@@ -12,6 +12,12 @@ Agentic memory is not retrieval.
 
 Agentic memory is governed state transition over addressable artifacts, scored by calibrated relevance, constrained by mutation authority, and confirmed by provenance or certification before becoming durable.
 
+## Architecture posture
+
+Agent Memory is one overall architecture composed of bounded components.
+
+It is unified by shared contracts, vocabulary, and conformance expectations. It is segmented by responsibility so identity, evidence, scoring, lifecycle, governance, certification, runtime use, and conformance do not collapse into one vague mega-layer.
+
 ## Repository structure
 
 ```text
@@ -30,13 +36,17 @@ Agentic memory is governed state transition over addressable artifacts, scored b
 │   ├── 08-source-material-index.md
 │   ├── 09-calibration-protocol.md
 │   ├── 10-memory-unit-examples.md
+│   ├── 11-component-architecture.md
+│   ├── 12-concept-segmentation-matrix.md
+│   ├── 13-system-composition-boundaries.md
 │   └── adr/
 │       ├── ADR-001-uor-is-identity-not-memory.md
 │       ├── ADR-002-saturation-is-routing-not-truth.md
 │       ├── ADR-003-crystallization-requires-certification.md
 │       ├── ADR-004-pama-controls-mutation-authority.md
 │       ├── ADR-005-codegenome-is-code-reality-substrate.md
-│       └── ADR-006-neurospace-is-runtime-memory-space.md
+│       ├── ADR-006-neurospace-is-runtime-memory-space.md
+│       └── ADR-007-agent-memory-is-component-architecture.md
 ├── fixtures/
 │   ├── access-spam-junk.json
 │   ├── certified-durable-memory.json
@@ -69,15 +79,35 @@ Agentic memory is governed state transition over addressable artifacts, scored b
 | Neurospace / Vault | Local runtime memory space used by agents and products |
 | CodeGenome | Canonical code reality graph and evidence substrate for software artifacts |
 
+## Component summary
+
+| Component | Role |
+|---|---|
+| Identity Substrate | stable object identity |
+| Evidence and Provenance Substrate | source support and witness material |
+| Reality Graphs | structured domain truth with confidence and provenance |
+| Lifecycle Engine | governed memory state transitions |
+| Saturation and Decay Engine | calibrated persistence pressure |
+| Governance and Mutation Authority | permission to mutate, promote, prune, or canonize |
+| Certification and Crystallization Gate | durable transition confirmation |
+| Runtime Memory Space | operational agent memory use |
+| Context Assembly Surface | scoped recall into agent context |
+| Correction and Dispute Surface | safe revision, demotion, and reconciliation |
+| Conformance and Calibration Harness | fixtures, trap classes, reports, and thresholds |
+| Product and Agent Integrations | implementation adoption surfaces |
+
 ## Start here
 
 Read these first:
 
 1. `docs/AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md`
-2. `docs/00-glossary.md`
-3. `docs/01-layer-model.md`
-4. `docs/06-conformance-test-plan.md`
-5. `docs/09-calibration-protocol.md`
+2. `docs/11-component-architecture.md`
+3. `docs/12-concept-segmentation-matrix.md`
+4. `docs/13-system-composition-boundaries.md`
+5. `docs/00-glossary.md`
+6. `docs/01-layer-model.md`
+7. `docs/06-conformance-test-plan.md`
+8. `docs/09-calibration-protocol.md`
 
 Then use the ADRs to anchor implementation decisions.
 
