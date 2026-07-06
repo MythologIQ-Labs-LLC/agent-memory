@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Knapp-Kevin/agent-memory/schemas/memory-unit.schema.json",
+  "title": "Agent Memory Unit",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "state",
+    "provenance",
+    "evidence",
+    "saturation",
+    "authority",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "UOR address or stable implementation-specific memory identifier."
+    },
+    "content_ref": {
+      "type": "string",
+      "description": "Pointer to raw, canonical, or external content."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "observation",
+        "decision",
+        "fact",
+        "trace",
+        "code_artifact",
+        "preference",
+        "policy",
+        "failure",
+        "correction",
+        "summary"
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "transient",
+        "observed",
+        "linked",
+        "reinforced",
+        "candidate",
+        "pending_verification",
+        "crystallized",
+        "operationally_reused",
+        "stale",
+        "disputed",
+        "corrected",
+        "reconciled",
+        "pruned"
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["origin", "observer", "method", "timestamp"],
+      "properties": {
+        "origin": { "type": "string" },
+        "observer": { "type": "string" },
+        "method": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "ref", "confidence"],
+        "properties": {
+          "id": { "type": "string" },
+          "kind": { "type": "string" },
+          "ref": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "saturation": {
+      "type": "object",
+      "required": ["sigma", "calibrated", "durability_dimensions"],
+      "properties": {
+        "sigma": { "type": "number", "minimum": 0, "maximum": 1 },
+        "calibrated": { "type": "boolean" },
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "durability_dimensions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "required": ["pama_outcome", "risk_class"],
+      "properties": {
+        "pama_outcome": {
+          "type": "string",
+          "enum": ["allow", "allow_with_ledger", "require_review", "require_external_verification", "block"]
+        },
+        "risk_class": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "policy_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "certification": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["none", "pending", "pass", "fail", "expired"]
+        },
+        "ref": { "type": "string" },
+        "scope": { "type": "string" }
+      }
+    },
+    "decay_profile": {
+      "type": "object",
+      "properties": {
+        "lambda_base": { "type": "number", "minimum": 0 },
+        "lambda_eff": { "type": "number", "minimum": 0 },
+        "last_accessed_at": { "type": "string", "format": "date-time" },
+        "pressure": { "type": "number", "minimum": 0 }
+      }
+    },
+    "ledger_ref": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

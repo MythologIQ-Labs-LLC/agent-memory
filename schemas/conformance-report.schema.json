@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Knapp-Kevin/agent-memory/schemas/conformance-report.schema.json",
+  "title": "Agent Memory Conformance Report",
+  "type": "object",
+  "required": [
+    "implementation",
+    "version",
+    "doctrine_version",
+    "conformance_level",
+    "fixtures_run",
+    "fixtures_passed",
+    "fixtures_failed"
+  ],
+  "properties": {
+    "implementation": { "type": "string" },
+    "version": { "type": "string" },
+    "doctrine_version": { "type": "string" },
+    "conformance_level": { "type": "integer", "minimum": 0, "maximum": 5 },
+    "fixtures_run": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "fixtures_passed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "fixtures_failed": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "sample_size": { "type": "integer", "minimum": 0 },
+        "persist_retention_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "false_permanence_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evaporation_rate_for_true_ephemeral": { "type": "number", "minimum": 0, "maximum": 1 },
+        "trap_class_failure_rate": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "durability_dimensions_tested": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "known_exemptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evidence_bundle_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}
