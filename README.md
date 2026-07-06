@@ -28,6 +28,8 @@ Agentic memory is governed state transition over addressable artifacts, scored b
 │   ├── 06-conformance-test-plan.md
 │   ├── 07-integration-roadmap.md
 │   ├── 08-source-material-index.md
+│   ├── 09-calibration-protocol.md
+│   ├── 10-memory-unit-examples.md
 │   └── adr/
 │       ├── ADR-001-uor-is-identity-not-memory.md
 │       ├── ADR-002-saturation-is-routing-not-truth.md
@@ -35,6 +37,20 @@ Agentic memory is governed state transition over addressable artifacts, scored b
 │       ├── ADR-004-pama-controls-mutation-authority.md
 │       ├── ADR-005-codegenome-is-code-reality-substrate.md
 │       └── ADR-006-neurospace-is-runtime-memory-space.md
+├── fixtures/
+│   ├── access-spam-junk.json
+│   ├── certified-durable-memory.json
+│   ├── confidently-wrong-memory.json
+│   ├── contradicted-memory.json
+│   ├── ephemeral-memory.json
+│   ├── pruning-with-audit-preservation.json
+│   ├── unauthorized-mutation-attempt.json
+│   └── valuable-persistent-memory.json
+├── schemas/
+│   ├── conformance-report.schema.json
+│   └── memory-unit.schema.json
+├── scripts/
+│   └── validate_fixtures.py
 └── .github/
     └── ISSUE_TEMPLATE/
         └── doctrine-consolidation-task.md
@@ -61,8 +77,19 @@ Read these first:
 2. `docs/00-glossary.md`
 3. `docs/01-layer-model.md`
 4. `docs/06-conformance-test-plan.md`
+5. `docs/09-calibration-protocol.md`
 
 Then use the ADRs to anchor implementation decisions.
+
+## Fixture validation
+
+Run the fixture validator from the repository root:
+
+```bash
+python scripts/validate_fixtures.py
+```
+
+The validator uses only the Python standard library.
 
 ## Non-goals
 
