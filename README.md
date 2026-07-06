@@ -18,6 +18,8 @@ Agent Memory is one overall architecture composed of bounded components.
 
 It is unified by shared contracts, vocabulary, and conformance expectations. It is segmented by responsibility so identity, evidence, scoring, lifecycle, governance, certification, runtime use, and conformance do not collapse into one vague mega-layer.
 
+It should be treated as a reference architecture for governed agent memory systems, not as a single memory library.
+
 ## Repository structure
 
 ```text
@@ -39,6 +41,7 @@ It is unified by shared contracts, vocabulary, and conformance expectations. It 
 │   ├── 11-component-architecture.md
 │   ├── 12-concept-segmentation-matrix.md
 │   ├── 13-system-composition-boundaries.md
+│   ├── 14-expanded-scope-recommendations.md
 │   └── adr/
 │       ├── ADR-001-uor-is-identity-not-memory.md
 │       ├── ADR-002-saturation-is-routing-not-truth.md
@@ -96,6 +99,21 @@ It is unified by shared contracts, vocabulary, and conformance expectations. It 
 | Conformance and Calibration Harness | fixtures, trap classes, reports, and thresholds |
 | Product and Agent Integrations | implementation adoption surfaces |
 
+## Expansion candidates
+
+The highest-value expansion areas are:
+
+1. source trust and reputation
+2. conflict resolution
+3. temporal causality
+4. privacy and sensitivity classification
+5. memory threat modeling
+6. query planning and governed recall
+7. schema registry and type evolution
+8. multi-agent shared memory protocol
+
+See `docs/14-expanded-scope-recommendations.md`.
+
 ## Start here
 
 Read these first:
@@ -104,10 +122,11 @@ Read these first:
 2. `docs/11-component-architecture.md`
 3. `docs/12-concept-segmentation-matrix.md`
 4. `docs/13-system-composition-boundaries.md`
-5. `docs/00-glossary.md`
-6. `docs/01-layer-model.md`
-7. `docs/06-conformance-test-plan.md`
-8. `docs/09-calibration-protocol.md`
+5. `docs/14-expanded-scope-recommendations.md`
+6. `docs/00-glossary.md`
+7. `docs/01-layer-model.md`
+8. `docs/06-conformance-test-plan.md`
+9. `docs/09-calibration-protocol.md`
 
 Then use the ADRs to anchor implementation decisions.
 
