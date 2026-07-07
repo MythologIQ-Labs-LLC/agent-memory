@@ -49,7 +49,14 @@ It should be treated as a reference architecture for governed agent memory syste
 │       ├── ADR-004-pama-controls-mutation-authority.md
 │       ├── ADR-005-codegenome-is-code-reality-substrate.md
 │       ├── ADR-006-neurospace-is-runtime-memory-space.md
-│       └── ADR-007-agent-memory-is-component-architecture.md
+│       ├── ADR-007-agent-memory-is-component-architecture.md
+│       ├── ADR-008-memory-threat-model-is-required.md
+│       ├── ADR-009-source-trust-is-a-first-class-signal.md
+│       ├── ADR-010-conflict-resolution-is-a-separate-component.md
+│       ├── ADR-011-temporal-causality-is-required-for-memory-evolution.md
+│       ├── ADR-012-privacy-and-sensitivity-classification-is-required.md
+│       ├── ADR-013-governed-recall-planner-is-required.md
+│       └── ADR-014-schema-registry-and-type-evolution-are-needed.md
 ├── fixtures/
 │   ├── access-spam-junk.json
 │   ├── certified-durable-memory.json
