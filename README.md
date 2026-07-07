@@ -56,7 +56,12 @@ It should be treated as a reference architecture for governed agent memory syste
 │       ├── ADR-011-temporal-causality-is-required-for-memory-evolution.md
 │       ├── ADR-012-privacy-and-sensitivity-classification-is-required.md
 │       ├── ADR-013-governed-recall-planner-is-required.md
-│       └── ADR-014-schema-registry-and-type-evolution-are-needed.md
+│       ├── ADR-014-schema-registry-and-type-evolution-are-needed.md
+│       ├── ADR-015-retention-deletion-and-tombstones-are-required.md
+│       ├── ADR-016-actor-scope-consent-and-tenancy-are-required.md
+│       ├── ADR-017-memory-observability-and-audit-events-are-required.md
+│       ├── ADR-018-recovery-rollback-and-replay-are-required.md
+│       └── ADR-019-memory-quality-metrics-are-required.md
 ├── fixtures/
 │   ├── access-spam-junk.json
 │   ├── certified-durable-memory.json
