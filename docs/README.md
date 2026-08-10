@@ -57,7 +57,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 24 | [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) | Deterministic substrate, probabilistic epistemics, bounded authority, doctrine challenges |
 | 25 | [`25-governed-uncertainty-documentation-conformance-audit.md`](25-governed-uncertainty-documentation-conformance-audit.md) | GU-1 through GU-10 documentation-conformance rubric |
 
-## 26-38: Executable and operational contracts
+## 26-39: Executable and operational contracts
 
 | # | Document | Purpose |
 |---|---|---|
@@ -74,6 +74,15 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 36 | [`36-policy-as-memory.md`](36-policy-as-memory.md) | Policies as high-authority memory: versioning, certification, conflict, complete recall |
 | 37 | [`37-memory-economics-and-budget-policy.md`](37-memory-economics-and-budget-policy.md) | Budget dimensions and the pressure-shapes-priority-never-authority boundary |
 | 38 | [`38-human-correction-ux-contract.md`](38-human-correction-ux-contract.md) | Minimum user-facing evidence, correction, dispute, and indicator contract |
+| 39 | [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) | Component ownership candidates with explicit declared/contested/open status |
+
+## Profiles and future subsystems
+
+| Document | Purpose |
+|---|---|
+| [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md) | Decision memory: required fields, rationale preservation, supersession, drift, recall |
+| [`future/memory-compiler.md`](future/memory-compiler.md) | Bulk artifact-to-memory compilation — gated future subsystem |
+| [`future/multi-agent-shared-memory-protocol.md`](future/multi-agent-shared-memory-protocol.md) | Shared memory across agents and tenants — gated future subsystem |
 
 ## Architecture Decision Records
 

@@ -13,7 +13,7 @@ Profiles exist so that UOR, EvolveAI, CodeGenome, COREFORGE, and future systems 
 - A system claims a profile only for a declared scope (memory types, tenants, consequence classes). Claims outside the tested scope are not claims.
 - Every profile claim must be backed by passing fixtures; a claim without fixture evidence is documentation alignment (Level 0) wearing a costume.
 
-Exchange between systems flows through the adapter contracts of [`34-adapter-contracts.md`](34-adapter-contracts.md). A profile is, concretely, a promise about which adapters a system exposes correctly. System-to-component assignment is tracked in [`05-repo-implementation-map.md`](05-repo-implementation-map.md) and the implementation ownership map (issue #8).
+Exchange between systems flows through the adapter contracts of [`34-adapter-contracts.md`](34-adapter-contracts.md). A profile is, concretely, a promise about which adapters a system exposes correctly. System-to-component assignment is tracked in [`05-repo-implementation-map.md`](05-repo-implementation-map.md) and the implementation ownership map ([`39-implementation-ownership-map.md`](39-implementation-ownership-map.md)).
 
 ## Profile 1: Identity and provenance
 
