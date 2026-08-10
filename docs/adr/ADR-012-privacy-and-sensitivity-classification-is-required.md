@@ -2,61 +2,66 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
 Agentic memory systems may store or recall personal, organizational, security, financial, health, credential, code, policy, or public information.
 
-A memory system that cannot classify sensitivity cannot reliably decide what may be stored, recalled, summarized, exported, shared, corrected, or deleted.
+A memory system that cannot represent sensitivity cannot reliably decide what may be stored, recalled, summarized, exported, shared, corrected, or deleted.
 
-Local-first storage helps, but it is not enough. A locally stored sensitive memory can still be recalled into the wrong context, shared with the wrong agent, or preserved beyond its intended scope. Humanity, against all odds, continues to invent new ways to mishandle data.
+Local-first storage helps, but it is not enough. Sensitive memory can still be recalled into the wrong context, shared with the wrong actor, inferred through composition, or retained after a nominal deletion.
 
 ## Decision
 
-Privacy and sensitivity classification must be a first-class component.
+Privacy and sensitivity classification are first-class memory-governance concerns.
 
-The component should influence storage, retention, recall, context assembly, PAMA authority, certification, export, and deletion behavior.
+Classification may be probabilistic or multi-label. Storage, recall, sharing, export, and deletion consequences remain policy-governed.
+
+Required invariant:
+
+```text
+classifier_uncertain != non_sensitive
+```
+
+Canonical document:
+
+- [`../19-privacy-and-sensitivity-classifier.md`](../19-privacy-and-sensitivity-classifier.md)
 
 ## Consequences
 
 ### Positive
 
-- prevents overbroad recall
-- improves PAMA risk classification
-- supports local-first and encrypted memory boundaries
-- enables conformance tests for cross-user leakage and unsafe context assembly
-- makes retention and deletion policy enforceable
+- prevents overbroad recall and disclosure
+- improves consequence-aware PAMA decisions
+- supports local-first and encrypted boundaries
+- enables conformance tests for cross-user leakage, extraction, composition leakage, and deletion residue
 
 ### Negative
 
-- requires sensitivity taxonomy
-- may require implementation-specific classifiers
+- requires sensitivity taxonomy and policy
+- may require implementation-specific classifiers and calibration
 - may reduce recall convenience when sensitivity is unclear
 
-## Required classes
+## Required handling dimensions
 
-At minimum, the system should support sensitivity classes for:
+At minimum, policy should be able to distinguish:
 
-- public
-- personal
-- organizational
-- security-sensitive
-- credential or secret
-- financial
-- health or wellbeing
-- code or IP-sensitive
-- policy or compliance
-- restricted or consent-bound
+- storage permission/location
+- retrieval permission
+- context destination
+- sharing/export scope
+- encryption
+- retention period
+- deletion mode
+- audit/review requirements
 
-## Required follow-up
+## Acceptance scope
 
-Create and maintain:
-
-```text
-docs/19-privacy-and-sensitivity-classifier.md
-```
+Accepted establishes privacy and sensitivity handling as canonical doctrine. It does not claim one classifier is reliable enough for all domains or consequences.
 
 ## Doctrine
 
-A memory cannot be safely recalled until the system knows the sensitivity boundary it belongs to.
+Sensitivity can be uncertain.
+
+Permission to expose memory cannot be inferred from that uncertainty.
