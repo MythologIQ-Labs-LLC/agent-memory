@@ -1,8 +1,8 @@
 # META LEDGER — agent-memory
 
-QoreLogic S.H.I.E.L.D. decision ledger for `Knapp-Kevin/agent-memory`.
+Qor-logic S.H.I.E.L.D. decision ledger for `Knapp-Kevin/agent-memory`.
 
-Note: this repository was not previously bootstrapped with QoreLogic governance.
+Note: this repository was not previously bootstrapped with Qor-logic governance.
 Entry #0 below is a genesis anchor created at research time; a full
 `/qor-bootstrap` (CONCEPT.md + ARCHITECTURE_PLAN.md) remains available as a
 later step if the Governor wants full S.H.I.E.L.D. DNA. Repository content was
@@ -20,8 +20,8 @@ directive (Codex structural overhaul in flight).
 
 **Content Hash**:
 ```
-SHA256("agent-memory:qorelogic:genesis:2026-08-10")
-= 5638e3a033dbae1baafdd49b8a45a12c7dda6763c348f7ffa4a364108e6453d2
+SHA256("agent-memory:qor-logic:genesis:2026-08-10")
+= 5305376f89cb2d3c5631329efbc06b2740b2208713d58229db6c06b4f95d1e21
 ```
 
 **Previous Hash**: none (genesis)
@@ -41,15 +41,15 @@ the open-issue backlog consolidation effort.
 **Content Hash**:
 ```
 SHA256(RESEARCH_BRIEF.md)
-= f1a427ed46f705867e7acc47acb45628172251817557055ba76d00673ca84ce7
+= 8f2c899c77e4e5b09eaad3434aa2228a987a2d145ba8042654fcbbaaeafaefbe
 ```
 
-**Previous Hash**: 5638e3a033dbae1baafdd49b8a45a12c7dda6763c348f7ffa4a364108e6453d2
+**Previous Hash**: 5305376f89cb2d3c5631329efbc06b2740b2208713d58229db6c06b4f95d1e21
 
 **Chain Hash**:
 ```
 SHA256(content_hash + previous_hash)
-= 673f2c4dfaf08b32826e10d49983b54ab600ceb788b1f9e3b903e664a049b9a6
+= 2a456d3b6993ca2b520a89eb654542bd44d2c3eaaa969c735ceb5f052b1ed704
 ```
 
 **Decision**: All 25 open issues triaged against repository reality. Key
@@ -76,12 +76,12 @@ SHA256(plan-issue-backlog-consolidation.md)
 = f360ef7793edd29934ac3810ff712957c12b19bdef595ecef3278ec65bae4a5f
 ```
 
-**Previous Hash**: 673f2c4dfaf08b32826e10d49983b54ab600ceb788b1f9e3b903e664a049b9a6
+**Previous Hash**: 2a456d3b6993ca2b520a89eb654542bd44d2c3eaaa969c735ceb5f052b1ed704
 
 **Chain Hash**:
 ```
 SHA256(content_hash + previous_hash)
-= ae7447d9fa9a5b6d44f8bbae4b30da19edd6c3c9f6ae5ccf2858ed97169fe6b5
+= 910773ec64c0b3330d2d1790eaa74db54a45e9e6e6ca765554dc424232f585a9
 ```
 
 **Decision**: End-to-end plan covering all 25 open issues in four gated
@@ -108,15 +108,15 @@ Codex overhaul completion.
 **Content Hash**:
 ```
 SHA256(RESEARCH_BRIEF.md with Milestone 0 delta)
-= b9a3a1850d0e9dac2f9a331a65c73e6ec4df29515a2946defe241ff3b7f542db
+= 8f2c899c77e4e5b09eaad3434aa2228a987a2d145ba8042654fcbbaaeafaefbe
 ```
 
-**Previous Hash**: ae7447d9fa9a5b6d44f8bbae4b30da19edd6c3c9f6ae5ccf2858ed97169fe6b5
+**Previous Hash**: 910773ec64c0b3330d2d1790eaa74db54a45e9e6e6ca765554dc424232f585a9
 
 **Chain Hash**:
 ```
 SHA256(content_hash + previous_hash)
-= 8e38e0ab719db7b296e6aefa1d4baba6551c67367f3a5761e1d829d2e4e9dea0
+= 77ae4f73a32bd51d0f1dfca9d4a20b62b80a2d033b7a3ab54926498fe8250af3
 ```
 
 **Decision**: Governor authorized execution ("entirely up to you... proceed").
@@ -129,4 +129,4 @@ CI step-summary gap fixed. Milestone 2: calibration report generator delivered
 (#4) with input schema, worked example, and CI sync check. Remaining scope:
 Milestone 3 doctrine wave (#6 -> #7 -> #18 -> #26/#27 -> #28 -> #30),
 cross-repo (#5, #8), gated futures (#19, #29). Per Governor directive,
-contributions carry no AI attribution.
+commit messages and issue comments carry no attribution trailers.

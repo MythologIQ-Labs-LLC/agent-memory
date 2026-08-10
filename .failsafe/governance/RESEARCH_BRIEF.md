@@ -1,7 +1,7 @@
 # Research Brief
 
 **Date**: 2026-08-10T22:30:00Z
-**Analyst**: The QoreLogic Analyst
+**Analyst**: The Qor-logic Analyst
 **Target**: `Knapp-Kevin/agent-memory` — open issue backlog vs. repository reality
 **Scope**: All 25 open issues, docs 00–29, ADRs 001–020, audit slices 02–07A, schemas, fixtures, validator, CI state
 **Constraint**: Observational only. Codex is performing a structural overhaul of the repository; no code or doc mutations are proposed for immediate execution.
@@ -17,7 +17,7 @@ The repository is a documentation/doctrine artifact (~15.2k lines: 31 docs, 20 A
 ### F1. Repository state (verified)
 
 - Branch `claude/agent-memory-dev-plan-oz24pw` is identical to `origin/main` at `bf0baa6` ("Contracts slice 7A"). No open PRs. 25 open issues, **0 closed issues** (number gaps 1, 2, 9, 16, 20 are PRs, e.g. issue #3 cites "PR #2").
-- No QoreLogic governance state existed prior to this brief (no `.failsafe/`, no META_LEDGER) — this brief's ledger entry is the genesis entry.
+- No Qor-logic governance state existed prior to this brief (no `.failsafe/`, no META_LEDGER) — this brief's ledger entry is the genesis entry.
 - `scripts/validate_fixtures.py` runs and passes: `Validated 8 fixture(s).`, exit 0. It is stdlib-only but **does not read the JSON Schema files** — it duplicates constraints as Python constants (`REQUIRED_MEMORY_UNIT` at `scripts/validate_fixtures.py:25-34`, `VALID_STATES` at `:40-54`), so schema and validator can drift silently.
 - **No CI exists.** `.github/` contains only `ISSUE_TEMPLATE/doctrine-consolidation-task.md`. Nothing runs the validator automatically.
 
