@@ -1,4 +1,6 @@
-# ADR-020: Probabilistic Discovery, Deterministic Governance
+# ADR-020: Probabilistic Discovery, Governed Consequences
+
+> Filename retained for decision-history continuity. The refined doctrine no longer assumes every governance mechanism must be computationally deterministic.
 
 ## Status
 
@@ -8,269 +10,264 @@ Proposed
 
 Agentic memory operates under uncertainty.
 
-Candidate extraction, semantic retrieval, contradiction detection, source trust, salience, relevance, abstraction, causal inference, and risk estimation may all depend on learned or probabilistic mechanisms.
+Candidate extraction, semantic retrieval, contradiction detection, source trust, salience, relevance, abstraction, causal inference, sensitivity, future utility, and risk estimation may all depend on learned, heuristic, probabilistic, or stochastic mechanisms.
 
-However, memory also contains transitions whose consequences are too important to delegate directly to uncertain inference:
+Memory also contains consequences too important to delegate directly to uncertain inference:
 
 - canonical promotion
-- mutation of durable state
+- durable mutation
 - cross-tenant or cross-user disclosure
-- deletion and erasure
+- irreversible deletion
 - policy mutation
 - certification
-- inherited memory propagation
+- inherited-memory propagation
 - authority changes
 - preservation or destruction of evidence
 
-A binary architectural choice between "deterministic memory" and "probabilistic memory" is therefore insufficient.
-
-Research also challenges both extremes. Human memory and decision research supports explicit representation of uncertainty and stochastic retrieval. Current agent-memory work shows value in adaptive learned memory control. At the same time, memory-poisoning research shows that aggressively writing and retrieving memory can create persistent attack surfaces, and runtime-assurance research provides precedent for allowing learned behavior only inside separately enforced safety boundaries.
+A binary choice between "deterministic memory" and "probabilistic memory" is therefore insufficient.
 
 ## Decision candidate
 
-Adopt a **governed uncertainty** architecture with the following separation:
+Adopt a **governed uncertainty** architecture:
 
 ```text
-probabilistic / learned epistemics
+probabilistic / learned / heuristic epistemics
         |
         v
-policy-defined governance envelope
+explicit policy + authority envelope
         |
         v
-optional stochastic selection among permitted actions
+permitted / prohibited / deferred actions
         |
         v
-defined state transition + audit receipt
+optional deterministic or stochastic selection
+AMONG PERMITTED ACTIONS ONLY
+        |
+        v
+committed consequence + provenance + receipt
 ```
 
-### Rule 1: probabilistic outputs are not authority
+Short form:
 
-Learned or probabilistic components MAY produce:
+> **Probabilistic epistemics. Governed consequences.**
 
-- beliefs
-- confidence estimates
-- relevance scores
-- risk estimates
+Operational form:
+
+> **Uncertainty may propose. Authority constrains.**
+
+The desired property is **authority boundedness and reconstructability**, not fictional certainty.
+
+## Rule 1: estimator output is not authority
+
+Learned, heuristic, or probabilistic components MAY produce:
+
+- beliefs and alternative hypotheses
+- confidence or probability estimates
+- relevance and trust scores
+- sensitivity or risk estimates
 - contradiction likelihoods
 - rankings
 - memory candidates
 - proposed mutations
 - proposed retrieval sets
-- proposed consolidation targets
+- proposed consolidation or forgetting actions
 
-They MUST NOT acquire mutation, promotion, deletion, sharing, or certification authority merely from their scores.
+They MUST NOT acquire mutation, promotion, deletion, sharing, certification, or policy authority merely from those outputs.
 
-### Rule 2: governance defines the permitted action set
+## Rule 2: governance defines the action envelope
 
-For every consequential transition, a versioned governance function MUST determine the set of permitted outcomes using applicable:
+For every consequential operation, a versioned governance process MUST determine permitted, prohibited, review-required, or deferred outcomes using applicable:
 
 - identity
-- scope
-- tenant
-- authority
+- current state/version
+- scope/tenant
+- actor authority
 - sensitivity
 - provenance
 - lifecycle state
-- risk class
+- risk and reversibility
 - certification state
 - policy
+- estimator uncertainty when relevant
 
-A learned component MUST NOT expand that set.
+A learned component MUST NOT expand its own permitted action set.
 
-### Rule 3: stochastic behavior may remain inside the envelope
+## Rule 3: stochastic behavior may remain inside the envelope
 
-The architecture MAY permit stochastic or learned selection among actions already authorized by policy.
+The architecture MAY permit stochastic or learned selection among already-authorized actions.
 
-Examples include:
-
-- retrieval ordering
-- query exploration
-- low-risk hypothesis testing
-- non-destructive consolidation analysis
-
-The invariant is:
+Required invariant:
 
 ```text
 selected_action ∈ permitted_action_set
 ```
 
-### Rule 4: irreversible and authority-changing transitions receive the strongest boundary
+Randomness does not create permission.
 
-Transitions involving canonical truth, erasure, permission expansion, evidence destruction, cross-scope disclosure, policy mutation, or inherited canonical state MUST require explicit prerequisites beyond model confidence.
+## Rule 4: consequence strength is proportional
 
-Depending on risk, these MAY include:
+The strongest boundary belongs around operations that:
 
-- deterministic policy checks
-- external verification
-- human approval
-- cryptographic authorization
-- certification
-- quorum
-- formal safety constraints
+- create canonical or certified state
+- irreversibly erase data or evidence
+- cross user, tenant, organization, or trust-domain boundaries
+- change policy or authority
+- expose sensitive memory
+- create inherited behavioral control
+- trigger external destructive side effects
 
-### Rule 5: uncertainty remains visible
+High model confidence does not reduce those requirements by itself.
 
-The system MUST NOT silently collapse uncertain inference into authoritative fact.
+## Rule 5: uncertainty remains visible
 
-Where material, audit evidence SHOULD preserve:
+Where material, the decision record SHOULD preserve:
 
-- estimator/model version
-- relevant probabilities or scores
-- threshold or rule version
-- candidate set
+- signal semantics
+- estimator/model identity and version
+- calibration reference and scope
+- uncertainty or disagreement
+- candidate/proposed action
 - policy version
-- authority scope
+- authority and scope
+- permitted and prohibited actions
+- selected action and selection mode
 - committed result
 
-### Rule 6: deterministic does not mean static
+A 0-to-1 score MUST NOT be assumed to be a calibrated probability unless the estimator defines it that way.
 
-Deterministic governance rules MAY consume probabilistic inputs and MAY evolve through explicit versioned policy changes.
+## Rule 6: deterministic does not mean static or correct
 
-Fixed thresholds MUST NOT be assumed safe merely because they are reproducible.
+Reproducible policy can still be badly designed.
 
-Thresholds and classifiers that influence consequential transitions SHOULD be calibrated and adversarially evaluated.
+Fixed thresholds MUST NOT be assumed safe merely because they are deterministic.
 
-### Rule 7: read-path governance is required
+Thresholds and classifiers influencing consequential transitions SHOULD be calibrated, stress-tested near decision boundaries, and re-evaluated under drift.
 
-A memory that was safe to store MAY become unsafe when combined with other memories or retrieved into a different scope.
+## Rule 7: read-path governance is required
 
-Therefore, deterministic or formally bounded policy enforcement MUST exist on both:
+A memory safe to store MAY become unsafe when retrieved under a different scope or combined with other memories.
 
-```text
-write path
-read path
-```
+Policy enforcement must therefore exist on both write and read paths, with context/composition checks where consequence warrants them.
 
-### Rule 8: formal probabilistic guarantees are allowed when absolute guarantees are impossible
+## Rule 8: formally bounded probabilistic guarantees are allowed
 
-Some systems cannot provide absolute deterministic safety because environment models, hidden parameters, or learned estimators remain uncertain.
+Absolute deterministic safety may be impossible in environments with hidden parameters or uncertain models.
 
-Formally bounded probabilistic guarantees MAY be used when:
+A formally bounded probabilistic guarantee MAY be used when:
 
 - the guarantee type is explicit
-- the residual risk is measured
-- the policy accepts that risk
-- stronger deterministic constraints remain enforced where possible
+- residual risk is measured
+- policy explicitly accepts that residual risk
+- stronger exact constraints remain enforced where available
+- the guarantee can be independently evaluated
+
+Calling a system "formally bounded" without specifying the bound is not a guarantee.
+
+## Rule 9: learned is not synonymous with probabilistic
+
+A learned component may be deterministic at inference time. A hand-written heuristic may be uncertain without representing probability.
+
+The architecture should classify a component by what its output **means** and what authority it has, not by whether it contains machine learning.
+
+## Rule 10: governance begins at contract design
+
+Authority, scope, policy versioning, proposal-versus-commit boundaries, and decision receipts must be defined before implementations stabilize consequential memory APIs.
+
+Governance is not a later hardening phase.
 
 ## Consequences
 
 ### Positive
 
 - preserves adaptive and learned memory behavior
-- prevents model confidence from becoming authority
-- makes governance auditable
-- separates epistemic uncertainty from permission
-- supports stronger security boundaries
-- permits safe experimentation inside bounded action spaces
-- improves failure analysis by recording policy and estimator versions separately
-- provides a conceptual bridge to runtime assurance and shielding architectures
+- prevents confidence from becoming authority
+- supports uncertainty-preserving belief memory
+- makes consequential decisions auditable
+- permits stochastic optimization inside bounded action spaces
+- separates policy drift from estimator drift
+- supports read-time and composition security
 
 ### Negative
 
-- adds architectural complexity
-- requires explicit policy and transition semantics
-- requires calibration of probabilistic components
+- requires richer schemas and receipts
+- adds explicit policy and transition semantics
+- requires calibration and drift evaluation
 - can add latency to high-consequence operations
-- may require additional audit storage
-- poorly designed deterministic gates can become brittle bottlenecks
-- formal guarantees may be difficult for complex memory composition
+- formally bounded guarantees can be difficult to specify for complex compositions
 
-### Risks
+### Doctrine risks
 
-- teams may label a rule "deterministic" and stop evaluating whether it is correct
-- fixed thresholds may create false confidence
-- stochastic components may influence governance indirectly through poorly bounded inputs
-- read-path composition can create risks not visible at write time
-- policy version drift may mimic model drift unless both are recorded
-- excessive fail-closed behavior can destroy memory utility
+- deterministic rules may reproduce a bad assumption perfectly
+- estimator and policy may become tightly coupled
+- hidden stochasticity may escape receipts
+- `require_human_review` may create false assurance if the reviewer lacks evidence or authority
+- over-conservative policy can destroy useful adaptation
+- flexible policy can become a euphemism for model self-authorization
+- correct authorization can become stale before commit
+- safe components can compose into unsafe behavior
 
 ## Rejected alternatives
 
 ### Fully deterministic memory control
 
-Rejected as a universal doctrine.
-
-Reason:
-
-Memory relevance, ambiguity, contradiction, abstraction, source trust, retrieval, and risk frequently involve uncertainty. Fixed deterministic heuristics can be brittle and may underperform adaptive methods.
+Rejected as universal doctrine because relevance, ambiguity, trust, contradiction, sensitivity, abstraction, retrieval, and risk frequently involve uncertainty.
 
 ### End-to-end model-directed memory
 
-Rejected for consequential state transitions.
+Rejected for consequential transitions because cognition and authority would collapse into one failure domain.
 
-Reason:
+### Deterministic thresholds as primary governance
 
-A model that can decide what to believe and independently grant itself authority to persist, expose, mutate, or delete that belief collapses epistemics and governance into one failure domain.
-
-### Deterministic thresholds as the primary governance mechanism
-
-Rejected as insufficient.
-
-Reason:
-
-Thresholds require calibration, vary by risk and domain, can be attacked, and can fail under memory composition or distribution shift.
+Rejected as insufficient because thresholds can be miscalibrated, brittle, domain-specific, attacked, or invalid under drift and composition.
 
 ### Human approval for every mutation
 
-Rejected as a default.
-
-Reason:
-
-It creates an unnecessary human bottleneck and prevents useful autonomous low-risk adaptation. Human authority should be reserved for policy-defined consequence classes where it adds material assurance.
-
-## Research basis
-
-The doctrine is informed by freely inspectable research rather than citation collection for its own sake.
-
-Relevant sources include:
-
-- stochastic selective memory retrieval and decision noise: https://pmc.ncbi.nlm.nih.gov/articles/PMC3651451/
-- working-memory uncertainty in decisions: https://pmc.ncbi.nlm.nih.gov/articles/PMC7165478/
-- distinctions among forms of uncertainty: https://pmc.ncbi.nlm.nih.gov/articles/PMC3461114/
-- adaptive memory control for LLM agents: https://arxiv.org/abs/2607.13591
-- adaptive probabilistic memory-structure gating: https://arxiv.org/abs/2602.14038
-- governed evolving agent memory: https://arxiv.org/abs/2603.11768
-- memory-poisoning write-channel vulnerabilities: https://arxiv.org/abs/2606.04329
-- compositional and context-triggered memory poisoning: https://arxiv.org/abs/2607.14651
-- threshold calibration tradeoffs in memory defenses: https://arxiv.org/abs/2601.05504
-- Simplex-style runtime assurance: https://arxiv.org/abs/2109.13446
-- black-box Simplex runtime assurance: https://arxiv.org/abs/2102.12981
-- adaptive shielding under uncertainty: https://arxiv.org/abs/2506.11033
+Rejected as a default because it creates a human bottleneck and prevents useful autonomous low-risk adaptation.
 
 ## Validation required before acceptance
 
-Before moving this ADR from Proposed to Accepted, the repository SHOULD add conformance fixtures proving at least:
+This ADR MUST remain Proposed until the repository has executable evidence proving at least:
 
-1. a high-confidence false memory cannot self-promote
-2. a semantically perfect cross-tenant memory cannot be recalled across scope
+1. high-confidence false memory cannot self-promote
+2. high-relevance wrong-tenant memory cannot enter context
 3. probabilistic contradiction detection cannot silently overwrite certified state
-4. stochastic retrieval cannot bypass policy filters
-5. uncertain sensitivity classification fails safely for high-risk storage
-6. model-predicted low utility cannot independently authorize irreversible deletion
-7. read-time composition defenses can catch unsafe combinations of individually acceptable memories
-8. policy-version changes are distinguishable from estimator/model drift
-9. concurrent conflicting mutations resolve through explicit conflict semantics
-10. stochastic action selection cannot escape its permitted action set
+4. stochastic retrieval/action selection cannot bypass policy filters
+5. uncertain sensitivity is handled safely for high-consequence disclosure
+6. predicted low utility cannot independently authorize irreversible deletion
+7. unsafe multi-memory composition is tested
+8. policy-version drift is distinguishable from estimator/model drift
+9. concurrent conflicting mutations do not silently become last-writer-wins
+10. selected action cannot escape its permitted set across stochastic trials
+11. authority and consequence remain reconstructable from receipts
+12. derived-memory deletion residue is tested
+13. at least one implementation is mapped end-to-end from estimate -> governance -> action set -> commit
+14. at least one adversarial challenge causes a documented boundary, correction, or rejection rather than being ignored
+
+Canonical evidence locations:
+
+- [`../06-conformance-test-plan.md`](../06-conformance-test-plan.md)
+- [`../24-determinism-probability-and-governed-uncertainty.md`](../24-determinism-probability-and-governed-uncertainty.md)
+- [`../25-governed-uncertainty-documentation-conformance-audit.md`](../25-governed-uncertainty-documentation-conformance-audit.md)
+- [`../audits/governed-uncertainty/`](../audits/governed-uncertainty/)
 
 ## Open questions
 
-- Which governance checks require strict computational determinism?
-- Which only require deterministic policy semantics?
+- Which checks require strict computational determinism versus explicit bounded semantics?
 - When are probabilistic safety guarantees sufficient?
-- How should uncertainty propagate into derived and consolidated memory?
-- Can learned governance components themselves be certified inside constrained scopes?
-- What formal model best represents an allowed action envelope for agent memory?
-- How should policy adapt under distribution shift without becoming hidden self-mutation?
+- How should uncertainty propagate through consolidation and derivation?
+- Can learned governance itself be certified inside a constrained scope?
+- What formal model best represents a permitted action envelope?
+- How should policy adapt under drift without becoming hidden self-mutation?
+- Which uncertainty representations are useful enough to standardize?
 
-## Related doctrine
+## Research posture
 
-See:
+The decision should be challenged using freely inspectable research where practical, implementation evidence, adversarial fixtures, and negative results.
 
-- `../24-determinism-probability-and-governed-uncertainty.md`
-- `../03-scoring-and-decay.md`
-- `../04-governance-and-pama.md`
-- `../06-conformance-test-plan.md`
-- `ADR-002-saturation-is-routing-not-truth.md`
-- `ADR-004-pama-controls-mutation-authority.md`
-- `ADR-008-memory-threat-model-is-required.md`
-- `ADR-013-governed-recall-planner-is-required.md`
+Citation count is not confidence.
+
+## Doctrine candidate
+
+The system may be uncertain about what is true.
+
+It must remain explicit about what that uncertainty is allowed to change.
