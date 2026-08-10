@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -12,9 +12,9 @@ A memory may be incorrectly promoted, wrongly corrected, over-pruned, recalled i
 
 If the system cannot recover from these events, governance becomes performative. Performative governance is just theater with YAML.
 
-## Decision candidate
+## Decision
 
-Agent Memory must define recovery, rollback, and replay semantics.
+Agent Memory defines recovery, rollback, and replay semantics.
 
 Implementations should be able to reconstruct consequential decision paths, restore or compensate for unsafe mutations when policy allows, demote incorrectly durable memory, revoke certification, and preserve incident evidence.
 
@@ -57,16 +57,25 @@ what recovery path exists
 - revoke certification
 - preserve incident evidence within privacy constraints
 
-## Required follow-up before acceptance
+## Acceptance evidence
 
-Create and audit:
+Canonical contract:
 
-```text
-docs/31-recovery-rollback-and-replay.md
-```
+- [`../31-recovery-rollback-and-replay.md`](../31-recovery-rollback-and-replay.md)
 
-Then add replay cases for stochastic estimators, policy drift, concurrent mutation, and deletion constraints.
+Repository fixtures include:
 
-## Doctrine candidate
+- `stochastic-replay-reconstruction.json`
+- `policy-estimator-version-drift.json`
+- `concurrent-conflicting-mutation.json`
+- `deletion-residue.json`
+
+Decision-receipt and audit-event schemas preserve the evidence needed for reconstruction.
+
+## Acceptance scope
+
+Accepted establishes recovery/reconstruction as canonical doctrine. It does not claim every runtime already supports automatic rollback or complete dependency repair.
+
+## Doctrine
 
 A governed memory system must recover from its own mistakes without pretending stochastic cognition has to be byte-for-byte replayable.
