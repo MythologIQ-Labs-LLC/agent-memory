@@ -2,7 +2,7 @@
 
 This directory is the canonical documentation map for the Agent Memory reference architecture.
 
-The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all thirty-five numbered documents in numerical order is legal, but there are more humane options.
+The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all thirty-six numbered documents in numerical order is legal, but there are more humane options.
 
 ## Choose your path
 
@@ -57,7 +57,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 24 | [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) | Deterministic substrate, probabilistic epistemics, bounded authority, doctrine challenges |
 | 25 | [`25-governed-uncertainty-documentation-conformance-audit.md`](25-governed-uncertainty-documentation-conformance-audit.md) | GU-1 through GU-10 documentation-conformance rubric |
 
-## 26-34: Executable and operational contracts
+## 26-35: Executable and operational contracts
 
 | # | Document | Purpose |
 |---|---|---|
@@ -70,6 +70,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 32 | [`32-memory-quality-metrics.md`](32-memory-quality-metrics.md) | Ongoing quality, safety, calibration, deletion, and outcome metrics |
 | 33 | [`33-pama-decision-table.md`](33-pama-decision-table.md) | Mutation type and risk class to minimum authority outcome, with modifiers |
 | 34 | [`34-adapter-contracts.md`](34-adapter-contracts.md) | Typed seam contracts: required handoff fields, failure modes, rejection semantics |
+| 35 | [`35-interoperability-profiles.md`](35-interoperability-profiles.md) | Six cumulative reliance profiles for cross-system memory exchange |
 
 ## Architecture Decision Records
 
