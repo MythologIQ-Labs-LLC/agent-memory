@@ -2,68 +2,65 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
 The lifecycle state machine includes a `disputed` state. That state identifies a problem, but it does not resolve the problem.
 
-Conflicts can arise between:
+Conflicts can arise between facts, decisions, time windows, scopes, policies, source reliability estimates, user corrections, estimator outputs, procedures, and implementation states.
 
-- facts
-- decisions
-- time windows
-- policies
-- source reliability scores
-- user corrections
-- implementation states
-- code graph evidence
-
-If conflict resolution is embedded ad hoc inside each implementation, the same memory dispute can resolve differently across systems.
+If conflict handling is embedded ad hoc inside each implementation, the same dispute can produce incompatible consequences across systems.
 
 ## Decision
 
-Conflict resolution must be treated as a separate component.
+Conflict resolution is a separate architectural component or explicitly bounded component contract.
 
-The component will classify conflict type, rank evidence, determine whether to correct, demote, split scope, escalate, preserve historical minority claims, or prune.
+Conflict **interpretation** may be probabilistic. Detection, classification, source ranking, causal interpretation, and stale-versus-superseded analysis can remain uncertain.
+
+Conflict **consequence** must be governed through explicit outcomes such as:
+
+```text
+retain_both
+split_scope
+mark_disputed
+request_more_evidence
+require_verification
+correct_preserve_history
+demote
+archive_superseded
+block_canonical_use
+escalate
+```
+
+Canonical document:
+
+- [`../17-conflict-resolution-engine.md`](../17-conflict-resolution-engine.md)
 
 ## Consequences
 
 ### Positive
 
 - prevents silent overwrite
-- gives disputed memory a deterministic path forward
-- allows temporal supersession without losing historical context
+- preserves alternative hypotheses and historical truth
+- allows temporal supersession without deleting valid history
 - supports policy-aware reconciliation
+- separates uncertain interpretation from authorized mutation
 
 ### Negative
 
-- requires conflict taxonomy and rules
-- requires implementations to expose enough evidence for resolution
-- may require human escalation for high-risk disputes
+- requires conflict taxonomy and evidence exposure
+- requires policy for resolution outcomes
+- may require review for high-risk unresolved disputes
 
-## Required conflict types
+## Acceptance scope
 
-At minimum:
-
-- factual contradiction
-- temporal supersession
-- scope mismatch
-- policy conflict
-- source reliability conflict
-- user correction conflict
-- implementation drift
-
-## Required follow-up
-
-Create and maintain:
-
-```text
-docs/17-conflict-resolution-engine.md
-```
+Accepted establishes conflict resolution as canonical architecture. It does not require deterministic conflict classification or claim one universal resolution algorithm.
 
 ## Doctrine
 
 Dispute is a state.
 
-Resolution is a component.
+Interpretation may be uncertain.
+
+Resolution consequence is governed.

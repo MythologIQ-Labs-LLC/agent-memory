@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -20,9 +20,11 @@ The doctrine repo owns the shared architecture, vocabulary, contracts, segmentat
 
 Individual repos own implementation slices.
 
+Components may contain deterministic, probabilistic, learned, or hybrid internals, but cross-component handoffs must preserve signal semantics, provenance, scope, uncertainty, and authority boundaries.
+
 ## Component boundaries
 
-The canonical components are:
+The canonical components include:
 
 1. Identity Substrate
 2. Evidence and Provenance Substrate
@@ -36,6 +38,8 @@ The canonical components are:
 10. Correction and Dispute Surface
 11. Conformance and Calibration Harness
 12. Product and Agent Integrations
+
+Additional components may be added when they have distinct cross-system interfaces and failure modes.
 
 ## Consequences
 
@@ -53,21 +57,25 @@ The canonical components are:
 - requires adapter contracts between components
 - requires careful documentation discipline
 - requires cross-repo backlinks and implementation maps
-- may feel heavier than a single library until implementation matures
+- creates composition-specific failure modes that must be tested
 
 ## Rejected alternatives
 
 ### One monolithic memory system
 
-Rejected because identity, scoring, certification, governance, and runtime use have distinct failure modes and should not be collapsed.
+Rejected because identity, inference, scoring, certification, governance, runtime use, privacy, and correction have distinct failure modes.
 
 ### Completely separate concepts
 
-Rejected because the concepts all participate in governed memory state transition and need a shared doctrine.
+Rejected because the concepts participate in governed memory transition/admission and need shared doctrine.
 
 ### Product-first definition
 
-Rejected because COREFORGE, EvolveAI, CodeGenome, and future systems should conform to doctrine rather than each product redefining memory terms.
+Rejected because products should conform to doctrine rather than redefine memory terms locally.
+
+## Acceptance scope
+
+Accepted establishes component architecture as canonical doctrine. It does not freeze the component list forever or require one repository per component.
 
 ## Doctrine
 

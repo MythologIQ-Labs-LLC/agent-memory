@@ -8,51 +8,65 @@ Proposed
 
 Governed memory systems will make mistakes.
 
-A memory may be incorrectly promoted, wrongly corrected, over-pruned, recalled into unsafe context, or mutated under insufficient authority.
+A memory may be incorrectly promoted, wrongly corrected, over-pruned, recalled into unsafe context, mutated under insufficient authority, or committed from stale authorization.
 
 If the system cannot recover from these events, governance becomes performative. Performative governance is just theater with YAML.
 
-## Decision
+## Decision candidate
 
 Agent Memory must define recovery, rollback, and replay semantics.
 
-Implementations should be able to reconstruct memory state transitions, roll back unsafe mutations when policy allows, replay decision paths for audit, and preserve evidence for incident review.
+Implementations should be able to reconstruct consequential decision paths, restore or compensate for unsafe mutations when policy allows, demote incorrectly durable memory, revoke certification, and preserve incident evidence.
+
+Exact replay of stochastic cognition is not always required or possible.
+
+The required invariant is reconstruction of:
+
+```text
+what was observed/estimated
+which policy and authority applied
+what actions were permitted/prohibited
+what action was selected
+what state changed
+what recovery path exists
+```
 
 ## Consequences
 
 ### Positive
 
-- makes unsafe memory transitions recoverable
+- makes unsafe transitions recoverable
 - supports incident review and conformance debugging
-- improves trust in correction workflows
-- enables replay-based validation of PAMA and certification decisions
+- improves correction and certification trust
+- preserves accountability even when model outputs are stochastic
 
 ### Negative
 
-- requires ledger integrity
-- requires event ordering and replay semantics
-- may conflict with deletion requirements unless retention policy is explicit
+- requires ledger integrity and ordering
+- requires state/version binding
+- may conflict with privacy/deletion requirements unless retention is explicit
 
 ## Required recovery capabilities
 
-At minimum:
-
-- replay memory state transition history
+- reconstruct memory transition history
 - identify unsafe transition source
-- roll back unauthorized mutation
+- reject stale authorization at commit
+- roll back or compensate for unauthorized mutation
 - demote incorrectly crystallized memory
 - restore mistakenly pruned memory when retention allows
 - revoke certification
-- preserve incident evidence
+- preserve incident evidence within privacy constraints
 
-## Required follow-up
+## Required follow-up before acceptance
 
-Create and maintain:
+Create and audit:
 
 ```text
-docs/26-recovery-rollback-and-replay.md
+docs/31-recovery-rollback-and-replay.md
 ```
 
-## Doctrine
+Then add replay cases for stochastic estimators, policy drift, concurrent mutation, and deletion constraints.
 
-A governed memory system must be able to recover from its own mistakes.
+## Doctrine candidate
+
+A governed memory system must recover from its own mistakes without pretending stochastic cognition has to be byte-for-byte replayable.
