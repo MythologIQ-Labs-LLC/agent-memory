@@ -2,7 +2,7 @@
 
 This directory is the canonical documentation map for the Agent Memory reference architecture.
 
-The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all thirty-three numbered documents in numerical order is legal, but there are more humane options.
+The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all thirty-four numbered documents in numerical order is legal, but there are more humane options.
 
 ## Choose your path
 
@@ -57,7 +57,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 24 | [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) | Deterministic substrate, probabilistic epistemics, bounded authority, doctrine challenges |
 | 25 | [`25-governed-uncertainty-documentation-conformance-audit.md`](25-governed-uncertainty-documentation-conformance-audit.md) | GU-1 through GU-10 documentation-conformance rubric |
 
-## 26-32: Executable and operational contracts
+## 26-33: Executable and operational contracts
 
 | # | Document | Purpose |
 |---|---|---|
@@ -68,6 +68,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 30 | [`30-memory-observability-and-audit-events.md`](30-memory-observability-and-audit-events.md) | Structured memory events and reconstruction evidence |
 | 31 | [`31-recovery-rollback-and-replay.md`](31-recovery-rollback-and-replay.md) | Recovery, compensation, state/version binding, replay semantics |
 | 32 | [`32-memory-quality-metrics.md`](32-memory-quality-metrics.md) | Ongoing quality, safety, calibration, deletion, and outcome metrics |
+| 33 | [`33-pama-decision-table.md`](33-pama-decision-table.md) | Mutation type and risk class to minimum authority outcome, with modifiers |
 
 ## Architecture Decision Records
 
