@@ -8,61 +8,64 @@ Proposed
 
 Agent Memory may operate across users, agents, organizations, projects, repositories, tools, and products.
 
-Without explicit actor scope and consent boundaries, a memory may be valid in one context and unsafe in another.
+Without explicit actor scope, delegation, consent, and tenancy boundaries, a memory may be valid in one context and unsafe in another.
 
 Examples:
 
-- a user preference should not silently become an organization policy
-- a project decision should not leak into another tenant
-- an agent should not inherit authority from another agent by reading its memory
-- a shared memory should not bypass consent or role boundaries
+- a user preference must not silently become organization policy
+- a project decision must not leak into another tenant
+- an agent must not inherit authority merely by reading another agent's memory
+- shared memory must not bypass consent, role, or purpose boundaries
 
-## Decision
+## Decision candidate
 
-Agent Memory must define actor scope, consent, and tenancy boundaries as first-class governance concerns.
+Agent Memory must define actor scope, consent, delegation, and tenancy as first-class governance concerns.
 
-Memory units should carry enough scope metadata to determine who may store, mutate, recall, export, correct, or delete them.
+Memory units and decision receipts should carry enough metadata to determine who may store, mutate, recall, export, share, correct, or delete them.
+
+Relevance, trust, or inherited access must not create broader authority.
+
+## Required dimensions
+
+- actor identity
+- agent identity
+- user/principal identity
+- organization or tenant
+- project/repository scope
+- role or capability
+- consent state
+- purpose limitation
+- delegation scope
+- expiry/revocation state
+- re-sharing rights
 
 ## Consequences
 
 ### Positive
 
-- prevents cross-user leakage
+- prevents cross-user and cross-tenant leakage
 - supports multi-agent and organizational memory safely
-- improves PAMA risk classification
-- enables role-aware recall and mutation
-- clarifies product integration boundaries
+- improves PAMA and recall-admission decisions
+- clarifies shared-memory ownership
 
 ### Negative
 
-- requires actor and tenant metadata
-- complicates shared memory protocols
-- may reduce convenience for broad context assembly
+- requires richer scope metadata
+- complicates shared-memory protocols and inheritance
+- requires consent/revocation propagation
 
-## Required scope dimensions
+## Required follow-up before acceptance
 
-At minimum:
-
-- actor identity
-- agent identity
-- user identity
-- organization or tenant
-- project or repository
-- role or permission level
-- consent state
-- delegation scope
-- expiration or revocation status
-
-## Required follow-up
-
-Create and maintain:
+Create and audit:
 
 ```text
-docs/24-actor-scope-consent-and-tenancy.md
+docs/29-actor-scope-consent-and-tenancy.md
 ```
 
-## Doctrine
+Then add conformance cases for scope laundering, delegated-authority expiry, and cross-tenant retrieval.
+
+## Doctrine candidate
 
 Memory authority is scoped.
 
-A memory that is valid for one actor, tenant, or purpose is not automatically valid everywhere else.
+A memory that is useful or valid for one actor, tenant, or purpose is not automatically usable everywhere else.
