@@ -8,55 +8,57 @@ Proposed
 
 Retrieval is not memory.
 
-Agentic systems often treat retrieval as the whole memory problem: search something, stuff it into context, and hope the model behaves. This is convenient in the same way that removing the brakes makes a car simpler.
+A governed memory system needs recall planning that respects current state, certification, dispute status, sensitivity, source trust, tenancy, authority, and context boundaries.
 
-A governed memory system needs recall planning that respects state, certification, dispute status, sensitivity, source trust, authority, and context boundaries.
+Candidate generation may legitimately be probabilistic. Recall admission is a governed decision.
 
-## Decision
+## Decision candidate
 
-Agent Memory must include a governed recall planner.
+Agent Memory should include a governed recall planner or equivalent recall-admission component contract.
 
-The planner decides how to retrieve memory across exact lookup, graph traversal, evidence search, vector retrieval, policy recall, runtime context recall, and certification-aware recall.
+The planner should compose exact lookup, graph traversal, evidence search, semantic retrieval, temporal retrieval, procedural recall, and policy constraints without treating relevance as permission.
+
+## Required invariant
+
+```text
+candidate_generation may be probabilistic
+relevance != permission
+prohibited_memory never enters admitted context
+```
 
 ## Consequences
 
 ### Positive
 
-- prevents disputed memory from being used as canonical
-- avoids unsafe recall of sensitive memory
+- prevents disputed or wrong-scope memory from entering context as canonical
 - distinguishes exact lookup from similarity retrieval
-- supports recall explanations
+- supports recall explanations and composition checks
 - makes context assembly policy-aware
 
 ### Negative
 
-- adds another planning step before context assembly
-- requires recall metadata from memory units
-- may block convenient but unsafe retrieval
+- adds a governance step before context assembly
+- requires recall metadata and destination context
+- may reduce convenient but unsafe recall
 
-## Required recall paths
+## Required follow-up before acceptance
 
-At minimum:
-
-- exact identity lookup
-- graph traversal
-- evidence search
-- vector or similarity retrieval
-- policy recall
-- runtime context recall
-- certified memory recall
-- disputed memory recall with warning semantics
-
-## Required follow-up
-
-Create and maintain:
+Create and audit:
 
 ```text
-docs/20-governed-recall-planner.md
+docs/26-governed-recall-planner.md
 ```
 
-## Doctrine
+Then add conformance evidence for:
+
+- high-relevance wrong-tenant memory
+- disputed canonical memory
+- uncertain sensitivity
+- unsafe multi-memory composition
+- stochastic candidate ordering under fixed admission policy
+
+## Doctrine candidate
 
 Retrieval finds candidates.
 
-Governed recall decides what may enter context and under what warning, scope, or authority.
+Governed recall decides what may enter context.
