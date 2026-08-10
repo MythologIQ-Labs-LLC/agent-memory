@@ -35,3 +35,8 @@ jobs:
           CONTRIBUTING.md
           docs/README.md
           docs/adr/README.md
+
+      - name: Verify calibration report example is in sync with generator
+        run: |
+          python scripts/generate_calibration_report.py reports/examples/calibration-results.example.json -o /tmp/calibration-report.md
+          diff -u reports/examples/calibration-report.example.md /tmp/calibration-report.md
