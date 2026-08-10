@@ -6,31 +6,27 @@ Proposed
 
 ## Context
 
-The doctrine defines lifecycle states, PAMA outcomes, certification gates, conformance fixtures, and component handoffs. It does not yet define a common observability and audit event model.
+The doctrine defines lifecycle states, PAMA outcomes, certification gates, conformance fixtures, component handoffs, probabilistic estimators, and bounded action sets.
 
-Without shared audit events, implementations can claim governance while emitting incompatible or incomplete traces. That is how observability turns into decorative logging, nature's most boring confetti.
+Without a common audit-event model, implementations can claim governance while emitting incompatible or incomplete traces. Decorative logging remains logging's favorite hobby.
 
-## Decision
+## Decision candidate
 
-Agent Memory must define a memory observability and audit event model.
+Agent Memory must define a common memory observability and audit-event model.
 
-Every meaningful memory transition, handoff, recall, mutation, certification, dispute, correction, deletion, and policy decision should emit a structured event.
+Consequential memory transitions, handoffs, recalls, mutations, certification, disputes, corrections, deletion, policy decisions, and conformance runs should emit structured events appropriate to their risk and privacy constraints.
 
-## Consequences
+Events affecting governed uncertainty should preserve where material:
 
-### Positive
-
-- enables cross-component traceability
-- supports conformance testing
-- improves incident review
-- allows runtime memory behavior to be replayed or audited
-- gives FailSafe, Arbiter, Vault, and product surfaces a common event language
-
-### Negative
-
-- requires event schemas
-- increases implementation burden
-- requires careful handling of sensitive event content
+- estimator/model ID and version
+- calibration reference
+- uncertainty/disagreement summary
+- policy version
+- authority reference
+- permitted action set
+- selected action and selection mode
+- before/after state
+- rollback/recovery reference
 
 ## Required event classes
 
@@ -41,27 +37,30 @@ At minimum:
 - memory_scored
 - memory_state_changed
 - memory_recalled
+- recall_admission_decided
 - memory_mutation_requested
 - pama_decision
+- action_selected
 - certification_requested
 - certification_completed
 - dispute_opened
 - correction_applied
+- memory_archived
 - memory_pruned
 - memory_tombstoned
 - memory_deleted
 - component_handoff
 - conformance_fixture_run
 
-## Required follow-up
+## Required follow-up before acceptance
 
-Create and maintain:
+Create and audit:
 
 ```text
-docs/25-memory-observability-and-audit-events.md
+docs/30-memory-observability-and-audit-events.md
 schemas/memory-audit-event.schema.json
 ```
 
-## Doctrine
+## Doctrine candidate
 
-If a memory transition cannot be observed, it cannot be governed.
+If a consequential memory transition cannot be reconstructed from evidence, policy, authority, and state, its governance is incomplete.
