@@ -133,11 +133,11 @@ This slice adds 16 adversarial fixture definitions:
 15. `expired-delegation.json`
 16. `stochastic-replay-reconstruction.json`
 
-Together with the 8 original fixtures, the repository should contain 24 fixture definitions after merge.
+Together with the 8 original fixtures, the repository contains 24 fixture definitions on this branch.
 
 ## What fixture validation proves
 
-Structural validation can demonstrate:
+Structural validation demonstrates:
 
 - fixture JSON parses
 - required memory fields exist
@@ -164,27 +164,28 @@ These fixtures are executable **test definitions and structural evidence**, not 
 
 ## ADR implications
 
-If repository validation passes:
-
-- ADR-013 through ADR-019 will have their dedicated contracts and repository-level schema/fixture prerequisites substantially satisfied.
+- ADR-013 through ADR-019 now have their dedicated contracts and repository-level schema/fixture prerequisites substantially satisfied.
 - Their doctrine-acceptance status may be reconsidered in a separate incremental status PR.
 - ADR-020 must remain **Proposed** because its acceptance criteria still require at least one real implementation mapped and tested end-to-end from estimate -> governance -> permitted action set -> commit, including repeated stochastic behavioral evidence where applicable.
 
 ## Validation gate
 
-This slice must not merge until the repository workflow verifies:
+The exact PR #40 head `a485e7b5c9ac0ad3aae505c606020f0848adf9a7` was validated by GitHub Actions run `31437263174` before this audit-status update.
+
+Both substantive validation steps completed successfully:
 
 ```text
-python scripts/validate_fixtures.py fixtures
-python scripts/validate_schemas.py
+Validate fixture invariants: success
+Validate JSON Schemas and fixture memory units: success
 ```
 
-Validation result:
+Workflow:
 
 ```text
-status: pending GitHub Actions
-workflow: .github/workflows/validate-doctrine-evidence.yml
+.github/workflows/validate-doctrine-evidence.yml
 ```
+
+Because this audit update creates a new head, the workflow must pass again on the final PR head before merge.
 
 ## Merge criteria
 
@@ -197,6 +198,7 @@ workflow: .github/workflows/validate-doctrine-evidence.yml
 - [x] schema validator added
 - [x] 16 governed-uncertainty fixture definitions added
 - [x] repeatable GitHub Actions validation added
-- [ ] workflow passes on PR head
-- [ ] branch diff reviewed against main
+- [x] substantive validators passed on pre-audit-update PR head
+- [x] branch diff reviewed against main
+- [ ] workflow passes again on final PR head
 - [ ] merge by exact validated head SHA
