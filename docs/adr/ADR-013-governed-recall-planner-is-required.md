@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -12,11 +12,11 @@ A governed memory system needs recall planning that respects current state, cert
 
 Candidate generation may legitimately be probabilistic. Recall admission is a governed decision.
 
-## Decision candidate
+## Decision
 
-Agent Memory should include a governed recall planner or equivalent recall-admission component contract.
+Agent Memory includes a governed recall planner or equivalent recall-admission component contract.
 
-The planner should compose exact lookup, graph traversal, evidence search, semantic retrieval, temporal retrieval, procedural recall, and policy constraints without treating relevance as permission.
+The planner composes exact lookup, graph traversal, evidence search, semantic retrieval, temporal retrieval, procedural recall, and policy constraints without treating relevance as permission.
 
 ## Required invariant
 
@@ -41,23 +41,26 @@ prohibited_memory never enters admitted context
 - requires recall metadata and destination context
 - may reduce convenient but unsafe recall
 
-## Required follow-up before acceptance
+## Acceptance evidence
 
-Create and audit:
+Canonical contract:
 
-```text
-docs/26-governed-recall-planner.md
-```
+- [`../26-governed-recall-planner.md`](../26-governed-recall-planner.md)
 
-Then add conformance evidence for:
+Repository conformance fixtures include:
 
-- high-relevance wrong-tenant memory
-- disputed canonical memory
-- uncertain sensitivity
-- unsafe multi-memory composition
-- stochastic candidate ordering under fixed admission policy
+- `cross-tenant-relevance-trap.json`
+- `stochastic-retrieval-policy-envelope.json`
+- `unsafe-multi-memory-composition.json`
+- `uncertain-sensitivity-before-export.json`
 
-## Doctrine candidate
+These fixture definitions and schemas are validated by the repository's `Validate Doctrine Evidence` workflow.
+
+## Acceptance scope
+
+Accepted establishes governed recall as canonical doctrine. It does not claim any particular runtime implementation has passed the behavioral cases end to end.
+
+## Doctrine
 
 Retrieval finds candidates.
 

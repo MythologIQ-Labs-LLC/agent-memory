@@ -2,17 +2,17 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
-The architecture distinguishes pruning, archival, suppression, redaction, correction, crystallization, and privacy handling, but still needs one canonical retention/deletion contract tying them together.
+A governed memory system must distinguish pruning, archival, suppression, redaction, correction, tombstoning, cryptographic deletion, and full deletion propagation.
 
 A memory system that can remember but cannot explain deletion is not governed. It is a hoarder with APIs.
 
-## Decision candidate
+## Decision
 
-Agent Memory must define explicit retention, deletion, redaction, archival, and tombstone semantics.
+Agent Memory defines explicit retention, deletion, redaction, archival, and tombstone semantics.
 
 Deletion is not pruning. Predicted low utility is not deletion authority. Removing the raw record is not complete deletion if summaries, embeddings, graphs, caches, or consolidated memories still retain recoverable content.
 
@@ -45,17 +45,24 @@ Deletion is not pruning. Predicted low utility is not deletion authority. Removi
 - requires dependency traversal across derived memory
 - requires policy-specific verification
 
-## Required follow-up before acceptance
+## Acceptance evidence
 
-Create and audit:
+Canonical contract:
 
-```text
-docs/28-retention-deletion-and-tombstones.md
-```
+- [`../28-retention-deletion-and-tombstones.md`](../28-retention-deletion-and-tombstones.md)
 
-Then add deletion-residue and dependency-propagation conformance fixtures.
+Repository fixtures include:
 
-## Doctrine candidate
+- `deletion-residue.json`
+- `irreversible-deletion-under-uncertain-utility.json`
+
+The memory-unit schema now represents retention/tombstone state, and the conformance schema includes deletion-residue metrics.
+
+## Acceptance scope
+
+Accepted establishes the forgetting/deletion mode distinctions as canonical doctrine. It does not claim current runtimes can guarantee full deletion from every derived or external system.
+
+## Doctrine
 
 Forgetting is a governed family of operations.
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -17,13 +17,13 @@ Examples:
 - an agent must not inherit authority merely by reading another agent's memory
 - shared memory must not bypass consent, role, or purpose boundaries
 
-## Decision candidate
+## Decision
 
-Agent Memory must define actor scope, consent, delegation, and tenancy as first-class governance concerns.
+Agent Memory defines actor scope, consent, delegation, and tenancy as first-class governance concerns.
 
-Memory units and decision receipts should carry enough metadata to determine who may store, mutate, recall, export, share, correct, or delete them.
+Memory units and decision receipts carry enough metadata to determine who may store, mutate, recall, export, share, correct, or delete them.
 
-Relevance, trust, or inherited access must not create broader authority.
+Relevance, trust, or inherited access does not create broader authority.
 
 ## Required dimensions
 
@@ -54,17 +54,24 @@ Relevance, trust, or inherited access must not create broader authority.
 - complicates shared-memory protocols and inheritance
 - requires consent/revocation propagation
 
-## Required follow-up before acceptance
+## Acceptance evidence
 
-Create and audit:
+Canonical contract:
 
-```text
-docs/29-actor-scope-consent-and-tenancy.md
-```
+- [`../29-actor-scope-consent-and-tenancy.md`](../29-actor-scope-consent-and-tenancy.md)
 
-Then add conformance cases for scope laundering, delegated-authority expiry, and cross-tenant retrieval.
+Machine-readable and fixture evidence includes:
 
-## Doctrine candidate
+- scope fields in `schemas/memory-unit.schema.json`
+- `cross-tenant-relevance-trap.json`
+- `expired-delegation.json`
+- governed recall and sensitivity fixtures
+
+## Acceptance scope
+
+Accepted establishes scope/consent/delegation/tenancy as canonical doctrine. It does not claim every external sharing system can propagate consent or revocation perfectly.
+
+## Doctrine
 
 Memory authority is scoped.
 
