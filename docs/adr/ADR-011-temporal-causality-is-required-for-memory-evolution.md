@@ -2,59 +2,58 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
 Memory changes over time. A memory may become stale, superseded, corrected, disputed, or historically relevant.
 
-Time-based decay alone does not explain why a memory changed. It only says that time passed, which is technically true and architecturally lazy.
+Time-based decay alone does not explain why memory changed.
 
-Decision memory, code evolution, organizational memory, agent learning, and correction flows all need causal explanation.
+However, exact chronology and causal interpretation are not the same epistemic problem. Event order may be known deterministically while causality remains uncertain.
 
 ## Decision
 
-Agent Memory must include a temporal causality layer.
+Agent Memory must include explicit temporal and causal representation sufficient to distinguish history, current state, supersession, correction, and causal hypotheses.
 
-The layer will represent event order, causal links, supersession, correction history, and causal recall requirements.
+The architecture must preserve exact event/observation/valid times where known and label inferred causal relations with provenance and uncertainty.
+
+Canonical document:
+
+- [`../18-temporal-causality-layer.md`](../18-temporal-causality-layer.md)
 
 ## Consequences
 
 ### Positive
 
-- distinguishes stale from superseded
-- supports causal recall
+- distinguishes stale from superseded and false
+- supports temporal and causal recall
 - preserves decision and correction history
-- improves code-evolution memory
-- helps explain why memory changed
+- avoids treating sequence as proof of causation
+- supports prospective and procedural drift handling
 
 ### Negative
 
-- requires event and causal-link modeling
-- increases complexity of memory state transitions
-- requires careful treatment of historical claims
+- requires multiple temporal fields and causal-link modeling
+- increases complexity of historical queries and lifecycle transitions
 
 ## Required distinctions
 
 The architecture must distinguish:
 
-- stale memory
-- superseded memory
-- corrected memory
-- disputed memory
-- historically relevant memory
-- currently canonical memory
+- event time from observation/record time
+- stale from false
+- superseded from corrected
+- historical from current truth
+- observed dependency from inferred causality
+- prospective obligation from action execution
 
-## Required follow-up
+## Acceptance scope
 
-Create and maintain:
-
-```text
-docs/18-temporal-causality-layer.md
-```
+Accepted establishes temporal evolution and uncertainty-aware causal representation as canonical doctrine. It does not claim a universal causal-inference algorithm.
 
 ## Doctrine
 
-Memory does not only decay.
+Time can be exact while causality remains uncertain.
 
-Memory evolves through causes, consequences, corrections, and supersession.
+Memory evolves through events, evidence, correction, supersession, and sometimes causal relationships whose strength must remain explicit.

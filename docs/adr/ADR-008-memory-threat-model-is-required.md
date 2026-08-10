@@ -2,64 +2,45 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
-The doctrine already defines trap classes such as access-spam and confidently-wrong memory. Those are necessary, but not sufficient.
+Trap classes such as access-spam and confidently-wrong memory are necessary but insufficient.
 
-A governed memory system also faces broader threats:
+Persistent memory creates additional threats including poisoning, sleeper behavior, authority laundering, recursive self-citation, provenance stripping, scope leakage, stale authorization, deletion residue, unsafe composition, estimator manipulation, and policy bypass.
 
-- memory poisoning
-- recursive self-citation
-- source spoofing
-- provenance stripping
-- unauthorized mutation
-- stale policy retention
-- cross-user leakage
-- overbroad context assembly
-- malicious correction
-- poisoned code graph evidence
-
-Without a threat model, conformance becomes too narrow and the system can appear safe while failing under adversarial memory pressure.
+Without a threat model, conformance can appear strong while ignoring the seams where persistent state becomes a control channel.
 
 ## Decision
 
-Agent Memory must include a formal memory threat model.
+Agent Memory must include and maintain a formal memory threat model.
 
-The threat model will define threat classes, affected components, detection strategies, mitigations, and required conformance fixtures.
+The threat model defines threat classes, trust boundaries, affected components, mitigations, required invariants, and adversarial conformance fixtures.
+
+Canonical document:
+
+- [`../15-memory-threat-model.md`](../15-memory-threat-model.md)
 
 ## Consequences
 
 ### Positive
 
-- expands safety beyond current trap classes
-- gives PAMA and certification concrete adversarial cases
-- improves conformance fixture design
-- clarifies memory-specific security risks
+- expands safety beyond simple trap classes
+- gives PAMA, recall governance, privacy, and certification concrete adversarial cases
+- improves conformance design
+- makes memory-specific security boundaries explicit
 
 ### Negative
 
-- adds additional documentation and fixture burden
-- may require implementation repos to expose more audit and provenance data
+- increases documentation and fixture burden
+- requires implementations to expose provenance, scope, authority, and audit data
+- requires ongoing updates as attacks evolve
 
-## Required follow-up
+## Acceptance scope
 
-Create and maintain:
-
-```text
-docs/15-memory-threat-model.md
-```
-
-The threat model should link to:
-
-- PAMA governance
-- certification and crystallization
-- source trust and reputation
-- governed recall
-- privacy and sensitivity classification
-- conformance fixtures
+Accepted means a formal memory threat model is canonical architecture doctrine and the foundational threat-model document now exists. It does not claim every required adversarial fixture or runtime mitigation is implemented.
 
 ## Doctrine
 
-A memory system is not trustworthy unless it defines how memory can be attacked.
+A memory system is not trustworthy unless it defines how persistent state can be attacked, laundered, leaked, corrupted, or incompletely forgotten.

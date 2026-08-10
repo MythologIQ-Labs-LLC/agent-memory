@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -12,7 +12,7 @@ This makes it a domain reality graph for software artifacts, not a general memor
 
 ## Decision
 
-CodeGenome is the canonical code reality substrate.
+CodeGenome is the canonical code-reality substrate within the current Agent Memory architecture mapping.
 
 It should provide evidence, graph relations, provenance, confidence, and impact traversal for code artifacts consumed by agentic memory systems.
 
@@ -33,11 +33,17 @@ It should provide evidence, graph relations, provenance, confidence, and impact 
 
 ```text
 CodeGenome confidence supports evidence.
-It does not automatically grant memory permanence.
+It does not automatically grant memory permanence, certification, or authority.
 ```
+
+Inferred graph relations should preserve their estimator/method provenance and uncertainty when material to downstream decisions.
+
+## Acceptance scope
+
+Accepted means this is the canonical architectural role assigned to CodeGenome. It does not claim every CodeGenome capability is implemented or required by every Agent Memory implementation.
 
 ## Doctrine
 
-CodeGenome tells the agent what is structurally true about code.
+CodeGenome provides a code-reality substrate.
 
-The memory lifecycle decides how that knowledge persists and changes over time.
+The memory lifecycle and governance layers decide how its observations persist, are disputed, and affect agents over time.

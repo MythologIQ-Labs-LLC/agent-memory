@@ -6,59 +6,68 @@ Proposed
 
 ## Context
 
-The doctrine defines conformance fixtures and calibration reporting, but it does not yet define ongoing memory quality metrics.
+Conformance fixtures test defined cases, but implementations can still degrade over time through stale recall, poor correction, over-retention, under-retention, unsafe context assembly, calibration drift, or authority-boundary failures.
 
-An implementation may pass fixtures and still degrade over time through stale recall, poor correction handling, over-retention, under-retention, unsafe context assembly, or excessive false permanence.
+Ongoing metrics are required to distinguish a memory system that passed yesterday's fixture from one that remains healthy today.
 
-Because apparently even memory systems need performance reviews. Horrifying, but useful.
+## Decision candidate
 
-## Decision
+Agent Memory must define ongoing memory-quality metrics across retention, forgetting, retrieval, uncertainty, correction, governance, security, privacy, and agent outcomes.
 
-Agent Memory must define ongoing memory quality metrics.
-
-These metrics should evaluate how well an implementation remembers, forgets, corrects, recalls, protects, and explains memory over time.
-
-## Consequences
-
-### Positive
-
-- supports continuous evaluation beyond fixture snapshots
-- detects degradation over time
-- gives implementation repos comparable quality targets
-- helps tune saturation, decay, recall, and certification policies
-
-### Negative
-
-- requires telemetry and reporting
-- may require workload-specific benchmarks
-- quality metrics can be gamed if not tied to trap classes and audit evidence
+Metrics should be segmented by memory class and consequence class where aggregate numbers would hide risk.
 
 ## Required metric families
 
 At minimum:
 
 - false permanence rate
-- false evaporation rate
-- unsafe recall rate
+- valuable-memory loss / false evaporation
+- stale recall rate
 - disputed canonical use rate
-- correction latency
+- correction latency and propagation
 - provenance retention rate
-- source trust degradation rate
-- overbroad context assembly rate
-- successful rollback rate
+- source-trust calibration/degradation
+- unsafe recall and overbroad context rate
+- cross-scope leakage rate
+- deletion completeness/residue
+- successful rollback or recovery rate
 - certification failure catch rate
-- stale memory recall rate
+- boundary instability rate
+- abstention rate and quality
+- estimator disagreement rate
+- out-of-calibration-scope rate
+- blocked-action escape rate
+- stochastic action-set violation rate
+- memory-guided task success
+- repeated-failure avoidance
 
-## Required follow-up
+## Consequences
 
-Create and maintain:
+### Positive
+
+- supports continuous evaluation beyond fixture snapshots
+- detects drift and degradation
+- gives implementations comparable outcome families
+- makes optimization tradeoffs visible
+
+### Negative
+
+- requires telemetry, workloads, and reporting
+- metrics can be gamed if detached from adversarial fixtures and evidence
+- some metrics require domain-specific interpretation
+
+## Required follow-up before acceptance
+
+Create and audit:
 
 ```text
-docs/27-memory-quality-metrics.md
+docs/32-memory-quality-metrics.md
 ```
 
-## Doctrine
+Then map the metrics into conformance-report schema and implementation evidence.
 
-Conformance proves a system can behave correctly under defined tests.
+## Doctrine candidate
 
-Quality metrics show whether it keeps behaving correctly over time.
+Conformance shows a system can satisfy defined invariants under test.
+
+Quality metrics show whether it continues to do so under real memory pressure and drift.
