@@ -94,4 +94,21 @@ The repo's linking convention is **positional doc numbers**, and they are alread
 
 ---
 
+## Milestone 0 Delta — Post-overhaul re-baseline (2026-08-10, second session)
+
+The Codex overhaul landed as three commits on `main` (`edc8df7` evidence slice 7B, `3480bc3` ADR slice 7C, `e11d388` platinum README). **No files were renamed or renumbered** — the old→new path map is the identity map; all file:line citations in this brief for docs 00–29 remain valid. The overhaul *extended* the tree:
+
+- **Docs 30/31/32 now exist** (observability/audit events, recovery/rollback/replay, quality metrics) plus `docs/README.md` navigation and `CONTRIBUTING.md`.
+- **ADRs 013–019 are now Accepted** (slice 7C, evidence-backed). Only ADR-020 remains Proposed, still correctly gated.
+- **Schemas reconciled and extended**: `memory-unit.schema.json` grew from 137 to ~330 lines; new `memory-audit-event.schema.json` and `decision-receipt.schema.json`; conformance-report gained estimator/policy versioning and the full metric family.
+- **16 new fixtures** (24 total) covering the governed-uncertainty backlog (threshold jitter, estimator disagreement, cross-tenant relevance trap, deletion residue, sleeper poisoning, etc.).
+- **CI exists**: `.github/workflows/validate-doctrine-evidence.yml` runs fixture, schema, and link validation. The validator-duplicates-schema braid is resolved by `validate_schemas.py` (jsonschema-driven); `validate_markdown_links.py` is the link guard this plan's Open Question 1 asked for — positional numbering was kept, guarded by link checking.
+- **README fully rewritten** (stale-map drift resolved).
+
+**Verification at re-baseline**: all three validators pass locally on the merged tree (24 fixtures, 4→5 schemas, 4 Markdown files).
+
+**Effect on the plan**: Milestone 1's CI item (#3) and Milestone 2's docs/schemas/fixtures items (#23, #24, #25) were delivered by the overhaul. Group A grows from 9 to 13 verify-then-close candidates. Remaining scope: Milestone 1 issue hygiene (closures + reference repair), Milestone 2 residual (#4 calibration generator — delivered this session), Milestone 3 doctrine wave (#6, #7, #18, #26, #27, #28, #30), cross-repo (#5, #8), gated futures (#19, #29).
+
+---
+
 _Research complete. Findings are advisory — implementation decisions remain with the Governor._
