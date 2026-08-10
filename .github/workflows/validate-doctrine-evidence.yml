@@ -27,3 +27,11 @@ jobs:
 
       - name: Validate JSON Schemas and fixture memory units
         run: python scripts/validate_schemas.py
+
+      - name: Validate top-level documentation links
+        run: >-
+          python scripts/validate_markdown_links.py
+          README.md
+          CONTRIBUTING.md
+          docs/README.md
+          docs/adr/README.md
