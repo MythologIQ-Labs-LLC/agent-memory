@@ -130,103 +130,160 @@ Baseline was measured against `main` at `2bf1f6b` before remediation.
 
 Strengths:
 
-- deterministic identity is already explicit
-- saturation, certification, and authority are separated
-- mutation capability is explicitly separated from mutation authority
+- deterministic identity was already explicit
+- saturation, certification, and authority were separated
+- mutation capability was explicitly separated from mutation authority
 
-Gaps:
+Baseline gaps:
 
 - no named probabilistic epistemic responsibility
 - no rule for carrying estimator uncertainty into governance
 - no bounded-stochastic-action rule
 - no explicit distinction between estimator output and policy outcome
 
-Remediation target:
+Remediation applied:
 
-- classify layers by control character
-- add an explicit epistemic/governance boundary
-- require estimator provenance where probabilistic outputs affect memory
-- state that stochastic choice may occur only after policy filtering
+- classified architecture responsibilities by control character
+- added explicit probabilistic-estimation versus governance boundary
+- required estimator provenance where estimates materially affect memory
+- added recall-time governance after probabilistic candidate generation
+- added bounded stochastic selection only among already-permitted actions
+- added anti-collapse rules for inference versus permission and determinism versus correctness
 
 ### `02-lifecycle-state-machine.md`
 
 Strengths:
 
-- state machine is naturally deterministic and auditable
-- transition metadata already records authority, evidence, confidence, saturation, and ledger references
-- promotion and crystallization are distinct transitions
+- state machine was naturally deterministic and auditable
+- transition metadata already recorded authority, evidence, confidence, saturation, and ledger references
+- promotion and crystallization were distinct transitions
 
-Gaps:
+Baseline gaps:
 
-- threshold outputs can appear to directly drive transitions without an explicit proposal/commit split
+- threshold outputs could appear to directly drive transitions without an explicit proposal/commit split
 - no behavior for uncertain or conflicting estimators
 - no hysteresis or threshold-jitter treatment
 - no estimator/method version in transition evidence
 
-Remediation target:
+Remediation applied:
 
-- separate transition proposal from transition commit
-- make estimator outputs inputs to governance, not state mutation instructions
-- define escalation/abstention for uncertainty near consequential boundaries
-- record estimator and policy versions
+- separated transition proposal from transition commit
+- made estimator outputs inputs to governance rather than state mutation instructions
+- added estimator and policy versions to transition metadata
+- added uncertainty summary to consequential transition receipts
+- added abstention, review, and evidence-gathering paths near uncertain boundaries
+- added hysteresis guidance and explicit threshold-jitter and estimator-disagreement traps
 
 ### `03-scoring-and-decay.md`
 
 Strengths:
 
 - strongest pre-existing separation of confidence, saturation, authority, certification, and risk
-- explicitly states that no score grants permanence
-- already requires calibration and trap classes
+- explicitly stated that no score grants permanence
+- already required calibration and trap classes
 
-Gaps:
+Baseline gaps:
 
-- calibration is centered on threshold selection rather than uncertainty quality
+- calibration centered on threshold selection rather than uncertainty quality
 - no confidence intervals or calibration-error concept
 - no estimator disagreement, drift, abstention, or hysteresis handling
-- point estimates may appear more precise than their evidence warrants
+- point estimates could appear more precise than their evidence warranted
 
-Remediation target:
+Remediation applied:
 
-- define score uncertainty as first-class metadata
-- add calibration error, drift, and decision-boundary stability checks
-- require abstention/escalation zones where false irreversible transitions are costly
+- defined score uncertainty as first-class metadata
+- added estimator, calibration, scope, version, and out-of-distribution metadata
+- added calibration error, decision-boundary stability, abstention, hysteresis, disagreement, and drift treatment
+- added threshold-jitter, estimator-disagreement, and distribution-shift trap classes
+- separated estimator-version, calibration-version, and policy-version changes
+- retained the hard rule that scores never grant permanence or authority
 
 ### `04-governance-and-pama.md`
 
 Strengths:
 
-- authority is already separate from confidence and saturation
-- risk and reversibility are already first-class PAMA inputs
-- finite authority outcomes already exist
-- enforcement is located at mutation boundaries
+- authority was already separate from confidence and saturation
+- risk and reversibility were already first-class PAMA inputs
+- finite authority outcomes already existed
+- enforcement was located at mutation boundaries
 
-Gaps:
+Baseline gaps:
 
-- PAMA inputs do not explicitly include uncertainty quality, estimator provenance, or estimator disagreement
+- PAMA inputs did not explicitly include uncertainty quality, estimator provenance, or estimator disagreement
 - no rule that PAMA outcome mapping must be deterministic or formally bounded for a fixed input/policy snapshot
 - no explicit allowance for stochastic choice among already-permitted actions
-- no fail-safe behavior when policy or estimator state cannot be reconstructed
+- no fail-safe behavior when policy or estimator state could not be reconstructed
 
-Remediation target:
+Remediation applied:
 
-- add governed-uncertainty inputs and decision receipt fields
-- define deterministic/formally bounded authority resolution
-- permit bounded stochastic choice only after authorization
-- fail closed or escalate when authority cannot be reconstructed for high-consequence actions
+- added governed-uncertainty inputs and decision receipt fields
+- defined deterministic/formally bounded authority resolution for fixed committed inputs and policy
+- added explicit consequence proportionality by reversibility, persistence, sensitivity, scope, authority, blast radius, and evidence destruction
+- permitted stochastic selection only after governance creates a permitted action set
+- added epistemic, policy, authority, and scope uncertainty handling
+- added fail-closed/escalation behavior for missing high-consequence governance state
+- added replay requirements and adversarial cases
 
-## Slice 1 completion criteria
+## Post-remediation assessment
 
-Slice 1 may be merged when:
+Post-remediation scoring measures the documents on branch `agent/governed-uncertainty-audit-01` before merge.
 
-- [ ] all four documents are remediated against their stated targets
-- [ ] no existing invariant is weakened
-- [ ] no document grants authority directly from a probabilistic estimate
-- [ ] changed files remain documentation-only
-- [ ] post-remediation scores are recorded here
-- [ ] branch diff is reviewed against `main`
-- [ ] merge uses the verified head SHA
+`N/A` means the criterion is not materially owned by that document and is excluded from the percentage denominator.
 
-## Remaining audit queue
+| Document | GU-1 | GU-2 | GU-3 | GU-4 | GU-5 | GU-6 | GU-7 | GU-8 | GU-9 | GU-10 | Coverage |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| `01-layer-model.md` | 4 | 4 | 4 | 3 | 4 | 3 | 4 | 4 | N/A | N/A | 94% |
+| `02-lifecycle-state-machine.md` | 4 | 3 | 4 | 4 | 4 | 3 | 4 | 4 | 4 | 4 | 95% |
+| `03-scoring-and-decay.md` | N/A | 4 | 4 | 4 | 4 | 4 | 3 | N/A | 4 | 4 | 97% |
+| `04-governance-and-pama.md` | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 4 | 100% |
+
+## Score interpretation
+
+The increase is meaningful because the documents did not merely gain vocabulary:
+
+- `01` now locates deterministic, probabilistic, hybrid, and governed responsibilities.
+- `02` now distinguishes probabilistic transition proposals from governed transition commits.
+- `03` now models uncertainty around scores rather than treating calibrated point estimates as complete.
+- `04` now defines how PAMA consumes uncertain signals without allowing those signals to become authority.
+
+Remaining non-maximal scores are deliberate rather than forgotten:
+
+- `01` is an architectural placement document, not a calibration or adversarial-test specification.
+- `02` permits probabilistic proposals but leaves estimator-specific design to scoring/retrieval components.
+- `03` records estimator/audit metadata but does not own the complete mutation receipt, which belongs to PAMA and lifecycle governance.
+
+## Slice 1 verification
+
+Verified before PR creation:
+
+- [x] all four documents remediated against their stated targets
+- [x] no existing invariant weakened
+- [x] no document grants authority directly from a probabilistic estimate
+- [x] changed files are documentation-only
+- [x] post-remediation scores recorded
+- [x] branch diff reviewed against `main`
+- [x] branch is based on merged foundation commit `2bf1f6b`
+
+Branch diff at verification contained only:
+
+```text
+docs/01-layer-model.md
+docs/02-lifecycle-state-machine.md
+docs/03-scoring-and-decay.md
+docs/04-governance-and-pama.md
+docs/25-governed-uncertainty-documentation-conformance-audit.md
+```
+
+Merge state:
+
+```text
+status: ready_for_incremental_pr
+merge_requirement: use verified PR head SHA
+```
+
+---
+
+# Remaining audit queue
 
 Next slices should evaluate, in order:
 
