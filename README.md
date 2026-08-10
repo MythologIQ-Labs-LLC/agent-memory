@@ -1,949 +1,677 @@
+<div align="center">
+
 # Agent Memory
 
-### An interdisciplinary reference architecture for how intelligent systems encode, retain, consolidate, retrieve, revise, forget, and inherit information.
+### A reference architecture for governed memory in autonomous and agentic systems
 
-Agent Memory is a doctrine, architecture, research map, and conformance framework for **governed agentic memory systems**.
+From working memory to inherited state. From biological theory to executable conformance. From probabilistic inference to bounded authority.
 
-It connects ideas from biological and cognitive memory with practical agent engineering while keeping the boundary between inspiration and implementation explicit. It covers short-term and long-term memory, episodic and semantic memory, procedural and prospective memory, consolidation, forgetting, inherited and collective memory, provenance, trust, mutation authority, privacy, security, evaluation, and the uncomfortable fact that remembering everything is usually a design failure wearing a storage bill.
+[![Validate Doctrine Evidence](https://github.com/Knapp-Kevin/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/Knapp-Kevin/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
+![Architecture](https://img.shields.io/badge/Architecture-Reference%20Architecture-334155)
+![ADRs](https://img.shields.io/badge/ADRs-19%20Accepted%20%7C%201%20Proposed-2563eb)
+![Conformance](https://img.shields.io/badge/Conformance-Level%206%20Spec-7c3aed)
+![Fixtures](https://img.shields.io/badge/Fixtures-24%20Validated-0f766e)
+![Research](https://img.shields.io/badge/Research-Open%20Evidence-b45309)
 
-> **Core thesis:** Agentic memory is not retrieval. It is governed state transition over retained information that can alter future agent behavior.
+**[Documentation](docs/README.md)** · **[Architecture decisions](docs/adr/README.md)** · **[Research map](docs/23-research-bibliography.md)** · **[Conformance](docs/06-conformance-test-plan.md)** · **[Contributing](CONTRIBUTING.md)**
+
+</div>
+
+---
+
+> [!IMPORTANT]
+> **Current maturity:** the doctrine, schemas, and 24 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 remains Proposed** because governed uncertainty still requires real runtime evidence end to end. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
+
+## The thesis
+
+**Agentic memory is retained state that can alter an agent's future interpretation, reasoning, planning, tool use, action, or adaptation across a meaningful persistence boundary.**
+
+That makes memory much larger than retrieval.
+
+A serious memory system must decide:
+
+- what deserves to be encoded
+- what should remain ephemeral
+- what becomes durable
+- what should be consolidated or generalized
+- what must remain exact and historical
+- what can be trusted, disputed, corrected, shared, or inherited
+- what should be forgotten
+- what uncertainty must remain visible
+- what an agent is actually authorized to change
+
+The core governed-uncertainty model is deliberately simple:
+
+> **Probabilistic epistemics. Governed consequences.**
+>
+> **Uncertainty may propose. Authority constrains.**
+
+The architecture does **not** require all memory behavior to be deterministic. It requires uncertain inference to remain separate from the authority to create durable consequences.
+
+---
+
+## Start here
+
+You do not need to read the repository front to back. Human working memory has suffered enough.
+
+| If you are... | Start with | Then read |
+|---|---|---|
+| **Researching memory theory** | [Memory foundations across scales](docs/20-memory-foundations-across-scales.md) | [Forgetting & consolidation](docs/21-forgetting-consolidation-and-memory-metabolism.md), [Research bibliography](docs/23-research-bibliography.md), [Governed uncertainty](docs/24-determinism-probability-and-governed-uncertainty.md) |
+| **Designing an agent architecture** | [Layer model](docs/01-layer-model.md) | [Component architecture](docs/11-component-architecture.md), [Composition boundaries](docs/13-system-composition-boundaries.md), [Agentic memory theory](docs/22-agentic-memory-theory-and-development.md) |
+| **Implementing a memory system** | [Agentic memory theory](docs/22-agentic-memory-theory-and-development.md) | [Lifecycle](docs/02-lifecycle-state-machine.md), [PAMA](docs/04-governance-and-pama.md), [Recall planner](docs/26-governed-recall-planner.md), [Schemas](schemas/) |
+| **Reviewing security or privacy** | [Memory threat model](docs/15-memory-threat-model.md) | [Source trust](docs/16-source-trust-and-reputation.md), [Privacy](docs/19-privacy-and-sensitivity-classifier.md), [Retention & deletion](docs/28-retention-deletion-and-tombstones.md), [Scope & tenancy](docs/29-actor-scope-consent-and-tenancy.md) |
+| **Evaluating conformance** | [Conformance test plan](docs/06-conformance-test-plan.md) | [Calibration](docs/09-calibration-protocol.md), [Audit rubric](docs/25-governed-uncertainty-documentation-conformance-audit.md), [Fixtures](fixtures/) |
+| **Reviewing architecture decisions** | [ADR index](docs/adr/README.md) | ADR-001 through ADR-020 |
+| **Contributing evidence or challenges** | [CONTRIBUTING.md](CONTRIBUTING.md) | [Source material index](docs/08-source-material-index.md), [Research bibliography](docs/23-research-bibliography.md) |
+
+The complete document map is in **[docs/README.md](docs/README.md)**.
 
 ---
 
 ## Why this repository exists
 
-Most "AI memory" systems begin with one question:
+Most AI-memory implementations begin with:
 
 > How do we retrieve old context?
 
-That is necessary, but much too small.
+That is useful. It is also much too small.
 
-A serious memory architecture must also ask:
+Retrieval does not answer:
 
-- What deserves to be encoded at all?
-- What should remain only in working memory?
-- What crosses a session boundary?
-- What becomes durable?
-- What should be generalized from repeated experience?
-- What should remain an exact episodic record?
-- How does a procedure differ from a fact?
-- How does an agent remember a future obligation?
-- When does old information become stale rather than false?
-- What happens when two memories conflict?
-- What can the agent revise by itself?
-- What requires verification or human authority?
-- What should be forgotten?
-- How does deletion propagate into summaries, graphs, indexes, and caches?
-- What knowledge may be inherited by a successor agent?
-- How is inherited knowledge distinguished from direct experience?
-- How do we know memory improves action rather than merely recall scores?
+- whether the memory should have been stored
+- whether it is current or merely historically true
+- whether it came from observation, inference, inheritance, or synthesis
+- whether the source is trustworthy within this scope
+- whether the memory belongs to this user or tenant
+- whether it conflicts with stronger evidence
+- whether it should be generalized into semantic or procedural memory
+- whether a model is confident but wrong
+- whether the memory is safe to place into the current context
+- whether a deletion request propagated into derived state
+- whether a learned policy is proposing an action or granting itself authority
 
-This repository exists to make those questions architectural rather than accidental.
+**Agent Memory exists to make those questions architectural rather than accidental.**
 
 ---
 
-## What Agent Memory is
+## The system at a glance
 
-Agent Memory is a **reference architecture**, not a single memory library.
-
-It consolidates memory-system logic distributed across UOR, EvolveAI, CodeGenome, COREFORGE Vault / Neurospace, PAMA, FailSafe / Arbiter, Bicameral, and related governance work into shared doctrine and testable contracts.
-
-It now also provides an interdisciplinary framework spanning:
-
-```text
-biological memory
-      |
-cognitive memory
-      |
-individual agent memory
-      |
-shared / institutional memory
-      |
-inherited / evolutionary-scale memory
+```mermaid
+flowchart LR
+    A[Experience / Query / Event] --> B[Evidence + Provenance]
+    B --> C[Estimate / Proposal]
+    C --> D{Governance Envelope}
+    D -->|Block / Review / Verify| E[No Consequential Commit]
+    D -->|Permit| F[Permitted Action Set]
+    F --> G[Deterministic or Stochastic Selection]
+    G --> H[Committed Consequence]
+    H --> I[Receipt + Audit Evidence]
+    H --> J[Retained Memory State]
+    J --> K[Governed Recall]
+    K --> L[Active Agent Context]
+    L --> A
 ```
 
-The goal is not to pretend those systems are equivalent.
+The critical invariant is:
 
-The goal is to identify reusable **functions, constraints, tradeoffs, and failure modes** without importing biological metaphors as fake implementation facts.
+```text
+selected_action ∈ permitted_action_set
+```
+
+And the equally important one:
+
+```text
+estimator_output != authority
+```
+
+A model may estimate relevance, trust, contradiction, sensitivity, staleness, utility, or risk. Those estimates can shape the decision. They do not create permission by themselves.
+
+See **[Determinism, Probability, and Governed Uncertainty](docs/24-determinism-probability-and-governed-uncertainty.md)**.
+
+---
+
+## Where determinism belongs, and where it does not
+
+The useful boundary is not "deterministic memory versus probabilistic memory."
+
+| Responsibility | Typical control character | Why |
+|---|---|---|
+| Exact identity and references | **Deterministic** | Ambiguous identity corrupts every later decision |
+| Schema and transition validity | **Deterministic** | Invalid states should not depend on model confidence |
+| Provenance and policy version | **Deterministic records** | Consequence must be reconstructable |
+| Semantic relevance | **Probabilistic / learned / heuristic** | Relevance is contextual and uncertain |
+| Source trust | **Probabilistic / evidence-driven** | Reliability is scoped and evolves over time |
+| Contradiction and causal interpretation | **Probabilistic / hybrid** | Evidence may support multiple hypotheses |
+| Sensitivity classification | **Deterministic when exact; probabilistic when inferred** | Uncertainty must remain visible |
+| Lifecycle candidacy | **Probabilistic / calibrated / heuristic** | Persistence pressure is not truth |
+| Mutation authority | **Deterministic or formally bounded** | Permission must not emerge from confidence |
+| Recall admission | **Governed** | Relevance does not override tenant, sensitivity, or policy |
+| Choice among permitted actions | **May be stochastic** | Exploration is acceptable inside the safe envelope |
+| Durable state transition | **Governed and auditable** | Consequence must bind to policy, state, and authority |
+
+A deterministic rule can be perfectly reproducible and perfectly wrong.
+
+A probabilistic component can be useful and safe when it operates inside an explicit authority envelope.
 
 ---
 
 ## The seven functions of memory
 
-A mature memory system must do more than store and search.
+A mature memory architecture must do more than store and search.
 
 ```text
-             ┌──────────┐
-             │  ENCODE  │
-             └────┬─────┘
-                  │
-                  v
-             ┌──────────┐
-             │  RETAIN  │
-             └────┬─────┘
-                  │
-                  v
-          ┌───────────────┐
-          │  CONSOLIDATE  │
-          └───────┬───────┘
-                  │
-                  v
-            ┌────────────┐
-            │  RETRIEVE  │
-            └─────┬──────┘
-                  │
-          ┌───────┴────────┐
-          v                v
-     ┌─────────┐      ┌─────────┐
-     │ REVISE  │      │ FORGET  │
-     └────┬────┘      └────┬────┘
-          │                │
-          └───────┬────────┘
-                  v
-             ┌─────────┐
-             │ INHERIT │
-             └─────────┘
+ENCODE -> RETAIN -> CONSOLIDATE -> RETRIEVE -> REVISE -> FORGET -> INHERIT
 ```
 
-### Encode
+| Function | Architectural question |
+|---|---|
+| **Encode** | What experience becomes a memory candidate? |
+| **Retain** | What crosses the relevant persistence boundary? |
+| **Consolidate** | What can be generalized, summarized, proceduralized, or modeled? |
+| **Retrieve** | What retained state is relevant now? |
+| **Revise** | How do correction, contradiction, supersession, and disagreement change memory? |
+| **Forget** | What should decay, suppress, archive, redact, tombstone, or delete? |
+| **Inherit** | What state may pass to a successor agent, team, or generation? |
 
-Turn observations, actions, outcomes, decisions, corrections, and evidence into candidate memory.
-
-### Retain
-
-Preserve selected state across the boundary where it becomes useful.
-
-### Consolidate
-
-Transform experience into more durable or reusable representations such as facts, summaries, procedures, models, or abstractions.
-
-### Retrieve
-
-Select retained information appropriate to the current task, time, scope, and authority boundary.
-
-### Revise
-
-Correct, refine, supersede, dispute, reconcile, or split memory when reality changes or new evidence arrives.
-
-### Forget
-
-Decay, suppress, archive, delete, abstract, or otherwise reduce memory influence according to policy.
-
-### Inherit
-
-Allow a new agent, process, team, or generation to begin with retained information it did not personally experience.
+See **[Agentic Memory Theory and Development](docs/22-agentic-memory-theory-and-development.md)**.
 
 ---
 
 ## Memory across scales
 
-Memory appears in many substrates, and the word means different things in each.
+This repository deliberately studies memory beyond software architecture.
 
-| Scale | What persists | Example |
+| Scale | What persists | Useful questions for agent design |
 |---|---|---|
-| Neural / cognitive | activity, plasticity, distributed representations | working, episodic, semantic, procedural memory |
-| Cellular | altered future response | transcriptional or epigenetic memory |
-| Immune | altered response to later exposure | adaptive and trained immune memory |
-| Individual agent | retained state across reasoning or session boundaries | preferences, episodes, procedures, corrections |
-| Multi-agent / institutional | shared state beyond one actor | policies, runbooks, repositories, ledgers |
-| Inherited / evolutionary | information survives the originating individual/process | genes, inherited priors, model weights, seed doctrine |
+| **Neural / cognitive** | active state, plasticity, distributed representations | working memory, episodic/semantic distinction, uncertainty, interference |
+| **Cellular** | altered future response | persistence without autobiographical record |
+| **Immune** | changed response to later exposure | adaptation, specificity, inherited response state |
+| **Individual agent** | state across steps, tasks, or sessions | preferences, episodes, procedures, corrections |
+| **Multi-agent / institutional** | shared state beyond one actor | policy, ownership, consensus, provenance, tenancy |
+| **Inherited / evolutionary-scale** | state survives the originating individual/process | priors, weights, seed doctrine, inherited constraints |
 
-**Important:** this table describes functional parallels, not substrate equivalence.
+> [!NOTE]
+> These are **functional comparisons**, not claims of substrate equivalence. An embedding index is not a hippocampus. A system prompt is not a genome. A cache eviction policy is not human forgetting. Analogy becomes useful after the poetry stops impersonating mechanism.
 
-An embedding index is not a hippocampus. A system prompt is not a genome. A cache eviction policy is not human forgetting. The comparison becomes useful only after the poetry is removed.
-
-See [`docs/20-memory-foundations-across-scales.md`](docs/20-memory-foundations-across-scales.md).
+See **[Memory Foundations Across Scales](docs/20-memory-foundations-across-scales.md)**.
 
 ---
 
-## Memory horizons
+## Memory horizons and types are separate dimensions
 
-"Short-term" and "long-term" are incomplete specifications. The meaningful question is: **which persistence boundary does the memory cross?**
+### Persistence horizons
 
-| Horizon | Agentic meaning | Typical examples |
-|---|---|---|
-| Immediate | current inference step | intermediate tool output |
-| Working | active reasoning context | scratch state, current plan |
-| Session | current task or conversation | local entities, temporary decisions |
-| Episodic | survives prior sessions | interaction or trajectory records |
-| Long-term | durable reusable state | preferences, facts, procedures |
-| Remote | deeply consolidated and rarely changing | mature policies, stable domain knowledge |
-| Inherited | predates current agent experience | model priors, organization rules, runbooks |
+```text
+Immediate -> Working -> Session -> Episodic -> Long-term -> Remote -> Inherited
+```
 
-Persistence horizon and memory type are separate dimensions.
+A horizon says **how far state persists**, not what kind of memory it is.
 
-A procedural memory can be session-local or remote. A semantic fact can be provisional or certified. An episodic record can be permanent evidence even when it is rarely retrieved.
+### Content types
 
----
+The canonical taxonomy includes:
 
-## Memory types
+- observation
+- episodic
+- semantic
+- procedural
+- prospective
+- preference
+- relationship
+- policy
+- failure
+- correction
+- decision
+- evidence
+- compact environment/model state
+- inherited memory
 
-The canonical taxonomy includes more than facts and chat history.
-
-| Memory type | Question it answers | Agent examples |
-|---|---|---|
-| Observation | What did I perceive? | message, page state, sensor input |
-| Episodic | What happened, when, and in what context? | interaction, task trajectory, incident |
-| Semantic | What is generally true? | facts, concepts, entity knowledge |
-| Procedural | How do I do this? | runbook, tool sequence, recovery workflow |
-| Prospective | What must happen later? | follow-up, deadline, deferred obligation |
-| Preference | What does this actor prefer? | output style, product choice |
-| Relationship | How are entities connected? | ownership, dependencies, trust |
-| Policy | What is authoritative or prohibited? | retention, approval, access rules |
-| Failure | What failed and why? | environment gotcha, known bad path |
-| Correction | What changed because earlier memory was wrong? | user correction, revised fact |
-| Decision | What was chosen and why? | architecture decision, approval |
-| Evidence | What supports another memory or claim? | logs, artifacts, source records |
-| Model | What compact representation predicts the environment? | topology, causal graph, workflow model |
-
-See [`docs/22-agentic-memory-theory-and-development.md`](docs/22-agentic-memory-theory-and-development.md).
+A procedural memory can be session-local or remote. An episodic record can become permanent evidence. A semantic claim can remain provisional. Treating "long-term memory" as one storage bucket hides those differences.
 
 ---
 
-## Forgetting is a feature
+## Forgetting is a first-class capability
 
-The architecture treats forgetting as a first-class capability.
+A memory system that remembers everything is not maximally intelligent. It is a database with boundary problems.
 
-Forgetting may mean:
+Agent Memory distinguishes:
 
-- passive decay
-- retrieval suppression
-- interference control
+- decay
+- suppression
+- interference management
+- deprioritization
 - pruning
 - archival
 - compression
 - semanticization
 - supersession
-- scope restriction
-- deletion
-- cryptographic erasure
+- redaction
 - tombstoning
+- cryptographic deletion
+- full-pipeline purge
 - specialized model unlearning
 
-Those are not interchangeable operations.
-
-A memory system needs to know whether it intends to:
+These operations have different consequences and authority requirements.
 
 ```text
-make something harder to recall
-make something unavailable to normal recall
-preserve it only as history
-replace details with abstraction
-remove active copies
-remove derived copies
-or make recovery intentionally impossible
+predicted low utility -> forgetting candidate
+predicted low utility != irreversible deletion authority
 ```
 
-Forgetting matters because memory creates costs and risks:
+Deletion must also account for derived memory such as summaries, indexes, graph edges, caches, exported copies, and consolidated state where the system controls them.
 
-- stale beliefs
-- interference
-- context pollution
-- privacy exposure
-- poisoning persistence
-- storage and retrieval cost
-- outdated policy influence
-- contradictory state
-
-A memory architecture with no forgetting policy eventually becomes a historical landfill with semantic search.
-
-See [`docs/21-forgetting-consolidation-and-memory-metabolism.md`](docs/21-forgetting-consolidation-and-memory-metabolism.md).
+See **[Forgetting, Consolidation, and Memory Metabolism](docs/21-forgetting-consolidation-and-memory-metabolism.md)** and **[Retention, Deletion, and Tombstones](docs/28-retention-deletion-and-tombstones.md)**.
 
 ---
 
-## The canonical governed-memory pipeline
+## Canonical architecture
 
-```text
-Raw experience / artifact
-        |
-        v
-┌──────────────────────────────┐
-│ Identity / exact reference   │
-│ What is this object?         │
-└──────────────┬───────────────┘
-               v
-┌──────────────────────────────┐
-│ Evidence + provenance        │
-│ Why should we believe it?    │
-└──────────────┬───────────────┘
-               v
-┌──────────────────────────────┐
-│ Admission + classification   │
-│ Should it become memory?     │
-└──────────────┬───────────────┘
-               v
-┌──────────────────────────────┐
-│ Saturation / lifecycle       │
-│ Persist, decay, verify?      │
-└──────────────┬───────────────┘
-               v
-┌──────────────────────────────┐
-│ PAMA / mutation authority    │
-│ Is this transition allowed?  │
-└──────────────┬───────────────┘
-               v
-┌──────────────────────────────┐
-│ Certification / promotion    │
-│ Can it become durable?       │
-└──────────────┬───────────────┘
-               v
-┌──────────────────────────────┐
-│ Runtime memory space         │
-│ How may agents use it?       │
-└──────────────┬───────────────┘
-               v
-┌──────────────────────────────┐
-│ Governed recall planner      │
-│ Should it enter context now? │
-└──────────────┬───────────────┘
-               v
-            Agent action
-```
+Agent Memory is **one reference architecture composed of bounded components**, not one monolithic library.
 
-Memory is governed on both the **write path** and the **read path**.
-
-That distinction matters because persistent memory can become a durable control channel. A semantically relevant memory can still be stale, malicious, cross-tenant, superseded, over-sensitive, or inappropriate to the current task.
-
----
-
-## The canonical architecture
-
-Agent Memory is one architecture composed of bounded responsibilities.
-
-| Layer / component | Responsibility |
-|---|---|
-| Identity substrate | stable object identity and exact addressability |
-| Evidence and provenance | source support, witness material, origin |
-| Source trust | reliability of sources over time |
-| Admission | decide whether observations may become memory |
-| Saturation and decay | persistence pressure and lifecycle routing |
-| Lifecycle engine | explicit state transitions |
-| Conflict resolution | contradiction, supersession, scope mismatch |
-| Temporal causality | what changed, when, and why |
-| Governance / PAMA | mutation, promotion, pruning, and sharing authority |
-| Privacy and sensitivity | what may be stored, recalled, shared, retained, or deleted |
-| Certification | durable transition confirmation |
-| Runtime memory space | operational memory used by agents |
-| Recall planner | exact, semantic, temporal, graph, and procedural recall |
-| Context assembly | bounded memory supplied to active reasoning |
-| Correction and dispute | safe revision and reconciliation |
-| Observability and audit | explain memory creation, mutation, recall, deletion |
-| Conformance harness | fixtures, calibration, traps, and metrics |
-
-### Existing implementation mapping
-
-| System | Role in the doctrine |
-|---|---|
-| UOR Framework | identity substrate and deterministic addressability |
-| EvolveAI | memory metabolism and lifecycle prototype |
-| CodeGenome | code-reality graph, confidence, evidence, provenance |
-| COREFORGE Vault / Neurospace | local-first runtime memory surface |
-| PAMA | proportional mutation and promotion authority |
-| FailSafe / Arbiter | governance enforcement and approval boundaries |
-| Bicameral | decision continuity, evidence, and drift detection |
-
----
-
-## Governing invariants
-
-These are architectural rules, not implementation suggestions.
-
-1. **Identity is not memory.**
-2. **Retrieval is not memory.**
-3. **Relevance is not truth.**
-4. **Saturation is not truth.**
-5. **Repetition is not durability.**
-6. **Reflection is not evidence.**
-7. **High confidence is not permission to become permanent.**
-8. **Runtime usefulness is not canonical authority.**
-9. **Newer is not automatically more authoritative.**
-10. **Old is not automatically false.**
-11. **A memory that cannot be disputed cannot be trusted.**
-12. **A durable mutation must be explainable.**
-13. **Provenance must survive summarization and consolidation.**
-14. **Sensitive memory remains governed at recall time, not only write time.**
-15. **Forgetting is a governed transition.**
-16. **Deletion must account for derived state.**
-17. **Inherited memory must not masquerade as direct observation.**
-18. **Memory quality must be evaluated by behavior, not recall alone.**
-
----
-
-## The signals that must remain separate
-
-A recurring design failure is compressing many dimensions into one score.
-
-Agent Memory keeps these distinct:
-
-| Signal | Meaning | Does not mean |
+| Component | Owns | Must not silently own |
 |---|---|---|
-| Identity | exact object/reference resolution | truth or usefulness |
-| Confidence | evidence support for content | permanence |
-| Source trust | expected source reliability | current relevance |
-| Relevance | usefulness to current task | correctness |
-| Saturation | persistence/lifecycle pressure | truth |
-| Authority | permission to perform transition | evidence quality |
+| **Identity substrate** | stable identity, exact addressing | lifecycle policy, truth |
+| **Evidence & provenance** | source records, derivation, witnesses | permanence |
+| **Source trust** | scoped reliability evidence | authority |
+| **Reality graphs** | domain structure and relations | canonical memory status |
+| **Lifecycle engine** | explicit memory states and transitions | identity semantics |
+| **Saturation & decay** | persistence pressure and routing signals | truth, certification |
+| **Conflict resolution** | disagreement and resolution proposals | ungoverned overwrite |
+| **Temporal causality** | chronology, valid time, causal hypotheses | certainty from sequence alone |
+| **Governance / PAMA** | mutation and consequence authority | factual truth |
+| **Privacy & sensitivity** | handling classification and disclosure constraints | optimistic scope guessing |
+| **Certification** | durable transition confirmation | eternal immutability |
+| **Runtime memory** | operational use and graph traversal | doctrine ownership |
+| **Governed recall** | context admission | relevance-as-permission |
+| **Correction & dispute** | revision without history destruction | silent overwrite |
+| **Observability** | decision and transition evidence | sensitive shadow copies |
+| **Recovery** | rollback, compensation, replay | rewriting history to hide errors |
+| **Conformance** | fixtures, schemas, calibration, quality metrics | claims of runtime proof without runtime evidence |
+
+See **[Component Architecture](docs/11-component-architecture.md)** and **[System Composition Boundaries](docs/13-system-composition-boundaries.md)**.
+
+---
+
+## Signals that must remain separate
+
+One universal memory score is appealing for the same reason one permissions role named `admin-ish` is appealing: fewer fields, more regret.
+
+| Signal | Means | Does **not** mean |
+|---|---|---|
+| Identity | exact object/reference | truth or usefulness |
+| Confidence | support for an estimate/claim | authority |
+| Probability | modeled uncertainty with defined semantics | generic score |
+| Similarity | representational closeness | correctness |
+| Source trust | expected reliability in scope | permission |
+| Relevance | usefulness to current task | recall authorization |
+| Saturation | lifecycle persistence pressure | truth |
+| Sensitivity | handling/privacy risk | low utility |
+| Scope | where memory is valid/visible | global truth |
+| Authority | permission for a consequence | evidence quality |
 | Certification | required confirmation passed | immutability |
-| Sensitivity | privacy/security classification | low utility |
-| Scope | where memory is valid or visible | global truth |
-| Contradiction | conflict with other retained state | which side is wrong |
-
-A single universal "memory score" is convenient in the same way one giant permissions role called `admin-ish` is convenient.
+| Contradiction | retained state conflicts | automatic winner selection |
 
 ---
 
-## Lifecycle state machine
+## Lifecycle
 
-A durable memory should have an explainable history.
+Memory has history. The architecture should be able to explain it.
 
-```text
-Transient
-   |
-Observed
-   |
-Linked
-   |
-Reinforced
-   |
-Candidate
-   |
-Pending Verification
-   |
-Crystallized
-   |
-Operationally Reused
-   |
-   +-----------> Stale
-   |                |
-   |                v
-   +-----------> Disputed
-                    |
-                    v
-                 Corrected
-                    |
-                    v
-                 Reconciled
-                    |
-              ┌─────┴─────┐
-              v           v
-           Archived     Pruned
+```mermaid
+stateDiagram-v2
+    [*] --> Transient
+    Transient --> Observed
+    Observed --> Linked
+    Linked --> Reinforced
+    Reinforced --> Candidate
+    Candidate --> PendingVerification
+    PendingVerification --> Crystallized
+    Crystallized --> OperationallyReused
+    OperationallyReused --> Stale
+    Crystallized --> Disputed
+    Stale --> Disputed
+    Disputed --> Corrected
+    Corrected --> Reconciled
+    Reconciled --> Archived
+    Reconciled --> Pruned
+    Archived --> Tombstoned
 ```
 
-Not every memory traverses every state.
+Not every memory follows every transition.
 
-The requirement is that consequential transitions be explicit, authorized, and auditable.
+The invariant is that consequential transitions remain explicit, scoped, authorized, and auditable.
 
----
-
-## Crystallization
-
-Crystallization is the transition from provisional memory into durable, strongly trusted memory within a defined scope.
-
-A canonical promotion gate may look like:
-
-```text
-identity_resolved == true
-provenance_present == true
-source_trust >= required_floor
-saturation >= calibrated_candidate_threshold
-trap_class_check == pass
-contradiction_state == acceptable
-pama_authority == allow
-certification_gate == pass
-```
-
-A score may nominate memory for promotion.
-
-A score must not silently grant permanence unless an explicit policy accepts that risk.
+See **[Lifecycle State Machine](docs/02-lifecycle-state-machine.md)**.
 
 ---
 
-## Memory consolidation
+## Security and privacy are lifecycle concerns
 
-Consolidation is not "move row from short-term table to long-term table."
+Persistent memory creates attack surfaces that do not exist in a stateless exchange.
 
-A system may transform retained experience:
+The threat model includes:
 
-```text
-raw episodes
-   |
-   +--> semantic facts
-   +--> generalized patterns
-   +--> procedures / runbooks
-   +--> failure guardrails
-   +--> entity or world models
-   +--> compact summaries
-```
-
-Derived memory should preserve links back to supporting evidence.
-
-This lets the runtime use compact abstractions without sacrificing auditability and correction.
-
----
-
-## Prospective memory
-
-Agents need to remember the future as well as the past.
-
-Prospective memory represents:
-
-- commitments
-- deadlines
-- pending reviews
-- follow-ups
-- conditions to recheck
-- deferred decisions
-- unresolved dependencies
-
-This is memory of an obligation or intended action.
-
-It is not necessarily the scheduler that executes it.
-
----
-
-## Procedural and failure memory
-
-A capable agent should not merely remember what happened. It should retain **how to succeed** and **how not to fail the same way again**.
-
-Procedural memory stores reusable action knowledge.
-
-Failure memory should preserve:
-
-```text
-attempt
-context
-expected outcome
-actual outcome
-root cause
-correction
-verification
-applicability
-expiry / recheck condition
-```
-
-This is especially important for coding agents, browser agents, operations agents, and long-running autonomous systems.
-
----
-
-## Collective and inherited memory
-
-Shared memory is not simply a database with multiple API keys.
-
-Collective memory introduces:
-
-- ownership
-- authorship
-- tenancy
-- roles
-- source reputation
-- write authority
-- read authority
-- dispute authority
-- versioning
-- succession
-
-Inherited memory introduces another distinction:
-
-```text
-observed     -> this agent experienced it
-inferred     -> this agent derived it
-taught       -> another authority provided it
-imported     -> brought from an external system
-inherited    -> existed before this agent instance
-generated    -> synthesized by a model/process
-```
-
-That provenance prevents agents from presenting inherited or synthetic state as firsthand experience.
-
----
-
-## Security model
-
-Memory is a security boundary because retained information can change future behavior.
-
-Threat classes include:
-
-- memory poisoning
-- prompt-injection persistence
-- access-spam reinforcement
+- direct and sleeper memory poisoning
 - hallucination permanence
 - recursive self-citation
-- source spoofing
+- authority laundering through summaries or trusted tools
 - provenance stripping
-- unauthorized mutation
-- stale policy retention
-- cross-user or cross-tenant leakage
+- cross-tenant leakage
+- sensitive-memory extraction
+- unsafe multi-memory composition
+- stale authorization
+- stochastic policy bypass
+- estimator manipulation and calibration drift
 - malicious correction
-- overbroad context assembly
-- sensitive-data persistence
-- poisoned procedural memory
+- irreversible deletion abuse
+- deletion residue in derived memory
 
-A trustworthy system governs:
+Write-time safety is not lifetime safety.
+
+A memory can appear benign when stored and become unsafe later when another context retrieves, combines, or acts on it.
+
+See **[Memory Threat Model](docs/15-memory-threat-model.md)** and **[Privacy and Sensitivity](docs/19-privacy-and-sensitivity-classifier.md)**.
+
+---
+
+## Conflict, time, and correction
+
+A mature memory system must preserve more than one kind of disagreement.
 
 ```text
-write admission
-source trust
-scope
-retrieval admission
-mutation authority
-promotion
-sharing
-expiry
-correction
-revocation
-deletion
-audit
+factual contradiction
+!= temporal supersession
+!= scope mismatch
+!= source disagreement
+!= policy conflict
+!= estimator disagreement
 ```
 
+Likewise:
+
+```text
+historically true != currently true
+stale != false
+superseded != corrected
+chronology != causality
+```
+
+Conflict interpretation may be probabilistic. Resolution consequences remain governed.
+
+See **[Conflict Resolution](docs/17-conflict-resolution-engine.md)** and **[Temporal Causality](docs/18-temporal-causality-layer.md)**.
+
 ---
 
-## Evaluation: recall is only level one
+## Conformance and executable evidence
 
-A memory system should be evaluated at four levels.
+The repository now contains machine-readable doctrine evidence, not just prose.
 
-### Level 1: Recall
+### Schemas
 
-Can it retrieve a past fact or event?
+- [`memory-unit.schema.json`](schemas/memory-unit.schema.json)
+- [`conformance-report.schema.json`](schemas/conformance-report.schema.json)
+- [`decision-receipt.schema.json`](schemas/decision-receipt.schema.json)
+- [`memory-audit-event.schema.json`](schemas/memory-audit-event.schema.json)
 
-### Level 2: Temporal and update reasoning
+### Fixtures
 
-Can it distinguish current, historical, contradicted, and superseded state?
+The [`fixtures/`](fixtures/) directory contains **24 validated fixture definitions**, including:
 
-### Level 3: Memory-guided action
+- valuable persistent memory
+- ephemeral memory
+- access-spam junk
+- confidently wrong memory
+- contradiction
+- certified durable memory
+- unauthorized mutation
+- audit-preserving pruning
+- high-confidence false promotion
+- threshold jitter
+- estimator disagreement
+- cross-tenant relevance
+- stochastic retrieval inside policy
+- unsafe multi-memory composition
+- uncertain sensitivity
+- irreversible deletion under uncertain utility
+- policy/estimator drift
+- concurrent mutation
+- sleeper poisoning
+- authority laundering
+- deletion residue
+- out-of-calibration-scope scoring
+- expired delegation
+- stochastic replay reconstruction
 
-Does retained experience improve later planning and execution?
+### Validate locally
 
-### Level 4: Governed memory
+```bash
+python -m pip install jsonschema
+python scripts/validate_fixtures.py fixtures
+python scripts/validate_schemas.py
+```
 
-Can it improve behavior while preserving provenance, privacy, authority, correction, deletion, and scope?
+The **[Validate Doctrine Evidence](.github/workflows/validate-doctrine-evidence.yml)** workflow runs the same checks on pushes and pull requests.
 
-Recent benchmarks increasingly expose the gap between simple recall and memory-guided agent performance. The doctrine therefore treats **task outcome, avoided repeated failure, stale-memory contamination, false permanence, and governance compliance** as first-class memory metrics.
+> [!WARNING]
+> These checks prove schema and fixture coherence. They do **not** prove a runtime implementation detects poisoning, enforces tenancy, contains a stochastic planner, resolves concurrency, or propagates deletion correctly. Structural evidence is a prerequisite for runtime evidence, not a substitute for it.
 
-Recommended evaluation dimensions:
+See **[Conformance Test Plan](docs/06-conformance-test-plan.md)**.
 
-| Stage | Metrics |
+---
+
+## Conformance levels
+
+| Level | Evidence target |
 |---|---|
-| Encoding | useful-memory precision/recall, sensitive-data rejection, unsupported-inference admission |
-| Retrieval | relevant recall, temporal correctness, stale recall, contradiction contamination, abstention |
-| Consolidation | abstraction accuracy, transfer utility, provenance completeness, exception preservation |
-| Revision | correction propagation, supersession accuracy, rollback integrity |
-| Forgetting | false permanence, valuable-memory loss, deletion completeness, interference reduction |
-| Agent behavior | task success, avoided repeated failure, tool-call quality, latency, token cost |
-| Security | poisoning success, leakage, unauthorized mutation, memory-induced jailbreaks |
+| **0** | documentation alignment |
+| **1** | identity and provenance |
+| **2** | lifecycle and decay |
+| **3** | calibrated saturation and trap resistance |
+| **4** | PAMA or equivalent mutation authority |
+| **5** | certification and audited crystallization |
+| **6** | governed uncertainty across estimator, policy, action-set, and committed-consequence boundaries |
 
-See the current research map in [`docs/23-research-bibliography.md`](docs/23-research-bibliography.md).
+Level 6 does not mean "make the model deterministic."
+
+It means uncertainty can remain adaptive while prohibited consequences stay outside the reachable action space.
 
 ---
 
-## Development guide
+## Architecture decisions and current maturity
 
-For a new memory implementation, build in this order.
+See **[docs/adr/README.md](docs/adr/README.md)** for status semantics.
 
-### 1. Define contracts
+| Area | Current state |
+|---|---|
+| Core doctrine | **Canonical and extensively documented** |
+| ADR-001 through ADR-019 | **Accepted** |
+| ADR-020 governed uncertainty | **Proposed** |
+| Documentation conformance audit | **Recorded piece by piece** |
+| JSON Schemas | **4 validated schemas** |
+| Conformance fixture definitions | **24 validated fixtures** |
+| Repository validation workflow | **Active** |
+| Runtime reference implementation | **Not yet the evidence basis of this repo** |
+| ADR-020 runtime proof | **Incomplete by design** |
+| Research evidence | **Living, open-evidence-preferred, challengeable** |
 
-Establish:
+### Why ADR-020 is still Proposed
 
-- memory unit schema
-- stable identity
-- provenance
-- scope
-- lifecycle state
-- mutation events
+The repository already has the theory, contracts, schemas, receipts, fixtures, and validation machinery.
 
-### 2. Build write admission
+What it intentionally does **not** yet claim is that a real implementation has demonstrated, end to end:
 
-Implement:
+```text
+estimate / proposal
+    -> governance envelope
+    -> permitted action set
+    -> selected action
+    -> committed consequence
+```
 
-- candidate extraction
-- sensitivity classification
-- source classification
-- deduplication
-- contradiction detection
-- admission policy
+with repeated stochastic trials, cross-scope admission tests, actual concurrency behavior, deletion propagation, and reconstructable runtime receipts.
 
-### 3. Build multiple recall paths
+That missing evidence is a feature of the governance process, not an embarrassing footnote to hide below the fold.
 
-Support appropriate combinations of:
+---
 
-- exact address
-- semantic similarity
-- graph traversal
-- temporal retrieval
-- procedural retrieval
+## Research posture
 
-Then govern what may actually enter context.
+This repository uses research to **learn and challenge**, not to decorate architecture with citation density.
 
-### 4. Build correction before clever reflection
+Preferred evidence sources, when practical, include:
 
-Implement:
+- open-access journals
+- PubMed Central and comparable public archives
+- lawful preprints
+- open conference proceedings
+- public technical reports
+- open datasets and benchmark repositories
+- standards and government publications
 
-- dispute
-- supersession
-- reconciliation
-- mutation history
-- rollback
+For consequential claims, the goal is to preserve:
 
-A system that can synthesize insights but cannot reliably correct itself has prioritized the cinematic feature.
+```text
+supporting evidence
+challenging evidence
+boundary conditions
+implementation evidence
+conformance evidence
+known uncertainty
+```
 
-### 5. Build forgetting
+When transferring an idea from biological or cognitive memory into software, classify it as:
 
-Implement intentionally distinct modes:
+```text
+MECHANISM
+FUNCTIONAL ANALOGY
+ENGINEERING PRESCRIPTION
+OPEN HYPOTHESIS
+```
 
-- decay
-- suppression
-- archive
-- prune
-- delete
-- tombstone
+The repository should be willing to revise a favorite theory when better evidence shows up. Otherwise this is not a research architecture; it is a belief system with Markdown.
 
-### 6. Build consolidation
+See **[Research Bibliography](docs/23-research-bibliography.md)** and **[Source Material Index](docs/08-source-material-index.md)**.
 
-Add:
+---
 
-- summarization
-- semantic extraction
-- procedure induction
-- generalization
-- reflection with provenance
+## Related implementation systems
 
-### 7. Add governance
+The doctrine currently maps several existing systems into bounded roles:
 
-Enforce:
+| System | Role |
+|---|---|
+| **UOR Framework** | exact identity and deterministic addressability |
+| **EvolveAI** | memory metabolism and lifecycle prototype |
+| **CodeGenome** | code-reality graph, evidence, provenance, inferred relations |
+| **COREFORGE Vault / Neurospace** | local-first runtime memory and agent-facing recall |
+| **PAMA** | proportional mutation and promotion authority |
+| **FailSafe / Arbiter** | governance enforcement, evidence, approval boundaries |
+| **Bicameral** | durable decision continuity and drift detection |
 
-- mutation authority
-- certification
-- privacy
-- tenancy
-- sharing boundaries
-- audit
+The map defines architectural roles. It does not claim every related repository already conforms to every current contract.
 
-### 8. Evaluate the lifecycle
-
-Use adversarial fixtures and multi-session action tasks, not just retrieval QA.
+See **[Repo Implementation Map](docs/05-repo-implementation-map.md)**.
 
 ---
 
 ## Repository map
 
 ```text
-.
-├── README.md
+agent-memory/
+├── README.md                       # front door and architecture overview
+├── CONTRIBUTING.md                 # evidence and contribution standard
 ├── docs/
-│   ├── AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md
-│   ├── 00-glossary.md
-│   ├── 01-layer-model.md
-│   ├── 02-lifecycle-state-machine.md
-│   ├── 03-scoring-and-decay.md
-│   ├── 04-governance-and-pama.md
-│   ├── 05-repo-implementation-map.md
-│   ├── 06-conformance-test-plan.md
-│   ├── 07-integration-roadmap.md
-│   ├── 08-source-material-index.md
-│   ├── 09-calibration-protocol.md
-│   ├── 10-memory-unit-examples.md
-│   ├── 11-component-architecture.md
-│   ├── 12-concept-segmentation-matrix.md
-│   ├── 13-system-composition-boundaries.md
-│   ├── 14-expanded-scope-recommendations.md
-│   ├── 20-memory-foundations-across-scales.md
-│   ├── 21-forgetting-consolidation-and-memory-metabolism.md
-│   ├── 22-agentic-memory-theory-and-development.md
-│   ├── 23-research-bibliography.md
-│   └── adr/
-│       ├── ADR-001-uor-is-identity-not-memory.md
-│       ├── ADR-002-saturation-is-routing-not-truth.md
-│       ├── ADR-003-crystallization-requires-certification.md
-│       ├── ADR-004-pama-controls-mutation-authority.md
-│       ├── ADR-005-codegenome-is-code-reality-substrate.md
-│       ├── ADR-006-neurospace-is-runtime-memory-space.md
-│       ├── ADR-007-agent-memory-is-component-architecture.md
-│       ├── ADR-008-memory-threat-model-is-required.md
-│       ├── ADR-009-source-trust-is-a-first-class-signal.md
-│       ├── ADR-010-conflict-resolution-is-a-separate-component.md
-│       ├── ADR-011-temporal-causality-is-required-for-memory-evolution.md
-│       ├── ADR-012-privacy-and-sensitivity-classification-is-required.md
-│       ├── ADR-013-governed-recall-planner-is-required.md
-│       ├── ADR-014-schema-registry-and-type-evolution-are-needed.md
-│       ├── ADR-015-retention-deletion-and-tombstones-are-required.md
-│       ├── ADR-016-actor-scope-consent-and-tenancy-are-required.md
-│       ├── ADR-017-memory-observability-and-audit-events-are-required.md
-│       ├── ADR-018-recovery-rollback-and-replay-are-required.md
-│       └── ADR-019-memory-quality-metrics-are-required.md
-├── fixtures/
-├── schemas/
-├── scripts/
-│   └── validate_fixtures.py
+│   ├── README.md                   # full documentation index
+│   ├── 00-10                      # architecture spine
+│   ├── 11-19                      # composition, security, trust, time, privacy
+│   ├── 20-25                      # interdisciplinary theory and governed uncertainty
+│   ├── 26-32                      # operational and executable contracts
+│   ├── adr/                       # architecture decision records
+│   └── audits/governed-uncertainty/
+│       └── ...                    # baseline and post-remediation audit trail
+├── schemas/                        # doctrine-level JSON Schemas
+├── fixtures/                       # 24 conformance fixture definitions
+├── scripts/                        # fixture and schema validators
 └── .github/
+    ├── ISSUE_TEMPLATE/
+    └── workflows/
+        └── validate-doctrine-evidence.yml
 ```
 
-Numbers 15-19 remain intentionally available for the foundational architecture additions already specified in `14-expanded-scope-recommendations.md`.
+---
+
+## Core invariants
+
+These are the shortest route to the doctrine:
+
+1. **Identity is not memory.**
+2. **Retrieval is not memory.**
+3. **Confidence is not authority.**
+4. **Trust is not authority.**
+5. **Relevance is not permission.**
+6. **Saturation is not truth.**
+7. **Reflection is not evidence.**
+8. **A deterministic threshold is not certainty.**
+9. **A probabilistic component is not inherently ungovernable.**
+10. **Proposal is not commit.**
+11. **Historical truth is not current truth.**
+12. **Chronology is not causality.**
+13. **Uncertain sensitivity is not non-sensitive.**
+14. **Utility is not deletion authority.**
+15. **Provenance must survive transformation.**
+16. **A blocked action must remain blocked downstream.**
+17. **Stochastic choice may occur only inside a permitted action set.**
+18. **Memory must remain correctable after becoming durable.**
+19. **Forgetting is a governed family of operations.**
+20. **Memory quality is measured by future behavior, not recall alone.**
 
 ---
 
-## Reading paths
+## What this repository is not
 
-### If you are new to agent memory
+It is **not**:
 
-1. [`20-memory-foundations-across-scales.md`](docs/20-memory-foundations-across-scales.md)
-2. [`22-agentic-memory-theory-and-development.md`](docs/22-agentic-memory-theory-and-development.md)
-3. [`AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md`](docs/AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md)
-4. [`00-glossary.md`](docs/00-glossary.md)
+- a claim that brains are databases
+- a neuroscience simulation
+- one universal memory algorithm
+- a vector-store wrapper presented as complete memory architecture
+- a benchmark leaderboard
+- a production-runtime certification program
+- proof that every mapped implementation already conforms
+- a requirement that uncertain cognition become deterministic
 
-### If you are implementing a system
-
-1. [`11-component-architecture.md`](docs/11-component-architecture.md)
-2. [`02-lifecycle-state-machine.md`](docs/02-lifecycle-state-machine.md)
-3. [`03-scoring-and-decay.md`](docs/03-scoring-and-decay.md)
-4. [`04-governance-and-pama.md`](docs/04-governance-and-pama.md)
-5. [`06-conformance-test-plan.md`](docs/06-conformance-test-plan.md)
-6. [`09-calibration-protocol.md`](docs/09-calibration-protocol.md)
-7. [`10-memory-unit-examples.md`](docs/10-memory-unit-examples.md)
-
-### If you care about forgetting, retention, and deletion
-
-1. [`21-forgetting-consolidation-and-memory-metabolism.md`](docs/21-forgetting-consolidation-and-memory-metabolism.md)
-2. [`03-scoring-and-decay.md`](docs/03-scoring-and-decay.md)
-3. `ADR-015-retention-deletion-and-tombstones-are-required.md`
-
-### If you are researching the field
-
-1. [`23-research-bibliography.md`](docs/23-research-bibliography.md)
-2. [`20-memory-foundations-across-scales.md`](docs/20-memory-foundations-across-scales.md)
-3. [`08-source-material-index.md`](docs/08-source-material-index.md)
-4. [`12-concept-segmentation-matrix.md`](docs/12-concept-segmentation-matrix.md)
-
-### If you are integrating another repository
-
-1. [`05-repo-implementation-map.md`](docs/05-repo-implementation-map.md)
-2. [`13-system-composition-boundaries.md`](docs/13-system-composition-boundaries.md)
-3. [`07-integration-roadmap.md`](docs/07-integration-roadmap.md)
+It **is** a place to define, challenge, test, and eventually implement the contracts required for memory that persists without becoming ungoverned state.
 
 ---
 
-## Fixture validation
+## Contributing
 
-Run from the repository root:
+Read **[CONTRIBUTING.md](CONTRIBUTING.md)** before proposing architecture, research, schema, or conformance changes.
 
-```bash
-python scripts/validate_fixtures.py
-```
+The most valuable contributions are not limited to confirming the current doctrine. Strong counterexamples, contradictory research, adversarial fixtures, implementation failures, and evidence that an accepted decision should be revised are all first-class contributions.
 
-The validator uses only the Python standard library.
+When a doctrine claim changes, preserve the reason it changed.
 
-Existing fixtures test cases including:
+When a probabilistic system fails, preserve the uncertainty and evidence.
 
-- certified durable memory
-- confidently wrong memory
-- contradicted memory
-- ephemeral memory
-- access-spam junk
-- unauthorized mutation
-- pruning with audit preservation
-- valuable persistent memory
-
-The conformance suite should continue expanding toward:
-
-- stale-but-historically-valid memory
-- semantic abstraction with preserved evidence
-- prospective memory completion
-- procedural memory version drift
-- inherited-memory provenance
-- deletion propagation
-- cross-tenant recall denial
-- memory poisoning
-- conflict reconciliation
-- retrieval interference
+When a deterministic policy fails, resist the temptation to congratulate it for failing reproducibly.
 
 ---
 
-## Research discipline
-
-Agent Memory deliberately combines architecture and interdisciplinary research, so source discipline matters.
-
-When importing a concept, label it as one of:
-
-```text
-MECHANISM
-Demonstrated in the source substrate.
-
-FUNCTIONAL ANALOGY
-A similar problem or function appears elsewhere.
-
-ENGINEERING PRESCRIPTION
-A requirement justified by agent-system evidence or governance.
-
-OPEN HYPOTHESIS
-Promising, but not doctrine yet.
-```
-
-Biological analogy must not be used as implementation evidence by itself.
-
-A paper saying the hippocampus does something does not create a Jira ticket requiring a `HippocampusService`.
-
-See [`docs/23-research-bibliography.md`](docs/23-research-bibliography.md).
-
----
-
-## Non-goals
-
-This repository is not:
-
-- a vector database
-- a RAG wrapper
-- a chatbot prompt pack
-- a universal cognitive model
-- a claim that LLM agents think like humans
-- a replacement for UOR, EvolveAI, CodeGenome, COREFORGE, PAMA, FailSafe, or Bicameral
-- an excuse to put every vaguely memory-shaped idea into one mega-framework
-
-It is the canonical spine for organizing memory theory, architecture, governance, implementation, and evidence.
-
----
-
-## Conformance challenge
-
-Before calling a system an Agent Memory implementation, it should be able to answer:
-
-1. What exactly is a memory unit?
-2. What persistence boundary does each memory class cross?
-3. What is raw evidence versus derived memory?
-4. How are episodic, semantic, procedural, and prospective memory distinguished?
-5. Who may create, mutate, promote, share, or delete memory?
-6. How are source trust and provenance represented?
-7. How are stale, historical, disputed, and superseded states distinguished?
-8. How does forgetting work?
-9. How does user deletion propagate into derived state?
-10. How does retrieval enforce scope and sensitivity?
-11. How is poisoning contained?
-12. How are corrections propagated?
-13. How are failures converted into reusable learning without overgeneralization?
-14. How is inherited memory distinguished from direct experience?
-15. What evidence shows memory improves later agent action?
-
-If the answers reduce to "we embed previous messages and retrieve the top five," the system has useful retrieval. It does not yet have a memory architecture.
-
----
-
-## Direction
-
-The long-term goal is to make this repository the **quintessential reference for Agentic Memory theory, function, governance, and development**:
-
-```text
-memory science
-   +
-agent architecture
-   +
-security and governance
-   +
-implementation contracts
-   +
-conformance tests
-   +
-evaluation benchmarks
-   =
-Agent Memory
-```
+## The long-term objective
 
 The wedge is not remembering more.
 
-The wedge is **remembering, transforming, using, correcting, and forgetting the right information under the right authority at the right time**.
+It is building memory systems that can explain:
+
+- **why something was remembered**
+- **why it was trusted**
+- **what uncertainty remained**
+- **why it entered the current context**
+- **what the agent was allowed to change**
+- **why a state transition occurred**
+- **how the decision can be reconstructed**
+- **how the memory can be corrected**
+- **when and how it should be forgotten**
+
+**The objective is not persistent recall. It is governed memory state across time.**

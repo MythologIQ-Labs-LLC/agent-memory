@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Validate agent-memory conformance fixtures.
 
-This script intentionally uses only the Python standard library so the repo can
-run basic fixture validation without dependency ceremony, because even schemas
-deserve fewer excuses.
+This validator intentionally uses only the Python standard library. It validates
+baseline fixture structure plus a small set of doctrine-level governed-uncertainty
+invariants. It is not a replacement for implementation-specific behavioral tests.
 """
 
 from __future__ import annotations
@@ -51,6 +51,8 @@ VALID_STATES = {
     "corrected",
     "reconciled",
     "pruned",
+    "archived",
+    "tombstoned",
 }
 
 VALID_PAMA_OUTCOMES = {
@@ -58,10 +60,14 @@ VALID_PAMA_OUTCOMES = {
     "allow_with_ledger",
     "require_review",
     "require_external_verification",
+    "abstain",
+    "quarantine",
+    "collect_more_evidence",
     "block",
 }
 
 VALID_RISK_CLASSES = {"low", "medium", "high", "critical"}
+VALID_SELECTION_MODES = {"none", "deterministic", "stochastic", "learned", "human", "external"}
 
 
 def load_json(path: Path) -> Any:
@@ -75,6 +81,39 @@ def require_keys(obj: dict[str, Any], keys: set[str], path: str) -> list[str]:
     return [f"{path}: missing required key '{key}'" for key in sorted(keys - obj.keys())]
 
 
+def validate_action_envelope(obj: dict[str, Any], path: str) -> list[str]:
+    errors: list[str] = []
+    permitted = obj.get("permitted_actions")
+    prohibited = obj.get("prohibited_actions")
+    selected = obj.get("selected_action")
+    mode = obj.get("selection_mode")
+
+    if permitted is not None and (not isinstance(permitted, list) or not all(isinstance(x, str) for x in permitted)):
+        errors.append(f"{path}.permitted_actions must be a list of strings")
+        permitted = None
+    if prohibited is not None and (not isinstance(prohibited, list) or not all(isinstance(x, str) for x in prohibited)):
+        errors.append(f"{path}.prohibited_actions must be a list of strings")
+        prohibited = None
+
+    if permitted is not None and prohibited is not None:
+        overlap = sorted(set(permitted) & set(prohibited))
+        if overlap:
+            errors.append(f"{path}: actions cannot be both permitted and prohibited: {overlap}")
+
+    if selected is not None:
+        if not isinstance(selected, str):
+            errors.append(f"{path}.selected_action must be a string")
+        elif permitted is None:
+            errors.append(f"{path}.selected_action requires permitted_actions")
+        elif selected not in permitted:
+            errors.append(f"{path}.selected_action {selected!r} is not in permitted_actions")
+
+    if mode is not None and mode not in VALID_SELECTION_MODES:
+        errors.append(f"{path}.selection_mode invalid: {mode!r}")
+
+    return errors
+
+
 def validate_fixture(path: Path) -> list[str]:
     errors: list[str] = []
     data = load_json(path)
@@ -85,6 +124,10 @@ def validate_fixture(path: Path) -> list[str]:
     errors.extend(require_keys(data, REQUIRED_TOP_LEVEL, str(path)))
     if errors:
         return errors
+
+    expected = data.get("expected_behavior")
+    if not isinstance(expected, (dict, list, str)):
+        errors.append(f"{path}: expected_behavior must be an object, list, or string")
 
     memory = data["memory_unit"]
     if not isinstance(memory, dict):
@@ -140,6 +183,26 @@ def validate_fixture(path: Path) -> list[str]:
         risk = authority.get("risk_class")
         if risk not in VALID_RISK_CLASSES:
             errors.append(f"{path}:memory_unit.authority.risk_class invalid: {risk!r}")
+        errors.extend(validate_action_envelope(authority, f"{path}:memory_unit.authority"))
+
+    governed = data.get("governed_uncertainty")
+    if governed is not None:
+        if not isinstance(governed, dict):
+            errors.append(f"{path}:governed_uncertainty must be an object")
+        else:
+            errors.extend(
+                require_keys(
+                    governed,
+                    {"requested_action", "permitted_actions", "prohibited_actions", "expected_invariants"},
+                    f"{path}:governed_uncertainty",
+                )
+            )
+            if not isinstance(governed.get("requested_action"), str):
+                errors.append(f"{path}:governed_uncertainty.requested_action must be a string")
+            invariants = governed.get("expected_invariants")
+            if not isinstance(invariants, list) or not invariants or not all(isinstance(x, str) for x in invariants):
+                errors.append(f"{path}:governed_uncertainty.expected_invariants must be a non-empty list of strings")
+            errors.extend(validate_action_envelope(governed, f"{path}:governed_uncertainty"))
 
     return errors
 

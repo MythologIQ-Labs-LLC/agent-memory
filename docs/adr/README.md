@@ -16,11 +16,22 @@ ADR status describes **doctrine maturity**, not implementation maturity.
 An `Accepted` ADR does **not** claim:
 
 - every related repository implements it
-- executable conformance exists
 - runtime enforcement is complete
+- all behavioral conformance cases pass in production
 - the decision can never be revised
 
-Implementation maturity is tracked separately through documentation, fixtures, conformance evidence, implementation maps, and runtime evidence.
+Implementation maturity is tracked separately through documentation, fixtures, conformance evidence, implementation maps, quality metrics, and runtime evidence.
+
+## Current doctrine state
+
+```text
+ADR-001 through ADR-019: Accepted
+ADR-020: Proposed
+```
+
+ADRs 001-019 now have their required canonical doctrine contracts and, where specified, repository-level schema/fixture evidence.
+
+ADR-020 remains deliberately different. It requires **runtime end-to-end evidence**, not merely documentation or fixture structure.
 
 ## Current status policy
 
@@ -30,13 +41,28 @@ A decision may move from Proposed to Accepted when:
 2. it is integrated consistently into canonical doctrine
 3. known material contradictions have been resolved or documented
 4. required foundational documentation exists
-5. acceptance does not depend on implementation evidence the ADR itself explicitly requires
+5. any repository-level schema/fixture prerequisites named by the ADR are satisfied
+6. acceptance does not depend on runtime evidence the ADR explicitly says is still missing
 
-If an ADR explicitly requires executable evidence before acceptance, that requirement controls.
+If an ADR explicitly requires stronger evidence before acceptance, that requirement controls.
 
 ## Governed uncertainty
 
-`ADR-020` is intentionally different from many earlier ADRs. It explicitly requires conformance and implementation evidence before acceptance. It remains **Proposed** until those conditions are met.
+[`ADR-020`](ADR-020-probabilistic-discovery-deterministic-governance.md) is intentionally still **Proposed**.
+
+Its acceptance requires at least one real implementation mapped and tested end to end across:
+
+```text
+estimate / proposal
+  -> governance envelope
+  -> permitted action set
+  -> selected action
+  -> committed consequence
+```
+
+It also requires repeated behavioral evidence for stochastic containment, cross-scope recall, concurrency, deletion residue, and related adversarial cases.
+
+The repository now has machine-readable schemas and fixture definitions for those cases, but fixture validity is not runtime proof.
 
 ## Canonical references
 
@@ -46,3 +72,10 @@ If an ADR explicitly requires executable evidence before acceptance, that requir
 - [`../11-component-architecture.md`](../11-component-architecture.md)
 - [`../24-determinism-probability-and-governed-uncertainty.md`](../24-determinism-probability-and-governed-uncertainty.md)
 - [`../25-governed-uncertainty-documentation-conformance-audit.md`](../25-governed-uncertainty-documentation-conformance-audit.md)
+- [`../26-governed-recall-planner.md`](../26-governed-recall-planner.md)
+- [`../27-schema-registry-and-type-evolution.md`](../27-schema-registry-and-type-evolution.md)
+- [`../28-retention-deletion-and-tombstones.md`](../28-retention-deletion-and-tombstones.md)
+- [`../29-actor-scope-consent-and-tenancy.md`](../29-actor-scope-consent-and-tenancy.md)
+- [`../30-memory-observability-and-audit-events.md`](../30-memory-observability-and-audit-events.md)
+- [`../31-recovery-rollback-and-replay.md`](../31-recovery-rollback-and-replay.md)
+- [`../32-memory-quality-metrics.md`](../32-memory-quality-metrics.md)

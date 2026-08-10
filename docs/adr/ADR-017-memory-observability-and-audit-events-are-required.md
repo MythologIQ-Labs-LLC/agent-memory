@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -10,13 +10,13 @@ The doctrine defines lifecycle states, PAMA outcomes, certification gates, confo
 
 Without a common audit-event model, implementations can claim governance while emitting incompatible or incomplete traces. Decorative logging remains logging's favorite hobby.
 
-## Decision candidate
+## Decision
 
-Agent Memory must define a common memory observability and audit-event model.
+Agent Memory defines a common memory observability and audit-event model.
 
-Consequential memory transitions, handoffs, recalls, mutations, certification, disputes, corrections, deletion, policy decisions, and conformance runs should emit structured events appropriate to their risk and privacy constraints.
+Consequential memory transitions, handoffs, recalls, mutations, certification, disputes, corrections, deletion, policy decisions, and conformance runs emit structured events appropriate to their risk and privacy constraints.
 
-Events affecting governed uncertainty should preserve where material:
+Events affecting governed uncertainty preserve where material:
 
 - estimator/model ID and version
 - calibration reference
@@ -52,15 +52,23 @@ At minimum:
 - component_handoff
 - conformance_fixture_run
 
-## Required follow-up before acceptance
+## Acceptance evidence
 
-Create and audit:
+Canonical contract:
 
-```text
-docs/30-memory-observability-and-audit-events.md
-schemas/memory-audit-event.schema.json
-```
+- [`../30-memory-observability-and-audit-events.md`](../30-memory-observability-and-audit-events.md)
 
-## Doctrine candidate
+Machine-readable evidence:
+
+- `schemas/memory-audit-event.schema.json`
+- `schemas/decision-receipt.schema.json`
+
+Repository validation checks both schemas as valid Draft 2020-12 JSON Schemas.
+
+## Acceptance scope
+
+Accepted establishes structured observability and reconstruction semantics as canonical doctrine. It does not require one ledger backend or claim every implementation emits every event today.
+
+## Doctrine
 
 If a consequential memory transition cannot be reconstructed from evidence, policy, authority, and state, its governance is incomplete.
