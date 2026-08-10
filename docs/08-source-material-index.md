@@ -2,9 +2,11 @@
 
 ## Purpose
 
-This index records the conceptual sources that fed the doctrine.
+This index records the conceptual systems that fed the doctrine and points to the external research evidence used to challenge, extend, or validate those concepts.
 
-It is not a complete bibliography. It is a working map of where the ideas currently live so they can be reconciled without treating every repo as its own little kingdom.
+It is not a complete bibliography. Internal architecture provenance and external scientific evidence are deliberately separated so a repo-specific idea does not quietly acquire the authority of neuroscience merely because both happen to use the word "memory."
+
+For the interdisciplinary literature map, see `23-research-bibliography.md`.
 
 ## Primary source systems
 
@@ -18,6 +20,21 @@ It is not a complete bibliography. It is a working map of where the ideas curren
 | PAMA logic | mutation authority, adaptive guardrails, promotion and pruning policy |
 | FailSafe / Arbiter | evidence capture, policy gates, approval boundaries, audit trails |
 | Bicameral | decision continuity, drift detection, durable decisions |
+
+## External research domains
+
+| Domain | Questions it informs | Evidence map |
+|---|---|---|
+| Working memory | active state, bounded context, integration | `23-research-bibliography.md` |
+| Episodic / semantic memory | events versus generalized knowledge | `23-research-bibliography.md` |
+| Procedural memory | skills, runbooks, learned action patterns | `23-research-bibliography.md` |
+| Prospective memory | future intentions and obligations | `23-research-bibliography.md` |
+| Consolidation | durable transformation and abstraction | `23-research-bibliography.md` |
+| Forgetting / interference | adaptive suppression, retrieval competition | `21-forgetting-consolidation-and-memory-metabolism.md` |
+| Cellular / immune memory | inherited altered response without autobiographical recall | `20-memory-foundations-across-scales.md` |
+| Agent-memory architectures | store/read/manage/control patterns | `22-agentic-memory-theory-and-development.md` |
+| Agent-memory benchmarks | recall, updates, temporal reasoning, action | `23-research-bibliography.md` |
+| Memory security | poisoning, leakage, context admission | `22-agentic-memory-theory-and-development.md` |
 
 ## UOR Framework
 
@@ -101,6 +118,36 @@ Doctrine placement:
 - `docs/04-governance-and-pama.md`
 - `docs/adr/ADR-004-pama-controls-mutation-authority.md`
 
+## Evidence-transfer rule
+
+When moving an idea between biological, cognitive, and agentic domains, classify the transfer:
+
+```text
+MECHANISM
+Demonstrated in the original substrate.
+
+FUNCTIONAL ANALOGY
+A similar problem or role appears in another substrate.
+
+ENGINEERING PRESCRIPTION
+A software requirement justified independently by agent evidence, governance, or operational risk.
+
+OPEN HYPOTHESIS
+A design idea that still requires validation.
+```
+
+Do not turn functional analogy into claimed mechanism.
+
+For example:
+
+```text
+Biological systems show adaptive forgetting.
+```
+
+may support the hypothesis that selective forgetting can help an artificial memory system.
+
+It does **not** establish that a specific decay equation, vector-store TTL, or pruning algorithm is biologically correct.
+
 ## Open consolidation questions
 
 1. Should saturation be represented as one scalar or a vector of durability dimensions?
@@ -110,20 +157,33 @@ Doctrine placement:
 5. Which memory types require human approval before crystallization?
 6. What is the minimum viable conformance fixture schema?
 7. How should CodeGenome graph confidence flow into general agent memory saturation?
+8. How should episodic memory be consolidated into semantic or procedural memory without losing behavior-changing exceptions?
+9. Which forgetting mechanisms should be reversible, and which require irreversible deletion?
+10. How should prospective memory connect to schedulers and automation systems without conflating memory with execution?
+11. How should inherited memory identify acquisition mode and authority?
+12. How should memory-guided action be benchmarked separately from conversational recall?
 
 ## Maintenance rule
 
-When a new memory-system idea appears, place it in one of these categories before adding implementation work:
+When a new memory-system idea appears, place it in one or more of these categories before adding implementation work:
 
 ```text
 identity
 evidence
+source trust
+encoding / admission
+content type
 saturation
 lifecycle
+consolidation
+retrieval
 governance
 certification
 runtime
+correction
+forgetting
+inheritance
 conformance
 ```
 
-If it does not fit, create an issue before creating a new concept.
+If the idea does not fit, determine whether the taxonomy is genuinely incomplete before creating a new component. Architectural sprawl remains undefeated at naming things humans find interesting.
