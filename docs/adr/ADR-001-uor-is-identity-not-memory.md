@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -32,6 +32,10 @@ UOR must own deterministic object identity and exact addressability. It must not
 
 - requires a separate lifecycle layer
 - requires implementers to respect the boundary between object identity and memory use
+
+## Acceptance scope
+
+Accepted means this boundary is canonical doctrine. It does not claim that every implementation uses UOR or that any specific UOR integration is complete.
 
 ## Doctrine
 
