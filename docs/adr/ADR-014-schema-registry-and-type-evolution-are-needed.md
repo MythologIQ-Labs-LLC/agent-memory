@@ -2,28 +2,29 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
-The repository contains initial schemas for memory units and conformance reports. As implementations adopt the doctrine, those schemas will evolve.
+The repository contains doctrine-level schemas used by fixtures and future implementations. As implementations adopt the doctrine, those schemas will evolve.
 
 Without explicit schema governance, implementation-specific fields can leak into doctrine-level objects, uncertainty semantics can be lost across adapters, and migrations can become oral tradition, which is how software projects summon ghosts.
 
-## Decision candidate
+## Decision
 
-Agent Memory should define a schema registry and type-evolution strategy.
+Agent Memory defines a schema registry and type-evolution strategy.
 
-The registry should govern doctrine-level types while allowing implementation-specific extension under explicit compatibility rules.
+The registry governs doctrine-level semantic types while allowing implementation-specific extension under explicit compatibility rules.
 
-It should define representations for at least:
+It includes representations for:
 
-- memory unit identity and lifecycle state
+- memory identity and lifecycle state
 - provenance and acquisition mode
 - estimator provenance and uncertainty
 - policy and authority references
 - permitted-action sets
 - decision receipts
+- audit events
 - deletion/tombstone state
 - schema version and migration metadata
 
@@ -42,17 +43,27 @@ It should define representations for at least:
 - requires compatibility and migration rules
 - can slow experimentation if extension mechanisms are too rigid
 
-## Required follow-up before acceptance
+## Acceptance evidence
 
-Create and audit:
+Canonical contract:
 
-```text
-docs/27-schema-registry-and-type-evolution.md
-```
+- [`../27-schema-registry-and-type-evolution.md`](../27-schema-registry-and-type-evolution.md)
 
-Then reconcile the existing schemas and fixtures against the registry.
+Machine-readable evidence:
 
-## Doctrine candidate
+- `schemas/memory-unit.schema.json`
+- `schemas/conformance-report.schema.json`
+- `schemas/decision-receipt.schema.json`
+- `schemas/memory-audit-event.schema.json`
+- `scripts/validate_schemas.py`
+
+The memory schema was expanded additively so legacy fixtures remain valid while governed-uncertainty types become representable.
+
+## Acceptance scope
+
+Accepted establishes semantic schema governance as canonical doctrine. Future breaking migrations still require explicit versioning and evidence.
+
+## Doctrine
 
 Schemas are part of memory governance.
 
