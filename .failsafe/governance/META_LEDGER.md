@@ -95,3 +95,38 @@ three identified braids (tracker/delivery state, identity/ordering,
 schema/validator) before adding new doctrine. No repository content modified —
 observational directive honored; execution awaits Governor approval and
 Codex overhaul completion.
+
+---
+
+### Entry #3: MILESTONES 0-2 EXECUTED
+
+**Timestamp**: 2026-08-10T23:30:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256(RESEARCH_BRIEF.md with Milestone 0 delta)
+= b9a3a1850d0e9dac2f9a331a65c73e6ec4df29515a2946defe241ff3b7f542db
+```
+
+**Previous Hash**: ae7447d9fa9a5b6d44f8bbae4b30da19edd6c3c9f6ae5ccf2858ed97169fe6b5
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= 8e38e0ab719db7b296e6aefa1d4baba6551c67367f3a5761e1d829d2e4e9dea0
+```
+
+**Decision**: Governor authorized execution ("entirely up to you... proceed").
+Milestone 0: overhaul landed with no renames; identity path map; all validators
+green on merged tree. Milestone 1: 13 delivered issues verified against
+acceptance criteria by independent verification pass (6 clean, 7 with narrow
+residual gaps consolidated into follow-up issue #43); stale references repaired
+in 8 open issue bodies (deliverables reassigned to free slots docs/33-39);
+CI step-summary gap fixed. Milestone 2: calibration report generator delivered
+(#4) with input schema, worked example, and CI sync check. Remaining scope:
+Milestone 3 doctrine wave (#6 -> #7 -> #18 -> #26/#27 -> #28 -> #30),
+cross-repo (#5, #8), gated futures (#19, #29). Per Governor directive,
+contributions carry no AI attribution.
