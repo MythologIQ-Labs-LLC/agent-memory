@@ -130,3 +130,40 @@ CI step-summary gap fixed. Milestone 2: calibration report generator delivered
 Milestone 3 doctrine wave (#6 -> #7 -> #18 -> #26/#27 -> #28 -> #30),
 cross-repo (#5, #8), gated futures (#19, #29). Per Governor directive,
 commit messages and issue comments carry no attribution trailers.
+
+---
+
+### Entry #4: MILESTONE 3 EXECUTED — DOCTRINE WAVE COMPLETE
+
+**Timestamp**: 2026-08-11T00:45:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("milestone-3:" + git tree hash of docs/ at HEAD)
+= 2e830c86d818f2e6e947d754328709f9e369e6cb94a67755710ae641052ef398
+(docs tree: 9055f56e2969bb4916462f1372e17b836249801b)
+```
+
+**Previous Hash**: 77ae4f73a32bd51d0f1dfca9d4a20b62b80a2d033b7a3ab54926498fe8250af3
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= 43f3936ffe183f5a536ba86edbc79519cf5c6f733027765a8571b0f5e3fb448c
+```
+
+**Decision**: Milestone 3 executed in dependency order per the plan. Delivered
+and closed: #6 (docs/33 PAMA decision table), #7 (docs/34 adapter contracts),
+#18 (docs/35 interoperability profiles), #26 (docs/36 policy-as-memory),
+#27 (docs/37 memory economics), #28 (docs/38 correction UX contract),
+#8 (docs/39 ownership map, declared-not-verified), #30
+(docs/profiles/durable-decision-memory-profile), #19 and #29 (gated future
+notes, gates cleared by #18 and the contracts slice). All 14 previously
+verified issues also closed with delivery evidence. Backlog reduced from 25
+open issues to 2: #5 (blocked on external repository access) and #43
+(consolidated residual gaps). All validators green at every commit; commit
+messages and issue comments carry no attribution trailers per Governor
+directive.
