@@ -1,34 +1,37 @@
 """P4.5a portable governance evidence core.
 
-These tests intentionally exercise valid negative outcomes as well as signature
-and binding failures.  A denial with a valid authentication tag is evidence, not
-a verifier malfunction; an authorized delete with residual state remains a
-lifecycle failure.
+These tests exercise valid negative outcomes as well as signature and binding
+failures. A denial with a valid signature is evidence, not a verifier malfunction;
+an authorized delete with residual state remains a lifecycle failure.
 
 Run: python -m unittest discover -s reference/tests -t reference
 """
 
 from __future__ import annotations
 
+import json
 import sys
 import unittest
 from pathlib import Path
 
+import jsonschema
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref.portable_evidence import (  # noqa: E402
+    IssuerKey,
     RuntimeObservation,
-    TrustKey,
     canonical_json,
     issue_evidence,
     verify_evidence,
 )
 
 ISSUER = "issuer:agent-memory-reference"
-KEY = TrustKey(
+KEY = IssuerKey(
     issuer_id=ISSUER,
     key_id="key-2026-08",
-    secret=b"test-only-portable-evidence-key",
+    private_key=Ed25519PrivateKey.from_private_bytes(bytes(range(1, 33))),
     valid_from="2026-08-01T00:00:00Z",
     valid_until="2026-08-31T23:59:59Z",
 )
@@ -54,12 +57,12 @@ def make_evidence(**overrides):
         policy_ref="policy:pama-2026-08",
         authority_state_ref="authority:rev-12",
         decision_time="2026-08-11T18:00:00Z",
-        scope_ref="scope:hmac:4fc2",
+        scope_ref="scope:opaque:4fc2",
         before_state_ref="state:before:42",
         after_state_ref="state:after:42",
         lifecycle_result="satisfied",
-        source_domain_ref="domain:hmac:project-a",
-        destination_domain_ref="domain:hmac:archive",
+        source_domain_ref="domain:opaque:project-a",
+        destination_domain_ref="domain:opaque:archive",
         domain_authorization_state_ref="domain-auth:9",
     )
     args.update(overrides)
@@ -77,7 +80,8 @@ class CanonicalizationTests(unittest.TestCase):
 
 class PortableEvidenceTests(unittest.TestCase):
     def setUp(self):
-        self.trust = {(KEY.issuer_id, KEY.key_id): KEY}
+        trust_key = KEY.trust_key()
+        self.trust = {(trust_key.issuer_id, trust_key.key_id): trust_key}
 
     def test_happy_path_binds_receipt_action_policy_authority_and_domains(self):
         evidence = make_evidence()
@@ -90,8 +94,8 @@ class PortableEvidenceTests(unittest.TestCase):
                 execution_time="2026-08-11T18:00:02Z",
                 policy_ref="policy:pama-2026-08",
                 authority_state_ref="authority:rev-12",
-                source_domain_ref="domain:hmac:project-a",
-                destination_domain_ref="domain:hmac:archive",
+                source_domain_ref="domain:opaque:project-a",
+                destination_domain_ref="domain:opaque:archive",
                 authority_valid_at_execution=True,
             ),
         )
@@ -100,6 +104,12 @@ class PortableEvidenceTests(unittest.TestCase):
         self.assertEqual(result["governance_disposition"], "committed")
         self.assertEqual(result["runtime_execution"], "executed_as_authorized")
         self.assertEqual(result["lifecycle_satisfaction"], "satisfied")
+
+    def test_projection_satisfies_the_versioned_json_schema(self):
+        evidence = make_evidence()
+        root = Path(__file__).resolve().parents[2]
+        schema = json.loads((root / "schemas" / "portable-governance-evidence.schema.json").read_text())
+        jsonschema.Draft202012Validator(schema).validate(evidence)
 
     def test_projection_contains_no_canonical_receipt_or_memory_content(self):
         evidence = make_evidence()
@@ -114,7 +124,7 @@ class PortableEvidenceTests(unittest.TestCase):
         evidence["governance"]["disposition"] = "denied"
         result = verify_evidence(evidence, self.trust)
         self.assertEqual(result["evidence_integrity"], "invalid")
-        self.assertIn("authentication_failed", result["binding_failures"])
+        self.assertIn("signature_verification_failed", result["binding_failures"])
 
     def test_unknown_issuer_is_unverifiable_not_governance_denial(self):
         evidence = make_evidence()
@@ -155,12 +165,39 @@ class PortableEvidenceTests(unittest.TestCase):
             evidence,
             self.trust,
             runtime=RuntimeObservation(
-                source_domain_ref="domain:hmac:project-b",
-                destination_domain_ref="domain:hmac:archive",
+                source_domain_ref="domain:opaque:project-b",
+                destination_domain_ref="domain:opaque:archive",
             ),
         )
         self.assertEqual(result["evidence_integrity"], "invalid")
         self.assertIn("wrong_source_domain", result["binding_failures"])
+
+    def test_execution_before_decision_fails_binding(self):
+        evidence = make_evidence()
+        result = verify_evidence(
+            evidence,
+            self.trust,
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                execution_time="2026-08-11T17:59:59Z",
+                authority_valid_at_execution=True,
+            ),
+        )
+        self.assertEqual(result["evidence_integrity"], "invalid")
+        self.assertIn("execution_precedes_decision", result["binding_failures"])
+
+    def test_unknown_execution_time_authority_fails_closed(self):
+        evidence = make_evidence()
+        result = verify_evidence(
+            evidence,
+            self.trust,
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                execution_time="2026-08-11T18:00:02Z",
+            ),
+        )
+        self.assertEqual(result["evidence_integrity"], "valid")
+        self.assertEqual(result["runtime_execution"], "unverifiable")
 
     def test_valid_denial_plus_runtime_action_is_unauthorized_execution(self):
         evidence = make_evidence(governance_disposition="denied", lifecycle_result="not_applicable")
@@ -197,30 +234,35 @@ class PortableEvidenceTests(unittest.TestCase):
         self.assertEqual(result["evidence_integrity"], "invalid")
         self.assertEqual(result["receipt_resolution"], "mismatch")
 
-    def test_historical_key_remains_verifiable_after_rotation(self):
-        old_key = TrustKey(
+    def test_historical_public_key_remains_verifiable_after_rotation(self):
+        old_key = IssuerKey(
             issuer_id=ISSUER,
             key_id="key-old",
-            secret=b"old-test-key",
+            private_key=Ed25519PrivateKey.from_private_bytes(bytes(range(33, 65))),
             valid_from="2026-07-01T00:00:00Z",
             valid_until="2026-08-15T00:00:00Z",
         )
-        new_key = TrustKey(
+        new_key = IssuerKey(
             issuer_id=ISSUER,
             key_id="key-new",
-            secret=b"new-test-key",
+            private_key=Ed25519PrivateKey.from_private_bytes(bytes(range(65, 97))),
             valid_from="2026-08-15T00:00:01Z",
         )
         evidence = make_evidence(key=old_key, issued_at="2026-08-11T18:00:01Z")
-        trust = {(old_key.issuer_id, old_key.key_id): old_key, (new_key.issuer_id, new_key.key_id): new_key}
+        old_trust = old_key.trust_key()
+        new_trust = new_key.trust_key()
+        trust = {
+            (old_trust.issuer_id, old_trust.key_id): old_trust,
+            (new_trust.issuer_id, new_trust.key_id): new_trust,
+        }
         result = verify_evidence(evidence, trust)
         self.assertEqual(result["evidence_integrity"], "valid")
 
     def test_revoked_key_cannot_issue_new_evidence(self):
-        revoked = TrustKey(
+        revoked = IssuerKey(
             issuer_id=ISSUER,
             key_id="key-revoked",
-            secret=b"revoked-test-key",
+            private_key=Ed25519PrivateKey.from_private_bytes(bytes(range(97, 129))),
             valid_from="2026-08-01T00:00:00Z",
             revoked_at="2026-08-10T00:00:00Z",
         )
