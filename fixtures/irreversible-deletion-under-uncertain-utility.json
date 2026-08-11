@@ -1,5 +1,6 @@
 {
   "fixture_id": "irreversible-deletion-under-uncertain-utility",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "A learned utility estimator predicts very low future value and proposes permanent deletion.",
   "expected_behavior": {
@@ -9,8 +10,14 @@
   },
   "governed_uncertainty": {
     "requested_action": "purge",
-    "permitted_actions": ["archive", "require_review", "deprioritize"],
-    "prohibited_actions": ["purge"],
+    "permitted_actions": [
+      "archive",
+      "require_review",
+      "deprioritize"
+    ],
+    "prohibited_actions": [
+      "purge"
+    ],
     "selected_action": "archive",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -40,13 +47,21 @@
     "saturation": {
       "sigma": 0.2,
       "calibrated": true,
-      "durability_dimensions": ["future_utility"]
+      "durability_dimensions": [
+        "future_utility"
+      ]
     },
     "authority": {
       "pama_outcome": "require_review",
       "risk_class": "critical",
-      "permitted_actions": ["archive", "require_review", "deprioritize"],
-      "prohibited_actions": ["purge"],
+      "permitted_actions": [
+        "archive",
+        "require_review",
+        "deprioritize"
+      ],
+      "prohibited_actions": [
+        "purge"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-10T00:00:00Z"

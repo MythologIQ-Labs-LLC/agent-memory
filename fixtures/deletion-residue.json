@@ -1,5 +1,6 @@
 {
   "fixture_id": "deletion-residue",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "The raw memory is deleted while a derived summary or index still preserves recoverable content.",
   "expected_behavior": {
@@ -9,8 +10,14 @@
   },
   "governed_uncertainty": {
     "requested_action": "declare_full_deletion_complete",
-    "permitted_actions": ["continue_dependency_purge", "report_residual_copy", "verify_deletion"],
-    "prohibited_actions": ["declare_full_deletion_complete"],
+    "permitted_actions": [
+      "continue_dependency_purge",
+      "report_residual_copy",
+      "verify_deletion"
+    ],
+    "prohibited_actions": [
+      "declare_full_deletion_complete"
+    ],
     "selected_action": "continue_dependency_purge",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -28,7 +35,9 @@
       "observer": "deletion-verifier",
       "method": "dependency traversal",
       "timestamp": "2026-08-10T00:00:00Z",
-      "derived_from": ["uor:test:deleted-raw-memory"]
+      "derived_from": [
+        "uor:test:deleted-raw-memory"
+      ]
     },
     "evidence": [
       {
@@ -41,13 +50,21 @@
     "saturation": {
       "sigma": 0.0,
       "calibrated": true,
-      "durability_dimensions": ["deletion_verification"]
+      "durability_dimensions": [
+        "deletion_verification"
+      ]
     },
     "authority": {
       "pama_outcome": "collect_more_evidence",
       "risk_class": "critical",
-      "permitted_actions": ["continue_dependency_purge", "report_residual_copy", "verify_deletion"],
-      "prohibited_actions": ["declare_full_deletion_complete"],
+      "permitted_actions": [
+        "continue_dependency_purge",
+        "report_residual_copy",
+        "verify_deletion"
+      ],
+      "prohibited_actions": [
+        "declare_full_deletion_complete"
+      ],
       "selection_mode": "deterministic"
     },
     "retention": {

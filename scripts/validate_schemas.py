@@ -44,9 +44,12 @@ def main() -> int:
 
     memory_schema = load(schema_dir / "memory-unit.schema.json")
     memory_validator = jsonschema.Draft202012Validator(memory_schema)
+    audit_event_schema = load(schema_dir / "memory-audit-event.schema.json")
+    audit_event_validator = jsonschema.Draft202012Validator(audit_event_schema)
 
     fixture_errors: list[str] = []
     fixture_count = 0
+    audit_event_count = 0
     for path in sorted(fixture_dir.glob("*.json")):
         fixture_count += 1
         try:
@@ -64,6 +67,27 @@ def main() -> int:
             location = ".".join(str(part) for part in error.path)
             suffix = f" at memory_unit.{location}" if location else " at memory_unit"
             fixture_errors.append(f"{path.relative_to(root)}{suffix}: {error.message}")
+
+        audit_events = fixture.get("audit_events")
+        if audit_events is not None:
+            if not isinstance(audit_events, list) or not audit_events:
+                fixture_errors.append(
+                    f"{path.relative_to(root)}: audit_events must be a non-empty list when present"
+                )
+                continue
+            for index, event in enumerate(audit_events):
+                audit_event_count += 1
+                if not isinstance(event, dict):
+                    fixture_errors.append(
+                        f"{path.relative_to(root)}: audit_events[{index}] must be an object"
+                    )
+                    continue
+                for error in sorted(audit_event_validator.iter_errors(event), key=lambda e: list(e.path)):
+                    location = ".".join(str(part) for part in error.path)
+                    suffix = f".{location}" if location else ""
+                    fixture_errors.append(
+                        f"{path.relative_to(root)} at audit_events[{index}]{suffix}: {error.message}"
+                    )
 
     if fixture_errors:
         print("Fixture/schema validation failed:", file=sys.stderr)
@@ -158,7 +182,7 @@ def main() -> int:
     schema_count = len(list(schema_dir.glob("*.json")))
     print(
         f"Validated {schema_count} schema(s), {fixture_count} fixture memory unit(s), "
-        f"and {source_count} source-rights record(s)."
+        f"{audit_event_count} audit event(s), and {source_count} source-rights record(s)."
     )
     return 0
 

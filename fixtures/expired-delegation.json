@@ -1,5 +1,6 @@
 {
   "fixture_id": "expired-delegation",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "An agent previously had delegated access, but that delegation has expired before a new recall or mutation request.",
   "expected_behavior": {
@@ -9,8 +10,13 @@
   },
   "governed_uncertainty": {
     "requested_action": "mutate_shared_memory",
-    "permitted_actions": ["block", "request_new_delegation"],
-    "prohibited_actions": ["mutate_shared_memory"],
+    "permitted_actions": [
+      "block",
+      "request_new_delegation"
+    ],
+    "prohibited_actions": [
+      "mutate_shared_memory"
+    ],
     "selected_action": "block",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -46,13 +52,20 @@
     "saturation": {
       "sigma": 0.95,
       "calibrated": true,
-      "durability_dimensions": ["certified_shared_memory"]
+      "durability_dimensions": [
+        "certified_shared_memory"
+      ]
     },
     "authority": {
       "pama_outcome": "block",
       "risk_class": "high",
-      "permitted_actions": ["block", "request_new_delegation"],
-      "prohibited_actions": ["mutate_shared_memory"],
+      "permitted_actions": [
+        "block",
+        "request_new_delegation"
+      ],
+      "prohibited_actions": [
+        "mutate_shared_memory"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-01T00:00:00Z"

@@ -1,5 +1,7 @@
 # Source Trust and Reputation
 
+> Canonical requirement: [ADR-009](adr/ADR-009-source-trust-is-a-first-class-signal.md)
+
 ## Purpose
 
 Memory quality depends not only on what a source says, but on what kind of source produced it, how reliably that source has behaved, what scope the reliability applies to, and whether later transformations preserve the source's origin.

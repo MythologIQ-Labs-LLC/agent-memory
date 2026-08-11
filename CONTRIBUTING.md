@@ -172,10 +172,13 @@ If a field changes meaning, treat it as a semantic migration even when its JSON 
 Every conformance fixture should:
 
 - isolate a meaningful failure mode
+- carry a `fixture_version` (MAJOR.MINOR.PATCH) describing its scenario contract
 - declare expected behavior
 - contain a valid memory unit
 - declare governed-uncertainty invariants where applicable
 - avoid claiming that structural fixture validity proves runtime behavior
+
+Fixture versioning rules: the version tracks the scenario contract, not the memory-unit schema. Prose-only changes may stay patch-compatible; changes to expected behavior, invariants, trap semantics, or material inputs require a version bump (major when scenario semantics break). Runtime evidence records `fixture_id` plus `fixture_version` so results stay comparable as fixtures evolve. Full rules live in `docs/27-schema-registry-and-type-evolution.md`.
 
 Run:
 
@@ -186,6 +189,21 @@ python scripts/validate_schemas.py
 ```
 
 The repository workflow runs the same checks on pushes and pull requests.
+
+## Validator dependency policy
+
+Validation tooling keeps a deliberate dependency split:
+
+```text
+scripts/validate_fixtures.py             Python standard library only
+scripts/validate_schemas.py              jsonschema permitted/required
+scripts/validate_markdown_links.py       Python standard library only
+scripts/validate_doctrine_boundaries.py  Python standard library only
+scripts/generate_calibration_report.py   Python standard library only
+other validation dependencies            require explicit justification in the PR
+```
+
+The stdlib-only validators must stay runnable with no installation step, so the cheapest check is always available. `jsonschema` is the one sanctioned exception because hand-rolled JSON Schema validation is how schema and validator drift apart. CI remains reproducible from the commands documented above and in the workflow summary.
 
 ## Documentation changes
 

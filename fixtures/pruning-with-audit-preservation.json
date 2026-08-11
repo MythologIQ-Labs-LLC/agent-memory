@@ -1,5 +1,6 @@
 {
   "fixture_id": "pruning-with-audit-preservation",
+  "fixture_version": "1.0.0",
   "class": "evaporate",
   "description": "A stale memory is removed from active recall while preserving an audit tombstone.",
   "expected_behavior": {
@@ -32,12 +33,18 @@
       "sigma": 0.04,
       "calibrated": true,
       "threshold": 0.95,
-      "durability_dimensions": ["staleness", "low_reuse", "retention_policy"]
+      "durability_dimensions": [
+        "staleness",
+        "low_reuse",
+        "retention_policy"
+      ]
     },
     "authority": {
       "pama_outcome": "allow_with_ledger",
       "risk_class": "low",
-      "policy_refs": ["ADR-004"]
+      "policy_refs": [
+        "ADR-004"
+      ]
     },
     "certification": {
       "status": "none",
@@ -52,9 +59,21 @@
     "created_at": "2026-07-06T00:00:00Z"
   },
   "interaction_history": [
-    { "event": "observed", "count": 1 },
-    { "event": "stale", "count": 1 },
-    { "event": "pruned", "count": 1 },
-    { "event": "tombstone_created", "count": 1 }
+    {
+      "event": "observed",
+      "count": 1
+    },
+    {
+      "event": "stale",
+      "count": 1
+    },
+    {
+      "event": "pruned",
+      "count": 1
+    },
+    {
+      "event": "tombstone_created",
+      "count": 1
+    }
   ]
 }

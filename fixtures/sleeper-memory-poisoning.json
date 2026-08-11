@@ -1,5 +1,6 @@
 {
   "fixture_id": "sleeper-memory-poisoning",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "A memory appears benign at write time but becomes unsafe when a later trigger causes retrieval and action.",
   "expected_behavior": {
@@ -9,8 +10,14 @@
   },
   "governed_uncertainty": {
     "requested_action": "activate_triggered_memory",
-    "permitted_actions": ["quarantine", "require_review", "block_activation"],
-    "prohibited_actions": ["activate_triggered_memory"],
+    "permitted_actions": [
+      "quarantine",
+      "require_review",
+      "block_activation"
+    ],
+    "prohibited_actions": [
+      "activate_triggered_memory"
+    ],
     "selected_action": "quarantine",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -40,13 +47,21 @@
     "saturation": {
       "sigma": 0.72,
       "calibrated": true,
-      "durability_dimensions": ["prior_benign_use"]
+      "durability_dimensions": [
+        "prior_benign_use"
+      ]
     },
     "authority": {
       "pama_outcome": "quarantine",
       "risk_class": "critical",
-      "permitted_actions": ["quarantine", "require_review", "block_activation"],
-      "prohibited_actions": ["activate_triggered_memory"],
+      "permitted_actions": [
+        "quarantine",
+        "require_review",
+        "block_activation"
+      ],
+      "prohibited_actions": [
+        "activate_triggered_memory"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-10T00:00:00Z"

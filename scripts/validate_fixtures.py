@@ -10,17 +10,23 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
 
 REQUIRED_TOP_LEVEL = {
     "fixture_id",
+    "fixture_version",
     "class",
     "description",
     "expected_behavior",
     "memory_unit",
 }
+
+# Fixture versions describe the scenario contract (expected behavior, invariants,
+# trap semantics, material inputs), not the memory-unit schema version.
+FIXTURE_VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+$")
 
 REQUIRED_MEMORY_UNIT = {
     "id",
@@ -124,6 +130,10 @@ def validate_fixture(path: Path) -> list[str]:
     errors.extend(require_keys(data, REQUIRED_TOP_LEVEL, str(path)))
     if errors:
         return errors
+
+    version = data.get("fixture_version")
+    if not isinstance(version, str) or not FIXTURE_VERSION_PATTERN.match(version):
+        errors.append(f"{path}: fixture_version must be a MAJOR.MINOR.PATCH string, got {version!r}")
 
     expected = data.get("expected_behavior")
     if not isinstance(expected, (dict, list, str)):

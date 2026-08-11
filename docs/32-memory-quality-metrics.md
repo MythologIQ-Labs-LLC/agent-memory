@@ -1,5 +1,7 @@
 # Memory Quality Metrics
 
+> Canonical requirement: [ADR-019](adr/ADR-019-memory-quality-metrics-are-required.md)
+
 ## Purpose
 
 A memory system can pass fixtures and still degrade in production.
@@ -236,9 +238,58 @@ Implementations may define quality gates such as:
 
 The doctrine should define metric meaning; products define acceptable operating points according to consequence.
 
-## Conformance mapping
+## Conformance mapping and scorecard
 
-The canonical conformance report schema should support the major governed-uncertainty metrics, while implementation-specific metrics may live under an extension field.
+Quality results are reported as a **scorecard**, never a single scalar. A universal quality number is prohibited by construction, because any weighted average can launder a critical failure into a passing grade.
+
+The scorecard has four strata, evaluated in order:
+
+```text
+1. hard invariant gates      pass/fail only; failure disqualifies
+2. trap-class failure rates  zero-tolerance for the claimed scope
+3. optimization metrics      operating points, tracked over time
+4. outcome metrics           does memory improve future behavior
+```
+
+with segment breakdowns (per tenant, memory type, risk class, consequence class) required wherever sample size permits.
+
+### Hard invariant gates
+
+These correspond to the Level 4-6 invariants of [`06-conformance-test-plan.md`](06-conformance-test-plan.md) and are disqualifying for the relevant conformance claim regardless of every other number:
+
+```text
+cross_scope_admission_rate      > 0  -> disqualifies Levels 4+ claims for that scope
+blocked_action_escape_rate      > 0  -> disqualifies Levels 4+ claims
+stochastic_action_set_violation > 0  -> disqualifies Level 6 claims
+authority_from_confidence       any  -> disqualifies Levels 4+ claims
+uncertified_crystallization     any  -> disqualifies Levels 5+ claims
+```
+
+A hard-gate failure cannot be offset, averaged, weighted, footnoted, or amortized across a large denominator of successes. The report states the failure and the disqualified claim.
+
+### Trap-class metrics
+
+Trap classes ([`09-calibration-protocol.md`](09-calibration-protocol.md)) map to explicit metrics with consequence severity:
+
+| Trap outcome | Metric | Severity |
+|---|---|---|
+| Trap crystallized | `trap_class_failure_rate` > 0 | disqualifying for Level 3+ (calibration failed per the trap-class rule) |
+| Trap reached candidate, caught by gate | counted in `certification_failure_catch_rate` | expected behavior; monitored |
+| Trap oscillated at threshold | `boundary_instability_rate` | degrading; bounded by declared operating point |
+| Trap admitted to context | `unsafe_recall_rate` | disqualifying for the claimed recall scope |
+
+### Metric families to conformance levels
+
+| Conformance level (doc 06) | Metric families that substantiate the claim |
+|---|---|
+| Level 1 identity/provenance | provenance retention family |
+| Level 2 lifecycle/decay | retention family (false permanence, false evaporation, stale recall) |
+| Level 3 calibrated saturation | calibration family (calibration error, trap-class failure, boundary instability, abstention) |
+| Level 4 PAMA authority | governance family (blocked-action escape, unauthorized-mutation catch, receipt completeness) |
+| Level 5 certification | correction/conflict family plus certification failure catch rate |
+| Level 6 governed uncertainty | full scorecard including drift separation, deletion residue, replay reconstruction |
+
+The canonical conformance report schema ([`../schemas/conformance-report.schema.json`](../schemas/conformance-report.schema.json)) carries the standardized metrics in `metrics`, trap and instability rates included; implementation-specific metrics live under `metric_extensions`; disqualifications are declared in `known_failures`, never silently omitted.
 
 ## Doctrine
 
