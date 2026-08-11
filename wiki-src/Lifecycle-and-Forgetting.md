@@ -22,6 +22,16 @@ Each function asks a different architectural question.
 
 ## Lifecycle state is explicit
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/lifecycle-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/lifecycle-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/lifecycle-flow-light.svg" alt="Agent Memory lifecycle state map showing strengthening, governed promotion, demotion, dispute, correction, reconciliation, pruning, and the separation between transition proposal and commit" width="100%">
+  </picture>
+</p>
+
+The diagram is an explanatory map of the canonical lifecycle state machine, not an independent transition table. Not every memory traverses every state. A transition proposal does not mutate lifecycle state; only a permitted transition may commit after validation. `Crystallized` means durable under current evidence and policy, not eternal, and `Pruned` does not necessarily mean deleted.
+
 A compact view:
 
 ```text
