@@ -9,6 +9,7 @@
 **Architecture**
 - [PAMA](PAMA)
 - [Lifecycle and Forgetting](Lifecycle-and-Forgetting)
+- [Canonical and Derived State](Canonical-and-Derived-State)
 - [Governed Uncertainty](Governed-Uncertainty)
 - [Security and Privacy](Security-and-Privacy)
 - [Architecture Decisions](Architecture-Decisions)

@@ -286,7 +286,16 @@ predicted low utility != irreversible deletion authority
 
 Deletion must also account for derived memory such as summaries, indexes, graph edges, caches, exported copies, and consolidated state where the system controls them.
 
-See **[Forgetting, Consolidation, and Memory Metabolism](docs/21-forgetting-consolidation-and-memory-metabolism.md)** and **[Retention, Deletion, and Tombstones](docs/28-retention-deletion-and-tombstones.md)**.
+Derived state fails in a way canonical state cannot — by being out of date — and the two ways it can be out of date are not interchangeable:
+
+```text
+stale     a source changed        content may be wrong
+residual  a source was purged     content may be prohibited
+```
+
+Staleness may be repairable by recomputation. Residue is not, because recomputation cannot un-retain content the deletion was meant to destroy, and because deciding what happens to it is the deletion authority's call rather than an estimator's.
+
+See **[Forgetting, Consolidation, and Memory Metabolism](docs/21-forgetting-consolidation-and-memory-metabolism.md)** and **[Retention, Deletion, and Tombstones](docs/28-retention-deletion-and-tombstones.md)**. The propagation semantics behind that distinction are worked out in **[Canonical and Derived State](docs/programs/runtime-evidence/canonical-and-derived-state.md)**, which is design work rather than adopted doctrine.
 
 ---
 
@@ -527,6 +536,8 @@ estimate / proposal
 with repeated stochastic trials, cross-scope admission tests, actual concurrency behavior, deletion propagation, and reconstructable runtime receipts.
 
 That missing evidence is a feature of the governance process, not an embarrassing footnote to hide below the fold.
+
+Deletion propagation is the slice currently in progress, and beginning it surfaced something worth stating plainly: the requirement was not yet expressible. A claim like *this projection is stale with respect to canonical state* had no defined meaning in this repository, which made it untestable rather than merely unproven. **[Canonical and Derived State](docs/programs/runtime-evidence/canonical-and-derived-state.md)** supplies the missing definitions and fixes the evidence bar before the implementation that has to clear it. It is a design spike — no code, no fixtures, and no claim on the evidence ledger.
 
 ---
 

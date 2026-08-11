@@ -86,7 +86,18 @@ Deletion is not complete merely because the canonical record disappeared. Contro
 - exported state
 - consolidated memories
 
-The system must state what it can actually purge and what remains outside its control.
+The system must state what it can actually purge and what remains outside its control. Stating it means sorting every affected artifact into one of four buckets:
+
+| Bucket | Meaning |
+|---|---|
+| Purged | demonstrated removed |
+| Declared residual, controlled | survives, reported, still reachable |
+| Declared residual, uncontrollable | survives, reported, out of reach |
+| **Undeclared residual** | survives, and nobody said so |
+
+The fourth bucket must be empty. A deletion that leaves recoverable content it never reported is a failed deletion regardless of how much it correctly removed, which makes this a disqualifying gate rather than a metric to average.
+
+Residue is also an authority problem and not only a completeness problem. Automatically rebuilding a stale summary looks like maintenance and is actually a write: if a language model recomputes content whenever a source version changes, an estimator has acquired a durable write channel without ever passing through the authority gate. That is authority laundering with a scheduler in front of it. **[Canonical and Derived State](Canonical-and-Derived-State)** works through both problems.
 
 ## Security reporting
 

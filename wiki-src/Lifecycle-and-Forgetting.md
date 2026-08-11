@@ -87,6 +87,17 @@ Deleting one canonical record may leave behind:
 
 A deletion guarantee is only as strong as the propagation boundary it actually controls.
 
+Two of those items are governed memory in their own right — a consolidated semantic memory carries identity, lifecycle, and derivation links. The rest are **projections**: infrastructure with no identity, no lifecycle state, and nothing obliging them to record what they were built from. That asymmetry is the point. The residue risk concentrates in exactly the state the architecture currently cannot see, and a projection's most dangerous property is not that it is stale but that it is *unaccounted for*.
+
+Derived state also fails in a way canonical state cannot — by being out of date. Distinguishing the two failure modes is what makes deletion propagation testable rather than merely required:
+
+```text
+stale     a source changed         content may be wrong
+residual  a source was purged      content may be prohibited
+```
+
+Staleness may be repairable by recomputation. Residue is not: it is a governance problem, and only the deletion authority may resolve it. **[Canonical and Derived State](Canonical-and-Derived-State)** develops both, along with the case where correction and deletion give opposite instructions about the same superseded summary.
+
 ## Correction is not erasure
 
 Agent Memory prefers preserved history over silent overwrite.
@@ -108,5 +119,6 @@ When evidence changes, the architecture should preserve what was known, what cha
 
 ## Next
 
+- **[Canonical and Derived State](Canonical-and-Derived-State)** for how deletion and correction propagate into derived state
 - **[Security and Privacy](Security-and-Privacy)** for deletion residue and lifecycle attack surfaces
 - **[Conformance and Evidence](Conformance-and-Evidence)** for proving lifecycle behavior

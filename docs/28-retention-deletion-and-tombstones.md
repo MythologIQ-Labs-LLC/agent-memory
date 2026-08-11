@@ -72,6 +72,8 @@ Potential dependents include:
 
 A deletion operation should identify which dependents are in scope and which cannot be controlled.
 
+Those dependents are not one kind of thing. Summaries, semantic memories, and procedures are memory units with identity, lifecycle, and derivation links. Embeddings, index records, caches, and graph projections are not, so nothing obliges them to record what they were built from — which is where residue collects. Propagation semantics for both, including how staleness is expressed and what a purge must reach, are developed in [`programs/runtime-evidence/canonical-and-derived-state.md`](programs/runtime-evidence/canonical-and-derived-state.md). That is program design work; nothing in it is doctrine until an ADR adopts it.
+
 ## Tombstones
 
 A tombstone records enough metadata to prevent accidental resurrection without preserving content that policy requires erased.
