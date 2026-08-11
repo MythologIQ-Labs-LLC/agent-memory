@@ -505,3 +505,57 @@ undemonstrated properties, several of which are now demonstrated and several of
 which are not. Active fixture counts in the README were updated from 24 to 25;
 the two audit records citing 24 were left untouched because they correctly
 describe the branch they audited.
+
+---
+
+### Entry #12: SESSION SEAL
+
+**Timestamp**: 2026-08-11T15:00:00Z
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("session-close:" + git tree hash at parent commit)
+= d2c7129d4ace95e9a7f7c49b3df1233188e7089fcc4c32e85ab24b32cb34b91c
+```
+
+**Previous Hash**: eaeaf16e8189bd61ba2620ef6baac7fc6921a77c47c8a21d65ba3d905f9d363b
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= 32a674bb717c71207f75f161d3dc28055bf059e95b3815694ff571b1357020c8
+```
+
+**Decision**: Session sealed. PR #58 merged to main at 1fae404, carrying twelve
+commits: the evidence floor, the runtime-evidence program, the first substrate
+capability mapping, the governed reference adapter with runtime evidence, the
+fixture corpus driven through enforcement, stochastic containment, the
+organization transfer, and the first wiki evidence page.
+
+Backlog moved from 25 open issues to 2. Closed this session with delivery
+evidence: 23 doctrine and tooling issues, plus #43 (evidence floor) and #48
+(conformance harness). Remaining: #5, blocked on external repository access,
+and #46, the runtime-evidence program umbrella whose P4 and later slices are
+unstarted.
+
+Two errors were made and corrected rather than concealed. Commit author and
+committer fields carried a model identity through eleven commits despite the
+standing stealth directive; only message trailers had been stripped. Identities
+were rewritten to the repository owner, local configuration corrected, and a
+server-appended attribution footer was removed from the pull request body
+before merge. Separately, compiled Python bytecode was swept into the
+repository by an overly broad add and merged; a .gitignore was added and the
+twelve cache files untracked in a follow-up.
+
+Verification at seal: 25 fixtures, 7 schemas, 25 memory units, 5 audit events,
+8 source-rights records, doctrine boundaries, 17 wiki files, 31 reference
+tests, and a 200-trial stochastic sweep, all green on main.
+
+Standing claims remain bounded. No conformance level is claimed, and ADR-020
+remains Proposed pending concurrency behavior, deletion-propagation
+measurement, and evidence across a wider surface than one reference adapter.
+The wiki source tree is ahead of the published wiki, which remains unpublished
+pending Governor direction.

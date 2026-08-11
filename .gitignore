@@ -1,0 +1,21 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+
+# Test and tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local build and distribution artifacts
+build/
+dist/
+*.egg-info/
+
+# Embedded substrate databases created by reference probes
+*.kuzu/
