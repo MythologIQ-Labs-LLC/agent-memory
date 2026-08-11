@@ -31,7 +31,7 @@
       "properties": {
         "id": {"type": "string", "minLength": 1},
         "key_id": {"type": "string", "minLength": 1},
-        "algorithm": {"const": "HMAC-SHA256"}
+        "algorithm": {"const": "Ed25519"}
       }
     },
     "issued_at": {"type": "string", "format": "date-time"},
@@ -79,9 +79,14 @@
       "additionalProperties": false,
       "required": ["algorithm", "key_id", "value"],
       "properties": {
-        "algorithm": {"const": "HMAC-SHA256"},
+        "algorithm": {"const": "Ed25519"},
         "key_id": {"type": "string", "minLength": 1},
-        "value": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        "value": {
+          "type": "string",
+          "minLength": 88,
+          "maxLength": 88,
+          "pattern": "^[A-Za-z0-9+/]{86}==$"
+        }
       }
     }
   }
