@@ -29,6 +29,8 @@ Evidence that omits the negative paths is a demo. Evidence that cannot be re-run
 
 P4.5a is intentionally a **substrate-independent interoperability precondition** rather than a claim that another runtime substrate has been exercised. Its job is to make the portable evidence boundary executable and adversarially testable before correlation to Agent Manifest, TRACE, or another external runtime surface.
 
+P4.5b is **external comparator evidence**: the tests execute the pinned Agent Manifest package's own checkpoint/delta verifier and correlate its verdict to Agent Memory receipts and portable evidence. Agent Memory does not copy the external checkpoint protocol or inherit its semantics.
+
 ## Comparator discipline
 
 External systems enter this program to answer one architectural question each, and are barred from becoming something else:
@@ -77,6 +79,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`../../../reference/README.md`](../../../reference/README.md) | minimal governed adapter | bound and executed against a real substrate |
 | [`canonical-and-derived-state.md`](canonical-and-derived-state.md) | canonical memory versus derived projections | design spike executed: all seven evidence-bar items run in CI |
 | [`portable-governance-evidence.md`](portable-governance-evidence.md) | P4.5a portable governance evidence core | executable substrate-independent Ed25519 issuer/verifier and adversarial vectors |
+| [`agent-manifest-correlation.md`](agent-manifest-correlation.md) | P4.5b Agent Manifest memory checkpoint correlation | pinned external comparator executed; accepted `DEL` remains distinct from lifecycle satisfaction |
 
 ## Preconditions
 
