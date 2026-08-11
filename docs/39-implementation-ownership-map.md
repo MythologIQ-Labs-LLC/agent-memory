@@ -26,12 +26,12 @@ contested       more than one implementation claims primary ownership; consolida
 | Identity Substrate | UOR Framework semantics as mapped by Agent Memory; CodeGenome for code-node identity | all components | declared |
 | Evidence and Provenance | Agent Memory contracts | CodeGenome, FailSafe receipts, COREFORGE ledgers | declared, **contested implementation** — three ledger-shaped systems overlap |
 | Reality Graphs | Agent Memory contract; CodeGenome candidate implementation | Runtime Memory | declared |
-| Lifecycle Engine | Agent Memory lifecycle doctrine | EvolveAI proposer, COREFORGE Vault committer candidates | declared, **contested implementation** |
+| Lifecycle Engine | Agent Memory lifecycle doctrine | EvolveAI proposer, COREFORGE Vault committer candidates | declared, **contested implementation** — the proposer/committer seam exists as code (see inspection record) |
 | Saturation and Decay | Agent Memory scoring doctrine | EvolveAI implementation candidate | declared |
 | **PAMA** | **Agent Memory native doctrine, authored by Kevin R. Knapp** | every mutating component; runtime policy module/service TBD | **doctrine-owned; runtime implementation open** |
 | Certification | Agent Memory certification contract | FailSafe, Arbiter, approval workflows | declared, **contested implementation** |
-| Runtime Memory Space | Agent Memory runtime contract | COREFORGE Vault / Neurospace | declared |
-| Context Assembly | Agent Memory recall/context contract | COREFORGE and agent runtimes | declared |
+| Runtime Memory Space | Agent Memory runtime contract | COREFORGE Vault / Neurospace | **partial** — implementation confirmed present by inspection; conformance unverified |
+| Context Assembly | Agent Memory recall/context contract | COREFORGE and agent runtimes | **partial** — context broker/engine/packet confirmed present by inspection; conformance unverified |
 | Correction and Dispute | Agent Memory correction/dispute contract | Vault and FailSafe-style workflows | declared, **contested implementation** |
 | Durable Decision Memory | Agent Memory durable-decision profile | implementation candidates must map explicitly to profile | **doctrine-owned; runtime implementation open** |
 | Conformance | this repository | every implementation | **verified** — schemas, fixtures, validators, CI |
@@ -90,6 +90,17 @@ A named external or private implementation should appear in this map only when i
 4. a deliberate contested-ownership question that must be resolved.
 
 Conceptual adjacency alone is insufficient.
+
+## Inspection record
+
+**2026-08-11.** Four candidate repositories were cloned and inspected directly, at pinned commits: EvolveAI `7c163f0`, CodeGenome `02565cc`, GG-CORE `f4ed6ca` (all public), and COREFORGE `48ee0ca` (private, default branch). Findings that bear on this map:
+
+- **No doctrine backlink exists in any of the four.** Case-insensitive searches for `agent-memory`/`agent_memory` return zero doctrine references; COREFORGE's matches are local identifier names. Every graduation path in this document therefore still begins at its first step.
+- **COREFORGE Vault/Neurospace exists as code**, not only as a claim: lifecycle store, mutation contract and gate with an approved/pending-review/vetoed envelope, Neurospace assembler/inspector/mutator, context broker/engine/packet, knowledge graph, UOR-style references, lineage, RAG engine. This moved Runtime Memory Space and Context Assembly to `partial`. Conformance remains unverified — existence of a mutation gate is not evidence that it enforces PAMA semantics.
+- **The lifecycle proposer/committer split is a live seam**: EvolveAI and CodeGenome are consumed inside COREFORGE's Vault through in-tree memory-provider interfaces. The contested Lifecycle Engine row now has a concrete surface to resolve against.
+- **GG-CORE holds no memory role and must not be recorded as the Vault successor.** Its architecture documents list `vault/` among forbidden modules, its `memory/` module is inference memory management (arenas, KV-cache, pools), and COREFORGE consumes it strictly as an optional compute dependency. Recorded here because the wrong successor narrative appeared once already and should not be re-derived.
+
+Inspection verifies existence, never conformance. `partial` is the ceiling this kind of evidence can reach.
 
 ## Resolution path
 

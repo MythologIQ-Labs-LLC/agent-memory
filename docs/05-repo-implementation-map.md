@@ -48,6 +48,7 @@ A PAMA implementation must preserve:
 | CodeGenome | Code reality graph | code artifact graph, overlays, confidence fusion, provenance, impact traversal | inferred relations preserve confidence, estimator provenance, and disagreement |
 | COREFORGE Vault | Runtime memory container | encrypted local memory, graph recall, context windows, governed storage | probabilistic retrieval may generate candidates; scope and mutation boundaries remain enforced |
 | Neurospace | Operational memory space | agent-facing memory traversal and use within COREFORGE | learned ranking may operate only inside recall-time policy |
+| GG-CORE | Local inference compute substrate — **not a memory role** | contained offline model execution, consumed by COREFORGE behind a feature gate | performs model compute only; holds no memory, policy, or authority responsibility |
 | FailSafe | Governance enforcement implementation candidate | evidence capture, approval gates, policy checks, release/session audit | can enforce policy version, estimator context, action set, and consequence receipt |
 | Arbiter | Product policy enforcement candidate | authorization, rate limits, audit logging, action boundaries | can enforce prohibited and permitted actions independently of model confidence |
 | Shadow Genome | Negative memory substrate | failure patterns, blocked behaviors, prior harm avoidance | failure inference may be probabilistic; guardrail promotion preserves evidence and authority |
@@ -144,6 +145,14 @@ Exact syntax or content-addressed facts may be deterministic while semantic over
 ### Governed-uncertainty contract
 
 High semantic relevance must not override privacy, tenancy, scope, dispute state, or policy. Candidate generation may be probabilistic; admission into active context remains governed.
+
+### Inspection evidence
+
+Direct inspection of the private COREFORGE repository on 2026-08-11 (default branch, commit `48ee0ca`) confirmed this role is implemented as code, not only claimed: a `vault/` module carrying a lifecycle store, a mutation contract and mutation gate producing an approved/pending-review/vetoed envelope, Neurospace assembler/inspector/mutator, context broker/engine/packet, a knowledge graph, UOR-style references with memory domains, lineage records, and a RAG engine. The Vault also consumes EvolveAI and CodeGenome through in-tree memory-provider seams, which makes the proposer-versus-committer split described in [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) a live integration rather than a diagram.
+
+Two boundaries from the same inspection. No Agent Memory doctrine backlink exists in COREFORGE — occurrences of `agent_memory` there are local identifier names, not references to this architecture. And GG-CORE is COREFORGE's *compute* dependency, not its memory successor: GG-CORE's own architecture documents list `vault/` among forbidden modules, and its runtime promise is model execution only. The role above stays with COREFORGE Vault.
+
+This inspection verifies **existence**, not conformance. Status remains governed by the resolution path in `39-implementation-ownership-map.md`.
 
 ## PAMA enforcement boundary
 
