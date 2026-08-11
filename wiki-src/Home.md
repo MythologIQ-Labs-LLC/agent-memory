@@ -79,7 +79,7 @@ See **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectua
 | PAMA | Native doctrine authored by Kevin R. Knapp |
 | ADRs | ADR-001 through ADR-019 Accepted; ADR-020 Proposed |
 | Schemas | 7 validated JSON Schemas |
-| Conformance fixtures | 25 validated definitions |
+| Conformance fixtures | 26 validated definitions |
 | Runtime evidence | Reference adapter executed against a real substrate; broader ADR-020 proof remains incomplete |
 | License | Apache-2.0 |
 
