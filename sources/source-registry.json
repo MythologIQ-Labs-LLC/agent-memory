@@ -151,6 +151,27 @@
       "provenance_note": "Direct implementation locator is preferred over a generic project homepage.",
       "limitations": "Any future copied or adapted code/documentation must satisfy applicable Apache-2.0 obligations.",
       "verified_at": "2026-08-10"
+    },
+    {
+      "source_id": "graphiti-temporal-graph",
+      "title": "Graphiti temporal knowledge graph framework",
+      "source_type": "external_open_source_substrate_candidate",
+      "public_url": "https://github.com/getzep/graphiti",
+      "repository": "getzep/graphiti",
+      "access": "public",
+      "copyright_owner_or_originator": "Zep AI, Inc. and Graphiti contributors",
+      "license_spdx": "Apache-2.0",
+      "license_url": "https://github.com/getzep/graphiti/blob/main/LICENSE",
+      "rights_status": "verified_open_license",
+      "reuse_mode": "independent_synthesis",
+      "reuse_basis": "Capability behavior was read from the public Apache-2.0 source tree and restated in original words for comparison purposes. No source code, documentation prose, schema text, or prompt content is reproduced in this repository.",
+      "material_reused": "None. The conformance mapping describes observed capabilities and their absence; it copies no substrate text or code.",
+      "attribution_required": true,
+      "notice_required": false,
+      "modification_notice_required": false,
+      "provenance_note": "Examined at graphiti-core version 0.29.3, main tree 401c59a65bdeb22a44136901ff30231e6998a7fe. Mapping is independent synthesis for substrate evaluation under the runtime evidence program. Registered as an external comparator and candidate substrate, not as an implementation owner or doctrine source.",
+      "limitations": "Documentation-verified only; no runtime execution has occurred, so no row constitutes runtime evidence. The substrate's documentation site and source tree disagree in at least two observed places; the mapping follows the source tree. Five open questions remain that require an executed probe.",
+      "verified_at": "2026-08-11"
     }
   ]
 }
