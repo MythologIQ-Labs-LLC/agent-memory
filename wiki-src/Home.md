@@ -67,8 +67,8 @@ Agent Memory treats all of these as first-class architectural concerns:
 | PAMA | Native doctrine authored by Kevin R. Knapp |
 | ADRs | ADR-001 through ADR-019 Accepted; ADR-020 Proposed |
 | Schemas | 7 validated JSON Schemas |
-| Conformance fixtures | 24 validated definitions |
-| Runtime proof | Incomplete by design; active future program |
+| Conformance fixtures | 25 validated definitions |
+| Runtime evidence | Reference adapter executed against a real substrate; broader ADR-020 proof remains incomplete |
 | License | Apache-2.0 |
 
 > **Important:** repository validation proves the declared schemas, fixtures, links, and doctrine boundaries are coherent. It does **not** magically prove a production runtime enforces them. Reality remains stubbornly outside the jurisdiction of JSON Schema.
