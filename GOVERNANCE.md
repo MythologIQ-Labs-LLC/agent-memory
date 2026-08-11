@@ -10,6 +10,21 @@ The current repository maintainer and doctrine owner is **Kevin R. Knapp** (`@Kn
 
 PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. External implementations may conform to, challenge, or extend the doctrine through the contribution process, but they do not acquire doctrine ownership by implementing it.
 
+## MythologIQ Labs contribution standard
+
+Agent Memory adopts [`docs/policies/AI_ASSISTED_CONTRIBUTIONS.md`](docs/policies/AI_ASSISTED_CONTRIBUTIONS.md) as both a repository rule and the default MythologIQ Labs standard for AI-assisted contribution workflows.
+
+The standard deliberately separates **implementation method** from **contributor accountability**:
+
+- coding agents and AI-assisted development are allowed;
+- contributors are not required to hand-write implementation code;
+- a responsible human must direct and review the specific contribution and be able to explain and defend its meaningful behavior;
+- ordinary repository submissions and maintainer-review interactions remain human-accountable unless a bot or agent has explicit repository authorization;
+- autonomous contribution is not accepted by default;
+- external repositories may impose stricter rules, which control when contributing upstream.
+
+Repository-specific policy may narrow automation privileges but must not silently weaken this human-accountability baseline.
+
 ## Decision classes
 
 Changes are reviewed according to their consequence.
@@ -94,8 +109,10 @@ A change is merge-ready when:
 2. affected doctrine and contracts are internally consistent;
 3. source provenance and reuse rights are resolved;
 4. tests/validators relevant to the change pass;
-5. the PR distinguishes what it proves from what remains unproven;
-6. material disagreement is either resolved or recorded rather than silently erased.
+5. the responsible human has reviewed the specific contribution and can explain its meaningful behavior;
+6. required contribution provenance is satisfied;
+7. the PR distinguishes what it proves from what remains unproven;
+8. material disagreement is either resolved or recorded rather than silently erased.
 
 ## Implementation neutrality
 
@@ -106,6 +123,8 @@ Conceptual adjacency does not create architectural ownership.
 ## Security-sensitive changes
 
 Security-sensitive findings should follow `SECURITY.md`. Do not force public disclosure merely to satisfy normal issue-tracking ceremony.
+
+AI assistance does not reduce the review bar for cryptography, authentication, authorization, policy enforcement, isolation boundaries, provenance, destructive lifecycle actions, or other security-sensitive surfaces. Independent validation is required when self-referential tests could mask an implementation error.
 
 ## Forks and derivative works
 
