@@ -102,11 +102,21 @@ Everything classified WRAPPER_REQUIRED or NOT_REPRESENTABLE above, concretely:
 7. **Decision receipts**, recorded by the adapter because the substrate discards its reasoning.
 8. **Projection invalidation**, since nothing self-invalidates on source change.
 
-## Adapter status
+## Adapter status: bound and executed
 
-The wrapper described above is implemented as a reference in [`../../../reference/README.md`](../../../reference/README.md). It executes the full governed path — including the eight responsibilities listed here — against an in-memory model that reproduces this substrate's verified permissive semantics, and it is wired into repository CI.
+The wrapper is implemented in [`../../../reference/README.md`](../../../reference/README.md) and **is now bound to this substrate and executed against it**, not only against a model.
 
-That is a precondition, not runtime evidence. The port is defined; a driver binding it to this substrate's no-LLM direct-write paths is the remaining step, and is where runtime evidence begins.
+The binding runs `graphiti-core` 0.29.3 over the embedded backend with **no LLM, no embedder, no API key, and no database server**, confirming the estimator-boundary argument below is not merely theoretical: pre-computed vectors are supplied, so the bulk writer's embedder call never fires, and the driver-level API is reached without the facade. Seven governance paths execute against the live graph, including cross-partition refusal, supersession that marks without deleting, and a physical delete.
+
+Execution verified three things source reading alone had not:
+
+1. **The no-LLM write path works end to end.** A bulk write with a null embedder and pre-supplied embeddings persists facts with provenance and both temporal axes intact.
+2. **The facade forces an LLM client.** Constructing the top-level client instantiates an OpenAI client even when every operation in use is LLM-free, and fails without credentials. A governed adapter must therefore bind at the driver level. This is an integration constraint, not a documentation detail.
+3. **An empty partition raises rather than returning empty.** The partition query signals absence by exception, so a wrapper must treat "no edges here" as a normal condition rather than an error.
+
+It also partially resolves open question 3: invalidated edges **are** returned by the partition query, so an adapter that does not filter them would admit superseded facts as current. The hybrid-search path remains untested because ranking needs an embedder.
+
+What remains unproven is stated plainly: the doctrine fixture corpus is not driven through the adapter, retrieval ranking is not exercised, and the backend used is deprecated upstream — chosen because it is embedded and therefore self-contained. No governance behavior under test depends on the backend.
 
 ## Negative paths this substrate makes testable
 

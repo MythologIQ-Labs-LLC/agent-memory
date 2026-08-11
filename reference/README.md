@@ -8,14 +8,19 @@ can be implemented over a temporal-graph substrate that provides no governance o
 
 Read this section before citing anything in this directory.
 
-- **Not runtime evidence.** The paths execute against a substrate *model*, not a running substrate. Under the program's own evidence rules, evidence requires execution against a real substrate at a pinned version. This is a precondition slice, not the proof.
-- **Not a conformance claim.** The emitted report states conformance level 0 and says why. Nothing here substantiates a level, a profile, or ADR-020.
+- **Not a conformance claim.** The emitted report states conformance level 0 and says why. Nothing here substantiates a level, a profile, or ADR-020. Levels require the doctrine fixture corpus driven through the adapter, which this does not do.
 - **Not a reference implementation of Agent Memory.** It implements the narrow slice needed to exercise governance paths, and nothing else.
 - **Not an endorsement of any substrate.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against.
 
 ## What it does demonstrate
 
-That the governance layer is load-bearing. The substrate model is deliberately permissive in exactly the ways the mapping verified: identity is opaque rather than content-derived, the partition filter defaults to unfiltered, deletion is physical with no tombstone, and **no operation checks authority**. Several tests assert both halves — that the substrate *would* misbehave, and that the adapter refuses anyway. A test that only checked the adapter would not prove the governance was doing any work.
+Two things, at different evidential weight.
+
+**Against a real substrate (runtime evidence).** Seven governance paths execute against `graphiti-core` 0.29.3 backed by an embedded graph database, with no LLM, no embedder, no API key and no server. Facts are written through the substrate's no-LLM direct-write path, superseded, pruned, physically deleted, and refused across partitions, all under the authority gate.
+
+**Against a substrate model (precondition).** Twelve further paths run against an in-memory model, covering cases the live binding does not reach — stale authorization, self-approval, undeclared derived residue, and version-drift separation.
+
+The common point is that the governance layer is load-bearing. The substrate model is deliberately permissive in exactly the ways the mapping verified: identity is opaque rather than content-derived, the partition filter defaults to unfiltered, deletion is physical with no tombstone, and **no operation checks authority**. Several tests assert both halves — that the substrate *would* misbehave, and that the adapter refuses anyway. A test that only checked the adapter would not prove the governance was doing any work.
 
 ## Layout
 
@@ -26,7 +31,8 @@ reference/
     policy.py       PAMA evaluation: base table, class floors, modifiers
     receipts.py     schema-conformant decisions, receipts, audit events
     adapter.py      the governed path
-  tests/            one positive path, eleven negative paths
+  agentmem_ref/graphiti_driver.py   binding to a real temporal knowledge graph
+  tests/            model paths and real-substrate paths
   run_conformance.py
 ```
 
@@ -35,6 +41,11 @@ Everything is standard-library except schema validation, which uses `jsonschema`
 ## Running it
 
 ```bash
+# model paths only; standard library plus jsonschema
+python -m unittest discover -s reference/tests -t reference
+
+# add the real substrate; the substrate tests skip cleanly without it
+pip install graphiti-core kuzu
 python -m unittest discover -s reference/tests -t reference
 python reference/run_conformance.py
 ```
@@ -72,7 +83,9 @@ The adapter supplies what the substrate cannot: an authority gate before every w
 
 Stated rather than left to be discovered:
 
-1. Approved permanent deletion is never exercised, because no review-satisfaction path is modelled. The physical-delete branch is reachable only through a proposal the gate refuses.
-2. Retrieval ranking is lexical overlap. No recall quality or calibration claim is made or measurable here.
+1. The doctrine fixture corpus is not driven through the adapter, which is why no conformance level is claimed.
+2. Retrieval ranking is lexical overlap, not the substrate's hybrid search, because hybrid ranking needs an embedder. Recall quality is not measured.
 3. The policy implements the subset of the decision table these paths need, not the whole table.
-4. Substrate binding is not implemented. The port exists; a driver mapping it to a real substrate's direct-write paths is the next slice, and is where runtime evidence begins.
+4. The substrate binding uses an embedded backend that is deprecated upstream, chosen because it needs no server. No governance behavior under test depends on the backend choice.
+5. Node topology is simplified to one edge per fact. This exercises governance invariants, not knowledge modelling.
+6. Approved permanent deletion is exercised only at the substrate level; no review-satisfaction path is modelled in the policy, so the gate refuses the proposal form.
