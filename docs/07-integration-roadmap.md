@@ -55,7 +55,7 @@ A repository is not a backlink target merely because it is adjacent to Agent Mem
 ### Recommended backlink text
 
 ```text
-This implementation follows the Agent Memory doctrine maintained in Knapp-Kevin/agent-memory. See the layer model, lifecycle state machine, PAMA governance model, governed-uncertainty doctrine, and conformance test plan for canonical terminology.
+This implementation follows the Agent Memory doctrine maintained in MythologIQ-Labs-LLC/agent-memory. See the layer model, lifecycle state machine, PAMA governance model, governed-uncertainty doctrine, and conformance test plan for canonical terminology.
 ```
 
 ## Phase 3: Implementation alignment issues

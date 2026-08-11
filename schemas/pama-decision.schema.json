@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/Knapp-Kevin/agent-memory/schemas/pama-decision.schema.json",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/pama-decision.schema.json",
   "title": "Proportional Adaptive Mutation Authority Decision",
   "description": "Doctrine-level contract for a PAMA authority evaluation. PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. This schema separates mutation target class, lifecycle strength, requested operation, downstream authority, evidence, policy, and resulting authority envelope.",
   "type": "object",
