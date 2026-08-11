@@ -1,0 +1,112 @@
+# Repository Governance
+
+Agent Memory is a public reference architecture with one canonical doctrine tree, not a collection of equally authoritative implementation opinions.
+
+## Maintainer
+
+The current repository maintainer and doctrine owner is **Kevin R. Knapp** (`@Knapp-Kevin`).
+
+PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. External implementations may conform to, challenge, or extend the doctrine through the contribution process, but they do not acquire doctrine ownership by implementing it.
+
+## Decision classes
+
+Changes are reviewed according to their consequence.
+
+### Editorial
+
+Examples:
+
+- grammar and formatting;
+- clearer examples;
+- corrected links;
+- non-semantic navigation improvements.
+
+These should not change doctrine meaning.
+
+### Evidence
+
+Examples:
+
+- new research;
+- benchmark results;
+- source-rights records;
+- implementation mappings;
+- adversarial fixtures;
+- runtime evidence.
+
+Evidence may support, challenge, or narrow existing doctrine. Adding evidence does not automatically change an ADR.
+
+### Contract
+
+Examples:
+
+- schema changes;
+- fixture-semantic changes;
+- conformance-level changes;
+- adapter contracts;
+- telemetry/interchange contracts;
+- PAMA machine-readable interfaces.
+
+Contract changes require compatibility analysis and validation updates.
+
+### Doctrine / ADR
+
+Examples:
+
+- changing an architectural invariant;
+- changing the meaning of PAMA authority classes;
+- changing lifecycle semantics;
+- accepting, superseding, or rejecting an ADR.
+
+Doctrine changes require explicit rationale, affected-surface analysis, evidence, and a preserved decision trail.
+
+## Evidence rule
+
+A merged statement should make its epistemic status clear.
+
+Where material, distinguish:
+
+```text
+native doctrine
+external evidence
+implementation observation
+conformance evidence
+runtime proof
+hypothesis
+analogy
+```
+
+A validator passing is evidence about the validator's declared contract. It is not automatic proof of production behavior.
+
+## Public-source and reuse-rights rule
+
+Contributors must follow `docs/SOURCE_RIGHTS_POLICY.md`.
+
+Public availability does not imply permission to copy expressive material. External sources should normally be linked and independently synthesized unless a stronger reuse basis is both necessary and documented.
+
+## Merge expectations
+
+A change is merge-ready when:
+
+1. the intended consequence is explicit;
+2. affected doctrine and contracts are internally consistent;
+3. source provenance and reuse rights are resolved;
+4. tests/validators relevant to the change pass;
+5. the PR distinguishes what it proves from what remains unproven;
+6. material disagreement is either resolved or recorded rather than silently erased.
+
+## Implementation neutrality
+
+Named products and repositories appear in Agent Memory only when they add a concrete implementation, comparison, interoperability, or conformance value.
+
+Conceptual adjacency does not create architectural ownership.
+
+## Security-sensitive changes
+
+Security-sensitive findings should follow `SECURITY.md`. Do not force public disclosure merely to satisfy normal issue-tracking ceremony.
+
+## Forks and derivative works
+
+The Apache-2.0 license permits forks and derivative works under its terms. A derivative project may change its own doctrine, but it should not present modified doctrine as an unchanged canonical decision of this repository.
+
+The canonical upstream doctrine is the state merged into `Knapp-Kevin/agent-memory` unless an explicit release or version reference says otherwise.
