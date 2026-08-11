@@ -1,0 +1,80 @@
+name: Bug or documentation defect
+description: Report a concrete repository, documentation, schema, validation, or presentation defect
+title: "[Defect] "
+labels:
+  - agent-memory
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for a concrete defect in the repository or its published documentation. For architecture changes, research evidence, or runtime-conformance work, use the dedicated forms instead.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched existing open and closed issues for the same problem.
+          required: true
+        - label: This is not a security vulnerability. Security issues should follow SECURITY.md.
+          required: true
+
+  - type: dropdown
+    id: defect_type
+    attributes:
+      label: Defect type
+      options:
+        - Documentation accuracy or inconsistency
+        - Broken link or navigation
+        - README or diagram presentation
+        - Schema or fixture defect
+        - Validation or CI defect
+        - Citation or provenance defect
+        - Source-rights or attribution defect
+        - Other repository defect
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Affected file, URL, or component
+      placeholder: docs/..., schemas/..., README.md, workflow URL, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: observed
+    attributes:
+      label: What is wrong?
+      description: Describe the observed behavior or inaccurate content precisely.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior or correction
+      description: State what should happen or what the repository should say instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction or evidence
+      description: Include steps, commands, screenshots, commit references, or other evidence when applicable.
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact
+      description: Explain whether this is cosmetic, misleading, breaks validation, changes doctrine interpretation, or affects implementation/conformance claims.
+
+  - type: checkboxes
+    id: evidence_boundary
+    attributes:
+      label: Evidence boundary
+      options:
+        - label: I have distinguished verified behavior from assumptions or interpretation.
+          required: true
