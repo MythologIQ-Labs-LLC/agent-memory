@@ -167,3 +167,341 @@ open issues to 2: #5 (blocked on external repository access) and #43
 (consolidated residual gaps). All validators green at every commit; commit
 messages and issue comments carry no attribution trailers per Governor
 directive.
+
+---
+
+### Entry #5: EXTERNAL ADVISORY ASSESSED AND ACTIONED
+
+**Timestamp**: 2026-08-11T05:30:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("advisory-slice:" + git tree hash of docs/ at HEAD)
+= 9786a6ffada43b961fb5d918287bcd30f9182087db5cf9722955ed0cbcfd63b5
+(docs tree: 740a8aa93c1478b35adce84bb994b0d7cc9c3e1e)
+```
+
+**Previous Hash**: 43f3936ffe183f5a536ba86edbc79519cf5c6f733027765a8571b0f5e3fb448c
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= b37f4b80a93ccd115a684e13a337d003b5ae9bcbc3a8c44bb38db1ea3e9cc5b1
+```
+
+**Decision**: Five-item external advisory (non-binding) assessed against
+repository reality after upstream commits 217a74e and ec73edd elevated PAMA to
+native doctrine. Item 1 (executable harness): accepted, scoped as issue #48
+with a thin system-under-test interface, toy implementation, multi-trial
+stochastic support, and a second-phase external substrate bridge. Item 2
+(proven-vs-aspirational matrix): already delivered by docs/39, further
+strengthened upstream by the doctrine-owned status vocabulary; no action.
+Item 3 (verification economics): accepted; verification-budget section added
+to docs/37 with sufficiency floors, cost attribution, bounded deferral, and
+three new metrics. Item 4 (promotion-queue flooding): accepted; threat 19
+added to docs/15 with controls and a conformance case. Item 5 (inter-system
+authority conflict): advisory arrived truncated; inferable core implemented in
+docs/35 (authority does not transit seams, singular ownership, fail-closed
+competing claims, per-hop receipts, recognition-not-transfer certification).
+Branch restarted from post-merge main per merged-PR protocol; all six
+validators green; stealth maintained.
+
+---
+
+### Entry #6: P0 EVIDENCE FLOOR CLOSED (#43)
+
+**Timestamp**: 2026-08-11T07:00:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("evidence-floor:" + git tree hash at HEAD)
+= 76ea088221889f59eafe9acd06a2fd757560765170f7d92ae874924c80ef09ce
+(tree: b24bb9ac75977a76e7d352928f81f3fa785212c8)
+```
+
+**Previous Hash**: b37f4b80a93ccd115a684e13a337d003b5ae9bcbc3a8c44bb38db1ea3e9cc5b1
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= ade0126711cd9b4195b850386a82a832f997075fba0b4ce5c3509dc60c740472
+```
+
+**Decision**: Executed P0 of the runtime-evidence roadmap. All seven #43 gaps
+closed at b2159ca on the designated branch, incorporating the
+agent/close-evidence-gaps-43 starter commit by merge: 25 versioned fixtures
+with validator enforcement and documented rules; governed-promotion audit-trace
+fixture with five schema-validated correlated events; doc 32 four-stratum
+scorecard with disqualifying hard gates and trap-class severity; twelve
+canonical ADR backlinks; docs 15/19 governance cross-links with PAMA named;
+CONTRIBUTING validator dependency split; doc 27 seven-schema inventory.
+Full validation gate green at branch head. #43 left open for merge-time
+closure per the branch owner's no-partial-satisfaction stance. #48 cross-linked
+into #46 as the P3 slice with Graphiti-first sequencing note. Roadmap P1-P10
+assessed and endorsed; P1 (#5) requires external repository access.
+
+---
+
+### Entry #7: P2 SUBSTRATE MAPPING AND ORGANIZATION TRANSFER
+
+**Timestamp**: 2026-08-11T08:30:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("org-transfer:" + git tree hash at HEAD)
+= c1744ba6d1b1f97d5c03e69ecaf0ab48c00852820e942f0649e2bba02a1f166b
+```
+
+**Previous Hash**: ade0126711cd9b4195b850386a82a832f997075fba0b4ce5c3509dc60c740472
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= 9be289079d826c6127eb8e6e912badd553101fc51a11a6bc757ec2d72e70149f
+```
+
+**Decision**: Two changes recorded together.
+
+P2 executed: runtime-evidence program opened under docs/programs/, and the
+first substrate (Graphiti, graphiti-core 0.29.3) mapped across the fourteen
+conformance concerns from its public source tree, registered in the source
+registry as an external comparator under independent synthesis. Mapping is
+documentation-verified only and explicitly constitutes no runtime evidence.
+Load-bearing findings: ordinary ingestion is LLM-mediated and therefore an
+estimator that may propose but must not commit; no authorization layer exists;
+tenancy is a permissive query-filter convention; deletion is physical without
+tombstoning; decision reasoning is discarded. The substrate's no-LLM
+direct-write paths are the seam that makes a governed wrapper viable. Five
+questions recorded as requiring an executed probe rather than inferred.
+
+Repository transferred to MythologIQ-Labs-LLC/agent-memory for public
+distribution. Thirteen active owner references updated across citation
+metadata, README badge, governance canonical-upstream statement, the two
+prescribed cross-repo backlink strings, and seven schema $id identifiers;
+git remote repointed. Four references deliberately preserved as historical
+anchors: the point-in-time research brief target, this ledger's own header,
+and the pinned baseline audit anchor in doc 25, which records the repository
+and commit the first audit pass actually ran against. Rewriting those would
+falsify history to flatter present naming. Schema $id identity changed at
+the pre-public-release moment, when no external consumer can have pinned the
+prior identifiers; this is a schema-registry identity event and is flagged
+for Governor review rather than treated as cosmetic.
+
+---
+
+### Entry #8: P3 MINIMAL GOVERNED ADAPTER
+
+**Timestamp**: 2026-08-11T10:00:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("p3-adapter:" + git tree hash at parent commit)
+= 60bf182602d00de902e95c7e846e6e3d2fb738366556da1ec2d3cd9fa6d86701
+```
+
+**Previous Hash**: 9be289079d826c6127eb8e6e912badd553101fc51a11a6bc757ec2d72e70149f
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= f46b0871cdf68cfa976a359ccd65888380806a7ebe86725939982d750fae4622
+```
+
+**Decision**: P3 executed. A minimal governed adapter under reference/ implements
+the full path from evidence through proposal, authority envelope, permitted
+action set, selected action, substrate mutation, decision receipt, retrieval
+candidate, and governed admission. Twelve paths execute in CI: one positive and
+eleven negative, exceeding the five-negative exit gate. Artifacts are emitted
+against four canonical repository schemas rather than invented shapes, and the
+selected-action membership rule the receipt schema delegates to consumers is
+enforced in code.
+
+The substrate is a model, not a running instance, and deliberately reproduces
+the mapped substrate's verified permissiveness: opaque identity, unfiltered
+partition default, physical deletion without tombstones, and no authority check
+anywhere. Several tests assert both that the substrate would misbehave and that
+the adapter refuses regardless, so the governance layer is demonstrated to be
+load-bearing rather than merely present.
+
+Two policy behaviors were discovered by execution rather than assumed. Permanent
+deletion cannot commit autonomously at any risk class, which failed an initial
+test that had assumed otherwise; the test was wrong and the doctrine was right.
+Pruning and permanent deletion were consequently separated so pruning tombstones
+and removes from recall while content stays recoverable.
+
+Claims are bounded. The emitted conformance report declares level 0 with three
+stated exemptions, because execution against a substrate model is not runtime
+evidence under the program's own rules. Four limitations are documented rather
+than left to be discovered, including that substrate binding remains unimplemented.
+That binding is where runtime evidence begins and is the next slice.
+
+---
+
+### Entry #9: FIRST RUNTIME EVIDENCE AGAINST A REAL SUBSTRATE
+
+**Timestamp**: 2026-08-11T11:30:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("p3-runtime-evidence:" + git tree hash at parent commit)
+= 26960978cf3dc1529242f73ea913103e12350acfbfd49337b7bcc2b87579828f
+```
+
+**Previous Hash**: f46b0871cdf68cfa976a359ccd65888380806a7ebe86725939982d750fae4622
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= f00fff3fc0a23982dff9ddb18578cc7f83c0f742fd6dac752328aa4c756c56d6
+```
+
+**Decision**: The Governor asked whether the substrate binding could be
+established in a hosted development container, and to defer otherwise.
+Investigation found it unnecessary: the binding runs in the existing session.
+Container runtime is unavailable, but the substrate ships an embedded backend
+requiring no server, and the mapping's central architectural claim held under
+test, so no credentials were required either.
+
+Nineteen paths now execute, seven of them against graphiti-core 0.29.3 over an
+embedded graph database with no LLM, no embedder, no API key, and no server.
+This is the program's first runtime evidence rather than precondition work.
+
+Execution verified three facts source reading had not established. The no-LLM
+write path works end to end when pre-computed vectors are supplied. The
+library's top-level facade force-constructs a provider client even when every
+operation in use is provider-free and fails without credentials, so a governed
+adapter must bind at driver level; this is an integration constraint, not a
+documentation nuance. An empty partition signals absence by raising rather than
+returning an empty result. Open question 3 is partially resolved: invalidated
+edges are returned by the partition query, so an adapter that fails to filter
+them would admit superseded facts as current.
+
+Claims remain bounded. Conformance level 0 is still declared, now with five
+stated exemptions, because the doctrine fixture corpus is not driven through
+the adapter and levels require it. The backend used is deprecated upstream and
+that is declared rather than hidden; no governance behavior under test depends
+on the backend choice. Substrate tests skip cleanly when the library is absent,
+so the standard-library gate remains runnable everywhere, and CI installs the
+substrate with continue-on-error so runtime evidence never becomes a hard
+dependency of the doctrine gate.
+
+---
+
+### Entry #10: FIXTURE CORPUS DRIVEN THROUGH THE ADAPTER
+
+**Timestamp**: 2026-08-11T12:45:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("fixture-corpus:" + git tree hash at parent commit)
+= d597b428902ec7461b60401442368bf9a5e72548c6b8b2d74f0f60e3b5beca47
+```
+
+**Previous Hash**: f00fff3fc0a23982dff9ddb18578cc7f83c0f742fd6dac752328aa4c756c56d6
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= a4a7d8da4f94664ed44bc3357bc18150995cf30df28ebcda62794df9d2c75d96
+```
+
+**Decision**: Governor directed that substrate CI remain optional and that the
+fixture corpus be driven through the adapter. Both done.
+
+All 25 doctrine fixtures now execute against the adapter's own authority
+enforcement rule, the same function the write path uses, rather than a
+reimplementation of it. Seventeen carry a declared authority envelope. Five
+checks run per envelope: permitted and prohibited sets disjoint, declared
+selection is a member of the permitted set, declared selection is not
+prohibited, every prohibited action is actively refused, and a fixture
+expecting no crystallization does not permit one. All 25 pass.
+
+A first-run pass was treated as suspicious rather than satisfying. The checker
+was mutation-tested against four deliberately corrupted envelopes and detected
+every one; those mutations are now permanent tests, so a check that silently
+stops being able to fail will itself fail. This is what distinguishes corpus
+evidence from a suite agreeing with its own author: the fixtures were written
+to describe doctrine, not to satisfy this implementation.
+
+Conformance level remains 0, now for a sharper reason than before. The doc 06
+levels are cumulative and this adapter implements neither decay nor calibrated
+saturation, so levels 2 and 3 are unmet however well enforcement performs.
+Nine exemptions are stated in the report. Corpus coverage is explicitly
+envelope enforcement, not full scenario execution.
+
+Substrate installation in CI remains best-effort per Governor direction, so
+runtime evidence never becomes a hard dependency of the standard-library
+doctrine gate. Total: 25 executable paths plus 25 corpus fixtures, 50 trials.
+
+---
+
+### Entry #11: STOCHASTIC CONTAINMENT AND WIKI PARALLEL TRACK
+
+**Timestamp**: 2026-08-11T14:00:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("stochastic-containment:" + git tree hash at parent commit)
+= e6ba10acdaab966d7d77da0ce3de5132fef5433c48c5c67ee2eb4d0c06f8f42c
+```
+
+**Previous Hash**: a4a7d8da4f94664ed44bc3357bc18150995cf30df28ebcda62794df9d2c75d96
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= eaeaf16e8189bd61ba2620ef6baac7fc6921a77c47c8a21d65ba3d905f9d363b
+```
+
+**Decision**: Branch rebased onto post-transfer main, which introduced the
+wiki-src tree, a wiki link validator, and hardened issue intake. Eleven
+recurring workflow conflicts were resolved by keeping both the extended
+documentation link list and the new wiki validation step.
+
+Stochastic containment implemented, closing the last outstanding criterion of
+issue #48. Selection is now delegated to a selector abstraction with
+deterministic and seeded stochastic implementations, and the adapter treats
+every selector as untrusted: whatever a selector returns is re-checked against
+the permitted set before use, with violations recorded and failed closed to a
+deferral. Randomness proposes; it does not authorize.
+
+Three properties are asserted together rather than only the flattering one.
+Safety: across 500 sampled trials no selection escapes the envelope, reported
+through the standardized stochastic_action_set_violation_rate metric at 0.0.
+Liveness: the selector demonstrably varies across three distinct actions, so
+the safety assertion is not vacuous. Containment under hostility: a selector
+deliberately returning a prohibited action is contained by the adapter and the
+violation recorded, proving the guarantee comes from the gate rather than the
+selector's good behavior. The harness gained the --trials flag doc 06 sketched.
+
+Wiki parallel track opened per Governor direction. A Runtime-Evidence page was
+added following the established wiki conventions: reader-facing, no wiki-only
+doctrine, canonical links back to the repository. Its "what this still does not
+prove" section is deliberately as prominent as its claims, since a public
+surface is where overclaiming does the most damage. Neighbouring pages were
+corrected: the conformance page's stale fixture count and its list of
+undemonstrated properties, several of which are now demonstrated and several of
+which are not. Active fixture counts in the README were updated from 24 to 25;
+the two audit records citing 24 were left untouched because they correctly
+describe the branch they audited.

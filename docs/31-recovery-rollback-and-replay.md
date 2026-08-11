@@ -1,5 +1,7 @@
 # Recovery, Rollback, and Replay
 
+> Canonical requirement: [ADR-018](adr/ADR-018-recovery-rollback-and-replay-are-required.md)
+
 ## Purpose
 
 Governed memory must assume that some accepted writes, recalls, corrections, and deletions will later prove wrong or unsafe.

@@ -1,5 +1,6 @@
 {
   "fixture_id": "authority-laundering",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "Untrusted content is transformed through a trusted summary and must not inherit authority from the summarizer.",
   "expected_behavior": {
@@ -9,8 +10,14 @@
   },
   "governed_uncertainty": {
     "requested_action": "crystallize_transformed_claim",
-    "permitted_actions": ["retain_with_origin", "require_verification", "mark_inferred"],
-    "prohibited_actions": ["crystallize_transformed_claim"],
+    "permitted_actions": [
+      "retain_with_origin",
+      "require_verification",
+      "mark_inferred"
+    ],
+    "prohibited_actions": [
+      "crystallize_transformed_claim"
+    ],
     "selected_action": "retain_with_origin",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -28,8 +35,12 @@
       "observer": "trusted-summary-service",
       "method": "summarization",
       "timestamp": "2026-08-10T00:00:00Z",
-      "source_refs": ["fixture://untrusted-origin"],
-      "derived_from": ["uor:test:untrusted-source-memory"]
+      "source_refs": [
+        "fixture://untrusted-origin"
+      ],
+      "derived_from": [
+        "uor:test:untrusted-source-memory"
+      ]
     },
     "evidence": [
       {
@@ -42,13 +53,21 @@
     "saturation": {
       "sigma": 0.81,
       "calibrated": true,
-      "durability_dimensions": ["derived_use"]
+      "durability_dimensions": [
+        "derived_use"
+      ]
     },
     "authority": {
       "pama_outcome": "require_external_verification",
       "risk_class": "high",
-      "permitted_actions": ["retain_with_origin", "require_verification", "mark_inferred"],
-      "prohibited_actions": ["crystallize_transformed_claim"],
+      "permitted_actions": [
+        "retain_with_origin",
+        "require_verification",
+        "mark_inferred"
+      ],
+      "prohibited_actions": [
+        "crystallize_transformed_claim"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-10T00:00:00Z"

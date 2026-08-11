@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/Knapp-Kevin/agent-memory/schemas/decision-receipt.schema.json",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/decision-receipt.schema.json",
   "title": "Agent Memory Decision Receipt",
   "type": "object",
   "required": [

@@ -117,6 +117,14 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | [`future/memory-compiler.md`](future/memory-compiler.md) | Bulk artifact-to-memory-unit conversion at scale, gated future subsystem |
 | [`future/multi-agent-shared-memory-protocol.md`](future/multi-agent-shared-memory-protocol.md) | Shared memory across agents and tenants, gated future subsystem |
 
+## Programs
+
+Programs hold multi-slice work that produces evidence rather than doctrine. They use grouped paths instead of extending the canonical numbering.
+
+| Program | Purpose |
+|---|---|
+| [`programs/runtime-evidence/README.md`](programs/runtime-evidence/README.md) | Moving from doctrine-validated to implementation-evidenced: substrate mapping, adapters, benchmarks, and the ADR-020 evidence path |
+
 ## Architecture Decision Records
 
 See [`adr/README.md`](adr/README.md).

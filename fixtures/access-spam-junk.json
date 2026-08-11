@@ -1,5 +1,6 @@
 {
   "fixture_id": "access-spam-junk",
+  "fixture_version": "1.0.0",
   "class": "trap",
   "description": "A low-value object receives repeated reads in an attempt to inflate lifecycle score.",
   "expected_behavior": {
@@ -31,12 +32,18 @@
       "sigma": 0.2,
       "calibrated": true,
       "threshold": 0.95,
-      "durability_dimensions": ["access"]
+      "durability_dimensions": [
+        "access"
+      ]
     },
     "authority": {
       "pama_outcome": "block",
       "risk_class": "medium",
-      "policy_refs": ["ADR-002", "ADR-003", "ADR-004"]
+      "policy_refs": [
+        "ADR-002",
+        "ADR-003",
+        "ADR-004"
+      ]
     },
     "certification": {
       "status": "none",
@@ -51,9 +58,21 @@
     "created_at": "2026-07-06T00:00:00Z"
   },
   "interaction_history": [
-    { "event": "read", "count": 100 },
-    { "event": "corroboration", "count": 0 },
-    { "event": "verification", "count": 0 },
-    { "event": "cross_reference", "count": 0 }
+    {
+      "event": "read",
+      "count": 100
+    },
+    {
+      "event": "corroboration",
+      "count": 0
+    },
+    {
+      "event": "verification",
+      "count": 0
+    },
+    {
+      "event": "cross_reference",
+      "count": 0
+    }
   ]
 }

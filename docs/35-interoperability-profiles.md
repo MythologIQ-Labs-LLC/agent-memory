@@ -121,6 +121,20 @@ A peer may rely on: full governed exchange — memory can move between systems w
 
 **Implementation-specific**: transport, serialization framing, discovery, batching — provided the handoff record's semantic content is preserved bit-for-meaning.
 
+## Authority conflict between systems
+
+Interoperating systems each run their own governance. That creates a failure mode no single-system doctrine covers: two systems, each internally compliant, disagreeing about who holds authority over an exchanged memory — both believing they may correct it, certify it, expand its scope, or delete it.
+
+Rules for any exchange at Profile 4 and above:
+
+- **Authority does not transit seams.** A peer's `allow` is evidence that *the peer's* PAMA authorized *its* actor under *its* policy version. It is never this system's `allow`. Every consequential action on received memory re-resolves against the local authority path — the peer's receipt is an input, not a verdict.
+- **Ownership is singular and travels with the memory.** The owner principal (per [`29-actor-scope-consent-and-tenancy.md`](29-actor-scope-consent-and-tenancy.md)) is part of the exchanged record. Receiving a copy grants access within scope; it never grants ownership, correction authority, or deletion authority over the origin's record.
+- **Competing authority claims fail closed.** If two systems assert conflicting authority over the same memory — both claim ownership, or their policies authorize incompatible mutations — the contested memory is frozen for consequential use in both systems until a governed resolution lands. Resolution is by ownership record and declared precedence, never by whichever system acted first, holds the higher confidence, or has the faster pipeline.
+- **Receipts name the authorizing system.** Cross-system decision receipts identify which system's PAMA, which policy version, and which actor authorized each consequence, so an auditor can reconstruct authority per hop — a chain of receipts, not a blended one.
+- **Certification does not transfer by default.** A certificate binds the issuing system's certifier, scope, and policy context. A receiving system may *recognize* a peer's certificate as evidence under its own policy; recognition is a local, revocable policy decision, not an automatic import of certified status.
+
+A dedicated cross-system authority-conflict fixture belongs in the fixture backlog (issue #43) alongside the shared-memory cases of [`future/multi-agent-shared-memory-protocol.md`](future/multi-agent-shared-memory-protocol.md).
+
 ## Profile claims in the conformance report
 
 A conformance report claiming profiles should record, per profile: claimed scope, fixtures run and passed, known exemptions with expiry, and the doctrine version tested. Use `metric_extensions` and `known_exemptions` in `conformance-report.schema.json` until profile fields are standardized (tracked with the fixture-versioning work in issue #43).

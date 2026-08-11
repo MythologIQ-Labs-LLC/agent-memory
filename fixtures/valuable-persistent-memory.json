@@ -1,5 +1,6 @@
 {
   "fixture_id": "valuable-persistent-memory",
+  "fixture_version": "1.0.0",
   "class": "persist",
   "description": "A corroborated, cross-referenced project decision should become a crystallization candidate and pass certification.",
   "expected_behavior": {
@@ -37,12 +38,20 @@
       "sigma": 0.98,
       "calibrated": true,
       "threshold": 0.95,
-      "durability_dimensions": ["corroboration", "cross_reference", "approval", "meaningful_reuse"]
+      "durability_dimensions": [
+        "corroboration",
+        "cross_reference",
+        "approval",
+        "meaningful_reuse"
+      ]
     },
     "authority": {
       "pama_outcome": "allow_with_ledger",
       "risk_class": "medium",
-      "policy_refs": ["ADR-003", "ADR-004"]
+      "policy_refs": [
+        "ADR-003",
+        "ADR-004"
+      ]
     },
     "certification": {
       "status": "pass",
@@ -58,10 +67,25 @@
     "created_at": "2026-07-06T00:00:00Z"
   },
   "interaction_history": [
-    { "event": "observed", "count": 1 },
-    { "event": "corroborated", "count": 3 },
-    { "event": "cross_referenced", "count": 5 },
-    { "event": "approved", "count": 1 },
-    { "event": "certified", "result": "pass" }
+    {
+      "event": "observed",
+      "count": 1
+    },
+    {
+      "event": "corroborated",
+      "count": 3
+    },
+    {
+      "event": "cross_referenced",
+      "count": 5
+    },
+    {
+      "event": "approved",
+      "count": 1
+    },
+    {
+      "event": "certified",
+      "result": "pass"
+    }
   ]
 }

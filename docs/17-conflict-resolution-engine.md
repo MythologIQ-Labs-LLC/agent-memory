@@ -1,5 +1,7 @@
 # Conflict Resolution Engine
 
+> Canonical requirement: [ADR-010](adr/ADR-010-conflict-resolution-is-a-separate-component.md)
+
 ## Purpose
 
 Memory systems must tolerate contradiction without collapsing into either silent overwrite or permanent paralysis.
