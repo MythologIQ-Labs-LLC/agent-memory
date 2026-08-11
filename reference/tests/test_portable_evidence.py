@@ -96,7 +96,9 @@ class PortableEvidenceTests(unittest.TestCase):
                 authority_state_ref="authority:rev-12",
                 source_domain_ref="domain:opaque:project-a",
                 destination_domain_ref="domain:opaque:archive",
+                domain_authorization_state_ref="domain-auth:9",
                 authority_valid_at_execution=True,
+                domain_authorization_valid_at_execution=True,
             ),
         )
         self.assertEqual(result["evidence_integrity"], "valid")
@@ -172,6 +174,97 @@ class PortableEvidenceTests(unittest.TestCase):
         self.assertEqual(result["evidence_integrity"], "invalid")
         self.assertIn("wrong_source_domain", result["binding_failures"])
 
+    def test_unauthorized_scope_broadening_fails_destination_binding(self):
+        evidence = make_evidence()
+        result = verify_evidence(
+            evidence,
+            self.trust,
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                source_domain_ref="domain:opaque:project-a",
+                destination_domain_ref="domain:opaque:organization-wide",
+                domain_authorization_state_ref="domain-auth:9",
+                authority_valid_at_execution=True,
+                domain_authorization_valid_at_execution=True,
+            ),
+        )
+        self.assertEqual(result["evidence_integrity"], "invalid")
+        self.assertIn("wrong_destination_domain", result["binding_failures"])
+        self.assertEqual(result["runtime_execution"], "unverifiable")
+
+    def test_stale_domain_authorization_state_fails_binding(self):
+        evidence = make_evidence()
+        result = verify_evidence(
+            evidence,
+            self.trust,
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                source_domain_ref="domain:opaque:project-a",
+                destination_domain_ref="domain:opaque:archive",
+                domain_authorization_state_ref="domain-auth:10",
+                authority_valid_at_execution=True,
+                domain_authorization_valid_at_execution=True,
+            ),
+        )
+        self.assertEqual(result["evidence_integrity"], "invalid")
+        self.assertIn(
+            "stale_or_wrong_domain_authorization_state_ref",
+            result["binding_failures"],
+        )
+        self.assertEqual(result["runtime_execution"], "unverifiable")
+
+    def test_revoked_shared_domain_membership_makes_execution_unauthorized(self):
+        evidence = make_evidence()
+        result = verify_evidence(
+            evidence,
+            self.trust,
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                execution_time="2026-08-11T18:00:02Z",
+                source_domain_ref="domain:opaque:project-a",
+                destination_domain_ref="domain:opaque:archive",
+                domain_authorization_state_ref="domain-auth:9",
+                authority_valid_at_execution=True,
+                domain_authorization_valid_at_execution=False,
+            ),
+        )
+        self.assertEqual(result["evidence_integrity"], "valid")
+        self.assertEqual(result["binding_failures"], [])
+        self.assertEqual(result["runtime_execution"], "unauthorized_execution")
+
+    def test_cross_domain_execution_without_membership_continuity_is_unverifiable(self):
+        evidence = make_evidence()
+        result = verify_evidence(
+            evidence,
+            self.trust,
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                execution_time="2026-08-11T18:00:02Z",
+                source_domain_ref="domain:opaque:project-a",
+                destination_domain_ref="domain:opaque:archive",
+                authority_valid_at_execution=True,
+            ),
+        )
+        self.assertEqual(result["evidence_integrity"], "valid")
+        self.assertEqual(result["runtime_execution"], "unverifiable")
+
+    def test_cross_domain_execution_without_signed_membership_state_is_unverifiable(self):
+        evidence = make_evidence(domain_authorization_state_ref=None)
+        result = verify_evidence(
+            evidence,
+            self.trust,
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                execution_time="2026-08-11T18:00:02Z",
+                source_domain_ref="domain:opaque:project-a",
+                destination_domain_ref="domain:opaque:archive",
+                authority_valid_at_execution=True,
+                domain_authorization_valid_at_execution=True,
+            ),
+        )
+        self.assertEqual(result["evidence_integrity"], "valid")
+        self.assertEqual(result["runtime_execution"], "unverifiable")
+
     def test_execution_before_decision_fails_binding(self):
         evidence = make_evidence()
         result = verify_evidence(
@@ -215,7 +308,14 @@ class PortableEvidenceTests(unittest.TestCase):
         result = verify_evidence(
             evidence,
             self.trust,
-            runtime=RuntimeObservation(action_ref="action:delete:42", authority_valid_at_execution=True),
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                source_domain_ref="domain:opaque:project-a",
+                destination_domain_ref="domain:opaque:archive",
+                domain_authorization_state_ref="domain-auth:9",
+                authority_valid_at_execution=True,
+                domain_authorization_valid_at_execution=True,
+            ),
         )
         self.assertEqual(result["evidence_integrity"], "valid")
         self.assertEqual(result["runtime_execution"], "executed_as_authorized")
