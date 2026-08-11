@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="350" viewBox="0 0 1200 350" role="img" aria-labelledby="title desc">
+  <title id="title">Agent Memory governed memory loop</title>
+  <desc id="desc">A compact three-stage overview: interpretation, PAMA governance and commit, then retained memory and governed recall. The exception path remains inside the governance stage.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#8c959f"/></marker>
+    <marker id="arrowBlue" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="#0969da"/></marker>
+  </defs>
+
+  <rect x="1" y="1" width="1198" height="348" rx="18" fill="#ffffff" stroke="#d0d7de"/>
+
+  <text x="40" y="42" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="26" font-weight="700">Governed memory loop</text>
+  <text x="40" y="67" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="15">Inference may be uncertain. Consequences remain inside an explicit authority envelope.</text>
+
+  <text x="44" y="101" fill="#0969da" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">01  INTERPRET</text>
+  <text x="438" y="101" fill="#8250df" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">02  GOVERN &amp; COMMIT</text>
+  <text x="836" y="101" fill="#1a7f37" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">03  RETAIN &amp; RECALL</text>
+
+  <rect x="40" y="118" width="316" height="54" rx="10" fill="#f6f8fa" stroke="#0969da"/>
+  <text x="198" y="141" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Experience / query / event</text>
+  <text x="198" y="159" text-anchor="middle" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">New state enters the memory pipeline</text>
+  <line x1="198" y1="172" x2="198" y2="188" stroke="#8c959f" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="40" y="194" width="316" height="54" rx="10" fill="#f6f8fa" stroke="#0969da"/>
+  <text x="198" y="217" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Evidence + provenance</text>
+  <text x="198" y="235" text-anchor="middle" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Origin, scope, time, derivation</text>
+  <line x1="198" y1="248" x2="198" y2="264" stroke="#8c959f" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="40" y="270" width="316" height="54" rx="10" fill="#f6f8fa" stroke="#0969da"/>
+  <text x="198" y="293" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Estimate / proposal</text>
+  <text x="198" y="311" text-anchor="middle" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">May be probabilistic or learned</text>
+  <line x1="356" y1="297" x2="420" y2="297" stroke="#0969da" stroke-width="2.3" marker-end="url(#arrowBlue)"/>
+
+  <rect x="434" y="118" width="332" height="70" rx="12" fill="#fbfaff" stroke="#8250df" stroke-width="1.5"/>
+  <text x="600" y="144" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="700">PAMA governance envelope</text>
+  <text x="600" y="166" text-anchor="middle" fill="#6639ba" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">M0–M5 target · operation · A0–A5 authority</text>
+  <text x="600" y="181" text-anchor="middle" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Policy constrains what can happen next</text>
+  <rect x="434" y="198" width="332" height="34" rx="8" fill="#fff8f8" stroke="#cf222e"/>
+  <text x="600" y="220" text-anchor="middle" fill="#a40e26" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">EXCEPTION PATH: BLOCK · REVIEW · VERIFY</text>
+  <line x1="600" y1="188" x2="600" y2="240" stroke="#8c959f" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="434" y="246" width="332" height="54" rx="10" fill="#fbfaff" stroke="#8250df"/>
+  <text x="600" y="269" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Permitted action set</text>
+  <text x="600" y="287" text-anchor="middle" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Selection only occurs inside this set</text>
+  <line x1="600" y1="300" x2="600" y2="310" stroke="#8c959f" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="434" y="314" width="332" height="28" rx="8" fill="#fbfaff" stroke="#8250df"/>
+  <text x="600" y="333" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="600">Commit + decision receipt</text>
+  <line x1="766" y1="328" x2="820" y2="328" stroke="#0969da" stroke-width="2.3" marker-end="url(#arrowBlue)"/>
+
+  <rect x="834" y="118" width="324" height="54" rx="10" fill="#f6fff8" stroke="#1a7f37"/>
+  <text x="996" y="141" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Retained memory state</text>
+  <text x="996" y="159" text-anchor="middle" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Durable, scoped, correctable, forgettable</text>
+  <line x1="996" y1="172" x2="996" y2="188" stroke="#8c959f" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="834" y="194" width="324" height="54" rx="10" fill="#f6fff8" stroke="#1a7f37"/>
+  <text x="996" y="217" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Governed recall</text>
+  <text x="996" y="235" text-anchor="middle" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Relevance filtered by scope and policy</text>
+  <line x1="996" y1="248" x2="996" y2="264" stroke="#8c959f" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="834" y="270" width="324" height="54" rx="10" fill="#f6fff8" stroke="#1a7f37"/>
+  <text x="996" y="293" text-anchor="middle" fill="#1f2328" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Active agent context</text>
+  <text x="996" y="311" text-anchor="middle" fill="#656d76" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Memory may influence future behavior</text>
+</svg>
