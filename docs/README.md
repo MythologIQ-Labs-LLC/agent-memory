@@ -147,9 +147,10 @@ Start with:
 - [`audits/governed-uncertainty/07b-machine-readable-evidence.md`](audits/governed-uncertainty/07b-machine-readable-evidence.md)
 - [`audits/governed-uncertainty/07c-adr-evidence-acceptance.md`](audits/governed-uncertainty/07c-adr-evidence-acceptance.md)
 
-Source-rights audits:
+Source-rights and provenance audits:
 
 - [`audits/source-rights/01-public-provenance-and-reuse-rights.md`](audits/source-rights/01-public-provenance-and-reuse-rights.md)
+- [`audits/source-rights/02-pama-native-provenance-and-implementation-reference-cleanup.md`](audits/source-rights/02-pama-native-provenance-and-implementation-reference-cleanup.md)
 
 ## Machine-readable evidence
 
@@ -159,7 +160,9 @@ Schemas:
 - [`../schemas/conformance-report.schema.json`](../schemas/conformance-report.schema.json)
 - [`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json)
 - [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json)
+- [`../schemas/calibration-results.schema.json`](../schemas/calibration-results.schema.json)
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json)
+- [`../schemas/pama-decision.schema.json`](../schemas/pama-decision.schema.json)
 
 External/material source provenance and rights records:
 
