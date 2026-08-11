@@ -27,6 +27,8 @@ reconstructable a receipt reconstructs estimate, authority, selection,
 
 Evidence that omits the negative paths is a demo. Evidence that cannot be re-run is an anecdote. Both are welcome in a discussion and neither moves an ADR.
 
+P4.5a is intentionally a **substrate-independent interoperability precondition** rather than a claim that another runtime substrate has been exercised. Its job is to make the portable evidence boundary executable and adversarially testable before correlation to Agent Manifest, TRACE, or another external runtime surface.
+
 ## Comparator discipline
 
 External systems enter this program to answer one architectural question each, and are barred from becoming something else:
@@ -41,7 +43,7 @@ External systems enter this program to answer one architectural question each, a
 | Telemetry conventions | observability interoperability | licence to emit memory content |
 | Systems characterization | cost, latency, and scaling pressure | an authority signal |
 
-Two standing rules follow from this table. A missing guarantee in an external system is a **classified gap**, not a bug, unless that system claims the guarantee. And a behavior observed in one product does not become Agent Memory doctrine without independent justification — otherwise the architecture is just the union of whatever shipped recently.
+Two standing rules follow from this table. A missing guarantee in an external system is a **classified gap**, not a bug, unless that system claims the guarantee. And a behavior observed in one product does not become Agent Memory doctrine without independent justification, otherwise the architecture is just the union of whatever shipped recently.
 
 ## Evidence rules for imported material
 
@@ -74,6 +76,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`graphiti-conformance.md`](graphiti-conformance.md) | first substrate capability mapping | documentation-verified, with key findings confirmed by execution |
 | [`../../../reference/README.md`](../../../reference/README.md) | minimal governed adapter | bound and executed against a real substrate |
 | [`canonical-and-derived-state.md`](canonical-and-derived-state.md) | canonical memory versus derived projections | design spike executed: all seven evidence-bar items run in CI |
+| [`portable-governance-evidence.md`](portable-governance-evidence.md) | P4.5a portable governance evidence core | executable substrate-independent Ed25519 issuer/verifier and adversarial vectors |
 
 ## Preconditions
 
@@ -83,7 +86,7 @@ Before runtime evidence from a first-party implementation is treated as disposit
 2. doctrine-to-implementation identity is established for any implementation used as evidence, earned through a concrete responsibility or conformance surface rather than asserted;
 3. the exact implementation, policy, estimator, fixture, and evidence bundle versions are reproducible.
 
-External comparators do not require precondition 2 — a comparator is measured, not adopted.
+External comparators do not require precondition 2. A comparator is measured, not adopted.
 
 ## Non-goals
 
