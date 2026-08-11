@@ -2,11 +2,45 @@
 
 ## Purpose
 
-This document turns the governance model in [`04-governance-and-pama.md`](04-governance-and-pama.md) into an inspectable decision table: mutation type and risk class map to a minimum authority outcome, and named modifiers raise or lower that minimum under defined conditions.
+This document turns the Agent Memory specialization of PAMA in [`04-governance-and-pama.md`](04-governance-and-pama.md) into an inspectable decision table: requested operation and operational risk map to a minimum authority outcome, and named modifiers raise or lower that minimum under defined conditions.
+
+PAMA itself is native Agent Memory doctrine authored by Kevin R. Knapp. Its foundational taxonomy is defined in [`pama/README.md`](pama/README.md): **M0-M5 target classes**, lifecycle strength, **A0-A5 downstream authority classes**, adaptive charters, and proportional handling lanes.
+
+The table below is therefore **one policy projection of PAMA, not the definition of PAMA**.
 
 The table is policy data, not code. An implementation may encode it as configuration, rules, or a policy engine, but the mapping must satisfy the authority resolution invariant: for fixed committed inputs, current state, and policy version, the resulting authority envelope is deterministic or formally bounded.
 
 This document implements the decision-table requirement of [`adr/ADR-004-pama-controls-mutation-authority.md`](adr/ADR-004-pama-controls-mutation-authority.md).
+
+## Required PAMA dimensions before table lookup
+
+A compliant implementation must classify more than an operation name and generic risk score.
+
+Before resolving this table, the request should establish at least:
+
+```text
+target_class: M0 | M1 | M2 | M3 | M4 | M5
+lifecycle_strength
+requested_operation
+requested_downstream_authority: A0 | A1 | A2 | A3 | A4 | A5
+scope
+reversibility
+actor / charter
+operational_risk
+```
+
+These dimensions are orthogonal.
+
+For example:
+
+- `promotion` is an **operation**;
+- an M3 reusable procedure is a **target class**;
+- `Promoted` is a **lifecycle strength**;
+- A1 recommendation influence is a **downstream authority ceiling**.
+
+Calling all four of these a "mutation class" makes the policy easier to implement incorrectly, which is a charming quality in diagrams and a terrible one in governance.
+
+A high-confidence M3 capability promoted successfully under this table does not gain A4 external-action authority unless a separate PAMA decision authorizes that authority.
 
 ## How to read the table
 
@@ -16,16 +50,34 @@ Outcomes are ordered by strictness:
 allow < allow_with_ledger < require_review < require_external_verification < block
 ```
 
-- A cell is the **minimum** outcome for that mutation type at that risk class. Policy may always be stricter; it must not be weaker.
+- A cell is the **minimum** outcome for that requested operation at that operational risk class. Policy may always be stricter; it must not be weaker.
+- Target class, lifecycle strength, downstream authority, scope, sensitivity, reversibility, and actor authority may escalate the base cell.
 - Modifiers move the outcome along this ordering. A modifier can only relax an outcome when the table row explicitly marks it relaxable.
 - `abstain`, `quarantine`, and `collect_more_evidence` are lateral outcomes: they defer the decision without granting authority. A deferral never counts as satisfaction of a review or verification requirement.
 - `block` is absorbing. No modifier, score, or estimator output relaxes a `block` produced by a prohibited-action rule.
 
+## Foundational class floors
+
+The operation table must not undercut PAMA's target and downstream-authority semantics.
+
+| PAMA dimension | Minimum consequence rule |
+|---|---|
+| **M0** execution-local context | may be transient when it cannot escape local context or create durable/external effects |
+| **M1** low-risk preference | may be retained tentatively when visible, scoped, reversible, and barred from higher authority |
+| **M2** operational association | meaningful recommendation influence requires evidence and correction/conflict handling |
+| **M3** reusable capability | promotion requires validation, versioning, authority ceiling, rollback/revocation, and monitoring |
+| **M4** shared or identity-bearing state | requires authoritative evidence and controlled review appropriate to consequence |
+| **M5** governance/security/autonomous authority | requires explicit authorized review; proposing agent may not self-approve |
+| **A4** external action | never granted merely because a memory or capability is reliable |
+| **A5** governance change | never granted through a lower-authority mutation pathway |
+
+If a base operation/risk cell is weaker than one of these floors, the PAMA class floor wins.
+
 ## Base decision table
 
-Mutation classes are those defined in `04-governance-and-pama.md`. Risk classes follow the same doc: low, medium, high, critical.
+Operational mutation types are defined in `04-governance-and-pama.md`. Risk classes follow the same doc: low, medium, high, critical.
 
-| Mutation type | Low | Medium | High | Critical |
+| Mutation operation | Low | Medium | High | Critical |
 |---|---|---|---|---|
 | Runtime assembly | allow_with_ledger | allow_with_ledger | require_review | require_review |
 | Score adjustment | allow_with_ledger | allow_with_ledger | require_review | block |
@@ -41,10 +93,11 @@ Mutation classes are those defined in `04-governance-and-pama.md`. Risk classes 
 
 Reading notes:
 
-- Score adjustment at critical risk is `block` because a score change on identity, credential, compliance, or safety-boundary memory is not a score change; it is an attempt to route around governance. Re-evaluation of such memory goes through correction or policy mutation instead.
+- Score adjustment at critical risk is `block` because a score change on identity, credential, compliance, or safety-boundary memory is not merely a score change; it is an attempt to route around governance. Re-evaluation of such memory goes through correction or policy mutation instead.
 - Scope expansion at critical risk is `block` because cross-tenant expansion of critical-class memory has no autonomous path. It requires a policy-level decision, which is a policy mutation, not a scope-expansion request.
 - `require_external_verification` means verification by an authority outside the requesting component: a human approver, an independent certification service, or an equivalently authoritative system. The requesting estimator can never be its own verifier.
-- Policy mutation never resolves below `require_review` at any risk class, and human approval remains the default expectation per `04-governance-and-pama.md`.
+- Policy mutation never resolves below `require_review` at any risk class, and human or equivalently authoritative approval remains the default expectation per `04-governance-and-pama.md`.
+- M5 and A5 requests must not be relabeled as lower-risk operations merely to reach a weaker row.
 
 ## Modifier rules
 
@@ -54,6 +107,8 @@ Modifiers apply after the base cell is selected, in the order listed. Escalating
 
 | Modifier | Condition | Effect |
 |---|---|---|
+| M-TARGET | PAMA target class imposes a stricter floor than the base cell | raise to the target-class floor |
+| M-AUTHORITY | requested downstream authority A4/A5 exceeds the authority normally associated with the mutation | raise to explicit review or external verification; A5 never self-approved |
 | M-IRREV | mutation is irreversible or destroys its own rollback path | raise to at least require_review; at high/critical risk raise to at least require_external_verification |
 | M-EVID | evidence quality below policy floor for this mutation type | raise one step and require collect_more_evidence before re-evaluation |
 | M-DISPUTE | target memory is disputed or contradiction pressure is material | raise to at least require_review |
@@ -74,7 +129,7 @@ Relaxation exists so reversible, well-evidenced, narrow mutations are not buried
 | R-REV | mutation is cheaply reversible with a verified rollback path and a reversible tombstone | may lower require_review to allow_with_ledger, only for rows marked relaxable below |
 | R-DELEG | acting under an explicit, unexpired, in-scope delegation record | may lower one step, never below allow_with_ledger, never for policy mutation or scope expansion |
 
-Relaxable rows: link deletion (low/medium), pruning (high), promotion (medium). No other cell is relaxable. Crystallization, permanent deletion, scope expansion, and policy mutation are never relaxable.
+Relaxable rows: link deletion (low/medium), pruning (high), promotion (medium). No other cell is relaxable. Crystallization, permanent deletion, scope expansion, policy mutation, M5 governance/security authority, and A5 governance changes are never relaxable through these modifiers.
 
 Reversibility works in both directions and asymmetrically: irreversibility escalates everywhere, reversibility relaxes only where the table says so. A verified rollback path is a precondition for relaxation, not evidence of safety.
 
@@ -84,6 +139,7 @@ Reversibility works in both directions and asymmetrically: irreversibility escal
 high confidence        -> never relaxes any outcome
 high saturation        -> never relaxes any outcome
 repetition / access    -> never relaxes any outcome
+validated capability   -> never expands its authority ceiling by itself
 prior similar approval -> never substitutes for current authority
 deferral outcomes      -> never satisfy review or verification
 ```
@@ -98,6 +154,7 @@ Each example gives the request, the resolved outcome, the before and after state
 
 Request: decay pass lowers sigma on a task note after two weeks without meaningful reuse.
 
+- PAMA shape: M2 operational association, reinforced, A1 ceiling, score-adjustment operation, low risk.
 - Base cell: score adjustment × low = `allow_with_ledger`. No modifiers trigger.
 - Before: `sigma 0.58`, state `reinforced`. After: `sigma 0.44`, state `reinforced`.
 - Ledger: score-adjustment event with estimator refs, estimator version, and decay-profile ref. No receipt approval refs required.
@@ -122,7 +179,8 @@ Request: remove a `supports` edge that a retracted source had justified.
 
 Request: user corrects a stored preference that was inferred wrongly.
 
-- Base cell: correction × high (user preference) = `require_review`. The user's own correction with explicit approval satisfies review; M-AUTH does not trigger because the actor is the memory's owner principal.
+- PAMA shape: M1 preference, A1 ceiling, correction operation, high handling sensitivity because the value belongs to the user.
+- Base cell: correction × high = `require_review`. The user's own correction with explicit approval satisfies review; M-AUTH does not trigger because the actor is the memory's owner principal.
 - Before: `preference: weekly summary`, state `crystallized`, dispute open. After: `preference: daily summary`, state `corrected`, prior value preserved as history with supersession link per `18-temporal-causality-layer.md`.
 - Ledger: correction event with approval ref (the user's action), before/after state, and rollback path. The old value is superseded, not erased.
 
@@ -132,7 +190,7 @@ Request: recurring, corroborated project decision reaches candidate threshold; s
 
 - Base cell: promotion × high (durable decision) = `require_review`. M-DISAGREE does not trigger; trap-class check passes.
 - Before: state `reinforced`, `sigma 0.86`, certification absent. After: state `pending_verification`. Not durable yet.
-- Ledger: lifecycle-transition event with pama inputs, permitted-action set, and selected action. Receipt records that review is the binding step; saturation alone did not promote.
+- Ledger: lifecycle-transition event with PAMA inputs, permitted-action set, and selected action. Receipt records that review is the binding step; saturation alone did not promote.
 
 ### 6. Crystallization
 
@@ -148,14 +206,25 @@ Request: eviction pass proposes pruning a stale runtime trace from active recall
 
 - Base cell: pruning × low = `allow_with_ledger`. M-EVIDENCE-DESTRUCTION does not trigger: nothing references the trace as evidence.
 - Before: state `stale`, in active recall. After: state `pruned`, reversible tombstone retained per `28-retention-deletion-and-tombstones.md`; content recoverable within the retention window.
-- Ledger: pruning event with tombstone ref. Contrast: the same request against a memory cited in an open dispute is blocked by M-EVIDENCE-DESTRUCTION until the hold resolves — see `fixtures/pruning-with-audit-preservation.json`.
+- Ledger: pruning event with tombstone ref. Contrast: the same request against a memory cited in an open dispute is blocked by M-EVIDENCE-DESTRUCTION until the hold resolves, see `fixtures/pruning-with-audit-preservation.json`.
 
-### 8. Policy mutation
+### 8. Reusable capability authority
+
+Request: a validated troubleshooting procedure has been promoted as an M3 capability with an A1 recommendation ceiling and now requests shell execution.
+
+- Capability validation remains valid.
+- Requested authority changes from A1 to A4, so M-AUTHORITY escalates.
+- The existing capability promotion does not authorize execution.
+- Result: `require_review` or stricter policy outcome for the A4 request; if the actor lacks authority to request that expansion, `block`.
+- Ledger: separate authority decision receipt. The original capability artifact remains unchanged until the new authority decision resolves.
+
+### 9. Policy mutation
 
 Request: agent proposes lowering the candidate threshold from 0.80 to 0.70 because "too few memories are promoting."
 
-- Base cell: policy mutation × high = `require_external_verification`. No relaxation path exists for policy mutation.
-- Before: `candidate_threshold 0.80`, policy version `p-14`. After (only if approved by human or equivalently authoritative review): `candidate_threshold 0.70`, policy version `p-15`, prior version retained for replay.
+- PAMA shape: M5 governance mutation, A5 downstream authority.
+- Base cell: policy mutation × high = `require_external_verification`. No relaxation path exists for policy mutation, M5, or A5.
+- Before: `candidate_threshold 0.80`, policy version `p-14`. After, only if approved by human or equivalently authoritative review: `candidate_threshold 0.70`, policy version `p-15`, prior version retained for replay.
 - Ledger: policy-mutation receipt with approval refs, both policy versions, and effective time. An agent observing its own promotion rate is an estimator; an estimator proposing to widen its own authority is exactly what this row exists to stop.
 
 ## Interaction with lifecycle gates
@@ -179,13 +248,20 @@ A table outcome of `require_review` therefore admits a memory to Pending Verific
 | Deletion proposed from predicted low utility | permanent-deletion row plus M-IRREV; utility estimate cannot authorize | [`../fixtures/irreversible-deletion-under-uncertain-utility.json`](../fixtures/irreversible-deletion-under-uncertain-utility.json) |
 | Delegated actor acts after delegation expiry | R-DELEG does not apply; expired delegation escalates, not relaxes | [`../fixtures/expired-delegation.json`](../fixtures/expired-delegation.json) |
 | Concurrent conflicting mutation requests | no silent last-writer-wins; second request re-resolves against new state | [`../fixtures/concurrent-conflicting-mutation.json`](../fixtures/concurrent-conflicting-mutation.json) |
-| Authority laundering through a permissive path | outcome depends on mutation type actually requested, not the path that carried it | [`../fixtures/authority-laundering.json`](../fixtures/authority-laundering.json) |
+| Authority laundering through a permissive path | outcome depends on mutation actually requested, target class, and downstream authority, not the path that carried it | [`../fixtures/authority-laundering.json`](../fixtures/authority-laundering.json) |
 | Policy applied under drifted estimator version | M-OOD escalates consequential mutations | [`../fixtures/policy-estimator-version-drift.json`](../fixtures/policy-estimator-version-drift.json) |
+
+Additional PAMA-native fixtures should cover:
+
+- M3 capability promoted successfully but blocked from exceeding its A1/A2 ceiling;
+- M5 governance change disguised as M2 operational association;
+- missing target class treated as unknown consequence rather than low risk; and
+- charter mismatch between proposing agent and mutation domain.
 
 ## Doctrine
 
-The decision table is the shape of PAMA, not a replacement for it.
+The decision table is one operational projection of PAMA, not a replacement for it.
 
-A cell grants nothing by itself. It states the weakest outcome a compliant policy may return, given committed inputs whose provenance and uncertainty are inspectable.
+A cell grants nothing by itself. It states the weakest outcome a compliant policy may return, given committed inputs whose provenance, PAMA class, authority ceiling, and uncertainty are inspectable.
 
-Estimates inform the inputs. Authority comes from the table, its modifiers, and the approvals they require — never from the estimate.
+Estimates inform the inputs. Authority comes from PAMA's class boundaries, the table, its modifiers, and the approvals they require, never from the estimate.
