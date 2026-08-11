@@ -106,6 +106,8 @@ The first executable profile is **Ed25519**, implemented with the Python `crypto
 
 The additional dependency is intentional. A symmetric HMAC profile would let a verifier forge evidence because verification requires possession of the signing secret; that fails the independent-verification premise of #63. Ed25519 lets the issuer retain the private key while independent verifiers receive only the public trust key.
 
+The CI validation profile pins `cryptography==50.0.0` and `jsonschema==4.26.0`, the exact direct validation-package versions exercised by the first successful P4.5a CI run. Pinning those direct dependencies keeps this evidence slice reproducible without pretending P4.5a owns the separate real-substrate dependency graph.
+
 The profile demonstrates:
 
 - deterministic canonicalization
@@ -205,7 +207,7 @@ If execution is observed but execution-time authority continuity is unknown, run
 Run:
 
 ```bash
-python -m pip install jsonschema cryptography
+python -m pip install jsonschema==4.26.0 cryptography==50.0.0
 python -m unittest discover -s reference/tests -t reference
 python scripts/validate_schemas.py
 ```
