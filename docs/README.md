@@ -10,10 +10,11 @@ The repository is intentionally layered. Start with the smallest path that answe
 |---|---|---|
 | Researcher / theorist | [`20-memory-foundations-across-scales.md`](20-memory-foundations-across-scales.md) | `21`, `23`, `24` |
 | Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24` |
-| Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`32`, schemas and fixtures |
+| Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`39`, schemas and fixtures |
 | Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29` |
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
-| Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, correction/recall surfaces |
+| Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), source registry, `23` |
+| Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
 | ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-020 |
 
 ## 00-10: Canonical architecture spine
@@ -28,9 +29,17 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 05 | [`05-repo-implementation-map.md`](05-repo-implementation-map.md) | Mapping of related systems into the architecture |
 | 06 | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | Conformance Levels 0-6 and adversarial fixture requirements |
 | 07 | [`07-integration-roadmap.md`](07-integration-roadmap.md) | Doctrine-to-implementation roadmap |
-| 08 | [`08-source-material-index.md`](08-source-material-index.md) | Internal provenance and external evidence domains |
+| 08 | [`08-source-material-index.md`](08-source-material-index.md) | Internal provenance, public source locators, rights posture, and external evidence domains |
 | 09 | [`09-calibration-protocol.md`](09-calibration-protocol.md) | Calibration, abstention, hysteresis, disagreement, drift |
 | 10 | [`10-memory-unit-examples.md`](10-memory-unit-examples.md) | Concrete memory, uncertainty, authority, receipt, and scope examples |
+
+### Source rights and provenance
+
+- [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) defines citation, synthesis, author-originated, licensed, and permission-based reuse modes.
+- [`../sources/source-registry.json`](../sources/source-registry.json) records primary-source access and rights posture.
+- [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) makes reuse-rights records machine-checkable.
+
+The default is citation plus independent synthesis. Public readability is not treated as an open license, and private canonical provenance is not replaced with convenient but inaccurate public substitutes.
 
 ## 11-19: Composition, security, trust, time, and privacy
 
@@ -114,6 +123,10 @@ Start with:
 - [`audits/governed-uncertainty/07b-machine-readable-evidence.md`](audits/governed-uncertainty/07b-machine-readable-evidence.md)
 - [`audits/governed-uncertainty/07c-adr-evidence-acceptance.md`](audits/governed-uncertainty/07c-adr-evidence-acceptance.md)
 
+Source-rights audit:
+
+- [`audits/source-rights/01-public-provenance-and-reuse-rights.md`](audits/source-rights/01-public-provenance-and-reuse-rights.md)
+
 ## Machine-readable evidence
 
 Schemas:
@@ -122,6 +135,11 @@ Schemas:
 - [`../schemas/conformance-report.schema.json`](../schemas/conformance-report.schema.json)
 - [`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json)
 - [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json)
+- [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json)
+
+Source provenance and rights records:
+
+- [`../sources/source-registry.json`](../sources/source-registry.json)
 
 Conformance fixtures:
 
@@ -143,4 +161,6 @@ Research may support, challenge, narrow, or reject an architectural idea.
 
 Prefer freely inspectable research where practical, but do not let accessibility outrank evidence quality. Biological and cognitive research should be classified as native mechanism, functional analogy, engineering prescription, or open hypothesis before it is transferred into software doctrine.
 
-The repository's job is not to collect citations until an idea looks inevitable. Its job is to make assumptions inspectable enough that good evidence can change them.
+Evidence availability and reuse permission remain separate questions. Research sources are citation/synthesis-only by default unless material reuse has an explicit rights record.
+
+The repository's job is not to collect citations until an idea looks inevitable. Its job is to make assumptions inspectable enough that good evidence can change them without making the repository a rights-management guessing game.
