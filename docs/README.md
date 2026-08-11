@@ -11,11 +11,33 @@ The repository is intentionally layered. Start with the smallest path that answe
 | Researcher / theorist | [`20-memory-foundations-across-scales.md`](20-memory-foundations-across-scales.md) | `21`, `23`, `24` |
 | Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24` |
 | Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`39`, schemas and fixtures |
+| Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `33`, `34`, ADR-004, ADR-020 |
 | Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29` |
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
-| Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), source registry, `23` |
+| Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
 | Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
 | ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-020 |
+
+## Native PAMA doctrine
+
+**Proportional Adaptive Mutation Authority (PAMA)** is native Agent Memory doctrine authored by **Kevin R. Knapp**.
+
+Start with [`pama/README.md`](pama/README.md) for the systems-agnostic foundation:
+
+- adaptation is not authority
+- memory is not procedure
+- procedure is not permission
+- permission is not governance
+- M0-M5 mutation target classes
+- lifecycle strength
+- A0-A5 downstream authority classes
+- proportional handling lanes
+- adaptive charters
+- capability authority ceilings
+
+Then use [`04-governance-and-pama.md`](04-governance-and-pama.md) and [`33-pama-decision-table.md`](33-pama-decision-table.md) for the Agent Memory specialization.
+
+PAMA is not represented as an external source dependency. External research, standards, and implementations that support or challenge PAMA retain separate provenance and source-rights treatment.
 
 ## 00-10: Canonical architecture spine
 
@@ -25,21 +47,23 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 01 | [`01-layer-model.md`](01-layer-model.md) | Layer ownership, deterministic substrate, probabilistic epistemics, governance boundaries |
 | 02 | [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md) | Memory states, proposal-versus-commit, promotion, dispute, correction, pruning |
 | 03 | [`03-scoring-and-decay.md`](03-scoring-and-decay.md) | Saturation, decay, uncertainty, calibration, drift, threshold stability |
-| 04 | [`04-governance-and-pama.md`](04-governance-and-pama.md) | Mutation authority and bounded consequence |
-| 05 | [`05-repo-implementation-map.md`](05-repo-implementation-map.md) | Mapping of related systems into the architecture |
+| 04 | [`04-governance-and-pama.md`](04-governance-and-pama.md) | Native PAMA specialization: mutation authority and bounded consequence |
+| 05 | [`05-repo-implementation-map.md`](05-repo-implementation-map.md) | Mapping of related implementations into the architecture while keeping native doctrine separate |
 | 06 | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | Conformance Levels 0-6 and adversarial fixture requirements |
 | 07 | [`07-integration-roadmap.md`](07-integration-roadmap.md) | Doctrine-to-implementation roadmap |
-| 08 | [`08-source-material-index.md`](08-source-material-index.md) | Internal provenance, public source locators, rights posture, and external evidence domains |
+| 08 | [`08-source-material-index.md`](08-source-material-index.md) | External/related provenance, public source locators, rights posture, and evidence domains |
 | 09 | [`09-calibration-protocol.md`](09-calibration-protocol.md) | Calibration, abstention, hysteresis, disagreement, drift |
 | 10 | [`10-memory-unit-examples.md`](10-memory-unit-examples.md) | Concrete memory, uncertainty, authority, receipt, and scope examples |
 
 ### Source rights and provenance
 
 - [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) defines citation, synthesis, author-originated, licensed, and permission-based reuse modes.
-- [`../sources/source-registry.json`](../sources/source-registry.json) records primary-source access and rights posture.
-- [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) makes reuse-rights records machine-checkable.
+- [`../sources/source-registry.json`](../sources/source-registry.json) records external/private/material-reuse source posture.
+- [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) makes those source-rights records machine-checkable.
 
-The default is citation plus independent synthesis. Public readability is not treated as an open license, and private canonical provenance is not replaced with convenient but inaccurate public substitutes.
+The default for external sources is citation plus independent synthesis. Public readability is not treated as an open license, and private canonical provenance is not replaced with convenient but inaccurate public substitutes.
+
+Native contributor-authored doctrine does not need to masquerade as an external source. Its authorship and canonical location belong in the doctrine tree.
 
 ## 11-19: Composition, security, trust, time, and privacy
 
@@ -77,21 +101,21 @@ The default is citation plus independent synthesis. Public readability is not tr
 | 30 | [`30-memory-observability-and-audit-events.md`](30-memory-observability-and-audit-events.md) | Structured memory events and reconstruction evidence |
 | 31 | [`31-recovery-rollback-and-replay.md`](31-recovery-rollback-and-replay.md) | Recovery, compensation, state/version binding, replay semantics |
 | 32 | [`32-memory-quality-metrics.md`](32-memory-quality-metrics.md) | Ongoing quality, safety, calibration, deletion, and outcome metrics |
-| 33 | [`33-pama-decision-table.md`](33-pama-decision-table.md) | Mutation type and risk class to minimum authority outcome, with modifiers |
+| 33 | [`33-pama-decision-table.md`](33-pama-decision-table.md) | Agent Memory operation/risk policy projection of native PAMA doctrine |
 | 34 | [`34-adapter-contracts.md`](34-adapter-contracts.md) | Typed seam contracts: required handoff fields, failure modes, rejection semantics |
 | 35 | [`35-interoperability-profiles.md`](35-interoperability-profiles.md) | Six cumulative reliance profiles for cross-system memory exchange |
 | 36 | [`36-policy-as-memory.md`](36-policy-as-memory.md) | Policies as high-authority memory: versioning, certification, conflict, complete recall |
 | 37 | [`37-memory-economics-and-budget-policy.md`](37-memory-economics-and-budget-policy.md) | Budget dimensions and the pressure-shapes-priority-never-authority boundary |
 | 38 | [`38-human-correction-ux-contract.md`](38-human-correction-ux-contract.md) | Minimum user-facing evidence, correction, dispute, and indicator contract |
-| 39 | [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) | Component ownership candidates with explicit declared/contested/open status |
+| 39 | [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) | Doctrine ownership versus candidate runtime implementation ownership |
 
 ## Profiles and future subsystems
 
 | Document | Purpose |
 |---|---|
 | [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md) | Decision memory: required fields, rationale preservation, supersession, drift, recall |
-| [`future/memory-compiler.md`](future/memory-compiler.md) | Bulk artifact-to-memory compilation — gated future subsystem |
-| [`future/multi-agent-shared-memory-protocol.md`](future/multi-agent-shared-memory-protocol.md) | Shared memory across agents and tenants — gated future subsystem |
+| [`future/memory-compiler.md`](future/memory-compiler.md) | Bulk artifact-to-memory-unit conversion at scale, gated future subsystem |
+| [`future/multi-agent-shared-memory-protocol.md`](future/multi-agent-shared-memory-protocol.md) | Shared memory across agents and tenants, gated future subsystem |
 
 ## Architecture Decision Records
 
@@ -123,7 +147,7 @@ Start with:
 - [`audits/governed-uncertainty/07b-machine-readable-evidence.md`](audits/governed-uncertainty/07b-machine-readable-evidence.md)
 - [`audits/governed-uncertainty/07c-adr-evidence-acceptance.md`](audits/governed-uncertainty/07c-adr-evidence-acceptance.md)
 
-Source-rights audit:
+Source-rights audits:
 
 - [`audits/source-rights/01-public-provenance-and-reuse-rights.md`](audits/source-rights/01-public-provenance-and-reuse-rights.md)
 
@@ -137,7 +161,7 @@ Schemas:
 - [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json)
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json)
 
-Source provenance and rights records:
+External/material source provenance and rights records:
 
 - [`../sources/source-registry.json`](../sources/source-registry.json)
 
@@ -151,6 +175,7 @@ Validation:
 python -m pip install jsonschema
 python scripts/validate_fixtures.py fixtures
 python scripts/validate_schemas.py
+python scripts/validate_doctrine_boundaries.py
 ```
 
 Repository CI runs the same validation through [`../.github/workflows/validate-doctrine-evidence.yml`](../.github/workflows/validate-doctrine-evidence.yml).
@@ -161,6 +186,6 @@ Research may support, challenge, narrow, or reject an architectural idea.
 
 Prefer freely inspectable research where practical, but do not let accessibility outrank evidence quality. Biological and cognitive research should be classified as native mechanism, functional analogy, engineering prescription, or open hypothesis before it is transferred into software doctrine.
 
-Evidence availability and reuse permission remain separate questions. Research sources are citation/synthesis-only by default unless material reuse has an explicit rights record.
+Evidence availability and reuse permission remain separate questions. External research sources are citation/synthesis-only by default unless material reuse has an explicit rights record.
 
 The repository's job is not to collect citations until an idea looks inevitable. Its job is to make assumptions inspectable enough that good evidence can change them without making the repository a rights-management guessing game.
