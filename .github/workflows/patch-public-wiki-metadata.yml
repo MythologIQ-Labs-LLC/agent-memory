@@ -1,0 +1,63 @@
+name: Reconcile public Wiki metadata
+
+on:
+  push:
+    branches:
+      - agent/wiki-publish
+    paths:
+      - .github/workflows/patch-public-wiki-metadata.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/wiki-publish
+
+      - name: Reconcile README and Wiki maturity metadata
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          readme = Path('README.md')
+          text = readme.read_text(encoding='utf-8')
+          replacements = {
+              '![Fixtures](https://img.shields.io/badge/Fixtures-24%20Validated-0f766e)':
+                  '![Fixtures](https://img.shields.io/badge/Fixtures-25%20Validated-0f766e)',
+              '**[Documentation](docs/README.md)** · **[PAMA](docs/pama/README.md)**':
+                  '**[Documentation](docs/README.md)** · **[Wiki](https://github.com/MythologIQ-Labs-LLC/agent-memory/wiki)** · **[PAMA](docs/pama/README.md)**',
+              '**ADR-020 remains Proposed** because governed uncertainty still requires real runtime evidence end to end.':
+                  '**ADR-020 remains Proposed** because its acceptance criteria still require broader runtime evidence, including concurrency and deletion-propagation behavior beyond the current reference adapter.'
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'README target not found: {old}')
+              text = text.replace(old, new, 1)
+          readme.write_text(text, encoding='utf-8')
+
+          home = Path('wiki-src/Home.md')
+          text = home.read_text(encoding='utf-8')
+          replacements = {
+              '| Conformance fixtures | 24 validated definitions |':
+                  '| Conformance fixtures | 25 validated definitions |',
+              '| Runtime proof | Incomplete by design; active future program |':
+                  '| Runtime evidence | Reference adapter executed against a real substrate; broader ADR-020 proof remains incomplete |'
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'Wiki Home target not found: {old}')
+              text = text.replace(old, new, 1)
+          home.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit reconciled metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md wiki-src/Home.md
+          git commit -m "Reconcile public runtime-evidence maturity"
+          git push origin HEAD:agent/wiki-publish
