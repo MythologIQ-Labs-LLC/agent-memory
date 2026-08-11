@@ -13,7 +13,7 @@ From working memory to inherited state. From biological theory to executable con
 ![Fixtures](https://img.shields.io/badge/Fixtures-24%20Validated-0f766e)
 ![Research](https://img.shields.io/badge/Research-Open%20Evidence-b45309)
 
-**[Documentation](docs/README.md)** · **[Architecture decisions](docs/adr/README.md)** · **[Research map](docs/23-research-bibliography.md)** · **[Conformance](docs/06-conformance-test-plan.md)** · **[Contributing](CONTRIBUTING.md)**
+**[Documentation](docs/README.md)** · **[PAMA](docs/pama/README.md)** · **[Architecture decisions](docs/adr/README.md)** · **[Research map](docs/23-research-bibliography.md)** · **[Conformance](docs/06-conformance-test-plan.md)** · **[Contributing](CONTRIBUTING.md)**
 
 </div>
 
@@ -58,6 +58,7 @@ You do not need to read the repository front to back. Human working memory has s
 |---|---|---|
 | **Researching memory theory** | [Memory foundations across scales](docs/20-memory-foundations-across-scales.md) | [Forgetting & consolidation](docs/21-forgetting-consolidation-and-memory-metabolism.md), [Research bibliography](docs/23-research-bibliography.md), [Governed uncertainty](docs/24-determinism-probability-and-governed-uncertainty.md) |
 | **Designing an agent architecture** | [Layer model](docs/01-layer-model.md) | [Component architecture](docs/11-component-architecture.md), [Composition boundaries](docs/13-system-composition-boundaries.md), [Agentic memory theory](docs/22-agentic-memory-theory-and-development.md) |
+| **Designing adaptive authority** | [PAMA foundation](docs/pama/README.md) | [Governance & PAMA](docs/04-governance-and-pama.md), [PAMA decision table](docs/33-pama-decision-table.md), [ADR-004](docs/adr/ADR-004-pama-controls-mutation-authority.md) |
 | **Implementing a memory system** | [Agentic memory theory](docs/22-agentic-memory-theory-and-development.md) | [Lifecycle](docs/02-lifecycle-state-machine.md), [PAMA](docs/04-governance-and-pama.md), [Recall planner](docs/26-governed-recall-planner.md), [Schemas](schemas/) |
 | **Reviewing security or privacy** | [Memory threat model](docs/15-memory-threat-model.md) | [Source trust](docs/16-source-trust-and-reputation.md), [Privacy](docs/19-privacy-and-sensitivity-classifier.md), [Retention & deletion](docs/28-retention-deletion-and-tombstones.md), [Scope & tenancy](docs/29-actor-scope-consent-and-tenancy.md) |
 | **Evaluating conformance** | [Conformance test plan](docs/06-conformance-test-plan.md) | [Calibration](docs/09-calibration-protocol.md), [Audit rubric](docs/25-governed-uncertainty-documentation-conformance-audit.md), [Fixtures](fixtures/) |
@@ -94,13 +95,45 @@ Retrieval does not answer:
 
 ---
 
+## Native doctrine: Proportional Adaptive Mutation Authority
+
+**Proportional Adaptive Mutation Authority (PAMA) is native Agent Memory doctrine authored by Kevin R. Knapp.** It is not an external dependency, related-product import, or source-registry item.
+
+Its systems-agnostic rule is:
+
+> **Adaptation should be broadly available to authorized agents. Authority to make a mutation durable, influential, shared, or action-enabling should increase in proportion to the mutation's consequence.**
+
+PAMA preserves four separations:
+
+```text
+adaptation != authority
+memory != procedure
+procedure != permission
+permission != governance
+```
+
+And it separates four dimensions that are easy to muddle when governance is reduced to a single score:
+
+```text
+M0-M5 target class
+lifecycle strength
+requested operation
+A0-A5 downstream authority
+```
+
+A validated procedure can become a trusted capability without gaining permission to execute externally. A highly reinforced memory can remain barred from governance effects. Low-risk reversible learning can proceed without turning a human into the bottleneck for every observation.
+
+See **[PAMA](docs/pama/README.md)**, **[Governance and PAMA](docs/04-governance-and-pama.md)**, and **[PAMA Decision Table](docs/33-pama-decision-table.md)**.
+
+---
+
 ## The system at a glance
 
 ```mermaid
 flowchart LR
     A[Experience / Query / Event] --> B[Evidence + Provenance]
     B --> C[Estimate / Proposal]
-    C --> D{Governance Envelope}
+    C --> D{PAMA Governance Envelope}
     D -->|Block / Review / Verify| E[No Consequential Commit]
     D -->|Permit| F[Permitted Action Set]
     F --> G[Deterministic or Stochastic Selection]
@@ -278,12 +311,13 @@ Agent Memory is **one reference architecture composed of bounded components**, n
 | **Saturation & decay** | persistence pressure and routing signals | truth, certification |
 | **Conflict resolution** | disagreement and resolution proposals | ungoverned overwrite |
 | **Temporal causality** | chronology, valid time, causal hypotheses | certainty from sequence alone |
-| **Governance / PAMA** | mutation and consequence authority | factual truth |
+| **Governance / PAMA** | M0-M5 target classes, A0-A5 authority ceilings, mutation and consequence authority | factual truth, raw scoring |
 | **Privacy & sensitivity** | handling classification and disclosure constraints | optimistic scope guessing |
 | **Certification** | durable transition confirmation | eternal immutability |
 | **Runtime memory** | operational use and graph traversal | doctrine ownership |
 | **Governed recall** | context admission | relevance-as-permission |
 | **Correction & dispute** | revision without history destruction | silent overwrite |
+| **Durable decision memory** | decisions, rationale, supersession, drift | product ownership by adjacency |
 | **Observability** | decision and transition evidence | sensitive shadow copies |
 | **Recovery** | rollback, compensation, replay | rewriting history to hide errors |
 | **Conformance** | fixtures, schemas, calibration, quality metrics | claims of runtime proof without runtime evidence |
@@ -412,6 +446,8 @@ The repository now contains machine-readable doctrine evidence, not just prose.
 - [`conformance-report.schema.json`](schemas/conformance-report.schema.json)
 - [`decision-receipt.schema.json`](schemas/decision-receipt.schema.json)
 - [`memory-audit-event.schema.json`](schemas/memory-audit-event.schema.json)
+- [`source-record.schema.json`](schemas/source-record.schema.json)
+- [`pama-decision.schema.json`](schemas/pama-decision.schema.json)
 
 ### Fixtures
 
@@ -448,6 +484,7 @@ The [`fixtures/`](fixtures/) directory contains **24 validated fixture definitio
 python -m pip install jsonschema
 python scripts/validate_fixtures.py fixtures
 python scripts/validate_schemas.py
+python scripts/validate_doctrine_boundaries.py
 ```
 
 The **[Validate Doctrine Evidence](.github/workflows/validate-doctrine-evidence.yml)** workflow runs the same checks on pushes and pull requests.
@@ -484,10 +521,11 @@ See **[docs/adr/README.md](docs/adr/README.md)** for status semantics.
 | Area | Current state |
 |---|---|
 | Core doctrine | **Canonical and extensively documented** |
+| Native PAMA doctrine | **Canonical; authored by Kevin R. Knapp** |
 | ADR-001 through ADR-019 | **Accepted** |
 | ADR-020 governed uncertainty | **Proposed** |
 | Documentation conformance audit | **Recorded piece by piece** |
-| JSON Schemas | **4 validated schemas** |
+| JSON Schemas | **6 validated schemas** |
 | Conformance fixture definitions | **24 validated fixtures** |
 | Repository validation workflow | **Active** |
 | Runtime reference implementation | **Not yet the evidence basis of this repo** |
@@ -556,7 +594,7 @@ See **[Research Bibliography](docs/23-research-bibliography.md)** and **[Source 
 
 ## Related implementation systems
 
-The doctrine currently maps several existing systems into bounded roles:
+The doctrine currently maps several systems into bounded implementation roles where they add specific value:
 
 | System | Role |
 |---|---|
@@ -564,11 +602,13 @@ The doctrine currently maps several existing systems into bounded roles:
 | **EvolveAI** | memory metabolism and lifecycle prototype |
 | **CodeGenome** | code-reality graph, evidence, provenance, inferred relations |
 | **COREFORGE Vault / Neurospace** | local-first runtime memory and agent-facing recall |
-| **PAMA** | proportional mutation and promotion authority |
 | **FailSafe / Arbiter** | governance enforcement, evidence, approval boundaries |
-| **Bicameral** | durable decision continuity and drift detection |
 
-The map defines architectural roles. It does not claim every related repository already conforms to every current contract.
+**PAMA is intentionally not in this external implementation table.** It is native Agent Memory doctrine. A runtime may implement PAMA inside any conforming codebase while preserving its authority boundary.
+
+**Durable decision memory is also defined internally**, through the [Durable Decision Memory Profile](docs/profiles/durable-decision-memory-profile.md). A product earns an implementation mapping by demonstrating evidence against that profile, not by being conceptually nearby.
+
+The map defines architectural implementation roles. It does not claim every related repository already conforms to every current contract.
 
 See **[Repo Implementation Map](docs/05-repo-implementation-map.md)**.
 
@@ -582,16 +622,18 @@ agent-memory/
 ├── CONTRIBUTING.md                 # evidence and contribution standard
 ├── docs/
 │   ├── README.md                   # full documentation index
+│   ├── pama/                       # native PAMA foundation
 │   ├── 00-10                      # architecture spine
 │   ├── 11-19                      # composition, security, trust, time, privacy
 │   ├── 20-25                      # interdisciplinary theory and governed uncertainty
-│   ├── 26-32                      # operational and executable contracts
+│   ├── 26-39                      # operational and executable contracts
+│   ├── profiles/                  # doctrine profiles for memory classes
 │   ├── adr/                       # architecture decision records
-│   └── audits/governed-uncertainty/
-│       └── ...                    # baseline and post-remediation audit trail
+│   └── audits/                    # preserved audit history
+├── sources/                        # external/material source-rights registry
 ├── schemas/                        # doctrine-level JSON Schemas
 ├── fixtures/                       # 24 conformance fixture definitions
-├── scripts/                        # fixture and schema validators
+├── scripts/                        # fixture, schema, link, and doctrine-boundary validators
 └── .github/
     ├── ISSUE_TEMPLATE/
     └── workflows/
@@ -624,6 +666,11 @@ These are the shortest route to the doctrine:
 18. **Memory must remain correctable after becoming durable.**
 19. **Forgetting is a governed family of operations.**
 20. **Memory quality is measured by future behavior, not recall alone.**
+21. **Adaptation is not authority.**
+22. **Memory is not procedure.**
+23. **Procedure is not permission.**
+24. **Permission is not governance.**
+25. **Validated capability does not imply autonomous execution authority.**
 
 ---
 
@@ -639,6 +686,7 @@ It is **not**:
 - a production-runtime certification program
 - proof that every mapped implementation already conforms
 - a requirement that uncertain cognition become deterministic
+- an architecture whose validity depends on keeping every adjacent product name in the doctrine
 
 It **is** a place to define, challenge, test, and eventually implement the contracts required for memory that persists without becoming ungoverned state.
 
