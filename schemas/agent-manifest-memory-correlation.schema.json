@@ -29,6 +29,7 @@
         "portable_evidence_ref",
         "canonical_receipt_ref",
         "action_ref",
+        "memory_action",
         "governance_disposition",
         "lifecycle_satisfaction"
       ],
@@ -36,6 +37,7 @@
         "portable_evidence_ref": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
         "canonical_receipt_ref": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
         "action_ref": {"type": "string", "minLength": 1},
+        "memory_action": {"type": "string", "minLength": 1},
         "governance_disposition": {
           "enum": ["permitted", "denied", "deferred", "review_required", "committed", "unverifiable"]
         },
@@ -52,7 +54,6 @@
         "sdk_version",
         "upstream_commit",
         "representation",
-        "operation_kind",
         "checkpoint_ref",
         "previous_checkpoint",
         "new_checkpoint",
@@ -64,7 +65,6 @@
         "sdk_version": {"const": "0.11.0"},
         "upstream_commit": {"const": "98cead8e8809e3302dc388ca869882d15b812b7f"},
         "representation": {"enum": ["kv", "vector", "graph"]},
-        "operation_kind": {"enum": ["PUT", "DEL", "ADD"]},
         "checkpoint_ref": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
         "previous_checkpoint": {"$ref": "#/$defs/checkpoint"},
         "new_checkpoint": {"$ref": "#/$defs/checkpoint"},
