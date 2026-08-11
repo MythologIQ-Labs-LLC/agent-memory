@@ -19,3 +19,6 @@ dist/
 
 # Embedded substrate databases created by reference probes
 *.kuzu/
+
+# Local agent tooling settings; never part of the repository
+.claude/
