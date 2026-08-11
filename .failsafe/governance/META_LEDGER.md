@@ -559,3 +559,62 @@ remains Proposed pending concurrency behavior, deletion-propagation
 measurement, and evidence across a wider surface than one reference adapter.
 The wiki source tree is ahead of the published wiki, which remains unpublished
 pending Governor direction.
+
+---
+
+### Entry #13: P4 EXECUTED — CANONICAL AND DERIVED STATE
+
+**Timestamp**: 2026-08-11T16:30:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("p4-derived-state:" + git tree hash at parent commit)
+= 48d657dff24782adbecfe76e9da4277be34f4491084ac937d4771141d1b46f80
+```
+
+**Previous Hash**: 32a674bb717c71207f75f161d3dc28055bf059e95b3815694ff571b1357020c8
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= 25fe3794d02da6bfe553f605a0a7488fdf7de424529e82f43d3482c705b4e2f3
+```
+
+**Decision**: P4 executed against the architectural design authored upstream.
+The division of labor is explicit and preserved: the canonical-and-derived-state
+design spike, its three-tier model, its freshness relation, its residue
+partition, and its seven-item evidence bar were specified elsewhere. This work
+implements that specification and does not amend its argument.
+
+All seven bar items now execute in CI. A tier-3 declaration surface records
+basis at build time. Freshness is computed as a relation over recorded basis
+versus current canonical state, never set by a flag, with residual dominating
+stale because they carry different authorities. Correction supersedes
+content-bearing projections without erasing the version a prior decision used.
+Purge traverses the transitive derivation closure including retained superseded
+versions, honoring deletion-dominates-correction. An independent sweep
+re-derives residual status rather than asking the purge whether it finished.
+Estimator-mediated rebuild is refused without an authority decision, while
+deterministic reproducible rebuild is categorically authorized.
+
+Items 4, 5, and 6 were called out upstream as the ones a persuasive
+demonstration would skip. Each carries a paired negative test: a deliberate
+one-hop purge must be caught by the sweep, an unauthorized purge must not run,
+and staleness alone must not commit estimator content. Two implementation bugs
+were found by those negative tests rather than by inspection: a dropped
+projection was not recorded as purged, so dependents read as merely stale
+instead of residual; and a refused purge recorded a no-action sentinel while
+the envelope still permitted deferrals.
+
+A review-satisfaction path was added to the policy so an externally approved
+purge is reachable at all. Review is discharged only by an approval record from
+someone other than the proposer, block remains absorbing, and self-approval
+cannot buy past review. This also closes a previously documented limitation.
+
+Reported metrics: deletion_residue_rate 0.0 with an empty undeclared cell, and
+stochastic_action_set_violation_rate 0.0. Forty-six tests plus sweeps.
+Conformance level remains 0 and ADR-020 remains Proposed: this discharges one
+validation item, and clearing one bar is not acceptance.
