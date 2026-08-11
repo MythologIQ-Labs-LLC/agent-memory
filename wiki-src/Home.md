@@ -2,93 +2,87 @@
 
 **A field guide to governed memory for autonomous and agentic systems.**
 
-Agent Memory asks a larger question than _“how do we retrieve old context?”_ It defines the architecture around what becomes memory, what remains uncertain, what may influence future behavior, who may change durable state, and how memory can be corrected or forgotten.
+Agent Memory is about more than retrieving old context. It defines what becomes memory, what remains uncertain, what may influence future behavior, who may change durable state, and how retained state can be corrected or forgotten.
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/agent-memory-flow.svg">
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/agent-memory-flow-light.svg">
-    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/agent-memory-flow-light.svg" alt="Agent Memory governed memory loop" width="100%">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/agent-memory-flow-light.svg" alt="Agent Memory governed memory loop showing interpretation, evidence and proposal, PAMA governance, permitted action selection, retained memory, governed recall, and active agent context" width="100%">
   </picture>
 </p>
 
 > **Agentic memory is retained state that can alter an agent's future interpretation, reasoning, planning, tool use, action, or adaptation across a meaningful persistence boundary.**
 
-## Choose your path
+## Start with the question you have
 
-| I want to... | Start here |
-|---|---|
-| Follow the architecture through focused visual decision flows | **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** |
-| Understand the architecture quickly | **[Getting Started](Getting-Started)** |
-| Learn the core vocabulary and invariants | **[Core Concepts](Core-Concepts)** |
-| Understand adaptive authority | **[PAMA](PAMA)** |
-| Design retention, consolidation, and forgetting | **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)** |
-| Understand why deleting a memory does not delete what was derived from it | **[Canonical and Derived State](Canonical-and-Derived-State)** |
-| Separate probabilistic inference from consequential authority | **[Governed Uncertainty](Governed-Uncertainty)** |
-| Review threat, privacy, and deletion risks | **[Security and Privacy](Security-and-Privacy)** |
-| Evaluate evidence or runtime claims | **[Conformance and Evidence](Conformance-and-Evidence)** |
-| See what has actually been executed | **[Runtime Evidence](Runtime-Evidence)** |
-| Contribute research or challenge doctrine | **[Research and Sources](Research-and-Sources)** |
-| See the developers, projects, and ideas that materially informed the work | **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** |
-| Map a real memory system into the architecture | **[Implementation Guide](Implementation-Guide)** |
-| Contribute to the project | **[Contributing](Contributing)** |
+**I want the architecture in pictures.**  
+Start with **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)**. It is the visual map for lifecycle, strength/stability, PAMA, recall, temporal correction, deletion completeness, executable scenarios, and evidence boundaries.
 
-## The architecture in one minute
+**I am new to Agent Memory.**  
+Read **[Getting Started](Getting-Started)**, then **[Core Concepts](Core-Concepts)** for the vocabulary and invariants that the diagrams preserve.
+
+**I am implementing a memory system.**  
+Use the **[Implementation Guide](Implementation-Guide)**, then **[PAMA](PAMA)**, **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)**, and **[Canonical and Derived State](Canonical-and-Derived-State)** for the consequential boundaries.
+
+**I am evaluating whether a claim is actually proven.**  
+Use **[Conformance and Evidence](Conformance-and-Evidence)** for the evidence ladder and **[Runtime Evidence](Runtime-Evidence)** for what has actually executed.
+
+## Follow the architecture
+
+1. **Observe and estimate.** Experience becomes evidence, provenance, uncertainty, and a proposal. See **[Core Concepts](Core-Concepts)**.
+2. **Govern consequences.** PAMA resolves what actions are permitted. Evidence may strengthen a proposal; it does not manufacture authority. See **[PAMA](PAMA)**.
+3. **Commit explicit state.** A permitted consequence becomes retained state with reconstructable evidence. See **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)**.
+4. **Recall through admission.** Retrieval creates candidates; governance decides what may enter active context. See **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle#4-governed-recall-pipeline)**.
+5. **Correct, supersede, or forget.** Historical truth, correction, staleness, supersession, deletion, and residue remain distinct. See **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)** and **[Canonical and Derived State](Canonical-and-Derived-State)**.
+6. **Verify without inflating claims.** Runtime and portable evidence can prove specific relationships and outcomes without becoming semantic authority. See **[Runtime Evidence](Runtime-Evidence)**.
+
+The core separations are deliberately simple to state and expensive to violate:
+
+```text
+confidence != truth
+saturation != authority
+relevance != permission
+proposal != commit
+retrieval != recall admission
+staleness != falsity
+delete operation != forgetting completeness
+```
+
+For the complete visual set and nearby canonical-source links, use **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)**.
+
+## What makes the architecture different
 
 Agent Memory separates four jobs that are often collapsed into one opaque score:
 
-| Layer | Job |
-|---|---|
-| **Epistemics** | Estimate relevance, trust, contradiction, sensitivity, utility, staleness, and other uncertain properties. |
-| **Governance** | Determine which consequences are allowed under current policy, scope, authority, and state. |
-| **Commit** | Apply an explicit state transition and emit reconstructable evidence. |
-| **Recall** | Admit retained state into active context only when relevance and authorization both permit it. |
-
-The governing rule is simple:
+- **Epistemics** estimates relevance, trust, contradiction, sensitivity, utility, staleness, and other uncertain properties.
+- **Governance** determines which consequences are allowed under current policy, scope, authority, and state.
+- **Commit** applies an explicit state transition and emits reconstructable evidence.
+- **Recall** admits retained state into active context only when relevance and authorization both permit it.
 
 > **Probabilistic epistemics. Governed consequences.**  
 > **Uncertainty may propose. Authority constrains.**
 
-## What makes Agent Memory different
-
-Agent Memory treats all of these as first-class architectural concerns:
-
-- provenance and source trust
-- short-, medium-, long-, remote-, and inherited persistence
-- episodic, semantic, procedural, preference, policy, decision, and evidence memory
-- contradiction, correction, supersession, and causality
-- forgetting, deletion, redaction, tombstones, and deletion residue
-- privacy, sensitivity, scope, tenancy, and consent
-- adaptive mutation authority through **PAMA**
-- receipts, replay, rollback, observability, and conformance evidence
-
-## Credit without capture
-
-Agent Memory is independent, but it is not intellectually isolated. The project explicitly records meaningful influence from other developers, researchers, and repositories while preserving architectural and licensing boundaries.
-
-The first highlighted lineage is the **UOR Foundation**, whose work on deterministic object reference, content-addressed identity, explicit resolution state, and formal object semantics helped sharpen Agent Memory's distinction between **what an object is** and **what retained state is allowed to become**.
-
-Recognition is relationship-typed and license-aware. “Informed by” does not mean “depends on,” and acknowledgement does not imply endorsement, joint authorship, or transfer of intellectual-property ownership.
-
-See **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)**.
-
 ## Current maturity
 
-| Surface | State |
-|---|---|
-| Core doctrine | Canonical and extensively documented |
-| PAMA | Native doctrine authored by Kevin R. Knapp |
-| ADRs | ADR-001 through ADR-019 Accepted; ADR-020 Proposed |
-| Schemas | 7 validated JSON Schemas |
-| Conformance fixtures | 26 validated definitions |
-| Runtime evidence | Reference adapter executed against a real substrate; broader ADR-020 proof remains incomplete |
-| License | Apache-2.0 |
+- **Canonical doctrine:** ADR-001 through ADR-019 are Accepted.
+- **Emerging decisions:** ADR-020, ADR-021, and ADR-022 remain Proposed and keep their own evidence gates.
+- **Executed evidence:** the repository exercises a governed reference adapter, P4 deletion-completeness paths, and the P4.5 portable-governance-evidence chain with adversarial negative cases.
+- **Claim boundary:** those executions do not automatically raise a conformance level or accept an ADR.
 
-> **Important:** repository validation proves the declared schemas, fixtures, links, and doctrine boundaries are coherent. It does **not** magically prove a production runtime enforces them. Reality remains stubbornly outside the jurisdiction of JSON Schema.
+See **[Architecture Decisions](Architecture-Decisions)** for doctrine maturity and **[Runtime Evidence](Runtime-Evidence)** for the executable evidence ledger.
+
+## Explore the rest
+
+- **[Governed Uncertainty](Governed-Uncertainty)** for deterministic governance around probabilistic discovery
+- **[Security and Privacy](Security-and-Privacy)** for scope, deletion, and leakage risks
+- **[Research and Sources](Research-and-Sources)** for supporting and challenging research
+- **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for external influences and architectural relationships
+- **[Contributing](Contributing)** for contribution rules
 
 ## Canonical source
 
-The Wiki is the readable navigation layer. The repository documentation is authoritative.
+The Wiki is the readable navigation and explanation layer. The numbered repository documentation remains authoritative.
 
 **Canonical repository:** https://github.com/MythologIQ-Labs-LLC/agent-memory  
 **Documentation index:** https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/README.md  
