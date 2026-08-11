@@ -31,6 +31,8 @@ P4.5a is intentionally a **substrate-independent interoperability precondition**
 
 P4.5b is **external comparator evidence**: the tests execute the pinned Agent Manifest package's own checkpoint/delta verifier and correlate its verdict to Agent Memory receipts and portable evidence. Agent Memory does not copy the external checkpoint protocol or inherit its semantics.
 
+P4.5c is **external action-evidence interoperability**: Agent Memory projects only content-free references into the existing TRACE/cMCP external execution-evidence path, keeps call identity distinct from Agent Memory action identity, and executes the resulting envelope through the released cMCP verifier. TRACE receipt validity remains separate from PAMA, runtime authorization, and lifecycle satisfaction.
+
 ## Comparator discipline
 
 External systems enter this program to answer one architectural question each, and are barred from becoming something else:
@@ -80,6 +82,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`canonical-and-derived-state.md`](canonical-and-derived-state.md) | canonical memory versus derived projections | design spike executed: all seven evidence-bar items run in CI |
 | [`portable-governance-evidence.md`](portable-governance-evidence.md) | P4.5a portable governance evidence core | executable substrate-independent Ed25519 issuer/verifier and adversarial vectors |
 | [`agent-manifest-correlation.md`](agent-manifest-correlation.md) | P4.5b Agent Manifest memory checkpoint correlation | pinned external comparator executed; a checkpoint built from a test log containing `DEL` remains distinct from Agent Memory lifecycle satisfaction |
+| [`trace-action-evidence.md`](trace-action-evidence.md) | P4.5c TRACE/cMCP action-evidence binding | content-free action receipt adapter plus released cMCP verifier comparator; TRACE receipt state remains separate from Agent Memory governance and lifecycle |
 
 ## Preconditions
 
