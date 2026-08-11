@@ -1,12 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="350" viewBox="0 0 1200 350" role="img" aria-labelledby="title desc">
   <title id="title">Agent Memory governed memory loop</title>
-  <desc id="desc">A compact three-stage overview: interpretation, PAMA governance and commit, then retained memory and governed recall. The exception path remains inside the governance stage.</desc>
+  <desc id="desc">A compact three-stage overview: interpretation, PAMA governance and commit, then retained memory and governed recall. Stage transitions route through the gutters and the governance decision forks cleanly between permitted and exception paths.</desc>
   <defs>
     <marker id="arrow" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L8,3 z" fill="#8b949e"/>
     </marker>
     <marker id="arrowBlue" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L8,3 z" fill="#58a6ff"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#f85149"/>
     </marker>
   </defs>
 
@@ -33,17 +36,21 @@
   <text x="198" y="293" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Estimate / proposal</text>
   <text x="198" y="311" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">May be probabilistic or learned</text>
 
-  <line x1="356" y1="297" x2="420" y2="297" stroke="#58a6ff" stroke-width="2.3" marker-end="url(#arrowBlue)"/>
+  <path d="M356 297 H382 Q394 297 394 285 V165 Q394 153 406 153 H424" fill="none" stroke="#58a6ff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowBlue)"/>
 
   <rect x="434" y="118" width="332" height="70" rx="12" fill="#1c1628" stroke="#a371f7" stroke-width="1.5"/>
   <text x="600" y="144" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="700">PAMA governance envelope</text>
   <text x="600" y="166" text-anchor="middle" fill="#d2a8ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">M0–M5 target · operation · A0–A5 authority</text>
   <text x="600" y="181" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Policy constrains what can happen next</text>
 
-  <rect x="434" y="198" width="332" height="34" rx="8" fill="#251719" stroke="#f85149"/>
-  <text x="600" y="220" text-anchor="middle" fill="#ff7b72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">EXCEPTION PATH: BLOCK · REVIEW · VERIFY</text>
+  <line x1="600" y1="188" x2="600" y2="197" stroke="#8b949e" stroke-width="2"/>
+  <circle cx="600" cy="197" r="3.5" fill="#8b949e"/>
+  <path d="M600 197 H520 V240" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+  <path d="M600 197 H674 V200" fill="none" stroke="#f85149" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowRed)"/>
 
-  <line x1="600" y1="188" x2="600" y2="240" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="584" y="206" width="182" height="30" rx="8" fill="#251719" stroke="#f85149"/>
+  <text x="675" y="226" text-anchor="middle" fill="#ff7b72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">BLOCK · REVIEW · VERIFY</text>
+
   <rect x="434" y="246" width="332" height="54" rx="10" fill="#161b22" stroke="#a371f7"/>
   <text x="600" y="269" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Permitted action set</text>
   <text x="600" y="287" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Selection only occurs inside this set</text>
@@ -52,7 +59,7 @@
   <rect x="434" y="314" width="332" height="28" rx="8" fill="#161b22" stroke="#a371f7"/>
   <text x="600" y="333" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="600">Commit + decision receipt</text>
 
-  <line x1="766" y1="328" x2="820" y2="328" stroke="#58a6ff" stroke-width="2.3" marker-end="url(#arrowBlue)"/>
+  <path d="M766 328 H794 Q806 328 806 316 V157 Q806 145 818 145 H824" fill="none" stroke="#58a6ff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowBlue)"/>
 
   <rect x="834" y="118" width="324" height="54" rx="10" fill="#122019" stroke="#3fb950"/>
   <text x="996" y="141" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Retained memory state</text>
