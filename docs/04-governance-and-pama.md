@@ -10,30 +10,91 @@ PAMA also defines the boundary between uncertain inference and governed conseque
 
 **Probabilistic or learned systems may estimate confidence, trust, relevance, contradiction, sensitivity, utility, or risk. PAMA determines what those estimates are allowed to change.**
 
-## PAMA definition
+## Native doctrine and provenance
 
-PAMA means Proportional Adaptive Mutation Authority.
+PAMA means **Proportional Adaptive Mutation Authority**.
 
-It is a governance model for deciding when memory, policy, state, identity relations, or derived representations may be changed by an agent or system.
+PAMA is **native Agent Memory doctrine authored by Kevin R. Knapp**. It is not an external source system or dependency that Agent Memory imports from elsewhere.
 
-## Why PAMA exists
+The systems-agnostic foundation is summarized in [`pama/README.md`](pama/README.md). This document specializes that foundation for memory lifecycle, durable state, correction, deletion, sharing, policy, and action boundaries.
 
-Agentic memory becomes dangerous when the system can:
+External standards, research, and implementation systems may support, challenge, align with, or implement PAMA. They do not define its authorship or become its source of authority.
 
-- rewrite durable memory without review
-- promote repeated claims into truth
-- mutate user preferences without consent
-- overwrite project decisions because a new session felt confident
-- prune evidence needed for later accountability
-- crystallize hallucinations
-- convert probabilistic confidence directly into mutation authority
-- infer missing permission because an action appears useful
+## Foundational PAMA thesis
 
-The point of PAMA is to make adaptive memory useful without letting adaptation become silent self-corruption.
+> **Adaptation should be broadly available to authorized agents. Authority to make a mutation durable, influential, shared, or action-enabling should increase in proportion to the mutation's consequence.**
 
-## Mutation classes
+PAMA preserves four separations:
 
-| Class | Description | Default authority |
+```text
+adaptation != authority
+memory != procedure
+procedure != permission
+permission != governance
+```
+
+An agent may observe, infer, propose, or learn without automatically receiving authority to apply a durable or consequential change.
+
+A remembered fact or preference does not automatically become an executable workflow.
+
+A validated procedure does not automatically authorize the agent to execute it.
+
+Permission to act does not authorize an agent to expand, weaken, or redefine governance itself.
+
+The associated review rule is:
+
+> **Review should be applied at promotion and consequence boundaries, not at every observation boundary.**
+
+This is why PAMA is proportional rather than approval-heavy. Low-risk reversible learning should not turn a human into the throughput bottleneck. High-impact mutation should attract stronger evidence, validation, review, authorization, and monitoring.
+
+## PAMA dimensions
+
+PAMA evaluates several dimensions that must not be collapsed into one score.
+
+### Mutation target classes
+
+Target class describes **what kind of state is being changed**.
+
+| Class | Target type | Examples | Default posture |
+|---|---|---|---|
+| **M0** | Execution-local context | current-session correlation, temporary intent interpretation, local retrieval hint | transient; expire automatically |
+| **M1** | Low-risk personal preference | formatting, terminology, view, pacing | tentative, visible, reversible |
+| **M2** | Operational association | project routing, recurring task association, workflow suggestion | evidence-backed; recommendation influence |
+| **M3** | Reusable procedure or capability | validated checklist, repair sequence, reusable workflow | validation and promotion controls |
+| **M4** | Shared fact or identity-bearing state | relationship, entitlement, commitment, permission-affecting fact | authoritative evidence and controlled review |
+| **M5** | Governance, security, or autonomous-action authority | policy exemption, trust elevation, send/deploy/delete authority | explicit authorization; no self-approval |
+
+### Lifecycle strength
+
+Lifecycle strength describes how established retained state is:
+
+```text
+Observed -> Tentative -> Reinforced -> Promoted -> Canonical
+                   \-> Decaying -> Archived / Deprecated / Blocked
+```
+
+Lifecycle strength does not itself grant downstream authority.
+
+### Downstream authority classes
+
+Downstream authority describes **what the retained mutation is permitted to influence**.
+
+| Class | Authority | Meaning |
+|---|---|---|
+| **A0** | Retrieval only | inspection or context recall |
+| **A1** | Recommendation influence | rankings, suggestions, routing, planning |
+| **A2** | Draft generation | drafts for review, no execution |
+| **A3** | Local workflow mutation | authorized internal state changes |
+| **A4** | External action | messages, deployments, purchases, deletions, bookings, provider state |
+| **A5** | Governance change | privileges, policy, trust, enforcement, future autonomy |
+
+A mutation can be strongly validated and still have a low authority ceiling. Reliability does not create permission.
+
+## Memory mutation operations
+
+Agent Memory additionally classifies **the operation being requested**. These are operational mutation types, not replacements for PAMA's M0-M5 target classes.
+
+| Operation | Description | Default authority |
 |---|---|---|
 | Runtime assembly | Build context from existing memory | allowed with audit |
 | Score adjustment | Update saturation, confidence, or decay pressure | allowed with ledger when low risk |
@@ -45,7 +106,24 @@ The point of PAMA is to make adaptive memory useful without letting adaptation b
 | Pruning | Remove from active recall | require reversible tombstone unless ephemeral |
 | Permanent deletion | Intentionally make recovery unavailable | explicit high-consequence authority and deletion scope required |
 | Scope expansion | Share memory with broader actor or tenant scope | explicit authority appropriate to target scope |
-| Policy mutation | Change governance rules | require human approval |
+| Policy mutation | Change governance rules | require human or equivalently authoritative approval |
+
+A compliant decision therefore considers at least:
+
+```text
+target_class
+lifecycle_strength
+requested_operation
+downstream_authority
+risk
+scope
+reversibility
+evidence
+policy
+actor_authority
+```
+
+The operation/risk decision table in [`33-pama-decision-table.md`](33-pama-decision-table.md) is an Agent Memory specialization of this multidimensional PAMA model, not the whole of PAMA.
 
 ## Authority outcomes
 
@@ -69,14 +147,16 @@ This does not require all upstream inputs to be deterministic.
 
 It requires that:
 
-1. the policy knows which inputs are estimates
-2. their provenance and uncertainty are inspectable
-3. the estimator cannot grant itself authority
-4. prohibited actions remain prohibited regardless of confidence
-5. any stochastic behavior after authorization selects only among already-permitted actions
-6. the resulting authority decision can be reconstructed from its receipt
+1. the policy knows which inputs are estimates;
+2. their provenance and uncertainty are inspectable;
+3. the estimator cannot grant itself authority;
+4. prohibited actions remain prohibited regardless of confidence;
+5. any stochastic behavior after authorization selects only among already-permitted actions; and
+6. the resulting authority decision can be reconstructed from its receipt.
 
 ## Risk classes
+
+Risk remains an operational dimension in Agent Memory and composes with PAMA target and authority classes.
 
 | Risk | Examples | Required handling |
 |---|---|---|
@@ -92,6 +172,9 @@ Governance strength should rise with consequence, not merely with estimator conf
 Relevant dimensions include:
 
 ```text
+target_class
+lifecycle_strength
+downstream_authority
 reversibility
 persistence horizon
 sensitivity
@@ -112,9 +195,13 @@ A high-confidence proposal for permanent deletion may still require explicit rev
 
 ```text
 memory_state
+target_class
+lifecycle_strength
 mutation_type
+requested_downstream_authority
 risk_class
 actor
+agent_charter_version
 source_authority
 evidence_quality
 saturation
@@ -135,6 +222,22 @@ requested_scope_change
 ```
 
 PAMA should distinguish required inputs from optional advisory signals. Missing advisory signals may reduce decision quality. Missing required authority inputs must not be silently guessed for consequential actions.
+
+Unknown consequence must not be converted into presumed safety.
+
+## Proportional handling lanes
+
+PAMA concentrates review where influence and consequence increase.
+
+| Lane | Typical use | Core control |
+|---|---|---|
+| **1. Transient automatic** | M0 context and narrow interpretations | no durable authority or external effect |
+| **2. Tentative low-risk retention** | M1 and selected recommendation-only M2 | visible, removable, scoped |
+| **3. Evidence-backed reinforcement** | meaningful but reversible M2 | evidence, correction, conflict checks |
+| **4. Promotion and review** | M3, shared knowledge, meaningful workflow behavior | validation, versioning, authority ceiling, rollback |
+| **5. Restricted authority** | M4/M5 effects involving external action or governance | explicit authorized review, no self-approval, fail closed when authority is ambiguous |
+
+Human attention is a scarce governance resource. PAMA spends it where a mutation becomes durable, shared, action-enabling, identity-bearing, security-relevant, or governance-changing.
 
 ## Promotion rule
 
@@ -175,6 +278,23 @@ can_crystallize =
 ```
 
 Crystallization should bind to the evidence set, policy version, estimator context, authority record, and scope under which it was approved.
+
+## Capability authority ceiling
+
+Reusable capability is a first-class PAMA concern.
+
+A procedure that is repeatedly successful may become a validated capability artifact. It must still declare the maximum downstream authority it can influence.
+
+Examples:
+
+```text
+may retrieve and recommend only
+may draft but not send
+may update bounded internal workflow state
+may not execute external tools without separate authorization
+```
+
+> **Validation can justify trust in a capability. It does not automatically grant permission to use that capability autonomously.**
 
 ## Bounded stochastic action
 
@@ -237,6 +357,20 @@ Correct:
 model confidence -> evidence signal -> calibrated scoring -> governance -> verification path
 ```
 
+### Procedure as permission
+
+Wrong:
+
+```text
+validated procedure -> autonomous execution
+```
+
+Correct:
+
+```text
+validated procedure -> governed capability -> authority ceiling -> separately authorized execution
+```
+
 ### Summary as authority
 
 Wrong:
@@ -285,26 +419,26 @@ PAMA is proportional and adaptive.
 
 Authority may increase when:
 
-- memory is low risk
-- mutation is reversible
-- evidence is strong
-- policy scope is narrow
-- prior similar mutations succeeded
-- user has delegated authority explicitly
-- estimator calibration is valid for the current scope
+- memory is low risk;
+- mutation is reversible;
+- evidence is strong;
+- policy scope is narrow;
+- prior similar mutations succeeded;
+- user has delegated authority explicitly; and
+- estimator calibration is valid for the current scope.
 
 Authority must decrease or escalate when:
 
-- contradiction pressure rises
-- source authority weakens
-- trap-class behavior appears
-- mutation blast radius grows
-- certification is missing or expired
-- system confidence exceeds evidence quality
-- estimator disagreement is material
-- estimator calibration is stale or out of scope
-- a requested mutation expands sharing or tenancy scope
-- the action destroys rollback, evidence, or future governance options
+- contradiction pressure rises;
+- source authority weakens;
+- trap-class behavior appears;
+- mutation blast radius grows;
+- certification is missing or expired;
+- system confidence exceeds evidence quality;
+- estimator disagreement is material;
+- estimator calibration is stale or out of scope;
+- a requested mutation expands sharing or tenancy scope; or
+- the action destroys rollback, evidence, or future governance options.
 
 ## Uncertainty handling
 
@@ -322,10 +456,10 @@ Not all uncertainty should be handled the same way.
 
 For example:
 
-- low-risk epistemic uncertainty may still permit an ephemeral write
-- policy uncertainty on a high-impact mutation should block or escalate
-- authority uncertainty must never be resolved by estimator confidence
-- scope uncertainty should prevent broad sharing until resolved
+- low-risk epistemic uncertainty may still permit an ephemeral write;
+- policy uncertainty on a high-impact mutation should block or escalate;
+- authority uncertainty must never be resolved by estimator confidence; and
+- scope uncertainty should prevent broad sharing until resolved.
 
 ## Fail-safe behavior
 
@@ -351,7 +485,11 @@ Every mutation decision should record:
 mutation_id
 memory_id
 actor
+agent_charter_version
+target_class
+lifecycle_strength
 requested_mutation
+requested_downstream_authority
 pama_inputs
 estimator_refs
 estimator_versions
@@ -379,50 +517,58 @@ A decision receipt should allow an auditor to answer:
 
 1. What did the uncertain components estimate?
 2. Which estimator and calibration versions produced those estimates?
-3. Which policy version interpreted them?
-4. What actions were prohibited?
-5. What actions were permitted?
-6. Which permitted action was selected and how?
-7. What state changed?
-8. Could the change be rolled back?
+3. Which target class, lifecycle strength, requested operation, and authority ceiling were evaluated?
+4. Which policy version interpreted them?
+5. What actions were prohibited?
+6. What actions were permitted?
+7. Which permitted action was selected and how?
+8. What state changed?
+9. Could the change be rolled back?
 
 Exact replay of a stochastic estimator is not always possible or necessary. Exact reconstruction of **authority and consequence** is required.
 
 ## Runtime enforcement
 
-PAMA should be enforced at the boundary where the system changes memory, not merely where it explains memory.
+PAMA should be enforced at the boundary where the system changes memory or behavior, not merely where it explains memory.
 
 Good enforcement points:
 
-- Vault write boundary
-- crystallization gate
-- graph mutation API
-- agent action planner
-- code governance layer
-- correction workflow
-- pruning workflow
-- deletion workflow
-- scope-sharing boundary
+- Vault write boundary;
+- crystallization gate;
+- graph mutation API;
+- agent action planner;
+- reusable capability invocation boundary;
+- code governance layer;
+- correction workflow;
+- pruning workflow;
+- deletion workflow; and
+- scope-sharing boundary.
 
 ## Required adversarial cases
 
 PAMA conformance should eventually include:
 
-- high-confidence false memory requesting durable promotion
-- threshold jitter near promotion boundary
-- estimator disagreement about sensitivity
-- high semantic relevance from the wrong tenant
-- stochastic planner offered both permitted and prohibited actions
-- permanent deletion proposed from uncertain future utility
-- policy-version drift after a prior authorization
-- missing authority record during replay
-- concurrent conflicting mutation requests
-- unsafe multi-memory composition that was not visible at individual write time
+- high-confidence false memory requesting durable promotion;
+- threshold jitter near promotion boundary;
+- estimator disagreement about sensitivity;
+- high semantic relevance from the wrong tenant;
+- stochastic planner offered both permitted and prohibited actions;
+- permanent deletion proposed from uncertain future utility;
+- policy-version drift after a prior authorization;
+- missing authority record during replay;
+- concurrent conflicting mutation requests;
+- unsafe multi-memory composition that was not visible at individual write time;
+- validated M3 capability attempting to exceed its A1/A2 authority ceiling; and
+- M5 governance mutation disguised as a lower-risk operational update.
 
 ## Doctrine
 
 PAMA is not a memory score.
 
-PAMA is the authority layer that decides whether a proposed memory transition is allowed.
+PAMA is not an external dependency of Agent Memory.
+
+PAMA is the authority architecture that decides whether a proposed adaptive mutation is allowed and how much consequence it may carry.
 
 Probability may inform PAMA. Probability does not become PAMA.
+
+**Learning may be broad. Consequence remains governed.**
