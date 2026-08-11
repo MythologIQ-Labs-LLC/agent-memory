@@ -21,8 +21,12 @@ saturation != confidence
 saturation != authority
 relevance != permission
 certification != permanence forever
-proposal != commit
+staleness != falsity
+supersession != correction
+delete operation != forgetting completeness
 retrieval != recall admission
+same agent != same memory scope
+proposal != commit
 ```
 
 When a visual and a canonical document appear to differ, **the canonical document governs**. Open an issue rather than treating the picture as an independent policy source.
@@ -97,6 +101,8 @@ Candidate generation may be probabilistic. Admission is governed. Ranking occurs
 
 ## What comes next
 
-The immediate visual core above does **not** complete the full initiative. The next stable visual work under issue #73 covers temporal correction/supersession and deletion completeness/derived-state propagation. Emerging isolation-domain and portable-evidence visuals must follow the maturity of their governing ADRs and executable evidence rather than anticipating it.
+The immediate visual core above does **not** complete the full initiative. The next stable visual work under issue #73 covers temporal correction/supersession and deletion completeness/derived-state propagation.
 
-This page will remain an index into those stable visual explanations as they land.
+[ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md) and [ADR-022](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) remain **Proposed**. V1 does not contain a visual that finalizes either boundary. Isolation-domain visuals must follow ADR-022's doctrine maturity, and portable-evidence visuals must follow ADR-021's executable interoperability evidence rather than inventing a wire model visually. A diagram does not raise an ADR status, conformance level, or runtime-evidence claim.
+
+This page will remain an index into stable visual explanations as they land.
