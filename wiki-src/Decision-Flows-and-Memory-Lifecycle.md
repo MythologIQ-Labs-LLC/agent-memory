@@ -12,6 +12,7 @@ Use each diagram to answer one architectural question, then follow the canonical
 | Which retrieved candidates may enter active context, and under what treatment? | [Governed recall](#4-governed-recall-pipeline) | [`docs/26-governed-recall-planner.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/26-governed-recall-planner.md) |
 | How should readers distinguish supersession, correction, dispute, and staleness across time? | [Temporal change](#5-temporal-change-correction-and-supersession) | [`docs/18-temporal-causality-layer.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/18-temporal-causality-layer.md) |
 | Why can a successful delete operation still leave memory behind? | [Deletion completeness](#6-deletion-completeness-and-derived-state-propagation) | [`docs/28-retention-deletion-and-tombstones.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/28-retention-deletion-and-tombstones.md) |
+| What do these governance boundaries look like in executable cases? | [Scenario walkthroughs](#7-executable-scenario-walkthroughs) | [Conformance fixtures](https://github.com/MythologIQ-Labs-LLC/agent-memory/tree/main/fixtures) |
 
 ## Reading rule
 
@@ -136,9 +137,25 @@ Canonical deletion doctrine requires propagation through known derivation relati
 **Canonical contract:** [`docs/28-retention-deletion-and-tombstones.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/28-retention-deletion-and-tombstones.md) · [`docs/31-recovery-rollback-and-replay.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/31-recovery-rollback-and-replay.md)  
 **Executed design evidence:** [`docs/programs/runtime-evidence/canonical-and-derived-state.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/canonical-and-derived-state.md)
 
+## 7. Executable scenario walkthroughs
+
+**Question:** What do these boundaries look like when the repository's fixtures exercise them?
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/scenario-walkthroughs-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/scenario-walkthroughs-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/scenario-walkthroughs-flow-light.svg" alt="Three governed-memory scenarios showing a supported memory entering pending verification rather than self-promoting, a highly confident false claim blocked from crystallization, and a raw deletion failing the forgetting outcome because derived residue survives" width="100%">
+  </picture>
+</p>
+
+These are not hypothetical new policies. They are reader-oriented projections of existing conformance fixtures. [`governed-promotion-audit-trace.json`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/fixtures/governed-promotion-audit-trace.json) shows corroboration, cross-reference, reuse, proposal, authority resolution, a selected permitted action, committed `pending_verification`, and a reconstructable receipt. [`high-confidence-false-promotion.json`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/fixtures/high-confidence-false-promotion.json) demonstrates that confidence `0.99` and saturation `0.97` still do not permit crystallization of a false claim. [`deletion-residue.json`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/fixtures/deletion-residue.json) demonstrates that a deleted raw record plus surviving derived content forbids a full-deletion claim and requires continued dependency handling and verification.
+
+The scenario set deliberately does **not** visualize cross-project isolation as settled behavior. The repository already has recall and tenant-scope negative cases, but issue #73 separately binds the isolation-domain visualization to ADR-022 maturity. Scenario convenience does not get to bypass that boundary.
+
 ## What comes next
 
-The remaining V2 work under issue #73 is the first scenario walkthrough set and then a local acceptance-criteria audit.
+The stable V1/V2 visual core and first executable scenario set are now represented. The next step under issue #73 is a local acceptance-criteria audit against the merged repository and published Wiki before deciding what remains open.
 
 [ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md) and [ADR-022](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) remain **Proposed**. This visual guide does not contain a visual that finalizes either boundary. Isolation-domain visuals must follow ADR-022's doctrine maturity, and portable-evidence visuals must follow ADR-021's executable interoperability evidence rather than inventing a wire model visually. A diagram does not raise an ADR status, conformance level, or runtime-evidence claim.
 
