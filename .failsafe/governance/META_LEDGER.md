@@ -399,3 +399,54 @@ on the backend choice. Substrate tests skip cleanly when the library is absent,
 so the standard-library gate remains runnable everywhere, and CI installs the
 substrate with continue-on-error so runtime evidence never becomes a hard
 dependency of the doctrine gate.
+
+---
+
+### Entry #10: FIXTURE CORPUS DRIVEN THROUGH THE ADAPTER
+
+**Timestamp**: 2026-08-11T12:45:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("fixture-corpus:" + git tree hash at parent commit)
+= d597b428902ec7461b60401442368bf9a5e72548c6b8b2d74f0f60e3b5beca47
+```
+
+**Previous Hash**: f00fff3fc0a23982dff9ddb18578cc7f83c0f742fd6dac752328aa4c756c56d6
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= a4a7d8da4f94664ed44bc3357bc18150995cf30df28ebcda62794df9d2c75d96
+```
+
+**Decision**: Governor directed that substrate CI remain optional and that the
+fixture corpus be driven through the adapter. Both done.
+
+All 25 doctrine fixtures now execute against the adapter's own authority
+enforcement rule, the same function the write path uses, rather than a
+reimplementation of it. Seventeen carry a declared authority envelope. Five
+checks run per envelope: permitted and prohibited sets disjoint, declared
+selection is a member of the permitted set, declared selection is not
+prohibited, every prohibited action is actively refused, and a fixture
+expecting no crystallization does not permit one. All 25 pass.
+
+A first-run pass was treated as suspicious rather than satisfying. The checker
+was mutation-tested against four deliberately corrupted envelopes and detected
+every one; those mutations are now permanent tests, so a check that silently
+stops being able to fail will itself fail. This is what distinguishes corpus
+evidence from a suite agreeing with its own author: the fixtures were written
+to describe doctrine, not to satisfy this implementation.
+
+Conformance level remains 0, now for a sharper reason than before. The doc 06
+levels are cumulative and this adapter implements neither decay nor calibrated
+saturation, so levels 2 and 3 are unmet however well enforcement performs.
+Nine exemptions are stated in the report. Corpus coverage is explicitly
+envelope enforcement, not full scenario execution.
+
+Substrate installation in CI remains best-effort per Governor direction, so
+runtime evidence never becomes a hard dependency of the standard-library
+doctrine gate. Total: 25 executable paths plus 25 corpus fixtures, 50 trials.
