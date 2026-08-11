@@ -5,8 +5,8 @@ type: software
 authors:
   - family-names: Knapp
     given-names: Kevin R.
-repository-code: "https://github.com/Knapp-Kevin/agent-memory"
-url: "https://github.com/Knapp-Kevin/agent-memory"
+repository-code: "https://github.com/MythologIQ-Labs-LLC/agent-memory"
+url: "https://github.com/MythologIQ-Labs-LLC/agent-memory"
 license: Apache-2.0
 abstract: >-
   Agent Memory is a reference architecture for governed memory in autonomous
