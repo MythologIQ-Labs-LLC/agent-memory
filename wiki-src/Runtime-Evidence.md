@@ -10,66 +10,83 @@ A claim counts as runtime evidence only when all five hold:
 
 | Requirement | Meaning |
 |---|---|
-| **Executed** | the path ran against a real substrate, not a diagram |
-| **Pinned** | substrate, adapter, policy, estimator, and fixture versions are recorded |
+| **Executed** | the path ran against a real substrate or executable reference boundary, not a diagram |
+| **Pinned** | substrate/comparator, adapter, policy, estimator, fixture, and direct validation versions are recorded where applicable |
 | **Reproducible** | another operator re-runs it and gets the same verdict |
 | **Negative-tested** | the run includes paths that must fail, and they failed |
-| **Reconstructable** | a receipt reconstructs estimate, authority, selection, and consequence |
+| **Reconstructable** | a receipt/evidence chain reconstructs estimate, authority, selection, consequence, and applicable lifecycle result |
 
-Evidence that omits the negative paths is a demo. Evidence that cannot be re-run is an anecdote. Neither moves an Architecture Decision Record.
+Evidence that omits the negative paths is a demo. Evidence that cannot be re-run is an anecdote. Neither moves an Architecture Decision Record by itself.
 
 ## What has been demonstrated
 
 A reference governed adapter executes the full path — proposal, authority envelope, permitted action set, selected action, substrate mutation, decision receipt, retrieval, governed admission — and runs in continuous integration.
 
-**Against a real temporal knowledge graph.** Seven governance paths execute against a live graph database with no language model, no embedder, no API key, and no server. This includes cross-partition refusal, supersession that marks rather than deletes, pruning that keeps content recoverable, and a physical delete.
+**Against a real temporal knowledge graph.** Governance paths execute against a live graph database with no language model, no embedder, no API key, and no server. This includes cross-partition refusal, supersession that marks rather than deletes, pruning that keeps content recoverable, and a physical delete.
 
-**Against the doctrine fixture corpus.** All repository fixtures are driven through the adapter's own authority-enforcement rule. This matters because the fixtures were written to describe doctrine, not to satisfy the adapter, so agreement between them is evidence rather than a test suite agreeing with its author.
+**Against the doctrine fixture corpus.** Repository fixtures are driven through the adapter's own authority-enforcement rule. This matters because the fixtures were written to describe doctrine, not to satisfy the adapter, so agreement between them is evidence rather than a test suite agreeing with its author.
 
-**Stochastic containment.** Hundreds of trials sample from the permitted action set. No trial ever selects outside the envelope, and a deliberately hostile selector that tries to take a prohibited action is contained by the adapter rather than trusted to behave.
+**Stochastic containment.** Repeated trials sample from the permitted action set. No trial may select outside the envelope, and a deliberately hostile selector that tries to take a prohibited action is contained by the adapter rather than trusted to behave.
+
+**Canonical/derived deletion completeness.** The P4 evidence path computes projection staleness and residue, traverses transitive purge closure, independently sweeps for surviving residue, refuses unauthorized estimator-mediated rebuild, and distinguishes residual failure from zero-undeclared-residue success.
+
+**Portable governance evidence.** P4.5a/b/c executes a content-free signed projection of the canonical Agent Memory receipt, Agent Manifest checkpoint correlation, TRACE/cMCP external-action evidence correlation, lifecycle-result composition, and authority/domain-continuity negative paths. This is evidence toward ADR-021, not acceptance of it.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/portable-evidence-chain-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/portable-evidence-chain-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/portable-evidence-chain-flow-light.svg" alt="Portable Agent Memory governance evidence chain showing the canonical decision receipt, content-free signed evidence projection, correlation to runtime and Agent Manifest or TRACE-cMCP evidence, and independent verification of evidence integrity, governance disposition, runtime execution, and lifecycle satisfaction" width="100%">
+  </picture>
+</p>
+
+The diagram is an **evidence-scoped explanatory surface**, not adopted ADR-021 doctrine. The canonical Agent Memory receipt remains authoritative for memory semantics and PAMA. Portable evidence can prove integrity and correlation without receiving raw memory, but a valid signature does not create permission, a valid execution does not establish authorization, and a valid `DEL` does not establish forgetting completeness. The four verifier dimensions remain separate so valid negative outcomes are representable rather than flattened into a reassuring but useless `valid = true`.
 
 ## What that still does not prove
 
 Stated plainly, because a partial result presented as a complete one is worse than no result:
 
-- **No conformance level is claimed.** Levels are cumulative, and the reference adapter implements neither decay nor calibrated saturation, so levels 2 and 3 are unmet however well authority enforcement performs.
-- Corpus coverage is **authority-envelope enforcement**, not full scenario execution. Decay, calibration, retrieval ranking, and most lifecycle mechanics sit outside this adapter.
-- Retrieval uses lexical matching rather than hybrid search, so **recall quality is not measured** and no calibration claim is made.
-- The substrate binding uses an embedded backend that is deprecated upstream, chosen because it needs no server. No governance behavior under test depends on that choice.
-- The adapter is a **reference, not a product**: it implements the narrow slice needed to exercise governance, and nothing else.
+- **No conformance level is raised by these diagrams or evidence slices.** Levels remain governed by their cumulative requirements.
+- The reference adapter remains a narrow evidence vehicle rather than a production Agent Memory implementation.
+- Retrieval-quality calibration, production trust discovery, universal key/revocation infrastructure, and physical-media erasure are not established by P4/P4.5.
+- P4.5 does not establish upstream AgenTrust integration acceptance or multi-implementation interoperability beyond the pinned comparators exercised locally.
+- ADR-020, ADR-021, and ADR-022 remain independently maturity-gated. Executing supporting evidence does not accept them automatically.
 
 ## Why the tests are built to fail
 
 Two habits distinguish this evidence from self-congratulation.
 
-**The substrate model is permissive on purpose.** It reproduces the mapped substrate's verified behavior including its dangerous defaults: an unfiltered partition default, physical deletion with no tombstone, and no authority check anywhere. Several tests assert *both* that the substrate would misbehave and that the adapter refuses regardless. A test that only checked the adapter would not show the governance was doing any work.
+**The substrate model is permissive on purpose.** It reproduces mapped substrate behavior including dangerous defaults. Tests assert both that the substrate would permit problematic behavior and that the governed adapter refuses regardless. A test that only checked the adapter would not show the governance was doing any work.
 
-**The checkers are mutation-tested.** Deliberately corrupted authority envelopes must be detected. A conformance check that cannot fail is decoration, so the corruptions are permanent tests: if a check quietly loses its teeth, that failure surfaces.
+**The checkers are mutation- and adversarially tested.** Deliberately corrupted authority envelopes, wrong action references, replay, trust failures, stale authority/domain state, unauthorized broadening, and deletion residue must be detected. A conformance check that cannot fail is decoration, so negative cases remain permanent evidence.
 
 ## What execution corrected
 
-Running the binding revised three conclusions that source reading alone had reached, which is the practical argument for executing rather than describing:
+Execution has repeatedly narrowed claims that source reading or a polished diagram could otherwise overstate. Examples include substrate defaults that return invalidated facts, deletion paths whose raw operation succeeds while derived residue survives, and portable evidence that remains cryptographically valid even when execution-time domain authority has been revoked.
 
-1. The substrate library's top-level client constructs a model-provider client even when every operation in use is provider-free, so a governed adapter must bind at the driver level.
-2. An empty partition signals absence by raising rather than returning an empty result.
-3. Invalidated facts are still returned by partition queries, so an adapter that does not filter them would admit superseded facts as current. The separation between retrieval and admission turns out to be load-bearing against a specific real system, not only in principle.
+Those are precisely why the architecture separates retrieval from admission, delete operation from lifecycle satisfaction, evidence integrity from governance disposition, and decision-time authority from execution-time continuity.
 
-## Where this leaves ADR-020
+## Where this leaves emerging ADRs
 
-Closer, and not close enough. The proof bar in **[Architecture Decisions](Architecture-Decisions)** additionally expects concurrency behavior, deletion propagation measurement, and evidence gathered across a wider surface than one reference adapter. ADR-020 stays Proposed.
+Closer, and deliberately not declared complete by visualization.
 
-Deletion propagation is the slice now in progress, and it began by discovering that the requirement was not yet expressible. "This projection is stale with respect to canonical state" had no defined meaning here, which made it untestable rather than merely unproven. **[Canonical and Derived State](Canonical-and-Derived-State)** supplies the missing definitions and fixes the evidence bar in advance — deliberately including the parts a persuasive demonstration would skip. It is a design spike: no code, no fixtures, and no claim on this page's ledger until something executes.
+- **ADR-020 remains Proposed.** P4 executes a substantial deletion-completeness evidence bar, but the ADR's independent acceptance process governs its status.
+- **ADR-021 remains Proposed.** P4.5 local implementation is complete and supplies executable evidence for the portable boundary, including Agent Manifest and TRACE/cMCP correlation, but ADR acceptance remains a separate decision.
+- **ADR-022 remains Proposed.** Isolation-domain implementation issue #68 remains open, so a finalized isolation-domain diagram would outrun the contract and its critical fixtures.
 
-## Canonical sources
+## Canonical and evidence sources
 
 - Runtime evidence program: https://github.com/MythologIQ-Labs-LLC/agent-memory/tree/main/docs/programs/runtime-evidence
+- Portable governance evidence: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/portable-governance-evidence.md
+- Canonical and derived state: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/canonical-and-derived-state.md
 - Substrate capability mapping: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/graphiti-conformance.md
-- Canonical and derived state design spike: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/canonical-and-derived-state.md
-- Reference adapter: https://github.com/MythologIQ-Labs-LLC/agent-memory/tree/main/reference
+- Reference adapter and verifiers: https://github.com/MythologIQ-Labs-LLC/agent-memory/tree/main/reference
+- Proposed ADR-021: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md
 - Conformance test plan: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/06-conformance-test-plan.md
 
 ## Next
 
 - **[Conformance and Evidence](Conformance-and-Evidence)** for the full evidence ladder and level definitions
+- **[Canonical and Derived State](Canonical-and-Derived-State)** for deletion propagation and residue
 - **[Implementation Guide](Implementation-Guide)** to map your own runtime
 - **[Governed Uncertainty](Governed-Uncertainty)** for the doctrine these paths test

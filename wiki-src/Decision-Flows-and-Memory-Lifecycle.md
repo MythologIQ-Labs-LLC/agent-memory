@@ -1,10 +1,10 @@
 # Decision Flows and Memory Lifecycle
 
-This page is a **visual map of existing Agent Memory doctrine**. It is not a new doctrine source, decision table, runtime guarantee, or substitute for the canonical numbered documentation.
+This page is a **visual map of existing Agent Memory doctrine and explicitly scoped implementation evidence**. It is not a new doctrine source, decision table, runtime guarantee, or substitute for the canonical numbered documentation and ADR maturity process.
 
-Use each diagram to answer one architectural question, then follow the canonical source link when implementation or conformance depends on the exact contract.
+Use each diagram to answer one architectural question, then follow the canonical or evidence source link when implementation or conformance depends on the exact contract.
 
-| Principal question | Visual | Canonical source |
+| Principal question | Visual | Canonical / evidence source |
 |---|---|---|
 | How can retained state strengthen, weaken, be disputed, corrected, reconciled, or pruned? | [Lifecycle state map](#1-memory-lifecycle-state-map) | [`docs/02-lifecycle-state-machine.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/02-lifecycle-state-machine.md) |
 | Which signals strengthen or weaken persistence without creating authority? | [Strength and stability](#2-strength-and-stability-dynamics) | [`docs/03-scoring-and-decay.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/03-scoring-and-decay.md) |
@@ -13,6 +13,7 @@ Use each diagram to answer one architectural question, then follow the canonical
 | How should readers distinguish supersession, correction, dispute, and staleness across time? | [Temporal change](#5-temporal-change-correction-and-supersession) | [`docs/18-temporal-causality-layer.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/18-temporal-causality-layer.md) |
 | Why can a successful delete operation still leave memory behind? | [Deletion completeness](#6-deletion-completeness-and-derived-state-propagation) | [`docs/28-retention-deletion-and-tombstones.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/28-retention-deletion-and-tombstones.md) |
 | What do these governance boundaries look like in executable cases? | [Scenario walkthroughs](#7-executable-scenario-walkthroughs) | [Conformance fixtures](https://github.com/MythologIQ-Labs-LLC/agent-memory/tree/main/fixtures) |
+| How can a memory decision be evidenced externally without exporting semantic authority? | [Portable evidence chain](#8-portable-governance-evidence-chain) | [P4.5 executable evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/portable-governance-evidence.md) |
 
 ## Reading rule
 
@@ -30,9 +31,12 @@ delete operation != forgetting completeness
 retrieval != recall admission
 same agent != same memory scope
 proposal != commit
+valid signature != permission
+valid execution != authorization
+valid DEL != forgetting
 ```
 
-When a visual and a canonical document appear to differ, **the canonical document governs**. Open an issue rather than treating the picture as an independent policy source.
+When a visual and a canonical document appear to differ, **the canonical document governs**. When an evidence-scoped visual and its executed evidence differ, the executed evidence governs and the diagram must be corrected. Open an issue rather than treating a picture as an independent policy or runtime claim.
 
 ## 1. Memory lifecycle state map
 
@@ -153,10 +157,32 @@ These are not hypothetical new policies. They are reader-oriented projections of
 
 The scenario set deliberately does **not** visualize cross-project isolation as settled behavior. The repository already has recall and tenant-scope negative cases, but issue #73 separately binds the isolation-domain visualization to ADR-022 maturity. Scenario convenience does not get to bypass that boundary.
 
-## What comes next
+## 8. Portable governance evidence chain
 
-The stable V1/V2 visual core and first executable scenario set are now represented. The next step under issue #73 is a local acceptance-criteria audit against the merged repository and published Wiki before deciding what remains open.
+**Question:** How can a memory decision be evidenced externally without exporting semantic authority?
 
-[ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md) and [ADR-022](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) remain **Proposed**. This visual guide does not contain a visual that finalizes either boundary. Isolation-domain visuals must follow ADR-022's doctrine maturity, and portable-evidence visuals must follow ADR-021's executable interoperability evidence rather than inventing a wire model visually. A diagram does not raise an ADR status, conformance level, or runtime-evidence claim.
+> **Maturity: executable evidence toward Proposed ADR-021.** This diagram is not an Accepted ADR visual and does not raise conformance.
 
-This page will remain an index into stable visual explanations as they land.
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/portable-evidence-chain-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/portable-evidence-chain-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/portable-evidence-chain-flow-light.svg" alt="Portable Agent Memory governance evidence chain showing the canonical decision receipt, a content-free signed evidence projection, correlation to runtime and Agent Manifest or TRACE-cMCP evidence, and separate verification of evidence integrity, governance disposition, runtime execution, and lifecycle satisfaction" width="100%">
+  </picture>
+</p>
+
+P4.5 local implementation now provides the executable shape issue #73 required before visualizing this boundary: a versioned content-free projection, deterministic canonicalization, Ed25519 issuer/verifier, Agent Manifest checkpoint correlation, TRACE/cMCP external-action correlation, lifecycle-result composition, and adversarial continuity vectors. The canonical Agent Memory receipt remains authoritative. Portable evidence proves integrity and correlation; it does not manufacture PAMA permission or lifecycle satisfaction. A valid negative outcome remains valid evidence.
+
+**Readable Wiki context:** [Runtime Evidence](Runtime-Evidence)  
+**Proposed architectural boundary:** [ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md)  
+**Executable evidence:** [`docs/programs/runtime-evidence/portable-governance-evidence.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/portable-governance-evidence.md)
+
+## What remains maturity-gated
+
+The V1/V2 visual core, first executable scenario set, and evidence-scoped portable governance chain are represented. The remaining issue #73 visual is the isolation-domain crossing view, and that boundary is **not ready to finalize**.
+
+[ADR-022](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) remains **Proposed**, and implementation issue [#68](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/68) remains open with its canonical contract/schema/critical fixture acceptance work incomplete. The visual guide therefore stops at the existing governed-recall scope boundary rather than promoting the proposed isolation-domain model into a settled diagram.
+
+[ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md) also remains **Proposed** despite the executable P4.5 evidence above. A diagram does not raise an ADR status, conformance level, or runtime-evidence claim.
+
+This page will remain an index into stable or explicitly evidence-scoped visual explanations as they land.
