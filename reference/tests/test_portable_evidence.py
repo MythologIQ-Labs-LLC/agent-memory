@@ -292,6 +292,26 @@ class PortableEvidenceTests(unittest.TestCase):
         self.assertEqual(result["evidence_integrity"], "valid")
         self.assertEqual(result["runtime_execution"], "unverifiable")
 
+    def test_authority_revoked_between_decision_and_execution_is_unauthorized(self):
+        evidence = make_evidence()
+        result = verify_evidence(
+            evidence,
+            self.trust,
+            runtime=RuntimeObservation(
+                action_ref="action:delete:42",
+                execution_time="2026-08-11T18:00:02Z",
+                source_domain_ref="domain:opaque:project-a",
+                destination_domain_ref="domain:opaque:archive",
+                domain_authorization_state_ref="domain-auth:9",
+                authority_valid_at_execution=False,
+                domain_authorization_valid_at_execution=True,
+            ),
+        )
+        self.assertEqual(result["evidence_integrity"], "valid")
+        self.assertEqual(result["binding_failures"], [])
+        self.assertEqual(result["governance_disposition"], "committed")
+        self.assertEqual(result["runtime_execution"], "unauthorized_execution")
+
     def test_valid_denial_plus_runtime_action_is_unauthorized_execution(self):
         evidence = make_evidence(governance_disposition="denied", lifecycle_result="not_applicable")
         result = verify_evidence(
