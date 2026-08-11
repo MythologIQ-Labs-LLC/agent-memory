@@ -93,17 +93,21 @@ P4.5a portable evidence then binds:
 
 ```text
 canonical_receipt_ref
+memory_action
 state.before_ref = previous checkpoint_ref
 state.after_ref  = new checkpoint_ref
 ```
 
-P4.5b validates all three relationships:
+P4.5b validates all four relationships:
 
 1. the portable evidence signature resolves to the supplied canonical receipt;
-2. the receipt contains the new checkpoint reference in `evidence_refs`;
-3. the portable before/after state references match the previous/new checkpoint references.
+2. canonical receipt `selected_action` equals signed portable `memory_action`;
+3. the receipt contains the new checkpoint reference in `evidence_refs`;
+4. the portable before/after state references match the previous/new checkpoint references.
 
 The correlation artifact also records the pinned upstream spec/package/commit identity and the **upstream verifier's** `accepted/rejected` verdict and reason.
+
+Checkpoint projection is deliberately strict at the boundary: hash values must use a supported algorithm plus a 64-character lowercase hexadecimal digest, counters must be non-negative integers rather than booleans masquerading as integers, TTL must be positive, and approval time must be timezone-aware.
 
 ## What is not duplicated
 
@@ -167,6 +171,7 @@ The correlation itself is valid because it correctly binds a negative external r
 By contrast, these are correlation-integrity failures:
 
 - the portable evidence does not verify against the canonical receipt;
+- canonical receipt `selected_action` disagrees with signed portable `memory_action`;
 - the receipt does not reference the new checkpoint;
 - portable `before_ref` does not identify the previous checkpoint;
 - portable `after_ref` does not identify the new checkpoint.
@@ -187,11 +192,14 @@ The upstream verifier receives the operation log because it owns checkpoint veri
 - a valid RFC 9162 checkpoint advance whose upstream operation log contains `DEL`
 - canonical receipt to checkpoint-reference binding
 - portable before/after state to checkpoint-reference binding
+- canonical receipt action to signed portable memory-action binding
 - accepted checkpoint + signed Agent Memory `permanent_deletion` + lifecycle `residual`
 - accepted checkpoint + signed Agent Memory `permanent_deletion` + lifecycle `satisfied`
 - rejected consistency proof surfaced as Agent Manifest `drift`
 - missing receipt checkpoint reference
+- mismatched receipt/portable action
 - tampered portable after-state binding
+- malformed checkpoint root and timezone-less timestamp rejection
 - schema validation of the content-free correlation artifact
 - absence of the raw deleted key/value from the correlation artifact
 - absence of an unproven `operation_kind` claim from the correlation artifact
