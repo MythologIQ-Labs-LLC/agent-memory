@@ -446,6 +446,7 @@ The repository now contains machine-readable doctrine evidence, not just prose.
 - [`conformance-report.schema.json`](schemas/conformance-report.schema.json)
 - [`decision-receipt.schema.json`](schemas/decision-receipt.schema.json)
 - [`memory-audit-event.schema.json`](schemas/memory-audit-event.schema.json)
+- [`calibration-results.schema.json`](schemas/calibration-results.schema.json)
 - [`source-record.schema.json`](schemas/source-record.schema.json)
 - [`pama-decision.schema.json`](schemas/pama-decision.schema.json)
 
@@ -525,7 +526,7 @@ See **[docs/adr/README.md](docs/adr/README.md)** for status semantics.
 | ADR-001 through ADR-019 | **Accepted** |
 | ADR-020 governed uncertainty | **Proposed** |
 | Documentation conformance audit | **Recorded piece by piece** |
-| JSON Schemas | **6 validated schemas** |
+| JSON Schemas | **7 validated schemas** |
 | Conformance fixture definitions | **24 validated fixtures** |
 | Repository validation workflow | **Active** |
 | Runtime reference implementation | **Not yet the evidence basis of this repo** |
