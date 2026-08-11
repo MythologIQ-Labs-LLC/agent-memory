@@ -79,7 +79,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`../../../reference/README.md`](../../../reference/README.md) | minimal governed adapter | bound and executed against a real substrate |
 | [`canonical-and-derived-state.md`](canonical-and-derived-state.md) | canonical memory versus derived projections | design spike executed: all seven evidence-bar items run in CI |
 | [`portable-governance-evidence.md`](portable-governance-evidence.md) | P4.5a portable governance evidence core | executable substrate-independent Ed25519 issuer/verifier and adversarial vectors |
-| [`agent-manifest-correlation.md`](agent-manifest-correlation.md) | P4.5b Agent Manifest memory checkpoint correlation | pinned external comparator executed; accepted `DEL` remains distinct from lifecycle satisfaction |
+| [`agent-manifest-correlation.md`](agent-manifest-correlation.md) | P4.5b Agent Manifest memory checkpoint correlation | pinned external comparator executed; a checkpoint built from a test log containing `DEL` remains distinct from Agent Memory lifecycle satisfaction |
 
 ## Preconditions
 
