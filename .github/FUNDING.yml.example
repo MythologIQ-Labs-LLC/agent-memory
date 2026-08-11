@@ -1,0 +1,9 @@
+# Rename this file to FUNDING.yml only after the destination is verified.
+# GitHub Sponsors may target either the maintainer or organization account.
+# Example:
+# github: [Knapp-Kevin]
+#
+# If Agent Memory moves to MythologIQ-Labs-LLC and sponsorship belongs to the
+# organization, use the verified sponsored organization account instead.
+# External funding services may also be configured using GitHub's supported
+# FUNDING.yml keys or `custom` URLs.
