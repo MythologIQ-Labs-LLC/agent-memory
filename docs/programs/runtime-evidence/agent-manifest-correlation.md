@@ -120,22 +120,28 @@ Those are executed by `agent-manifest==0.11.0` in CI. The local correlation laye
 
 ## DEL is not forgetting
 
-Agent Manifest encodes a key-value deletion as an appended `DEL` operation. That proves a particular memory-log evolution when the checkpoint delta verifies. It does not prove that Agent Memory's semantic forgetting obligations are satisfied.
+Agent Manifest encodes a key-value deletion as an appended `DEL` operation. The P4.5b test constructs the upstream operation log with an actual `DEL` and then executes the upstream checkpoint verifier against that log.
 
-P4.5b executes the same accepted upstream `DEL` checkpoint in two Agent Memory outcomes:
+A crucial boundary follows: **the checkpoint root and consistency proof do not, by themselves, let a third party infer the semantic class of the appended operation without additional operation or inclusion evidence.** The correlation artifact therefore does not claim `operation_kind = DEL`. The deletion semantic is carried by signed Agent Memory `memory_action = permanent_deletion`; the fact that the executed comparator vector used a real upstream `DEL` remains an executable test fact.
+
+This avoids turning a known test input into a portable proof claim the checkpoint protocol does not make.
+
+P4.5b executes the same upstream-accepted checkpoint advance, whose test input contains `DEL`, in two Agent Memory outcomes:
 
 ```text
-Agent Manifest: accepted DEL
-Agent Memory:    committed deletion
-Lifecycle:       residual
+Agent Manifest: accepted checkpoint advance
+Test input:     appended DEL
+Agent Memory:   committed permanent_deletion
+Lifecycle:      residual
 ```
 
 and:
 
 ```text
-Agent Manifest: accepted DEL
-Agent Memory:    committed deletion
-Lifecycle:       satisfied
+Agent Manifest: accepted checkpoint advance
+Test input:     appended DEL
+Agent Memory:   committed permanent_deletion
+Lifecycle:      satisfied
 ```
 
 Both correlation artifacts are valid. The difference is Agent Memory lifecycle evidence, not Agent Manifest checkpoint integrity.
@@ -143,7 +149,7 @@ Both correlation artifacts are valid. The difference is Agent Memory lifecycle e
 This is the executable version of:
 
 ```text
-valid DEL != forgetting
+accepted checkpoint containing DEL != forgetting
 ```
 
 ## Negative outcomes remain evidence
@@ -169,7 +175,7 @@ By contrast, these are correlation-integrity failures:
 
 The correlation artifact contains checkpoint roots and metadata, not operation payloads. The executed deletion vector intentionally uses a memory key and value that are absent from the emitted correlation object.
 
-The upstream verifier receives the operation log because it owns checkpoint verification. P4.5b does not copy those operations into Agent Memory portable evidence or the correlation artifact.
+The upstream verifier receives the operation log because it owns checkpoint verification. P4.5b does not copy those operations into Agent Memory portable evidence or the correlation artifact. Avoiding an `operation_kind` claim also prevents the compact artifact from pretending to reveal semantics its root alone cannot establish.
 
 ## Executed vectors
 
@@ -178,16 +184,17 @@ The upstream verifier receives the operation log because it owns checkpoint veri
 - the exact `agent-manifest==0.11.0` package identity
 - the pinned upstream commit identity
 - the Agent Manifest v0.2 normative KV root vector
-- a valid RFC 9162 checkpoint advance containing `DEL`
+- a valid RFC 9162 checkpoint advance whose upstream operation log contains `DEL`
 - canonical receipt to checkpoint-reference binding
 - portable before/after state to checkpoint-reference binding
-- accepted `DEL` plus Agent Memory lifecycle `residual`
-- accepted `DEL` plus Agent Memory lifecycle `satisfied`
+- accepted checkpoint + signed Agent Memory `permanent_deletion` + lifecycle `residual`
+- accepted checkpoint + signed Agent Memory `permanent_deletion` + lifecycle `satisfied`
 - rejected consistency proof surfaced as Agent Manifest `drift`
 - missing receipt checkpoint reference
 - tampered portable after-state binding
 - schema validation of the content-free correlation artifact
 - absence of the raw deleted key/value from the correlation artifact
+- absence of an unproven `operation_kind` claim from the correlation artifact
 
 Run:
 
@@ -204,12 +211,13 @@ python scripts/validate_schemas.py
 
 P4.5b demonstrates that Agent Memory can correlate its canonical receipt and P4.5a portable evidence to Agent Manifest's existing memory checkpoint/delta protocol without duplicating that protocol or delegating memory semantics to it.
 
-It also executes the key non-escalation claim: an Agent Manifest-valid `DEL` checkpoint can coexist with either residual or satisfied Agent Memory lifecycle evidence.
+It also executes the key non-escalation claim: a checkpoint advance built from an upstream log containing `DEL` and accepted by the Agent Manifest verifier can coexist with either residual or satisfied Agent Memory lifecycle evidence.
 
 ## What remains unproven
 
 This slice does not yet prove:
 
+- a content-free third-party proof that a checkpoint's newly appended operation was specifically `DEL`; that would require an additional operation/inclusion-evidence convention rather than inference from the checkpoint root
 - TRACE/AgenTrust external action-evidence interoperability (P4.5c)
 - production Agent Manifest trust/attestation deployment
 - hardware attestation of Agent Memory runtime state
