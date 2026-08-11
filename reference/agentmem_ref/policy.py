@@ -119,6 +119,9 @@ class Proposal:
     state_snapshot: str = ""
     tenant_ref: str = ""
     purpose: str = ""
+    isolation_domain_refs: tuple[str, ...] = ()
+    project_ref: str = ""
+    task_ref: str = ""
 
 
 @dataclass(frozen=True)
