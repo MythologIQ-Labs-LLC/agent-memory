@@ -3,6 +3,7 @@
   "policy": "../docs/SOURCE_RIGHTS_POLICY.md",
   "verified_at": "2026-08-10",
   "default_external_research_posture": "citation_only_or_independent_synthesis_unless_material_reuse_is_explicitly_registered",
+  "scope_note": "This registry tracks external, private, successor, or materially reused sources. Native Agent Memory doctrine such as PAMA is documented in the doctrine tree and does not require an external source record.",
   "sources": [
     {
       "source_id": "uor-issue-2-kevin-knapp",
@@ -131,27 +132,6 @@
       "verified_at": "2026-08-10"
     },
     {
-      "source_id": "pama-logic",
-      "title": "PAMA logic",
-      "source_type": "internal_architecture_provenance",
-      "public_url": null,
-      "repository": null,
-      "access": "no_public_locator",
-      "copyright_owner_or_originator": null,
-      "license_spdx": null,
-      "license_url": null,
-      "rights_status": "unknown",
-      "reuse_mode": "independent_synthesis",
-      "reuse_basis": "No standalone canonical public source or external reuse license has been verified.",
-      "material_reused": "Agent Memory expresses the governance doctrine independently and does not rely on copied PAMA source expression.",
-      "attribution_required": false,
-      "notice_required": false,
-      "modification_notice_required": false,
-      "provenance_note": "Public-link gap is explicit rather than filled with a merely related artifact.",
-      "limitations": "Do not add a convenient adjacent link and present it as canonical provenance.",
-      "verified_at": "2026-08-10"
-    },
-    {
       "source_id": "failsafe-arbiter",
       "title": "FailSafe / VerdictArbiter",
       "source_type": "public_repository_primary_implementation",
@@ -170,27 +150,6 @@
       "modification_notice_required": true,
       "provenance_note": "Direct implementation locator is preferred over a generic project homepage.",
       "limitations": "Any future copied or adapted code/documentation must satisfy applicable Apache-2.0 obligations.",
-      "verified_at": "2026-08-10"
-    },
-    {
-      "source_id": "bicameral-decision-continuity",
-      "title": "Bicameral decision continuity and durable decisions",
-      "source_type": "private_primary_provenance",
-      "public_url": null,
-      "repository": "BicameralAI/bicameral",
-      "access": "private",
-      "copyright_owner_or_originator": "BicameralAI",
-      "license_spdx": null,
-      "license_url": null,
-      "rights_status": "private_internal",
-      "reuse_mode": "independent_synthesis",
-      "reuse_basis": "Canonical implementation source is private. Existing public Bicameral repositories are not treated as substitutes unless they directly support the cited doctrine.",
-      "material_reused": "High-level conceptual provenance only.",
-      "attribution_required": true,
-      "notice_required": false,
-      "modification_notice_required": false,
-      "provenance_note": "No public source is linked until a genuinely relevant public artifact exists.",
-      "limitations": "Do not expose private repository URLs or content in public-facing material solely for provenance completeness.",
       "verified_at": "2026-08-10"
     }
   ]
