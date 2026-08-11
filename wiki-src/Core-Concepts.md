@@ -52,6 +52,16 @@ Common types include:
 | Certification | Required confirmation passed | Immutability |
 | Contradiction | Retained states conflict | Automatic winner selection |
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/strength-stability-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/strength-stability-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/strength-stability-flow-light.svg" alt="Agent Memory strength and stability map showing distinct evidence confidence, source trust, saturation, contradiction pressure, certification, lifecycle stability, and PAMA authority signals" width="100%">
+  </picture>
+</p>
+
+The diagram keeps those signals separate. Evidence quality, meaningful reuse, corroboration, and verification can strengthen the case for persistence. Contradiction, expiry, invalidation, uncertainty, and drift can increase decay, review, or demotion pressure. Neither direction grants authority to promote, share, execute, or delete. PAMA or equivalent governance determines permitted consequence, and any threshold or hysteresis value remains a calibrated operating choice rather than doctrine.
+
 ## High-value invariants
 
 ```text
@@ -94,6 +104,9 @@ The last two lines carry more weight than they look. *Stale* means a source has 
 
 - Glossary: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/00-glossary.md
 - Layer model: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/01-layer-model.md
+- Scoring and decay: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/03-scoring-and-decay.md
+- Governance and PAMA: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/04-governance-and-pama.md
+- Source trust and reputation: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/16-source-trust-and-reputation.md
 - Memory theory: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/22-agentic-memory-theory-and-development.md
 
 ## Next
