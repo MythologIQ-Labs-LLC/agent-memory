@@ -16,7 +16,15 @@ Third-party material
 --------------------
 The Apache-2.0 license applies to original material distributed as part of this repository unless a file or section states otherwise.
 
-References, links, bibliographic records, issue links, research citations, and descriptions of third-party systems do not relicense the referenced material. Third-party works remain subject to their own copyright, license, attribution, and reuse terms.
+References, links, bibliographic records, issue links, research citations, acknowledgements, intellectual-lineage statements, aligned-project callouts, and descriptions of third-party systems do not relicense the referenced material. Third-party works remain subject to their own copyright, license, attribution, trademark, and reuse terms.
+
+Recognition of an external developer, researcher, project, organization, repository, implementation, standard, or ecosystem does not by itself imply endorsement, sponsorship, formal partnership, joint authorship, implementation dependency, or transfer of intellectual-property ownership.
+
+Project and organization names are used descriptively where relevant. Logos, stylized marks, and other third-party brand assets are not covered by Agent Memory's Apache-2.0 license merely because the corresponding project is acknowledged here.
+
+The repository-wide convention for celebrating aligned work while preserving those boundaries is documented in:
+
+- docs/40-aligned-projects-and-intellectual-lineage.md
 
 Material external sources and reuse-rights determinations are tracked in:
 
