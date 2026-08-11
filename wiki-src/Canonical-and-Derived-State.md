@@ -8,6 +8,16 @@ Deleting a memory is easy. Proving it is gone is the hard part, and almost every
 
 A user asks for a record to be deleted. The record disappears. But a summary written from it still contains the content, an embedding built from it still encodes it, a search index still points at it, and a cached view still serves it. Each of those is a legitimate piece of engineering. Together they mean the deletion was a gesture. **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)** already says deletion must propagate through derived state. This page is about what that sentence has to mean before anyone can test it.
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow-light.svg" alt="Deletion completeness diagram showing canonical memory, governed derived memory and projection state, then separating correction staleness from deletion residue, transitive purge, independent residue sweep, and lifecycle success only when undeclared residue is zero" width="100%">
+  </picture>
+</p>
+
+The canonical requirement is that deletion propagate through known derived state and that verification answer the requested forgetting outcome rather than merely report that one row disappeared. The three-tier projection vocabulary and the exact `stale`/`residual` relation shown here are **executed P4 design evidence, not adopted doctrine**. The diagram therefore explains the current tested design without raising ADR-020 status or turning implementation vocabulary into a new canonical contract. Its critical distinction remains: a changed source creates a correctness problem; a purged source can create prohibited residual content. A delete operation is not proof of forgetting completeness.
+
 ## Three tiers, not two
 
 "Canonical memory versus derived projections" sounds like one boundary. There are two, and the difference decides where the risk lives.
