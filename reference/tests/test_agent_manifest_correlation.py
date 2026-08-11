@@ -36,6 +36,7 @@ except ImportError:  # local low-dependency runs may omit the comparator
 from agentmem_ref.agent_manifest_correlation import (  # noqa: E402
     AGENT_MANIFEST_SDK_VERSION,
     AGENT_MANIFEST_UPSTREAM_COMMIT,
+    checkpoint_payload,
     checkpoint_reference,
     correlate_agent_manifest_delta,
 )
@@ -90,17 +91,24 @@ class AgentManifestCorrelationTests(unittest.TestCase):
             now=APPROVED_AT + timedelta(seconds=5),
         )
 
-    def _receipt_and_evidence(self, lifecycle_result: str = "residual", *, include_checkpoint: bool = True):
+    def _receipt_and_evidence(
+        self,
+        lifecycle_result: str = "residual",
+        *,
+        include_checkpoint: bool = True,
+        receipt_action: str = "permanent_deletion",
+        portable_action: str = "permanent_deletion",
+    ):
         previous_ref = checkpoint_reference(self.previous)
         new_ref = checkpoint_reference(self.new)
         receipt = {
             "schema_version": "1.0.0",
             "receipt_id": "receipt:manifest-del:8",
             "memory_id": "mem:alpha",
-            "requested_action": "permanent_deletion",
+            "requested_action": receipt_action,
             "policy_version": "pama-2026-08",
-            "permitted_actions": ["permanent_deletion"],
-            "selected_action": "permanent_deletion",
+            "permitted_actions": [receipt_action],
+            "selected_action": receipt_action,
             "selection_mode": "deterministic",
             "evidence_refs": [new_ref] if include_checkpoint else [],
             "timestamp": "2026-08-11T20:00:01Z",
@@ -111,7 +119,7 @@ class AgentManifestCorrelationTests(unittest.TestCase):
             key=KEY,
             issued_at="2026-08-11T20:00:02Z",
             action_ref="action:delete:manifest:8",
-            memory_action="permanent_deletion",
+            memory_action=portable_action,
             governance_disposition="committed",
             policy_ref="policy:pama-2026-08",
             authority_state_ref="authority:rev-21",
@@ -200,6 +208,26 @@ class AgentManifestCorrelationTests(unittest.TestCase):
         self.assertEqual(correlation["correlation_integrity"], "invalid")
         self.assertIn("receipt_missing_checkpoint_ref", correlation["binding_failures"])
 
+    def test_receipt_action_must_match_signed_portable_memory_action(self):
+        receipt, evidence = self._receipt_and_evidence(
+            "residual",
+            receipt_action="retain",
+            portable_action="permanent_deletion",
+        )
+        correlation = correlate_agent_manifest_delta(
+            evidence,
+            receipt,
+            self.trust,
+            previous_checkpoint=self.previous,
+            new_checkpoint=self.new,
+            delta_accepted=self.verdict.accepted,
+            delta_reason=self.verdict.reason,
+            representation="kv",
+        )
+        self.assertEqual(correlation["correlation_integrity"], "invalid")
+        self.assertNotIn("portable_evidence_invalid", correlation["binding_failures"])
+        self.assertIn("receipt_memory_action_mismatch", correlation["binding_failures"])
+
     def test_portable_before_and_after_state_must_match_checkpoint_refs(self):
         receipt, evidence = self._receipt_and_evidence("residual")
         evidence["state"]["after_ref"] = checkpoint_reference(self.previous)
@@ -216,6 +244,23 @@ class AgentManifestCorrelationTests(unittest.TestCase):
         self.assertEqual(correlation["correlation_integrity"], "invalid")
         self.assertIn("portable_evidence_invalid", correlation["binding_failures"])
         self.assertIn("after_checkpoint_ref_mismatch", correlation["binding_failures"])
+
+    def test_checkpoint_projection_rejects_malformed_hash_and_naive_time(self):
+        bad_hash = {
+            "memory_root": "sha256:not-a-digest",
+            "tree_size": 1,
+            "seq": 1,
+            "approved_at": "2026-08-11T20:00:00Z",
+            "ttl_seconds": 3600,
+        }
+        with self.assertRaises(ValueError):
+            checkpoint_payload(bad_hash)
+
+        naive_time = dict(bad_hash)
+        naive_time["memory_root"] = "sha256:" + ("0" * 64)
+        naive_time["approved_at"] = "2026-08-11T20:00:00"
+        with self.assertRaises(ValueError):
+            checkpoint_payload(naive_time)
 
     def test_correlation_artifact_is_content_free_and_schema_valid(self):
         correlation = self._correlate("residual")
