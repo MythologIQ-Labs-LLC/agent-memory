@@ -71,7 +71,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 
 | Document | Slice | Status |
 |---|---|---|
-| `graphiti-conformance.md` | first substrate capability mapping | in progress |
+| [`graphiti-conformance.md`](graphiti-conformance.md) | first substrate capability mapping | documentation-verified; runtime probe pending |
 
 ## Preconditions
 
