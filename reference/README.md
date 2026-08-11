@@ -24,7 +24,7 @@ Several things, at different evidential weight.
 
 **Against the P4.5a portable-evidence contract.** A content-free projection of a canonical decision receipt is signed with Ed25519 and verified using only the configured public trust key. The verifier independently checks receipt, runtime-action, policy, authority-state, temporal, and isolation-domain bindings while preserving governance disposition, runtime execution, and lifecycle satisfaction as separate outcomes. Adversarial vectors exercise tampering, replay, stale authority, wrong domains, key rotation, revocation timing, detached receipt verification, and valid deletion with residual lifecycle state.
 
-**Against the P4.5b Agent Manifest comparator.** CI installs `agent-manifest==0.11.0`, pinned to release commit `98cead8e8809e3302dc388ca869882d15b812b7f`, and executes its own v0.2 memory checkpoint/delta implementation. Agent Memory content-addresses the checkpoint tuple and binds it through the canonical receipt and P4.5a state references. The same upstream-accepted `DEL` checkpoint is exercised once with lifecycle `residual` and once with lifecycle `satisfied`, proving checkpoint integrity does not manufacture forgetting.
+**Against the P4.5b Agent Manifest comparator.** CI installs `agent-manifest==0.11.0`, pinned to release commit `98cead8e8809e3302dc388ca869882d15b812b7f`, and executes its own v0.2 memory checkpoint/delta implementation. Agent Memory content-addresses the checkpoint tuple and binds it through the canonical receipt and P4.5a state references. The executed upstream log appends a real `DEL`; the resulting accepted checkpoint is exercised once with lifecycle `residual` and once with lifecycle `satisfied`, proving checkpoint integrity does not manufacture forgetting. Because a checkpoint root alone does not disclose the appended operation class, the portable correlation artifact deliberately carries signed Agent Memory `memory_action` rather than an unproven Agent Manifest `operation_kind` claim.
 
 The common point is that the governance layer is load-bearing. The substrate model is deliberately permissive in exactly the ways the mapping verified: identity is opaque rather than content-derived, the partition filter defaults to unfiltered, deletion is physical with no tombstone, and **no operation checks authority**. Several tests assert both halves: that the substrate *would* misbehave, and that the adapter refuses anyway. A test that only checked the adapter would not prove the governance was doing any work.
 
@@ -110,8 +110,8 @@ The adapter supplies what the substrate cannot: an authority gate before every w
 | portable negative outcomes | authentic denial, unauthorized execution, and residual lifecycle state remain distinct machine-readable outcomes |
 | portable replay and trust failures | wrong action/domain/state, signature tampering, unknown issuer, rotation, and revocation timing are exercised |
 | Agent Manifest normative root | the pinned upstream implementation reproduces the v0.2 KV memory-root vector |
-| Agent Manifest DEL correlation | upstream verifier accepts an RFC 9162 delta containing `DEL`; canonical receipt and portable state refs bind the checkpoint |
-| DEL versus forgetting | the same accepted checkpoint remains compatible with either residual or satisfied Agent Memory lifecycle evidence |
+| Agent Manifest deletion-vector correlation | the upstream verifier accepts an RFC 9162 checkpoint built from a log whose appended test operation is `DEL`; canonical receipt and portable state refs bind the checkpoint |
+| DEL versus forgetting | that accepted checkpoint remains compatible with either residual or satisfied Agent Memory lifecycle evidence |
 | external negative outcome | invalid consistency proof yields upstream `drift` while the correlation remains a valid record of a rejected delta |
 
 ## Known limitations
@@ -127,4 +127,5 @@ Stated rather than left to be discovered:
 7. Residue is measured over declared projections. State that was never declared is outside the sweep's reach by construction, which is why the declaration surface is the load-bearing part rather than the traversal.
 8. The P4.5a trust profile assumes configured Ed25519 public trust keys. Production key custody, trust discovery, certificates, and external revocation infrastructure remain outside this slice.
 9. P4.5b intentionally imports Agent Manifest private checkpoint modules only in its pinned comparator tests because the upstream implementation issue and specification surface those exact functions. This is not a stable production API commitment and is isolated from Agent Memory runtime code.
-10. P4.5b proves checkpoint/delta correlation, not hardware attestation of an Agent Memory process and not TRACE action-evidence interoperability. TRACE remains P4.5c.
+10. An Agent Manifest checkpoint root proves the bound log state but does not independently reveal the semantic class of a new operation. P4.5b demonstrates a real upstream `DEL` through executed test input; a compact content-free third-party proof of operation class would require additional upstream operation/inclusion evidence and is not invented here.
+11. P4.5b proves checkpoint/delta correlation, not hardware attestation of an Agent Memory process and not TRACE action-evidence interoperability. TRACE remains P4.5c.
