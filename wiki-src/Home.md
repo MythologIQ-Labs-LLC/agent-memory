@@ -28,6 +28,7 @@ Agent Memory asks a larger question than _“how do we retrieve old context?”_
 | Evaluate evidence or runtime claims | **[Conformance and Evidence](Conformance-and-Evidence)** |
 | See what has actually been executed | **[Runtime Evidence](Runtime-Evidence)** |
 | Contribute research or challenge doctrine | **[Research and Sources](Research-and-Sources)** |
+| See the developers, projects, and ideas that materially informed the work | **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** |
 | Map a real memory system into the architecture | **[Implementation Guide](Implementation-Guide)** |
 | Contribute to the project | **[Contributing](Contributing)** |
 
@@ -59,6 +60,16 @@ Agent Memory treats all of these as first-class architectural concerns:
 - privacy, sensitivity, scope, tenancy, and consent
 - adaptive mutation authority through **PAMA**
 - receipts, replay, rollback, observability, and conformance evidence
+
+## Credit without capture
+
+Agent Memory is independent, but it is not intellectually isolated. The project explicitly records meaningful influence from other developers, researchers, and repositories while preserving architectural and licensing boundaries.
+
+The first highlighted lineage is the **UOR Foundation**, whose work on deterministic object reference, content-addressed identity, explicit resolution state, and formal object semantics helped sharpen Agent Memory's distinction between **what an object is** and **what retained state is allowed to become**.
+
+Recognition is relationship-typed and license-aware. “Informed by” does not mean “depends on,” and acknowledgement does not imply endorsement, joint authorship, or transfer of intellectual-property ownership.
+
+See **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)**.
 
 ## Current maturity
 

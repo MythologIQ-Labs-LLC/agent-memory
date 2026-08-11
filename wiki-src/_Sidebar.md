@@ -19,6 +19,7 @@
 - [Conformance and Evidence](Conformance-and-Evidence)
 - [Runtime Evidence](Runtime-Evidence)
 - [Research and Sources](Research-and-Sources)
+- [Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)
 
 **Community**
 - [Contributing](Contributing)

@@ -8,7 +8,7 @@ From working memory to inherited state. From biological theory to executable con
 
 [![Validate Doctrine Evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
 ![Architecture](https://img.shields.io/badge/Architecture-Reference%20Architecture-334155)
-![ADRs](https://img.shields.io/badge/ADRs-19%20Accepted%20%7C%201%20Proposed-2563eb)
+![ADRs](https://img.shields.io/badge/ADRs-19%20Accepted%20%7C%202%20Proposed-2563eb)
 ![Conformance](https://img.shields.io/badge/Conformance-Level%206%20Spec-7c3aed)
 ![Fixtures](https://img.shields.io/badge/Fixtures-25%20Validated-0f766e)
 ![Research](https://img.shields.io/badge/Research-Open%20Evidence-b45309)
@@ -21,7 +21,7 @@ From working memory to inherited state. From biological theory to executable con
 ---
 
 > [!IMPORTANT]
-> **Current maturity:** the doctrine, schemas, and 25 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 remains Proposed** because its acceptance criteria still require broader runtime evidence, including concurrency and deletion-propagation behavior beyond the current reference adapter. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
+> **Current maturity:** the doctrine, schemas, and 25 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 and ADR-021 remain Proposed** because their acceptance criteria require broader runtime and interoperability evidence. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
 
 ## The thesis
 
@@ -63,7 +63,8 @@ You do not need to read the repository front to back. Human working memory has s
 | **Implementing a memory system** | [Agentic memory theory](docs/22-agentic-memory-theory-and-development.md) | [Lifecycle](docs/02-lifecycle-state-machine.md), [PAMA](docs/04-governance-and-pama.md), [Recall planner](docs/26-governed-recall-planner.md), [Schemas](schemas/) |
 | **Reviewing security or privacy** | [Memory threat model](docs/15-memory-threat-model.md) | [Source trust](docs/16-source-trust-and-reputation.md), [Privacy](docs/19-privacy-and-sensitivity-classifier.md), [Retention & deletion](docs/28-retention-deletion-and-tombstones.md), [Scope & tenancy](docs/29-actor-scope-consent-and-tenancy.md) |
 | **Evaluating conformance** | [Conformance test plan](docs/06-conformance-test-plan.md) | [Calibration](docs/09-calibration-protocol.md), [Audit rubric](docs/25-governed-uncertainty-documentation-conformance-audit.md), [Fixtures](fixtures/) |
-| **Reviewing architecture decisions** | [ADR index](docs/adr/README.md) | ADR-001 through ADR-020 |
+| **Reviewing architecture decisions** | [ADR index](docs/adr/README.md) | ADR-001 through ADR-021 |
+| **Tracing influences and aligned projects** | [Aligned projects & intellectual lineage](docs/40-aligned-projects-and-intellectual-lineage.md) | [Source material index](docs/08-source-material-index.md), [Source rights policy](docs/SOURCE_RIGHTS_POLICY.md) |
 | **Contributing evidence or challenges** | [CONTRIBUTING.md](CONTRIBUTING.md) | [Source material index](docs/08-source-material-index.md), [Research bibliography](docs/23-research-bibliography.md) |
 
 The complete document map is in **[docs/README.md](docs/README.md)**.
@@ -438,7 +439,7 @@ The repository now contains machine-readable doctrine evidence, not just prose.
 
 ### Fixtures
 
-The [`fixtures/`](fixtures/) directory contains **24 validated fixture definitions**, including:
+The [`fixtures/`](fixtures/) directory contains **25 validated fixture definitions**, including:
 
 - valuable persistent memory
 - ephemeral memory
@@ -464,6 +465,7 @@ The [`fixtures/`](fixtures/) directory contains **24 validated fixture definitio
 - out-of-calibration-scope scoring
 - expired delegation
 - stochastic replay reconstruction
+- runtime audit-trace reconstruction
 
 ### Validate locally
 
@@ -511,33 +513,24 @@ See **[docs/adr/README.md](docs/adr/README.md)** for status semantics.
 | Native PAMA doctrine | **Canonical; authored by Kevin R. Knapp** |
 | ADR-001 through ADR-019 | **Accepted** |
 | ADR-020 governed uncertainty | **Proposed** |
+| ADR-021 portable governance evidence | **Proposed** |
 | Documentation conformance audit | **Recorded piece by piece** |
 | JSON Schemas | **7 validated schemas** |
-| Conformance fixture definitions | **24 validated fixtures** |
+| Conformance fixture definitions | **25 validated fixtures** |
 | Repository validation workflow | **Active** |
-| Runtime reference implementation | **Not yet the evidence basis of this repo** |
+| Runtime reference implementation | **Executed against a real substrate; broader evidence incomplete** |
 | ADR-020 runtime proof | **Incomplete by design** |
 | Research evidence | **Living, open-evidence-preferred, challengeable** |
 
 ### Why ADR-020 is still Proposed
 
-The repository already has the theory, contracts, schemas, receipts, fixtures, and validation machinery.
+The repository already has the theory, contracts, schemas, receipts, fixtures, validation machinery, and a real-substrate reference-adapter execution.
 
-What it intentionally does **not** yet claim is that a real implementation has demonstrated, end to end:
-
-```text
-estimate / proposal
-    -> governance envelope
-    -> permitted action set
-    -> selected action
-    -> committed consequence
-```
-
-with repeated stochastic trials, cross-scope admission tests, actual concurrency behavior, deletion propagation, and reconstructable runtime receipts.
+What it intentionally does **not** yet claim is broad proof that production implementations satisfy the full end-to-end envelope across concurrency, deletion propagation, multiple runtime surfaces, and repeated adversarial behavior.
 
 That missing evidence is a feature of the governance process, not an embarrassing footnote to hide below the fold.
 
-Deletion propagation is the slice currently in progress, and beginning it surfaced something worth stating plainly: the requirement was not yet expressible. A claim like *this projection is stale with respect to canonical state* had no defined meaning in this repository, which made it untestable rather than merely unproven. **[Canonical and Derived State](docs/programs/runtime-evidence/canonical-and-derived-state.md)** supplies the missing definitions and fixes the evidence bar before the implementation that has to clear it. It is a design spike — no code, no fixtures, and no claim on the evidence ledger.
+Deletion propagation is the slice currently in progress, and beginning it surfaced something worth stating plainly: the requirement was not yet expressible. A claim like *this projection is stale with respect to canonical state* had no defined meaning in this repository, which made it untestable rather than merely unproven. **[Canonical and Derived State](docs/programs/runtime-evidence/canonical-and-derived-state.md)** supplies the missing definitions and fixes the evidence bar before the implementation that has to clear it.
 
 ---
 
@@ -581,17 +574,48 @@ See **[Research Bibliography](docs/23-research-bibliography.md)** and **[Source 
 
 ---
 
+## Aligned projects and intellectual lineage
+
+Agent Memory is independent, but it is not intellectually isolated.
+
+We explicitly celebrate developers, researchers, maintainers, and repositories that materially improve the architecture. Recognition is **relationship-typed** so credit does not quietly turn into dependency, endorsement, joint authorship, or license confusion.
+
+The first highlighted lineage is the **[UOR Foundation](https://github.com/UOR-Foundation/UOR-Framework)**.
+
+UOR Foundation work on deterministic object reference, content-addressed identity, explicit resolution state, and formally described object spaces materially informed Agent Memory's separation between:
+
+```text
+IDENTITY
+what object is this?
+
+        !=
+
+MEMORY GOVERNANCE
+what should retained state become,
+who may use it,
+and what consequences may it have?
+```
+
+Agent Memory adopts that **architectural separation**, not a mandatory UOR dependency. When UOR is used, it is a strong candidate for exact identity and deterministic addressability; another exact-identity mechanism may be used if it preserves the same boundary.
+
+Recognition here is citation and independent synthesis. External projects retain their own copyright, license, trademark, attribution, and reuse terms. Unless a separate public agreement says otherwise, acknowledgement does not imply endorsement, sponsorship, formal partnership, or transfer of intellectual-property ownership.
+
+See **[Aligned Projects and Intellectual Lineage](docs/40-aligned-projects-and-intellectual-lineage.md)** for the relationship taxonomy, licensing rules, UOR research lineage, and the evidence bar for future highlighted projects.
+
+---
+
 ## Related implementation systems
 
-The doctrine currently maps several systems into bounded implementation roles where they add specific value:
+The doctrine maps several systems into bounded implementation roles where inspected or reproducible evidence adds specific value:
 
 | System | Role |
 |---|---|
-| **UOR Framework** | exact identity and deterministic addressability |
 | **EvolveAI** | memory metabolism and lifecycle prototype |
 | **CodeGenome** | code-reality graph, evidence, provenance, inferred relations |
 | **COREFORGE Vault / Neurospace** | local-first runtime memory and agent-facing recall |
 | **FailSafe / Arbiter** | governance enforcement, evidence, approval boundaries |
+
+**UOR is intentionally not presented here as a required implementation dependency.** Its relationship is now recorded primarily as intellectual lineage and a candidate exact-identity mechanism under ADR-001.
 
 **PAMA is intentionally not in this external implementation table.** It is native Agent Memory doctrine. A runtime may implement PAMA inside any conforming codebase while preserving its authority boundary.
 
@@ -622,7 +646,7 @@ agent-memory/
 │   ├── 00-10                       # architecture spine
 │   ├── 11-19                       # composition, security, trust, time, privacy
 │   ├── 20-25                       # interdisciplinary theory and governed uncertainty
-│   ├── 26-39                       # operational and executable contracts
+│   ├── 26-40                       # operational, executable, and ecosystem contracts
 │   ├── profiles/                   # doctrine profiles for memory classes
 │   ├── adr/                        # architecture decision records
 │   └── audits/                     # preserved audit history
@@ -703,13 +727,15 @@ When a deterministic policy fails, resist the temptation to congratulate it for 
 
 ---
 
-## License, citation, and attribution
+## License, citation, attribution, and recognition
 
 Agent Memory is licensed under the **[Apache License 2.0](LICENSE)**. The license applies to original material distributed as part of this repository unless a file or section states otherwise.
 
 Authorship and attribution notices are recorded in **[NOTICE](NOTICE)**. Citation metadata is available in **[CITATION.cff](CITATION.cff)**.
 
-Third-party research, repositories, issue comments, linked documents, and other referenced material remain subject to their own rights and licenses. A citation or public link does not relicense that material under Apache-2.0. See **[Source Rights Policy](docs/SOURCE_RIGHTS_POLICY.md)** and the **[source registry](sources/source-registry.json)** for the repository's reuse discipline.
+Third-party research, repositories, issue comments, linked documents, and other referenced material remain subject to their own rights and licenses. A citation or public link does not relicense that material under Apache-2.0.
+
+Aligned-project recognition follows **[Aligned Projects and Intellectual Lineage](docs/40-aligned-projects-and-intellectual-lineage.md)**. Material reuse follows the **[Source Rights Policy](docs/SOURCE_RIGHTS_POLICY.md)** and **[source registry](sources/source-registry.json)**.
 
 ---
 

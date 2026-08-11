@@ -2,13 +2,15 @@
 
 ## Purpose
 
-This map assigns related repositories or systems to implementation roles in the Agent Memory architecture while keeping **native doctrine** separate from external or product-specific implementations.
+This map assigns related repositories or systems to implementation roles in the Agent Memory architecture while keeping **native doctrine**, **aligned foundations**, and external/product-specific implementations separate.
 
 The goal is to prevent repo-specific terminology from fragmenting the doctrine and to prevent implementations from collapsing probabilistic estimation, governance, and committed state mutation into one opaque subsystem.
 
 **Agent Memory owns the doctrine. PAMA is part of that doctrine.** PAMA is not listed as an external repository dependency simply because implementations must consume its authority contract.
 
-Named implementation systems appear only when they add a specific architecture or conformance mapping value.
+Named implementation systems appear only when they add specific architecture or conformance value.
+
+An external project may materially inform Agent Memory without owning an implementation role. See [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md).
 
 ## Native doctrine components
 
@@ -39,11 +41,36 @@ A PAMA implementation must preserve:
 - deterministic or formally bounded authority envelopes for committed inputs;
 - receipts reconstructing permitted, prohibited, selected, and committed consequences.
 
+## Aligned foundations
+
+### UOR Foundation / UOR Framework
+
+**Relationship:** intellectual lineage / conceptually aligned foundation / optional exact-identity mechanism.
+
+Work from the [UOR Foundation](https://github.com/UOR-Foundation/UOR-Framework) materially informed Agent Memory's separation between deterministic object identity and memory lifecycle/governance.
+
+Agent Memory adopts the architectural boundary, not a compulsory implementation dependency:
+
+```text
+exact identity
+    !=
+lifecycle state
+    !=
+relevance
+    !=
+authority
+```
+
+When UOR is used, it is a strong candidate for deterministic addressability, exact object resolution, and content identity. A conforming implementation may use another exact identity mechanism if it preserves the same boundary.
+
+UOR does **not** become the owner of Agent Memory lifecycle policy, saturation policy, mutation authority, recall governance, deletion semantics, or certification by virtue of that influence.
+
+See [`ADR-001`](adr/ADR-001-uor-is-identity-not-memory.md) and [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md).
+
 ## Related implementation map
 
 | System | Canonical implementation role | Primary responsibility | Governed-uncertainty posture |
 |---|---|---|---|
-| UOR Framework | Identity substrate | deterministic addressability, exact object resolution, content identity | deterministic substrate; must not infer authority |
 | EvolveAI | Memory metabolism prototype | lifecycle orchestration, decay, tier routing, crystallization prototype | probabilistic/heuristic proposals allowed; lifecycle commit remains governed |
 | CodeGenome | Code reality graph | code artifact graph, overlays, confidence fusion, provenance, impact traversal | inferred relations preserve confidence, estimator provenance, and disagreement |
 | COREFORGE Vault | Runtime memory container | encrypted local memory, graph recall, context windows, governed storage | probabilistic retrieval may generate candidates; scope and mutation boundaries remain enforced |
@@ -53,27 +80,15 @@ A PAMA implementation must preserve:
 | Arbiter | Product policy enforcement candidate | authorization, rate limits, audit logging, action boundaries | can enforce prohibited and permitted actions independently of model confidence |
 | Shadow Genome | Negative memory substrate | failure patterns, blocked behaviors, prior harm avoidance | failure inference may be probabilistic; guardrail promotion preserves evidence and authority |
 
-This table is an implementation map, not a source-of-doctrine table. Absence from the table does not mean a project is unimportant; it means it has not earned a distinct implementation role in this architecture map.
+This table is an implementation map, not a source-of-doctrine or acknowledgement table. Absence from the table does not mean a project is unimportant; it means it has not earned a distinct implementation role in this architecture map.
 
-## UOR Framework
+## Identity mechanism contract
 
-### Canonical owner of
+Agent Memory requires exact identity semantics where identity is consequential. It does not require one repository to supply them.
 
-- identity
-- deterministic addressability
-- exact object resolution
-- content-addressed lookup
+An identity mechanism should provide stable references that probabilistic layers can reason about without changing the identity of the underlying object. Exact reference resolution is a deterministic substrate concern, not a confidence-weighted guess.
 
-### Should import from this doctrine
-
-- saturation is not identity
-- lifecycle scoring belongs outside the addressing kernel
-- crystallization requires certification or policy authority
-- probabilistic interpretation must not contaminate exact identity semantics
-
-### Governed-uncertainty contract
-
-UOR should provide stable references that probabilistic layers can reason about without changing the identity of the underlying object. Exact reference resolution is a deterministic substrate concern, not a confidence-weighted guess.
+If UOR is selected, UOR-specific adapters may expose its addressability and resolution semantics. If another mechanism is selected, the implementation must preserve the same doctrine boundary.
 
 ## EvolveAI
 
@@ -256,7 +271,7 @@ This repo owns the doctrine, including PAMA.
 
 Other repos may own implementations, experiments, and product behavior, but should reference this doctrine for shared terms and boundaries.
 
-No external repository is required to make PAMA legitimate or canonical.
+No external repository is required to make Agent Memory doctrine legitimate or canonical.
 
 ## Implementation labels
 
