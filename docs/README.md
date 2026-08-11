@@ -2,7 +2,7 @@
 
 This directory is the canonical documentation map for the Agent Memory reference architecture.
 
-The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all thirty-nine numbered documents in numerical order is legal, but there are more humane options.
+The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all forty numbered documents in numerical order is legal, but there are more humane options.
 
 ## Choose your path
 
@@ -10,13 +10,13 @@ The repository is intentionally layered. Start with the smallest path that answe
 |---|---|---|
 | Researcher / theorist | [`20-memory-foundations-across-scales.md`](20-memory-foundations-across-scales.md) | `21`, `23`, `24` |
 | Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24` |
-| Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`39`, schemas and fixtures |
+| Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`40`, schemas and fixtures |
 | Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `33`, `34`, ADR-004, ADR-020 |
 | Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29` |
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
-| Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
+| Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
 | Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
-| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-020 |
+| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-021 |
 
 ## Native PAMA doctrine
 
@@ -55,8 +55,9 @@ PAMA is not represented as an external source dependency. External research, sta
 | 09 | [`09-calibration-protocol.md`](09-calibration-protocol.md) | Calibration, abstention, hysteresis, disagreement, drift |
 | 10 | [`10-memory-unit-examples.md`](10-memory-unit-examples.md) | Concrete memory, uncertainty, authority, receipt, and scope examples |
 
-### Source rights and provenance
+### Source rights, provenance, and aligned projects
 
+- [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md) defines how Agent Memory celebrates external developers and projects without implying dependency, endorsement, joint authorship, or license transfer.
 - [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) defines citation, synthesis, author-originated, licensed, and permission-based reuse modes.
 - [`../sources/source-registry.json`](../sources/source-registry.json) records external/private/material-reuse source posture.
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) makes those source-rights records machine-checkable.
@@ -90,7 +91,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 24 | [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) | Deterministic substrate, probabilistic epistemics, bounded authority, doctrine challenges |
 | 25 | [`25-governed-uncertainty-documentation-conformance-audit.md`](25-governed-uncertainty-documentation-conformance-audit.md) | GU-1 through GU-10 documentation-conformance rubric |
 
-## 26-39: Executable and operational contracts
+## 26-40: Executable, operational, and ecosystem contracts
 
 | # | Document | Purpose |
 |---|---|---|
@@ -108,6 +109,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 37 | [`37-memory-economics-and-budget-policy.md`](37-memory-economics-and-budget-policy.md) | Budget dimensions and the pressure-shapes-priority-never-authority boundary |
 | 38 | [`38-human-correction-ux-contract.md`](38-human-correction-ux-contract.md) | Minimum user-facing evidence, correction, dispute, and indicator contract |
 | 39 | [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) | Doctrine ownership versus candidate runtime implementation ownership |
+| 40 | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md) | Relationship-typed recognition, licensing boundaries, and visible credit for aligned external work |
 
 ## Profiles and future subsystems
 
@@ -134,9 +136,12 @@ Current doctrine state:
 ```text
 ADR-001 through ADR-019: Accepted
 ADR-020: Proposed
+ADR-021: Proposed
 ```
 
 ADR-020 remains Proposed because it explicitly requires real end-to-end runtime evidence, including repeated behavioral evidence for stochastic containment. Documentation, schemas, and structurally valid fixtures are necessary but not sufficient.
+
+ADR-021 remains Proposed until portable memory-governance evidence has executable interoperability proof across the declared Agent Memory / external attestation boundary.
 
 ## Governed-uncertainty audit trail
 
