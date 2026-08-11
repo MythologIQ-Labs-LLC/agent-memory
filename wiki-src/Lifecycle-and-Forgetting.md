@@ -108,6 +108,16 @@ residual  a source was purged      content may be prohibited
 
 Staleness may be repairable by recomputation. Residue is not: it is a governance problem, and only the deletion authority may resolve it. **[Canonical and Derived State](Canonical-and-Derived-State)** develops both, along with the case where correction and deletion give opposite instructions about the same superseded summary.
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow-light.svg" alt="Deletion completeness diagram showing canonical memory, governed derived memory and projection state, correction staleness versus deletion residue, transitive purge, independent residue verification, and incomplete forgetting when undeclared residue survives" width="100%">
+  </picture>
+</p>
+
+The deletion requirement is canonical: verification must address the requested forgetting outcome and known derived state rather than merely prove that one storage row disappeared. The diagram's three-tier projection vocabulary and its exact P4 residue mechanics are **executed design evidence, not adopted doctrine**. That maturity boundary matters. A persuasive picture cannot accept ADR-020 for us. The useful operational distinction is still clear: source change creates staleness; source purge can create residual content; and a delete operation is not equivalent to demonstrated forgetting completeness.
+
 ## Correction is not erasure
 
 Agent Memory prefers preserved history over silent overwrite.
