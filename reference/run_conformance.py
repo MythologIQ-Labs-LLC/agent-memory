@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Execute the governed paths and emit a conformance report.
+"""Execute the governed paths and the fixture corpus, then emit a report.
 
-The report conforms to `schemas/conformance-report.schema.json`. It
-deliberately claims **conformance level 0**: these paths execute against a
-substrate *model*, not a running substrate, so under the evidence rules in
-`docs/programs/runtime-evidence/README.md` they are not runtime evidence and
-cannot substantiate a level claim. The exemption is stated in the report
-itself rather than left for a reader to infer.
+The report conforms to `schemas/conformance-report.schema.json` and covers
+two populations: the governance paths in `tests/`, and the repository's
+doctrine fixture corpus driven through the adapter's authority enforcement.
+
+It deliberately claims **conformance level 0**. The doc 06 levels are
+cumulative, and this adapter implements neither decay nor calibrated
+saturation, so levels 2 and 3 are unmet however well the enforcement checks
+do. Every exemption is stated in the report rather than left to be inferred.
 
 Usage:
     python reference/run_conformance.py [-o report.json]
@@ -25,7 +27,7 @@ REFERENCE_DIR = Path(__file__).resolve().parent
 ROOT = REFERENCE_DIR.parent
 sys.path.insert(0, str(REFERENCE_DIR))
 
-from agentmem_ref import policy, receipts  # noqa: E402
+from agentmem_ref import fixture_conformance, policy, receipts  # noqa: E402
 from agentmem_ref.graphiti_driver import graphiti_available  # noqa: E402
 
 ADAPTER_VERSION = "0.1.0"
@@ -62,8 +64,9 @@ def _short(test) -> str:
 
 def _exemptions(substrate_executed: bool) -> list[str]:
     common = [
-        "The fixture corpus is not driven through the adapter, so no conformance level is claimed. "
-        "Levels require the doctrine fixtures, not governance paths alone.",
+        "No conformance level is claimed. The corpus is driven through the adapter's authority "
+        "enforcement, but doc 06 levels are cumulative and this adapter implements neither decay "
+        "nor calibrated saturation, so levels 2 and 3 are unmet regardless of enforcement results.",
         "Retrieval ranking is lexical rather than hybrid, so recall quality is not measured "
         "and no calibration claim is made.",
         "The policy implements the subset of the decision table these paths require.",
@@ -84,6 +87,7 @@ def _exemptions(substrate_executed: bool) -> list[str]:
 def build_report() -> dict:
     substrate_executed = graphiti_available()
     names, passed, failed = _run_suite()
+    corpus = fixture_conformance.run()
     report = {
         "schema_version": "1.0.0",
         "implementation": "agent-memory reference governed adapter",
@@ -91,18 +95,20 @@ def build_report() -> dict:
         "doctrine_version": DOCTRINE_VERSION,
         "policy_version": policy.POLICY_VERSION,
         "conformance_level": 0,
-        "fixtures_run": names,
-        "fixtures_passed": passed,
-        "fixtures_failed": failed,
-        "trials_run": len(names),
-        "known_exemptions": _exemptions(substrate_executed),
-        "known_failures": failed,
+        "fixtures_run": corpus["fixtures_run"],
+        "fixtures_passed": corpus["fixtures_passed"],
+        "fixtures_failed": corpus["fixtures_failed"],
+        "trials_run": len(names) + len(corpus["fixtures_run"]),
+        "known_exemptions": _exemptions(substrate_executed) + fixture_conformance.exemptions(),
+        "known_failures": corpus["fixtures_failed"] + failed,
         "metric_extensions": {
             "substrate_model": SUBSTRATE_MODEL,
             "real_substrate_executed": substrate_executed,
             "real_substrate": REAL_SUBSTRATE if substrate_executed else None,
             "governance_paths_executed": len(names),
             "negative_paths_executed": len([name for name in names if "positive" not in name]),
+            "governance_paths_failed": failed,
+            "corpus_fixtures_with_authority_envelope": corpus["fixtures_with_authority_envelope"],
         },
     }
     receipts.validate("conformance-report.schema.json", report)
@@ -121,7 +127,7 @@ def main() -> int:
         print(f"Wrote conformance report to {args.output}")
     else:
         print(rendered, end="")
-    return 1 if report["fixtures_failed"] else 0
+    return 1 if report["known_failures"] else 0
 
 
 if __name__ == "__main__":

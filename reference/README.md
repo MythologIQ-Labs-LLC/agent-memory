@@ -8,7 +8,7 @@ can be implemented over a temporal-graph substrate that provides no governance o
 
 Read this section before citing anything in this directory.
 
-- **Not a conformance claim.** The emitted report states conformance level 0 and says why. Nothing here substantiates a level, a profile, or ADR-020. Levels require the doctrine fixture corpus driven through the adapter, which this does not do.
+- **Not a conformance claim.** The emitted report states conformance level 0 and says why. The doctrine fixture corpus *is* now driven through the adapter's authority enforcement, but doc 06 levels are cumulative and this adapter implements neither decay nor calibrated saturation, so levels 2 and 3 are unmet however well enforcement does. Nothing here substantiates a level, a profile, or ADR-020.
 - **Not a reference implementation of Agent Memory.** It implements the narrow slice needed to exercise governance paths, and nothing else.
 - **Not an endorsement of any substrate.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against.
 
@@ -19,6 +19,8 @@ Two things, at different evidential weight.
 **Against a real substrate (runtime evidence).** Seven governance paths execute against `graphiti-core` 0.29.3 backed by an embedded graph database, with no LLM, no embedder, no API key and no server. Facts are written through the substrate's no-LLM direct-write path, superseded, pruned, physically deleted, and refused across partitions, all under the authority gate.
 
 **Against a substrate model (precondition).** Twelve further paths run against an in-memory model, covering cases the live binding does not reach — stale authorization, self-approval, undeclared derived residue, and version-drift separation.
+
+**Against the doctrine fixture corpus.** All 25 repository fixtures are driven through the adapter's own enforcement rule, 17 of which declare an authority envelope. This matters because the corpus was authored to describe doctrine, not to satisfy this implementation, so agreement between them is evidence rather than a suite agreeing with itself. The checker is mutation-tested in `tests/test_fixture_corpus.py`: four deliberately corrupted envelopes must be detected, because a conformance check that cannot fail is decoration.
 
 The common point is that the governance layer is load-bearing. The substrate model is deliberately permissive in exactly the ways the mapping verified: identity is opaque rather than content-derived, the partition filter defaults to unfiltered, deletion is physical with no tombstone, and **no operation checks authority**. Several tests assert both halves — that the substrate *would* misbehave, and that the adapter refuses anyway. A test that only checked the adapter would not prove the governance was doing any work.
 
@@ -31,6 +33,7 @@ reference/
     policy.py       PAMA evaluation: base table, class floors, modifiers
     receipts.py     schema-conformant decisions, receipts, audit events
     adapter.py      the governed path
+    fixture_conformance.py  drives the doctrine corpus through enforcement
   agentmem_ref/graphiti_driver.py   binding to a real temporal knowledge graph
   tests/            model paths and real-substrate paths
   run_conformance.py
@@ -78,12 +81,13 @@ The adapter supplies what the substrate cannot: an authority gate before every w
 | pruning | tombstones and removes from recall while content stays recoverable |
 | undeclared derived residue | a projection nobody declared is detected after removal |
 | version drift | policy version and estimator versions stay separable in the receipt |
+| fixture corpus | all 25 doctrine fixtures pass envelope enforcement; the checker is mutation-tested |
 
 ## Known limitations
 
 Stated rather than left to be discovered:
 
-1. The doctrine fixture corpus is not driven through the adapter, which is why no conformance level is claimed.
+1. Corpus coverage is envelope enforcement, not full scenario execution: decay, calibrated saturation, retrieval ranking, and most lifecycle transitions are outside this adapter and are declared as exemptions in the report rather than silently skipped.
 2. Retrieval ranking is lexical overlap, not the substrate's hybrid search, because hybrid ranking needs an embedder. Recall quality is not measured.
 3. The policy implements the subset of the decision table these paths need, not the whole table.
 4. The substrate binding uses an embedded backend that is deprecated upstream, chosen because it needs no server. No governance behavior under test depends on the backend choice.
