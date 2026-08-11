@@ -1,5 +1,6 @@
 {
   "fixture_id": "uncertain-sensitivity-before-export",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "A sensitivity classifier is uncertain before a high-consequence external export.",
   "expected_behavior": {
@@ -9,8 +10,14 @@
   },
   "governed_uncertainty": {
     "requested_action": "export_external",
-    "permitted_actions": ["block_export", "require_review", "redact_then_reclassify"],
-    "prohibited_actions": ["export_external"],
+    "permitted_actions": [
+      "block_export",
+      "require_review",
+      "redact_then_reclassify"
+    ],
+    "prohibited_actions": [
+      "export_external"
+    ],
     "selected_action": "block_export",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -24,7 +31,9 @@
     "type": "observation",
     "state": "observed",
     "sensitivity": {
-      "labels": ["unknown"],
+      "labels": [
+        "unknown"
+      ],
       "uncertainty": {
         "representation": "categorical",
         "level": "high"
@@ -47,13 +56,21 @@
     "saturation": {
       "sigma": 0.7,
       "calibrated": true,
-      "durability_dimensions": ["not_export_authority"]
+      "durability_dimensions": [
+        "not_export_authority"
+      ]
     },
     "authority": {
       "pama_outcome": "block",
       "risk_class": "critical",
-      "permitted_actions": ["block_export", "require_review", "redact_then_reclassify"],
-      "prohibited_actions": ["export_external"],
+      "permitted_actions": [
+        "block_export",
+        "require_review",
+        "redact_then_reclassify"
+      ],
+      "prohibited_actions": [
+        "export_external"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-10T00:00:00Z"

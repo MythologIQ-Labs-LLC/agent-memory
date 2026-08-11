@@ -1,5 +1,7 @@
 # Schema Registry and Type Evolution
 
+> Canonical requirement: [ADR-014](adr/ADR-014-schema-registry-and-type-evolution-are-needed.md)
+
 ## Purpose
 
 Agent Memory needs stable semantic contracts without freezing implementation experimentation.
@@ -231,12 +233,29 @@ Schema changes should be reviewed for:
 
 ## Current repository schemas
 
-The repository currently contains:
+The repository's schema registry currently contains seven schemas, reconciled with the governed-uncertainty model in evidence slice 7B and after:
 
-- `schemas/memory-unit.schema.json`
-- `schemas/conformance-report.schema.json`
+- [`../schemas/memory-unit.schema.json`](../schemas/memory-unit.schema.json) — the memory unit, including uncertainty, scope, tombstone, and action-envelope fields
+- [`../schemas/conformance-report.schema.json`](../schemas/conformance-report.schema.json) — conformance results with estimator/policy versioning and the standardized metric family
+- [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json) — structured audit events with correlation/causation identifiers
+- [`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json) — reconstruction receipts for consequential decisions
+- [`../schemas/pama-decision.schema.json`](../schemas/pama-decision.schema.json) — PAMA authority decision records
+- [`../schemas/calibration-results.schema.json`](../schemas/calibration-results.schema.json) — labeled calibration case input for the calibration report generator
+- [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) — source-registry records with rights and reuse gating
 
-These predate the full governed-uncertainty model and should be reconciled in a subsequent schema/fixture slice.
+## Fixture versioning
+
+Conformance fixtures are versioned artifacts with their own evolution rules, distinct from the schemas of the objects they contain:
+
+```text
+"fixture_version": "MAJOR.MINOR.PATCH"
+```
+
+- The fixture version describes the **scenario contract** — expected behavior, required invariants, trap semantics, and material scenario inputs — not the memory-unit schema version.
+- Prose or metadata changes that leave expected behavior untouched may remain patch-compatible.
+- Changing expected behavior, required invariants, trap semantics, or material scenario inputs requires a version change; breaking scenario-semantic changes require a major version change.
+- Runtime evidence must record `fixture_id` plus `fixture_version`, so results remain comparable after fixtures evolve.
+- `scripts/validate_fixtures.py` requires and validates the field on every fixture.
 
 ## Conformance cases
 

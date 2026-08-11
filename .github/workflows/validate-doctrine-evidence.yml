@@ -31,6 +31,19 @@ jobs:
       - name: Validate native doctrine and implementation boundaries
         run: python scripts/validate_doctrine_boundaries.py
 
+      - name: Execute reference governed-adapter paths
+        run: python -m unittest discover -s reference/tests -t reference
+
+      - name: Install real substrate for runtime evidence
+        continue-on-error: true
+        run: python -m pip install --disable-pip-version-check graphiti-core kuzu
+
+      - name: Execute governed paths against the real substrate
+        run: python -m unittest discover -s reference/tests -t reference
+
+      - name: Emit reference conformance report
+        run: python reference/run_conformance.py
+
       - name: Validate top-level documentation links
         run: >-
           python scripts/validate_markdown_links.py
@@ -43,6 +56,11 @@ jobs:
           docs/33-pama-decision-table.md
           docs/SOURCE_RIGHTS_POLICY.md
           docs/adr/README.md
+          docs/27-schema-registry-and-type-evolution.md
+          docs/32-memory-quality-metrics.md
+          docs/programs/runtime-evidence/README.md
+          docs/programs/runtime-evidence/graphiti-conformance.md
+          reference/README.md
 
       - name: Validate GitHub Wiki source links
         run: python scripts/validate_wiki_links.py wiki-src
@@ -64,7 +82,7 @@ jobs:
             echo "python scripts/validate_fixtures.py fixtures"
             echo "python scripts/validate_schemas.py  # requires: pip install jsonschema"
             echo "python scripts/validate_doctrine_boundaries.py"
-            echo "python scripts/validate_markdown_links.py README.md CONTRIBUTING.md docs/README.md docs/pama/README.md docs/04-governance-and-pama.md docs/08-source-material-index.md docs/33-pama-decision-table.md docs/SOURCE_RIGHTS_POLICY.md docs/adr/README.md"
+            echo "python scripts/validate_markdown_links.py README.md CONTRIBUTING.md docs/README.md docs/pama/README.md docs/04-governance-and-pama.md docs/08-source-material-index.md docs/33-pama-decision-table.md docs/SOURCE_RIGHTS_POLICY.md docs/adr/README.md docs/27-schema-registry-and-type-evolution.md docs/32-memory-quality-metrics.md docs/programs/runtime-evidence/README.md docs/programs/runtime-evidence/graphiti-conformance.md reference/README.md"
             echo "python scripts/validate_wiki_links.py wiki-src"
             echo "python scripts/generate_calibration_report.py reports/examples/calibration-results.example.json"
             echo '```'

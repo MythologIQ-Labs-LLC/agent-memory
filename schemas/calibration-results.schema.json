@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/Knapp-Kevin/agent-memory/schemas/calibration-results.schema.json",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/calibration-results.schema.json",
   "title": "Agent Memory Calibration Results",
   "description": "Input record for scripts/generate_calibration_report.py. Captures labeled calibration cases and run metadata; the generator derives the required measurements defined in docs/09-calibration-protocol.md.",
   "type": "object",

@@ -272,7 +272,7 @@ conformance
 Each implementation repo should eventually include a short doctrine pointer:
 
 ```text
-This implementation follows the Agent Memory doctrine in Knapp-Kevin/agent-memory.
+This implementation follows the Agent Memory doctrine in MythologIQ-Labs-LLC/agent-memory.
 ```
 
 And should link to the specific docs it conforms to.

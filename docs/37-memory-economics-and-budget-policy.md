@@ -64,6 +64,35 @@ Context assembly optimizes within authorization, in this order:
 3. **Truncation is visible.** If budget forces omission of authorized, relevant memory, the assembly records what was omitted and why; a silently truncated context misrepresents what the agent knew.
 4. **Compression preserves provenance.** Summarization to save tokens keeps source refs (the summary-as-authority anti-pattern of `04-governance-and-pama.md`); a cheap summary that launders away provenance is a threat, not a saving.
 
+## The verification budget
+
+The budgets above meter storing, recalling, and reviewing memory. There is a cost they do not capture: the cost of *earning the right to ask*. Gathering corroboration for a promotion proposal, running conflict and trap checks, assembling the evidence bundle a certifier will accept — the evidence-sufficiency step has its own compute, retrieval, and attention price, paid before any gate is reached.
+
+Left unmodeled, this budget fails in two opposite directions:
+
+```text
+under-verification  verification feels expensive -> proposals arrive under-evidenced
+                    -> gates reject or, worse, reviewers absorb the missing work
+over-verification   sufficiency is undefined -> agents gather evidence indefinitely
+                    -> valuable candidates never reach the gate at all
+```
+
+Both are budget failures wearing epistemic costumes. The requirements:
+
+- **Sufficiency is a declared operating point, not a feeling.** Policy states, per mutation type and risk class, what an adequate evidence bundle contains — so "have I gathered enough to ask?" is a checklist lookup, not an open-ended judgment an agent re-litigates under pressure.
+- **Verification cost is metered and attributed** like any other budget dimension: per proposal, per source, per estimator. A proposal's cost trail is part of its receipt.
+- **Sufficiency floors are load-bearing against flooding.** The evidence floor is what makes promotion-queue flooding (threat 19 of [`15-memory-threat-model.md`](15-memory-threat-model.md)) expensive for the attacker instead of for the reviewer: candidates pay the verification cost before consuming review capacity.
+- **Verification pressure escalates like all pressure.** If the declared sufficiency floor is chronically unaffordable, that is a policy problem solved by a versioned policy mutation (adjusting floors or capacity) — never by agents quietly lowering their own evidence standards, and never by floors silently rising until nothing promotes.
+- **Deferral for evidence is bounded.** `collect_more_evidence` outcomes carry a cost budget and a review-by point, so evidence-gathering cannot become either infinite postponement or infinite spend.
+
+Metrics for this budget join the scorecard:
+
+```text
+verification_cost_per_consequential_proposal   # by mutation type and risk class
+evidence_sufficiency_shortfall_rate            # proposals arriving below the declared floor
+verification_abandonment_rate                  # candidates that never reached the gate for cost reasons
+```
+
 ## Budget pressure and PAMA review paths
 
 Governance review capacity is a budget like any other, and the failure mode is predictable: queues back up, and someone proposes auto-approval.

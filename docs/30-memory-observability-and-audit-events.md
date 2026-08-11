@@ -1,5 +1,7 @@
 # Memory Observability and Audit Events
 
+> Canonical requirement: [ADR-017](adr/ADR-017-memory-observability-and-audit-events-are-required.md)
+
 ## Purpose
 
 Governed memory requires more than logs that say something happened.

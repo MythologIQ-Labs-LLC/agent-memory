@@ -1,5 +1,7 @@
 # Governed Recall Planner
 
+> Canonical requirement: [ADR-013](adr/ADR-013-governed-recall-planner-is-required.md)
+
 ## Purpose
 
 Retrieval finds candidate memory. Governed recall decides which candidates may enter an agent's active context, under what representation, and with what warnings or restrictions.

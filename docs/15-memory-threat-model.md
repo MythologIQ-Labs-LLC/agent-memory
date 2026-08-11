@@ -1,5 +1,7 @@
 # Memory Threat Model
 
+> Canonical requirement: [ADR-008](adr/ADR-008-memory-threat-model-is-required.md)
+
 ## Purpose
 
 Persistent memory turns an agent from a session-bound system into a stateful system whose mistakes, compromises, and authority errors can survive the interaction that created them.
@@ -9,6 +11,8 @@ This threat model defines the major adversarial and accidental failure classes t
 The core security rule is:
 
 > Memory content may be uncertain or adversarial. Memory authority must not be inferred from content, confidence, similarity, repetition, or apparent usefulness.
+
+The contracts that enforce that rule live elsewhere; this document names the attacks, those documents own the defenses: mutation authority in [`04-governance-and-pama.md`](04-governance-and-pama.md) and the decision table of [`33-pama-decision-table.md`](33-pama-decision-table.md), evidence weighting in [`16-source-trust-and-reputation.md`](16-source-trust-and-reputation.md), and recall-time admission in [`26-governed-recall-planner.md`](26-governed-recall-planner.md). Probabilistic detectors throughout this threat model estimate risk; they never grant or revoke authority.
 
 ## Assets
 
@@ -312,6 +316,26 @@ Controls:
 - dependency checks
 - stronger authority as reversibility decreases
 
+### 19. Promotion-queue flooding
+
+The proportional-handling lanes concentrate friction at promotion and review boundaries — which makes those boundaries the highest-value place to attack by volume rather than by quality. An attacker, a compromised estimator, or merely a noisy environment floods the review queue with plausible-looking candidates until reviewer attention degrades, then a bad promotion rides through on fatigue. This is governance-fatigue exploitation, and it is a direct consequence of the architecture's own design choice to make review the gate.
+
+Attack path:
+
+```text
+many plausible candidates -> review queue saturates -> reviewer throughput or
+scrutiny degrades -> marginal candidate approved under fatigue -> durable authority gained
+```
+
+Controls:
+
+- admission cost: candidates must clear evidence-quality floors before consuming review capacity, so flooding pays the evidence cost per candidate, not the reviewer
+- pre-adjudication triage separating "needs adjudication" from "worth a look" by consequence, per the review-budget rules of [`37-memory-economics-and-budget-policy.md`](37-memory-economics-and-budget-policy.md)
+- per-source and per-estimator rate accounting on promotion proposals; a source whose candidate volume spikes is itself an anomaly signal feeding source trust
+- batched review windows with explicit capacity, so saturation becomes a visible queue-depth metric instead of silent scrutiny decay
+- fatigue never relaxes the gate: queue pressure produces conservative interim state, never auto-approval — load-shedding only as a versioned policy mutation
+- queue-depth, review-latency, and approval-rate-under-load metrics monitored as attack indicators, not just operations telemetry
+
 ## Probabilistic security components
 
 The threat model does **not** require every defense to be deterministic.
@@ -384,6 +408,7 @@ At minimum:
 - deletion residue
 - permanent deletion from predicted low utility
 - estimator drift
+- promotion-queue flooding under review-capacity pressure
 
 ## Research signals
 

@@ -1,5 +1,6 @@
 {
   "fixture_id": "concurrent-conflicting-mutation",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "Two agents propose incompatible durable mutations from the same prior state.",
   "expected_behavior": {
@@ -9,8 +10,14 @@
   },
   "governed_uncertainty": {
     "requested_action": "commit_mutation_a",
-    "permitted_actions": ["open_conflict", "retry_with_latest_state", "require_review"],
-    "prohibited_actions": ["silent_last_writer_wins"],
+    "permitted_actions": [
+      "open_conflict",
+      "retry_with_latest_state",
+      "require_review"
+    ],
+    "prohibited_actions": [
+      "silent_last_writer_wins"
+    ],
     "selected_action": "open_conflict",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -40,13 +47,21 @@
     "saturation": {
       "sigma": 0.98,
       "calibrated": true,
-      "durability_dimensions": ["certified_decision"]
+      "durability_dimensions": [
+        "certified_decision"
+      ]
     },
     "authority": {
       "pama_outcome": "require_review",
       "risk_class": "high",
-      "permitted_actions": ["open_conflict", "retry_with_latest_state", "require_review"],
-      "prohibited_actions": ["silent_last_writer_wins"],
+      "permitted_actions": [
+        "open_conflict",
+        "retry_with_latest_state",
+        "require_review"
+      ],
+      "prohibited_actions": [
+        "silent_last_writer_wins"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-10T00:00:00Z"

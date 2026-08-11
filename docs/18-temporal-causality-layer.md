@@ -1,5 +1,7 @@
 # Temporal Causality Layer
 
+> Canonical requirement: [ADR-011](adr/ADR-011-temporal-causality-is-required-for-memory-evolution.md)
+
 ## Purpose
 
 Memory is not only a collection of facts. It is a record of change.

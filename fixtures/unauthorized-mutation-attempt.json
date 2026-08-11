@@ -1,5 +1,6 @@
 {
   "fixture_id": "unauthorized-mutation-attempt",
+  "fixture_version": "1.0.0",
   "class": "governance",
   "description": "An agent attempts to mutate durable memory without sufficient authority.",
   "expected_behavior": {
@@ -31,12 +32,18 @@
       "sigma": 0.99,
       "calibrated": true,
       "threshold": 0.95,
-      "durability_dimensions": ["approval", "cross_reference", "certification"]
+      "durability_dimensions": [
+        "approval",
+        "cross_reference",
+        "certification"
+      ]
     },
     "authority": {
       "pama_outcome": "block",
       "risk_class": "high",
-      "policy_refs": ["ADR-004"]
+      "policy_refs": [
+        "ADR-004"
+      ]
     },
     "certification": {
       "status": "pass",
@@ -52,8 +59,17 @@
     "created_at": "2026-07-06T00:00:00Z"
   },
   "interaction_history": [
-    { "event": "mutation_requested", "actor": "unauthorized-agent" },
-    { "event": "pama_evaluated", "result": "block" },
-    { "event": "audit_record_created", "count": 1 }
+    {
+      "event": "mutation_requested",
+      "actor": "unauthorized-agent"
+    },
+    {
+      "event": "pama_evaluated",
+      "result": "block"
+    },
+    {
+      "event": "audit_record_created",
+      "count": 1
+    }
   ]
 }

@@ -251,6 +251,23 @@ silent_last_writer_wins == false
 ledger_preserves_conflict == true
 ```
 
+### Fixture S: Governed promotion audit trace
+
+A governed promotion emits the full consequential event chain, so the decision can be reconstructed after the fact without replaying the estimator.
+
+Expected behavior:
+
+```text
+audit_trace_complete == true
+estimator_distinct_from_authority == true
+selected_action_in_permitted_set == true
+state_change_ledgered == true
+receipt_reconstructs_consequence == true
+raw_content_in_events == false
+```
+
+This fixture carries an `audit_events` array validated against `schemas/memory-audit-event.schema.json`, and is the structural precondition for the replay and receipt requirements of `30-memory-observability-and-audit-events.md` and `31-recovery-rollback-and-replay.md`.
+
 ## Required assertions
 
 Every conforming implementation should assert:
