@@ -1,0 +1,103 @@
+name: Doctrine or architecture proposal
+description: Propose a change, challenge, clarification, or new boundary in Agent Memory doctrine
+title: "[Doctrine] "
+labels:
+  - agent-memory
+  - doctrine
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for changes to canonical doctrine, architecture boundaries, ADRs, PAMA interpretation, lifecycle semantics, or other normative design decisions. Strong challenges are welcome. A proposal should identify what would make it wrong, not merely why it sounds good.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I reviewed the relevant canonical documentation and ADRs.
+          required: true
+        - label: I searched existing issues for the same or closely related proposal.
+          required: true
+
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Proposal type
+      options:
+        - Clarification without changing doctrine
+        - New doctrine requirement
+        - Change to accepted doctrine
+        - Challenge or counterexample
+        - ADR proposal or revision
+        - PAMA/governance refinement
+        - Cross-domain memory hypothesis
+        - Other architecture change
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_state
+    attributes:
+      label: Current doctrine or gap
+      description: Identify the present rule, document, ADR, or missing boundary as precisely as possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: State the proposed rule or architecture change in testable language.
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why should this change?
+      description: Explain the failure mode, evidence, implementation pressure, or contradiction motivating the proposal.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Supporting and challenging evidence
+      description: Link supporting evidence and, where known, evidence that challenges or limits the proposal. Summarize third-party material in your own words unless quotation is necessary and permitted.
+
+  - type: textarea
+    id: falsification
+    attributes:
+      label: Falsification or rejection criteria
+      description: What evidence, test result, or counterexample would cause this proposal to be rejected or narrowed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: affected_surfaces
+    attributes:
+      label: Affected doctrine and contracts
+      description: List relevant docs, ADRs, schemas, fixtures, profiles, implementation maps, or conformance levels.
+
+  - type: dropdown
+    id: cross_domain
+    attributes:
+      label: Cross-domain classification
+      description: If this proposal transfers a concept from biological, cognitive, organizational, or other memory systems, classify the transfer. Otherwise select Not applicable.
+      options:
+        - Not applicable
+        - MECHANISM
+        - FUNCTIONAL ANALOGY
+        - ENGINEERING PRESCRIPTION
+        - OPEN HYPOTHESIS
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: authority_boundary
+    attributes:
+      label: Governance boundary
+      options:
+        - label: This proposal does not treat confidence, relevance, trust, saturation, or utility as authority unless it explicitly proposes and justifies changing that doctrine.
+          required: true
