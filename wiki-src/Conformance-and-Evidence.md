@@ -110,6 +110,8 @@ estimate / proposal
 
 with repeated stochastic trials, cross-scope admission tests, real concurrency behavior, deletion propagation, and reconstructable decision receipts.
 
+Deletion propagation carries the most hidden weight in that list, because a requirement stated in one clause can rest on vocabulary the architecture has not defined yet. **[Canonical and Derived State](Canonical-and-Derived-State)** sets out what has to be demonstrated — reaching the full transitive closure of derived state, matching an independent residue sweep against what the deletion receipt claimed, and refusing an automatic model-driven rebuild — and says plainly which of those a convincing demonstration would omit.
+
 ## Canonical sources
 
 - Conformance test plan: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/06-conformance-test-plan.md

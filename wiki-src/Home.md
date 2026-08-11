@@ -22,6 +22,7 @@ Agent Memory asks a larger question than _“how do we retrieve old context?”_
 | Learn the core vocabulary and invariants | **[Core Concepts](Core-Concepts)** |
 | Understand adaptive authority | **[PAMA](PAMA)** |
 | Design retention, consolidation, and forgetting | **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)** |
+| Understand why deleting a memory does not delete what was derived from it | **[Canonical and Derived State](Canonical-and-Derived-State)** |
 | Separate probabilistic inference from consequential authority | **[Governed Uncertainty](Governed-Uncertainty)** |
 | Review threat, privacy, and deletion risks | **[Security and Privacy](Security-and-Privacy)** |
 | Evaluate evidence or runtime claims | **[Conformance and Evidence](Conformance-and-Evidence)** |

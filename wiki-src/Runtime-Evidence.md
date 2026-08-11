@@ -58,10 +58,13 @@ Running the binding revised three conclusions that source reading alone had reac
 
 Closer, and not close enough. The proof bar in **[Architecture Decisions](Architecture-Decisions)** additionally expects concurrency behavior, deletion propagation measurement, and evidence gathered across a wider surface than one reference adapter. ADR-020 stays Proposed.
 
+Deletion propagation is the slice now in progress, and it began by discovering that the requirement was not yet expressible. "This projection is stale with respect to canonical state" had no defined meaning here, which made it untestable rather than merely unproven. **[Canonical and Derived State](Canonical-and-Derived-State)** supplies the missing definitions and fixes the evidence bar in advance — deliberately including the parts a persuasive demonstration would skip. It is a design spike: no code, no fixtures, and no claim on this page's ledger until something executes.
+
 ## Canonical sources
 
 - Runtime evidence program: https://github.com/MythologIQ-Labs-LLC/agent-memory/tree/main/docs/programs/runtime-evidence
 - Substrate capability mapping: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/graphiti-conformance.md
+- Canonical and derived state design spike: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/canonical-and-derived-state.md
 - Reference adapter: https://github.com/MythologIQ-Labs-LLC/agent-memory/tree/main/reference
 - Conformance test plan: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/06-conformance-test-plan.md
 
