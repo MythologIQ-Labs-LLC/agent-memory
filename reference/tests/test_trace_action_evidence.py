@@ -31,6 +31,7 @@ from agentmem_ref.trace_action_evidence import (  # noqa: E402
 )
 
 AM_ISSUER = "issuer:agent-memory-reference"
+DOMAIN_AUTH_STATE = "domain-auth:trace:31"
 AM_KEY = IssuerKey(
     issuer_id=AM_ISSUER,
     key_id="am-key-2026-08",
@@ -82,6 +83,7 @@ class TraceActionEvidenceTests(unittest.TestCase):
             lifecycle_result=lifecycle,
             source_domain_ref="domain:opaque:project-a",
             destination_domain_ref="domain:opaque:deleted",
+            domain_authorization_state_ref=DOMAIN_AUTH_STATE,
         )
         return receipt, portable
 
@@ -106,6 +108,9 @@ class TraceActionEvidenceTests(unittest.TestCase):
             observed_call_id=kwargs.pop("observed_call_id", self.call_id),
             observed_action_ref=kwargs.pop("observed_action_ref", self.action_ref),
             authority_valid_at_execution=kwargs.pop("authority_valid_at_execution", True),
+            domain_authorization_valid_at_execution=kwargs.pop(
+                "domain_authorization_valid_at_execution", True
+            ),
             **kwargs,
         )
 
@@ -125,6 +130,7 @@ class TraceActionEvidenceTests(unittest.TestCase):
         self.assertEqual(result["agent_memory"]["governance_disposition"], "committed")
         self.assertEqual(result["agent_memory"]["runtime_execution"], "executed_as_authorized")
         self.assertEqual(result["agent_memory"]["lifecycle_satisfaction"], "residual")
+        self.assertEqual(bundle["detached_payload"]["domain_authorization_state_ref"], DOMAIN_AUTH_STATE)
 
     def test_same_action_receipt_can_preserve_satisfied_lifecycle(self):
         receipt, portable, bundle = self._bundle("satisfied", "accepted")
@@ -140,6 +146,19 @@ class TraceActionEvidenceTests(unittest.TestCase):
         self.assertEqual(result["external_execution_outcome"], "rejected")
         self.assertEqual(result["agent_memory"]["governance_disposition"], "committed")
         self.assertEqual(result["agent_memory"]["lifecycle_satisfaction"], "residual")
+
+    def test_valid_trace_receipt_does_not_override_revoked_domain_membership(self):
+        receipt, portable, bundle = self._bundle("residual", "accepted")
+        result = self._verify(
+            receipt,
+            portable,
+            bundle,
+            domain_authorization_valid_at_execution=False,
+        )
+        self.assertEqual(result["trace_receipt_status"], TRACE_RECEIPT_VALID_ACCEPTED)
+        self.assertEqual(result["trace_binding"], "valid")
+        self.assertEqual(result["agent_memory"]["evidence_integrity"], "valid")
+        self.assertEqual(result["agent_memory"]["runtime_execution"], "unauthorized_execution")
 
     def test_wrong_call_id_blocks_replay(self):
         receipt, portable, bundle = self._bundle()
@@ -183,11 +202,13 @@ class TraceActionEvidenceTests(unittest.TestCase):
             observed_call_id=self.call_id,
             observed_action_ref=self.action_ref,
             authority_valid_at_execution=True,
+            domain_authorization_valid_at_execution=True,
         )
         self.assertEqual(result["trace_receipt_status"], TRACE_RECEIPT_UNVERIFIED)
         self.assertEqual(result["trace_binding"], "unverifiable")
         self.assertEqual(result["binding_failures"], [])
         self.assertEqual(result["agent_memory"]["evidence_integrity"], "valid")
+        self.assertEqual(result["agent_memory"]["runtime_execution"], "executed_as_authorized")
 
     def test_required_receipt_missing_is_distinct(self):
         receipt, portable = self._receipt_and_portable()
@@ -207,11 +228,19 @@ class TraceActionEvidenceTests(unittest.TestCase):
         bundle["external_execution_evidence"]["evidence_hash"] = detached_payload_hash(
             bundle["detached_payload"]
         )
-        # The issuer signature still commits the old hash, so this is both an envelope
-        # signature failure and a semantic domain-binding failure.
         result = self._verify(receipt, portable, bundle)
         self.assertEqual(result["trace_receipt_status"], TRACE_RECEIPT_INVALID)
         self.assertIn("destination_domain_ref_mismatch", result["binding_failures"])
+
+    def test_domain_authorization_state_mismatch_is_detected(self):
+        receipt, portable, bundle = self._bundle()
+        bundle["detached_payload"]["domain_authorization_state_ref"] = "domain-auth:trace:wrong"
+        bundle["external_execution_evidence"]["evidence_hash"] = detached_payload_hash(
+            bundle["detached_payload"]
+        )
+        result = self._verify(receipt, portable, bundle)
+        self.assertEqual(result["trace_receipt_status"], TRACE_RECEIPT_INVALID)
+        self.assertIn("domain_authorization_state_ref_mismatch", result["binding_failures"])
 
     def test_bundle_is_content_free_and_schema_valid(self):
         _, _, bundle = self._bundle()

@@ -1,6 +1,6 @@
 # P4.5c TRACE-compatible external action evidence
 
-Status: **Executable interoperability evidence**. This slice maps P4.5a portable Agent Memory governance evidence into the existing AgenTrust external action-evidence surface without making TRACE or cMCP responsible for PAMA or memory lifecycle semantics.
+Status: **Executable interoperability evidence**. This slice maps P4.5a portable Agent Memory governance evidence into the existing AgenTrust external action-evidence surface without making TRACE or cMCP responsible for PAMA, isolation-domain membership, or memory lifecycle semantics.
 
 Parent implementation issue: #63.
 
@@ -56,12 +56,13 @@ The meanings remain separate:
 
 ```text
 TRACE/cMCP receipt integrity != PAMA permission
+TRACE/cMCP receipt integrity != isolation-domain membership
 external accepted outcome    != lifecycle satisfaction
 external rejected outcome    != malformed evidence
 valid action evidence         != physical completion
 ```
 
-Agent Memory remains authoritative for memory-action meaning, PAMA, canonical receipt semantics, isolation-domain meaning, correction/deletion obligations, residue, and lifecycle satisfaction.
+Agent Memory remains authoritative for memory-action meaning, PAMA, canonical receipt semantics, isolation-domain meaning and membership continuity, correction/deletion obligations, residue, and lifecycle satisfaction.
 
 ## Existing envelope, no new TRACE wire format
 
@@ -98,7 +99,8 @@ The detached payload is content-free:
   "execution_outcome": "accepted | rejected",
   "execution_time": "2026-08-11T21:00:03Z",
   "source_domain_ref": "<optional opaque reference>",
-  "destination_domain_ref": "<optional opaque reference>"
+  "destination_domain_ref": "<optional opaque reference>",
+  "domain_authorization_state_ref": "<optional opaque membership/authorization-state reference>"
 }
 ```
 
@@ -109,7 +111,7 @@ It intentionally excludes:
 - full canonical receipts;
 - PAMA policy contents;
 - tenant/project/domain display names when opaque references suffice;
-- a claim that TRACE understands Agent Memory lifecycle semantics.
+- a claim that TRACE understands Agent Memory authority or lifecycle semantics.
 
 ## Two canonicalization domains
 
@@ -142,9 +144,52 @@ The verifier also binds:
 - detached `portable_evidence_ref` to the supplied P4.5a evidence;
 - detached `canonical_receipt_ref` to the signed P4.5a receipt reference;
 - optional source/destination opaque domain references to the P4.5a scope;
+- optional opaque `domain_authorization_state_ref` to the P4.5a scope;
 - external execution time to the P4.5a decision-time ordering check.
 
-No external receipt is allowed to manufacture execution-time PAMA authority. When authority continuity is supplied, it remains an Agent Memory verifier input rather than a TRACE semantic.
+No external receipt is allowed to manufacture execution-time PAMA authority or isolation-domain membership. Those continuity facts remain Agent Memory verifier inputs rather than TRACE semantics.
+
+## Domain-authorization non-escalation
+
+A valid TRACE/cMCP receipt proves the configured action-evidence binding. It does not prove that the Agent Memory actor still held permission to cross a memory-domain boundary at execution time.
+
+For a signed cross-domain consequence, Agent Memory independently evaluates:
+
+```text
+source_domain_ref
+destination_domain_ref
+domain_authorization_state_ref
+domain_authorization_valid_at_execution
+```
+
+The executable paths distinguish:
+
+```text
+TRACE receipt = valid accepted
+Agent Memory evidence = valid
+domain membership at execution = valid
+runtime execution = executed_as_authorized
+```
+
+from:
+
+```text
+TRACE receipt = valid accepted
+Agent Memory evidence = valid
+domain membership at execution = revoked/expired
+runtime execution = unauthorized_execution
+```
+
+and from:
+
+```text
+TRACE receipt = valid accepted
+Agent Memory evidence = valid
+required domain-continuity evidence = missing
+runtime execution = unverifiable
+```
+
+This is intentional. Historical receipt authenticity does not need to be rewritten when authorization changes. The runtime result carries the current execution-time authority truth.
 
 ## TRACE result taxonomy
 
@@ -209,6 +254,7 @@ The isolated environment is intentional because the current cMCP/AGT dependency 
 - accepted external receipt plus lifecycle `residual`;
 - accepted external receipt plus lifecycle `satisfied`;
 - valid external rejection as negative evidence;
+- valid TRACE receipt plus revoked Agent Memory domain membership;
 - wrong `linked_call_id` replay;
 - wrong Agent Memory `action_ref` replay;
 - detached payload tampering;
@@ -216,6 +262,7 @@ The isolated environment is intentional because the current cMCP/AGT dependency 
 - unknown/untrusted external issuer;
 - missing required receipt;
 - isolation-domain mismatch;
+- domain-authorization-state mismatch;
 - schema validation;
 - absence of raw memory content;
 - exact reuse of the existing six-field cMCP envelope.
@@ -269,6 +316,7 @@ The evidence remains multi-dimensional:
 valid TRACE receipt + committed Agent Memory decision + lifecycle residual
 valid TRACE receipt + committed Agent Memory decision + lifecycle satisfied
 valid TRACE rejection + independently valid Agent Memory governance evidence
+valid TRACE receipt + revoked Agent Memory domain membership + unauthorized execution
 ```
 
 ## What remains unproven
@@ -278,6 +326,7 @@ This slice does not prove:
 - TRACE Trust Record hardware attestation of an Agent Memory process;
 - physical completion or functional-safety certification;
 - production issuer-key discovery or revocation infrastructure;
+- production isolation-domain membership discovery/revocation infrastructure;
 - upstream Community/Verified integration acceptance;
 - generic cross-organization trust-anchor discovery;
 - AGT/runtime-policy composition (optional P4.5d);

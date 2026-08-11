@@ -41,9 +41,10 @@ Therefore all of these are representable without contradiction:
 valid evidence + denied + unauthorized execution
 valid evidence + committed + executed as authorized + residual
 valid evidence + committed + executed as authorized + satisfied
+valid evidence + committed + revoked domain membership + unauthorized execution
 ```
 
-A valid signature never manufactures PAMA permission. A valid runtime action never proves lifecycle satisfaction.
+A valid signature never manufactures PAMA permission. A valid runtime action never proves lifecycle satisfaction. Generic actor/PAMA authority also never manufactures isolation-domain membership.
 
 ## Portable evidence v1
 
@@ -156,12 +157,26 @@ The reference verifier can compare signed evidence to independently observed run
 - authority-state reference
 - source isolation domain
 - destination isolation domain
+- domain-authorization-state reference
 - execution time
-- execution-time authority continuity
+- execution-time generic authority continuity
+- execution-time domain-membership/authorization continuity
 
-Wrong action catches replay against another execution. Wrong policy/authority references expose stale or mismatched decision state. Wrong domain catches an isolation-boundary mismatch without requiring raw domain contents. Execution before the signed decision is rejected.
+Wrong action catches replay against another execution. Wrong policy/authority references expose stale or mismatched decision state. Wrong source/destination domain catches isolation-boundary broadening or substitution without requiring raw domain contents. A stale domain-authorization-state reference exposes membership/state drift. Execution before the signed decision is rejected.
 
-If execution is observed but execution-time authority continuity is unknown, runtime authorization is reported as `unverifiable`, not optimistically permitted.
+Generic authority and domain authorization are intentionally separate. For a boundary-crossing action, `source_domain_ref != destination_domain_ref`, a verifier needs both the signed domain-authorization state and independent execution-time continuity evidence. If either is missing, `runtime_execution` is `unverifiable`, not optimistically permitted. If membership/authorization is independently known to be revoked or expired at execution, the evidence can remain cryptographically valid while `runtime_execution` becomes `unauthorized_execution`.
+
+This distinction lets a verifier truthfully represent:
+
+```text
+signature = valid
+decision-time governance = committed
+generic actor authority at execution = valid
+shared-domain membership at execution = revoked
+runtime execution = unauthorized_execution
+```
+
+No signature rewriting is needed. Historical evidence stays authentic while current authorization truth remains current.
 
 ## Machine-readable result taxonomy
 
@@ -178,7 +193,7 @@ If execution is observed but execution-time authority continuity is unknown, run
 }
 ```
 
-`binding_failures` is intentionally explicit because a verifier needs to distinguish tampering, unknown trust, replay, stale policy, stale authority, temporal mismatch, and wrong isolation domain rather than flattening them into the same red light.
+`binding_failures` is intentionally explicit because a verifier needs to distinguish tampering, unknown trust, replay, stale policy, stale authority, stale domain authorization, temporal mismatch, and wrong isolation domain rather than flattening them into the same red light.
 
 ## Executed vectors
 
@@ -195,8 +210,13 @@ If execution is observed but execution-time authority continuity is unknown, run
 - stale/wrong policy reference
 - stale/wrong authority-state reference
 - wrong source isolation domain
+- unauthorized destination-domain broadening
+- stale/wrong domain-authorization-state reference
+- revoked/expired shared-domain membership at execution
+- fail-closed cross-domain execution with missing membership continuity evidence
+- fail-closed cross-domain execution with no signed membership state
 - execution preceding the signed decision
-- fail-closed execution when authority continuity is unknown
+- fail-closed execution when generic authority continuity is unknown
 - valid denial plus unauthorized runtime execution
 - authorized deletion with residual lifecycle state
 - detached verification after canonical content is unavailable
@@ -214,7 +234,7 @@ python scripts/validate_schemas.py
 
 ## What this slice proves
 
-P4.5a now has an executable substrate-independent boundary for content-free, independently verifiable governance evidence. It demonstrates that Agent Memory can sign and independently check the binding among a canonical receipt reference, decision-time governance state, isolation-domain references, and a runtime action while preserving lifecycle outcome as a separate semantic dimension.
+P4.5a has an executable substrate-independent boundary for content-free, independently verifiable governance evidence. It demonstrates that Agent Memory can sign and independently check the binding among a canonical receipt reference, decision-time governance state, isolation-domain references, domain-authorization state, and a runtime action while preserving lifecycle outcome as a separate semantic dimension.
 
 The implementation also demonstrates the core deletion distinction:
 
@@ -224,16 +244,17 @@ valid evidence of authorized deletion != proof of forgetting
 
 A correctly signed, authorized, correctly executed delete may still carry `lifecycle_satisfaction = residual`.
 
+P4.5b Agent Manifest correlation, P4.5c TRACE/cMCP action evidence, and the P4-to-P4.5 deletion-completeness composition are documented separately in this runtime-evidence program and execute against this portable boundary.
+
 ## What remains unproven
 
-This slice does not yet prove:
+This slice does not prove:
 
-- Agent Manifest checkpoint/delta correlation (P4.5b)
-- TRACE/AgenTrust external action-evidence interoperability (P4.5c)
 - production key storage or remote trust-anchor discovery
-- external revocation infrastructure
-- multi-implementation interoperability
+- an online shared-domain membership/revocation service
+- multi-implementation interoperability outside the pinned comparators
 - runtime-enforcement composition with AGT or another policy peer
+- upstream AgenTrust integration acceptance
 - ADR acceptance or a higher conformance level
 
-Those remain later evidence gates rather than assumptions smuggled into a successful unit test.
+Those remain separate evidence gates rather than assumptions smuggled into a successful unit test.
