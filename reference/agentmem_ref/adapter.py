@@ -86,6 +86,20 @@ class AdmissionResult:
     refusals: dict[str, str] = field(default_factory=dict)
 
 
+@dataclass(frozen=True)
+class RecallContext:
+    """Authority context for one governed recall request.
+
+    Domain refs are logical authority boundaries. They are not storage
+    partitions and their tuple order does not imply hierarchy.
+    """
+
+    target_domain_refs: tuple[str, ...]
+    project_ref: str = ""
+    task_ref: str = ""
+    purpose: str = ""
+
+
 class GovernedMemoryAdapter:
     """Wraps a permissive substrate in the governance it does not provide."""
 
@@ -105,6 +119,7 @@ class GovernedMemoryAdapter:
         self._state_version: dict[str, int] = {}
         self._disputed: set[str] = set()
         self._tombstones: dict[str, dict] = {}
+        self._fact_scope: dict[str, dict] = {}
         self.events: list[dict] = []
 
     # -- write path -----------------------------------------------------
@@ -232,28 +247,38 @@ class GovernedMemoryAdapter:
                 created_at=self._clock.now(),
             )
         )
+        domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
+        self._fact_scope[uuid] = {
+            "domain_refs": domain_refs,
+            "project_ref": proposal.project_ref,
+            "task_ref": proposal.task_ref,
+            "purpose": proposal.purpose,
+        }
         self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
         return uuid
 
     # -- read path ------------------------------------------------------
 
-    def governed_recall(self, query: str) -> AdmissionResult:
-        """Retrieve candidates, then admit only what policy allows.
+    def governed_recall(self, query: str, context: RecallContext | None = None) -> AdmissionResult:
+        """Retrieve candidates, then admit only what current authority allows.
 
-        The partition filter is always passed explicitly. The substrate's
-        unfiltered default is never reachable through this adapter.
+        Tenant partitioning is enforced before retrieval. Logical isolation
+        domains, project, and task are evaluated at admission because the
+        in-memory substrate is trusted to return same-tenant candidates for
+        policy evaluation. Candidate presence never creates admission rights.
         """
+        context = context or RecallContext(target_domain_refs=(self._tenant,))
         result = AdmissionResult()
         for fact, _score in self._substrate.search(query, group_ids=[self._tenant]):
             result.candidates.append(fact.uuid)
-            refusal = self._admission_refusal(fact)
+            refusal = self._admission_refusal(fact, context)
             if refusal:
                 result.refusals[fact.uuid] = refusal
             else:
                 result.admitted.append(fact.uuid)
         return result
 
-    def _admission_refusal(self, fact: Fact) -> str | None:
+    def _admission_refusal(self, fact: Fact, context: RecallContext) -> str | None:
         if fact.group_id != self._tenant:
             return "out_of_scope"
         if fact.uuid in self._tombstones:
@@ -262,6 +287,24 @@ class GovernedMemoryAdapter:
             return "superseded_not_current"
         if fact.uuid in self._disputed:
             return "disputed"
+
+        scope = self._fact_scope.get(fact.uuid)
+        if scope is None:
+            return None
+
+        memory_domains = set(scope["domain_refs"])
+        target_domains = set(context.target_domain_refs)
+        if not target_domains or not memory_domains.intersection(target_domains):
+            return "isolation_domain_mismatch"
+
+        memory_project = scope.get("project_ref", "")
+        if memory_project and context.project_ref != memory_project:
+            return "project_scope_mismatch"
+
+        memory_task = scope.get("task_ref", "")
+        if memory_task and context.task_ref != memory_task:
+            return "task_scope_mismatch"
+
         return None
 
     def mark_disputed(self, fact_uuid: str) -> None:
