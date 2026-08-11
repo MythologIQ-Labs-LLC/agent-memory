@@ -2,7 +2,7 @@
 
 A minimal, executable demonstration that the governed path in
 [`../docs/programs/runtime-evidence/README.md`](../docs/programs/runtime-evidence/README.md)
-can be implemented over a temporal-graph substrate that provides no governance of its own, plus the substrate-independent P4.5a portable governance-evidence boundary.
+can be implemented over a temporal-graph substrate that provides no governance of its own, plus the P4.5 portable evidence and external-checkpoint correlation boundaries.
 
 ## What this is not
 
@@ -10,7 +10,7 @@ Read this section before citing anything in this directory.
 
 - **Not a conformance claim.** The emitted report states conformance level 0 and says why. The doctrine fixture corpus *is* now driven through the adapter's authority enforcement, but doc 06 levels are cumulative and this adapter implements neither decay nor calibrated saturation, so levels 2 and 3 are unmet however well enforcement does. Nothing here substantiates a level, a profile, or ADR-020.
 - **Not a reference implementation of Agent Memory.** It implements the narrow slices needed to exercise governance paths and portable evidence, and nothing else.
-- **Not an endorsement of any substrate or trust infrastructure.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against. The Ed25519 profile proves an evidence boundary, not a universal PKI.
+- **Not an endorsement of any substrate or trust infrastructure.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against. The Ed25519 profile proves an evidence boundary, not a universal PKI. The Agent Manifest package is a pinned external comparator, not a doctrine dependency.
 
 ## What it does demonstrate
 
@@ -24,6 +24,8 @@ Several things, at different evidential weight.
 
 **Against the P4.5a portable-evidence contract.** A content-free projection of a canonical decision receipt is signed with Ed25519 and verified using only the configured public trust key. The verifier independently checks receipt, runtime-action, policy, authority-state, temporal, and isolation-domain bindings while preserving governance disposition, runtime execution, and lifecycle satisfaction as separate outcomes. Adversarial vectors exercise tampering, replay, stale authority, wrong domains, key rotation, revocation timing, detached receipt verification, and valid deletion with residual lifecycle state.
 
+**Against the P4.5b Agent Manifest comparator.** CI installs `agent-manifest==0.11.0`, pinned to release commit `98cead8e8809e3302dc388ca869882d15b812b7f`, and executes its own v0.2 memory checkpoint/delta implementation. Agent Memory content-addresses the checkpoint tuple and binds it through the canonical receipt and P4.5a state references. The same upstream-accepted `DEL` checkpoint is exercised once with lifecycle `residual` and once with lifecycle `satisfied`, proving checkpoint integrity does not manufacture forgetting.
+
 The common point is that the governance layer is load-bearing. The substrate model is deliberately permissive in exactly the ways the mapping verified: identity is opaque rather than content-derived, the partition filter defaults to unfiltered, deletion is physical with no tombstone, and **no operation checks authority**. Several tests assert both halves: that the substrate *would* misbehave, and that the adapter refuses anyway. A test that only checked the adapter would not prove the governance was doing any work.
 
 ## Layout
@@ -31,28 +33,32 @@ The common point is that the governance layer is load-bearing. The substrate mod
 ```text
 reference/
   agentmem_ref/
-    substrate.py             port + permissive in-memory temporal graph
-    policy.py                PAMA evaluation: base table, class floors, modifiers
-    receipts.py              schema-conformant decisions, receipts, audit events
-    adapter.py               the governed path
-    fixture_conformance.py   drives the doctrine corpus through enforcement
-    projections.py           tier-3 declarations and the freshness relation
-    residue.py               deletion residue partition and independent sweep
-    projection_governance.py governed correction, purge, and rebuild
-    portable_evidence.py     P4.5a Ed25519 portable issuer/verifier
+    substrate.py                     port + permissive in-memory temporal graph
+    policy.py                        PAMA evaluation: base table, class floors, modifiers
+    receipts.py                      schema-conformant decisions, receipts, audit events
+    adapter.py                       the governed path
+    fixture_conformance.py           drives the doctrine corpus through enforcement
+    projections.py                   tier-3 declarations and the freshness relation
+    residue.py                       deletion residue partition and independent sweep
+    projection_governance.py         governed correction, purge, and rebuild
+    portable_evidence.py             P4.5a Ed25519 portable issuer/verifier
+    agent_manifest_correlation.py    P4.5b checkpoint correlation boundary
     (selectors live in adapter.py: deterministic and seeded stochastic)
-  agentmem_ref/graphiti_driver.py   binding to a real temporal knowledge graph
-  tests/                            model, real-substrate, and portable-evidence paths
+  agentmem_ref/graphiti_driver.py     binding to a real temporal knowledge graph
+  tests/                              model, real-substrate, and interoperability paths
   run_conformance.py
 ```
 
-Schema validation uses `jsonschema`. P4.5a Ed25519 signing and public-key verification use `cryptography`, added under the explicit dependency-justification rule in `../CONTRIBUTING.md`. CI pins the direct validation profile to `jsonschema==4.26.0` and `cryptography==50.0.0`. The low-cost fixture, doctrine-boundary, and link validators remain standard-library only.
+Schema validation uses `jsonschema`. P4.5a Ed25519 signing and public-key verification use `cryptography`, added under the explicit dependency-justification rule in `../CONTRIBUTING.md`. P4.5b uses `agent-manifest==0.11.0` as a test-only comparator and does not import it from production reference modules. CI pins the direct validation profile to `jsonschema==4.26.0`, `cryptography==50.0.0`, and `agent-manifest==0.11.0`. The low-cost fixture, doctrine-boundary, and link validators remain standard-library only.
 
 ## Running it
 
 ```bash
-# reference model and portable-evidence paths
-python -m pip install jsonschema==4.26.0 cryptography==50.0.0
+# reference model and interoperability paths
+python -m pip install \
+  jsonschema==4.26.0 \
+  cryptography==50.0.0 \
+  agent-manifest==0.11.0
 python -m unittest discover -s reference/tests -t reference
 
 # stochastic containment sweep with an explicit trial count
@@ -64,7 +70,7 @@ python -m unittest discover -s reference/tests -t reference
 python reference/run_conformance.py
 ```
 
-Runs are deterministic where the contract requires determinism: identifiers are counter-based and the clock is injected, so repeated governed-adapter runs produce identical receipts and identical reports. Stochastic selection is seeded per trial, so it varies across trials and reproduces exactly for a given seed. Ed25519 signatures are deterministic for a fixed private key and canonical payload.
+Runs are deterministic where the contract requires determinism: identifiers are counter-based and the clock is injected, so repeated governed-adapter runs produce identical receipts and identical reports. Stochastic selection is seeded per trial, so it varies across trials and reproduces exactly for a given seed. Ed25519 signatures are deterministic for a fixed private key and canonical payload. P4.5b pins the external package version and upstream release commit so comparator drift is explicit rather than accidental.
 
 ## The governed path
 
@@ -74,7 +80,7 @@ evidence -> proposal -> authority envelope -> permitted action set
          -> retrieval candidate -> governed admission -> active context
 ```
 
-The adapter supplies what the substrate cannot: an authority gate before every write, always-explicit scope filtering, external lifecycle state, tombstones, and receipts. Artifacts are emitted against schemas already canonical in this repository rather than shapes invented beside the implementation: `pama-decision`, `decision-receipt`, `memory-audit-event`, `conformance-report`, and the P4.5a `portable-governance-evidence` projection.
+The adapter supplies what the substrate cannot: an authority gate before every write, always-explicit scope filtering, external lifecycle state, tombstones, and receipts. Artifacts are emitted against schemas already canonical in this repository rather than shapes invented beside the implementation: `pama-decision`, `decision-receipt`, `memory-audit-event`, `conformance-report`, P4.5a `portable-governance-evidence`, and P4.5b `agent-manifest-memory-correlation`.
 
 ## Paths exercised
 
@@ -103,6 +109,10 @@ The adapter supplies what the substrate cannot: an authority gate before every w
 | portable receipt binding | Ed25519 evidence binds the canonical receipt reference, action, policy, authority state, time, and optional isolation domains |
 | portable negative outcomes | authentic denial, unauthorized execution, and residual lifecycle state remain distinct machine-readable outcomes |
 | portable replay and trust failures | wrong action/domain/state, signature tampering, unknown issuer, rotation, and revocation timing are exercised |
+| Agent Manifest normative root | the pinned upstream implementation reproduces the v0.2 KV memory-root vector |
+| Agent Manifest DEL correlation | upstream verifier accepts an RFC 9162 delta containing `DEL`; canonical receipt and portable state refs bind the checkpoint |
+| DEL versus forgetting | the same accepted checkpoint remains compatible with either residual or satisfied Agent Memory lifecycle evidence |
+| external negative outcome | invalid consistency proof yields upstream `drift` while the correlation remains a valid record of a rejected delta |
 
 ## Known limitations
 
@@ -116,4 +126,5 @@ Stated rather than left to be discovered:
 6. Derived-state governance operates on an adapter-owned sidecar. The design spike names this as the obvious home for substrates that cannot store a projection declaration, and notes that it reintroduces the consistency problem one level up. That trade is accepted here rather than solved.
 7. Residue is measured over declared projections. State that was never declared is outside the sweep's reach by construction, which is why the declaration surface is the load-bearing part rather than the traversal.
 8. The P4.5a trust profile assumes configured Ed25519 public trust keys. Production key custody, trust discovery, certificates, and external revocation infrastructure remain outside this slice.
-9. P4.5a is substrate-independent interoperability evidence. Agent Manifest and TRACE correlation remain P4.5b/P4.5c and must be demonstrated separately.
+9. P4.5b intentionally imports Agent Manifest private checkpoint modules only in its pinned comparator tests because the upstream implementation issue and specification surface those exact functions. This is not a stable production API commitment and is isolated from Agent Memory runtime code.
+10. P4.5b proves checkpoint/delta correlation, not hardware attestation of an Agent Memory process and not TRACE action-evidence interoperability. TRACE remains P4.5c.
