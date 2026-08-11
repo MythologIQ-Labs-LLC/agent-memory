@@ -10,6 +10,24 @@ The current repository maintainer and doctrine owner is **Kevin R. Knapp** (`@Kn
 
 PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. External implementations may conform to, challenge, or extend the doctrine through the contribution process, but they do not acquire doctrine ownership by implementing it.
 
+## AI-assisted contribution authority
+
+Agent Memory adopts [`docs/policies/AI_ASSISTED_CONTRIBUTIONS.md`](docs/policies/AI_ASSISTED_CONTRIBUTIONS.md) as its repository policy for AI-assisted development and human-directed agent execution.
+
+The policy separates implementation method from repository authority:
+
+- coding agents and AI-assisted development are allowed;
+- contributors and maintainers are not required to hand-write code or manually perform every repository API action;
+- a responsible human remains accountable for the objective, material risk, and delegated authority;
+- authenticated agents may perform repository actions when directly delegated in a bounded working session or authorized by standing repository policy;
+- unbounded autonomous contribution is not accepted by default;
+- direct delegation inside Agent Memory does not create authority to act in external repositories;
+- upstream contribution rules control when they are stricter.
+
+Organization-wide inheritance is tracked separately in #85 and is not claimed merely because Agent Memory has adopted the local policy.
+
+DCO is not an active Agent Memory gate until explicit activation and enforcement are merged and discoverable.
+
 ## Decision classes
 
 Changes are reviewed according to their consequence.
@@ -94,8 +112,12 @@ A change is merge-ready when:
 2. affected doctrine and contracts are internally consistent;
 3. source provenance and reuse rights are resolved;
 4. tests/validators relevant to the change pass;
-5. the PR distinguishes what it proves from what remains unproven;
-6. material disagreement is either resolved or recorded rather than silently erased.
+5. repository authority for any agent-executed action is bounded and accountable;
+6. any explicitly active contribution-provenance requirement is satisfied;
+7. the PR distinguishes what it proves from what remains unproven;
+8. material disagreement is either resolved or recorded rather than silently erased.
+
+Where a task specifies exact-head validation, that validated head is the merge boundary. A later head must be revalidated rather than inheriting trust from an earlier result.
 
 ## Implementation neutrality
 
@@ -106,6 +128,8 @@ Conceptual adjacency does not create architectural ownership.
 ## Security-sensitive changes
 
 Security-sensitive findings should follow `SECURITY.md`. Do not force public disclosure merely to satisfy normal issue-tracking ceremony.
+
+AI assistance does not reduce the review bar for cryptography, authentication, authorization, policy enforcement, isolation boundaries, provenance, destructive lifecycle actions, or other security-sensitive surfaces. Independent validation is required when self-referential tests could mask an implementation error.
 
 ## Forks and derivative works
 
