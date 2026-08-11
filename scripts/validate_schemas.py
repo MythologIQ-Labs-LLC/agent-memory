@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Validate Agent Memory JSON Schemas and fixture memory units.
+"""Validate Agent Memory JSON Schemas, fixtures, and source-rights records.
 
 Requires the `jsonschema` package. This complements `validate_fixtures.py` by
-checking JSON Schema correctness and validating each fixture's `memory_unit`
-against the doctrine-level memory-unit schema.
+checking JSON Schema correctness, validating each fixture's `memory_unit`, and
+ensuring primary-source reuse records satisfy the repository's rights gates.
 """
 
 from __future__ import annotations
@@ -71,7 +71,95 @@ def main() -> int:
             print(f"- {error}", file=sys.stderr)
         return 1
 
-    print(f"Validated {len(list(schema_dir.glob('*.json')))} schema(s) and {fixture_count} fixture memory unit(s).")
+    source_registry_path = root / "sources" / "source-registry.json"
+    source_schema = load(schema_dir / "source-record.schema.json")
+    source_validator = jsonschema.Draft202012Validator(
+        source_schema,
+        format_checker=jsonschema.Draft202012Validator.FORMAT_CHECKER,
+    )
+
+    source_errors: list[str] = []
+    source_count = 0
+    try:
+        registry = load(source_registry_path)
+    except Exception as exc:
+        source_errors.append(f"{source_registry_path.relative_to(root)}: invalid JSON: {exc}")
+        registry = {}
+
+    records = registry.get("sources") if isinstance(registry, dict) else None
+    if not isinstance(records, list):
+        source_errors.append(f"{source_registry_path.relative_to(root)}: missing sources array")
+        records = []
+
+    seen_ids: set[str] = set()
+    for index, record in enumerate(records):
+        source_count += 1
+        location = f"sources[{index}]"
+        if not isinstance(record, dict):
+            source_errors.append(f"{source_registry_path.relative_to(root)} {location}: must be an object")
+            continue
+
+        for error in sorted(source_validator.iter_errors(record), key=lambda e: list(e.path)):
+            field = ".".join(str(part) for part in error.path)
+            suffix = f".{field}" if field else ""
+            source_errors.append(
+                f"{source_registry_path.relative_to(root)} {location}{suffix}: {error.message}"
+            )
+
+        source_id = record.get("source_id")
+        if isinstance(source_id, str):
+            if source_id in seen_ids:
+                source_errors.append(
+                    f"{source_registry_path.relative_to(root)} {location}: duplicate source_id {source_id!r}"
+                )
+            seen_ids.add(source_id)
+
+        reuse_mode = record.get("reuse_mode")
+        rights_status = record.get("rights_status")
+        reuse_basis = record.get("reuse_basis")
+
+        if reuse_mode == "licensed_reuse":
+            if rights_status != "verified_open_license":
+                source_errors.append(
+                    f"{source_registry_path.relative_to(root)} {location}: licensed_reuse requires verified_open_license"
+                )
+            if not record.get("license_spdx") or not record.get("license_url"):
+                source_errors.append(
+                    f"{source_registry_path.relative_to(root)} {location}: licensed_reuse requires license_spdx and license_url"
+                )
+
+        if reuse_mode == "permission_granted" and rights_status != "permission_verified":
+            source_errors.append(
+                f"{source_registry_path.relative_to(root)} {location}: permission_granted requires permission_verified"
+            )
+
+        if reuse_mode == "author_originated" and rights_status != "author_originated":
+            source_errors.append(
+                f"{source_registry_path.relative_to(root)} {location}: author_originated reuse requires author_originated rights_status"
+            )
+
+        if reuse_mode in {"licensed_reuse", "permission_granted", "author_originated"}:
+            if not isinstance(reuse_basis, str) or not reuse_basis.strip():
+                source_errors.append(
+                    f"{source_registry_path.relative_to(root)} {location}: reuse-oriented mode requires a documented reuse_basis"
+                )
+
+        if rights_status == "unknown" and reuse_mode not in {"citation_only", "independent_synthesis"}:
+            source_errors.append(
+                f"{source_registry_path.relative_to(root)} {location}: unknown rights status may only cite or independently synthesize"
+            )
+
+    if source_errors:
+        print("Source-rights validation failed:", file=sys.stderr)
+        for error in source_errors:
+            print(f"- {error}", file=sys.stderr)
+        return 1
+
+    schema_count = len(list(schema_dir.glob("*.json")))
+    print(
+        f"Validated {schema_count} schema(s), {fixture_count} fixture memory unit(s), "
+        f"and {source_count} source-rights record(s)."
+    )
     return 0
 
 
