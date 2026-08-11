@@ -6,7 +6,7 @@
 
 From working memory to inherited state. From biological theory to executable conformance. From probabilistic inference to bounded authority.
 
-[![Validate Doctrine Evidence](https://github.com/Knapp-Kevin/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/Knapp-Kevin/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
+[![Validate Doctrine Evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
 ![Architecture](https://img.shields.io/badge/Architecture-Reference%20Architecture-334155)
 ![ADRs](https://img.shields.io/badge/ADRs-19%20Accepted%20%7C%201%20Proposed-2563eb)
 ![Conformance](https://img.shields.io/badge/Conformance-Level%206%20Spec-7c3aed)
@@ -131,7 +131,11 @@ See **[PAMA](docs/pama/README.md)**, **[Governance and PAMA](docs/04-governance-
 ## The system at a glance
 
 <p align="center">
-  <img src="assets/agent-memory-flow.svg" alt="Agent Memory governed memory loop: experience becomes evidence and an estimate, PAMA constrains the permitted actions, a consequence is committed with a receipt, retained state is recalled through policy, and memory influences future context." width="100%" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/agent-memory-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/agent-memory-flow-light.svg">
+    <img src="assets/agent-memory-flow-light.svg" alt="Agent Memory governed memory loop: experience becomes evidence and an estimate, PAMA constrains the permitted actions, a consequence is committed with a receipt, retained state is recalled through policy, and memory influences future context." width="100%">
+  </picture>
 </p>
 
 The critical invariant is:
