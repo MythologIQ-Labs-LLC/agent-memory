@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/Knapp-Kevin/agent-memory/schemas/memory-unit.schema.json",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/memory-unit.schema.json",
   "title": "Agent Memory Unit",
   "description": "Doctrine-level memory unit schema. New governed-uncertainty fields are additive for backward compatibility with early fixtures.",
   "type": "object",

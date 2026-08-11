@@ -245,3 +245,53 @@ Full validation gate green at branch head. #43 left open for merge-time
 closure per the branch owner's no-partial-satisfaction stance. #48 cross-linked
 into #46 as the P3 slice with Graphiti-first sequencing note. Roadmap P1-P10
 assessed and endorsed; P1 (#5) requires external repository access.
+
+---
+
+### Entry #7: P2 SUBSTRATE MAPPING AND ORGANIZATION TRANSFER
+
+**Timestamp**: 2026-08-11T08:30:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("org-transfer:" + git tree hash at HEAD)
+= c1744ba6d1b1f97d5c03e69ecaf0ab48c00852820e942f0649e2bba02a1f166b
+```
+
+**Previous Hash**: ade0126711cd9b4195b850386a82a832f997075fba0b4ce5c3509dc60c740472
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= 9be289079d826c6127eb8e6e912badd553101fc51a11a6bc757ec2d72e70149f
+```
+
+**Decision**: Two changes recorded together.
+
+P2 executed: runtime-evidence program opened under docs/programs/, and the
+first substrate (Graphiti, graphiti-core 0.29.3) mapped across the fourteen
+conformance concerns from its public source tree, registered in the source
+registry as an external comparator under independent synthesis. Mapping is
+documentation-verified only and explicitly constitutes no runtime evidence.
+Load-bearing findings: ordinary ingestion is LLM-mediated and therefore an
+estimator that may propose but must not commit; no authorization layer exists;
+tenancy is a permissive query-filter convention; deletion is physical without
+tombstoning; decision reasoning is discarded. The substrate's no-LLM
+direct-write paths are the seam that makes a governed wrapper viable. Five
+questions recorded as requiring an executed probe rather than inferred.
+
+Repository transferred to MythologIQ-Labs-LLC/agent-memory for public
+distribution. Thirteen active owner references updated across citation
+metadata, README badge, governance canonical-upstream statement, the two
+prescribed cross-repo backlink strings, and seven schema $id identifiers;
+git remote repointed. Four references deliberately preserved as historical
+anchors: the point-in-time research brief target, this ledger's own header,
+and the pinned baseline audit anchor in doc 25, which records the repository
+and commit the first audit pass actually ran against. Rewriting those would
+falsify history to flatter present naming. Schema $id identity changed at
+the pre-public-release moment, when no external consumer can have pinned the
+prior identifiers; this is a schema-registry identity event and is flagged
+for Governor review rather than treated as cosmetic.
