@@ -1,79 +1,70 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="350" viewBox="0 0 1200 350" role="img" aria-labelledby="title desc">
   <title id="title">Agent Memory governed memory loop</title>
-  <desc id="desc">A compact overview showing interpretation, PAMA governance, commitment, retained memory, governed recall, and return to active agent context.</desc>
+  <desc id="desc">A compact three-stage overview: interpretation, PAMA governance and commit, then retained memory and governed recall. The exception path remains inside the governance stage.</desc>
   <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#8b949e"/>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#8b949e"/>
     </marker>
-    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#58a6ff"/>
-    </marker>
-    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L0,6 L9,3 z" fill="#f85149"/>
+    <marker id="arrowBlue" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#58a6ff"/>
     </marker>
   </defs>
 
-  <rect x="1" y="1" width="1198" height="428" rx="18" fill="#0d1117" stroke="#30363d"/>
+  <rect x="1" y="1" width="1198" height="348" rx="18" fill="#0d1117" stroke="#30363d"/>
 
-  <text x="44" y="46" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="27" font-weight="700">Governed memory loop</text>
-  <text x="44" y="73" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="15">Inference may be uncertain. Consequences remain inside an explicit authority envelope.</text>
+  <text x="40" y="42" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="26" font-weight="700">Governed memory loop</text>
+  <text x="40" y="67" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="15">Inference may be uncertain. Consequences remain inside an explicit authority envelope.</text>
 
-  <text x="48" y="112" fill="#79c0ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">01  INTERPRET</text>
-  <text x="442" y="112" fill="#d2a8ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">02  GOVERN &amp; COMMIT</text>
-  <text x="838" y="112" fill="#7ee787" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.2">03  RETAIN &amp; RECALL</text>
+  <text x="44" y="101" fill="#79c0ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">01  INTERPRET</text>
+  <text x="438" y="101" fill="#d2a8ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">02  GOVERN &amp; COMMIT</text>
+  <text x="836" y="101" fill="#7ee787" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1.1">03  RETAIN &amp; RECALL</text>
 
-  <rect x="42" y="130" width="314" height="58" rx="10" fill="#161b22" stroke="#388bfd"/>
-  <text x="199" y="154" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Experience / query / event</text>
-  <text x="199" y="174" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">New state enters the memory pipeline</text>
+  <rect x="40" y="118" width="316" height="54" rx="10" fill="#161b22" stroke="#388bfd"/>
+  <text x="198" y="141" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Experience / query / event</text>
+  <text x="198" y="159" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">New state enters the memory pipeline</text>
 
-  <line x1="199" y1="188" x2="199" y2="210" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="42" y="215" width="314" height="58" rx="10" fill="#161b22" stroke="#388bfd"/>
-  <text x="199" y="239" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Evidence + provenance</text>
-  <text x="199" y="259" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Origin, scope, time, derivation</text>
+  <line x1="198" y1="172" x2="198" y2="188" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="40" y="194" width="316" height="54" rx="10" fill="#161b22" stroke="#388bfd"/>
+  <text x="198" y="217" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Evidence + provenance</text>
+  <text x="198" y="235" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Origin, scope, time, derivation</text>
 
-  <line x1="199" y1="273" x2="199" y2="295" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="42" y="300" width="314" height="58" rx="10" fill="#161b22" stroke="#388bfd"/>
-  <text x="199" y="324" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Estimate / proposal</text>
-  <text x="199" y="344" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">May be probabilistic or learned</text>
+  <line x1="198" y1="248" x2="198" y2="264" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="40" y="270" width="316" height="54" rx="10" fill="#161b22" stroke="#388bfd"/>
+  <text x="198" y="293" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Estimate / proposal</text>
+  <text x="198" y="311" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">May be probabilistic or learned</text>
 
-  <line x1="356" y1="329" x2="423" y2="329" stroke="#58a6ff" stroke-width="2.4" marker-end="url(#arrowBlue)"/>
+  <line x1="356" y1="297" x2="420" y2="297" stroke="#58a6ff" stroke-width="2.3" marker-end="url(#arrowBlue)"/>
 
-  <rect x="435" y="130" width="330" height="76" rx="12" fill="#1c1628" stroke="#a371f7" stroke-width="1.5"/>
-  <text x="600" y="157" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="700">PAMA governance envelope</text>
-  <text x="600" y="179" text-anchor="middle" fill="#d2a8ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">M0–M5 target · operation · A0–A5 authority</text>
-  <text x="600" y="195" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11">Policy constrains what can happen next</text>
+  <rect x="434" y="118" width="332" height="70" rx="12" fill="#1c1628" stroke="#a371f7" stroke-width="1.5"/>
+  <text x="600" y="144" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="700">PAMA governance envelope</text>
+  <text x="600" y="166" text-anchor="middle" fill="#d2a8ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">M0–M5 target · operation · A0–A5 authority</text>
+  <text x="600" y="181" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Policy constrains what can happen next</text>
 
-  <path d="M765 164 C806 164, 800 190, 800 208" fill="none" stroke="#f85149" stroke-width="2" marker-end="url(#arrowRed)"/>
-  <rect x="782" y="216" width="180" height="50" rx="9" fill="#251719" stroke="#f85149"/>
-  <text x="872" y="238" text-anchor="middle" fill="#ff7b72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">BLOCK · REVIEW · VERIFY</text>
-  <text x="872" y="255" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11">No consequential commit</text>
+  <rect x="434" y="198" width="332" height="34" rx="8" fill="#251719" stroke="#f85149"/>
+  <text x="600" y="220" text-anchor="middle" fill="#ff7b72" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">EXCEPTION PATH: BLOCK · REVIEW · VERIFY</text>
 
-  <line x1="600" y1="206" x2="600" y2="228" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="435" y="233" width="330" height="58" rx="10" fill="#161b22" stroke="#a371f7"/>
-  <text x="600" y="257" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Permitted action set</text>
-  <text x="600" y="277" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Selection can only occur inside this set</text>
+  <line x1="600" y1="188" x2="600" y2="240" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="434" y="246" width="332" height="54" rx="10" fill="#161b22" stroke="#a371f7"/>
+  <text x="600" y="269" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Permitted action set</text>
+  <text x="600" y="287" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Selection only occurs inside this set</text>
 
-  <line x1="600" y1="291" x2="600" y2="313" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="435" y="318" width="330" height="58" rx="10" fill="#161b22" stroke="#a371f7"/>
-  <text x="600" y="342" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Commit + decision receipt</text>
-  <text x="600" y="362" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Selected action · before/after · evidence</text>
+  <line x1="600" y1="300" x2="600" y2="310" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="434" y="314" width="332" height="28" rx="8" fill="#161b22" stroke="#a371f7"/>
+  <text x="600" y="333" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="14" font-weight="600">Commit + decision receipt</text>
 
-  <line x1="765" y1="347" x2="821" y2="347" stroke="#58a6ff" stroke-width="2.4" marker-end="url(#arrowBlue)"/>
+  <line x1="766" y1="328" x2="820" y2="328" stroke="#58a6ff" stroke-width="2.3" marker-end="url(#arrowBlue)"/>
 
-  <rect x="835" y="130" width="323" height="58" rx="10" fill="#122019" stroke="#3fb950"/>
-  <text x="996" y="154" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Retained memory state</text>
-  <text x="996" y="174" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Durable, scoped, correctable, forgettable</text>
+  <rect x="834" y="118" width="324" height="54" rx="10" fill="#122019" stroke="#3fb950"/>
+  <text x="996" y="141" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Retained memory state</text>
+  <text x="996" y="159" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Durable, scoped, correctable, forgettable</text>
 
-  <line x1="996" y1="188" x2="996" y2="210" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="835" y="215" width="323" height="58" rx="10" fill="#122019" stroke="#3fb950"/>
-  <text x="996" y="239" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Governed recall</text>
-  <text x="996" y="259" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Relevance is filtered by scope and policy</text>
+  <line x1="996" y1="172" x2="996" y2="188" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="834" y="194" width="324" height="54" rx="10" fill="#122019" stroke="#3fb950"/>
+  <text x="996" y="217" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Governed recall</text>
+  <text x="996" y="235" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Relevance filtered by scope and policy</text>
 
-  <line x1="996" y1="273" x2="996" y2="295" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
-  <rect x="835" y="300" width="323" height="58" rx="10" fill="#122019" stroke="#3fb950"/>
-  <text x="996" y="324" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Active agent context</text>
-  <text x="996" y="344" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">Memory may now influence future behavior</text>
-
-  <path d="M996 358 C996 402, 199 402, 199 370" fill="none" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#arrowBlue)"/>
-  <text x="600" y="414" text-anchor="middle" fill="#79c0ff" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12">future behavior creates new evidence</text>
+  <line x1="996" y1="248" x2="996" y2="264" stroke="#8b949e" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="834" y="270" width="324" height="54" rx="10" fill="#122019" stroke="#3fb950"/>
+  <text x="996" y="293" text-anchor="middle" fill="#f0f6fc" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="16" font-weight="600">Active agent context</text>
+  <text x="996" y="311" text-anchor="middle" fill="#8b949e" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13">Memory may influence future behavior</text>
 </svg>

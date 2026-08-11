@@ -2,9 +2,11 @@
 
 Agent Memory is a public reference architecture with one canonical doctrine tree, not a collection of equally authoritative implementation opinions.
 
-## Maintainer
+## Stewardship and maintainer
 
-The current repository maintainer and doctrine owner is **Kevin R. Knapp** (`@Knapp-Kevin`).
+The repository is stewarded by **MythologIQ Labs LLC** through `MythologIQ-Labs-LLC/agent-memory`.
+
+The current repository maintainer and doctrine owner is **Kevin R. Knapp** (`@Knapp-Kevin`). Organization stewardship does not rewrite individual authorship provenance.
 
 PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. External implementations may conform to, challenge, or extend the doctrine through the contribution process, but they do not acquire doctrine ownership by implementing it.
 
@@ -109,4 +111,4 @@ Security-sensitive findings should follow `SECURITY.md`. Do not force public dis
 
 The Apache-2.0 license permits forks and derivative works under its terms. A derivative project may change its own doctrine, but it should not present modified doctrine as an unchanged canonical decision of this repository.
 
-The canonical upstream doctrine is the state merged into `Knapp-Kevin/agent-memory` unless an explicit release or version reference says otherwise.
+The canonical upstream doctrine is the state merged into `MythologIQ-Labs-LLC/agent-memory` unless an explicit release or version reference says otherwise.
