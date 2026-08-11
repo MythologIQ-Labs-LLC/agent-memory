@@ -30,7 +30,9 @@ sys.path.insert(0, str(REFERENCE_DIR))
 from agentmem_ref import fixture_conformance, policy, receipts  # noqa: E402
 from agentmem_ref.adapter import Clock, GovernedMemoryAdapter, StochasticSelector  # noqa: E402
 from agentmem_ref.graphiti_driver import graphiti_available  # noqa: E402
+from agentmem_ref.projection_governance import ProjectionGovernor  # noqa: E402
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
+from agentmem_ref import projections as proj  # noqa: E402
 
 ADAPTER_VERSION = "0.1.0"
 DOCTRINE_VERSION = "v0.3"
@@ -100,6 +102,52 @@ def _stochastic_sweep(trials: int) -> dict:
     return {"trials": trials, "escapes": escapes, "distinct_actions": sorted(observed)}
 
 
+def _derived_state_probe() -> dict:
+    """Purge a derivation chain and measure residue independently.
+
+    Reports the partition, not a volume. `undeclared_residual` is a hard gate:
+    any nonzero value is a failed deletion regardless of how much was removed.
+    """
+    adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant="tenant-a", clock=Clock())
+    governor = ProjectionGovernor(adapter)
+    source = "mem:probe"
+    adapter.commit_proposal(
+        policy.Proposal(
+            proposal_id="probe", actor_id="agent:planner", charter_version="c1",
+            target_reference=source, target_class=policy.M2, scope="tenant-a",
+            operation="promotion", current_strength="reinforced", proposed_strength="promoted",
+            downstream_authority=policy.A1, reversibility="reversible", risk_class="low",
+            evidence_refs=("ev:1",),
+        ),
+        "a claim",
+    )
+    governor.declare("sum:1", (source,), proj.ESTIMATOR_MEDIATED,
+                     proj.RECOVERABLE_CONTENT, proj.APPROXIMABLE, "tenant-a")
+    governor.declare("sum:2", ("sum:1",), proj.ESTIMATOR_MEDIATED,
+                     proj.RECOVERABLE_CONTENT, proj.APPROXIMABLE, "tenant-a")
+    governor.declare("export:1", (source,), proj.DETERMINISTIC,
+                     proj.RECOVERABLE_CONTENT, proj.IRREPRODUCIBLE, "tenant-a", reachable=False)
+    total = 3
+
+    result = governor.purge(
+        policy.Proposal(
+            proposal_id="probe-purge", actor_id="agent:planner", charter_version="c1",
+            target_reference=source, target_class=policy.M2, scope="tenant-a",
+            operation="permanent_deletion", current_strength="promoted",
+            proposed_strength="not_applicable", downstream_authority=policy.A1,
+            reversibility="irreversible", risk_class="low", evidence_refs=("ev:1",),
+            approval_refs=("approval:dpo",), review_satisfied=True,
+        ),
+        source,
+    )
+    return {
+        "buckets": result.buckets,
+        "undeclared_count": len(result.undeclared),
+        "derived_total": total,
+        "hard_gate_passed": result.hard_gate_passed,
+    }
+
+
 def _exemptions(substrate_executed: bool) -> list[str]:
     common = [
         "No conformance level is claimed. The corpus is driven through the adapter's authority "
@@ -127,6 +175,7 @@ def build_report(trials: int = 200) -> dict:
     names, passed, failed = _run_suite()
     corpus = fixture_conformance.run()
     sweep = _stochastic_sweep(trials)
+    derived = _derived_state_probe()
     report = {
         "schema_version": "1.0.0",
         "implementation": "agent-memory reference governed adapter",
@@ -138,7 +187,10 @@ def build_report(trials: int = 200) -> dict:
         "fixtures_passed": corpus["fixtures_passed"],
         "fixtures_failed": corpus["fixtures_failed"],
         "trials_run": len(names) + len(corpus["fixtures_run"]) + sweep["trials"],
-        "metrics": {"stochastic_action_set_violation_rate": sweep["escapes"] / max(sweep["trials"], 1)},
+        "metrics": {
+            "stochastic_action_set_violation_rate": sweep["escapes"] / max(sweep["trials"], 1),
+            "deletion_residue_rate": derived["undeclared_count"] / max(derived["derived_total"], 1),
+        },
         "known_exemptions": _exemptions(substrate_executed) + fixture_conformance.exemptions(),
         "known_failures": corpus["fixtures_failed"] + failed,
         "metric_extensions": {
@@ -152,6 +204,8 @@ def build_report(trials: int = 200) -> dict:
             "stochastic_trials": sweep["trials"],
             "stochastic_escapes": sweep["escapes"],
             "stochastic_distinct_actions": sweep["distinct_actions"],
+            "derived_state_residue_buckets": derived["buckets"],
+            "derived_state_hard_gate_passed": derived["hard_gate_passed"],
         },
     }
     receipts.validate("conformance-report.schema.json", report)
@@ -173,6 +227,9 @@ def main() -> int:
         print(rendered, end="")
     if report["metric_extensions"]["stochastic_escapes"]:
         print("stochastic containment violated", file=sys.stderr)
+        return 1
+    if not report["metric_extensions"]["derived_state_hard_gate_passed"]:
+        print("undeclared deletion residue detected", file=sys.stderr)
         return 1
     return 1 if report["known_failures"] else 0
 

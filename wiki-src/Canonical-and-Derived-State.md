@@ -1,6 +1,6 @@
 # Canonical and Derived State
 
-> **Status: design spike.** This page describes vocabulary and proposed invariants, not implemented behavior. Nothing here has been executed, and no Architecture Decision Record has adopted it. It is published because the definitions are what make the requirements testable — the alternative is a requirement everyone agrees with and no one can fail.
+> **Status: design executed, not adopted.** The vocabulary and invariants below began as a design spike and are now implemented and exercised in continuous integration, including the parts a persuasive demonstration would skip. No Architecture Decision Record has adopted them, and executing a bar is not the same as accepting the decision it supports. See **[Runtime Evidence](Runtime-Evidence)** for what that distinction means here.
 
 Deleting a memory is easy. Proving it is gone is the hard part, and almost every hard case involves state that was *derived* from the memory rather than the memory itself.
 
@@ -110,7 +110,7 @@ Two rules keep the measurement honest. State that cannot be enumerated goes in t
 
 ## Where this sits
 
-This slice is why ADR-020 remains Proposed. Its proof bar requires that derived-memory deletion residue be *tested*, and that single line sits on top of everything above. The spike fixes the bar before building the thing that has to clear it — including the parts a persuasive demonstration would quietly skip: reaching the full transitive closure, matching an independent sweep against the receipt, and refusing an automatic rebuild.
+This slice exists because ADR-020's proof bar requires that derived-memory deletion residue be *tested*, and that single line sits on top of everything above. The bar was fixed before the implementation that had to clear it, and all seven of its items now execute: a declaration surface for tier-3 state, freshness computed as a relation rather than a flag, correction that supersedes without erasing, a transitive purge, an independent sweep that catches a one-hop purge, and refusal of automatic estimator-mediated rebuild. ADR-020 remains Proposed: it has further validation items, and clearing one bar is not acceptance.
 
 ## Canonical sources
 
@@ -123,4 +123,4 @@ This slice is why ADR-020 remains Proposed. Its proof bar requires that derived-
 
 - **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)** for the forgetting operations this refines
 - **[Security and Privacy](Security-and-Privacy)** for deletion residue as an attack surface
-- **[Runtime Evidence](Runtime-Evidence)** for what has actually been executed, which is not this
+- **[Runtime Evidence](Runtime-Evidence)** for the evidence bar these paths are measured against
