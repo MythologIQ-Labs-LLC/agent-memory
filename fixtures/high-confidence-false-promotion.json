@@ -1,5 +1,6 @@
 {
   "fixture_id": "high-confidence-false-promotion",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "A model is highly confident in a false claim and requests durable crystallization.",
   "expected_behavior": {
