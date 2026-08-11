@@ -150,12 +150,7 @@ def issue_trace_action_evidence(
     execution_outcome: str,
     execution_time: str,
 ) -> dict:
-    """Issue a cMCP-compatible external execution-evidence envelope.
-
-    The detached payload carries only content-free Agent Memory references plus
-    opaque domain references already present in the signed P4.5a evidence. It
-    never copies raw memory or asks TRACE/cMCP to interpret PAMA.
-    """
+    """Issue a cMCP-compatible external execution-evidence envelope."""
     if execution_outcome not in _OUTCOMES:
         raise ValueError(f"unsupported external execution outcome: {execution_outcome}")
     if not isinstance(call_id, str) or not call_id:
@@ -181,7 +176,11 @@ def issue_trace_action_evidence(
         "execution_outcome": execution_outcome,
         "execution_time": execution_time,
     }
-    for name in ("source_domain_ref", "destination_domain_ref"):
+    for name in (
+        "source_domain_ref",
+        "destination_domain_ref",
+        "domain_authorization_state_ref",
+    ):
         value = scope.get(name)
         if value is not None:
             if not isinstance(value, str) or not value:
@@ -209,7 +208,11 @@ def _portable_scope_failures(payload: Mapping[str, object], portable_evidence: M
     if not isinstance(scope, Mapping):
         return ["portable_scope_missing"]
     failures: list[str] = []
-    for name in ("source_domain_ref", "destination_domain_ref"):
+    for name in (
+        "source_domain_ref",
+        "destination_domain_ref",
+        "domain_authorization_state_ref",
+    ):
         signed = scope.get(name)
         detached = payload.get(name)
         if signed != detached:
@@ -227,14 +230,9 @@ def verify_trace_action_evidence(
     observed_call_id: str | None = None,
     observed_action_ref: str | None = None,
     authority_valid_at_execution: bool | None = None,
+    domain_authorization_valid_at_execution: bool | None = None,
 ) -> dict:
-    """Verify TRACE/cMCP action evidence without importing Agent Memory semantics.
-
-    TRACE receipt validity, Agent Memory governance, runtime authorization, and
-    lifecycle satisfaction remain separate result dimensions. Unknown external
-    issuer trust is ``receipt_unverified`` rather than ``receipt_invalid`` when
-    every independently checkable binding still holds.
-    """
+    """Verify TRACE/cMCP action evidence without importing Agent Memory semantics."""
     if bundle is None:
         portable_result = verify_evidence(
             portable_evidence,
@@ -307,7 +305,7 @@ def verify_trace_action_evidence(
 
     try:
         expected_hash = detached_payload_hash(payload)
-    except Exception:  # rfc8785 exposes several canonicalization errors
+    except Exception:
         expected_hash = ""
         failures.append("detached_payload_canonicalization_failed")
     if envelope.get("evidence_hash") != expected_hash:
@@ -347,7 +345,13 @@ def verify_trace_action_evidence(
         destination_domain_ref=(
             str(payload.get("destination_domain_ref")) if payload.get("destination_domain_ref") is not None else None
         ),
+        domain_authorization_state_ref=(
+            str(payload.get("domain_authorization_state_ref"))
+            if payload.get("domain_authorization_state_ref") is not None
+            else None
+        ),
         authority_valid_at_execution=authority_valid_at_execution,
+        domain_authorization_valid_at_execution=domain_authorization_valid_at_execution,
     )
     portable_result = verify_evidence(
         portable_evidence,
