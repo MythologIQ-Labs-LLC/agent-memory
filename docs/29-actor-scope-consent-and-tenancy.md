@@ -1,5 +1,7 @@
 # Actor Scope, Consent, and Tenancy
 
+> Canonical requirement: [ADR-016](adr/ADR-016-actor-scope-consent-and-tenancy-are-required.md)
+
 ## Purpose
 
 Memory authority is never universal by default.

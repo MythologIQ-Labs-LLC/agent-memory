@@ -1,5 +1,7 @@
 # Retention, Deletion, and Tombstones
 
+> Canonical requirement: [ADR-015](adr/ADR-015-retention-deletion-and-tombstones-are-required.md)
+
 ## Purpose
 
 Forgetting is not one operation.

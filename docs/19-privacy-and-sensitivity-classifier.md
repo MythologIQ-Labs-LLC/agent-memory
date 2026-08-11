@@ -1,5 +1,7 @@
 # Privacy and Sensitivity Classifier
 
+> Canonical requirement: [ADR-012](adr/ADR-012-privacy-and-sensitivity-classification-is-required.md)
+
 ## Purpose
 
 Persistent memory changes privacy from a one-response concern into a lifecycle concern.
@@ -18,7 +20,7 @@ Sensitive information can be exposed when it is:
 
 The sensitivity classifier helps estimate what handling a memory may require.
 
-It does not grant permission.
+It does not grant permission. Permission belongs to PAMA: every storage, sharing, export, or deletion consequence a sensitivity estimate suggests is authorized (or refused) through the mutation-authority path of [`04-governance-and-pama.md`](04-governance-and-pama.md). Classifier output enters that path as one evidence signal — weighted per [`16-source-trust-and-reputation.md`](16-source-trust-and-reputation.md) where source-derived — and sensitivity constraints are enforced at recall time by the governed recall planner of [`26-governed-recall-planner.md`](26-governed-recall-planner.md).
 
 > Sensitivity classification may be probabilistic. Storage, recall, sharing, export, and deletion consequences must remain governed.
 

@@ -1,5 +1,6 @@
 {
   "fixture_id": "stochastic-retrieval-policy-envelope",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "A stochastic retriever may vary ordering among permitted memories but may never select a prohibited candidate.",
   "expected_behavior": {
@@ -9,8 +10,13 @@
   },
   "governed_uncertainty": {
     "requested_action": "select_recall_candidate",
-    "permitted_actions": ["admit_memory_a", "admit_memory_b"],
-    "prohibited_actions": ["admit_memory_secret"],
+    "permitted_actions": [
+      "admit_memory_a",
+      "admit_memory_b"
+    ],
+    "prohibited_actions": [
+      "admit_memory_secret"
+    ],
     "selected_action": "admit_memory_a",
     "selection_mode": "stochastic",
     "expected_invariants": [
@@ -40,13 +46,20 @@
     "saturation": {
       "sigma": 0.5,
       "calibrated": true,
-      "durability_dimensions": ["not_material_to_recall_permission"]
+      "durability_dimensions": [
+        "not_material_to_recall_permission"
+      ]
     },
     "authority": {
       "pama_outcome": "allow_with_ledger",
       "risk_class": "medium",
-      "permitted_actions": ["admit_memory_a", "admit_memory_b"],
-      "prohibited_actions": ["admit_memory_secret"],
+      "permitted_actions": [
+        "admit_memory_a",
+        "admit_memory_b"
+      ],
+      "prohibited_actions": [
+        "admit_memory_secret"
+      ],
       "selection_mode": "stochastic"
     },
     "created_at": "2026-08-10T00:00:00Z"

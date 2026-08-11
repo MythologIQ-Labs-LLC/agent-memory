@@ -1,5 +1,6 @@
 {
   "fixture_id": "unsafe-multi-memory-composition",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "Individually admissible memories become unsafe when assembled together.",
   "expected_behavior": {
@@ -9,8 +10,14 @@
   },
   "governed_uncertainty": {
     "requested_action": "assemble_context",
-    "permitted_actions": ["quarantine_composition", "require_review", "redact_then_recheck"],
-    "prohibited_actions": ["assemble_context"],
+    "permitted_actions": [
+      "quarantine_composition",
+      "require_review",
+      "redact_then_recheck"
+    ],
+    "prohibited_actions": [
+      "assemble_context"
+    ],
     "selected_action": "quarantine_composition",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -40,13 +47,21 @@
     "saturation": {
       "sigma": 0.6,
       "calibrated": true,
-      "durability_dimensions": ["composition_relevance"]
+      "durability_dimensions": [
+        "composition_relevance"
+      ]
     },
     "authority": {
       "pama_outcome": "quarantine",
       "risk_class": "high",
-      "permitted_actions": ["quarantine_composition", "require_review", "redact_then_recheck"],
-      "prohibited_actions": ["assemble_context"],
+      "permitted_actions": [
+        "quarantine_composition",
+        "require_review",
+        "redact_then_recheck"
+      ],
+      "prohibited_actions": [
+        "assemble_context"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-10T00:00:00Z"

@@ -1,5 +1,6 @@
 {
   "fixture_id": "policy-estimator-version-drift",
+  "fixture_version": "1.0.0",
   "class": "governed_uncertainty",
   "description": "A prior authorization was produced under older policy or estimator versions and cannot be silently reused.",
   "expected_behavior": {
@@ -9,8 +10,13 @@
   },
   "governed_uncertainty": {
     "requested_action": "reuse_prior_authorization",
-    "permitted_actions": ["revalidate", "require_review"],
-    "prohibited_actions": ["commit_with_stale_receipt"],
+    "permitted_actions": [
+      "revalidate",
+      "require_review"
+    ],
+    "prohibited_actions": [
+      "commit_with_stale_receipt"
+    ],
     "selected_action": "revalidate",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -40,14 +46,21 @@
     "saturation": {
       "sigma": 0.95,
       "calibrated": true,
-      "durability_dimensions": ["prior_certification"]
+      "durability_dimensions": [
+        "prior_certification"
+      ]
     },
     "authority": {
       "pama_outcome": "require_review",
       "risk_class": "high",
       "policy_version": "policy-v2",
-      "permitted_actions": ["revalidate", "require_review"],
-      "prohibited_actions": ["commit_with_stale_receipt"],
+      "permitted_actions": [
+        "revalidate",
+        "require_review"
+      ],
+      "prohibited_actions": [
+        "commit_with_stale_receipt"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-10T00:00:00Z"

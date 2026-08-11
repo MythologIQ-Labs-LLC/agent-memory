@@ -1,5 +1,7 @@
 # Memory Threat Model
 
+> Canonical requirement: [ADR-008](adr/ADR-008-memory-threat-model-is-required.md)
+
 ## Purpose
 
 Persistent memory turns an agent from a session-bound system into a stateful system whose mistakes, compromises, and authority errors can survive the interaction that created them.
@@ -9,6 +11,8 @@ This threat model defines the major adversarial and accidental failure classes t
 The core security rule is:
 
 > Memory content may be uncertain or adversarial. Memory authority must not be inferred from content, confidence, similarity, repetition, or apparent usefulness.
+
+The contracts that enforce that rule live elsewhere; this document names the attacks, those documents own the defenses: mutation authority in [`04-governance-and-pama.md`](04-governance-and-pama.md) and the decision table of [`33-pama-decision-table.md`](33-pama-decision-table.md), evidence weighting in [`16-source-trust-and-reputation.md`](16-source-trust-and-reputation.md), and recall-time admission in [`26-governed-recall-planner.md`](26-governed-recall-planner.md). Probabilistic detectors throughout this threat model estimate risk; they never grant or revoke authority.
 
 ## Assets
 
@@ -326,7 +330,7 @@ scrutiny degrades -> marginal candidate approved under fatigue -> durable author
 Controls:
 
 - admission cost: candidates must clear evidence-quality floors before consuming review capacity, so flooding pays the evidence cost per candidate, not the reviewer
-- pre-adjudication triage separating "needs adjudication" from "worth a look" by consequence, per the review-budget rules of the memory economics doctrine
+- pre-adjudication triage separating "needs adjudication" from "worth a look" by consequence, per the review-budget rules of [`37-memory-economics-and-budget-policy.md`](37-memory-economics-and-budget-policy.md)
 - per-source and per-estimator rate accounting on promotion proposals; a source whose candidate volume spikes is itself an anomaly signal feeding source trust
 - batched review windows with explicit capacity, so saturation becomes a visible queue-depth metric instead of silent scrutiny decay
 - fatigue never relaxes the gate: queue pressure produces conservative interim state, never auto-approval — load-shedding only as a versioned policy mutation
