@@ -1,8 +1,8 @@
 """P4.5b correlation with the Agent Manifest memory checkpoint protocol.
 
 Agent Manifest owns checkpoint construction, RFC 9162 consistency proofs, TTL,
-sequence, and delta-budget verification.  This module does not reimplement that
-protocol.  It content-addresses the checkpoint tuple, proves that the canonical
+sequence, and delta-budget verification. This module does not reimplement that
+protocol. It content-addresses the checkpoint tuple, proves that the canonical
 Agent Memory receipt references that checkpoint, and preserves the external
 checkpoint verdict beside Agent Memory governance and lifecycle outcomes.
 """
@@ -51,7 +51,7 @@ def checkpoint_payload(checkpoint: object) -> dict:
     """Project only fields Agent Manifest v0.2 binds into a checkpoint.
 
     The upstream protocol defines the bound tuple as
-    ``{memory_root, tree_size, seq, approved_at, ttl_seconds}``.  We preserve
+    ``{memory_root, tree_size, seq, approved_at, ttl_seconds}``. We preserve
     exactly that tuple here and intentionally omit operation content and the
     upstream verifier's internal proof representation.
     """
@@ -99,12 +99,12 @@ def correlate_agent_manifest_delta(
     """Bind an externally verified Agent Manifest delta to Agent Memory evidence.
 
     ``delta_accepted`` and ``delta_reason`` MUST come from the pinned Agent
-    Manifest verifier (or another conforming implementation).  This function
+    Manifest verifier (or another conforming implementation). This function
     never recomputes a consistency proof, TTL verdict, sequence verdict, or
     delta budget; those semantics remain owned by Agent Manifest.
 
     A rejected delta still yields a valid correlation artifact when the records
-    are correctly bound.  Likewise, an accepted ``DEL`` never upgrades Agent
+    are correctly bound. Likewise, an accepted ``DEL`` never upgrades Agent
     Memory lifecycle satisfaction from ``residual`` to ``satisfied``.
     """
     if delta_reason not in DELTA_REASONS:
@@ -118,6 +118,7 @@ def correlate_agent_manifest_delta(
 
     previous = checkpoint_payload(previous_checkpoint)
     new = checkpoint_payload(new_checkpoint)
+    previous_ref = checkpoint_reference(previous_checkpoint)
     checkpoint_ref = checkpoint_reference(new_checkpoint)
 
     failures: list[str] = []
@@ -134,6 +135,15 @@ def correlate_agent_manifest_delta(
     evidence_refs = canonical_receipt.get("evidence_refs", [])
     if not isinstance(evidence_refs, list) or checkpoint_ref not in evidence_refs:
         failures.append("receipt_missing_checkpoint_ref")
+
+    state = portable_evidence.get("state")
+    if not isinstance(state, Mapping):
+        failures.append("portable_state_binding_missing")
+    else:
+        if state.get("before_ref") != previous_ref:
+            failures.append("before_checkpoint_ref_mismatch")
+        if state.get("after_ref") != checkpoint_ref:
+            failures.append("after_checkpoint_ref_mismatch")
 
     governance = portable_evidence.get("governance")
     if not isinstance(governance, Mapping):
