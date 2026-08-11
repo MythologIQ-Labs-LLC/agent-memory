@@ -26,6 +26,7 @@ AGENT_MANIFEST_UPSTREAM_COMMIT = "98cead8e8809e3302dc388ca869882d15b812b7f"
 
 DELTA_REASONS = {"accepted", "drift", "rollback", "expired", "budget"}
 REPRESENTATIONS = {"kv", "vector", "graph"}
+_HASH_ALGORITHMS = {"sha256", "shake256"}
 
 
 def _value(checkpoint: object, name: str) -> object:
@@ -39,15 +40,41 @@ def _value(checkpoint: object, name: str) -> object:
         raise ValueError(f"checkpoint missing {name}") from exc
 
 
+def _parse_timestamp(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None:
+        raise ValueError("checkpoint approved_at must include a timezone")
+    return parsed.astimezone(timezone.utc)
+
+
 def _timestamp(value: object) -> str:
     if isinstance(value, datetime):
         if value.tzinfo is None:
-            value = value.replace(tzinfo=timezone.utc)
-        text = value.astimezone(timezone.utc).isoformat()
-        return text.replace("+00:00", "Z")
-    if isinstance(value, str) and value:
-        return value
-    raise ValueError("checkpoint approved_at must be a datetime or non-empty string")
+            raise ValueError("checkpoint approved_at must include a timezone")
+        parsed = value.astimezone(timezone.utc)
+    elif isinstance(value, str) and value:
+        try:
+            parsed = _parse_timestamp(value)
+        except ValueError as exc:
+            raise ValueError("checkpoint approved_at must be a valid timezone-aware datetime") from exc
+    else:
+        raise ValueError("checkpoint approved_at must be a datetime or non-empty string")
+    return parsed.isoformat().replace("+00:00", "Z")
+
+
+def _validate_hashvalue(value: object) -> str:
+    if not isinstance(value, str):
+        raise ValueError("checkpoint memory_root must be a HashValue")
+    algorithm, sep, digest = value.partition(":")
+    if (
+        not sep
+        or algorithm not in _HASH_ALGORITHMS
+        or len(digest) != 64
+        or digest != digest.lower()
+        or any(char not in "0123456789abcdef" for char in digest)
+    ):
+        raise ValueError("checkpoint memory_root must be sha256/shake256 plus 64 lowercase hex characters")
+    return value
 
 
 def checkpoint_payload(checkpoint: object) -> dict:
@@ -58,19 +85,17 @@ def checkpoint_payload(checkpoint: object) -> dict:
     exactly that tuple here and intentionally omit operation content and the
     upstream verifier's internal proof representation.
     """
-    memory_root = _value(checkpoint, "memory_root")
+    memory_root = _validate_hashvalue(_value(checkpoint, "memory_root"))
     tree_size = _value(checkpoint, "tree_size")
     seq = _value(checkpoint, "seq")
     ttl_seconds = _value(checkpoint, "ttl_seconds")
     approved_at = _timestamp(_value(checkpoint, "approved_at"))
 
-    if not isinstance(memory_root, str) or not memory_root.startswith(("sha256:", "shake256:")):
-        raise ValueError("checkpoint memory_root must be a HashValue")
-    if not isinstance(tree_size, int) or tree_size < 0:
+    if not isinstance(tree_size, int) or isinstance(tree_size, bool) or tree_size < 0:
         raise ValueError("checkpoint tree_size must be a non-negative integer")
-    if not isinstance(seq, int) or seq < 0:
+    if not isinstance(seq, int) or isinstance(seq, bool) or seq < 0:
         raise ValueError("checkpoint seq must be a non-negative integer")
-    if not isinstance(ttl_seconds, int) or ttl_seconds <= 0:
+    if not isinstance(ttl_seconds, int) or isinstance(ttl_seconds, bool) or ttl_seconds <= 0:
         raise ValueError("checkpoint ttl_seconds must be a positive integer")
 
     return {
@@ -132,6 +157,10 @@ def correlate_agent_manifest_delta(
     if portable_result["receipt_resolution"] != "resolved":
         failures.append("canonical_receipt_not_resolved")
 
+    memory_action = portable_evidence.get("memory_action")
+    if canonical_receipt.get("selected_action") != memory_action:
+        failures.append("receipt_memory_action_mismatch")
+
     evidence_refs = canonical_receipt.get("evidence_refs", [])
     if not isinstance(evidence_refs, list) or checkpoint_ref not in evidence_refs:
         failures.append("receipt_missing_checkpoint_ref")
@@ -158,7 +187,7 @@ def correlate_agent_manifest_delta(
             "portable_evidence_ref": sha256_ref(dict(portable_evidence)),
             "canonical_receipt_ref": portable_evidence.get("canonical_receipt_ref", ""),
             "action_ref": portable_evidence.get("action_ref", ""),
-            "memory_action": portable_evidence.get("memory_action", ""),
+            "memory_action": memory_action or "",
             "governance_disposition": governance.get("disposition", "unverifiable"),
             "lifecycle_satisfaction": portable_evidence.get("lifecycle_result", "unverifiable"),
         },
