@@ -11,6 +11,7 @@ Use each diagram to answer one architectural question, then follow the canonical
 | What authority outcome is allowed for a proposed mutation? | [PAMA decision flow](#3-pama-mutation-authority-decision-flow) | [`docs/pama/README.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/pama/README.md) |
 | Which retrieved candidates may enter active context, and under what treatment? | [Governed recall](#4-governed-recall-pipeline) | [`docs/26-governed-recall-planner.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/26-governed-recall-planner.md) |
 | How should readers distinguish supersession, correction, dispute, and staleness across time? | [Temporal change](#5-temporal-change-correction-and-supersession) | [`docs/18-temporal-causality-layer.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/18-temporal-causality-layer.md) |
+| Why can a successful delete operation still leave memory behind? | [Deletion completeness](#6-deletion-completeness-and-derived-state-propagation) | [`docs/28-retention-deletion-and-tombstones.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/28-retention-deletion-and-tombstones.md) |
 
 ## Reading rule
 
@@ -117,9 +118,27 @@ Supersession preserves a previously valid state while a newer state becomes curr
 **Readable Wiki context:** [Lifecycle and Forgetting](Lifecycle-and-Forgetting)  
 **Canonical contract:** [`docs/18-temporal-causality-layer.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/18-temporal-causality-layer.md) · [ADR-011](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-011-temporal-causality-is-required-for-memory-evolution.md)
 
+## 6. Deletion completeness and derived-state propagation
+
+**Question:** Why can a successful delete operation still leave memory behind?
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/deletion-propagation-flow-light.svg" alt="Deletion completeness diagram showing canonical memory, governed derived memory and projection state, correction staleness versus deletion residue, transitive purge, independent residue verification, and incomplete forgetting when undeclared residue survives" width="100%">
+  </picture>
+</p>
+
+Canonical deletion doctrine requires propagation through known derivation relationships and verification of the requested forgetting outcome. The diagram's three-tier projection vocabulary, transitive-closure mechanics, and `stale`/`residual` relation come from **executed P4 design evidence that is not ADR-adopted doctrine**. That distinction is deliberate. The tested design makes the key failure mode legible without pretending its supporting ADR has matured: source change creates staleness; source purge can create residual content; and a row-level delete cannot prove forgetting completeness.
+
+**Readable Wiki context:** [Lifecycle and Forgetting](Lifecycle-and-Forgetting) · [Canonical and Derived State](Canonical-and-Derived-State)  
+**Canonical contract:** [`docs/28-retention-deletion-and-tombstones.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/28-retention-deletion-and-tombstones.md) · [`docs/31-recovery-rollback-and-replay.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/31-recovery-rollback-and-replay.md)  
+**Executed design evidence:** [`docs/programs/runtime-evidence/canonical-and-derived-state.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/canonical-and-derived-state.md)
+
 ## What comes next
 
-The remaining stable V2 visual work under issue #73 covers deletion completeness/derived-state propagation and the first scenario walkthroughs.
+The remaining V2 work under issue #73 is the first scenario walkthrough set and then a local acceptance-criteria audit.
 
 [ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md) and [ADR-022](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) remain **Proposed**. This visual guide does not contain a visual that finalizes either boundary. Isolation-domain visuals must follow ADR-022's doctrine maturity, and portable-evidence visuals must follow ADR-021's executable interoperability evidence rather than inventing a wire model visually. A diagram does not raise an ADR status, conformance level, or runtime-evidence claim.
 
