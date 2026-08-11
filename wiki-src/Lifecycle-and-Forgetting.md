@@ -120,9 +120,20 @@ historically true != currently true
 
 When evidence changes, the architecture should preserve what was known, what changed, why it changed, and which newer state supersedes the old one.
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/temporal-correction-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/temporal-correction-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/temporal-correction-flow-light.svg" alt="Temporal change diagram distinguishing historically true state that is later superseded, wrong or incomplete state that is corrected, uncertain state that is disputed, and old but historically valid state that is stale for current-state recall" width="100%">
+  </picture>
+</p>
+
+The visual is an explanatory projection of the temporal-causality doctrine, not a replacement policy. Supersession means the older record was valid and a newer state applies later. Correction means the older record was wrong or materially incomplete within its claimed scope or time. Dispute preserves unresolved uncertainty rather than choosing a winner, while staleness can reduce current-state usefulness without making a historically valid record false. Chronology may be deterministic when the system has exact events and timestamps; causal attribution remains uncertain unless independently established.
+
 ## Canonical sources
 
 - Lifecycle state machine: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/02-lifecycle-state-machine.md
+- Temporal causality: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/18-temporal-causality-layer.md
 - Forgetting and consolidation: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/21-forgetting-consolidation-and-memory-metabolism.md
 - Retention, deletion, tombstones: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/28-retention-deletion-and-tombstones.md
 - Recovery and replay: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/31-recovery-rollback-and-replay.md
