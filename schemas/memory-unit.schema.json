@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/memory-unit.schema.json",
   "title": "Agent Memory Unit",
-  "description": "Doctrine-level memory unit schema. New governed-uncertainty fields are additive for backward compatibility with early fixtures.",
+  "description": "Doctrine-level memory unit schema. New governed-uncertainty and isolation-domain fields are additive for backward compatibility with early fixtures.",
   "type": "object",
   "required": [
     "id",
@@ -285,12 +285,51 @@
         "origin_actor": { "type": "string" },
         "tenant": { "type": "string" },
         "organization": { "type": "string" },
+        "workspace": { "type": "string" },
         "project": { "type": "string" },
         "repository": { "type": "string" },
+        "task": { "type": "string" },
+        "session": { "type": "string" },
         "purpose": { "type": "string" },
         "consent_state": { "type": "string" },
         "delegation_ref": { "type": "string" },
-        "valid_until": { "type": "string", "format": "date-time" }
+        "valid_until": { "type": "string", "format": "date-time" },
+        "allowed_destinations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "revocation_ref": { "type": "string" },
+        "isolation_domain_refs": {
+          "type": "array",
+          "description": "Logical authority-domain identifiers that currently govern this memory. Order does not imply hierarchy.",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "primary_isolation_domain_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional primary domain for implementations that need one routing anchor. It does not make other bound domains subordinate."
+        },
+        "source_isolation_domain_refs": {
+          "type": "array",
+          "description": "Source-domain provenance relevant to inherited or derived scope constraints.",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "shared_memory_domain_refs": {
+          "type": "array",
+          "description": "Governed shared-memory domains in which this memory is eligible. Membership alone does not imply recall, mutation, export, or re-sharing authority.",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "domain_membership_refs": {
+          "type": "array",
+          "description": "References to current membership or authorization state used to evaluate domain access.",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
       },
       "additionalProperties": false
     },
