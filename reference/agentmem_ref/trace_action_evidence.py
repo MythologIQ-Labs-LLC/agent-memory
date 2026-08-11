@@ -16,6 +16,7 @@ Do not collapse these into one serializer unless the upstream contracts converge
 from __future__ import annotations
 
 import base64
+import binascii
 import copy
 import hashlib
 import json
@@ -333,11 +334,12 @@ def verify_trace_action_evidence(
                     _b64url_decode(str(signature)),
                     cmcp_envelope_signing_input(envelope),
                 )
-            except (InvalidSignature, ValueError, TypeError):
+            except (InvalidSignature, ValueError, TypeError, binascii.Error):
                 failures.append("external_evidence_signature_invalid")
 
+    runtime_action_ref = observed_action_ref if observed_action_ref is not None else action_ref
     runtime = RuntimeObservation(
-        action_ref=str(action_ref) if isinstance(action_ref, str) else None,
+        action_ref=str(runtime_action_ref) if isinstance(runtime_action_ref, str) else None,
         execution_time=str(execution_time) if isinstance(execution_time, str) else None,
         source_domain_ref=(
             str(payload.get("source_domain_ref")) if payload.get("source_domain_ref") is not None else None
