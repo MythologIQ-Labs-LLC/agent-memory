@@ -86,6 +86,16 @@ candidate retrieval
 
 Stochastic ranking can be perfectly acceptable **after** prohibited candidates are removed from the reachable set.
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/governed-recall-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/governed-recall-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/governed-recall-flow-light.svg" alt="Governed recall pipeline showing request and scope resolution, candidate generation and normalization, recall admission, ranking only among admitted candidates, composition risk checks, context budgeting, governed assembly, and recall explanation" width="100%">
+  </picture>
+</p>
+
+The diagram preserves the canonical ordering rather than treating retrieval score as admission. Candidate generation may be probabilistic, but identity, tenancy, purpose, scope, sensitivity, destination, delegation, dispute/certification state, freshness, and policy constrain what may enter context. Ranking occurs only after admission. Composition risk and context budgeting remain separate governed stages, and a blocked candidate cannot re-enter merely because randomness or a stronger score prefers it.
+
 ## Decision receipts
 
 A consequential memory mutation should be reconstructable. Useful receipt fields include:
