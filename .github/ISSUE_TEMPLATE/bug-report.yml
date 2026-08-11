@@ -3,6 +3,7 @@ description: Report a concrete repository, documentation, schema, validation, or
 title: "[Defect] "
 labels:
   - agent-memory
+  - bug
 body:
   - type: markdown
     attributes:
