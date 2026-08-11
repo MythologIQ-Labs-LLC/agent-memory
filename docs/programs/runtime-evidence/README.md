@@ -86,6 +86,8 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`agent-manifest-correlation.md`](agent-manifest-correlation.md) | P4.5b Agent Manifest memory checkpoint correlation | pinned external comparator executed; a checkpoint built from a test log containing `DEL` remains distinct from Agent Memory lifecycle satisfaction |
 | [`trace-action-evidence.md`](trace-action-evidence.md) | P4.5c TRACE/cMCP action-evidence binding | content-free action receipt adapter plus released cMCP verifier comparator; TRACE receipt state remains separate from Agent Memory governance and lifecycle |
 | [`deletion-completeness-evidence.md`](deletion-completeness-evidence.md) | P4 -> P4.5 deletion lifecycle composition | declared residual, undeclared hard-gate failure, and zero-residue success drive signed portable lifecycle evidence and an exact-commit JSON report |
+| [`concurrency-conflict-evidence.md`](concurrency-conflict-evidence.md) | concurrency behavior | conflicting proposals from one prior state are revalidated at commit; stale second write is deferred and conflict evidence is emitted |
+| [`benchmark-security-scorecard.md`](benchmark-security-scorecard.md) | P5 benchmark/security matrix and harness | seven hard-gate security/governance metrics execute with explicit denominators and an exact-commit scorecard artifact; no scalar quality score |
 
 ## Preconditions
 
