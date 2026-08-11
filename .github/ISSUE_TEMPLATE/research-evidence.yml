@@ -3,6 +3,7 @@ description: Submit research, standards, benchmarks, or evidence that supports, 
 title: "[Evidence] "
 labels:
   - agent-memory
+  - evidence
 body:
   - type: markdown
     attributes:
