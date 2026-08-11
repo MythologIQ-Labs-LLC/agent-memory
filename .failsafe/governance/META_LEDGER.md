@@ -346,3 +346,56 @@ stated exemptions, because execution against a substrate model is not runtime
 evidence under the program's own rules. Four limitations are documented rather
 than left to be discovered, including that substrate binding remains unimplemented.
 That binding is where runtime evidence begins and is the next slice.
+
+---
+
+### Entry #9: FIRST RUNTIME EVIDENCE AGAINST A REAL SUBSTRATE
+
+**Timestamp**: 2026-08-11T11:30:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("p3-runtime-evidence:" + git tree hash at parent commit)
+= 26960978cf3dc1529242f73ea913103e12350acfbfd49337b7bcc2b87579828f
+```
+
+**Previous Hash**: f46b0871cdf68cfa976a359ccd65888380806a7ebe86725939982d750fae4622
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= f00fff3fc0a23982dff9ddb18578cc7f83c0f742fd6dac752328aa4c756c56d6
+```
+
+**Decision**: The Governor asked whether the substrate binding could be
+established in a hosted development container, and to defer otherwise.
+Investigation found it unnecessary: the binding runs in the existing session.
+Container runtime is unavailable, but the substrate ships an embedded backend
+requiring no server, and the mapping's central architectural claim held under
+test, so no credentials were required either.
+
+Nineteen paths now execute, seven of them against graphiti-core 0.29.3 over an
+embedded graph database with no LLM, no embedder, no API key, and no server.
+This is the program's first runtime evidence rather than precondition work.
+
+Execution verified three facts source reading had not established. The no-LLM
+write path works end to end when pre-computed vectors are supplied. The
+library's top-level facade force-constructs a provider client even when every
+operation in use is provider-free and fails without credentials, so a governed
+adapter must bind at driver level; this is an integration constraint, not a
+documentation nuance. An empty partition signals absence by raising rather than
+returning an empty result. Open question 3 is partially resolved: invalidated
+edges are returned by the partition query, so an adapter that fails to filter
+them would admit superseded facts as current.
+
+Claims remain bounded. Conformance level 0 is still declared, now with five
+stated exemptions, because the doctrine fixture corpus is not driven through
+the adapter and levels require it. The backend used is deprecated upstream and
+that is declared rather than hidden; no governance behavior under test depends
+on the backend choice. Substrate tests skip cleanly when the library is absent,
+so the standard-library gate remains runnable everywhere, and CI installs the
+substrate with continue-on-error so runtime evidence never becomes a hard
+dependency of the doctrine gate.

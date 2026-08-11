@@ -26,10 +26,12 @@ ROOT = REFERENCE_DIR.parent
 sys.path.insert(0, str(REFERENCE_DIR))
 
 from agentmem_ref import policy, receipts  # noqa: E402
+from agentmem_ref.graphiti_driver import graphiti_available  # noqa: E402
 
 ADAPTER_VERSION = "0.1.0"
 DOCTRINE_VERSION = "v0.3"
 SUBSTRATE_MODEL = "in-memory temporal graph modelling graphiti-core 0.29.3 verified semantics"
+REAL_SUBSTRATE = "graphiti-core 0.29.3 over embedded kuzu, no LLM and no embedder invoked"
 
 
 def _run_suite() -> tuple[list[str], list[str], list[str]]:
@@ -58,7 +60,29 @@ def _short(test) -> str:
     return test.id().rsplit(".", 1)[-1]
 
 
+def _exemptions(substrate_executed: bool) -> list[str]:
+    common = [
+        "The fixture corpus is not driven through the adapter, so no conformance level is claimed. "
+        "Levels require the doctrine fixtures, not governance paths alone.",
+        "Retrieval ranking is lexical rather than hybrid, so recall quality is not measured "
+        "and no calibration claim is made.",
+        "The policy implements the subset of the decision table these paths require.",
+    ]
+    if not substrate_executed:
+        return common + [
+            "The real substrate is not installed, so only substrate-model paths ran. "
+            "Model execution is a precondition, not runtime evidence."
+        ]
+    return common + [
+        "Substrate paths executed against an embedded backend deprecated upstream, chosen because "
+        "it needs no server. No governance behavior under test depends on the backend.",
+        "Node topology is simplified to one edge per fact; this exercises governance invariants, "
+        "not knowledge modelling.",
+    ]
+
+
 def build_report() -> dict:
+    substrate_executed = graphiti_available()
     names, passed, failed = _run_suite()
     report = {
         "schema_version": "1.0.0",
@@ -71,16 +95,12 @@ def build_report() -> dict:
         "fixtures_passed": passed,
         "fixtures_failed": failed,
         "trials_run": len(names),
-        "known_exemptions": [
-            "No conformance level is claimed. These paths execute against a substrate model, "
-            "not a running substrate, and therefore are not runtime evidence.",
-            "Approved permanent deletion is not exercised: no review-satisfaction path is modelled, "
-            "so the physical-delete branch is reachable only through an unapproved proposal, which the gate refuses.",
-            "Retrieval ranking is lexical, so recall quality is not measured and no calibration claim is made.",
-        ],
+        "known_exemptions": _exemptions(substrate_executed),
         "known_failures": failed,
         "metric_extensions": {
             "substrate_model": SUBSTRATE_MODEL,
+            "real_substrate_executed": substrate_executed,
+            "real_substrate": REAL_SUBSTRATE if substrate_executed else None,
             "governance_paths_executed": len(names),
             "negative_paths_executed": len([name for name in names if "positive" not in name]),
         },

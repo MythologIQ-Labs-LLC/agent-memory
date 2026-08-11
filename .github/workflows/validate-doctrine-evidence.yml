@@ -34,6 +34,13 @@ jobs:
       - name: Execute reference governed-adapter paths
         run: python -m unittest discover -s reference/tests -t reference
 
+      - name: Install real substrate for runtime evidence
+        continue-on-error: true
+        run: python -m pip install --disable-pip-version-check graphiti-core kuzu
+
+      - name: Execute governed paths against the real substrate
+        run: python -m unittest discover -s reference/tests -t reference
+
       - name: Emit reference conformance report
         run: python reference/run_conformance.py
 
