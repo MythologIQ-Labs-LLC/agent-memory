@@ -8,6 +8,24 @@ By intentionally submitting a contribution for inclusion in this repository, you
 
 Participation is also subject to the repository [Code of Conduct](CODE_OF_CONDUCT.md). Repository decision rights and doctrine-change rules are described in [GOVERNANCE.md](GOVERNANCE.md). Security-sensitive findings should follow [SECURITY.md](SECURITY.md) rather than being disclosed through an ordinary public issue.
 
+## AI-assisted development and accountable delegation
+
+Agent Memory permits and encourages AI-assisted development, including coding agents, AI editors, code generators, automated review tools, and authenticated repository connectors.
+
+The repository does not require contributors or maintainers to hand-write code or manually click every repository action. It requires accountable authority.
+
+The governing standard is [`docs/policies/AI_ASSISTED_CONTRIBUTIONS.md`](docs/policies/AI_ASSISTED_CONTRIBUTIONS.md).
+
+Its core rule is:
+
+> **AI-assisted development is allowed. Unbounded autonomous contribution is not accepted by default.**
+
+A responsible human owns the objective, material risk, repository authority, and resulting contribution. Repository actions may be performed by an agent when they are directly delegated in a bounded working session or allowed by a standing repository authorization.
+
+Direct delegation does not authorize unrelated upstream submissions, external-project comments, destructive administration, or expansion into work outside the stated scope.
+
+DCO is a planned provenance mechanism, not an invisible current gate. It becomes mandatory only when the repository explicitly activates and enforces it. See the policy and #85 for the organization rollout.
+
 ## Before contributing
 
 Start with:
@@ -18,7 +36,8 @@ Start with:
 4. [`docs/24-determinism-probability-and-governed-uncertainty.md`](docs/24-determinism-probability-and-governed-uncertainty.md)
 5. [`docs/adr/README.md`](docs/adr/README.md)
 6. [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md)
-7. [`GOVERNANCE.md`](GOVERNANCE.md)
+7. [`docs/policies/AI_ASSISTED_CONTRIBUTIONS.md`](docs/policies/AI_ASSISTED_CONTRIBUTIONS.md)
+8. [`GOVERNANCE.md`](GOVERNANCE.md)
 
 Then read the specific doctrine document your change affects.
 
@@ -242,6 +261,8 @@ A pull request should state:
 - what the change proves
 - what remains unproven
 
+For a human-directed agent workflow, the PR should also make the material delegation or authorization boundary clear when it is relevant to understanding who exercised repository authority.
+
 Large research or runtime-evidence programs should be sliced into independently reviewable claims rather than merged as one heroic diff.
 
 ## Definition of done
@@ -254,6 +275,8 @@ A contribution is complete when:
 4. schemas/fixtures are updated when the contract changed
 5. source rights and attribution obligations are resolved for any material reuse
 6. validation passes
-7. the PR clearly states what was proven and what remains unproven
+7. repository authority for agent-executed actions is bounded and accountable where applicable
+8. any explicitly active provenance requirement is satisfied
+9. the PR clearly states what was proven and what remains unproven
 
 A green validator proves the repository evidence is structurally coherent. It does not absolve runtime systems from reality, which remains stubbornly outside JSON Schema's jurisdiction.
