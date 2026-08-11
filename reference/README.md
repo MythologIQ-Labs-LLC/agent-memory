@@ -34,6 +34,7 @@ reference/
     receipts.py     schema-conformant decisions, receipts, audit events
     adapter.py      the governed path
     fixture_conformance.py  drives the doctrine corpus through enforcement
+    (selectors live in adapter.py: deterministic and seeded stochastic)
   agentmem_ref/graphiti_driver.py   binding to a real temporal knowledge graph
   tests/            model paths and real-substrate paths
   run_conformance.py
@@ -47,13 +48,16 @@ Everything is standard-library except schema validation, which uses `jsonschema`
 # model paths only; standard library plus jsonschema
 python -m unittest discover -s reference/tests -t reference
 
+# stochastic containment sweep with an explicit trial count
+python reference/run_conformance.py --trials 500
+
 # add the real substrate; the substrate tests skip cleanly without it
 pip install graphiti-core kuzu
 python -m unittest discover -s reference/tests -t reference
 python reference/run_conformance.py
 ```
 
-Both are deterministic: identifiers are counter-based and the clock is injected, so repeated runs produce identical receipts and identical reports.
+Runs are deterministic: identifiers are counter-based and the clock is injected, so repeated runs produce identical receipts and identical reports. Stochastic selection is seeded per trial, so it varies across trials and reproduces exactly for a given seed.
 
 ## The governed path
 
@@ -82,6 +86,8 @@ The adapter supplies what the substrate cannot: an authority gate before every w
 | undeclared derived residue | a projection nobody declared is detected after removal |
 | version drift | policy version and estimator versions stay separable in the receipt |
 | fixture corpus | all 25 doctrine fixtures pass envelope enforcement; the checker is mutation-tested |
+| stochastic containment | hundreds of sampled trials never escape the permitted set, and the selector demonstrably varies |
+| hostile selector | a selector returning a prohibited action is contained by the adapter and the violation recorded |
 
 ## Known limitations
 
