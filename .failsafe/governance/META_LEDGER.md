@@ -450,3 +450,58 @@ envelope enforcement, not full scenario execution.
 Substrate installation in CI remains best-effort per Governor direction, so
 runtime evidence never becomes a hard dependency of the standard-library
 doctrine gate. Total: 25 executable paths plus 25 corpus fixtures, 50 trials.
+
+---
+
+### Entry #11: STOCHASTIC CONTAINMENT AND WIKI PARALLEL TRACK
+
+**Timestamp**: 2026-08-11T14:00:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("stochastic-containment:" + git tree hash at parent commit)
+= e6ba10acdaab966d7d77da0ce3de5132fef5433c48c5c67ee2eb4d0c06f8f42c
+```
+
+**Previous Hash**: a4a7d8da4f94664ed44bc3357bc18150995cf30df28ebcda62794df9d2c75d96
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= eaeaf16e8189bd61ba2620ef6baac7fc6921a77c47c8a21d65ba3d905f9d363b
+```
+
+**Decision**: Branch rebased onto post-transfer main, which introduced the
+wiki-src tree, a wiki link validator, and hardened issue intake. Eleven
+recurring workflow conflicts were resolved by keeping both the extended
+documentation link list and the new wiki validation step.
+
+Stochastic containment implemented, closing the last outstanding criterion of
+issue #48. Selection is now delegated to a selector abstraction with
+deterministic and seeded stochastic implementations, and the adapter treats
+every selector as untrusted: whatever a selector returns is re-checked against
+the permitted set before use, with violations recorded and failed closed to a
+deferral. Randomness proposes; it does not authorize.
+
+Three properties are asserted together rather than only the flattering one.
+Safety: across 500 sampled trials no selection escapes the envelope, reported
+through the standardized stochastic_action_set_violation_rate metric at 0.0.
+Liveness: the selector demonstrably varies across three distinct actions, so
+the safety assertion is not vacuous. Containment under hostility: a selector
+deliberately returning a prohibited action is contained by the adapter and the
+violation recorded, proving the guarantee comes from the gate rather than the
+selector's good behavior. The harness gained the --trials flag doc 06 sketched.
+
+Wiki parallel track opened per Governor direction. A Runtime-Evidence page was
+added following the established wiki conventions: reader-facing, no wiki-only
+doctrine, canonical links back to the repository. Its "what this still does not
+prove" section is deliberately as prominent as its claims, since a public
+surface is where overclaiming does the most damage. Neighbouring pages were
+corrected: the conformance page's stale fixture count and its list of
+undemonstrated properties, several of which are now demonstrated and several of
+which are not. Active fixture counts in the README were updated from 24 to 25;
+the two audit records citing 24 were left untouched because they correctly
+describe the branch they audited.

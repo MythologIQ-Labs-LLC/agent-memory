@@ -35,7 +35,7 @@ Level 6 does not mean “make the model deterministic.” It means uncertainty c
 Agent Memory currently includes:
 
 - 7 JSON Schemas
-- 24 conformance fixture definitions
+- 25 conformance fixture definitions
 - fixture invariant validation
 - schema validation
 - source-rights validation
@@ -55,7 +55,7 @@ Repository validation does not by itself prove that a runtime:
 - propagates deletion into derived state
 - reconstructs a committed decision from receipts
 
-Those claims require runtime evidence.
+Those claims require runtime evidence. Several of them have since been demonstrated by a reference adapter, and several have not. **[Runtime Evidence](Runtime-Evidence)** records which is which, and what the demonstrations still do not establish.
 
 ## High-value negative paths
 
@@ -121,5 +121,6 @@ with repeated stochastic trials, cross-scope admission tests, real concurrency b
 
 ## Next
 
+- **[Runtime Evidence](Runtime-Evidence)** for what has actually been executed
 - **[Implementation Guide](Implementation-Guide)** to map a real runtime
 - **[Architecture Decisions](Architecture-Decisions)** to understand the accepted/proposed doctrine boundary

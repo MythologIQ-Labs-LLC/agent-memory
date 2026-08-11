@@ -25,6 +25,7 @@ Agent Memory asks a larger question than _“how do we retrieve old context?”_
 | Separate probabilistic inference from consequential authority | **[Governed Uncertainty](Governed-Uncertainty)** |
 | Review threat, privacy, and deletion risks | **[Security and Privacy](Security-and-Privacy)** |
 | Evaluate evidence or runtime claims | **[Conformance and Evidence](Conformance-and-Evidence)** |
+| See what has actually been executed | **[Runtime Evidence](Runtime-Evidence)** |
 | Contribute research or challenge doctrine | **[Research and Sources](Research-and-Sources)** |
 | Map a real memory system into the architecture | **[Implementation Guide](Implementation-Guide)** |
 | Contribute to the project | **[Contributing](Contributing)** |

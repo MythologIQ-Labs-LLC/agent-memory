@@ -21,7 +21,7 @@ From working memory to inherited state. From biological theory to executable con
 ---
 
 > [!IMPORTANT]
-> **Current maturity:** the doctrine, schemas, and 24 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 remains Proposed** because governed uncertainty still requires real runtime evidence end to end. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
+> **Current maturity:** the doctrine, schemas, and 25 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 remains Proposed** because governed uncertainty still requires real runtime evidence end to end. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
 
 ## The thesis
 
@@ -617,7 +617,7 @@ agent-memory/
 │   └── audits/                     # preserved audit history
 ├── sources/                        # external/material source-rights registry
 ├── schemas/                        # doctrine-level JSON Schemas
-├── fixtures/                       # 24 conformance fixture definitions
+├── fixtures/                       # 25 conformance fixture definitions
 ├── scripts/                        # fixture, schema, link, and doctrine-boundary validators
 └── .github/
     ├── CODEOWNERS

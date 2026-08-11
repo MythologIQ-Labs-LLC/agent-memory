@@ -17,6 +17,7 @@ Stdlib only apart from the schema validation reached through `receipts`.
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 
 from . import policy, receipts
@@ -32,6 +33,39 @@ class Clock:
     def now(self) -> str:
         self._t += 1
         return f"2026-01-01T00:00:{self._t:02d}Z"
+
+
+class DeterministicSelector:
+    """Prefers the requested operation when permitted, else the first permitted action."""
+
+    mode = "deterministic"
+
+    def select(self, permitted: tuple[str, ...], preferred: str | None) -> str:
+        if not permitted:
+            return receipts.NO_ACTION
+        if preferred in permitted:
+            return preferred
+        return permitted[0]
+
+
+class StochasticSelector:
+    """Samples uniformly from the permitted set.
+
+    Doctrine permits stochastic action selection *inside* an authority
+    envelope. It is the adapter, not this selector, that guarantees the choice
+    stays inside: a selector is untrusted by construction, so whatever it
+    returns is re-checked against the permitted set before use.
+    """
+
+    mode = "stochastic"
+
+    def __init__(self, seed: int) -> None:
+        self._rng = random.Random(seed)
+
+    def select(self, permitted: tuple[str, ...], preferred: str | None) -> str:
+        if not permitted:
+            return receipts.NO_ACTION
+        return self._rng.choice(list(permitted))
 
 
 @dataclass
@@ -55,11 +89,19 @@ class AdmissionResult:
 class GovernedMemoryAdapter:
     """Wraps a permissive substrate in the governance it does not provide."""
 
-    def __init__(self, substrate: TemporalGraphPort, tenant: str, clock: Clock | None = None) -> None:
+    def __init__(
+        self,
+        substrate: TemporalGraphPort,
+        tenant: str,
+        clock: Clock | None = None,
+        selector=None,
+    ) -> None:
         self._substrate = substrate
         self._tenant = tenant
         self._clock = clock or Clock()
+        self._selector = selector or DeterministicSelector()
         self._ids = DeterministicIds("ref")
+        self.containment_violations: list[str] = []
         self._state_version: dict[str, int] = {}
         self._disputed: set[str] = set()
         self._tombstones: dict[str, dict] = {}
@@ -113,7 +155,7 @@ class GovernedMemoryAdapter:
             proposal=proposal,
             decision=decision,
             selected_action=selected,
-            selection_mode="deterministic" if selected != receipts.NO_ACTION else "none",
+            selection_mode=self._selector.mode if selected != receipts.NO_ACTION else "none",
             timestamp=self._clock.now(),
             before_state=before_state,
             after_state=after_state,
@@ -123,7 +165,7 @@ class GovernedMemoryAdapter:
             proposal,
             decision,
             selected,
-            "deterministic" if selected != receipts.NO_ACTION else None,
+            self._selector.mode if selected != receipts.NO_ACTION else None,
             receipt_id,
         )
         events.append(
@@ -154,13 +196,29 @@ class GovernedMemoryAdapter:
         return proposal.state_snapshot != current
 
     def _select_action(self, decision: policy.Decision, proposal: policy.Proposal, blocked_by_stale: bool) -> str:
-        if not decision.permitted_actions:
+        permitted = decision.permitted_actions
+        if not permitted:
             return receipts.NO_ACTION
         if blocked_by_stale:
-            return "defer" if "defer" in decision.permitted_actions else decision.permitted_actions[0]
-        if proposal.operation in decision.permitted_actions:
-            return proposal.operation
-        return decision.permitted_actions[0]
+            return "defer" if "defer" in permitted else permitted[0]
+
+        choice = self._selector.select(permitted, proposal.operation)
+        return self._contain(permitted, choice)
+
+    def _contain(self, permitted: tuple[str, ...], choice: str) -> str:
+        """Re-check any selector's output against the envelope.
+
+        A selector is untrusted: deterministic, stochastic, or learned, it
+        proposes and does not authorize. A choice outside the permitted set is
+        a containment violation, recorded and failed closed to a deferral
+        rather than executed. Randomness does not create permission.
+        """
+        try:
+            receipts.enforce_selection(permitted, choice)
+        except ValueError as exc:
+            self.containment_violations.append(str(exc))
+            return "defer" if "defer" in permitted else permitted[0]
+        return choice
 
     def _write(self, proposal: policy.Proposal, fact_text: str) -> str:
         uuid = self._ids.next()
@@ -240,13 +298,13 @@ class GovernedMemoryAdapter:
             proposal=proposal,
             decision=decision,
             selected_action=selected,
-            selection_mode="deterministic" if selected != receipts.NO_ACTION else "none",
+            selection_mode=self._selector.mode if selected != receipts.NO_ACTION else "none",
             timestamp=self._clock.now(),
             before_state=before_state,
             after_state=f"v{self._state_version.get(proposal.target_reference, 0)}",
         )
         pama_decision = receipts.build_pama_decision(
-            proposal, decision, selected, "deterministic" if selected != receipts.NO_ACTION else None, receipt_id
+            proposal, decision, selected, self._selector.mode if selected != receipts.NO_ACTION else None, receipt_id
         )
         event = self._event("memory.delete", proposal.target_reference, correlation, receipt_ref=receipt_id)
         self.events.append(event)
