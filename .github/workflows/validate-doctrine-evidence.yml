@@ -37,6 +37,9 @@ jobs:
       - name: Validate native doctrine and implementation boundaries
         run: python scripts/validate_doctrine_boundaries.py
 
+      - name: Validate visual documentation assets
+        run: python scripts/validate_visual_assets.py assets/diagrams
+
       - name: Execute reference governed-adapter paths
         run: python -m unittest discover -s reference/tests -t reference
 
@@ -153,6 +156,7 @@ jobs:
             echo "python scripts/validate_fixtures.py fixtures"
             echo "python scripts/validate_schemas.py"
             echo "python scripts/validate_doctrine_boundaries.py"
+            echo "python scripts/validate_visual_assets.py assets/diagrams"
             echo "python -m unittest discover -s reference/tests -t reference"
             echo "python reference/run_concurrency_evidence.py --agent-memory-commit <exact-40-hex-commit> --output concurrency-evidence.json"
             echo "python reference/run_benchmark_security.py --agent-memory-commit <exact-40-hex-commit> --output benchmark-security.json"
