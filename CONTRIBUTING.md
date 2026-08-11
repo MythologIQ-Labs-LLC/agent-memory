@@ -13,6 +13,7 @@ Start with:
 3. [`docs/00-glossary.md`](docs/00-glossary.md)
 4. [`docs/24-determinism-probability-and-governed-uncertainty.md`](docs/24-determinism-probability-and-governed-uncertainty.md)
 5. [`docs/adr/README.md`](docs/adr/README.md)
+6. [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md)
 
 Then read the specific doctrine document your change affects.
 
@@ -57,6 +58,34 @@ Prefer freely inspectable research when practical:
 - standards and government publications
 
 Accessibility is a preference, not a substitute for quality.
+
+## Source and reuse rights
+
+Evidence quality and reuse permission are separate questions.
+
+Read [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md) before introducing external text, code, diagrams, tables, figures, screenshots, or other expressive material.
+
+The default rule is:
+
+> **Public accessibility does not imply reuse permission. Citation does not imply a license.**
+
+Contributors should prefer direct links and independent synthesis unless a stronger reuse basis is both necessary and verified.
+
+Before merge:
+
+- link the most specific lawful public source when one exists
+- distinguish public, private, successor, and no-public-locator sources
+- do not assume a repository license governs third-party issue comments or external attachments
+- do not treat open access as an automatic reuse license
+- do not copy code without a compatible verified license or explicit permission
+- do not copy or closely redraw diagrams, tables, figures, or screenshots without a verified reuse basis
+- preserve license text, notices, attribution, and modification notices when required
+- register material reuse in [`sources/source-registry.json`](sources/source-registry.json)
+- default unknown rights to `citation_only` or `independent_synthesis`
+
+Contributor-originated provenance may be recorded when supported. Provenance statements should identify origin without overstating legal exclusivity over an idea, method, or short phrase.
+
+CI validates the source registry against [`schemas/source-record.schema.json`](schemas/source-record.schema.json). Reuse-oriented records require a documented rights basis.
 
 ## Cross-domain memory claims
 
@@ -161,6 +190,8 @@ Optimize for:
 - clear status and evidence language
 - examples that distinguish estimates from authority
 - diagrams that explain architecture rather than decorate it
+- precise public provenance when lawful public sources exist
+- original synthesis when reuse rights are unclear or unnecessary
 
 Avoid:
 
@@ -169,6 +200,8 @@ Avoid:
 - claiming neuroscience equivalence without evidence
 - presenting proposed doctrine as implemented reality
 - silently deleting contradictory evidence from the research narrative
+- copying protected expression merely because it is publicly readable
+- presenting a related public project as the provenance source for a private canonical artifact
 
 ## Definition of done
 
@@ -178,7 +211,8 @@ A contribution is complete when:
 2. affected doctrine is internally consistent
 3. relevant links and indexes are updated
 4. schemas/fixtures are updated when the contract changed
-5. validation passes
-6. the PR clearly states what was proven and what remains unproven
+5. source rights and attribution obligations are resolved for any material reuse
+6. validation passes
+7. the PR clearly states what was proven and what remains unproven
 
 A green validator proves the repository evidence is structurally coherent. It does not absolve runtime systems from reality, which remains stubbornly outside JSON Schema's jurisdiction.
