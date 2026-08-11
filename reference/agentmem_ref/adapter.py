@@ -267,6 +267,19 @@ class GovernedMemoryAdapter:
     def mark_disputed(self, fact_uuid: str) -> None:
         self._disputed.add(fact_uuid)
 
+    # -- canonical state accessors --------------------------------------
+
+    def state_version(self, memory_id: str) -> int:
+        return self._state_version.get(memory_id, 0)
+
+    def tombstoned_ids(self) -> set[str]:
+        return {record["memory_id"] for record in self._tombstones.values()}
+
+    def record_correction(self, memory_id: str) -> int:
+        """A correction advances canonical version; dependents become stale by relation."""
+        self._state_version[memory_id] = self._state_version.get(memory_id, 0) + 1
+        return self._state_version[memory_id]
+
     # -- deletion -------------------------------------------------------
 
     def governed_delete(self, proposal: policy.Proposal, fact_uuid: str, derived_refs: tuple[str, ...] = ()) -> CommitResult:

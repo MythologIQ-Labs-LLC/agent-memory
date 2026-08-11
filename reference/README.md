@@ -34,6 +34,9 @@ reference/
     receipts.py     schema-conformant decisions, receipts, audit events
     adapter.py      the governed path
     fixture_conformance.py  drives the doctrine corpus through enforcement
+    projections.py          tier-3 declarations and the freshness relation
+    residue.py              deletion residue partition and independent sweep
+    projection_governance.py governed correction, purge, and rebuild
     (selectors live in adapter.py: deterministic and seeded stochastic)
   agentmem_ref/graphiti_driver.py   binding to a real temporal knowledge graph
   tests/            model paths and real-substrate paths
@@ -88,6 +91,11 @@ The adapter supplies what the substrate cannot: an authority gate before every w
 | fixture corpus | all 25 doctrine fixtures pass envelope enforcement; the checker is mutation-tested |
 | stochastic containment | hundreds of sampled trials never escape the permitted set, and the selector demonstrably varies |
 | hostile selector | a selector returning a prohibited action is contained by the adapter and the violation recorded |
+| derived-state freshness | stale and residual are computed from a recorded basis, never set by a flag |
+| correction propagation | dependents go stale; content-bearing projections supersede without erasing the prior version |
+| transitive purge | the whole derivation closure is reached, and a deliberate one-hop purge is caught by the sweep |
+| undeclared residue | the four-way partition holds, with the undeclared cell empty as a hard gate |
+| rebuild authority | estimator-mediated rebuild is refused without an authority decision; deterministic reproducible rebuild is categorical |
 
 ## Known limitations
 
@@ -98,4 +106,5 @@ Stated rather than left to be discovered:
 3. The policy implements the subset of the decision table these paths need, not the whole table.
 4. The substrate binding uses an embedded backend that is deprecated upstream, chosen because it needs no server. No governance behavior under test depends on the backend choice.
 5. Node topology is simplified to one edge per fact. This exercises governance invariants, not knowledge modelling.
-6. Approved permanent deletion is exercised only at the substrate level; no review-satisfaction path is modelled in the policy, so the gate refuses the proposal form.
+6. Derived-state governance operates on an adapter-owned sidecar. The design spike names this as the obvious home for substrates that cannot store a projection declaration, and notes that it reintroduces the consistency problem one level up. That trade is accepted here rather than solved.
+7. Residue is measured over declared projections. State that was never declared is outside the sweep's reach by construction, which is why the declaration surface is the load-bearing part rather than the traversal.

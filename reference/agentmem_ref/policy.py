@@ -114,6 +114,8 @@ class Proposal:
     confidence: float | None = None
     actor_authority_resolved: bool = True
     approves_own_authority: bool = False
+    approval_refs: tuple[str, ...] = ()
+    review_satisfied: bool = False
     state_snapshot: str = ""
     tenant_ref: str = ""
     purpose: str = ""
@@ -168,6 +170,22 @@ def _apply_modifiers(outcome: str, proposal: Proposal) -> tuple[str, list[str]]:
     return outcome, reasons
 
 
+def _apply_review(outcome: str, proposal: Proposal) -> tuple[str, list[str]]:
+    """Discharge a review requirement that an external authority has satisfied.
+
+    Review is satisfied by an approver, never by the proposer. `block` stays
+    absorbing, and a proposal that would expand its own authority cannot buy
+    its way past review by asserting that review happened.
+    """
+    if outcome not in (REQUIRE_REVIEW, REQUIRE_EXTERNAL_VERIFICATION):
+        return outcome, []
+    if not proposal.review_satisfied:
+        return outcome, []
+    if not proposal.approval_refs or proposal.approves_own_authority:
+        return outcome, ["review claimed without an external approval record"]
+    return ALLOW_WITH_LEDGER, [f"review discharged by {list(proposal.approval_refs)}"]
+
+
 def _envelope(outcome: str, proposal: Proposal) -> tuple[tuple[str, ...], tuple[str, ...]]:
     """Permitted and prohibited sets. Prohibited actions are absent from permitted."""
     operation = proposal.operation
@@ -185,10 +203,11 @@ def evaluate(proposal: Proposal) -> Decision:
     outcome = _base_outcome(proposal)
     outcome, floor_reasons = _apply_floors(outcome, proposal)
     outcome, modifier_reasons = _apply_modifiers(outcome, proposal)
+    outcome, review_reasons = _apply_review(outcome, proposal)
     permitted, prohibited = _envelope(outcome, proposal)
     return Decision(
         outcome=outcome,
         permitted_actions=permitted,
         prohibited_actions=prohibited,
-        reasons=tuple(floor_reasons + modifier_reasons),
+        reasons=tuple(floor_reasons + modifier_reasons + review_reasons),
     )
