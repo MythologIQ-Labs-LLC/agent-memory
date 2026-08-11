@@ -46,13 +46,13 @@ reference/
   run_conformance.py
 ```
 
-Schema validation uses `jsonschema`. P4.5a Ed25519 signing and public-key verification use `cryptography`, added under the explicit dependency-justification rule in `../CONTRIBUTING.md`. The low-cost fixture, doctrine-boundary, and link validators remain standard-library only.
+Schema validation uses `jsonschema`. P4.5a Ed25519 signing and public-key verification use `cryptography`, added under the explicit dependency-justification rule in `../CONTRIBUTING.md`. CI pins the direct validation profile to `jsonschema==4.26.0` and `cryptography==50.0.0`. The low-cost fixture, doctrine-boundary, and link validators remain standard-library only.
 
 ## Running it
 
 ```bash
 # reference model and portable-evidence paths
-python -m pip install jsonschema cryptography
+python -m pip install jsonschema==4.26.0 cryptography==50.0.0
 python -m unittest discover -s reference/tests -t reference
 
 # stochastic containment sweep with an explicit trial count
