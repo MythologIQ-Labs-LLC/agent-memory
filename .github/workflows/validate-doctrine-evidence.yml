@@ -40,6 +40,21 @@ jobs:
       - name: Execute reference governed-adapter paths
         run: python -m unittest discover -s reference/tests -t reference
 
+      - name: Emit concurrency-conflict evidence
+        env:
+          AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          python reference/run_concurrency_evidence.py
+          --agent-memory-commit "$AGENT_MEMORY_COMMIT"
+          --output concurrency-evidence.json
+
+      - name: Upload concurrency-conflict evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: concurrency-conflict-evidence
+          path: concurrency-evidence.json
+          if-no-files-found: error
+
       - name: Emit deletion-completeness evidence
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -98,6 +113,7 @@ jobs:
           docs/programs/runtime-evidence/agent-manifest-correlation.md
           docs/programs/runtime-evidence/trace-action-evidence.md
           docs/programs/runtime-evidence/deletion-completeness-evidence.md
+          docs/programs/runtime-evidence/concurrency-conflict-evidence.md
           reference/README.md
 
       - name: Validate GitHub Wiki source links
@@ -122,9 +138,10 @@ jobs:
             echo "python scripts/validate_schemas.py"
             echo "python scripts/validate_doctrine_boundaries.py"
             echo "python -m unittest discover -s reference/tests -t reference"
+            echo "python reference/run_concurrency_evidence.py --agent-memory-commit <exact-40-hex-commit> --output concurrency-evidence.json"
             echo "python reference/run_deletion_completeness.py --agent-memory-commit <exact-40-hex-commit> --output deletion-completeness.json"
             echo "python -m venv /tmp/agent-memory-p45c-cmcp && /tmp/agent-memory-p45c-cmcp/bin/python -m pip install cmcp-runtime==0.4.0 agentrust-trace==0.8.0 agent-manifest==0.11.0 rfc8785==0.1.4 && PYTHONPATH=reference /tmp/agent-memory-p45c-cmcp/bin/python reference/run_trace_cmcp_comparator.py"
-            echo "python scripts/validate_markdown_links.py README.md CONTRIBUTING.md docs/README.md docs/pama/README.md docs/04-governance-and-pama.md docs/08-source-material-index.md docs/33-pama-decision-table.md docs/40-aligned-projects-and-intellectual-lineage.md docs/SOURCE_RIGHTS_POLICY.md docs/adr/README.md docs/27-schema-registry-and-type-evolution.md docs/32-memory-quality-metrics.md docs/programs/runtime-evidence/README.md docs/programs/runtime-evidence/graphiti-conformance.md docs/programs/runtime-evidence/canonical-and-derived-state.md docs/programs/runtime-evidence/portable-governance-evidence.md docs/programs/runtime-evidence/agent-manifest-correlation.md docs/programs/runtime-evidence/trace-action-evidence.md docs/programs/runtime-evidence/deletion-completeness-evidence.md reference/README.md"
+            echo "python scripts/validate_markdown_links.py README.md CONTRIBUTING.md docs/README.md docs/pama/README.md docs/04-governance-and-pama.md docs/08-source-material-index.md docs/33-pama-decision-table.md docs/40-aligned-projects-and-intellectual-lineage.md docs/SOURCE_RIGHTS_POLICY.md docs/adr/README.md docs/27-schema-registry-and-type-evolution.md docs/32-memory-quality-metrics.md docs/programs/runtime-evidence/README.md docs/programs/runtime-evidence/graphiti-conformance.md docs/programs/runtime-evidence/canonical-and-derived-state.md docs/programs/runtime-evidence/portable-governance-evidence.md docs/programs/runtime-evidence/agent-manifest-correlation.md docs/programs/runtime-evidence/trace-action-evidence.md docs/programs/runtime-evidence/deletion-completeness-evidence.md docs/programs/runtime-evidence/concurrency-conflict-evidence.md reference/README.md"
             echo "python scripts/validate_wiki_links.py wiki-src"
             echo "python scripts/generate_calibration_report.py reports/examples/calibration-results.example.json"
             echo '```'
