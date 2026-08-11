@@ -52,6 +52,16 @@ The required invariant is:
 selected_action ∈ permitted_action_set
 ```
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/pama-decision-flow.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/pama-decision-flow-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/pama-decision-flow-light.svg" alt="PAMA decision flow showing mutation proposal classification, authority floors, policy modifiers, authority outcomes, permitted action set construction, and commit or deferral with evidence" width="100%">
+  </picture>
+</p>
+
+The diagram is an explanatory flow, not a replacement for the canonical PAMA taxonomy or decision table. PAMA first keeps target class, lifecycle strength, requested operation, and downstream authority distinct, then composes those dimensions with consequence, actor, evidence, uncertainty, and policy. Foundational class floors and the operation/risk table establish a minimum authority outcome; defined modifiers may escalate it or relax only explicitly relaxable cases. `block` remains absorbing, deferral does not grant authority, and confidence, saturation, repetition, or validated capability never create a broader authority ceiling.
+
 ## Why PAMA matters for memory
 
 Without an authority model, memory systems tend to let confidence, repetition, relevance, or reinforcement quietly become permission. That creates several failure modes:
