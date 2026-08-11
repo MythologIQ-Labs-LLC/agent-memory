@@ -35,7 +35,7 @@ Level 6 does not mean “make the model deterministic.” It means uncertainty c
 Agent Memory currently includes:
 
 - 7 JSON Schemas
-- 25 conformance fixture definitions
+- 26 conformance fixture definitions
 - fixture invariant validation
 - schema validation
 - source-rights validation
