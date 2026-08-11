@@ -132,7 +132,12 @@ def _usable_at(timestamp: str, valid_from: str, valid_until: str | None, revoked
 
 @dataclass(frozen=True)
 class RuntimeObservation:
-    """Optional execution-time facts supplied independently by a verifier."""
+    """Optional execution-time facts supplied independently by a verifier.
+
+    Generic actor/PAMA authority continuity and isolation-domain membership
+    continuity are separate facts. A verifier must not infer that one remained
+    valid merely because the other did.
+    """
 
     action_ref: str | None = None
     execution_time: str | None = None
@@ -140,7 +145,9 @@ class RuntimeObservation:
     authority_state_ref: str | None = None
     source_domain_ref: str | None = None
     destination_domain_ref: str | None = None
+    domain_authorization_state_ref: str | None = None
     authority_valid_at_execution: bool | None = None
+    domain_authorization_valid_at_execution: bool | None = None
 
 
 def issue_evidence(
@@ -292,6 +299,11 @@ def verify_evidence(
         (runtime.authority_state_ref, governance["authority_state_ref"], "stale_or_wrong_authority_state_ref"),
         (runtime.source_domain_ref, scope.get("source_domain_ref"), "wrong_source_domain"),
         (runtime.destination_domain_ref, scope.get("destination_domain_ref"), "wrong_destination_domain"),
+        (
+            runtime.domain_authorization_state_ref,
+            scope.get("domain_authorization_state_ref"),
+            "stale_or_wrong_domain_authorization_state_ref",
+        ),
     ):
         if observed is not None and observed != signed:
             failures.append(failure)
@@ -366,6 +378,18 @@ def _structural_failures(evidence: Mapping[str, object]) -> list[str]:
     return failures
 
 
+def _cross_domain(scope: Mapping[str, object]) -> bool:
+    source = scope.get("source_domain_ref")
+    destination = scope.get("destination_domain_ref")
+    return (
+        isinstance(source, str)
+        and isinstance(destination, str)
+        and bool(source)
+        and bool(destination)
+        and source != destination
+    )
+
+
 def _result(
     integrity: str,
     failures: list[str],
@@ -374,8 +398,11 @@ def _result(
     runtime: RuntimeObservation,
 ) -> dict:
     governance = evidence.get("governance") if isinstance(evidence.get("governance"), dict) else {}
+    scope = evidence.get("scope") if isinstance(evidence.get("scope"), dict) else {}
     disposition = governance.get("disposition", "unverifiable")
     lifecycle = evidence.get("lifecycle_result", "unverifiable")
+    cross_domain = _cross_domain(scope)
+    signed_domain_state = scope.get("domain_authorization_state_ref")
 
     if runtime.action_ref is None:
         execution = "not_executed"
@@ -385,7 +412,18 @@ def _result(
         execution = "unauthorized_execution"
     elif runtime.authority_valid_at_execution is False:
         execution = "unauthorized_execution"
+    elif cross_domain and runtime.domain_authorization_valid_at_execution is False:
+        execution = "unauthorized_execution"
     elif runtime.authority_valid_at_execution is None:
+        execution = "unverifiable"
+    elif cross_domain and (
+        not isinstance(signed_domain_state, str)
+        or not signed_domain_state
+        or runtime.domain_authorization_state_ref is None
+        or runtime.domain_authorization_valid_at_execution is None
+    ):
+        # A boundary-crossing action needs execution-time membership/authorization
+        # continuity. Absence of that evidence never becomes optimistic permission.
         execution = "unverifiable"
     elif integrity == INTEGRITY_VALID:
         execution = "executed_as_authorized"
