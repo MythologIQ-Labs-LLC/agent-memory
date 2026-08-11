@@ -18,6 +18,7 @@ Agent Memory asks a larger question than _“how do we retrieve old context?”_
 
 | I want to... | Start here |
 |---|---|
+| Follow the architecture through focused visual decision flows | **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** |
 | Understand the architecture quickly | **[Getting Started](Getting-Started)** |
 | Learn the core vocabulary and invariants | **[Core Concepts](Core-Concepts)** |
 | Understand adaptive authority | **[PAMA](PAMA)** |
