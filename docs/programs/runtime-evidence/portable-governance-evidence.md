@@ -6,7 +6,7 @@ Parent implementation issue: #63.
 
 ## Purpose
 
-P4.5a exports a small, content-free projection of an Agent Memory governance decision so another process can verify integrity and correlate runtime behavior without receiving the raw memory or taking ownership of Agent Memory semantics.
+P4.5a exports a small, content-free projection of an Agent Memory governance decision so another process can verify integrity and correlate runtime behavior without receiving the raw memory, hidden reasoning, or a signing secret.
 
 The ownership boundary remains:
 
@@ -43,17 +43,17 @@ valid evidence + committed + executed as authorized + residual
 valid evidence + committed + executed as authorized + satisfied
 ```
 
-A valid authentication result never manufactures PAMA permission. A valid runtime action never proves lifecycle satisfaction.
+A valid signature never manufactures PAMA permission. A valid runtime action never proves lifecycle satisfaction.
 
 ## Portable evidence v1
 
-Schema: `schemas/portable-governance-evidence.schema.json`.
+Schema: `../../../schemas/portable-governance-evidence.schema.json`.
 
 The v1 projection contains:
 
 - evidence type and version
 - canonicalization profile
-- issuer ID, key ID, and authentication algorithm
+- issuer ID, key ID, and signature algorithm
 - issuance time
 - runtime `action_ref`
 - memory action class/name
@@ -67,7 +67,7 @@ The v1 projection contains:
 - optional domain-authorization-state reference
 - before/after state references
 - lifecycle result
-- authentication tag
+- signature
 
 It intentionally does **not** contain:
 
@@ -76,6 +76,7 @@ It intentionally does **not** contain:
 - the full canonical decision receipt
 - tenant/project/domain display names when an opaque reference is sufficient
 - a generic `valid: true` field
+- a private signing key or shared verification secret
 
 Low-entropy tenant, user, project, repository, and isolation-domain names should not be converted to plain unsalted hashes and treated as private. Callers should supply opaque IDs or keyed/privacy-preserving references where disclosure would matter.
 
@@ -97,25 +98,37 @@ The canonical receipt reference is:
 sha256:<hex sha256 of canonical receipt JSON>
 ```
 
-The portable object's authentication covers every evidence field except the `authentication` object itself.
+The Ed25519 signature covers every evidence field except the `authentication` object itself.
 
 ## Reference trust profile
 
-The first executable profile is `HMAC-SHA256` using Python's standard library.
+The first executable profile is **Ed25519**, implemented with the Python `cryptography` package.
 
-This is a deliberately small **symmetric trust-domain profile**. It demonstrates deterministic canonicalization, issuer/key binding, trust configuration, key validity windows, rotation, distrust/revocation timing, tamper detection, and detached verification without adding a crypto dependency to the reference implementation.
+The additional dependency is intentional. A symmetric HMAC profile would let a verifier forge evidence because verification requires possession of the signing secret; that fails the independent-verification premise of #63. Ed25519 lets the issuer retain the private key while independent verifiers receive only the public trust key.
 
-It does **not** provide:
+The profile demonstrates:
 
-- public verifiability
-- asymmetric issuer identity
-- non-repudiation
+- deterministic canonicalization
+- issuer/key binding
+- public-key verification
+- key-validity windows
+- key rotation with historical verification
+- revocation/distrust timing
+- tamper detection
+- detached verification after canonical content is no longer supplied
+
+It still does **not** invent:
+
 - a universal PKI
 - cross-organization trust discovery
+- production key storage
+- remote key distribution
+- certificate semantics
+- automatic online revocation infrastructure
 
-Those are future profile concerns. The wire contract names the algorithm explicitly so a later Ed25519 or other asymmetric profile can be introduced without redefining memory semantics.
+Those are later trust-profile concerns, not memory semantics.
 
-Historical evidence remains verifiable after key rotation when the verifier retains the historical trust key and the key was valid at evidence issuance time. A key revoked before issuance cannot produce acceptable new evidence.
+Historical evidence remains verifiable after key rotation when the verifier retains the historical public key and that key was valid at evidence issuance time. A key revoked before issuance cannot produce acceptable new evidence.
 
 ## Receipt resolution and forgetting
 
@@ -141,11 +154,12 @@ The reference verifier can compare signed evidence to independently observed run
 - authority-state reference
 - source isolation domain
 - destination isolation domain
+- execution time
 - execution-time authority continuity
 
-Wrong action catches replay against another execution. Wrong policy/authority references expose stale or mismatched decision state. Wrong domain catches an isolation-boundary mismatch without requiring raw domain contents.
+Wrong action catches replay against another execution. Wrong policy/authority references expose stale or mismatched decision state. Wrong domain catches an isolation-boundary mismatch without requiring raw domain contents. Execution before the signed decision is rejected.
 
-If an execution time is supplied but execution-time authority continuity is unknown, runtime authorization is reported as `unverifiable`, not optimistically permitted.
+If execution is observed but execution-time authority continuity is unknown, runtime authorization is reported as `unverifiable`, not optimistically permitted.
 
 ## Machine-readable result taxonomy
 
@@ -162,39 +176,43 @@ If an execution time is supplied but execution-time authority continuity is unkn
 }
 ```
 
-`binding_failures` is intentionally explicit because a verifier needs to distinguish tampering, unknown trust, replay, stale policy, stale authority, and wrong isolation domain rather than flattening them into the same red light.
+`binding_failures` is intentionally explicit because a verifier needs to distinguish tampering, unknown trust, replay, stale policy, stale authority, temporal mismatch, and wrong isolation domain rather than flattening them into the same red light.
 
 ## Executed vectors
 
-`reference/tests/test_portable_evidence.py` covers:
+`../../../reference/tests/test_portable_evidence.py` covers:
 
 - deterministic canonicalization
 - float rejection
+- schema validation of emitted evidence
 - successful receipt/action/policy/authority/domain binding
 - no raw canonical receipt or memory content in the portable projection
-- tamper detection
+- signature tamper detection
 - unknown/untrusted issuer
 - replay against a different `action_ref`
 - stale/wrong policy reference
 - stale/wrong authority-state reference
 - wrong source isolation domain
+- execution preceding the signed decision
+- fail-closed execution when authority continuity is unknown
 - valid denial plus unauthorized runtime execution
 - authorized deletion with residual lifecycle state
 - detached verification after canonical content is unavailable
 - wrong canonical receipt
-- historical verification across key rotation
+- historical public-key verification across key rotation
 - rejection of evidence newly issued after key revocation
 
 Run:
 
 ```bash
+python -m pip install jsonschema cryptography
 python -m unittest discover -s reference/tests -t reference
 python scripts/validate_schemas.py
 ```
 
 ## What this slice proves
 
-P4.5a now has an executable substrate-independent boundary for content-free portable governance evidence. It demonstrates that Agent Memory can authenticate and independently check the binding among a canonical receipt reference, decision-time governance state, isolation-domain references, and a runtime action while preserving lifecycle outcome as a separate semantic dimension.
+P4.5a now has an executable substrate-independent boundary for content-free, independently verifiable governance evidence. It demonstrates that Agent Memory can sign and independently check the binding among a canonical receipt reference, decision-time governance state, isolation-domain references, and a runtime action while preserving lifecycle outcome as a separate semantic dimension.
 
 The implementation also demonstrates the core deletion distinction:
 
@@ -202,7 +220,7 @@ The implementation also demonstrates the core deletion distinction:
 valid evidence of authorized deletion != proof of forgetting
 ```
 
-A signed, correctly executed delete may still carry `lifecycle_satisfaction = residual`.
+A correctly signed, authorized, correctly executed delete may still carry `lifecycle_satisfaction = residual`.
 
 ## What remains unproven
 
@@ -210,8 +228,7 @@ This slice does not yet prove:
 
 - Agent Manifest checkpoint/delta correlation (P4.5b)
 - TRACE/AgenTrust external action-evidence interoperability (P4.5c)
-- asymmetric or publicly verifiable trust
-- production key storage or remote key discovery
+- production key storage or remote trust-anchor discovery
 - external revocation infrastructure
 - multi-implementation interoperability
 - runtime-enforcement composition with AGT or another policy peer
