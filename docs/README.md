@@ -16,7 +16,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
 | Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
 | Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
-| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-021 |
+| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-022 |
 
 ## Native PAMA doctrine
 
@@ -137,11 +137,14 @@ Current doctrine state:
 ADR-001 through ADR-019: Accepted
 ADR-020: Proposed
 ADR-021: Proposed
+ADR-022: Proposed
 ```
 
 ADR-020 remains Proposed because it explicitly requires real end-to-end runtime evidence, including repeated behavioral evidence for stochastic containment. Documentation, schemas, and structurally valid fixtures are necessary but not sufficient.
 
 ADR-021 remains Proposed until portable memory-governance evidence has executable interoperability proof across the declared Agent Memory / external attestation boundary.
+
+ADR-022 remains Proposed until isolation domains, controlled crossings, same-agent task/project separation, derived-scope propagation, shared-memory membership, and the required schema/fixture surface are explicitly represented and validated.
 
 ## Governed-uncertainty audit trail
 
