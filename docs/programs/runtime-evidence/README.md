@@ -33,6 +33,8 @@ P4.5b is **external comparator evidence**: the tests execute the pinned Agent Ma
 
 P4.5c is **external action-evidence interoperability**: Agent Memory projects only content-free references into the existing TRACE/cMCP external execution-evidence path, keeps call identity distinct from Agent Memory action identity, and executes the resulting envelope through the released cMCP verifier. TRACE receipt validity remains separate from PAMA, runtime authorization, and lifecycle satisfaction.
 
+The P4.5 lifecycle composition is **derived lifecycle evidence**: the actual P4 residue partition and independent sweep deterministically produce the public residual/zero-residue measurement, and that measurement drives the signed P4.5a `lifecycle_result`. The portable result is therefore downstream of the deletion-completeness evidence instead of being an adjacent assertion.
+
 ## Comparator discipline
 
 External systems enter this program to answer one architectural question each, and are barred from becoming something else:
@@ -83,6 +85,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`portable-governance-evidence.md`](portable-governance-evidence.md) | P4.5a portable governance evidence core | executable substrate-independent Ed25519 issuer/verifier and adversarial vectors |
 | [`agent-manifest-correlation.md`](agent-manifest-correlation.md) | P4.5b Agent Manifest memory checkpoint correlation | pinned external comparator executed; a checkpoint built from a test log containing `DEL` remains distinct from Agent Memory lifecycle satisfaction |
 | [`trace-action-evidence.md`](trace-action-evidence.md) | P4.5c TRACE/cMCP action-evidence binding | content-free action receipt adapter plus released cMCP verifier comparator; TRACE receipt state remains separate from Agent Memory governance and lifecycle |
+| [`deletion-completeness-evidence.md`](deletion-completeness-evidence.md) | P4 -> P4.5 deletion lifecycle composition | declared residual, undeclared hard-gate failure, and zero-residue success drive signed portable lifecycle evidence and an exact-commit JSON report |
 
 ## Preconditions
 
