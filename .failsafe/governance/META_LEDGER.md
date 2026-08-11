@@ -208,3 +208,40 @@ docs/35 (authority does not transit seams, singular ownership, fail-closed
 competing claims, per-hop receipts, recognition-not-transfer certification).
 Branch restarted from post-merge main per merged-PR protocol; all six
 validators green; stealth maintained.
+
+---
+
+### Entry #6: P0 EVIDENCE FLOOR CLOSED (#43)
+
+**Timestamp**: 2026-08-11T07:00:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("evidence-floor:" + git tree hash at HEAD)
+= 76ea088221889f59eafe9acd06a2fd757560765170f7d92ae874924c80ef09ce
+(tree: b24bb9ac75977a76e7d352928f81f3fa785212c8)
+```
+
+**Previous Hash**: b37f4b80a93ccd115a684e13a337d003b5ae9bcbc3a8c44bb38db1ea3e9cc5b1
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= ade0126711cd9b4195b850386a82a832f997075fba0b4ce5c3509dc60c740472
+```
+
+**Decision**: Executed P0 of the runtime-evidence roadmap. All seven #43 gaps
+closed at b2159ca on the designated branch, incorporating the
+agent/close-evidence-gaps-43 starter commit by merge: 25 versioned fixtures
+with validator enforcement and documented rules; governed-promotion audit-trace
+fixture with five schema-validated correlated events; doc 32 four-stratum
+scorecard with disqualifying hard gates and trap-class severity; twelve
+canonical ADR backlinks; docs 15/19 governance cross-links with PAMA named;
+CONTRIBUTING validator dependency split; doc 27 seven-schema inventory.
+Full validation gate green at branch head. #43 left open for merge-time
+closure per the branch owner's no-partial-satisfaction stance. #48 cross-linked
+into #46 as the P3 slice with Graphiti-first sequencing note. Roadmap P1-P10
+assessed and endorsed; P1 (#5) requires external repository access.
