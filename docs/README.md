@@ -2,7 +2,7 @@
 
 This directory is the canonical documentation map for the Agent Memory reference architecture.
 
-The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all thirty-three numbered documents in numerical order is legal, but there are more humane options.
+The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all thirty-nine numbered documents in numerical order is legal, but there are more humane options.
 
 ## Choose your path
 
@@ -57,7 +57,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 24 | [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) | Deterministic substrate, probabilistic epistemics, bounded authority, doctrine challenges |
 | 25 | [`25-governed-uncertainty-documentation-conformance-audit.md`](25-governed-uncertainty-documentation-conformance-audit.md) | GU-1 through GU-10 documentation-conformance rubric |
 
-## 26-32: Executable and operational contracts
+## 26-39: Executable and operational contracts
 
 | # | Document | Purpose |
 |---|---|---|
@@ -68,6 +68,21 @@ The repository is intentionally layered. Start with the smallest path that answe
 | 30 | [`30-memory-observability-and-audit-events.md`](30-memory-observability-and-audit-events.md) | Structured memory events and reconstruction evidence |
 | 31 | [`31-recovery-rollback-and-replay.md`](31-recovery-rollback-and-replay.md) | Recovery, compensation, state/version binding, replay semantics |
 | 32 | [`32-memory-quality-metrics.md`](32-memory-quality-metrics.md) | Ongoing quality, safety, calibration, deletion, and outcome metrics |
+| 33 | [`33-pama-decision-table.md`](33-pama-decision-table.md) | Mutation type and risk class to minimum authority outcome, with modifiers |
+| 34 | [`34-adapter-contracts.md`](34-adapter-contracts.md) | Typed seam contracts: required handoff fields, failure modes, rejection semantics |
+| 35 | [`35-interoperability-profiles.md`](35-interoperability-profiles.md) | Six cumulative reliance profiles for cross-system memory exchange |
+| 36 | [`36-policy-as-memory.md`](36-policy-as-memory.md) | Policies as high-authority memory: versioning, certification, conflict, complete recall |
+| 37 | [`37-memory-economics-and-budget-policy.md`](37-memory-economics-and-budget-policy.md) | Budget dimensions and the pressure-shapes-priority-never-authority boundary |
+| 38 | [`38-human-correction-ux-contract.md`](38-human-correction-ux-contract.md) | Minimum user-facing evidence, correction, dispute, and indicator contract |
+| 39 | [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) | Component ownership candidates with explicit declared/contested/open status |
+
+## Profiles and future subsystems
+
+| Document | Purpose |
+|---|---|
+| [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md) | Decision memory: required fields, rationale preservation, supersession, drift, recall |
+| [`future/memory-compiler.md`](future/memory-compiler.md) | Bulk artifact-to-memory compilation — gated future subsystem |
+| [`future/multi-agent-shared-memory-protocol.md`](future/multi-agent-shared-memory-protocol.md) | Shared memory across agents and tenants — gated future subsystem |
 
 ## Architecture Decision Records
 
