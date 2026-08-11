@@ -312,6 +312,26 @@ Controls:
 - dependency checks
 - stronger authority as reversibility decreases
 
+### 19. Promotion-queue flooding
+
+The proportional-handling lanes concentrate friction at promotion and review boundaries — which makes those boundaries the highest-value place to attack by volume rather than by quality. An attacker, a compromised estimator, or merely a noisy environment floods the review queue with plausible-looking candidates until reviewer attention degrades, then a bad promotion rides through on fatigue. This is governance-fatigue exploitation, and it is a direct consequence of the architecture's own design choice to make review the gate.
+
+Attack path:
+
+```text
+many plausible candidates -> review queue saturates -> reviewer throughput or
+scrutiny degrades -> marginal candidate approved under fatigue -> durable authority gained
+```
+
+Controls:
+
+- admission cost: candidates must clear evidence-quality floors before consuming review capacity, so flooding pays the evidence cost per candidate, not the reviewer
+- pre-adjudication triage separating "needs adjudication" from "worth a look" by consequence, per the review-budget rules of the memory economics doctrine
+- per-source and per-estimator rate accounting on promotion proposals; a source whose candidate volume spikes is itself an anomaly signal feeding source trust
+- batched review windows with explicit capacity, so saturation becomes a visible queue-depth metric instead of silent scrutiny decay
+- fatigue never relaxes the gate: queue pressure produces conservative interim state, never auto-approval — load-shedding only as a versioned policy mutation
+- queue-depth, review-latency, and approval-rate-under-load metrics monitored as attack indicators, not just operations telemetry
+
 ## Probabilistic security components
 
 The threat model does **not** require every defense to be deterministic.
@@ -384,6 +404,7 @@ At minimum:
 - deletion residue
 - permanent deletion from predicted low utility
 - estimator drift
+- promotion-queue flooding under review-capacity pressure
 
 ## Research signals
 
