@@ -117,6 +117,7 @@ def _chain(receipt: dict, measurement, commit: str, action_ref: str) -> dict:
         before_state_ref="sha256:" + "6" * 64,
         source_domain_ref="domain:opaque:source",
         destination_domain_ref="domain:opaque:deleted",
+        domain_authorization_state_ref="domain-auth:deletion-report:41",
     )
 
 
