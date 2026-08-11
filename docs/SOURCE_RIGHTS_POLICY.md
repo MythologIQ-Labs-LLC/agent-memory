@@ -14,9 +14,26 @@ When reuse rights are absent, unclear, unnecessary, or disproportionate to the v
 
 This is a repository governance policy, not a substitute for legal advice.
 
+## Native doctrine versus external source material
+
+Agent Memory distinguishes **native contributor-authored doctrine** from **external source material**.
+
+Native doctrine does not need to be forced into the external source registry merely to demonstrate provenance. Its canonical location and authorship should be recorded in the doctrine tree itself.
+
+For native doctrine:
+
+- record the contributor or originator when provenance matters;
+- keep the canonical doctrine in this repository;
+- do not invent an external locator or external reuse license;
+- separately govern any third-party research, standards text, diagrams, code, or other expression incorporated into or used to support that doctrine.
+
+**Proportional Adaptive Mutation Authority (PAMA) is native Agent Memory doctrine authored by Kevin R. Knapp.** Its canonical foundation is [`pama/README.md`](pama/README.md). External OWASP, NIST, regulatory, research, or implementation references may support, challenge, benchmark, or align with PAMA, but they are not the source of PAMA.
+
+This distinction matters because a contributor-authored framework may itself cite external standards. The presence of those references does not transfer authorship of the framework to the standards body, nor does contributor authorship grant permission to copy protected expression from the referenced standards.
+
 ## Default source treatment
 
-Unless a stronger reuse basis has been verified and recorded, treat external material as:
+Unless a stronger reuse basis has been verified and recorded, treat **external** material as:
 
 ```text
 LINKABLE
@@ -29,25 +46,27 @@ SYNTHESIS-ONLY
 The repository should express the idea independently rather than copy distinctive prose, diagrams, tables, screenshots, or code.
 ```
 
-Unknown rights status defaults to **citation and independent synthesis only**.
+Unknown external rights status defaults to **citation and independent synthesis only**.
 
 ## Reuse modes
 
-Every material source should be classifiable as one of these modes:
+Every materially relevant external source should be classifiable as one of these modes:
 
 | Mode | Meaning | Default posture |
 |---|---|---|
 | `citation_only` | Link or cite the source without importing protected expression | Safe default |
 | `independent_synthesis` | Explain facts, ideas, findings, or mechanisms in original repository language | Preferred default |
-| `author_originated` | Material originated with a repository contributor who is asserting authorship/provenance | May be reused subject to contributor authority and any third-party constraints |
+| `author_originated` | Material originated with a repository contributor who is asserting authorship/provenance outside or before the current repository | May be reused subject to contributor authority and any third-party constraints |
 | `licensed_reuse` | Copy or adapt material under a verified license | License obligations must be satisfied |
 | `permission_granted` | Copy or adapt under explicit permission outside a standard license | Permission evidence must be retained |
 
 `licensed_reuse` and `permission_granted` require an explicit reuse basis in the source registry.
 
+Native doctrine maintained directly in Agent Memory is not required to have a source-registry entry unless there is a separate material-reuse reason to create one.
+
 ## What may be linked
 
-When a named source has a lawful, stable public locator, link the most specific authoritative artifact available.
+When a named external source has a lawful, stable public locator, link the most specific authoritative artifact available.
 
 Prefer, in order:
 
@@ -104,6 +123,7 @@ For example, an MIT-licensed repository may contain an issue comment written by 
 - Private accessibility is not publication permission.
 - Do not expose private URLs, confidential text, screenshots, or implementation details merely to make public provenance look complete.
 - A public successor or related project may be identified, but it must be labeled as a successor or related implementation rather than substituted for the private provenance source.
+- A private project should not appear in active Agent Memory provenance surfaces merely because it is conceptually adjacent. It should add a specific, articulable implementation or evidence value.
 
 ### Code
 
@@ -141,9 +161,11 @@ An authorship/provenance statement is not automatically a claim that the underly
 
 For UOR Framework issue #2, the thermodynamic memory-lifecycle proposal was opened by Kevin R. Knapp. The **"thermodynamic ground state" framing as used in that proposal is recorded in Agent Memory as a Kevin R. Knapp contribution**. This is a provenance record. It does not depend on treating the phrase itself as an exclusively protectable asset.
 
+PAMA is stronger than a provenance note attached to an external source: it is a contributor-authored framework maintained as native Agent Memory doctrine. Its external alignment references retain their own rights and citation requirements.
+
 ## Material-reuse record
 
-When source material is materially reused rather than merely cited or independently synthesized, record at least:
+When external source material is materially reused rather than merely cited or independently synthesized, record at least:
 
 ```text
 source_ref
@@ -161,7 +183,7 @@ reuse_basis
 verified_at
 ```
 
-Machine-readable primary-source records live in `sources/source-registry.json` and are validated against `schemas/source-record.schema.json`.
+Machine-readable external/material-reuse records live in `sources/source-registry.json` and are validated against `schemas/source-record.schema.json`.
 
 ## Hard gates
 
@@ -175,6 +197,8 @@ A source marked private must not receive a fabricated public provenance link.
 
 A project successor must not be represented as the originating source.
 
+Native contributor-authored doctrine must not be mislabeled as an unresolved external source merely because it previously existed in another document or repository context.
+
 ## Review checklist
 
 Before merging externally sourced material, reviewers should ask:
@@ -187,5 +211,7 @@ Before merging externally sourced material, reviewers should ask:
 - Is any private or confidential provenance being exposed?
 - Is contributor-originated material correctly attributed?
 - Are we recording provenance without overstating legal exclusivity?
+- Is this actually an external source, or is it native contributor-authored doctrine that belongs in the doctrine tree?
+- Does a named private or external project add specific value here, or is it merely adjacent?
 
 When the answer is uncertain, prefer citation and independent synthesis and record the unresolved rights question rather than rationalizing reuse after the fact.

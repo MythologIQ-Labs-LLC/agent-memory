@@ -8,6 +8,8 @@ The goal is not to absorb every adjacent idea into Agent Memory. That would recr
 
 Expansion proposals must also preserve the governed-uncertainty boundary. Components that classify, infer, rank, predict, or discover may remain probabilistic. Components that authorize durable consequence must expose explicit policy and authority semantics.
 
+PAMA is already native core doctrine. Expansion work may refine its implementation contracts, but should not treat it as an external subsystem to be adopted.
+
 ## Recommendation summary
 
 | Recommendation | Placement | Priority | Governed-uncertainty posture | Rationale |
@@ -421,7 +423,9 @@ Do not market this as an agent memory library.
 
 Treat it as a reference architecture for governed agent memory systems.
 
-That lets EvolveAI, CodeGenome, COREFORGE, UOR, FailSafe, Bicameral, and future systems remain separate implementations while still aligning to a common doctrine.
+That lets EvolveAI, CodeGenome, COREFORGE, UOR, FailSafe, and future implementation systems remain separate while aligning to a common doctrine.
+
+PAMA remains native doctrine within Agent Memory rather than another external implementation name in that list.
 
 The long-term wedge is not memory recall.
 

@@ -22,20 +22,22 @@ Select one or more:
 - [ ] Certification / crystallization
 - [ ] Runtime / Neurospace
 - [ ] Code reality graph
+- [ ] Durable decision memory
 - [ ] Conformance
 
-## Related system
+## Related implementation
 
-Select one or more:
+Select one or more only when the implementation adds concrete mapping value:
 
 - [ ] UOR Framework
 - [ ] EvolveAI
 - [ ] CodeGenome
 - [ ] COREFORGE Vault / Neurospace
-- [ ] PAMA
 - [ ] FailSafe / Arbiter
-- [ ] Bicameral
-- [ ] Other
+- [ ] Other implementation
+- [ ] Native doctrine only / no external implementation
+
+> PAMA is native Agent Memory doctrine, not an external implementation choice. Use the affected-layer field for PAMA and name a related implementation only when code or runtime evidence is actually being mapped.
 
 ## Current behavior or concept
 
@@ -53,9 +55,9 @@ What decision is needed?
 
 - [ ] The affected layer is identified.
 - [ ] Relevant docs or ADRs are updated.
-- [ ] Implementation impact is mapped.
+- [ ] Implementation impact is mapped only where evidence exists.
 - [ ] Conformance implications are recorded.
-- [ ] Cross-repo links are added if needed.
+- [ ] Cross-repo links are added only if needed.
 
 ## Notes
 
