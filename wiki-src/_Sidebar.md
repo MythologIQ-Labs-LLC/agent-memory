@@ -2,12 +2,12 @@
 
 **Start**
 - [Home](Home)
+- [Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)
 - [Getting Started](Getting-Started)
 - [Core Concepts](Core-Concepts)
 - [Glossary](Glossary)
 
 **Architecture**
-- [Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)
 - [PAMA](PAMA)
 - [Lifecycle and Forgetting](Lifecycle-and-Forgetting)
 - [Canonical and Derived State](Canonical-and-Derived-State)
