@@ -10,18 +10,18 @@ From working memory to inherited state. From biological theory to executable con
 ![Architecture](https://img.shields.io/badge/Architecture-Reference%20Architecture-334155)
 ![ADRs](https://img.shields.io/badge/ADRs-19%20Accepted%20%7C%201%20Proposed-2563eb)
 ![Conformance](https://img.shields.io/badge/Conformance-Level%206%20Spec-7c3aed)
-![Fixtures](https://img.shields.io/badge/Fixtures-24%20Validated-0f766e)
+![Fixtures](https://img.shields.io/badge/Fixtures-25%20Validated-0f766e)
 ![Research](https://img.shields.io/badge/Research-Open%20Evidence-b45309)
 [![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)
 
-**[Documentation](docs/README.md)** · **[PAMA](docs/pama/README.md)** · **[Architecture decisions](docs/adr/README.md)** · **[Research map](docs/23-research-bibliography.md)** · **[Conformance](docs/06-conformance-test-plan.md)** · **[Contributing](CONTRIBUTING.md)** · **[Governance](GOVERNANCE.md)** · **[Security](SECURITY.md)**
+**[Documentation](docs/README.md)** · **[Wiki](https://github.com/MythologIQ-Labs-LLC/agent-memory/wiki)** · **[PAMA](docs/pama/README.md)** · **[Architecture decisions](docs/adr/README.md)** · **[Research map](docs/23-research-bibliography.md)** · **[Conformance](docs/06-conformance-test-plan.md)** · **[Contributing](CONTRIBUTING.md)** · **[Governance](GOVERNANCE.md)** · **[Security](SECURITY.md)**
 
 </div>
 
 ---
 
 > [!IMPORTANT]
-> **Current maturity:** the doctrine, schemas, and 25 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 remains Proposed** because governed uncertainty still requires real runtime evidence end to end. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
+> **Current maturity:** the doctrine, schemas, and 25 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 remains Proposed** because its acceptance criteria still require broader runtime evidence, including concurrency and deletion-propagation behavior beyond the current reference adapter. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
 
 ## The thesis
 
