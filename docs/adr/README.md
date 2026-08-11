@@ -27,11 +27,14 @@ Implementation maturity is tracked separately through documentation, fixtures, c
 ```text
 ADR-001 through ADR-019: Accepted
 ADR-020: Proposed
+ADR-021: Proposed
 ```
 
 ADRs 001-019 now have their required canonical doctrine contracts and, where specified, repository-level schema/fixture evidence.
 
 ADR-020 remains deliberately different. It requires **runtime end-to-end evidence**, not merely documentation or fixture structure.
+
+ADR-021 proposes the interoperability boundary for **portable memory-governance evidence**. It keeps Agent Memory authoritative for memory semantics, PAMA, lifecycle obligations, and canonical decision receipts while allowing external trust systems such as AgenTrust to verify and correlate evidence without redefining those semantics.
 
 ## Current status policy
 
@@ -63,6 +66,28 @@ estimate / proposal
 It also requires repeated behavioral evidence for stochastic containment, cross-scope recall, concurrency, deletion residue, and related adversarial cases.
 
 The repository now has machine-readable schemas and fixture definitions for those cases, but fixture validity is not runtime proof.
+
+## Portable memory-governance evidence
+
+[`ADR-021`](ADR-021-portable-memory-governance-evidence-boundary.md) is intentionally **Proposed**.
+
+Its central boundary is:
+
+```text
+Agent Memory
+  owns memory semantics, PAMA, lifecycle, and canonical receipts
+        |
+        v
+portable evidence projection
+        |
+        v
+external trust / attestation system
+  verifies binding, integrity, and execution correlation
+```
+
+The external trust system does not acquire authority to redefine memory-specific permission or infer lifecycle satisfaction from cryptographic integrity alone.
+
+ADR-021 acceptance requires an executable interoperability proof, including negative paths and at least one deletion-completeness scenario that distinguishes a valid memory mutation/checkpoint from successful semantic forgetting.
 
 ## Canonical references
 
