@@ -167,3 +167,44 @@ open issues to 2: #5 (blocked on external repository access) and #43
 (consolidated residual gaps). All validators green at every commit; commit
 messages and issue comments carry no attribution trailers per Governor
 directive.
+
+---
+
+### Entry #5: EXTERNAL ADVISORY ASSESSED AND ACTIONED
+
+**Timestamp**: 2026-08-11T05:30:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("advisory-slice:" + git tree hash of docs/ at HEAD)
+= 9786a6ffada43b961fb5d918287bcd30f9182087db5cf9722955ed0cbcfd63b5
+(docs tree: 740a8aa93c1478b35adce84bb994b0d7cc9c3e1e)
+```
+
+**Previous Hash**: 43f3936ffe183f5a536ba86edbc79519cf5c6f733027765a8571b0f5e3fb448c
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= b37f4b80a93ccd115a684e13a337d003b5ae9bcbc3a8c44bb38db1ea3e9cc5b1
+```
+
+**Decision**: Five-item external advisory (non-binding) assessed against
+repository reality after upstream commits 217a74e and ec73edd elevated PAMA to
+native doctrine. Item 1 (executable harness): accepted, scoped as issue #48
+with a thin system-under-test interface, toy implementation, multi-trial
+stochastic support, and a second-phase external substrate bridge. Item 2
+(proven-vs-aspirational matrix): already delivered by docs/39, further
+strengthened upstream by the doctrine-owned status vocabulary; no action.
+Item 3 (verification economics): accepted; verification-budget section added
+to docs/37 with sufficiency floors, cost attribution, bounded deferral, and
+three new metrics. Item 4 (promotion-queue flooding): accepted; threat 19
+added to docs/15 with controls and a conformance case. Item 5 (inter-system
+authority conflict): advisory arrived truncated; inferable core implemented in
+docs/35 (authority does not transit seams, singular ownership, fail-closed
+competing claims, per-hop receipts, recognition-not-transfer certification).
+Branch restarted from post-merge main per merged-PR protocol; all six
+validators green; stealth maintained.
