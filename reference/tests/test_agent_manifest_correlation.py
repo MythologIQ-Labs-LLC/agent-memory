@@ -137,7 +137,6 @@ class AgentManifestCorrelationTests(unittest.TestCase):
             delta_accepted=verdict.accepted,
             delta_reason=verdict.reason,
             representation="kv",
-            operation_kind="DEL",
         )
 
     def test_pinned_release_and_repository_identity_are_explicit(self):
@@ -158,7 +157,8 @@ class AgentManifestCorrelationTests(unittest.TestCase):
             "sha256:9a41dee8ec223727525f8b26685e413664190d2b82cd62d4f7c15180a9e1f5af",
         )
 
-    def test_upstream_del_checkpoint_is_accepted(self):
+    def test_upstream_checkpoint_advance_executed_with_del_is_accepted(self):
+        self.assertEqual(self.after_ops[-1]["op"], "DEL")
         self.assertTrue(self.verdict.accepted)
         self.assertEqual(self.verdict.reason, "accepted")
         self.assertEqual(self.new.tree_size, self.previous.tree_size + 1)
@@ -168,14 +168,16 @@ class AgentManifestCorrelationTests(unittest.TestCase):
         correlation = self._correlate("residual")
         self.assertEqual(correlation["correlation_integrity"], "valid")
         self.assertEqual(correlation["agent_manifest"]["delta_verification"], "accepted")
-        self.assertEqual(correlation["agent_manifest"]["operation_kind"], "DEL")
+        self.assertEqual(correlation["agent_memory"]["memory_action"], "permanent_deletion")
         self.assertEqual(correlation["agent_memory"]["governance_disposition"], "committed")
         self.assertEqual(correlation["agent_memory"]["lifecycle_satisfaction"], "residual")
+        self.assertNotIn("operation_kind", correlation["agent_manifest"])
 
     def test_same_valid_del_checkpoint_can_accompany_satisfied_lifecycle(self):
         correlation = self._correlate("satisfied")
         self.assertEqual(correlation["correlation_integrity"], "valid")
         self.assertEqual(correlation["agent_manifest"]["delta_verification"], "accepted")
+        self.assertEqual(correlation["agent_memory"]["memory_action"], "permanent_deletion")
         self.assertEqual(correlation["agent_memory"]["lifecycle_satisfaction"], "satisfied")
 
     def test_rejected_manifest_delta_is_a_valid_correlated_negative_outcome(self):
@@ -210,7 +212,6 @@ class AgentManifestCorrelationTests(unittest.TestCase):
             delta_accepted=self.verdict.accepted,
             delta_reason=self.verdict.reason,
             representation="kv",
-            operation_kind="DEL",
         )
         self.assertEqual(correlation["correlation_integrity"], "invalid")
         self.assertIn("portable_evidence_invalid", correlation["binding_failures"])
