@@ -152,6 +152,8 @@ class TraceActionEvidenceTests(unittest.TestCase):
         result = self._verify(receipt, portable, bundle, observed_action_ref="action:other")
         self.assertEqual(result["trace_receipt_status"], TRACE_RECEIPT_INVALID)
         self.assertIn("wrong_action_ref", result["binding_failures"])
+        self.assertEqual(result["agent_memory"]["runtime_execution"], "execution_mismatch")
+        self.assertIn("wrong_action_ref", result["agent_memory"]["binding_failures"])
 
     def test_detached_payload_tamper_is_detected(self):
         receipt, portable, bundle = self._bundle()
