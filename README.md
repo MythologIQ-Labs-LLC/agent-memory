@@ -10,7 +10,7 @@ From working memory to inherited state. From biological theory to executable con
 ![Architecture](https://img.shields.io/badge/Architecture-Reference%20Architecture-334155)
 ![ADRs](https://img.shields.io/badge/ADRs-19%20Accepted%20%7C%202%20Proposed-2563eb)
 ![Conformance](https://img.shields.io/badge/Conformance-Level%206%20Spec-7c3aed)
-![Fixtures](https://img.shields.io/badge/Fixtures-25%20Validated-0f766e)
+![Fixtures](https://img.shields.io/badge/Fixtures-26%20Validated-0f766e)
 ![Research](https://img.shields.io/badge/Research-Open%20Evidence-b45309)
 [![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)
 
@@ -21,7 +21,7 @@ From working memory to inherited state. From biological theory to executable con
 ---
 
 > [!IMPORTANT]
-> **Current maturity:** the doctrine, schemas, and 25 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 and ADR-021 remain Proposed** because their acceptance criteria require broader runtime and interoperability evidence. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
+> **Current maturity:** the doctrine, schemas, and 26 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 and ADR-021 remain Proposed** because their acceptance criteria require broader runtime and interoperability evidence. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
 
 ## The thesis
 
@@ -652,7 +652,7 @@ agent-memory/
 │   └── audits/                     # preserved audit history
 ├── sources/                        # external/material source-rights registry
 ├── schemas/                        # doctrine-level JSON Schemas
-├── fixtures/                       # 25 conformance fixture definitions
+├── fixtures/                       # 26 conformance fixture definitions
 ├── scripts/                        # fixture, schema, link, and doctrine-boundary validators
 └── .github/
     ├── CODEOWNERS
