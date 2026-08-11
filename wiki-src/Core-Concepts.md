@@ -63,6 +63,9 @@ relevance != permission
 saturation != truth
 utility != deletion authority
 proposal != commit
+canonical != derived
+raw delete != full delete
+rebuild != maintenance
 historical truth != current truth
 chronology != causality
 uncertain sensitivity != non-sensitive
@@ -79,10 +82,13 @@ A memory can remain historically valid while no longer describing the present.
 ```text
 historically true != currently true
 stale != false
+stale != residual
 superseded != corrected
 ```
 
 Agent Memory keeps those distinctions because silently overwriting history destroys evidence.
+
+The last two lines carry more weight than they look. *Stale* means a source has changed, so derived content may be wrong and recomputing it may help. *Residual* means a source was deleted, so derived content may be prohibited and recomputing it helps nobody — only the deletion authority can resolve that. Collapsing both into "invalid" is the most natural mistake in this area and the most expensive. See **[Canonical and Derived State](Canonical-and-Derived-State)**.
 
 ## Canonical sources
 
