@@ -2,56 +2,107 @@
 
 ## Purpose
 
-[`05-repo-implementation-map.md`](05-repo-implementation-map.md) maps named systems into the architecture's roles and control classes. This document adds the ownership dimension: for each component of [`11-component-architecture.md`](11-component-architecture.md), who is the primary owner, who consumes it, and what its implementation status actually is — so concepts do not drift back into repo-local folklore.
+[`05-repo-implementation-map.md`](05-repo-implementation-map.md) maps named implementation systems into Agent Memory roles and control classes. This document adds the ownership dimension: for each component of [`11-component-architecture.md`](11-component-architecture.md), who owns the doctrine, who is a candidate implementation owner, who consumes it, and what its implementation status actually is.
 
-**Epistemic status: declared, not verified.** This repository is the doctrine and conformance authority; it does not contain, build, or test the implementation systems named below. Every ownership claim is a candidate assignment awaiting the implementation evidence defined in `05-repo-implementation-map.md`, and the doctrine backlinks of issue #5. Nothing here is a conformance claim — see the claiming rules of [`35-interoperability-profiles.md`](35-interoperability-profiles.md).
+This distinction matters especially for PAMA: **Agent Memory owns the PAMA doctrine. A runtime implementation owner is still open.** Those are different facts and should not be collapsed into “no standalone PAMA repository exists.” No standalone external repository is required for native doctrine.
+
+**Epistemic status for implementation ownership: declared, not verified unless stated otherwise.** This repository is the doctrine and conformance authority; it does not contain, build, or test most implementation systems named below. Every external ownership claim is a candidate assignment awaiting the implementation evidence defined in `05-repo-implementation-map.md`. Nothing here is a conformance claim unless it has the required evidence under [`35-interoperability-profiles.md`](35-interoperability-profiles.md).
 
 ## Status vocabulary
 
 ```text
-declared    ownership asserted by doctrine; no implementation evidence in this repo
-partial     some implementation exists per its own repo's claims; unverified here
-verified    implementation evidence linked and checked against doctrine (none yet)
-contested   more than one system claims primary ownership; consolidation needed
-open        no credible owner yet
+doctrine-owned  canonical semantics are owned by Agent Memory
+open            no verified runtime implementation owner yet
+declared        implementation ownership asserted; no conformance evidence in this repo
+partial         some implementation exists per its own repo's claims; unverified here
+verified        implementation evidence linked and checked against doctrine
+contested       more than one implementation claims primary ownership; consolidation needed
 ```
 
 ## Ownership map
 
-| Component | Primary owner (candidate) | Secondary consumers | Status |
+| Component | Doctrine / primary owner | Secondary consumers or implementation candidates | Status |
 |---|---|---|---|
-| Identity Substrate | UOR Framework; CodeGenome for code-node identity | all components | declared |
-| Evidence and Provenance | CodeGenome; FailSafe receipts; COREFORGE ledgers | PAMA, Certification, Conformance | declared, **contested** — three ledger-shaped systems overlap |
-| Reality Graphs | CodeGenome | Bicameral (decision graphs), Runtime Memory | declared |
-| Lifecycle Engine | EvolveAI | COREFORGE Vault | declared, **contested** — Vault also holds lifecycle candidates |
-| Saturation and Decay | EvolveAI (L1/L2/L3 tiers, CMHL decay, REM synthesis) | PRISM-style consumers, Lifecycle | declared |
-| PAMA | dedicated governance module | every mutating component | **open** — no standalone PAMA implementation exists; highest-risk gap |
-| Certification | FailSafe; Arbiter; approval workflows | Lifecycle, Crystallization gate | declared, **contested** — certifier independence (doc 35, Profile 5) must survive consolidation |
-| Runtime Memory Space | COREFORGE Vault / Neurospace | agent runtimes, Context Assembly | declared |
-| Context Assembly | COREFORGE; agent runtimes | user-facing products | declared |
-| Correction and Dispute | Vault, Bicameral, FailSafe-style workflows | Recall admission, Quality metrics | declared, **contested** — three partial candidates, no owner of the user-facing contract in [`38-human-correction-ux-contract.md`](38-human-correction-ux-contract.md) |
-| Conformance | this repository | every implementation | **verified** — the one component whose owner is checkable here: schemas, fixtures, validators, CI |
-| Failure / negative memory | Shadow Genome | Scoring, Threat model | declared |
+| Identity Substrate | UOR Framework semantics as mapped by Agent Memory; CodeGenome for code-node identity | all components | declared |
+| Evidence and Provenance | Agent Memory contracts | CodeGenome, FailSafe receipts, COREFORGE ledgers | declared, **contested implementation** — three ledger-shaped systems overlap |
+| Reality Graphs | Agent Memory contract; CodeGenome candidate implementation | Runtime Memory | declared |
+| Lifecycle Engine | Agent Memory lifecycle doctrine | EvolveAI proposer, COREFORGE Vault committer candidates | declared, **contested implementation** |
+| Saturation and Decay | Agent Memory scoring doctrine | EvolveAI implementation candidate | declared |
+| **PAMA** | **Agent Memory native doctrine, authored by Kevin R. Knapp** | every mutating component; runtime policy module/service TBD | **doctrine-owned; runtime implementation open** |
+| Certification | Agent Memory certification contract | FailSafe, Arbiter, approval workflows | declared, **contested implementation** |
+| Runtime Memory Space | Agent Memory runtime contract | COREFORGE Vault / Neurospace | declared |
+| Context Assembly | Agent Memory recall/context contract | COREFORGE and agent runtimes | declared |
+| Correction and Dispute | Agent Memory correction/dispute contract | Vault and FailSafe-style workflows | declared, **contested implementation** |
+| Durable Decision Memory | Agent Memory durable-decision profile | implementation candidates must map explicitly to profile | **doctrine-owned; runtime implementation open** |
+| Conformance | this repository | every implementation | **verified** — schemas, fixtures, validators, CI |
+| Failure / negative memory | Agent Memory negative-memory doctrine | Shadow Genome implementation candidate | declared |
+
+## PAMA ownership
+
+PAMA's canonical semantics live here:
+
+- [`pama/README.md`](pama/README.md)
+- [`04-governance-and-pama.md`](04-governance-and-pama.md)
+- [`33-pama-decision-table.md`](33-pama-decision-table.md)
+- [`adr/ADR-004-pama-controls-mutation-authority.md`](adr/ADR-004-pama-controls-mutation-authority.md)
+
+The open implementation question is **where the authority evaluator and enforcement boundary run**, not who owns the framework.
+
+A runtime implementation may live inside a larger repository or service if it preserves the semantic boundary. It must expose at least:
+
+```text
+M0-M5 target class
+lifecycle strength
+requested operation
+A0-A5 downstream authority
+actor and charter
+scope and reversibility
+evidence and uncertainty
+policy version
+permitted / prohibited outcomes
+selected action
+committed consequence receipt
+```
+
+PAMA must not be absorbed into a storage or estimator subsystem in a way that makes authority indistinguishable from relevance, confidence, saturation, or implementation convenience.
 
 ## Consolidation and segmentation calls
 
-**Should consolidate** (duplicated concepts):
+**Should consolidate** where implementations duplicate contracts:
 
-- The three ledger-shaped systems (CodeGenome provenance, FailSafe receipts, COREFORGE ledgers) should converge on the decision-receipt and audit-event schemas ([`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json), [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json)) rather than each defining a private evidence format.
+- The three ledger-shaped implementation candidates (CodeGenome provenance, FailSafe receipts, COREFORGE ledgers) should converge on the decision-receipt and audit-event schemas ([`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json), [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json)) rather than each defining a private evidence format.
 - Lifecycle ownership must resolve to one committer: EvolveAI proposing transitions that Vault commits is a legitimate split (proposal versus commit per [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md)); both committing is not.
 
 **Should remain segmented** (per [`12-concept-segmentation-matrix.md`](12-concept-segmentation-matrix.md)):
 
-- Certification must not collapse into the system that proposes candidates, whatever repo hosts both — independence is the point.
-- PAMA must not be absorbed into Vault or any single runtime: whichever repo implements it, the authority boundary stays a separate, auditable module consumed through the PAMA adapter of [`34-adapter-contracts.md`](34-adapter-contracts.md).
+- Certification must not collapse into the system that proposes candidates, whatever repo hosts both. Independence is the point.
+- PAMA's authority boundary remains a separate, auditable module/contract regardless of which runtime repository implements it. The PAMA adapter of [`34-adapter-contracts.md`](34-adapter-contracts.md) is the seam.
 - Identity stays out of every scoring system. No estimator gets to mint identity.
+- Durable decision memory is an Agent Memory profile; an adjacent product does not become its doctrine owner merely because it implements decisions.
+
+## External implementation inclusion rule
+
+A named external or private implementation should appear in this map only when it adds specific value:
+
+1. a concrete implementation responsibility;
+2. evidence that can be mapped to an Agent Memory contract or profile;
+3. a meaningful conformance candidate; or
+4. a deliberate contested-ownership question that must be resolved.
+
+Conceptual adjacency alone is insufficient.
 
 ## Resolution path
 
-Ownership claims graduate from `declared` only through the evidence items of `05-repo-implementation-map.md`: a doctrine backlink in the owning repo (issue #5), an implementation-alignment issue mapping its slice, and eventually fixture results claiming a profile from `35-interoperability-profiles.md`. Contested rows are resolved by cross-repo decision, recorded here with the decision reference — not by whichever implementation ships first.
+Implementation claims graduate from `declared` only through the evidence items of `05-repo-implementation-map.md`: a doctrine backlink in the implementing repo, an implementation-alignment issue mapping its slice, and eventually fixture results claiming a profile from `35-interoperability-profiles.md`.
+
+Contested rows are resolved by evidence and explicit cross-repo decision, recorded here with the decision reference, not by whichever implementation ships first.
+
+Native doctrine ownership does not require that process. PAMA is already canonical doctrine; its runtime implementation remains subject to conformance evidence.
 
 ## Doctrine
 
-Ownership is a governance fact, not a deployment fact.
+Ownership is a governance fact, not merely a deployment fact.
 
-A component belongs to the repo that accepts its doctrine obligations — its contracts, its conformance surface, its audit duties. Code without those obligations is not an owner; it is an unverified volunteer.
+A component's **doctrine owner** defines its obligations, contracts, conformance surface, and audit duties. An **implementation owner** must demonstrate that its code accepts those obligations.
+
+Code without those obligations is not an owner. It is an unverified volunteer.

@@ -14,6 +14,8 @@ Agent Memory is one overall architecture made of multiple governed components.
 
 It is not one monolithic product, library, database, score, graph, vault, protocol, or model.
 
+PAMA is a native governance component of this architecture, not an external product dependency.
+
 ## System shape
 
 ```text
@@ -23,11 +25,12 @@ Agent Memory System
 ├── Reality Graphs
 ├── Lifecycle Engine
 ├── Saturation and Decay Engine
-├── Governance and Mutation Authority
+├── Governance and Mutation Authority (PAMA)
 ├── Certification and Crystallization Gate
 ├── Runtime Memory Space
 ├── Context Assembly Surface
 ├── Correction and Dispute Surface
+├── Durable Decision Memory
 ├── Conformance and Calibration Harness
 └── Product and Agent Integrations
 ```
@@ -41,13 +44,14 @@ Agent Memory System
 | Reality Graphs | Domain-specific structured reality | code graph, decision graph, task graph, relation graph | runtime memory authority | deterministic identity + probabilistic relations |
 | Lifecycle Engine | Memory state transitions | transient, observed, linked, candidate, disputed, pruned, crystallized | identity semantics | governed state machine |
 | Saturation and Decay Engine | Persistence pressure | calibrated sigma, decay, pressure, routing candidacy | correctness, certification | probabilistic / heuristic / learned estimates |
-| Governance and Mutation Authority | Permission to change memory | PAMA outcomes, risk, reversibility, authority | raw scoring | deterministic or formally bounded governance envelope |
+| Governance and Mutation Authority | Permission to change memory or downstream authority | native PAMA outcomes, M0-M5 target classes, A0-A5 authority ceilings, risk, reversibility | raw scoring, factual truth | deterministic or formally bounded governance envelope |
 | Certification and Crystallization Gate | Durable transition approval | verification, approval, certificate, scope | ongoing truth forever | governed consequence |
 | Runtime Memory Space | Operational use | Vault, Neurospace, context recall, graph traversal | canonical doctrine ownership | hybrid retrieval + enforced scope |
 | Context Assembly Surface | What the agent sees now | prompt context, retrieved memories, active constraints | memory mutation without authority | probabilistic ranking inside governed admission |
 | Correction and Dispute Surface | How memory changes safely | user correction, contradiction, reconciliation | silent overwrite | mixed inference + governed commit |
+| Durable Decision Memory | Decision continuity and rationale | durable decisions, supersession, drift evidence, rationale preservation | product-specific ownership | governed memory profile |
 | Conformance and Calibration Harness | System validation | fixtures, reports, trap classes, threshold calibration | product UX | measurement and falsification |
-| Product and Agent Integrations | Adoption surfaces | COREFORGE, EvolveAI, CodeGenome, FailSafe, Bicameral | redefining canonical terms locally | implementation-specific within doctrine |
+| Product and Agent Integrations | Adoption surfaces | implementations with explicit mapping evidence | redefining canonical terms locally | implementation-specific within doctrine |
 
 ## Component interaction pipeline
 
@@ -58,7 +62,7 @@ Artifact or experience
   -> Reality Graph or Memory Unit
   -> probabilistic / heuristic interpretation
   -> Lifecycle and Saturation proposal
-  -> Governance and Mutation Authority
+  -> Governance and Mutation Authority (PAMA)
   -> permitted action set
   -> Certification and Crystallization Gate when required
   -> committed state transition
@@ -99,7 +103,7 @@ PROPOSAL
 what an estimator, model, rule, or planner suggests
 
 AUTHORITY ENVELOPE
-what policy permits, blocks, defers, or requires review for
+what PAMA policy permits, blocks, defers, or requires review for
 
 SELECTION
 which permitted action is chosen, deterministically or stochastically
@@ -120,9 +124,10 @@ Examples:
 - evidence failure means the object lacks support
 - estimator failure means a confidence, relevance, sensitivity, or persistence estimate is miscalibrated or out of scope
 - saturation failure means the system remembers or forgets poorly
-- governance failure means the system changes memory without authority
+- governance failure means the system changes memory or authority without permission
 - certification failure means an unverified memory becomes durable
 - runtime failure means the agent uses memory incorrectly
+- durable-decision failure means rationale, supersession, or current decision state is lost or silently rewritten
 - composition failure means individually valid components combine into unsafe behavior
 - conformance failure means the implementation cannot prove its behavior
 
@@ -153,10 +158,12 @@ Examples:
 - UOR participates by providing stable identity
 - CodeGenome participates by providing domain evidence and graph relations
 - EvolveAI participates by modeling lifecycle and decay
-- PAMA participates by controlling mutation authority
-- COREFORGE Vault and Neurospace participate by operationalizing memory
-- FailSafe and Arbiter participate by enforcing policy and audit
-- Bicameral participates by preserving decision continuity
+- PAMA participates as native doctrine controlling mutation and downstream authority
+- COREFORGE Vault and Neurospace may participate by operationalizing memory
+- FailSafe and Arbiter may participate as enforcement implementations
+- durable decision memory participates through the repository's own decision-memory profile
+
+An adjacent product name is not itself an architectural role. Implementations should be named only when the mapping adds concrete evidence or responsibility.
 
 ## Boundary rules
 
@@ -172,6 +179,8 @@ Examples:
 10. Stochastic selection may occur only inside a policy-permitted action set.
 11. Commit boundaries must bind to the state and policy snapshot under which authority was granted.
 12. Composition-specific failure modes require composition-specific tests.
+13. PAMA target class, lifecycle strength, requested operation, and downstream authority remain separate dimensions.
+14. External implementation names require an evidence-backed mapping role, not mere conceptual proximity.
 
 ## Cross-component handoff contract
 
@@ -183,6 +192,10 @@ source_component
 target_component
 handoff_reason
 state_snapshot
+pama_target_class
+lifecycle_strength
+requested_operation
+requested_downstream_authority
 estimate_type
 estimate_value
 estimator_ref
@@ -216,8 +229,8 @@ Not all fields apply to every handoff. Omitted authority-critical fields must no
 
 ## Architecture decision
 
-This repo owns the overall architecture.
+This repo owns the overall architecture and native doctrine, including PAMA.
 
-Individual repos own implementation slices.
+Individual repos may own implementation slices after they demonstrate a meaningful mapping.
 
-The shared architecture should stabilize concepts, boundaries, handoff semantics, and conformance expectations. It should not force every implementation into one repository or one runtime.
+The shared architecture should stabilize concepts, boundaries, handoff semantics, and conformance expectations. It should not force every implementation into one repository or one runtime, and it should not grant doctrine ownership to whichever product happens to implement a feature first.

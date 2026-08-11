@@ -2,11 +2,13 @@
 
 ## Purpose
 
-This is the first entry in the profile family: doctrine applied to one high-value memory class. Decision memory serves Bicameral-style decision continuity, agent governance, product planning, and code evolution — and decisions are not ordinary facts. A fact is true or it is not. A decision was *made*: by someone, over alternatives, for reasons, within a scope, until superseded.
+This is the first entry in the profile family: doctrine applied to one high-value memory class. Decision memory serves decision continuity, agent governance, product planning, organizational memory, and code evolution. Decisions are not ordinary facts. A fact is true or it is not. A decision was *made*: by someone, over alternatives, for reasons, within a scope, until superseded.
 
 Treating decisions as facts produces the familiar failures: decisions relitigated because the rationale evaporated, superseded decisions enforced by agents that remembered the conclusion but not the retirement, and drift between what was decided and what is being done that nobody can date.
 
 This profile defines the required shape, lifecycle handling, recall rules, and conformance surface for decision memory. It builds on the general doctrine and assumes it; nothing here relaxes a general rule.
+
+A particular product may implement this profile, but product adjacency is not doctrine provenance. Implementation claims should be added only when evidence demonstrates meaningful conformance to the profile.
 
 ## Required fields
 
@@ -54,33 +56,45 @@ reversal without replacement -> status = reversed, with rationale for reversal
 expiry                       -> status = expired at effective_until / unactioned review_by
 ```
 
-A superseded decision is never deleted by supersession — decision history is exactly the memory class whose past states stay load-bearing (audits, "why is the system like this," re-evaluation).
+A superseded decision is never deleted by supersession. Decision history is exactly the memory class whose past states stay load-bearing for audits, explanation, and re-evaluation.
 
 **Drift** is the gap between an active decision and observed reality:
 
-- Detectors (agents, conformance runs, humans) may attach `drift_signals` — estimator outputs, with provenance and uncertainty per the evidence rules.
-- Drift signals never auto-supersede. Material drift routes to the decision's owner for a governed outcome: reaffirm, revise (new decision superseding), or reverse. An estimator observing drift and "correcting" the decision itself is the confidence-becomes-authority failure with a paper trail.
+- Detectors, whether agents, conformance runs, or humans, may attach `drift_signals`: estimator outputs with provenance and uncertainty per the evidence rules.
+- Drift signals never auto-supersede. Material drift routes to the decision's owner for a governed outcome: reaffirm, revise through a new superseding decision, or reverse. An estimator observing drift and "correcting" the decision itself is the confidence-becomes-authority failure with a paper trail.
 - Unreviewed drift past `review_by` escalates per the review-budget rules of [`../37-memory-economics-and-budget-policy.md`](../37-memory-economics-and-budget-policy.md); the conservative interim state is that the decision stands but is flagged contested-by-drift in recall.
 
 ## Owner and approval metadata
 
-- Ownership is a role or principal that survives personnel change; orphaned decisions (owner no longer resolvable) are flagged for re-ownership at next review, not silently ownerless.
-- Approval strength scales with the decision's risk class per [`../33-pama-decision-table.md`](../33-pama-decision-table.md): a team convention needs less than a security boundary decision.
-- Corrections to decision *records* (typos, mislinked evidence) are ordinary corrections per [`../38-human-correction-ux-contract.md`](../38-human-correction-ux-contract.md). Changing what was decided is never a correction; it is supersession or reversal by the owner's authority.
+- Ownership is a role or principal that survives personnel change; orphaned decisions, where the owner is no longer resolvable, are flagged for re-ownership at next review, not silently ownerless.
+- Approval strength scales with the decision's PAMA target class, downstream authority, and operational risk per [`../33-pama-decision-table.md`](../33-pama-decision-table.md): a team convention needs less than a security-boundary decision.
+- Corrections to decision *records* such as typos or mislinked evidence are ordinary corrections per [`../38-human-correction-ux-contract.md`](../38-human-correction-ux-contract.md). Changing what was decided is never a correction; it is supersession or reversal by the owner's authority.
 
 ## Recall and certification rules
 
-**Recall** (through [`../26-governed-recall-planner.md`](../26-governed-recall-planner.md)):
+**Recall** through [`../26-governed-recall-planner.md`](../26-governed-recall-planner.md):
 
-- An agent acting within a decision's scope gets the decision recalled with policy-grade completeness — the applicable-set rule of [`../36-policy-as-memory.md`](../36-policy-as-memory.md) applies: missing an active in-scope decision is a recall failure.
+- An agent acting within a decision's scope gets the decision recalled with policy-grade completeness. The applicable-set rule of [`../36-policy-as-memory.md`](../36-policy-as-memory.md) applies: missing an active in-scope decision is a recall failure.
 - Recall returns the decision with its status. Superseded and reversed decisions surface only as historical, never as current constraints; a drift-flagged decision surfaces with the flag.
-- Rationale and alternatives are recallable on demand but need not be admitted into every context — the decision statement, scope, and status are the working set; the rest is one hop away with provenance intact.
+- Rationale and alternatives are recallable on demand but need not be admitted into every context. The decision statement, scope, and status are the working set; the rest is one hop away with provenance intact.
 
 **Certification**:
 
-- An active decision constrains behavior, which makes it authority-adjacent: certification for decision memory verifies the *record* — statement matches approval, scope is defined, owner resolvable, supersession chain intact — not the decision's wisdom.
+- An active decision constrains behavior, which makes it authority-adjacent: certification for decision memory verifies the *record*. Statement matches approval, scope is defined, owner is resolvable, and the supersession chain is intact. Certification does not certify the decision's wisdom.
 - Certified-active decisions are the only ones agents may treat as binding constraints. Uncertified decision records are candidate memory: recallable, flagged, non-binding.
-- Certification revocation (broken supersession chain, unresolvable authority) demotes the decision to disputed per [`../31-recovery-rollback-and-replay.md`](../31-recovery-rollback-and-replay.md) — visible, contested, non-binding until repaired.
+- Certification revocation due to a broken supersession chain or unresolvable authority demotes the decision to disputed per [`../31-recovery-rollback-and-replay.md`](../31-recovery-rollback-and-replay.md): visible, contested, non-binding until repaired.
+
+## PAMA treatment
+
+Decision memory uses native PAMA semantics rather than product-specific authority assumptions.
+
+Depending on scope and consequence, a decision commonly falls into:
+
+- **M2** when it is an operational association or recommendation only;
+- **M4** when it becomes a shared, commitment-bearing, identity-bearing, or permission-affecting decision state; or
+- **M5** when it changes governance, security, privilege, or autonomous-action authority.
+
+Its downstream authority ceiling may range from A0 recall to A5 governance change. A decision record does not gain a stronger authority ceiling merely because it is old, frequently recalled, highly saturated, or repeatedly followed.
 
 ## Conformance fixture recommendations
 
@@ -93,6 +107,7 @@ A superseded decision is never deleted by supersession — decision history is e
 | Alternative set lost in consolidation | fails: compression preserved statement but dropped alternatives/approvals |
 | Approval chain unreconstructable | certification refused; decision non-binding — the [`../../fixtures/authority-laundering.json`](../../fixtures/authority-laundering.json) pattern applied to decisions |
 | Conflicting active decisions in one scope | governed conflict per [`../17-conflict-resolution-engine.md`](../17-conflict-resolution-engine.md); strictest-applicable interim; no recency-wins |
+| Product claims decision-memory conformance without profile evidence | claim remains unverified; product name does not substitute for fixture or runtime evidence |
 
 A `superseded-decision-recall` fixture is the highest-value addition and should join the fixture backlog tracked in issue #43.
 
@@ -100,4 +115,4 @@ A `superseded-decision-recall` fixture is the highest-value addition and should 
 
 A decision is memory with an owner, a reason, and an expiry on its certainty.
 
-Store the conclusion and you have a fact that will rot. Store the commitment — rationale, alternatives, authority, scope, supersession — and the system can do the one thing decision memory exists for: change its mind on purpose, and know that it did.
+Store the conclusion and you have a fact that will rot. Store the commitment, including rationale, alternatives, authority, scope, and supersession, and the system can do the one thing decision memory exists for: change its mind on purpose, and know that it did.

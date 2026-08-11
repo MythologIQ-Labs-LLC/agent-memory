@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Knapp-Kevin/agent-memory/schemas/pama-decision.schema.json",
+  "title": "Proportional Adaptive Mutation Authority Decision",
+  "description": "Doctrine-level contract for a PAMA authority evaluation. PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. This schema separates mutation target class, lifecycle strength, requested operation, downstream authority, evidence, policy, and resulting authority envelope.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "proposal_id",
+    "proposing_actor",
+    "target",
+    "mutation",
+    "basis",
+    "policy",
+    "decision"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "proposal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "proposing_actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "charter_version"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "charter_version": {"type": "string", "minLength": 1},
+        "authority_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference", "class", "scope"],
+      "properties": {
+        "reference": {"type": "string", "minLength": 1},
+        "domain": {"type": "string", "minLength": 1},
+        "class": {
+          "type": "string",
+          "enum": [
+            "M0_EXECUTION_LOCAL_CONTEXT",
+            "M1_LOW_RISK_PERSONAL_PREFERENCE",
+            "M2_OPERATIONAL_ASSOCIATION",
+            "M3_REUSABLE_PROCEDURE_OR_CAPABILITY",
+            "M4_SHARED_OR_IDENTITY_BEARING_STATE",
+            "M5_GOVERNANCE_SECURITY_OR_AUTONOMOUS_AUTHORITY"
+          ]
+        },
+        "scope": {"type": "string", "minLength": 1},
+        "tenant_ref": {"type": "string", "minLength": 1},
+        "purpose": {"type": "string", "minLength": 1}
+      }
+    },
+    "mutation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "current_strength",
+        "proposed_strength",
+        "downstream_authority",
+        "reversibility",
+        "risk_class"
+      ],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "enum": [
+            "runtime_assembly",
+            "score_adjustment",
+            "link_creation",
+            "link_deletion",
+            "correction",
+            "promotion",
+            "crystallization",
+            "pruning",
+            "permanent_deletion",
+            "scope_expansion",
+            "policy_mutation",
+            "capability_promotion",
+            "authority_change",
+            "other"
+          ]
+        },
+        "current_strength": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "tentative",
+            "reinforced",
+            "promoted",
+            "canonical",
+            "decaying",
+            "archived",
+            "deprecated",
+            "blocked",
+            "not_applicable"
+          ]
+        },
+        "proposed_strength": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "tentative",
+            "reinforced",
+            "promoted",
+            "canonical",
+            "decaying",
+            "archived",
+            "deprecated",
+            "blocked",
+            "not_applicable"
+          ]
+        },
+        "downstream_authority": {
+          "type": "string",
+          "enum": [
+            "A0_RETRIEVAL_ONLY",
+            "A1_RECOMMENDATION_INFLUENCE",
+            "A2_DRAFT_GENERATION",
+            "A3_LOCAL_WORKFLOW_MUTATION",
+            "A4_EXTERNAL_ACTION",
+            "A5_GOVERNANCE_CHANGE"
+          ]
+        },
+        "reversibility": {
+          "type": "string",
+          "enum": [
+            "ephemeral",
+            "reversible",
+            "versioned_revocable",
+            "compensatable",
+            "irreversible",
+            "unknown"
+          ]
+        },
+        "risk_class": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "requested_scope_change": {"type": "string"}
+      }
+    },
+    "basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_refs"],
+      "properties": {
+        "justification": {"type": "string"},
+        "evidence_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "validation_result_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "correction_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "estimator_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "estimator_versions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "calibration_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "uncertainty_summary": {"type": "string"},
+        "freshness_requirement": {"type": "string"},
+        "sensitivity": {"type": "string"}
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_version"],
+      "properties": {
+        "policy_version": {"type": "string", "minLength": 1},
+        "policy_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "required_review_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "permitted_actions",
+        "prohibited_actions"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "allow",
+            "allow_with_ledger",
+            "require_review",
+            "require_external_verification",
+            "block",
+            "abstain",
+            "quarantine",
+            "collect_more_evidence"
+          ]
+        },
+        "permitted_actions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "prohibited_actions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "selected_action": {"type": ["string", "null"]},
+        "selection_mode": {
+          "type": ["string", "null"],
+          "enum": ["deterministic", "stochastic", "human", "external", null]
+        },
+        "decision_receipt_ref": {"type": "string", "minLength": 1}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mutation": {
+            "properties": {
+              "downstream_authority": {"const": "A5_GOVERNANCE_CHANGE"}
+            },
+            "required": ["downstream_authority"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "outcome": {
+                "enum": [
+                  "require_review",
+                  "require_external_verification",
+                  "block",
+                  "abstain",
+                  "quarantine",
+                  "collect_more_evidence"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -2,26 +2,57 @@
 
 ## Purpose
 
-This map assigns each related repository or system to a canonical role in the agentic memory architecture.
+This map assigns related repositories or systems to implementation roles in the Agent Memory architecture while keeping **native doctrine** separate from external or product-specific implementations.
 
-The goal is to prevent repo-specific terminology from fragmenting the doctrine.
+The goal is to prevent repo-specific terminology from fragmenting the doctrine and to prevent implementations from collapsing probabilistic estimation, governance, and committed state mutation into one opaque subsystem.
 
-A second goal is to prevent implementations from collapsing probabilistic estimation, governance, and committed state mutation into one opaque subsystem.
+**Agent Memory owns the doctrine. PAMA is part of that doctrine.** PAMA is not listed as an external repository dependency simply because implementations must consume its authority contract.
 
-## System map
+Named implementation systems appear only when they add a specific architecture or conformance mapping value.
 
-| System | Canonical role | Primary responsibility | Governed-uncertainty posture |
+## Native doctrine components
+
+### PAMA
+
+**Proportional Adaptive Mutation Authority (PAMA)** is native Agent Memory governance doctrine authored by Kevin R. Knapp.
+
+Canonical doctrine:
+
+- [`pama/README.md`](pama/README.md)
+- [`04-governance-and-pama.md`](04-governance-and-pama.md)
+- [`33-pama-decision-table.md`](33-pama-decision-table.md)
+- [`adr/ADR-004-pama-controls-mutation-authority.md`](adr/ADR-004-pama-controls-mutation-authority.md)
+
+PAMA owns the **authority semantics**, not a particular repository or deployment location. A runtime may implement PAMA as a dedicated service, policy module, library, or enforcement boundary, provided the separation remains explicit and auditable.
+
+### PAMA implementation contract
+
+A PAMA implementation must preserve:
+
+- M0-M5 mutation target classes;
+- lifecycle strength as separate from authority;
+- A0-A5 downstream authority ceilings;
+- explicit operation classification;
+- consequence-proportional handling;
+- no self-approved privilege expansion;
+- evidence and charter binding;
+- deterministic or formally bounded authority envelopes for committed inputs;
+- receipts reconstructing permitted, prohibited, selected, and committed consequences.
+
+## Related implementation map
+
+| System | Canonical implementation role | Primary responsibility | Governed-uncertainty posture |
 |---|---|---|---|
 | UOR Framework | Identity substrate | deterministic addressability, exact object resolution, content identity | deterministic substrate; must not infer authority |
 | EvolveAI | Memory metabolism prototype | lifecycle orchestration, decay, tier routing, crystallization prototype | probabilistic/heuristic proposals allowed; lifecycle commit remains governed |
-| CodeGenome | Code reality graph | code artifact graph, overlays, confidence fusion, provenance, impact traversal | inferred relations must preserve confidence, estimator provenance, and disagreement |
+| CodeGenome | Code reality graph | code artifact graph, overlays, confidence fusion, provenance, impact traversal | inferred relations preserve confidence, estimator provenance, and disagreement |
 | COREFORGE Vault | Runtime memory container | encrypted local memory, graph recall, context windows, governed storage | probabilistic retrieval may generate candidates; scope and mutation boundaries remain enforced |
 | Neurospace | Operational memory space | agent-facing memory traversal and use within COREFORGE | learned ranking may operate only inside recall-time policy |
-| PAMA | Mutation authority model | governed promotion, mutation, pruning, adaptation, canonicalization | maps uncertain inputs into deterministic or formally bounded authority outcomes |
-| FailSafe | Governance enforcement | evidence capture, approval gates, policy checks, release/session audit | binds policy version, estimator context, permitted action set, and consequence receipt |
-| Arbiter | Product policy guardian | authorization, rate limits, audit logging, action boundaries | enforces prohibited and permitted actions independently of model confidence |
-| Bicameral | Decision continuity layer | durable decision state, drift detection, team/agent alignment | drift/disagreement may be estimated probabilistically; durable decision changes remain governed |
-| Shadow Genome | Negative memory substrate | failure patterns, blocked behaviors, prior harm avoidance | failure inference may be probabilistic; guardrail promotion must preserve evidence and authority |
+| FailSafe | Governance enforcement implementation candidate | evidence capture, approval gates, policy checks, release/session audit | can enforce policy version, estimator context, action set, and consequence receipt |
+| Arbiter | Product policy enforcement candidate | authorization, rate limits, audit logging, action boundaries | can enforce prohibited and permitted actions independently of model confidence |
+| Shadow Genome | Negative memory substrate | failure patterns, blocked behaviors, prior harm avoidance | failure inference may be probabilistic; guardrail promotion preserves evidence and authority |
+
+This table is an implementation map, not a source-of-doctrine table. Absence from the table does not mean a project is unimportant; it means it has not earned a distinct implementation role in this architecture map.
 
 ## UOR Framework
 
@@ -114,30 +145,26 @@ Exact syntax or content-addressed facts may be deterministic while semantic over
 
 High semantic relevance must not override privacy, tenancy, scope, dispute state, or policy. Candidate generation may be probabilistic; admission into active context remains governed.
 
-## PAMA
+## PAMA enforcement boundary
 
-### Canonical owner of
+PAMA is not another external system in this map. It is the native authority contract every mutating implementation must satisfy.
 
-- mutation authority
-- promotion authority
-- adaptive constraints
-- authority scaling by risk and reversibility
+A compliant runtime should expose where:
 
-### Should import from this doctrine
+1. a mutation target is classified M0-M5;
+2. lifecycle strength is read or proposed;
+3. the requested operation is classified;
+4. requested downstream authority A0-A5 is declared;
+5. evidence, actor charter, scope, and reversibility are bound;
+6. policy produces the permitted/prohibited/review-required envelope;
+7. optional deterministic or stochastic selection occurs only inside the permitted set; and
+8. the committed consequence is receipted.
 
-- saturation proposes transitions but does not authorize them
-- certification gates durable memory
-- all mutation authority must be scoped and auditable
-- a fixed policy snapshot and committed input record must yield a reconstructable deterministic or formally bounded authority envelope
-- estimator confidence does not resolve missing policy, authority, or scope
-
-### Governed-uncertainty contract
-
-PAMA consumes uncertainty. It does not become uncertainty. Its purpose is to convert estimates into a finite set of permitted, blocked, deferred, or review-required consequences.
+A runtime may host the PAMA implementation. It may not absorb the semantic boundary so thoroughly that authority becomes indistinguishable from its estimator or storage layer.
 
 ## FailSafe / Arbiter
 
-### Canonical owner of
+### Candidate implementation value
 
 - policy enforcement
 - evidence capture
@@ -153,21 +180,7 @@ PAMA consumes uncertainty. It does not become uncertainty. Its purpose is to con
 - receipts should bind estimator versions, policy version, permitted action set, selected action, and before/after state when relevant
 - high-consequence actions should fail closed or escalate when required governance state cannot be reconstructed
 
-## Bicameral
-
-### Canonical owner of
-
-- decision continuity
-- drift detection
-- durable decision alignment
-- team and agent consensus surfaces
-
-### Should import from this doctrine
-
-- decisions are high-risk memory objects
-- decision changes must preserve old state and rationale
-- drift should trigger dispute or correction, not silent overwrite
-- probabilistic drift detection or disagreement scoring may propose review but must not silently rewrite durable decisions
+FailSafe or Arbiter may be useful implementation mappings for parts of PAMA. They are not the origin or owner of PAMA doctrine.
 
 ## Shadow Genome
 
@@ -182,6 +195,14 @@ PAMA consumes uncertainty. It does not become uncertainty. Its purpose is to con
 - failure inference must preserve causal evidence and applicability scope
 - a high-confidence negative pattern must not become a global prohibition without governed promotion
 - guardrails derived from failure memory should retain provenance to the failures that justified them
+
+## Durable decision memory
+
+Decision continuity, drift, rationale preservation, supersession, and durable decision recall are defined as **Agent Memory capabilities** rather than attributed to an adjacent product.
+
+See [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md).
+
+A product or implementation should be named here only if it provides specific implementation evidence against that profile.
 
 ## Cross-repo control contract
 
@@ -204,26 +225,29 @@ COMMITTED_CONSEQUENCE
 state mutation, ledger record, scope change, certification, deletion, or other durable effect
 ```
 
-A repo may own more than one class, but it must expose the boundary between them.
+A repo may own more than one implementation class, but it must expose the boundary between them.
 
 ## Required implementation evidence
 
 A repo claiming governed-uncertainty alignment should be able to point to:
 
-1. where probabilistic or learned estimates are produced
-2. how those estimates identify their method/version and calibration scope
-3. where policy converts estimates into authority outcomes
-4. where prohibited actions are enforced
-5. where the permitted action set is represented, if more than one action can follow
-6. where committed state changes are ledgered
-7. how estimator drift differs from policy change
-8. how the implementation behaves when required authority inputs are missing
+1. where probabilistic or learned estimates are produced;
+2. how those estimates identify their method/version and calibration scope;
+3. where PAMA policy converts estimates into authority outcomes;
+4. where prohibited actions are enforced;
+5. where the permitted action set is represented, if more than one action can follow;
+6. where committed state changes are ledgered;
+7. how estimator drift differs from policy change;
+8. how the implementation behaves when required authority inputs are missing; and
+9. how M0-M5 target class and A0-A5 authority ceilings are represented or equivalently enforced.
 
 ## Source of truth policy
 
-This repo owns the doctrine.
+This repo owns the doctrine, including PAMA.
 
 Other repos may own implementations, experiments, and product behavior, but should reference this doctrine for shared terms and boundaries.
+
+No external repository is required to make PAMA legitimate or canonical.
 
 ## Implementation labels
 

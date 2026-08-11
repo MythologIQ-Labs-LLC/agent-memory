@@ -28,13 +28,19 @@ jobs:
       - name: Validate JSON Schemas, fixtures, and source rights
         run: python scripts/validate_schemas.py
 
+      - name: Validate native doctrine and implementation boundaries
+        run: python scripts/validate_doctrine_boundaries.py
+
       - name: Validate top-level documentation links
         run: >-
           python scripts/validate_markdown_links.py
           README.md
           CONTRIBUTING.md
           docs/README.md
+          docs/pama/README.md
+          docs/04-governance-and-pama.md
           docs/08-source-material-index.md
+          docs/33-pama-decision-table.md
           docs/SOURCE_RIGHTS_POLICY.md
           docs/adr/README.md
 
@@ -54,7 +60,8 @@ jobs:
             echo '```'
             echo "python scripts/validate_fixtures.py fixtures"
             echo "python scripts/validate_schemas.py  # requires: pip install jsonschema"
-            echo "python scripts/validate_markdown_links.py README.md CONTRIBUTING.md docs/README.md docs/08-source-material-index.md docs/SOURCE_RIGHTS_POLICY.md docs/adr/README.md"
+            echo "python scripts/validate_doctrine_boundaries.py"
+            echo "python scripts/validate_markdown_links.py README.md CONTRIBUTING.md docs/README.md docs/pama/README.md docs/04-governance-and-pama.md docs/08-source-material-index.md docs/33-pama-decision-table.md docs/SOURCE_RIGHTS_POLICY.md docs/adr/README.md"
             echo "python scripts/generate_calibration_report.py reports/examples/calibration-results.example.json"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

@@ -2,9 +2,11 @@
 
 ## Purpose
 
-This roadmap turns the doctrine into implementation work across the related repos.
+This roadmap turns the doctrine into implementation work across related repos and native Agent Memory contracts.
 
 The priority is consolidation before expansion. The system already has enough ideas. What it needs now is shared vocabulary, conformance boundaries, implementation hooks, and evidence that uncertain inference cannot silently become memory authority.
+
+PAMA is native Agent Memory doctrine. Related repositories implement or consume doctrine; they do not define PAMA's provenance.
 
 ## Phase 1: Canonical doctrine stabilization
 
@@ -18,17 +20,18 @@ Make this repository the shared reference point.
 - finalize layer model
 - finalize lifecycle state machine
 - finalize scoring and decay doctrine
-- finalize PAMA governance boundaries
+- finalize native PAMA governance boundaries
 - finalize governed-uncertainty doctrine and disposition ADR-020 only after evidence supports acceptance
 - finalize ADR set
-- add source backlinks to related repos
+- add source backlinks to related implementation repos where they add concrete value
 
 ### Exit criteria
 
 ```text
 README points to canonical docs
 ADRs accepted, revised, or explicitly proposed
-each related repo has an implementation-map entry
+native doctrine has canonical internal entry points
+each materially relevant implementation repo has an implementation-map entry
 open questions are tracked as issues
 governed-uncertainty audit has no unresolved critical contradiction
 ```
@@ -37,16 +40,17 @@ governed-uncertainty audit has no unresolved critical contradiction
 
 ### Goal
 
-Every implementation repo references the doctrine.
+Every materially relevant implementation repo references the doctrine.
 
 ### Target repos
 
 - UOR Framework
 - EvolveAI
 - CodeGenome
-- COREFORGE
-- FailSafe or governance repos as applicable
-- Bicameral decision-memory surfaces as applicable
+- COREFORGE / successor runtime as applicable
+- FailSafe or governance implementations as applicable
+
+A repository is not a backlink target merely because it is adjacent to Agent Memory concepts. It should map a concrete implementation responsibility or conformance surface.
 
 ### Recommended backlink text
 
@@ -69,7 +73,7 @@ Create repo-specific issues that map existing implementation behavior to doctrin
 5. Map COREFORGE Vault writes to PAMA enforcement points.
 6. Map Neurospace runtime memory to operational versus canonical memory states and recall-time scope enforcement.
 7. Map FailSafe / Arbiter approval gates to crystallization and mutation transitions, including policy-version and permitted-action receipts.
-8. Map Bicameral drift detection to probabilistic proposal versus governed durable decision change.
+8. Map a real durable-decision implementation to [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md) only when implementation evidence is available.
 
 ## Phase 4: Governed-uncertainty boundary inventory
 
@@ -157,12 +161,17 @@ Make doctrine enforceable in product and agent runtimes.
 - deletion workflow
 - scope-sharing / tenancy boundary
 - agent action planner
+- reusable capability authority boundary
 
 ### Required behavior
 
 At each enforcement point, identify:
 
 ```text
+PAMA target class M0-M5
+lifecycle strength
+requested operation
+requested downstream authority A0-A5
 what may be probabilistic
 what must remain invariant
 what policy version applies
@@ -218,7 +227,10 @@ Make consequential memory decisions reconstructable without requiring exact repl
 ```text
 actor
 memory_id
+PAMA target class
+lifecycle strength
 requested_action
+requested_downstream_authority
 estimator_refs
 estimator_versions
 uncertainty_summary
@@ -252,6 +264,7 @@ Continuously test doctrine assumptions against accessible research and empirical
 - classify biological/cognitive transfers as mechanism, functional analogy, engineering prescription, or open hypothesis
 - create conformance fixtures when research exposes a falsifiable failure mode
 - do not promote a research-inspired idea to doctrine solely because the analogy is appealing
+- keep external evidence separate from native doctrine authorship
 
 ## Phase 10: Doctrine versioning
 
@@ -277,10 +290,11 @@ Create issues for:
 1. Add schemas for memory units and conformance reports.
 2. Add fixture examples for all required conformance cases.
 3. Expand the calibration harness to measure uncertainty, drift, and decision-boundary stability.
-4. Add cross-repo backlink and governed-uncertainty mapping issues for EvolveAI, CodeGenome, COREFORGE, FailSafe / Arbiter, and Bicameral.
-5. Add PAMA decision-table tests for finite authority outcomes and bounded stochastic action.
+4. Add cross-repo backlink and governed-uncertainty mapping issues only for implementation systems with concrete evidence value.
+5. Add PAMA decision-table tests for M0-M5 target classes, A0-A5 authority ceilings, finite authority outcomes, and bounded stochastic action.
 6. Add a decision-receipt schema that separates estimator outputs from governance outcomes.
 7. Build the cross-repo boundary inventory before accepting ADR-020.
+8. Validate at least one real implementation against the durable-decision memory profile rather than assigning doctrine provenance to an adjacent product.
 
 ## Acceptance dependency for ADR-020
 
@@ -300,5 +314,7 @@ policy and estimator version drift remain distinguishable
 ## Roadmap principle
 
 Do not add another concept until the existing concepts have a stable place to live.
+
+Do not add another implementation name until it earns a distinct role through evidence.
 
 Do not call governed uncertainty complete until it survives implementation and adversarial testing. Documentation agreeing with itself is useful. It is also an exceptionally low bar for reality.
