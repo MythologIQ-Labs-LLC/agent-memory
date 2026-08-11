@@ -4,6 +4,10 @@ Agent Memory is a reference architecture and research-driven doctrine for govern
 
 Contributions are welcome when they sharpen a boundary, add evidence, expose a failure mode, improve a machine-readable contract, or challenge an architectural assumption constructively.
 
+By intentionally submitting a contribution for inclusion in this repository, you agree that the contribution is submitted under the repository's [Apache License 2.0](LICENSE), unless a separate written agreement explicitly applies.
+
+Participation is also subject to the repository [Code of Conduct](CODE_OF_CONDUCT.md). Repository decision rights and doctrine-change rules are described in [GOVERNANCE.md](GOVERNANCE.md). Security-sensitive findings should follow [SECURITY.md](SECURITY.md) rather than being disclosed through an ordinary public issue.
+
 ## Before contributing
 
 Start with:
@@ -14,6 +18,7 @@ Start with:
 4. [`docs/24-determinism-probability-and-governed-uncertainty.md`](docs/24-determinism-probability-and-governed-uncertainty.md)
 5. [`docs/adr/README.md`](docs/adr/README.md)
 6. [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md)
+7. [`GOVERNANCE.md`](GOVERNANCE.md)
 
 Then read the specific doctrine document your change affects.
 
@@ -86,6 +91,8 @@ Before merge:
 Contributor-originated provenance may be recorded when supported. Provenance statements should identify origin without overstating legal exclusivity over an idea, method, or short phrase.
 
 CI validates the source registry against [`schemas/source-record.schema.json`](schemas/source-record.schema.json). Reuse-oriented records require a documented rights basis.
+
+The repository's own Apache-2.0 license does **not** absorb or relicense third-party material merely because it is cited, linked, described, or referenced here.
 
 ## Cross-domain memory claims
 
@@ -193,6 +200,8 @@ Optimize for:
 - precise public provenance when lawful public sources exist
 - original synthesis when reuse rights are unclear or unnecessary
 
+For the root README, prefer stable static overview graphics or compact tables when GitHub's interactive Mermaid renderer harms legibility. Mermaid remains useful in detailed documentation where the source graph itself is part of the working artifact.
+
 Avoid:
 
 - reintroducing one universal memory score
@@ -202,6 +211,20 @@ Avoid:
 - silently deleting contradictory evidence from the research narrative
 - copying protected expression merely because it is publicly readable
 - presenting a related public project as the provenance source for a private canonical artifact
+
+## Pull-request expectations
+
+A pull request should state:
+
+- what changed
+- why the change is needed
+- which doctrine/contracts are affected
+- what evidence supports the change
+- what validation was run
+- what the change proves
+- what remains unproven
+
+Large research or runtime-evidence programs should be sliced into independently reviewable claims rather than merged as one heroic diff.
 
 ## Definition of done
 

@@ -12,8 +12,9 @@ From working memory to inherited state. From biological theory to executable con
 ![Conformance](https://img.shields.io/badge/Conformance-Level%206%20Spec-7c3aed)
 ![Fixtures](https://img.shields.io/badge/Fixtures-24%20Validated-0f766e)
 ![Research](https://img.shields.io/badge/Research-Open%20Evidence-b45309)
+[![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)
 
-**[Documentation](docs/README.md)** · **[PAMA](docs/pama/README.md)** · **[Architecture decisions](docs/adr/README.md)** · **[Research map](docs/23-research-bibliography.md)** · **[Conformance](docs/06-conformance-test-plan.md)** · **[Contributing](CONTRIBUTING.md)**
+**[Documentation](docs/README.md)** · **[PAMA](docs/pama/README.md)** · **[Architecture decisions](docs/adr/README.md)** · **[Research map](docs/23-research-bibliography.md)** · **[Conformance](docs/06-conformance-test-plan.md)** · **[Contributing](CONTRIBUTING.md)** · **[Governance](GOVERNANCE.md)** · **[Security](SECURITY.md)**
 
 </div>
 
@@ -129,21 +130,9 @@ See **[PAMA](docs/pama/README.md)**, **[Governance and PAMA](docs/04-governance-
 
 ## The system at a glance
 
-```mermaid
-flowchart LR
-    A[Experience / Query / Event] --> B[Evidence + Provenance]
-    B --> C[Estimate / Proposal]
-    C --> D{PAMA Governance Envelope}
-    D -->|Block / Review / Verify| E[No Consequential Commit]
-    D -->|Permit| F[Permitted Action Set]
-    F --> G[Deterministic or Stochastic Selection]
-    G --> H[Committed Consequence]
-    H --> I[Receipt + Audit Evidence]
-    H --> J[Retained Memory State]
-    J --> K[Governed Recall]
-    K --> L[Active Agent Context]
-    L --> A
-```
+<p align="center">
+  <img src="assets/agent-memory-flow.svg" alt="Agent Memory governed memory loop: experience becomes evidence and an estimate, PAMA constrains the permitted actions, a consequence is committed with a receipt, retained state is recalled through policy, and memory influences future context." width="100%" />
+</p>
 
 The critical invariant is:
 
@@ -351,31 +340,15 @@ One universal memory score is appealing for the same reason one permissions role
 
 Memory has history. The architecture should be able to explain it.
 
-```mermaid
-stateDiagram-v2
-    [*] --> Transient
-    Transient --> Observed
-    Observed --> Linked
-    Linked --> Reinforced
-    Reinforced --> Candidate
-    Candidate --> PendingVerification
-    PendingVerification --> Crystallized
-    Crystallized --> OperationallyReused
-    OperationallyReused --> Stale
-    Crystallized --> Disputed
-    Stale --> Disputed
-    Disputed --> Corrected
-    Corrected --> Reconciled
-    Reconciled --> Archived
-    Reconciled --> Pruned
-    Archived --> Tombstoned
-```
+| Formation | Durability | Use & drift | Repair & forgetting |
+|---|---|---|---|
+| `Transient -> Observed -> Linked -> Reinforced` | `Candidate -> Pending verification -> Crystallized` | `Operationally reused -> Stale / Disputed` | `Corrected -> Reconciled -> Archived / Pruned -> Tombstoned` |
 
-Not every memory follows every transition.
+This is intentionally a compact README view rather than the complete transition graph. Not every memory follows every transition, and several states have governed branches that do not fit honestly into one tiny horizontal picture.
 
 The invariant is that consequential transitions remain explicit, scoped, authorized, and auditable.
 
-See **[Lifecycle State Machine](docs/02-lifecycle-state-machine.md)**.
+See **[Lifecycle State Machine](docs/02-lifecycle-state-machine.md)** for the canonical state machine.
 
 ---
 
@@ -620,22 +593,30 @@ See **[Repo Implementation Map](docs/05-repo-implementation-map.md)**.
 ```text
 agent-memory/
 ├── README.md                       # front door and architecture overview
+├── LICENSE                         # Apache License 2.0
+├── NOTICE                          # authorship, attribution, rights boundary
+├── CITATION.cff                    # citation metadata
 ├── CONTRIBUTING.md                 # evidence and contribution standard
+├── GOVERNANCE.md                   # repository decision and doctrine governance
+├── SECURITY.md                     # vulnerability reporting policy
+├── CODE_OF_CONDUCT.md              # contributor conduct expectations
+├── assets/                         # stable README presentation graphics
 ├── docs/
 │   ├── README.md                   # full documentation index
 │   ├── pama/                       # native PAMA foundation
-│   ├── 00-10                      # architecture spine
-│   ├── 11-19                      # composition, security, trust, time, privacy
-│   ├── 20-25                      # interdisciplinary theory and governed uncertainty
-│   ├── 26-39                      # operational and executable contracts
-│   ├── profiles/                  # doctrine profiles for memory classes
-│   ├── adr/                       # architecture decision records
-│   └── audits/                    # preserved audit history
+│   ├── 00-10                       # architecture spine
+│   ├── 11-19                       # composition, security, trust, time, privacy
+│   ├── 20-25                       # interdisciplinary theory and governed uncertainty
+│   ├── 26-39                       # operational and executable contracts
+│   ├── profiles/                   # doctrine profiles for memory classes
+│   ├── adr/                        # architecture decision records
+│   └── audits/                     # preserved audit history
 ├── sources/                        # external/material source-rights registry
 ├── schemas/                        # doctrine-level JSON Schemas
 ├── fixtures/                       # 24 conformance fixture definitions
 ├── scripts/                        # fixture, schema, link, and doctrine-boundary validators
 └── .github/
+    ├── CODEOWNERS
     ├── ISSUE_TEMPLATE/
     └── workflows/
         └── validate-doctrine-evidence.yml
@@ -695,7 +676,7 @@ It **is** a place to define, challenge, test, and eventually implement the contr
 
 ## Contributing
 
-Read **[CONTRIBUTING.md](CONTRIBUTING.md)** before proposing architecture, research, schema, or conformance changes.
+Read **[CONTRIBUTING.md](CONTRIBUTING.md)** before proposing architecture, research, schema, or conformance changes. Repository decision rights and doctrine-change expectations are in **[GOVERNANCE.md](GOVERNANCE.md)**, and security-sensitive findings should follow **[SECURITY.md](SECURITY.md)**.
 
 The most valuable contributions are not limited to confirming the current doctrine. Strong counterexamples, contradictory research, adversarial fixtures, implementation failures, and evidence that an accepted decision should be revised are all first-class contributions.
 
@@ -704,6 +685,16 @@ When a doctrine claim changes, preserve the reason it changed.
 When a probabilistic system fails, preserve the uncertainty and evidence.
 
 When a deterministic policy fails, resist the temptation to congratulate it for failing reproducibly.
+
+---
+
+## License, citation, and attribution
+
+Agent Memory is licensed under the **[Apache License 2.0](LICENSE)**. The license applies to original material distributed as part of this repository unless a file or section states otherwise.
+
+Authorship and attribution notices are recorded in **[NOTICE](NOTICE)**. Citation metadata is available in **[CITATION.cff](CITATION.cff)**.
+
+Third-party research, repositories, issue comments, linked documents, and other referenced material remain subject to their own rights and licenses. A citation or public link does not relicense that material under Apache-2.0. See **[Source Rights Policy](docs/SOURCE_RIGHTS_POLICY.md)** and the **[source registry](sources/source-registry.json)** for the repository's reuse discipline.
 
 ---
 
