@@ -31,6 +31,7 @@ TENANT = "tenant-a"
 SOURCE = "mem:alpha"
 COMMIT = "a" * 40
 ISSUER = "issuer:deletion-completeness-reference"
+DOMAIN_AUTH_STATE = "domain-auth:deletion:40"
 KEY = IssuerKey(
     issuer_id=ISSUER,
     key_id="key-p45-lifecycle",
@@ -120,6 +121,7 @@ def chain_for(receipt: dict, measurement, action_ref: str) -> dict:
         before_state_ref="sha256:" + "5" * 64,
         source_domain_ref="domain:opaque:project-a",
         destination_domain_ref="domain:opaque:deleted",
+        domain_authorization_state_ref=DOMAIN_AUTH_STATE,
     )
 
 
@@ -133,7 +135,9 @@ class DeletionCompletenessEvidenceTests(unittest.TestCase):
             runtime=RuntimeObservation(
                 action_ref=chain["action_ref"],
                 execution_time="2026-08-11T21:30:03Z",
+                domain_authorization_state_ref=DOMAIN_AUTH_STATE,
                 authority_valid_at_execution=True,
+                domain_authorization_valid_at_execution=True,
             ),
         )
 
@@ -172,8 +176,6 @@ class DeletionCompletenessEvidenceTests(unittest.TestCase):
             after_state="v1",
         )
 
-        # Deliberately broken one-hop derived purge after an authorized canonical
-        # delete. The independent sweep must expose the transitive survivor.
         one_hop = residue.ResiduePlan(purged=["summary:one"])
         residue.apply_purge(gov.store, one_hop, gov._purged)
         gov._purged.add(SOURCE)
