@@ -73,6 +73,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 |---|---|---|
 | [`graphiti-conformance.md`](graphiti-conformance.md) | first substrate capability mapping | documentation-verified, with key findings confirmed by execution |
 | [`../../../reference/README.md`](../../../reference/README.md) | minimal governed adapter | bound and executed against a real substrate |
+| [`canonical-and-derived-state.md`](canonical-and-derived-state.md) | canonical memory versus derived projections | design spike: vocabulary and proposed invariants only, no runtime evidence |
 
 ## Preconditions
 
