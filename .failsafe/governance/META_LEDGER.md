@@ -295,3 +295,54 @@ falsify history to flatter present naming. Schema $id identity changed at
 the pre-public-release moment, when no external consumer can have pinned the
 prior identifiers; this is a schema-registry identity event and is flagged
 for Governor review rather than treated as cosmetic.
+
+---
+
+### Entry #8: P3 MINIMAL GOVERNED ADAPTER
+
+**Timestamp**: 2026-08-11T10:00:00Z
+**Phase**: IMPLEMENT
+**Author**: Governor
+**Risk Grade**: L1
+
+**Content Hash**:
+```
+SHA256("p3-adapter:" + git tree hash at parent commit)
+= 60bf182602d00de902e95c7e846e6e3d2fb738366556da1ec2d3cd9fa6d86701
+```
+
+**Previous Hash**: 9be289079d826c6127eb8e6e912badd553101fc51a11a6bc757ec2d72e70149f
+
+**Chain Hash**:
+```
+SHA256(content_hash + previous_hash)
+= f46b0871cdf68cfa976a359ccd65888380806a7ebe86725939982d750fae4622
+```
+
+**Decision**: P3 executed. A minimal governed adapter under reference/ implements
+the full path from evidence through proposal, authority envelope, permitted
+action set, selected action, substrate mutation, decision receipt, retrieval
+candidate, and governed admission. Twelve paths execute in CI: one positive and
+eleven negative, exceeding the five-negative exit gate. Artifacts are emitted
+against four canonical repository schemas rather than invented shapes, and the
+selected-action membership rule the receipt schema delegates to consumers is
+enforced in code.
+
+The substrate is a model, not a running instance, and deliberately reproduces
+the mapped substrate's verified permissiveness: opaque identity, unfiltered
+partition default, physical deletion without tombstones, and no authority check
+anywhere. Several tests assert both that the substrate would misbehave and that
+the adapter refuses regardless, so the governance layer is demonstrated to be
+load-bearing rather than merely present.
+
+Two policy behaviors were discovered by execution rather than assumed. Permanent
+deletion cannot commit autonomously at any risk class, which failed an initial
+test that had assumed otherwise; the test was wrong and the doctrine was right.
+Pruning and permanent deletion were consequently separated so pruning tombstones
+and removes from recall while content stays recoverable.
+
+Claims are bounded. The emitted conformance report declares level 0 with three
+stated exemptions, because execution against a substrate model is not runtime
+evidence under the program's own rules. Four limitations are documented rather
+than left to be discovered, including that substrate binding remains unimplemented.
+That binding is where runtime evidence begins and is the next slice.

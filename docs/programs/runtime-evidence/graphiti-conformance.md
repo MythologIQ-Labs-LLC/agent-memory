@@ -102,6 +102,12 @@ Everything classified WRAPPER_REQUIRED or NOT_REPRESENTABLE above, concretely:
 7. **Decision receipts**, recorded by the adapter because the substrate discards its reasoning.
 8. **Projection invalidation**, since nothing self-invalidates on source change.
 
+## Adapter status
+
+The wrapper described above is implemented as a reference in [`../../../reference/README.md`](../../../reference/README.md). It executes the full governed path — including the eight responsibilities listed here — against an in-memory model that reproduces this substrate's verified permissive semantics, and it is wired into repository CI.
+
+That is a precondition, not runtime evidence. The port is defined; a driver binding it to this substrate's no-LLM direct-write paths is the remaining step, and is where runtime evidence begins.
+
 ## Negative paths this substrate makes testable
 
 The mapping is useful precisely because the gaps are sharp. These existing fixtures become executable against a wrapped substrate, and several would fail against the bare substrate — which is the point of measuring:
