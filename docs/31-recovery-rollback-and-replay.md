@@ -67,6 +67,8 @@ Prevent unsafe memory from entering context while investigation proceeds.
 
 Recompute or dispute derived memories that depended on corrupted state.
 
+Recomputation is itself a governed transition where the derivation involves an estimator, because it commits new content rather than restoring old content. Repair triggered automatically by staleness detection would let an estimator write whenever it can cause a version change. See [`programs/runtime-evidence/canonical-and-derived-state.md`](programs/runtime-evidence/canonical-and-derived-state.md), which is design work rather than adopted doctrine.
+
 ## State/version binding
 
 Authorization should bind to the state version it evaluated.

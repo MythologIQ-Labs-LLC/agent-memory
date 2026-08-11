@@ -22,9 +22,11 @@ GitHub stores Wiki content in a separate Git repository:
 https://github.com/MythologIQ-Labs-LLC/agent-memory.wiki.git
 ```
 
-The current ChatGPT GitHub connector does not expose Wiki write operations, so publication requires a git-capable environment.
+Publication is automated. [`.github/workflows/publish-wiki.yml`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/.github/workflows/publish-wiki.yml) validates this tree and republishes it whenever `wiki-src/**` changes on `main`, and can also be run on demand through workflow dispatch. It treats `wiki-src` as canonical: the published pages are replaced from the validated source rather than merged into, so an edit made directly in the GitHub Wiki UI will be overwritten on the next publish. Edit the source here instead.
 
-After the repository Wiki has been initialized once from the GitHub UI if necessary:
+`README.md` is deliberately excluded from publication — it documents the source tree and is not a reader-facing page. Every other `*.md` file in this directory becomes a Wiki page, so adding a page means adding a file here, a sidebar entry, and an inventory line below.
+
+Manual publication remains possible from any git-capable environment, which matters because some connectors expose no Wiki write operations at all:
 
 ```bash
 git clone https://github.com/MythologIQ-Labs-LLC/agent-memory.wiki.git
@@ -54,6 +56,7 @@ The validator understands GitHub Wiki extensionless page links such as `[PAMA](P
 - `Core-Concepts.md`
 - `PAMA.md`
 - `Lifecycle-and-Forgetting.md`
+- `Canonical-and-Derived-State.md`
 - `Governed-Uncertainty.md`
 - `Security-and-Privacy.md`
 - `Conformance-and-Evidence.md`
