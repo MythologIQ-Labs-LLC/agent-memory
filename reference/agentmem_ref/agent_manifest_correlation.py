@@ -5,6 +5,10 @@ sequence, and delta-budget verification. This module does not reimplement that
 protocol. It content-addresses the checkpoint tuple, proves that the canonical
 Agent Memory receipt references that checkpoint, and preserves the external
 checkpoint verdict beside Agent Memory governance and lifecycle outcomes.
+
+A checkpoint root proves the bound log state; it does not, by itself, disclose
+or independently prove the semantic class of a newly appended operation. Agent
+Memory action semantics therefore remain in the signed Agent Memory evidence.
 """
 
 from __future__ import annotations
@@ -22,7 +26,6 @@ AGENT_MANIFEST_UPSTREAM_COMMIT = "98cead8e8809e3302dc388ca869882d15b812b7f"
 
 DELTA_REASONS = {"accepted", "drift", "rollback", "expired", "budget"}
 REPRESENTATIONS = {"kv", "vector", "graph"}
-OPERATION_KINDS = {"PUT", "DEL", "ADD"}
 
 
 def _value(checkpoint: object, name: str) -> object:
@@ -94,18 +97,17 @@ def correlate_agent_manifest_delta(
     delta_accepted: bool,
     delta_reason: str,
     representation: str,
-    operation_kind: str,
 ) -> dict:
     """Bind an externally verified Agent Manifest delta to Agent Memory evidence.
 
     ``delta_accepted`` and ``delta_reason`` MUST come from the pinned Agent
     Manifest verifier (or another conforming implementation). This function
-    never recomputes a consistency proof, TTL verdict, sequence verdict, or
-    delta budget; those semantics remain owned by Agent Manifest.
+    never recomputes a consistency proof, TTL verdict, sequence verdict, delta
+    budget, or operation semantics; those remain owned by their source systems.
 
     A rejected delta still yields a valid correlation artifact when the records
-    are correctly bound. Likewise, an accepted ``DEL`` never upgrades Agent
-    Memory lifecycle satisfaction from ``residual`` to ``satisfied``.
+    are correctly bound. Likewise, an accepted checkpoint advance never upgrades
+    Agent Memory lifecycle satisfaction from ``residual`` to ``satisfied``.
     """
     if delta_reason not in DELTA_REASONS:
         raise ValueError(f"unsupported Agent Manifest delta reason: {delta_reason}")
@@ -113,8 +115,6 @@ def correlate_agent_manifest_delta(
         raise ValueError("delta_accepted and delta_reason disagree")
     if representation not in REPRESENTATIONS:
         raise ValueError(f"unsupported memory representation: {representation}")
-    if operation_kind not in OPERATION_KINDS:
-        raise ValueError(f"unsupported operation kind: {operation_kind}")
 
     previous = checkpoint_payload(previous_checkpoint)
     new = checkpoint_payload(new_checkpoint)
@@ -158,6 +158,7 @@ def correlate_agent_manifest_delta(
             "portable_evidence_ref": sha256_ref(dict(portable_evidence)),
             "canonical_receipt_ref": portable_evidence.get("canonical_receipt_ref", ""),
             "action_ref": portable_evidence.get("action_ref", ""),
+            "memory_action": portable_evidence.get("memory_action", ""),
             "governance_disposition": governance.get("disposition", "unverifiable"),
             "lifecycle_satisfaction": portable_evidence.get("lifecycle_result", "unverifiable"),
         },
@@ -166,7 +167,6 @@ def correlate_agent_manifest_delta(
             "sdk_version": AGENT_MANIFEST_SDK_VERSION,
             "upstream_commit": AGENT_MANIFEST_UPSTREAM_COMMIT,
             "representation": representation,
-            "operation_kind": operation_kind,
             "checkpoint_ref": checkpoint_ref,
             "previous_checkpoint": previous,
             "new_checkpoint": new,
