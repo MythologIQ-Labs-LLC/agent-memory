@@ -1,30 +1,29 @@
 """Portable Agent Memory governance evidence, P4.5a reference profile.
 
 This module projects a canonical Agent Memory decision receipt into a content-free,
-portable evidence object.  The canonical receipt remains authoritative; the
-portable object only binds that receipt to governance, authority, domain, runtime,
-and lifecycle references so another process can verify what happened without
-receiving raw memory content.
-
-The first executable trust profile deliberately uses HMAC-SHA256 from the Python
-standard library.  It is a symmetric trust-domain profile, not a public-key or
-non-repudiation scheme.  The evidence format names the algorithm explicitly so a
-later asymmetric profile can replace it without changing the semantic boundary.
+portable evidence object. The canonical receipt remains authoritative; the
+portable object binds that receipt to governance, authority, domain, runtime, and
+lifecycle references so an independent verifier can check what happened without
+receiving raw memory content or a signing secret.
 """
 
 from __future__ import annotations
 
+import base64
+import binascii
 import copy
 import hashlib
-import hmac
 import json
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Mapping
 
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
+
 EVIDENCE_TYPE = "agent-memory-governance-evidence"
 EVIDENCE_VERSION = "1.0.0"
-ALGORITHM = "HMAC-SHA256"
+ALGORITHM = "Ed25519"
 
 INTEGRITY_VALID = "valid"
 INTEGRITY_INVALID = "invalid"
@@ -47,13 +46,7 @@ LIFECYCLE_VALUES = {
 
 
 def canonical_json(value: object) -> bytes:
-    """Return the v1 canonical JSON byte representation.
-
-    v1 is UTF-8 JSON with sorted object keys, no insignificant whitespace, and
-    non-ASCII characters preserved.  Floats are intentionally unsupported in
-    the evidence contract because cross-runtime float canonicalization is a
-    larger problem than this reference profile needs to invent.
-    """
+    """Return the deterministic v1 canonical JSON byte representation."""
     _reject_floats(value)
     return json.dumps(
         value,
@@ -87,25 +80,54 @@ def _parse_time(value: str) -> datetime:
 
 
 @dataclass(frozen=True)
-class TrustKey:
-    """One configured symmetric trust anchor for the reference profile."""
+class IssuerKey:
+    """Private signing key and its issuance-validity metadata."""
 
     issuer_id: str
     key_id: str
-    secret: bytes
+    private_key: Ed25519PrivateKey
     valid_from: str
     valid_until: str | None = None
     revoked_at: str | None = None
 
     def usable_at(self, timestamp: str) -> bool:
-        point = _parse_time(timestamp)
-        if point < _parse_time(self.valid_from):
-            return False
-        if self.valid_until and point > _parse_time(self.valid_until):
-            return False
-        if self.revoked_at and point >= _parse_time(self.revoked_at):
-            return False
-        return True
+        return _usable_at(timestamp, self.valid_from, self.valid_until, self.revoked_at)
+
+    def trust_key(self) -> "TrustKey":
+        return TrustKey(
+            issuer_id=self.issuer_id,
+            key_id=self.key_id,
+            public_key=self.private_key.public_key(),
+            valid_from=self.valid_from,
+            valid_until=self.valid_until,
+            revoked_at=self.revoked_at,
+        )
+
+
+@dataclass(frozen=True)
+class TrustKey:
+    """Public verification key configured as a verifier trust anchor."""
+
+    issuer_id: str
+    key_id: str
+    public_key: Ed25519PublicKey
+    valid_from: str
+    valid_until: str | None = None
+    revoked_at: str | None = None
+
+    def usable_at(self, timestamp: str) -> bool:
+        return _usable_at(timestamp, self.valid_from, self.valid_until, self.revoked_at)
+
+
+def _usable_at(timestamp: str, valid_from: str, valid_until: str | None, revoked_at: str | None) -> bool:
+    point = _parse_time(timestamp)
+    if point < _parse_time(valid_from):
+        return False
+    if valid_until and point > _parse_time(valid_until):
+        return False
+    if revoked_at and point >= _parse_time(revoked_at):
+        return False
+    return True
 
 
 @dataclass(frozen=True)
@@ -125,7 +147,7 @@ def issue_evidence(
     canonical_receipt: Mapping[str, object],
     *,
     issuer_id: str,
-    key: TrustKey,
+    key: IssuerKey,
     issued_at: str,
     action_ref: str,
     memory_action: str,
@@ -141,15 +163,17 @@ def issue_evidence(
     destination_domain_ref: str | None = None,
     domain_authorization_state_ref: str | None = None,
 ) -> dict:
-    """Create and authenticate a portable projection of a canonical receipt."""
+    """Create and sign a portable projection of a canonical decision receipt."""
     if issuer_id != key.issuer_id:
-        raise ValueError("issuer_id must match the configured trust key")
+        raise ValueError("issuer_id must match the configured issuer key")
     if governance_disposition not in GOVERNANCE_VALUES:
         raise ValueError(f"unsupported governance disposition: {governance_disposition}")
     if lifecycle_result not in LIFECYCLE_VALUES:
         raise ValueError(f"unsupported lifecycle result: {lifecycle_result}")
     if not key.usable_at(issued_at):
-        raise ValueError("trust key is not valid at evidence issuance time")
+        raise ValueError("issuer key is not valid at evidence issuance time")
+    if _parse_time(decision_time) > _parse_time(issued_at):
+        raise ValueError("decision_time cannot be after evidence issuance")
 
     scope = {"scope_ref": scope_ref}
     for name, value in (
@@ -186,10 +210,11 @@ def issue_evidence(
         },
         "lifecycle_result": lifecycle_result,
     }
+    signature = key.private_key.sign(canonical_json(_signable(evidence)))
     evidence["authentication"] = {
         "algorithm": ALGORITHM,
         "key_id": key.key_id,
-        "value": _mac(evidence, key.secret),
+        "value": base64.b64encode(signature).decode("ascii"),
     }
     return evidence
 
@@ -200,10 +225,6 @@ def _signable(evidence: Mapping[str, object]) -> dict:
     return payload
 
 
-def _mac(evidence: Mapping[str, object], secret: bytes) -> str:
-    return hmac.new(secret, canonical_json(_signable(evidence)), hashlib.sha256).hexdigest()
-
-
 def verify_evidence(
     evidence: Mapping[str, object],
     trust_keys: Mapping[tuple[str, str], TrustKey],
@@ -211,62 +232,138 @@ def verify_evidence(
     canonical_receipt: Mapping[str, object] | None = None,
     runtime: RuntimeObservation | None = None,
 ) -> dict:
-    """Verify evidence while keeping semantic outcome dimensions separate.
-
-    A cryptographically authentic denial is still a denial.  Likewise, a valid
-    authorized delete with residual derived state remains a lifecycle failure.
-    """
+    """Verify evidence while keeping all semantic outcome dimensions separate."""
     runtime = runtime or RuntimeObservation()
-    failures: list[str] = []
+    failures = _structural_failures(evidence)
+    if failures:
+        return _result(INTEGRITY_INVALID, failures, evidence, "unresolved", runtime)
 
-    if evidence.get("evidence_type") != EVIDENCE_TYPE or evidence.get("version") != EVIDENCE_VERSION:
-        return _result(INTEGRITY_INVALID, ["unsupported_evidence_profile"], evidence, "unresolved", runtime)
+    issuer = evidence["issuer"]
+    auth = evidence["authentication"]
+    issuer_id = issuer["id"]
+    key_id = issuer["key_id"]
 
-    issuer = evidence.get("issuer")
-    auth = evidence.get("authentication")
-    if not isinstance(issuer, dict) or not isinstance(auth, dict):
-        return _result(INTEGRITY_INVALID, ["missing_authentication_metadata"], evidence, "unresolved", runtime)
-
-    issuer_id = issuer.get("id")
-    key_id = issuer.get("key_id")
-    if issuer.get("algorithm") != ALGORITHM or auth.get("algorithm") != ALGORITHM or auth.get("key_id") != key_id:
-        return _result(INTEGRITY_INVALID, ["algorithm_or_key_binding_mismatch"], evidence, "unresolved", runtime)
-
-    key = trust_keys.get((str(issuer_id), str(key_id)))
+    key = trust_keys.get((issuer_id, key_id))
     if key is None:
-        return _result(INTEGRITY_UNVERIFIABLE, ["unknown_or_untrusted_issuer_key"], evidence, "unresolved", runtime)
+        return _result(
+            INTEGRITY_UNVERIFIABLE,
+            ["unknown_or_untrusted_issuer_key"],
+            evidence,
+            "unresolved",
+            runtime,
+        )
 
-    issued_at = evidence.get("issued_at")
-    if not isinstance(issued_at, str) or not key.usable_at(issued_at):
-        return _result(INTEGRITY_UNVERIFIABLE, ["issuer_key_not_valid_at_issuance"], evidence, "unresolved", runtime)
+    issued_at = evidence["issued_at"]
+    if not key.usable_at(issued_at):
+        return _result(
+            INTEGRITY_UNVERIFIABLE,
+            ["issuer_key_not_valid_at_issuance"],
+            evidence,
+            "unresolved",
+            runtime,
+        )
 
-    expected_mac = _mac(evidence, key.secret)
-    if not hmac.compare_digest(str(auth.get("value", "")), expected_mac):
-        return _result(INTEGRITY_INVALID, ["authentication_failed"], evidence, "unresolved", runtime)
+    try:
+        signature = base64.b64decode(auth["value"], validate=True)
+        key.public_key.verify(signature, canonical_json(_signable(evidence)))
+    except (InvalidSignature, ValueError, TypeError, binascii.Error):
+        return _result(
+            INTEGRITY_INVALID,
+            ["signature_verification_failed"],
+            evidence,
+            "unresolved",
+            runtime,
+        )
 
+    failures = []
     receipt_resolution = "detached"
     if canonical_receipt is not None:
-        if sha256_ref(dict(canonical_receipt)) != evidence.get("canonical_receipt_ref"):
+        if sha256_ref(dict(canonical_receipt)) != evidence["canonical_receipt_ref"]:
             failures.append("canonical_receipt_hash_mismatch")
             receipt_resolution = "mismatch"
         else:
             receipt_resolution = "resolved"
 
-    governance = evidence.get("governance") if isinstance(evidence.get("governance"), dict) else {}
-    scope = evidence.get("scope") if isinstance(evidence.get("scope"), dict) else {}
-
+    governance = evidence["governance"]
+    scope = evidence["scope"]
     for observed, signed, failure in (
-        (runtime.action_ref, evidence.get("action_ref"), "wrong_action_ref"),
-        (runtime.policy_ref, governance.get("policy_ref"), "stale_or_wrong_policy_ref"),
-        (runtime.authority_state_ref, governance.get("authority_state_ref"), "stale_or_wrong_authority_state_ref"),
+        (runtime.action_ref, evidence["action_ref"], "wrong_action_ref"),
+        (runtime.policy_ref, governance["policy_ref"], "stale_or_wrong_policy_ref"),
+        (runtime.authority_state_ref, governance["authority_state_ref"], "stale_or_wrong_authority_state_ref"),
         (runtime.source_domain_ref, scope.get("source_domain_ref"), "wrong_source_domain"),
         (runtime.destination_domain_ref, scope.get("destination_domain_ref"), "wrong_destination_domain"),
     ):
         if observed is not None and observed != signed:
             failures.append(failure)
 
+    if runtime.execution_time is not None:
+        try:
+            if _parse_time(runtime.execution_time) < _parse_time(governance["decision_time"]):
+                failures.append("execution_precedes_decision")
+        except ValueError:
+            failures.append("invalid_execution_time")
+
     integrity = INTEGRITY_VALID if not failures else INTEGRITY_INVALID
     return _result(integrity, failures, evidence, receipt_resolution, runtime)
+
+
+def _structural_failures(evidence: Mapping[str, object]) -> list[str]:
+    failures: list[str] = []
+    if evidence.get("evidence_type") != EVIDENCE_TYPE or evidence.get("version") != EVIDENCE_VERSION:
+        failures.append("unsupported_evidence_profile")
+    if evidence.get("canonicalization") != "agent-memory-canonical-json-v1":
+        failures.append("unsupported_canonicalization")
+
+    issuer = evidence.get("issuer")
+    auth = evidence.get("authentication")
+    governance = evidence.get("governance")
+    scope = evidence.get("scope")
+    state = evidence.get("state")
+    if not all(isinstance(item, dict) for item in (issuer, auth, governance, scope, state)):
+        failures.append("missing_required_object")
+        return failures
+
+    if issuer.get("algorithm") != ALGORITHM or auth.get("algorithm") != ALGORITHM:
+        failures.append("unsupported_signature_algorithm")
+    if issuer.get("key_id") != auth.get("key_id"):
+        failures.append("key_binding_mismatch")
+    if governance.get("disposition") not in GOVERNANCE_VALUES:
+        failures.append("invalid_governance_disposition")
+    if evidence.get("lifecycle_result") not in LIFECYCLE_VALUES:
+        failures.append("invalid_lifecycle_result")
+
+    required_strings = (
+        issuer.get("id"),
+        issuer.get("key_id"),
+        auth.get("value"),
+        evidence.get("issued_at"),
+        evidence.get("action_ref"),
+        evidence.get("memory_action"),
+        evidence.get("canonical_receipt_ref"),
+        governance.get("policy_ref"),
+        governance.get("authority_state_ref"),
+        governance.get("decision_time"),
+        scope.get("scope_ref"),
+        state.get("before_ref"),
+        state.get("after_ref"),
+    )
+    if any(not isinstance(value, str) or not value for value in required_strings):
+        failures.append("missing_required_string")
+
+    try:
+        if isinstance(evidence.get("issued_at"), str) and isinstance(governance.get("decision_time"), str):
+            if _parse_time(governance["decision_time"]) > _parse_time(evidence["issued_at"]):
+                failures.append("decision_after_issuance")
+    except ValueError:
+        failures.append("invalid_evidence_timestamp")
+
+    receipt_ref = evidence.get("canonical_receipt_ref")
+    if isinstance(receipt_ref, str):
+        digest = receipt_ref.removeprefix("sha256:")
+        if not receipt_ref.startswith("sha256:") or len(digest) != 64 or any(c not in "0123456789abcdef" for c in digest):
+            failures.append("invalid_canonical_receipt_ref")
+
+    return failures
 
 
 def _result(
@@ -288,7 +385,7 @@ def _result(
         execution = "unauthorized_execution"
     elif runtime.authority_valid_at_execution is False:
         execution = "unauthorized_execution"
-    elif runtime.authority_valid_at_execution is None and runtime.execution_time is not None:
+    elif runtime.authority_valid_at_execution is None:
         execution = "unverifiable"
     elif integrity == INTEGRITY_VALID:
         execution = "executed_as_authorized"
