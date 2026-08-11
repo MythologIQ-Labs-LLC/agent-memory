@@ -38,65 +38,35 @@ jobs:
               path = Path(filename)
               text = path.read_text(encoding='utf-8')
 
-              arrow_blue = (
-                  f'    <marker id="arrowBlue" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">\n'
-                  f'      <path d="M0,0 L0,6 L8,3 z" fill="{c["blue"]}"/>\n'
-                  f'    </marker>'
-              )
               if 'id="arrowRed"' not in text:
-                  arrow_red = (
-                      arrow_blue + '\n'
+                  marker_pos = text.index('  </defs>')
+                  marker = (
                       f'    <marker id="arrowRed" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth">\n'
                       f'      <path d="M0,0 L0,6 L8,3 z" fill="{c["red"]}"/>\n'
-                      f'    </marker>'
+                      f'    </marker>\n'
                   )
-                  if arrow_blue not in text:
-                      # Light SVG stores marker definitions on one line.
-                      compact = (
-                          f'    <marker id="arrowBlue" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="{c["blue"]}"/></marker>'
-                      )
-                      replacement = compact + '\n' + (
-                          f'    <marker id="arrowRed" markerWidth="9" markerHeight="9" refX="7.5" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L8,3 z" fill="{c["red"]}"/></marker>'
-                      )
-                      if compact not in text:
-                          raise SystemExit(f'arrowBlue marker not found in {filename}')
-                      text = text.replace(compact, replacement)
-                  else:
-                      text = text.replace(arrow_blue, arrow_red)
+                  text = text[:marker_pos] + marker + text[marker_pos:]
 
-              old_stage_1 = (
-                  f'  <line x1="356" y1="297" x2="420" y2="297" stroke="{c["blue"]}" stroke-width="2.3" marker-end="url(#arrowBlue)"/>'
-              )
-              new_stage_1 = (
-                  f'  <path d="M356 297 H382 Q394 297 394 285 V165 Q394 153 406 153 H424" fill="none" stroke="{c["blue"]}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowBlue)"/>'
-              )
+              old_stage_1 = f'  <line x1="356" y1="297" x2="420" y2="297" stroke="{c["blue"]}" stroke-width="2.3" marker-end="url(#arrowBlue)"/>'
+              new_stage_1 = f'  <path d="M356 297 H382 Q394 297 394 285 V165 Q394 153 406 153 H424" fill="none" stroke="{c["blue"]}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowBlue)"/>'
               if old_stage_1 not in text:
                   raise SystemExit(f'estimate connector not found in {filename}')
               text = text.replace(old_stage_1, new_stage_1)
 
-              old_governance = (
-                  f'  <rect x="434" y="198" width="332" height="34" rx="8" fill="{c["red_fill"]}" stroke="{c["red"]}"/>\n'
-                  f'  <text x="600" y="220" text-anchor="middle" fill="{c["red_text"]}" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">EXCEPTION PATH: BLOCK · REVIEW · VERIFY</text>\n\n'
-                  f'  <line x1="600" y1="188" x2="600" y2="240" stroke="{c["neutral"]}" stroke-width="2" marker-end="url(#arrow)"/>'
-              )
+              start = text.index('  <rect x="434" y="198"')
+              end = text.index('  <rect x="434" y="246"', start)
               new_governance = (
                   f'  <line x1="600" y1="188" x2="600" y2="197" stroke="{c["neutral"]}" stroke-width="2"/>\n'
                   f'  <circle cx="600" cy="197" r="3.5" fill="{c["neutral"]}"/>\n'
                   f'  <path d="M600 197 H520 V240" fill="none" stroke="{c["neutral"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>\n'
                   f'  <path d="M600 197 H674 V200" fill="none" stroke="{c["red"]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowRed)"/>\n\n'
                   f'  <rect x="584" y="206" width="182" height="30" rx="8" fill="{c["red_fill"]}" stroke="{c["red"]}"/>\n'
-                  f'  <text x="675" y="226" text-anchor="middle" fill="{c["red_text"]}" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">BLOCK · REVIEW · VERIFY</text>'
+                  f'  <text x="675" y="226" text-anchor="middle" fill="{c["red_text"]}" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">BLOCK · REVIEW · VERIFY</text>\n\n'
               )
-              if old_governance not in text:
-                  raise SystemExit(f'governance connector block not found in {filename}')
-              text = text.replace(old_governance, new_governance)
+              text = text[:start] + new_governance + text[end:]
 
-              old_stage_2 = (
-                  f'  <line x1="766" y1="328" x2="820" y2="328" stroke="{c["blue"]}" stroke-width="2.3" marker-end="url(#arrowBlue)"/>'
-              )
-              new_stage_2 = (
-                  f'  <path d="M766 328 H794 Q806 328 806 316 V157 Q806 145 818 145 H824" fill="none" stroke="{c["blue"]}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowBlue)"/>'
-              )
+              old_stage_2 = f'  <line x1="766" y1="328" x2="820" y2="328" stroke="{c["blue"]}" stroke-width="2.3" marker-end="url(#arrowBlue)"/>'
+              new_stage_2 = f'  <path d="M766 328 H794 Q806 328 806 316 V157 Q806 145 818 145 H824" fill="none" stroke="{c["blue"]}" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowBlue)"/>'
               if old_stage_2 not in text:
                   raise SystemExit(f'commit connector not found in {filename}')
               text = text.replace(old_stage_2, new_stage_2)
