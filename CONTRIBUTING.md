@@ -8,6 +8,30 @@ By intentionally submitting a contribution for inclusion in this repository, you
 
 Participation is also subject to the repository [Code of Conduct](CODE_OF_CONDUCT.md). Repository decision rights and doctrine-change rules are described in [GOVERNANCE.md](GOVERNANCE.md). Security-sensitive findings should follow [SECURITY.md](SECURITY.md) rather than being disclosed through an ordinary public issue.
 
+## AI-assisted development and human accountability
+
+Agent Memory permits and encourages AI-assisted development, including coding agents, code generators, AI editors, automated review tools, and agentic development workflows.
+
+The repository does **not** require contributors to hand-write code. It requires a responsible human to own the contribution.
+
+The governing standard is [`docs/policies/AI_ASSISTED_CONTRIBUTIONS.md`](docs/policies/AI_ASSISTED_CONTRIBUTIONS.md), which is also the default MythologIQ Labs contribution standard unless a repository documents a stricter local rule.
+
+The core rule is:
+
+> **AI-assisted development is allowed. Autonomous contribution is not accepted by default.**
+
+Before a substantive contribution is submitted, the responsible human must review the actual diff and relevant evidence, understand and be able to defend the meaningful design choices, resolve provenance and licensing questions, and take responsibility for the result.
+
+Unless a repository bot or agent is explicitly authorized, ordinary pull requests should be submitted from the responsible human's GitHub identity after that review. AI tools may prepare branches, commits, tests, review findings, and candidate PR text before the human submission boundary.
+
+For contribution PRs opened after adoption of this policy, commits must include Developer Certificate of Origin sign-off unless a documented repository-specific contribution agreement supersedes it:
+
+```bash
+git commit -s -m "type(scope): summary"
+```
+
+An AI tool must not invent or apply a human's `Signed-off-by` certification without that person's authorization and review.
+
 ## Before contributing
 
 Start with:
@@ -18,7 +42,8 @@ Start with:
 4. [`docs/24-determinism-probability-and-governed-uncertainty.md`](docs/24-determinism-probability-and-governed-uncertainty.md)
 5. [`docs/adr/README.md`](docs/adr/README.md)
 6. [`docs/SOURCE_RIGHTS_POLICY.md`](docs/SOURCE_RIGHTS_POLICY.md)
-7. [`GOVERNANCE.md`](GOVERNANCE.md)
+7. [`docs/policies/AI_ASSISTED_CONTRIBUTIONS.md`](docs/policies/AI_ASSISTED_CONTRIBUTIONS.md)
+8. [`GOVERNANCE.md`](GOVERNANCE.md)
 
 Then read the specific doctrine document your change affects.
 
@@ -242,6 +267,8 @@ A pull request should state:
 - what the change proves
 - what remains unproven
 
+For AI-assisted contributions, the responsible human must also have reviewed the specific diff and evidence and be prepared to explain the meaningful implementation and design choices during review.
+
 Large research or runtime-evidence programs should be sliced into independently reviewable claims rather than merged as one heroic diff.
 
 ## Definition of done
@@ -254,6 +281,8 @@ A contribution is complete when:
 4. schemas/fixtures are updated when the contract changed
 5. source rights and attribution obligations are resolved for any material reuse
 6. validation passes
-7. the PR clearly states what was proven and what remains unproven
+7. the responsible human has reviewed and can defend the specific contribution
+8. required contribution provenance, including DCO sign-off where applicable, is satisfied
+9. the PR clearly states what was proven and what remains unproven
 
 A green validator proves the repository evidence is structurally coherent. It does not absolve runtime systems from reality, which remains stubbornly outside JSON Schema's jurisdiction.
