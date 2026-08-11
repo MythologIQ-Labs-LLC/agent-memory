@@ -2,9 +2,9 @@
 
 ## Purpose
 
-This index records the conceptual systems that fed the doctrine and points to the external research evidence used to challenge, extend, or validate those concepts.
+This index records external and related conceptual systems that informed, challenged, implemented, or provided provenance context for Agent Memory doctrine, and points to external research evidence used to challenge, extend, or validate those concepts.
 
-It is not a complete bibliography. Internal architecture provenance and external scientific evidence are deliberately separated so a repo-specific idea does not quietly acquire the authority of neuroscience merely because both happen to use the word "memory."
+It is not a complete bibliography. Native Agent Memory doctrine, implementation provenance, and external scientific evidence are deliberately separated so a repo-specific idea does not quietly acquire the authority of neuroscience merely because both happen to use the word "memory."
 
 For the interdisciplinary literature map, see [`23-research-bibliography.md`](23-research-bibliography.md).
 
@@ -12,22 +12,43 @@ For copyright, license, attribution, and reuse handling, see [`SOURCE_RIGHTS_POL
 
 Research in this repository is not decorative citation inventory. Its job is to improve, constrain, or falsify architectural claims.
 
+## Native Agent Memory doctrine
+
+Some foundational concepts are authored as part of Agent Memory itself and therefore are **not external source records**.
+
+### Proportional Adaptive Mutation Authority (PAMA)
+
+PAMA is native Agent Memory governance doctrine authored by **Kevin R. Knapp**. It does not require an external provenance link or a source-rights registry entry merely because it has an identifiable conceptual origin.
+
+The systems-agnostic PAMA foundation is maintained in [`pama/README.md`](pama/README.md). Agent Memory specializes that foundation through:
+
+- [`04-governance-and-pama.md`](04-governance-and-pama.md)
+- [`33-pama-decision-table.md`](33-pama-decision-table.md)
+- [`34-adapter-contracts.md`](34-adapter-contracts.md)
+- [`36-policy-as-memory.md`](36-policy-as-memory.md)
+- [`38-human-correction-ux-contract.md`](38-human-correction-ux-contract.md)
+- [`adr/ADR-004-pama-controls-mutation-authority.md`](adr/ADR-004-pama-controls-mutation-authority.md)
+- [`adr/ADR-020-probabilistic-discovery-deterministic-governance.md`](adr/ADR-020-probabilistic-discovery-deterministic-governance.md)
+
+External standards, research, and implementations may support, challenge, benchmark, align with, or implement PAMA. They do not become the source of PAMA by doing so.
+
 ## Public-source and reuse rule
 
-> **When a source has a lawful, stable public locator, link the most specific authoritative artifact available. Public accessibility does not imply reuse permission.**
+> **When an external or related source has a lawful, stable public locator, link the most specific authoritative artifact available. Public accessibility does not imply reuse permission.**
 
 The repository distinguishes:
 
-- **provenance**: where an idea, implementation, proposal, or evidence claim came from
+- **native doctrine**: contributor-authored doctrine owned and maintained by Agent Memory
+- **provenance**: where an external idea, implementation, proposal, or evidence claim came from
 - **accessibility**: whether contributors can inspect that source directly
 - **rights status**: what license, permission, authorship, or uncertainty governs reuse of its expression
 - **reuse mode**: citation, independent synthesis, author-originated reuse, licensed reuse, or permission-based reuse
 
 A related public artifact must not be substituted for a private canonical source merely to make the index look complete.
 
-Unknown rights status defaults to **citation and independent synthesis only**.
+Unknown external rights status defaults to **citation and independent synthesis only**.
 
-## Primary source systems
+## External and related provenance systems
 
 | Source | Public source / evidence | Access and reuse posture | Relevant doctrine area |
 |---|---|---|---|
@@ -36,9 +57,9 @@ Unknown rights status defaults to **citation and independent synthesis only**.
 | EvolveAI | [Autopoietic Memory Theory](https://github.com/MythologIQ-Labs-LLC/EvolveAI/blob/main/docs/AUTOPOIETIC_MEMORY_THEORY.md) · [repository](https://github.com/MythologIQ-Labs-LLC/EvolveAI) | Public; Apache-2.0 repository. Independent synthesis preferred; direct reuse must satisfy applicable attribution/NOTICE obligations. | autopoietic memory, L1/L2/L3 tiers, CMHL, REM synthesis, Shadow Genome |
 | CodeGenome | [CodeGenome](https://github.com/MythologIQ-Labs-LLC/CodeGenome) | Public; MIT repository. Independent synthesis preferred; copies/substantial portions retain required notice. | content-addressed code reality graph, overlays, confidence fusion, provenance |
 | COREFORGE | Canonical historical source is private. [GG-CORE](https://github.com/MythologIQ-Labs-LLC/GG-CORE) is a public successor/continuation, not the originating source. | Private historical provenance; do not expose private content or mislabel the successor as original provenance. GG-CORE is Apache-2.0. | local-first product runtime, Vault, Neurospace, governed agent modules |
-| PAMA logic | No standalone canonical public locator verified | Rights/provenance unresolved at standalone-source level; Agent Memory expresses the governance doctrine independently. | mutation authority, adaptive guardrails, promotion and pruning policy |
 | FailSafe / Arbiter | [VerdictArbiter implementation](https://github.com/MythologIQ-Labs-LLC/FailSafe/blob/main/FailSafe/extension/src/sentinel/VerdictArbiter.ts) · [repository](https://github.com/MythologIQ-Labs-LLC/FailSafe) | Public; Apache-2.0 repository. Link implementation directly; copied/adapted material must satisfy applicable license obligations. | evidence capture, policy gates, approval boundaries, audit trails |
-| Bicameral | Canonical decision-continuity source is private; no public artifact is currently treated as a substitute | Private primary provenance; expose only independently stated high-level concepts unless a genuinely relevant public artifact becomes available. | decision continuity, drift detection, durable decisions |
+
+External or private projects should appear here only when they add specific provenance, implementation, challenge, or evidence value. Mere conceptual adjacency is not enough.
 
 ### UOR provenance note
 
@@ -213,24 +234,28 @@ Doctrine placement:
 - [`04-governance-and-pama.md`](04-governance-and-pama.md)
 - [`adr/ADR-006-neurospace-is-runtime-memory-space.md`](adr/ADR-006-neurospace-is-runtime-memory-space.md)
 
-## PAMA
+## Native doctrine: PAMA
 
-No standalone canonical public locator has been verified. Agent Memory therefore records the conceptual provenance without inventing a public source and expresses the doctrine independently.
+PAMA is maintained directly by Agent Memory rather than represented as an external provenance source.
 
-Relevant ideas:
+Canonical entry point:
+
+- [`pama/README.md`](pama/README.md)
+
+Relevant doctrine:
 
 - proportional adaptive mutation authority
-- promotion authority
-- adaptive mutation constraints
-- governance by risk, scope, reversibility, and evidence
-- conversion of uncertain estimator outputs into explicit authority outcomes
+- M0-M5 mutation target classes
+- lifecycle strength
+- A0-A5 downstream authority classes
+- adaptive charters
+- proportional handling lanes
+- reusable capability authority ceilings
+- evidence, lineage, correction, revocation, and consequence-proportional governance
 
-Doctrine placement:
+Agent Memory's memory-specific specialization is in [`04-governance-and-pama.md`](04-governance-and-pama.md) and [`33-pama-decision-table.md`](33-pama-decision-table.md).
 
-- [`04-governance-and-pama.md`](04-governance-and-pama.md)
-- [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md)
-- [`adr/ADR-004-pama-controls-mutation-authority.md`](adr/ADR-004-pama-controls-mutation-authority.md)
-- [`adr/ADR-020-probabilistic-discovery-deterministic-governance.md`](adr/ADR-020-probabilistic-discovery-deterministic-governance.md)
+No external source-rights entry is required for PAMA itself. Any external research, standard, or implementation reused to support or challenge PAMA remains separately governed by this source policy.
 
 ## FailSafe / Arbiter
 
@@ -248,17 +273,6 @@ Relevant ideas:
 - audit trails
 
 Agent Memory independently expresses the governance doctrine. Directly copied or adapted Apache-2.0 material would require the applicable attribution, license, NOTICE, and modification obligations to be recorded and satisfied.
-
-## Bicameral
-
-The canonical decision-continuity implementation source is currently private. Existing public Bicameral repositories are not treated as provenance substitutes unless a specific public artifact directly supports the cited doctrine.
-
-Relevant ideas:
-
-- decision continuity
-- drift detection
-- durable decisions
-- supersession and rationale preservation
 
 ## Evidence-transfer rule
 
@@ -302,7 +316,7 @@ It does **not** prove that a particular neural network, confidence threshold, or
 
 ## Source-record fields
 
-When a research claim materially affects doctrine, the research map should be able to record:
+When an external research claim materially affects doctrine, the research map should be able to record:
 
 ```text
 source_ref
@@ -318,7 +332,7 @@ related_fixture_or_test
 reviewed_at
 ```
 
-When source material is materially reused rather than merely cited or independently synthesized, the rights record should additionally retain:
+When external source material is materially reused rather than merely cited or independently synthesized, the rights record should additionally retain:
 
 ```text
 public_url
@@ -334,9 +348,9 @@ reuse_basis
 verified_at
 ```
 
-The repository need not turn into citation-management software. It does need enough evidence to distinguish research provenance from permission to copy.
+The repository need not turn into citation-management software. It does need enough evidence to distinguish external research provenance from permission to copy.
 
-Primary rights records live in [`../sources/source-registry.json`](../sources/source-registry.json) and are validated against [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json).
+External and materially reused source-rights records live in [`../sources/source-registry.json`](../sources/source-registry.json) and are validated against [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json).
 
 External research listed in [`23-research-bibliography.md`](23-research-bibliography.md) defaults to citation and independent synthesis unless material reuse is explicitly registered.
 
@@ -381,7 +395,17 @@ This prevents the bibliography from becoming a one-way machine for proving whate
 
 ## Maintenance rule
 
-When a new memory-system idea appears, place it in one or more of these categories before adding implementation work:
+When a new memory-system idea appears, first determine whether it is:
+
+```text
+native Agent Memory doctrine
+external evidence
+external implementation provenance
+cross-domain analogy
+conformance evidence
+```
+
+Then place the idea in one or more architecture categories before adding implementation work:
 
 ```text
 identity
@@ -403,7 +427,7 @@ inheritance
 conformance
 ```
 
-Then apply the source-rights gate:
+For external material, apply the source-rights gate:
 
 1. link the most specific lawful public source when one exists
 2. identify whether the source is public, private, a successor, or lacks a public locator
@@ -412,5 +436,7 @@ Then apply the source-rights gate:
 5. register any material quotation, adaptation, or copy before merge
 6. preserve applicable attribution, notice, and modification obligations
 7. never substitute an adjacent public artifact for private canonical provenance
+
+Native contributor-authored doctrine does not need to be manufactured into an external source merely to satisfy this index. Its authorship and canonical location should be recorded in the doctrine tree itself.
 
 If the idea does not fit the architecture taxonomy, determine whether the taxonomy is genuinely incomplete before creating a new component. Architectural sprawl remains undefeated at naming things humans find interesting.
