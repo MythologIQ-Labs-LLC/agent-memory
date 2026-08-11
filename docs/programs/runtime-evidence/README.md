@@ -88,6 +88,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`deletion-completeness-evidence.md`](deletion-completeness-evidence.md) | P4 -> P4.5 deletion lifecycle composition | declared residual, undeclared hard-gate failure, and zero-residue success drive signed portable lifecycle evidence and an exact-commit JSON report |
 | [`concurrency-conflict-evidence.md`](concurrency-conflict-evidence.md) | concurrency behavior | conflicting proposals from one prior state are revalidated at commit; stale second write is deferred and conflict evidence is emitted |
 | [`benchmark-security-scorecard.md`](benchmark-security-scorecard.md) | P5 benchmark/security matrix and harness | seven hard-gate security/governance metrics execute with explicit denominators and an exact-commit scorecard artifact; no scalar quality score |
+| [`mem0-adversarial-comparator.md`](mem0-adversarial-comparator.md) | P6 production-oriented adversarial comparator | pinned Mem0 OSS memory CRUD, scope, correction, deletion, history, and direct-ID behavior execute against local Qdrant/SQLite with external-model seams removed |
 
 ## Preconditions
 
