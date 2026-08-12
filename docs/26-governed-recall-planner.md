@@ -138,6 +138,23 @@ incorrect state later corrected
 
 A current-state query should not prefer a stale memory merely because it is semantically closer.
 
+## Derived state after source deletion or tombstoning
+
+A derived summary, projection, graph fact, cache entry, or similar artifact may remain physically discoverable after one of its source memories is pruned, deleted, or tombstoned. Candidate discovery does not make that derived artifact valid current evidence.
+
+When the derivation basis includes a source that current lifecycle policy treats as tombstoned or deleted, ordinary current-state recall must fail closed unless a governed revalidation/rebuild path has independently established a new valid basis.
+
+```text
+tombstoned source
+  -> derived artifact may still be a retrieval candidate
+  -> ordinary admission rejects current use
+  -> revalidation / rebuild requires its own governed evidence
+```
+
+This is separate from residue detection. A deletion sweep may identify undeclared residue for cleanup; recall admission independently prevents that residue from influencing current context while it remains reachable.
+
+The reference refusal `derived_from_tombstoned_source` expresses this boundary. It is not a requirement that every implementation use that exact string, but conformance evidence must identify the equivalent blocking reason and stage.
+
 ## Sensitivity and destination
 
 Recall policy should consider where the assembled context is going:
@@ -196,6 +213,7 @@ For consequential recall, the system should be able to answer:
 - disputed memory appears canonical
 - summaries erase scope/sensitivity
 - stale memory outranks current memory
+- derived state whose source was tombstoned remains admissible merely because the derived object itself was not tombstoned
 - stochastic ranker can sample prohibited content
 - context budgeting drops required governance state
 - several safe memories compose into unsafe context
@@ -213,6 +231,20 @@ expected: blocked
 ### Disputed high-relevance memory
 
 Expected: excluded from canonical recall or included with explicit dispute semantics.
+
+### Derived residue from tombstoned source
+
+Expected:
+
+```text
+candidate_discovered == true
+admitted == false
+current_context_surface == false
+downstream_influence == false
+blocking_reason == derived-from-tombstoned-source equivalent
+```
+
+The artifact's continued physical presence is evidence of residue, not evidence of current validity.
 
 ### Uncertain sensitivity
 

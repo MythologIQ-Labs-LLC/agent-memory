@@ -387,6 +387,8 @@ class GovernedMemoryAdapter:
             return "out_of_scope"
         if fact.uuid in self._tombstones:
             return "tombstoned"
+        if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
+            return "derived_from_tombstoned_source"
         if fact.is_event_invalid:
             return "superseded_not_current"
         if fact.uuid in self._disputed:
