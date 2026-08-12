@@ -233,10 +233,10 @@ Conformance fixtures:
 
 - [`../fixtures/`](../fixtures/)
 
-Validation:
+Validation from the repository root:
 
 ```bash
-python -m pip install -r ../reference/requirements.txt
+python -m pip install -r reference/requirements.txt
 python scripts/validate_fixtures.py fixtures
 python scripts/validate_schemas.py
 python scripts/validate_doctrine_boundaries.py
