@@ -2,15 +2,15 @@
 
 A minimal, executable demonstration that the governed path in
 [`../docs/programs/runtime-evidence/README.md`](../docs/programs/runtime-evidence/README.md)
-can be implemented over a temporal-graph substrate that provides no governance of its own, plus the P4.5 portable evidence, external-checkpoint correlation, TRACE/cMCP action-evidence boundaries, and the first deterministic Governance Context Projection slice.
+can be implemented over a temporal-graph substrate that provides no governance of its own, plus the P4.5 portable evidence, external-checkpoint correlation, TRACE/cMCP action-evidence boundaries, accepted ADR-024 shared-write coordination evidence, and the first deterministic Governance Context Projection slice.
 
 ## What this is not
 
 Read this section before citing anything in this directory.
 
 - **Not a conformance claim.** The emitted report states conformance level 0 and says why. The doctrine fixture corpus is driven through the adapter's authority enforcement, but doc 06 levels are cumulative and this adapter implements neither decay nor calibrated saturation, so levels 2 and 3 are unmet however well enforcement does. Nothing here substantiates a level, a profile, or ADR-020 by itself.
-- **Not a reference implementation of Agent Memory.** It implements the narrow slices needed to exercise governance paths, portable evidence, and bounded interoperability projections, and nothing else.
-- **Not an endorsement of any substrate, trust infrastructure, or governance consumer.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against. The Ed25519 profile proves an evidence boundary, not a universal PKI. Agent Manifest, TRACE, cMCP, DashClaw, and Microsoft Agent Governance Toolkit are comparators/interoperability surfaces, not doctrine dependencies.
+- **Not a reference implementation of Agent Memory.** It implements the narrow slices needed to exercise governance paths, portable evidence, shared-write coordination, and bounded interoperability projections, and nothing else.
+- **Not an endorsement of any substrate, trust infrastructure, governance consumer, or distributed-lock implementation.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against. The Ed25519 profile proves an evidence boundary, not a universal PKI. The ADR-024 coordinator proves a pre-write coordination boundary, not a universal lock algorithm. Agent Manifest, TRACE, cMCP, DashClaw, and Microsoft Agent Governance Toolkit are comparators/interoperability surfaces, not doctrine dependencies.
 
 ## What it does demonstrate
 
@@ -22,6 +22,8 @@ Several things, at different evidential weight.
 
 **Against the doctrine fixture corpus.** All repository fixtures are driven through the adapter's own enforcement rule where they declare an authority envelope. This matters because the corpus was authored to describe doctrine, not to satisfy this implementation, so agreement between them is evidence rather than a suite agreeing with itself. The checker is mutation-tested in `tests/test_fixture_corpus.py`: deliberately corrupted envelopes must be detected, because a conformance check that cannot fail is decoration.
 
+**Against accepted ADR-024 shared-write coordination.** A deterministic reference coordinator binds actor, task, scope, target, mutation class, authority basis, state snapshot, and lease validity before a shared durable write may reach the governed adapter. Fixtures and unit tests exercise successful coordination, competing claims, stale state, expired leases, unauthorized claims, claim/proposal mismatch, and the critical negative path where a valid claim still cannot override a PAMA `block`. Successful and failed claim outcomes are emitted as schema-valid audit events.
+
 **Against the P4.5a portable-evidence contract.** A content-free projection of a canonical decision receipt is signed with Ed25519 and verified using only the configured public trust key. The verifier independently checks receipt, runtime-action, policy, authority-state, temporal, and isolation-domain bindings while preserving governance disposition, runtime execution, and lifecycle satisfaction as separate outcomes. Adversarial vectors exercise tampering, replay, stale authority, wrong domains, key rotation, revocation timing, detached receipt verification, and valid deletion with residual lifecycle state.
 
 **Against the P4.5b Agent Manifest comparator.** CI installs `agent-manifest==0.11.0`, pinned to release commit `98cead8e8809e3302dc388ca869882d15b812b7f`, and executes its own v0.2 memory checkpoint/delta implementation. Agent Memory content-addresses the checkpoint tuple and binds it through the canonical receipt and P4.5a state references. The executed upstream log appends a real `DEL`; the resulting accepted checkpoint is exercised once with lifecycle `residual` and once with lifecycle `satisfied`, proving checkpoint integrity does not manufacture forgetting. Because a checkpoint root alone does not disclose the appended operation class, the portable correlation artifact deliberately carries signed Agent Memory `memory_action` rather than an unproven Agent Manifest `operation_kind` claim.
@@ -31,6 +33,8 @@ Several things, at different evidential weight.
 **Against the proposed ADR-029 Governance Context Projection boundary.** A deterministic reference builder converts explicit precedent inputs into a vendor-neutral projection containing source-memory references, material conditions, polarity, validity, provenance, outcomes, scope, and derivation metadata. The builder does not emit consumer verdicts, standing permission, or risk scores. Tests exercise material matches, misleading near-matches, negative precedent, unknown conditions, deterministic rebuild, and provenance laundering where a policy-generated outcome tries to impersonate independent human adjudication.
 
 The common point is that the governance layer is load-bearing. The substrate model is deliberately permissive in exactly the ways the mapping verified: identity is opaque rather than content-derived, the partition filter defaults to unfiltered, deletion is physical with no tombstone, and **no operation checks authority**. Several tests assert both halves: that the substrate *would* misbehave, and that the adapter refuses anyway. A test that only checked the adapter would not prove the governance was doing any work.
+
+The shared-write claim boundary adds a related separation: coordination may determine which writer gets to attempt a shared mutation, but PAMA still determines what durable consequence is permitted.
 
 The Governance Context Projection adds a complementary boundary: remembered context can be useful to an external policy system without becoming permission merely because it crossed an adapter seam.
 
@@ -44,6 +48,7 @@ reference/
     policy.py                        PAMA evaluation: base table, class floors, modifiers
     receipts.py                      schema-conformant decisions, receipts, audit events
     adapter.py                       the governed path
+    write_claims.py                  ADR-024 pre-write shared-mutation coordination
     governance_projection.py         deterministic ADR-029 context projection builder
     fixture_conformance.py           drives the doctrine corpus through enforcement
     projections.py                   tier-3 declarations and the freshness relation
@@ -54,12 +59,12 @@ reference/
     trace_action_evidence.py         P4.5c TRACE/cMCP external action evidence
     (selectors live in adapter.py: deterministic and seeded stochastic)
   agentmem_ref/graphiti_driver.py     binding to a real temporal knowledge graph
-  tests/                              model, projection, real-substrate, and interoperability paths
+  tests/                              model, claim, projection, real-substrate, and interoperability paths
   run_trace_cmcp_comparator.py        isolated released cMCP verifier execution
   run_conformance.py
 ```
 
-The reference implementation is **not** standard-library only. Its main validation dependency set is declared and pinned in [`requirements.txt`](requirements.txt): `jsonschema`, `cryptography`, `agent-manifest`, `agentrust-trace`, and `rfc8785`. P4.5b uses Agent Manifest as a test-only comparator and does not import it from production reference modules. P4.5c uses TRACE/JCS dependencies in the main reference environment, while `cmcp-runtime==0.4.0` is kept in an isolated comparator environment because its dependency line differs. The Governance Context Projection builder adds no runtime dependency.
+The reference implementation is **not** standard-library only. Its main validation dependency set is declared and pinned in [`requirements.txt`](requirements.txt): `jsonschema`, `cryptography`, `agent-manifest`, `agentrust-trace`, and `rfc8785`. P4.5b uses Agent Manifest as a test-only comparator and does not import it from production reference modules. P4.5c uses TRACE/JCS dependencies in the main reference environment, while `cmcp-runtime==0.4.0` is kept in an isolated comparator environment because its dependency line differs. The shared-write coordinator and Governance Context Projection builder add no runtime dependency.
 
 The low-cost repository validators intentionally keep a different dependency posture: fixture, doctrine-boundary, link, visual, and calibration tooling stays standard-library only where documented, with `jsonschema` as the explicit schema-validation exception. See [`../CONTRIBUTING.md`](../CONTRIBUTING.md). CI installs the main reference validation environment from the same checked-in manifest used by contributors rather than maintaining a second hidden pin list.
 
@@ -89,7 +94,7 @@ python -m unittest discover -s reference/tests -t reference
 python reference/run_conformance.py
 ```
 
-Runs are deterministic where the contract requires determinism: identifiers are counter-based and the clock is injected, so repeated governed-adapter runs produce identical receipts and identical reports. The Governance Context Projection builder is deterministic for the same explicit inputs and source snapshot. Stochastic selection is seeded per trial, so it varies across trials and reproduces exactly for a given seed. Ed25519 signatures are deterministic for a fixed private key and canonical payload. P4.5b and P4.5c pin external package versions and upstream release commits so comparator drift is explicit rather than accidental.
+Runs are deterministic where the contract requires determinism: identifiers are counter-based and the clock is injected, so repeated governed-adapter runs produce identical receipts and identical reports. Shared-write claim tests inject claim time and exact state versions, so lease/state outcomes reproduce exactly. The Governance Context Projection builder is deterministic for the same explicit inputs and source snapshot. Stochastic selection is seeded per trial, so it varies across trials and reproduces exactly for a given seed. Ed25519 signatures are deterministic for a fixed private key and canonical payload. P4.5b and P4.5c pin external package versions and upstream release commits so comparator drift is explicit rather than accidental.
 
 ## The governed path
 
@@ -100,6 +105,19 @@ evidence -> proposal -> authority envelope -> permitted action set
 ```
 
 The adapter supplies what the substrate cannot: an authority gate before every write, always-explicit scope filtering, external lifecycle state, tombstones, and receipts. Artifacts are emitted against schemas already canonical in this repository rather than shapes invented beside the implementation: `pama-decision`, `decision-receipt`, `memory-audit-event`, `conformance-report`, P4.5a `portable-governance-evidence`, P4.5b `agent-manifest-memory-correlation`, P4.5c `trace-action-evidence-bundle`, and proposed ADR-029 `governance-context-projection`.
+
+The accepted ADR-024 shared-write path is an additional precondition for shared durable mutation:
+
+```text
+shared write intent
+  -> pre-write claim / lease
+  -> conflict / expiry / state / binding validation
+  -> ordinary governed adapter / PAMA
+  -> durable mutation or refusal
+  -> claim + decision audit evidence
+```
+
+The reference coordinator implements one exact-scope lease mechanism. It does not replace the ordinary governed path or make the lease itself authoritative.
 
 The governance-consumer path is separate:
 
@@ -118,6 +136,10 @@ The reference module currently implements only the deterministic projection buil
 | Path | Holds |
 |---|---|
 | positive commit and reconstruction | full chain executes; receipt reconstructs estimate, authority, selection, consequence; events causally linked |
+| shared-write valid claim | current authorized claim acquires coordination and reaches ordinary PAMA before one durable write commits |
+| shared-write conflict | a second active claim for the same scope/target is rejected before durable mutation |
+| shared-write stale/expired/unauthorized | stale state, expired lease, or unresolved claim authority fails closed with no substrate write |
+| shared-write PAMA non-override | a valid coordination claim cannot loosen a later PAMA `block`; no durable write occurs |
 | high-confidence false promotion | confidence 0.99 and 0.01 produce an identical envelope; confidence has no route to authority |
 | cross-tenant relevance | substrate returns the foreign record unfiltered; adapter never reaches that default |
 | prohibited action selectability | a governance-class mutation is absent from the permitted set and cannot be selected |
@@ -174,3 +196,4 @@ Stated rather than left to be discovered:
 12. The released cMCP 0.4.0 dependency graph is intentionally isolated from the main evidence environment because its AGT dependency line resolves a lower cryptography range. This is comparator containment, not a production dependency recommendation.
 13. P4.5c does not demonstrate hardware attestation of the Agent Memory process, production trust-anchor discovery, or upstream Community/Verified integration acceptance.
 14. Governance Context Projection V0.1 uses explicit deterministic material-condition comparison. It does not implement semantic similarity, learned precedent ranking, approval suppression, standing grants, DashClaw integration, AGT/ACS integration, or evidence that reduced approval friction is safe in production.
+15. The ADR-024 `SharedWriteCoordinator` is an in-process exact-scope reference lease. It does not prove distributed serializability, consensus, deadlock freedom, cross-process lock durability, or one normative coordination algorithm. Those remain implementation-specific obligations.
