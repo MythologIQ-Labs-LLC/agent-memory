@@ -16,11 +16,12 @@ The repository is intentionally layered. Start with the smallest path that answe
 | Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24`, `41` |
 | Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`41`, schemas and fixtures |
 | Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `33`, `34`, ADR-004, ADR-020, ADR-022 |
+| Governance integration architect | [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) | `11`, `34`, ADR-021, ADR-028, `07` roadmap |
 | Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41` |
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
 | Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
 | Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
-| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-022 |
+| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-028 |
 
 ## Native PAMA doctrine
 
@@ -54,14 +55,14 @@ PAMA is not represented as an external source dependency. External research, sta
 | 04 | [`04-governance-and-pama.md`](04-governance-and-pama.md) | Native PAMA specialization: mutation authority and bounded consequence |
 | 05 | [`05-repo-implementation-map.md`](05-repo-implementation-map.md) | Mapping of related implementations into the architecture while keeping native doctrine separate |
 | 06 | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | Conformance Levels 0-6 and adversarial fixture requirements |
-| 07 | [`07-integration-roadmap.md`](07-integration-roadmap.md) | Doctrine-to-implementation roadmap |
+| 07 | [`07-integration-roadmap.md`](07-integration-roadmap.md) | Doctrine-to-implementation roadmap, including the Governance Projection track |
 | 08 | [`08-source-material-index.md`](08-source-material-index.md) | External/related provenance, public source locators, rights posture, and evidence domains |
 | 09 | [`09-calibration-protocol.md`](09-calibration-protocol.md) | Calibration, abstention, hysteresis, disagreement, drift |
 | 10 | [`10-memory-unit-examples.md`](10-memory-unit-examples.md) | Concrete memory, uncertainty, authority, receipt, and scope examples |
 
 ### Source rights, provenance, and aligned projects
 
-- [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md) defines how Agent Memory celebrates external developers and projects without implying dependency, endorsement, joint authorship, or license transfer.
+- [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md) defines how Agent Memory celebrates external developers and projects without implying dependency, endorsement, joint authorship, or license transfer. Current highlighted governance peers include DashClaw and Microsoft Agent Governance Toolkit under explicit independence boundaries.
 - [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) defines citation, synthesis, author-originated, licensed, and permission-based reuse modes.
 - [`../sources/source-registry.json`](../sources/source-registry.json) records external/private/material-reuse source posture.
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) makes those source-rights records machine-checkable.
@@ -74,7 +75,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 
 | # | Document | Purpose |
 |---|---|---|
-| 11 | [`11-component-architecture.md`](11-component-architecture.md) | Component boundaries and control character |
+| 11 | [`11-component-architecture.md`](11-component-architecture.md) | Component boundaries and control character, including Governance Context Projection |
 | 12 | [`12-concept-segmentation-matrix.md`](12-concept-segmentation-matrix.md) | Where concepts belong and when they deserve promotion into doctrine |
 | 13 | [`13-system-composition-boundaries.md`](13-system-composition-boundaries.md) | Typed handoffs and composition-specific failure modes |
 | 14 | [`14-expanded-scope-recommendations.md`](14-expanded-scope-recommendations.md) | Controlled architecture expansion candidates |
@@ -107,7 +108,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 31 | [`31-recovery-rollback-and-replay.md`](31-recovery-rollback-and-replay.md) | Recovery, compensation, state/version binding, replay semantics |
 | 32 | [`32-memory-quality-metrics.md`](32-memory-quality-metrics.md) | Ongoing quality, safety, calibration, deletion, and outcome metrics |
 | 33 | [`33-pama-decision-table.md`](33-pama-decision-table.md) | Agent Memory operation/risk policy projection of native PAMA doctrine |
-| 34 | [`34-adapter-contracts.md`](34-adapter-contracts.md) | Typed seam contracts: required handoff fields, failure modes, rejection semantics |
+| 34 | [`34-adapter-contracts.md`](34-adapter-contracts.md) | Typed seam contracts, including the governance-context projection adapter boundary |
 | 35 | [`35-interoperability-profiles.md`](35-interoperability-profiles.md) | Six cumulative reliance profiles for cross-system memory exchange |
 | 36 | [`36-policy-as-memory.md`](36-policy-as-memory.md) | Policies as high-authority memory: versioning, certification, conflict, complete recall |
 | 37 | [`37-memory-economics-and-budget-policy.md`](37-memory-economics-and-budget-policy.md) | Budget dimensions and the pressure-shapes-priority-never-authority boundary |
@@ -121,6 +122,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | Document | Purpose |
 |---|---|
 | [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md) | Decision memory: required fields, rationale preservation, supersession, drift, recall |
+| [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) | Vendor-neutral derived precedent/context for external governance consumers without exporting final authority |
 | [`future/memory-compiler.md`](future/memory-compiler.md) | Bulk artifact-to-memory-unit conversion at scale, gated future subsystem |
 | [`future/multi-agent-shared-memory-protocol.md`](future/multi-agent-shared-memory-protocol.md) | Shared memory across agents and tenants, gated future subsystem |
 
@@ -139,17 +141,46 @@ See [`adr/README.md`](adr/README.md).
 Current doctrine state:
 
 ```text
-ADR-001 through ADR-019: Accepted
-ADR-020: Proposed
+ADR-001 through ADR-020: Accepted
 ADR-021: Proposed
 ADR-022: Accepted
+ADR-023: Proposed
+ADR-024: Proposed
+ADR-025: Proposed
+ADR-026: Proposed
+ADR-027: Proposed
+ADR-028: Proposed
 ```
 
-ADR-020 remains Proposed because it explicitly requires real end-to-end runtime evidence, including repeated behavioral evidence for stochastic containment. Documentation, schemas, and structurally valid fixtures are necessary but not sufficient.
+ADR-020 is Accepted after its explicitly stronger executable end-to-end evidence gate was satisfied. Acceptance remains doctrine maturity, not universal implementation conformance.
 
-ADR-021 remains Proposed until portable memory-governance evidence has executable interoperability proof across the declared Agent Memory / external attestation boundary.
+ADR-021 remains Proposed until portable memory-governance evidence satisfies its independent interoperability and negative-path gates.
 
-ADR-022 is Accepted because isolation domains, controlled crossings, same-agent task/project separation, derived-scope propagation, shared-memory membership, boundary-crossing receipts, and the required schema/fixture surface are explicitly represented and validated. Acceptance is doctrine maturity, not a claim of universal production-runtime enforcement.
+ADR-022 is Accepted because isolation domains, controlled crossings, same-agent task/project separation, derived-scope propagation, shared-memory membership, boundary-crossing receipts, and the required schema/fixture surface are explicitly represented and validated.
+
+ADRs 023-027 remain individually Proposed under their own durable-mutation/evidence gates. ADR-028 remains Proposed while Governance Context Projection proceeds from schema/fixture/reference-builder evidence toward a real consumer adapter and the additional privacy, reconstruction, and near-match evidence named by the ADR.
+
+## Governance Context Projection
+
+Proposed [`ADR-028`](adr/ADR-028-governance-projection-is-derived-context-not-authority.md) establishes:
+
+```text
+Agent Memory core
+        |
+        v
+Governance Context Projection
+  vendor-neutral remembered context
+        |
+        v
+consumer-specific adapter
+        |
+        v
+external policy / approval / enforcement runtime
+```
+
+The projection may preserve precedent, material conditions, scope, validity, provenance, negative outcomes, and derivation metadata. It does not own a final external-governance verdict, standing permission, or vendor risk score.
+
+The first contract lives in [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) and [`../schemas/governance-context-projection.schema.json`](../schemas/governance-context-projection.schema.json). The implementation track is in [`07-integration-roadmap.md`](07-integration-roadmap.md).
 
 ## Governed-uncertainty audit trail
 
@@ -185,6 +216,7 @@ Schemas:
 - [`../schemas/calibration-results.schema.json`](../schemas/calibration-results.schema.json)
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json)
 - [`../schemas/pama-decision.schema.json`](../schemas/pama-decision.schema.json)
+- [`../schemas/governance-context-projection.schema.json`](../schemas/governance-context-projection.schema.json)
 
 External/material source provenance and rights records:
 
@@ -201,6 +233,7 @@ python -m pip install jsonschema
 python scripts/validate_fixtures.py fixtures
 python scripts/validate_schemas.py
 python scripts/validate_doctrine_boundaries.py
+python scripts/validate_wiki_links.py wiki-src
 ```
 
 Repository CI runs the same validation through [`../.github/workflows/validate-doctrine-evidence.yml`](../.github/workflows/validate-doctrine-evidence.yml).
