@@ -3,6 +3,11 @@
   "fixture_version": "1.0.0",
   "class": "trap",
   "description": "Pinned TRACE reference evidence exercises vendor-neutral normalization while proving that verification, freshness, revocation, and applicability remain distinct from Agent Memory authority.",
+  "expected_behavior": {
+    "all_cases_preserve_authority_non_escalation": true,
+    "applicable_requires_verified_current_unrevoked_exact_binding": true,
+    "authority_effect": "none"
+  },
   "memory_unit": {
     "id": "mem:external-evidence-normalization",
     "content_ref": "fixture://external-evidence-normalization/reference-claim",
