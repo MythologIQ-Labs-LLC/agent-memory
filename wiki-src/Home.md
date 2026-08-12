@@ -16,9 +16,9 @@ It separates uncertain interpretation from governed consequence, preserves why s
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/agent-memory-flow.svg">
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/agent-memory-flow-light.svg">
-    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/agent-memory-flow-light.svg" alt="Agent Memory governed memory loop showing interpretation, evidence and proposal, PAMA governance, permitted action selection, retained memory, governed recall, and active agent context" width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/agent-memory-flow.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/agent-memory-flow-light.png">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/agent-memory-flow-light.png" alt="Agent Memory governed memory loop showing interpretation, scope and isolation-domain resolution, PAMA authority outcomes, permitted consequences, retained state, governed recall admission, ranking and composition, and active agent context" width="100%">
   </picture>
 </p>
 

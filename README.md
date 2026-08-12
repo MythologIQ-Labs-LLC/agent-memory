@@ -137,9 +137,9 @@ See **[PAMA](docs/pama/README.md)**, **[Governance and PAMA](docs/04-governance-
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/agent-memory-flow.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/agent-memory-flow-light.svg">
-    <img src="assets/agent-memory-flow-light.svg" alt="Agent Memory governed memory loop: experience becomes evidence and an estimate, PAMA constrains the permitted actions, a consequence is committed with a receipt, retained state is recalled through policy, and memory influences future context." width="100%">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/diagrams/agent-memory-flow.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/diagrams/agent-memory-flow-light.png">
+    <img src="assets/diagrams/agent-memory-flow-light.png" alt="Agent Memory governed memory loop: experience becomes evidence and an estimate, scope and isolation domain are resolved, PAMA constrains permitted consequences, committed state is retained, retrieval candidates pass governed recall admission, and admitted memory is composed into active context." width="100%">
   </picture>
 </p>
 
