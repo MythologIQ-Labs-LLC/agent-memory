@@ -175,6 +175,8 @@ Authority must not be inferred from estimator fields.
 A common receipt should support:
 
 ```text
+decision_ref
+decision_outcome
 requested_action
 state_snapshot
 estimate_refs
@@ -190,6 +192,35 @@ evidence_refs
 rollback_or_recovery_ref
 timestamp
 ```
+
+The decision and receipt remain distinct artifacts. The receipt carries enough authority context to identify the decision and reconstruct its outcome class, while the referenced decision remains authoritative for the full PAMA evaluation record.
+
+Decision-receipt version compatibility currently follows this boundary:
+
+```text
+1.0.0
+  historical receipt shape
+  decision_ref / decision_outcome absent or optional
+  remains valid historical evidence
+
+1.1.0
+  decision_ref required
+  decision_outcome required
+  receipt <-> decision binding can be verified bidirectionally
+```
+
+This is intentionally versioned rather than retroactively making new fields required on all stored receipts. Optional-to-required evolution is breaking unless historical objects are migrated, and signed or content-addressed evidence must not be silently rewritten merely to satisfy a newer convenience contract.
+
+For 1.1.0 receipts, consumers that possess the referenced decision should verify at least:
+
+- `decision_ref` resolves to the intended PAMA/authority decision;
+- `decision_outcome` matches that decision;
+- policy version and permitted/prohibited action sets match;
+- selected action matches the decision and belongs to the permitted set;
+- the decision points back to the same receipt;
+- the outcome and action envelope are internally consistent.
+
+A receipt proves what was recorded about the authority decision and selected consequence. It does not, by itself, prove downstream execution occurred.
 
 ## Migration
 
@@ -233,12 +264,16 @@ Schema changes should be reviewed for:
 
 ## Current repository schemas
 
-The repository's schema registry currently contains seven schemas, reconciled with the governed-uncertainty model in evidence slice 7B and after:
+The repository schema registry includes machine-readable contracts for memory units, conformance results, audit events, decision receipts, PAMA decisions, calibration evidence, source records, portable/interchange evidence, isolation boundaries, governance projections, and other bounded profiles introduced by validated architecture slices.
+
+The canonical inventory is the [`../schemas/`](../schemas/) directory. Do not rely on a hand-maintained schema count in prose as a maturity signal.
+
+Core examples include:
 
 - [`../schemas/memory-unit.schema.json`](../schemas/memory-unit.schema.json) — the memory unit, including uncertainty, scope, tombstone, and action-envelope fields
 - [`../schemas/conformance-report.schema.json`](../schemas/conformance-report.schema.json) — conformance results with estimator/policy versioning and the standardized metric family
 - [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json) — structured audit events with correlation/causation identifiers
-- [`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json) — reconstruction receipts for consequential decisions
+- [`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json) — reconstruction receipts for consequential decisions, including the versioned authority-decision backlink
 - [`../schemas/pama-decision.schema.json`](../schemas/pama-decision.schema.json) — PAMA authority decision records
 - [`../schemas/calibration-results.schema.json`](../schemas/calibration-results.schema.json) — labeled calibration case input for the calibration report generator
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) — source-registry records with rights and reuse gating
@@ -251,7 +286,7 @@ Conformance fixtures are versioned artifacts with their own evolution rules, dis
 "fixture_version": "MAJOR.MINOR.PATCH"
 ```
 
-- The fixture version describes the **scenario contract** — expected behavior, required invariants, trap semantics, and material scenario inputs — not the memory-unit schema version.
+- The fixture version describes the **scenario contract**: expected behavior, required invariants, trap semantics, and material scenario inputs, not the memory-unit schema version.
 - Prose or metadata changes that leave expected behavior untouched may remain patch-compatible.
 - Changing expected behavior, required invariants, trap semantics, or material scenario inputs requires a version change; breaking scenario-semantic changes require a major version change.
 - Runtime evidence must record `fixture_id` plus `fixture_version`, so results remain comparable after fixtures evolve.
@@ -261,11 +296,17 @@ Conformance fixtures are versioned artifacts with their own evolution rules, dis
 
 - old consumer receives new optional field
 - old consumer receives unknown enum member
+- historical 1.0 decision receipt remains valid under the compatibility schema
+- 1.1 decision receipt omits required decision backlink/outcome
+- decision receipt references the wrong authority decision
+- decision receipt outcome does not match the referenced decision
+- decision and receipt point at different counterparts
+- outcome class contradicts the permitted/prohibited action envelope
+- decision receipt references mismatched policy version
 - estimator score changes semantics without type change
 - migrated object loses provenance
 - schema adapter strips tenant scope
 - unknown schema attempts durable mutation
-- decision receipt references mismatched policy version
 
 ## Doctrine
 
