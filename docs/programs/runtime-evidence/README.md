@@ -8,7 +8,26 @@ Everything in the doctrine tree is supported by internal coherence: schemas that
 
 > ADR-020 is Accepted on the executable evidence mapped by the P10 acceptance audit. That doctrine decision does not imply cumulative implementation conformance or universal production proof.
 
-The live backlog and workstream detail are tracked in the program issue. This document is the durable in-repo statement of the program's rules: what counts as evidence, how comparators are used, and what the program is not allowed to do.
+The completed runtime-evidence workstream is tracked in [issue #46](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/46). This document is the durable in-repo statement of the program's rules, evidence surfaces, and completion boundary.
+
+## Program completion posture
+
+The runtime-evidence program owned by #46 is complete through its planned evidence slices:
+
+- **P0** evidence floor: delivered under #43;
+- **P2-P3** substrate mapping and governed reference adapter: delivered and exercised against the pinned real substrate;
+- **P4** canonical/derived/projection correction, deletion, residue, and rebuild authority: delivered;
+- **P4.5** portable governance evidence, Agent Manifest correlation, TRACE/cMCP action-evidence binding, and lifecycle composition: delivered;
+- **P5** benchmark/security scorecard: delivered;
+- **P6** pinned production-oriented Mem0 adversarial comparator: delivered;
+- **P7** governed interchange: delivered through receiver-local authorization, lifecycle-obligation continuity, and two-store correction/deletion propagation;
+- **P8** telemetry interoperability: delivered through strict minimization plus rotation-aware retention/deletion behavior;
+- **P9** systems/economic characterization: delivered with structural cost/scaling measures and runner-specific non-gating timings;
+- **P10** ADR-020 evidence acceptance audit: delivered, with ADR-020 accepted on the mapped evidence.
+
+**P1 / #5 remains separate.** It tracks evidence-gated first-party implementation adoption/backlinks. P1 is a precondition before evidence from a first-party implementation is treated as dispositive; it is not unfinished reference-runtime or comparator work under #46. Closing #46 therefore does not close, satisfy, or weaken #5.
+
+Likewise, broader isolation-domain conformance under #68, architecture-family exploration under #67, repository-governance hardening, and other future implementation/deployment evidence remain independent workstreams. Program completion means the planned #46 evidence program is complete, not that Agent Memory has exhausted every useful experiment or earned universal production conformance.
 
 ## What counts as runtime evidence
 
@@ -79,9 +98,9 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 
 | Document | Slice | Status |
 |---|---|---|
-| [`graphiti-conformance.md`](graphiti-conformance.md) | first substrate capability mapping | documentation-verified, with key findings confirmed by execution |
-| [`../../../reference/README.md`](../../../reference/README.md) | minimal governed adapter | bound and executed against a real substrate |
-| [`canonical-and-derived-state.md`](canonical-and-derived-state.md) | canonical memory versus derived projections | design spike executed: all seven evidence-bar items run in CI |
+| [`graphiti-conformance.md`](graphiti-conformance.md) | P2 first substrate capability mapping | documentation-verified, with key findings confirmed by execution |
+| [`../../../reference/README.md`](../../../reference/README.md) | P3 minimal governed adapter | bound and executed against a real substrate |
+| [`canonical-and-derived-state.md`](canonical-and-derived-state.md) | P4 canonical memory versus derived projections | design spike executed: all seven evidence-bar items run in CI |
 | [`portable-governance-evidence.md`](portable-governance-evidence.md) | P4.5a portable governance evidence core | executable substrate-independent Ed25519 issuer/verifier and adversarial vectors |
 | [`agent-manifest-correlation.md`](agent-manifest-correlation.md) | P4.5b Agent Manifest memory checkpoint correlation | pinned external comparator executed; a checkpoint built from a test log containing `DEL` remains distinct from Agent Memory lifecycle satisfaction |
 | [`trace-action-evidence.md`](trace-action-evidence.md) | P4.5c TRACE/cMCP action-evidence binding | content-free action receipt adapter plus released cMCP verifier comparator; TRACE receipt state remains separate from Agent Memory governance and lifecycle |
@@ -89,7 +108,10 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`concurrency-conflict-evidence.md`](concurrency-conflict-evidence.md) | concurrency behavior | conflicting proposals from one prior state are revalidated at commit; stale second write is deferred and conflict evidence is emitted |
 | [`benchmark-security-scorecard.md`](benchmark-security-scorecard.md) | P5 benchmark/security matrix and harness | seven hard-gate security/governance metrics execute with explicit denominators and an exact-commit scorecard artifact; no scalar quality score |
 | [`mem0-adversarial-comparator.md`](mem0-adversarial-comparator.md) | P6 production-oriented adversarial comparator | pinned Mem0 OSS memory CRUD, scope, correction, deletion, history, and direct-ID behavior execute against local Qdrant/SQLite with external-model seams removed |
-| [`../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md`](../../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md) | P10 ADR-020 evidence review | all fourteen ADR-020 minimum evidence gates mapped to executable repository evidence; acceptance separated from cumulative conformance |
+| [`governed-interchange.md`](governed-interchange.md) | P7 governed interchange | receiver-local authorization, lifecycle-notice continuity, and two-store correction/deletion propagation execute without importing sender authority |
+| [`telemetry-minimization.md`](telemetry-minimization.md) | P8 telemetry interoperability | strict content minimization plus expiry and rotation-aware targeted purge execute without turning telemetry into shadow memory |
+| [`systems-economic-characterization.md`](systems-economic-characterization.md) | P9 systems/economic characterization | structural work and scaling measurements plus runner-specific non-gating timings are emitted as exact-head evidence |
+| [`../../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md`](../../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md) | P10 ADR-020 evidence review | all fourteen ADR-020 minimum evidence gates mapped to executable repository evidence; acceptance separated from cumulative conformance |
 
 ## Preconditions
 
@@ -104,6 +126,8 @@ External comparators do not require precondition 2. A comparator is measured, no
 ## Non-goals
 
 This program does not authorize replacing Agent Memory with any external system, vendor lock-in, treating emerging drafts as adopted standards, importing external schemas without semantic review, inventing a universal memory score, averaging critical governance failures into a passing aggregate, weakening scope, privacy, correction, or deletion semantics for implementation convenience, or declaring cumulative implementation conformance merely because ADR-020 is accepted.
+
+Program completion also does not imply that #5, #67, #68, repository-governance work, deployment-specific telemetry work, or future architecture-family evidence is complete.
 
 ## Governing principle
 
