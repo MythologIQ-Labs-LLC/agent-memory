@@ -34,6 +34,7 @@ ADR-025: Proposed
 ADR-026: Proposed
 ADR-027: Proposed
 ADR-028: Proposed
+ADR-029: Proposed
 ```
 
 ADRs 001-020 and ADR-022 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance.
@@ -44,9 +45,11 @@ ADR-022 establishes **memory isolation domains and controlled boundary crossing*
 
 ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 proposes **pre-write coordination for shared-memory mutation**. ADR-025 proposes **explicit authority for overwriting durable decision memory**. All remain Proposed until their named evidence gates are satisfied.
 
-ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity.
+ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity. Both remain Proposed while their linked evidence programs run.
 
-ADR-028 proposes a three-layer interoperability boundary: **canonical Agent Memory core -> vendor-neutral Governance Context Projection -> consumer-specific adapter**. The projection is reconstructable derived context, not canonical memory truth, standing permission, or a final external-governance verdict.
+ADR-028 proposes a **language-neutral normative core with optional implementation and interoperability profiles**. It permits Python-first reference tooling, Rust high-assurance implementations, and UOR/AGT/MCP integrations without allowing any one language or external ecosystem to become the definition of Agent Memory doctrine.
+
+ADR-029 proposes a three-layer governance-consumer boundary: **canonical Agent Memory core -> vendor-neutral Governance Context Projection -> consumer-specific adapter**. The projection is reconstructable derived context, not canonical memory truth, standing permission, or a final external-governance verdict.
 
 ## Current status policy
 
@@ -130,13 +133,32 @@ The current Proposed ADRs intentionally separate several related but non-identic
 - [`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md): require explicit authority before overwriting durable decision state;
 - [`ADR-026`](ADR-026-origin-is-provenance-not-evidentiary-authority.md): apply the same evidence discipline to claims regardless of origin;
 - [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): require governed re-admission when a corrected/rejected value later reappears;
-- [`ADR-028`](ADR-028-governance-projection-is-derived-context-not-authority.md): expose vendor-neutral governance context as reconstructable derived state without turning consumer semantics into core memory doctrine.
+- [`ADR-028`](ADR-028-language-neutral-core-and-optional-implementation-profiles.md): preserve a language-neutral normative core while allowing optional implementation/interoperability profiles;
+- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): expose vendor-neutral governance context as reconstructable derived state without turning consumer semantics into core memory doctrine.
 
 These ADRs must not be collapsed into a single broad "memory safety" or "governance integration" claim. Each has its own acceptance evidence and may be accepted, narrowed, or rejected independently.
 
+## Implementation portability and ecosystem boundaries
+
+[`ADR-028`](ADR-028-language-neutral-core-and-optional-implementation-profiles.md) is **Proposed**.
+
+Its central boundary is:
+
+```text
+normative doctrine / schemas / fixtures
+        !=
+reference implementation language
+        !=
+optional implementation or interoperability profile
+```
+
+Python may remain the practical reference/integration language where it maximizes ecosystem reach. Rust is a first-class implementation language for high-assurance or performance-sensitive components. UOR, AGT, MCP, and other external systems may supply reusable primitives or profiles, but none becomes authoritative for Agent Memory semantics merely through adoption.
+
+ADR-028 acceptance requires cross-language conformance evidence and a negative path demonstrating that content-address verification does not confer memory authority.
+
 ## Governance Context Projection
 
-[`ADR-028`](ADR-028-governance-projection-is-derived-context-not-authority.md) is intentionally **Proposed**.
+[`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md) is intentionally **Proposed**.
 
 Its central boundary is:
 
@@ -154,7 +176,9 @@ consumer-specific adapter
 
 The projection does not emit a final consumer verdict or standing permission. It is designed so consumers can use remembered rationale, conditions, negative precedent, validity, and outcomes without requiring Agent Memory core to mirror a DashClaw-, AGT/ACS-, or other vendor-specific data model.
 
-ADR-028 acceptance requires a reconstructable reference builder, adversarial near-match coverage, provenance/scope preservation, privacy/minimization evidence, and at least one consumer integration that demonstrates value without pushing consumer-specific fields into the canonical memory-unit schema.
+ADR-029 complements ADR-028: the normative core remains language-neutral, the governance projection remains vendor-neutral, and concrete consumers stay behind optional adapters.
+
+ADR-029 acceptance requires a reconstructable reference builder, adversarial near-match coverage, provenance/scope preservation, privacy/minimization evidence, and at least one consumer integration that demonstrates value without pushing consumer-specific fields into the canonical memory-unit schema.
 
 ## Canonical references
 
