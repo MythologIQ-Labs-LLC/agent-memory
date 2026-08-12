@@ -91,7 +91,9 @@ class RecallContext:
     """Authority context for one governed recall request.
 
     Domain refs are logical authority boundaries. They are not storage
-    partitions and their tuple order does not imply hierarchy.
+    partitions and their tuple order does not imply hierarchy. A target context
+    may carry several active domains so mandatory compartment constraints can
+    be checked conjunctively without redefining ordinary domain routes.
     """
 
     target_domain_refs: tuple[str, ...]
@@ -263,8 +265,12 @@ class GovernedMemoryAdapter:
             )
         )
         domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
+        required_domains = tuple(dict.fromkeys(proposal.required_isolation_domain_refs))
+        if required_domains and not set(required_domains).issubset(set(domain_refs)):
+            raise ValueError("required isolation domains must also be bound isolation domains")
         self._fact_scope[uuid] = {
             "domain_refs": domain_refs,
+            "required_domain_refs": required_domains,
             "project_ref": proposal.project_ref,
             "task_ref": proposal.task_ref,
             "purpose": proposal.purpose,
@@ -278,10 +284,10 @@ class GovernedMemoryAdapter:
         """Retrieve candidates, then admit only what current authority allows.
 
         Tenant partitioning is enforced before retrieval. Logical isolation
-        domains, shared-space membership, project, and task are evaluated at
-        admission because the in-memory substrate is trusted to return
-        same-tenant candidates for policy evaluation. Candidate presence and
-        shared-space membership remain distinct from admission authority.
+        domains, mandatory compartment constraints, shared-space membership,
+        project, and task are evaluated at admission because the in-memory
+        substrate is trusted to return same-tenant candidates for policy
+        evaluation. Candidate presence remains distinct from admission authority.
         """
         context = context or RecallContext(target_domain_refs=(self._tenant,))
         result = AdmissionResult()
@@ -309,10 +315,13 @@ class GovernedMemoryAdapter:
             return None
 
         memory_domains = set(scope["domain_refs"])
+        required_domains = set(scope.get("required_domain_refs", ()))
         target_domains = set(context.target_domain_refs)
         matching_domains = memory_domains.intersection(target_domains)
         if not target_domains or not matching_domains:
             return "isolation_domain_mismatch"
+        if required_domains and not required_domains.issubset(target_domains):
+            return "required_isolation_domain_missing"
 
         # A shared domain is still an isolation boundary. If all matching
         # routes are governed shared spaces, at least one must currently admit
