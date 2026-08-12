@@ -241,12 +241,13 @@ class ContextualRecallTests(unittest.TestCase):
             policy_ref="contextual-policy:minimized",
             policy_version="1.0.0",
         )
+        query = "contextual recall raw query should not be copied"
         result = ContextualRecallAdapter(base, policy=contextual_policy, clock=Clock(start=10)).governed_recall(
-            "raw query should not be copied", self._context("benign")
+            query, self._context("benign")
         )
         decision = result.contextual_decisions[fact_uuid]
         rendered = str(decision)
-        self.assertNotIn("raw query should not be copied", rendered)
+        self.assertNotIn(query, rendered)
         self.assertNotIn("contextual recall test fact", rendered)
         self.assertEqual(decision["candidate_ref"], fact_uuid)
 
