@@ -2,15 +2,15 @@
 
 A minimal, executable demonstration that the governed path in
 [`../docs/programs/runtime-evidence/README.md`](../docs/programs/runtime-evidence/README.md)
-can be implemented over a temporal-graph substrate that provides no governance of its own, plus the P4.5 portable evidence, external-checkpoint correlation, and TRACE/cMCP action-evidence boundaries.
+can be implemented over a temporal-graph substrate that provides no governance of its own, plus the P4.5 portable evidence, external-checkpoint correlation, TRACE/cMCP action-evidence boundaries, and the first deterministic Governance Context Projection slice.
 
 ## What this is not
 
 Read this section before citing anything in this directory.
 
-- **Not a conformance claim.** The emitted report states conformance level 0 and says why. The doctrine fixture corpus *is* now driven through the adapter's authority enforcement, but doc 06 levels are cumulative and this adapter implements neither decay nor calibrated saturation, so levels 2 and 3 are unmet however well enforcement does. Nothing here substantiates a level, a profile, or ADR-020.
-- **Not a reference implementation of Agent Memory.** It implements the narrow slices needed to exercise governance paths and portable evidence, and nothing else.
-- **Not an endorsement of any substrate or trust infrastructure.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against. The Ed25519 profile proves an evidence boundary, not a universal PKI. Agent Manifest, TRACE, and cMCP are pinned external comparators/interoperability surfaces, not doctrine dependencies.
+- **Not a conformance claim.** The emitted report states conformance level 0 and says why. The doctrine fixture corpus is driven through the adapter's authority enforcement, but doc 06 levels are cumulative and this adapter implements neither decay nor calibrated saturation, so levels 2 and 3 are unmet however well enforcement does. Nothing here substantiates a level, a profile, or ADR-020 by itself.
+- **Not a reference implementation of Agent Memory.** It implements the narrow slices needed to exercise governance paths, portable evidence, and bounded interoperability projections, and nothing else.
+- **Not an endorsement of any substrate, trust infrastructure, or governance consumer.** The model reproduces one mapped substrate's verified semantics so the tests have something realistic to push against. The Ed25519 profile proves an evidence boundary, not a universal PKI. Agent Manifest, TRACE, cMCP, DashClaw, and Microsoft Agent Governance Toolkit are comparators/interoperability surfaces, not doctrine dependencies.
 
 ## What it does demonstrate
 
@@ -20,7 +20,7 @@ Several things, at different evidential weight.
 
 **Against a substrate model (precondition).** Twelve further paths run against an in-memory model, covering cases the live binding does not reach: stale authorization, self-approval, undeclared derived residue, and version-drift separation.
 
-**Against the doctrine fixture corpus.** All 26 repository fixtures are driven through the adapter's own enforcement rule, 18 of which declare an authority envelope. This matters because the corpus was authored to describe doctrine, not to satisfy this implementation, so agreement between them is evidence rather than a suite agreeing with itself. The checker is mutation-tested in `tests/test_fixture_corpus.py`: four deliberately corrupted envelopes must be detected, because a conformance check that cannot fail is decoration.
+**Against the doctrine fixture corpus.** All repository fixtures are driven through the adapter's own enforcement rule where they declare an authority envelope. This matters because the corpus was authored to describe doctrine, not to satisfy this implementation, so agreement between them is evidence rather than a suite agreeing with itself. The checker is mutation-tested in `tests/test_fixture_corpus.py`: deliberately corrupted envelopes must be detected, because a conformance check that cannot fail is decoration.
 
 **Against the P4.5a portable-evidence contract.** A content-free projection of a canonical decision receipt is signed with Ed25519 and verified using only the configured public trust key. The verifier independently checks receipt, runtime-action, policy, authority-state, temporal, and isolation-domain bindings while preserving governance disposition, runtime execution, and lifecycle satisfaction as separate outcomes. Adversarial vectors exercise tampering, replay, stale authority, wrong domains, key rotation, revocation timing, detached receipt verification, and valid deletion with residual lifecycle state.
 
@@ -28,7 +28,11 @@ Several things, at different evidential weight.
 
 **Against the P4.5c TRACE/cMCP action-evidence surface.** The reference adapter wraps P4.5a evidence in the existing six-field cMCP `external_execution_evidence` envelope, hashes the detached payload with RFC 8785/JCS, and preserves `linked_call_id` as a separate audit identity from Agent Memory `action_ref`. Local vectors exercise TRACE-style receipt outcomes, wrong-call and wrong-action replay, payload/signature tampering, missing trust, domain mismatch, and lifecycle separation. A second CI path creates an isolated environment with `cmcp-runtime==0.4.0` and calls the released `cmcp_verify.verify_audit_bundle()` verifier against the emitted envelope.
 
+**Against the proposed ADR-028 Governance Context Projection boundary.** A deterministic reference builder converts explicit precedent inputs into a vendor-neutral projection containing source-memory references, material conditions, polarity, validity, provenance, outcomes, scope, and derivation metadata. The builder does not emit consumer verdicts, standing permission, or risk scores. Tests exercise material matches, misleading near-matches, negative precedent, unknown conditions, deterministic rebuild, and provenance laundering where a policy-generated outcome tries to impersonate independent human adjudication.
+
 The common point is that the governance layer is load-bearing. The substrate model is deliberately permissive in exactly the ways the mapping verified: identity is opaque rather than content-derived, the partition filter defaults to unfiltered, deletion is physical with no tombstone, and **no operation checks authority**. Several tests assert both halves: that the substrate *would* misbehave, and that the adapter refuses anyway. A test that only checked the adapter would not prove the governance was doing any work.
+
+The Governance Context Projection adds a complementary boundary: remembered context can be useful to an external policy system without becoming permission merely because it crossed an adapter seam.
 
 ## Layout
 
@@ -39,6 +43,7 @@ reference/
     policy.py                        PAMA evaluation: base table, class floors, modifiers
     receipts.py                      schema-conformant decisions, receipts, audit events
     adapter.py                       the governed path
+    governance_projection.py         deterministic ADR-028 context projection builder
     fixture_conformance.py           drives the doctrine corpus through enforcement
     projections.py                   tier-3 declarations and the freshness relation
     residue.py                       deletion residue partition and independent sweep
@@ -48,12 +53,12 @@ reference/
     trace_action_evidence.py         P4.5c TRACE/cMCP external action evidence
     (selectors live in adapter.py: deterministic and seeded stochastic)
   agentmem_ref/graphiti_driver.py     binding to a real temporal knowledge graph
-  tests/                              model, real-substrate, and interoperability paths
+  tests/                              model, projection, real-substrate, and interoperability paths
   run_trace_cmcp_comparator.py        isolated released cMCP verifier execution
   run_conformance.py
 ```
 
-Schema validation uses `jsonschema`. P4.5a Ed25519 signing and public-key verification use `cryptography`, added under the explicit dependency-justification rule in `../CONTRIBUTING.md`. P4.5b uses `agent-manifest==0.11.0` as a test-only comparator and does not import it from production reference modules. P4.5c uses `agentrust-trace==0.8.0` plus `rfc8785==0.1.4` for the TRACE/JCS contract and runs `cmcp-runtime==0.4.0` in an isolated comparator environment. CI pins the main validation profile to `jsonschema==4.26.0`, `cryptography==50.0.0`, `agent-manifest==0.11.0`, `agentrust-trace==0.8.0`, and `rfc8785==0.1.4`. The low-cost fixture, doctrine-boundary, and link validators remain standard-library only.
+Schema validation uses `jsonschema`. P4.5a Ed25519 signing and public-key verification use `cryptography`, added under the explicit dependency-justification rule in `../CONTRIBUTING.md`. P4.5b uses `agent-manifest==0.11.0` as a test-only comparator and does not import it from production reference modules. P4.5c uses `agentrust-trace==0.8.0` plus `rfc8785==0.1.4` for the TRACE/JCS contract and runs `cmcp-runtime==0.4.0` in an isolated comparator environment. CI pins the main validation profile to `jsonschema==4.26.0`, `cryptography==50.0.0`, `agent-manifest==0.11.0`, `agentrust-trace==0.8.0`, and `rfc8785==0.1.4`. The Governance Context Projection builder adds no runtime dependency. The low-cost fixture, doctrine-boundary, and link validators remain standard-library only except the JSON Schema validator.
 
 ## Running it
 
@@ -86,7 +91,7 @@ python -m unittest discover -s reference/tests -t reference
 python reference/run_conformance.py
 ```
 
-Runs are deterministic where the contract requires determinism: identifiers are counter-based and the clock is injected, so repeated governed-adapter runs produce identical receipts and identical reports. Stochastic selection is seeded per trial, so it varies across trials and reproduces exactly for a given seed. Ed25519 signatures are deterministic for a fixed private key and canonical payload. P4.5b and P4.5c pin external package versions and upstream release commits so comparator drift is explicit rather than accidental.
+Runs are deterministic where the contract requires determinism: identifiers are counter-based and the clock is injected, so repeated governed-adapter runs produce identical receipts and identical reports. The Governance Context Projection builder is deterministic for the same explicit inputs and source snapshot. Stochastic selection is seeded per trial, so it varies across trials and reproduces exactly for a given seed. Ed25519 signatures are deterministic for a fixed private key and canonical payload. P4.5b and P4.5c pin external package versions and upstream release commits so comparator drift is explicit rather than accidental.
 
 ## The governed path
 
@@ -96,7 +101,19 @@ evidence -> proposal -> authority envelope -> permitted action set
          -> retrieval candidate -> governed admission -> active context
 ```
 
-The adapter supplies what the substrate cannot: an authority gate before every write, always-explicit scope filtering, external lifecycle state, tombstones, and receipts. Artifacts are emitted against schemas already canonical in this repository rather than shapes invented beside the implementation: `pama-decision`, `decision-receipt`, `memory-audit-event`, `conformance-report`, P4.5a `portable-governance-evidence`, P4.5b `agent-manifest-memory-correlation`, and P4.5c `trace-action-evidence-bundle`.
+The adapter supplies what the substrate cannot: an authority gate before every write, always-explicit scope filtering, external lifecycle state, tombstones, and receipts. Artifacts are emitted against schemas already canonical in this repository rather than shapes invented beside the implementation: `pama-decision`, `decision-receipt`, `memory-audit-event`, `conformance-report`, P4.5a `portable-governance-evidence`, P4.5b `agent-manifest-memory-correlation`, P4.5c `trace-action-evidence-bundle`, and proposed ADR-028 `governance-context-projection`.
+
+The governance-consumer path is separate:
+
+```text
+canonical memory / precedent
+  -> governed selection
+  -> Governance Context Projection
+  -> consumer-specific adapter
+  -> external governance decision
+```
+
+The reference module currently implements only the deterministic projection builder. It does not implement a DashClaw or AGT/ACS adapter and does not claim those integrations exist.
 
 ## Paths exercised
 
@@ -114,7 +131,7 @@ The adapter supplies what the substrate cannot: an authority gate before every w
 | pruning | tombstones and removes from recall while content stays recoverable |
 | undeclared derived residue | a projection nobody declared is detected after removal |
 | version drift | policy version and estimator versions stay separable in the receipt |
-| fixture corpus | all 26 doctrine fixtures pass envelope enforcement; the checker is mutation-tested |
+| fixture corpus | doctrine fixtures pass envelope enforcement where applicable; the checker is mutation-tested |
 | stochastic containment | hundreds of sampled trials never escape the permitted set, and the selector demonstrably varies |
 | hostile selector | a selector returning a prohibited action is contained by the adapter and the violation recorded |
 | derived-state freshness | stale and residual are computed from a recorded basis, never set by a flag |
@@ -135,6 +152,11 @@ The adapter supplies what the substrate cannot: an authority gate before every w
 | TRACE negative action outcome | a correctly bound external `rejected` receipt remains valid negative evidence rather than malformed evidence |
 | TRACE versus lifecycle | accepted action evidence remains compatible with both residual and satisfied Agent Memory lifecycle evidence |
 | TRACE trust failure | local TRACE-style classification reports unknown issuer as unverified; configured cMCP external-key verification fails closed on the same missing trust anchor |
+| governance precedent material match | prior human decision context is projected with explicit matching material conditions but no final permission |
+| governance precedent near-match | superficially similar positive precedent remains a material mismatch when protected target, force, or CI conditions differ |
+| negative governance precedent | cautionary/contradictory precedent remains separately addressable rather than being erased by positive frequency |
+| adjudication provenance | policy/runtime-derived outcomes cannot claim independent human adjudication |
+| governance projection rebuild | identical deterministic inputs produce identical derived projection output |
 
 ## Known limitations
 
@@ -153,3 +175,4 @@ Stated rather than left to be discovered:
 11. P4.5c binds Agent Memory action evidence into TRACE/cMCP receipt infrastructure; it does not prove a physical or business outcome occurred and does not make TRACE a PAMA interpreter.
 12. The released cMCP 0.4.0 dependency graph is intentionally isolated from the main evidence environment because its AGT dependency line resolves a lower cryptography range. This is comparator containment, not a production dependency recommendation.
 13. P4.5c does not demonstrate hardware attestation of the Agent Memory process, production trust-anchor discovery, or upstream Community/Verified integration acceptance.
+14. Governance Context Projection V0.1 uses explicit deterministic material-condition comparison. It does not implement semantic similarity, learned precedent ranking, approval suppression, standing grants, DashClaw integration, AGT/ACS integration, or evidence that reduced approval friction is safe in production.
