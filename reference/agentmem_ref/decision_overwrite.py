@@ -152,7 +152,7 @@ class DurableDecisionRegistry:
         if refusal:
             return self._reject(result, grant, now, refusal)
 
-        assert grant is not None  # proved by _precommit_refusal
+        assert grant is not None
         pama_proposal = policy.Proposal(
             proposal_id=proposal.proposal_id,
             actor_id=proposal.proposing_actor,
@@ -161,8 +161,8 @@ class DurableDecisionRegistry:
             target_class=proposal.target_class,
             scope=proposal.scope,
             operation="decision_overwrite",
-            current_strength="durable_decision",
-            proposed_strength="superseded",
+            current_strength="canonical",
+            proposed_strength="deprecated",
             downstream_authority=proposal.downstream_authority,
             reversibility=proposal.reversibility,
             risk_class=proposal.risk_class,
