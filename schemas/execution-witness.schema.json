@@ -20,6 +20,7 @@
     "action_status",
     "decision_alignment",
     "liveness_status",
+    "approval_evidence_status",
     "observed_at",
     "evidence_refs",
     "non_claims"
@@ -61,6 +62,10 @@
       "enum": ["healthy", "degraded", "unavailable", "unknown"]
     },
     "approval_evidence_ref": { "type": "string", "minLength": 1 },
+    "approval_evidence_status": {
+      "type": "string",
+      "enum": ["absent", "unverified", "verified_current", "stale", "denied", "invalid", "not_applicable"]
+    },
     "observed_at": { "type": "string", "format": "date-time" },
     "evidence_refs": {
       "type": "array",
