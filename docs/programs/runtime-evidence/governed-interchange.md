@@ -4,13 +4,14 @@
 
 Exercise the Agent Memory Profile 6 seam without defining a transport standard or making any upstream submission.
 
-The question is deliberately narrow:
+The local evidence now asks two questions:
 
-> Can one governed system export memory to another without losing ownership, provenance, lifecycle, sensitivity, scope provenance, or the requirement for receiver-local authorization?
+1. can one governed system export memory to another without losing ownership, provenance, lifecycle, sensitivity, scope provenance, or receiver-local authorization;
+2. can later source correction, supersession, revocation, or deletion obligations remain visible without turning the sender into a remote mutation authority over the receiver?
 
-This slice is local reference evidence only. External projects are not modified, asked to adopt the contract, or treated as implementation dependencies.
+External projects are not modified, asked to adopt the contract, or treated as implementation dependencies.
 
-## Executed contract
+## V1: governed export and import
 
 The reference path under `reference/agentmem_ref/interchange.py` enforces:
 
@@ -18,7 +19,7 @@ The reference path under `reference/agentmem_ref/interchange.py` enforces:
 2. the crossing receipt must bind the exported memory id;
 3. cross-system export requires explicit ownership and source isolation-domain bindings;
 4. sender-side authorization travels with the bundle as evidence, not as receiver permission;
-5. the receiver must evaluate a local `scope_expansion` proposal through its own PAMA path;
+5. the receiver evaluates a local `scope_expansion` proposal through its own PAMA path;
 6. an ownership conflict fails closed before admission;
 7. successful import preserves stable identity, lifecycle state, provenance, sensitivity, and owner;
 8. successful import binds the receiving isolation domain while retaining source-domain provenance;
@@ -26,19 +27,42 @@ The reference path under `reference/agentmem_ref/interchange.py` enforces:
 
 The companion fixture `fixtures/cross-system-authority-conflict.json` makes the missing authority-conflict case from `docs/35-interoperability-profiles.md` permanent in the conformance corpus.
 
+## V2: lifecycle-obligation continuity
+
+A successful import now also emits a local `InterchangeLink` binding the imported memory to:
+
+- source system;
+- receiver system;
+- source crossing receipt;
+- source isolation domains;
+- receiver isolation domain.
+
+A later `SourceLifecycleNotice` may report correction, supersession, revocation, or deletion. The notice is **evidence of a source-side lifecycle change**, not permission to mutate receiver state.
+
+The receiver therefore:
+
+1. verifies memory identity and the linked source system;
+2. requires source evidence references;
+3. maps deletion to a local `permanent_deletion` consequence and other lifecycle changes to local `correction`;
+4. evaluates that consequence under the receiver's current PAMA policy and authority;
+5. leaves local memory untouched while review or verification is still required;
+6. only after receiver-local authorization schedules a local correction or deletion workflow.
+
+Even an authorized notice handler does not directly purge or rewrite the local memory object in this slice. It schedules the local consequence so the existing correction/deletion machinery remains authoritative for actual mutation and forgetting completeness.
+
 ## Evidence boundary
 
-This demonstrates a local executable interoperability contract. It does **not** claim:
+This demonstrates local executable interoperability behavior. It does **not** claim:
 
 - a universal interchange wire format;
 - Profile 6 conformance for the entire reference adapter;
 - automatic trust of imported memory;
-- transfer of ownership, certification, or mutation authority;
-- deletion propagation to an actual remote deployment;
+- transfer of ownership, certification, mutation, correction, or deletion authority;
+- proof that remote deletion automatically satisfies local forgetting completeness;
 - production transport security;
 - upstream acceptance by Agent Manifest, TRACE/cMCP, Mem0, Graphiti, AgenTrust, or any other project.
 
-The sender's `allow` means only that the sender authorized its own export. The receiver still owns its admission and consequence decision.
+The sender's `allow` authorizes the sender's own export. A later sender notice makes an obligation visible. The receiver still owns every local admission and consequence decision.
 
 ## Validation
 
@@ -47,10 +71,14 @@ The sender's `allow` means only that the sender authorized its own export. The r
 - refusal to export without a committed sender crossing;
 - refusal to inherit sender authority at the receiver;
 - fail-closed ownership conflict;
-- successful locally authorized import with semantic preservation and receiving-domain rebinding.
+- successful locally authorized import with semantic preservation and receiving-domain rebinding;
+- deletion notice held pending local governance;
+- locally authorized deletion notice scheduling a local deletion workflow without silently deleting state;
+- correction notice requiring receiver-local correction authority;
+- rejection of lifecycle notices from an unlinked source system.
 
 Repository CI runs these tests through the existing reference governed-adapter validation path together with fixture/schema/doctrine validation.
 
-## Next P7 slice
+## Remaining P7 work
 
-The next meaningful P7 work is deletion/correction continuity across the exchange boundary: prove that an exported copy retains enough source identity and lifecycle linkage for a later correction, supersession, revocation, or deletion obligation to be recognized and governed by the receiver without granting the sender unilateral mutation authority over the receiver's store.
+The strongest remaining Profile 6 gap is end-to-end **actual correction/deletion propagation evidence** across two concrete local stores, including receipt linkage and deletion-residue accounting on the receiving side. That work must reuse the existing canonical correction and deletion-completeness machinery rather than creating a special interoperability shortcut.
