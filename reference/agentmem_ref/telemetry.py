@@ -25,10 +25,19 @@ def _opaque_ref(key: bytes, value: str) -> str:
 class TelemetryProjector:
     """Project a canonical audit event into a strict content-free span shape."""
 
-    def __init__(self, key: bytes) -> None:
+    def __init__(self, key: bytes, key_id: str = "local") -> None:
         if len(key) < 16:
             raise ValueError("telemetry HMAC key must be at least 16 bytes")
+        if not key_id:
+            raise ValueError("telemetry key_id must be non-empty")
         self._key = key
+        self.key_id = key_id
+
+    def memory_ref(self, memory_id: str) -> str:
+        """Resolve one raw memory id into this key generation's opaque reference."""
+        if not memory_id:
+            raise ValueError("memory_id must be non-empty")
+        return _opaque_ref(self._key, memory_id)
 
     def project(self, event: dict) -> dict:
         receipts.validate("memory-audit-event.schema.json", event)
@@ -61,6 +70,7 @@ class TelemetryProjector:
         projection = {
             "profile": PROFILE,
             "version": VERSION,
+            "key_id": self.key_id,
             "span_name": f"agent_memory.{event['event_type']}",
             "timestamp": event["timestamp"],
             "attributes": attrs,

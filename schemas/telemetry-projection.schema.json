@@ -4,10 +4,15 @@
   "title": "Agent Memory Privacy-Minimized Telemetry Projection",
   "description": "Content-free projection of a canonical memory audit event for external observability systems. Raw memory, actor, principal, payload, signal values, uncertainty, and authority-reference bodies are intentionally excluded.",
   "type": "object",
-  "required": ["profile", "version", "span_name", "timestamp", "attributes"],
+  "required": ["profile", "version", "key_id", "span_name", "timestamp", "attributes"],
   "properties": {
     "profile": {"const": "agent-memory-telemetry-minimized"},
     "version": {"const": "1.0.0"},
+    "key_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Non-secret identifier for the HMAC key generation used to create opaque telemetry references. The key itself is never emitted."
+    },
     "span_name": {"type": "string", "minLength": 1},
     "timestamp": {"type": "string", "format": "date-time"},
     "attributes": {
