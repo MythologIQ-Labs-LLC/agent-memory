@@ -77,10 +77,11 @@ class SharedWriteFixtureTests(unittest.TestCase):
         coordinator = SharedWriteCoordinator(adapter, lambda _claim: data["authorized"], ManualClock().now)
 
         acquired = coordinator.acquire(claim)
+        acquire_status = acquired.status
         committed = coordinator.commit(claim.claim_id, _proposal(claim), "fixture fact")
         expected = fixture["expected_behavior"]
 
-        self.assertEqual(acquired.status, expected["claim_status"])
+        self.assertEqual(acquire_status, expected["claim_status"])
         self.assertEqual(committed.status, expected["commit_status"])
         self.assertEqual(len(_writes(substrate)), expected["substrate_write_count"])
         self.assertEqual(committed.commit_result.decision.outcome, expected["pama_outcome"])
