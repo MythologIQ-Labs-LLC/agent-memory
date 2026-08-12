@@ -1,13 +1,13 @@
-"""Characterization evidence for #147: fresh-identity rejected-value re-admission.
+"""Regression evidence for #147: governed exact-value re-admission.
 
-This first-stage test intentionally proves the *current* reference behavior before
-we change it. It is not a conformance assertion and must be inverted by the
-implementation commit that closes the reproduced gap.
+Commit 0e1eca3 first preserved the pre-fix characterization: after a value was
+superseded, the same value could return under a fresh fact identity and become
+admissible. The Validate Doctrine Evidence workflow executed that test through
+full unittest discovery before the implementation change.
 
-The test isolates re-admission from #142's correction implementation work by
-explicitly invalidating the original substrate fact, thereby granting the
-stronger assumption that supersession already happened correctly. It then asks
-whether the same rejected value can enter as a fresh fact and become admissible.
+These tests invert that characterization. They cover only deterministic exact
+identity after case/whitespace normalization. They do not claim semantic
+paraphrase equivalence or architecture-independent conformance.
 
 Run: python -m unittest reference.tests.test_rejected_value_readmission
 """
@@ -57,57 +57,88 @@ def proposal(
     )
 
 
-class RejectedValueReadmissionCharacterization(unittest.TestCase):
-    """Prove the pre-fix failure without relying on Agent Memory Atlas claims."""
+class RejectedValueReadmissionTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.substrate = InMemoryTemporalGraph()
+        self.adapter = GovernedMemoryAdapter(self.substrate, TENANT, Clock())
 
-    def test_fresh_identity_can_reintroduce_a_superseded_value(self):
-        substrate = InMemoryTemporalGraph()
-        adapter = GovernedMemoryAdapter(substrate, TENANT, Clock())
+        self.original = self.adapter.commit_proposal(proposal("prop-original"), VALUE_A)
+        self.assertTrue(self.original.committed)
 
-        original = adapter.commit_proposal(proposal("prop-original"), VALUE_A)
-        self.assertTrue(original.committed)
-        self.assertIsNotNone(original.fact_uuid)
-
-        # Isolate the #147 question from #142. Assume correction-as-supersession
-        # has already worked and the old fact is no longer current.
-        substrate.invalidate_fact(
-            original.fact_uuid,
-            invalid_at="2026-01-01T00:10:00Z",
-            expired_at="2026-01-01T00:10:00Z",
-        )
-        adapter.record_correction(MEMORY)
-
-        replacement = adapter.commit_proposal(
+        self.replacement = self.adapter.commit_proposal(
             proposal("prop-correction", operation="correction", evidence_refs=("ev:correction",), approved=True),
             VALUE_B,
         )
-        self.assertTrue(replacement.committed)
+        self.assertTrue(self.replacement.committed)
 
-        # A later extraction uses a fresh proposal/fact identity and repeats the
-        # value that was just superseded. The current adapter has no write-path
-        # rejection history to consult.
-        reintroduced = adapter.commit_proposal(
+    def test_correction_supersedes_old_row_and_records_rejection_history(self):
+        recall = self.adapter.governed_recall("deploy window Thursday")
+
+        self.assertIn(self.original.fact_uuid, recall.candidates)
+        self.assertEqual(recall.refusals.get(self.original.fact_uuid), "superseded_not_current")
+
+        history = self.adapter.rejected_value_history(MEMORY, VALUE_A)
+        self.assertEqual(len(history), 1)
+        self.assertTrue(history[0]["active"])
+        self.assertEqual(history[0]["superseded_fact_uuid"], self.original.fact_uuid)
+        self.assertEqual(history[0]["correction_proposal_id"], "prop-correction")
+        self.assertNotIn("fact_text", history[0], "rejection history must not duplicate raw memory content")
+
+    def test_fresh_identity_cannot_silently_reintroduce_rejected_value(self):
+        reintroduced = self.adapter.commit_proposal(
             proposal("prop-reintroduced", evidence_refs=("ev:later-extraction",)),
             VALUE_A,
         )
-        self.assertTrue(
-            reintroduced.committed,
-            "characterization failed: the current adapter unexpectedly blocked re-admission",
+
+        self.assertFalse(reintroduced.committed)
+        self.assertIsNone(reintroduced.fact_uuid)
+        self.assertEqual(reintroduced.refusal, "rejected_value_requires_reconciliation")
+        self.assertEqual(reintroduced.receipt["selected_action"], "defer")
+        self.assertTrue(any(event["event_type"] == "memory.readmission_blocked" for event in reintroduced.events))
+
+        recall = self.adapter.governed_recall("deploy window Thursday")
+        self.assertEqual(recall.refusals.get(self.original.fact_uuid), "superseded_not_current")
+        self.assertNotIn(None, recall.admitted)
+
+    def test_deterministic_normalization_does_not_bypass_rejection(self):
+        variant = "  Deploy   Window is THURSDAY  "
+        result = self.adapter.commit_proposal(
+            proposal("prop-normalized-variant", evidence_refs=("ev:later-extraction",)),
+            variant,
         )
 
-        recall = adapter.governed_recall("deploy window Thursday")
+        self.assertFalse(result.committed)
+        self.assertEqual(result.refusal, "rejected_value_requires_reconciliation")
 
-        # Supersession protects the old row on the read path...
-        self.assertIn(original.fact_uuid, recall.candidates)
-        self.assertEqual(recall.refusals.get(original.fact_uuid), "superseded_not_current")
-
-        # ...but a fresh row carrying the same rejected value is admitted.
-        self.assertIn(reintroduced.fact_uuid, recall.candidates)
-        self.assertIn(
-            reintroduced.fact_uuid,
-            recall.admitted,
-            "characterization failed: fresh rejected value did not become current/admissible",
+    def test_explicit_approved_correction_can_reverse_prior_rejection(self):
+        reversal = self.adapter.commit_proposal(
+            proposal(
+                "prop-approved-reversal",
+                operation="correction",
+                evidence_refs=("ev:new-independent-evidence",),
+                approved=True,
+            ),
+            VALUE_A,
         )
+
+        self.assertTrue(reversal.committed)
+        self.assertEqual(self.adapter.current_fact_uuid(MEMORY), reversal.fact_uuid)
+
+        old_history = self.adapter.rejected_value_history(MEMORY, VALUE_A)
+        self.assertEqual(len(old_history), 1)
+        self.assertFalse(old_history[0]["active"])
+        self.assertEqual(old_history[0]["readmission_proposal_id"], "prop-approved-reversal")
+        self.assertIsNotNone(old_history[0]["readmitted_at"])
+
+        replaced_history = self.adapter.rejected_value_history(MEMORY, VALUE_B)
+        self.assertEqual(len(replaced_history), 1)
+        self.assertTrue(replaced_history[0]["active"])
+        self.assertEqual(replaced_history[0]["superseded_fact_uuid"], self.replacement.fact_uuid)
+
+        recall = self.adapter.governed_recall("deploy window Thursday")
+        self.assertIn(reversal.fact_uuid, recall.admitted)
+        self.assertEqual(recall.refusals.get(self.original.fact_uuid), "superseded_not_current")
+        self.assertEqual(recall.refusals.get(self.replacement.fact_uuid), "superseded_not_current")
 
 
 if __name__ == "__main__":
