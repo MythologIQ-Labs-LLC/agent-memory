@@ -37,16 +37,12 @@ The governing idea is compact:
 
 ## Start with what you need
 
-| If you want to... | Start here | Why |
-|---|---|---|
-| **Understand Agent Memory quickly** | **[Getting Started](Getting-Started)** | The shortest guided introduction to the architecture and vocabulary. |
-| **See the architecture visually** | **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** | Lifecycle, PAMA, recall, correction, deletion, isolation, and evidence flows in one visual guide. |
-| **Understand the core doctrine** | **[Core Concepts](Core-Concepts)** | The invariants and distinctions the rest of the architecture preserves. |
-| **Implement a memory system** | **[Implementation Guide](Implementation-Guide)** | A practical path from doctrine to components, adapters, governance, and evidence. |
-| **Evaluate security and isolation** | **[Security and Privacy](Security-and-Privacy)** | Scope, tenancy, isolation domains, leakage, sensitivity, and deletion boundaries. |
-| **Evaluate what is actually proven** | **[Conformance and Evidence](Conformance-and-Evidence)** → **[Runtime Evidence](Runtime-Evidence)** | Separates documentation, fixtures, executable evidence, and cumulative conformance claims. |
-| **Understand PAMA** | **[PAMA](PAMA)** | The native doctrine for proportional mutation authority and bounded consequence. |
-| **Trace research and influences** | **[Research and Sources](Research-and-Sources)** → **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** | Supporting and challenging evidence, provenance, and external architectural lineage. |
+- **New to Agent Memory?** Start with **[Getting Started](Getting-Started)**, then **[Core Concepts](Core-Concepts)** for the vocabulary and invariants the architecture preserves.
+- **Want the architecture in pictures?** Open **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** for lifecycle, PAMA, recall, correction, deletion, isolation, and evidence flows.
+- **Implementing a memory system?** Use the **[Implementation Guide](Implementation-Guide)**, then move into **[PAMA](PAMA)**, **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)**, and **[Canonical and Derived State](Canonical-and-Derived-State)** as needed.
+- **Reviewing security or isolation?** Start with **[Security and Privacy](Security-and-Privacy)** for scope, tenancy, isolation domains, sensitivity, leakage, and deletion boundaries.
+- **Checking what is actually proven?** Read **[Conformance and Evidence](Conformance-and-Evidence)** first, then **[Runtime Evidence](Runtime-Evidence)** for what has actually executed.
+- **Researching the foundations or influences?** Use **[Research and Sources](Research-and-Sources)** and **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)**.
 
 ## Why retrieval alone is not enough
 
