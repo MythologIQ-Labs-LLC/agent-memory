@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -236,7 +236,7 @@ ADR-016 remains canonical and is not superseded.
 
 ADR-016 establishes that actor scope, consent, delegation, tenancy, project/repository scope, purpose, and re-sharing rights are required governance concerns.
 
-ADR-022 proposes the next abstraction:
+ADR-022 establishes the next abstraction:
 
 > Those dimensions must be able to resolve into **logical isolation domains and controlled crossings** so the system can demonstrate that memory did not bleed between contexts that happen to share an agent or storage substrate.
 
@@ -266,7 +266,7 @@ An implementation may collapse some of these capabilities where policy proves th
 
 ## Relationship to multi-agent shared memory
 
-The future multi-agent shared-memory protocol should treat a shared space as a governed isolation domain.
+The future multi-agent shared-memory protocol treats a shared space as a governed isolation domain.
 
 Agent-to-agent sharing therefore becomes a specific instance of controlled boundary crossing rather than a separate exception to the isolation model.
 
@@ -331,29 +331,29 @@ Rejected.
 
 Shared memory has ownership, membership, mutation, recall, correction, deletion, and re-sharing boundaries. Modeling it as a governed domain is simpler and safer than inventing a separate permission universe.
 
-## Acceptance evidence required
+## Acceptance evidence
 
-ADR-022 remains **Proposed** until the repository can express and test the decision.
+ADR-022 is **Accepted** because the repository can express and test the decision without relying on unproven cross-architecture runtime claims.
 
-Minimum evidence:
+Minimum evidence is satisfied by:
 
-1. a canonical isolation-domain contract exists;
-2. the relationship to ADR-016 is documented without duplication or contradiction;
-3. memory-unit scope or a companion schema can represent the required domain state;
-4. governed recall can express target task/project/isolation domain;
-5. a boundary-crossing decision/receipt shape exists;
-6. derived-state scope propagation semantics are defined;
-7. critical fixtures cover same-agent cross-project and cross-task bleed;
-8. unauthorized scope promotion is tested;
-9. shared-memory membership and non-member recall are tested;
-10. the future multi-agent shared-memory protocol is reconciled to this model; and
-11. repository validation remains green.
+1. canonical contract: [`../41-memory-isolation-domains-and-governed-crossing.md`](../41-memory-isolation-domains-and-governed-crossing.md);
+2. ADR-016 relationship: this ADR and the canonical contract preserve ADR-016 as the scope/authority-dimension contract rather than duplicating it;
+3. machine-readable boundary state: [`../../schemas/memory-unit.schema.json`](../../schemas/memory-unit.schema.json) and the isolation-domain schema surface;
+4. governed recall target context: the reference governed adapter resolves target isolation-domain, project, and task context before admission;
+5. crossing evidence: the boundary-crossing decision/receipt schema and reference emitter bind source/destination domains, PAMA/policy evidence, and outcome;
+6. derived-state semantics: scope propagation uses audience/purpose intersection, accumulated restrictions, and fail-closed handling for incompatible source scopes;
+7. critical same-agent project/task fixtures and executable reference tests;
+8. unauthorized scope-promotion fixture and PAMA `scope_expansion` handling;
+9. shared-memory member/non-member recall and revocation tests, including `fixtures/shared-space-non-member-recall.json`;
+10. reconciled [`../future/multi-agent-shared-memory-protocol.md`](../future/multi-agent-shared-memory-protocol.md); and
+11. exact-head repository validation and CodeQL remained green through the acceptance-critical implementation slices.
 
-Runtime evidence across multiple architecture families is desirable but not required merely to make the doctrine expressible. Runtime claims remain evidence-scoped under the runtime-evidence program.
+Acceptance is a doctrine-maturity decision, not a claim that every deployment, storage family, or production implementation enforces ADR-022. Runtime claims remain evidence-scoped under the runtime-evidence program and architecture-family exploration.
 
 Implementation initiative: [issue #68](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/68).
 
-## Doctrine candidate
+## Doctrine
 
 > **Memory scope is an authority boundary, not a retrieval filter.**
 
