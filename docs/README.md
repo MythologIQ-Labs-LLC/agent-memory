@@ -2,17 +2,17 @@
 
 This directory is the canonical documentation map for the Agent Memory reference architecture.
 
-The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all forty numbered documents in numerical order is legal, but there are more humane options.
+The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all forty-one numbered documents in numerical order is legal, but there are more humane options.
 
 ## Choose your path
 
 | Reader | Start here | Then continue to |
 |---|---|---|
 | Researcher / theorist | [`20-memory-foundations-across-scales.md`](20-memory-foundations-across-scales.md) | `21`, `23`, `24` |
-| Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24` |
-| Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`40`, schemas and fixtures |
-| Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `33`, `34`, ADR-004, ADR-020 |
-| Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29` |
+| Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24`, `41` |
+| Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`41`, schemas and fixtures |
+| Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `33`, `34`, ADR-004, ADR-020, ADR-022 |
+| Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41` |
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
 | Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
 | Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
@@ -91,7 +91,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 24 | [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) | Deterministic substrate, probabilistic epistemics, bounded authority, doctrine challenges |
 | 25 | [`25-governed-uncertainty-documentation-conformance-audit.md`](25-governed-uncertainty-documentation-conformance-audit.md) | GU-1 through GU-10 documentation-conformance rubric |
 
-## 26-40: Executable, operational, and ecosystem contracts
+## 26-41: Executable, operational, ecosystem, and isolation contracts
 
 | # | Document | Purpose |
 |---|---|---|
@@ -110,6 +110,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 38 | [`38-human-correction-ux-contract.md`](38-human-correction-ux-contract.md) | Minimum user-facing evidence, correction, dispute, and indicator contract |
 | 39 | [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) | Doctrine ownership versus candidate runtime implementation ownership |
 | 40 | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md) | Relationship-typed recognition, licensing boundaries, and visible credit for aligned external work |
+| 41 | [`41-memory-isolation-domains-and-governed-crossing.md`](41-memory-isolation-domains-and-governed-crossing.md) | Logical isolation domains, same-agent task/project separation, governed crossings, shared-memory domains, and derived-scope inheritance |
 
 ## Profiles and future subsystems
 
@@ -137,14 +138,14 @@ Current doctrine state:
 ADR-001 through ADR-019: Accepted
 ADR-020: Proposed
 ADR-021: Proposed
-ADR-022: Proposed
+ADR-022: Accepted
 ```
 
 ADR-020 remains Proposed because it explicitly requires real end-to-end runtime evidence, including repeated behavioral evidence for stochastic containment. Documentation, schemas, and structurally valid fixtures are necessary but not sufficient.
 
 ADR-021 remains Proposed until portable memory-governance evidence has executable interoperability proof across the declared Agent Memory / external attestation boundary.
 
-ADR-022 remains Proposed until isolation domains, controlled crossings, same-agent task/project separation, derived-scope propagation, shared-memory membership, and the required schema/fixture surface are explicitly represented and validated.
+ADR-022 is Accepted because isolation domains, controlled crossings, same-agent task/project separation, derived-scope propagation, shared-memory membership, boundary-crossing receipts, and the required schema/fixture surface are explicitly represented and validated. Acceptance is doctrine maturity, not a claim of universal production-runtime enforcement.
 
 ## Governed-uncertainty audit trail
 
@@ -175,6 +176,7 @@ Schemas:
 - [`../schemas/memory-unit.schema.json`](../schemas/memory-unit.schema.json)
 - [`../schemas/conformance-report.schema.json`](../schemas/conformance-report.schema.json)
 - [`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json)
+- [`../schemas/boundary-crossing-receipt.schema.json`](../schemas/boundary-crossing-receipt.schema.json)
 - [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json)
 - [`../schemas/calibration-results.schema.json`](../schemas/calibration-results.schema.json)
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json)

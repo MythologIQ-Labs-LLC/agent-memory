@@ -28,16 +28,16 @@ Implementation maturity is tracked separately through documentation, fixtures, c
 ADR-001 through ADR-019: Accepted
 ADR-020: Proposed
 ADR-021: Proposed
-ADR-022: Proposed
+ADR-022: Accepted
 ```
 
-ADRs 001-019 now have their required canonical doctrine contracts and, where specified, repository-level schema/fixture evidence.
+ADRs 001-019 and ADR-022 have their required canonical doctrine contracts and, where specified, repository-level schema/fixture evidence.
 
 ADR-020 remains deliberately different. It requires **runtime end-to-end evidence**, not merely documentation or fixture structure.
 
 ADR-021 proposes the interoperability boundary for **portable memory-governance evidence**. It keeps Agent Memory authoritative for memory semantics, PAMA, lifecycle obligations, and canonical decision receipts while allowing external trust systems such as AgenTrust to verify and correlate evidence without redefining those semantics.
 
-ADR-022 proposes **memory isolation domains and controlled boundary crossing** as first-class architecture. It extends ADR-016 by making same-agent cross-project/task separation, shared-memory domains, derived-scope inheritance, and scope crossing explicitly governable rather than leaving them as implied metadata filters.
+ADR-022 establishes **memory isolation domains and controlled boundary crossing** as first-class architecture. It extends ADR-016 by making same-agent cross-project/task separation, shared-memory domains, derived-scope inheritance, and scope crossing explicitly governable rather than leaving them as implied metadata filters.
 
 ## Current status policy
 
@@ -94,7 +94,7 @@ ADR-021 acceptance requires an executable interoperability proof, including nega
 
 ## Memory isolation domains
 
-[`ADR-022`](ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) is intentionally **Proposed**.
+[`ADR-022`](ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) is **Accepted**.
 
 Its central boundary is:
 
@@ -108,7 +108,7 @@ It treats project, task, workspace, session, purpose, tenant, and shared-memory 
 
 Boundary crossing, including sharing, exporting, copying, deriving, inheriting, or broadening scope, is treated as a governed consequence. Derived state must not silently gain broader scope than its sources.
 
-ADR-022 acceptance requires a canonical isolation-domain contract, schema/receipt representation, recall integration, critical same-agent cross-project/task fixtures, unauthorized scope-promotion tests, and reconciliation with the future multi-agent shared-memory protocol.
+Acceptance is backed by the canonical isolation-domain contract, additive schema/receipt representation, governed-recall enforcement, same-agent cross-project/task fixtures, derived-scope propagation, unauthorized scope-promotion tests, shared-space member/non-member recall tests, executable crossing receipts, and reconciliation with the future multi-agent shared-memory protocol. This is a doctrine-maturity statement, not universal production-runtime conformance.
 
 ## Canonical references
 
@@ -125,3 +125,4 @@ ADR-022 acceptance requires a canonical isolation-domain contract, schema/receip
 - [`../30-memory-observability-and-audit-events.md`](../30-memory-observability-and-audit-events.md)
 - [`../31-recovery-rollback-and-replay.md`](../31-recovery-rollback-and-replay.md)
 - [`../32-memory-quality-metrics.md`](../32-memory-quality-metrics.md)
+- [`../41-memory-isolation-domains-and-governed-crossing.md`](../41-memory-isolation-domains-and-governed-crossing.md)
