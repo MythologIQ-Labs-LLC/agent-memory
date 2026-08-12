@@ -1,7 +1,7 @@
 """Isolation-domain scope propagation for derived memory.
 
-Executable evidence toward proposed ADR-022. A transform may change
-representation but does not erase source authority constraints.
+Executable evidence for ADR-022. A transform may change representation but does
+not erase source authority constraints.
 
 The safe default is:
 
@@ -40,6 +40,18 @@ class DerivedScope:
     allowed_audiences: frozenset[str]
     allowed_purposes: frozenset[str]
     restrictions: frozenset[str]
+
+
+@dataclass(frozen=True)
+class ScopeReconciliation:
+    """Result of re-evaluating derived authority after source scope changes."""
+
+    inherited_scope: DerivedScope | None
+    current_scope: DerivedScope
+    current_for_use: bool
+    requires_narrowing: bool
+    incompatible: bool = False
+    reason: str = ""
 
 
 def derive_scope(sources: tuple[SourceScope, ...]) -> DerivedScope:
@@ -81,6 +93,50 @@ def scope_broadens(inherited: DerivedScope, requested: DerivedScope) -> bool:
         or not requested.allowed_audiences.issubset(inherited.allowed_audiences)
         or not requested.allowed_purposes.issubset(inherited.allowed_purposes)
         or not requested.restrictions.issuperset(inherited.restrictions)
+    )
+
+
+def reconcile_derived_scope(
+    current: DerivedScope,
+    current_sources: tuple[SourceScope, ...],
+) -> ScopeReconciliation:
+    """Recompute inherited authority after a source scope change.
+
+    A derived object that remains broader than the newly inherited scope is not
+    current for use until it is narrowed or rebuilt through a governed path.
+    If the sources no longer have any compatible scope at all, the derivation
+    fails closed rather than retaining its historical authority envelope.
+    """
+    expected_refs = tuple(source.source_ref for source in current_sources)
+    if current.source_refs != expected_refs:
+        return ScopeReconciliation(
+            inherited_scope=None,
+            current_scope=current,
+            current_for_use=False,
+            requires_narrowing=False,
+            incompatible=True,
+            reason="source_basis_changed",
+        )
+
+    try:
+        inherited = derive_scope(current_sources)
+    except ScopeConflict as exc:
+        return ScopeReconciliation(
+            inherited_scope=None,
+            current_scope=current,
+            current_for_use=False,
+            requires_narrowing=False,
+            incompatible=True,
+            reason=str(exc),
+        )
+
+    broader = scope_broadens(inherited, current)
+    return ScopeReconciliation(
+        inherited_scope=inherited,
+        current_scope=current,
+        current_for_use=not broader,
+        requires_narrowing=broader,
+        reason="derived_scope_exceeds_current_source_authority" if broader else "",
     )
 
 
