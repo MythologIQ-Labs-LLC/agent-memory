@@ -2,8 +2,8 @@
 
 The consumer accepts the existing Governance Context Projection produced by
 ``governance_projection.py`` and classifies whether historical governed decision
-context is materially applicable to a current action.  The result is advisory
-only.  It cannot create permission, a standing grant, or execution authority.
+context is materially applicable to a current action. The result is advisory
+only. It cannot create permission, a standing grant, or execution authority.
 """
 
 from __future__ import annotations
@@ -53,7 +53,7 @@ def evaluate_projection(projection: dict) -> dict:
     """Return a deterministic advisory applicability result.
 
     Only exact identity and deterministic material-condition projections are
-    accepted in V0.1.  Probabilistic or hybrid retrieval is intentionally
+    accepted in V0.1. Probabilistic or hybrid retrieval is intentionally
     rejected so semantic similarity cannot quietly become authority.
     """
 
@@ -104,18 +104,23 @@ def evaluate_projection(projection: dict) -> dict:
         relevant = relationship in _RELEVANT_RELATIONSHIPS
         current = validity == _CURRENT
 
+        # Attribution counts describe current, materially relevant evidence of
+        # any polarity. A relevant incident must not disappear merely because
+        # it is cautionary instead of supportive.
+        if relevant and current:
+            if (
+                provenance["source_type"] == "human_adjudication"
+                and provenance.get("independent_adjudication") is True
+            ):
+                independent_human_count += 1
+            elif provenance["source_type"] in _DERIVED_SOURCE_TYPES:
+                derived_count += 1
+
         if polarity == _POSITIVE and relevant:
             historical_matching_support_seen = True
             if current:
                 current_support_seen = True
                 current_support_relationships.append(relationship)
-                if (
-                    provenance["source_type"] == "human_adjudication"
-                    and provenance.get("independent_adjudication") is True
-                ):
-                    independent_human_count += 1
-                elif provenance["source_type"] in _DERIVED_SOURCE_TYPES:
-                    derived_count += 1
             else:
                 stale_reasons.append(f"{ref}:{validity}")
 
@@ -125,7 +130,7 @@ def evaluate_projection(projection: dict) -> dict:
             else:
                 stale_reasons.append(f"{ref}:{validity}")
 
-    # Scope is deliberately conservative.  V0.1 may reduce review only when the
+    # Scope is deliberately conservative. V0.1 may reduce review only when the
     # projection says the decision context is from the same governed scope.
     scope_relationship = projection["scope"]["relationship"]
     if scope_relationship != "same":
@@ -179,8 +184,8 @@ def summarize_metrics(evaluated_cases: Iterable[dict]) -> dict:
     """Aggregate fixture metrics without hiding safety failures in one score.
 
     Each item contains ``result`` plus an ``expected`` mapping from the fixture.
-    This is intentionally explicit and boring: the whole point is to expose
-    false reductions and attribution errors instead of rewarding prompt count.
+    This is intentionally explicit: the point is to expose false reductions and
+    attribution errors instead of rewarding prompt count.
     """
 
     cases = list(evaluated_cases)
