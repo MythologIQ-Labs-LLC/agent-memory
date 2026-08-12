@@ -12,9 +12,9 @@ From working memory to inherited state. From biological theory to executable con
 
 [![Validate Doctrine Evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
 ![Architecture](https://img.shields.io/badge/Architecture-Reference%20Architecture-334155)
-![ADRs](https://img.shields.io/badge/ADRs-19%20Accepted%20%7C%202%20Proposed-2563eb)
+[![ADRs](https://img.shields.io/badge/ADRs-Canonical%20Index-2563eb)](docs/adr/README.md)
 ![Conformance](https://img.shields.io/badge/Conformance-Level%206%20Spec-7c3aed)
-![Fixtures](https://img.shields.io/badge/Fixtures-26%20Validated-0f766e)
+[![Fixtures](https://img.shields.io/badge/Fixtures-Validated%20Corpus-0f766e)](fixtures/)
 ![Research](https://img.shields.io/badge/Research-Open%20Evidence-b45309)
 [![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)
 
@@ -25,7 +25,7 @@ From working memory to inherited state. From biological theory to executable con
 ---
 
 > [!IMPORTANT]
-> **Current maturity:** the doctrine, schemas, and 26 conformance fixture definitions are repository-validated. ADR-001 through ADR-019 are accepted architecture decisions. **ADR-020 and ADR-021 remain Proposed** because their acceptance criteria require broader runtime and interoperability evidence. Passing fixture validation is not the same thing as proving a production memory system behaves correctly.
+> **Current maturity:** doctrine, schemas, fixtures, and the reference evidence paths are repository-validated at their declared boundaries. Architecture-decision status is maintained in the **[canonical ADR index](docs/adr/README.md)** rather than duplicated as a hand-maintained count here. Passing repository validation is not the same thing as proving a production memory system behaves correctly.
 
 ## The thesis
 
@@ -64,12 +64,13 @@ You do not need to read the repository front to back. Human working memory has s
 | **Researching memory theory** | [Memory foundations across scales](docs/20-memory-foundations-across-scales.md) | [Forgetting & consolidation](docs/21-forgetting-consolidation-and-memory-metabolism.md), [Research bibliography](docs/23-research-bibliography.md), [Governed uncertainty](docs/24-determinism-probability-and-governed-uncertainty.md) |
 | **Designing an agent architecture** | [Layer model](docs/01-layer-model.md) | [Component architecture](docs/11-component-architecture.md), [Composition boundaries](docs/13-system-composition-boundaries.md), [Agentic memory theory](docs/22-agentic-memory-theory-and-development.md) |
 | **Designing adaptive authority** | [PAMA foundation](docs/pama/README.md) | [Governance & PAMA](docs/04-governance-and-pama.md), [PAMA decision table](docs/33-pama-decision-table.md), [ADR-004](docs/adr/ADR-004-pama-controls-mutation-authority.md) |
+| **Integrating governance consumers** | [Governance Context Projection](docs/profiles/governance-context-projection-profile.md) | [Adapter contracts](docs/34-adapter-contracts.md), [Integration roadmap](docs/07-integration-roadmap.md), [ADR index](docs/adr/README.md) |
 | **Implementing a memory system** | [Agentic memory theory](docs/22-agentic-memory-theory-and-development.md) | [Lifecycle](docs/02-lifecycle-state-machine.md), [PAMA](docs/04-governance-and-pama.md), [Recall planner](docs/26-governed-recall-planner.md), [Schemas](schemas/) |
-| **Reviewing security or privacy** | [Memory threat model](docs/15-memory-threat-model.md) | [Source trust](docs/16-source-trust-and-reputation.md), [Privacy](docs/19-privacy-and-sensitivity-classifier.md), [Retention & deletion](docs/28-retention-deletion-and-tombstones.md), [Scope & tenancy](docs/29-actor-scope-consent-and-tenancy.md) |
+| **Reviewing security or privacy** | [Memory threat model](docs/15-memory-threat-model.md) | [Source trust](docs/16-source-trust-and-reputation.md), [Privacy](docs/19-privacy-and-sensitivity-classifier.md), [Retention & deletion](docs/28-retention-deletion-and-tombstones.md), [Scope & tenancy](docs/29-actor-scope-consent-and-tenancy.md), [Isolation domains](docs/41-memory-isolation-domains-and-governed-crossing.md) |
 | **Evaluating conformance** | [Conformance test plan](docs/06-conformance-test-plan.md) | [Calibration](docs/09-calibration-protocol.md), [Audit rubric](docs/25-governed-uncertainty-documentation-conformance-audit.md), [Fixtures](fixtures/) |
-| **Reviewing architecture decisions** | [ADR index](docs/adr/README.md) | ADR-001 through ADR-021 |
+| **Reviewing architecture decisions** | [ADR index](docs/adr/README.md) | Follow the current Accepted/Proposed/Superseded status in the index |
 | **Tracing influences and aligned projects** | [Aligned projects & intellectual lineage](docs/40-aligned-projects-and-intellectual-lineage.md) | [Source material index](docs/08-source-material-index.md), [Source rights policy](docs/SOURCE_RIGHTS_POLICY.md) |
-| **Contributing evidence or challenges** | [CONTRIBUTING.md](CONTRIBUTING.md) | [Source material index](docs/08-source-material-index.md), [Research bibliography](docs/23-research-bibliography.md) |
+| **Contributing evidence or challenges** | [CONTRIBUTING.md](CONTRIBUTING.md) | [Evidence promotion policy](docs/policies/EVIDENCE_PROMOTION.md), [Claim/evidence template](docs/templates/claim-evidence-record.md), [Research bibliography](docs/23-research-bibliography.md) |
 
 The complete document map is in **[docs/README.md](docs/README.md)**.
 
@@ -291,7 +292,7 @@ predicted low utility != irreversible deletion authority
 
 Deletion must also account for derived memory such as summaries, indexes, graph edges, caches, exported copies, and consolidated state where the system controls them.
 
-Derived state fails in a way canonical state cannot — by being out of date — and the two ways it can be out of date are not interchangeable:
+Derived state fails in a way canonical state cannot by being out of date, and the two ways it can be out of date are not interchangeable:
 
 ```text
 stale     a source changed        content may be wrong
@@ -325,11 +326,12 @@ Agent Memory is **one reference architecture composed of bounded components**, n
 | **Governed recall** | context admission | relevance-as-permission |
 | **Correction & dispute** | revision without history destruction | silent overwrite |
 | **Durable decision memory** | decisions, rationale, supersession, drift | product ownership by adjacency |
+| **Governance Context Projection** | minimized, reconstructable governance-relevant context derived from canonical memory | final external verdicts, standing permission, consumer-specific policy semantics |
 | **Observability** | decision and transition evidence | sensitive shadow copies |
 | **Recovery** | rollback, compensation, replay | rewriting history to hide errors |
 | **Conformance** | fixtures, schemas, calibration, quality metrics | claims of runtime proof without runtime evidence |
 
-See **[Component Architecture](docs/11-component-architecture.md)** and **[System Composition Boundaries](docs/13-system-composition-boundaries.md)**.
+See **[Component Architecture](docs/11-component-architecture.md)**, **[System Composition Boundaries](docs/13-system-composition-boundaries.md)**, and **[Governance Context Projection](docs/profiles/governance-context-projection-profile.md)**.
 
 ---
 
@@ -395,7 +397,7 @@ Write-time safety is not lifetime safety.
 
 A memory can appear benign when stored and become unsafe later when another context retrieves, combines, or acts on it.
 
-See **[Memory Threat Model](docs/15-memory-threat-model.md)** and **[Privacy and Sensitivity](docs/19-privacy-and-sensitivity-classifier.md)**.
+See **[Memory Threat Model](docs/15-memory-threat-model.md)**, **[Privacy and Sensitivity](docs/19-privacy-and-sensitivity-classifier.md)**, and **[Memory Isolation Domains](docs/41-memory-isolation-domains-and-governed-crossing.md)**.
 
 ---
 
@@ -429,63 +431,52 @@ See **[Conflict Resolution](docs/17-conflict-resolution-engine.md)** and **[Temp
 
 ## Conformance and executable evidence
 
-The repository now contains machine-readable doctrine evidence, not just prose.
+The repository contains machine-readable doctrine and runtime evidence, not just prose.
 
 ### Schemas
+
+The canonical schema inventory is **[`schemas/`](schemas/)**. Selected core and interoperability schemas include:
 
 - [`memory-unit.schema.json`](schemas/memory-unit.schema.json)
 - [`conformance-report.schema.json`](schemas/conformance-report.schema.json)
 - [`decision-receipt.schema.json`](schemas/decision-receipt.schema.json)
-- [`memory-audit-event.schema.json`](schemas/memory-audit-event.schema.json)
-- [`calibration-results.schema.json`](schemas/calibration-results.schema.json)
-- [`source-record.schema.json`](schemas/source-record.schema.json)
 - [`pama-decision.schema.json`](schemas/pama-decision.schema.json)
+- [`memory-audit-event.schema.json`](schemas/memory-audit-event.schema.json)
+- [`source-record.schema.json`](schemas/source-record.schema.json)
+- [`governance-context-projection.schema.json`](schemas/governance-context-projection.schema.json)
 
 ### Fixtures
 
-The [`fixtures/`](fixtures/) directory contains **25 validated fixture definitions**, including:
+The canonical fixture inventory is **[`fixtures/`](fixtures/)**. The validated corpus includes positive controls and adversarial cases for, among other things:
 
-- valuable persistent memory
-- ephemeral memory
-- access-spam junk
-- confidently wrong memory
-- contradiction
-- certified durable memory
-- unauthorized mutation
-- audit-preserving pruning
-- high-confidence false promotion
-- threshold jitter
-- estimator disagreement
-- cross-tenant relevance
-- stochastic retrieval inside policy
-- unsafe multi-memory composition
-- uncertain sensitivity
-- irreversible deletion under uncertain utility
-- policy/estimator drift
-- concurrent mutation
-- sleeper poisoning
-- authority laundering
-- deletion residue
-- out-of-calibration-scope scoring
-- expired delegation
-- stochastic replay reconstruction
-- runtime audit-trace reconstruction
+- high-confidence false promotion and estimator disagreement
+- cross-tenant relevance and isolation boundaries
+- stochastic containment and replay reconstruction
+- authority laundering and self-corroboration
+- correction, supersession, rejected-value re-entry, and stale state
+- deletion residue and transitive purge behavior
+- concurrency conflicts and stale authorization
+- independent corroboration versus repeated/derived reuse
+- governance precedent material matches and dangerous near-matches
+
+The corpus evolves as new failure modes earn executable tests. The directory, not a duplicated README count, is the canonical inventory.
 
 ### Validate locally
 
 ```bash
-python -m pip install jsonschema
+python -m pip install -r reference/requirements.txt
 python scripts/validate_fixtures.py fixtures
 python scripts/validate_schemas.py
 python scripts/validate_doctrine_boundaries.py
+python -m unittest discover -s reference/tests -t reference
 ```
 
-The **[Validate Doctrine Evidence](.github/workflows/validate-doctrine-evidence.yml)** workflow runs the same checks on pushes and pull requests.
+The **[Validate Doctrine Evidence](.github/workflows/validate-doctrine-evidence.yml)** workflow executes the repository's declared validation/evidence path on pushes and pull requests.
 
 > [!WARNING]
-> These checks prove schema and fixture coherence. They do **not** prove a runtime implementation detects poisoning, enforces tenancy, contains a stochastic planner, resolves concurrency, or propagates deletion correctly. Structural evidence is a prerequisite for runtime evidence, not a substitute for it.
+> These checks prove only the behavior and contracts they actually exercise. Structural fixture validity is not production runtime proof, and one validated reference path is not universal architecture conformance.
 
-See **[Conformance Test Plan](docs/06-conformance-test-plan.md)**.
+See **[Conformance Test Plan](docs/06-conformance-test-plan.md)** and **[Runtime Evidence Program](docs/programs/runtime-evidence/README.md)**.
 
 ---
 
@@ -507,34 +498,25 @@ It means uncertainty can remain adaptive while prohibited consequences stay outs
 
 ---
 
-## Architecture decisions and current maturity
+## Architecture decisions and evidence maturity
 
-See **[docs/adr/README.md](docs/adr/README.md)** for status semantics.
+See **[docs/adr/README.md](docs/adr/README.md)** for the current Accepted, Proposed, Superseded, and Rejected decision state. That index is canonical; this README intentionally does not maintain a second ADR count.
 
 | Area | Current state |
 |---|---|
 | Core doctrine | **Canonical and extensively documented** |
 | Native PAMA doctrine | **Canonical; authored by Kevin R. Knapp** |
-| ADR-001 through ADR-019 | **Accepted** |
-| ADR-020 governed uncertainty | **Proposed** |
-| ADR-021 portable governance evidence | **Proposed** |
+| Architecture decisions | **Status maintained in the canonical ADR index** |
 | Documentation conformance audit | **Recorded piece by piece** |
-| JSON Schemas | **7 validated schemas** |
-| Conformance fixture definitions | **25 validated fixtures** |
+| JSON Schemas | **Machine-readable registry; canonical inventory in `schemas/`** |
+| Conformance fixtures | **Validated evolving corpus; canonical inventory in `fixtures/`** |
 | Repository validation workflow | **Active** |
-| Runtime reference implementation | **Executed against a real substrate; broader evidence incomplete** |
-| ADR-020 runtime proof | **Incomplete by design** |
-| Research evidence | **Living, open-evidence-preferred, challengeable** |
+| Runtime reference evidence | **Executed against real and modeled substrates plus pinned interoperability comparators; scope remains explicitly bounded** |
+| Research evidence | **Living, source-neutral, challengeable, and open-evidence-preferred** |
 
-### Why ADR-020 is still Proposed
+Accepted doctrine means a decision has satisfied its own maturity gate. It does not claim every production implementation conforms. Proposed decisions retain their own evidence gates and are not upgraded merely because adjacent work merged.
 
-The repository already has the theory, contracts, schemas, receipts, fixtures, validation machinery, and a real-substrate reference-adapter execution.
-
-What it intentionally does **not** yet claim is broad proof that production implementations satisfy the full end-to-end envelope across concurrency, deletion propagation, multiple runtime surfaces, and repeated adversarial behavior.
-
-That missing evidence is a feature of the governance process, not an embarrassing footnote to hide below the fold.
-
-Deletion propagation is the slice currently in progress, and beginning it surfaced something worth stating plainly: the requirement was not yet expressible. A claim like *this projection is stale with respect to canonical state* had no defined meaning in this repository, which made it untestable rather than merely unproven. **[Canonical and Derived State](docs/programs/runtime-evidence/canonical-and-derived-state.md)** supplies the missing definitions and fixes the evidence bar before the implementation that has to clear it.
+The runtime-evidence program records what has actually been exercised, including real-substrate governance paths, deletion completeness, concurrency, portable evidence, external comparator boundaries, and systems characterization. See **[Runtime Evidence](docs/programs/runtime-evidence/README.md)** for the current evidence surface rather than relying on an old README snapshot.
 
 ---
 
@@ -555,12 +537,15 @@ Preferred evidence sources, when practical, include:
 For consequential claims, the goal is to preserve:
 
 ```text
+origin / provenance
 supporting evidence
 challenging evidence
+reproduction status
 boundary conditions
 implementation evidence
 conformance evidence
 known uncertainty
+promotion state
 ```
 
 When transferring an idea from biological or cognitive memory into software, classify it as:
@@ -574,7 +559,7 @@ OPEN HYPOTHESIS
 
 The repository should be willing to revise a favorite theory when better evidence shows up. Otherwise this is not a research architecture; it is a belief system with Markdown.
 
-See **[Research Bibliography](docs/23-research-bibliography.md)** and **[Source Material Index](docs/08-source-material-index.md)**.
+See **[Evidence Promotion Policy](docs/policies/EVIDENCE_PROMOTION.md)**, **[Research Bibliography](docs/23-research-bibliography.md)**, and **[Source Material Index](docs/08-source-material-index.md)**.
 
 ---
 
@@ -584,27 +569,13 @@ Agent Memory is independent, but it is not intellectually isolated.
 
 We explicitly celebrate developers, researchers, maintainers, and repositories that materially improve the architecture. Recognition is **relationship-typed** so credit does not quietly turn into dependency, endorsement, joint authorship, or license confusion.
 
-The first highlighted lineage is the **[UOR Foundation](https://github.com/UOR-Foundation/UOR-Framework)**.
+The **[UOR Foundation](https://github.com/UOR-Foundation/UOR-Framework)** is an important intellectual-lineage source for deterministic object reference and content-addressed identity. Agent Memory adopts the architectural separation between exact identity and memory governance, not a mandatory UOR dependency.
 
-UOR Foundation work on deterministic object reference, content-addressed identity, explicit resolution state, and formally described object spaces materially informed Agent Memory's separation between:
-
-```text
-IDENTITY
-what object is this?
-
-        !=
-
-MEMORY GOVERNANCE
-what should retained state become,
-who may use it,
-and what consequences may it have?
-```
-
-Agent Memory adopts that **architectural separation**, not a mandatory UOR dependency. When UOR is used, it is a strong candidate for exact identity and deterministic addressability; another exact-identity mechanism may be used if it preserves the same boundary.
+Current governance peers and interoperability comparators include **DashClaw** and the **Microsoft Agent Governance Toolkit**. Their role is to pressure-test and inform vendor-neutral governance/evidence boundaries. Neither is a required Agent Memory runtime, and Agent Memory does not claim those projects have adopted this architecture.
 
 Recognition here is citation and independent synthesis. External projects retain their own copyright, license, trademark, attribution, and reuse terms. Unless a separate public agreement says otherwise, acknowledgement does not imply endorsement, sponsorship, formal partnership, or transfer of intellectual-property ownership.
 
-See **[Aligned Projects and Intellectual Lineage](docs/40-aligned-projects-and-intellectual-lineage.md)** for the relationship taxonomy, licensing rules, UOR research lineage, and the evidence bar for future highlighted projects.
+See **[Aligned Projects and Intellectual Lineage](docs/40-aligned-projects-and-intellectual-lineage.md)** for the relationship taxonomy, licensing rules, and evidence bar for highlighted projects.
 
 ---
 
@@ -619,15 +590,15 @@ The doctrine maps several systems into bounded implementation roles where inspec
 | **COREFORGE Vault / Neurospace** | local-first runtime memory and agent-facing recall |
 | **FailSafe / Arbiter** | governance enforcement, evidence, approval boundaries |
 
-**UOR is intentionally not presented here as a required implementation dependency.** Its relationship is now recorded primarily as intellectual lineage and a candidate exact-identity mechanism under ADR-001.
+UOR is intentionally not presented here as a required implementation dependency. DashClaw and Microsoft AGT are tracked as governance peers/comparators rather than silently promoted into runtime dependencies.
 
-**PAMA is intentionally not in this external implementation table.** It is native Agent Memory doctrine. A runtime may implement PAMA inside any conforming codebase while preserving its authority boundary.
+PAMA is intentionally not in this external implementation table. It is native Agent Memory doctrine. A runtime may implement PAMA inside any conforming codebase while preserving its authority boundary.
 
-**Durable decision memory is also defined internally**, through the [Durable Decision Memory Profile](docs/profiles/durable-decision-memory-profile.md). A product earns an implementation mapping by demonstrating evidence against that profile, not by being conceptually nearby.
+Durable decision memory and Governance Context Projection are also defined internally. A product earns an implementation mapping by demonstrating evidence against the applicable profile, not by being conceptually nearby.
 
 The map defines architectural implementation roles. It does not claim every related repository already conforms to every current contract.
 
-See **[Repo Implementation Map](docs/05-repo-implementation-map.md)**.
+See **[Repo Implementation Map](docs/05-repo-implementation-map.md)** and **[Aligned Projects](docs/40-aligned-projects-and-intellectual-lineage.md)**.
 
 ---
 
@@ -650,14 +621,18 @@ agent-memory/
 │   ├── 00-10                       # architecture spine
 │   ├── 11-19                       # composition, security, trust, time, privacy
 │   ├── 20-25                       # interdisciplinary theory and governed uncertainty
-│   ├── 26-40                       # operational, executable, and ecosystem contracts
-│   ├── profiles/                   # doctrine profiles for memory classes
+│   ├── 26-41                       # operational, executable, ecosystem, and isolation contracts
+│   ├── profiles/                   # bounded doctrine/interoperability profiles
+│   ├── programs/                   # multi-slice evidence programs
+│   ├── templates/                  # reusable research/evidence records
 │   ├── adr/                        # architecture decision records
 │   └── audits/                     # preserved audit history
+├── wiki-src/                       # canonical source for the published GitHub Wiki
 ├── sources/                        # external/material source-rights registry
-├── schemas/                        # doctrine-level JSON Schemas
-├── fixtures/                       # 26 conformance fixture definitions
-├── scripts/                        # fixture, schema, link, and doctrine-boundary validators
+├── schemas/                        # doctrine-level JSON Schemas and bounded profiles
+├── fixtures/                       # evolving conformance fixture corpus
+├── reference/                      # executable reference/evidence paths and dependency manifest
+├── scripts/                        # validation/reporting tooling
 └── .github/
     ├── CODEOWNERS
     ├── ISSUE_TEMPLATE/
