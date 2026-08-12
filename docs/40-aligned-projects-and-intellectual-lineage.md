@@ -107,7 +107,7 @@ Examples include:
 
 Attribution should not overstate legal exclusivity. Recording that someone originated a proposal or framing is a provenance claim, not automatically a claim that the underlying idea, method, or short phrase is exclusively protectable.
 
-## First highlighted lineage: UOR Foundation
+## Highlighted lineage: UOR Foundation
 
 ### Relationship
 
@@ -162,6 +162,97 @@ If future Agent Memory work deliberately reuses MIT-licensed UOR material, the r
 ### Independence statement
 
 > Agent Memory is not affiliated with, endorsed by, sponsored by, or formally partnered with the UOR Foundation unless a separate public agreement says otherwise. Recognition here records intellectual lineage and technical alignment only.
+
+## Highlighted alignment: DashClaw
+
+### Relationship
+
+**Interoperability target / enforcement peer / comparator.**
+
+[DashClaw](https://github.com/ucsandman/DashClaw) is a separate agent-governance runtime focused on the execution seam between an agent deciding to invoke a tool and the tool actually running. Its current product thesis centers on an `intercept -> decide -> approve -> prove` loop, remote approval, fail-closed enforcement where mechanically available, calibrated interruption pressure, signed audit evidence, and enforcement liveness.
+
+Those concerns overlap with Agent Memory only at the governance boundary. DashClaw does not define Agent Memory lifecycle, recall, correction, forgetting, or canonical memory semantics, and Agent Memory should not absorb DashClaw's policy vocabulary into its core model.
+
+### What materially sharpened Agent Memory
+
+Inspection of DashClaw helped sharpen several questions that are independently useful to Agent Memory:
+
+- a governance decision receipt is not automatically proof that enforcement occurred;
+- enforcement posture should distinguish mechanical, cooperative, degraded, and unknown paths rather than imply universal interception;
+- approval-fatigue reduction must not become automatic permission expansion;
+- liveness of the actual enforcement seam matters more than configuration claiming a guard exists;
+- execution/approval evidence can become valuable later memory when it re-enters through normal provenance, scope, lifecycle, and authority boundaries.
+
+The most important interoperability opportunity is not to make Agent Memory imitate DashClaw. It is to let Agent Memory expose vendor-neutral remembered context that a DashClaw adapter could use when evaluating whether a present action is materially equivalent to earlier approvals, denials, incidents, revocations, or exceptions.
+
+That architecture is tracked by proposed ADR-028 and the Governance Context Projection profile:
+
+```text
+Agent Memory core
+  -> Governance Context Projection
+  -> DashClaw-specific adapter
+  -> DashClaw decision / approval / enforcement
+```
+
+The projection preserves precedent and material conditions but does not emit a DashClaw risk score or final verdict.
+
+A public suggestion for the complementary DashClaw-side seam is recorded in [DashClaw issue #219](https://github.com/ucsandman/DashClaw/issues/219). That issue is an interoperability proposal, not evidence of adoption or a formal relationship.
+
+### Licensing boundary
+
+DashClaw is MIT-licensed. Agent Memory's current relationship is citation, comparison, and independent synthesis. No DashClaw code or distinctive documentation expression is incorporated by this alignment entry.
+
+### Independence statement
+
+> DashClaw and Agent Memory are independent projects. This entry records comparative research and a potential interoperability boundary. It does not imply DashClaw endorsement, adoption of Agent Memory, sponsorship, or formal partnership.
+
+## Highlighted alignment: Microsoft Agent Governance Toolkit
+
+### Relationship
+
+**Enforcement peer / interoperability target / policy-runtime comparator.**
+
+Microsoft's [Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit) is an independent open-source governance project whose charter describes runtime-enforceable governance, deterministic policy evaluation, identity verification, audit logging, and compliance tooling that can be embedded into agent frameworks and orchestration systems.
+
+That places AGT in a neighboring but different responsibility class from Agent Memory.
+
+Agent Memory owns memory-specific semantics and governance, including lifecycle, PAMA, recall admission, correction, supersession, deletion/forgetting semantics, and canonical memory evidence. A general agent-governance runtime may constrain an agent action more broadly, but it does not become the semantic owner of what a memory consequence means.
+
+### What materially matters to the architecture
+
+AGT provides a useful comparator for the separation between:
+
+```text
+policy decision
+        !=
+policy enforcement host
+        !=
+memory-specific semantics
+```
+
+This strengthens the case for Agent Memory to expose a vendor-neutral Governance Context Projection rather than implement one governance system's policy model directly.
+
+A downstream AGT/ACS-style adapter may translate remembered precedent, material conditions, validity, authority context, and outcome evidence into the policy engine's own input shape. The consumer remains responsible for the final governance consequence.
+
+The safe composition remains monotonic for memory-specific consequences:
+
+```text
+Agent Memory / PAMA may constrain memory authority
+external runtime governance may further constrain execution
+external runtime governance must not widen a memory-specific permission that Agent Memory denied
+```
+
+ADR-021 separately addresses portable outbound governance evidence. ADR-028 addresses the complementary inbound/context direction.
+
+### Licensing and trademark boundary
+
+The Agent Governance Toolkit repository is MIT-licensed. Its technical charter also identifies Agent Governance Toolkit and AGT as Microsoft trademarks. Agent Memory therefore uses the project name descriptively and does not incorporate Microsoft marks or imply endorsement.
+
+The current relationship is citation, comparison, and independent synthesis. No AGT code, schema, or distinctive documentation expression is incorporated by this recognition entry.
+
+### Independence statement
+
+> Agent Memory is not endorsed by, sponsored by, or formally partnered with Microsoft or the Agent Governance Toolkit project by virtue of this entry. Recognition records an architectural comparison and potential interoperability target only.
 
 ## How projects earn a highlighted entry
 
