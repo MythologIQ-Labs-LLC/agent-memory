@@ -295,6 +295,66 @@ cross_scope_relevance_does_not_override_access_policy == true
 irreversible_action_requires_consequence_appropriate_authority == true
 ```
 
+## Forbidden-hit lifecycle assertions
+
+Positive retrieval evidence is not enough to establish lifecycle safety. An implementation can retrieve the right memory while also surfacing a memory that is superseded, disputed, tombstoned, out of scope, derived from deleted state, or otherwise forbidden for current use.
+
+Conformance should therefore represent negative expectations explicitly across four stages:
+
+```text
+candidate_discovered
+!=
+admitted
+!=
+context_surfaced
+!=
+downstream_influence
+```
+
+A backend may intentionally discover a forbidden candidate so governance can inspect and reject it. That is not itself a failure. The failure occurs when the candidate crosses a stage the fixture says is forbidden.
+
+Each reusable forbidden-hit assertion should record at least:
+
+```text
+assertion_id
+forbidden_class
+source_lifecycle_state
+source_evidence
+candidate_discovered: true | false
+admitted: true | false
+context_surfaced: true | false
+downstream_influence: true | false
+expected_refusal
+```
+
+The four stage fields are independent report fields even when a particular runtime blocks early enough that later fields necessarily remain false. This preserves a stable reporting shape for systems that enforce additional gates after admission.
+
+Current reference coverage is declared in [`../fixtures/forbidden-hit-lifecycle-matrix.json`](../fixtures/forbidden-hit-lifecycle-matrix.json) and includes:
+
+- superseded/corrected state presented as current;
+- tombstoned state;
+- state derived from a tombstoned source;
+- disputed state;
+- project-scope mismatch;
+- revoked or absent shared-memory membership;
+- missing required isolation compartment;
+- rejected-value re-entry at the mutation boundary;
+- stale authorization at the mutation boundary.
+
+This list is a coverage statement, not a universal claim. Sensitivity/purpose restrictions, stale projection variants, additional tenant/task/domain combinations, and later-stage action influence require their own assertions when the tested profile represents them.
+
+At least one negative recall case should prove all of the following simultaneously:
+
+```text
+candidate_discovered == true
+admitted == false
+context_surfaced == false
+downstream_influence == false
+expected_refusal is explicit
+```
+
+Absence from a final answer is not evidence of this property unless the harness establishes the stage at which the memory was blocked.
+
 ## Calibration assertions
 
 The implementation should report where applicable:
@@ -357,6 +417,9 @@ The suite should fail if:
 - policy or estimator version cannot be reconstructed for a consequential decision
 - permanent deletion is authorized solely from predicted low utility
 - concurrent mutation silently becomes last-writer-wins
+- a declared forbidden-hit assertion crosses any stage marked false
+- forbidden-hit reporting omits the refusal/blocking reason needed to establish where safety held
+- state derived from a tombstoned source is admitted as valid current evidence without a governed revalidation path
 
 ## Test harness recommendation
 
@@ -386,9 +449,22 @@ fixtures_failed:
 trials_run:
 trap_class_failure_rate:
 boundary_instability_rate:
+forbidden_hit_coverage:
+  - assertion_id
+    forbidden_class
+    source_lifecycle_state
+    source_evidence
+    candidate_discovered
+    admitted
+    context_surfaced
+    downstream_influence
+    expected_refusal
+    passed
 known_exemptions:
 evidence_bundle_refs:
 ```
+
+A conformance claim must name the forbidden classes it actually tested. An empty or omitted `forbidden_hit_coverage` field means no explicit forbidden-hit coverage is being claimed; positive recall metrics do not fill that gap by implication.
 
 ## Doctrine
 
