@@ -77,9 +77,9 @@ def _pama_high_confidence_case(record: dict[str, Any]) -> dict[str, Any]:
         target_reference=record["derived"]["derived_ref"],
         target_class=policy.M4,
         scope=record["scope"]["scope_ref"],
-        operation="promotion",
-        current_strength="observed",
-        proposed_strength="crystallized",
+        operation="crystallization",
+        current_strength="promoted",
+        proposed_strength="canonical",
         downstream_authority=policy.A1,
         reversibility="reversible",
         risk_class="high",
@@ -95,7 +95,7 @@ def _pama_high_confidence_case(record: dict[str, Any]) -> dict[str, Any]:
     writes = [entry for entry in substrate.write_log if entry[0] == "write_fact"]
     checks = {
         "high_confidence_not_committed": not result.committed and not writes,
-        "promotion_remains_prohibited": "promotion" in result.decision.prohibited_actions,
+        "crystallization_remains_prohibited": "crystallization" in result.decision.prohibited_actions,
         "review_or_verification_still_required": result.decision.outcome in {
             policy.REQUIRE_REVIEW,
             policy.REQUIRE_EXTERNAL_VERIFICATION,
