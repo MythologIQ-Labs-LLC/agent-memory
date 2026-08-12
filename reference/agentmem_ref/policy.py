@@ -120,6 +120,7 @@ class Proposal:
     tenant_ref: str = ""
     purpose: str = ""
     isolation_domain_refs: tuple[str, ...] = ()
+    required_isolation_domain_refs: tuple[str, ...] = ()
     project_ref: str = ""
     task_ref: str = ""
 
