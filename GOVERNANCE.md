@@ -82,6 +82,12 @@ Doctrine changes require explicit rationale, affected-surface analysis, evidence
 
 ## Evidence rule
 
+Agent Memory adopts [`docs/policies/EVIDENCE_PROMOTION.md`](docs/policies/EVIDENCE_PROMOTION.md) as the source-neutral evidence and doctrine-promotion policy.
+
+> **Origin establishes provenance, not evidentiary privilege.**
+
+This applies to every material input, including native doctrine, maintainer or contributor statements, AI-generated analysis, practitioner feedback, external research, standards, implementations, benchmarks, production observations, and external corpora.
+
 A merged statement should make its epistemic status clear.
 
 Where material, distinguish:
@@ -95,6 +101,8 @@ runtime proof
 hypothesis
 analogy
 ```
+
+Native authorship establishes provenance and repository ownership of a decision. It does not prove the decision correct. External publication or popularity does not prove a claim correct either. Accepted ADRs remain challengeable and may be narrowed, superseded, or rejected when stronger evidence justifies a change.
 
 A validator passing is evidence about the validator's declared contract. It is not automatic proof of production behavior.
 
