@@ -2,8 +2,9 @@
 """Validate Agent Memory JSON Schemas, fixtures, and source-rights records.
 
 Requires the `jsonschema` package. This complements `validate_fixtures.py` by
-checking JSON Schema correctness, validating each fixture's `memory_unit`, and
-ensuring primary-source reuse records satisfy the repository's rights gates.
+checking JSON Schema correctness, validating each fixture's `memory_unit`,
+validating optional governance-context projections, and ensuring primary-source
+reuse records satisfy the repository's rights gates.
 """
 
 from __future__ import annotations
@@ -46,10 +47,16 @@ def main() -> int:
     memory_validator = jsonschema.Draft202012Validator(memory_schema)
     audit_event_schema = load(schema_dir / "memory-audit-event.schema.json")
     audit_event_validator = jsonschema.Draft202012Validator(audit_event_schema)
+    governance_projection_schema = load(schema_dir / "governance-context-projection.schema.json")
+    governance_projection_validator = jsonschema.Draft202012Validator(
+        governance_projection_schema,
+        format_checker=jsonschema.Draft202012Validator.FORMAT_CHECKER,
+    )
 
     fixture_errors: list[str] = []
     fixture_count = 0
     audit_event_count = 0
+    governance_projection_count = 0
     for path in sorted(fixture_dir.glob("*.json")):
         fixture_count += 1
         try:
@@ -88,6 +95,107 @@ def main() -> int:
                     fixture_errors.append(
                         f"{path.relative_to(root)} at audit_events[{index}]{suffix}: {error.message}"
                     )
+
+        projection = fixture.get("governance_projection")
+        if projection is not None:
+            governance_projection_count += 1
+            if not isinstance(projection, dict):
+                fixture_errors.append(
+                    f"{path.relative_to(root)}: governance_projection must be an object"
+                )
+                continue
+
+            for error in sorted(
+                governance_projection_validator.iter_errors(projection),
+                key=lambda e: list(e.path),
+            ):
+                location = ".".join(str(part) for part in error.path)
+                suffix = f".{location}" if location else ""
+                fixture_errors.append(
+                    f"{path.relative_to(root)} at governance_projection{suffix}: {error.message}"
+                )
+
+            # Doctrine-level projection invariants that JSON Schema cannot express
+            # cleanly without turning the projection into a consumer policy model.
+            forbidden_authority_keys = {
+                "decision",
+                "verdict",
+                "permission",
+                "standing_permission",
+                "risk_score",
+                "final_decision",
+                "require_approval",
+            }
+            present_forbidden = sorted(forbidden_authority_keys & projection.keys())
+            if present_forbidden:
+                fixture_errors.append(
+                    f"{path.relative_to(root)}: governance_projection must not encode final "
+                    f"consumer authority fields: {present_forbidden}"
+                )
+
+            source_refs = projection.get("source_memory_refs")
+            precedents = projection.get("precedents")
+            if isinstance(source_refs, list) and isinstance(precedents, list):
+                source_ref_set = {ref for ref in source_refs if isinstance(ref, str)}
+                precedent_refs = {
+                    item.get("memory_ref")
+                    for item in precedents
+                    if isinstance(item, dict) and isinstance(item.get("memory_ref"), str)
+                }
+                missing_sources = sorted(precedent_refs - source_ref_set)
+                if missing_sources:
+                    fixture_errors.append(
+                        f"{path.relative_to(root)}: precedent memory_ref values must be "
+                        f"reconstructable through source_memory_refs; missing {missing_sources}"
+                    )
+
+                polarity_by_ref = {
+                    item.get("memory_ref"): item.get("polarity")
+                    for item in precedents
+                    if isinstance(item, dict) and isinstance(item.get("memory_ref"), str)
+                }
+                negative_refs = projection.get("negative_precedent_refs", [])
+                if isinstance(negative_refs, list):
+                    for ref in negative_refs:
+                        if ref not in precedent_refs:
+                            fixture_errors.append(
+                                f"{path.relative_to(root)}: negative precedent {ref!r} must "
+                                "also appear in precedents"
+                            )
+                        elif polarity_by_ref.get(ref) not in {"cautionary", "contradictory"}:
+                            fixture_errors.append(
+                                f"{path.relative_to(root)}: negative precedent {ref!r} must "
+                                "be cautionary or contradictory"
+                            )
+
+                for index, item in enumerate(precedents):
+                    if not isinstance(item, dict):
+                        continue
+                    relationship = item.get("relationship")
+                    conditions = item.get("material_conditions")
+                    if relationship == "material_mismatch" and isinstance(conditions, list):
+                        has_mismatch = any(
+                            isinstance(condition, dict)
+                            and condition.get("comparison") == "mismatch"
+                            for condition in conditions
+                        )
+                        if not has_mismatch:
+                            fixture_errors.append(
+                                f"{path.relative_to(root)}: precedents[{index}] declares "
+                                "material_mismatch without a mismatched material condition"
+                            )
+
+                    provenance = item.get("provenance")
+                    if isinstance(provenance, dict):
+                        source_type = provenance.get("source_type")
+                        independent = provenance.get("independent_adjudication")
+                        if independent is True and source_type != "human_adjudication":
+                            fixture_errors.append(
+                                f"{path.relative_to(root)}: precedents[{index}] may mark "
+                                "independent_adjudication=true only for human_adjudication; "
+                                "policy/runtime/derived outcomes must not launder themselves "
+                                "into independent human precedent"
+                            )
 
     if fixture_errors:
         print("Fixture/schema validation failed:", file=sys.stderr)
@@ -182,7 +290,8 @@ def main() -> int:
     schema_count = len(list(schema_dir.glob("*.json")))
     print(
         f"Validated {schema_count} schema(s), {fixture_count} fixture memory unit(s), "
-        f"{audit_event_count} audit event(s), and {source_count} source-rights record(s)."
+        f"{audit_event_count} audit event(s), {governance_projection_count} governance "
+        f"projection(s), and {source_count} source-rights record(s)."
     )
     return 0
 

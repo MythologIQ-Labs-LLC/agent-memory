@@ -31,6 +31,7 @@ Agent Memory System
 ├── Context Assembly Surface
 ├── Correction and Dispute Surface
 ├── Durable Decision Memory
+├── Governance Context Projection
 ├── Conformance and Calibration Harness
 └── Product and Agent Integrations
 ```
@@ -50,8 +51,9 @@ Agent Memory System
 | Context Assembly Surface | What the agent sees now | prompt context, retrieved memories, active constraints | memory mutation without authority | probabilistic ranking inside governed admission |
 | Correction and Dispute Surface | How memory changes safely | user correction, contradiction, reconciliation | silent overwrite | mixed inference + governed commit |
 | Durable Decision Memory | Decision continuity and rationale | durable decisions, supersession, drift evidence, rationale preservation | product-specific ownership | governed memory profile |
+| Governance Context Projection | Vendor-neutral governance-facing view | derived precedent/context, material conditions, polarity, validity, derivation metadata | canonical memory truth, standing permission, consumer verdicts | deterministic projection first; estimator-mediated retrieval only as typed evidence |
 | Conformance and Calibration Harness | System validation | fixtures, reports, trap classes, threshold calibration | product UX | measurement and falsification |
-| Product and Agent Integrations | Adoption surfaces | implementations with explicit mapping evidence | redefining canonical terms locally | implementation-specific within doctrine |
+| Product and Agent Integrations | Adoption surfaces | implementations with explicit mapping evidence, consumer-specific adapters | redefining canonical terms locally | implementation-specific within doctrine |
 
 ## Component interaction pipeline
 
@@ -75,6 +77,18 @@ Corrections and disputes can re-enter the pipeline at Evidence, Lifecycle, Gover
 
 The pipeline describes responsibility and authority flow, not necessarily one synchronous execution order.
 
+Governance Context Projection is an optional derived branch from canonical memory and governed recall, not a replacement stage in the canonical write/read path:
+
+```text
+canonical memory + evidence + scope + outcome
+  -> governed retrieval / selection
+  -> Governance Context Projection
+  -> consumer-specific adapter
+  -> external governance / approval / enforcement decision
+```
+
+The consumer may return approval or execution evidence through a separate interoperability/evidence seam. That returned evidence may become new Agent Memory input only through the normal identity, evidence, lifecycle, and authority boundaries.
+
 ## Uncertainty must survive handoff
 
 When a component produces an estimate, the receiving component must be able to distinguish:
@@ -93,6 +107,8 @@ validity scope
 For example, a CodeGenome relation with confidence `0.82` must not arrive at PAMA as a naked `0.82` with no indication that it is an inferred semantic edge.
 
 Likewise, a sensitivity classifier that reports uncertainty must not be converted into `non_sensitive=true` merely because an API wanted a boolean.
+
+A Governance Context Projection selected through semantic similarity must likewise preserve the estimator and uncertainty that selected the precedent. The consumer may receive candidate relevance; it must not receive probabilistic similarity disguised as permission.
 
 ## Proposal, authority, selection, commit
 
@@ -114,6 +130,8 @@ what state actually changes and what receipt is emitted
 
 A component may implement multiple stages, but it must not make them indistinguishable.
 
+For external governance consumers, Governance Context Projection sits before their equivalent authority/selection/commit stages. It supplies remembered context, not a substitute authority envelope.
+
 ## Segmentation principle
 
 A concept belongs in a separate component when it has a distinct failure mode.
@@ -128,6 +146,7 @@ Examples:
 - certification failure means an unverified memory becomes durable
 - runtime failure means the agent uses memory incorrectly
 - durable-decision failure means rationale, supersession, or current decision state is lost or silently rewritten
+- governance-projection failure means derived context loses provenance/scope, erases negative precedent, or becomes consumer authority
 - composition failure means individually valid components combine into unsafe behavior
 - conformance failure means the implementation cannot prove its behavior
 
@@ -145,13 +164,14 @@ accurate sensitivity classifier + stale policy -> unsafe sharing
 calibrated utility estimator + overbroad deletion authority -> irreversible loss
 valid individual memories + unsafe composition -> poisoned context
 valid PAMA outcome + stale state snapshot -> incorrect commit
+valid precedent + consumer-specific overgeneralization -> approval laundering
 ```
 
 Therefore conformance must test handoffs and composition, not only isolated component behavior.
 
 ## Unification principle
 
-A concept belongs under the same overall architecture when it participates in governed memory state transition.
+A concept belongs under the same overall architecture when it participates in governed memory state transition or in a governed projection of remembered state whose semantics must remain reconstructable.
 
 Examples:
 
@@ -162,6 +182,7 @@ Examples:
 - COREFORGE Vault and Neurospace may participate by operationalizing memory
 - FailSafe and Arbiter may participate as enforcement implementations
 - durable decision memory participates through the repository's own decision-memory profile
+- Governance Context Projection participates by exposing bounded, consumer-neutral context without owning the downstream governance decision
 
 An adjacent product name is not itself an architectural role. Implementations should be named only when the mapping adds concrete evidence or responsibility.
 
@@ -181,6 +202,9 @@ An adjacent product name is not itself an architectural role. Implementations sh
 12. Composition-specific failure modes require composition-specific tests.
 13. PAMA target class, lifecycle strength, requested operation, and downstream authority remain separate dimensions.
 14. External implementation names require an evidence-backed mapping role, not mere conceptual proximity.
+15. Derived Governance Context Projection is reconstructable context, never an alternate canonical memory store or final policy authority.
+16. Consumer-specific fields belong in consumer adapters unless they expose a genuinely general missing Agent Memory primitive.
+17. Returned external approval or execution evidence re-enters Agent Memory through normal evidence/governance boundaries; an integration callback is not a privileged write path.
 
 ## Cross-component handoff contract
 
@@ -214,6 +238,8 @@ timestamp
 
 Not all fields apply to every handoff. Omitted authority-critical fields must not be guessed downstream.
 
+Governance Context Projection has a separate minimized schema because it is a consumer-facing derived view rather than a canonical component mutation handoff. It must still preserve source-memory references, scope, derivation, validity, and uncertainty sufficient for reconstruction.
+
 ## Component maturity levels
 
 | Level | Meaning |
@@ -229,8 +255,8 @@ Not all fields apply to every handoff. Omitted authority-critical fields must no
 
 ## Architecture decision
 
-This repo owns the overall architecture and native doctrine, including PAMA.
+This repo owns the overall architecture and native doctrine, including PAMA and the vendor-neutral Governance Context Projection profile.
 
-Individual repos may own implementation slices after they demonstrate a meaningful mapping.
+Individual repos may own implementation slices after they demonstrate a meaningful mapping. Consumer-specific governance adapters should normally be owned with the consumer integration, not by changing Agent Memory core to mirror the consumer's policy model.
 
 The shared architecture should stabilize concepts, boundaries, handoff semantics, and conformance expectations. It should not force every implementation into one repository or one runtime, and it should not grant doctrine ownership to whichever product happens to implement a feature first.

@@ -12,6 +12,7 @@
 - [Lifecycle and Forgetting](Lifecycle-and-Forgetting)
 - [Canonical and Derived State](Canonical-and-Derived-State)
 - [Governed Uncertainty](Governed-Uncertainty)
+- [Governance Projection](Governance-Projection)
 - [Security and Privacy](Security-and-Privacy)
 - [Architecture Decisions](Architecture-Decisions)
 

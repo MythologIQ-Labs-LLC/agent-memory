@@ -19,7 +19,7 @@ Agent Memory uses explicit relationship labels instead of a generic â€œpartnersâ
 | **Reference substrate** | Agent Memory has mapped or executed doctrine against the system. |
 | **Implementation mapping** | Inspected evidence supports a bounded Agent Memory implementation role. |
 | **Comparator** | The project provides a useful architecture or behavior to test adversarially. |
-| **Interoperability target** | The projects exchange evidence, state, policy signals, or contracts across a defined boundary. |
+| **Interoperability target** | The projects may exchange evidence, state, policy signals, or contracts across a defined boundary. |
 | **Enforcement peer** | A separate runtime may further restrict Agent Memory-permitted consequences. |
 | **Evidence peer** | A separate system can attest to or verify evidence of Agent Memory decisions. |
 | **Formal partner** | A documented organizational partnership actually exists. |
@@ -83,6 +83,90 @@ The UOR Framework repository is MIT-licensed. Agent Memory is Apache-2.0 license
 This acknowledgement is citation and independent synthesis. It does not incorporate UOR code, generated ontology artifacts, diagrams, or distinctive documentation expression into Agent Memory.
 
 > **Independence:** Agent Memory is not affiliated with, endorsed by, sponsored by, or formally partnered with the UOR Foundation unless a separate public agreement says otherwise.
+
+---
+
+## DashClaw
+
+**Relationship:** interoperability target / enforcement peer / comparator
+
+**[DashClaw](https://github.com/ucsandman/DashClaw)** is an independent governance runtime focused on intercepting agent tool actions before execution, evaluating risk/policy, routing dangerous actions through approval, and preserving execution/governance evidence.
+
+That makes it adjacent to Agent Memory rather than an alternative memory architecture.
+
+DashClaw helped sharpen several Agent Memory questions:
+
+- a governance decision is not automatically proof that the decision was enforced;
+- enforcement posture should be explicit rather than implied;
+- approval fatigue is itself a governance failure mode;
+- liveness of the enforcement seam matters;
+- prior approval history is more useful when the system remembers **why** the action was acceptable and what conditions bounded the decision.
+
+The potential composition is:
+
+```text
+Agent Memory core
+  -> Governance Context Projection
+  -> DashClaw-specific adapter
+  -> DashClaw guard / approval / enforcement
+```
+
+Agent Memory owns the remembered context. The projection remains vendor-neutral. A DashClaw adapter would own translation into DashClaw-specific risk, verdict, approval, and API semantics.
+
+A public opportunity proposal is recorded in **[DashClaw issue #219](https://github.com/ucsandman/DashClaw/issues/219)**. That issue is a suggestion, not evidence that DashClaw has adopted the architecture.
+
+DashClaw is MIT-licensed. The current relationship is citation, comparison, and independent synthesis.
+
+> **Independence:** DashClaw and Agent Memory are independent projects. This recognition does not imply endorsement, adoption, sponsorship, or formal partnership.
+
+---
+
+## Microsoft Agent Governance Toolkit
+
+**Relationship:** enforcement peer / interoperability target / policy-runtime comparator
+
+Microsoft's **[Agent Governance Toolkit](https://github.com/microsoft/agent-governance-toolkit)** is an independent open-source governance project focused on runtime-enforceable policy, deterministic policy evaluation, identity verification, audit logging, and related governance controls.
+
+Its useful relationship to Agent Memory is responsibility separation:
+
+```text
+memory-specific semantics
+        !=
+general agent policy decision
+        !=
+runtime enforcement
+```
+
+Agent Memory remains authoritative for memory lifecycle, PAMA, recall admission, correction, supersession, deletion/forgetting semantics, and canonical memory evidence.
+
+A general governance runtime may further restrict execution. It should not silently widen a memory-specific consequence that Agent Memory has denied.
+
+The Governance Context Projection creates a clean interoperability seam:
+
+```text
+Agent Memory core
+  -> Governance Context Projection
+  -> AGT/ACS-style adapter
+  -> policy decision / enforcement host
+```
+
+The adapter may translate precedent, material conditions, validity, scope, authority context, and outcomes into the governance runtime's own input vocabulary. The final policy decision remains downstream.
+
+The Agent Governance Toolkit repository is MIT-licensed. Its charter also identifies Agent Governance Toolkit and AGT as Microsoft trademarks, so names are used descriptively and no Microsoft marks are incorporated here.
+
+> **Independence:** Agent Memory is not endorsed by, sponsored by, or formally partnered with Microsoft or the Agent Governance Toolkit project by virtue of this recognition.
+
+---
+
+## Governance Projection connects the boundary
+
+The architecture joining these governance peers to Agent Memory is explained in **[Governance Projection](Governance-Projection)**.
+
+The core rule is:
+
+> **Core owns memory semantics. Governance Projection owns vendor-neutral remembered context. Consumer adapters own consumer-specific interpretation.**
+
+This lets Agent Memory intentionally support governance as a use-case class without turning the canonical memory schema into a DashClaw, AGT, or other policy-engine schema.
 
 ---
 

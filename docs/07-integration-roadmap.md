@@ -283,9 +283,90 @@ v0.5: governed-uncertainty receipts and runtime boundary inventory
 v1.0: stable doctrine with tests, research challenge history, and adoption notes
 ```
 
+## Cross-cutting implementation track: Governance Projection
+
+### Goal
+
+Allow governance, approval, and enforcement systems to consume useful Agent Memory context without reshaping the canonical memory model around any one consumer.
+
+Canonical layering:
+
+```text
+Agent Memory core
+  -> Governance Context Projection
+  -> consumer-specific adapter
+  -> governance / approval / enforcement runtime
+```
+
+The core remembers generally valuable state. The Governance Context Projection is derived, minimized, reconstructable context. Consumer adapters own consumer-specific policy vocabulary, risk semantics, API compatibility, and verdict mapping.
+
+### Architectural rule
+
+> Adapter convenience must not redefine canonical memory semantics.
+
+When an integration needs a new field, first determine whether it exposes a generally useful missing memory primitive or merely a consumer-specific concept. Add only the former to core. Keep the latter downstream.
+
+### V0.1: contract and deterministic fixtures
+
+Tracked by #154 and proposed ADR-029.
+
+- [ ] define the vendor-neutral governance-context projection profile
+- [ ] add `schemas/governance-context-projection.schema.json`
+- [ ] add exact/material-condition precedent fixtures
+- [ ] preserve positive and negative precedent independently
+- [ ] preserve scope, validity, provenance, outcome, and derivation metadata
+- [ ] make the schema structurally exclude final consumer verdict/permission fields
+- [ ] validate that policy-generated outcomes cannot masquerade as independent human adjudication
+
+### V0.2: reference projection builder
+
+- [ ] implement a deterministic builder over existing canonical memory primitives
+- [ ] prove projection state can be discarded and rebuilt from canonical memory + evidence
+- [ ] emit material-difference reports before adding semantic similarity
+- [ ] keep sensitive raw content out of the projection when structured characteristics/references suffice
+- [ ] add cross-scope and stale-precedent negative tests
+
+### V0.3: estimator-mediated precedent retrieval
+
+Only after deterministic matching is stable:
+
+- [ ] define an estimator interface for semantic/contextual precedent candidate retrieval
+- [ ] preserve estimator identity/version/calibration/uncertainty
+- [ ] require deterministic governance consequence after estimator output
+- [ ] test superficially similar but materially unsafe near-matches
+- [ ] measure unsafe-equivalence false positives separately from interruption reduction
+
+### V0.4: consumer adapters
+
+- [ ] implement a generic fake governance consumer first
+- [ ] evaluate a DashClaw-specific adapter without moving DashClaw fields into core
+- [ ] evaluate an AGT/ACS-style adapter independently
+- [ ] record rejected mappings and incompatibilities rather than forcing equivalence
+- [ ] keep each consumer adapter optional and independently versioned
+
+### V0.5: closed-loop evidence without authority laundering
+
+- [ ] correlate decision context with downstream approval/enforcement evidence
+- [ ] preserve whether an outcome came from independent human adjudication, policy, or runtime behavior
+- [ ] permit repeated contextual precedent to propose a narrow policy/grant
+- [ ] require a separate explicit authority transition before that proposal reduces review requirements
+- [ ] prevent policy-generated allows from recursively becoming corroborating human precedent
+
+### Exit criteria
+
+```text
+canonical memory schema remains consumer-neutral
+projection is reconstructable derived state
+projection carries no final consumer permission/verdict
+scope and negative precedent survive projection
+consumer adapters can evolve without redefining core memory
+at least one real consumer demonstrates useful decision context
+approval-friction reduction is measured alongside unsafe-equivalence failures
+```
+
 ## Immediate next issues
 
-Create issues for:
+Create or execute issues for:
 
 1. Add schemas for memory units and conformance reports.
 2. Add fixture examples for all required conformance cases.
@@ -295,6 +376,7 @@ Create issues for:
 6. Add a decision-receipt schema that separates estimator outputs from governance outcomes.
 7. Build the cross-repo boundary inventory before accepting ADR-020.
 8. Validate at least one real implementation against the durable-decision memory profile rather than assigning doctrine provenance to an adjacent product.
+9. Execute #154 to establish Governance Projection V0.1 before building any consumer-specific governance adapter.
 
 ## Acceptance dependency for ADR-020
 

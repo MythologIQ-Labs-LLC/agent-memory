@@ -33,6 +33,7 @@ If one opaque model call silently performs all of those jobs, the implementation
 | Commit layer | Explicit mutation + receipt |
 | Storage/projections | Canonical and derived retained state |
 | Recall planner | Candidate retrieval + governed admission + composition |
+| Governance Context Projection | Vendor-neutral remembered context for external governance consumers |
 | Observability | Transition and decision evidence |
 | Recovery | Replay, rollback, compensation |
 
@@ -49,8 +50,11 @@ Possible projections include:
 - compiled knowledge
 - search indexes
 - model-side derived state
+- governance-context projections
 
 Derived artifacts need dependency metadata if correction, deletion, or replay is expected to propagate reliably.
+
+Governance Context Projection is explicitly derived state. It should be discardable and rebuildable from canonical memory plus declared derivation logic.
 
 ## Required version bindings
 
@@ -96,6 +100,70 @@ Stochastic ranking can be perfectly acceptable **after** prohibited candidates a
 
 The diagram preserves the canonical ordering rather than treating retrieval score as admission. Candidate generation may be probabilistic, but identity, tenancy, purpose, scope, sensitivity, destination, delegation, dispute/certification state, freshness, and policy constrain what may enter context. Ranking occurs only after admission. Composition risk and context budgeting remain separate governed stages, and a blocked candidate cannot re-enter merely because randomness or a stronger score prefers it.
 
+## Building a governance consumer
+
+Do not put a consumer's policy vocabulary directly into the canonical memory model.
+
+Use the three-layer boundary:
+
+```text
+Agent Memory core
+  → Governance Context Projection
+  → consumer-specific adapter
+  → policy / approval / enforcement runtime
+```
+
+Agent Memory core should expose generally useful primitives such as provenance, scope, validity, rationale, outcome, correction/supersession state, authority context, and uncertainty.
+
+The Governance Context Projection may derive:
+
+- relevant precedent references
+- supportive / cautionary / contradictory polarity
+- material conditions
+- condition match / mismatch / unknown state
+- freshness and validity
+- negative precedent
+- outcome and incident references
+- derivation metadata
+
+The projection must not emit a final permission or standing grant.
+
+The consumer adapter owns:
+
+- product-specific risk semantics
+- policy vocabulary
+- verdict mapping
+- consumer API compatibility
+- retries/timeouts specific to that consumer
+- approval UX
+
+For example, DashClaw- or AGT/ACS-specific fields belong in those consumer adapters, not in Agent Memory's canonical memory-unit schema.
+
+See **[Governance Projection](Governance-Projection)**.
+
+## Deterministic precedent first
+
+Start with explicit material-condition comparison before semantic similarity.
+
+```text
+same protected-target status?
+same force semantics?
+same environment?
+same policy version?
+same scope?
+same authority context?
+```
+
+Represent each condition as:
+
+```text
+match
+mismatch
+unknown
+```
+
+A semantic model may later retrieve candidate precedents, but the model must preserve estimator identity/version/uncertainty and cannot independently turn similarity into authorization.
+
 ## Decision receipts
 
 A consequential memory mutation should be reconstructable. Useful receipt fields include:
@@ -114,6 +182,8 @@ A consequential memory mutation should be reconstructable. Useful receipt fields
 - receipt hash or integrity reference
 - recovery reference
 
+An external governance decision or execution result can later become new Agent Memory evidence, but it must re-enter through normal provenance, lifecycle, scope, and authority boundaries. An integration callback is not a privileged memory write path.
+
 ## Start small
 
 A minimal reference adapter should prove the boundaries before becoming a feature-rich memory product.
@@ -128,7 +198,16 @@ Recommended first milestone:
 6. a handful of adversarial fixtures
 7. repeated runs for stochastic behavior
 
-Then add richer graphs, consolidation, portability, and multi-agent features.
+For governance-consumer interoperability, add separately:
+
+1. one deterministic governance-context projection builder
+2. one matching-precedent fixture
+3. one misleading near-match fixture
+4. one negative-precedent case
+5. proof that the projection carries no final consumer verdict
+6. a fake consumer before a vendor-specific adapter
+
+Then add richer graphs, consolidation, portability, semantic precedent retrieval, and real consumer adapters.
 
 ## Implementation evidence
 
@@ -140,10 +219,13 @@ When mapping a real system, pin the exact release or commit and document both po
 - Composition boundaries: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/13-system-composition-boundaries.md
 - Recall planner: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/26-governed-recall-planner.md
 - Schema registry: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/27-schema-registry-and-type-evolution.md
+- Adapter contracts: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/34-adapter-contracts.md
+- Governance Context Projection profile: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/profiles/governance-context-projection-profile.md
 - Observability: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/30-memory-observability-and-audit-events.md
 - Recovery/replay: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/31-recovery-rollback-and-replay.md
 
 ## Next
 
+- **[Governance Projection](Governance-Projection)** for governance-consumer integration
 - **[Conformance and Evidence](Conformance-and-Evidence)** for proving behavior
 - **[Security and Privacy](Security-and-Privacy)** for negative paths

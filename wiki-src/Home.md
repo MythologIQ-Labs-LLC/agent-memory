@@ -40,6 +40,7 @@ The governing idea is compact:
 - **New to Agent Memory?** Start with **[Getting Started](Getting-Started)**, then **[Core Concepts](Core-Concepts)** for the vocabulary and invariants the architecture preserves.
 - **Want the architecture in pictures?** Open **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** for lifecycle, PAMA, recall, correction, deletion, isolation, and evidence flows.
 - **Implementing a memory system?** Use the **[Implementation Guide](Implementation-Guide)**, then move into **[PAMA](PAMA)**, **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)**, and **[Canonical and Derived State](Canonical-and-Derived-State)** as needed.
+- **Integrating with governance or approval systems?** Read **[Governance Projection](Governance-Projection)** for the vendor-neutral memory-to-governance boundary and consumer-adapter ownership model.
 - **Reviewing security or isolation?** Start with **[Security and Privacy](Security-and-Privacy)** for scope, tenancy, isolation domains, sensitivity, leakage, and deletion boundaries.
 - **Checking what is actually proven?** Read **[Conformance and Evidence](Conformance-and-Evidence)** first, then **[Runtime Evidence](Runtime-Evidence)** for what has actually executed.
 - **Researching the foundations or influences?** Use **[Research and Sources](Research-and-Sources)** and **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)**.
@@ -75,9 +76,28 @@ same agent     != same memory scope
 staleness      != falsity
 supersession   != correction
 delete action  != forgetting completeness
+precedent      != standing permission
+projection     != policy decision
 ```
 
 These are not slogans pasted over a storage layer. They determine where evidence, policy, scope, lifecycle, and authority must remain independently inspectable.
+
+## Governance systems can consume memory without owning it
+
+Agent Memory can expose remembered decision context to external policy, approval, and enforcement runtimes through a **Governance Context Projection**:
+
+```text
+Agent Memory core
+  -> Governance Context Projection
+  -> consumer-specific adapter
+  -> external governance runtime
+```
+
+The core keeps generally useful memory semantics. The projection carries vendor-neutral precedent, material conditions, scope, validity, provenance, and outcomes. A consumer adapter owns product-specific policy vocabulary, risk interpretation, and verdict mapping.
+
+The projection deliberately does **not** create a final permission. A prior approval is evidence about a prior case, not permanent authorization for a new one.
+
+See **[Governance Projection](Governance-Projection)** and **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for the current DashClaw and Microsoft Agent Governance Toolkit comparison boundaries.
 
 ## Four jobs that should not collapse into one score
 
@@ -99,6 +119,9 @@ Agent Memory separates doctrine maturity from implementation evidence so that on
 |---|---|
 | **Canonical doctrine** | ADR-001 through ADR-020 and ADR-022 are **Accepted**. |
 | **Portable governance evidence** | ADR-021 remains **Proposed** and independently maturity-gated. |
+| **Durable mutation / evidence candidates** | ADR-023 through ADR-027 remain **Proposed** under their individual evidence gates. |
+| **Implementation portability** | ADR-028 is **Proposed**, preserving a language-neutral core with optional implementation/interoperability profiles. |
+| **Governance Context Projection** | ADR-029 is **Proposed**. V0.1 schema, fixtures, and deterministic reference-builder work are under active implementation. |
 | **Runtime evidence** | Executable reference paths cover governed mutation, stochastic containment, deletion completeness, concurrency conflict handling, portable evidence correlation, adversarial comparator behavior, and systems characterization. |
 | **ADR-020 evidence gate** | Satisfied through the repository's executable P10 acceptance audit. |
 | **Reference implementation** | A narrow evidence vehicle, not a claim of universal production readiness or higher cumulative conformance. |
@@ -112,6 +135,7 @@ See **[Architecture Decisions](Architecture-Decisions)** for doctrine status and
 - **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)** for strengthening, correction, dispute, pruning, and forgetting
 - **[Canonical and Derived State](Canonical-and-Derived-State)** for staleness, deletion propagation, residue, and rebuild authority
 - **[Governed Uncertainty](Governed-Uncertainty)** for deterministic boundaries around probabilistic discovery
+- **[Governance Projection](Governance-Projection)** for vendor-neutral remembered context supplied to external governance consumers
 - **[Security and Privacy](Security-and-Privacy)** for isolation domains, scope, tenancy, sensitivity, and leakage risks
 - **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** for the complete visual architecture set
 - **[Glossary](Glossary)** when two familiar words turn out to mean inconveniently different things
