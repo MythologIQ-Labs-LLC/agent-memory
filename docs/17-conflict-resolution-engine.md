@@ -64,6 +64,12 @@ An episodic record and a generalized semantic summary diverge.
 
 A learned procedure no longer matches the environment or policy under which it was formed.
 
+### Concurrent write conflict
+
+Two actors attempt to mutate the same shared durable state under overlapping scope and time.
+
+This conflict is different from discovering contradictory memories after they are already durable. For shared writes, coordination must happen before commit so conflict resolution does not degrade into retrospective last-writer-wins cleanup.
+
 ## Conflict record
 
 A conflict should be representable independently from either side:
@@ -250,6 +256,62 @@ critical consequence -> abstain or escalate
 
 Uncertainty does not require universal paralysis. It requires proportional consequence handling.
 
+## Shared durable writes: coordinate before commit
+
+For concurrent mutation of shared durable memory, the overwrite/conflict boundary is resolved before the substrate mutation rather than after it.
+
+Proposed [ADR-024](adr/ADR-024-shared-memory-writes-require-prewrite-claims.md) defines the candidate contract. A writer must first hold a valid claim, lease, lock, compare-and-swap reservation, single-writer queue position, transactional reservation, or equivalent coordination mechanism that binds at least:
+
+```text
+actor
+task
+scope
+target memory
+mutation class
+authority basis
+state snapshot
+issued time
+expiry / validity
+```
+
+A coordination claim means only:
+
+> this actor currently owns the bounded opportunity to attempt this shared mutation.
+
+It does not mean:
+
+```text
+claim acquired == PAMA allow
+claim acquired == truth
+claim acquired == overwrite authority
+claim acquired == durable mutation committed
+```
+
+Immediately before commit, the implementation must revalidate the claim against current state and the actual proposal. At minimum:
+
+- an expired lease fails closed;
+- a stale state snapshot fails closed;
+- an unauthorized authority basis fails closed;
+- a conflicting active claim prevents a second writer from committing silently;
+- actor, task, scope, target, and mutation mismatches fail closed;
+- PAMA or the applicable mutation-authority policy still evaluates the proposal after coordination succeeds.
+
+This creates an explicit ordering:
+
+```text
+proposal intent
+  -> pre-write coordination claim
+  -> conflict / lease / state validation
+  -> PAMA authority envelope
+  -> permitted action selection
+  -> durable mutation or refusal
+  -> audit / conflict evidence
+```
+
+A valid claim that later encounters a PAMA `block` remains blocked. Coordination cannot launder authority.
+
+Successful, rejected, conflicting, stale, expired, and unauthorized claims should remain audit evidence. The reference implementation in `reference/agentmem_ref/write_claims.py` demonstrates one exact-scope lease mechanism; it is evidence for the contract, not a requirement that implementations adopt that mechanism.
+
 ## Deterministic substrate
 
 The following should remain stable:
@@ -289,6 +351,10 @@ A reproducible conflict label can still be wrong.
 ### Silent merge
 
 Combining conflicting memories into a summary without preserving the dispute destroys evidence.
+
+### Coordinate after overwrite
+
+Detecting two writers only after one has silently replaced the other's durable state is not pre-write conflict control. The competing authority must be resolved or rejected before the mutation becomes durable.
 
 ## Conformance cases
 
@@ -344,6 +410,25 @@ Expected:
 conflict is explicit
 silent last-writer-wins is prohibited for durable state
 ```
+
+### Concurrent shared write claims
+
+Expected:
+
+```text
+first valid claim may acquire coordination
+second conflicting claim is rejected before durable commit
+stale / expired / unauthorized claims do not reach mutation
+valid claim still cannot override a stricter PAMA outcome
+all claim outcomes remain auditable
+```
+
+Executable reference fixtures:
+
+- `shared-write-valid-claim.json`
+- `shared-write-conflicting-claim.json`
+- `shared-write-stale-claim.json`
+- `shared-write-unauthorized-claim.json`
 
 ## Research signals
 
