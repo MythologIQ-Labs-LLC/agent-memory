@@ -95,6 +95,7 @@ class RecallContext:
     """
 
     target_domain_refs: tuple[str, ...]
+    principal_ref: str = ""
     project_ref: str = ""
     task_ref: str = ""
     purpose: str = ""
@@ -120,7 +121,21 @@ class GovernedMemoryAdapter:
         self._disputed: set[str] = set()
         self._tombstones: dict[str, dict] = {}
         self._fact_scope: dict[str, dict] = {}
+        self._shared_domain_members: dict[str, set[str]] = {}
         self.events: list[dict] = []
+
+    # -- isolation-domain administration -------------------------------
+
+    def set_shared_domain_members(self, domain_ref: str, members: tuple[str, ...]) -> None:
+        """Replace current membership for a governed shared-memory domain.
+
+        This is a narrow reference seam, not a complete membership service.
+        Recall always consults the current set so revocation affects subsequent
+        admission without rewriting the retained memory itself.
+        """
+        if not domain_ref:
+            raise ValueError("shared domain requires a stable domain ref")
+        self._shared_domain_members[domain_ref] = set(members)
 
     # -- write path -----------------------------------------------------
 
@@ -263,9 +278,10 @@ class GovernedMemoryAdapter:
         """Retrieve candidates, then admit only what current authority allows.
 
         Tenant partitioning is enforced before retrieval. Logical isolation
-        domains, project, and task are evaluated at admission because the
-        in-memory substrate is trusted to return same-tenant candidates for
-        policy evaluation. Candidate presence never creates admission rights.
+        domains, shared-space membership, project, and task are evaluated at
+        admission because the in-memory substrate is trusted to return
+        same-tenant candidates for policy evaluation. Candidate presence and
+        shared-space membership remain distinct from admission authority.
         """
         context = context or RecallContext(target_domain_refs=(self._tenant,))
         result = AdmissionResult()
@@ -294,8 +310,20 @@ class GovernedMemoryAdapter:
 
         memory_domains = set(scope["domain_refs"])
         target_domains = set(context.target_domain_refs)
-        if not target_domains or not memory_domains.intersection(target_domains):
+        matching_domains = memory_domains.intersection(target_domains)
+        if not target_domains or not matching_domains:
             return "isolation_domain_mismatch"
+
+        # A shared domain is still an isolation boundary. If all matching
+        # routes are governed shared spaces, at least one must currently admit
+        # the requesting principal as a member. Membership is necessary but
+        # not sufficient; project/task/purpose gates continue below.
+        shared_matches = {domain for domain in matching_domains if domain in self._shared_domain_members}
+        if shared_matches == matching_domains:
+            if not context.principal_ref:
+                return "shared_space_membership_unresolved"
+            if not any(context.principal_ref in self._shared_domain_members[domain] for domain in shared_matches):
+                return "shared_space_non_member"
 
         memory_project = scope.get("project_ref", "")
         if memory_project and context.project_ref != memory_project:
