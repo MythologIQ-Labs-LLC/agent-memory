@@ -104,19 +104,40 @@ trace absent -> not proof that execution did not occur
 
 ## First-host behavioral proof
 
-The pinned MAF comparator uses the real `agent-framework-core==1.13.0` package with `WorkflowCheckpoint` and `InMemoryCheckpointStorage`. It does not require an LLM or cloud service.
+The pinned MAF comparator uses the real `agent-framework-core==1.13.0` package with `WorkflowBuilder`, `WorkflowCheckpoint`, and `InMemoryCheckpointStorage`. It does not require an LLM or cloud service.
 
-The comparator proves a bounded lifecycle:
+The comparator executes a real checkpointed MAF workflow and proves a bounded lifecycle:
 
-1. real MAF checkpoints round-trip through framework storage;
-2. two checkpoints may share an iteration count while lineage distinguishes current from stale;
-3. Agent Memory commits one governed mutation;
-4. a governed recall admits the current scoped memory;
-5. retry recovers the original receipt and does not duplicate the durable mutation;
-6. a PAMA-denied mutation remains uncommitted;
-7. loading an older MAF checkpoint does not roll back newer Agent Memory state;
-8. cross-scope recall is not admitted;
-9. missing trace correlation does not erase governance evidence.
+1. a governed Agent Memory seed is available for scoped recall;
+2. MAF starts a workflow and emits a checkpoint after the first superstep;
+3. execution is interrupted only after that checkpoint boundary;
+4. a new MAF workflow instance resumes from the checkpoint;
+5. the resumed framework step performs governed recall and commits one PAMA-authorized durable mutation;
+6. the original pre-mutation checkpoint becomes stale relative to the resumed lineage;
+7. replaying that old checkpoint re-enters the framework step but reuses the original Agent Memory receipt and does not duplicate the durable mutation;
+8. a separate real MAF run carries a PAMA-denied mutation through framework continuation without committing it;
+9. cross-scope recall is not admitted;
+10. missing trace correlation does not erase governance evidence.
+
+A separate real-object checkpoint case creates two MAF checkpoints with the same `iteration_count` but different lineage, proving that the adapter does not use the iteration counter as ordering authority.
+
+## Checkpoint write failure after memory commit
+
+Framework persistence can fail after Agent Memory has already committed a durable mutation. V0.1 records this as `checkpoint_write_failed` evidence while preserving the original decision receipt and idempotency binding.
+
+The default consequence is:
+
+```text
+Agent Memory commit succeeded
++ framework checkpoint write failed
+-> canonical memory commit remains current
+-> framework recovery is required
+-> retry must consult the prior receipt/idempotency key
+-> no silent rollback
+-> no automatic second durable mutation
+```
+
+A framework-storage failure does not itself authorize compensation or rollback. Any compensating memory mutation must cross normal Agent Memory governance.
 
 ## Privacy and minimization
 
@@ -138,8 +159,10 @@ V0.1 does not claim:
 
 ## Failure behavior
 
+- Agent Memory unavailability at a durable-mutation boundary cannot silently widen authority; the framework must fail according to configured policy rather than infer permission;
 - stale/unknown checkpoint lineage does not silently restore older memory state;
 - retry after a known committed mutation reuses the bound receipt rather than committing again;
+- checkpoint write failure after a successful memory commit preserves the memory receipt and requires framework recovery rather than silent rollback;
 - a denied mutation remains denied even if framework execution continues;
 - cross-scope context does not inherit memory merely because the framework run/checkpoint is valid;
 - trace backend unavailability preserves explicit evidence gaps without widening authority.
