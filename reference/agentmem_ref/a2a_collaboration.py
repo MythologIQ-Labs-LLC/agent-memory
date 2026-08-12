@@ -105,22 +105,29 @@ def _alignment(
     task_state: str,
     binding_status: str,
 ) -> str:
-    if export_classification == "context_projection" and binding_status == "mismatch":
+    if binding_status == "mismatch" and governance_status != "not_required":
         return "binding_mismatch"
-    if export_classification != "context_projection":
-        return "not_applicable" if governance_status == "not_required" else "not_evaluated"
-    if memory_evidence_status in {"historical", "stale", "revoked"}:
-        return "historical_only"
-    if governance_status != "available":
-        return "blocked_governance_unavailable"
-    assert effective_decision is not None
-    if effective_decision == "deny":
+
+    # A remote protocol result may be governance-relevant even when the content
+    # itself is explicit non-memory. Export/memory classification and action
+    # governance are deliberately separate axes.
+    if governance_status == "available" and effective_decision == "deny":
         if direction == "inbound" and task_state not in {"unavailable", "not_observed", "rejected"}:
             return "remote_result_under_deny"
+        if export_classification == "context_projection":
+            return "within_governance"
+
+    if export_classification == "context_projection":
+        if memory_evidence_status in {"historical", "stale", "revoked"}:
+            return "historical_only"
+        if governance_status != "available":
+            return "blocked_governance_unavailable"
+        assert effective_decision is not None
+        if effective_decision == "require_approval":
+            return "approval_not_established"
         return "within_governance"
-    if effective_decision == "require_approval":
-        return "approval_not_established"
-    return "within_governance"
+
+    return "not_applicable" if governance_status == "not_required" else "not_evaluated"
 
 
 def normalize_a2a_collaboration(adapter_result: dict, expected_context: dict | None = None) -> dict:
