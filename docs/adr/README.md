@@ -43,7 +43,7 @@ ADR-021 proposes the interoperability boundary for **portable memory-governance 
 
 ADR-022 establishes **memory isolation domains and controlled boundary crossing** as first-class architecture. It extends ADR-016 by making same-agent cross-project/task separation, shared-memory domains, derived-scope inheritance, and scope crossing explicitly governable rather than leaving them as implied metadata filters.
 
-ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 establishes **pre-write coordination for shared-memory mutation** as accepted doctrine. ADR-025 proposes **explicit authority for overwriting durable decision memory**. ADR-023 and ADR-025 remain Proposed under their own evidence gates.
+ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 establishes **pre-write coordination for shared-memory mutation** as accepted doctrine. ADR-025 proposes **explicit authority for overwriting durable decision memory**. The #144 implementation slice now supplies executable proposal/authority/PAMA/supersession evidence for ADR-025, but #144 explicitly excludes automatic maturity promotion, so ADR-025 remains Proposed pending a separate doctrine-governance decision.
 
 ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity. Both remain Proposed while their linked evidence programs run.
 
@@ -62,7 +62,7 @@ A decision may move from Proposed to Accepted when:
 5. any repository-level schema/fixture prerequisites named by the ADR are satisfied
 6. acceptance does not depend on runtime evidence the ADR explicitly says is still missing
 
-If an ADR explicitly requires stronger evidence before acceptance, that requirement controls.
+If an ADR explicitly requires stronger evidence before acceptance, that requirement controls. Satisfying an evidence prerequisite does not silently promote a Proposed ADR when the governing issue or decision process reserves maturity review as a separate action.
 
 The evidence policy is source-neutral. Native authorship, maintainer status, external publication, implementation popularity, AI generation, or prior acceptance do not make a claim immune to challenge. See [`../policies/EVIDENCE_PROMOTION.md`](../policies/EVIDENCE_PROMOTION.md).
 
@@ -142,6 +142,21 @@ A claim grants the bounded opportunity to attempt the shared write. It does not 
 
 Acceptance is backed by executable valid, conflicting, stale, expired, and unauthorized claim paths, schema-valid audit evidence for successful and failed claim outcomes, a negative test proving a valid claim cannot override PAMA `block`, and conflict-resolution documentation that settles competing shared-writer authority before commit. The reference lease coordinator is evidence for the contract, not a normative requirement that every implementation use the same primitive.
 
+## Durable decision overwrite authority evidence
+
+[`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md) remains **Proposed**.
+
+The #144 reference slice now exercises:
+
+```text
+agent proposal
+  -> exact overwrite-authority validation
+  -> PAMA
+  -> append-only supersession or refusal
+```
+
+The evidence includes proposal-without-mutation, human-confirmed overwrite, bounded delegated low-risk overwrite, stale proposal, agent-collusion rejection, authority-binding failures, append-only supersession, PAMA non-override, and versioned PAMA `decision_overwrite` representation. This closes implementation questions; it does not itself decide doctrine maturity.
+
 ## Candidate durable-mutation and interoperability decisions
 
 The remaining Proposed ADRs intentionally separate several related but non-identical questions:
@@ -215,4 +230,5 @@ ADR-029 acceptance requires a reconstructable reference builder, adversarial nea
 - [`../32-memory-quality-metrics.md`](../32-memory-quality-metrics.md)
 - [`../34-adapter-contracts.md`](../34-adapter-contracts.md)
 - [`../41-memory-isolation-domains-and-governed-crossing.md`](../41-memory-isolation-domains-and-governed-crossing.md)
+- [`../profiles/durable-decision-memory-profile.md`](../profiles/durable-decision-memory-profile.md)
 - [`../profiles/governance-context-projection-profile.md`](../profiles/governance-context-projection-profile.md)

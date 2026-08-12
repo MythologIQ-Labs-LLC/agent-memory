@@ -126,8 +126,12 @@ def build_pama_decision(
     selection_mode: str | None,
     receipt_ref: str,
 ) -> dict:
+    # PAMA decision 1.1.0 adds the closed-enum `decision_overwrite` operation.
+    # Existing operations remain 1.0.0 so older decision artifacts and closed
+    # consumers do not acquire a new semantic contract retroactively.
+    schema_version = "1.1.0" if proposal.operation == "decision_overwrite" else "1.0.0"
     document = {
-        "schema_version": "1.0.0",
+        "schema_version": schema_version,
         "proposal_id": proposal.proposal_id,
         "proposing_actor": {"id": proposal.actor_id, "charter_version": proposal.charter_version},
         "target": {
