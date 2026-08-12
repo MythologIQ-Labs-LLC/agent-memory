@@ -222,6 +222,33 @@ For 1.1.0 receipts, consumers that possess the referenced decision should verify
 
 A receipt proves what was recorded about the authority decision and selected consequence. It does not, by itself, prove downstream execution occurred.
 
+## PAMA-decision type evolution
+
+The PAMA decision contract uses a closed operation enum because operation meaning is part of authority semantics, not decorative vocabulary. Adding a new operation therefore needs an explicit compatibility boundary even when the JSON shape is otherwise unchanged.
+
+Current compatibility:
+
+```text
+1.0.0
+  historical operation vocabulary
+  remains valid historical evidence
+
+1.1.0
+  adds mutation.operation = decision_overwrite
+  preserves all existing 1.0.0 operation meanings
+```
+
+`decision_overwrite` is intentionally distinct from `correction`, `authority_change`, and `other`:
+
+- `correction` can repair a decision record without changing what was decided;
+- `authority_change` changes authority itself;
+- `decision_overwrite` requests supersession/reversal of durable decision state under ADR-025;
+- `other` must not be used to hide a known consequential mutation class merely to avoid schema evolution.
+
+Because a new enum member can break closed consumers, the reference producer emits PAMA decision `1.1.0` when `decision_overwrite` is used and continues to emit `1.0.0` for existing operation classes. The compatibility schema rejects a `decision_overwrite` record that claims schema version `1.0.0`.
+
+Consumers performing consequential mutation must therefore treat an unsupported PAMA decision schema version or unknown operation as an explicit compatibility failure, not silently coerce it to a familiar action.
+
 ## Migration
 
 A migration should record:
@@ -274,7 +301,7 @@ Core examples include:
 - [`../schemas/conformance-report.schema.json`](../schemas/conformance-report.schema.json) — conformance results with estimator/policy versioning and the standardized metric family
 - [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json) — structured audit events with correlation/causation identifiers
 - [`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json) — reconstruction receipts for consequential decisions, including the versioned authority-decision backlink
-- [`../schemas/pama-decision.schema.json`](../schemas/pama-decision.schema.json) — PAMA authority decision records
+- [`../schemas/pama-decision.schema.json`](../schemas/pama-decision.schema.json) — PAMA authority decision records, with versioned closed-operation evolution
 - [`../schemas/calibration-results.schema.json`](../schemas/calibration-results.schema.json) — labeled calibration case input for the calibration report generator
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) — source-registry records with rights and reuse gating
 
@@ -296,6 +323,9 @@ Conformance fixtures are versioned artifacts with their own evolution rules, dis
 
 - old consumer receives new optional field
 - old consumer receives unknown enum member
+- historical 1.0 PAMA decision remains valid
+- `decision_overwrite` presented as PAMA decision 1.0 is rejected
+- unknown PAMA operation/schema attempts durable mutation
 - historical 1.0 decision receipt remains valid under the compatibility schema
 - 1.1 decision receipt omits required decision backlink/outcome
 - decision receipt references the wrong authority decision
