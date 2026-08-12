@@ -185,7 +185,7 @@ Inspection of DashClaw helped sharpen several questions that are independently u
 
 The most important interoperability opportunity is not to make Agent Memory imitate DashClaw. It is to let Agent Memory expose vendor-neutral remembered context that a DashClaw adapter could use when evaluating whether a present action is materially equivalent to earlier approvals, denials, incidents, revocations, or exceptions.
 
-That architecture is tracked by proposed ADR-028 and the Governance Context Projection profile:
+That architecture is tracked by proposed ADR-029 and the Governance Context Projection profile:
 
 ```text
 Agent Memory core
@@ -242,7 +242,7 @@ external runtime governance may further constrain execution
 external runtime governance must not widen a memory-specific permission that Agent Memory denied
 ```
 
-ADR-021 separately addresses portable outbound governance evidence. ADR-028 addresses the complementary inbound/context direction.
+ADR-021 separately addresses portable outbound governance evidence. ADR-029 addresses the complementary inbound/context direction.
 
 ### Licensing and trademark boundary
 
