@@ -45,7 +45,7 @@
       ]
     },
     "certification": {
-      "status": "verified",
+      "status": "pass",
       "scope": "fixture:repo:protected-branch"
     },
     "decay_profile": {
