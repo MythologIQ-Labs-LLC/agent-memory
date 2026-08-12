@@ -67,6 +67,22 @@ jobs:
           path: benchmark-security.json
           if-no-files-found: error
 
+      - name: Emit security evidence-depth report
+        env:
+          AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          python reference/run_security_evidence_depth.py
+          --agent-memory-commit "$AGENT_MEMORY_COMMIT"
+          --benchmark-security benchmark-security.json
+          --output security-evidence-depth.json
+
+      - name: Upload security evidence-depth report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-evidence-depth-report
+          path: security-evidence-depth.json
+          if-no-files-found: error
+
       - name: Execute pinned Mem0 P6 comparator
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -150,6 +166,7 @@ jobs:
           docs/programs/runtime-evidence/deletion-completeness-evidence.md
           docs/programs/runtime-evidence/concurrency-conflict-evidence.md
           docs/programs/runtime-evidence/benchmark-security-scorecard.md
+          docs/programs/runtime-evidence/security-evidence-depth.md
           docs/programs/runtime-evidence/mem0-adversarial-comparator.md
           docs/programs/runtime-evidence/governed-interchange.md
           docs/programs/runtime-evidence/telemetry-minimization.md
@@ -182,10 +199,11 @@ jobs:
             echo "python -m unittest discover -s reference/tests -t reference"
             echo "python reference/run_concurrency_evidence.py --agent-memory-commit <exact-40-hex-commit> --output concurrency-evidence.json"
             echo "python reference/run_benchmark_security.py --agent-memory-commit <exact-40-hex-commit> --output benchmark-security.json"
+            echo "python reference/run_security_evidence_depth.py --agent-memory-commit <exact-40-hex-commit> --benchmark-security benchmark-security.json --output security-evidence-depth.json"
             echo "python -m venv /tmp/agent-memory-p6-mem0 && /tmp/agent-memory-p6-mem0/bin/python -m pip install mem0ai==2.0.18 jsonschema==4.26.0 && MEM0_TELEMETRY=false PYTHONPATH=reference /tmp/agent-memory-p6-mem0/bin/python reference/run_mem0_comparator.py --agent-memory-commit <exact-40-hex-commit> --output mem0-comparator.json"
             echo "python reference/run_deletion_completeness.py --agent-memory-commit <exact-40-hex-commit> --output deletion-completeness.json"
             echo "python -m venv /tmp/agent-memory-p45c-cmcp && /tmp/agent-memory-p45c-cmcp/bin/python -m pip install cmcp-runtime==0.4.0 agentrust-trace==0.8.0 agent-manifest==0.11.0 rfc8785==0.1.4 && PYTHONPATH=reference /tmp/agent-memory-p45c-cmcp/bin/python reference/run_trace_cmcp_comparator.py"
-            echo "python scripts/validate_markdown_links.py README.md CONTRIBUTING.md GOVERNANCE.md docs/README.md docs/pama/README.md docs/04-governance-and-pama.md docs/08-source-material-index.md docs/33-pama-decision-table.md docs/40-aligned-projects-and-intellectual-lineage.md docs/SOURCE_RIGHTS_POLICY.md docs/policies/AI_ASSISTED_CONTRIBUTIONS.md docs/adr/README.md docs/27-schema-registry-and-type-evolution.md docs/32-memory-quality-metrics.md docs/programs/runtime-evidence/README.md docs/programs/runtime-evidence/graphiti-conformance.md docs/programs/runtime-evidence/canonical-and-derived-state.md docs/programs/runtime-evidence/portable-governance-evidence.md docs/programs/runtime-evidence/agent-manifest-correlation.md docs/programs/runtime-evidence/trace-action-evidence.md docs/programs/runtime-evidence/deletion-completeness-evidence.md docs/programs/runtime-evidence/concurrency-conflict-evidence.md docs/programs/runtime-evidence/benchmark-security-scorecard.md docs/programs/runtime-evidence/mem0-adversarial-comparator.md docs/programs/runtime-evidence/governed-interchange.md docs/programs/runtime-evidence/telemetry-minimization.md docs/programs/runtime-evidence/systems-economic-characterization.md docs/programs/runtime-evidence/program-closeout-audit.md reference/README.md"
+            echo "python scripts/validate_markdown_links.py README.md CONTRIBUTING.md GOVERNANCE.md docs/README.md docs/pama/README.md docs/04-governance-and-pama.md docs/08-source-material-index.md docs/33-pama-decision-table.md docs/40-aligned-projects-and-intellectual-lineage.md docs/SOURCE_RIGHTS_POLICY.md docs/policies/AI_ASSISTED_CONTRIBUTIONS.md docs/adr/README.md docs/27-schema-registry-and-type-evolution.md docs/32-memory-quality-metrics.md docs/programs/runtime-evidence/README.md docs/programs/runtime-evidence/graphiti-conformance.md docs/programs/runtime-evidence/canonical-and-derived-state.md docs/programs/runtime-evidence/portable-governance-evidence.md docs/programs/runtime-evidence/agent-manifest-correlation.md docs/programs/runtime-evidence/trace-action-evidence.md docs/programs/runtime-evidence/deletion-completeness-evidence.md docs/programs/runtime-evidence/concurrency-conflict-evidence.md docs/programs/runtime-evidence/benchmark-security-scorecard.md docs/programs/runtime-evidence/security-evidence-depth.md docs/programs/runtime-evidence/mem0-adversarial-comparator.md docs/programs/runtime-evidence/governed-interchange.md docs/programs/runtime-evidence/telemetry-minimization.md docs/programs/runtime-evidence/systems-economic-characterization.md docs/programs/runtime-evidence/program-closeout-audit.md reference/README.md"
             echo "python scripts/validate_wiki_links.py wiki-src"
             echo "python scripts/generate_calibration_report.py reports/examples/calibration-results.example.json"
             echo '```'
