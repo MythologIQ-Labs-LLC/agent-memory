@@ -122,6 +122,27 @@ class FrameworkLifecycleTests(unittest.TestCase):
         self.assertIn("decision_receipt_ref", event)
         self.assertEqual(event["interpretation"]["authority_effect"], "none")
 
+    def test_checkpoint_write_failure_does_not_erase_committed_receipt(self):
+        event = build_framework_lifecycle_event(
+            framework_id="microsoft-agent-framework",
+            framework_version="python-1.13.0",
+            framework_source_ref="github://microsoft/agent-framework/python-1.13.0",
+            framework_source_commit=self.matrix["pinned_reference"]["commit"],
+            event_type="checkpoint_write_failed",
+            run_ref="run:checkpoint-failed",
+            workflow_ref="workflow:1",
+            persistence_classification="evidence",
+            action_ref="action:committed-before-checkpoint-failure",
+            decision_receipt_ref="receipt:already-committed",
+            idempotency_key="maf:run:committed-before-checkpoint-failure",
+            occurred_at="2026-08-12T21:42:30Z",
+            evidence_refs=("evidence:checkpoint-write-failure",),
+        )
+        self.assertEqual(event["event_type"], "checkpoint_write_failed")
+        self.assertEqual(event["decision_receipt_ref"], "receipt:already-committed")
+        self.assertEqual(event["interpretation"]["checkpoint_rollback_authority"], "not_established")
+        self.assertEqual(event["interpretation"]["memory_admission"], "not_established")
+
     def test_checkpoint_metadata_requires_checkpoint_identity(self):
         with self.assertRaisesRegex(ValueError, "requires checkpoint_ref"):
             build_framework_lifecycle_event(
