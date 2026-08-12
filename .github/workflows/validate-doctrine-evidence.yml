@@ -20,13 +20,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install validation dependencies
-        run: >-
-          python -m pip install --disable-pip-version-check
-          jsonschema==4.26.0
-          cryptography==50.0.0
-          agent-manifest==0.11.0
-          agentrust-trace==0.8.0
-          rfc8785==0.1.4
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
 
       - name: Validate fixture invariants
         run: python scripts/validate_fixtures.py fixtures
@@ -180,7 +174,7 @@ jobs:
             echo "Commands run by this workflow (reproducible locally):"
             echo ""
             echo '```'
-            echo "python -m pip install jsonschema==4.26.0 cryptography==50.0.0 agent-manifest==0.11.0 agentrust-trace==0.8.0 rfc8785==0.1.4"
+            echo "python -m pip install -r reference/requirements.txt"
             echo "python scripts/validate_fixtures.py fixtures"
             echo "python scripts/validate_schemas.py"
             echo "python scripts/validate_doctrine_boundaries.py"
