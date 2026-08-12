@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/brand/agent-memory-readme-banner.webp" alt="Agent Memory: governed memory architecture for AI agents, shown with a layered memory stack, connected nodes, and a cyan inference spark." width="100%">
+  <img src="assets/brand/agent-memory-readme-banner.png" alt="Agent Memory: governed memory architecture for AI agents, shown with a layered memory stack, connected nodes, and a cyan inference spark." width="100%">
 </p>
 
 <div align="center">
