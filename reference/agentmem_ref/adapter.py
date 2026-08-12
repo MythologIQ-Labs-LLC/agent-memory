@@ -21,6 +21,7 @@ import random
 from dataclasses import dataclass, field
 
 from . import policy, receipts
+from .readmission import RejectedValueRegistry
 from .substrate import DeterministicIds, Episode, Fact, TemporalGraphPort
 
 
@@ -124,6 +125,8 @@ class GovernedMemoryAdapter:
         self._tombstones: dict[str, dict] = {}
         self._fact_scope: dict[str, dict] = {}
         self._shared_domain_members: dict[str, set[str]] = {}
+        self._current_fact_by_memory: dict[str, str] = {}
+        self._rejected_values = RejectedValueRegistry()
         self.events: list[dict] = []
 
     # -- isolation-domain administration -------------------------------
@@ -163,13 +166,38 @@ class GovernedMemoryAdapter:
         events = [propose_event, authorize_event]
 
         stale = self._is_stale(proposal)
-        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        readmission_blocked = self._readmission_blocked(proposal, fact_text)
+        selected = self._select_action(
+            decision,
+            proposal,
+            blocked_by_stale=stale or readmission_blocked,
+        )
         commits = selected == proposal.operation
         before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
 
+        if readmission_blocked:
+            events.append(
+                self._event(
+                    "memory.readmission_blocked",
+                    proposal.target_reference,
+                    correlation,
+                    causation_id=authorize_event["event_id"],
+                    policy_version=decision.policy_version,
+                )
+            )
+
         fact_uuid = None
         if commits:
+            if proposal.operation == "correction":
+                self._supersede_current(proposal)
+                self._rejected_values.readmit(
+                    memory_id=proposal.target_reference,
+                    value=fact_text,
+                    proposal_id=proposal.proposal_id,
+                    readmitted_at=self._clock.now(),
+                )
             fact_uuid = self._write(proposal, fact_text)
+            self._current_fact_by_memory[proposal.target_reference] = fact_uuid
             events.append(
                 self._event(
                     "memory.commit",
@@ -210,6 +238,13 @@ class GovernedMemoryAdapter:
             )
         )
         self.events.extend(events)
+
+        refusal = None
+        if stale:
+            refusal = "stale_authorization"
+        elif readmission_blocked:
+            refusal = "rejected_value_requires_reconciliation"
+
         return CommitResult(
             decision=decision,
             pama_decision=pama_decision,
@@ -217,7 +252,7 @@ class GovernedMemoryAdapter:
             events=events,
             committed=commits,
             fact_uuid=fact_uuid,
-            refusal="stale_authorization" if stale else None,
+            refusal=refusal,
         )
 
     def _is_stale(self, proposal: policy.Proposal) -> bool:
@@ -226,6 +261,52 @@ class GovernedMemoryAdapter:
             return False
         current = f"v{self._state_version.get(proposal.target_reference, 0)}"
         return proposal.state_snapshot != current
+
+    def _readmission_blocked(self, proposal: policy.Proposal, fact_text: str) -> bool:
+        """Fail closed when an exact rejected value attempts silent re-entry.
+
+        An externally approved correction is an explicit reversal path. It may
+        re-admit a previously rejected value because policy has already required
+        review for correction. Ordinary promotion/import-style writes cannot.
+        """
+        if self._rejected_values.active(proposal.target_reference, fact_text) is None:
+            return False
+        approved_reversal = (
+            proposal.operation == "correction"
+            and proposal.review_satisfied
+            and bool(proposal.approval_refs)
+            and not proposal.approves_own_authority
+        )
+        return not approved_reversal
+
+    def _supersede_current(self, proposal: policy.Proposal) -> None:
+        """Invalidate the current fact and record its value as rejected.
+
+        This is the minimum correction seam needed to test ADR-023/ADR-027
+        composition. It does not claim full #142 closure.
+        """
+        current_uuid = self._current_fact_by_memory.get(proposal.target_reference)
+        if not current_uuid:
+            return
+        current = self._substrate.get_fact(current_uuid)
+        if current is None or current.is_event_invalid:
+            return
+
+        rejected_at = self._clock.now()
+        self._rejected_values.reject(
+            memory_id=proposal.target_reference,
+            value=current.fact_text,
+            superseded_fact_uuid=current.uuid,
+            correction_proposal_id=proposal.proposal_id,
+            evidence_refs=tuple(proposal.evidence_refs),
+            scope=proposal.scope,
+            rejected_at=rejected_at,
+        )
+        self._substrate.invalidate_fact(
+            current.uuid,
+            invalid_at=rejected_at,
+            expired_at=self._clock.now(),
+        )
 
     def _select_action(self, decision: policy.Decision, proposal: policy.Proposal, blocked_by_stale: bool) -> str:
         permitted = decision.permitted_actions
@@ -353,6 +434,12 @@ class GovernedMemoryAdapter:
     def state_version(self, memory_id: str) -> int:
         return self._state_version.get(memory_id, 0)
 
+    def current_fact_uuid(self, memory_id: str) -> str | None:
+        return self._current_fact_by_memory.get(memory_id)
+
+    def rejected_value_history(self, memory_id: str, fact_text: str) -> tuple[dict, ...]:
+        return self._rejected_values.history(memory_id, fact_text)
+
     def tombstoned_ids(self) -> set[str]:
         return {record["memory_id"] for record in self._tombstones.values()}
 
@@ -384,6 +471,8 @@ class GovernedMemoryAdapter:
             # only permanent deletion reaches the substrate's physical delete.
             if proposal.operation == "permanent_deletion":
                 self._substrate.delete_fact(fact_uuid)
+            if self._current_fact_by_memory.get(proposal.target_reference) == fact_uuid:
+                self._current_fact_by_memory.pop(proposal.target_reference, None)
             self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
 
         receipt_id = self._ids.next()
