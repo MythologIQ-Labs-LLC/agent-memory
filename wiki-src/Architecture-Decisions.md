@@ -21,7 +21,7 @@ An Accepted ADR does **not** mean every mapped product implements it. That would
 - **ADR-021:** Proposed, portable memory-governance evidence boundary
 - **ADR-022:** Accepted, memory isolation domains and controlled boundary crossing
 - **ADR-023:** Proposed, correction as supersession rather than deletion
-- **ADR-024:** Proposed, pre-write claims for shared-memory mutation
+- **ADR-024:** Accepted, pre-write coordination for shared-memory mutation
 - **ADR-025:** Proposed, explicit authority for durable decision overwrite
 - **ADR-026:** Proposed, origin is provenance rather than evidentiary authority
 - **ADR-027:** Proposed, governed re-admission for rejected values
@@ -45,6 +45,18 @@ Decisions about decay, consolidation, retention, correction, supersession, re-ad
 ### Governance and PAMA
 
 Decisions about mutation authority, consequence classes, certification, and separating learned pressure from permission.
+
+ADR-024 adds the shared-write coordination boundary:
+
+```text
+shared write intent
+  -> pre-write claim / lease / equivalent coordination
+  -> current-state and conflict validation
+  -> PAMA authority evaluation
+  -> durable mutation or refusal
+```
+
+A valid claim gives a writer the bounded opportunity to attempt a shared mutation. It does not grant permission to make that mutation durable. ADR-024 was accepted only after executable valid, conflicting, stale, expired, unauthorized, audit, and PAMA-non-override paths passed the repository evidence gates.
 
 ### Composition and security
 
