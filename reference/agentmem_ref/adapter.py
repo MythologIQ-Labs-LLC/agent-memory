@@ -298,34 +298,27 @@ class GovernedMemoryAdapter:
             value=current.fact_text,
             superseded_fact_uuid=current.uuid,
             correction_proposal_id=proposal.proposal_id,
-            evidence_refs=tuple(proposal.evidence_refs),
-            scope=proposal.scope,
             rejected_at=rejected_at,
         )
         self._substrate.invalidate_fact(
-            current.uuid,
+            current_uuid,
             invalid_at=rejected_at,
             expired_at=self._clock.now(),
         )
 
-    def _select_action(self, decision: policy.Decision, proposal: policy.Proposal, blocked_by_stale: bool) -> str:
+    def _select_action(
+        self,
+        decision: policy.Decision,
+        proposal: policy.Proposal,
+        *,
+        blocked_by_stale: bool,
+    ) -> str:
         permitted = decision.permitted_actions
+        if blocked_by_stale:
+            permitted = tuple(action for action in permitted if action != proposal.operation)
         if not permitted:
             return receipts.NO_ACTION
-        if blocked_by_stale:
-            return "defer" if "defer" in permitted else permitted[0]
-
         choice = self._selector.select(permitted, proposal.operation)
-        return self._contain(permitted, choice)
-
-    def _contain(self, permitted: tuple[str, ...], choice: str) -> str:
-        """Re-check any selector's output against the envelope.
-
-        A selector is untrusted: deterministic, stochastic, or learned, it
-        proposes and does not authorize. A choice outside the permitted set is
-        a containment violation, recorded and failed closed to a deferral
-        rather than executed. Randomness does not create permission.
-        """
         try:
             receipts.enforce_selection(permitted, choice)
         except ValueError as exc:
@@ -387,6 +380,8 @@ class GovernedMemoryAdapter:
             return "out_of_scope"
         if fact.uuid in self._tombstones:
             return "tombstoned"
+        if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
+            return "derived_from_tombstoned_source"
         if fact.is_event_invalid:
             return "superseded_not_current"
         if fact.uuid in self._disputed:
