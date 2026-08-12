@@ -22,8 +22,13 @@
       "source_refs": ["fixture://shared-write/source"]
     },
     "evidence": [
-      {"id": "evidence:shared-write-valid", "kind": "coordination_fixture", "ref": "fixture://shared-write/source"}
+      {"id": "evidence:shared-write-valid", "kind": "coordination_fixture", "ref": "fixture://shared-write/source", "confidence": 1.0}
     ],
+    "saturation": {
+      "sigma": 0.1,
+      "calibrated": false,
+      "durability_dimensions": ["coordination_fixture"]
+    },
     "authority": {
       "pama_outcome": "allow_with_ledger",
       "risk_class": "low",
