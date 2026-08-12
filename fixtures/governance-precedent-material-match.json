@@ -44,7 +44,7 @@
       ]
     },
     "certification": {
-      "status": "verified",
+      "status": "pass",
       "scope": "fixture:repo:feature-branch"
     },
     "decay_profile": {
