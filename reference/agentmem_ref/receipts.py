@@ -30,6 +30,14 @@ SCHEMA_DIR = Path(__file__).resolve().parents[2] / "schemas"
 #: Sentinel recorded when governance permitted no action at all.
 NO_ACTION = "none"
 
+_DEFERRED_OUTCOMES = {
+    "require_review",
+    "require_external_verification",
+    "abstain",
+    "quarantine",
+    "collect_more_evidence",
+}
+
 
 @lru_cache(maxsize=None)
 def _validator(schema_name: str) -> jsonschema.Draft202012Validator:
@@ -45,6 +53,18 @@ def validate(schema_name: str, document: dict) -> None:
         raise ValueError(f"{schema_name} at {location}: {errors[0].message}")
 
 
+def decision_ref_for(proposal_id: str) -> str:
+    """Stable logical reference for the PAMA decision produced for a proposal.
+
+    The PAMA decision already carries ``proposal_id`` as its stable identity
+    anchor. This names that artifact without introducing a second, cyclic
+    content identity merely to link it back from the receipt.
+    """
+    if not proposal_id:
+        raise ValueError("decision reference requires a proposal id")
+    return f"pama-decision:{proposal_id}"
+
+
 def enforce_selection(permitted: tuple[str, ...], selected: str) -> None:
     """Selected action must come from the permitted set.
 
@@ -58,6 +78,45 @@ def enforce_selection(permitted: tuple[str, ...], selected: str) -> None:
         return
     if selected not in permitted:
         raise ValueError(f"selected action {selected!r} is not in the permitted set {list(permitted)}")
+
+
+def enforce_decision_consistency(
+    outcome: str,
+    requested_action: str,
+    permitted: tuple[str, ...],
+    prohibited: tuple[str, ...],
+) -> None:
+    """Reject authority outcomes that contradict their action envelope.
+
+    This intentionally enforces only invariants that are stable across the
+    current decision vocabulary. It does not invent one universal policy table.
+    """
+    overlap = set(permitted) & set(prohibited)
+    if overlap:
+        raise ValueError(f"actions cannot be both permitted and prohibited: {sorted(overlap)}")
+
+    if outcome in ("allow", "allow_with_ledger"):
+        if requested_action not in permitted:
+            raise ValueError(f"{outcome} must permit the requested action {requested_action!r}")
+        if requested_action in prohibited:
+            raise ValueError(f"{outcome} cannot prohibit the requested action {requested_action!r}")
+        return
+
+    if outcome == "block":
+        if permitted:
+            raise ValueError("block outcome cannot expose permitted actions")
+        if requested_action not in prohibited:
+            raise ValueError("block outcome must prohibit the requested action")
+        return
+
+    if outcome in _DEFERRED_OUTCOMES:
+        if requested_action in permitted:
+            raise ValueError(f"{outcome} cannot directly permit the requested action")
+        if requested_action not in prohibited:
+            raise ValueError(f"{outcome} must keep the requested action prohibited pending resolution")
+        return
+
+    raise ValueError(f"unknown decision outcome {outcome!r}")
 
 
 def build_pama_decision(
@@ -124,10 +183,18 @@ def build_receipt(
     after_state: str,
     rollback_ref: str | None = None,
 ) -> dict:
+    enforce_decision_consistency(
+        decision.outcome,
+        proposal.operation,
+        decision.permitted_actions,
+        decision.prohibited_actions,
+    )
     enforce_selection(decision.permitted_actions, selected_action)
     document = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "receipt_id": receipt_id,
+        "decision_ref": decision_ref_for(proposal.proposal_id),
+        "decision_outcome": decision.outcome,
         "memory_id": proposal.target_reference,
         "actor": proposal.actor_id,
         "requested_action": proposal.operation,
@@ -153,6 +220,52 @@ def build_receipt(
         document["rollback_or_recovery_ref"] = rollback_ref
     validate("decision-receipt.schema.json", document)
     return document
+
+
+def verify_receipt_decision_pair(receipt: dict, pama_decision: dict) -> None:
+    """Verify that a receipt and PAMA decision describe the same authority event."""
+    validate("decision-receipt.schema.json", receipt)
+    validate("pama-decision.schema.json", pama_decision)
+
+    expected_ref = decision_ref_for(pama_decision["proposal_id"])
+    if receipt.get("decision_ref") != expected_ref:
+        raise ValueError(
+            f"receipt decision_ref {receipt.get('decision_ref')!r} does not match {expected_ref!r}"
+        )
+
+    decision = pama_decision["decision"]
+    comparisons = {
+        "decision_outcome": decision["outcome"],
+        "permitted_actions": decision["permitted_actions"],
+        "prohibited_actions": decision["prohibited_actions"],
+        "policy_version": pama_decision["policy"]["policy_version"],
+    }
+    for receipt_field, decision_value in comparisons.items():
+        if receipt.get(receipt_field) != decision_value:
+            raise ValueError(
+                f"receipt {receipt_field} does not match referenced decision: "
+                f"receipt={receipt.get(receipt_field)!r} decision={decision_value!r}"
+            )
+
+    receipt_selected = receipt["selected_action"]
+    decision_selected = decision.get("selected_action")
+    normalized_decision_selected = NO_ACTION if decision_selected is None else decision_selected
+    if receipt_selected != normalized_decision_selected:
+        raise ValueError(
+            "receipt selected_action does not match referenced decision: "
+            f"receipt={receipt_selected!r} decision={normalized_decision_selected!r}"
+        )
+
+    if decision.get("decision_receipt_ref") != receipt["receipt_id"]:
+        raise ValueError("referenced decision does not point back to this receipt")
+
+    enforce_decision_consistency(
+        receipt["decision_outcome"],
+        receipt["requested_action"],
+        tuple(receipt["permitted_actions"]),
+        tuple(receipt.get("prohibited_actions") or ()),
+    )
+    enforce_selection(tuple(receipt["permitted_actions"]), receipt_selected)
 
 
 def build_audit_event(
