@@ -10,7 +10,34 @@ For the interdisciplinary literature map, see [`23-research-bibliography.md`](23
 
 For copyright, license, attribution, and reuse handling, see [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) and the machine-readable [`source registry`](../sources/source-registry.json).
 
+For source-neutral evidence and doctrine promotion, see [`policies/EVIDENCE_PROMOTION.md`](policies/EVIDENCE_PROMOTION.md) and the reusable [`claim/evidence record template`](templates/claim-evidence-record.md).
+
 Research in this repository is not decorative citation inventory. Its job is to improve, constrain, or falsify architectural claims.
+
+## Source-neutral evidence rule
+
+> **Origin establishes provenance, not evidentiary privilege.**
+
+This index distinguishes source provenance and reuse rights, but those distinctions do not create an epistemic hierarchy based on authorship or publication venue. A material claim from native doctrine, a maintainer, a contributor, an AI system, a practitioner, an external paper, a benchmark, a runtime, or a production observation must still earn whatever conclusion is claimed from it.
+
+For material research or architecture claims, preserve at least:
+
+```text
+claim
+origin / provenance
+claim type
+evidence class
+supporting evidence
+challenging evidence
+reproduction status
+scope / boundary conditions
+known counterexamples
+promotion state
+```
+
+Use [`templates/claim-evidence-record.md`](templates/claim-evidence-record.md) when a structured record is useful. Research programs such as #67 and #138 may extend the template with architecture- or experiment-specific fields, but they should not collapse provenance, evidence strength, or governance consequence into one status.
+
+A source may be valuable at discovery time without being promotion-quality evidence. Likewise, native or Accepted doctrine may be challenged by stronger evidence later. Negative results and contradictions remain part of the record rather than disappearing because a preferred conclusion won.
 
 ## Native Agent Memory doctrine
 
@@ -133,7 +160,7 @@ DESIGN CANDIDATE
 A plausible engineering approach that has not yet earned doctrine status.
 ```
 
-A source can play multiple roles.
+A source can play multiple roles. These roles describe how an external source is being used; they do not replace the source-neutral claim/evidence record when the resulting claim is consequential.
 
 ## Research challenge rule
 
@@ -314,9 +341,11 @@ may support preserving uncertainty in agent-memory reasoning.
 
 It does **not** prove that a particular neural network, confidence threshold, or stochastic planner is the correct software implementation.
 
-## Source-record fields
+## Claim/evidence records and source-rights fields
 
-When an external research claim materially affects doctrine, the research map should be able to record:
+When any claim materially affects doctrine, contracts, conformance, security, privacy, lifecycle behavior, authority, interoperability, or production guidance, use the source-neutral distinctions in [`templates/claim-evidence-record.md`](templates/claim-evidence-record.md). The record covers origin, evidence class, supporting/challenging evidence, reproduction status, scope, counterexamples, promotion state, and governance consequence.
+
+For external research sources, the research map may additionally record source-specific metadata such as:
 
 ```text
 source_ref
@@ -348,7 +377,7 @@ reuse_basis
 verified_at
 ```
 
-The repository need not turn into citation-management software. It does need enough evidence to distinguish external research provenance from permission to copy.
+The repository need not turn into citation-management software. It does need enough evidence to distinguish claim provenance from claim support, and external research provenance from permission to copy.
 
 External and materially reused source-rights records live in [`../sources/source-registry.json`](../sources/source-registry.json) and are validated against [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json).
 
@@ -367,8 +396,10 @@ challenging_evidence: ...
 known_boundary_conditions: ...
 implementation_evidence: ...
 conformance_evidence: ...
-current_status: proposed | supported | revised | rejected | unresolved
+current_status: accepted_for_scope | revised | rejected | unresolved
 ```
+
+The same discipline applies after acceptance. Accepted doctrine remains challengeable when stronger evidence appears.
 
 This prevents the bibliography from becoming a one-way machine for proving whatever we already wanted to believe.
 
@@ -390,22 +421,25 @@ This prevents the bibliography from becoming a one-way machine for proving whate
 14. When is deterministic policy too brittle and a formally bounded probabilistic guarantee more appropriate?
 15. Which forms of stochastic action are acceptable after governance creates the permitted action set?
 16. How should unsafe behavior emerging only from memory composition be represented and tested?
-17. What evidence is sufficient to move ADR-020 from Proposed to Accepted?
+17. What new evidence would justify narrowing, revising, or superseding ADR-020 for its accepted scope?
 18. Which external sources currently require explicit reuse-rights review because repository content moved beyond citation or independent synthesis?
 
 ## Maintenance rule
 
-When a new memory-system idea appears, first determine whether it is:
+When a new memory-system idea or material claim appears, first classify its provenance without treating that classification as proof:
 
 ```text
 native Agent Memory doctrine
-external evidence
-external implementation provenance
+maintainer or contributor proposal
+AI-assisted analysis
+practitioner/community input
+external research evidence
+external implementation observation
+conformance/runtime/benchmark/production evidence
 cross-domain analogy
-conformance evidence
 ```
 
-Then place the idea in one or more architecture categories before adding implementation work:
+Then record evidence and promotion status separately using the source-neutral claim/evidence discipline, and place the idea in one or more architecture categories before adding implementation work:
 
 ```text
 identity
@@ -437,6 +471,6 @@ For external material, apply the source-rights gate:
 6. preserve applicable attribution, notice, and modification obligations
 7. never substitute an adjacent public artifact for private canonical provenance
 
-Native contributor-authored doctrine does not need to be manufactured into an external source merely to satisfy this index. Its authorship and canonical location should be recorded in the doctrine tree itself.
+Native contributor-authored doctrine does not need to be manufactured into an external source merely to satisfy this index. Its authorship and canonical location should be recorded in the doctrine tree itself. That provenance does not exempt the claim from challenge or evidence requirements.
 
 If the idea does not fit the architecture taxonomy, determine whether the taxonomy is genuinely incomplete before creating a new component. Architectural sprawl remains undefeated at naming things humans find interesting.
