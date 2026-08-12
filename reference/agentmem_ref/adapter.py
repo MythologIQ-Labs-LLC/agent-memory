@@ -253,6 +253,11 @@ class GovernedMemoryAdapter:
         return choice
 
     def _write(self, proposal: policy.Proposal, fact_text: str) -> str:
+        domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
+        required_domains = tuple(dict.fromkeys(proposal.required_isolation_domain_refs))
+        if required_domains and not set(required_domains).issubset(set(domain_refs)):
+            raise ValueError("required isolation domains must also be bound isolation domains")
+
         uuid = self._ids.next()
         self._substrate.write_fact(
             Fact(
@@ -264,10 +269,6 @@ class GovernedMemoryAdapter:
                 created_at=self._clock.now(),
             )
         )
-        domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
-        required_domains = tuple(dict.fromkeys(proposal.required_isolation_domain_refs))
-        if required_domains and not set(required_domains).issubset(set(domain_refs)):
-            raise ValueError("required isolation domains must also be bound isolation domains")
         self._fact_scope[uuid] = {
             "domain_refs": domain_refs,
             "required_domain_refs": required_domains,
