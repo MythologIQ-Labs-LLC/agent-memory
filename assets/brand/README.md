@@ -22,12 +22,12 @@ The logo intentionally uses a database-like stack because Agent Memory is durabl
 
 ## Canonical presentation assets
 
-- `agent-memory-mark.svg` — compact SVG emblem without text. Use for documentation indexes, avatars, small cards, and surfaces where the project name is already visible.
-- `agent-memory-logo-lockup.svg` — square SVG logo with project name. Use for release cards, presentations, repository announcements, and other square placements.
-- `agent-memory-readme-banner.webp` — wide GitHub README / social-preview-ready banner.
-- `agent-memory-wiki-cover.webp` — more atmospheric cover for the Wiki Home page.
+- `agent-memory-mark.png` — compact emblem without text. Use for documentation indexes, avatars, small cards, and surfaces where the project name is already visible.
+- `agent-memory-logo-lockup.png` — square logo with project name. Use for release cards, presentations, repository announcements, and other square placements.
+- `agent-memory-readme-banner.png` — wide GitHub README / social-preview-ready banner.
+- `agent-memory-wiki-cover.png` — more atmospheric cover for the Wiki Home page.
 
-The compact mark and square lockup are intentionally SVG-native. Do not raster-convert them for repository use unless a destination explicitly requires a raster format. The README and Wiki hero assets remain raster because their atmospheric backgrounds benefit from that treatment.
+The original PNG files are canonical. Do not convert, recompress, resize, redraw, or substitute derivative formats for repository presentation unless a destination explicitly requires a different format. When a derivative is unavoidable, preserve the original PNG alongside it as the source asset.
 
 ## Usage guidance
 
