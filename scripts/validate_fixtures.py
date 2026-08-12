@@ -3,7 +3,8 @@
 
 This validator intentionally uses only the Python standard library. It validates
 baseline fixture structure plus a small set of doctrine-level governed-uncertainty
-invariants. It is not a replacement for implementation-specific behavioral tests.
+and forbidden-hit invariants. It is not a replacement for implementation-specific
+behavioral tests.
 """
 
 from __future__ import annotations
@@ -42,6 +43,23 @@ REQUIRED_MEMORY_UNIT = {
 REQUIRED_PROVENANCE = {"origin", "observer", "method", "timestamp"}
 REQUIRED_SATURATION = {"sigma", "calibrated", "durability_dimensions"}
 REQUIRED_AUTHORITY = {"pama_outcome", "risk_class"}
+REQUIRED_FORBIDDEN_HIT = {
+    "assertion_id",
+    "forbidden_class",
+    "source_lifecycle_state",
+    "source_evidence",
+    "candidate_discovered",
+    "admitted",
+    "context_surfaced",
+    "downstream_influence",
+    "expected_refusal",
+}
+FORBIDDEN_HIT_STAGE_FIELDS = {
+    "candidate_discovered",
+    "admitted",
+    "context_surfaced",
+    "downstream_influence",
+}
 
 VALID_STATES = {
     "transient",
@@ -116,6 +134,79 @@ def validate_action_envelope(obj: dict[str, Any], path: str) -> list[str]:
 
     if mode is not None and mode not in VALID_SELECTION_MODES:
         errors.append(f"{path}.selection_mode invalid: {mode!r}")
+
+    return errors
+
+
+def validate_forbidden_hit_assertions(data: dict[str, Any], path: Path) -> list[str]:
+    """Validate the optional reusable negative-lifecycle assertion family."""
+    assertions = data.get("forbidden_hit_assertions")
+    if assertions is None:
+        return []
+
+    errors: list[str] = []
+    fixture_path = str(path)
+    if not isinstance(assertions, list) or not assertions:
+        return [f"{fixture_path}:forbidden_hit_assertions must be a non-empty list"]
+
+    seen_ids: set[str] = set()
+    seen_classes: set[str] = set()
+    for index, item in enumerate(assertions):
+        item_path = f"{fixture_path}:forbidden_hit_assertions[{index}]"
+        if not isinstance(item, dict):
+            errors.append(f"{item_path} must be an object")
+            continue
+        errors.extend(require_keys(item, REQUIRED_FORBIDDEN_HIT, item_path))
+
+        assertion_id = item.get("assertion_id")
+        if not isinstance(assertion_id, str) or not assertion_id.strip():
+            errors.append(f"{item_path}.assertion_id must be a non-empty string")
+        elif assertion_id in seen_ids:
+            errors.append(f"{item_path}.assertion_id duplicates {assertion_id!r}")
+        else:
+            seen_ids.add(assertion_id)
+
+        forbidden_class = item.get("forbidden_class")
+        if not isinstance(forbidden_class, str) or not forbidden_class.strip():
+            errors.append(f"{item_path}.forbidden_class must be a non-empty string")
+        else:
+            seen_classes.add(forbidden_class)
+
+        for field in ("source_lifecycle_state", "source_evidence", "expected_refusal"):
+            value = item.get(field)
+            if not isinstance(value, str) or not value.strip():
+                errors.append(f"{item_path}.{field} must be a non-empty string")
+
+        for field in FORBIDDEN_HIT_STAGE_FIELDS:
+            if not isinstance(item.get(field), bool):
+                errors.append(f"{item_path}.{field} must be a boolean")
+
+        # Later-stage influence cannot be true if the candidate never reached
+        # the preceding stage. This is structural ordering, not a claim that
+        # every runtime must block specifically at admission.
+        if item.get("admitted") and not item.get("candidate_discovered"):
+            errors.append(f"{item_path}: admitted=true requires candidate_discovered=true")
+        if item.get("context_surfaced") and not item.get("admitted"):
+            errors.append(f"{item_path}: context_surfaced=true requires admitted=true")
+        if item.get("downstream_influence") and not item.get("context_surfaced"):
+            errors.append(f"{item_path}: downstream_influence=true requires context_surfaced=true")
+
+    expected = data.get("expected_behavior")
+    if isinstance(expected, dict):
+        declared_count = expected.get("forbidden_classes_covered")
+        if declared_count is not None and declared_count != len(seen_classes):
+            errors.append(
+                f"{fixture_path}:expected_behavior.forbidden_classes_covered={declared_count!r} "
+                f"does not match {len(seen_classes)} unique forbidden classes"
+            )
+        stages = expected.get("explicit_pipeline_stages")
+        required_stages = sorted(FORBIDDEN_HIT_STAGE_FIELDS)
+        if stages is not None:
+            if not isinstance(stages, list) or sorted(stages) != required_stages:
+                errors.append(
+                    f"{fixture_path}:expected_behavior.explicit_pipeline_stages must contain "
+                    f"exactly {required_stages!r}"
+                )
 
     return errors
 
@@ -214,6 +305,7 @@ def validate_fixture(path: Path) -> list[str]:
                 errors.append(f"{path}:governed_uncertainty.expected_invariants must be a non-empty list of strings")
             errors.extend(validate_action_envelope(governed, f"{path}:governed_uncertainty"))
 
+    errors.extend(validate_forbidden_hit_assertions(data, path))
     return errors
 
 
