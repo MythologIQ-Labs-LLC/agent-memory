@@ -273,12 +273,15 @@ def normalize_mcp_interaction(adapter_result: dict, expected_context: dict | Non
     binding_status, binding_reasons = _binding(adapter_result, expected_context, memory_effect)
     body["binding_status"] = binding_status
     body["binding_reasons"] = binding_reasons
-    body["governance_alignment"] = _governance_alignment(
-        memory_effect=memory_effect,
-        governance_status=governance_status,
-        effective_decision=effective_decision,
-        result_status=result_status,
-    )
+    if memory_effect == "durable_mutation" and binding_status == "mismatch":
+        body["governance_alignment"] = "binding_mismatch"
+    else:
+        body["governance_alignment"] = _governance_alignment(
+            memory_effect=memory_effect,
+            governance_status=governance_status,
+            effective_decision=effective_decision,
+            result_status=result_status,
+        )
 
     identity_body = {key: value for key, value in body.items() if key != "observed_at"}
     document = {
