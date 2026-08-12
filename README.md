@@ -301,7 +301,7 @@ residual  a source was purged     content may be prohibited
 
 Staleness may be repairable by recomputation. Residue is not, because recomputation cannot un-retain content the deletion was meant to destroy, and because deciding what happens to it is the deletion authority's call rather than an estimator's.
 
-See **[Forgetting, Consolidation, and Memory Metabolism](docs/21-forgetting-consolidation-and-memory-metabolism.md)** and **[Retention, Deletion, and Tombstones](docs/28-retention-deletion-and-tombstones.md)**. The propagation semantics behind that distinction are worked out in **[Canonical and Derived State](docs/programs/runtime-evidence/canonical-and-derived-state.md)**.
+See **[Forgetting, Consolidation, and Memory Metabolism](docs/21-forgetting-consolidation-and-memory-metabolism.md)** and **[Retention, Deletion, and Tombstones](docs/28-retention-deletion-and-tombstones.md)**. The propagation semantics behind that distinction are worked out in **[Canonical and Derived State](docs/programs/runtime-evidence/canonical-and-derived-state.md)**, which is design work rather than adopted doctrine.
 
 ---
 
@@ -671,8 +671,6 @@ These are the shortest route to the doctrine:
 23. **Procedure is not permission.**
 24. **Permission is not governance.**
 25. **Validated capability does not imply autonomous execution authority.**
-26. **Decision evidence is not execution evidence.**
-27. **Derived governance context is not standing authority.**
 
 ---
 
