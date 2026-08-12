@@ -1,6 +1,18 @@
-"""Schema-conformant decision and audit artifacts.
+"""Construction and validation of governance evidence.
 
-Stdlib apart from jsonschema, which is a pinned reference-validation dependency.
+Emits three artifacts, each conforming to a schema already canonical in this
+repository rather than to a shape invented here:
+
+- a PAMA decision record   (`schemas/pama-decision.schema.json`)
+- a decision receipt       (`schemas/decision-receipt.schema.json`)
+- audit events             (`schemas/memory-audit-event.schema.json`)
+
+The substrate under evaluation persists none of this, which is precisely why
+the adapter must.
+
+`jsonschema` is required here, matching the validator dependency policy in
+CONTRIBUTING: fixture and link validation stay standard-library, schema
+validation may use it.
 """
 
 from __future__ import annotations
@@ -9,85 +21,102 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, FormatChecker
+import jsonschema
 
 from . import policy
 
-NO_ACTION = "no_action"
-ROOT = Path(__file__).resolve().parents[2]
-SCHEMA_DIR = ROOT / "schemas"
+SCHEMA_DIR = Path(__file__).resolve().parents[2] / "schemas"
+
+#: Sentinel recorded when governance permitted no action at all.
+NO_ACTION = "none"
+
+_DEFERRED_OUTCOMES = {
+    "require_review",
+    "require_external_verification",
+    "abstain",
+    "quarantine",
+    "collect_more_evidence",
+}
 
 
 @lru_cache(maxsize=None)
-def _validator(schema_name: str) -> Draft202012Validator:
+def _validator(schema_name: str) -> jsonschema.Draft202012Validator:
     schema = json.loads((SCHEMA_DIR / schema_name).read_text(encoding="utf-8"))
-    return Draft202012Validator(schema, format_checker=FormatChecker())
+    return jsonschema.Draft202012Validator(schema)
 
 
 def validate(schema_name: str, document: dict) -> None:
-    errors = sorted(_validator(schema_name).iter_errors(document), key=lambda error: list(error.path))
+    """Raise if the document does not satisfy its canonical schema."""
+    errors = sorted(_validator(schema_name).iter_errors(document), key=lambda e: list(e.path))
     if errors:
-        location = ".".join(str(part) for part in errors[0].path) or "$"
+        location = ".".join(str(part) for part in errors[0].path) or "<root>"
         raise ValueError(f"{schema_name} at {location}: {errors[0].message}")
 
 
-def enforce_selection(permitted_actions: tuple[str, ...], selected_action: str) -> None:
-    if selected_action not in permitted_actions:
-        raise ValueError(f"selected action {selected_action!r} is outside the permitted set {permitted_actions!r}")
+def decision_ref_for(proposal_id: str) -> str:
+    """Stable logical reference for the PAMA decision produced for a proposal.
+
+    The PAMA decision already carries ``proposal_id`` as its stable identity
+    anchor. This names that artifact without introducing a second, cyclic
+    content identity merely to link it back from the receipt.
+    """
+    if not proposal_id:
+        raise ValueError("decision reference requires a proposal id")
+    return f"pama-decision:{proposal_id}"
+
+
+def enforce_selection(permitted: tuple[str, ...], selected: str) -> None:
+    """Selected action must come from the permitted set.
+
+    JSON Schema cannot portably express this membership across sibling
+    properties, so the receipt schema delegates it to consumers. This is that
+    enforcement. `NO_ACTION` is legal only when nothing was permitted.
+    """
+    if selected == NO_ACTION:
+        if permitted:
+            raise ValueError("no action recorded although governance permitted actions")
+        return
+    if selected not in permitted:
+        raise ValueError(f"selected action {selected!r} is not in the permitted set {list(permitted)}")
 
 
 def enforce_decision_consistency(
     outcome: str,
     requested_action: str,
-    permitted_actions: tuple[str, ...],
-    prohibited_actions: tuple[str, ...],
-    selected_action: str,
+    permitted: tuple[str, ...],
+    prohibited: tuple[str, ...],
 ) -> None:
-    """Hold the authority envelope and selected consequence internally consistent."""
-    overlap = set(permitted_actions) & set(prohibited_actions)
+    """Reject authority outcomes that contradict their action envelope.
+
+    This intentionally enforces only invariants that are stable across the
+    current decision vocabulary. It does not invent one universal policy table.
+    """
+    overlap = set(permitted) & set(prohibited)
     if overlap:
-        raise ValueError(f"actions appear in both permitted and prohibited sets: {sorted(overlap)!r}")
-    if outcome in (policy.REQUIRE_REVIEW, policy.REQUIRE_EXTERNAL_VERIFICATION, policy.BLOCK):
-        if requested_action not in prohibited_actions:
-            raise ValueError(f"{outcome} must prohibit requested action {requested_action!r}")
-    if selected_action != NO_ACTION:
-        enforce_selection(permitted_actions, selected_action)
+        raise ValueError(f"actions cannot be both permitted and prohibited: {sorted(overlap)}")
 
+    if outcome in ("allow", "allow_with_ledger"):
+        if requested_action not in permitted:
+            raise ValueError(f"{outcome} must permit the requested action {requested_action!r}")
+        if requested_action in prohibited:
+            raise ValueError(f"{outcome} cannot prohibit the requested action {requested_action!r}")
+        return
 
-def build_audit_event(
-    event_id: str,
-    event_type: str,
-    timestamp: str,
-    component: str,
-    memory_id: str | None = None,
-    correlation_id: str | None = None,
-    causation_id: str | None = None,
-    policy_version: str | None = None,
-    authority: dict | None = None,
-    receipt_ref: str | None = None,
-) -> dict:
-    document = {
-        "schema_version": "1.0.0",
-        "event_id": event_id,
-        "event_type": event_type,
-        "event_version": "1.0.0",
-        "timestamp": timestamp,
-        "component": component,
-    }
-    if memory_id:
-        document["memory_id"] = memory_id
-    if correlation_id:
-        document["correlation_id"] = correlation_id
-    if causation_id:
-        document["causation_id"] = causation_id
-    if policy_version:
-        document["policy_version"] = policy_version
-    if authority is not None:
-        document["authority"] = authority
-    if receipt_ref:
-        document["receipt_ref"] = receipt_ref
-    validate("memory-audit-event.schema.json", document)
-    return document
+    if outcome == "block":
+        if permitted:
+            raise ValueError("block outcome cannot expose permitted actions")
+        if requested_action not in prohibited:
+            raise ValueError("block outcome must prohibit the requested action")
+        return
+
+    if outcome in _DEFERRED_OUTCOMES:
+        if requested_action in permitted:
+            raise ValueError(f"{outcome} cannot directly permit the requested action")
+        if requested_action not in prohibited:
+            raise ValueError(f"{outcome} must keep the requested action prohibited pending resolution")
+        return
+
+    raise ValueError(f"unknown decision outcome {outcome!r}")
 
 
 def build_pama_decision(
@@ -97,9 +126,9 @@ def build_pama_decision(
     selection_mode: str | None,
     receipt_ref: str,
 ) -> dict:
-    # PAMA decision 1.1.0 introduces the closed-enum `decision_overwrite`
-    # operation. Existing operations continue to emit 1.0.0 so historical
-    # consumers are not told their older contract changed retroactively.
+    # PAMA decision 1.1.0 adds the closed-enum `decision_overwrite` operation.
+    # Existing operations remain 1.0.0 so older decision artifacts and closed
+    # consumers do not acquire a new semantic contract retroactively.
     schema_version = "1.1.0" if proposal.operation == "decision_overwrite" else "1.0.0"
     document = {
         "schema_version": schema_version,
@@ -163,17 +192,18 @@ def build_receipt(
         proposal.operation,
         decision.permitted_actions,
         decision.prohibited_actions,
-        selected_action,
     )
+    enforce_selection(decision.permitted_actions, selected_action)
     document = {
         "schema_version": "1.1.0",
         "receipt_id": receipt_id,
-        "decision_ref": proposal.proposal_id,
+        "decision_ref": decision_ref_for(proposal.proposal_id),
         "decision_outcome": decision.outcome,
         "memory_id": proposal.target_reference,
+        "actor": proposal.actor_id,
         "requested_action": proposal.operation,
+        "state_snapshot": proposal.state_snapshot,
         "policy_version": decision.policy_version,
-        "authority_refs": list(proposal.approval_refs),
         "permitted_actions": list(decision.permitted_actions),
         "prohibited_actions": list(decision.prohibited_actions),
         "selected_action": selected_action,
@@ -183,10 +213,13 @@ def build_receipt(
         "evidence_refs": list(proposal.evidence_refs),
         "timestamp": timestamp,
     }
-    if proposal.state_snapshot:
-        document["state_snapshot"] = proposal.state_snapshot
     if proposal.estimator_refs:
         document["estimate_refs"] = list(proposal.estimator_refs)
+    if proposal.estimator_versions:
+        document["estimator_versions"] = {
+            ref: version
+            for ref, version in zip(proposal.estimator_refs, proposal.estimator_versions)
+        }
     if rollback_ref:
         document["rollback_or_recovery_ref"] = rollback_ref
     validate("decision-receipt.schema.json", document)
@@ -194,33 +227,80 @@ def build_receipt(
 
 
 def verify_receipt_decision_pair(receipt: dict, pama_decision: dict) -> None:
-    """Verify the bidirectional decision <-> receipt authority binding."""
-    decision = pama_decision["decision"]
-    if receipt.get("decision_ref") != pama_decision.get("proposal_id"):
-        raise ValueError("receipt decision_ref does not match PAMA proposal_id")
-    if receipt.get("decision_outcome") != decision.get("outcome"):
-        raise ValueError("receipt decision_outcome does not match PAMA decision outcome")
-    if decision.get("decision_receipt_ref") != receipt.get("receipt_id"):
-        raise ValueError("PAMA decision receipt backlink does not match receipt_id")
-    if receipt.get("policy_version") != pama_decision.get("policy", {}).get("policy_version"):
-        raise ValueError("receipt policy_version does not match PAMA decision")
-    if receipt.get("permitted_actions") != decision.get("permitted_actions"):
-        raise ValueError("receipt permitted_actions do not match PAMA decision")
-    if receipt.get("prohibited_actions") != decision.get("prohibited_actions"):
-        raise ValueError("receipt prohibited_actions do not match PAMA decision")
+    """Verify that a receipt and PAMA decision describe the same authority event."""
+    validate("decision-receipt.schema.json", receipt)
+    validate("pama-decision.schema.json", pama_decision)
 
-    selected = receipt.get("selected_action")
-    pama_selected = decision.get("selected_action")
-    if selected == NO_ACTION:
-        if pama_selected is not None:
-            raise ValueError("receipt no_action contradicts a selected PAMA action")
-    elif selected != pama_selected:
-        raise ValueError("receipt selected_action does not match PAMA decision")
+    expected_ref = decision_ref_for(pama_decision["proposal_id"])
+    if receipt.get("decision_ref") != expected_ref:
+        raise ValueError(
+            f"receipt decision_ref {receipt.get('decision_ref')!r} does not match {expected_ref!r}"
+        )
+
+    decision = pama_decision["decision"]
+    comparisons = {
+        "decision_outcome": decision["outcome"],
+        "permitted_actions": decision["permitted_actions"],
+        "prohibited_actions": decision["prohibited_actions"],
+        "policy_version": pama_decision["policy"]["policy_version"],
+    }
+    for receipt_field, decision_value in comparisons.items():
+        if receipt.get(receipt_field) != decision_value:
+            raise ValueError(
+                f"receipt {receipt_field} does not match referenced decision: "
+                f"receipt={receipt.get(receipt_field)!r} decision={decision_value!r}"
+            )
+
+    receipt_selected = receipt["selected_action"]
+    decision_selected = decision.get("selected_action")
+    normalized_decision_selected = NO_ACTION if decision_selected is None else decision_selected
+    if receipt_selected != normalized_decision_selected:
+        raise ValueError(
+            "receipt selected_action does not match referenced decision: "
+            f"receipt={receipt_selected!r} decision={normalized_decision_selected!r}"
+        )
+
+    if decision.get("decision_receipt_ref") != receipt["receipt_id"]:
+        raise ValueError("referenced decision does not point back to this receipt")
 
     enforce_decision_consistency(
-        decision["outcome"],
+        receipt["decision_outcome"],
         receipt["requested_action"],
-        tuple(decision["permitted_actions"]),
-        tuple(decision["prohibited_actions"]),
-        selected,
+        tuple(receipt["permitted_actions"]),
+        tuple(receipt.get("prohibited_actions") or ()),
     )
+    enforce_selection(tuple(receipt["permitted_actions"]), receipt_selected)
+
+
+def build_audit_event(
+    event_id: str,
+    event_type: str,
+    timestamp: str,
+    component: str,
+    memory_id: str,
+    correlation_id: str,
+    causation_id: str | None = None,
+    policy_version: str | None = None,
+    authority: dict | None = None,
+    receipt_ref: str | None = None,
+) -> dict:
+    document = {
+        "schema_version": "1.0.0",
+        "event_id": event_id,
+        "event_type": event_type,
+        "event_version": "1.0.0",
+        "timestamp": timestamp,
+        "component": component,
+        "memory_id": memory_id,
+        "correlation_id": correlation_id,
+    }
+    for key, value in (
+        ("causation_id", causation_id),
+        ("policy_version", policy_version),
+        ("authority", authority),
+        ("receipt_ref", receipt_ref),
+    ):
+        if value is not None:
+            document[key] = value
+    validate("memory-audit-event.schema.json", document)
+    return document
