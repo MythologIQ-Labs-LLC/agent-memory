@@ -94,6 +94,7 @@
         "result_observed_under_deny",
         "approval_not_established",
         "blocked_governance_unavailable",
+        "binding_mismatch",
         "not_applicable",
         "not_evaluated"
       ]
