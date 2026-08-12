@@ -132,7 +132,7 @@
       "assertion_id": "missing-required-compartment",
       "forbidden_class": "required_isolation_domain_missing",
       "source_lifecycle_state": "current",
-      "source_evidence": "fixtures/cross-domain-retrieval-attempt.json",
+      "source_evidence": "reference/tests/test_isolation_domains.py::test_same_tenant_missing_required_compartment_is_blocked",
       "candidate_discovered": true,
       "admitted": false,
       "context_surfaced": false,
