@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/transformation-evidence.schema.json",
+  "title": "Agent Memory Transformation Evidence",
+  "description": "Vendor-neutral evidence for derived-state transformations. Transformation preserves source lineage and bounded scope but cannot create memory authority, certification, standing policy, or source trust.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_version",
+    "transformation_id",
+    "transformation_type",
+    "mode",
+    "status",
+    "transformer",
+    "sources",
+    "lineage",
+    "derived",
+    "scope",
+    "source_currentness",
+    "applicability",
+    "created_at",
+    "identity_digest",
+    "interpretation"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "profile_version": { "const": "0.1.0" },
+    "transformation_id": { "type": "string", "minLength": 1 },
+    "transformation_type": {
+      "type": "string",
+      "enum": ["summary", "consolidation", "extraction", "projection", "other"]
+    },
+    "mode": { "type": "string", "enum": ["deterministic", "probabilistic"] },
+    "status": { "type": "string", "enum": ["complete", "partial", "failed"] },
+    "transformer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transformer_ref", "transformer_version"],
+      "properties": {
+        "transformer_ref": { "type": "string", "minLength": 1 },
+        "transformer_version": { "type": "string", "minLength": 1 },
+        "trust_evidence_refs": { "$ref": "#/$defs/refList" }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["direct_source_refs", "original_source_refs", "parent_transformation_refs"],
+      "properties": {
+        "direct_source_refs": { "$ref": "#/$defs/refListNonEmpty" },
+        "original_source_refs": { "$ref": "#/$defs/refListNonEmpty" },
+        "parent_transformation_refs": { "$ref": "#/$defs/refList" }
+      }
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["derived_ref", "derived_evidence_ref", "derived_evidence_digest", "evidence_character"],
+      "properties": {
+        "derived_ref": { "type": "string", "minLength": 1 },
+        "derived_evidence_ref": { "type": "string", "minLength": 1 },
+        "derived_evidence_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "evidence_character": {
+          "type": "string",
+          "enum": ["ordinary", "negative_or_adversarial", "correction_or_incident"]
+        },
+        "uncertainty": { "$ref": "#/$defs/uncertainty" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope_ref", "relation", "basis_refs", "binding_status"],
+      "properties": {
+        "scope_ref": { "type": "string", "minLength": 1 },
+        "tenant_ref": { "type": "string", "minLength": 1 },
+        "project_ref": { "type": "string", "minLength": 1 },
+        "relation": { "type": "string", "enum": ["preserved", "narrowed", "mismatch"] },
+        "basis_refs": { "$ref": "#/$defs/refList" },
+        "binding_status": { "type": "string", "enum": ["exact", "narrowed", "mismatch"] }
+      }
+    },
+    "source_currentness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reasons"],
+      "properties": {
+        "status": { "type": "string", "enum": ["current", "revalidation_required", "unknown"] },
+        "reasons": { "$ref": "#/$defs/refList" }
+      }
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reasons"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["current", "revalidation_required", "incomplete", "invalid"]
+        },
+        "reasons": { "$ref": "#/$defs/refList" }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "identity_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transformation_authority_effect",
+        "transformer_trust_is_source_trust",
+        "derived_confidence_authority",
+        "certification_claim",
+        "standing_policy_effect",
+        "memory_admission"
+      ],
+      "properties": {
+        "transformation_authority_effect": { "const": "none" },
+        "transformer_trust_is_source_trust": { "const": false },
+        "derived_confidence_authority": { "const": "none" },
+        "certification_claim": { "const": "none" },
+        "standing_policy_effect": { "const": "none" },
+        "memory_admission": { "const": "not_established" }
+      }
+    }
+  },
+  "$defs": {
+    "refList": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "refListNonEmpty": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_ref", "evidence_refs", "scope_ref", "state", "evidence_class"],
+      "properties": {
+        "source_ref": { "type": "string", "minLength": 1 },
+        "evidence_refs": { "$ref": "#/$defs/refListNonEmpty" },
+        "scope_ref": { "type": "string", "minLength": 1 },
+        "tenant_ref": { "type": "string", "minLength": 1 },
+        "project_ref": { "type": "string", "minLength": 1 },
+        "state": {
+          "type": "string",
+          "enum": ["current", "disputed", "revoked", "superseded", "tombstoned", "deleted", "unknown"]
+        },
+        "evidence_class": {
+          "type": "string",
+          "enum": ["ordinary", "negative", "adversarial", "correction", "incident"]
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["signal_semantics", "estimator_ref", "estimator_version", "signal_value"],
+      "properties": {
+        "signal_semantics": { "type": "string", "minLength": 1 },
+        "estimator_ref": { "type": "string", "minLength": 1 },
+        "estimator_version": { "type": "string", "minLength": 1 },
+        "signal_value": { "type": "number" },
+        "uncertainty_summary": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
