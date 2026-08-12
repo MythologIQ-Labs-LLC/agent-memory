@@ -1,8 +1,9 @@
 """Vendor-neutral enforcement evidence for issue #152 Phase 3.
 
 This module keeps configured governance, decision delivery, enforcement-point
-observation, and action execution/prevention as distinct evidence states.
-A decision receipt is never upgraded to execution proof by inference.
+observation, approval satisfaction, and action execution/prevention as distinct
+evidence states. A decision or approval receipt is never upgraded to execution
+proof by inference.
 """
 
 from __future__ import annotations
@@ -28,7 +29,12 @@ def _sha256_ref(value: dict) -> str:
     return "sha256:" + hashlib.sha256(rfc8785.dumps(value)).hexdigest()
 
 
-def _alignment(effective_decision: str, action_status: str, enforcement_point_status: str) -> str:
+def _alignment(
+    effective_decision: str,
+    action_status: str,
+    enforcement_point_status: str,
+    approval_evidence_status: str,
+) -> str:
     if enforcement_point_status != "reached" or action_status in {"unknown", "not_observed"}:
         return "unverifiable"
 
@@ -42,14 +48,42 @@ def _alignment(effective_decision: str, action_status: str, enforcement_point_st
             return "stricter_than_decision"
         return "unverifiable"
 
-    # ``require_approval`` cannot be upgraded to authorized execution merely
-    # because a witness sees execution. Approval validity is a separate check.
     if effective_decision == "require_approval":
         if action_status in {"prevented", "refused"}:
+            return "consistent"
+        if action_status == "executed" and approval_evidence_status == "verified_current":
             return "consistent"
         return "unverifiable"
 
     return "unverifiable"
+
+
+def _approval_status(
+    composition: dict,
+    approval_evidence_ref: str | None,
+    approval_verification: dict | None,
+) -> tuple[str | None, str]:
+    if approval_verification is None:
+        return approval_evidence_ref, "unverified" if approval_evidence_ref else "absent"
+
+    receipts.validate("approval-verification-result.schema.json", approval_verification)
+    if approval_verification["input_identity"] != composition["input_identity"]:
+        raise ValueError("approval verification input identity does not match composed decision")
+    if approval_verification["composition_id"] != composition["composition_id"]:
+        raise ValueError("approval verification composition identity does not match composed decision")
+
+    verified_ref = approval_verification["approval_id"]
+    if approval_evidence_ref is not None and approval_evidence_ref != verified_ref:
+        raise ValueError("approval evidence reference does not match verified approval")
+
+    status = approval_verification["status"]
+    if status == "current" and approval_verification["satisfies_required_approval"]:
+        witness_status = "verified_current"
+    elif status in {"stale", "denied", "invalid", "not_applicable"}:
+        witness_status = status
+    else:
+        witness_status = "invalid"
+    return verified_ref, witness_status
 
 
 def build_execution_witness(
@@ -65,13 +99,15 @@ def build_execution_witness(
     observed_at: str,
     observed_input_identity: str | None = None,
     approval_evidence_ref: str | None = None,
+    approval_verification: dict | None = None,
     evidence_refs: tuple[str, ...] = (),
 ) -> dict:
     """Bind an observed enforcement/execution event to a composed decision.
 
     The witness may record a policy violation rather than rejecting the event.
-    That distinction matters: evidence that an action executed despite ``deny``
-    is valuable negative evidence, not malformed evidence.
+    Approval satisfaction is only recognized from a separately verified result
+    bound to the same input and composition identities. A bare approval reference
+    remains explicitly unverified.
     """
 
     receipts.validate("decision-composition-receipt.schema.json", composition)
@@ -97,6 +133,12 @@ def build_execution_witness(
     if enforcement_point_status != "reached" and action_status in {"executed", "prevented", "refused"}:
         raise ValueError("action outcome cannot be claimed without observing the enforcement point")
 
+    approval_ref, approval_status = _approval_status(
+        composition,
+        approval_evidence_ref,
+        approval_verification,
+    )
+
     body = {
         "input_identity": identity,
         "composition_id": composition["composition_id"],
@@ -108,18 +150,23 @@ def build_execution_witness(
         "enforcement_point_status": enforcement_point_status,
         "action_status": action_status,
         "decision_alignment": _alignment(
-            composition["effective_decision"], action_status, enforcement_point_status
+            composition["effective_decision"],
+            action_status,
+            enforcement_point_status,
+            approval_status,
         ),
         "liveness_status": liveness_status,
+        "approval_evidence_status": approval_status,
         "observed_at": observed_at,
         "evidence_refs": list(dict.fromkeys(evidence_refs)),
         "non_claims": [
             "lifecycle_satisfaction_not_established",
             "execution_witness_does_not_create_memory_authority",
+            "approval_evidence_is_not_standing_authority",
         ],
     }
-    if approval_evidence_ref:
-        body["approval_evidence_ref"] = approval_evidence_ref
+    if approval_ref:
+        body["approval_evidence_ref"] = approval_ref
 
     witness = {
         "schema_version": "1.0.0",
