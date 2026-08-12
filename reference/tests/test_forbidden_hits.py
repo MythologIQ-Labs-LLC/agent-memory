@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import unittest
-from dataclasses import replace
+from pathlib import Path
 
 from agentmem_ref import forbidden_hits
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 class ForbiddenHitTests(unittest.TestCase):
@@ -61,6 +63,12 @@ class ForbiddenHitTests(unittest.TestCase):
             for field in ("candidate_discovered", "admitted", "context_surfaced", "downstream_influence"):
                 self.assertIn(field, item)
                 self.assertIsInstance(item[field], bool)
+
+    def test_mapped_source_evidence_paths_exist(self):
+        for assertion in forbidden_hits.load_assertions():
+            relative_path = assertion.source_evidence.split("::", 1)[0]
+            with self.subTest(assertion_id=assertion.assertion_id, source=relative_path):
+                self.assertTrue((ROOT / relative_path).is_file(), relative_path)
 
 
 if __name__ == "__main__":
