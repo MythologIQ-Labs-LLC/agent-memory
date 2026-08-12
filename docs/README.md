@@ -16,12 +16,12 @@ The repository is intentionally layered. Start with the smallest path that answe
 | Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24`, `41` |
 | Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`41`, schemas and fixtures |
 | Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `33`, `34`, ADR-004, ADR-020, ADR-022 |
-| Governance integration architect | [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) | `11`, `34`, ADR-021, ADR-028, `07` roadmap |
+| Governance integration architect | [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) | `11`, `34`, ADR-021, ADR-028, ADR-029, `07` roadmap |
 | Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41` |
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
 | Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
 | Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
-| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-028 |
+| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-029 |
 
 ## Native PAMA doctrine
 
@@ -150,6 +150,7 @@ ADR-025: Proposed
 ADR-026: Proposed
 ADR-027: Proposed
 ADR-028: Proposed
+ADR-029: Proposed
 ```
 
 ADR-020 is Accepted after its explicitly stronger executable end-to-end evidence gate was satisfied. Acceptance remains doctrine maturity, not universal implementation conformance.
@@ -158,11 +159,13 @@ ADR-021 remains Proposed until portable memory-governance evidence satisfies its
 
 ADR-022 is Accepted because isolation domains, controlled crossings, same-agent task/project separation, derived-scope propagation, shared-memory membership, boundary-crossing receipts, and the required schema/fixture surface are explicitly represented and validated.
 
-ADRs 023-027 remain individually Proposed under their own durable-mutation/evidence gates. ADR-028 remains Proposed while Governance Context Projection proceeds from schema/fixture/reference-builder evidence toward a real consumer adapter and the additional privacy, reconstruction, and near-match evidence named by the ADR.
+ADRs 023-027 remain individually Proposed under their own durable-mutation/evidence gates.
+
+ADR-028 remains Proposed for the language-neutral normative core and optional implementation/interoperability profile boundary. ADR-029 remains Proposed while Governance Context Projection proceeds from schema/fixture/reference-builder evidence toward a real consumer adapter and the additional privacy, reconstruction, and near-match evidence named by that ADR.
 
 ## Governance Context Projection
 
-Proposed [`ADR-028`](adr/ADR-028-governance-projection-is-derived-context-not-authority.md) establishes:
+Proposed [`ADR-029`](adr/ADR-029-governance-projection-is-derived-context-not-authority.md) establishes:
 
 ```text
 Agent Memory core
@@ -179,6 +182,8 @@ external policy / approval / enforcement runtime
 ```
 
 The projection may preserve precedent, material conditions, scope, validity, provenance, negative outcomes, and derivation metadata. It does not own a final external-governance verdict, standing permission, or vendor risk score.
+
+ADR-029 complements [`ADR-028`](adr/ADR-028-language-neutral-core-and-optional-implementation-profiles.md): the core remains language-neutral, the governance projection remains vendor-neutral, and concrete consumer integrations remain optional profiles/adapters rather than normative dependencies.
 
 The first contract lives in [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) and [`../schemas/governance-context-projection.schema.json`](../schemas/governance-context-projection.schema.json). The implementation track is in [`07-integration-roadmap.md`](07-integration-roadmap.md).
 
