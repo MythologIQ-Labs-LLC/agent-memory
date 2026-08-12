@@ -4,7 +4,9 @@
 
 <div align="center">
 
-# Agent Memory
+# 01010001 Agent Memory
+
+<p><sub><strong>Q Agent Memory</strong></sub></p>
 
 ### A reference architecture for governed memory in autonomous and agentic systems
 
