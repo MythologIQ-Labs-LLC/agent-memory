@@ -4,7 +4,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -26,7 +26,7 @@ Memory also contains consequences too important to delegate directly to uncertai
 
 A binary choice between "deterministic memory" and "probabilistic memory" is therefore insufficient.
 
-## Decision candidate
+## Decision
 
 Adopt a **governed uncertainty** architecture:
 
@@ -224,9 +224,9 @@ Rejected as insufficient because thresholds can be miscalibrated, brittle, domai
 
 Rejected as a default because it creates a human bottleneck and prevents useful autonomous low-risk adaptation.
 
-## Validation required before acceptance
+## Acceptance evidence
 
-This ADR MUST remain Proposed until the repository has executable evidence proving at least:
+ADR-020 was accepted only after the repository accumulated executable evidence for all fourteen required boundaries:
 
 1. high-confidence false memory cannot self-promote
 2. high-relevance wrong-tenant memory cannot enter context
@@ -243,12 +243,17 @@ This ADR MUST remain Proposed until the repository has executable evidence provi
 13. at least one implementation is mapped end-to-end from estimate -> governance -> action set -> commit
 14. at least one adversarial challenge causes a documented boundary, correction, or rejection rather than being ignored
 
+The acceptance audit is recorded in [`../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md`](../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md). Runtime evidence includes the pinned real-substrate governed adapter, stochastic containment, concurrency conflict evidence, deletion-completeness evidence, the P5 security scorecard, the P6 Mem0 comparator, and portable/external action-evidence negative paths.
+
+Acceptance is a **doctrine-maturity decision**, not a claim that the narrow reference adapter satisfies every cumulative Agent Memory conformance level or that every production implementation conforms.
+
 Canonical evidence locations:
 
 - [`../06-conformance-test-plan.md`](../06-conformance-test-plan.md)
 - [`../24-determinism-probability-and-governed-uncertainty.md`](../24-determinism-probability-and-governed-uncertainty.md)
 - [`../25-governed-uncertainty-documentation-conformance-audit.md`](../25-governed-uncertainty-documentation-conformance-audit.md)
 - [`../audits/governed-uncertainty/`](../audits/governed-uncertainty/)
+- [`../programs/runtime-evidence/`](../programs/runtime-evidence/)
 
 ## Open questions
 
@@ -262,11 +267,11 @@ Canonical evidence locations:
 
 ## Research posture
 
-The decision should be challenged using freely inspectable research where practical, implementation evidence, adversarial fixtures, and negative results.
+The decision should continue to be challenged using freely inspectable research where practical, implementation evidence, adversarial fixtures, and negative results.
 
 Citation count is not confidence.
 
-## Doctrine candidate
+## Doctrine
 
 The system may be uncertain about what is true.
 

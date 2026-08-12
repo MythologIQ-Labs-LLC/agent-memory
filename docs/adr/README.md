@@ -25,15 +25,12 @@ Implementation maturity is tracked separately through documentation, fixtures, c
 ## Current doctrine state
 
 ```text
-ADR-001 through ADR-019: Accepted
-ADR-020: Proposed
+ADR-001 through ADR-020: Accepted
 ADR-021: Proposed
 ADR-022: Accepted
 ```
 
-ADRs 001-019 and ADR-022 have their required canonical doctrine contracts and, where specified, repository-level schema/fixture evidence.
-
-ADR-020 remains deliberately different. It requires **runtime end-to-end evidence**, not merely documentation or fixture structure.
+ADRs 001-020 and ADR-022 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance.
 
 ADR-021 proposes the interoperability boundary for **portable memory-governance evidence**. It keeps Agent Memory authoritative for memory semantics, PAMA, lifecycle obligations, and canonical decision receipts while allowing external trust systems such as AgenTrust to verify and correlate evidence without redefining those semantics.
 
@@ -54,9 +51,9 @@ If an ADR explicitly requires stronger evidence before acceptance, that requirem
 
 ## Governed uncertainty
 
-[`ADR-020`](ADR-020-probabilistic-discovery-deterministic-governance.md) is intentionally still **Proposed**.
+[`ADR-020`](ADR-020-probabilistic-discovery-deterministic-governance.md) is **Accepted**.
 
-Its acceptance requires at least one real implementation mapped and tested end to end across:
+Its acceptance required at least one real implementation mapped and tested end to end across:
 
 ```text
 estimate / proposal
@@ -66,9 +63,9 @@ estimate / proposal
   -> committed consequence
 ```
 
-It also requires repeated behavioral evidence for stochastic containment, cross-scope recall, concurrency, deletion residue, and related adversarial cases.
+The repository now has executable evidence for stochastic containment, cross-scope recall, concurrency conflict handling, deletion residue and transitive deletion behavior, reconstructable receipts, adversarial boundary enforcement, and a pinned real-substrate path. The P10 acceptance audit maps all fourteen ADR-020 gates to current evidence.
 
-The repository now has machine-readable schemas and fixture definitions for those cases, but fixture validity is not runtime proof.
+Acceptance does not upgrade the narrow reference adapter to a higher cumulative conformance level. Doctrine maturity and implementation conformance remain separate claims.
 
 ## Portable memory-governance evidence
 
