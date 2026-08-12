@@ -25,13 +25,14 @@ An Accepted ADR does **not** mean every mapped product implements it. That would
 - **ADR-025:** Proposed, explicit authority for durable decision overwrite
 - **ADR-026:** Proposed, origin is provenance rather than evidentiary authority
 - **ADR-027:** Proposed, governed re-admission for rejected values
-- **ADR-028:** Proposed, Governance Context Projection as derived context rather than authority
+- **ADR-028:** Proposed, language-neutral core with optional implementation/interoperability profiles
+- **ADR-029:** Proposed, Governance Context Projection as derived context rather than authority
 
 Each Proposed ADR has its own acceptance evidence. A green implementation slice does not silently accept a doctrine decision whose ADR demands broader evidence.
 
 ## Important decision families
 
-Rather than memorizing twenty-eight filenames, think in decision families.
+Rather than memorizing twenty-nine filenames, think in decision families.
 
 ### Identity and provenance
 
@@ -53,12 +54,26 @@ Decisions about component boundaries, scope, isolation domains, privacy, trust, 
 
 ADR-020 establishes the deterministic governance boundary around uncertain or probabilistic discovery.
 
-### Interoperability and governance projection
+### Implementation portability
 
-ADR-021 and ADR-028 preserve two different directions across an external-governance boundary:
+ADR-028 separates normative doctrine from implementation language and optional ecosystem profiles:
 
 ```text
-ADR-028
+normative doctrine / schemas / fixtures
+        !=
+reference implementation language
+        !=
+optional implementation or interoperability profile
+```
+
+Python, Rust, UOR, AGT, MCP, and future ecosystems may participate without becoming the definition of Agent Memory.
+
+### Interoperability and governance projection
+
+ADR-021 and ADR-029 preserve two different directions across an external-governance boundary:
+
+```text
+ADR-029
 memory-derived context
   -> external governance decision
 
@@ -67,7 +82,7 @@ Agent Memory decision / execution evidence
   -> external verifier / attestation system
 ```
 
-ADR-028's core ownership model is:
+ADR-029's core ownership model is:
 
 ```text
 Agent Memory core
@@ -76,7 +91,7 @@ Agent Memory core
   -> governance / approval / enforcement system
 ```
 
-The projection is remembered context, not standing permission or a final policy verdict. See **[Governance Projection](Governance-Projection)**.
+The projection is remembered context, not standing permission or a final policy verdict. ADR-029 complements ADR-028 by keeping the projection vendor-neutral while the normative core remains language-neutral. See **[Governance Projection](Governance-Projection)**.
 
 ## When an ADR should change
 
@@ -113,6 +128,6 @@ The canonical ADR files, not this Wiki summary, determine current decision text 
 ## Next
 
 - **[Governed Uncertainty](Governed-Uncertainty)** for deterministic governance around probabilistic discovery
-- **[Governance Projection](Governance-Projection)** for ADR-028 and governance-consumer interoperability
+- **[Governance Projection](Governance-Projection)** for ADR-029 and governance-consumer interoperability
 - **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for current external governance comparators
 - **[Contributing](Contributing)** for the change process
