@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/pama-decision.schema.json",
   "title": "Proportional Adaptive Mutation Authority Decision",
-  "description": "Doctrine-level contract for a PAMA authority evaluation. PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. This schema separates mutation target class, lifecycle strength, requested operation, downstream authority, evidence, policy, and resulting authority envelope.",
+  "description": "Doctrine-level compatibility contract for PAMA authority evaluations. PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. PAMA decision 1.1.0 adds the decision_overwrite operation; historical 1.0.0 decisions remain valid.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -81,6 +81,7 @@
             "link_creation",
             "link_deletion",
             "correction",
+            "decision_overwrite",
             "promotion",
             "crystallization",
             "pruning",
@@ -284,6 +285,24 @@
               }
             }
           }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mutation": {
+            "properties": {
+              "operation": {"const": "decision_overwrite"}
+            },
+            "required": ["operation"]
+          }
+        }
+      },
+      "then": {
+        "required": ["schema_version"],
+        "properties": {
+          "schema_version": {"const": "1.1.0"}
         }
       }
     }
