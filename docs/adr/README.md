@@ -29,7 +29,7 @@ ADR-001 through ADR-020: Accepted
 ADR-021: Proposed
 ADR-022: Accepted
 ADR-023: Proposed
-ADR-024: Proposed
+ADR-024: Accepted
 ADR-025: Proposed
 ADR-026: Proposed
 ADR-027: Proposed
@@ -37,13 +37,13 @@ ADR-028: Proposed
 ADR-029: Proposed
 ```
 
-ADRs 001-020 and ADR-022 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance.
+ADRs 001-020, ADR-022, and ADR-024 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance. ADR-024 likewise required executable positive and negative shared-write coordination evidence before promotion.
 
 ADR-021 proposes the interoperability boundary for **portable memory-governance evidence**. It keeps Agent Memory authoritative for memory semantics, PAMA, lifecycle obligations, and canonical decision receipts while allowing external trust systems such as AgenTrust to verify and correlate evidence without redefining those semantics.
 
 ADR-022 establishes **memory isolation domains and controlled boundary crossing** as first-class architecture. It extends ADR-016 by making same-agent cross-project/task separation, shared-memory domains, derived-scope inheritance, and scope crossing explicitly governable rather than leaving them as implied metadata filters.
 
-ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 proposes **pre-write coordination for shared-memory mutation**. ADR-025 proposes **explicit authority for overwriting durable decision memory**. All remain Proposed until their named evidence gates are satisfied.
+ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 establishes **pre-write coordination for shared-memory mutation** as accepted doctrine. ADR-025 proposes **explicit authority for overwriting durable decision memory**. ADR-023 and ADR-025 remain Proposed under their own evidence gates.
 
 ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity. Both remain Proposed while their linked evidence programs run.
 
@@ -124,12 +124,29 @@ Boundary crossing, including sharing, exporting, copying, deriving, inheriting, 
 
 Acceptance is backed by the canonical isolation-domain contract, additive schema/receipt representation, governed-recall enforcement, same-agent cross-project/task fixtures, derived-scope propagation, unauthorized scope-promotion tests, shared-space member/non-member recall tests, executable crossing receipts, and reconciliation with the future multi-agent shared-memory protocol. This is a doctrine-maturity statement, not universal production-runtime conformance.
 
+## Shared durable-memory write coordination
+
+[`ADR-024`](ADR-024-shared-memory-writes-require-prewrite-claims.md) is **Accepted**.
+
+Its central boundary is:
+
+```text
+shared write intent
+  -> bounded pre-write claim / lease / equivalent coordination
+  -> current-state and conflict validation
+  -> PAMA authority evaluation
+  -> durable mutation or refusal
+```
+
+A claim grants the bounded opportunity to attempt the shared write. It does not grant the durable consequence.
+
+Acceptance is backed by executable valid, conflicting, stale, expired, and unauthorized claim paths, schema-valid audit evidence for successful and failed claim outcomes, a negative test proving a valid claim cannot override PAMA `block`, and conflict-resolution documentation that settles competing shared-writer authority before commit. The reference lease coordinator is evidence for the contract, not a normative requirement that every implementation use the same primitive.
+
 ## Candidate durable-mutation and interoperability decisions
 
-The current Proposed ADRs intentionally separate several related but non-identical questions:
+The remaining Proposed ADRs intentionally separate several related but non-identical questions:
 
 - [`ADR-023`](ADR-023-corrections-are-supersession-not-deletion.md): preserve correction history while removing superseded state from current truth;
-- [`ADR-024`](ADR-024-shared-memory-writes-require-prewrite-claims.md): coordinate shared durable writes before commit;
 - [`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md): require explicit authority before overwriting durable decision state;
 - [`ADR-026`](ADR-026-origin-is-provenance-not-evidentiary-authority.md): apply the same evidence discipline to claims regardless of origin;
 - [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): require governed re-admission when a corrected/rejected value later reappears;
@@ -186,6 +203,7 @@ ADR-029 acceptance requires a reconstructable reference builder, adversarial nea
 - [`../04-governance-and-pama.md`](../04-governance-and-pama.md)
 - [`../06-conformance-test-plan.md`](../06-conformance-test-plan.md)
 - [`../11-component-architecture.md`](../11-component-architecture.md)
+- [`../17-conflict-resolution-engine.md`](../17-conflict-resolution-engine.md)
 - [`../24-determinism-probability-and-governed-uncertainty.md`](../24-determinism-probability-and-governed-uncertainty.md)
 - [`../25-governed-uncertainty-documentation-conformance-audit.md`](../25-governed-uncertainty-documentation-conformance-audit.md)
 - [`../26-governed-recall-planner.md`](../26-governed-recall-planner.md)
