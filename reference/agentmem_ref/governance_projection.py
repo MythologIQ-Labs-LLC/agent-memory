@@ -1,6 +1,6 @@
 """Deterministic reference builder for vendor-neutral governance context.
 
-This module implements the first executable slice of ADR-028. It deliberately
+This module implements the first executable slice of ADR-029. It deliberately
 builds remembered context, not a governance verdict. Consumer-specific policy,
 risk, approval, and enforcement semantics belong downstream.
 """
