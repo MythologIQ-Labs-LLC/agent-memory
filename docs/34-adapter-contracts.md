@@ -194,6 +194,7 @@ The evidence component asks the identity component to resolve a build artifact:
   "target_component": "evidence",
   "handoff_reason": "artifact_resolution",
   "signal_type": "identity_resolution",
+  "signal_semantics": "deterministic_content_address",
   "timestamp": "2026-08-10T21:04:00Z"
 }
 ```
