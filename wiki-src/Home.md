@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/brand/agent-memory-wiki-cover.webp" alt="Agent Memory Wiki cover showing the MythologIQ Labs lineage and the Agent Memory layered memory emblem with a cyan inference spark." width="100%">
+</p>
+
 # Agent Memory
 
 **A field guide to governed memory for autonomous and agentic systems.**
