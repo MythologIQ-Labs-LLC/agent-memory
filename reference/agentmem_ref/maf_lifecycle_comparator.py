@@ -54,7 +54,7 @@ class MutationTask:
 
 class LifecycleStartExecutor(Executor):  # type: ignore[misc,valid-type]
     @handler
-    async def start(self, mode: str, ctx: WorkflowContext) -> None:  # type: ignore[valid-type]
+    async def start(self, mode: str, ctx: WorkflowContext[MutationTask]) -> None:  # type: ignore[valid-type]
         await ctx.send_message(MutationTask(mode=mode))
 
 
@@ -71,7 +71,11 @@ class LifecycleMutationExecutor(Executor):  # type: ignore[misc,valid-type]
         self._replay_guard = replay_guard
 
     @handler
-    async def mutate(self, task: MutationTask, ctx: WorkflowContext) -> None:  # type: ignore[valid-type]
+    async def mutate(
+        self,
+        task: MutationTask,
+        ctx: WorkflowContext[Any, dict[str, Any]],  # type: ignore[valid-type]
+    ) -> None:
         recall = self._memory.governed_recall(
             "governed seed",
             RecallContext(
@@ -201,6 +205,23 @@ async def _consume_until_output(event_stream) -> dict[str, Any]:
     raise AssertionError("MAF workflow completed without output")
 
 
+async def _checkpoint_after_first_superstep(workflow, storage) -> Any:
+    """Interrupt at a documented checkpoint boundary and close the stream cleanly."""
+
+    event_stream = workflow.run(message="allow", stream=True)
+    checkpoint = None
+    try:
+        async for event in event_stream:
+            if event.type == "superstep_completed":
+                checkpoint = await storage.get_latest(workflow_name=workflow.name)
+                break
+    finally:
+        close = getattr(event_stream, "aclose", None)
+        if close is not None:
+            await close()
+    return checkpoint
+
+
 async def _run(agent_memory_commit: str) -> dict[str, Any]:
     if not _MAF_AVAILABLE:
         raise RuntimeError(f"{MAF_PACKAGE} is required for the pinned comparator")
@@ -260,21 +281,19 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
     runtime_storage = InMemoryCheckpointStorage()
     start = LifecycleStartExecutor(id="start")
     worker = LifecycleMutationExecutor(id="memory", memory=memory, replay_guard=replay_guard)
-    builder = (
-        WorkflowBuilder(start_executor=start, checkpoint_storage=runtime_storage)
-        .add_edge(start, worker)
-    )
+    builder = WorkflowBuilder(start_executor=start, checkpoint_storage=runtime_storage).add_edge(start, worker)
 
     first_workflow = builder.build()
-    pre_mutation_checkpoint = None
-    async for event in first_workflow.run(message="allow", stream=True):
-        if event.type == "superstep_completed":
-            pre_mutation_checkpoint = await runtime_storage.get_latest(workflow_name=first_workflow.name)
-            break
+    pre_mutation_checkpoint = await _checkpoint_after_first_superstep(first_workflow, runtime_storage)
     if pre_mutation_checkpoint is None:
         raise AssertionError("MAF workflow did not create a pre-mutation checkpoint")
     if replay_guard.prior_receipt("maf:run-allow:mutation-1") is not None:
         raise AssertionError("mutation committed before checkpointed resume boundary")
+
+    # Bind the framework checkpoint to the Agent Memory state that was current at
+    # capture time. Framework checkpoint recency and memory-state freshness are
+    # deliberately separate axes.
+    checkpoint_bound_memory_state = memory.state_version("mem:maf:lifecycle")
 
     resumed_workflow = builder.build()
     committed_output = await _consume_until_output(
@@ -284,15 +303,20 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
     if committed_output.get("status") != "committed":
         raise AssertionError(f"resumed workflow did not commit governed mutation: {committed_output}")
 
+    current_memory_state_after_commit = memory.state_version("mem:maf:lifecycle")
+    checkpoint_memory_state_relation = (
+        "current" if checkpoint_bound_memory_state == current_memory_state_after_commit else "stale"
+    )
+
     checkpoints_after_commit = await runtime_storage.list_checkpoints(workflow_name=first_workflow.name)
     latest_after_commit = await runtime_storage.get_latest(workflow_name=first_workflow.name)
     if latest_after_commit is None:
-        raise AssertionError("MAF workflow did not retain a post-mutation checkpoint")
+        raise AssertionError("MAF workflow lost its checkpoint state after resume")
     runtime_lineage = {
         checkpoint.checkpoint_id: checkpoint.previous_checkpoint_id
         for checkpoint in checkpoints_after_commit
     }
-    stale_runtime_relation = classify_checkpoint_relation(
+    framework_relation_after_commit = classify_checkpoint_relation(
         pre_mutation_checkpoint.checkpoint_id,
         latest_after_commit.checkpoint_id,
         runtime_lineage,
@@ -337,7 +361,17 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
         "real_maf_workflow_checkpointed_before_mutation": bool(pre_mutation_checkpoint.checkpoint_id),
         "real_maf_resume_committed_governed_mutation": committed_output.get("status") == "committed",
         "real_maf_resume_included_governed_recall": committed_output.get("recall_admitted") is True,
-        "runtime_checkpoint_becomes_stale_after_resume": stale_runtime_relation == "stale",
+        "checkpoint_bound_memory_state_becomes_stale": (
+            checkpoint_bound_memory_state == 0
+            and current_memory_state_after_commit == 1
+            and checkpoint_memory_state_relation == "stale"
+        ),
+        "framework_checkpoint_relation_is_explicit": framework_relation_after_commit in {
+            "current",
+            "stale",
+            "divergent",
+            "unknown",
+        },
         "stale_checkpoint_replay_reused_receipt": (
             replay_output.get("status") == "replay"
             and replay_output.get("receipt_ref") == committed_output.get("receipt_ref")
@@ -381,7 +415,10 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
             },
             "pre_mutation_checkpoint": pre_mutation_checkpoint.checkpoint_id,
             "latest_after_commit": latest_after_commit.checkpoint_id,
-            "stale_runtime_relation": stale_runtime_relation,
+            "framework_relation_after_commit": framework_relation_after_commit,
+            "checkpoint_bound_memory_state": checkpoint_bound_memory_state,
+            "current_memory_state_after_commit": current_memory_state_after_commit,
+            "checkpoint_memory_state_relation": checkpoint_memory_state_relation,
         },
         "governance_evidence": {
             "committed_receipt_ref": committed_output.get("receipt_ref"),
@@ -396,6 +433,7 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
             "framework_checkpoint_is_not_memory_admission",
             "framework_checkpoint_is_not_lifecycle_satisfaction",
             "framework_persistence_is_not_memory_authority",
+            "framework_latest_checkpoint_is_not_memory_state_freshness",
             "missing_trace_is_not_non_execution_evidence",
         ],
     }
