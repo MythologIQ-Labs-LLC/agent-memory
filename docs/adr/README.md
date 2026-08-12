@@ -33,6 +33,7 @@ ADR-024: Proposed
 ADR-025: Proposed
 ADR-026: Proposed
 ADR-027: Proposed
+ADR-028: Proposed
 ```
 
 ADRs 001-020 and ADR-022 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance.
@@ -44,6 +45,8 @@ ADR-022 establishes **memory isolation domains and controlled boundary crossing*
 ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 proposes **pre-write coordination for shared-memory mutation**. ADR-025 proposes **explicit authority for overwriting durable decision memory**. All remain Proposed until their named evidence gates are satisfied.
 
 ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity. Both remain Proposed while their linked evidence programs run.
+
+ADR-028 proposes a **language-neutral normative core with optional implementation and interoperability profiles**. It permits Python-first reference tooling, Rust high-assurance implementations, and UOR/AGT/MCP integrations without allowing any one language or external ecosystem to become the definition of Agent Memory doctrine.
 
 ## Current status policy
 
@@ -129,6 +132,24 @@ The current Proposed ADRs intentionally separate several related but non-identic
 - [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): require governed re-admission when a corrected/rejected value later reappears.
 
 These ADRs must not be collapsed into a single broad "memory safety" claim. Each has its own acceptance evidence and may be accepted, narrowed, or rejected independently.
+
+## Implementation portability and ecosystem boundaries
+
+[`ADR-028`](ADR-028-language-neutral-core-and-optional-implementation-profiles.md) is **Proposed**.
+
+Its central boundary is:
+
+```text
+normative doctrine / schemas / fixtures
+        !=
+reference implementation language
+        !=
+optional implementation or interoperability profile
+```
+
+Python may remain the practical reference/integration language where it maximizes ecosystem reach. Rust is a first-class implementation language for high-assurance or performance-sensitive components. UOR, AGT, MCP, and other external systems may supply reusable primitives or profiles, but none becomes authoritative for Agent Memory semantics merely through adoption.
+
+ADR-028 acceptance requires cross-language conformance evidence and a negative path demonstrating that content-address verification does not confer memory authority.
 
 ## Canonical references
 
