@@ -199,17 +199,17 @@ Every conformance fixture should:
 
 Fixture versioning rules: the version tracks the scenario contract, not the memory-unit schema. Prose-only changes may stay patch-compatible; changes to expected behavior, invariants, trap semantics, or material inputs require a version bump (major when scenario semantics break). Runtime evidence records `fixture_id` plus `fixture_version` so results stay comparable as fixtures evolve. Full rules live in `docs/27-schema-registry-and-type-evolution.md`.
 
-Run:
+For the main reference validation environment, install the repository-visible pinned dependency set:
 
 ```bash
-python -m pip install jsonschema
+python -m pip install -r reference/requirements.txt
 python scripts/validate_fixtures.py fixtures
 python scripts/validate_schemas.py
 ```
 
-The repository workflow runs the same checks on pushes and pull requests.
+The repository workflow consumes the same manifest. Comparator-only environments remain separately pinned where dependency isolation is part of the evidence boundary.
 
-## Validator dependency policy
+## Validator and reference dependency policy
 
 Validation tooling keeps a deliberate dependency split:
 
@@ -219,10 +219,11 @@ scripts/validate_schemas.py              jsonschema permitted/required
 scripts/validate_markdown_links.py       Python standard library only
 scripts/validate_doctrine_boundaries.py  Python standard library only
 scripts/generate_calibration_report.py   Python standard library only
+reference/ governed/interoperability     pinned dependencies in reference/requirements.txt
 other validation dependencies            require explicit justification in the PR
 ```
 
-The stdlib-only validators must stay runnable with no installation step, so the cheapest check is always available. `jsonschema` is the one sanctioned exception because hand-rolled JSON Schema validation is how schema and validator drift apart. CI remains reproducible from the commands documented above and in the workflow summary.
+The stdlib-only claim applies to the listed low-cost validator surfaces, not to the entire `reference/` implementation. The stdlib-only validators must stay runnable with no installation step; `jsonschema` is the sanctioned schema-validation exception. Reference/runtime evidence dependencies are declared explicitly in [`reference/requirements.txt`](reference/requirements.txt) so a fresh contributor does not have to reverse-engineer CI to reproduce the supported validation environment.
 
 ## Documentation changes
 
@@ -238,6 +239,18 @@ Optimize for:
 - original synthesis when reuse rights are unclear or unnecessary
 
 For the root README, prefer stable static overview graphics or compact tables when GitHub's interactive Mermaid renderer harms legibility. Mermaid remains useful in detailed documentation where the source graph itself is part of the working artifact.
+
+Documentation alignment is part of the change, not a post-merge cleanup task. When a contribution changes architecture, maturity, setup, governance, contribution behavior, security posture, roadmap state, interoperability, or public project relationships, review the affected public surfaces in the same PR. Depending on impact, that includes:
+
+- `README.md`
+- `docs/README.md` and the relevant canonical doctrine/profile/program document
+- `docs/adr/README.md` and affected ADR status text
+- `wiki-src/`
+- `CONTRIBUTING.md`, `GOVERNANCE.md`, and `SECURITY.md`
+- `reference/README.md` and dependency/setup instructions
+- roadmap and aligned-project/source-rights records
+
+Do not edit every surface ceremonially. Do update every surface whose current statement would become stale, misleading, or contradictory because of the change.
 
 Avoid:
 
@@ -260,6 +273,7 @@ A pull request should state:
 - what validation was run
 - what the change proves
 - what remains unproven
+- which public documentation surfaces were reviewed and which required updates
 
 For a human-directed agent workflow, the PR should also make the material delegation or authorization boundary clear when it is relevant to understanding who exercised repository authority.
 
@@ -271,7 +285,7 @@ A contribution is complete when:
 
 1. the intended architectural or evidence change is explicit
 2. affected doctrine is internally consistent
-3. relevant links and indexes are updated
+3. affected public documentation, links, indexes, setup instructions, and status surfaces are aligned
 4. schemas/fixtures are updated when the contract changed
 5. source rights and attribution obligations are resolved for any material reuse
 6. validation passes

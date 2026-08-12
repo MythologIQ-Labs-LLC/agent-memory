@@ -38,6 +38,7 @@ The Governance Context Projection adds a complementary boundary: remembered cont
 
 ```text
 reference/
+  requirements.txt                   pinned main reference-validation dependencies
   agentmem_ref/
     substrate.py                     port + permissive in-memory temporal graph
     policy.py                        PAMA evaluation: base table, class floors, modifiers
@@ -58,18 +59,15 @@ reference/
   run_conformance.py
 ```
 
-Schema validation uses `jsonschema`. P4.5a Ed25519 signing and public-key verification use `cryptography`, added under the explicit dependency-justification rule in `../CONTRIBUTING.md`. P4.5b uses `agent-manifest==0.11.0` as a test-only comparator and does not import it from production reference modules. P4.5c uses `agentrust-trace==0.8.0` plus `rfc8785==0.1.4` for the TRACE/JCS contract and runs `cmcp-runtime==0.4.0` in an isolated comparator environment. CI pins the main validation profile to `jsonschema==4.26.0`, `cryptography==50.0.0`, `agent-manifest==0.11.0`, `agentrust-trace==0.8.0`, and `rfc8785==0.1.4`. The Governance Context Projection builder adds no runtime dependency. The low-cost fixture, doctrine-boundary, and link validators remain standard-library only except the JSON Schema validator.
+The reference implementation is **not** standard-library only. Its main validation dependency set is declared and pinned in [`requirements.txt`](requirements.txt): `jsonschema`, `cryptography`, `agent-manifest`, `agentrust-trace`, and `rfc8785`. P4.5b uses Agent Manifest as a test-only comparator and does not import it from production reference modules. P4.5c uses TRACE/JCS dependencies in the main reference environment, while `cmcp-runtime==0.4.0` is kept in an isolated comparator environment because its dependency line differs. The Governance Context Projection builder adds no runtime dependency.
+
+The low-cost repository validators intentionally keep a different dependency posture: fixture, doctrine-boundary, link, visual, and calibration tooling stays standard-library only where documented, with `jsonschema` as the explicit schema-validation exception. See [`../CONTRIBUTING.md`](../CONTRIBUTING.md). CI installs the main reference validation environment from the same checked-in manifest used by contributors rather than maintaining a second hidden pin list.
 
 ## Running it
 
 ```bash
 # reference model and interoperability paths
-python -m pip install \
-  jsonschema==4.26.0 \
-  cryptography==50.0.0 \
-  agent-manifest==0.11.0 \
-  agentrust-trace==0.8.0 \
-  rfc8785==0.1.4
+python -m pip install -r reference/requirements.txt
 python -m unittest discover -s reference/tests -t reference
 
 # TRACE/cMCP comparator in a dependency-isolated environment
