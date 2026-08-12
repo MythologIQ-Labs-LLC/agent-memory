@@ -4,9 +4,9 @@
 
 Move Agent Memory from a **doctrine-validated** reference architecture to an **implementation-evidenced** one.
 
-Everything in the doctrine tree is currently supported by internal coherence: schemas that validate, fixtures that are structurally sound, ADRs that agree with the documents they govern. That is necessary and it is not proof. This program exists to test whether the architecture's boundaries survive real substrates, real workloads, adversarial cases, portability pressure, observability requirements, and cost.
+Everything in the doctrine tree is supported by internal coherence: schemas that validate, fixtures that are structurally sound, and ADRs that agree with the documents they govern. This program exists because coherence is necessary and still is not proof. It tests whether the architecture's boundaries survive real substrates, real workloads, adversarial cases, portability pressure, observability requirements, and cost.
 
-> ADR-020 remains Proposed until runtime evidence, not prose, earns acceptance.
+> ADR-020 is Accepted on the executable evidence mapped by the P10 acceptance audit. That doctrine decision does not imply cumulative implementation conformance or universal production proof.
 
 The live backlog and workstream detail are tracked in the program issue. This document is the durable in-repo statement of the program's rules: what counts as evidence, how comparators are used, and what the program is not allowed to do.
 
@@ -89,6 +89,7 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`concurrency-conflict-evidence.md`](concurrency-conflict-evidence.md) | concurrency behavior | conflicting proposals from one prior state are revalidated at commit; stale second write is deferred and conflict evidence is emitted |
 | [`benchmark-security-scorecard.md`](benchmark-security-scorecard.md) | P5 benchmark/security matrix and harness | seven hard-gate security/governance metrics execute with explicit denominators and an exact-commit scorecard artifact; no scalar quality score |
 | [`mem0-adversarial-comparator.md`](mem0-adversarial-comparator.md) | P6 production-oriented adversarial comparator | pinned Mem0 OSS memory CRUD, scope, correction, deletion, history, and direct-ID behavior execute against local Qdrant/SQLite with external-model seams removed |
+| [`../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md`](../../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md) | P10 ADR-020 evidence review | all fourteen ADR-020 minimum evidence gates mapped to executable repository evidence; acceptance separated from cumulative conformance |
 
 ## Preconditions
 
@@ -102,7 +103,7 @@ External comparators do not require precondition 2. A comparator is measured, no
 
 ## Non-goals
 
-This program does not authorize replacing Agent Memory with any external system, vendor lock-in, treating emerging drafts as adopted standards, importing external schemas without semantic review, inventing a universal memory score, averaging critical governance failures into a passing aggregate, weakening scope, privacy, correction, or deletion semantics for implementation convenience, declaring governance runtime-proven because a schema validates, or accepting ADR-020 because a demonstration was persuasive once.
+This program does not authorize replacing Agent Memory with any external system, vendor lock-in, treating emerging drafts as adopted standards, importing external schemas without semantic review, inventing a universal memory score, averaging critical governance failures into a passing aggregate, weakening scope, privacy, correction, or deletion semantics for implementation convenience, or declaring cumulative implementation conformance merely because ADR-020 is accepted.
 
 ## Governing principle
 
