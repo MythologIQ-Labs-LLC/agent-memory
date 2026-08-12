@@ -33,6 +33,7 @@ ADR-024: Proposed
 ADR-025: Proposed
 ADR-026: Proposed
 ADR-027: Proposed
+ADR-028: Proposed
 ```
 
 ADRs 001-020 and ADR-022 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance.
@@ -43,7 +44,9 @@ ADR-022 establishes **memory isolation domains and controlled boundary crossing*
 
 ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 proposes **pre-write coordination for shared-memory mutation**. ADR-025 proposes **explicit authority for overwriting durable decision memory**. All remain Proposed until their named evidence gates are satisfied.
 
-ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity. Both remain Proposed while their linked evidence programs run.
+ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity.
+
+ADR-028 proposes a three-layer interoperability boundary: **canonical Agent Memory core -> vendor-neutral Governance Context Projection -> consumer-specific adapter**. The projection is reconstructable derived context, not canonical memory truth, standing permission, or a final external-governance verdict.
 
 ## Current status policy
 
@@ -118,7 +121,7 @@ Boundary crossing, including sharing, exporting, copying, deriving, inheriting, 
 
 Acceptance is backed by the canonical isolation-domain contract, additive schema/receipt representation, governed-recall enforcement, same-agent cross-project/task fixtures, derived-scope propagation, unauthorized scope-promotion tests, shared-space member/non-member recall tests, executable crossing receipts, and reconciliation with the future multi-agent shared-memory protocol. This is a doctrine-maturity statement, not universal production-runtime conformance.
 
-## Candidate durable-mutation decisions
+## Candidate durable-mutation and interoperability decisions
 
 The current Proposed ADRs intentionally separate several related but non-identical questions:
 
@@ -126,9 +129,32 @@ The current Proposed ADRs intentionally separate several related but non-identic
 - [`ADR-024`](ADR-024-shared-memory-writes-require-prewrite-claims.md): coordinate shared durable writes before commit;
 - [`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md): require explicit authority before overwriting durable decision state;
 - [`ADR-026`](ADR-026-origin-is-provenance-not-evidentiary-authority.md): apply the same evidence discipline to claims regardless of origin;
-- [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): require governed re-admission when a corrected/rejected value later reappears.
+- [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): require governed re-admission when a corrected/rejected value later reappears;
+- [`ADR-028`](ADR-028-governance-projection-is-derived-context-not-authority.md): expose vendor-neutral governance context as reconstructable derived state without turning consumer semantics into core memory doctrine.
 
-These ADRs must not be collapsed into a single broad "memory safety" claim. Each has its own acceptance evidence and may be accepted, narrowed, or rejected independently.
+These ADRs must not be collapsed into a single broad "memory safety" or "governance integration" claim. Each has its own acceptance evidence and may be accepted, narrowed, or rejected independently.
+
+## Governance Context Projection
+
+[`ADR-028`](ADR-028-governance-projection-is-derived-context-not-authority.md) is intentionally **Proposed**.
+
+Its central boundary is:
+
+```text
+canonical Agent Memory primitives
+        |
+        v
+Governance Context Projection
+  evidence / precedent / material conditions
+        |
+        v
+consumer-specific adapter
+  policy vocabulary / risk / approval / enforcement
+```
+
+The projection does not emit a final consumer verdict or standing permission. It is designed so consumers can use remembered rationale, conditions, negative precedent, validity, and outcomes without requiring Agent Memory core to mirror a DashClaw-, AGT/ACS-, or other vendor-specific data model.
+
+ADR-028 acceptance requires a reconstructable reference builder, adversarial near-match coverage, provenance/scope preservation, privacy/minimization evidence, and at least one consumer integration that demonstrates value without pushing consumer-specific fields into the canonical memory-unit schema.
 
 ## Canonical references
 
@@ -145,4 +171,6 @@ These ADRs must not be collapsed into a single broad "memory safety" claim. Each
 - [`../30-memory-observability-and-audit-events.md`](../30-memory-observability-and-audit-events.md)
 - [`../31-recovery-rollback-and-replay.md`](../31-recovery-rollback-and-replay.md)
 - [`../32-memory-quality-metrics.md`](../32-memory-quality-metrics.md)
+- [`../34-adapter-contracts.md`](../34-adapter-contracts.md)
 - [`../41-memory-isolation-domains-and-governed-crossing.md`](../41-memory-isolation-domains-and-governed-crossing.md)
+- [`../profiles/governance-context-projection-profile.md`](../profiles/governance-context-projection-profile.md)
