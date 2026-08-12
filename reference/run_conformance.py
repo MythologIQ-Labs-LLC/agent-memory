@@ -2,8 +2,10 @@
 """Execute the governed paths and the fixture corpus, then emit a report.
 
 The report conforms to `schemas/conformance-report.schema.json` and covers
-two populations: the governance paths in `tests/`, and the repository's
-doctrine fixture corpus driven through the adapter's authority enforcement.
+three evidence populations: governance paths in `tests/`, the repository's
+doctrine fixture corpus driven through authority enforcement, and explicit
+forbidden-hit lifecycle assertions that separate discovery, admission, context
+surfacing, and downstream influence.
 
 It deliberately claims **conformance level 0**. The doc 06 levels are
 cumulative, and this adapter implements neither decay nor calibrated
@@ -27,7 +29,7 @@ REFERENCE_DIR = Path(__file__).resolve().parent
 ROOT = REFERENCE_DIR.parent
 sys.path.insert(0, str(REFERENCE_DIR))
 
-from agentmem_ref import fixture_conformance, policy, receipts  # noqa: E402
+from agentmem_ref import fixture_conformance, forbidden_hits, policy, receipts  # noqa: E402
 from agentmem_ref.adapter import Clock, GovernedMemoryAdapter, StochasticSelector  # noqa: E402
 from agentmem_ref.graphiti_driver import graphiti_available  # noqa: E402
 from agentmem_ref.projection_governance import ProjectionGovernor  # noqa: E402
@@ -156,6 +158,8 @@ def _exemptions(substrate_executed: bool) -> list[str]:
         "Retrieval ranking is lexical rather than hybrid, so recall quality is not measured "
         "and no calibration claim is made.",
         "The policy implements the subset of the decision table these paths require.",
+        "Forbidden-hit coverage proves the named negative classes and blocking stages only. It does "
+        "not imply that unlisted lifecycle, sensitivity, purpose, or downstream-action classes are covered.",
     ]
     if not substrate_executed:
         return common + [
@@ -174,6 +178,7 @@ def build_report(trials: int = 200) -> dict:
     substrate_executed = graphiti_available()
     names, passed, failed = _run_suite()
     corpus = fixture_conformance.run()
+    forbidden = forbidden_hits.run()
     sweep = _stochastic_sweep(trials)
     derived = _derived_state_probe()
     report = {
@@ -186,13 +191,19 @@ def build_report(trials: int = 200) -> dict:
         "fixtures_run": corpus["fixtures_run"],
         "fixtures_passed": corpus["fixtures_passed"],
         "fixtures_failed": corpus["fixtures_failed"],
-        "trials_run": len(names) + len(corpus["fixtures_run"]) + sweep["trials"],
+        "trials_run": (
+            len(names)
+            + len(corpus["fixtures_run"])
+            + len(forbidden["assertions_run"])
+            + sweep["trials"]
+        ),
         "metrics": {
             "stochastic_action_set_violation_rate": sweep["escapes"] / max(sweep["trials"], 1),
             "deletion_residue_rate": derived["undeclared_count"] / max(derived["derived_total"], 1),
         },
+        "forbidden_hit_coverage": forbidden["coverage"],
         "known_exemptions": _exemptions(substrate_executed) + fixture_conformance.exemptions(),
-        "known_failures": corpus["fixtures_failed"] + failed,
+        "known_failures": corpus["fixtures_failed"] + failed + forbidden["failures"],
         "metric_extensions": {
             "substrate_model": SUBSTRATE_MODEL,
             "real_substrate_executed": substrate_executed,
@@ -201,6 +212,9 @@ def build_report(trials: int = 200) -> dict:
             "negative_paths_executed": len([name for name in names if "positive" not in name]),
             "governance_paths_failed": failed,
             "corpus_fixtures_with_authority_envelope": corpus["fixtures_with_authority_envelope"],
+            "forbidden_hit_assertions_run": len(forbidden["assertions_run"]),
+            "forbidden_hit_classes_covered": forbidden["forbidden_classes"],
+            "forbidden_hit_failures": forbidden["failures"],
             "stochastic_trials": sweep["trials"],
             "stochastic_escapes": sweep["escapes"],
             "stochastic_distinct_actions": sweep["distinct_actions"],
