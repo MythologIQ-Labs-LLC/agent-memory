@@ -1,4 +1,4 @@
-"""Executable evidence for the ADR-028 governance-projection boundary."""
+"""Executable evidence for the ADR-029 governance-projection boundary."""
 
 from __future__ import annotations
 
