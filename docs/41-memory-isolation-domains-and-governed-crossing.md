@@ -1,6 +1,6 @@
 # Memory Isolation Domains and Governed Boundary Crossing
 
-> Proposed doctrine contract for [ADR-022](adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md). ADR-022 remains **Proposed** until its named schema, recall, fixture, shared-memory, and validation evidence is satisfied.
+> Canonical doctrine contract for [ADR-022](adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md). ADR-022 is **Accepted** doctrine. Acceptance records doctrine maturity; it does not claim universal runtime enforcement, production conformance, or completion of every #68 follow-up.
 >
 > This contract extends [29-actor-scope-consent-and-tenancy.md](29-actor-scope-consent-and-tenancy.md) and does not supersede ADR-016.
 
@@ -251,7 +251,7 @@ timestamp
 receipt_id
 ```
 
-The exact machine-readable representation belongs to the schema work package. This contract deliberately does not freeze field placement or hierarchy before that work is evaluated.
+The repository now provides a machine-readable crossing representation through [`../schemas/boundary-crossing-receipt.schema.json`](../schemas/boundary-crossing-receipt.schema.json), together with isolation-domain state on the memory scope surface and executable reference behavior. This document remains authoritative for the semantic meaning of those fields and relationships; the schema does not redefine the doctrine.
 
 A receipt proves what decision was made under bound policy/state. It does not make the crossing permanently valid after authority or domain state changes.
 
@@ -438,46 +438,44 @@ The schema and fixture work should make at least these failures expressible and 
 
 Critical isolation failures are hard governance failures. They must not be averaged away by good recall quality elsewhere.
 
-## Machine-readable follow-up boundary
+## Machine-readable representation
 
-This document defines semantic requirements only.
+The repository now has additive machine-readable support for the ADR-022 acceptance boundary, including:
 
-It does **not** yet claim that the current schemas can represent all of them. In particular, the repository still needs to evaluate:
+- stable isolation-domain identifiers and domain-type/relationship state on the memory scope surface
+- target isolation-domain, project, and task context for governed recall
+- shared-space membership evaluation in the reference adapter
+- source-domain provenance for derived scope
+- a boundary-crossing receipt schema
+- executable crossing decisions that bind source and destination domains, policy/PAMA state, and outcome
+- revocation and destination constraints where the current reference paths exercise them
 
-- stable domain identifiers and domain type/relationship representation
-- target-domain fields on governed recall requests
-- shared-space membership references
-- derived-scope provenance
-- boundary-crossing decision/receipt representation
-- revocation and destination constraints
+The representation remains deliberately non-hierarchical. It does not encode a universal tenant -> project -> task tree, and future schema evolution must preserve that property.
 
-Schema work must remain additive where possible and must not encode a fixed tenant -> project -> task hierarchy that this contract does not require.
+Machine-readable coverage sufficient for ADR acceptance is not the same as proof that every supported architecture family or production deployment enforces every isolation path.
 
-## Shared-memory protocol follow-up
+## Shared-memory protocol relationship
 
-The future multi-agent shared-memory protocol must be reconciled so that a shared space is explicitly a governed isolation domain.
+The future multi-agent shared-memory protocol has been reconciled so that a shared space is explicitly modeled as a governed isolation domain.
 
-Agent-to-agent sharing is therefore a controlled boundary crossing, not an exception that bypasses isolation doctrine.
-
-Until that reconciliation lands, this contract must not be read as proof that the future shared-memory protocol already satisfies ADR-022.
+Agent-to-agent sharing is therefore a controlled boundary crossing, not an exception that bypasses isolation doctrine. The protocol remains a future subsystem; reconciliation establishes semantic compatibility, not a claim that a production shared-memory implementation is complete.
 
 ## Conformance boundary
 
-This contract satisfies only the canonical-contract portion of issue #68 / ADR-022 evidence.
+This canonical contract, together with the evidence recorded by ADR-022, supports **Accepted** doctrine status.
 
-It does not by itself:
+That acceptance does not by itself:
 
-- accept ADR-022
-- raise a conformance level
-- prove runtime isolation
-- prove schema coverage
-- prove recall integration
-- prove shared-memory reconciliation
-- prove derived-scope propagation in an implementation
+- raise a repository-wide conformance level
+- prove universal runtime isolation across architecture families
+- prove production deployment enforcement
+- complete every broader #68 negative path or conformance fixture
+- make membership sufficient for recall admission
+- make a valid crossing receipt proof that later revocation, correction, scope reduction, or deletion obligations were satisfied
 
-Those claims require their own machine-readable and executable evidence.
+Those stronger claims require their own executable and runtime evidence.
 
-## Doctrine candidate
+## Canonical doctrine
 
 > **Memory scope is an authority boundary, not a retrieval filter.**
 
