@@ -297,6 +297,7 @@ A consumer-specific need should first be implemented in that consumer's adapter.
 
 ## Related
 
+- ADR-029
 - ADR-028
 - ADR-021
 - [`../34-adapter-contracts.md`](../34-adapter-contracts.md)
