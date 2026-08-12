@@ -98,7 +98,7 @@ class TelemetryProjectionTests(unittest.TestCase):
         self.assertEqual(first["attributes"]["am.memory_ref"], second["attributes"]["am.memory_ref"])
         self.assertNotEqual(first["attributes"]["am.event_ref"], second["attributes"]["am.event_ref"])
 
-    def test_different_telemetry_keys_break_cross-domain_linkability(self):
+    def test_different_telemetry_keys_break_cross_domain_linkability(self):
         first = self.projector.project(self.event)
         other = TelemetryProjector(b"different-telemetry-key-32-bytes").project(self.event)
         self.assertNotEqual(first["attributes"]["am.memory_ref"], other["attributes"]["am.memory_ref"])
