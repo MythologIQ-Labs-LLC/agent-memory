@@ -3,6 +3,41 @@
   "fixture_version": "1.0.0",
   "class": "trap",
   "description": "Pinned TRACE reference evidence exercises vendor-neutral normalization while proving that verification, freshness, revocation, and applicability remain distinct from Agent Memory authority.",
+  "memory_unit": {
+    "id": "mem:external-evidence-normalization",
+    "content_ref": "fixture://external-evidence-normalization/reference-claim",
+    "type": "decision",
+    "state": "candidate",
+    "provenance": {
+      "origin": "fixture",
+      "observer": "conformance-suite",
+      "method": "external-evidence-normalization-matrix",
+      "timestamp": "2026-08-12T20:00:00Z",
+      "source_refs": ["issue://180", "peer://TRACE/agentrust-trace==0.8.0"]
+    },
+    "evidence": [
+      {
+        "id": "evidence:external-evidence-normalization",
+        "kind": "external_attestation_normalization_fixture",
+        "ref": "issue://180",
+        "confidence": 1.0
+      }
+    ],
+    "saturation": {
+      "sigma": 0.0,
+      "calibrated": false,
+      "durability_dimensions": ["interoperability_contract"]
+    },
+    "authority": {
+      "pama_outcome": "require_review",
+      "risk_class": "medium",
+      "policy_refs": ["ADR-021", "issue:180"],
+      "permitted_actions": ["collect_more_evidence", "defer"],
+      "prohibited_actions": ["promotion"],
+      "selection_mode": "none"
+    },
+    "created_at": "2026-08-12T20:00:00Z"
+  },
   "pinned_reference": {
     "source_peer": "TRACE",
     "source_version": "agentrust-trace==0.8.0",
