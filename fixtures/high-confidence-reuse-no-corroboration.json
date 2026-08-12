@@ -20,9 +20,7 @@
       "observer": "conformance-suite",
       "method": "synthetic-high-confidence-reuse-trap",
       "timestamp": "2026-08-12T00:00:00Z",
-      "source_refs": [
-        "fixture://source/inference-a"
-      ]
+      "source_refs": ["fixture://source/inference-a"]
     },
     "evidence": [
       {
@@ -31,51 +29,29 @@
         "ref": "fixture://source/inference-a",
         "confidence": 0.99,
         "confidence_kind": "estimator_confidence",
-        "estimator": {
-          "id": "fixture-estimator",
-          "version": "1.0.0"
-        }
+        "estimator": {"id": "fixture-estimator", "version": "1.0.0"}
       }
     ],
     "saturation": {
       "sigma": 0.97,
       "calibrated": true,
       "threshold": 0.8,
-      "durability_dimensions": [
-        "retrieval",
-        "reuse"
-      ]
+      "durability_dimensions": ["retrieval", "reuse"]
     },
     "authority": {
       "pama_outcome": "require_external_verification",
       "risk_class": "medium",
-      "policy_refs": [
-        "ADR-002",
-        "ADR-003",
-        "ADR-009"
-      ],
-      "permitted_actions": [
-        "retain_candidate",
-        "request_independent_evidence"
-      ],
-      "prohibited_actions": [
-        "crystallize"
-      ],
+      "policy_refs": ["ADR-002", "ADR-003", "ADR-009"],
+      "permitted_actions": ["retain_candidate", "request_independent_evidence"],
+      "prohibited_actions": ["crystallize"],
       "selection_mode": "deterministic"
     },
-    "certification": {
-      "status": "none",
-      "scope": "fixture"
-    },
+    "certification": {"status": "none", "scope": "fixture"},
     "created_at": "2026-08-12T00:00:00Z"
   },
   "epistemic_promotion": {
     "lineage": [
-      {
-        "evidence_id": "evidence:inference-a",
-        "origin_id": "origin:inference-a",
-        "derived_from": []
-      }
+      {"evidence_id": "evidence:inference-a", "origin_refs": ["origin:inference-a"], "derived_from": []}
     ],
     "retrieval_count": 250,
     "downstream_use_count": 100,
