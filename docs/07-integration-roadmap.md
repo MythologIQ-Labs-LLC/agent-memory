@@ -308,7 +308,7 @@ When an integration needs a new field, first determine whether it exposes a gene
 
 ### V0.1: contract and deterministic fixtures
 
-Tracked by #154 and proposed ADR-028.
+Tracked by #154 and proposed ADR-029.
 
 - [ ] define the vendor-neutral governance-context projection profile
 - [ ] add `schemas/governance-context-projection.schema.json`
