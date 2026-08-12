@@ -38,6 +38,18 @@ def _proposal() -> policy.Proposal:
     )
 
 
+def _context(purpose: str) -> RecallContext:
+    # The reference substrate retrieves by tenant group_id while canonical
+    # admission also checks isolation-domain membership. Carry both identities
+    # so the behavioral proof exercises admission rather than an empty search.
+    return RecallContext(
+        target_domain_refs=("tenant-a", "scope:tenant-a/project-a"),
+        principal_ref="principal:sleeper-test",
+        project_ref="project-a",
+        purpose=purpose,
+    )
+
+
 def run_sleeper_poisoning_harness() -> dict[str, Any]:
     fixture = json.loads(SLEEPER_FIXTURE.read_text(encoding="utf-8"))
     expected = fixture["expected_behavior"]
@@ -76,21 +88,8 @@ def run_sleeper_poisoning_harness() -> dict[str, Any]:
     )
     recall = ContextualRecallAdapter(base, policy=contextual_policy, clock=Clock(start=50))
 
-    benign_context = RecallContext(
-        target_domain_refs=("scope:tenant-a/project-a",),
-        principal_ref="principal:sleeper-test",
-        project_ref="project-a",
-        purpose="bounded-procedural-context",
-    )
-    benign = recall.governed_recall("procedural helper", benign_context)
-
-    trigger_context = RecallContext(
-        target_domain_refs=("scope:tenant-a/project-a",),
-        principal_ref="principal:sleeper-test",
-        project_ref="project-a",
-        purpose="activate-triggered-memory",
-    )
-    triggered = recall.governed_recall("procedural helper", trigger_context)
+    benign = recall.governed_recall("procedural helper", _context("bounded-procedural-context"))
+    triggered = recall.governed_recall("procedural helper", _context("activate-triggered-memory"))
     trigger_decision = triggered.contextual_decisions.get(fact_uuid)
 
     stored_after = substrate.get_fact(fact_uuid)
