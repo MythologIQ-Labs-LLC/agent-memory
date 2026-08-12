@@ -70,6 +70,38 @@
       "description": "Implementation-specific metrics not yet standardized by doctrine.",
       "additionalProperties": true
     },
+    "forbidden_hit_coverage": {
+      "type": "array",
+      "description": "Explicit negative lifecycle assertions. Each row states which pipeline stages were expected to remain unreachable for a forbidden memory/action class rather than inferring safety from a positive recall result.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assertion_id",
+          "forbidden_class",
+          "source_lifecycle_state",
+          "source_evidence",
+          "candidate_discovered",
+          "admitted",
+          "context_surfaced",
+          "downstream_influence",
+          "expected_refusal",
+          "passed"
+        ],
+        "properties": {
+          "assertion_id": { "type": "string", "minLength": 1 },
+          "forbidden_class": { "type": "string", "minLength": 1 },
+          "source_lifecycle_state": { "type": "string", "minLength": 1 },
+          "source_evidence": { "type": "string", "minLength": 1 },
+          "candidate_discovered": { "type": "boolean" },
+          "admitted": { "type": "boolean" },
+          "context_surfaced": { "type": "boolean" },
+          "downstream_influence": { "type": "boolean" },
+          "expected_refusal": { "type": "string", "minLength": 1 },
+          "passed": { "type": "boolean" }
+        }
+      }
+    },
     "durability_dimensions_tested": {
       "type": "array",
       "items": { "type": "string" }
