@@ -63,6 +63,8 @@ class OverwriteProposal:
     target_class: str = policy.M4
     downstream_authority: str = policy.A3
     reversibility: str = "reversible"
+    isolation_domain_refs: tuple[str, ...] = ()
+    required_isolation_domain_refs: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -171,6 +173,8 @@ class DurableDecisionRegistry:
             review_satisfied=True,
             state_snapshot=proposal.state_snapshot,
             purpose="durable-decision-overwrite",
+            isolation_domain_refs=proposal.isolation_domain_refs,
+            required_isolation_domain_refs=proposal.required_isolation_domain_refs,
         )
         decision = policy.evaluate(pama_proposal)
         selected_action = (
@@ -202,6 +206,7 @@ class DurableDecisionRegistry:
                 None,
                 receipt_id,
             )
+            receipts.verify_receipt_decision_pair(receipt, pama_decision)
             result.grant = grant
             result.decision = decision
             result.receipt = receipt
@@ -233,6 +238,7 @@ class DurableDecisionRegistry:
         replacement = proposal.replacement
         self._decisions[replacement.decision_id] = replacement
         self._versions[proposal.target_decision_id] = new_version
+        self._versions[replacement.decision_id] = 0
         self._superseded_by[proposal.target_decision_id] = replacement.decision_id
         evidence = {
             "supersession_id": f"supersession:{proposal.proposal_id}",
@@ -327,10 +333,11 @@ class DurableDecisionRegistry:
         grant: AuthorityGrant,
         now: str,
     ) -> str | None:
+        grant_shape = self._grant_shape_refusal(grant, now)
+        if grant_shape:
+            return grant_shape
         if grant.revoked:
             return "authority_grant_revoked"
-        if self._is_expired(grant, now):
-            return "authority_grant_expired"
         if grant.proposal_id != proposal.proposal_id:
             return "authority_proposal_mismatch"
         if grant.target_decision_id != proposal.target_decision_id:
@@ -343,6 +350,8 @@ class DurableDecisionRegistry:
             return "actor_not_delegated"
         if grant.principal_id == proposal.proposing_actor:
             return "self_approval_prohibited"
+        if grant.grant_id not in proposal.replacement.approval_refs:
+            return "authority_not_recorded_on_replacement"
         if grant.max_risk_class not in _RISK_ORDER:
             return "invalid_authority_risk_ceiling"
         if _RISK_ORDER[proposal.risk_class] > _RISK_ORDER[grant.max_risk_class]:
@@ -355,6 +364,34 @@ class DurableDecisionRegistry:
             return "unsupported_authority_kind"
         if grant.authority_kind == DELEGATED_POLICY and proposal.risk_class not in ("low", "medium"):
             return "delegation_not_permitted_for_risk"
+        return None
+
+    def _grant_shape_refusal(self, grant: AuthorityGrant, now: str) -> str | None:
+        for name in (
+            "grant_id",
+            "authority_kind",
+            "principal_id",
+            "proposal_id",
+            "target_decision_id",
+            "scope",
+            "mutation_class",
+            "issued_at",
+            "expires_at",
+            "max_risk_class",
+        ):
+            if not getattr(grant, name):
+                return "invalid_authority_grant"
+        if not grant.authorized_actor_ids:
+            return "invalid_authority_grant"
+        issued = self._parse_time(grant.issued_at)
+        expires = self._parse_time(grant.expires_at)
+        current = self._parse_time(now)
+        if expires <= issued:
+            return "invalid_authority_grant"
+        if current < issued:
+            return "authority_grant_not_yet_valid"
+        if current >= expires:
+            return "authority_grant_expired"
         return None
 
     def _reject(
@@ -412,10 +449,6 @@ class DurableDecisionRegistry:
         if parsed.tzinfo is None:
             parsed = parsed.replace(tzinfo=timezone.utc)
         return parsed.astimezone(timezone.utc)
-
-    @classmethod
-    def _is_expired(cls, grant: AuthorityGrant, now: str) -> bool:
-        return cls._parse_time(now) >= cls._parse_time(grant.expires_at)
 
     def _event(
         self,
