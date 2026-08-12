@@ -40,6 +40,12 @@ def proposal(
     state_snapshot: str = "",
     review: bool = True,
 ) -> policy.Proposal:
+    strength = {
+        "promotion": ("reinforced", "canonical"),
+        "correction": ("canonical", "canonical"),
+        "permanent_deletion": ("canonical", "not_applicable"),
+    }
+    current_strength, proposed_strength = strength[operation]
     return policy.Proposal(
         proposal_id=f"{actor}:{operation}",
         actor_id=actor,
@@ -48,8 +54,8 @@ def proposal(
         target_class=policy.M4,
         scope=tenant,
         operation=operation,
-        current_strength="crystallized",
-        proposed_strength="crystallized",
+        current_strength=current_strength,
+        proposed_strength=proposed_strength,
         downstream_authority=policy.A2,
         reversibility="irreversible" if operation == "permanent_deletion" else "reversible",
         risk_class="medium",
