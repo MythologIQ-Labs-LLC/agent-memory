@@ -243,7 +243,7 @@ ADR-020 was accepted only after the repository accumulated executable evidence f
 13. at least one implementation is mapped end-to-end from estimate -> governance -> action set -> commit
 14. at least one adversarial challenge causes a documented boundary, correction, or rejection rather than being ignored
 
-The acceptance audit is recorded in [`../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance.md`](../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance.md). Runtime evidence includes the pinned real-substrate governed adapter, stochastic containment, concurrency conflict evidence, deletion-completeness evidence, the P5 security scorecard, the P6 Mem0 comparator, and portable/external action-evidence negative paths.
+The acceptance audit is recorded in [`../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md`](../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md). Runtime evidence includes the pinned real-substrate governed adapter, stochastic containment, concurrency conflict evidence, deletion-completeness evidence, the P5 security scorecard, the P6 Mem0 comparator, and portable/external action-evidence negative paths.
 
 Acceptance is a **doctrine-maturity decision**, not a claim that the narrow reference adapter satisfies every cumulative Agent Memory conformance level or that every production implementation conforms.
 
