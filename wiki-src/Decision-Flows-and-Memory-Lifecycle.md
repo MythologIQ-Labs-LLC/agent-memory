@@ -13,7 +13,8 @@ Use each diagram to answer one architectural question, then follow the canonical
 | How should readers distinguish supersession, correction, dispute, and staleness across time? | [Temporal change](#5-temporal-change-correction-and-supersession) | [`docs/18-temporal-causality-layer.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/18-temporal-causality-layer.md) |
 | Why can a successful delete operation still leave memory behind? | [Deletion completeness](#6-deletion-completeness-and-derived-state-propagation) | [`docs/28-retention-deletion-and-tombstones.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/28-retention-deletion-and-tombstones.md) |
 | What do these governance boundaries look like in executable cases? | [Scenario walkthroughs](#7-executable-scenario-walkthroughs) | [Conformance fixtures](https://github.com/MythologIQ-Labs-LLC/agent-memory/tree/main/fixtures) |
-| How can a memory decision be evidenced externally without exporting semantic authority? | [Portable evidence chain](#8-portable-governance-evidence-chain) | [P4.5 executable evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/portable-governance-evidence.md) |
+| How can one physical store safely hold multiple project, task, and shared-memory boundaries? | [Isolation-domain crossing](#8-isolation-domain-crossing) | [`docs/41-memory-isolation-domains-and-governed-crossing.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/41-memory-isolation-domains-and-governed-crossing.md) |
+| How can a memory decision be evidenced externally without exporting semantic authority? | [Portable evidence chain](#9-portable-governance-evidence-chain) | [P4.5 executable evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/portable-governance-evidence.md) |
 
 ## Reading rule
 
@@ -155,9 +156,29 @@ Canonical deletion doctrine requires propagation through known derivation relati
 
 These are not hypothetical new policies. They are reader-oriented projections of existing conformance fixtures. [`governed-promotion-audit-trace.json`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/fixtures/governed-promotion-audit-trace.json) shows corroboration, cross-reference, reuse, proposal, authority resolution, a selected permitted action, committed `pending_verification`, and a reconstructable receipt. [`high-confidence-false-promotion.json`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/fixtures/high-confidence-false-promotion.json) demonstrates that confidence `0.99` and saturation `0.97` still do not permit crystallization of a false claim. [`deletion-residue.json`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/fixtures/deletion-residue.json) demonstrates that a deleted raw record plus surviving derived content forbids a full-deletion claim and requires continued dependency handling and verification.
 
-The scenario set deliberately does **not** visualize cross-project isolation as settled behavior. The repository already has recall and tenant-scope negative cases, but issue #73 separately binds the isolation-domain visualization to ADR-022 maturity. Scenario convenience does not get to bypass that boundary.
+The first scenario set is intentionally small and fixture-grounded. Cross-project isolation is now represented separately by the Accepted ADR-022 isolation-domain visual below rather than being retrofitted into these earlier walkthroughs.
 
-## 8. Portable governance evidence chain
+## 8. Isolation-domain crossing
+
+**Question:** How can one physical memory store host multiple project, task, and shared-memory domains without allowing memory to bleed between them?
+
+> **Maturity: Accepted ADR-022 doctrine.** This visual explains the accepted isolation-domain boundary. It does not claim universal runtime enforcement or complete every broader #68 conformance path.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/isolation-domain-crossing.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/isolation-domain-crossing-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/isolation-domain-crossing-light.svg" alt="Agent Memory isolation-domain crossing diagram showing Project A Task 1, Project B Task 2, and a shared security space in one physical store; a cross-domain candidate must resolve current scope, membership, purpose, destination, and policy, pass PAMA governance, use only a permitted representation, and produce a reconstructable crossing receipt" width="100%">
+  </picture>
+</p>
+
+The same physical store and the same agent do not collapse separate memory scopes. A highly relevant candidate from another project or task must still resolve the target domain and current authority before admission or transfer. Shared-space membership creates eligibility where applicable, not universal recall, mutation, export, or re-sharing authority. PAMA evaluates the crossing consequence, and only an allowed treatment may proceed. Permitted crossings remain reconstructable through a boundary-crossing receipt, while later correction, revocation, scope reduction, or deletion may create downstream propagation obligations.
+
+**Readable Wiki context:** [Security and Privacy](Security-and-Privacy)  
+**Canonical contract:** [`docs/41-memory-isolation-domains-and-governed-crossing.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/41-memory-isolation-domains-and-governed-crossing.md)  
+**Accepted architectural decision:** [ADR-022](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md)
+
+## 9. Portable governance evidence chain
 
 **Question:** How can a memory decision be evidenced externally without exporting semantic authority?
 
@@ -171,18 +192,18 @@ The scenario set deliberately does **not** visualize cross-project isolation as 
   </picture>
 </p>
 
-P4.5 local implementation now provides the executable shape issue #73 required before visualizing this boundary: a versioned content-free projection, deterministic canonicalization, Ed25519 issuer/verifier, Agent Manifest checkpoint correlation, TRACE/cMCP external-action correlation, lifecycle-result composition, and adversarial continuity vectors. The canonical Agent Memory receipt remains authoritative. Portable evidence proves integrity and correlation; it does not manufacture PAMA permission or lifecycle satisfaction. A valid negative outcome remains valid evidence.
+P4.5 local implementation provides the executable shape issue #73 required before visualizing this boundary: a versioned content-free projection, deterministic canonicalization, Ed25519 issuer/verifier, Agent Manifest checkpoint correlation, TRACE/cMCP external-action correlation, lifecycle-result composition, and adversarial continuity vectors. The canonical Agent Memory receipt remains authoritative. Portable evidence proves integrity and correlation; it does not manufacture PAMA permission or lifecycle satisfaction. A valid negative outcome remains valid evidence.
 
 **Readable Wiki context:** [Runtime Evidence](Runtime-Evidence)  
 **Proposed architectural boundary:** [ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md)  
 **Executable evidence:** [`docs/programs/runtime-evidence/portable-governance-evidence.md`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/programs/runtime-evidence/portable-governance-evidence.md)
 
-## What remains maturity-gated
+## Maturity boundary
 
-The V1/V2 visual core, first executable scenario set, and evidence-scoped portable governance chain are represented. The remaining issue #73 visual is the isolation-domain crossing view, and that boundary is **not ready to finalize**.
+The V1/V2 visual core, first executable scenario set, Accepted ADR-022 isolation-domain view, and evidence-scoped portable governance chain are represented.
 
-[ADR-022](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) remains **Proposed**, and implementation issue [#68](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/68) remains open with its canonical contract/schema/critical fixture acceptance work incomplete. The visual guide therefore stops at the existing governed-recall scope boundary rather than promoting the proposed isolation-domain model into a settled diagram.
+[ADR-022](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md) is **Accepted** doctrine. Its diagram therefore explains a canonical architectural boundary, while the broader implementation and conformance backlog in [#68](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/68) remains separate and does not become complete merely because the doctrine is accepted or illustrated.
 
-[ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md) also remains **Proposed** despite the executable P4.5 evidence above. A diagram does not raise an ADR status, conformance level, or runtime-evidence claim.
+[ADR-021](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md) remains **Proposed** despite the executable P4.5 evidence above. Its visual remains explicitly evidence-scoped. A diagram does not raise an ADR status, conformance level, or runtime-evidence claim.
 
-This page will remain an index into stable or explicitly evidence-scoped visual explanations as they land.
+This page remains an index into stable or explicitly evidence-scoped visual explanations rather than an independent doctrine source.
