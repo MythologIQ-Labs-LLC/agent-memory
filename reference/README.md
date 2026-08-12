@@ -28,7 +28,7 @@ Several things, at different evidential weight.
 
 **Against the P4.5c TRACE/cMCP action-evidence surface.** The reference adapter wraps P4.5a evidence in the existing six-field cMCP `external_execution_evidence` envelope, hashes the detached payload with RFC 8785/JCS, and preserves `linked_call_id` as a separate audit identity from Agent Memory `action_ref`. Local vectors exercise TRACE-style receipt outcomes, wrong-call and wrong-action replay, payload/signature tampering, missing trust, domain mismatch, and lifecycle separation. A second CI path creates an isolated environment with `cmcp-runtime==0.4.0` and calls the released `cmcp_verify.verify_audit_bundle()` verifier against the emitted envelope.
 
-**Against the proposed ADR-028 Governance Context Projection boundary.** A deterministic reference builder converts explicit precedent inputs into a vendor-neutral projection containing source-memory references, material conditions, polarity, validity, provenance, outcomes, scope, and derivation metadata. The builder does not emit consumer verdicts, standing permission, or risk scores. Tests exercise material matches, misleading near-matches, negative precedent, unknown conditions, deterministic rebuild, and provenance laundering where a policy-generated outcome tries to impersonate independent human adjudication.
+**Against the proposed ADR-029 Governance Context Projection boundary.** A deterministic reference builder converts explicit precedent inputs into a vendor-neutral projection containing source-memory references, material conditions, polarity, validity, provenance, outcomes, scope, and derivation metadata. The builder does not emit consumer verdicts, standing permission, or risk scores. Tests exercise material matches, misleading near-matches, negative precedent, unknown conditions, deterministic rebuild, and provenance laundering where a policy-generated outcome tries to impersonate independent human adjudication.
 
 The common point is that the governance layer is load-bearing. The substrate model is deliberately permissive in exactly the ways the mapping verified: identity is opaque rather than content-derived, the partition filter defaults to unfiltered, deletion is physical with no tombstone, and **no operation checks authority**. Several tests assert both halves: that the substrate *would* misbehave, and that the adapter refuses anyway. A test that only checked the adapter would not prove the governance was doing any work.
 
@@ -43,7 +43,7 @@ reference/
     policy.py                        PAMA evaluation: base table, class floors, modifiers
     receipts.py                      schema-conformant decisions, receipts, audit events
     adapter.py                       the governed path
-    governance_projection.py         deterministic ADR-028 context projection builder
+    governance_projection.py         deterministic ADR-029 context projection builder
     fixture_conformance.py           drives the doctrine corpus through enforcement
     projections.py                   tier-3 declarations and the freshness relation
     residue.py                       deletion residue partition and independent sweep
@@ -101,7 +101,7 @@ evidence -> proposal -> authority envelope -> permitted action set
          -> retrieval candidate -> governed admission -> active context
 ```
 
-The adapter supplies what the substrate cannot: an authority gate before every write, always-explicit scope filtering, external lifecycle state, tombstones, and receipts. Artifacts are emitted against schemas already canonical in this repository rather than shapes invented beside the implementation: `pama-decision`, `decision-receipt`, `memory-audit-event`, `conformance-report`, P4.5a `portable-governance-evidence`, P4.5b `agent-manifest-memory-correlation`, P4.5c `trace-action-evidence-bundle`, and proposed ADR-028 `governance-context-projection`.
+The adapter supplies what the substrate cannot: an authority gate before every write, always-explicit scope filtering, external lifecycle state, tombstones, and receipts. Artifacts are emitted against schemas already canonical in this repository rather than shapes invented beside the implementation: `pama-decision`, `decision-receipt`, `memory-audit-event`, `conformance-report`, P4.5a `portable-governance-evidence`, P4.5b `agent-manifest-memory-correlation`, P4.5c `trace-action-evidence-bundle`, and proposed ADR-029 `governance-context-projection`.
 
 The governance-consumer path is separate:
 
