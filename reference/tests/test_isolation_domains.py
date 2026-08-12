@@ -1,4 +1,4 @@
-"""Executable isolation-domain recall evidence for proposed ADR-022.
+"""Executable isolation-domain recall evidence for accepted ADR-022.
 
 These tests deliberately use one adapter, one agent identity, one tenant, and
 one physical substrate. The only changing boundary is logical memory scope.
@@ -21,9 +21,19 @@ TENANT = "tenant-a"
 AGENT = "agent:planner"
 DOMAIN_A = "domain:project-a"
 DOMAIN_B = "domain:project-b"
+COMPARTMENT_EXPORT = "compartment:export-controlled"
+COMPARTMENT_LEGAL = "compartment:legal"
 
 
-def proposal(reference: str, domain: str, project: str, task: str) -> policy.Proposal:
+def proposal(
+    reference: str,
+    domain: str,
+    project: str,
+    task: str,
+    *,
+    additional_domains: tuple[str, ...] = (),
+    required_domains: tuple[str, ...] = (),
+) -> policy.Proposal:
     return policy.Proposal(
         proposal_id=f"proposal:{reference}",
         actor_id=AGENT,
@@ -40,7 +50,8 @@ def proposal(reference: str, domain: str, project: str, task: str) -> policy.Pro
         evidence_refs=("evidence:source",),
         tenant_ref=TENANT,
         purpose="assistance",
-        isolation_domain_refs=(domain,),
+        isolation_domain_refs=(domain, *additional_domains),
+        required_isolation_domain_refs=required_domains,
         project_ref=project,
         task_ref=task,
     )
@@ -51,9 +62,25 @@ class IsolationDomainRecallTests(unittest.TestCase):
         self.substrate = InMemoryTemporalGraph()
         self.adapter = GovernedMemoryAdapter(self.substrate, tenant=TENANT, clock=Clock())
 
-    def _commit(self, reference: str, domain: str, project: str, task: str):
+    def _commit(
+        self,
+        reference: str,
+        domain: str,
+        project: str,
+        task: str,
+        *,
+        additional_domains: tuple[str, ...] = (),
+        required_domains: tuple[str, ...] = (),
+    ):
         result = self.adapter.commit_proposal(
-            proposal(reference, domain, project, task),
+            proposal(
+                reference,
+                domain,
+                project,
+                task,
+                additional_domains=additional_domains,
+                required_domains=required_domains,
+            ),
             "deployment credential rotation procedure",
         )
         self.assertTrue(result.committed)
@@ -140,6 +167,72 @@ class IsolationDomainRecallTests(unittest.TestCase):
         self.assertIn(fact_uuid, recall.candidates)
         self.assertNotIn(fact_uuid, recall.admitted)
         self.assertEqual(recall.refusals[fact_uuid], "isolation_domain_mismatch")
+
+    def test_same_tenant_missing_required_compartment_is_blocked(self):
+        fact_uuid = self._commit(
+            "mem:a6",
+            DOMAIN_A,
+            "project-a",
+            "task-1",
+            additional_domains=(COMPARTMENT_EXPORT, COMPARTMENT_LEGAL),
+            required_domains=(COMPARTMENT_EXPORT, COMPARTMENT_LEGAL),
+        )
+
+        recall = self.adapter.governed_recall(
+            "deployment credential rotation procedure",
+            RecallContext(
+                target_domain_refs=(DOMAIN_A, COMPARTMENT_EXPORT),
+                project_ref="project-a",
+                task_ref="task-1",
+                purpose="assistance",
+            ),
+        )
+
+        self.assertIn(fact_uuid, recall.candidates)
+        self.assertNotIn(fact_uuid, recall.admitted)
+        self.assertEqual(recall.refusals[fact_uuid], "required_isolation_domain_missing")
+
+    def test_all_required_compartments_allow_admission_when_other_gates_match(self):
+        fact_uuid = self._commit(
+            "mem:a7",
+            DOMAIN_A,
+            "project-a",
+            "task-1",
+            additional_domains=(COMPARTMENT_EXPORT, COMPARTMENT_LEGAL),
+            required_domains=(COMPARTMENT_EXPORT, COMPARTMENT_LEGAL),
+        )
+
+        recall = self.adapter.governed_recall(
+            "deployment credential rotation procedure",
+            RecallContext(
+                target_domain_refs=(DOMAIN_A, COMPARTMENT_EXPORT, COMPARTMENT_LEGAL),
+                project_ref="project-a",
+                task_ref="task-1",
+                purpose="assistance",
+            ),
+        )
+
+        self.assertIn(fact_uuid, recall.admitted)
+
+    def test_ordinary_multiple_domain_refs_remain_alternative_routes(self):
+        fact_uuid = self._commit(
+            "mem:a8",
+            DOMAIN_A,
+            "project-a",
+            "task-1",
+            additional_domains=("domain:shared-route",),
+        )
+
+        recall = self.adapter.governed_recall(
+            "deployment credential rotation procedure",
+            RecallContext(
+                target_domain_refs=(DOMAIN_A,),
+                project_ref="project-a",
+                task_ref="task-1",
+            ),
+        )
+
+        self.assertIn(fact_uuid, recall.admitted)
 
 
 if __name__ == "__main__":

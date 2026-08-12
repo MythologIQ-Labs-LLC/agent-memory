@@ -120,6 +120,7 @@ class Proposal:
     tenant_ref: str = ""
     purpose: str = ""
     isolation_domain_refs: tuple[str, ...] = ()
+    required_isolation_domain_refs: tuple[str, ...] = ()
     project_ref: str = ""
     task_ref: str = ""
 
@@ -160,6 +161,10 @@ def _apply_modifiers(outcome: str, proposal: Proposal) -> tuple[str, list[str]]:
         return BLOCK, ["M-AUTH: actor authority could not be reconstructed"]
     if proposal.approves_own_authority:
         return BLOCK, ["invariant 4: an actor may not approve its own authority expansion"]
+    required_domains = set(proposal.required_isolation_domain_refs)
+    bound_domains = set(proposal.isolation_domain_refs)
+    if required_domains and not required_domains.issubset(bound_domains):
+        return BLOCK, ["required isolation domains must be bound to the memory scope"]
     if proposal.reversibility == "irreversible":
         escalated = _strictest(outcome, REQUIRE_REVIEW)
         if proposal.risk_class in ("high", "critical"):
