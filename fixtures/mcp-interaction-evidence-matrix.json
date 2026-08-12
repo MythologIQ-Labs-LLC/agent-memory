@@ -143,7 +143,7 @@
       },
       "remove": [],
       "expected_binding": "mismatch",
-      "expected_alignment": "within_governance"
+      "expected_alignment": "binding_mismatch"
     },
     {
       "case_id": "cross-tenant-same-tool-and-request-id",
@@ -154,7 +154,7 @@
       },
       "remove": [],
       "expected_binding": "mismatch",
-      "expected_alignment": "within_governance"
+      "expected_alignment": "binding_mismatch"
     },
     {
       "case_id": "server-unavailable-governance-unavailable",
