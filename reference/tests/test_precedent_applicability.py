@@ -17,6 +17,7 @@ from agentmem_ref.precedent_applicability import evaluate_projection, summarize_
 
 ROOT = Path(__file__).resolve().parents[2]
 MATRIX = ROOT / "fixtures" / "precedent-applicability-matrix.json"
+REPORT = ROOT / "reports" / "examples" / "precedent-applicability-results.example.json"
 
 
 def _projection_from_scenario(scenario: dict) -> dict:
@@ -97,7 +98,12 @@ class PrecedentApplicabilityTests(unittest.TestCase):
             "novel-insufficient-evidence",
         }
         self.assertEqual(seen, required)
-        self.assertEqual(summarize_metrics(evaluated), self.matrix["expected_behavior"])
+        metrics = summarize_metrics(evaluated)
+        self.assertEqual(metrics, self.matrix["expected_behavior"])
+
+        report = json.loads(REPORT.read_text(encoding="utf-8"))
+        reported_metrics = {key: report[key] for key in metrics}
+        self.assertEqual(reported_metrics, metrics)
 
     def test_force_push_material_differences_are_explicit(self):
         scenario = next(
