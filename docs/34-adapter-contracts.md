@@ -150,7 +150,7 @@ Implements the correction and dispute contract; doctrine in [`17-conflict-resolu
 
 ### Governance context projection adapter
 
-Implements the vendor-neutral governance-facing projection defined in [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) and proposed ADR-028.
+Implements the vendor-neutral governance-facing projection defined in [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) and proposed ADR-029.
 
 This adapter differs from the internal component adapters above: it produces a **derived consumer-facing projection** rather than a canonical mutation handoff.
 
@@ -194,7 +194,6 @@ The evidence component asks the identity component to resolve a build artifact:
   "target_component": "evidence",
   "handoff_reason": "artifact_resolution",
   "signal_type": "identity_resolution",
-  "signal_semantics": "deterministic_content_address",
   "timestamp": "2026-08-10T21:04:00Z"
 }
 ```
