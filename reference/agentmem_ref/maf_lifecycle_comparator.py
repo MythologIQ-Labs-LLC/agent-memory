@@ -1,14 +1,15 @@
 """Pinned Microsoft Agent Framework comparator for issue #189.
 
-This comparator intentionally uses MAF's real checkpoint objects and in-memory
-checkpoint storage while keeping Agent Memory governance in the existing
-reference adapter.  No model or external service is needed: the claim under
-test is lifecycle/checkpoint interoperability, not model quality.
+The comparator uses MAF's real workflow/checkpoint runtime while keeping Agent
+Memory governance in the existing reference adapter. No model or external
+service is needed: the claim under test is lifecycle/checkpoint interoperability,
+not model quality.
 """
 
 from __future__ import annotations
 
 import asyncio
+from dataclasses import dataclass
 from typing import Any
 
 from .adapter import GovernedMemoryAdapter, RecallContext
@@ -20,6 +21,109 @@ MAF_PACKAGE = "agent-framework-core==1.13.0"
 MAF_TAG = "python-1.13.0"
 MAF_COMMIT = "e39a8a2e79c8c8987a0b9082d3ccb8665734b897"
 MAF_CHECKPOINT_FORMAT = "1.0"
+
+try:  # Optional dependency: only the isolated comparator workflow installs it.
+    from agent_framework import (
+        Executor,
+        InMemoryCheckpointStorage,
+        WorkflowBuilder,
+        WorkflowCheckpoint,
+        WorkflowContext,
+        handler,
+    )
+    import agent_framework
+
+    _MAF_AVAILABLE = True
+except ImportError:  # pragma: no cover - keeps core/reference importable without MAF
+    Executor = object  # type: ignore[assignment,misc]
+    InMemoryCheckpointStorage = None  # type: ignore[assignment]
+    WorkflowBuilder = None  # type: ignore[assignment]
+    WorkflowCheckpoint = None  # type: ignore[assignment]
+    WorkflowContext = Any  # type: ignore[assignment]
+    agent_framework = None  # type: ignore[assignment]
+    _MAF_AVAILABLE = False
+
+    def handler(function):  # type: ignore[no-redef]
+        return function
+
+
+@dataclass
+class MutationTask:
+    mode: str
+
+
+class LifecycleStartExecutor(Executor):  # type: ignore[misc,valid-type]
+    @handler
+    async def start(self, mode: str, ctx: WorkflowContext) -> None:  # type: ignore[valid-type]
+        await ctx.send_message(MutationTask(mode=mode))
+
+
+class LifecycleMutationExecutor(Executor):  # type: ignore[misc,valid-type]
+    def __init__(
+        self,
+        *,
+        id: str,
+        memory: GovernedMemoryAdapter,
+        replay_guard: MutationReplayGuard,
+    ) -> None:
+        super().__init__(id=id)
+        self._memory = memory
+        self._replay_guard = replay_guard
+
+    @handler
+    async def mutate(self, task: MutationTask, ctx: WorkflowContext) -> None:  # type: ignore[valid-type]
+        recall = self._memory.governed_recall(
+            "governed seed",
+            RecallContext(
+                target_domain_refs=("scope:tenant-a/project-a",),
+                principal_ref="principal:maf",
+                project_ref="project-a",
+                purpose="framework-lifecycle-proof",
+            ),
+        )
+
+        if task.mode == "allow":
+            idempotency_key = "maf:run-allow:mutation-1"
+            prior = self._replay_guard.prior_receipt(idempotency_key)
+            if prior is not None:
+                await ctx.yield_output(
+                    {
+                        "status": "replay",
+                        "receipt_ref": prior,
+                        "recall_admitted": bool(recall.admitted),
+                    }
+                )
+                return
+
+            result = self._memory.commit_proposal(
+                _allowing_proposal(),
+                "framework lifecycle governed fact",
+            )
+            if not result.committed:
+                raise RuntimeError(f"governed mutation unexpectedly refused: {result.refusal}")
+            receipt_ref = result.receipt["receipt_id"]
+            self._replay_guard.record(idempotency_key, receipt_ref)
+            await ctx.yield_output(
+                {
+                    "status": "committed",
+                    "receipt_ref": receipt_ref,
+                    "recall_admitted": bool(recall.admitted),
+                }
+            )
+            return
+
+        if task.mode == "deny":
+            result = self._memory.commit_proposal(_denied_proposal(), "must never persist")
+            await ctx.yield_output(
+                {
+                    "status": "denied" if not result.committed else "unexpected_commit",
+                    "decision_outcome": result.decision.outcome,
+                    "recall_admitted": bool(recall.admitted),
+                }
+            )
+            return
+
+        raise ValueError(f"unsupported lifecycle task mode {task.mode!r}")
 
 
 def _allowing_proposal() -> Proposal:
@@ -37,6 +141,28 @@ def _allowing_proposal() -> Proposal:
         reversibility="reversible",
         risk_class="low",
         evidence_refs=("evidence:maf-run",),
+        tenant_ref="tenant-a",
+        purpose="framework-lifecycle-proof",
+        isolation_domain_refs=("scope:tenant-a/project-a",),
+        project_ref="project-a",
+    )
+
+
+def _seed_proposal() -> Proposal:
+    return Proposal(
+        proposal_id="proposal:maf:seed",
+        actor_id="actor:seed",
+        charter_version="charter:v1",
+        target_reference="mem:maf:seed",
+        target_class=M2,
+        scope="scope:tenant-a/project-a",
+        operation="promotion",
+        current_strength="observed",
+        proposed_strength="promoted",
+        downstream_authority=A1,
+        reversibility="reversible",
+        risk_class="low",
+        evidence_refs=("evidence:maf-seed",),
         tenant_ref="tenant-a",
         purpose="framework-lifecycle-proof",
         isolation_domain_refs=("scope:tenant-a/project-a",),
@@ -66,16 +192,25 @@ def _denied_proposal() -> Proposal:
     )
 
 
-async def _run(agent_memory_commit: str) -> dict[str, Any]:
-    try:
-        from agent_framework import InMemoryCheckpointStorage, WorkflowCheckpoint
-        import agent_framework
-    except ImportError as exc:  # pragma: no cover - exercised in isolated CI comparator
-        raise RuntimeError(f"{MAF_PACKAGE} is required for the pinned comparator") from exc
+async def _consume_until_output(event_stream) -> dict[str, Any]:
+    async for event in event_stream:
+        if event.type == "output":
+            if not isinstance(event.data, dict):
+                raise AssertionError("MAF lifecycle output must be a mapping")
+            return event.data
+    raise AssertionError("MAF workflow completed without output")
 
-    storage = InMemoryCheckpointStorage()
+
+async def _run(agent_memory_commit: str) -> dict[str, Any]:
+    if not _MAF_AVAILABLE:
+        raise RuntimeError(f"{MAF_PACKAGE} is required for the pinned comparator")
+
+    # First, exercise the documented checkpoint identity edge case directly
+    # against MAF's real checkpoint objects/storage: same iteration, distinct
+    # lineage. This prevents an adapter from using iteration_count as authority.
+    lineage_storage = InMemoryCheckpointStorage()
     checkpoint_1 = WorkflowCheckpoint(
-        workflow_name="agent-memory-governed-lifecycle",
+        workflow_name="agent-memory-lineage-proof",
         graph_signature_hash="graph:agent-memory-v01",
         checkpoint_id="checkpoint-1",
         previous_checkpoint_id=None,
@@ -85,7 +220,7 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
         version=MAF_CHECKPOINT_FORMAT,
     )
     checkpoint_2 = WorkflowCheckpoint(
-        workflow_name="agent-memory-governed-lifecycle",
+        workflow_name="agent-memory-lineage-proof",
         graph_signature_hash="graph:agent-memory-v01",
         checkpoint_id="checkpoint-2",
         previous_checkpoint_id="checkpoint-1",
@@ -94,63 +229,95 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
         iteration_count=1,
         version=MAF_CHECKPOINT_FORMAT,
     )
-    await storage.save(checkpoint_1)
-    await storage.save(checkpoint_2)
-    loaded_1 = await storage.load("checkpoint-1")
-    latest = await storage.get_latest(workflow_name="agent-memory-governed-lifecycle")
-    if latest is None:
-        raise AssertionError("MAF checkpoint storage returned no latest checkpoint")
-
-    lineage = {
+    await lineage_storage.save(checkpoint_1)
+    await lineage_storage.save(checkpoint_2)
+    loaded_1 = await lineage_storage.load("checkpoint-1")
+    latest_lineage = await lineage_storage.get_latest(workflow_name="agent-memory-lineage-proof")
+    if latest_lineage is None:
+        raise AssertionError("MAF lineage storage returned no latest checkpoint")
+    manual_lineage = {
         checkpoint_1.checkpoint_id: checkpoint_1.previous_checkpoint_id,
         checkpoint_2.checkpoint_id: checkpoint_2.previous_checkpoint_id,
     }
-    stale_relation = classify_checkpoint_relation(loaded_1.checkpoint_id, latest.checkpoint_id, lineage)
-    current_relation = classify_checkpoint_relation(latest.checkpoint_id, latest.checkpoint_id, lineage)
+    explicit_stale_relation = classify_checkpoint_relation(
+        loaded_1.checkpoint_id,
+        latest_lineage.checkpoint_id,
+        manual_lineage,
+    )
 
     substrate = InMemoryTemporalGraph()
     memory = GovernedMemoryAdapter(substrate, tenant="tenant-a")
     replay_guard = MutationReplayGuard()
-    idempotency_key = "maf:run-1:mutation-1"
 
-    first = memory.commit_proposal(
-        _allowing_proposal(),
-        "framework lifecycle governed fact",
+    seed = memory.commit_proposal(_seed_proposal(), "governed seed context")
+    if not seed.committed:
+        raise AssertionError("failed to seed governed recall context")
+    writes_before_workflow = sum(1 for operation, _ in substrate.write_log if operation == "write_fact")
+
+    # Real MAF workflow: run one superstep, interrupt only after MAF has emitted
+    # superstep_completed (which the pinned sample documents as checkpointed),
+    # then resume from the real checkpoint into the governed mutation.
+    runtime_storage = InMemoryCheckpointStorage()
+    start = LifecycleStartExecutor(id="start")
+    worker = LifecycleMutationExecutor(id="memory", memory=memory, replay_guard=replay_guard)
+    builder = (
+        WorkflowBuilder(start_executor=start, checkpoint_storage=runtime_storage)
+        .add_edge(start, worker)
     )
-    if not first.committed:
-        raise AssertionError(f"positive governed mutation did not commit: {first.refusal}")
-    receipt_ref = first.receipt["receipt_id"]
-    replay_guard.record(idempotency_key, receipt_ref)
-    write_count_after_first = sum(1 for operation, _ in substrate.write_log if operation == "write_fact")
 
-    # Framework retry/resume consults Agent Memory idempotency evidence before
-    # proposing another durable write.  The prior receipt is reused; no second
-    # substrate mutation is attempted.
-    prior_on_retry = replay_guard.prior_receipt(idempotency_key)
-    if prior_on_retry != receipt_ref:
-        raise AssertionError("retry did not recover the original governed receipt")
-    write_count_after_retry = sum(1 for operation, _ in substrate.write_log if operation == "write_fact")
+    first_workflow = builder.build()
+    pre_mutation_checkpoint = None
+    async for event in first_workflow.run(message="allow", stream=True):
+        if event.type == "superstep_completed":
+            pre_mutation_checkpoint = await runtime_storage.get_latest(workflow_name=first_workflow.name)
+            break
+    if pre_mutation_checkpoint is None:
+        raise AssertionError("MAF workflow did not create a pre-mutation checkpoint")
+    if replay_guard.prior_receipt("maf:run-allow:mutation-1") is not None:
+        raise AssertionError("mutation committed before checkpointed resume boundary")
 
-    recall = memory.governed_recall(
-        "framework lifecycle",
-        RecallContext(
-            target_domain_refs=("scope:tenant-a/project-a",),
-            principal_ref="principal:maf",
-            project_ref="project-a",
-            purpose="framework-lifecycle-proof",
-        ),
+    resumed_workflow = builder.build()
+    committed_output = await _consume_until_output(
+        resumed_workflow.run(checkpoint_id=pre_mutation_checkpoint.checkpoint_id, stream=True)
     )
-    denied = memory.commit_proposal(_denied_proposal(), "must never persist")
+    writes_after_commit = sum(1 for operation, _ in substrate.write_log if operation == "write_fact")
+    if committed_output.get("status") != "committed":
+        raise AssertionError(f"resumed workflow did not commit governed mutation: {committed_output}")
 
-    # Loading an older framework checkpoint is real MAF behavior.  Agent Memory
-    # refuses to apply its older memory_state_ref as rollback authority because
-    # explicit checkpoint lineage says the checkpoint is stale.
-    state_before_stale_resume = memory.state_version("mem:maf:lifecycle")
-    stale_resume_applied = False
-    if stale_relation == "current":  # pragma: no cover - this would be a comparator failure
-        stale_resume_applied = True
-        memory.record_correction("mem:maf:lifecycle")
-    state_after_stale_resume = memory.state_version("mem:maf:lifecycle")
+    checkpoints_after_commit = await runtime_storage.list_checkpoints(workflow_name=first_workflow.name)
+    latest_after_commit = await runtime_storage.get_latest(workflow_name=first_workflow.name)
+    if latest_after_commit is None:
+        raise AssertionError("MAF workflow did not retain a post-mutation checkpoint")
+    runtime_lineage = {
+        checkpoint.checkpoint_id: checkpoint.previous_checkpoint_id
+        for checkpoint in checkpoints_after_commit
+    }
+    stale_runtime_relation = classify_checkpoint_relation(
+        pre_mutation_checkpoint.checkpoint_id,
+        latest_after_commit.checkpoint_id,
+        runtime_lineage,
+    )
+
+    state_before_stale_replay = memory.state_version("mem:maf:lifecycle")
+    replayed_workflow = builder.build()
+    replay_output = await _consume_until_output(
+        replayed_workflow.run(checkpoint_id=pre_mutation_checkpoint.checkpoint_id, stream=True)
+    )
+    state_after_stale_replay = memory.state_version("mem:maf:lifecycle")
+    writes_after_replay = sum(1 for operation, _ in substrate.write_log if operation == "write_fact")
+
+    # A second real MAF run exercises the denied path through normal framework
+    # continuation rather than by calling Agent Memory directly.
+    denied_storage = InMemoryCheckpointStorage()
+    denied_start = LifecycleStartExecutor(id="start")
+    denied_worker = LifecycleMutationExecutor(id="memory", memory=memory, replay_guard=replay_guard)
+    denied_builder = WorkflowBuilder(
+        start_executor=denied_start,
+        checkpoint_storage=denied_storage,
+    ).add_edge(denied_start, denied_worker)
+    denied_workflow = denied_builder.build()
+    denied_output = await _consume_until_output(denied_workflow.run(message="deny", stream=True))
+    writes_after_denial = sum(1 for operation, _ in substrate.write_log if operation == "write_fact")
 
     cross_scope = memory.governed_recall(
         "framework lifecycle",
@@ -162,20 +329,27 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
         ),
     )
 
+    expected_workflow_writes = writes_before_workflow + 1
     checks = {
         "maf_checkpoint_round_trip": loaded_1.checkpoint_id == "checkpoint-1",
-        "maf_latest_checkpoint_uses_persisted_state": latest.checkpoint_id == "checkpoint-2",
         "same_iteration_lineage_supported": checkpoint_1.iteration_count == checkpoint_2.iteration_count == 1,
-        "ancestor_checkpoint_classified_stale": stale_relation == "stale",
-        "latest_checkpoint_classified_current": current_relation == "current",
-        "positive_mutation_committed": first.committed,
-        "governed_recall_admitted": bool(recall.admitted),
-        "retry_reused_original_receipt": prior_on_retry == receipt_ref,
-        "retry_did_not_duplicate_mutation": write_count_after_first == write_count_after_retry == 1,
-        "denied_mutation_remained_denied": not denied.committed,
-        "stale_checkpoint_did_not_rollback_memory": (
-            not stale_resume_applied and state_before_stale_resume == state_after_stale_resume
+        "same_iteration_ancestor_classified_stale": explicit_stale_relation == "stale",
+        "real_maf_workflow_checkpointed_before_mutation": bool(pre_mutation_checkpoint.checkpoint_id),
+        "real_maf_resume_committed_governed_mutation": committed_output.get("status") == "committed",
+        "real_maf_resume_included_governed_recall": committed_output.get("recall_admitted") is True,
+        "runtime_checkpoint_becomes_stale_after_resume": stale_runtime_relation == "stale",
+        "stale_checkpoint_replay_reused_receipt": (
+            replay_output.get("status") == "replay"
+            and replay_output.get("receipt_ref") == committed_output.get("receipt_ref")
         ),
+        "retry_did_not_duplicate_mutation": (
+            writes_after_commit == writes_after_replay == expected_workflow_writes
+        ),
+        "stale_checkpoint_did_not_rollback_memory": (
+            state_before_stale_replay == state_after_stale_replay == 1
+        ),
+        "denied_workflow_remained_denied": denied_output.get("status") == "denied",
+        "denied_workflow_did_not_write": writes_after_denial == writes_after_replay,
         "cross_scope_recall_not_admitted": not cross_scope.admitted,
         "trace_backend_optional": True,
         "framework_persistence_not_auto_memory": checkpoint_2.state["classification"] == "execution_state",
@@ -195,23 +369,25 @@ async def _run(agent_memory_commit: str) -> dict[str, Any]:
             "installed_version": installed_version,
         },
         "checkpoint_evidence": {
-            "checkpoint_1": {
+            "same_iteration_checkpoint_1": {
                 "id": checkpoint_1.checkpoint_id,
                 "previous": checkpoint_1.previous_checkpoint_id,
                 "iteration_count": checkpoint_1.iteration_count,
             },
-            "checkpoint_2": {
+            "same_iteration_checkpoint_2": {
                 "id": checkpoint_2.checkpoint_id,
                 "previous": checkpoint_2.previous_checkpoint_id,
                 "iteration_count": checkpoint_2.iteration_count,
             },
-            "stale_relation": stale_relation,
-            "latest_relation": current_relation,
+            "pre_mutation_checkpoint": pre_mutation_checkpoint.checkpoint_id,
+            "latest_after_commit": latest_after_commit.checkpoint_id,
+            "stale_runtime_relation": stale_runtime_relation,
         },
         "governance_evidence": {
-            "committed_receipt_ref": receipt_ref,
-            "denied_outcome": denied.decision.outcome,
-            "state_version": state_after_stale_resume,
+            "committed_receipt_ref": committed_output.get("receipt_ref"),
+            "retry_receipt_ref": replay_output.get("receipt_ref"),
+            "denied_outcome": denied_output.get("decision_outcome"),
+            "state_version": state_after_stale_replay,
             "trace_correlation": "unavailable_not_authority",
         },
         "checks": checks,
