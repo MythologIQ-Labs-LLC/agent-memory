@@ -58,6 +58,25 @@ Privacy decisions should consider:
 
 Relevance cannot create access permission.
 
+## Isolation domains and controlled crossing
+
+A physical memory service is not itself the authority boundary. One store may contain many logical isolation domains, and one agent may participate in several domains without gaining permission to move memory among them.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/isolation-domain-crossing.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/isolation-domain-crossing-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/isolation-domain-crossing-light.svg" alt="Agent Memory isolation-domain crossing diagram showing Project A Task 1, Project B Task 2, and a shared security space in one physical store; a cross-domain candidate must resolve current scope, membership, purpose, destination, and policy, pass PAMA governance, use only a permitted representation, and produce a reconstructable crossing receipt" width="100%">
+  </picture>
+</p>
+
+The visual preserves several hard boundaries: `physical store != isolation domain`, `same agent != same memory scope`, and `relevance != permission to cross`. A semantically perfect Project B memory remains blocked from Project A merely because the same agent found it. Governed use resolves the target domain and current authority first, then PAMA evaluates the consequence of crossing. Shared-space membership is necessary where policy requires it, but membership alone does not grant recall admission, mutation, export, or re-sharing authority.
+
+If a crossing is permitted, the permitted treatment may still be narrower than raw transfer, such as redacted or summary-only representation. The decision is receipted with source and destination domains, actor/principal, purpose, policy/PAMA state, representation, provenance, and outcome. Transformation does not erase inherited restrictions, and later correction, revocation, scope reduction, or purge may create propagation obligations.
+
+**Canonical contract:** https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/41-memory-isolation-domains-and-governed-crossing.md  
+**Accepted ADR:** https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-022-memory-isolation-domains-and-controlled-boundary-crossing.md
+
 ## Provenance and authority laundering
 
 A summary, trusted tool, or higher-reputation intermediary must not silently transform low-authority content into high-authority content.
@@ -111,6 +130,7 @@ Security policy: https://github.com/MythologIQ-Labs-LLC/agent-memory/security/po
 - Source trust: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/16-source-trust-and-reputation.md
 - Privacy and sensitivity: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/19-privacy-and-sensitivity-classifier.md
 - Scope, consent, tenancy: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/29-actor-scope-consent-and-tenancy.md
+- Memory isolation domains and governed crossing: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/41-memory-isolation-domains-and-governed-crossing.md
 - Retention and deletion: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/28-retention-deletion-and-tombstones.md
 
 ## Next
