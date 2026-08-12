@@ -43,6 +43,8 @@ promotion state
 
 The representation may vary by research program. The distinctions may not be collapsed.
 
+A reusable record is available at [`../templates/claim-evidence-record.md`](../templates/claim-evidence-record.md). Research programs may extend it with domain-specific fields while preserving the source-neutral distinctions above.
+
 ## Evidence classes
 
 Useful evidence classes include:
