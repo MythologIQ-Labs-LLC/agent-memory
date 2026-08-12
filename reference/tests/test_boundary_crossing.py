@@ -137,13 +137,44 @@ class BoundaryCrossingTests(unittest.TestCase):
         self.assertTrue(result.receipt["representation"]["privacy_minimized"])
         self.assertEqual(result.receipt["outcome"], "review_required")
 
+    def test_reviewed_privacy_minimized_export_can_commit_without_redaction_becoming_authority(self):
+        result = evaluate_crossing(
+            request(
+                operation="export",
+                destination_domain_refs=("domain:external-partner",),
+                representation_kind="redacted_summary",
+                privacy_minimized=True,
+                redaction_ref="redaction:approved-shape",
+                after_scope_refs=("domain:external-partner",),
+                authority_refs=("authority:external-export",),
+            ),
+            proposal(
+                review_satisfied=True,
+                approval_refs=("approval:data-owner",),
+            ),
+            receipt_id="crossing:authorized-redacted-export",
+            timestamp="2026-08-11T20:00:05Z",
+            decision_receipt_ref="decision:authorized-redacted-export",
+            ledger_ref="ledger:authorized-redacted-export",
+        )
+
+        self.assertTrue(result.committed)
+        self.assertEqual(result.decision.outcome, policy.ALLOW_WITH_LEDGER)
+        self.assertEqual(result.receipt["operation"], "export")
+        self.assertEqual(result.receipt["destination_domain_refs"], ["domain:external-partner"])
+        self.assertEqual(result.receipt["representation"]["kind"], "redacted_summary")
+        self.assertTrue(result.receipt["representation"]["privacy_minimized"])
+        self.assertEqual(result.receipt["representation"]["redaction_ref"], "redaction:approved-shape")
+        self.assertEqual(result.receipt["pama_disposition"], "allow_with_ledger")
+        self.assertEqual(result.receipt["decision_receipt_ref"], "decision:authorized-redacted-export")
+
     def test_crossing_requires_explicit_source_and_destination_domains(self):
         with self.assertRaises(ValueError):
             evaluate_crossing(
                 request(destination_domain_refs=()),
                 proposal(),
                 receipt_id="crossing:missing-domain",
-                timestamp="2026-08-11T20:00:05Z",
+                timestamp="2026-08-11T20:00:06Z",
             )
 
 
