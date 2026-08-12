@@ -148,6 +148,29 @@ Implements the correction and dispute contract; doctrine in [`17-conflict-resolu
 - **Failure modes**: corrections overwriting history instead of superseding it; dispute state dropped in transit so downstream consumers see a clean memory; auto-resolution by newest-wins or highest-confidence-wins.
 - **Rejection**: correction commits without provenance and ledger requirements are rejected back to proposal state.
 
+### Governance context projection adapter
+
+Implements the vendor-neutral governance-facing projection defined in [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) and proposed ADR-028.
+
+This adapter differs from the internal component adapters above: it produces a **derived consumer-facing projection** rather than a canonical mutation handoff.
+
+- **Input**: governed-recall results plus canonical identity, evidence, scope, lifecycle/validity, rationale, authority-context, and outcome references that are permitted for the requesting purpose.
+- **Output**: an object conforming to [`../schemas/governance-context-projection.schema.json`](../schemas/governance-context-projection.schema.json).
+- **Required projection fields**: `projection_id`, `purpose`, `current_context_ref`, `source_memory_refs`, `scope`, `precedents`, `derivation`, `generated_at`.
+- **Seam guarantees**: projection remains reconstructable; source memory and provenance remain resolvable; positive and negative precedent remain distinguishable; material conditions preserve match/mismatch/unknown rather than collapsing into a broad action label; validity and scope survive projection; consumer-specific verdict and risk semantics are absent.
+- **Failure modes**: prior approval crossing the seam as standing permission; policy-generated allow presented as independent human precedent; negative precedent erased by frequency; semantic similarity becoming authority; sensitive raw rationale copied when a bounded reference would suffice; a derived projection becoming the only source of an underlying memory fact.
+- **Rejection**: projections with unknown/invalid source identity, missing scope, unreconstructable derivation, or schema-invalid consumer authority fields are rejected whole. The adapter does not repair them into a permissive default.
+
+The ownership boundary is deliberate:
+
+```text
+Agent Memory core
+  -> governance context projection
+  -> consumer adapter
+```
+
+The governance-context adapter may expose vendor-neutral context. A DashClaw adapter, AGT/ACS adapter, or other consumer adapter owns translation into that consumer's risk, verdict, approval, and API vocabulary.
+
 ### Conformance adapter
 
 Implements the conformance contract; doctrine in [`06-conformance-test-plan.md`](06-conformance-test-plan.md).
@@ -251,8 +274,12 @@ The certificate binds scope, evidence, and policy version. A later request to re
 
 The composition paths in `13-system-composition-boundaries.md` are the adapter test plan: each path crosses at least two of these seams, and tests should inject uncertainty, disagreement, and staleness at the seam rather than only inside components. Existing fixtures exercising seam behavior include [`../fixtures/authority-laundering.json`](../fixtures/authority-laundering.json) (authority leakage), [`../fixtures/cross-tenant-relevance-trap.json`](../fixtures/cross-tenant-relevance-trap.json) (relevance versus admission), [`../fixtures/stochastic-retrieval-policy-envelope.json`](../fixtures/stochastic-retrieval-policy-envelope.json) (selection inside the permitted set), and [`../fixtures/policy-estimator-version-drift.json`](../fixtures/policy-estimator-version-drift.json) (stale authorization).
 
+Governance-projection V0.1 adds [`../fixtures/governance-precedent-material-match.json`](../fixtures/governance-precedent-material-match.json) and [`../fixtures/governance-precedent-material-mismatch.json`](../fixtures/governance-precedent-material-mismatch.json). These prove that useful precedent context can cross a consumer seam while final authority remains downstream.
+
 ## Doctrine
 
 Adapters do not make decisions. They make decisions portable.
+
+Governance Context Projection sharpens that rule: some adapters do not even carry a decision. They carry remembered context from which a separate governance system may make one.
 
 Whatever a component may not do inside its own boundary, it may not achieve by handing data across a seam that strips the constraint. The handoff record exists so that authority, scope, uncertainty, and provenance arrive with the payload — or the payload does not arrive.
