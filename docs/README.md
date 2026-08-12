@@ -1,7 +1,7 @@
 # Agent Memory Documentation
 
 <p align="center">
-  <img src="../assets/brand/agent-memory-mark.webp" alt="Agent Memory emblem: layered memory stack with connected nodes, an orbit, and a cyan inference spark." width="140">
+  <img src="../assets/brand/agent-memory-mark.svg" alt="Agent Memory emblem: layered memory stack with connected nodes, an orbit, and a cyan inference spark." width="140">
 </p>
 
 This directory is the canonical documentation map for the Agent Memory reference architecture.
