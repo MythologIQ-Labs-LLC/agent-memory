@@ -120,7 +120,8 @@ Agent Memory separates doctrine maturity from implementation evidence so that on
 | **Canonical doctrine** | ADR-001 through ADR-020 and ADR-022 are **Accepted**. |
 | **Portable governance evidence** | ADR-021 remains **Proposed** and independently maturity-gated. |
 | **Durable mutation / evidence candidates** | ADR-023 through ADR-027 remain **Proposed** under their individual evidence gates. |
-| **Governance Context Projection** | ADR-028 is **Proposed**. V0.1 schema, fixtures, and deterministic reference-builder work are under active implementation. |
+| **Implementation portability** | ADR-028 is **Proposed**, preserving a language-neutral core with optional implementation/interoperability profiles. |
+| **Governance Context Projection** | ADR-029 is **Proposed**. V0.1 schema, fixtures, and deterministic reference-builder work are under active implementation. |
 | **Runtime evidence** | Executable reference paths cover governed mutation, stochastic containment, deletion completeness, concurrency conflict handling, portable evidence correlation, adversarial comparator behavior, and systems characterization. |
 | **ADR-020 evidence gate** | Satisfied through the repository's executable P10 acceptance audit. |
 | **Reference implementation** | A narrow evidence vehicle, not a claim of universal production readiness or higher cumulative conformance. |
