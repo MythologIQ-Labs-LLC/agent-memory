@@ -48,11 +48,11 @@ evidence references
 
 The generic contract does not copy framework conversation history, checkpoint blobs, prompts, tool payloads, or arbitrary framework metadata into canonical memory.
 
-## Checkpoint ordering
+## Checkpoint ordering and memory-state freshness
 
 The MAF `WorkflowCheckpoint` source at the pinned release carries both `previous_checkpoint_id` and `iteration_count`. MAF explicitly documents that `iteration_count` is not guaranteed unique, particularly around human-in-the-loop checkpoints, and that checkpoint ordering is defined by checkpoint lineage and timestamp rather than iteration count alone.
 
-Agent Memory therefore treats explicit lineage as the V0.1 checkpoint relation signal:
+Agent Memory therefore treats explicit lineage as the V0.1 **framework checkpoint relation** signal:
 
 ```text
 resume checkpoint == latest checkpoint -> current
@@ -61,7 +61,16 @@ known checkpoint on another lineage -> divergent
 missing/incomplete lineage -> unknown
 ```
 
-A stale, divergent, or unknown framework checkpoint does not gain rollback authority over newer canonical Agent Memory state.
+That relation is separate from whether the checkpoint is fresh relative to canonical Agent Memory state:
+
+```text
+framework checkpoint recency
+!= Agent Memory state freshness
+```
+
+A framework may legitimately retain a checkpoint as its latest checkpoint even after an external governed memory mutation occurs. When the checkpoint is bound to an Agent Memory `memory_state_ref`, that binding must be compared with current Agent Memory state independently. A checkpoint bound to an older state is stale **for memory replay purposes** even if the framework still considers it its latest execution checkpoint.
+
+Neither a stale/divergent framework lineage nor a stale Agent Memory state binding gains rollback authority over newer canonical Agent Memory state.
 
 ## Retry and idempotency
 
@@ -113,8 +122,8 @@ The comparator executes a real checkpointed MAF workflow and proves a bounded li
 3. execution is interrupted only after that checkpoint boundary;
 4. a new MAF workflow instance resumes from the checkpoint;
 5. the resumed framework step performs governed recall and commits one PAMA-authorized durable mutation;
-6. the original pre-mutation checkpoint becomes stale relative to the resumed lineage;
-7. replaying that old checkpoint re-enters the framework step but reuses the original Agent Memory receipt and does not duplicate the durable mutation;
+6. the checkpoint's bound Agent Memory state becomes stale when the governed mutation advances canonical memory state, regardless of whether MAF emits a newer descendant checkpoint;
+7. replaying that old checkpoint re-enters the framework step but reuses the original Agent Memory receipt and does not duplicate the durable mutation or roll state backward;
 8. a separate real MAF run carries a PAMA-denied mutation through framework continuation without committing it;
 9. cross-scope recall is not admitted;
 10. missing trace correlation does not erase governance evidence.
@@ -151,6 +160,7 @@ V0.1 does not claim:
 
 - MAF checkpoints are Agent Memory;
 - checkpoint persistence proves lifecycle satisfaction;
+- MAF's latest checkpoint proves Agent Memory state freshness;
 - framework retry creates new authority;
 - framework HITL history is reusable approval authority;
 - trace success proves semantic authorization;
@@ -161,6 +171,7 @@ V0.1 does not claim:
 
 - Agent Memory unavailability at a durable-mutation boundary cannot silently widen authority; the framework must fail according to configured policy rather than infer permission;
 - stale/unknown checkpoint lineage does not silently restore older memory state;
+- a checkpoint whose bound Agent Memory state is stale cannot silently restore older memory state even when the framework still considers the checkpoint current;
 - retry after a known committed mutation reuses the bound receipt rather than committing again;
 - checkpoint write failure after a successful memory commit preserves the memory receipt and requires framework recovery rather than silent rollback;
 - a denied mutation remains denied even if framework execution continues;
