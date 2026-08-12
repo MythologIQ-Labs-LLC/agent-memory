@@ -17,7 +17,7 @@ A decision memory unit is a memory unit (per [`../../schemas/memory-unit.schema.
 ```text
 decision_id
 decision_statement        # what was decided, as a commitment, not a description
-rationale                 # why — required, not decorative
+rationale                 # why; required, not decorative
 alternatives_considered   # options rejected, each with at least a one-line reason
 decision_scope            # what the decision governs: systems, processes, time horizon
 owner                     # accountable principal (role or person per doc 29)
@@ -70,6 +70,52 @@ A superseded decision is never deleted by supersession. Decision history is exac
 - Approval strength scales with the decision's PAMA target class, downstream authority, and operational risk per [`../33-pama-decision-table.md`](../33-pama-decision-table.md): a team convention needs less than a security-boundary decision.
 - Corrections to decision *records* such as typos or mislinked evidence are ordinary corrections per [`../38-human-correction-ux-contract.md`](../38-human-correction-ux-contract.md). Changing what was decided is never a correction; it is supersession or reversal by the owner's authority.
 
+## Durable overwrite authority boundary
+
+Changing what a durable decision says is a new authority event, not an edit operation. Implementations must keep at least these states distinct:
+
+```text
+overwrite proposal
+  -> pending authority resolution
+  -> rejected / expired / stale
+     OR
+  -> authority satisfied
+  -> PAMA evaluation
+  -> committed append-only supersession
+```
+
+An overwrite proposal may be durable evidence. It must preserve the proposing actor, target decision, candidate replacement, rationale, evidence, conflict notes, scope, risk, and state snapshot. Merely retaining that proposal must not change which decision is current.
+
+A committed overwrite must bind the authority record to the exact proposal, target decision, scope, mutation class, actor eligibility, risk ceiling, state snapshot, and validity window. The replacement decision must preserve that authority reference in its own `approval_refs`. If any of those bindings are stale, missing, revoked, expired, or mismatched, the overwrite fails closed before durable supersession.
+
+For this profile's current reference posture:
+
+- a previously human-confirmed decision requires a fresh human confirmation before overwrite;
+- a high- or critical-risk durable decision overwrite requires human confirmation;
+- a low- or medium-risk decision that was not human-confirmed may use an explicit bounded delegated-policy grant when the grant names the actor, exact scope, exact proposal/target, risk ceiling, expiry, and `decision_overwrite` mutation class;
+- agent agreement, majority vote, repetition, confidence, saturation, or prior similar approvals do not substitute for human confirmation or delegated authority;
+- an approver may not be the proposing actor for its own authority transition;
+- satisfying the decision-memory authority gate still does not override a stricter PAMA result.
+
+The authority order is therefore:
+
+```text
+proposal evidence
+  -> exact overwrite-authority validation
+  -> PAMA
+  -> append replacement + supersession evidence
+```
+
+not:
+
+```text
+proposal consensus
+  -> overwrite
+  -> reconstruct authority afterward
+```
+
+The prior decision remains an immutable historical episode. Current/superseded status may be represented as derived lifecycle state or append-only supersession metadata; implementations need not mutate the old record in place to make it historical.
+
 ## Recall and certification rules
 
 **Recall** through [`../26-governed-recall-planner.md`](../26-governed-recall-planner.md):
@@ -96,20 +142,28 @@ Depending on scope and consequence, a decision commonly falls into:
 
 Its downstream authority ceiling may range from A0 recall to A5 governance change. A decision record does not gain a stronger authority ceiling merely because it is old, frequently recalled, highly saturated, or repeatedly followed.
 
+`decision_overwrite` is a distinct PAMA operation in the reference decision table. Its base outcome is `require_review` at low/medium risk and `require_external_verification` at high/critical risk. The durable-decision authority boundary above determines what kind of approval may satisfy that requirement for this memory class. PAMA remains free to be stricter; a valid overwrite grant is never a bypass token.
+
 ## Conformance fixture recommendations
 
 | Case | Expectation |
 |---|---|
+| Agent proposes overwrite without authority | proposal remains evidence; current durable decision is unchanged |
+| Human-confirmed overwrite | prior decision remains historical; replacement and supersession receipt are append-only |
+| Agent consensus targets human-confirmed decision | rejected; consensus is not human confirmation |
+| Stale overwrite proposal | rejected before authority can mutate current state |
+| Bounded delegated low-risk overwrite | allowed only inside exact delegation scope/risk/actor/time bindings |
+| Valid overwrite grant but PAMA blocks | fails; grant cannot widen PAMA authority |
 | Superseded decision recalled as current | fails: agent within scope receives the superseding decision; old surfaces as historical only |
 | Rationale-free decision write | rejected at write time |
 | Drift signal auto-supersedes | fails: drift routes to owner; estimator cannot retire a decision |
 | Decision enforced past expiry | fails: expired status blocks binding use; escalates to review |
 | Alternative set lost in consolidation | fails: compression preserved statement but dropped alternatives/approvals |
-| Approval chain unreconstructable | certification refused; decision non-binding — the [`../../fixtures/authority-laundering.json`](../../fixtures/authority-laundering.json) pattern applied to decisions |
+| Approval chain unreconstructable | certification refused; decision non-binding; the [`../../fixtures/authority-laundering.json`](../../fixtures/authority-laundering.json) pattern applied to decisions |
 | Conflicting active decisions in one scope | governed conflict per [`../17-conflict-resolution-engine.md`](../17-conflict-resolution-engine.md); strictest-applicable interim; no recency-wins |
 | Product claims decision-memory conformance without profile evidence | claim remains unverified; product name does not substitute for fixture or runtime evidence |
 
-A `superseded-decision-recall` fixture is the highest-value addition and should join the fixture backlog tracked in issue #43.
+Executable overwrite fixtures live under `fixtures/durable-decision-*.json`. A separate `superseded-decision-recall` fixture remains useful for the read-path backlog because overwrite authority and recall admission prove different things.
 
 ## Doctrine
 
