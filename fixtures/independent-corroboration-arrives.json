@@ -19,67 +19,33 @@
       "observer": "conformance-suite",
       "method": "synthetic-independent-corroboration-control",
       "timestamp": "2026-08-12T00:00:00Z",
-      "source_refs": [
-        "fixture://source/origin-a",
-        "fixture://source/origin-b"
-      ]
+      "source_refs": ["fixture://source/origin-a", "fixture://source/origin-b"]
     },
     "evidence": [
-      {
-        "id": "evidence:origin-a",
-        "kind": "single_source_assertion",
-        "ref": "fixture://source/origin-a",
-        "confidence": 0.72
-      },
-      {
-        "id": "evidence:origin-b",
-        "kind": "independent_observation",
-        "ref": "fixture://source/origin-b",
-        "confidence": 0.81
-      }
+      {"id": "evidence:origin-a", "kind": "single_source_assertion", "ref": "fixture://source/origin-a", "confidence": 0.72},
+      {"id": "evidence:origin-b", "kind": "independent_observation", "ref": "fixture://source/origin-b", "confidence": 0.81}
     ],
     "saturation": {
       "sigma": 0.76,
       "calibrated": true,
       "threshold": 0.8,
-      "durability_dimensions": [
-        "corroboration"
-      ]
+      "durability_dimensions": ["corroboration"]
     },
     "authority": {
       "pama_outcome": "require_review",
       "risk_class": "medium",
-      "policy_refs": [
-        "ADR-003",
-        "ADR-009"
-      ],
-      "permitted_actions": [
-        "retain_candidate",
-        "request_certification"
-      ],
-      "prohibited_actions": [
-        "auto_crystallize"
-      ],
+      "policy_refs": ["ADR-003", "ADR-009"],
+      "permitted_actions": ["retain_candidate", "request_certification"],
+      "prohibited_actions": ["auto_crystallize"],
       "selection_mode": "deterministic"
     },
-    "certification": {
-      "status": "pending",
-      "scope": "fixture"
-    },
+    "certification": {"status": "pending", "scope": "fixture"},
     "created_at": "2026-08-12T00:00:00Z"
   },
   "epistemic_promotion": {
     "lineage": [
-      {
-        "evidence_id": "evidence:origin-a",
-        "origin_id": "origin:a",
-        "derived_from": []
-      },
-      {
-        "evidence_id": "evidence:origin-b",
-        "origin_id": "origin:b",
-        "derived_from": []
-      }
+      {"evidence_id": "evidence:origin-a", "origin_refs": ["origin:a"], "derived_from": []},
+      {"evidence_id": "evidence:origin-b", "origin_refs": ["origin:b"], "derived_from": []}
     ],
     "retrieval_count": 3,
     "downstream_use_count": 1,
