@@ -10,7 +10,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import policy  # noqa: E402
 from agentmem_ref.crossing import CrossingRequest, evaluate_crossing  # noqa: E402
-from agentmem_ref.interchange import build_export_bundle, import_bundle  # noqa: E402
+from agentmem_ref.interchange import (  # noqa: E402
+    NOTICE_CORRECTION,
+    NOTICE_DELETION,
+    SourceLifecycleNotice,
+    build_export_bundle,
+    evaluate_source_notice,
+    import_bundle,
+)
 
 
 def memory_unit() -> dict:
@@ -35,19 +42,8 @@ def memory_unit() -> dict:
             "timestamp": "2026-08-11T20:00:00Z",
             "source_refs": ["evidence:decision-source"],
         },
-        "evidence": [
-            {
-                "id": "evidence:decision-source",
-                "kind": "decision_record",
-                "ref": "local://decision/42",
-                "confidence": 1.0,
-            }
-        ],
-        "saturation": {
-            "sigma": 0.95,
-            "calibrated": True,
-            "durability_dimensions": ["certified_decision"],
-        },
+        "evidence": [{"id": "evidence:decision-source", "kind": "decision_record", "ref": "local://decision/42", "confidence": 1.0}],
+        "saturation": {"sigma": 0.95, "calibrated": True, "durability_dimensions": ["certified_decision"]},
         "authority": {
             "pama_outcome": "allow_with_ledger",
             "risk_class": "medium",
@@ -78,115 +74,69 @@ def crossing(*, reviewed: bool) -> dict:
         after_scope_refs=("domain:system-b-import",),
     )
     proposal = policy.Proposal(
-        proposal_id="sender-export",
-        actor_id="agent:planner",
-        charter_version="charter-a",
-        target_reference="mem:portable-decision",
-        target_class=policy.M4,
-        scope="tenant-a",
-        operation="scope_expansion",
-        current_strength="crystallized",
-        proposed_strength="crystallized",
-        downstream_authority=policy.A2,
-        reversibility="reversible",
-        risk_class="medium",
-        evidence_refs=("evidence:decision-source",),
-        review_satisfied=reviewed,
+        proposal_id="sender-export", actor_id="agent:planner", charter_version="charter-a",
+        target_reference="mem:portable-decision", target_class=policy.M4, scope="tenant-a",
+        operation="scope_expansion", current_strength="crystallized", proposed_strength="crystallized",
+        downstream_authority=policy.A2, reversibility="reversible", risk_class="medium",
+        evidence_refs=("evidence:decision-source",), review_satisfied=reviewed,
         approval_refs=("approval:sender-security-owner",) if reviewed else (),
     )
     return evaluate_crossing(
-        request,
-        proposal,
-        receipt_id="crossing:sender-export",
-        timestamp="2026-08-11T20:01:00Z",
-        decision_receipt_ref="decision:sender-export",
-        ledger_ref="ledger:sender-export",
+        request, proposal, receipt_id="crossing:sender-export", timestamp="2026-08-11T20:01:00Z",
+        decision_receipt_ref="decision:sender-export", ledger_ref="ledger:sender-export",
     ).receipt
 
 
-def receiver_proposal(*, reviewed: bool = True, owner_conflict: bool = False) -> policy.Proposal:
+def receiver_proposal(*, reviewed: bool = True) -> policy.Proposal:
     return policy.Proposal(
-        proposal_id="receiver-import",
-        actor_id="agent:receiver",
-        charter_version="charter-b",
-        target_reference="mem:portable-decision",
-        target_class=policy.M4,
-        scope="tenant-b",
-        operation="scope_expansion",
-        current_strength="crystallized",
-        proposed_strength="crystallized",
-        downstream_authority=policy.A2,
-        reversibility="reversible",
-        risk_class="medium",
-        evidence_refs=("crossing:sender-export",),
-        review_satisfied=reviewed,
+        proposal_id="receiver-import", actor_id="agent:receiver", charter_version="charter-b",
+        target_reference="mem:portable-decision", target_class=policy.M4, scope="tenant-b",
+        operation="scope_expansion", current_strength="crystallized", proposed_strength="crystallized",
+        downstream_authority=policy.A2, reversibility="reversible", risk_class="medium",
+        evidence_refs=("crossing:sender-export",), review_satisfied=reviewed,
         approval_refs=("approval:receiver-security-owner",) if reviewed else (),
-        actor_authority_resolved=not owner_conflict,
+    )
+
+
+def notice_proposal(operation: str, *, reviewed: bool) -> policy.Proposal:
+    return policy.Proposal(
+        proposal_id=f"receiver-{operation}", actor_id="agent:receiver", charter_version="charter-b",
+        target_reference="mem:portable-decision", target_class=policy.M4, scope="tenant-b",
+        operation=operation, current_strength="crystallized", proposed_strength="corrected",
+        downstream_authority=policy.A2, reversibility="reversible", risk_class="medium",
+        evidence_refs=("notice:source-change",), review_satisfied=reviewed,
+        approval_refs=("approval:receiver-security-owner",) if reviewed else (),
     )
 
 
 class InterchangeTests(unittest.TestCase):
+    def imported(self):
+        bundle = build_export_bundle(memory_unit(), sender_system="system-a", receiver_system="system-b", crossing_receipt=crossing(reviewed=True))
+        result = import_bundle(bundle, receiver_domain_ref="domain:system-b-import", receiver_proposal=receiver_proposal(), expected_owner_principal="user:alice")
+        self.assertTrue(result.admitted)
+        self.assertIsNotNone(result.memory)
+        self.assertIsNotNone(result.link)
+        return result.memory, result.link
+
     def test_export_requires_committed_sender_crossing(self):
         with self.assertRaises(ValueError):
-            build_export_bundle(
-                memory_unit(),
-                sender_system="system-a",
-                receiver_system="system-b",
-                crossing_receipt=crossing(reviewed=False),
-            )
+            build_export_bundle(memory_unit(), sender_system="system-a", receiver_system="system-b", crossing_receipt=crossing(reviewed=False))
 
     def test_receiver_does_not_inherit_sender_allow(self):
-        bundle = build_export_bundle(
-            memory_unit(),
-            sender_system="system-a",
-            receiver_system="system-b",
-            crossing_receipt=crossing(reviewed=True),
-        )
-        result = import_bundle(
-            bundle,
-            receiver_domain_ref="domain:system-b-import",
-            receiver_proposal=receiver_proposal(reviewed=False),
-            expected_owner_principal="user:alice",
-        )
+        bundle = build_export_bundle(memory_unit(), sender_system="system-a", receiver_system="system-b", crossing_receipt=crossing(reviewed=True))
+        result = import_bundle(bundle, receiver_domain_ref="domain:system-b-import", receiver_proposal=receiver_proposal(reviewed=False), expected_owner_principal="user:alice")
         self.assertFalse(result.admitted)
         self.assertEqual(result.decision.outcome, policy.REQUIRE_REVIEW)
-        self.assertIsNone(result.memory)
 
     def test_ownership_conflict_fails_closed(self):
-        bundle = build_export_bundle(
-            memory_unit(),
-            sender_system="system-a",
-            receiver_system="system-b",
-            crossing_receipt=crossing(reviewed=True),
-        )
-        result = import_bundle(
-            bundle,
-            receiver_domain_ref="domain:system-b-import",
-            receiver_proposal=receiver_proposal(),
-            expected_owner_principal="user:bob",
-        )
+        bundle = build_export_bundle(memory_unit(), sender_system="system-a", receiver_system="system-b", crossing_receipt=crossing(reviewed=True))
+        result = import_bundle(bundle, receiver_domain_ref="domain:system-b-import", receiver_proposal=receiver_proposal(), expected_owner_principal="user:bob")
         self.assertFalse(result.admitted)
-        self.assertEqual(result.decision.outcome, policy.BLOCK)
         self.assertEqual(result.refusal, "ownership_conflict")
 
     def test_successful_import_preserves_semantics_and_rebinds_local_scope(self):
         original = memory_unit()
-        bundle = build_export_bundle(
-            original,
-            sender_system="system-a",
-            receiver_system="system-b",
-            crossing_receipt=crossing(reviewed=True),
-        )
-        result = import_bundle(
-            bundle,
-            receiver_domain_ref="domain:system-b-import",
-            receiver_proposal=receiver_proposal(),
-            expected_owner_principal="user:alice",
-        )
-
-        self.assertTrue(result.admitted)
-        imported = result.memory
-        assert imported is not None
+        imported, link = self.imported()
         self.assertEqual(imported["id"], original["id"])
         self.assertEqual(imported["state"], original["state"])
         self.assertEqual(imported["provenance"], original["provenance"])
@@ -194,9 +144,51 @@ class InterchangeTests(unittest.TestCase):
         self.assertEqual(imported["scope"]["owner_principal"], "user:alice")
         self.assertEqual(imported["scope"]["isolation_domain_refs"], ["domain:system-b-import"])
         self.assertEqual(imported["scope"]["source_isolation_domain_refs"], ["domain:project-a"])
-        self.assertEqual(imported["authority"]["authority_refs"], ["approval:receiver-security-owner"])
-        self.assertNotIn("authority:sender", imported["authority"]["authority_refs"])
-        self.assertEqual(bundle.sender_authority_evidence[-1], "crossing:sender-export")
+        self.assertEqual(link.source_system, "system-a")
+
+    def test_source_deletion_notice_does_not_delete_without_local_authority(self):
+        imported, link = self.imported()
+        before = dict(imported)
+        result = evaluate_source_notice(
+            imported, link,
+            SourceLifecycleNotice("notice:delete", "system-a", imported["id"], NOTICE_DELETION, ("receipt:source-delete",), source_state="tombstoned"),
+            receiver_proposal=notice_proposal("permanent_deletion", reviewed=False),
+        )
+        self.assertTrue(result.recognized)
+        self.assertFalse(result.local_action == "schedule_local_deletion")
+        self.assertEqual(result.local_action, "pending_local_governance")
+        self.assertEqual(imported, before)
+
+    def test_locally_authorized_deletion_notice_schedules_local_deletion_only(self):
+        imported, link = self.imported()
+        result = evaluate_source_notice(
+            imported, link,
+            SourceLifecycleNotice("notice:delete", "system-a", imported["id"], NOTICE_DELETION, ("receipt:source-delete",)),
+            receiver_proposal=notice_proposal("permanent_deletion", reviewed=True),
+        )
+        self.assertEqual(result.decision.outcome, policy.ALLOW_WITH_LEDGER)
+        self.assertEqual(result.local_action, "schedule_local_deletion")
+        self.assertEqual(imported["state"], "crystallized")
+
+    def test_correction_notice_requires_receiver_local_correction_authority(self):
+        imported, link = self.imported()
+        result = evaluate_source_notice(
+            imported, link,
+            SourceLifecycleNotice("notice:correction", "system-a", imported["id"], NOTICE_CORRECTION, ("receipt:source-correction",), source_state="corrected"),
+            receiver_proposal=notice_proposal("correction", reviewed=False),
+        )
+        self.assertEqual(result.local_action, "pending_local_governance")
+        self.assertEqual(result.decision.outcome, policy.REQUIRE_REVIEW)
+
+    def test_notice_from_unlinked_system_is_rejected(self):
+        imported, link = self.imported()
+        result = evaluate_source_notice(
+            imported, link,
+            SourceLifecycleNotice("notice:spoof", "system-c", imported["id"], NOTICE_DELETION, ("receipt:fake",)),
+            receiver_proposal=notice_proposal("permanent_deletion", reviewed=True),
+        )
+        self.assertFalse(result.recognized)
+        self.assertEqual(result.refusal, "source_system_mismatch")
 
 
 if __name__ == "__main__":

@@ -4,13 +4,15 @@ This module does not define a transport standard and does not import another
 project's authority semantics. It exercises Agent Memory's own Profile 6 seam:
 
 - sender export requires a committed governed boundary crossing;
-- the memory's identity, provenance, lifecycle, sensitivity, ownership, and
-  source-domain scope survive export;
+- memory identity, provenance, lifecycle, sensitivity, ownership, and source
+  domain scope survive export;
 - sender authority travels as evidence, never as receiver permission;
-- the receiver evaluates its own PAMA authority before admitting the import;
+- the receiver evaluates its own PAMA authority before admitting an import;
 - ownership conflicts fail closed;
 - successful imports bind a receiving isolation domain while retaining source
-  domain provenance.
+  domain provenance;
+- later source correction/deletion notices remain evidence until receiver-local
+  governance authorizes a local consequence.
 """
 
 from __future__ import annotations
@@ -19,6 +21,12 @@ from copy import deepcopy
 from dataclasses import dataclass
 
 from . import policy, receipts
+
+NOTICE_CORRECTION = "correction"
+NOTICE_SUPERSESSION = "supersession"
+NOTICE_REVOCATION = "revocation"
+NOTICE_DELETION = "deletion"
+NOTICE_KINDS = frozenset({NOTICE_CORRECTION, NOTICE_SUPERSESSION, NOTICE_REVOCATION, NOTICE_DELETION})
 
 
 @dataclass(frozen=True)
@@ -31,10 +39,40 @@ class ExportBundle:
 
 
 @dataclass(frozen=True)
+class InterchangeLink:
+    memory_id: str
+    source_system: str
+    receiver_system: str
+    source_crossing_receipt_ref: str
+    source_domain_refs: tuple[str, ...]
+    receiver_domain_ref: str
+
+
+@dataclass(frozen=True)
 class ImportResult:
     decision: policy.Decision
     admitted: bool
     memory: dict | None
+    refusal: str | None = None
+    link: InterchangeLink | None = None
+
+
+@dataclass(frozen=True)
+class SourceLifecycleNotice:
+    notice_id: str
+    source_system: str
+    memory_id: str
+    kind: str
+    evidence_refs: tuple[str, ...]
+    source_state: str = ""
+    source_receipt_ref: str = ""
+
+
+@dataclass(frozen=True)
+class NoticeResult:
+    decision: policy.Decision
+    recognized: bool
+    local_action: str
     refusal: str | None = None
 
 
@@ -139,4 +177,65 @@ def import_bundle(
     }
 
     receipts.validate("memory-unit.schema.json", imported)
-    return ImportResult(decision, True, imported)
+    link = InterchangeLink(
+        memory_id=source["id"],
+        source_system=bundle.sender_system,
+        receiver_system=bundle.receiver_system,
+        source_crossing_receipt_ref=bundle.crossing_receipt["receipt_id"],
+        source_domain_refs=tuple(all_sources),
+        receiver_domain_ref=receiver_domain_ref,
+    )
+    return ImportResult(decision, True, imported, link=link)
+
+
+def evaluate_source_notice(
+    imported_memory: dict,
+    link: InterchangeLink,
+    notice: SourceLifecycleNotice,
+    *,
+    receiver_proposal: policy.Proposal,
+) -> NoticeResult:
+    """Recognize a source lifecycle change without importing remote authority.
+
+    A notice may make a local correction/deletion obligation visible. It never
+    directly changes or deletes receiver state. The receiver evaluates the
+    corresponding local consequence under its own current policy and authority.
+    """
+    receipts.validate("memory-unit.schema.json", imported_memory)
+    if notice.kind not in NOTICE_KINDS:
+        raise ValueError(f"unsupported lifecycle notice: {notice.kind}")
+    if not notice.evidence_refs:
+        raise ValueError("source lifecycle notice requires evidence refs")
+    if imported_memory["id"] != link.memory_id or notice.memory_id != link.memory_id:
+        return NoticeResult(
+            policy.Decision(policy.BLOCK, (), ("correction", "permanent_deletion"), ("notice memory identity mismatch",)),
+            False,
+            "none",
+            "identity_mismatch",
+        )
+    if notice.source_system != link.source_system:
+        return NoticeResult(
+            policy.Decision(policy.BLOCK, (), ("correction", "permanent_deletion"), ("notice source system mismatch",)),
+            False,
+            "none",
+            "source_system_mismatch",
+        )
+
+    expected_operation = "permanent_deletion" if notice.kind == NOTICE_DELETION else "correction"
+    if receiver_proposal.target_reference != link.memory_id:
+        raise ValueError("receiver notice proposal must bind the imported memory id")
+    if receiver_proposal.operation != expected_operation:
+        decision = policy.Decision(
+            outcome=policy.BLOCK,
+            permitted_actions=(),
+            prohibited_actions=(receiver_proposal.operation, expected_operation),
+            reasons=("source lifecycle notice mapped to wrong local consequence",),
+        )
+        return NoticeResult(decision, True, "none", "wrong_local_consequence")
+
+    decision = policy.evaluate(receiver_proposal)
+    if decision.outcome not in (policy.ALLOW, policy.ALLOW_WITH_LEDGER):
+        return NoticeResult(decision, True, "pending_local_governance", f"receiver_{decision.outcome}")
+
+    action = "schedule_local_deletion" if notice.kind == NOTICE_DELETION else "schedule_local_correction"
+    return NoticeResult(decision, True, action)
