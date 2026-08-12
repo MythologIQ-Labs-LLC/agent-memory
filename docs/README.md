@@ -15,7 +15,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | Researcher / theorist | [`20-memory-foundations-across-scales.md`](20-memory-foundations-across-scales.md) | `21`, `23`, `24` |
 | Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24`, `41` |
 | Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`41`, schemas and fixtures |
-| Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `33`, `34`, ADR-004, ADR-020, ADR-022 |
+| Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `17`, `33`, `34`, ADR-004, ADR-020, ADR-022, ADR-024 |
 | Governance integration architect | [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) | `11`, `34`, ADR-021, ADR-028, ADR-029, `07` roadmap |
 | Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41` |
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
@@ -81,7 +81,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 14 | [`14-expanded-scope-recommendations.md`](14-expanded-scope-recommendations.md) | Controlled architecture expansion candidates |
 | 15 | [`15-memory-threat-model.md`](15-memory-threat-model.md) | Poisoning, leakage, authority laundering, deletion residue, composition attacks |
 | 16 | [`16-source-trust-and-reputation.md`](16-source-trust-and-reputation.md) | Source trust, independence, latent preference, reputation scope |
-| 17 | [`17-conflict-resolution-engine.md`](17-conflict-resolution-engine.md) | Conflict interpretation and governed resolution consequences |
+| 17 | [`17-conflict-resolution-engine.md`](17-conflict-resolution-engine.md) | Conflict interpretation, pre-write shared-mutation coordination, and governed resolution consequences |
 | 18 | [`18-temporal-causality-layer.md`](18-temporal-causality-layer.md) | Event time, valid time, supersession, causal uncertainty, prospective memory |
 | 19 | [`19-privacy-and-sensitivity-classifier.md`](19-privacy-and-sensitivity-classifier.md) | Sensitivity, recall privacy, minimization, composition leakage, deletion fidelity |
 
@@ -145,7 +145,7 @@ ADR-001 through ADR-020: Accepted
 ADR-021: Proposed
 ADR-022: Accepted
 ADR-023: Proposed
-ADR-024: Proposed
+ADR-024: Accepted
 ADR-025: Proposed
 ADR-026: Proposed
 ADR-027: Proposed
@@ -159,7 +159,9 @@ ADR-021 remains Proposed until portable memory-governance evidence satisfies its
 
 ADR-022 is Accepted because isolation domains, controlled crossings, same-agent task/project separation, derived-scope propagation, shared-memory membership, boundary-crossing receipts, and the required schema/fixture surface are explicitly represented and validated.
 
-ADRs 023-027 remain individually Proposed under their own durable-mutation/evidence gates.
+ADR-024 is Accepted because valid, conflicting, stale, expired, and unauthorized shared-write claim paths are executable; successful and failed claims produce audit evidence; and a valid coordination claim is proven unable to override a stricter PAMA decision. The reference lease coordinator demonstrates the contract without making one locking mechanism normative.
+
+ADR-023 and ADR-025 through ADR-027 remain individually Proposed under their own durable-mutation/evidence gates.
 
 ADR-028 remains Proposed for the language-neutral normative core and optional implementation/interoperability profile boundary. ADR-029 remains Proposed while Governance Context Projection proceeds from schema/fixture/reference-builder evidence toward a real consumer adapter and the additional privacy, reconstruction, and near-match evidence named by that ADR.
 
@@ -234,7 +236,7 @@ Conformance fixtures:
 Validation:
 
 ```bash
-python -m pip install jsonschema
+python -m pip install -r ../reference/requirements.txt
 python scripts/validate_fixtures.py fixtures
 python scripts/validate_schemas.py
 python scripts/validate_doctrine_boundaries.py
