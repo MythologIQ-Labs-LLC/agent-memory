@@ -1,5 +1,5 @@
-name: Bug or documentation defect
-description: Report a concrete repository, documentation, schema, validation, or presentation defect
+name: Bug or documentation problem
+description: Report something broken, inaccurate, confusing, or misleading
 title: "[Defect] "
 labels:
   - agent-memory
@@ -8,74 +8,48 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this form for a concrete defect in the repository or its published documentation. For architecture changes, research evidence, or runtime-conformance work, use the dedicated forms instead.
+        Thanks for reporting a problem. A clear description is enough to get started. You do not need to classify the issue against Agent Memory doctrine or governance rules.
 
-  - type: checkboxes
-    id: preflight
-    attributes:
-      label: Preflight
-      options:
-        - label: I searched existing open and closed issues for the same problem.
-          required: true
-        - label: This is not a security vulnerability. Security issues should follow SECURITY.md.
-          required: true
+        Do not report security vulnerabilities publicly; use the repository's security reporting process instead.
 
   - type: dropdown
     id: defect_type
     attributes:
-      label: Defect type
+      label: What kind of problem is this?
       options:
-        - Documentation accuracy or inconsistency
+        - Documentation is inaccurate or confusing
         - Broken link or navigation
-        - README or diagram presentation
-        - Schema or fixture defect
-        - Validation or CI defect
-        - Citation or provenance defect
-        - Source-rights or attribution defect
-        - Other repository defect
-    validations:
-      required: true
-
-  - type: input
-    id: location
-    attributes:
-      label: Affected file, URL, or component
-      placeholder: docs/..., schemas/..., README.md, workflow URL, etc.
+        - README, diagram, or presentation problem
+        - Schema, fixture, or data problem
+        - Validation or CI problem
+        - Citation, provenance, or attribution problem
+        - Code or implementation problem
+        - Other
     validations:
       required: true
 
   - type: textarea
     id: observed
     attributes:
-      label: What is wrong?
-      description: Describe the observed behavior or inaccurate content precisely.
+      label: What happened or what is wrong?
+      description: Tell us what you observed. Include a file, URL, component, screenshot, or command if useful.
     validations:
       required: true
 
   - type: textarea
     id: expected
     attributes:
-      label: Expected behavior or correction
-      description: State what should happen or what the repository should say instead.
-    validations:
-      required: true
+      label: What did you expect instead?
+      description: Optional. If the expected behavior or correction is obvious to you, describe it here.
 
   - type: textarea
     id: reproduction
     attributes:
-      label: Reproduction or evidence
-      description: Include steps, commands, screenshots, commit references, or other evidence when applicable.
+      label: Reproduction or supporting evidence
+      description: Optional. Include steps, commands, screenshots, commit references, or other evidence when applicable.
 
   - type: textarea
     id: impact
     attributes:
-      label: Impact
-      description: Explain whether this is cosmetic, misleading, breaks validation, changes doctrine interpretation, or affects implementation/conformance claims.
-
-  - type: checkboxes
-    id: evidence_boundary
-    attributes:
-      label: Evidence boundary
-      options:
-        - label: I have distinguished verified behavior from assumptions or interpretation.
-          required: true
+      label: Why does this matter?
+      description: Optional. Note user impact, confusion, validation failure, or other consequences if known.
