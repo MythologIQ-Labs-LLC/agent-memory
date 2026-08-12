@@ -318,7 +318,7 @@ Controls:
 
 ### 19. Promotion-queue flooding
 
-The proportional-handling lanes concentrate friction at promotion and review boundaries — which makes those boundaries the highest-value place to attack by volume rather than by quality. An attacker, a compromised estimator, or merely a noisy environment floods the review queue with plausible-looking candidates until reviewer attention degrades, then a bad promotion rides through on fatigue. This is governance-fatigue exploitation, and it is a direct consequence of the architecture's own design choice to make review the gate.
+The proportional-handling lanes concentrate friction at promotion and review boundaries, which makes those boundaries the highest-value place to attack by volume rather than by quality. An attacker, a compromised estimator, or merely a noisy environment floods the review queue with plausible-looking candidates until reviewer attention degrades, then a bad promotion rides through on fatigue. This is governance-fatigue exploitation, and it is a direct consequence of the architecture's own design choice to make review the gate.
 
 Attack path:
 
@@ -333,8 +333,42 @@ Controls:
 - pre-adjudication triage separating "needs adjudication" from "worth a look" by consequence, per the review-budget rules of [`37-memory-economics-and-budget-policy.md`](37-memory-economics-and-budget-policy.md)
 - per-source and per-estimator rate accounting on promotion proposals; a source whose candidate volume spikes is itself an anomaly signal feeding source trust
 - batched review windows with explicit capacity, so saturation becomes a visible queue-depth metric instead of silent scrutiny decay
-- fatigue never relaxes the gate: queue pressure produces conservative interim state, never auto-approval — load-shedding only as a versioned policy mutation
+- fatigue never relaxes the gate: queue pressure produces conservative interim state, never auto-approval; load-shedding only as a versioned policy mutation
 - queue-depth, review-latency, and approval-rate-under-load metrics monitored as attack indicators, not just operations telemetry
+
+### 20. Durable decision authority capture
+
+An agent or coalition of agents turns a proposal to revisit an earlier durable decision into a committed reversal without the authority that the earlier decision's scope and consequence require.
+
+Attack variants include:
+
+- **agent collusion**: several agents agree that a prior human-confirmed decision should change and treat their agreement as equivalent to human confirmation;
+- **stale approval replay**: a real approval is reused after the target decision state, scope, policy, or proposal changed;
+- **authority substitution**: a grant for another target, actor, mutation class, scope, or risk ceiling is presented as sufficient for the overwrite;
+- **silent reversal**: a replacement becomes current without an explicit `supersedes` relationship and append-only authority evidence;
+- **self-approval**: the proposing actor supplies or ratifies its own authority transition;
+- **approval stripping**: the runtime validates an authority grant but writes a replacement decision that no longer carries the grant reference needed to reconstruct why it became current.
+
+Required invariant:
+
+```text
+proposal evidence
+!=
+overwrite authority
+!=
+PAMA permission
+```
+
+Controls:
+
+- represent proposal, authority resolution, PAMA decision, and committed supersession as separate events;
+- bind overwrite authority to exact proposal, target decision, actor eligibility, scope, mutation class, state snapshot, risk ceiling, issue/expiry window, and revocation state;
+- require fresh human confirmation for prior human-confirmed decisions and for the high/critical reference-profile cases defined in [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md);
+- preserve bounded delegated policy as an explicit authority object rather than inferring delegation from repeated approvals or agent consensus;
+- reject stale, expired, revoked, mismatched, self-approved, or unrecorded authority before durable mutation;
+- preserve the prior decision as historical evidence and append a supersession record rather than destructively rewriting it;
+- evaluate PAMA after decision-specific authority validation so a valid grant cannot override an independent PAMA block;
+- retain rejected overwrite proposals and failed authority attempts as audit evidence.
 
 ## Probabilistic security components
 
@@ -373,6 +407,7 @@ Strong invariants should include:
 - ledger creation for consequential changes
 - certification requirements
 - concurrency/version checks
+- exact durable-decision overwrite authority binding
 
 ## Threat severity
 
@@ -409,6 +444,9 @@ At minimum:
 - permanent deletion from predicted low utility
 - estimator drift
 - promotion-queue flooding under review-capacity pressure
+- durable decision overwrite without current authority
+- agent consensus attempting to replace a human-confirmed durable decision
+- stale durable-decision overwrite approval
 
 ## Research signals
 
