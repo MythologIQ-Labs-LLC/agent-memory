@@ -229,7 +229,7 @@ They remain independent projects. Agent Memory does not require either system.
 
 ## Current maturity
 
-The architecture is tracked by **proposed ADR-028** and implementation issue **#154**.
+The architecture is tracked by **proposed ADR-029** and implementation issue **#154**.
 
 V0.1 establishes:
 
@@ -241,11 +241,13 @@ V0.1 establishes:
 - structural exclusion of final consumer verdict/permission fields
 - a deterministic reference projection builder
 
-ADR-028 remains Proposed until the stronger acceptance evidence in the canonical ADR is satisfied.
+ADR-029 remains Proposed until the stronger acceptance evidence in the canonical ADR is satisfied.
+
+ADR-028 separately preserves the language-neutral normative core and optional implementation-profile boundary. Together, the two decisions keep both the implementation layer and governance-consumer layer from capturing core Agent Memory semantics.
 
 ## Canonical sources
 
-- Architecture decision: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-028-governance-projection-is-derived-context-not-authority.md
+- Architecture decision: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-029-governance-projection-is-derived-context-not-authority.md
 - Projection profile: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/profiles/governance-context-projection-profile.md
 - Schema: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/schemas/governance-context-projection.schema.json
 - Adapter contracts: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/34-adapter-contracts.md
