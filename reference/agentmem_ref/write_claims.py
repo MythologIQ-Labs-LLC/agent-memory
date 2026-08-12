@@ -294,15 +294,20 @@ class SharedWriteCoordinator:
             payload["reason"] = reason
         if extra_payload:
             payload.update(extra_payload)
-        return receipts.build_audit_event(
-            event_id=f"write-claim-event:{self._event_counter}",
-            event_type=event_type,
-            timestamp=timestamp,
-            component="shared-write-coordinator",
-            memory_id=claim.target_reference,
-            correlation_id=claim.claim_id,
-            actor=claim.actor_id,
-            authority={"authority_refs": [claim.authority_ref]},
-            payload=payload,
-            receipt_ref=receipt_ref,
-        )
+        document = {
+            "schema_version": "1.0.0",
+            "event_id": f"write-claim-event:{self._event_counter}",
+            "event_type": event_type,
+            "event_version": "1.0.0",
+            "timestamp": timestamp,
+            "component": "shared-write-coordinator",
+            "memory_id": claim.target_reference,
+            "actor": claim.actor_id,
+            "correlation_id": claim.claim_id,
+            "authority": {"authority_refs": [claim.authority_ref]},
+            "payload": payload,
+        }
+        if receipt_ref:
+            document["receipt_ref"] = receipt_ref
+        receipts.validate("memory-audit-event.schema.json", document)
+        return document
