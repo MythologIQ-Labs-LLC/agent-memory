@@ -84,6 +84,7 @@ Operational mutation types are defined in `04-governance-and-pama.md`. Risk clas
 | Link creation | allow_with_ledger | allow_with_ledger | require_review | require_review |
 | Link deletion | allow_with_ledger | require_review | require_review | require_external_verification |
 | Correction | require_review | require_review | require_review | require_external_verification |
+| Decision overwrite | require_review | require_review | require_external_verification | require_external_verification |
 | Promotion | allow_with_ledger | require_review | require_review | require_external_verification |
 | Crystallization | require_review | require_review | require_external_verification | require_external_verification |
 | Pruning | allow_with_ledger | allow_with_ledger | require_review | require_external_verification |
@@ -94,6 +95,8 @@ Operational mutation types are defined in `04-governance-and-pama.md`. Risk clas
 Reading notes:
 
 - Score adjustment at critical risk is `block` because a score change on identity, credential, compliance, or safety-boundary memory is not merely a score change; it is an attempt to route around governance. Re-evaluation of such memory goes through correction or policy mutation instead.
+- Decision overwrite is distinct from correcting a decision record. Fixing a typo or evidence link may be a correction; changing what was decided is a supersession/reversal authority event. Low/medium overwrite requires explicit review. High/critical overwrite requires external verification. The durable-decision profile defines which authority records may satisfy those outcomes for decision memory.
+- A prior human-confirmed durable decision is not downgraded by agent agreement, repetition, confidence, or a historical approval. Its overwrite requires a fresh authority transition under [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md).
 - Scope expansion at critical risk is `block` because cross-tenant expansion of critical-class memory has no autonomous path. It requires a policy-level decision, which is a policy mutation, not a scope-expansion request.
 - `require_external_verification` means verification by an authority outside the requesting component: a human approver, an independent certification service, or an equivalently authoritative system. The requesting estimator can never be its own verifier.
 - Policy mutation never resolves below `require_review` at any risk class, and human or equivalently authoritative approval remains the default expectation per `04-governance-and-pama.md`.
@@ -129,7 +132,7 @@ Relaxation exists so reversible, well-evidenced, narrow mutations are not buried
 | R-REV | mutation is cheaply reversible with a verified rollback path and a reversible tombstone | may lower require_review to allow_with_ledger, only for rows marked relaxable below |
 | R-DELEG | acting under an explicit, unexpired, in-scope delegation record | may lower one step, never below allow_with_ledger, never for policy mutation or scope expansion |
 
-Relaxable rows: link deletion (low/medium), pruning (high), promotion (medium). No other cell is relaxable. Crystallization, permanent deletion, scope expansion, policy mutation, M5 governance/security authority, and A5 governance changes are never relaxable through these modifiers.
+Relaxable rows: link deletion (low/medium), pruning (high), promotion (medium). No other cell is relaxable. Decision overwrite, crystallization, permanent deletion, scope expansion, policy mutation, M5 governance/security authority, and A5 governance changes are never relaxable through these modifiers.
 
 Reversibility works in both directions and asymmetrically: irreversibility escalates everywhere, reversibility relaxes only where the table says so. A verified rollback path is a precondition for relaxation, not evidence of safety.
 
@@ -227,6 +230,17 @@ Request: agent proposes lowering the candidate threshold from 0.80 to 0.70 becau
 - Before: `candidate_threshold 0.80`, policy version `p-14`. After, only if approved by human or equivalently authoritative review: `candidate_threshold 0.70`, policy version `p-15`, prior version retained for replay.
 - Ledger: policy-mutation receipt with approval refs, both policy versions, and effective time. An agent observing its own promotion rate is an estimator; an estimator proposing to widen its own authority is exactly what this row exists to stop.
 
+### 10. Durable decision overwrite
+
+Request: an agent proposes replacing a durable repository decision that was previously human-confirmed.
+
+- PAMA shape: M4 shared/commitment-bearing state, A3 local workflow effect, decision-overwrite operation, high risk.
+- Base cell: decision overwrite × high = `require_external_verification`.
+- The agent proposal, its confidence, and agreement from other agents are evidence only. They do not satisfy the external-verification requirement.
+- A fresh human confirmation bound to the exact proposal, target, scope, actor eligibility, risk ceiling, state snapshot, and validity window may satisfy the decision-memory authority gate.
+- PAMA is then evaluated and may still block for an independent reason such as a required isolation-domain mismatch.
+- On success, the prior decision remains historical, the replacement is appended, and the supersession/receipt chain records the exact authority transition. See [`../fixtures/durable-decision-human-confirmed-overwrite.json`](../fixtures/durable-decision-human-confirmed-overwrite.json).
+
 ## Interaction with lifecycle gates
 
 The table composes with, and never replaces, the promotion and crystallization gates of `04-governance-and-pama.md`:
@@ -237,6 +251,15 @@ can_crystallize requires pama_outcome in [allow, allow_with_ledger] and certific
 ```
 
 A table outcome of `require_review` therefore admits a memory to Pending Verification at most. Crystallization additionally requires the review to have resolved and certification to pass. The decision table decides authority; the gates decide sequence.
+
+Decision overwrite has its own sequence because the proposal is already about changing a durable decision rather than promoting a candidate memory:
+
+```text
+overwrite proposal
+  -> decision-memory authority validation
+  -> PAMA outcome
+  -> append-only supersession or refusal
+```
 
 ## Conformance cases
 
@@ -250,6 +273,11 @@ A table outcome of `require_review` therefore admits a memory to Pending Verific
 | Concurrent conflicting mutation requests | no silent last-writer-wins; second request re-resolves against new state | [`../fixtures/concurrent-conflicting-mutation.json`](../fixtures/concurrent-conflicting-mutation.json) |
 | Authority laundering through a permissive path | outcome depends on mutation actually requested, target class, and downstream authority, not the path that carried it | [`../fixtures/authority-laundering.json`](../fixtures/authority-laundering.json) |
 | Policy applied under drifted estimator version | M-OOD escalates consequential mutations | [`../fixtures/policy-estimator-version-drift.json`](../fixtures/policy-estimator-version-drift.json) |
+| Agent overwrite proposal without authority | proposal remains evidence; current decision does not change | [`../fixtures/durable-decision-agent-proposal.json`](../fixtures/durable-decision-agent-proposal.json) |
+| Human-confirmed durable overwrite | exact approval can satisfy review; old decision remains historical | [`../fixtures/durable-decision-human-confirmed-overwrite.json`](../fixtures/durable-decision-human-confirmed-overwrite.json) |
+| Stale overwrite proposal | current state mismatch rejects before commit | [`../fixtures/durable-decision-stale-overwrite.json`](../fixtures/durable-decision-stale-overwrite.json) |
+| Agent consensus attempts to replace human-confirmed decision | consensus cannot substitute for required human confirmation | [`../fixtures/durable-decision-agent-collusion.json`](../fixtures/durable-decision-agent-collusion.json) |
+| Bounded delegated low-risk decision overwrite | exact delegation may satisfy low-risk review only inside its declared bounds | [`../fixtures/durable-decision-delegated-low-risk-overwrite.json`](../fixtures/durable-decision-delegated-low-risk-overwrite.json) |
 
 Additional PAMA-native fixtures should cover:
 
