@@ -10,7 +10,7 @@ from pathlib import Path
 from agentmem_ref.policy_projection_compatibility import evaluate_policy_projection_compatibility
 
 ROOT = Path(__file__).resolve().parents[2]
-FIXTURE = ROOT / "fixtures" / "policy-projection-compatibility-adversarial.json"
+FIXTURE = ROOT / "reference" / "testdata" / "policy-projection-compatibility-adversarial.json"
 
 
 def _merge(base, overrides):
