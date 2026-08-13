@@ -155,6 +155,11 @@ def evaluate_derivation_currentness(
             unknown = True
         ordered.append(observation)
 
+    transformation_status = derivation["transformation"].get("status", "complete")
+    if transformation_status in {"partial", "failed"}:
+        reasons.append(f"transformation_{transformation_status}")
+        definite_revalidation = True
+
     current_scope = _normalize_scope_observation(scope_observation)
     historical_scope = derivation["scope"]
     if current_scope["tenant_ref"] != historical_scope["tenant_ref"]:
