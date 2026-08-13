@@ -45,6 +45,8 @@
       "required": ["method", "transformer_ref", "transformer_version", "transformer_trust", "output_ref"],
       "properties": {
         "method": { "type": "string", "minLength": 1 },
+        "mode": { "type": "string", "enum": ["deterministic", "probabilistic"] },
+        "status": { "type": "string", "enum": ["complete", "partial", "failed"] },
         "transformer_ref": { "type": "string", "minLength": 1 },
         "transformer_version": { "type": "string", "minLength": 1 },
         "transformer_trust": {
