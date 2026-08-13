@@ -1,0 +1,47 @@
+name: Policy Projection Compatibility
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Agent Memory
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+
+      - name: Execute compatibility tests
+        env:
+          PYTHONPATH: reference
+        run: python -m unittest reference/tests/test_policy_projection_compatibility.py
+
+      - name: Checkout pinned Dogwood public source
+        uses: actions/checkout@v4
+        with:
+          repository: dogwood-policy/dogwood
+          ref: c6237c88099b3f492ecc5fcee42df06a19224b97
+          path: dogwood-public
+          persist-credentials: false
+
+      - name: Set up Rust
+        run: |
+          rustup toolchain install 1.89.0 --profile minimal
+          rustup default 1.89.0
+
+      - name: Execute pinned Dogwood partition contract test
+        run: cargo test --manifest-path dogwood-public/Cargo.toml -p amzn-dogwood-language --test pin_partition_differential
+
+      - name: Verify source pin
+        run: test "$(git -C dogwood-public rev-parse HEAD)" = "c6237c88099b3f492ecc5fcee42df06a19224b97"
