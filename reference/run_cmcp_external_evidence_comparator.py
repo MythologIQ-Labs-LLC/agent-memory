@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import copy
-import hashlib
 import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -169,9 +168,11 @@ def run(agent_memory_commit: str) -> dict:
 
     checks = {
         "all_enforcement_modes_real_and_distinct": all(case["passed"] for case in mode_cases),
-        "stale_attestation_not_current": (
+        "stale_attestation_is_scoped_to_attestation_record": (
             stale_result["is_attestation_fresh"] is False
-            and stale_enforcement["applicability"]["status"] == "stale"
+            and stale_enforcement["freshness"]["status"] == "current"
+            and stale_enforcement["applicability"]["status"] == "applicable"
+            and stale_attestation["freshness"]["status"] == "expired"
             and stale_attestation["applicability"]["status"] == "stale"
         ),
         "wrong_policy_hash_invalidates_enforcement": (
