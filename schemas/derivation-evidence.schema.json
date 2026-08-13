@@ -67,8 +67,26 @@
       "properties": {
         "scope_ref": { "type": "string", "minLength": 1 },
         "tenant_ref": { "type": "string", "minLength": 1 },
-        "project_ref": { "type": "string", "minLength": 1 }
-      }
+        "project_ref": { "type": "string", "minLength": 1 },
+        "relation": { "type": "string", "enum": ["preserved", "narrowed"] },
+        "basis_refs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "relation": { "const": "narrowed" } },
+            "required": ["relation"]
+          },
+          "then": {
+            "required": ["basis_refs"],
+            "properties": { "basis_refs": { "minItems": 1 } }
+          }
+        }
+      ]
     },
     "evidence_refs": {
       "type": "array",
