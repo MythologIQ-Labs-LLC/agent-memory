@@ -8,7 +8,6 @@ import copy
 import importlib.metadata
 import json
 from pathlib import Path
-import subprocess
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
@@ -33,7 +32,6 @@ UOR_RELEASE = "v0.2.0"
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--agent-memory-commit", required=True)
-    parser.add_argument("--rust-probe", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
@@ -48,18 +46,6 @@ def main() -> int:
             return kappa.json_address(raw)
         except AddressError as exc:
             raise RuntimeError(str(exc)) from exc
-
-    def rust_address(raw: bytes) -> str:
-        result = subprocess.run(
-            [args.rust_probe],
-            input=raw,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            check=False,
-        )
-        if result.returncode:
-            raise RuntimeError(result.stderr.decode("utf-8", errors="replace"))
-        return result.stdout.decode("ascii").strip()
 
     fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
     base = fixture["base"]
@@ -79,17 +65,15 @@ def main() -> int:
         )
 
     root = build(base, ordering_mode="linear_stream", stream_ref="stream:alpha", sequence=0)
-    root_py = address_temporal_commitment(root, address_fn=py_address)
-    root_rust = address_temporal_commitment(root, address_fn=rust_address)
+    root_ref = address_temporal_commitment(root, address_fn=py_address)
     child = build(
         base,
         ordering_mode="linear_stream",
         stream_ref="stream:alpha",
         sequence=1,
-        predecessor_refs=[root_py],
+        predecessor_refs=[root_ref],
     )
-    child_py = address_temporal_commitment(child, address_fn=py_address)
-    child_rust = address_temporal_commitment(child, address_fn=rust_address)
+    child_ref = address_temporal_commitment(child, address_fn=py_address)
 
     changed_time = copy.deepcopy(base)
     changed_time["temporal_claims"]["event_time"] = "2026-08-13T19:05:00Z"
@@ -98,13 +82,13 @@ def main() -> int:
         ordering_mode="linear_stream",
         stream_ref="stream:alpha",
         sequence=1,
-        predecessor_refs=[root_py],
+        predecessor_refs=[root_ref],
     )
     changed_time_ref = address_temporal_commitment(changed_time_commitment, address_fn=py_address)
 
     key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(fixture["test_key"]["seed_hex"]))
     attestation = sign_temporal_commitment(
-        content_ref=child_py,
+        content_ref=child_ref,
         private_key=key,
         key_ref=fixture["test_key"]["key_ref"],
         content_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
@@ -124,13 +108,13 @@ def main() -> int:
         ordering_mode="linear_stream",
         stream_ref="stream:alpha",
         sequence=1,
-        predecessor_refs=[root_py],
+        predecessor_refs=[root_ref],
     )
     fork_ref = address_temporal_commitment(fork_child, address_fn=py_address)
     forks = detect_linear_forks(
         [
-            {"content_ref": root_py, "commitment": root},
-            {"content_ref": child_py, "commitment": child},
+            {"content_ref": root_ref, "commitment": root},
+            {"content_ref": child_ref, "commitment": child},
             {"content_ref": fork_ref, "commitment": fork_child},
         ]
     )
@@ -138,23 +122,19 @@ def main() -> int:
     witness = build_external_witness_evidence(
         witness_profile="rfc3161-verified-by-host",
         subject_kind="temporal_commitment",
-        subject_ref=child_py,
+        subject_ref=child_ref,
         claim_kind="existence_by_time",
         verification_status="verified",
         witnessed_at="2026-08-13T19:01:00Z",
         proof_ref="evidence:test-witness:1",
     )
-    witness_good = verify_witness_binding(witness, expected_subject_ref=child_py)
+    witness_good = verify_witness_binding(witness, expected_subject_ref=child_ref)
     witness_wrong = verify_witness_binding(witness, expected_subject_ref="sha256:" + "6" * 64)
 
-    rows = [
-        {"id": "root", "python": root_py, "rust": root_rust, "match": root_py == root_rust},
-        {"id": "child", "python": child_py, "rust": child_rust, "match": child_py == child_rust},
-    ]
-
     checks = {
-        "cross_language_labels_match": all(row["match"] for row in rows),
-        "temporal_mutation_changes_identity": changed_time_ref != child_py,
+        "exact_uor_release_loaded": binding_version == "0.2.0",
+        "uor_temporal_labels_are_distinct": root_ref != child_ref,
+        "temporal_mutation_changes_identity": changed_time_ref != child_ref,
         "trusted_signature_is_valid": trusted["cryptographic_status"] == "valid",
         "signature_tamper_is_invalid": tampered_result["cryptographic_status"] == "invalid",
         "untrusted_signature_stays_non_authoritative": untrusted["cryptographic_status"] == "valid" and not untrusted["trusted_signer"] and untrusted["authority_effect"] == "none",
@@ -163,8 +143,7 @@ def main() -> int:
         "linear_order_does_not_claim_complete_history": order["complete_history_proven"] is False,
         "linear_order_does_not_claim_non_equivocation": order["non_equivocation_proven"] is False,
         "fork_is_exposed_without_canonical_child": len(forks) == 1 and forks[0]["canonical_child"] is None,
-        "witness_binds_exact_subject": witness_good["bound"] is True,
-        "wrong_witness_subject_rejected": witness_wrong["bound"] is False,
+        "witness_binds_exact_subject": witness_good["bound"] is True and witness_wrong["bound"] is False,
         "witness_does_not_prove_event_occurrence_time": witness_good["event_occurrence_time_proven"] is False,
     }
 
@@ -179,26 +158,30 @@ def main() -> int:
             "source_commit": UOR_SOURCE_COMMIT,
             "python_binding": f"uor-addr=={binding_version}",
             "content_reference_profile": UOR_CONTENT_REFERENCE_PROFILE,
+            "cross_language_evidence_workflow": "UOR Addr Compatibility",
         },
-        "temporal_objects": rows,
+        "temporal_objects": [
+            {"id": "root", "content_ref": root_ref},
+            {"id": "child", "content_ref": child_ref, "predecessor_ref": root_ref},
+            {"id": "child-time-mutated", "content_ref": changed_time_ref, "predecessor_ref": root_ref},
+        ],
         "checks": checks,
         "forks": forks,
         "interpretation": {
             "content_identity_authority_effect": "none",
             "signature_authority_effect": "none",
             "witness_authority_effect": "none",
-            "complete_history_claimed": False,
-            "event_occurrence_time_proven_by_witness": False,
+            "complete_history_claimed": false,
+            "event_occurrence_time_proven_by_witness": false
         },
         "metrics": {
             "check_count": len(checks),
-            "failed_checks": sum(value is not True for value in checks.values()),
-            "cross_language_mismatches": sum(not row["match"] for row in rows),
-        },
+            "failed_checks": sum(value is not True for value in checks.values())
+        }
     }
     Path(args.output).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
-    return 1 if report["metrics"]["failed_checks"] or report["metrics"]["cross_language_mismatches"] else 0
+    return 1 if report["metrics"]["failed_checks"] else 0
 
 
 if __name__ == "__main__":
