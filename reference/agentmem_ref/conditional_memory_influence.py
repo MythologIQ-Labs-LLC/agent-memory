@@ -8,6 +8,8 @@ from typing import Any
 
 from . import receipts
 
+UNAVAILABLE_REF = "urn:agent-memory:evidence:unavailable"
+
 NONCLAIMS = (
     "address_is_not_identity",
     "prefetch_is_not_admission",
@@ -24,14 +26,30 @@ def opaque_address_digest(address: Any) -> str:
     return "sha256:" + hashlib.sha256(raw).hexdigest()
 
 
+def map_currentness(applicability_status: str | None, source_state: str | None = None) -> str:
+    """Map generic derivation/source posture into the profile's bounded vocabulary."""
+    if applicability_status == "current" and source_state in (None, "current"):
+        return "current"
+    if source_state == "revoked":
+        return "revoked"
+    if source_state == "deleted":
+        return "deleted_residue"
+    if applicability_status in {"revalidation_required", "stale", "non_current"}:
+        return "stale"
+    return "unknown"
+
+
 def decide_gate(
     *,
     table_partition: str | None,
     requested_partition: str | None,
     currentness: str | None,
     suppression: str | None,
+    table_version_supported: bool | None = True,
 ) -> tuple[str, tuple[str, ...]]:
     """Return the narrowest explicit gate result for one influence attempt."""
+    if table_version_supported is not True:
+        return "block_unknown", ("table format/version is unsupported or unavailable",)
     if not table_partition or not requested_partition:
         return "block_unknown", ("partition evidence unavailable",)
     if table_partition != requested_partition:
@@ -49,6 +67,21 @@ def decide_gate(
     return "allow", ("table current, partition matched, suppression clear",)
 
 
+def _evidence_safe_table(table: dict[str, Any]) -> dict[str, Any]:
+    safe = dict(table)
+    for field in ("partition_ref", "currentness_ref", "suppression_overlay_ref"):
+        if not safe.get(field):
+            safe[field] = UNAVAILABLE_REF
+    return safe
+
+
+def _evidence_safe_request(request: dict[str, Any]) -> dict[str, Any]:
+    safe = dict(request)
+    if not safe.get("partition_ref"):
+        safe["partition_ref"] = UNAVAILABLE_REF
+    return safe
+
+
 def normalize_influence(
     *,
     influence_id: str,
@@ -62,6 +95,7 @@ def normalize_influence(
     correlation_ref: str,
     observed_at: str,
     collision_ref: str | None = None,
+    table_version_supported: bool | None = True,
 ) -> dict[str, Any]:
     """Build privacy-minimized evidence for a conditional-memory influence gate."""
     result, reasons = decide_gate(
@@ -69,6 +103,7 @@ def normalize_influence(
         requested_partition=request.get("partition_ref"),
         currentness=currentness,
         suppression=suppression,
+        table_version_supported=table_version_supported,
     )
     document: dict[str, Any] = {
         "schema_version": "1.0.0",
@@ -76,8 +111,8 @@ def normalize_influence(
         "influence_id": influence_id,
         "lookup_ref": lookup_ref,
         "opaque_address_digest": opaque_address_digest(address),
-        "table": dict(table),
-        "request": dict(request),
+        "table": _evidence_safe_table(table),
+        "request": _evidence_safe_request(request),
         "currentness": currentness or "unknown",
         "suppression": suppression or "unknown",
         "gate": {
