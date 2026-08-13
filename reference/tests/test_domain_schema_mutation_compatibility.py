@@ -30,6 +30,21 @@ def selected(decision, operation):
 
 
 class DomainSchemaMutationCompatibilityTests(unittest.TestCase):
+    def test_historical_1_0_and_1_1_decisions_remain_valid(self):
+        for operation, risk, expected_version in (
+            ("promotion", "medium", "1.0.0"),
+            ("decision_overwrite", "high", "1.1.0"),
+        ):
+            with self.subTest(operation=operation):
+                item = proposal(operation=operation, risk=risk)
+                decision = policy.evaluate(item)
+                document = receipts.build_pama_decision(
+                    item, decision, selected_action=selected(decision, item.operation),
+                    selection_mode="deterministic", receipt_ref=f"receipt:{operation}",
+                )
+                self.assertEqual(document["schema_version"], expected_version)
+                receipts.validate("pama-decision.schema.json", document)
+
     def test_1_2_document_validates_and_binds_scope_change(self):
         item = proposal(scope_change="project-local -> tenant-shared")
         decision = dsm.evaluate(item, requested_scope_change=item.requested_scope_change)
