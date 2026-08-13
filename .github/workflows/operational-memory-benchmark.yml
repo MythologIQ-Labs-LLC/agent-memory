@@ -40,12 +40,7 @@ jobs:
           for row in report["representations"]:
               current = row["current_only"]["all"]
               stale = row["stale_contaminated"]["all"]
-              print(
-                  row["representation"],
-                  "current_mae=", current["mean_absolute_error_px"],
-                  "success=", current["intercept_success_rate"],
-                  "stale_mae=", stale["mean_absolute_error_px"],
-              )
+              print(row["representation"], "current_mae=", current["mean_absolute_error_px"], "success=", current["intercept_success_rate"], "stale_mae=", stale["mean_absolute_error_px"])
           PY
 
       - name: Upload local benchmark evidence
@@ -77,19 +72,14 @@ jobs:
       - name: Install isolated CPU comparator environment
         run: |
           python -m venv /tmp/vjepa-benchmark
-          /tmp/vjepa-benchmark/bin/python -m pip install --disable-pip-version-check \
-            -r reference/requirements.txt
-          /tmp/vjepa-benchmark/bin/python -m pip install --disable-pip-version-check \
-            --index-url https://download.pytorch.org/whl/cpu \
-            torch==2.7.1 torchvision==0.22.1
-          /tmp/vjepa-benchmark/bin/python -m pip install --disable-pip-version-check \
-            numpy==2.2.6 timm==1.0.19
+          /tmp/vjepa-benchmark/bin/python -m pip install --disable-pip-version-check -r reference/requirements.txt
+          /tmp/vjepa-benchmark/bin/python -m pip install --disable-pip-version-check --index-url https://download.pytorch.org/whl/cpu torch==2.7.1 torchvision==0.22.1
+          /tmp/vjepa-benchmark/bin/python -m pip install --disable-pip-version-check numpy==2.2.6 timm==1.0.19 einops==0.8.1
 
-      - name: Download official V-JEPA 2.1 ViT-B checkpoint
-        run: >-
-          curl --fail --location --retry 3
-          https://dl.fbaipublicfiles.com/vjepa2/vjepa2_1_vitb_dist_vitG_384.pt
-          --output /tmp/vjepa2_1_vitb_dist_vitG_384.pt
+      - name: Download and verify official V-JEPA 2.1 ViT-B checkpoint
+        run: |
+          curl --fail --location --retry 3 https://dl.fbaipublicfiles.com/vjepa2/vjepa2_1_vitb_dist_vitG_384.pt --output /tmp/vjepa2_1_vitb_dist_vitG_384.pt
+          echo "848a77c33cc9e6649ed2119c9bea1e2c569bcdab9539ff3e7c02ccc2959ddf4d  /tmp/vjepa2_1_vitb_dist_vitG_384.pt" | sha256sum --check
 
       - name: Run pinned V-JEPA 2.1 frozen-representation comparator
         env:
@@ -100,6 +90,7 @@ jobs:
           --agent-memory-commit "$AGENT_MEMORY_COMMIT"
           --vjepa-source /tmp/vjepa2
           --checkpoint /tmp/vjepa2_1_vitb_dist_vitG_384.pt
+          --expected-checkpoint-sha256 848a77c33cc9e6649ed2119c9bea1e2c569bcdab9539ff3e7c02ccc2959ddf4d
           --output vjepa2-operational-comparator.json
 
       - name: Show V-JEPA comparator summary
