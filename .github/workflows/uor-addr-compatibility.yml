@@ -63,6 +63,8 @@ jobs:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
           PYTHONPATH: reference
         run: |
+          mkdir -p fixtures
+          cp reference/testdata/uor-addr-v0.2.0-json-vectors.json fixtures/uor-addr-v0.2.0-json-vectors.json
           python reference/run_uor_addr_workflow.py --agent-memory-commit "$AGENT_MEMORY_COMMIT" --rust-probe /tmp/uor-probe/target/debug/agent-memory-uor-probe --output uor-addr-compatibility.json
       - name: Inspect evidence invariants
         env:
