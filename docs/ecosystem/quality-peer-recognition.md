@@ -124,7 +124,7 @@ Cedar is a purpose-built authorization policy language and engine with explicit 
 
 Primary repository: <https://github.com/cedar-policy/cedar>
 
-Current Agent Memory comparator target: Cedar v4.12.0, exact source commit `fdcbaed9bba4f67b498f60733cb9253d2ffc968e`. Issue #216 tracks the real-host proof. Until that comparator completes, Cedar should be described as an active comparator target rather than a validated integration.
+Current Agent Memory comparator target: Cedar v4.12.0, exact source commit `fdcbaed32bdb8c8d13e4eaf2b58db5555e9fb8c5`. Issue #216 tracks the real-host proof. Until that comparator completes, Cedar should be described as an active comparator target rather than a validated integration.
 
 ### Cedarling
 
