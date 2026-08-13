@@ -33,11 +33,13 @@ ADR-024: Accepted
 ADR-025: Proposed
 ADR-026: Proposed
 ADR-027: Proposed
-ADR-028: Proposed
+ADR-028: Accepted
 ADR-029: Proposed
+ADR-030: Accepted
+ADR-031: Accepted
 ```
 
-ADRs 001-020, ADR-022, and ADR-024 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance. ADR-024 likewise required executable positive and negative shared-write coordination evidence before promotion.
+ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, and ADR-031 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance. ADR-024 likewise required executable positive and negative shared-write coordination evidence before promotion.
 
 ADR-021 proposes the interoperability boundary for **portable memory-governance evidence**. It keeps Agent Memory authoritative for memory semantics, PAMA, lifecycle obligations, and canonical decision receipts while allowing external trust systems such as AgenTrust to verify and correlate evidence without redefining those semantics.
 
@@ -47,9 +49,13 @@ ADR-023 proposes that durable correction is **append-only supersession rather th
 
 ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity. Both remain Proposed while their linked evidence programs run.
 
-ADR-028 proposes a **language-neutral normative core with optional implementation and interoperability profiles**. It permits Python-first reference tooling, Rust high-assurance implementations, and UOR/AGT/MCP integrations without allowing any one language or external ecosystem to become the definition of Agent Memory doctrine.
+ADR-028 establishes a **language-neutral normative core with optional implementation and interoperability profiles**. It permits Python-first reference tooling, Rust high-assurance implementations, and UOR/AGT/MCP integrations without allowing any one language or external ecosystem to become the definition of Agent Memory doctrine.
 
 ADR-029 proposes a three-layer governance-consumer boundary: **canonical Agent Memory core -> vendor-neutral Governance Context Projection -> consumer-specific adapter**. The projection is reconstructable derived context, not canonical memory truth, standing permission, or a final external-governance verdict.
+
+ADR-030 establishes that temporal and authorization consumers require a **versioned compatibility/currentness evaluation** before a memory-derived projection can be treated as current policy input. Serialization success is not semantic compatibility, and historical temporal evidence is not current authority.
+
+ADR-031 establishes a **layered temporal-commitment model**. Material temporal claims that determine historical identity belong inside deterministic content commitments, while signer attestation, signer trust, external witnessed time/transparency evidence, currentness, and PAMA authority remain distinct claims.
 
 ## Current status policy
 
@@ -161,18 +167,18 @@ The evidence includes proposal-without-mutation, human-confirmed overwrite, boun
 
 The remaining Proposed ADRs intentionally separate several related but non-identical questions:
 
+- [`ADR-021`](ADR-021-portable-memory-governance-evidence-boundary.md): define the portable memory-governance evidence boundary with external trust and attestation systems;
 - [`ADR-023`](ADR-023-corrections-are-supersession-not-deletion.md): preserve correction history while removing superseded state from current truth;
 - [`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md): require explicit authority before overwriting durable decision state;
 - [`ADR-026`](ADR-026-origin-is-provenance-not-evidentiary-authority.md): apply the same evidence discipline to claims regardless of origin;
 - [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): require governed re-admission when a corrected/rejected value later reappears;
-- [`ADR-028`](ADR-028-language-neutral-core-and-optional-implementation-profiles.md): preserve a language-neutral normative core while allowing optional implementation/interoperability profiles;
 - [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): expose vendor-neutral governance context as reconstructable derived state without turning consumer semantics into core memory doctrine.
 
 These ADRs must not be collapsed into a single broad "memory safety" or "governance integration" claim. Each has its own acceptance evidence and may be accepted, narrowed, or rejected independently.
 
 ## Implementation portability and ecosystem boundaries
 
-[`ADR-028`](ADR-028-language-neutral-core-and-optional-implementation-profiles.md) is **Proposed**.
+[`ADR-028`](ADR-028-language-neutral-core-and-optional-implementation-profiles.md) is **Accepted**.
 
 Its central boundary is:
 
@@ -186,7 +192,7 @@ optional implementation or interoperability profile
 
 Python may remain the practical reference/integration language where it maximizes ecosystem reach. Rust is a first-class implementation language for high-assurance or performance-sensitive components. UOR, AGT, MCP, and other external systems may supply reusable primitives or profiles, but none becomes authoritative for Agent Memory semantics merely through adoption.
 
-ADR-028 acceptance requires cross-language conformance evidence and a negative path demonstrating that content-address verification does not confer memory authority.
+Acceptance is backed by the #232 UOR-Addr interoperability slice, including exact cross-language/content-reference compatibility evidence and negative paths proving that content identity does not confer memory authority or make UOR a required runtime dependency.
 
 ## Governance Context Projection
 
@@ -212,6 +218,48 @@ ADR-029 complements ADR-028: the normative core remains language-neutral, the go
 
 ADR-029 acceptance requires a reconstructable reference builder, adversarial near-match coverage, provenance/scope preservation, privacy/minimization evidence, and at least one consumer integration that demonstrates value without pushing consumer-specific fields into the canonical memory-unit schema.
 
+## Versioned temporal-policy projections
+
+[`ADR-030`](ADR-030-temporal-policy-consumers-require-versioned-compatible-projections.md) is **Accepted**.
+
+Its central boundary is:
+
+```text
+canonical Agent Memory state
+        |
+        v
+versioned consumer projection
+        |
+        v
+compatibility / currentness evaluation
+        |
+        v
+external temporal or authorization consumer
+```
+
+A projection is not current merely because it serialized successfully or matched historical policy context. Compatibility binds source schema/currentness, projection identity/version, consumer/policy schema and capabilities, isolation strategy, and evidence. External policy may tighten consequences but cannot silently widen PAMA authority.
+
+## Cryptographic temporal commitments
+
+[`ADR-031`](ADR-031-temporal-claims-require-deterministic-content-commitments.md) is **Accepted**.
+
+Its central boundary is:
+
+```text
+temporal claims + payload/schema/scope/order
+        |
+        v
+deterministic content commitment
+        |
+        +--> signer attestation
+        +--> optional external witness / transparency evidence
+        |
+        v
+separate Agent Memory currentness + PAMA evaluation
+```
+
+The commitment provides exact historical identity for material temporal claims. Signer attestation is not signer trust, witnessed time is not event truth, predecessor chaining is not proof of complete or unique history, and cryptographic validity does not create lifecycle currentness or authority. The accepted evidence includes adversarial fork/gap behavior, supersession/currentness separation, witness-binding failures, optional UOR compatibility, and exact-head repository validation.
+
 ## Canonical references
 
 - [`../01-layer-model.md`](../01-layer-model.md)
@@ -232,3 +280,4 @@ ADR-029 acceptance requires a reconstructable reference builder, adversarial nea
 - [`../41-memory-isolation-domains-and-governed-crossing.md`](../41-memory-isolation-domains-and-governed-crossing.md)
 - [`../profiles/durable-decision-memory-profile.md`](../profiles/durable-decision-memory-profile.md)
 - [`../profiles/governance-context-projection-profile.md`](../profiles/governance-context-projection-profile.md)
+- [`../profiles/temporal-commitment-evidence-profile.md`](../profiles/temporal-commitment-evidence-profile.md)
