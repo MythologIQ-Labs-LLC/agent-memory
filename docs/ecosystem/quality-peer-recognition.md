@@ -102,7 +102,7 @@ The project currently identifies TRACE v0.2 as a developer-preview specification
 
 ### Open Policy Agent
 
-**Classification:** quality peer / real policy comparator / external decision peer
+**Classification:** quality peer / validated real policy comparator / external decision peer
 
 OPA is a mature general-purpose policy engine and a strong reference host for testing whether Agent Memory can project minimized action context into an external policy decision without importing Rego or OPA-specific ontology into canonical memory semantics.
 
@@ -118,25 +118,45 @@ OPA decision != execution witness
 
 ### Cedar
 
-**Classification:** quality peer / authorization-policy peer / second policy comparator
+**Classification:** quality peer / validated authorization-policy comparator / external decision peer
 
-Cedar is a purpose-built authorization policy language and engine with explicit principal, action, resource, context, permit, forbid, and determining-policy semantics. That model is materially different from OPA and therefore provides a useful second-host test for Agent Memory's vendor-neutral external-policy seam.
+Cedar is a purpose-built authorization policy language and engine with explicit principal, action, resource, context, permit, forbid, and determining-policy semantics. That model is materially different from OPA and provides a useful second-host test for Agent Memory's vendor-neutral external-policy seam.
 
 Primary repository: <https://github.com/cedar-policy/cedar>
 
-Current Agent Memory comparator target: Cedar v4.12.0, exact source commit `fdcbaed32bdb8c8d13e4eaf2b58db5555e9fb8c5`. Issue #216 tracks the real-host proof. Until that comparator completes, Cedar should be described as an active comparator target rather than a validated integration.
+Agent Memory has now executed the same generic monotonic policy-composition boundary against Cedar v4.12.0, exact source commit `fdcbaed32bdb8c8d13e4eaf2b58db5555e9fb8c5`, through #216 / PR #219.
+
+The proof required no Cedar-specific canonical composition fields. Policy artifact digest, request digest, Cedar source identity, and determining policy IDs remain adapter evidence. Cedar ALLOW/DENY remains policy-decision evidence, not approval, execution, or enforcement evidence.
 
 ### Cedarling
 
 **Classification:** quality peer / research candidate / embedded authorization and deployment peer
 
-Cedarling, maintained in the Janssen Project, wraps Cedar in a local authorization service with additional deployment and identity capabilities. Current source exposes an embeddable Rust core plus multiple language bindings, policy-store/bootstrap configuration, JWT and multi-issuer authorization paths, decision logging, and additional deployment integrations.
+Cedarling, maintained in the Janssen Project, wraps Cedar in a local authorization service with additional deployment, identity, policy-store, and evidence capabilities.
 
 Primary repository: <https://github.com/JanssenProject/jans/tree/main/jans-cedarling>
 
-A particularly interesting current surface is the Cedarling OPA plugin, which allows Cedar-based authorization inside OPA workflows and exposes AuthZen access-evaluation endpoints. That creates a potentially useful bridge between two policy ecosystems Agent Memory already evaluates independently.
+Current stable research pin:
 
-Current Janssen `main` declares Cedarling as a local authorization service powered by Cedar and currently depends on `cedar-policy = 4.11.2`. That is **not** the same version as Agent Memory's direct Cedar v4.12.0 comparator target and must not be blurred into one evidence claim.
+- Janssen / Cedarling `v2.3.0`
+- release commit `f7c6e34be6ac8d585a9d7b6f7a12921b440b495b`
+- Cedarling package version `2.3.0`
+- embedded `cedar-policy = 4.11.2`
+
+That embedded Cedar version is **not** the same as Agent Memory's direct Cedar v4.12.0 comparator target, so the two evidence lines remain separate.
+
+Primary v2.3.0 documentation confirms useful Cedarling responsibilities beyond raw Cedar evaluation:
+
+- local, directory, archive, JSON/YAML, HTTPS, and Jans Lock-backed policy-store loading;
+- policy-store identity and version metadata;
+- trusted-issuer configuration;
+- JWT / multi-issuer validation and token-to-Cedar context mapping;
+- unsigned authorization for callers that already own authentication;
+- Decision/System/Metric logs with request, PDP, policy-store, diagnostics, action/resource, and decision correlation;
+- an OPA plugin that performs Cedar-based authorization in OPA workflows;
+- AuthZen metadata and access-evaluation endpoints through that OPA/Cedarling integration.
+
+That makes Cedarling particularly interesting as a deployment and identity-rich PDP bridge between policy ecosystems Agent Memory already evaluates independently. It does not need to replace Cedar or OPA to be valuable.
 
 Issue #217 tracks the bounded Cedarling research. Agent Memory has not adopted Cedarling as a dependency or policy store.
 
