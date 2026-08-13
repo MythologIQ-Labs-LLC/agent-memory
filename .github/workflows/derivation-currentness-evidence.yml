@@ -32,6 +32,7 @@ jobs:
           python -m unittest
           tests.test_derivation_evidence
           tests.test_derivation_currentness
+          tests.test_derivation_completion_status
           tests.test_derivation_currentness_depth
 
       - name: Validate derivation currentness profile links
