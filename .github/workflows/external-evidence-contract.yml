@@ -43,34 +43,27 @@ jobs:
           ./Configure no-shared no-tests
           make -j2 build_sw
           test "$(git rev-parse HEAD)" = "aae016bfd52fcad2bc9657c2c782cfdf73b1ed5f"
-          ./apps/openssl version
+          OPENSSL_CONF="$PWD/apps/openssl.cnf" ./apps/openssl version
 
-      - name: Diagnose exact RFC 3161 fixture behavior
-        shell: bash
+      - name: Verify exact RFC 3161 fixture directly
+        env:
+          OPENSSL_CONF: ${{ github.workspace }}/.external/openssl/apps/openssl.cnf
         run: |
-          set +e
           OPENSSL=.external/openssl/apps/openssl
           DATA=.external/openssl/test/recipes/80-test_tsa_data
-          wc -c "$DATA/all-zero.tsq" "$DATA/sectigo-all-zero.tsr" "$DATA/user-trust-ca.pem" "$DATA/comodo-aaa.pem"
-          sha256sum "$DATA/all-zero.tsq" "$DATA/sectigo-all-zero.tsr" "$DATA/user-trust-ca.pem" "$DATA/comodo-aaa.pem"
-          "$OPENSSL" asn1parse -inform DER -in "$DATA/sectigo-all-zero.tsr" -i > rfc3161-asn1.txt 2>&1
-          echo "asn1parse_rc=$?"
-          tail -80 rfc3161-asn1.txt
-          "$OPENSSL" ts -reply -in "$DATA/sectigo-all-zero.tsr" -text > rfc3161-reply.txt 2>&1
-          echo "reply_rc=$?"
-          cat rfc3161-reply.txt
+          "$OPENSSL" asn1parse -inform DER -in "$DATA/sectigo-all-zero.tsr" -i > rfc3161-asn1.txt
+          "$OPENSSL" ts -reply -in "$DATA/sectigo-all-zero.tsr" -text > rfc3161-reply.txt
           "$OPENSSL" ts -verify -no_check_time -queryfile "$DATA/all-zero.tsq" -in "$DATA/sectigo-all-zero.tsr" -CAfile "$DATA/user-trust-ca.pem" > rfc3161-verify.txt 2>&1
-          echo "verify_rc=$?"
-          cat rfc3161-verify.txt
-          cd .external/openssl
-          make test TESTS=test_tsa > ../../openssl-test-tsa.txt 2>&1
-          echo "upstream_test_tsa_rc=$?"
-          tail -120 ../../openssl-test-tsa.txt
-          exit 0
+          set +e
+          "$OPENSSL" ts -verify -no_check_time -queryfile "$DATA/all-zero.tsq" -in "$DATA/sectigo-all-zero.tsr" -CAfile "$DATA/comodo-aaa.pem" > rfc3161-wrong-root.txt 2>&1
+          WRONG_ROOT_RC=$?
+          set -e
+          test "$WRONG_ROOT_RC" -ne 0
 
       - name: Execute exact RFC 3161 comparator
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+          OPENSSL_CONF: ${{ github.workspace }}/.external/openssl/apps/openssl.cnf
         run: |
           python reference/run_rfc3161_comparator.py \
             --openssl-bin .external/openssl/apps/openssl \
@@ -88,5 +81,5 @@ jobs:
             rfc3161-asn1.txt
             rfc3161-reply.txt
             rfc3161-verify.txt
-            openssl-test-tsa.txt
+            rfc3161-wrong-root.txt
           if-no-files-found: warn
