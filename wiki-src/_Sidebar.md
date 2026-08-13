@@ -13,6 +13,7 @@
 - [Canonical and Derived State](Canonical-and-Derived-State)
 - [Governed Uncertainty](Governed-Uncertainty)
 - [Governance Projection](Governance-Projection)
+- [Cryptographic Temporal Commitments](Cryptographic-Temporal-Commitments)
 - [Security and Privacy](Security-and-Privacy)
 - [Architecture Decisions](Architecture-Decisions)
 
