@@ -173,7 +173,7 @@ class CmcpExternalEvidenceTests(unittest.TestCase):
             self.assertEqual(record["interpretation"]["memory_authority"], "not_established")
             self.assertEqual(record["interpretation"]["lifecycle_satisfaction"], "not_established")
 
-    def test_stale_attestation_is_historical_not_current(self):
+    def test_stale_attestation_does_not_retroactively_expire_new_claim(self):
         claim = self._claim()
         old = datetime.now(tz=timezone.utc) - timedelta(days=2)
         claim["gateway"]["attestation_generated_at"] = old.isoformat()
@@ -182,10 +182,11 @@ class CmcpExternalEvidenceTests(unittest.TestCase):
         enforcement, attestation = normalize_cmcp_claim(
             claim, self._verification(fresh=False), observed_at=observed
         )
-        self.assertEqual(enforcement["freshness"]["status"], "expired")
+        self.assertEqual(enforcement["freshness"]["status"], "current")
+        self.assertEqual(enforcement["applicability"]["status"], "applicable")
         self.assertEqual(attestation["freshness"]["status"], "expired")
-        self.assertEqual(enforcement["applicability"]["status"], "stale")
         self.assertEqual(attestation["applicability"]["status"], "stale")
+        self.assertNotIn("expires_at", enforcement["freshness"])
 
     def test_identity_is_stable_for_same_claim_and_verification(self):
         claim = self._claim()
