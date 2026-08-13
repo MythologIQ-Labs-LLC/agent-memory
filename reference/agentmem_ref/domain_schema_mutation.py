@@ -8,6 +8,7 @@ any durable authority.
 from __future__ import annotations
 
 from collections.abc import Iterable
+from dataclasses import replace
 
 from . import policy, receipts
 
@@ -63,36 +64,31 @@ def _strictest_decision(
 
 
 def _scope_expansion_floor(proposal: policy.Proposal) -> policy.Decision:
-    scope_proposal = policy.Proposal(
-        proposal_id=proposal.proposal_id,
-        actor_id=proposal.actor_id,
-        charter_version=proposal.charter_version,
-        target_reference=proposal.target_reference,
-        target_class=proposal.target_class,
-        scope=proposal.scope,
-        operation="scope_expansion",
-        current_strength=proposal.current_strength,
-        proposed_strength=proposal.proposed_strength,
-        downstream_authority=proposal.downstream_authority,
-        reversibility=proposal.reversibility,
-        risk_class=proposal.risk_class,
-        evidence_refs=proposal.evidence_refs,
-        estimator_refs=proposal.estimator_refs,
-        estimator_versions=proposal.estimator_versions,
-        confidence=proposal.confidence,
-        actor_authority_resolved=proposal.actor_authority_resolved,
-        approves_own_authority=proposal.approves_own_authority,
-        approval_refs=proposal.approval_refs,
-        review_satisfied=proposal.review_satisfied,
-        state_snapshot=proposal.state_snapshot,
-        tenant_ref=proposal.tenant_ref,
-        purpose=proposal.purpose,
-        isolation_domain_refs=proposal.isolation_domain_refs,
-        required_isolation_domain_refs=proposal.required_isolation_domain_refs,
-        project_ref=proposal.project_ref,
-        task_ref=proposal.task_ref,
-    )
+    scope_proposal = replace(proposal, operation="scope_expansion", review_satisfied=False)
     return policy.evaluate(scope_proposal)
+
+
+def _discharge_review(decision: policy.Decision, proposal: policy.Proposal) -> policy.Decision:
+    if decision.outcome not in (policy.REQUIRE_REVIEW, policy.REQUIRE_EXTERNAL_VERIFICATION):
+        return decision
+    if not proposal.review_satisfied:
+        return decision
+    if not proposal.approval_refs or proposal.approves_own_authority:
+        return policy.Decision(
+            outcome=decision.outcome,
+            permitted_actions=decision.permitted_actions,
+            prohibited_actions=decision.prohibited_actions,
+            reasons=decision.reasons + ("review claimed without an external approval record",),
+            policy_version=decision.policy_version,
+        )
+    permitted, prohibited = _envelope(policy.ALLOW_WITH_LEDGER, proposal.operation)
+    return policy.Decision(
+        outcome=policy.ALLOW_WITH_LEDGER,
+        permitted_actions=permitted,
+        prohibited_actions=prohibited,
+        reasons=decision.reasons + (f"review discharged by {list(proposal.approval_refs)}",),
+        policy_version=decision.policy_version,
+    )
 
 
 def evaluate(
@@ -102,15 +98,17 @@ def evaluate(
 ) -> policy.Decision:
     """Evaluate a domain-schema mutation while preserving stricter PAMA floors.
 
-    The generic PAMA evaluator still applies actor, target-class, downstream-
-    authority, isolation-domain, reversibility, evidence, and review rules.
-    This extension then adds the explicit domain-schema operation minimum and,
-    when the proposal also widens scope, the existing scope-expansion floor.
+    The generic evaluator first runs with review discharge disabled, preserving
+    actor, target-class, downstream-authority, isolation, reversibility, and
+    evidence constraints. The explicit operation and any scope-expansion floor
+    are then applied. Only after those floors exist may a valid external review
+    discharge the resulting review/verification requirement.
     """
     if proposal.operation != DOMAIN_SCHEMA_MUTATION:
         raise ValueError("domain-schema evaluator requires domain_schema_mutation")
 
-    decision = policy.evaluate(proposal)
+    undecided_review = replace(proposal, review_satisfied=False)
+    decision = policy.evaluate(undecided_review)
     decision = _strictest_decision(
         decision,
         required_outcome_for_risk(proposal.risk_class),
@@ -119,7 +117,7 @@ def evaluate(
     )
 
     if requested_scope_change:
-        scope_decision = _scope_expansion_floor(proposal)
+        scope_decision = _scope_expansion_floor(undecided_review)
         decision = _strictest_decision(
             decision,
             scope_decision.outcome,
@@ -127,7 +125,7 @@ def evaluate(
             "scope-expansion floor preserved",
         )
 
-    return decision
+    return _discharge_review(decision, proposal)
 
 
 def build_pama_decision(
@@ -199,9 +197,8 @@ def enforce_consumer_compatibility(
 ) -> None:
     """Fail explicitly when a consequential consumer cannot interpret the record."""
     receipts.validate("pama-decision.schema.json", pama_decision)
-    supported_versions = set(supported_schema_versions)
     version = pama_decision.get("schema_version")
-    if version not in supported_versions:
+    if version not in set(supported_schema_versions):
         raise ValueError(f"unsupported PAMA schema version {version!r}")
 
     if supported_operations is not None:
