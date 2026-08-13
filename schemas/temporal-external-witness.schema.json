@@ -5,11 +5,12 @@
   "description": "Verified host-supplied evidence about existence, inclusion, consistency, freshness, or another bounded witness claim for an exact temporal subject.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "witness_profile", "subject_kind", "subject_ref", "claim_kind", "verification_status", "witnessed_at", "proof_ref", "interpretation"],
+  "required": ["schema_version", "witness_profile", "subject_kind", "subject_reference_profile", "subject_ref", "claim_kind", "verification_status", "witnessed_at", "proof_ref", "interpretation"],
   "properties": {
     "schema_version": {"const": "1.0.0"},
     "witness_profile": {"type": "string", "minLength": 1},
     "subject_kind": {"type": "string", "enum": ["temporal_commitment", "signer_attestation"]},
+    "subject_reference_profile": {"type": "string", "minLength": 1},
     "subject_ref": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "claim_kind": {"type": "string", "enum": ["existence_by_time", "inclusion", "consistency", "freshness", "other"]},
     "verification_status": {"type": "string", "enum": ["verified", "invalid", "unknown"]},
