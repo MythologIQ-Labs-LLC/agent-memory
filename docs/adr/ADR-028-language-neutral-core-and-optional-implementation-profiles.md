@@ -1,8 +1,9 @@
 # ADR-028: Preserve a language-neutral core with optional implementation profiles
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-08-12
-- **Related:** #150, ADR-021, ADR-020
+- **Accepted:** 2026-08-13
+- **Related:** #150, #232, ADR-021, ADR-020
 
 ## Context
 
@@ -23,13 +24,13 @@ However, adopting UOR or Rust wholesale would narrow Agent Memory from a portabl
 
 The repository already reflects a more general boundary: `schemas/memory-unit.schema.json` permits a memory unit identifier to be a UOR address **or** another stable implementation-specific identifier. That flexibility should be preserved unless evidence demonstrates that a narrower rule is necessary.
 
-## Decision candidate
+## Decision
 
 Agent Memory SHALL preserve a **language-neutral normative core**.
 
 No implementation language, runtime, storage substrate, addressing scheme, external trust system, or third-party project SHALL become normative merely because the reference tooling or a high-quality implementation uses it.
 
-The architecture SHOULD distinguish four layers:
+The architecture distinguishes four layers:
 
 ```text
 Normative doctrine / schemas / fixtures
@@ -69,14 +70,7 @@ Rust MUST NOT become the default normative language without separate evidence th
 
 External systems such as UOR SHOULD be integrated through explicit, bounded interoperability or implementation profiles.
 
-A profile MAY define:
-
-- deterministic content-addressing rules;
-- canonicalization requirements;
-- mapping between external identifiers and Agent Memory references;
-- storage or registry mappings;
-- receipt, attestation, or evidence projections;
-- conformance fixtures demonstrating cross-language or cross-runtime equivalence.
+A profile MAY define deterministic content-addressing rules, canonicalization requirements, mapping between external identifiers and Agent Memory references, storage or registry mappings, receipt/attestation/evidence projections, and cross-language conformance fixtures.
 
 A profile MUST NOT silently redefine Agent Memory authority, lifecycle, correction, retention, deletion, or identity semantics.
 
@@ -86,12 +80,9 @@ Agent Memory MUST preserve the distinction between:
 
 ```text
 logical memory identity
-!=
-content identity
-!=
-revision / governed-state identity
-!=
-authority to mutate durable state
+!= content identity
+!= revision / governed-state identity
+!= authority to mutate durable state
 ```
 
 UOR-compatible addressing MAY be used for content or immutable revision references when appropriate. It MUST NOT automatically imply that the content hash is the logical identity of the memory unit or that possession/verification of an address grants mutation, recall, export, deletion, or overwrite authority.
@@ -114,28 +105,31 @@ UOR-compatible addressing MAY be used for content or immutable revision referenc
 - Optional profiles require explicit mapping documents and fixtures instead of simply inheriting a third-party architecture.
 - Some useful UOR repository machinery may need adaptation rather than direct reuse.
 
-## UOR-specific preliminary disposition
+## UOR-specific disposition
 
-This ADR does not reject UOR. It narrows the proposed integration boundary.
+This ADR does not reject UOR. It fixes the integration boundary.
 
-### Pursue
+### Retain now
 
-1. **`uor-addr` compatibility profile**
-   - evaluate canonical addressing for `content_ref`, evidence references, immutable revisions, receipts, and lineage edges;
-   - preserve logical memory identity separately;
-   - add cross-language equivalence fixtures where practical.
+**`uor-addr` optional content-reference profile**
 
-2. **UOR governance-pattern analysis**
-   - compare UOR claim registers, conformance IDs, BDD gates, and claim-honesty levels against Agent Memory evidence and conformance doctrine;
-   - adopt only patterns that materially strengthen the repository without making Rust tooling normative.
+Issue #232 proves the pinned UOR-Addr v0.2.0 JSON realization across the released Python binding and released Rust crate while independently verifying annotated tag `4bdc4ec0...` and source commit `d78f82f...`.
 
-3. **`kappa-registry` implementation profile**
-   - map content-addressed blobs, namespaces, graph edges, transactions, bundles, signed roots, filters, and garbage-collection behavior to Agent Memory contracts;
-   - explicitly document gaps in authorization, privacy, distributed deployment, and memory-specific lifecycle semantics.
+The bounded profile may be evaluated for immutable evidence content references, receipt artifacts, immutable revision snapshots, derivation/output custody references, and lineage targets that denote content identity. Logical memory identity remains separate.
 
-4. **`uor-r4` conformance experiment**
-   - evaluate witnessed inference artifacts as an implementation/evidence substrate;
-   - do not make R4 inference architecture part of Agent Memory doctrine.
+### Research separately before implementation
+
+1. **UOR governance-pattern analysis**
+   - compare claim registers, conformance IDs, BDD gates, and claim-honesty levels against Agent Memory evidence doctrine;
+   - adopt only generally useful patterns without making Rust tooling normative.
+
+2. **`kappa-registry` implementation profile**
+   - evaluate content-addressed blobs, namespaces, graph edges, transactions, bundles, signed roots, filters, and garbage collection against Agent Memory contracts;
+   - explicitly document authorization, privacy, distributed deployment, and lifecycle gaps.
+
+3. **`uor-r4` conformance experiment**
+   - evaluate witnessed inference artifacts as an optional evidence substrate;
+   - do not import R4 inference architecture into Agent Memory doctrine.
 
 ### Do not pursue without new evidence
 
@@ -145,23 +139,35 @@ This ADR does not reject UOR. It narrows the proposed integration boundary.
 - treating UOR conformance as equivalent to Agent Memory conformance;
 - making any third-party ecosystem authoritative for PAMA, lifecycle, correction, deletion, or memory mutation semantics.
 
-## Acceptance criteria
+## Acceptance evidence
 
-This ADR may move from Proposed to Accepted when:
+ADR maturity criteria are satisfied by the bounded #232 implementation and its exact-head evidence:
 
-1. at least one Python implementation/tooling path and one non-Python implementation path exercise the same language-neutral fixture or contract without semantic divergence;
-2. the UOR compatibility analysis identifies which Agent Memory reference surfaces may safely use UOR addressing and which must remain logically distinct;
-3. at least one negative-path fixture demonstrates that content-address verification does not confer memory authority;
-4. the documentation clearly distinguishes normative doctrine, reference implementation, implementation profile, and interoperability profile;
-5. any UOR-derived patterns adopted into the repository preserve independent Agent Memory semantics and attribution/reuse requirements;
-6. no acceptance criterion depends on rewriting existing tooling in Rust merely for language uniformity.
+1. the same seven JSON vectors execute through released Python `uor-addr==0.2.0` and released Rust `uor-addr=0.2.0` with zero cross-language mismatches;
+2. the profile documents safe content-reference surfaces while keeping logical memory identity separate;
+3. focused tests prove a valid content reference does not discharge existing PAMA review or repair an isolation-domain mismatch;
+4. documentation distinguishes normative doctrine, reference tooling, implementation language, and optional interoperability profile;
+5. UOR remains Apache-2.0-attributed, non-vendored, and absent from ordinary Agent Memory runtime dependencies;
+6. no criterion requires rewriting Python tooling in Rust.
+
+The inspected focused artifact at candidate head `a0bacc0d84d84f3a018f1d0ebd889bbf9cde0d05` records:
+
+- 7 vectors;
+- 0 cross-language mismatches;
+- 0 canonical-equivalence failures;
+- 0 typed-distinction failures;
+- 0 failure-posture failures;
+- all logical-identity/currentness/recall/scope/PAMA authority effects false;
+- artifact digest `sha256:cd1b217491a24ad58972c995673417eb981d1f3cdc3e118ad15eb8b59e10bd0d`.
+
+Because this ADR change itself advances the candidate head, merge still requires exact-head validation of the final head. The evidence above establishes the architectural decision; final-head CI establishes that the repository carrying the Accepted ADR remains conformant.
 
 ## Rejection or narrowing criteria
 
-This proposal should be rejected or narrowed if evidence demonstrates that:
+Revisit or narrow this decision if evidence demonstrates that:
 
 - a language-neutral contract cannot express a required safety or conformance property without unacceptable ambiguity;
 - a specific implementation substrate is necessary for a core invariant rather than merely useful for implementing it; or
 - cross-language conformance repeatedly produces semantic divergence that cannot be resolved at the contract level.
 
-Even in those cases, the narrowest necessary implementation constraint should be preferred over ecosystem-wide adoption.
+Even in those cases, prefer the narrowest necessary implementation constraint over ecosystem-wide adoption.
