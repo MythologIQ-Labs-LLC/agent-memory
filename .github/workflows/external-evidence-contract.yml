@@ -32,3 +32,19 @@ jobs:
           python -m unittest \
             reference/tests/test_temporal_trust.py \
             reference/tests/test_temporal_transparency.py
+
+      - name: Run pinned external comparator
+        env:
+          AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python reference/run_rfc3161_comparator.py \
+            --provision-release \
+            --agent-memory-commit "$AGENT_MEMORY_COMMIT" \
+            --output external-trust-evidence.json
+
+      - name: Upload external evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-trust-evidence
+          path: external-trust-evidence.json
+          if-no-files-found: error
