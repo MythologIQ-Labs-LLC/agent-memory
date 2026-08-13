@@ -4,7 +4,7 @@
 
 This profile defines the smallest vendor-neutral boundary needed to carry an Agent Memory governed mutation decision to an optional external policy or enforcement host without surrendering memory-specific semantics.
 
-It implements the Phase 1 contract work of issue #152 and is now behaviorally proven against a first real deterministic policy host, Open Policy Agent (OPA). OPA remains an optional reference peer, not a required Agent Memory dependency.
+It implements the Phase 1 contract work of issue #152 and is now behaviorally proven against two materially different real deterministic policy hosts: Open Policy Agent (OPA) and Cedar. Both remain optional reference peers, not required Agent Memory dependencies.
 
 The responsibility split is:
 
@@ -162,7 +162,7 @@ issued_at
 
 `reason` and provider evidence are provenance for the external decision. They do not become Agent Memory truth merely because the provider is trusted to make policy decisions.
 
-Provider-specific revision, package, rule, bundle, or source identity may travel inside the bounded `evidence` object when needed for reconstructability. Such metadata does not become a new canonical Agent Memory authority field merely because one provider exposes it.
+Provider-specific revision, package, rule, bundle, source identity, policy artifact digest, determining policy ID, or equivalent reconstructability metadata may travel inside the bounded `evidence` object. Such metadata does not become a new canonical Agent Memory authority field merely because one provider exposes it.
 
 ## Provider posture
 
@@ -401,6 +401,125 @@ real OPA decision mechanics
 
 That is the result the first real peer was intended to test.
 
+## Second real policy-host proof: Cedar
+
+The same generic seam is now behaviorally proven against Cedar `v4.12.0`, exact tag commit `fdcbaed32bdb8c8d13e4eaf2b58db5555e9fb8c5`.
+
+The dedicated workflow builds `cedar-policy-cli` from that exact Git source under the release's Rust 1.89 minimum toolchain, verifies the installed Cedar 4.12.0 binary, verifies the checked-in policy artifact SHA-256, and executes the comparator against the real engine.
+
+### Why Cedar is a meaningful second host
+
+Cedar's result shape is materially different from the OPA comparator.
+
+OPA can return an arbitrary structured value that echoes Agent Memory metadata. Cedar `authorize` instead evaluates an explicit principal/action/resource/context request and returns `ALLOW` or `DENY` plus diagnostics such as determining policy IDs.
+
+The Cedar adapter therefore owns request/result binding:
+
+```text
+Agent Memory input_identity
++ principal / action / resource / minimized context
++ exact policy artifact SHA-256
+-> real Cedar authorize
+-> ALLOW / DENY + determining policy IDs
+-> adapter binds result to the exact request it executed
+-> existing generic external decision
+-> existing generic composition
+```
+
+No Cedar-specific field was added to the canonical composition schemas.
+
+### Minimized Cedar request
+
+The reference comparator maps only the bounded request identity and action context:
+
+```text
+principal <- actor_id
+action    <- operation
+resource  <- memory_id
+context   <- input_identity
+             purpose
+             risk_class
+             scope
+             tenant_ref
+             pama_outcome
+             policy_version
+```
+
+Raw memory content, prompts, hidden reasoning, arbitrary evidence payloads, and retrieved context are not required.
+
+### Real Cedar monotonic matrix
+
+The pinned real Cedar engine proves:
+
+```text
+native allow + Cedar allow              -> allow
+native allow + Cedar deny               -> deny
+native require_approval + Cedar allow   -> require_approval
+native deny + Cedar allow               -> deny
+```
+
+Cedar can therefore tighten a native Agent Memory consequence without gaining a path to loosen PAMA.
+
+### Policy artifact identity versus provider revision
+
+Cedar CLI does not return an arbitrary policy-revision field. The adapter instead binds decision evidence to the exact policy artifact under evaluation:
+
+```text
+policy_ref
+policy_sha256
+cedar_release
+cedar_source_commit
+determining_policy_ids
+request_digest
+```
+
+A mismatched expected policy digest is rejected at the adapter edge before any valid external decision reaches generic composition. Advisory versus authoritative failure posture is then handled by the existing generic rules.
+
+This demonstrates a useful cross-provider result: reconstructable provider policy identity belongs in bounded external evidence, while the generic composition contract needs only stable decision and Agent Memory input identity semantics.
+
+### Cedar DENY is not provider failure
+
+The pinned Cedar CLI uses exit code `2` for a completed authorization request whose decision is `DENY`. The adapter therefore treats that documented return code as a valid policy result and distinguishes it from actual CLI/provider failure.
+
+The distinction matters:
+
+```text
+policy evaluated and denied
+!=
+policy engine failed to evaluate
+```
+
+### Stale Agent Memory input identity remains generic
+
+A valid Cedar decision is rebound to the Agent Memory `input_identity` of the exact request the adapter executed. Replaying that normalized decision against another projection is rejected by the same generic stale-identity gate used for OPA.
+
+No Cedar-specific replay exception is needed.
+
+### Decision remains distinct from enforcement
+
+Successful Cedar authorization still produces:
+
+```text
+execution_status = unknown
+```
+
+Cedar ALLOW or DENY is policy-decision evidence. It is not approval, an enforcement witness, execution evidence, lifecycle satisfaction, or canonical Agent Memory state.
+
+## Generic finding after two materially different hosts
+
+OPA and Cedar differ significantly in policy language, request/result shape, and how reconstructable policy identity is surfaced. Both nevertheless fit the same core contract:
+
+```text
+Agent Memory semantics / PAMA
+-> minimized current-action projection
+-> provider-specific adapter
+-> external policy decision bound to exact input_identity
+-> monotonic composition
+-> separate approval / enforcement / execution evidence
+```
+
+The two-host proof therefore strengthens the claim that the generic seam is provider-neutral at this boundary. It does **not** imply that every authorization system will fit without further research, or that a third engine should be added merely to accumulate logos.
+
 ## Relationship to existing Agent Memory contracts
 
 This profile composes with existing artifacts rather than replacing them:
@@ -410,7 +529,7 @@ This profile composes with existing artifacts rather than replacing them:
 - portable governance evidence may correlate a completed Agent Memory decision with external trust systems;
 - Governance Context Projection carries remembered context/precedent outward and does not become this action-decision projection;
 - execution evidence remains a separate surface;
-- real OPA policy evaluation remains external decision evidence and does not become memory state merely because it is deterministic.
+- real OPA and Cedar policy evaluations remain external decision evidence and do not become memory state merely because they are deterministic.
 
 The outbound directions are therefore distinct:
 
@@ -430,31 +549,23 @@ Portable governance evidence
 
 ## Follow-on gate
 
-The #166 research order requires a second materially different deterministic policy peer before this abstraction is treated as broadly proven.
+The #166 two-host policy-abstraction gate is now satisfied by OPA and Cedar.
 
-The recommended second host is Cedar.
+A third policy peer should be added only when it tests a **materially different responsibility or failure mode**, not merely another allow/deny API. Examples may include relationship-based authorization state, embedded authorization libraries, identity-rich local PDP deployment, or a standards-shaped access-evaluation surface.
 
-```text
-OPA first
--> generic seam survives one real host
-
-Cedar second
--> test whether the same projection/result/composition contract survives a different policy model
-```
-
-Do not add a third policy peer until OPA and Cedar have both been evaluated through the same generic boundary, or a real incompatibility has been returned to research.
+Cedarling research is tracked separately because its potential value is primarily deployment, identity/token handling, policy-store evidence, local PDP operation, OPA bridging, and AuthZen exposure rather than proving Cedar's policy semantics a second time.
 
 ## Non-goals
 
 - making Agent Memory a universal PDP;
-- adopting Microsoft AGT, DashClaw, OPA, Cedar, or another provider as a required dependency;
+- adopting Microsoft AGT, DashClaw, OPA, Cedar, Cedarling, or another provider as a required dependency;
 - importing a vendor policy language into memory doctrine;
 - allowing external `allow` to weaken PAMA;
 - treating a decision receipt as execution proof;
 - exporting raw memory content when stable references and characteristics suffice;
 - supporting transform-style provider verdicts in V0.1;
-- using OPA policy revision as standing Agent Memory authority;
-- treating OPA policy evaluation as approval or enforcement evidence.
+- using provider policy revision, policy digest, or determining policy ID as standing Agent Memory authority;
+- treating OPA or Cedar policy evaluation as approval or enforcement evidence.
 
 ## Doctrine boundary
 
