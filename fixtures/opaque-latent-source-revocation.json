@@ -49,7 +49,7 @@
   },
   "memory_unit": {
     "id": "uor:test:opaque-latent-source-revocation",
-    "type": "derived_predictive_state",
+    "type": "model",
     "state": "stale",
     "scope": {
       "owner_principal": "user:alice",
