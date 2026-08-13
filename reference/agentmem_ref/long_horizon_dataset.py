@@ -51,6 +51,8 @@ def _clip(start: np.ndarray, velocity: np.ndarray, stale_velocity: np.ndarray | 
         _draw(frame, start + velocity * t, (242, 34, 30), 2)
         if stale_velocity is not None:
             _draw(frame, start + stale_velocity * t, (118, 46, 150), 1)
+    # The next stage begins at t=FRAMES. The final observed point in this clip
+    # is t=FRAMES-1, so this returned position is also forecast horizon 1.
     return video, start + velocity * FRAMES
 
 
@@ -63,13 +65,17 @@ def _episode(rng: np.random.Generator, index: int):
         v1 = alternatives[int(rng.integers(0, len(alternatives)))]
     position = np.asarray([rng.integers(20, 44), rng.integers(20, 44)], dtype=np.float32)
     videos, targets, old_targets = [], [], []
-    horizon = np.arange(1, HORIZONS + 1, dtype=np.float32)[:, None]
+    # `position` returned by _clip is already the first unobserved point.
+    # Therefore horizon 1 has offset 0 from that position, horizon 2 offset 1,
+    # and so on. Starting this vector at 1 would skip the first unobserved
+    # state and bias every representation by one time step.
+    future_offsets = np.arange(HORIZONS, dtype=np.float32)[:, None]
     for stage in range(STAGES):
         active = v0 if stage == 0 else v1
         video, position = _clip(position, active, v0 if corrected and stage > 0 else None)
         videos.append(video)
-        targets.append(position[None, :] + horizon * active[None, :])
-        old_targets.append(position[None, :] + horizon * v0[None, :])
+        targets.append(position[None, :] + future_offsets * active[None, :])
+        old_targets.append(position[None, :] + future_offsets * v0[None, :])
     return np.stack(videos), np.stack(targets), np.stack(old_targets), corrected
 
 
