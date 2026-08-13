@@ -186,6 +186,9 @@ def evaluate_policy_projection_compatibility(
     elif semantic_status == "unknown":
         reasons.append("semantic_mapping_unknown")
         unknown = True
+    elif semantic_status == "compatible" and not target_norm["evidence_refs"]:
+        reasons.append("target_compatibility_evidence_missing")
+        unknown = True
 
     policy_status = target_norm["policy_validation_status"]
     if policy_status == "revalidation_required":
@@ -197,6 +200,9 @@ def evaluate_policy_projection_compatibility(
     elif policy_status == "unknown":
         reasons.append("target_policy_validation_unknown")
         unknown = True
+    elif policy_status == "not_applicable" and target_norm["consumer_kind"] in {"dogwood", "cedar", "cedarling"}:
+        reasons.append("target_policy_validation_not_applicable")
+        incompatible = True
 
     if target_norm["consumer_kind"] == "dogwood" and target_norm["event_schema_digest"] is None:
         reasons.append("dogwood_event_schema_identity_missing")
@@ -227,6 +233,9 @@ def evaluate_policy_projection_compatibility(
             unknown = True
         elif not isolation["validated"]:
             reasons.append("target_isolation_not_validated")
+            unknown = True
+        elif not isolation["evidence_refs"]:
+            reasons.append("target_isolation_evidence_missing")
             unknown = True
     elif isolation["strategy"] == "not_required" and not isolation["validated"]:
         reasons.append("target_isolation_nonrequirement_not_validated")
