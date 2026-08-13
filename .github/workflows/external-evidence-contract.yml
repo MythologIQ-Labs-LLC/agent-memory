@@ -11,7 +11,7 @@ jobs:
   external-evidence-contract:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Agent Memory
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -22,23 +22,36 @@ jobs:
       - name: Install reference dependencies
         run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
 
-      - name: Validate schemas
-        run: python scripts/validate_schemas.py
-
-      - name: Run trust and transparency boundary tests
+      - name: Validate schemas and evidence boundaries
         env:
           PYTHONPATH: reference
         run: |
-          python -m unittest \
-            reference/tests/test_temporal_trust.py \
-            reference/tests/test_temporal_transparency.py
+          python scripts/validate_schemas.py
+          python -m unittest reference/tests/test_temporal_trust.py reference/tests/test_temporal_transparency.py
 
-      - name: Run pinned external comparator
+      - name: Checkout exact OpenSSL source
+        uses: actions/checkout@v4
+        with:
+          repository: openssl/openssl
+          ref: aae016bfd52fcad2bc9657c2c782cfdf73b1ed5f
+          path: .external/openssl
+          persist-credentials: false
+
+      - name: Build exact OpenSSL source
+        run: |
+          cd .external/openssl
+          ./Configure no-shared no-tests
+          make -j2 build_sw
+          test "$(git rev-parse HEAD)" = "aae016bfd52fcad2bc9657c2c782cfdf73b1ed5f"
+          ./apps/openssl version
+
+      - name: Execute exact RFC 3161 comparator
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python reference/run_rfc3161_comparator.py \
-            --provision-release \
+            --openssl-bin .external/openssl/apps/openssl \
+            --fixture-dir .external/openssl/test/recipes/80-test_tsa_data \
             --agent-memory-commit "$AGENT_MEMORY_COMMIT" \
             --output external-trust-evidence.json
 
