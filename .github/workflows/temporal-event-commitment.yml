@@ -27,7 +27,7 @@ jobs:
           PYTHONPATH: reference
         run: |
           set -o pipefail
-          python -m unittest reference/tests/test_temporal_event_commitment.py 2>&1 | tee temporal-event-commitment-tests.txt
+          python -m unittest reference/tests/test_temporal_event_evidence.py 2>&1 | tee temporal-event-commitment-tests.txt
 
       - name: Run existing UOR content-reference boundary tests
         env:

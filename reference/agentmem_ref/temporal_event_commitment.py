@@ -1,9 +1,8 @@
 """Cryptographically committed temporal event evidence for #263 / ADR-031.
 
-The temporal claim is part of the content-addressed commitment. Signatures,
+Temporal meaning is part of the content-addressed commitment. Signer evidence,
 trusted-time witnesses, currentness, and authority remain separate layers.
 """
-
 from __future__ import annotations
 
 import base64
@@ -84,9 +83,8 @@ def _normalize_nfc(value: Any) -> Any:
 def canonical_temporal_bytes(commitment: Mapping[str, Any]) -> bytes:
     if not isinstance(commitment, Mapping):
         raise ValueError("commitment must be an object")
-    normalized = _normalize_nfc(dict(commitment))
     try:
-        return rfc8785.dumps(normalized)
+        return rfc8785.dumps(_normalize_nfc(dict(commitment)))
     except Exception as exc:
         raise ValueError(f"temporal commitment cannot be canonicalized: {exc}") from exc
 
@@ -95,38 +93,31 @@ def temporal_content_ref(commitment: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(canonical_temporal_bytes(commitment)).hexdigest()
 
 
-def _signature_message(commitment_ref: str) -> bytes:
-    return SIGNATURE_DOMAIN + _digest(commitment_ref, "commitment_ref").encode("ascii")
+def _signature_message(commitment_ref: str, key_id: str) -> bytes:
+    binding = {
+        "commitment_ref": _digest(commitment_ref, "commitment_ref"),
+        "key_id": _nonempty(key_id, "key_id"),
+    }
+    return SIGNATURE_DOMAIN + rfc8785.dumps(binding)
 
 
 def _signature_ref(signature_bytes: bytes) -> str:
     return "sha256:" + hashlib.sha256(signature_bytes).hexdigest()
 
 
-def build_temporal_commitment(
-    *,
-    event_type: str,
-    payload_digest: str,
-    event_time: str,
-    observed_at: str,
-    scope_ref: str,
-    stream_id: str,
-    sequence: int,
-    source_schema_ref: str,
-    source_schema_digest: str,
-    previous_event_ref: str | None = None,
-    valid_from: str | None = None,
-    valid_to: str | None = None,
-    projection_profile: str | None = None,
-    projection_version: str | None = None,
-) -> dict[str, Any]:
+def build_temporal_commitment(*, event_type: str, payload_digest: str, event_time: str,
+    observed_at: str, scope_ref: str, stream_id: str, sequence: int,
+    source_schema_ref: str, source_schema_digest: str,
+    previous_event_ref: str | None = None, valid_from: str | None = None,
+    valid_to: str | None = None, projection_profile: str | None = None,
+    projection_version: str | None = None) -> dict[str, Any]:
     if isinstance(sequence, bool) or not isinstance(sequence, int) or sequence < 1:
         raise ValueError("sequence must be a positive integer")
-    event_time = _time(event_time, "event_time")  # type: ignore[assignment]
-    observed_at = _time(observed_at, "observed_at")  # type: ignore[assignment]
+    event_time = _time(event_time, "event_time")
+    observed_at = _time(observed_at, "observed_at")
     valid_from = _time(valid_from, "valid_from")
     valid_to = _time(valid_to, "valid_to")
-    if valid_from is not None and valid_to is not None:
+    if valid_from and valid_to:
         if datetime.fromisoformat(valid_to.replace("Z", "+00:00")) < datetime.fromisoformat(valid_from.replace("Z", "+00:00")):
             raise ValueError("valid_to cannot precede valid_from")
     if sequence == 1 and previous_event_ref is not None:
@@ -137,7 +128,6 @@ def build_temporal_commitment(
         previous_event_ref = _digest(previous_event_ref, "previous_event_ref")
     if (projection_profile is None) != (projection_version is None):
         raise ValueError("projection_profile and projection_version must be supplied together")
-
     commitment: dict[str, Any] = {
         "profile_id": PROFILE_ID,
         "profile_version": PROFILE_VERSION,
@@ -163,49 +153,34 @@ def build_temporal_commitment(
     return _normalize_nfc(commitment)
 
 
-def sign_temporal_commitment(
-    commitment: Mapping[str, Any],
-    *,
-    private_key: Ed25519PrivateKey,
-    key_id: str,
-    trusted_time_witness: Mapping[str, Any] | None = None,
-) -> dict[str, Any]:
+def sign_temporal_commitment(commitment: Mapping[str, Any], *, private_key: Ed25519PrivateKey,
+    key_id: str, trusted_time_witness: Mapping[str, Any] | None = None) -> dict[str, Any]:
     if not isinstance(private_key, Ed25519PrivateKey):
         raise ValueError("private_key must be Ed25519PrivateKey")
     commitment_norm = _normalize_nfc(dict(commitment))
     commitment_ref = temporal_content_ref(commitment_norm)
-    signature_bytes = private_key.sign(_signature_message(commitment_ref))
+    key_id = _nonempty(key_id, "key_id")
+    signature_bytes = private_key.sign(_signature_message(commitment_ref, key_id))
     public_key = private_key.public_key().public_bytes(
-        encoding=serialization.Encoding.Raw,
-        format=serialization.PublicFormat.Raw,
-    )
+        encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw)
     signature = {
         "algorithm": SIGNATURE_ALGORITHM,
         "domain": SIGNATURE_DOMAIN[:-1].decode("ascii"),
-        "key_id": _nonempty(key_id, "key_id"),
+        "key_id": key_id,
         "public_key_base64": base64.b64encode(public_key).decode("ascii"),
         "signature_base64": base64.b64encode(signature_bytes).decode("ascii"),
         "signature_ref": _signature_ref(signature_bytes),
     }
     document: dict[str, Any] = {
-        "schema_version": "1.0.0",
-        "profile_id": PROFILE_ID,
-        "profile_version": PROFILE_VERSION,
-        "canonicalization": CANONICALIZATION,
-        "hash_algorithm": HASH_ALGORITHM,
-        "commitment_ref": commitment_ref,
-        "commitment": commitment_norm,
-        "signature": signature,
-        "trusted_time": {
-            "status": "unwitnessed",
-            "claim": "signer_commitment_only",
-            "authority_effect": AUTHORITY_EFFECT,
-        },
+        "schema_version": "1.0.0", "profile_id": PROFILE_ID,
+        "profile_version": PROFILE_VERSION, "canonicalization": CANONICALIZATION,
+        "hash_algorithm": HASH_ALGORITHM, "commitment_ref": commitment_ref,
+        "commitment": commitment_norm, "signature": signature,
+        "trusted_time": {"status": "unwitnessed", "claim": "signer_commitment_only", "authority_effect": AUTHORITY_EFFECT},
         "interpretation": _interpretation(),
     }
     if trusted_time_witness is not None:
-        witness = _normalize_witness(trusted_time_witness, signature["signature_ref"])
-        document["trusted_time"] = witness
+        document["trusted_time"] = _normalize_witness(trusted_time_witness, signature["signature_ref"])
     receipts.validate("temporal-event-commitment.schema.json", document)
     return document
 
@@ -225,17 +200,14 @@ def _normalize_witness(value: Mapping[str, Any], expected_subject_ref: str) -> d
         raise ValueError("trusted_time_witness.verified must be boolean")
     evidence_refs = value.get("evidence_refs", [])
     if not isinstance(evidence_refs, list) or not all(isinstance(item, str) and item for item in evidence_refs):
-        raise ValueError("trusted_time_witness.evidence_refs must be an array of non-empty strings")
+        raise ValueError("trusted_time_witness.evidence_refs must be non-empty strings")
     if verified and not evidence_refs:
         raise ValueError("verified trusted-time witness requires evidence_refs")
     return {
-        "status": "verified" if verified else "unverified",
-        "kind": kind,
-        "subject_ref": subject_ref,
-        "witnessed_at": witnessed_at,
+        "status": "verified" if verified else "unverified", "kind": kind,
+        "subject_ref": subject_ref, "witnessed_at": witnessed_at,
         "witness_ref": _nonempty(value.get("witness_ref"), "trusted_time_witness.witness_ref"),
-        "verified": verified,
-        "evidence_refs": list(dict.fromkeys(evidence_refs)),
+        "verified": verified, "evidence_refs": list(dict.fromkeys(evidence_refs)),
         "claim": "independent_time_evidence" if verified else "unverified_time_evidence",
         "authority_effect": AUTHORITY_EFFECT,
     }
@@ -243,42 +215,35 @@ def _normalize_witness(value: Mapping[str, Any], expected_subject_ref: str) -> d
 
 def _interpretation() -> dict[str, Any]:
     return {
-        "authority_effect": AUTHORITY_EFFECT,
-        "content_identity_only": True,
+        "authority_effect": AUTHORITY_EFFECT, "content_identity_only": True,
         "signature_proves": "signer_commitment_to_exact_temporal_object",
         "signature_proves_trusted_wall_clock": False,
-        "chain_proves_complete_history": False,
-        "chain_proves_deletion_completeness": False,
-        "can_create_lifecycle_currentness": False,
-        "can_satisfy_pama_mutation_authority": False,
+        "chain_proves_complete_history": False, "chain_proves_deletion_completeness": False,
+        "can_create_lifecycle_currentness": False, "can_satisfy_pama_mutation_authority": False,
         "can_create_reusable_authority": False,
     }
 
 
 def verify_temporal_commitment(document: Mapping[str, Any]) -> dict[str, Any]:
     receipts.validate("temporal-event-commitment.schema.json", dict(document))
-    expected_ref = temporal_content_ref(document["commitment"])
     reasons: list[str] = []
-    if expected_ref != document["commitment_ref"]:
+    if temporal_content_ref(document["commitment"]) != document["commitment_ref"]:
         reasons.append("content_reference_mismatch")
     signature = document["signature"]
     try:
-        public_key_bytes = base64.b64decode(signature["public_key_base64"], validate=True)
+        public_key = Ed25519PublicKey.from_public_bytes(base64.b64decode(signature["public_key_base64"], validate=True))
         signature_bytes = base64.b64decode(signature["signature_base64"], validate=True)
-        public_key = Ed25519PublicKey.from_public_bytes(public_key_bytes)
-        public_key.verify(signature_bytes, _signature_message(document["commitment_ref"]))
+        public_key.verify(signature_bytes, _signature_message(document["commitment_ref"], signature["key_id"]))
         if _signature_ref(signature_bytes) != signature["signature_ref"]:
             reasons.append("signature_reference_mismatch")
     except (ValueError, InvalidSignature):
         reasons.append("signature_invalid")
-    status = "verified" if not reasons else "invalid"
     return {
-        "status": status,
+        "status": "verified" if not reasons else "invalid",
         "commitment_ref": document["commitment_ref"],
         "signature_valid": "signature_invalid" not in reasons and "signature_reference_mismatch" not in reasons,
         "content_identity_valid": "content_reference_mismatch" not in reasons,
-        "trusted_time_status": document["trusted_time"]["status"],
-        "reason_codes": reasons,
+        "trusted_time_status": document["trusted_time"]["status"], "reason_codes": reasons,
         **_interpretation(),
     }
 
@@ -291,8 +256,7 @@ def verify_temporal_chain(documents: list[Mapping[str, Any]]) -> dict[str, Any]:
     expected_scope = documents[0]["commitment"]["scope_ref"]
     previous_ref: str | None = None
     for index, document in enumerate(documents, start=1):
-        verification = verify_temporal_commitment(document)
-        if verification["status"] != "verified":
+        if verify_temporal_commitment(document)["status"] != "verified":
             reasons.append(f"event_{index}_cryptographic_verification_failed")
         commitment = document["commitment"]
         if commitment["sequence"] != index:
@@ -302,44 +266,28 @@ def verify_temporal_chain(documents: list[Mapping[str, Any]]) -> dict[str, Any]:
         if commitment["scope_ref"] != expected_scope:
             reasons.append(f"event_{index}_scope_mismatch")
         actual_previous = commitment.get("previous_event_ref")
-        if index == 1:
-            if actual_previous is not None:
-                reasons.append("event_1_unexpected_previous_ref")
-        elif actual_previous != previous_ref:
+        if index == 1 and actual_previous is not None:
+            reasons.append("event_1_unexpected_previous_ref")
+        elif index > 1 and actual_previous != previous_ref:
             reasons.append(f"event_{index}_previous_ref_mismatch")
         previous_ref = document["commitment_ref"]
     return {
-        "status": "verified" if not reasons else "invalid",
-        "event_count": len(documents),
-        "stream_id": expected_stream,
-        "scope_ref": expected_scope,
-        "reason_codes": reasons,
-        "proves_complete_history": False,
-        "proves_deletion_completeness": False,
+        "status": "verified" if not reasons else "invalid", "event_count": len(documents),
+        "stream_id": expected_stream, "scope_ref": expected_scope, "reason_codes": reasons,
+        "proves_complete_history": False, "proves_deletion_completeness": False,
         "authority_effect": AUTHORITY_EFFECT,
     }
 
 
-def evaluate_uor_temporal_compatibility(
-    document: Mapping[str, Any],
-    *,
-    address_fn: Callable[[bytes], str],
-    binding_name: str,
-    binding_version: str,
-) -> dict[str, Any]:
+def evaluate_uor_temporal_compatibility(document: Mapping[str, Any], *, address_fn: Callable[[bytes], str],
+    binding_name: str, binding_version: str) -> dict[str, Any]:
     receipts.validate("temporal-event-commitment.schema.json", dict(document))
     evidence = evaluate_json_content_reference(
-        canonical_temporal_bytes(document["commitment"]),
-        address_fn=address_fn,
-        binding_name=binding_name,
-        binding_version=binding_version,
-        claimed_label=document["commitment_ref"],
-    )
+        canonical_temporal_bytes(document["commitment"]), address_fn=address_fn,
+        binding_name=binding_name, binding_version=binding_version,
+        claimed_label=document["commitment_ref"])
     return {
-        "status": evidence["status"],
-        "commitment_ref": document["commitment_ref"],
-        "uor_profile_id": UOR_PROFILE_ID,
-        "uor_evidence": evidence,
-        "authority_effect": AUTHORITY_EFFECT,
-        "ordinary_agent_memory_requires_uor_runtime": False,
+        "status": evidence["status"], "commitment_ref": document["commitment_ref"],
+        "uor_profile_id": UOR_PROFILE_ID, "uor_evidence": evidence,
+        "authority_effect": AUTHORITY_EFFECT, "ordinary_agent_memory_requires_uor_runtime": False,
     }
