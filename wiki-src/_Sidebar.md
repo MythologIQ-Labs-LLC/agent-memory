@@ -22,6 +22,7 @@
 - [Runtime Evidence](Runtime-Evidence)
 - [Research and Sources](Research-and-Sources)
 - [Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)
+- [Quality Peers & Useful Projects](Quality-Peers-and-Useful-Projects)
 
 **Community**
 - [Contributing](Contributing)
