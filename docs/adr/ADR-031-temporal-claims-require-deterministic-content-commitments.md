@@ -1,295 +1,82 @@
 # ADR-031: Temporal claims require deterministic content commitments
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-08-13
-- **Related:** #258, ADR-021, ADR-028, ADR-030
+- **Accepted:** 2026-08-13
+- **Related:** #258, #259, ADR-021, ADR-028, ADR-030
 
-## Context
+## Decision
 
-Agent Memory needs to preserve more than an event payload. Some retained events carry temporal meaning whose later mutation would materially change what happened:
+Agent Memory adopts a layered temporal-commitment model.
 
-- claimed event time;
-- observation time;
-- validity interval;
-- stream/scope identity;
-- predecessor or causal-order references;
-- domain-schema identity under which the event was interpreted.
+Material temporal claims belong inside a deterministic content commitment when changing those claims must create a different historical identity.
 
-Signing only a payload and attaching time/order metadata afterward leaves those temporal claims outside the cryptographic commitment.
+Keep these evidence layers distinct:
 
-Conversely, putting a timestamp inside a signed object does not make the timestamp trustworthy. It proves only that the signer committed to that temporal claim.
+1. exact temporal-object identity;
+2. signer attestation to that exact object;
+3. declared relative-order evidence;
+4. optional external time/transparency evidence;
+5. separate currentness and Agent Memory governance.
 
-Current standards reinforce a layered model:
+The governing invariant is:
 
-- RFC 8785 supports deterministic canonical bytes for hashing/signing;
-- RFC 3161 separates trusted timestamp evidence from the object being timestamped;
-- RFC 9052 separates signature/data-origin evidence from application semantics;
-- RFC 9942 and RFC 9943 separate signed statements from verifiable inclusion/consistency receipts;
-- Sigstore bundles similarly compose signature verification material with transparency/timestamp evidence.
+> **Making a temporal claim tamper-evident does not make the claim true, current, trusted, complete, or authorized.**
 
-Agent Memory already has an optional UOR-Addr v0.2.0 content-reference profile proving cross-language JSON content identity while preserving `authority_effect = none`.
-
-## Decision candidate
-
-Adopt a **layered temporal commitment model**.
-
-Temporal claims whose mutation must create a different historical event identity belong inside a deterministic content commitment.
-
-Signer attestation, ordering evidence, and external time/transparency evidence remain separate evidence layers bound to that exact commitment.
+Therefore:
 
 ```text
-TemporalCommitment
-  deterministic content identity
-        |
-        v
-SignerAttestation
-  who endorsed the exact commitment
-        |
-        v
-optional ExternalWitnessEvidence
-  existence / inclusion / consistency / freshness
-        |
-        v
-Agent Memory trust/currentness/PAMA evaluation
+content identity != signer trust
+signed time != trusted event time
+predecessor chain != complete or unique history
+evidence validity != memory authority
 ```
 
-## Core invariant
+## Boundaries
 
-> **Cryptography may make a temporal claim tamper-evident without making the claim true, current, trusted, complete, or authorized.**
+The first optional content-reference profile uses UOR-Addr v0.2.0. UOR identifies the exact canonical temporal object. It does not establish signer trust, wall-clock truth, currentness, completeness, admission, or PAMA authority, and it is not a required core runtime.
 
-```text
-content identity != signature
-signature != trusted time
-trusted time != event occurrence time
-predecessor chain != complete global history
-cryptographic validity != memory authority
-```
+The Python reference uses Ed25519 only as an implementation evidence profile. Algorithm and key-management choices are not canonical doctrine.
 
-## Temporal commitment
+A linear predecessor profile proves only its declared local relationship. It does not prove complete history or non-equivocation without stronger anchoring/consistency evidence. Fork detection reports competing children but does not choose a canonical branch.
 
-A commitment profile must define deterministic serialization/addressing and the exact fields included in the historical commitment.
+External witness evidence may establish a bounded claim such as existence by a time or inclusion in a verifiable structure. Witness time is not automatically event occurrence time.
 
-The generic shape may include:
+Later correction, revocation, dispute, or supersession creates separate currentness evidence. It does not rewrite the historical commitment or retroactively change historical evidence validity.
 
-```text
-profile identity
-canonical event payload/reference
-temporal claims
-ordering profile + predecessor refs
-scope / isolation ref
-domain-schema identity
-projection/profile identity where applicable
-```
+None of these layers independently establishes factual truth, memory admission, current applicability, human approval, reusable authority, PAMA permission, or execution.
 
-Changing any committed field produces a different content identity.
+## Acceptance evidence
 
-The canonical doctrine does not require one content-address implementation.
+All sixteen acceptance gates are mapped in:
 
-The initial optional interoperability profile may use the existing UOR-Addr v0.2.0 JSON realization.
+`docs/audits/temporal-commitments/01-adr-031-acceptance-audit.md`
 
-## UOR boundary
+Pre-acceptance exact head:
 
-UOR may answer:
+`1b02d02ef6b1d96a5c7b04515bac62ae86a15fc0`
 
-> **What exact canonical temporal object is being referenced?**
+That head passed all 25 repository workflows.
 
-UOR does not answer:
+Focused artifact:
 
-- who signed it;
-- whether the signing key is trusted;
-- whether a claimed time is accurate;
-- whether the event is current;
-- whether history is complete;
-- whether a mutation/action is authorized.
+- id `9198292626`
+- digest `sha256:66454918179ce3e0e9e887497d59120b1845494a9a7d62e46d2bc6f4ad15c52f`
 
-Ordinary Agent Memory conformance does not require a UOR runtime.
+Independent same-head UOR artifact:
 
-## Signer attestation
+- id `9198303010`
+- digest `sha256:25b067fd2aba43ea1d988e62b767d6c07b2da20c1a13f6cab4dfc56dcf4f8f28`
 
-The signer attests to a domain-separated transcript binding at least:
+The first green implementation was not accepted. Review required explicit reference-profile binding, verified fork-node bindings, append-only currentness/supersession evidence, non-null temporal claims, and matching light/dark visual semantics.
 
-```text
-attestation profile/version
-content-reference profile
-content_ref
-```
+The Accepted head must pass the complete validation matrix before merge.
 
-The signing algorithm and key-identification mechanism are implementation/profile concerns.
+## Canonical detail
 
-The first reference evidence may use Ed25519 through the existing Python `cryptography` dependency. That choice is not normative doctrine.
-
-Key trust, rotation, revocation, and authorization are evaluated separately from historical signature validity.
-
-A signature may remain cryptographically valid after the signer loses current authority.
-
-## Claimed time versus witnessed time
-
-A signed temporal commitment may contain a claimed `event_time` or `observed_at`.
-
-A valid signature proves only that the signer committed to those values.
-
-An independent time/transparency profile may bind separate evidence to the commitment or signer attestation, for example:
-
-- RFC 3161 timestamp token;
-- SCITT/COSE receipt;
-- Sigstore-style transparency evidence;
-- another deployment-specific witness.
-
-Witness evidence must state exactly what it proves.
-
-```text
-witnessed existence by T
-!= event occurred at T
-```
-
-## Ordering evidence
-
-A strictly serialized stream may commit to:
-
-```text
-stream_ref
-sequence
-predecessor_ref
-```
-
-or another declared equivalent.
-
-This makes local order tamper-evident because changing the predecessor/order fields changes the descendant commitment identity.
-
-However:
-
-```text
-hash/predecessor chain
-!= proof of completeness or non-equivocation by itself
-```
-
-A verifier that needs stronger history claims must have an appropriate anchor, authoritative head, consistency proof, coordinator receipt, or verifiable-data-structure receipt.
-
-## Concurrent / multi-writer history
-
-Core must not impose a fake total order over concurrent writers.
-
-A profile may instead use:
-
-- multiple causal predecessor refs;
-- shared-write coordination receipts;
-- external ordered-log/VDS receipts;
-- coordinator-issued sequence evidence.
-
-The profile must state which ordering property it proves.
-
-This ADR does not replace shared-memory pre-write coordination or PAMA.
-
-## Corrections and currentness
-
-A signed historical commitment is append-only evidence.
-
-Later correction, revocation, dispute, or supersession creates new governed evidence/currentness rather than rewriting the signed object.
-
-```text
-E1 signed historical commitment
-E2 correction/supersession references E1
-currentness(E1) -> no longer current
-```
-
-Cryptographic immutability does not waive retention/deletion obligations for known copies, signatures, receipts, or projections.
-
-## Policy projection
-
-A temporal/policy consumer such as Dogwood may receive a derived projection carrying only the verified claims it needs.
-
-```text
-Agent Memory temporal commitment
-!= Dogwood trace entry
-```
-
-A cryptographically valid event may still be stale, revoked, superseded, out of scope, or non-authoritative for current policy.
-
-ADR-030 compatibility/currentness still applies before consequential policy use.
-
-## Authority boundary
-
-Every layer has `authority_effect = none` unless a separate Agent Memory authority evaluation explicitly says otherwise.
-
-Neither a content-reference match, valid digital signature, predecessor chain, trusted timestamp, inclusion receipt, nor transparency receipt independently establishes:
-
-- memory admission;
-- factual truth;
-- current applicability;
-- human approval;
-- reusable grant;
-- PAMA permission;
-- enforcement/execution.
-
-## Acceptance evidence required
-
-ADR-031 MUST remain Proposed until executable evidence demonstrates at least:
-
-1. payload mutation changes commitment identity;
-2. temporal-claim mutation changes commitment identity;
-3. predecessor/order mutation changes commitment identity;
-4. schema/profile mutation changes commitment identity;
-5. a signature is bound to the exact commitment/profile and fails after reference mutation;
-6. a valid signature over a false/future claimed time remains distinguishable from trusted-time evidence;
-7. an unknown/untrusted signer can remain cryptographically valid without gaining authority;
-8. a required predecessor missing/cross-scope is detected;
-9. a fork is represented as a fork rather than silently flattened;
-10. a linear predecessor chain is not reported as complete/non-equivocating without an anchor/receipt;
-11. later correction/currentness change does not rewrite the signed historical commitment;
-12. UOR/content identity cannot satisfy PAMA;
-13. external witness evidence with the wrong subject is rejected;
-14. witness time is not relabeled as event occurrence time;
-15. optional UOR unavailability fails only that optional profile path;
-16. at least one exact-pinned UOR-Addr v0.2.0 temporal-object comparator proves the generic contract without importing UOR authority semantics into core.
-
-## Rejected alternatives
-
-### Sign the event payload and leave time/order outside the commitment
-
-Rejected. Material temporal claims could change without invalidating the signature binding.
-
-### Treat a signed timestamp as trusted wall-clock time
-
-Rejected. The signer proves commitment to the claimed value, not clock truth.
-
-### Make UOR the signing or authority system
-
-Rejected. UOR content identity is useful precisely because it can remain narrower than signer trust and Agent Memory authority.
-
-### Treat a predecessor hash chain as a complete global ledger
-
-Rejected. Without an anchor/consistency/non-equivocation mechanism, a chain alone cannot prove the verifier has the unique complete history.
-
-### Require a single timestamp/transparency provider
-
-Rejected. External witness services are optional profiles behind a generic verified-evidence boundary.
-
-### Rewrite old signed events when corrected
-
-Rejected. Corrections and currentness remain append-only governance evidence.
-
-## Initial implementation
-
-The first executable slice should be Python-first and provider-neutral:
-
-1. temporal commitment schema;
-2. signer-attestation schema;
-3. external-witness-evidence schema;
-4. deterministic reference builder/verifier;
-5. Ed25519 reference profile for evidence only;
-6. optional exact-pinned UOR-Addr v0.2.0 address function;
-7. linear-stream ordering profile with explicit completeness non-claim;
-8. adversarial test vectors and focused CI artifact;
-9. no production TSA, SCITT service, Dogwood integration, or UOR core dependency in this slice.
-
-## Related
-
-- #67
-- #258
-- ADR-021
-- ADR-022
-- ADR-024
-- ADR-028
-- ADR-030
-- `docs/profiles/uor-addr-content-reference-profile.md`
 - `docs/research/cryptographic-temporal-commitments.md`
+- `docs/profiles/temporal-commitment-evidence-profile.md`
+- `docs/audits/temporal-commitments/01-adr-031-acceptance-audit.md`
+- `reference/agentmem_ref/temporal_commitment.py`
+- `reference/tests/test_temporal_commitment.py`
+- `wiki-src/Cryptographic-Temporal-Commitments.md`
