@@ -171,13 +171,13 @@ def main() -> int:
             "content_identity_authority_effect": "none",
             "signature_authority_effect": "none",
             "witness_authority_effect": "none",
-            "complete_history_claimed": false,
-            "event_occurrence_time_proven_by_witness": false
+            "complete_history_claimed": False,
+            "event_occurrence_time_proven_by_witness": False,
         },
         "metrics": {
             "check_count": len(checks),
-            "failed_checks": sum(value is not True for value in checks.values())
-        }
+            "failed_checks": sum(value is not True for value in checks.values()),
+        },
     }
     Path(args.output).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
