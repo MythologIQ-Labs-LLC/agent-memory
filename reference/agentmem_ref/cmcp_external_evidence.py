@@ -65,7 +65,7 @@ def _parse_time(value: str) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
-def _claim_expiry(gateway: Mapping[str, Any]) -> str:
+def _attestation_expiry(gateway: Mapping[str, Any]) -> str:
     generated = _parse_time(str(gateway["attestation_generated_at"]))
     validity = int(gateway["attestation_validity_seconds"])
     if validity < 1:
@@ -103,7 +103,7 @@ def _attestation_verification_status(result: Mapping[str, Any]) -> str:
     return VERIFICATION_UNKNOWN
 
 
-def _common_adapter_fields(claim: Mapping[str, Any], result: Mapping[str, Any]) -> dict[str, Any]:
+def _common_adapter_fields(claim: Mapping[str, Any]) -> dict[str, Any]:
     trace = claim["trace"]
     gateway = claim["gateway"]
     cnf = trace.get("cnf", {}).get("jwk", {})
@@ -139,7 +139,6 @@ def _common_adapter_fields(claim: Mapping[str, Any], result: Mapping[str, Any]) 
         "claim_scope": f"cmcp-session:{session_id}",
         "subject_ref": str(trace["subject"]),
         "issued_at": _iso_from_epoch(int(trace["iat"])),
-        "expires_at": _claim_expiry(gateway),
         "revocation_status": REVOCATION_NOT_REVOKED,
         "policy_ref": str(policy["bundle_hash"]),
         "configuration_ref": (
@@ -172,7 +171,7 @@ def build_cmcp_adapter_results(
     if not platform or not measurement:
         raise ValueError("cMCP runtime platform and measurement are required")
 
-    common = _common_adapter_fields(claim, verifier_result)
+    common = _common_adapter_fields(claim)
     global_status = str(verifier_result.get("status", "unknown"))
     failure = verifier_result.get("failure_reason")
     verified, unverified, _ = _verification_projection(verifier_result)
@@ -214,8 +213,15 @@ def build_cmcp_adapter_results(
         "runtime_ref": f"cmcp-runtime:{platform}:{measurement}",
         "limitations": enforcement_limitations,
     }
+
+    # Attestation freshness is a separate temporal fact from the freshness of
+    # the newly signed GatewayClaim. A claim can be issued now while carrying
+    # older attestation evidence. Do not make that old attestation retroactively
+    # expire the policy/configuration evidence record.
     attestation = {
         **common,
+        "issued_at": str(gateway["attestation_generated_at"]),
+        "expires_at": _attestation_expiry(gateway),
         "verification_status": attestation_status,
         "claim_type": "attestation",
         "runtime_ref": f"cmcp-runtime:{platform}:{measurement}",
