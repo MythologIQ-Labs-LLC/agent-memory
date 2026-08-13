@@ -63,6 +63,10 @@ _BASE_TABLE: dict[tuple[str, str], str] = {
     ("decision_overwrite", "medium"): REQUIRE_REVIEW,
     ("decision_overwrite", "high"): REQUIRE_EXTERNAL_VERIFICATION,
     ("decision_overwrite", "critical"): REQUIRE_EXTERNAL_VERIFICATION,
+    ("domain_schema_mutation", "low"): REQUIRE_REVIEW,
+    ("domain_schema_mutation", "medium"): REQUIRE_REVIEW,
+    ("domain_schema_mutation", "high"): REQUIRE_EXTERNAL_VERIFICATION,
+    ("domain_schema_mutation", "critical"): REQUIRE_EXTERNAL_VERIFICATION,
     ("promotion", "low"): ALLOW_WITH_LEDGER,
     ("promotion", "medium"): REQUIRE_REVIEW,
     ("promotion", "high"): REQUIRE_REVIEW,
@@ -120,6 +124,7 @@ class Proposal:
     approves_own_authority: bool = False
     approval_refs: tuple[str, ...] = ()
     review_satisfied: bool = False
+    requested_scope_change: str = ""
     state_snapshot: str = ""
     tenant_ref: str = ""
     purpose: str = ""
@@ -169,6 +174,12 @@ def _apply_modifiers(outcome: str, proposal: Proposal) -> tuple[str, list[str]]:
     bound_domains = set(proposal.isolation_domain_refs)
     if required_domains and not required_domains.issubset(bound_domains):
         return BLOCK, ["required isolation domains must be bound to the memory scope"]
+    if proposal.operation == "domain_schema_mutation" and proposal.requested_scope_change:
+        scope_floor = _BASE_TABLE[("scope_expansion", proposal.risk_class)]
+        escalated = _strictest(outcome, scope_floor)
+        if escalated != outcome:
+            reasons.append("M-SCOPE: domain-schema mutation also requests scope expansion")
+        outcome = escalated
     if proposal.reversibility == "irreversible":
         escalated = _strictest(outcome, REQUIRE_REVIEW)
         if proposal.risk_class in ("high", "critical"):
