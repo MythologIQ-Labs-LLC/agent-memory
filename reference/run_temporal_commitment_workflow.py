@@ -18,6 +18,7 @@ from agentmem_ref.temporal_commitment import (
     build_temporal_commitment,
     detect_linear_forks,
     evaluate_linear_order,
+    evaluate_temporal_currentness,
     sign_temporal_commitment,
     verify_temporal_attestation,
     verify_witness_binding,
@@ -64,13 +65,20 @@ def main() -> int:
             **ordering,
         )
 
-    root = build(base, ordering_mode="linear_stream", stream_ref="stream:alpha", sequence=0)
+    root = build(
+        base,
+        ordering_mode="linear_stream",
+        stream_ref="stream:alpha",
+        sequence=0,
+        predecessor_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
+    )
     root_ref = address_temporal_commitment(root, address_fn=py_address)
     child = build(
         base,
         ordering_mode="linear_stream",
         stream_ref="stream:alpha",
         sequence=1,
+        predecessor_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
         predecessor_refs=[root_ref],
     )
     child_ref = address_temporal_commitment(child, address_fn=py_address)
@@ -82,9 +90,22 @@ def main() -> int:
         ordering_mode="linear_stream",
         stream_ref="stream:alpha",
         sequence=1,
+        predecessor_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
         predecessor_refs=[root_ref],
     )
     changed_time_ref = address_temporal_commitment(changed_time_commitment, address_fn=py_address)
+
+    changed_profile = copy.deepcopy(base)
+    changed_profile["projection_version"] = "0.2.0"
+    changed_profile_commitment = build(
+        changed_profile,
+        ordering_mode="linear_stream",
+        stream_ref="stream:alpha",
+        sequence=1,
+        predecessor_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
+        predecessor_refs=[root_ref],
+    )
+    changed_profile_ref = address_temporal_commitment(changed_profile_commitment, address_fn=py_address)
 
     key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(fixture["test_key"]["seed_hex"]))
     attestation = sign_temporal_commitment(
@@ -99,7 +120,18 @@ def main() -> int:
     tampered["content_ref"] = changed_time_ref
     tampered_result = verify_temporal_attestation(tampered, public_key=key.public_key(), trust_status="trusted")
 
-    order = evaluate_linear_order(child, predecessor_commitment=root, address_fn=py_address)
+    order = evaluate_linear_order(
+        child,
+        predecessor_commitment=root,
+        address_fn=py_address,
+        address_profile=UOR_CONTENT_REFERENCE_PROFILE,
+    )
+    wrong_order_profile = evaluate_linear_order(
+        child,
+        predecessor_commitment=root,
+        address_fn=py_address,
+        address_profile="test/wrong-reference-profile",
+    )
 
     fork_material = copy.deepcopy(base)
     fork_material["payload_digest"] = "sha256:" + "7" * 64
@@ -108,6 +140,7 @@ def main() -> int:
         ordering_mode="linear_stream",
         stream_ref="stream:alpha",
         sequence=1,
+        predecessor_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
         predecessor_refs=[root_ref],
     )
     fork_ref = address_temporal_commitment(fork_child, address_fn=py_address)
@@ -116,35 +149,59 @@ def main() -> int:
             {"content_ref": root_ref, "commitment": root},
             {"content_ref": child_ref, "commitment": child},
             {"content_ref": fork_ref, "commitment": fork_child},
-        ]
+        ],
+        address_fn=py_address,
+        content_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
     )
 
     witness = build_external_witness_evidence(
         witness_profile="rfc3161-verified-by-host",
         subject_kind="temporal_commitment",
+        subject_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
         subject_ref=child_ref,
         claim_kind="existence_by_time",
         verification_status="verified",
         witnessed_at="2026-08-13T19:01:00Z",
         proof_ref="evidence:test-witness:1",
     )
-    witness_good = verify_witness_binding(witness, expected_subject_ref=child_ref)
-    witness_wrong = verify_witness_binding(witness, expected_subject_ref="sha256:" + "6" * 64)
+    witness_good = verify_witness_binding(
+        witness,
+        expected_subject_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
+        expected_subject_ref=child_ref,
+    )
+    witness_wrong = verify_witness_binding(
+        witness,
+        expected_subject_reference_profile="test/wrong-reference-profile",
+        expected_subject_ref=child_ref,
+    )
+
+    historical_before = copy.deepcopy(child)
+    currentness = evaluate_temporal_currentness(
+        commitment_reference_profile=UOR_CONTENT_REFERENCE_PROFILE,
+        commitment_ref=child_ref,
+        status="superseded",
+        evaluated_at="2026-08-13T20:00:00Z",
+        evidence_refs=["evidence:correction:temporal-1"],
+        superseding_refs=[changed_time_ref],
+    )
 
     checks = {
         "exact_uor_release_loaded": binding_version == "0.2.0",
         "uor_temporal_labels_are_distinct": root_ref != child_ref,
         "temporal_mutation_changes_identity": changed_time_ref != child_ref,
+        "semantic_profile_mutation_changes_identity": changed_profile_ref != child_ref,
         "trusted_signature_is_valid": trusted["cryptographic_status"] == "valid",
         "signature_tamper_is_invalid": tampered_result["cryptographic_status"] == "invalid",
         "untrusted_signature_stays_non_authoritative": untrusted["cryptographic_status"] == "valid" and not untrusted["trusted_signer"] and untrusted["authority_effect"] == "none",
         "trusted_signature_does_not_establish_time_or_authority": trusted["trusted_time"] == "not_established" and trusted["authority_effect"] == "none",
         "local_order_valid": order["local_order_valid"] is True,
+        "reference_profile_mismatch_is_rejected": wrong_order_profile["status"] == "invalid" and "predecessor_reference_profile_mismatch" in wrong_order_profile["reason_codes"],
         "linear_order_does_not_claim_complete_history": order["complete_history_proven"] is False,
         "linear_order_does_not_claim_non_equivocation": order["non_equivocation_proven"] is False,
         "fork_is_exposed_without_canonical_child": len(forks) == 1 and forks[0]["canonical_child"] is None,
-        "witness_binds_exact_subject": witness_good["bound"] is True and witness_wrong["bound"] is False,
+        "witness_binds_exact_subject_and_profile": witness_good["bound"] is True and witness_wrong["bound"] is False,
         "witness_does_not_prove_event_occurrence_time": witness_good["event_occurrence_time_proven"] is False,
+        "supersession_does_not_rewrite_historical_commitment": child == historical_before and currentness["interpretation"]["historical_commitment_mutated"] is False and currentness["interpretation"]["cryptographic_validity_changed"] is False,
     }
 
     report = {
@@ -162,15 +219,18 @@ def main() -> int:
         },
         "temporal_objects": [
             {"id": "root", "content_ref": root_ref},
-            {"id": "child", "content_ref": child_ref, "predecessor_ref": root_ref},
+            {"id": "child", "content_ref": child_ref, "predecessor_reference_profile": UOR_CONTENT_REFERENCE_PROFILE, "predecessor_ref": root_ref},
             {"id": "child-time-mutated", "content_ref": changed_time_ref, "predecessor_ref": root_ref},
+            {"id": "child-profile-mutated", "content_ref": changed_profile_ref, "predecessor_ref": root_ref},
         ],
         "checks": checks,
         "forks": forks,
+        "currentness": currentness,
         "interpretation": {
             "content_identity_authority_effect": "none",
             "signature_authority_effect": "none",
             "witness_authority_effect": "none",
+            "currentness_authority_effect": "none",
             "complete_history_claimed": False,
             "event_occurrence_time_proven_by_witness": False,
         },
