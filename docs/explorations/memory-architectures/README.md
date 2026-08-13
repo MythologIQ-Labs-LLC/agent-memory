@@ -18,6 +18,34 @@ The program became active after its original sequencing prerequisites were compl
 
 Those programs now provide evidence and vocabulary that this exploration can pressure-test across architecture families.
 
+## Strategic scope intent
+
+Agent Memory's early emphasis on governance, provenance, lifecycle, correction, forgetting, isolation, and authority was a **sequencing decision**, not a permanent product boundary.
+
+Those surfaces were the best place to start because they establish the control plane needed before adding more powerful and less inspectable memory mechanisms. The long-term scope is broader: Agent Memory should be capable of encompassing explicit durable memory, lexical/vector retrieval, graph memory, event/log memory, consolidation and tiering, learned or latent predictive state, world-model memory, planning context, and hybrid compositions where evidence shows they improve the system.
+
+The intended direction is therefore not:
+
+```text
+governance/provenance around somebody else's memory system
+```
+
+It is closer to:
+
+```text
+Agent Memory
+  = governed memory substrate(s)
+  + provenance / evidence
+  + lifecycle / correction / forgetting
+  + recall / context assembly
+  + learned and explicit representations
+  + predictive / world-state memory where justified
+  + isolation / authority / PAMA
+  + reconstructable runtime evidence
+```
+
+No current representation is protected by historical sequencing. If comparative evidence shows that a learned predictive representation, graph, retrieval architecture, or hybrid should become a first-class operational memory layer, the architecture should evolve accordingly while preserving only the governance invariants that survive pressure-testing.
+
 ## Research products
 
 This foundation slice is tracked by #224.
@@ -27,6 +55,7 @@ This foundation slice is tracked by #224.
 - [`governance-comparison-matrix.md`](governance-comparison-matrix.md) — bounded cross-family comparison with explicit evidence status
 - [`hybrid-composition-patterns.md`](hybrid-composition-patterns.md) — governance of multi-stage memory compositions
 - [`adversarial-scenarios.md`](adversarial-scenarios.md) — equivalent pressure tests for later representative substrates
+- [`opaque-latent-predictive-state.md`](opaque-latent-predictive-state.md) — #137 JEPA/latent predictive-state study and comparative architecture hypotheses
 
 Follow-on family studies should eventually include file/note memory, lexical/vector RAG, knowledge graphs, GraphRAG, event logs, relational/document stores, hierarchical memory, shared/distributed memory, and opaque learned/latent state.
 
@@ -77,7 +106,7 @@ A cross-architecture counterexample is valuable. A no-change result where the cu
 
 ## Relationship to #137 and #138
 
-#137 tests the representation-agnostic hypothesis against opaque learned/JEPA-style predictive state. It should be treated as an adversarial architecture family, not an exotic footnote.
+#137 tests the representation-agnostic hypothesis against opaque learned/JEPA-style predictive state. It should be treated as an adversarial architecture family and a serious candidate operational memory architecture, not an exotic footnote or a mechanism that must remain merely external to Agent Memory.
 
 #138 supplies recurring field claims, benchmark failures, context-assembly questions, long-horizon degradation hypotheses, and evaluation-contamination risks. It is a research feed into this program, not a source of doctrine by itself.
 
