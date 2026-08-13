@@ -46,9 +46,9 @@ The canonical policy is **[Aligned Projects and Intellectual Lineage](https://gi
 
 ## UOR Foundation
 
-**Relationship:** intellectual lineage / conceptually aligned foundation
+**Relationship:** intellectual lineage / conceptually aligned foundation / optional identity interoperability profile
 
-Agent Memory is an independent project, but work from the **[UOR Foundation](https://github.com/UOR-Foundation/UOR-Framework)** on deterministic object reference, content-addressed identity, explicit resolution state, and formally described object spaces materially informed parts of Agent Memory's architectural thinking.
+Agent Memory is an independent project, but work from the **[UOR Foundation](https://github.com/UOR-Foundation/UOR-Framework)** on deterministic object reference, content-addressed identity, explicit resolution state, formally described object spaces, and replayable derivation materially informed parts of Agent Memory's architectural thinking.
 
 The most useful inherited distinction is not a package dependency. It is a boundary:
 
@@ -70,6 +70,36 @@ Agent Memory carries that distinction forward as architecture while remaining im
 
 When UOR is used, it is a strong candidate for deterministic identity and exact addressability. Another exact-identity mechanism may be used if it preserves the same separation.
 
+### Temporal evolution of the relationship
+
+ADR-031 gives that identity boundary a concrete temporal use.
+
+An Agent Memory temporal commitment can use an optional UOR-Addr content reference so different runtimes can agree on the **exact temporal object** being attested or projected.
+
+```text
+TemporalCommitment
+  -> exact canonical content
+  -> optional UOR-Addr reference
+  -> signer / witness / currentness evidence remain separate
+```
+
+This is stronger than merely saying “UOR inspired identity.” It is now an executable interoperability profile for exact temporal-object addressing.
+
+The boundary remains strict:
+
+```text
+UOR identity
+!= truth
+!= signer trust
+!= witnessed time
+!= currentness
+!= PAMA authority
+```
+
+Current UOR `DerivationTrace` concepts are also useful comparison material for ordered replayable derivation, but Agent Memory does not infer a signing or trust authority from those concepts.
+
+See **[Temporal Memory Architecture](Temporal-Memory-Architecture)** and **[Cryptographic Temporal Commitments](Cryptographic-Temporal-Commitments)**.
+
 ### Research lineage
 
 **[UOR Framework issue #2](https://github.com/UOR-Foundation/UOR-Framework/issues/2)**, opened by Kevin R. Knapp, explored whether UOR resolution and saturation primitives could inform memory decay, crystallization, conflict-driven reheating, and exact-address transitions.
@@ -83,6 +113,78 @@ The UOR Framework repository is MIT-licensed. Agent Memory is Apache-2.0 license
 This acknowledgement is citation and independent synthesis. It does not incorporate UOR code, generated ontology artifacts, diagrams, or distinctive documentation expression into Agent Memory.
 
 > **Independence:** Agent Memory is not affiliated with, endorsed by, sponsored by, or formally partnered with the UOR Foundation unless a separate public agreement says otherwise.
+
+---
+
+## Dogwood
+
+**Relationship:** temporal-policy peer / interoperability target / exact-source comparator
+
+**[Dogwood](https://github.com/dogwood-policy/dogwood)** is a Cedar-derived governance language for evaluating temporal policy over bounded event history.
+
+Dogwood materially sharpened an architectural question that ordinary authorization comparators do not answer:
+
+> **What may policy conclude from a bounded history of prior events?**
+
+The resulting Agent Memory relationship is compositional rather than adoptive:
+
+```text
+Agent Memory canonical history/currentness
+  -> versioned governed temporal projection
+  -> compatibility/currentness gate
+  -> Dogwood event trace + temporal policy
+  -> policy-decision evidence
+  -> Agent Memory evidence boundary
+```
+
+Agent Memory can enrich the projected temporal view with exact historical identity, lifecycle currentness, scope, schema version, and bounded external evidence without requiring Dogwood to become the canonical memory system.
+
+Dogwood contributes specialized temporal-policy semantics without requiring Agent Memory core to become a temporal-policy language.
+
+The relationship is intentionally bidirectional: Dogwood can consume governed memory context, and Dogwood's resulting policy decision can later become evidence inside Agent Memory through normal provenance and governance.
+
+The boundaries remain strict:
+
+```text
+Agent Memory canonical history != Dogwood temporal trace
+Dogwood temporal match != current memory truth
+Dogwood ALLOW != human approval
+Dogwood policy result != execution evidence
+```
+
+Dogwood's temporal horizons, event schemas, provider/context semantics, and pin/partition behavior also provide useful failure cases for Agent Memory's versioned compatibility gate.
+
+The current public comparator is pinned to source commit `c6237c88099b3f492ecc5fcee42df06a19224b97`. The public repository is treated as a reference interpreter evidence surface, not as a production dependency.
+
+See **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** and **[Temporal Memory Architecture](Temporal-Memory-Architecture)**.
+
+> **Independence:** Dogwood and Agent Memory are independent projects. This recognition does not imply adoption, sponsorship, endorsement, or a formal partnership.
+
+---
+
+## Cedar and Cedarling
+
+**Relationship:** authorization comparator / embedded policy peer / interoperability target
+
+**[Cedar](https://github.com/cedar-policy/cedar)** provides a typed authorization model centered on principal, action, resource, context, policies, and an application schema.
+
+**[Cedarling](https://github.com/JanssenProject/jans/tree/main/jans-cedarling)** provides a deployable embedded Cedar policy-decision surface with identity handling, policy-store context, dynamic context data, and decision logging.
+
+These systems helped make another Agent Memory distinction explicit:
+
+```text
+memory-derived context can be validly serialized
+!=
+that context is semantically current for the policy consumer
+```
+
+Accepted ADR-030 therefore requires a versioned compatibility/currentness evaluation before a memory-derived projection is treated as current policy input.
+
+Cedar and Cedarling can consume current Agent Memory-derived context without becoming the memory lifecycle authority. Their policy decisions can tighten downstream behavior but cannot silently widen a PAMA consequence Agent Memory denied.
+
+See **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)**.
+
+> **Independence:** Cedar, Cedarling, and Agent Memory remain independent projects unless a separate public agreement states otherwise.
 
 ---
 
@@ -162,11 +264,13 @@ The Agent Governance Toolkit repository is MIT-licensed. Its charter also identi
 
 The architecture joining these governance peers to Agent Memory is explained in **[Governance Projection](Governance-Projection)**.
 
-The core rule is:
+For temporal peers, the fuller evidence and projection composition is explained in **[Temporal Memory Architecture](Temporal-Memory-Architecture)**.
+
+The core rule remains:
 
 > **Core owns memory semantics. Governance Projection owns vendor-neutral remembered context. Consumer adapters own consumer-specific interpretation.**
 
-This lets Agent Memory intentionally support governance as a use-case class without turning the canonical memory schema into a DashClaw, AGT, or other policy-engine schema.
+This lets Agent Memory intentionally support governance as a use-case class without turning the canonical memory schema into a DashClaw, AGT, Dogwood, Cedar, Cedarling, or other policy-engine schema.
 
 ---
 

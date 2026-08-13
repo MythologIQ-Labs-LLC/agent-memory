@@ -26,24 +26,61 @@ A project can be excellent without Agent Memory adopting it. An interoperability
 
 | Project | Why it stands out | Current relationship |
 |---|---|---|
-| **UOR Foundation / UOR Framework** | Deterministic object reference, exact identity, resolution state, formally described object spaces | quality peer / intellectual lineage |
+| **UOR Foundation / UOR Framework** | Deterministic object reference, exact identity, replayable derivation concepts | quality peer / intellectual lineage / optional temporal identity profile |
 | **DashClaw** | Serious treatment of pre-execution governance, approvals, enforcement posture, liveness, and evidence | enforcement peer / interoperability target / comparator |
 | **Microsoft Agent Governance Toolkit** | Broad open governance surface around policy, identity, audit, and runtime controls | policy/enforcement peer / interoperability target |
 | **AgentTrust / TRACE** | Cryptographically bound governance evidence, attestation, verification, and conformance surfaces | evidence/attestation peer / comparator |
 | **Open Policy Agent** | Mature general-purpose policy engine with a strong deterministic external-decision surface | validated real policy comparator |
 | **Cedar** | Purpose-built authorization model with principal/action/resource/context and permit/forbid semantics | validated real policy comparator |
-| **Cedarling** | Embedded/local Cedar PDP with identity, policy-store, logging, OPA and AuthZen deployment surfaces | quality peer / active research candidate |
-| **Dogwood** | Cedar-derived temporal policy over bounded event history, typed event schemas, providers, and explicit partition semantics | temporal-policy peer / exact-source research comparator |
+| **Cedarling** | Embedded/local Cedar PDP with identity, policy-store, logging, OPA and AuthZen deployment surfaces | quality peer / policy-runtime interoperability candidate |
+| **Dogwood** | Cedar-derived temporal policy over bounded event history, typed event schemas, providers, and explicit partition semantics | temporal-policy peer / interoperability target / exact-source comparator |
+
+## Temporal interoperability cluster
+
+The UOR, Dogwood, Cedar, and Cedarling relationships have materially matured beyond simple comparison.
+
+```text
+Agent Memory temporal commitment
+  -> optional UOR exact identity
+  -> lifecycle/currentness
+  -> governed compatible projection
+  -> Dogwood temporal policy or Cedar-family authorization
+  -> returned decision evidence
+  -> PAMA
+```
+
+This is not a product bundle. It is an architectural composition in which each system keeps its own responsibility.
+
+See **[Temporal Memory Architecture](Temporal-Memory-Architecture)** for the full visual model.
 
 ---
 
 ## UOR Foundation / UOR Framework
 
-UOR is particularly useful for thinking precisely about identity. Agent Memory's main architectural takeaway is the distinction between exact object identity and the separate question of what that object is permitted to become or influence as memory.
+UOR is particularly useful for thinking precisely about identity. Agent Memory's main architectural takeaway remains the distinction between exact object identity and the separate question of what that object is permitted to become or influence as memory.
 
 **Repository:** https://github.com/UOR-Foundation/UOR-Framework
 
-See **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for the fuller lineage record.
+ADR-031 now gives that distinction an executable temporal role. Agent Memory can use the existing UOR-Addr compatibility profile to produce an exact portable reference to a canonical temporal commitment.
+
+```text
+TemporalCommitment
+  -> exact content
+  -> optional UOR-Addr reference
+```
+
+The boundary remains explicit:
+
+```text
+UOR identity != truth
+UOR identity != signer trust
+UOR identity != currentness
+UOR identity != authority
+```
+
+Current UOR `DerivationTrace` concepts are also useful comparison material for ordered replayable derivation. Agent Memory does not infer a signing, clock, trust, or policy authority from those concepts.
+
+See **[Cryptographic Temporal Commitments](Cryptographic-Temporal-Commitments)** and **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)**.
 
 ---
 
@@ -128,11 +165,13 @@ Cedar is a purpose-built authorization language and engine centered on explicit 
 
 **Repository:** https://github.com/cedar-policy/cedar
 
-Agent Memory has now executed the same generic external-policy seam against Cedar v4.12.0, exact source commit `fdcbaed32bdb8c8d13e4eaf2b58db5555e9fb8c5`, through #216 / PR #219.
+Agent Memory has executed the generic external-policy seam against Cedar v4.12.0, exact source commit `fdcbaed32bdb8c8d13e4eaf2b58db5555e9fb8c5`.
 
-Cedar was especially valuable for this proof because its authorization result is structurally different from OPA. The adapter binds the result to the exact request and policy artifact instead of relying on an arbitrary result object that echoes Agent Memory metadata.
+Cedar was especially valuable because its authorization result is structurally different from OPA. The adapter binds the result to the exact request and policy artifact rather than relying on arbitrary result metadata.
 
-The second-host proof required no Cedar-specific canonical composition fields. Cedar policy identity and determining policy IDs remain evidence; ALLOW/DENY remains a policy decision, not execution or enforcement evidence.
+Accepted ADR-030 adds another boundary: a memory-derived projection must be semantically compatible and current for the exact Cedar policy/schema contract before it is treated as current policy input.
+
+Cedar policy identity and determining policy IDs remain evidence; ALLOW/DENY remains a policy decision, not execution or enforcement evidence.
 
 ---
 
@@ -151,20 +190,19 @@ Current stable research pin:
 
 Agent Memory's direct Cedar comparator targets v4.12.0. Those are separate evidence lines and should remain visibly separate.
 
-Primary v2.3.0 documentation confirms useful Cedarling capabilities beyond raw Cedar evaluation:
+Cedarling adds useful deployment/runtime surfaces around Cedar, including policy-store identity/version, trusted issuers, JWT/multi-issuer and unsigned authorization paths, dynamic context data, decision/system/metric logging, multiple bindings, OPA integration, and AuthZen surfaces.
 
-- embedded/local policy decision;
-- local, archive, directory, JSON/YAML, HTTPS, and Jans Lock-backed policy-store loading;
-- policy-store ID/version metadata;
-- trusted-issuer configuration;
-- JWT and multi-issuer authorization with token verification;
-- unsigned authorization when authentication is owned upstream;
-- Decision/System/Metric logging with request, PDP, policy-store, diagnostics, action/resource, and decision correlation;
-- multiple language/runtime bindings;
-- an OPA plugin that performs Cedar-based authorization in OPA workflows;
-- AuthZen metadata, single-evaluation, and batch-evaluation endpoints through that OPA/Cedarling integration.
+The temporal-memory relationship is increasingly concrete: Agent Memory can project current memory-derived context into a Cedarling decision surface while preserving source currentness and the identity of the context actually evaluated.
 
-That OPA/AuthZen surface is unusually interesting for Agent Memory. OPA and Cedar are now independently validated policy comparators, while Cedarling provides a deployable bridge between those ecosystems plus identity and policy-store evidence that bare Cedar intentionally does not supply.
+Cedarling context precedence makes that evidence important:
+
+```text
+inline request context
+>
+pushed context data
+>
+default context
+```
 
 The boundaries remain strict:
 
@@ -175,7 +213,7 @@ policy-store version != standing authority
 decision log != enforcement witness
 ```
 
-Issue #217 evaluated Cedarling as an embedded policy, identity, and deployment peer. It is **not** an adopted Agent Memory dependency.
+Cedarling is **not** an adopted Agent Memory dependency.
 
 ---
 
@@ -185,14 +223,12 @@ Dogwood is a Cedar-derived governance language for AI agents and tools that adds
 
 **Repository:** https://github.com/dogwood-policy/dogwood
 
-Current Agent Memory research pin:
+Current Agent Memory comparator pin:
 
 - public source commit `c6237c88099b3f492ecc5fcee42df06a19224b97`
 - Apache-2.0 public repository
 - reference interpreter explicitly not presented as production enforcement
 - no public GitHub release artifact at the current research snapshot
-
-The public repository also explicitly describes the current published tree as a sanitized synchronization from an internal source without the internal git history. Agent Memory therefore treats the published public contract as usable evidence and unpublished/internal capabilities as unknown. That is a maturity boundary, not a negative judgment about the project.
 
 Dogwood matters because it exercises a policy question that the existing OPA/Cedar comparators do not:
 
@@ -200,15 +236,19 @@ Dogwood matters because it exercises a policy question that the existing OPA/Ced
 what may policy conclude from a bounded history of prior events?
 ```
 
-The current architectural relationship is bidirectional but deliberately narrow:
+The relationship has now matured into a concrete semantic-mediation architecture:
 
 ```text
 Agent Memory canonical history/currentness
+  -> exact temporal evidence where available
   -> versioned governed event/context projection
-  -> Dogwood temporal policy evaluation
+  -> compatibility/currentness gate
+  -> Dogwood temporal policy
   -> policy-decision evidence
-  -> Agent Memory external evidence boundary
+  -> Agent Memory evidence boundary
 ```
+
+This lets Agent Memory provide richer historical meaning without asking Dogwood to ingest the entire memory model. Dogwood contributes temporal-policy semantics without becoming the canonical memory store.
 
 The boundaries remain strict:
 
@@ -219,11 +259,11 @@ Dogwood ALLOW != human approval
 Dogwood decision != enforcement or execution evidence
 ```
 
-Dogwood's public pin/partition semantics and bounded temporal windows also expose concrete interoperability failure modes. A partial/asymmetric pin must not be mistaken for a partition guarantee, and an insufficient temporal horizon must be treated as a capability mismatch rather than proof that no prior event occurred.
+Dogwood's public pin/partition semantics, bounded temporal windows, and trace-shape behavior expose concrete interoperability failure modes. A partial/asymmetric pin must not be mistaken for a partition guarantee, an insufficient temporal horizon is a capability mismatch rather than proof that no prior event occurred, and event projection shape can affect temporal semantics.
 
-Research #255 and implementation #256 use those failures to test a more general **policy-projection compatibility/currentness** contract. Proposed ADR-030 keeps that contract provider-neutral, so Dogwood does not become a core dependency or define Agent Memory's canonical history model.
+Accepted ADR-030 and the merged policy-projection compatibility evidence keep this contract provider-neutral, so Dogwood does not become a core dependency or define Agent Memory's canonical history model.
 
-See **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** for the visual relationship among Agent Memory, Dogwood, Cedar, and Cedarling.
+See **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** and **[Temporal Memory Architecture](Temporal-Memory-Architecture)**.
 
 ---
 

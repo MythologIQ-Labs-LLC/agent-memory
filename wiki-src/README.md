@@ -24,7 +24,7 @@ https://github.com/MythologIQ-Labs-LLC/agent-memory.wiki.git
 
 Publication is automated. [`.github/workflows/publish-wiki.yml`](https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/.github/workflows/publish-wiki.yml) validates this tree and republishes it whenever `wiki-src/**` changes on `main`, and can also be run on demand through workflow dispatch. It treats `wiki-src` as canonical: the published pages are replaced from the validated source rather than merged into, so an edit made directly in the GitHub Wiki UI will be overwritten on the next publish. Edit the source here instead.
 
-`README.md` is deliberately excluded from publication — it documents the source tree and is not a reader-facing page. Every other `*.md` file in this directory becomes a Wiki page, so adding a page means adding a file here, a sidebar entry, and an inventory line below.
+`README.md` is deliberately excluded from publication. It documents the source tree and is not a reader-facing page. Every other `*.md` file in this directory becomes a Wiki page, so adding a page means adding a file here, a sidebar entry, and an inventory line below.
 
 Manual publication remains possible from any git-capable environment, which matters because some connectors expose no Wiki write operations at all:
 
@@ -59,7 +59,9 @@ The validator understands GitHub Wiki extensionless page links such as `[PAMA](P
 - `Canonical-and-Derived-State.md`
 - `Governed-Uncertainty.md`
 - `Governance-Projection.md`
+- `Temporal-Memory-Architecture.md`
 - `Cryptographic-Temporal-Commitments.md`
+- `Temporal-Policy-and-Governed-Memory.md`
 - `Security-and-Privacy.md`
 - `Conformance-and-Evidence.md`
 - `Runtime-Evidence.md`
@@ -73,4 +75,3 @@ The validator understands GitHub Wiki extensionless page links such as `[PAMA](P
 - `Glossary.md`
 - `_Sidebar.md`
 - `_Footer.md`
-
