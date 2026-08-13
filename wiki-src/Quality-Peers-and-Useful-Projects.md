@@ -33,6 +33,7 @@ A project can be excellent without Agent Memory adopting it. An interoperability
 | **Open Policy Agent** | Mature general-purpose policy engine with a strong deterministic external-decision surface | validated real policy comparator |
 | **Cedar** | Purpose-built authorization model with principal/action/resource/context and permit/forbid semantics | validated real policy comparator |
 | **Cedarling** | Embedded/local Cedar PDP with identity, policy-store, logging, OPA and AuthZen deployment surfaces | quality peer / active research candidate |
+| **Dogwood** | Cedar-derived temporal policy over bounded event history, typed event schemas, providers, and explicit partition semantics | temporal-policy peer / exact-source research comparator |
 
 ---
 
@@ -174,7 +175,55 @@ policy-store version != standing authority
 decision log != enforcement witness
 ```
 
-Issue #217 is evaluating Cedarling as an embedded policy, identity, and deployment peer. It is **not** an adopted Agent Memory dependency.
+Issue #217 evaluated Cedarling as an embedded policy, identity, and deployment peer. It is **not** an adopted Agent Memory dependency.
+
+---
+
+## Dogwood
+
+Dogwood is a Cedar-derived governance language for AI agents and tools that adds bounded temporal conditions over an event history. Its public model supports temporal predicates, typed/custom event schemas, information providers, compilation/lowering into Cedar context, and pluggable policy/temporal backends.
+
+**Repository:** https://github.com/dogwood-policy/dogwood
+
+Current Agent Memory research pin:
+
+- public source commit `c6237c88099b3f492ecc5fcee42df06a19224b97`
+- Apache-2.0 public repository
+- reference interpreter explicitly not presented as production enforcement
+- no public GitHub release artifact at the current research snapshot
+
+The public repository also explicitly describes the current published tree as a sanitized synchronization from an internal source without the internal git history. Agent Memory therefore treats the published public contract as usable evidence and unpublished/internal capabilities as unknown. That is a maturity boundary, not a negative judgment about the project.
+
+Dogwood matters because it exercises a policy question that the existing OPA/Cedar comparators do not:
+
+```text
+what may policy conclude from a bounded history of prior events?
+```
+
+The current architectural relationship is bidirectional but deliberately narrow:
+
+```text
+Agent Memory canonical history/currentness
+  -> versioned governed event/context projection
+  -> Dogwood temporal policy evaluation
+  -> policy-decision evidence
+  -> Agent Memory external evidence boundary
+```
+
+The boundaries remain strict:
+
+```text
+Agent Memory canonical history != Dogwood temporal trace
+historical event match != current authority
+Dogwood ALLOW != human approval
+Dogwood decision != enforcement or execution evidence
+```
+
+Dogwood's public pin/partition semantics and bounded temporal windows also expose concrete interoperability failure modes. A partial/asymmetric pin must not be mistaken for a partition guarantee, and an insufficient temporal horizon must be treated as a capability mismatch rather than proof that no prior event occurred.
+
+Research #255 and implementation #256 use those failures to test a more general **policy-projection compatibility/currentness** contract. Proposed ADR-030 keeps that contract provider-neutral, so Dogwood does not become a core dependency or define Agent Memory's canonical history model.
+
+See **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** for the visual relationship among Agent Memory, Dogwood, Cedar, and Cedarling.
 
 ---
 
