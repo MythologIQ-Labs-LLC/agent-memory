@@ -58,12 +58,17 @@ The validator understands GitHub Wiki extensionless page links such as `[PAMA](P
 - `Lifecycle-and-Forgetting.md`
 - `Canonical-and-Derived-State.md`
 - `Governed-Uncertainty.md`
+- `Governance-Projection.md`
+- `Cryptographic-Temporal-Commitments.md`
 - `Security-and-Privacy.md`
 - `Conformance-and-Evidence.md`
 - `Runtime-Evidence.md`
 - `Research-and-Sources.md`
 - `Implementation-Guide.md`
 - `Architecture-Decisions.md`
+- `Aligned-Projects-and-Intellectual-Lineage.md`
+- `Quality-Peers-and-Useful-Projects.md`
+- `Decision-Flows-and-Memory-Lifecycle.md`
 - `Contributing.md`
 - `Glossary.md`
 - `_Sidebar.md`
