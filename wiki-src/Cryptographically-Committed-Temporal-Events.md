@@ -2,10 +2,20 @@
 
 A temporal event can be signed without proving very much about time. Agent Memory therefore treats **temporal identity**, **signer commitment**, **trusted time**, and **current authority** as separate evidence layers.
 
-<picture>
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/temporal-event-commitment-light.svg">
-  <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/temporal-event-commitment.svg" alt="Flow from an Agent Memory temporal event through canonicalization and content addressing, digital signature, optional independent time witness, currentness and PAMA evaluation, and finally a derived temporal-policy projection. The diagram emphasizes that content identity, signature validity, witnessed time, and current authority are distinct claims.">
-</picture>
+```mermaid
+flowchart TD
+  A[Temporal commitment\npayload + time + validity + scope + stream + sequence + schema] --> B[NFC + RFC 8785 JCS + SHA-256\nexact content identity]
+  B --> C[Domain-separated signer evidence]
+  C --> D{Independent time witness?}
+  D -->|yes| E[RFC 3161 / transparency evidence]
+  D -->|no| F[Signer-claimed time only]
+  E --> G[Agent Memory currentness + PAMA]
+  F --> G
+  G --> H[ADR-030 compatible temporal projection]
+  H --> I[Dogwood / Cedar-family policy consumer]
+```
+
+The visual is intentionally layered. Content identity, signer evidence, trusted time, currentness, and policy consequences are different claims.
 
 ## The core idea
 
@@ -23,10 +33,10 @@ canonical temporal object
 content reference
         |
         v
-signature
+signer commitment
 ```
 
-If somebody changes the event time, stream, sequence, predecessor, schema, scope, or payload digest, the content reference changes and the old signature no longer applies.
+If somebody changes the event time, stream, sequence, predecessor, schema, scope, or payload digest, the content reference changes and the old signer evidence no longer applies.
 
 That is stronger than signing a payload and attaching an editable timestamp beside it.
 
@@ -34,9 +44,9 @@ That is stronger than signing a payload and attaching an editable timestamp besi
 
 ### Claimed time
 
-The signed object can state when the event happened, when it was observed, and when it is valid.
+The committed object can state when the event happened, when it was observed, and when it is valid.
 
-A valid signature proves the signer committed to those claims. It does **not** independently prove the wall clock.
+Valid signer evidence proves commitment to those claims. It does **not** independently prove the wall clock.
 
 ### Cryptographic order
 
@@ -62,8 +72,8 @@ UOR is useful here because the accepted optional UOR-Addr profile gives Agent Me
 
 ```text
 UOR/content reference -> what exact temporal object?
-signature              -> who committed to it?
-time witness            -> when was existence independently witnessed?
+signer evidence        -> who committed to it?
+time witness           -> when was existence independently witnessed?
 Agent Memory            -> what does it mean now?
 ```
 
@@ -74,7 +84,7 @@ UOR does not become a signing authority, key manager, clock, lifecycle authority
 A historical event can remain cryptographically valid forever while becoming irrelevant or invalid for current action.
 
 ```text
-signature valid
+signer evidence valid
 chain valid
 trusted timestamp valid
         !=
@@ -86,8 +96,6 @@ Correction, supersession, revocation, dispute, scope changes, and schema/current
 ## Dogwood relationship
 
 Dogwood or another temporal-policy engine can consume a derived event trace that refers back to these cryptographic commitments.
-
-The responsibilities remain separated:
 
 ```text
 Agent Memory committed event history
@@ -104,25 +112,17 @@ external policy-decision evidence
 
 Dogwood does not become the canonical history store. Agent Memory does not become Dogwood's policy engine.
 
-## Why the signature has a domain
+## Domain separation
 
-The reference implementation signs a domain-separated message:
-
-```text
-agent-memory-temporal-event-v1\0 || commitment_ref
-```
-
-This prevents the same signature bytes from being casually reinterpreted as a different kind of signed statement.
+The reference implementation binds an explicit temporal-event domain to the content reference before signer evidence is produced. This prevents an otherwise valid proof from being casually reinterpreted as a different kind of statement.
 
 The first reference implementation uses Ed25519. The architecture itself is algorithm-agile.
 
 ## Evidence boundaries
 
-Hard invariants:
-
 ```text
 content identity != authority
-signature validity != authority
+signer validity != authority
 signed time != trusted time
 trusted time != semantic truth
 chain continuity != complete history
