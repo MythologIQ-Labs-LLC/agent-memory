@@ -25,14 +25,16 @@ An Accepted ADR does **not** mean every mapped product implements it. That would
 - **ADR-025:** Proposed, explicit authority for durable decision overwrite
 - **ADR-026:** Proposed, origin is provenance rather than evidentiary authority
 - **ADR-027:** Proposed, governed re-admission for rejected values
-- **ADR-028:** Proposed, language-neutral core with optional implementation/interoperability profiles
+- **ADR-028:** Accepted, language-neutral core with optional implementation/interoperability profiles
 - **ADR-029:** Proposed, Governance Context Projection as derived context rather than authority
+- **ADR-030:** Accepted, versioned compatibility/currentness for temporal-policy projections
+- **ADR-031:** Accepted, deterministic temporal commitments with separate evidence and authority layers
 
 Each Proposed ADR has its own acceptance evidence. A green implementation slice does not silently accept a doctrine decision whose ADR demands broader evidence.
 
 ## Important decision families
 
-Rather than memorizing twenty-nine filenames, think in decision families.
+Rather than memorizing thirty-one filenames, think in decision families.
 
 ### Identity and provenance
 
@@ -78,7 +80,7 @@ reference implementation language
 optional implementation or interoperability profile
 ```
 
-Python, Rust, UOR, AGT, MCP, and future ecosystems may participate without becoming the definition of Agent Memory.
+Python, Rust, UOR, AGT, MCP, and future ecosystems may participate without becoming the definition of Agent Memory. ADR-028 is Accepted.
 
 ### Interoperability and governance projection
 
@@ -104,6 +106,14 @@ Agent Memory core
 ```
 
 The projection is remembered context, not standing permission or a final policy verdict. ADR-029 complements ADR-028 by keeping the projection vendor-neutral while the normative core remains language-neutral. See **[Governance Projection](Governance-Projection)**.
+
+### Temporal policy and temporal commitments
+
+ADR-030 requires versioned compatibility/currentness before memory-derived context is treated as current input for a temporal or authorization consumer.
+
+ADR-031 establishes deterministic temporal commitments while keeping historical identity, evidence, lifecycle currentness, and PAMA authority distinct.
+
+See **[Temporal Commitments](Cryptographic-Temporal-Commitments)** for the reader-facing model and visual explanation.
 
 ## When an ADR should change
 
@@ -141,5 +151,6 @@ The canonical ADR files, not this Wiki summary, determine current decision text 
 
 - **[Governed Uncertainty](Governed-Uncertainty)** for deterministic governance around probabilistic discovery
 - **[Governance Projection](Governance-Projection)** for ADR-029 and governance-consumer interoperability
+- **[Temporal Commitments](Cryptographic-Temporal-Commitments)** for ADR-031
 - **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for current external governance comparators
 - **[Contributing](Contributing)** for the change process
