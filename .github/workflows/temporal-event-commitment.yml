@@ -1,0 +1,42 @@
+name: Temporal Event Commitment
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  temporal-commitment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+
+      - name: Run temporal commitment evidence
+        env:
+          PYTHONPATH: reference
+        run: |
+          set -o pipefail
+          python -m unittest reference/tests/test_temporal_event_evidence.py 2>&1 | tee temporal-event-commitment-tests.txt
+
+      - name: Run existing UOR content-reference boundary tests
+        env:
+          PYTHONPATH: reference
+        run: python -m unittest reference/tests/test_uor_content_reference.py
+
+      - name: Upload evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: temporal-event-commitment-evidence
+          path: temporal-event-commitment-tests.txt
+          if-no-files-found: error

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/temporal-event-commitment.schema.json",
+  "title": "Agent Memory Temporal Event Commitment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profile_id", "profile_version", "canonicalization", "hash_algorithm", "commitment_ref", "commitment", "signature", "trusted_time", "interpretation"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile_id": {"const": "agent-memory/temporal-event-commitment"},
+    "profile_version": {"const": "0.1.0"},
+    "canonicalization": {"const": "uax15-nfc+rfc8785-jcs"},
+    "hash_algorithm": {"const": "sha256"},
+    "commitment_ref": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "commitment": {"type": "object"},
+    "signature": {"type": "object"},
+    "trusted_time": {"type": "object"},
+    "interpretation": {
+      "type": "object",
+      "required": ["authority_effect", "signature_proves_trusted_wall_clock", "chain_proves_complete_history", "chain_proves_deletion_completeness", "can_create_lifecycle_currentness", "can_satisfy_pama_mutation_authority"],
+      "properties": {
+        "authority_effect": {"const": "none"},
+        "signature_proves_trusted_wall_clock": {"const": false},
+        "chain_proves_complete_history": {"const": false},
+        "chain_proves_deletion_completeness": {"const": false},
+        "can_create_lifecycle_currentness": {"const": false},
+        "can_satisfy_pama_mutation_authority": {"const": false}
+      }
+    }
+  }
+}
