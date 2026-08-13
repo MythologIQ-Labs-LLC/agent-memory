@@ -43,8 +43,9 @@ jobs:
             --output external-trust-evidence.json
 
       - name: Upload external evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: external-trust-evidence
           path: external-trust-evidence.json
-          if-no-files-found: error
+          if-no-files-found: warn
