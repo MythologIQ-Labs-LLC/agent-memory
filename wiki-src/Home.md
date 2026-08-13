@@ -8,7 +8,7 @@
 
 Agent Memory is about retained state that can influence future behavior without quietly acquiring truth, scope, permanence, or authority it has not earned.
 
-It separates uncertain interpretation from governed consequence, preserves why state changed, and treats correction, isolation, and forgetting as first-class architectural responsibilities rather than cleanup work.
+It separates uncertain interpretation from governed consequence, preserves why state changed, and treats correction, isolation, temporal integrity, and forgetting as first-class architectural responsibilities rather than cleanup work.
 
 > **Agentic memory is retained state that can alter an agent's future interpretation, reasoning, planning, tool use, action, or adaptation across a meaningful persistence boundary.**
 
@@ -39,11 +39,39 @@ The governing idea is compact:
 
 - **New to Agent Memory?** Start with **[Getting Started](Getting-Started)**, then **[Core Concepts](Core-Concepts)** for the vocabulary and invariants the architecture preserves.
 - **Want the architecture in pictures?** Open **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** for lifecycle, PAMA, recall, correction, deletion, isolation, and evidence flows.
+- **Working with temporal memory or temporal policy?** Start with **[Temporal Memory Architecture](Temporal-Memory-Architecture)**, then use **[Cryptographic Temporal Commitments](Cryptographic-Temporal-Commitments)** and **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** for the detailed evidence and consumer views.
 - **Implementing a memory system?** Use the **[Implementation Guide](Implementation-Guide)**, then move into **[PAMA](PAMA)**, **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)**, and **[Canonical and Derived State](Canonical-and-Derived-State)** as needed.
 - **Integrating with governance or approval systems?** Read **[Governance Projection](Governance-Projection)** for the vendor-neutral memory-to-governance boundary and consumer-adapter ownership model.
 - **Reviewing security or isolation?** Start with **[Security and Privacy](Security-and-Privacy)** for scope, tenancy, isolation domains, sensitivity, leakage, and deletion boundaries.
 - **Checking what is actually proven?** Read **[Conformance and Evidence](Conformance-and-Evidence)** first, then **[Runtime Evidence](Runtime-Evidence)** for what has actually executed.
 - **Researching the foundations or influences?** Use **[Research and Sources](Research-and-Sources)** and **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)**.
+
+## Temporal memory architecture
+
+Agent Memory now treats historical identity, signer evidence, lifecycle currentness, consumer compatibility, and policy authority as separate layers rather than one ambiguous timestamped record.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/temporal-memory-architecture-light.svg">
+    <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/temporal-memory-architecture.svg" alt="Agent Memory temporal architecture showing canonical memory, temporal commitment, optional UOR identity, signer and trust evidence, external temporal evidence, lifecycle currentness, governed projection compatibility, Dogwood temporal policy, Cedar and Cedarling consumers, and PAMA separation." width="82%">
+  </picture>
+</p>
+
+The composition is intentionally modular:
+
+```text
+canonical memory
+  -> temporal commitment and evidence
+  -> lifecycle currentness
+  -> governed compatible projection
+  -> Dogwood / Cedar / Cedarling / other aligned consumer
+  -> returned policy evidence
+  -> PAMA
+```
+
+This gives aligned systems meaningful roles without asking any one of them to become the universal memory model. UOR can provide exact object identity. Dogwood can provide temporal-policy semantics. Cedar and Cedarling can provide authorization surfaces. Agent Memory preserves memory-specific provenance, lifecycle, scope, and authority boundaries across those interactions.
+
+See **[Temporal Memory Architecture](Temporal-Memory-Architecture)** for the full visual and relationship model.
 
 ## Why retrieval alone is not enough
 
@@ -67,6 +95,8 @@ The architecture resists convenient equivalences that become expensive failure m
 
 ```text
 identity       != truth
+signature      != signer trust
+historical truth != current truth
 confidence     != authority
 saturation     != truth
 relevance      != permission
@@ -84,20 +114,20 @@ These are not slogans pasted over a storage layer. They determine where evidence
 
 ## Governance systems can consume memory without owning it
 
-Agent Memory can expose remembered decision context to external policy, approval, and enforcement runtimes through a **Governance Context Projection**:
+Agent Memory can expose remembered decision and temporal context to external policy, approval, and enforcement runtimes through governed projections:
 
 ```text
 Agent Memory core
-  -> Governance Context Projection
+  -> governed projection
   -> consumer-specific adapter
   -> external governance runtime
 ```
 
-The core keeps generally useful memory semantics. The projection carries vendor-neutral precedent, material conditions, scope, validity, provenance, and outcomes. A consumer adapter owns product-specific policy vocabulary, risk interpretation, and verdict mapping.
+The core keeps generally useful memory semantics. The projection carries vendor-neutral precedent, temporal context, material conditions, scope, validity, provenance, and outcomes. A consumer adapter owns product-specific policy vocabulary, risk interpretation, and verdict mapping.
 
 The projection deliberately does **not** create a final permission. A prior approval is evidence about a prior case, not permanent authorization for a new one.
 
-See **[Governance Projection](Governance-Projection)** and **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for the current DashClaw and Microsoft Agent Governance Toolkit comparison boundaries.
+See **[Governance Projection](Governance-Projection)**, **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)**, and **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for current aligned-system boundaries.
 
 ## Four jobs that should not collapse into one score
 
@@ -117,13 +147,15 @@ Agent Memory separates doctrine maturity from implementation evidence so that on
 
 | Area | Current state |
 |---|---|
-| **Canonical doctrine** | ADR-001 through ADR-020 and ADR-022 are **Accepted**. |
+| **Accepted doctrine** | ADR-001 through ADR-020, ADR-022, ADR-024, ADR-028, ADR-030, and ADR-031 are **Accepted**. |
 | **Portable governance evidence** | ADR-021 remains **Proposed** and independently maturity-gated. |
-| **Durable mutation / evidence candidates** | ADR-023 through ADR-027 remain **Proposed** under their individual evidence gates. |
-| **Implementation portability** | ADR-028 is **Proposed**, preserving a language-neutral core with optional implementation/interoperability profiles. |
-| **Governance Context Projection** | ADR-029 is **Proposed**. V0.1 schema, fixtures, and deterministic reference-builder work are under active implementation. |
-| **Runtime evidence** | Executable reference paths cover governed mutation, stochastic containment, deletion completeness, concurrency conflict handling, portable evidence correlation, adversarial comparator behavior, and systems characterization. |
-| **ADR-020 evidence gate** | Satisfied through the repository's executable P10 acceptance audit. |
+| **Durable mutation / evidence candidates** | ADR-023 and ADR-025 through ADR-027 remain **Proposed** under their individual evidence gates. |
+| **Implementation portability** | ADR-028 is **Accepted**, preserving a language-neutral core with optional implementation/interoperability profiles. |
+| **Governance Context Projection** | ADR-029 remains **Proposed** and independently evidence-gated. |
+| **Temporal policy compatibility** | ADR-030 is **Accepted**. |
+| **Temporal commitments** | ADR-031 is **Accepted**. |
+| **External temporal trust evidence** | #265 is under exact-head validation for signer-trust and transparency evidence. |
+| **Runtime evidence** | Executable reference paths cover governed mutation, deletion completeness, concurrency, temporal commitments, policy comparators, adversarial behavior, and systems characterization. |
 | **Reference implementation** | A narrow evidence vehicle, not a claim of universal production readiness or higher cumulative conformance. |
 | **Conformance claims** | Governed separately from individual evidence slices. Passing a runtime experiment does not automatically raise a cumulative conformance level. |
 
@@ -136,6 +168,9 @@ See **[Architecture Decisions](Architecture-Decisions)** for doctrine status and
 - **[Canonical and Derived State](Canonical-and-Derived-State)** for staleness, deletion propagation, residue, and rebuild authority
 - **[Governed Uncertainty](Governed-Uncertainty)** for deterministic boundaries around probabilistic discovery
 - **[Governance Projection](Governance-Projection)** for vendor-neutral remembered context supplied to external governance consumers
+- **[Temporal Memory Architecture](Temporal-Memory-Architecture)** for the full temporal evidence and aligned-consumer stack
+- **[Cryptographic Temporal Commitments](Cryptographic-Temporal-Commitments)** for exact temporal identity and evidence
+- **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** for Dogwood, Cedar, Cedarling, and consumer compatibility
 - **[Security and Privacy](Security-and-Privacy)** for isolation domains, scope, tenancy, sensitivity, and leakage risks
 - **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** for the complete visual architecture set
 - **[Glossary](Glossary)** when two familiar words turn out to mean inconveniently different things
