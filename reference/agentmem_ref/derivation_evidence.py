@@ -1,4 +1,4 @@
-"""Non-authoritative derivation/provenance envelope for issues #204 and #210.
+"""Non-authoritative derivation/provenance envelope for issues #204, #210, and #212.
 
 A summary, restatement, compression, or other transformation may create useful
 new evidence. It may not create a new origin, independent corroboration, or
@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from copy import deepcopy
 from typing import Any
 
@@ -23,6 +24,7 @@ TRUST_STATES = {"untrusted", "unknown", "bounded_trusted", "trusted"}
 SCOPE_RELATIONS = {"preserved", "narrowed"}
 TRANSFORMATION_MODES = {"deterministic", "probabilistic"}
 TRANSFORMATION_STATUSES = {"complete", "partial", "failed"}
+OUTPUT_DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 
 
 def _refs(values: Any, field: str, *, required: bool = False) -> list[str]:
@@ -58,6 +60,32 @@ def _optional_enum(value: Any, field: str, allowed: set[str]) -> str | None:
     if normalized not in allowed:
         raise ValueError(f"unsupported {field}: {normalized!r}")
     return normalized
+
+
+def _output_custody(transform: dict[str, Any]) -> dict[str, str]:
+    """Normalize optional typed/digested output custody without raw payloads.
+
+    ``output_ref`` remains the legacy minimum. If either type or digest is
+    supplied, both are required so the record never presents a partial custody
+    claim. Digest integrity is evidence about referenced bytes only; it does not
+    establish semantic correctness or authority.
+    """
+    output_type = transform.get("output_type")
+    output_digest = transform.get("output_digest")
+    if output_type is None and output_digest is None:
+        return {}
+    if output_type is None or output_digest is None:
+        raise ValueError(
+            "transformation.output_type and transformation.output_digest must be supplied together"
+        )
+    normalized_type = _required_string(output_type, "transformation.output_type")
+    normalized_digest = _required_string(output_digest, "transformation.output_digest")
+    if OUTPUT_DIGEST_RE.fullmatch(normalized_digest) is None:
+        raise ValueError("transformation.output_digest must be sha256:<64 lowercase hex>")
+    return {
+        "output_type": normalized_type,
+        "output_digest": normalized_digest,
+    }
 
 
 def _confidence(value: Any) -> dict[str, Any] | None:
@@ -132,8 +160,8 @@ def normalize_derivation(value: dict[str, Any], expected_scope: dict[str, Any] |
     """Normalize a first-order transformation while discarding authority-shaped input.
 
     Only the bounded fields below are consumed. Caller-supplied PAMA outcomes,
-    permissions, certification, lifecycle state, prompts, raw content, and
-    similar fields have no output path.
+    permissions, certification, lifecycle state, prompts, raw output content,
+    and similar fields have no output path.
     """
     if not isinstance(value, dict):
         raise ValueError("derivation input must be an object")
@@ -161,6 +189,7 @@ def normalize_derivation(value: dict[str, Any], expected_scope: dict[str, Any] |
         transformation["mode"] = mode
     if status is not None:
         transformation["status"] = status
+    transformation.update(_output_custody(transform))
 
     confidence = _confidence(value.get("confidence"))
     created_at = _required_string(value.get("created_at"), "created_at")
@@ -255,17 +284,16 @@ def derive_from(
 
     evidence_refs = _refs(transformation.get("evidence_refs"), "evidence_refs", required=True)
     child_scope = _governed_scope_for_child(source_derivation["scope"], narrowed_scope, scope_basis_refs)
-    child_transformation = {
+    child_transformation: dict[str, Any] = {
         "method": transformation.get("method"),
         "transformer_ref": transformation.get("transformer_ref"),
         "transformer_version": transformation.get("transformer_version"),
         "transformer_trust": transformation.get("transformer_trust"),
         "output_ref": transformation.get("output_ref"),
     }
-    if transformation.get("mode") is not None:
-        child_transformation["mode"] = transformation.get("mode")
-    if transformation.get("status") is not None:
-        child_transformation["status"] = transformation.get("status")
+    for field in ("mode", "status", "output_type", "output_digest"):
+        if transformation.get(field) is not None:
+            child_transformation[field] = transformation.get(field)
 
     value = {
         "root_origin_refs": deepcopy(source_derivation["root_origin_refs"]),

@@ -53,8 +53,20 @@
           "type": "string",
           "enum": ["untrusted", "unknown", "bounded_trusted", "trusted"]
         },
-        "output_ref": { "type": "string", "minLength": 1 }
-      }
+        "output_ref": { "type": "string", "minLength": 1 },
+        "output_type": { "type": "string", "minLength": 1 },
+        "output_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      },
+      "allOf": [
+        {
+          "if": { "required": ["output_type"] },
+          "then": { "required": ["output_digest"] }
+        },
+        {
+          "if": { "required": ["output_digest"] },
+          "then": { "required": ["output_type"] }
+        }
+      ]
     },
     "prior_derivation_refs": {
       "type": "array",
