@@ -31,7 +31,7 @@ jobs:
         run: |
           python -m venv /tmp/agent-memory-agent-manifest
           /tmp/agent-memory-agent-manifest/bin/python -m pip install --disable-pip-version-check \
-            agent-manifest==0.11.0
+            -r reference/requirements.txt
           /tmp/agent-memory-agent-manifest/bin/python - <<'PY'
           import importlib.metadata
           actual = importlib.metadata.version("agent-manifest")
