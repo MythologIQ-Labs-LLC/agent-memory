@@ -25,7 +25,9 @@ jobs:
       - name: Execute compatibility tests
         env:
           PYTHONPATH: reference
-        run: python -m unittest reference/tests/test_policy_projection_compatibility.py
+        run: |
+          set -o pipefail
+          python -m unittest reference/tests/test_policy_projection_compatibility.py 2>&1 | tee policy-projection-compatibility-tests.txt
 
       - name: Checkout pinned Dogwood public source
         uses: actions/checkout@v4
@@ -35,13 +37,34 @@ jobs:
           path: dogwood-public
           persist-credentials: false
 
-      - name: Set up Rust
+      - name: Set up exact Rust toolchain
         run: |
-          rustup toolchain install 1.89.0 --profile minimal
-          rustup default 1.89.0
+          rustup toolchain install 1.90.0 --profile minimal
+          rustup default 1.90.0
+          rustc --version | tee dogwood-toolchain.txt
+          cargo --version | tee -a dogwood-toolchain.txt
 
       - name: Execute pinned Dogwood partition contract test
-        run: cargo test --manifest-path dogwood-public/Cargo.toml -p amzn-dogwood-language --test pin_partition_differential
+        run: |
+          set -o pipefail
+          cargo test --manifest-path dogwood-public/Cargo.toml -p amzn-dogwood-language --test pin_partition_differential 2>&1 | tee dogwood-partition-differential.txt
 
-      - name: Verify source pin
-        run: test "$(git -C dogwood-public rev-parse HEAD)" = "c6237c88099b3f492ecc5fcee42df06a19224b97"
+      - name: Record public source and resolved dependency graph
+        run: |
+          git -C dogwood-public rev-parse HEAD | tee dogwood-source-pin.txt
+          test "$(cat dogwood-source-pin.txt)" = "c6237c88099b3f492ecc5fcee42df06a19224b97"
+          test -f dogwood-public/Cargo.lock
+          sha256sum dogwood-public/Cargo.lock | tee dogwood-cargo-lock-digest.txt
+
+      - name: Upload compatibility evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: policy-projection-compatibility-evidence
+          path: |
+            policy-projection-compatibility-tests.txt
+            dogwood-partition-differential.txt
+            dogwood-toolchain.txt
+            dogwood-source-pin.txt
+            dogwood-cargo-lock-digest.txt
+            dogwood-public/Cargo.lock
+          if-no-files-found: error
