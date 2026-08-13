@@ -34,11 +34,12 @@
     "ordering": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mode", "stream_ref", "sequence", "predecessor_refs"],
+      "required": ["mode", "stream_ref", "sequence", "predecessor_reference_profile", "predecessor_refs"],
       "properties": {
         "mode": {"type": "string", "enum": ["none", "linear_stream"]},
         "stream_ref": {"type": ["string", "null"]},
         "sequence": {"type": ["integer", "null"], "minimum": 0},
+        "predecessor_reference_profile": {"type": ["string", "null"]},
         "predecessor_refs": {
           "type": "array",
           "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
