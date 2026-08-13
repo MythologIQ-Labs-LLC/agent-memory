@@ -21,6 +21,8 @@ from . import receipts
 PROFILE_VERSION = "0.1.0"
 TRUST_STATES = {"untrusted", "unknown", "bounded_trusted", "trusted"}
 SCOPE_RELATIONS = {"preserved", "narrowed"}
+TRANSFORMATION_MODES = {"deterministic", "probabilistic"}
+TRANSFORMATION_STATUSES = {"complete", "partial", "failed"}
 
 
 def _refs(values: Any, field: str, *, required: bool = False) -> list[str]:
@@ -47,6 +49,15 @@ def _trust(value: Any, field: str) -> str:
     if trust not in TRUST_STATES:
         raise ValueError(f"unsupported {field}: {trust!r}")
     return trust
+
+
+def _optional_enum(value: Any, field: str, allowed: set[str]) -> str | None:
+    if value is None:
+        return None
+    normalized = _required_string(value, field)
+    if normalized not in allowed:
+        raise ValueError(f"unsupported {field}: {normalized!r}")
+    return normalized
 
 
 def _confidence(value: Any) -> dict[str, Any] | None:
@@ -137,13 +148,20 @@ def normalize_derivation(value: dict[str, Any], expected_scope: dict[str, Any] |
     transform = value.get("transformation")
     if not isinstance(transform, dict):
         raise ValueError("transformation must be an object")
-    transformation = {
+    transformation: dict[str, Any] = {
         "method": _required_string(transform.get("method"), "transformation.method"),
         "transformer_ref": _required_string(transform.get("transformer_ref"), "transformation.transformer_ref"),
         "transformer_version": _required_string(transform.get("transformer_version"), "transformation.transformer_version"),
         "transformer_trust": _trust(transform.get("transformer_trust"), "transformation.transformer_trust"),
         "output_ref": _required_string(transform.get("output_ref"), "transformation.output_ref"),
     }
+    mode = _optional_enum(transform.get("mode"), "transformation.mode", TRANSFORMATION_MODES)
+    status = _optional_enum(transform.get("status"), "transformation.status", TRANSFORMATION_STATUSES)
+    if mode is not None:
+        transformation["mode"] = mode
+    if status is not None:
+        transformation["status"] = status
+
     confidence = _confidence(value.get("confidence"))
     created_at = _required_string(value.get("created_at"), "created_at")
     depth = value.get("derivation_depth", 1)
@@ -237,17 +255,23 @@ def derive_from(
 
     evidence_refs = _refs(transformation.get("evidence_refs"), "evidence_refs", required=True)
     child_scope = _governed_scope_for_child(source_derivation["scope"], narrowed_scope, scope_basis_refs)
+    child_transformation = {
+        "method": transformation.get("method"),
+        "transformer_ref": transformation.get("transformer_ref"),
+        "transformer_version": transformation.get("transformer_version"),
+        "transformer_trust": transformation.get("transformer_trust"),
+        "output_ref": transformation.get("output_ref"),
+    }
+    if transformation.get("mode") is not None:
+        child_transformation["mode"] = transformation.get("mode")
+    if transformation.get("status") is not None:
+        child_transformation["status"] = transformation.get("status")
+
     value = {
         "root_origin_refs": deepcopy(source_derivation["root_origin_refs"]),
         "immediate_source_refs": [source_derivation["derivation_id"]],
         "source_trust": source_derivation["source_trust"],
-        "transformation": {
-            "method": transformation.get("method"),
-            "transformer_ref": transformation.get("transformer_ref"),
-            "transformer_version": transformation.get("transformer_version"),
-            "transformer_trust": transformation.get("transformer_trust"),
-            "output_ref": transformation.get("output_ref"),
-        },
+        "transformation": child_transformation,
         "prior_derivation_refs": list(dict.fromkeys(
             source_derivation["prior_derivation_refs"] + [source_derivation["derivation_id"]]
         )),
