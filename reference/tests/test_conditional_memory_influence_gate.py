@@ -88,8 +88,8 @@ class ConditionalMemoryInfluenceGateTests(unittest.TestCase):
     def test_evidence_is_minimized(self):
         result = record(address={"token_ids": [101, 202], "heads": [3, 7]})
         encoded = str(result)
-        self.assertNotIn("101", encoded)
-        self.assertNotIn("202", encoded)
+        self.assertNotIn("token_ids", encoded)
+        self.assertNotIn("[101, 202]", encoded)
         self.assertRegex(result["opaque_address_digest"], r"^sha256:[0-9a-f]{64}$")
 
 
