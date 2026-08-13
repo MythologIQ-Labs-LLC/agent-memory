@@ -35,7 +35,7 @@ from .substrate import InMemoryTemporalGraph
 
 CEDAR_VERSION = "4.12.0"
 CEDAR_TAG = "v4.12.0"
-CEDAR_SOURCE_COMMIT = "fdcbaed9bba4f67b498f60733cb9253d2ffc968e"
+CEDAR_SOURCE_COMMIT = "fdcbaed32bdb8c8d13e4eaf2b58db5555e9fb8c5"
 CEDAR_PROVIDER_ID = "cedar-policy/cedar"
 CEDAR_POLICY_PATH = Path(__file__).resolve().parents[1] / "policies" / "cedar_agent_memory_v01.cedar"
 CEDAR_POLICY_SHA256 = "sha256:a369c1423d48b6656e5e19f2589cc4660e00695e3b084c0a732b3f7f7ba6e18f"
