@@ -28,6 +28,7 @@ SIGNATURE_ALGORITHM = "Ed25519"
 AUTHORITY_EFFECT = "none"
 _LABEL_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 _TRUST_VALUES = {"trusted", "untrusted", "revoked", "unknown"}
+_CURRENTNESS_VALUES = {"current", "superseded", "revoked", "disputed", "unknown"}
 AddressFunction = Callable[[bytes], str]
 
 
@@ -40,10 +41,30 @@ def _parse_time(value: str) -> datetime:
     return parsed.astimezone(timezone.utc)
 
 
+def _required_string(value: Any, field: str) -> str:
+    if not isinstance(value, str) or not value:
+        raise ValueError(f"{field} must be a non-empty string")
+    return value
+
+
 def _validate_digest(value: str, field: str) -> str:
     if not isinstance(value, str) or not _LABEL_RE.fullmatch(value):
         raise ValueError(f"{field} must be lowercase sha256:<64hex>")
     return value
+
+
+def _refs(value: Any, field: str, *, digests: bool = False) -> list[str]:
+    if value is None:
+        return []
+    if not isinstance(value, (list, tuple)):
+        raise ValueError(f"{field} must be an array")
+    result = list(dict.fromkeys(value))
+    if not all(isinstance(item, str) and item for item in result):
+        raise ValueError(f"{field} must contain only non-empty strings")
+    if digests:
+        for item in result:
+            _validate_digest(item, field)
+    return result
 
 
 def canonical_json(value: Any) -> bytes:
@@ -67,6 +88,7 @@ def build_temporal_commitment(
     ordering_mode: str = "none",
     stream_ref: str | None = None,
     sequence: int | None = None,
+    predecessor_reference_profile: str | None = None,
     predecessor_refs: tuple[str, ...] | list[str] = (),
     projection_profile: str | None = None,
     projection_version: str | None = None,
@@ -78,29 +100,27 @@ def build_temporal_commitment(
     _validate_digest(domain_schema_digest, "domain_schema_digest")
 
     claims = dict(temporal_claims)
-    if not claims:
-        raise ValueError("at least one temporal claim is required")
+    if not claims or not any(value is not None for value in claims.values()):
+        raise ValueError("at least one non-null temporal claim is required")
     allowed_claims = {"event_time", "observed_at", "valid_from", "valid_to"}
     unknown = sorted(set(claims) - allowed_claims)
     if unknown:
         raise ValueError(f"unsupported temporal claims: {unknown}")
-    for key, value in claims.items():
+    for value in claims.values():
         if value is not None:
             _parse_time(value)
     if claims.get("valid_from") is not None and claims.get("valid_to") is not None:
         if _parse_time(claims["valid_from"]) > _parse_time(claims["valid_to"]):
             raise ValueError("valid_from cannot be after valid_to")
 
-    predecessors = list(dict.fromkeys(predecessor_refs))
-    for predecessor in predecessors:
-        _validate_digest(predecessor, "predecessor_ref")
+    predecessors = _refs(predecessor_refs, "predecessor_refs", digests=True)
 
     if ordering_mode == "none":
-        if stream_ref is not None or sequence is not None or predecessors:
-            raise ValueError("ordering mode none cannot carry stream, sequence, or predecessors")
+        if stream_ref is not None or sequence is not None or predecessor_reference_profile is not None or predecessors:
+            raise ValueError("ordering mode none cannot carry stream, sequence, reference profile, or predecessors")
     elif ordering_mode == "linear_stream":
-        if not stream_ref:
-            raise ValueError("linear_stream requires stream_ref")
+        _required_string(stream_ref, "stream_ref")
+        _required_string(predecessor_reference_profile, "predecessor_reference_profile")
         if isinstance(sequence, bool) or not isinstance(sequence, int) or sequence < 0:
             raise ValueError("linear_stream requires a non-negative integer sequence")
         if sequence == 0 and predecessors:
@@ -124,6 +144,7 @@ def build_temporal_commitment(
             "mode": ordering_mode,
             "stream_ref": stream_ref,
             "sequence": sequence,
+            "predecessor_reference_profile": predecessor_reference_profile,
             "predecessor_refs": predecessors,
         },
         "semantics": {
@@ -153,8 +174,8 @@ def _attestation_transcript(
     algorithm: str = SIGNATURE_ALGORITHM,
 ) -> bytes:
     _validate_digest(content_ref, "content_ref")
-    if not content_reference_profile or not key_ref:
-        raise ValueError("content_reference_profile and key_ref are required")
+    _required_string(content_reference_profile, "content_reference_profile")
+    _required_string(key_ref, "key_ref")
     return canonical_json(
         {
             "domain": ATTESTATION_PROFILE,
@@ -243,6 +264,7 @@ def build_external_witness_evidence(
     *,
     witness_profile: str,
     subject_kind: str,
+    subject_reference_profile: str,
     subject_ref: str,
     claim_kind: str,
     verification_status: str,
@@ -251,8 +273,8 @@ def build_external_witness_evidence(
 ) -> dict[str, Any]:
     """Record already-verified external witness evidence without implementing the witness service."""
     _validate_digest(subject_ref, "subject_ref")
-    if not witness_profile:
-        raise ValueError("witness_profile is required")
+    _required_string(witness_profile, "witness_profile")
+    _required_string(subject_reference_profile, "subject_reference_profile")
     if witnessed_at is not None:
         _parse_time(witnessed_at)
     if verification_status == "verified" and proof_ref is None:
@@ -264,6 +286,7 @@ def build_external_witness_evidence(
         "schema_version": "1.0.0",
         "witness_profile": witness_profile,
         "subject_kind": subject_kind,
+        "subject_reference_profile": subject_reference_profile,
         "subject_ref": subject_ref,
         "claim_kind": claim_kind,
         "verification_status": verification_status,
@@ -280,12 +303,22 @@ def build_external_witness_evidence(
     return evidence
 
 
-def verify_witness_binding(evidence: Mapping[str, Any], *, expected_subject_ref: str) -> dict[str, Any]:
-    """Verify the evidence is bound to the expected subject, not what the subject semantically means."""
+def verify_witness_binding(
+    evidence: Mapping[str, Any],
+    *,
+    expected_subject_reference_profile: str,
+    expected_subject_ref: str,
+) -> dict[str, Any]:
+    """Verify exact subject/profile binding, not what that subject semantically means."""
+    _required_string(expected_subject_reference_profile, "expected_subject_reference_profile")
     _validate_digest(expected_subject_ref, "expected_subject_ref")
     material = dict(evidence)
     receipts.validate("temporal-external-witness.schema.json", material)
-    bound = material["verification_status"] == "verified" and material["subject_ref"] == expected_subject_ref
+    bound = (
+        material["verification_status"] == "verified"
+        and material["subject_reference_profile"] == expected_subject_reference_profile
+        and material["subject_ref"] == expected_subject_ref
+    )
     return {
         "bound": bound,
         "verification_status": material["verification_status"],
@@ -296,11 +329,59 @@ def verify_witness_binding(evidence: Mapping[str, Any], *, expected_subject_ref:
     }
 
 
+def evaluate_temporal_currentness(
+    *,
+    commitment_reference_profile: str,
+    commitment_ref: str,
+    status: str,
+    evaluated_at: str,
+    evidence_refs: tuple[str, ...] | list[str] = (),
+    superseding_refs: tuple[str, ...] | list[str] = (),
+) -> dict[str, Any]:
+    """Emit append-only currentness evidence without altering historical commitment/signature validity."""
+    _required_string(commitment_reference_profile, "commitment_reference_profile")
+    _validate_digest(commitment_ref, "commitment_ref")
+    if status not in _CURRENTNESS_VALUES:
+        raise ValueError(f"unsupported temporal currentness status: {status}")
+    _parse_time(evaluated_at)
+    evidence = _refs(evidence_refs, "evidence_refs")
+    superseding = _refs(superseding_refs, "superseding_refs", digests=True)
+    if status in {"superseded", "revoked", "disputed"} and not evidence:
+        raise ValueError(f"{status} currentness requires evidence_refs")
+    if status == "superseded" and not superseding:
+        raise ValueError("superseded currentness requires superseding_refs")
+    if status != "superseded" and superseding:
+        raise ValueError("superseding_refs are only valid for superseded status")
+
+    body = {
+        "commitment_reference_profile": commitment_reference_profile,
+        "commitment_ref": commitment_ref,
+        "status": status,
+        "evidence_refs": evidence,
+        "superseding_refs": superseding,
+        "evaluated_at": evaluated_at,
+        "interpretation": {
+            "authority_effect": AUTHORITY_EFFECT,
+            "historical_commitment_mutated": False,
+            "cryptographic_validity_changed": False,
+            "memory_admission": "not_established",
+        },
+    }
+    result = {
+        "schema_version": "1.0.0",
+        "evaluation_id": document_ref(body),
+        **body,
+    }
+    receipts.validate("temporal-currentness-evaluation.schema.json", result)
+    return result
+
+
 def evaluate_linear_order(
     commitment: Mapping[str, Any],
     *,
     predecessor_commitment: Mapping[str, Any] | None = None,
     address_fn: AddressFunction | None = None,
+    address_profile: str | None = None,
 ) -> dict[str, Any]:
     """Evaluate a linear-stream relation while making no completeness/non-equivocation claim."""
     current = dict(commitment)
@@ -328,7 +409,7 @@ def evaluate_linear_order(
             "reason": None,
         }
 
-    if predecessor_commitment is None or address_fn is None:
+    if predecessor_commitment is None or address_fn is None or address_profile is None:
         return {
             "status": "missing_predecessor_evidence",
             "local_order_valid": False,
@@ -343,6 +424,8 @@ def evaluate_linear_order(
     predecessor_ref = address_temporal_commitment(predecessor, address_fn=address_fn)
     expected_ref = predecessors[0]
     reasons: list[str] = []
+    if address_profile != ordering["predecessor_reference_profile"]:
+        reasons.append("predecessor_reference_profile_mismatch")
     if predecessor_ref != expected_ref:
         reasons.append("predecessor_reference_mismatch")
     if predecessor["scope_ref"] != current["scope_ref"]:
@@ -353,6 +436,8 @@ def evaluate_linear_order(
     else:
         if previous_order["stream_ref"] != ordering["stream_ref"]:
             reasons.append("stream_mismatch")
+        if previous_order["predecessor_reference_profile"] != ordering["predecessor_reference_profile"]:
+            reasons.append("stream_reference_profile_changed")
         if previous_order["sequence"] != sequence - 1:
             reasons.append("non_contiguous_sequence")
 
@@ -367,30 +452,42 @@ def evaluate_linear_order(
     }
 
 
-def detect_linear_forks(nodes: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """Return explicit fork evidence from already-addressed nodes.
-
-    Each node must contain `content_ref` and `commitment`. This detects siblings
-    that claim the same predecessor. It does not decide which branch is canonical.
-    """
-    children: dict[tuple[str, str], list[str]] = {}
+def detect_linear_forks(
+    nodes: list[Mapping[str, Any]],
+    *,
+    address_fn: AddressFunction,
+    content_reference_profile: str,
+) -> list[dict[str, Any]]:
+    """Return explicit fork evidence after verifying each content-ref/commitment binding."""
+    _required_string(content_reference_profile, "content_reference_profile")
+    children: dict[tuple[str, str, str], list[str]] = {}
     for node in nodes:
         content_ref = _validate_digest(node["content_ref"], "content_ref")
         commitment = dict(node["commitment"])
         receipts.validate("temporal-commitment.schema.json", commitment)
+        generated_ref = address_temporal_commitment(commitment, address_fn=address_fn)
+        if generated_ref != content_ref:
+            raise ValueError("node content_ref does not match commitment content")
         ordering = commitment["ordering"]
         if ordering["mode"] != "linear_stream" or ordering["sequence"] == 0:
             continue
-        key = (ordering["stream_ref"], ordering["predecessor_refs"][0])
+        if ordering["predecessor_reference_profile"] != content_reference_profile:
+            raise ValueError("node predecessor reference profile does not match detector profile")
+        key = (
+            ordering["stream_ref"],
+            ordering["predecessor_reference_profile"],
+            ordering["predecessor_refs"][0],
+        )
         children.setdefault(key, []).append(content_ref)
 
     forks = []
-    for (stream_ref, predecessor_ref), child_refs in sorted(children.items()):
+    for (stream_ref, reference_profile, predecessor_ref), child_refs in sorted(children.items()):
         unique = sorted(set(child_refs))
         if len(unique) > 1:
             forks.append(
                 {
                     "stream_ref": stream_ref,
+                    "predecessor_reference_profile": reference_profile,
                     "predecessor_ref": predecessor_ref,
                     "child_refs": unique,
                     "canonical_child": None,
