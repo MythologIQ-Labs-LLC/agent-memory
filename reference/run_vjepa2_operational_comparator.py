@@ -69,11 +69,27 @@ def _load_encoder(vjepa_source: Path, checkpoint_path: Path):
     if "ema_encoder" not in checkpoint:
         raise RuntimeError("official V-JEPA 2.1 checkpoint lacks ema_encoder")
     state = {_clean_key(key): value for key, value in checkpoint["ema_encoder"].items()}
-    load_result = model.load_state_dict(state, strict=True)
-    if load_result.missing_keys or load_result.unexpected_keys:
-        raise RuntimeError(f"strict V-JEPA load mismatch: {load_result}")
+
+    # The published V-JEPA 2.1 checkpoint and the release-era app constructor
+    # differ only in an upstream register-token parameter surface. Keep loading
+    # exact and auditable: every model parameter must be present, and the only
+    # checkpoint-only key we permit is precisely `register_tokens`.
+    load_result = model.load_state_dict(state, strict=False)
+    missing = sorted(load_result.missing_keys)
+    unexpected = sorted(load_result.unexpected_keys)
+    if missing:
+        raise RuntimeError(f"V-JEPA checkpoint missing model parameters: {missing}")
+    if unexpected != ["register_tokens"]:
+        raise RuntimeError(
+            "V-JEPA checkpoint adaptation exceeded the reviewed boundary: "
+            f"unexpected={unexpected!r}"
+        )
     model.eval()
-    return model
+    return model, {
+        "missing_model_keys": missing,
+        "ignored_checkpoint_keys": unexpected,
+        "adaptation": "ignore_checkpoint_only_register_tokens",
+    }
 
 
 def _normalize(videos: np.ndarray) -> torch.Tensor:
@@ -116,7 +132,7 @@ def run(
 
     dataset = make_dataset()
     model_start = time.perf_counter()
-    model = _load_encoder(vjepa_source, checkpoint_path)
+    model, checkpoint_adaptation = _load_encoder(vjepa_source, checkpoint_path)
     model_load_seconds = time.perf_counter() - model_start
 
     train_features, train_feature_seconds = _features(model, dataset.train_videos)
@@ -149,6 +165,7 @@ def run(
             "tubelet_size": 2,
             "frozen_encoder": True,
             "readout": "same standardized ridge family as local learned baseline",
+            "checkpoint_state_adaptation": checkpoint_adaptation,
             "published_benchmark_reproduction": False,
             "action_conditioned_planning_tested": False,
         },
