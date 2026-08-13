@@ -2,6 +2,8 @@
 
 Agent Memory can make temporal claims tamper-evident without pretending cryptography makes them true, current, complete, or authorized.
 
+This page focuses on the **historical commitment and evidence layers**. For the end-to-end relationship among canonical memory, UOR, trust, external time/transparency evidence, Dogwood, Cedar/Cedarling, currentness, and PAMA, see **[Temporal Memory Architecture](Temporal-Memory-Architecture)**.
+
 <picture>
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/cryptographic-temporal-commitment-light.svg">
   <img src="https://raw.githubusercontent.com/MythologIQ-Labs-LLC/agent-memory/main/assets/diagrams/cryptographic-temporal-commitment.svg" alt="Flow showing an immutable temporal commitment receiving an exact content identity, separate signer attestation, relative ordering evidence, optional external witness evidence, and separate currentness and authority evaluation. The diagram emphasizes that a valid signature does not prove trusted time, a predecessor chain does not prove complete or unique history, and none of the cryptographic evidence independently grants authority.">
@@ -17,7 +19,7 @@ sign(payload) + timestamp metadata
 
 allows the temporal metadata to live outside the signed identity.
 
-ADR-031 instead proposes:
+Accepted ADR-031 instead establishes:
 
 ```text
 TemporalCommitment {
@@ -36,7 +38,7 @@ Changing a material temporal claim changes the object identity.
 
 That still does **not** make the temporal claim true.
 
-## Four proof layers
+## The evidence layers
 
 ### Exact content identity
 
@@ -77,6 +79,31 @@ authority effect: none
 
 Historical integrity survives changes in present authority.
 
+### Signer trust
+
+The #265 evidence layer makes signer trust a separate, explicit contract rather than a caller-supplied assumption.
+
+Trust binds:
+
+```text
+logical key reference
++ exact public-key digest
++ trust source
++ verification status
++ validity window
++ evidence references
+```
+
+This matters because a stable logical label such as `key:service:production` must not transfer trust to different key material merely because the name is familiar.
+
+```text
+valid signature
+!= trusted signer
+
+matching key_ref
+!= matching public key
+```
+
 ### Relative-order evidence
 
 The initial `linear_stream` profile commits to a stream, sequence, predecessor-reference profile, and predecessor reference.
@@ -96,15 +123,15 @@ A stronger claim needs additional evidence such as an authoritative head, coordi
 
 If two valid children reference the same predecessor, Agent Memory reports the fork. The fork detector does not decide which child is canonical.
 
-### External witness evidence
+### External witness and transparency evidence
 
 A trusted-time or transparency service may provide additional evidence about an exact commitment or signer attestation.
 
-The generic Agent Memory profile records the already-verified result and binds both the subject reference and its reference profile.
+The generic Agent Memory evidence model binds both the exact subject reference and its reference profile.
 
-For example, an external witness may establish:
+For example, RFC 3161 evidence may establish:
 
-> this commitment existed by time T2
+> this commitment existed by independently verified time T2
 
 That does not mean:
 
@@ -114,6 +141,24 @@ or even that its own claimed `event_time` is correct.
 
 ```text
 witnessed existence time != event occurrence time
+```
+
+The #265 transparency contract also distinguishes two bounded history claims:
+
+```text
+verified inclusion
+  -> exact subject included under a declared VDS profile
+
+verified consistency
+  -> append-only transition between two declared tree states
+```
+
+Those do not become universal claims:
+
+```text
+inclusion != complete history
+consistency != global non-equivocation
+append-only integrity != current semantic truth
 ```
 
 ## Claimed time, order, and witnessed time are different
@@ -158,14 +203,14 @@ This is the same historical/current separation Agent Memory uses elsewhere.
 
 The first profile is intentionally narrow. A single predecessor is suitable for a serialized stream, not for pretending concurrent writers happened in a neat total order.
 
-Shared/concurrent memory may eventually use:
+Shared/concurrent memory may use stronger profiles such as:
 
 - multiple causal predecessors;
 - shared-write coordination receipts;
 - coordinator-issued positions;
 - transparency or verifiable-data-structure receipts.
 
-Those are future profiles. ADR-031 does not turn Agent Memory into a blockchain with better branding.
+ADR-031 does not turn Agent Memory into a blockchain with better branding.
 
 ## Relationship to temporal policy
 
@@ -173,15 +218,18 @@ A consumer such as Dogwood may receive a derived event projection backed by this
 
 ```text
 Agent Memory temporal commitment
-  -> governed/current projection
-  -> temporal policy consumer
+  -> lifecycle/currentness
+  -> governed compatible projection
+  -> Dogwood temporal policy
 ```
 
 The consumer does not need to become the canonical memory system, and a cryptographically valid historical event does not become current policy authority merely because it remains present in a temporal trace.
 
-## What has been proved so far
+See **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** and **[Temporal Memory Architecture](Temporal-Memory-Architecture)** for the consumer-facing layers.
 
-The #259 reference evidence exercises:
+## What has been proved
+
+The merged ADR-031 reference evidence exercises:
 
 - temporal/payload/schema/profile mutation changing exact object identity;
 - signature binding to exact reference/profile;
@@ -196,7 +244,9 @@ The #259 reference evidence exercises:
 - supersession/currentness that does not rewrite historical evidence;
 - exact UOR-Addr v0.2.0 temporal-object addressing, composed with the repository's independent Python/Rust UOR compatibility workflow.
 
-ADR-031 remains Proposed until final exact-head acceptance review is complete.
+ADR-031 is **Accepted**.
+
+The active #265 evidence slice adds exact signer-trust binding and provider-neutral inclusion/consistency evidence, plus a pinned real RFC 3161 comparator. That slice remains exact-head evidence-gated until its external comparator and repository validation pass.
 
 ## Canonical references
 
@@ -204,8 +254,12 @@ ADR-031 remains Proposed until final exact-head acceptance review is complete.
 - `docs/adr/ADR-031-temporal-claims-require-deterministic-content-commitments.md`
 - `docs/profiles/temporal-commitment-evidence-profile.md`
 - `reference/agentmem_ref/temporal_commitment.py`
+- `reference/agentmem_ref/temporal_trust.py`
+- `reference/agentmem_ref/temporal_transparency.py`
 - `schemas/temporal-commitment.schema.json`
 - `schemas/temporal-signer-attestation.schema.json`
+- `schemas/temporal-signer-trust.schema.json`
+- `schemas/temporal-transparency-receipt.schema.json`
 - `schemas/temporal-external-witness.schema.json`
 - `schemas/temporal-currentness-evaluation.schema.json`
-- #258 and #259
+- #259 and #265
