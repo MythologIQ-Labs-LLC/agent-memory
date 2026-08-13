@@ -89,6 +89,67 @@ class PolicyProjectionCompatibilityTests(unittest.TestCase):
         self.assertEqual(first["compatibility"]["status"], "current")
         self.assertEqual(second["compatibility"]["status"], "migration_required")
 
+    def test_schema_migration_rebuild_uses_new_projection_identity(self):
+        old_projection = copy.deepcopy(self.fixture["projection"])
+        old_before = copy.deepcopy(old_projection)
+        rebuilt = copy.deepcopy(old_projection)
+        rebuilt["projection_ref"] = "projection:policy-context:beta"
+        rebuilt["projection_version"] = "0.2.0"
+        rebuilt["projection_digest"] = "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+        rebuilt["source_domain_schema_ref"] = "domain-schema:v3"
+        rebuilt["source_domain_schema_digest"] = "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+
+        old_result = evaluate_policy_projection_compatibility(
+            old_projection,
+            source_currentness=self.fixture["source_currentness"],
+            target=self.fixture["base_target"],
+            evaluated_at="2026-08-13T20:00:04Z",
+        )
+        new_result = evaluate_policy_projection_compatibility(
+            rebuilt,
+            source_currentness=self.fixture["source_currentness"],
+            target=self.fixture["base_target"],
+            evaluated_at="2026-08-13T20:00:05Z",
+        )
+        self.assertEqual(old_projection, old_before)
+        self.assertNotEqual(old_projection["projection_ref"], rebuilt["projection_ref"])
+        self.assertNotEqual(old_projection["projection_digest"], rebuilt["projection_digest"])
+        self.assertNotEqual(old_result["evaluation_id"], new_result["evaluation_id"])
+        self.assertFalse(old_result["interpretation"]["historical_projection_mutated"])
+        self.assertFalse(new_result["interpretation"]["historical_projection_mutated"])
+
+    def test_cedarling_schema_drift_requires_policy_revalidation(self):
+        target = copy.deepcopy(self.fixture["base_target"])
+        target.update(
+            {
+                "consumer_kind": "cedarling",
+                "consumer_version_or_source_pin": "cedarling:2.3.0",
+                "event_schema_digest": None,
+                "action_schema_digest": "sha256:1212121212121212121212121212121212121212121212121212121212121212",
+                "semantic_mapping_status": "migration_required",
+                "policy_validation_status": "revalidation_required",
+                "required_temporal_horizon_seconds": None,
+                "target_temporal_horizon_seconds": None,
+                "evidence_refs": ["evidence:cedarling:schema-drift"],
+                "isolation": {
+                    "required": False,
+                    "strategy": "not_required",
+                    "validated": True,
+                    "evidence_refs": ["evidence:isolation:not-required"],
+                },
+            }
+        )
+        result = evaluate_policy_projection_compatibility(
+            self.fixture["projection"],
+            source_currentness=self.fixture["source_currentness"],
+            target=target,
+            evaluated_at="2026-08-13T20:00:06Z",
+        )
+        self.assertEqual(result["compatibility"]["status"], "migration_required")
+        self.assertIn("semantic_mapping_migration_required", result["compatibility"]["reason_codes"])
+        self.assertIn("target_policy_revalidation_required", result["compatibility"]["reason_codes"])
+        self.assertFalse(result["compatibility"]["consequential_use_current"])
+
     def test_external_result_boundaries_are_fixed(self):
         result = self._evaluate_case(self.fixture["cases"][0])
         self.assertEqual(result["interpretation"]["external_policy_effect"], "may_only_tighten_existing_boundary")
@@ -104,7 +165,7 @@ class PolicyProjectionCompatibilityTests(unittest.TestCase):
                 projection,
                 source_currentness=self.fixture["source_currentness"],
                 target=self.fixture["base_target"],
-                evaluated_at="2026-08-13T20:00:04Z",
+                evaluated_at="2026-08-13T20:00:07Z",
             )
 
 
