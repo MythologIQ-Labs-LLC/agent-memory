@@ -58,37 +58,34 @@ def _load_encoder(vjepa_source: Path, checkpoint_path: Path):
         img_size=(FIXTURE_IMAGE_SIZE, FIXTURE_IMAGE_SIZE),
         num_frames=FIXTURE_FRAMES,
         tubelet_size=2,
-        uniform_power=True,
+        uniform_power=False,
         use_sdpa=True,
         use_silu=False,
         use_rope=True,
         use_activation_checkpointing=False,
-        use_extrinsics=False,
+        img_temporal_dim_size=1,
+        interpolate_rope=True,
     )
     checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
     if "ema_encoder" not in checkpoint:
         raise RuntimeError("official V-JEPA 2.1 checkpoint lacks ema_encoder")
     state = {_clean_key(key): value for key, value in checkpoint["ema_encoder"].items()}
 
-    # The published V-JEPA 2.1 checkpoint and the release-era app constructor
-    # differ only in an upstream register-token parameter surface. Keep loading
-    # exact and auditable: every model parameter must be present, and the only
-    # checkpoint-only key we permit is precisely `register_tokens`.
-    load_result = model.load_state_dict(state, strict=False)
+    # Meta's pinned V-JEPA 2.1 hub loader uses strict=True for this encoder.
+    # Preserve that boundary and adapt only the benchmark input geometry.
+    load_result = model.load_state_dict(state, strict=True)
     missing = sorted(load_result.missing_keys)
     unexpected = sorted(load_result.unexpected_keys)
-    if missing:
-        raise RuntimeError(f"V-JEPA checkpoint missing model parameters: {missing}")
-    if unexpected != ["register_tokens"]:
+    if missing or unexpected:
         raise RuntimeError(
-            "V-JEPA checkpoint adaptation exceeded the reviewed boundary: "
-            f"unexpected={unexpected!r}"
+            "strict V-JEPA checkpoint load returned incompatible state: "
+            f"missing={missing!r}, unexpected={unexpected!r}"
         )
     model.eval()
     return model, {
         "missing_model_keys": missing,
         "ignored_checkpoint_keys": unexpected,
-        "adaptation": "ignore_checkpoint_only_register_tokens",
+        "adaptation": "fixture_geometry_only_with_strict_upstream_state",
     }
 
 
@@ -156,7 +153,7 @@ def run(
             "checkpoint_url": VJEPA_CHECKPOINT_URL,
             "checkpoint_sha256": checkpoint_sha256,
             "checkpoint_key": "ema_encoder",
-            "source_license": "CC-BY-NC-4.0",
+            "source_license": "MIT",
         },
         "fixture_adaptation": {
             "checkpoint_published_geometry": "384px V-JEPA 2.1 base checkpoint",
