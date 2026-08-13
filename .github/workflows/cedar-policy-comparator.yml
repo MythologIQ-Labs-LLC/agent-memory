@@ -31,7 +31,7 @@ jobs:
 
       - name: Build pinned Cedar CLI from exact source commit
         env:
-          CEDAR_SOURCE_COMMIT: fdcbaed9bba4f67b498f60733cb9253d2ffc968e
+          CEDAR_SOURCE_COMMIT: fdcbaed32bdb8c8d13e4eaf2b58db5555e9fb8c5
           CARGO_NET_GIT_FETCH_WITH_CLI: "true"
         run: >-
           cargo install
