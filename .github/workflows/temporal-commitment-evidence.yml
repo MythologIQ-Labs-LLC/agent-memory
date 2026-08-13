@@ -52,13 +52,16 @@ jobs:
           assert report['agent_memory_commit'] == os.environ['AGENT_MEMORY_COMMIT']
           assert report['uor']['release'] == 'v0.2.0'
           assert report['uor']['source_commit'] == 'd78f82f26034880e91b1d54c21900a33ab73f695'
-          assert report['metrics']['check_count'] == 13
+          assert report['metrics']['check_count'] == 16
           assert report['metrics']['failed_checks'] == 0
           assert report['interpretation']['complete_history_claimed'] is False
           assert report['interpretation']['event_occurrence_time_proven_by_witness'] is False
           assert report['interpretation']['content_identity_authority_effect'] == 'none'
           assert report['interpretation']['signature_authority_effect'] == 'none'
           assert report['interpretation']['witness_authority_effect'] == 'none'
+          assert report['interpretation']['currentness_authority_effect'] == 'none'
+          assert report['currentness']['interpretation']['historical_commitment_mutated'] is False
+          assert report['currentness']['interpretation']['cryptographic_validity_changed'] is False
           PY
 
       - name: Upload temporal commitment evidence
