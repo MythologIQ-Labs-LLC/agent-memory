@@ -227,35 +227,49 @@ Two current aligned projects make this boundary concrete:
 
 They remain independent projects. Agent Memory does not require either system.
 
+## Temporal policy and evolving schemas
+
+Dogwood, Cedar, and Cedarling expose a second question beyond ADR-029's anti-authority boundary:
+
+> **Is this versioned memory-derived projection still semantically current for the exact policy consumer evaluating it?**
+
+A projection can remain syntactically valid while its source/domain schema, currentness, target policy schema, temporal horizon, isolation model, or actually evaluated context has changed.
+
+ADR-030 and #256 therefore add a compatibility/currentness gate:
+
+```text
+canonical memory
+  -> governed projection
+  -> compatibility/currentness evidence
+  -> consumer-specific temporal/policy view
+```
+
+The target trace or context cache remains derived state. External policy may tighten the Agent Memory boundary but cannot silently widen PAMA.
+
+See **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** for the Dogwood/Cedar/Cedarling relationship, schema-evolution failure modes, and visual flow.
+
 ## Current maturity
 
-The architecture is tracked by **proposed ADR-029** and implementation issue **#154**.
+The base governance-projection architecture is tracked by **proposed ADR-029**. The temporal/schema compatibility extension is tracked by **proposed ADR-030**, research issue **#255**, and implementation issue **#256**.
 
-V0.1 establishes:
+ADR-029 remains Proposed until the stronger acceptance evidence in the canonical ADR is satisfied. ADR-030 independently remains Proposed until its adversarial and exact-pinned comparator evidence passes.
 
-- the three-layer ownership boundary
-- a versioned governance-context projection schema
-- deterministic positive and misleading-near-match fixtures
-- negative-precedent preservation
-- provenance and scope checks
-- structural exclusion of final consumer verdict/permission fields
-- a deterministic reference projection builder
-
-ADR-029 remains Proposed until the stronger acceptance evidence in the canonical ADR is satisfied.
-
-ADR-028 separately preserves the language-neutral normative core and optional implementation-profile boundary. Together, the two decisions keep both the implementation layer and governance-consumer layer from capturing core Agent Memory semantics.
+ADR-028 separately preserves the language-neutral normative core and optional implementation-profile boundary. Together, these decisions keep both the implementation layer and governance-consumer layer from capturing core Agent Memory semantics.
 
 ## Canonical sources
 
 - Architecture decision: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-029-governance-projection-is-derived-context-not-authority.md
+- Temporal compatibility decision candidate: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/adr/ADR-030-temporal-policy-consumers-require-versioned-compatible-projections.md
 - Projection profile: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/profiles/governance-context-projection-profile.md
+- Policy projection compatibility profile: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/profiles/policy-projection-compatibility-profile.md
 - Schema: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/schemas/governance-context-projection.schema.json
+- Compatibility schema: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/schemas/policy-projection-compatibility.schema.json
 - Adapter contracts: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/34-adapter-contracts.md
 - Roadmap: https://github.com/MythologIQ-Labs-LLC/agent-memory/blob/main/docs/07-integration-roadmap.md
 
 ## Next
 
+- **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** for versioned projection compatibility across Dogwood, Cedar, and Cedarling
 - **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for the DashClaw and AGT relationship boundaries
 - **[Architecture Decisions](Architecture-Decisions)** for ADR maturity
 - **[Implementation Guide](Implementation-Guide)** for building against Agent Memory contracts
-- **[Conformance and Evidence](Conformance-and-Evidence)** for what a passing fixture or test actually proves
