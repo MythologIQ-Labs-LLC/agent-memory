@@ -30,6 +30,10 @@ AUDIT_ROOT = "c" * 64
 AUDIT_TIP = "d" * 64
 
 
+def _observed_now() -> str:
+    return datetime.now(tz=UTC).isoformat()
+
+
 def _verification_dict(result) -> dict:
     return {
         "status": result.status.value,
@@ -94,14 +98,12 @@ def run(agent_memory_commit: str) -> dict:
     if len(agent_memory_commit) != 40 or any(ch not in "0123456789abcdef" for ch in agent_memory_commit):
         raise ValueError("agent_memory_commit must be exact lowercase 40-hex")
 
-    observed_at = datetime.now(tz=UTC).isoformat()
     mode_cases = []
     for mode in ("enforce", "advisory", "silent"):
         claim, key = _claim(mode)
-        result = _verify(claim, key)
-        projected = _verification_dict(result)
+        projected = _verification_dict(_verify(claim, key))
         enforcement, attestation = normalize_cmcp_claim(
-            claim, projected, observed_at=observed_at
+            claim, projected, observed_at=_observed_now()
         )
         checks = {
             "real_verifier_is_partial_without_hardware": projected["status"] == "partially_verified",
@@ -128,7 +130,7 @@ def run(agent_memory_commit: str) -> dict:
     )
     stale_result = _verification_dict(_verify(stale_claim, stale_key, max_age=3600))
     stale_enforcement, stale_attestation = normalize_cmcp_claim(
-        stale_claim, stale_result, observed_at=observed_at
+        stale_claim, stale_result, observed_at=_observed_now()
     )
 
     mismatch_claim, mismatch_key = _claim("enforce")
@@ -136,7 +138,7 @@ def run(agent_memory_commit: str) -> dict:
         _verify(mismatch_claim, mismatch_key, approved_policy="sha256:" + "f" * 64)
     )
     mismatch_enforcement, _ = normalize_cmcp_claim(
-        mismatch_claim, mismatch_result, observed_at=observed_at
+        mismatch_claim, mismatch_result, observed_at=_observed_now()
     )
 
     tampered_claim, tampered_key = _claim("enforce")
@@ -144,7 +146,7 @@ def run(agent_memory_commit: str) -> dict:
     tampered["signature"] = "A" * max(1, len(tampered["signature"]))
     tampered_result = _verification_dict(_verify(tampered, tampered_key))
     tampered_enforcement, _ = normalize_cmcp_claim(
-        tampered, tampered_result, observed_at=observed_at
+        tampered, tampered_result, observed_at=_observed_now()
     )
 
     privacy_claim, privacy_key = _claim("enforce")
@@ -153,14 +155,13 @@ def run(agent_memory_commit: str) -> dict:
         "quote_signature": "c2lnbmF0dXJl",
         "cert_chain": "Y2VydGlmaWNhdGUtY2hhaW4=",
     }
-    # Re-sign after adding the optional peer-only evidence object.
     from cmcp_runtime.audit.trace_claim import RuntimeClaim, sign_trace_claim
     privacy_model = RuntimeClaim.model_validate(privacy_claim)
     privacy_model.signature = sign_trace_claim(privacy_model, privacy_key)
     privacy_claim = privacy_model.model_dump(exclude_none=True)
     privacy_result = _verification_dict(_verify(privacy_claim, privacy_key))
     privacy_enforcement, privacy_attestation = normalize_cmcp_claim(
-        privacy_claim, privacy_result, observed_at=observed_at
+        privacy_claim, privacy_result, observed_at=_observed_now()
     )
     normalized_render = json.dumps(
         [privacy_enforcement, privacy_attestation], sort_keys=True
@@ -223,7 +224,14 @@ def run(agent_memory_commit: str) -> dict:
     }
     if not result["passed"]:
         failed = [key for key, value in checks.items() if not value]
-        raise AssertionError(f"cMCP inbound external-evidence comparator failed: {failed}")
+        failed_modes = {
+            case["mode"]: [name for name, ok in case["checks"].items() if not ok]
+            for case in mode_cases
+            if not case["passed"]
+        }
+        raise AssertionError(
+            f"cMCP inbound external-evidence comparator failed: {failed}; mode_failures={failed_modes}"
+        )
     return result
 
 
