@@ -67,6 +67,7 @@ The validator understands GitHub Wiki extensionless page links such as `[PAMA](P
 - `Runtime-Evidence.md`
 - `Research-and-Sources.md`
 - `Implementation-Guide.md`
+- `Configuration-and-Profiles.md`
 - `Architecture-Decisions.md`
 - `Aligned-Projects-and-Intellectual-Lineage.md`
 - `Quality-Peers-and-Useful-Projects.md`
