@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
-from typing import Mapping, Sequence
+from typing import Sequence
 
 from .capabilities import MATURITY_ORDER, maturity_satisfies
 
@@ -121,14 +121,21 @@ class QualificationRecord:
             raise ValueError("unknown maturity")
         if not maturity_satisfies(self.claimed_maturity, self.earned_maturity):
             raise QualificationError("qualification cannot earn maturity above the component's claimed maturity")
+        if not self.license_id or not self.license_ref:
+            raise QualificationError("source-rights license identity and exact reference are required")
         if self.use_posture not in {"runtime_allowed", "comparator_only", "disallowed"}:
             raise ValueError("unknown source-rights use posture")
         if self.use_posture == "disallowed" and self.qualification_current:
             raise QualificationError("disallowed source cannot produce a current qualification")
+        if not self.operations:
+            raise QualificationError("qualification must exercise at least one operation")
         if not self.raw_provider_refs or not self.normalized_refs or not self.artifact_digests:
             raise QualificationError("qualification must preserve raw, normalized, and digest evidence")
-        if self.earned_maturity == "reference_qualified" and not all(passed for _, passed, _ in self.checks):
-            raise QualificationError("reference_qualified requires every profile check to pass")
+        if self.earned_maturity == "reference_qualified":
+            if self.use_posture != "runtime_allowed":
+                raise QualificationError("reference_qualified requires runtime-allowed source rights")
+            if not self.checks or not all(passed for _, passed, _ in self.checks):
+                raise QualificationError("reference_qualified requires every required profile check to pass")
 
     @property
     def applicability_digest(self) -> str:
