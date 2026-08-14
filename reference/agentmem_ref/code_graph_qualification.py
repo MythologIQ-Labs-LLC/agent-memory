@@ -20,7 +20,7 @@ from .qualification import (
     qualification_from_adapter_results,
 )
 
-CODEGENOME_COMMIT = "d2578729a46d495369bd7613845002d50cf20f4c"
+CODEGENOME_COMMIT = "43a6b7147ec78ec5c616723fa1dd30f342174860"
 GRAPHIFY_RELEASE = "v0.9.43"
 GRAPHIFY_COMMIT = "7281f27eac568f77f50910f59f84543458f5dfd1"
 PROFILE_ID = "code-graph-traversal-currentness"
