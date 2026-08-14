@@ -253,7 +253,8 @@ def build_qualification_report(
         results=(cg_result,),
         checks=_checks(codegenome_checks, "normalized:codegenome-code-graph"),
         artifact_digests=tuple(sha256_file(path) for path in cg_raw),
-        claimed_maturity="runtime_wired",
+        maturity_before="runtime_wired",
+        profile_maturity_ceiling="evidence_proven",
         earned_maturity="runtime_wired" if not cg_passed else "evidence_proven",
         limitations=("Currentness in this slice is proven through explicit full rebuild, not incremental update.",),
     )
@@ -266,7 +267,8 @@ def build_qualification_report(
         results=(graphify_result,),
         checks=_checks(graphify_checks, "normalized:graphify-code-graph"),
         artifact_digests=tuple(sha256_file(path) for path in graphify_raw),
-        claimed_maturity="runtime_wired",
+        maturity_before="runtime_wired",
+        profile_maturity_ceiling="evidence_proven",
         earned_maturity="runtime_wired" if not graphify_passed else "evidence_proven",
         limitations=("Currentness in this slice is proven through explicit full rebuild, not incremental update.",),
     )
