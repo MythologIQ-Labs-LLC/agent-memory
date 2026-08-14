@@ -27,7 +27,7 @@ def _cg(path: Path, lines: list[int]) -> None:
 
 def _graph(path: Path, calls: list[tuple[str, str, str]]) -> None:
     nodes = []
-    edges = []
+    links = []
     seen = set()
     for file_name, source, target in calls:
         for label in (source, target):
@@ -35,7 +35,7 @@ def _graph(path: Path, calls: list[tuple[str, str, str]]) -> None:
             if key not in seen:
                 seen.add(key)
                 nodes.append({"id": f"{file_name}:{label}", "label": label, "source_file": file_name})
-        edges.append(
+        links.append(
             {
                 "source": f"{file_name}:{source}",
                 "target": f"{file_name}:{target}",
@@ -44,7 +44,7 @@ def _graph(path: Path, calls: list[tuple[str, str, str]]) -> None:
                 "provenance": "EXTRACTED",
             }
         )
-    path.write_text(json.dumps({"nodes": nodes, "edges": edges}), encoding="utf-8")
+    path.write_text(json.dumps({"nodes": nodes, "links": links}), encoding="utf-8")
 
 
 class CodeGraphQualificationTests(unittest.TestCase):
