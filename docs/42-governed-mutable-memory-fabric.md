@@ -2,7 +2,9 @@
 
 ## Purpose
 
-Agent Memory is the memory system. Storage engines, retrieval systems, graph technologies, learned representations, lifecycle engines, and complete external memory products are implementation modules inside or behind that system.
+Agent Memory is the memory system. Storage engines, retrieval systems, graph technologies, learned representations, lifecycle engines, and complete first- or third-party memory products are **components** inside or behind that system.
+
+Components expose one or more **capabilities**. Capability families such as storage, vector retrieval, graph traversal, GraphRAG context assembly, lifecycle maintenance, or learned representation are not mutually exclusive product categories.
 
 The primary long-term boundaries are:
 
@@ -16,7 +18,9 @@ Agent Memory
   structural mutability, PAMA authority, routing,
   mutation, recall admission, evidence
         |
-        +--> configurable memory modules / substrates
+        +--> configurable components
+        |       +--> declared capabilities[]
+        |       +--> maturity / evidence per capability
         |
         v
 Agent Governance peer(s)
@@ -28,7 +32,7 @@ Agent Governance is a peer authority surface. It is not a memory substrate. A Da
 
 ## Agent Memory owns the fabric
 
-Agent Memory MUST remain authoritative for the general memory contract even when most physical work is delegated to modules.
+Agent Memory MUST remain authoritative for the general memory contract even when most physical work is delegated to components.
 
 It owns at least:
 
@@ -39,42 +43,163 @@ It owns at least:
 - PAMA mutation authority;
 - structural-mutation authority;
 - canonical-versus-derived state classification;
-- routing policy and module compatibility;
+- routing policy and component/capability compatibility;
 - governed recall admission;
 - correction/deletion obligations;
 - evidence sufficient to reconstruct consequential changes.
 
-A module can implement several capabilities, but it does not inherit these authorities by installation.
+A component can implement several capabilities, but it does not inherit these authorities by installation.
 
-## Configurable module roles
+## Component identity is not capability identity
 
-### Storage
+The fabric uses a many-to-many model:
 
-Files/Markdown, relational/document stores, graph stores, object stores, event logs, and other persistence mechanisms.
+```text
+component identity
+!= capability identity
+
+one component
+  -> may expose many capabilities
+
+one capability
+  -> may have many candidate implementations
+```
+
+This distinction is required for first-party systems such as EvolveAI and CodeGenome, which are both broader than one convenient role label.
+
+A deployment may therefore configure:
+
+```text
+EvolveAI
+  -> temporal graph
+  -> vector retrieval
+  -> exact retrieval
+  -> lifecycle / decay
+  -> consolidation
+
+CodeGenome
+  -> code graph
+  -> graph traversal
+  -> impact analysis
+  -> embedding storage
+  -> vector similarity
+```
+
+without forcing either component into one exclusive module type.
+
+Overlap is allowed. Ambiguous canonical ownership or conflicting writable authority is not.
+
+## Capability maturity is explicit
+
+A capability claim should distinguish at least:
+
+| Maturity | Meaning |
+|---|---|
+| `declared` | documented/intended capability |
+| `implemented` | material code exists |
+| `runtime_wired` | reachable through a supported runtime/product path |
+| `evidence_proven` | reproducible evidence demonstrates the claimed behavior |
+| `reference_qualified` | applicable Agent Memory conformance profile is satisfied |
+
+A component being mature in one area does not upgrade every capability it advertises.
+
+The initial evidence-bounded EvolveAI/CodeGenome inventory lives at [`programs/memory-modules/first-party-capability-inventory.md`](programs/memory-modules/first-party-capability-inventory.md).
+
+## Configurable capability families
+
+These are capability families, not exclusive module classes.
+
+### Storage and persistence
+
+Files/Markdown, relational/document stores, graph stores, object stores, event logs, content-addressed vaults, and other persistence mechanisms.
 
 ### Retrieval and indexing
 
-Lexical indexes, vector retrieval, GraphRAG-style traversal, code-graph queries, and other candidate-generation mechanisms.
+Lexical search, vector candidate retrieval, exact lookup, graph candidate retrieval, code-graph queries, and other candidate-generation mechanisms.
+
+### Graph and GraphRAG
+
+Graph capabilities must be described precisely:
+
+```text
+graph storage
+!= graph query/traversal
+!= graph candidate retrieval
+!= graph-augmented context assembly / GraphRAG
+```
+
+A graph database does not become GraphRAG merely because nodes and edges exist. Conversely, a multi-capability subsystem does not stop having GraphRAG architecture because lifecycle or domain-analysis capabilities are also important.
+
+Issue #291 owns the canonical graph/vector/GraphRAG/hybrid vocabulary.
 
 ### Representation
 
 Embeddings, summaries, compressed state, JEPA-style or other learned latent representations.
 
+Vector representation/storage is distinct from vector similarity and vector candidate retrieval.
+
 ### Structural and reasoning memory
 
-Domain graphs, code-reality graphs, temporal associations, relationship traversal, and other structured evidence surfaces.
-
-CodeGenome is a first-party candidate for a code-domain structural-memory role. It does not become the canonical graph ontology or logical identity system merely because it is first-party.
+Domain graphs, code-reality graphs, temporal associations, relationship traversal, impact/blast-radius analysis, and other structured evidence surfaces.
 
 ### Lifecycle and maintenance
 
-Decay, weakening, consolidation, synthesis, archival, pruning candidacy, and other memory-metabolism capabilities.
+Decay, weakening, consolidation, synthesis, archival, pruning candidacy, reinforcement signals, and other memory-metabolism capabilities.
 
-EvolveAI is a first-party candidate for adaptive/lifecycle roles. Its learned or heuristic signals may propose consequences but do not acquire mutation authority.
+### Complete memory-system integration
 
-### Complete external memory-system adapter
+A first- or third-party memory service may expose several capability families simultaneously. Agent Memory should integrate the component through explicit capabilities rather than flattening it into a single role.
 
-A third-party memory service may be wrapped as one or more module roles. Imported or retrieved state remains subject to Agent Memory provenance, scope, currentness, lifecycle, and admission rules.
+Imported or retrieved state remains subject to Agent Memory provenance, scope, currentness, lifecycle, and admission rules.
+
+## First-party multi-capability systems
+
+### EvolveAI
+
+EvolveAI is not merely a lifecycle component.
+
+At the current evidence boundary its architecture and implementation span, at different maturity levels:
+
+- transient/cache memory;
+- vector representation and candidate retrieval;
+- temporal graph storage and associative graph primitives;
+- GraphRAG-oriented L2 architecture;
+- exact/content-addressed L3 retrieval;
+- tier routing;
+- temporal decay/weakening;
+- lifecycle/consolidation mechanisms;
+- failure/negative memory;
+- persistence and audit mechanisms.
+
+Its differentiator remains adaptive/autopoietic memory metabolism, but that does not erase its graph or vector capabilities.
+
+The current Rust runtime does **not** yet justify an unqualified claim that every designed GraphRAG or real-embedding path is production-wired. Capability maturity is tracked independently under #284/#292.
+
+EvolveAI's learned or heuristic signals may propose consequences but do not acquire Agent Memory mutation authority.
+
+### CodeGenome
+
+CodeGenome is not merely a graph-storage component.
+
+At the current evidence boundary its architecture and implementation span, at different maturity levels:
+
+- content-addressed code identity;
+- multi-overlay code-reality graph storage;
+- graph query/traversal;
+- graph-derived structural context and GraphRAG-ready retrieval substrate;
+- embedding persistence;
+- vector similarity/k-nearest retrieval;
+- confidence/evidence fusion;
+- freshness and staleness modeling;
+- impact/blast-radius propagation;
+- provenance;
+- multi-language extraction;
+- MCP exposure;
+- experiment/self-evaluation capability.
+
+Its differentiator remains code-domain reality, but that does not erase its vector or retrieval capabilities.
+
+CodeGenome's code ontology, confidence, and graph reachability do not become canonical Agent Memory truth or authority merely because the component is first-party.
 
 ## Memory horizon is not backend identity
 
@@ -104,9 +229,26 @@ rebuild cost
 provenance requirements
 ```
 
-A deployment profile then routes the memory to one or several compatible modules.
+A deployment profile then requests required capabilities and minimum maturity/posture constraints, and deterministically selects or composes configured component implementations.
 
 This permits different instances to use different combinations while preserving the same Agent Memory behavior and conformance boundaries.
+
+## Capability routing is not authority
+
+Routing should conceptually operate as:
+
+```text
+memory characteristics
+  -> required capability set
+  -> minimum maturity + scope/posture constraints
+  -> deterministic component/capability resolution
+  -> candidate write / projection / retrieval work
+  -> Agent Memory governance remains controlling
+```
+
+A learned or heuristic signal may recommend a capability or implementation. It may not silently lower maturity requirements, widen scope, change canonical ownership, or turn routing into mutation authority.
+
+If multiple configured components expose the same capability, precedence or composition must be explicit. Hidden first-match behavior is not a governance model.
 
 ## Mutable shape, governed authority
 
@@ -164,7 +306,7 @@ Historical interpretation should remain reconstructable where it matters. Struct
 
 The safeguard is not a ban on adaptive discovery.
 
-A model or learned module may observe:
+A model or learned component may observe:
 
 ```text
 "these memories repeatedly need a release_channel relationship"
@@ -196,7 +338,7 @@ Uses memory. It may propose memory operations but does not become memory authori
 
 ### Agent Memory
 
-Owns retained-state semantics and the configured module fabric. It decides what memory is current, admissible, correctable, forgettable, and structurally mutable under PAMA and related doctrine.
+Owns retained-state semantics and the configured component/capability fabric. It decides what memory is current, admissible, correctable, forgettable, and structurally mutable under PAMA and related doctrine.
 
 ### Agent Governance
 
@@ -217,7 +359,7 @@ The first product-shaped acceptance test is deliberately concrete:
 7. another session uses the corrected value;
 8. stale approval, authority widening, and cross-scope recall fail;
 9. process restart eventually preserves currentness and governance state;
-10. the same behavioral contract is rerun with different module compositions.
+10. the same behavioral contract is rerun with different component/capability compositions.
 
 This is the difference between proving an adapter and proving a memory system.
 
@@ -226,11 +368,18 @@ This is the difference between proving an adapter and proving a memory system.
 - [`adr/ADR-032-governed-mutable-memory-structure.md`](adr/ADR-032-governed-mutable-memory-structure.md)
 - [`rfcs/RFC-001-governed-mutable-memory-fabric.md`](rfcs/RFC-001-governed-mutable-memory-fabric.md)
 - [`prd/PRD-001-configurable-agent-memory-runtime.md`](prd/PRD-001-configurable-agent-memory-runtime.md)
+- [`programs/memory-modules/first-party-capability-inventory.md`](programs/memory-modules/first-party-capability-inventory.md)
 - [`explorations/memory-architectures/progressive-domain-schema-discovery.md`](explorations/memory-architectures/progressive-domain-schema-discovery.md)
 - [`profiles/pama-1-2-domain-schema-compatibility.md`](profiles/pama-1-2-domain-schema-compatibility.md)
 - issue #274: modular memory profiles program
-- issue #275: EvolveAI / CodeGenome adversarial module comparison
-- issue #279: DashClaw external-verdict integration
-- issue #280: module/configuration and routing implementation
-- issue #281: deterministic structural-mutation classification and schema lifecycle
-- issue #282: restart-safe runtime and acceptance harness
+- issue #275: first-party/external adversarial comparison
+- issue #280: component/capability configuration and routing implementation
+- issue #284: first-party capability inventory and subsystem-gap analysis
+- issue #285: capability-oriented taxonomy correction
+- issue #286: external capability mapping
+- issue #287: machine-readable capability maturity declarations
+- issue #289: first-party subsystem boundary decision
+- issue #290: capability-based routing and overlap resolution
+- issue #291: graph/vector/GraphRAG/hybrid vocabulary
+- issue #292: EvolveAI capability qualification
+- issue #293: CodeGenome capability qualification
