@@ -111,16 +111,22 @@ class QualificationRecord:
     normalized_refs: tuple[str, ...]
     checks: tuple[tuple[str, bool, str], ...]
     artifact_digests: tuple[str, ...]
-    claimed_maturity: str
+    maturity_before: str
+    profile_maturity_ceiling: str
     earned_maturity: str
     limitations: tuple[str, ...] = ()
     qualification_current: bool = True
 
     def __post_init__(self) -> None:
-        if self.claimed_maturity not in MATURITY_ORDER or self.earned_maturity not in MATURITY_ORDER:
-            raise ValueError("unknown maturity")
-        if not maturity_satisfies(self.claimed_maturity, self.earned_maturity):
-            raise QualificationError("qualification cannot earn maturity above the component's claimed maturity")
+        for name, value in (
+            ("maturity_before", self.maturity_before),
+            ("profile_maturity_ceiling", self.profile_maturity_ceiling),
+            ("earned_maturity", self.earned_maturity),
+        ):
+            if value not in MATURITY_ORDER:
+                raise ValueError(f"unknown {name}: {value}")
+        if not maturity_satisfies(self.profile_maturity_ceiling, self.earned_maturity):
+            raise QualificationError("earned maturity exceeds the qualification profile ceiling")
         if not self.license_id or not self.license_ref:
             raise QualificationError("source-rights license identity and exact reference are required")
         if self.use_posture not in {"runtime_allowed", "comparator_only", "disallowed"}:
@@ -132,6 +138,8 @@ class QualificationRecord:
         if not self.raw_provider_refs or not self.normalized_refs or not self.artifact_digests:
             raise QualificationError("qualification must preserve raw, normalized, and digest evidence")
         if self.earned_maturity == "reference_qualified":
+            if self.profile_maturity_ceiling != "reference_qualified":
+                raise QualificationError("reference_qualified requires an explicit reference-qualified profile ceiling")
             if self.use_posture != "runtime_allowed":
                 raise QualificationError("reference_qualified requires runtime-allowed source rights")
             if not self.checks or not all(passed for _, passed, _ in self.checks):
@@ -175,7 +183,8 @@ class QualificationRecord:
                 "artifact_digests": list(self.artifact_digests),
             },
             "result": {
-                "claimed_maturity": self.claimed_maturity,
+                "maturity_before": self.maturity_before,
+                "profile_maturity_ceiling": self.profile_maturity_ceiling,
                 "earned_maturity": self.earned_maturity,
                 "applicability_digest": self.applicability_digest,
                 "qualification_current": self.qualification_current,
@@ -203,7 +212,8 @@ def qualification_from_adapter_results(
     results: Sequence[AdapterResult],
     checks: Sequence[tuple[str, bool, str]],
     artifact_digests: Sequence[str],
-    claimed_maturity: str,
+    maturity_before: str,
+    profile_maturity_ceiling: str,
     earned_maturity: str,
     limitations: Sequence[str] = (),
 ) -> QualificationRecord:
@@ -225,7 +235,8 @@ def qualification_from_adapter_results(
         normalized_refs=tuple(ref for result in results for ref in result.normalized_refs),
         checks=tuple(checks),
         artifact_digests=tuple(artifact_digests),
-        claimed_maturity=claimed_maturity,
+        maturity_before=maturity_before,
+        profile_maturity_ceiling=profile_maturity_ceiling,
         earned_maturity=earned_maturity,
         limitations=tuple(limitations),
     )
