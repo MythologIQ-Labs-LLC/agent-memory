@@ -1,0 +1,56 @@
+name: Component Qualification Foundation
+
+on:
+  pull_request:
+    paths:
+      - "schemas/component-capability-qualification.schema.json"
+      - "reference/agentmem_ref/qualification.py"
+      - "reference/tests/test_component_qualification.py"
+      - "reference/fixtures/component-qualification/**"
+      - ".github/workflows/component-qualification-foundation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualification-foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+
+      - name: Run qualification contract tests
+        env:
+          PYTHONPATH: reference
+        run: python -m unittest reference/tests/test_component_qualification.py
+
+      - name: Verify source mutation fixture is material
+        run: |
+          test reference/fixtures/component-qualification/v1/main.rs
+          test reference/fixtures/component-qualification/v2/main.rs
+          ! cmp -s \
+            reference/fixtures/component-qualification/v1/main.rs \
+            reference/fixtures/component-qualification/v2/main.rs
+
+      - name: Verify decoy symbol line overlap is preserved
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def middle_line(path: str) -> int:
+              lines = Path(path).read_text(encoding="utf-8").splitlines()
+              return next(i for i, line in enumerate(lines, 1) if line.startswith("fn middle"))
+
+          main_line = middle_line("reference/fixtures/component-qualification/v1/main.rs")
+          decoy_line = middle_line("reference/fixtures/component-qualification/v1/decoy.rs")
+          assert main_line == decoy_line, (main_line, decoy_line)
+          PY
