@@ -146,9 +146,31 @@ class SkillArtifact:
 
 
 @dataclass(frozen=True)
+class SkillApproval:
+    """Exact approval binding for a review-required procedural mutation."""
+
+    approval_ref: str
+    proposal_id: str
+    skill_version_ref: str
+    content_sha256: str
+    state_snapshot: str
+
+    def to_dict(self) -> dict:
+        return {
+            "approval_ref": self.approval_ref,
+            "proposal_id": self.proposal_id,
+            "skill_version_ref": self.skill_version_ref,
+            "content_sha256": self.content_sha256,
+            "state_snapshot": self.state_snapshot,
+        }
+
+
+@dataclass(frozen=True)
 class SkillProposal:
     artifact: SkillArtifact
     proposal: policy.Proposal
+    content_sha256: str
+    approval: SkillApproval | None = None
 
 
 @dataclass(frozen=True)
@@ -239,8 +261,6 @@ class ProceduralMemoryRuntime:
         artifact: SkillArtifact,
         *,
         actor_id: str,
-        approval_refs: tuple[str, ...] = (),
-        review_satisfied: bool = False,
         proposal_id: str | None = None,
     ) -> SkillProposal:
         current_version = self.adapter.state_version(artifact.memory_reference)
@@ -250,7 +270,8 @@ class ProceduralMemoryRuntime:
                 f"proposed=v{artifact.version}"
             )
         operation = "promotion" if current_version == 0 else "correction"
-        evidence_refs = _unique(artifact.provenance_refs + artifact.validation_refs)
+        digest_ref = f"skill-content:{artifact.content_sha256}"
+        evidence_refs = _unique(artifact.provenance_refs + artifact.validation_refs + (digest_ref,))
         proposal = policy.Proposal(
             proposal_id=proposal_id or f"proposal:{artifact.version_reference}",
             actor_id=actor_id,
@@ -265,8 +286,6 @@ class ProceduralMemoryRuntime:
             reversibility="reversible",
             risk_class="low" if operation == "promotion" else "medium",
             evidence_refs=evidence_refs,
-            approval_refs=approval_refs,
-            review_satisfied=review_satisfied,
             state_snapshot=f"v{current_version}",
             tenant_ref=artifact.scope,
             purpose=artifact.purpose,
@@ -274,16 +293,83 @@ class ProceduralMemoryRuntime:
             required_isolation_domain_refs=artifact.required_isolation_domain_refs,
             project_ref=_project_ref(artifact.isolation_domain_refs),
         )
-        return SkillProposal(artifact=artifact, proposal=proposal)
+        return SkillProposal(
+            artifact=artifact,
+            proposal=proposal,
+            content_sha256=artifact.content_sha256,
+        )
+
+    def approve_skill_proposal(self, skill_proposal: SkillProposal, *, approval_ref: str) -> SkillProposal:
+        """Bind a human/external approval to one exact skill payload and state."""
+        if not approval_ref:
+            raise ValueError("approval reference is required")
+        self._validate_skill_proposal_binding(skill_proposal, require_approval=False)
+        approval = SkillApproval(
+            approval_ref=approval_ref,
+            proposal_id=skill_proposal.proposal.proposal_id,
+            skill_version_ref=skill_proposal.artifact.version_reference,
+            content_sha256=skill_proposal.content_sha256,
+            state_snapshot=skill_proposal.proposal.state_snapshot,
+        )
+        approved_proposal = replace(
+            skill_proposal.proposal,
+            approval_refs=(approval_ref,),
+            review_satisfied=True,
+        )
+        return replace(skill_proposal, proposal=approved_proposal, approval=approval)
 
     def commit_skill(self, skill_proposal: SkillProposal) -> SkillCommitResult:
         resolution = self.resolve_capability()
+        self._validate_skill_proposal_binding(skill_proposal, require_approval=None)
         serialized = skill_proposal.artifact.serialize()
         SkillArtifact.from_text(serialized)
         result = self.adapter.commit_proposal(skill_proposal.proposal, serialized)
         if result.committed and self.adapter.state_version(skill_proposal.artifact.memory_reference) != skill_proposal.artifact.version:
             raise RuntimeError("committed procedural skill version diverged from governed state version")
         return SkillCommitResult(skill_proposal.artifact, resolution, result)
+
+    def _validate_skill_proposal_binding(
+        self,
+        skill_proposal: SkillProposal,
+        *,
+        require_approval: bool | None,
+    ) -> None:
+        artifact_digest = skill_proposal.artifact.content_sha256
+        if artifact_digest != skill_proposal.content_sha256:
+            raise ValueError("skill_proposal_content_mismatch")
+        digest_ref = f"skill-content:{artifact_digest}"
+        if digest_ref not in skill_proposal.proposal.evidence_refs:
+            raise ValueError("skill_proposal_digest_not_bound_to_pama_evidence")
+        if skill_proposal.proposal.target_reference != skill_proposal.artifact.memory_reference:
+            raise ValueError("skill_proposal_target_mismatch")
+
+        approval_present = bool(
+            skill_proposal.approval
+            or skill_proposal.proposal.approval_refs
+            or skill_proposal.proposal.review_satisfied
+        )
+        if require_approval is True and not approval_present:
+            raise ValueError("skill_approval_required")
+        if require_approval is False and approval_present:
+            raise ValueError("unexpected_skill_approval")
+        if not approval_present:
+            return
+
+        approval = skill_proposal.approval
+        if approval is None:
+            raise ValueError("skill_approval_binding_missing")
+        if not skill_proposal.proposal.review_satisfied:
+            raise ValueError("skill_approval_review_not_satisfied")
+        if tuple(skill_proposal.proposal.approval_refs) != (approval.approval_ref,):
+            raise ValueError("skill_approval_reference_mismatch")
+        if approval.proposal_id != skill_proposal.proposal.proposal_id:
+            raise ValueError("skill_approval_proposal_mismatch")
+        if approval.skill_version_ref != skill_proposal.artifact.version_reference:
+            raise ValueError("skill_approval_version_mismatch")
+        if approval.content_sha256 != artifact_digest:
+            raise ValueError("skill_approval_content_mismatch")
+        if approval.state_snapshot != skill_proposal.proposal.state_snapshot:
+            raise ValueError("skill_approval_state_mismatch")
 
     def recall_and_activate(
         self,

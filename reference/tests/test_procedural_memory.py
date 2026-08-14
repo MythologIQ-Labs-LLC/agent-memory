@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import sys
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -78,6 +79,8 @@ class ProceduralMemoryTests(unittest.TestCase):
         self.assertEqual(self.substrate.write_log, before_writes)
         self.assertEqual(proposed.proposal.target_class, policy.M3)
         self.assertEqual(proposed.proposal.downstream_authority, policy.A2)
+        self.assertEqual(proposed.content_sha256, artifact.content_sha256)
+        self.assertIn(f"skill-content:{artifact.content_sha256}", proposed.proposal.evidence_refs)
 
         committed = self.runtime.commit_skill(proposed)
         self.assertTrue(committed.commit.committed)
@@ -129,28 +132,27 @@ class ProceduralMemoryTests(unittest.TestCase):
         self.assertEqual(executed.governance_decision_ref, "governance:allow-1")
         self.assertEqual(executed.execution_ref, "execution:runtime-1")
 
-    def test_correction_requires_review_supersedes_v1_and_stale_replay_fails(self):
+    def test_correction_requires_exact_approval_supersedes_v1_and_stale_replay_fails(self):
         v1 = self.skill(version=1, branch="release")
         v1_proposal = self.runtime.propose_skill(v1, actor_id="agent:release", proposal_id="proposal:v1")
         v1_commit = self.runtime.commit_skill(v1_proposal)
         self.assertTrue(v1_commit.commit.committed)
 
         v2 = self.skill(version=2, branch="main")
-        unreviewed = self.runtime.propose_skill(v2, actor_id="agent:release", proposal_id="proposal:v2-unreviewed")
-        blocked = self.runtime.commit_skill(unreviewed)
+        v2_candidate = self.runtime.propose_skill(v2, actor_id="agent:release", proposal_id="proposal:v2")
+        blocked = self.runtime.commit_skill(v2_candidate)
         self.assertFalse(blocked.commit.committed)
         self.assertEqual(blocked.commit.decision.outcome, policy.REQUIRE_REVIEW)
 
-        reviewed = self.runtime.propose_skill(
-            v2,
-            actor_id="agent:release",
-            proposal_id="proposal:v2-reviewed",
-            approval_refs=("approval:human-release-owner",),
-            review_satisfied=True,
+        reviewed = self.runtime.approve_skill_proposal(
+            v2_candidate,
+            approval_ref="approval:human-release-owner",
         )
         committed = self.runtime.commit_skill(reviewed)
         self.assertTrue(committed.commit.committed)
         self.assertEqual(self.adapter.state_version(v2.memory_reference), 2)
+        self.assertEqual(reviewed.approval.content_sha256, v2.content_sha256)
+        self.assertEqual(reviewed.approval.state_snapshot, "v1")
 
         recalled = self.runtime.recall_and_activate("release workflow branch", context=self.context, purpose=PURPOSE)
         self.assertEqual([skill.version for skill in recalled.activated_skills], [2])
@@ -164,6 +166,48 @@ class ProceduralMemoryTests(unittest.TestCase):
         self.assertFalse(replay.commit.committed)
         self.assertEqual(replay.commit.refusal, "stale_authorization")
         self.assertEqual(self.adapter.state_version(v1.memory_reference), 2)
+
+    def test_approval_for_exact_skill_payload_cannot_authorize_substituted_content(self):
+        v1 = self.skill(version=1, branch="release")
+        self.runtime.commit_skill(self.runtime.propose_skill(v1, actor_id="agent:release"))
+
+        approved_artifact = self.skill(version=2, branch="main")
+        candidate = self.runtime.propose_skill(
+            approved_artifact,
+            actor_id="agent:release",
+            proposal_id="proposal:v2-exact",
+        )
+        approved = self.runtime.approve_skill_proposal(
+            candidate,
+            approval_ref="approval:exact-v2-main",
+        )
+
+        substituted_artifact = self.skill(version=2, branch="develop")
+        substituted = replace(approved, artifact=substituted_artifact)
+        with self.assertRaisesRegex(ValueError, "skill_proposal_content_mismatch"):
+            self.runtime.commit_skill(substituted)
+
+        self.assertEqual(self.adapter.state_version(v1.memory_reference), 1)
+        committed = self.runtime.commit_skill(approved)
+        self.assertTrue(committed.commit.committed)
+        self.assertEqual(self.adapter.state_version(v1.memory_reference), 2)
+
+    def test_review_flag_or_approval_ref_without_exact_binding_is_rejected(self):
+        v1 = self.skill(version=1, branch="release")
+        self.runtime.commit_skill(self.runtime.propose_skill(v1, actor_id="agent:release"))
+        v2 = self.skill(version=2, branch="main")
+        candidate = self.runtime.propose_skill(v2, actor_id="agent:release")
+        forged = replace(
+            candidate,
+            proposal=replace(
+                candidate.proposal,
+                approval_refs=("approval:unbound",),
+                review_satisfied=True,
+            ),
+        )
+        with self.assertRaisesRegex(ValueError, "skill_approval_binding_missing"):
+            self.runtime.commit_skill(forged)
+        self.assertEqual(self.adapter.state_version(v1.memory_reference), 1)
 
     def test_high_relevance_foreign_project_skill_is_candidate_but_not_activated(self):
         artifact = self.skill(version=1, branch="release")

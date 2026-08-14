@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from agentmem_ref import policy
@@ -85,18 +86,21 @@ def run() -> dict:
     executed_action = record_runtime_execution(governed_action, "execution:runtime-release-action")
 
     v2 = release_skill(2, "main")
-    v2_unreviewed = runtime.commit_skill(
-        runtime.propose_skill(v2, actor_id="agent:release", proposal_id="proposal:v2-unreviewed")
+    v2_candidate = runtime.propose_skill(v2, actor_id="agent:release", proposal_id="proposal:v2")
+    v2_unreviewed = runtime.commit_skill(v2_candidate)
+    v2_reviewed_proposal = runtime.approve_skill_proposal(
+        v2_candidate,
+        approval_ref="approval:human-release-owner",
     )
-    v2_reviewed = runtime.commit_skill(
-        runtime.propose_skill(
-            v2,
-            actor_id="agent:release",
-            proposal_id="proposal:v2-reviewed",
-            approval_refs=("approval:human-release-owner",),
-            review_satisfied=True,
-        )
-    )
+
+    substituted_artifact = release_skill(2, "develop")
+    substitution_refusal = "not_attempted"
+    try:
+        runtime.commit_skill(replace(v2_reviewed_proposal, artifact=substituted_artifact))
+    except ValueError as exc:
+        substitution_refusal = str(exc)
+
+    v2_reviewed = runtime.commit_skill(v2_reviewed_proposal)
     v2_activation = runtime.recall_and_activate("release workflow branch", context=context, purpose=PURPOSE)
     v2_plan = runtime.build_plan("prepare release", v2_activation)
     stale_replay = runtime.commit_skill(v1_proposal)
@@ -149,6 +153,7 @@ def run() -> dict:
     management_proposal = runtime.propose_management_change(metamemory, actor_id="agent:optimizer")
     management_decision = policy.evaluate(management_proposal)
 
+    approval = v2_reviewed_proposal.approval
     return {
         "profile": "governed-procedural-memory-v1",
         "proposal_without_mutation": proposal_writes == 0,
@@ -177,8 +182,10 @@ def run() -> dict:
         "correction": {
             "unreviewed_outcome": v2_unreviewed.commit.decision.outcome,
             "unreviewed_committed": v2_unreviewed.commit.committed,
+            "approval_binding": approval.to_dict() if approval else None,
             "reviewed_outcome": v2_reviewed.commit.decision.outcome,
             "reviewed_committed": v2_reviewed.commit.committed,
+            "substituted_content_refusal": substitution_refusal,
             "current_skill_refs": [item.version_reference for item in v2_activation.activated_skills],
             "v1_refusal": v2_activation.refusals.get(v1_commit.commit.fact_uuid),
             "plan_steps": list(v2_plan.steps),
@@ -212,6 +219,7 @@ def run() -> dict:
         "identities_remain_distinct": {
             "skill_ref": v2.version_reference,
             "skill_digest": v2.content_sha256,
+            "approval_ref": approval.approval_ref if approval else None,
             "memory_receipt": v2_reviewed.commit.receipt["receipt_id"],
             "action_id": action.action_id,
             "governance_decision_ref": executed_action.governance_decision_ref,
