@@ -1,0 +1,516 @@
+"""Governed procedural/skill memory reference vertical slice.
+
+This module proves the ADR-034 boundary without inventing a specialized skill
+store. A skill is serialized as bounded JSON metadata plus human-readable
+Markdown, committed through the existing GovernedMemoryAdapter, recalled through
+its admission path, and allowed to influence a plan only after skill-specific
+currentness/applicability checks.
+
+Crucially:
+
+    retained skill != activated skill != authorized action != execution
+
+The reference action gate records that separation but performs no real external
+side effect. Runtime/Agent-Governance systems remain authoritative for actions.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+from dataclasses import dataclass, field, replace
+from typing import Iterable
+
+from . import policy
+from .adapter import CommitResult, GovernedMemoryAdapter, RecallContext
+from .capabilities import (
+    CapabilityDeclaration,
+    CapabilityRequirement,
+    ComponentDeclaration,
+    ComponentRegistry,
+    ResolvedCapability,
+)
+from .substrate import TemporalGraphPort
+
+PROCEDURAL_CAPABILITY = "procedural_skill_memory"
+PROCEDURAL_CAPABILITY_VERSION = "1.0"
+PROCEDURAL_MINIMUM_MATURITY = "runtime_wired"
+SKILL_FORMAT = "agent-memory-skill/v1"
+SKILL_HEADER = f"--- {SKILL_FORMAT}\n"
+SKILL_SEPARATOR = "\n--- procedure\n"
+PLAN_INFLUENCE_ONLY = "plan_influence_only"
+TASK_PROCEDURE = "task_procedure"
+METAMEMORY = "metamemory"
+
+
+@dataclass(frozen=True)
+class SkillArtifact:
+    skill_id: str
+    version: int
+    purpose: str
+    scope: str
+    isolation_domain_refs: tuple[str, ...]
+    required_isolation_domain_refs: tuple[str, ...]
+    procedure_markdown: str
+    provenance_refs: tuple[str, ...]
+    validation_refs: tuple[str, ...] = ()
+    constraints: tuple[str, ...] = ()
+    action_templates: tuple[str, ...] = ()
+    activation_posture: str = PLAN_INFLUENCE_ONLY
+    skill_kind: str = TASK_PROCEDURE
+    management_effects: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        if not self.skill_id or self.version < 1:
+            raise ValueError("skill identity and positive version are required")
+        if not self.procedure_markdown.strip():
+            raise ValueError("procedure Markdown is required")
+        if not self.scope or not self.isolation_domain_refs:
+            raise ValueError("procedural memory requires explicit scope and isolation domain")
+        if not set(self.required_isolation_domain_refs).issubset(set(self.isolation_domain_refs)):
+            raise ValueError("required isolation domains must be included in bound isolation domains")
+        if self.skill_kind not in {TASK_PROCEDURE, METAMEMORY}:
+            raise ValueError(f"unsupported skill_kind: {self.skill_kind}")
+        if self.skill_kind == METAMEMORY and not self.management_effects:
+            raise ValueError("metamemory artifacts must declare management_effects")
+
+    @property
+    def memory_reference(self) -> str:
+        return f"skill:{self.skill_id}"
+
+    @property
+    def version_reference(self) -> str:
+        return f"{self.memory_reference}@v{self.version}"
+
+    def _payload(self) -> dict:
+        return {
+            "format": SKILL_FORMAT,
+            "skill_id": self.skill_id,
+            "version": self.version,
+            "purpose": self.purpose,
+            "scope": self.scope,
+            "isolation_domain_refs": list(self.isolation_domain_refs),
+            "required_isolation_domain_refs": list(self.required_isolation_domain_refs),
+            "procedure_markdown": self.procedure_markdown.strip(),
+            "provenance_refs": list(self.provenance_refs),
+            "validation_refs": list(self.validation_refs),
+            "constraints": list(self.constraints),
+            "action_templates": list(self.action_templates),
+            "activation_posture": self.activation_posture,
+            "skill_kind": self.skill_kind,
+            "management_effects": list(self.management_effects),
+        }
+
+    @property
+    def content_sha256(self) -> str:
+        canonical = json.dumps(self._payload(), sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+    def serialize(self) -> str:
+        payload = self._payload()
+        procedure = payload.pop("procedure_markdown")
+        payload["content_sha256"] = self.content_sha256
+        metadata = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        return f"{SKILL_HEADER}{metadata}{SKILL_SEPARATOR}{procedure}"
+
+    @classmethod
+    def from_text(cls, text: str) -> "SkillArtifact":
+        if not text.startswith(SKILL_HEADER) or SKILL_SEPARATOR not in text:
+            raise ValueError("not an Agent Memory procedural skill artifact")
+        metadata_text, procedure = text[len(SKILL_HEADER) :].split(SKILL_SEPARATOR, 1)
+        metadata = json.loads(metadata_text)
+        expected_digest = str(metadata.pop("content_sha256"))
+        if metadata.pop("format", None) != SKILL_FORMAT:
+            raise ValueError("unsupported procedural skill format")
+        artifact = cls(
+            skill_id=str(metadata["skill_id"]),
+            version=int(metadata["version"]),
+            purpose=str(metadata["purpose"]),
+            scope=str(metadata["scope"]),
+            isolation_domain_refs=tuple(str(item) for item in metadata["isolation_domain_refs"]),
+            required_isolation_domain_refs=tuple(
+                str(item) for item in metadata.get("required_isolation_domain_refs", ())
+            ),
+            procedure_markdown=procedure.strip(),
+            provenance_refs=tuple(str(item) for item in metadata.get("provenance_refs", ())),
+            validation_refs=tuple(str(item) for item in metadata.get("validation_refs", ())),
+            constraints=tuple(str(item) for item in metadata.get("constraints", ())),
+            action_templates=tuple(str(item) for item in metadata.get("action_templates", ())),
+            activation_posture=str(metadata.get("activation_posture", PLAN_INFLUENCE_ONLY)),
+            skill_kind=str(metadata.get("skill_kind", TASK_PROCEDURE)),
+            management_effects=tuple(str(item) for item in metadata.get("management_effects", ())),
+        )
+        if artifact.content_sha256 != expected_digest:
+            raise ValueError("procedural skill content digest mismatch")
+        return artifact
+
+
+@dataclass(frozen=True)
+class SkillProposal:
+    artifact: SkillArtifact
+    proposal: policy.Proposal
+
+
+@dataclass(frozen=True)
+class SkillCommitResult:
+    artifact: SkillArtifact
+    resolution: ResolvedCapability
+    commit: CommitResult
+
+
+@dataclass(frozen=True)
+class SkillActivationResult:
+    query: str
+    purpose: str
+    resolution: ResolvedCapability
+    candidate_fact_uuids: tuple[str, ...]
+    memory_admitted_fact_uuids: tuple[str, ...]
+    activated_skills: tuple[SkillArtifact, ...]
+    refusals: dict[str, str]
+    evidence: dict
+
+
+@dataclass(frozen=True)
+class ActionProposal:
+    action_id: str
+    description: str
+    skill_version_ref: str
+    requires_governance: bool = True
+    governance_decision_ref: str = ""
+    execution_status: str = "not_executed"
+    execution_ref: str = ""
+
+
+@dataclass(frozen=True)
+class ActionGovernanceDecision:
+    decision_ref: str
+    action_id: str
+    outcome: str
+
+    def __post_init__(self) -> None:
+        if self.outcome not in {"allow", "deny"}:
+            raise ValueError("action governance outcome must be allow or deny")
+
+
+@dataclass(frozen=True)
+class PlanResult:
+    goal: str
+    steps: tuple[str, ...]
+    activated_skill_refs: tuple[str, ...]
+    action_proposals: tuple[ActionProposal, ...]
+    execution_status: str = "not_executed"
+
+
+@dataclass(frozen=True)
+class RevocationResult:
+    skill_id: str
+    fact_uuid: str
+    commit: CommitResult
+    active_influence_removed: bool
+    physical_content_retained: bool
+    undeclared_residue: tuple[str, ...]
+
+
+class ProceduralMemoryRuntime:
+    """Narrow reference runtime for one governed procedural-memory capability."""
+
+    def __init__(
+        self,
+        *,
+        substrate: TemporalGraphPort,
+        adapter: GovernedMemoryAdapter,
+        registry: ComponentRegistry,
+    ) -> None:
+        self.substrate = substrate
+        self.adapter = adapter
+        self.registry = registry
+
+    def resolve_capability(self) -> ResolvedCapability:
+        return self.registry.resolve(
+            CapabilityRequirement(
+                capability_id=PROCEDURAL_CAPABILITY,
+                minimum_maturity=PROCEDURAL_MINIMUM_MATURITY,
+                required_scope_postures=("enforces_agent_memory_scope",),
+            )
+        )
+
+    def propose_skill(
+        self,
+        artifact: SkillArtifact,
+        *,
+        actor_id: str,
+        approval_refs: tuple[str, ...] = (),
+        review_satisfied: bool = False,
+        proposal_id: str | None = None,
+    ) -> SkillProposal:
+        current_version = self.adapter.state_version(artifact.memory_reference)
+        if artifact.version != current_version + 1:
+            raise ValueError(
+                f"skill version must advance current state exactly once: current=v{current_version}, "
+                f"proposed=v{artifact.version}"
+            )
+        operation = "promotion" if current_version == 0 else "correction"
+        evidence_refs = _unique(artifact.provenance_refs + artifact.validation_refs)
+        proposal = policy.Proposal(
+            proposal_id=proposal_id or f"proposal:{artifact.version_reference}",
+            actor_id=actor_id,
+            charter_version="procedural-memory-v1",
+            target_reference=artifact.memory_reference,
+            target_class=policy.M3,
+            scope=artifact.scope,
+            operation=operation,
+            current_strength="candidate" if current_version == 0 else "durable",
+            proposed_strength="durable",
+            downstream_authority=policy.A2,
+            reversibility="reversible",
+            risk_class="low" if operation == "promotion" else "medium",
+            evidence_refs=evidence_refs,
+            approval_refs=approval_refs,
+            review_satisfied=review_satisfied,
+            state_snapshot=f"v{current_version}",
+            tenant_ref=artifact.scope,
+            purpose=artifact.purpose,
+            isolation_domain_refs=artifact.isolation_domain_refs,
+            required_isolation_domain_refs=artifact.required_isolation_domain_refs,
+            project_ref=_project_ref(artifact.isolation_domain_refs),
+        )
+        return SkillProposal(artifact=artifact, proposal=proposal)
+
+    def commit_skill(self, skill_proposal: SkillProposal) -> SkillCommitResult:
+        resolution = self.resolve_capability()
+        # Round-trip validation makes the exact committed payload and digest the
+        # thing we subsequently trust, not the in-memory dataclass alone.
+        serialized = skill_proposal.artifact.serialize()
+        SkillArtifact.from_text(serialized)
+        result = self.adapter.commit_proposal(skill_proposal.proposal, serialized)
+        if result.committed and self.adapter.state_version(skill_proposal.artifact.memory_reference) != skill_proposal.artifact.version:
+            raise RuntimeError("committed procedural skill version diverged from governed state version")
+        return SkillCommitResult(skill_proposal.artifact, resolution, result)
+
+    def recall_and_activate(
+        self,
+        query: str,
+        *,
+        context: RecallContext,
+        purpose: str,
+    ) -> SkillActivationResult:
+        resolution = self.resolve_capability()
+        admission = self.adapter.governed_recall(query, context)
+        refusals = dict(admission.refusals)
+        activated: list[SkillArtifact] = []
+        memory_admitted: list[str] = []
+
+        for fact_uuid in admission.candidates:
+            fact = self.substrate.get_fact(fact_uuid)
+            if fact is None:
+                refusals[fact_uuid] = "candidate_missing"
+                continue
+            try:
+                artifact = SkillArtifact.from_text(fact.fact_text)
+            except (ValueError, KeyError, TypeError, json.JSONDecodeError):
+                refusals.setdefault(fact_uuid, "not_valid_procedural_skill")
+                continue
+
+            if fact_uuid not in admission.admitted:
+                continue
+            memory_admitted.append(fact_uuid)
+
+            if artifact.purpose and artifact.purpose != purpose:
+                refusals[fact_uuid] = "purpose_mismatch"
+                continue
+            if artifact.activation_posture != PLAN_INFLUENCE_ONLY:
+                refusals[fact_uuid] = "activation_posture_not_supported"
+                continue
+            if artifact.skill_kind == METAMEMORY or artifact.management_effects:
+                refusals[fact_uuid] = "metamemory_requires_configuration_governance"
+                continue
+            activated.append(artifact)
+
+        evidence = {
+            "capability_resolution": resolution.to_dict(),
+            "candidate_fact_uuids": list(admission.candidates),
+            "memory_admitted_fact_uuids": memory_admitted,
+            "activated_skill_refs": [artifact.version_reference for artifact in activated],
+            "refusals": dict(sorted(refusals.items())),
+            "authority_effect": "plan_context_influence_only",
+            "execution_status": "not_executed",
+        }
+        return SkillActivationResult(
+            query=query,
+            purpose=purpose,
+            resolution=resolution,
+            candidate_fact_uuids=tuple(admission.candidates),
+            memory_admitted_fact_uuids=tuple(memory_admitted),
+            activated_skills=tuple(activated),
+            refusals=refusals,
+            evidence=evidence,
+        )
+
+    def build_plan(self, goal: str, activation: SkillActivationResult) -> PlanResult:
+        steps: list[str] = [f"Inspect current state for: {goal}"]
+        actions: list[ActionProposal] = []
+        active_refs: list[str] = []
+        for artifact in activation.activated_skills:
+            active_refs.append(artifact.version_reference)
+            steps.append(f"Apply admitted procedure {artifact.version_reference}")
+            steps.extend(_procedure_steps(artifact.procedure_markdown))
+            for index, description in enumerate(artifact.action_templates, start=1):
+                action_id = _stable_id("action", artifact.version_reference, str(index), description)
+                actions.append(
+                    ActionProposal(
+                        action_id=action_id,
+                        description=description,
+                        skill_version_ref=artifact.version_reference,
+                    )
+                )
+        return PlanResult(
+            goal=goal,
+            steps=tuple(steps),
+            activated_skill_refs=tuple(active_refs),
+            action_proposals=tuple(actions),
+        )
+
+    def revoke_skill(
+        self,
+        skill_id: str,
+        *,
+        actor_id: str,
+        evidence_refs: tuple[str, ...],
+        proposal_id: str | None = None,
+    ) -> RevocationResult:
+        self.resolve_capability()
+        memory_ref = f"skill:{skill_id}"
+        fact_uuid = self.adapter.current_fact_uuid(memory_ref)
+        if not fact_uuid:
+            raise ValueError(f"no current procedural skill exists for {skill_id!r}")
+        current_version = self.adapter.state_version(memory_ref)
+        proposal = policy.Proposal(
+            proposal_id=proposal_id or f"proposal:revoke:{skill_id}:v{current_version}",
+            actor_id=actor_id,
+            charter_version="procedural-memory-v1",
+            target_reference=memory_ref,
+            target_class=policy.M3,
+            scope="procedural-memory",
+            operation="pruning",
+            current_strength="durable",
+            proposed_strength="pruned",
+            downstream_authority=policy.A1,
+            reversibility="reversible",
+            risk_class="low",
+            evidence_refs=evidence_refs,
+            state_snapshot=f"v{current_version}",
+        )
+        result = self.adapter.governed_delete(proposal, fact_uuid)
+        residue = tuple(self.adapter.undeclared_residue(fact_uuid))
+        return RevocationResult(
+            skill_id=skill_id,
+            fact_uuid=fact_uuid,
+            commit=result,
+            active_influence_removed=result.committed,
+            physical_content_retained=self.substrate.get_fact(fact_uuid) is not None,
+            undeclared_residue=residue,
+        )
+
+    def propose_management_change(
+        self,
+        artifact: SkillArtifact,
+        *,
+        actor_id: str,
+        proposal_id: str | None = None,
+    ) -> policy.Proposal:
+        if artifact.skill_kind != METAMEMORY or not artifact.management_effects:
+            raise ValueError("management change proposals require a metamemory artifact")
+        return policy.Proposal(
+            proposal_id=proposal_id or f"proposal:metamemory:{artifact.version_reference}",
+            actor_id=actor_id,
+            charter_version="procedural-memory-v1",
+            target_reference=f"memory-profile:{artifact.skill_id}",
+            target_class=policy.M5,
+            scope=artifact.scope,
+            operation="policy_mutation",
+            current_strength="candidate",
+            proposed_strength="durable",
+            downstream_authority=policy.A5,
+            reversibility="reversible",
+            risk_class="high",
+            evidence_refs=_unique(artifact.provenance_refs + artifact.validation_refs),
+            purpose="memory-management-profile-change",
+            isolation_domain_refs=artifact.isolation_domain_refs,
+            required_isolation_domain_refs=artifact.required_isolation_domain_refs,
+        )
+
+
+def reference_procedural_component() -> ComponentDeclaration:
+    return ComponentDeclaration(
+        component_id="agent-memory-reference-procedural",
+        component_version="0.1.0",
+        profile_version="component-capability-v1",
+        failure_posture="fail_closed",
+        runtime_ref="reference/agentmem_ref/procedural_memory.py",
+        provenance_refs=("issue:#295", "adr:ADR-034"),
+        capabilities=(
+            CapabilityDeclaration(
+                capability_id=PROCEDURAL_CAPABILITY,
+                capability_version=PROCEDURAL_CAPABILITY_VERSION,
+                maturity="runtime_wired",
+                state_posture="canonical",
+                scope_posture="enforces_agent_memory_scope",
+                failure_posture="fail_closed",
+                authority_effect="none",
+                evidence_refs=("reference:test_procedural_memory",),
+            ),
+        ),
+    )
+
+
+def apply_action_governance(action: ActionProposal, decision: ActionGovernanceDecision) -> ActionProposal:
+    """Apply a separate governance decision to a proposed runtime action.
+
+    This is intentionally not a skill-memory method. A skill cannot manufacture
+    this decision; the caller must supply it from the Runtime/Governance path.
+    """
+    if decision.action_id != action.action_id:
+        raise ValueError("governance decision does not bind the proposed action")
+    if decision.outcome == "deny":
+        return replace(
+            action,
+            governance_decision_ref=decision.decision_ref,
+            execution_status="blocked_by_governance",
+        )
+    return replace(
+        action,
+        governance_decision_ref=decision.decision_ref,
+        execution_status="authorized_not_executed",
+    )
+
+
+def record_runtime_execution(action: ActionProposal, execution_ref: str) -> ActionProposal:
+    """Record execution evidence only after a separate allow decision exists."""
+    if action.execution_status != "authorized_not_executed" or not action.governance_decision_ref:
+        raise ValueError("runtime execution requires a bound external governance allow decision")
+    if not execution_ref:
+        raise ValueError("runtime execution evidence reference is required")
+    return replace(action, execution_status="executed_by_runtime", execution_ref=execution_ref)
+
+
+def _procedure_steps(markdown: str) -> tuple[str, ...]:
+    bullets = tuple(line.strip()[2:].strip() for line in markdown.splitlines() if line.strip().startswith("- "))
+    if bullets:
+        return bullets
+    return (markdown.strip(),)
+
+
+def _stable_id(prefix: str, *parts: str) -> str:
+    digest = hashlib.sha256("\x1f".join(parts).encode("utf-8")).hexdigest()[:16]
+    return f"{prefix}:{digest}"
+
+
+def _unique(values: Iterable[str]) -> tuple[str, ...]:
+    return tuple(dict.fromkeys(value for value in values if value))
+
+
+def _project_ref(domain_refs: tuple[str, ...]) -> str:
+    for value in domain_refs:
+        if value.startswith("project:"):
+            return value
+    return ""
