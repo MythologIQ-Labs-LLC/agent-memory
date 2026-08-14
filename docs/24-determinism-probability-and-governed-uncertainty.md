@@ -2,11 +2,13 @@
 
 ## Status
 
-**Doctrine candidate.**
+**Canonical doctrine.**
 
-This document defines the current working boundary between deterministic, probabilistic, learned, human, and formally bounded behavior in Agent Memory.
+This document defines the current boundary between deterministic, probabilistic, learned, human, and formally bounded behavior in Agent Memory.
 
-It is intentionally challengeable. `ADR-020` should remain **Proposed** until implementation and conformance evidence demonstrate that these boundaries produce the guarantees claimed here.
+The general doctrine is governed by **Accepted ADR-020**. Canonical structural mutation has the additional safeguard defined by **Accepted ADR-032**: structural discovery may be uncertain, but the authority determination that commits a canonical structural consequence must be deterministic and versioned or explicitly human-authorized.
+
+Doctrine maturity does not imply universal implementation conformance. Runtime evidence and implementation maturity remain separately tracked.
 
 ## Core question
 
@@ -24,6 +26,7 @@ At the same time, uncertainty must not silently acquire authority to:
 - rewrite durable history
 - certify its own inference
 - create inherited control over successor agents
+- redefine canonical memory structure
 
 The useful question is not:
 
@@ -35,7 +38,7 @@ It is:
 
 ## Working thesis
 
-> **Probabilistic discovery may produce beliefs, rankings, hypotheses, candidates, confidence estimates, risk estimates, and proposed actions. Consequential memory behavior must occur inside an explicit governance envelope whose permissions, prohibitions, transitions, and audit consequences are deterministic or formally bounded.**
+> **Probabilistic discovery may produce beliefs, rankings, hypotheses, candidates, confidence estimates, risk estimates, and proposed actions. Consequential memory behavior must occur inside an explicit governance envelope whose permissions, prohibitions, transitions, and audit consequences are explicit and bounded.**
 
 Short form:
 
@@ -44,6 +47,10 @@ Short form:
 Operational form:
 
 > **Uncertainty may propose. Authority constrains.**
+
+Structural specialization:
+
+> **Memory shape may adapt. Authority over canonical structural mutation may not be probabilistic.**
 
 The earlier phrase "authority certainty" is deliberately avoided. Governance can be rigorous without claiming epistemic certainty. What the architecture needs is **authority boundedness, explicit policy semantics, and reconstructable consequence**.
 
@@ -98,6 +105,12 @@ An operation is governed when its authority, scope, policy, permitted outcomes, 
 
 Governed does not mean human-approved. Human approval is one possible authority mechanism.
 
+### Deterministically authorized structural mutation
+
+A canonical structural mutation is deterministically authorized when a versioned, reproducible rule evaluates the exact current structural state and proposal and proves that the consequence lies inside an explicitly delegated autonomous envelope.
+
+The rule may consume probabilistic evidence as evidence. The probabilistic output itself cannot decide that the envelope applies.
+
 ## Why the binary is misleading
 
 "Deterministic" can refer to:
@@ -121,10 +134,14 @@ Governed does not mean human-approved. Human approval is one possible authority 
 8. stochastic exploration
 9. uncertainty about sensitivity
 10. uncertainty about causality
+11. structural novelty discovery
+12. migration-benefit estimation
 
 A deterministic threshold applied to a noisy estimate is not epistemic certainty.
 
 A stochastic planner operating inside an enforced action set is not necessarily ungoverned.
+
+A learned system that proposes an excellent new schema is still not the authority that commits the schema.
 
 ## Canonical four-stage model
 
@@ -165,6 +182,12 @@ A second invariant is equally important:
 
 ```text
 estimator_output != authority
+```
+
+For canonical structural mutation there is a third invariant:
+
+```text
+probabilistic_structural_proposal != structural_commit_authority
 ```
 
 ## Formal sketch
@@ -210,6 +233,8 @@ S = {one explicitly authorized action}
 
 The doctrine does not require every `G` implementation to be one static rules engine. It requires the resulting authority semantics to be explicit and bounded.
 
+For canonical structural mutation, `G` has an additional restriction: an autonomous permission result must come from a versioned deterministic structural classifier/policy over the exact current state and proposal. Otherwise the structural action remains review-required or prohibited.
+
 ## Zone 1: deterministic substrate
 
 These functions normally need reproducible behavior because ambiguity creates identity, integrity, access-control, or audit failure.
@@ -228,6 +253,8 @@ Examples:
 - ledger append semantics
 - tombstone interpretation
 - dependency references used for deletion
+- structural compatibility checks used for autonomous schema authority
+- structural state/version checks at commit
 
 Do not use a probabilistic model to infer something the system already knows exactly.
 
@@ -250,8 +277,13 @@ These functions naturally operate under uncertainty:
 - predicted staleness
 - predicted future utility
 - composition risk
+- structural novelty discovery
+- candidate ontology/schema generation
+- predicted migration or retrieval benefit
 
 Outputs should identify their semantics, provenance, and uncertainty when materially consequential.
+
+Structural novelty is useful proposal evidence. It is not structural authority.
 
 ## Zone 3: governance envelope
 
@@ -298,9 +330,37 @@ Consequential operations include:
 - pruning
 - irreversible deletion
 - policy mutation
+- domain-schema mutation
 - inherited-memory publication
 
 A commit should bind to the state and policy snapshot that authorized it.
+
+## Structural mutation specialization
+
+Agent Memory permits structure to adapt, but it distinguishes three kinds of shape:
+
+```text
+canonical semantic shape
+application / domain ontology
+derived / physical representation
+```
+
+A lower-layer representation change must not silently reinterpret a higher-layer semantic contract.
+
+ADR-032 classifies structural consequences approximately as:
+
+| Class | Typical change | Default authority posture |
+|---|---|---|
+| S0 | derived/index/rebuild-only change with preserved semantics | autonomous under deterministic maintenance policy |
+| S1 | bounded additive local extension with rollback and no authority widening | autonomous only when deterministic policy proves the bounded envelope |
+| S2 | semantic reinterpretation or migration-bearing change | user-visible proposal and authorized human decision by default |
+| S3 | destructive, cross-scope, isolation-, policy-, or authority-bearing change | explicit authorized human decision; stricter policy may block |
+
+A probabilistic component may propose any class. It cannot decide that a proposal is safe enough to downgrade itself into S0 or S1 for authority purposes.
+
+The deterministic structural classifier must consider at least the applicable semantic impact, scope, blast radius, migration requirement, dependency impact, reversibility, residue/rebuild obligations, and authority/isolation effect.
+
+Current PAMA 1.2 remains conservatively stricter than this doctrine: `domain_schema_mutation` routes to review or external verification at every risk level. Issue #281 owns the executable evidence required before a narrower autonomous S0/S1 path may be introduced.
 
 ## Operation-by-operation boundary
 
@@ -318,6 +378,8 @@ A commit should bind to the state and policy snapshot that authorized it.
 | Share | usefulness to recipient | consent, ACL, tenant, sensitivity, destination |
 | Inherit | useful seed selection | acquisition mode, scope and inherited authority |
 | Execute procedure | procedure selection | tool permission and destructive-action gates |
+| Mutate domain structure | structural novelty, candidate schema, predicted benefit | exact class, migration, scope, dependency, rollback, and commit authority |
+| Rebuild derived representation | rebuild utility, scheduling priority | semantic invariance, scope, resource limits, residue/currentness |
 
 ## Consequence classes
 
@@ -394,6 +456,7 @@ Examples:
 - policy mutation
 - authority change
 - broad cross-tenant publication
+- destructive or authority-bearing structural mutation
 
 Default:
 
@@ -431,6 +494,8 @@ Therefore calibrate the estimator **and** test the policy consequence near the b
 
 Use abstention, review bands, hysteresis, or stronger evidence when the cost of a threshold mistake is high.
 
+For structural mutation, a deterministic threshold over a probabilistic utility/confidence score is not sufficient autonomous authority by itself. The deterministic policy must establish bounded structural facts such as scope, migration need, semantic compatibility, dependency state, reversibility, and authority effect.
+
 ## Probabilistic action inside a bounded envelope
 
 Stochastic behavior can remain useful for:
@@ -440,6 +505,7 @@ Stochastic behavior can remain useful for:
 - choosing among reversible candidate plans
 - sampling memories for offline consolidation
 - choosing among equally permitted compression strategies
+- generating alternative structural proposals for later deterministic/human evaluation
 
 The safety requirement is not identical output.
 
@@ -466,6 +532,8 @@ scope uncertainty
 temporal uncertainty
 causal uncertainty
 sensitivity uncertainty
+structural compatibility uncertainty
+migration-impact uncertainty
 ```
 
 Different uncertainty types demand different handling.
@@ -476,6 +544,7 @@ For example:
 - authority uncertainty should block a high-impact mutation
 - scope uncertainty should block cross-tenant sharing
 - sensitivity uncertainty may trigger stricter export handling
+- structural compatibility uncertainty should prevent autonomous canonical migration
 
 ## Belief memory challenges deterministic conclusions
 
@@ -503,7 +572,7 @@ The lesson is not "make everything deterministic."
 
 It is:
 
-> keep trust, risk, and content interpretation adaptive where necessary, but prevent them from minting authority.
+> keep trust, risk, content interpretation, and structural discovery adaptive where necessary, but prevent them from minting authority.
 
 ## Privacy challenges item-level classification
 
@@ -517,6 +586,8 @@ Engineering implication:
 > privacy governance cannot be one deterministic sensitivity flag assigned once at write time.
 
 Classification may evolve. Scope and disclosure consequences remain governed throughout the lifecycle.
+
+Structural changes that alter scope, isolation, disclosure, or retention interpretation are therefore not ordinary schema maintenance. They are authority-bearing structural consequences under ADR-032.
 
 ## Evidence supporting uncertainty-preserving memory
 
@@ -584,6 +655,18 @@ A correct authorization can become stale before commit.
 
 Individually governed components can combine into an unsafe system.
 
+### Structural self-authorization
+
+A learned or probabilistic component may discover a genuinely useful new shape and then incorrectly treat that usefulness as authority to change canonical interpretation.
+
+### Structural classification laundering
+
+An implementation may call a semantic migration a harmless rebuild or additive change to fit an autonomous S0/S1 envelope.
+
+### Retirement without residue proof
+
+A schema version may be declared retired while retained state, projections, consumers, or learned representations still depend on its interpretation.
+
 These are conformance targets, not footnotes.
 
 ## Required decision receipt
@@ -613,6 +696,22 @@ evidence_refs
 timestamp
 ```
 
+For canonical structural transitions also preserve, where applicable:
+
+```text
+current_structure_ref
+proposed_structure_ref
+structural_class
+semantic_diff_ref
+scope_impact
+migration_impact
+dependency_impact
+reversibility / rollback_ref
+residue_or_rebuild_obligations
+structural_classifier_ref/version
+human_authority_ref when required
+```
+
 Exact stochastic replay is not always required.
 
 Reconstruction of **what was believed, what was permitted, what was prohibited, and what changed** is required.
@@ -636,25 +735,35 @@ A governed-uncertainty implementation should test at least:
 13. authority laundering
 14. deletion residue
 15. out-of-calibration estimator input
+16. high-confidence structural proposal cannot self-authorize
+17. bounded additive structural change requires deterministic envelope evidence
+18. semantic migration requires human authority unless a future accepted exact delegation says otherwise
+19. destructive or cross-scope structural change cannot be downgraded by estimator confidence
+20. stale structural impact analysis cannot authorize commit
+21. schema retirement cannot claim completion while declared dependencies/residue remain
 
-## Evidence required before accepting ADR-020
+## ADR-020 acceptance evidence
 
-At minimum:
+ADR-020 is **Accepted**. Its stronger doctrine-maturity gate was satisfied only after executable evidence existed for the required estimate -> governance -> bounded action -> commit boundaries and adversarial negative paths.
+
+The acceptance evidence includes:
 
 ```text
-[ ] executable governed-uncertainty fixtures exist
-[ ] at least one end-to-end implementation maps estimate -> policy -> action set -> commit
-[ ] blocked actions remain blocked across stochastic trials
-[ ] high-confidence false memory cannot self-promote
-[ ] cross-scope relevance cannot bypass admission
-[ ] irreversible deletion cannot be authorized by utility score alone
-[ ] policy and estimator versions remain reconstructable
-[ ] concurrent mutation cannot silently become last-writer-wins
-[ ] derived-memory deletion residue is tested
-[ ] at least one doctrine challenge produces either a documented boundary or a revision
+[x] executable governed-uncertainty fixtures
+[x] end-to-end implementation mapping estimate -> policy -> action set -> commit
+[x] blocked actions remaining blocked across stochastic trials
+[x] high-confidence false memory unable to self-promote
+[x] cross-scope relevance unable to bypass admission
+[x] irreversible deletion not authorized by utility score alone
+[x] policy and estimator versions reconstructable
+[x] concurrent mutation prevented from silently becoming last-writer-wins
+[x] derived-memory deletion residue tested
+[x] adversarial doctrine challenges producing documented boundaries/revisions
 ```
 
-Until then, the architecture is a strong hypothesis with good supporting rationale, not a proven universal law.
+The canonical audit is `audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md`.
+
+ADR-032 is an Accepted structural specialization. Its implementation follow-up does not retroactively weaken ADR-020 or current PAMA. Until #281 proves a narrower autonomous structural envelope, current PAMA 1.2 remains the executable posture for `domain_schema_mutation`.
 
 ## Research posture
 
@@ -693,7 +802,11 @@ Citation count is not confidence.
 10. **Authority must be reconstructable even when cognition cannot be replayed exactly.**
 11. **Read-time governance matters as much as write-time governance.**
 12. **Composition must be tested, not assumed safe from component-level correctness.**
-13. **The doctrine itself remains revisable.**
+13. **Memory structure may adapt without making representation technology canonical.**
+14. **Probabilistic systems may discover and propose canonical structural change, but may not be the authority that commits it.**
+15. **Bounded autonomous structural change requires a deterministic versioned authority envelope; larger semantic, destructive, cross-scope, or authority-bearing changes require explicit human authority unless an Accepted exact delegation says otherwise.**
+16. **Schema and domain structure have lifecycle, migration, dependency, supersession, rollback, and residue obligations.**
+17. **The doctrine itself remains revisable.**
 
 ## Related documents
 
@@ -714,4 +827,8 @@ Citation count is not confidence.
 - `21-forgetting-consolidation-and-memory-metabolism.md`
 - `22-agentic-memory-theory-and-development.md`
 - `23-research-bibliography.md`
+- `27-schema-registry-and-type-evolution.md`
+- `42-governed-mutable-memory-fabric.md`
+- `profiles/pama-1-2-domain-schema-compatibility.md`
 - `adr/ADR-020-probabilistic-discovery-deterministic-governance.md`
+- `adr/ADR-032-governed-mutable-memory-structure.md`
