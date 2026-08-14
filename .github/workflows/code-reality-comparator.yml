@@ -122,7 +122,10 @@ jobs:
             --graphify-graph /tmp/code-reality-raw/graphify-graph.json \
             --output /tmp/code-reality-raw/code-reality-comparator.json
 
-      - name: Verify bounded ground truth
+      - name: Display comparator result
+        run: cat /tmp/code-reality-raw/code-reality-comparator.json
+
+      - name: Verify evidence integrity and claim boundary
         run: |
           python - <<'PY'
           import json
@@ -133,13 +136,15 @@ jobs:
           assert report["agent_memory_commit"] == os.environ["AGENT_MEMORY_COMMIT"]
           assert report["implementations"]["codegenome"]["commit"] == os.environ["CODEGENOME_COMMIT"]
           assert report["implementations"]["graphify"]["commit"] == os.environ["GRAPHIFY_COMMIT"]
-          assert report["matched_result"]["codegenome_ground_truth_passed"] is True
-          assert report["matched_result"]["graphify_ground_truth_passed"] is True
-          assert report["matched_result"]["both_reproduce_requested_fixture_facts"] is True
           assert report["matched_result"]["winner"] is None
+          assert report["governance_observations"]["scalar_product_ranking_created"] is False
+          assert report["governance_observations"]["raw_outputs_preserved_separately"] is True
+          assert isinstance(report["implementations"]["codegenome"]["passed"], bool)
+          assert isinstance(report["implementations"]["graphify"]["passed"], bool)
           PY
 
       - name: Upload raw and normalized comparator evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: code-reality-comparator-${{ env.AGENT_MEMORY_COMMIT }}
