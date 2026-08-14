@@ -1,12 +1,14 @@
 # Schema Registry and Type Evolution
 
-> Canonical requirement: [ADR-014](adr/ADR-014-schema-registry-and-type-evolution-are-needed.md)
+> Canonical requirements: [ADR-014](adr/ADR-014-schema-registry-and-type-evolution-are-needed.md) and [ADR-032](adr/ADR-032-governed-mutable-memory-structure.md)
 
 ## Purpose
 
-Agent Memory needs stable semantic contracts without freezing implementation experimentation.
+Agent Memory needs stable semantic contracts without freezing implementation experimentation or domain evolution.
 
 The schema registry defines which fields and meanings belong to doctrine-level interoperability, how those types evolve, and how implementations extend them without silently changing semantics.
+
+ADR-032 adds a second requirement: **memory structure may evolve, but canonical structural mutation authority may not be probabilistic.** Schema/type evolution therefore needs both compatibility mechanics and an explicit authority/lifecycle boundary.
 
 ## Core rule
 
@@ -15,6 +17,14 @@ schema compatibility != field-name compatibility only
 ```
 
 If two systems both emit `confidence: 0.8` but one means semantic similarity and the other means calibrated factual probability, the schemas are semantically incompatible even if JSON validation passes with enthusiasm.
+
+A second rule now applies:
+
+```text
+structural discovery != structural commit authority
+```
+
+A learned or probabilistic component may discover a useful candidate field, entity, relation, or model. It may not commit canonical meaning merely because the proposal scores well.
 
 ## Registry layers
 
@@ -36,6 +46,27 @@ Stable cross-implementation concepts such as:
 - uncertainty representation
 - deletion/tombstone state
 - decision receipt
+
+Doctrine-core changes use normal ADR/schema governance and are not ordinary runtime domain-schema adaptation.
+
+### Application/domain ontology
+
+Deployment- or application-specific entities, relations, fields, constraints, and interpretation rules.
+
+Examples:
+
+```text
+Project -> HAS_RELEASE_CHANNEL -> ReleaseChannel
+Customer -> HAS_CONTRACT -> Contract
+```
+
+Domain structure may legitimately evolve at runtime, but consequential changes are governed under ADR-032 and PAMA.
+
+### Derived/physical representation
+
+Indexes, embeddings, graph materializations, caches, learned representations, and storage-specific layouts.
+
+These may change without becoming canonical semantic mutations when meaning, authority, provenance, scope, lifecycle, and currentness remain unchanged.
 
 ### Extension layer
 
@@ -74,11 +105,15 @@ Version semantics should distinguish:
 
 A semantic change can be breaking even when the JSON type does not change.
 
+For runtime domain schemas, implementations should additionally preserve a stable schema/model identity, current/superseded state, migration lineage, and compatibility/dependency evidence sufficient to reconstruct which interpretation governed a durable memory.
+
 ## Type evolution rules
 
 ### Additive field
 
 May be backward compatible when optional and existing semantics remain valid.
+
+For runtime domain shape, an additive field is not automatically autonomous. ADR-032 S1 eligibility also depends on bounded scope, preserved historical interpretation, no authority/isolation widening, no destructive migration, deterministic impact classification, and rollback/reversibility posture.
 
 ### New enum member
 
@@ -88,6 +123,8 @@ Potentially breaking for closed consumers. Consumers should define unknown-value
 
 Breaking. Requires a new schema version or explicit migration.
 
+For durable domain state this is an ADR-032 S2-style semantic change by default, not a harmless rename hidden behind syntactic compatibility.
+
 ### Optional to required
 
 Breaking unless all stored objects are migrated.
@@ -95,6 +132,54 @@ Breaking unless all stored objects are migrated.
 ### Scalar to structured uncertainty
 
 Breaking unless the old scalar remains interpretable through an explicit compatibility adapter.
+
+### Retiring a field/type/relation
+
+Retirement is not complete merely because new writes stop using the old shape.
+
+Before retirement, the system should account for:
+
+- live canonical objects;
+- historical interpretation requirements;
+- derived projections and indexes;
+- module/consumer dependencies;
+- migration results;
+- deletion/residue obligations;
+- rollback requirements.
+
+Prefer supersession before retirement when historical interpretation or rollback matters.
+
+## Structural mutation classes
+
+ADR-032 defines the authority posture for runtime structural evolution:
+
+| Class | Typical change | Default posture |
+|---|---|---|
+| S0 | derived/index/rebuild-only change with preserved semantics | autonomous under deterministic maintenance policy |
+| S1 | bounded additive local extension with rollback and no authority widening | autonomous only when deterministic policy proves the exact bounded envelope |
+| S2 | semantic reinterpretation or migration-bearing change | user-visible proposal and authorized human decision by default |
+| S3 | destructive, cross-scope, isolation-, policy-, or authority-bearing change | explicit authorized human decision; stricter policy may block |
+
+Probabilistic discovery may propose any class. It cannot classify itself into a lower-authority class for commit purposes.
+
+A structural-impact record should preserve where applicable:
+
+```text
+current_schema_ref
+proposed_schema_ref
+structural_class
+semantic_diff
+scope / isolation impact
+affected-state / blast-radius evidence
+dependent modules / projections / consumers
+migration requirement
+information-loss posture
+reversibility / rollback ref
+rebuild / residue obligations
+source / estimator evidence
+deterministic classifier + policy version
+authority / approval refs
+```
 
 ## Semantic types that must not collapse
 
@@ -121,6 +206,17 @@ selected_action
 committed_transition
 ```
 
+And for structural evolution:
+
+```text
+structural proposal
+structural impact classification
+structural authorization
+migration execution
+schema activation
+schema retirement
+```
+
 ## Estimator provenance type
 
 A consequential estimate should be representable as:
@@ -137,6 +233,8 @@ A consequential estimate should be representable as:
   "scope": "project-A"
 }
 ```
+
+The same discipline applies when an estimator proposes a schema/domain-model change. Its confidence is evidence about the proposal, never structural authority.
 
 ## Uncertainty type
 
@@ -169,6 +267,8 @@ source of delegation
 ```
 
 Authority must not be inferred from estimator fields.
+
+For autonomous structural mutation, the authority record must additionally identify the versioned deterministic policy/classifier proving that the exact proposed change was within a delegated S0/S1 envelope.
 
 ## Decision-receipt type
 
@@ -236,6 +336,10 @@ Current compatibility:
 1.1.0
   adds mutation.operation = decision_overwrite
   preserves all existing 1.0.0 operation meanings
+
+1.2.0
+  adds mutation.operation = domain_schema_mutation
+  preserves 1.0.0 and 1.1.0 historical meanings
 ```
 
 `decision_overwrite` is intentionally distinct from `correction`, `authority_change`, and `other`:
@@ -245,9 +349,24 @@ Current compatibility:
 - `decision_overwrite` requests supersession/reversal of durable decision state under ADR-025;
 - `other` must not be used to hide a known consequential mutation class merely to avoid schema evolution.
 
-Because a new enum member can break closed consumers, the reference producer emits PAMA decision `1.1.0` when `decision_overwrite` is used and continues to emit `1.0.0` for existing operation classes. The compatibility schema rejects a `decision_overwrite` record that claims schema version `1.0.0`.
+`domain_schema_mutation` is intentionally distinct from ordinary fact insertion, Agent Memory doctrine-core schema change, unchanged-semantic index rebuild, and policy mutation. It represents durable application/domain-model changes capable of altering future extraction, typing, relation meaning, migration, or recall.
+
+Because new enum members can break closed consumers, the producer/version boundary must match the operation. A `decision_overwrite` record claiming 1.0.0 is invalid. A `domain_schema_mutation` record claiming a pre-1.2.0 version is invalid.
 
 Consumers performing consequential mutation must therefore treat an unsupported PAMA decision schema version or unknown operation as an explicit compatibility failure, not silently coerce it to a familiar action.
+
+### Current PAMA 1.2 structural posture
+
+PAMA 1.2 currently maps `domain_schema_mutation` conservatively:
+
+```text
+low / medium -> require_review
+high / critical -> require_external_verification
+```
+
+ADR-032 permits a future narrower autonomous path for deterministically proven S0/S1 structural changes. That doctrine does not silently alter current PAMA behavior. Issue #281 owns the compatibility/evidence work required before such a PAMA evolution can ship.
+
+Estimator confidence must never lower the structural authority floor.
 
 ## Migration
 
@@ -264,7 +383,11 @@ validation_result
 rollback_or_backup_ref
 ```
 
+For durable runtime structural evolution also preserve relevant proposal, authority, dependency, module/projection rebuild, and residue evidence.
+
 Lossy migration requires explicit handling. "The old field didn't fit" is not provenance.
+
+A migration is not the same event as schema authorization, schema activation, or retirement. Those lifecycle states should remain distinguishable when consequence warrants it.
 
 ## Unknown fields and versions
 
@@ -280,14 +403,21 @@ unsupported_schema -> abstain / quarantine / require_adapter
 
 ## Registry governance
 
-Schema changes should be reviewed for:
+Schema changes should be reviewed or deterministically classified for:
 
 - backward compatibility
 - semantic compatibility
 - privacy impact
+- scope/isolation impact
+- authority impact
 - deletion/migration impact
+- dependent module/projection/consumer impact
+- reversibility/rollback
+- residue/rebuild obligations
 - conformance impact
 - implementation adoption cost
+
+Probabilistic systems may supply evidence or recommendations for these dimensions. They may not directly mint canonical structural authority.
 
 ## Current repository schemas
 
@@ -325,6 +455,7 @@ Conformance fixtures are versioned artifacts with their own evolution rules, dis
 - old consumer receives unknown enum member
 - historical 1.0 PAMA decision remains valid
 - `decision_overwrite` presented as PAMA decision 1.0 is rejected
+- `domain_schema_mutation` presented as pre-1.2 PAMA decision is rejected
 - unknown PAMA operation/schema attempts durable mutation
 - historical 1.0 decision receipt remains valid under the compatibility schema
 - 1.1 decision receipt omits required decision backlink/outcome
@@ -337,9 +468,23 @@ Conformance fixtures are versioned artifacts with their own evolution rules, dis
 - migrated object loses provenance
 - schema adapter strips tenant scope
 - unknown schema attempts durable mutation
+- high-confidence structural proposal cannot self-authorize
+- bounded additive change cannot bypass deterministic S1 eligibility evidence
+- semantic migration cannot be mislabeled as derived rebuild
+- stale structural impact analysis cannot authorize commit
+- retirement with live dependencies/residue cannot claim completion
+
+## Related architecture
+
+- [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md)
+- [`adr/ADR-032-governed-mutable-memory-structure.md`](adr/ADR-032-governed-mutable-memory-structure.md)
+- [`profiles/pama-1-2-domain-schema-compatibility.md`](profiles/pama-1-2-domain-schema-compatibility.md)
+- [`explorations/memory-architectures/progressive-domain-schema-discovery.md`](explorations/memory-architectures/progressive-domain-schema-discovery.md)
 
 ## Doctrine
 
 Schemas govern meaning, not merely syntax.
 
 Interoperability is unsafe when two components agree on JSON while disagreeing on what the JSON means.
+
+Structure may evolve, but a system that lets uncertain discovery silently rewrite canonical meaning has confused adaptation with authority.
