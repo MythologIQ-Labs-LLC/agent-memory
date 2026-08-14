@@ -1,0 +1,62 @@
+name: Logical State Algebra Pressure
+
+on:
+  pull_request:
+    paths:
+      - "reference/agentmem_ref/logical_state_algebra_pressure.py"
+      - "reference/tests/test_logical_state_algebra_pressure.py"
+      - "reference/run_logical_state_algebra_pressure.py"
+      - "docs/explorations/memory-architectures/logical-state-algebra-scenarios.json"
+      - "docs/explorations/memory-architectures/memory-native-logical-state-algebra.md"
+      - ".github/workflows/logical-state-algebra-pressure.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  logical-state-algebra-pressure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Agent Memory
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run #276 acceptance tests
+        env:
+          PYTHONPATH: reference
+        run: python -m unittest reference.tests.test_logical_state_algebra_pressure
+
+      - name: Emit exact-head #276 evidence
+        env:
+          PYTHONPATH: reference
+        run: |
+          python reference/run_logical_state_algebra_pressure.py \
+            --agent-memory-commit "$GITHUB_SHA" \
+            --output logical-state-algebra-pressure-evidence.json
+
+      - name: Verify evidence is bound to exact head
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = json.loads(Path("logical-state-algebra-pressure-evidence.json").read_text())
+          assert report["agent_memory_commit"] == os.environ["GITHUB_SHA"]
+          assert report["aggregate"]["all_existing_contracts_express_scenarios"] is True
+          assert report["aggregate"]["missing_generic_primitive_observed"] is False
+          assert report["aggregate"]["stronger_engine_evidence_observed"] is False
+          assert report["aggregate"]["current_recommendation"] == "no_new_algebra"
+          PY
+
+      - name: Upload exact-head research evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: logical-state-algebra-pressure-${{ github.sha }}
+          path: logical-state-algebra-pressure-evidence.json
+          if-no-files-found: error
