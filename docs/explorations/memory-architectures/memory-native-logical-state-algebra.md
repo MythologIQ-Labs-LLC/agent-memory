@@ -1,12 +1,16 @@
 # Memory-Native Logical State Algebra Pressure Test
 
-Status: **active exploratory research** for #276. This document is not canonical doctrine and does not authorize a new storage engine, schema, or ADR.
+Status: **completed exploratory research** for #276.
+
+Final disposition: [`no_new_algebra`](memory-native-logical-state-algebra-closeout.md).
+
+This document records the pressure test that led to the closeout. It is not canonical doctrine and does not authorize a new storage engine, schema, transition algebra, or ADR.
 
 ## Research question
 
-Does Agent Memory need a new memory-native logical state-transition algebra above replaceable physical persistence, or do the existing lifecycle, derivation, currentness, isolation, PAMA, maintenance, and evidence contracts already supply the required logical layer?
+Does Agent Memory need a new memory-native logical state-transition algebra above replaceable physical persistence, or do the existing lifecycle, derivation, currentness, isolation, PAMA, maintenance, evidence, and component contracts already supply the required logical layer?
 
-The working default is deliberately conservative:
+The burden of proof was deliberately placed on the new abstraction:
 
 ```text
 new abstraction
@@ -14,13 +18,11 @@ must prove missing reusable semantics
 not merely rename existing operations
 ```
 
-The burden of proof is on a new algebra.
+The tested evidence did not meet that burden.
 
 ## Evidence boundary
 
-This pressure test starts from the completed cross-architecture research rather than from a blank-sheet design exercise.
-
-That work already reproduced the same governance distinctions across file/document, linked-note, lexical, vector, knowledge-graph, temporal-graph, GraphRAG, event-log, relational/document, hierarchical, shared/distributed, opaque learned/latent, and hybrid families.
+The pressure test started from completed cross-architecture research rather than blank-sheet design. That work had already reproduced the same governance distinctions across file/document, linked-note, lexical, vector, knowledge-graph, temporal-graph, GraphRAG, event-log, relational/document, hierarchical, shared/distributed, opaque learned/latent, and hybrid families.
 
 The durable findings include:
 
@@ -36,34 +38,32 @@ delete operation != forgetting completeness
 probabilistic / learned influence != durable write authority
 ```
 
-A new logical algebra therefore has to improve portability, correctness, or implementation simplicity beyond those already-shared contracts.
+A new logical algebra therefore had to improve portability, correctness, recovery, or implementation clarity beyond those already-shared contracts.
 
 ## Existing primitive inventory
 
-Before inventing any new operation vocabulary, map the proposed responsibilities to existing Agent Memory surfaces.
+The candidate responsibilities were mapped to existing Agent Memory surfaces before any new vocabulary was promoted.
 
-| Candidate logical responsibility | Existing Agent Memory surface | Current assessment |
+| Candidate logical responsibility | Existing Agent Memory surface | Result |
 |---|---|---|
-| stable logical identity | memory-unit identity, source/evidence identity, optional content-reference profiles | already represented; content address intentionally remains distinct from logical identity |
-| source provenance / derivation | provenance doctrine, derivation evidence, output-custody profile | already represented |
-| derived-state currentness | derivation-currentness profile | already represented |
-| correction / dispute / supersession | lifecycle, temporal-causality, correction/supersession doctrine | already represented |
-| reinforcement / weakening | scoring/decay and governed-estimator doctrine | already represented as evidence/estimation, intentionally not authority |
+| stable logical identity | memory-unit identity, source/evidence identity, optional content-reference profiles | already represented |
+| source provenance / derivation | provenance doctrine, derivation evidence, output custody | already represented |
+| derived-state currentness | derivation currentness | already represented |
+| correction / dispute / supersession | lifecycle, temporal causality, correction/supersession doctrine | already represented |
+| reinforcement / weakening | estimator/scoring evidence | represented, intentionally not authority |
 | promotion / crystallization | lifecycle + PAMA | already represented |
-| consolidation / summarization / semanticization | derived-state doctrine + maintenance-run evidence | already represented at the governance/evidence layer |
+| consolidation / summarization / semanticization | derived-state doctrine + maintenance evidence | already represented |
 | projection rebuild / invalidation | derivation currentness + maintenance evidence | already represented |
-| deletion / forgetting / purge | lifecycle/deletion doctrine + derived-residue evidence | already represented |
+| deletion / forgetting / purge | lifecycle/deletion doctrine + residue evidence | already represented |
 | scope / isolation | isolation-domain doctrine and crossing rules | already represented |
-| concurrent/conflicting mutation | conflict/concurrency evidence + PAMA consequence boundary | represented; backend-specific transaction mechanics remain implementation-specific |
-| autonomous maintenance transaction | maintenance-run evidence profile | already represented |
-| learned / predictive influence | conditional-memory influence profile + governed uncertainty | already represented |
-| mutation/action authority | PAMA | already represented and must remain separate from operation naming |
-| portable execution / governance evidence | receipt/evidence profiles | already represented |
-| implementation/module optionality | language-neutral core / optional implementation profiles and #274 | already represented conceptually; module packaging is current work |
+| concurrent/conflicting mutation | conflict/concurrency evidence + PAMA consequence boundary | represented; physical transaction mechanics remain backend-specific |
+| autonomous maintenance transaction | maintenance-run evidence | already represented |
+| learned / predictive influence | conditional-memory influence + governed uncertainty | already represented |
+| mutation/action authority | PAMA | already represented and separate from operation naming |
+| portable governance evidence | receipt/evidence profiles | already represented |
+| component optionality | capability/component program #274 | implemented without a new state algebra |
 
-### First finding
-
-The candidate verbs from #276 mostly map cleanly to existing contracts:
+The proposed verbs therefore mapped cleanly to existing contracts:
 
 ```text
 observe / ingest
@@ -100,36 +100,11 @@ re-evidence / revalidate
   -> currentness/evidence transition
 ```
 
-This strongly argues **against** creating a second parallel lifecycle model merely to collect the verbs under one namespace.
-
-## What could still be missing
-
-The remaining candidate gap is narrower than a database engine or a new memory ontology.
-
-Different module adapters may repeatedly need to package the same transition evidence:
-
-```text
-requested logical transition
-+ target logical identity
-+ source/currentness basis
-+ scope/isolation basis
-+ estimator evidence, if any
-+ PAMA decision
-+ backend transaction result
-+ post-write validation result
-+ lifecycle result
-+ reconstructable receipt
-```
-
-If multiple materially different modules independently re-create this envelope with incompatible semantics, a **narrow transition contract** may be justified.
-
-That would be an orchestration/evidence contract, not a physical persistence engine and not a replacement for PAMA or lifecycle doctrine.
+This is evidence against creating a second parallel lifecycle model merely to collect existing semantics under another namespace.
 
 ## Cross-substrate mapping
 
-Use one correction scenario to test whether the same logical semantics survive physically different stores.
-
-### Scenario
+The same correction scenario was mapped across three materially different persistence families:
 
 ```text
 source S1 is current
@@ -138,99 +113,69 @@ source S1 is current
 -> D1 remains physically present
 ```
 
-The required logical result is:
+The required logical outcome is independent of substrate:
 
 ```text
 S1 remains historical evidence where policy permits
-S2 becomes the current source version
+S2 becomes current
 D1 becomes stale / rebuild-required
 D1 physical presence does not imply currentness
 D1 may not regain authority from retrieval usefulness
 rebuild produces a new derived identity/evidence chain
 ```
 
-### Relational/document mapping
+### Relational/document
 
-Representative physical implementation:
+Strong transactions and explicit version columns help with canonical updates, but successful canonical transaction completion does not automatically invalidate every embedding, cache, summary, or other external projection. Physical row identity also does not become stable Agent Memory logical identity.
 
-```text
-canonical row/version table
-+ transactional update
-+ materialized/indexed derived view
-```
+Existing currentness, derivation, and lifecycle contracts express the distinction.
 
-Physical strengths:
+### Knowledge/temporal graph
 
-- strong transaction boundaries;
-- explicit version columns/foreign keys where designed;
-- familiar concurrency controls;
-- direct current-state queries.
+Graph reachability and temporal relationships can make lineage inspectable, but an inferred edge/path may remain physically reachable after its source basis changes. Reachability is neither currentness nor permission, and graph deletion may leave other projections or caches.
 
-Physical mismatch that the logical layer must expose:
+Existing derivation, currentness, isolation, and admission contracts express the distinction.
 
-- transaction success updates canonical state but does not automatically invalidate every external embedding/cache/summary;
-- last-write-wins mechanics may be available but are not an acceptable universal contradiction semantic;
-- physical row identity is not automatically stable logical memory identity across migrations or backend replacement.
+### Event log / ledger
 
-Existing Agent Memory contracts already express the required correction/currentness/residue distinctions.
+Append-only history naturally preserves mutation sequence, but historical integrity does not determine current truth. Tombstone/delete events do not prove transitive forgetting, and a valid checkpoint advance does not prove retrieval behavior remained semantically acceptable.
 
-### Knowledge/temporal-graph mapping
+Existing temporal, currentness, deletion, and evidence contracts express the distinction.
 
-Representative physical implementation:
+## Executable pressure evidence
+
+PR #277 added `logical-state-algebra-scenarios.json`, the reference pressure harness, focused tests, and `.github/workflows/logical-state-algebra-pressure.yml`.
+
+The dedicated workflow passed at exact research head:
 
 ```text
-source/entity nodes
-+ asserted/inferred edges
-+ temporal validity
-+ cached traversal/path or graph-derived summary
+head: 9f6bdbc415afdf57823d806312c33bd833cd1cb6
+run:  31800258733
+result: success
 ```
 
-Physical strengths:
+The research foundation merged in PR #277 as `767d8b7391de08892daaab9847b938bc7992f19c`.
 
-- explicit relationship structure;
-- derivation edges can make lineage inspectable;
-- temporal validity can preserve historical relationships naturally.
+## Later implementation pressure
 
-Physical mismatch that the logical layer must expose:
+The leading `no_new_algebra` hypothesis remained falsifiable after PR #277. Subsequent #274 implementation work supplied the required pressure rather than merely accepting the research conclusion on paper.
 
-- an inferred edge/path can remain physically reachable after its basis changes;
-- reachability does not establish currentness or permission;
-- graph deletion may leave caches, summaries, embeddings, or external indexes;
-- traversal authorization is a separate concern from graph connectivity.
+PR #297 implemented component/capability declarations, maturity, deterministic provider resolution, explicit ambiguity/shortfall failure, and a governed procedural-memory vertical slice without requiring a new state algebra.
 
-Existing Agent Memory derivation/currentness/isolation contracts already express these distinctions.
+PR #299 / completed #298 established the version-bound component adapter and qualification contract without introducing a second lifecycle/state model.
 
-### Event-log / ledger mapping
+PR #302 then exercised two materially different real code-graph providers through the shared qualification surface. Its first failed run exposed two concrete implementation defects:
 
-Representative physical implementation:
+1. CodeGenome retained a cross-file semantic-resolution collision after earlier target-file repair. The provider was repaired in CodeGenome #12 / PR #13 by preserving file identity in symbol and caller-span resolution.
+2. Agent Memory's Graphify normalizer expected `edges`, while Graphify's native NetworkX node-link artifact uses `links`. The normalizer was corrected to the real provider shape.
 
-```text
-append S1
-append correction/supersession S2
-materialize current view
-```
+Neither failure exposed a missing universal memory-state primitive. The existing qualification/currentness/evidence contracts were sufficient to detect the mismatch, preserve it as evidence, refuse an unearned qualification, repair the responsible layer, and re-run the exact-version proof.
 
-Physical strengths:
+That is material evidence for `no_new_algebra`, not merely absence of imagination.
 
-- historical mutation sequence is naturally preserved;
-- replay can reconstruct prior states;
-- append-only integrity can be evidenced independently.
+## External pressure signal
 
-Physical mismatch that the logical layer must expose:
-
-- historical integrity does not decide which event is current truth;
-- tombstone/delete events do not prove derived information was forgotten;
-- a valid append-only checkpoint advance does not prove retrieval behavior remained semantically acceptable.
-
-Again, existing temporal/currentness/deletion doctrine already handles the logical distinction.
-
-## External pressure signal: Agent Manifest checkpoint assessment
-
-`agentrust-io/agent-manifest#298` provides a useful independent counterexample to treating state-transition integrity as semantic correctness.
-
-The issue observes that an append-only, sequence-valid, fresh, in-budget memory checkpoint advance can still produce undesirable retrieval behavior, including correction-precedence failure, anchor displacement, cross-scope retrieval, or state collapse.
-
-For #276 this supports the separation:
+Agent Manifest #298 provides an independent counterexample to treating state-transition integrity as semantic correctness:
 
 ```text
 state-transition integrity
@@ -239,127 +184,59 @@ state-transition integrity
 != downstream authority
 ```
 
-It does **not** establish that Agent Memory needs a new algebra or that Agent Manifest's proposed assessment artifact should be adopted.
+This strengthens the separation already represented by Agent Memory's currentness, lifecycle, admission, authority, and evidence surfaces. It does not establish a need for a new algebra.
 
-## Interaction with #275
-
-The first #275 comparison slice strengthens the same conclusion.
-
-The reviewed implementations use substantially different product ontologies:
-
-```text
-EvolveAI
-  lifecycle tiers + temporal graph + vault + synthesis
-
-Hindsight
-  world facts + experiences + mental models + banks
-
-MemOS
-  graph memory + cubes + scheduler + retrieval + skills
-
-CodeGenome
-  content-addressed multi-overlay code graph
-
-GitNexus
-  persistent code knowledge graph + precomputed structural intelligence
-
-Graphify
-  extracted/inferred knowledge graph
-```
-
-Despite that variation, they repeatedly raise the same questions:
-
-- what is stable logical identity when bytes/physical IDs change?
-- what is observed versus derived?
-- what becomes stale after correction or revocation?
-- what residue survives deletion?
-- what scope may influence recall/traversal?
-- what evidence supports a derived state?
-- when is estimator output merely a proposal?
-- what authority permits a durable consequence?
-
-This is evidence that Agent Memory's **shared logical contract is real**.
-
-It is not yet evidence that the shared contract needs to be replaced or wrapped in another algebra.
-
-## Decision options
+## Evaluated outcomes
 
 ### A. `no_new_algebra`
 
-Use the existing lifecycle, derivation/currentness, isolation, PAMA, maintenance, and evidence contracts directly through the #274 module contract.
-
-Choose this if module implementations do not show recurring incompatible transition glue.
+**Selected.** Use the existing lifecycle, derivation/currentness, isolation, PAMA, maintenance, evidence, and component/qualification contracts directly.
 
 ### B. `narrow_transition_contract`
 
-Add a minimal representation-neutral transition envelope that references existing canonical contracts without redefining them.
+**Not currently required.** Reconsider only if at least two materially different component families repeatedly require the same transition/evidence envelope and the incompatibility causes a real correctness, recovery, interoperability, or evidence problem.
 
-Choose this only if at least two materially different module families repeatedly need the same orchestration/evidence binding and currently implement it inconsistently.
+A possible future envelope would bind:
+
+```text
+requested transition
++ target logical identity
++ source/currentness basis
++ scope/isolation basis
++ estimator evidence, if any
++ PAMA decision
++ backend transaction result
++ post-write validation
++ lifecycle result
++ reconstructable receipt
+```
+
+That would be an orchestration/evidence contract, not a database engine or new authority model.
 
 ### C. `profile_specific`
 
-Keep transition contracts inside module families where their physical semantics differ too much for one useful common transition envelope.
-
-Choose this if a universal contract would mostly contain optional/unknown fields or hide important backend capability differences.
+**Not required as the primary conclusion.** Backend-specific mechanics remain explicit in component/capability profiles where necessary, without creating competing Agent Memory semantic models.
 
 ### D. `stronger_engine`
 
-Create a broader memory-native logical runtime/state engine.
+**Rejected for lack of evidence.** No tested case requires Agent Memory to build a new database-like state runtime, uniform WAL/MVCC layer, universal conflict engine, or storage-specific transaction system.
 
-This requires the strongest evidence because it creates new durable architecture and implementation burden.
+## Future falsification trigger
 
-At this stage there is **no evidence sufficient to select D**.
+Reopen this question only if implementation demonstrates a recurring requirement that current contracts cannot faithfully express, such as:
 
-## Preliminary disposition
+- cross-component atomic logical transitions required for correctness;
+- uniform durable conflict/reconciliation semantics that cannot remain backend/profile specific;
+- recovery/replay semantics that must be shared across materially different substrates;
+- shared logical versioning that cannot safely remain represented through current identity/currentness contracts;
+- lifecycle closure spanning several physical modules in one indivisible governed transaction.
 
-Current evidence ranking, without pretending a research judgment is a scalar benchmark:
+Until then:
 
 ```text
-leading hypothesis:        no_new_algebra
-plausible if repetition emerges: narrow_transition_contract
-plausible for irreducible backend differences: profile_specific
-not currently justified:  stronger_engine
+recommendation = no_new_algebra
+new ADR = not warranted
+new physical persistence engine = not warranted
 ```
 
-The leading hypothesis is falsifiable. #274 implementation work can overturn it if real adapters repeatedly duplicate missing transition semantics.
-
-## What would justify a new generic contract
-
-A new representation-neutral transition contract should be proposed only if all of these occur:
-
-1. at least two materially different module/substrate families implement the same logical transition;
-2. existing contracts leave a concrete ambiguity or incompatibility;
-3. the ambiguity causes a correctness, interoperability, recovery, or evidence problem rather than merely verbose adapter code;
-4. the proposed contract removes that ambiguity without hiding backend capability differences;
-5. PAMA remains the authority boundary;
-6. lifecycle/currentness remains authoritative for semantic state;
-7. physical storage remains replaceable.
-
-## What would justify a stronger engine
-
-A stronger memory-native logical engine requires evidence beyond a repeated envelope.
-
-At minimum it would need to prove that existing module + profile composition cannot faithfully provide one or more of:
-
-- cross-module atomic logical transitions;
-- durable conflict/reconciliation semantics independent of backend behavior;
-- recovery/replay semantics that must be uniform for correctness;
-- shared logical versioning that cannot safely remain adapter-owned;
-- lifecycle closure spanning several physical modules in one governed transaction;
-- another recurring cross-substrate requirement demonstrated by implementation rather than intuition.
-
-No such gap is established yet.
-
-## Next evidence stage
-
-The next #276 stage should run the matched scenarios in `logical-state-algebra-scenarios.json` against existing reference harnesses and the first #274 module implementations.
-
-The primary question is not whether each backend can perform CRUD. It is:
-
-> Where, if anywhere, does the existing Agent Memory contract fail to express the same logical consequence without backend-specific semantic leakage?
-
-## ADR promotion gate
-
-Do not create a canonical ADR while `no_new_algebra` remains sufficient.
-
-An ADR is justified only after a generic missing primitive survives cross-substrate execution and adversarial review. A no-new-ADR result is a successful research result, not an unfinished one.
+See [`memory-native-logical-state-algebra-closeout.md`](memory-native-logical-state-algebra-closeout.md) for the final issue-closeout statement and evidence boundary.
