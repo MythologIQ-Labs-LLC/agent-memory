@@ -37,15 +37,16 @@ ADR-028: Accepted
 ADR-029: Proposed
 ADR-030: Accepted
 ADR-031: Accepted
+ADR-032: Accepted
 ```
 
-ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, and ADR-031 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance. ADR-024 likewise required executable positive and negative shared-write coordination evidence before promotion.
+ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, and ADR-032 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance. ADR-024 likewise required executable positive and negative shared-write coordination evidence before promotion.
 
 ADR-021 proposes the interoperability boundary for **portable memory-governance evidence**. It keeps Agent Memory authoritative for memory semantics, PAMA, lifecycle obligations, and canonical decision receipts while allowing external trust systems such as AgenTrust to verify and correlate evidence without redefining those semantics.
 
 ADR-022 establishes **memory isolation domains and controlled boundary crossing** as first-class architecture. It extends ADR-016 by making same-agent cross-project/task separation, shared-memory domains, derived-scope inheritance, and scope crossing explicitly governable rather than leaving them as implied metadata filters.
 
-ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 establishes **pre-write coordination for shared-memory mutation** as accepted doctrine. ADR-025 proposes **explicit authority for overwriting durable decision memory**. The #144 implementation slice now supplies executable proposal/authority/PAMA/supersession evidence for ADR-025, but #144 explicitly excludes automatic maturity promotion, so ADR-025 remains Proposed pending a separate doctrine-governance decision.
+ADR-023 proposes that durable correction is **append-only supersession rather than destructive deletion**. ADR-024 establishes **pre-write coordination for shared-memory mutation** as accepted doctrine. ADR-025 proposes **explicit authority for overwriting durable decision state**. The #144 implementation slice now supplies executable proposal/authority/PAMA/supersession evidence for ADR-025, but #144 explicitly excludes automatic maturity promotion, so ADR-025 remains Proposed pending a separate doctrine-governance decision.
 
 ADR-026 proposes a source-neutral epistemic boundary: **claim origin establishes provenance, not evidentiary authority**. ADR-027 proposes **governed re-admission for explicitly rejected values** so a corrected value cannot silently return merely by acquiring a fresh identity. Both remain Proposed while their linked evidence programs run.
 
@@ -56,6 +57,8 @@ ADR-029 proposes a three-layer governance-consumer boundary: **canonical Agent M
 ADR-030 establishes that temporal and authorization consumers require a **versioned compatibility/currentness evaluation** before a memory-derived projection can be treated as current policy input. Serialization success is not semantic compatibility, and historical temporal evidence is not current authority.
 
 ADR-031 establishes a **layered temporal-commitment model**. Material temporal claims that determine historical identity belong inside deterministic content commitments, while signer attestation, signer trust, external witnessed time/transparency evidence, currentness, and PAMA authority remain distinct claims.
+
+ADR-032 establishes **governed structural mutability**. Memory shape may adapt, and probabilistic or learned systems may discover and propose structural changes, but canonical structural consequences are committed only through a versioned deterministic authorized envelope or explicit authorized human decision. Authority escalates with semantic impact, blast radius, migration requirements, scope, authority effect, and irreversibility.
 
 ## Current status policy
 
@@ -89,6 +92,8 @@ estimate / proposal
 The repository now has executable evidence for stochastic containment, cross-scope recall, concurrency conflict handling, deletion residue and transitive deletion behavior, reconstructable receipts, adversarial boundary enforcement, and a pinned real-substrate path. The P10 acceptance audit maps all fourteen ADR-020 gates to current evidence.
 
 Acceptance does not upgrade the narrow reference adapter to a higher cumulative conformance level. Doctrine maturity and implementation conformance remain separate claims.
+
+ADR-032 is a domain-specific strengthening of this boundary for canonical structural mutation: probabilistic systems may propose a structural change, but the authority determination that commits the canonical structural consequence must be deterministic and versioned or explicitly human-authorized.
 
 ## Portable memory-governance evidence
 
@@ -260,6 +265,32 @@ separate Agent Memory currentness + PAMA evaluation
 
 The commitment provides exact historical identity for material temporal claims. Signer attestation is not signer trust, witnessed time is not event truth, predecessor chaining is not proof of complete or unique history, and cryptographic validity does not create lifecycle currentness or authority. The accepted evidence includes adversarial fork/gap behavior, supersession/currentness separation, witness-binding failures, optional UOR compatibility, and exact-head repository validation.
 
+## Governed mutable memory structure
+
+[`ADR-032`](ADR-032-governed-mutable-memory-structure.md) is **Accepted**.
+
+Its central boundary is:
+
+```text
+learned / probabilistic structural discovery
+        |
+        v
+structural proposal
+        |
+        v
+deterministic semantic / migration / dependency / scope analysis
+        |
+        v
+deterministic authorized envelope OR explicit human authority
+        |
+        v
+committed structural consequence
+```
+
+The doctrine distinguishes canonical semantic shape, application/domain ontology, and derived/physical representation. Rebuild-only derived changes may be autonomous under deterministic maintenance policy. Bounded additive changes may be autonomous only when a versioned deterministic rule proves the authorized envelope. Semantic migrations and destructive/cross-scope/authority-bearing changes require explicit human authority unless a future accepted doctrine narrows an exact delegated class.
+
+PAMA 1.2 remains conservatively stricter than the new doctrine because it routes all `domain_schema_mutation` outcomes to review or external verification. Issue #281 owns the implementation evidence needed before any narrower autonomous structural path is introduced.
+
 ## Canonical references
 
 - [`../01-layer-model.md`](../01-layer-model.md)
@@ -278,6 +309,7 @@ The commitment provides exact historical identity for material temporal claims. 
 - [`../32-memory-quality-metrics.md`](../32-memory-quality-metrics.md)
 - [`../34-adapter-contracts.md`](../34-adapter-contracts.md)
 - [`../41-memory-isolation-domains-and-governed-crossing.md`](../41-memory-isolation-domains-and-governed-crossing.md)
+- [`../42-governed-mutable-memory-fabric.md`](../42-governed-mutable-memory-fabric.md)
 - [`../profiles/durable-decision-memory-profile.md`](../profiles/durable-decision-memory-profile.md)
 - [`../profiles/governance-context-projection-profile.md`](../profiles/governance-context-projection-profile.md)
 - [`../profiles/temporal-commitment-evidence-profile.md`](../profiles/temporal-commitment-evidence-profile.md)
