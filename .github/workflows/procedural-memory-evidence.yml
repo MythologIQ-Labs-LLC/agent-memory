@@ -10,6 +10,11 @@ on:
       - "reference/run_procedural_memory.py"
       - "reference/fixtures/component-capabilities/**"
       - "schemas/component-capability-profile.schema.json"
+      - "docs/adr/ADR-034-procedural-memory-is-not-execution-authority.md"
+      - "docs/adr/README.md"
+      - "docs/programs/memory-modules/README.md"
+      - "docs/programs/runtime-evidence/procedural-memory.md"
+      - "wiki-src/Architecture-Decisions.md"
       - ".github/workflows/procedural-memory-evidence.yml"
   workflow_dispatch:
 

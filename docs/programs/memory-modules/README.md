@@ -18,43 +18,84 @@ Capability roles such as graph, vector, GraphRAG, lifecycle, procedural memory, 
 - [`first-party-capability-inventory.md`](first-party-capability-inventory.md) — evidence-bounded EvolveAI and CodeGenome capability/maturity map.
 - [`capability-vocabulary.md`](capability-vocabulary.md) — representation-neutral vocabulary spanning retained-content, graph/vector/temporal retrieval, procedural/metamemory, lifecycle, latent, multimodal, sharing, and operational capabilities.
 - [`external-capability-frontier.md`](external-capability-frontier.md) — external-system mapping and gap classification across the same capability families.
-- [`implementation-lane-selection.md`](implementation-lane-selection.md) — selected next vertical slice: governed procedural/skill memory.
+- [`implementation-lane-selection.md`](implementation-lane-selection.md) — why governed procedural/skill memory was selected as the first product-shaped fabric proof.
+- [`../runtime-evidence/procedural-memory.md`](../runtime-evidence/procedural-memory.md) — executable #295 evidence for capability routing, governed skill lifecycle, action-authority separation, and metamemory refusal.
 
 ## Current doctrine decisions
 
-- ADR-033: capability identity/maturity is independent from component identity and overlapping implementations are composed or selected deterministically.
-- ADR-034 (Proposed): procedural/skill memory is governed retained state, not standing execution authority; metamemory is a stricter configuration/policy-change surface.
+- **ADR-033 Accepted:** capability identity/maturity is independent from component identity and overlapping implementations are composed or selected deterministically.
+- **ADR-034 Accepted:** procedural/skill memory is governed retained state, not standing execution authority; exact approval binds the exact procedure/state, and metamemory is a stricter configuration/policy-change surface.
+
+## Executable capability fabric
+
+The first reference slice implements the minimum reusable #287/#290 surfaces required by #295:
+
+```text
+machine-readable component capability declaration
+        |
+        v
+minimum maturity + posture requirement
+        |
+        v
+deterministic provider resolution
+        |
+        +-- no eligible provider -> explicit failure
+        +-- ambiguous providers -> explicit failure
+        +-- configured eligible preference -> deterministic selection
+        |
+        v
+selected implementation
+        |
+        v
+normal Agent Memory PAMA / recall authority remains controlling
+```
+
+The capability registry never turns provider selection into memory mutation or recall permission. Fallback cannot silently lower minimum maturity or required scope posture.
+
+The checked-in EvolveAI and CodeGenome declarations are evidence-bounded examples. They preserve known limitations and do not promote either subsystem to `reference_qualified` merely because MythologIQ owns them.
+
+## Governed procedural-memory reference slice
+
+The first concrete workload is:
+
+```text
+procedure proposal
+  -> PAMA-governed promotion
+  -> durable scoped/versioned skill
+  -> later-session retrieval candidate
+  -> governed admission/activation
+  -> plan influence
+  -> separate runtime action proposal
+  -> separate action governance
+  -> separate execution evidence
+```
+
+The slice also proves correction/supersession, exact-content approval binding, stale replay refusal, cross-project admission refusal, revocation/residue honesty, and metamemory self-authorization refusal.
+
+It deliberately uses a simple inspectable reference artifact and the existing `GovernedMemoryAdapter`. A new proprietary skill database/repository was not required to prove the semantics.
 
 ## Work tracking
 
 - #274 — capability-oriented memory component program
-- #275 — adversarial first-party/external capability comparison; remains executable/runtime work
-- #280 — component/capability registry and routing fabric
-- #284 — first-party capability inventory and subsystem-gap analysis
-- #286 — external capability coverage mapping
-- #287 — machine-readable capability maturity declarations
-- #289 — first-party subsystem-boundary decision
-- #290 — capability-based routing and overlap resolution
-- #291 — capability vocabulary
-- #292 — EvolveAI capability qualification
-- #293 — CodeGenome capability qualification
+- #275 — adversarial first-party/external capability comparison; remains executable/runtime comparator work
+- #280 — broader component/capability registry and routing fabric program
+- #284 — first-party capability inventory and subsystem-gap analysis, completed
+- #286 — external capability coverage mapping, completed
+- #287 — machine-readable capability maturity declarations, implemented by the #295 reference slice
+- #289 — first-party subsystem-boundary decision, completed
+- #290 — capability-based routing and overlap resolution, implemented by the #295 reference slice
+- #291 — capability vocabulary, completed
+- #292 — EvolveAI capability qualification, remains open
+- #293 — CodeGenome capability qualification, remains open
+- #295 — governed procedural/skill memory reference vertical slice
 
-## Current research conclusion
+## Current portfolio conclusion
 
 No new proprietary memory subsystem is justified by the current gap analysis.
 
-The strongest genuinely distinct missing generic capability is **procedural/skill memory**, but current external evidence demonstrates that this can be proven with simple human-readable/declarative artifacts rather than a new database or repository.
+EvolveAI and CodeGenome remain broad multi-capability first-party subsystem candidates. Their overlapping graph/vector capabilities should be qualified and composed by capability, not split merely to remove implementation overlap.
 
-The first implementation lane therefore is:
-
-```text
-#287 capability declarations
-  -> #290 deterministic capability resolution
-  -> governed procedural/skill memory vertical slice
-  -> ADR-034 acceptance evidence
-```
-
-EvolveAI and CodeGenome remain broad multi-capability first-party subsystem candidates. Their overlapping graph/vector capabilities should be qualified and composed by capability, not split merely to remove code-level duplication.
+Procedural/skill memory was a genuinely distinct generic gap, but the reference implementation demonstrates that its stable value is semantic and governance-oriented rather than tied to a new storage product.
 
 ## Safeguards
 
@@ -66,6 +107,7 @@ retrieval score != recall permission
 graph reachability != permission
 first-party ownership != conformance
 procedural memory != execution permission
+approval for X != approval for modified Y
 metamemory proposal != configuration authority
 ```
 
