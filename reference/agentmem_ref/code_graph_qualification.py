@@ -81,9 +81,18 @@ def _graphify_call_facts(path: Path) -> set[tuple[str, str, str]]:
     payload = _load(path)
     if not isinstance(payload, dict):
         raise ValueError(f"Graphify graph output must be an object: {path}")
-    nodes = {node.get("id"): node for node in payload.get("nodes", []) if isinstance(node, dict) and node.get("id")}
+    nodes = {
+        node.get("id"): node
+        for node in payload.get("nodes", [])
+        if isinstance(node, dict) and node.get("id")
+    }
+    # Graphify exports NetworkX node-link JSON using `links`. Accept `edges`
+    # only as a compatibility fallback for older/synthetic evidence.
+    relationships = payload.get("links")
+    if relationships is None:
+        relationships = payload.get("edges", [])
     facts: set[tuple[str, str, str]] = set()
-    for edge in payload.get("edges", []):
+    for edge in relationships:
         if not isinstance(edge, dict) or edge.get("relation") != "calls":
             continue
         source = nodes.get(edge.get("source"))
