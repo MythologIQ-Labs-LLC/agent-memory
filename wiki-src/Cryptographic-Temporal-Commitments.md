@@ -81,7 +81,7 @@ Historical integrity survives changes in present authority.
 
 ### Signer trust
 
-The #265 evidence layer makes signer trust a separate, explicit contract rather than a caller-supplied assumption.
+The merged external-trust evidence layer makes signer trust a separate, explicit contract rather than a caller-supplied assumption.
 
 Trust binds:
 
@@ -143,7 +143,7 @@ or even that its own claimed `event_time` is correct.
 witnessed existence time != event occurrence time
 ```
 
-The #265 transparency contract also distinguishes two bounded history claims:
+The merged transparency contract also distinguishes two bounded history claims:
 
 ```text
 verified inclusion
@@ -246,7 +246,7 @@ The merged ADR-031 reference evidence exercises:
 
 ADR-031 is **Accepted**.
 
-The active #265 evidence slice adds exact signer-trust binding and provider-neutral inclusion/consistency evidence, plus a pinned real RFC 3161 comparator. That slice remains exact-head evidence-gated until its external comparator and repository validation pass.
+The completed #265 / PR #267 evidence slice adds exact signer-trust binding and provider-neutral inclusion/consistency evidence plus a real RFC 3161 comparator against exact OpenSSL 3.6.3 source. PR #267 passed the full repository matrix at exact final head `3d3483feb10647ce02ed67c9d09b7022406196a6`; those results remain bounded repository evidence rather than a production trust-service guarantee.
 
 ## Canonical references
 

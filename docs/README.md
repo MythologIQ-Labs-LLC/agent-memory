@@ -21,7 +21,7 @@ The repository is intentionally layered. Start with the smallest path that answe
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
 | Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
 | Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
-| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-029 |
+| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-031 |
 
 ## Native PAMA doctrine
 
@@ -138,32 +138,17 @@ Programs hold multi-slice work that produces evidence rather than doctrine. They
 
 See [`adr/README.md`](adr/README.md).
 
-Current doctrine state:
+The ADR index is the canonical hand-maintained doctrine-status ledger. This documentation map deliberately does not duplicate the complete status table, because duplicated current-state ledgers drift.
 
-```text
-ADR-001 through ADR-020: Accepted
-ADR-021: Proposed
-ADR-022: Accepted
-ADR-023: Proposed
-ADR-024: Accepted
-ADR-025: Proposed
-ADR-026: Proposed
-ADR-027: Proposed
-ADR-028: Proposed
-ADR-029: Proposed
-```
+Current decision highlights relevant to the documentation map:
 
-ADR-020 is Accepted after its explicitly stronger executable end-to-end evidence gate was satisfied. Acceptance remains doctrine maturity, not universal implementation conformance.
-
-ADR-021 remains Proposed until portable memory-governance evidence satisfies its independent interoperability and negative-path gates.
-
-ADR-022 is Accepted because isolation domains, controlled crossings, same-agent task/project separation, derived-scope propagation, shared-memory membership, boundary-crossing receipts, and the required schema/fixture surface are explicitly represented and validated.
-
-ADR-024 is Accepted because valid, conflicting, stale, expired, and unauthorized shared-write claim paths are executable; successful and failed claims produce audit evidence; and a valid coordination claim is proven unable to override a stricter PAMA decision. The reference lease coordinator demonstrates the contract without making one locking mechanism normative.
-
-ADR-023 and ADR-025 through ADR-027 remain individually Proposed under their own durable-mutation/evidence gates.
-
-ADR-028 remains Proposed for the language-neutral normative core and optional implementation/interoperability profile boundary. ADR-029 remains Proposed while Governance Context Projection proceeds from schema/fixture/reference-builder evidence toward a real consumer adapter and the additional privacy, reconstruction, and near-match evidence named by that ADR.
+- **ADR-020** is Accepted after its explicitly stronger executable governed-uncertainty evidence gate.
+- **ADR-022** is Accepted for logical memory isolation domains and governed boundary crossing.
+- **ADR-024** is Accepted for pre-write coordination of shared durable-memory mutation.
+- **ADR-028** is Accepted and preserves a language-neutral normative core with optional implementation/interoperability profiles.
+- **ADR-030** is Accepted and requires versioned compatibility/currentness before memory-derived projections are treated as current temporal or authorization input.
+- **ADR-031** is Accepted and binds material temporal claims into deterministic commitments while keeping signer trust, external witness evidence, lifecycle currentness, and PAMA authority separate.
+- **ADR-021, ADR-023, ADR-025, ADR-026, ADR-027, and ADR-029** remain Proposed unless and until their individual maturity reviews change the canonical ADR status. Merged implementation evidence does not silently promote doctrine.
 
 ## Governance Context Projection
 

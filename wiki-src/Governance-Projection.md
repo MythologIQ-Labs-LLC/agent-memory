@@ -235,7 +235,7 @@ Dogwood, Cedar, and Cedarling expose a second question beyond ADR-029's anti-aut
 
 A projection can remain syntactically valid while its source/domain schema, currentness, target policy schema, temporal horizon, isolation model, or actually evaluated context has changed.
 
-ADR-030 and #256 therefore add a compatibility/currentness gate:
+Accepted ADR-030 and the merged #256 implementation add a compatibility/currentness gate:
 
 ```text
 canonical memory
@@ -250,11 +250,11 @@ See **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)
 
 ## Current maturity
 
-The base governance-projection architecture is tracked by **proposed ADR-029**. The temporal/schema compatibility extension is tracked by **proposed ADR-030**, research issue **#255**, and implementation issue **#256**.
+The base governance-projection architecture remains tracked by **Proposed ADR-029** pending its own stronger maturity review. Its merged schema, fixtures, reference builder, precedent handling, and consumer-facing evidence do not silently make it canonical doctrine.
 
-ADR-029 remains Proposed until the stronger acceptance evidence in the canonical ADR is satisfied. ADR-030 independently remains Proposed until its adversarial and exact-pinned comparator evidence passes.
+The temporal/schema compatibility extension is **Accepted ADR-030**. Its research and implementation evidence, including #255 and #256, established versioned compatibility/currentness checks and adversarial consumer behavior before acceptance. ADR-030 acceptance does not promote ADR-029.
 
-ADR-028 separately preserves the language-neutral normative core and optional implementation-profile boundary. Together, these decisions keep both the implementation layer and governance-consumer layer from capturing core Agent Memory semantics.
+**ADR-028 is Accepted** and separately preserves the language-neutral normative core and optional implementation-profile boundary. Together, ADR-028 and ADR-030 keep implementation language and temporal-policy consumers from capturing core Agent Memory semantics while ADR-029 remains independently maturity-gated.
 
 ## Canonical sources
 
