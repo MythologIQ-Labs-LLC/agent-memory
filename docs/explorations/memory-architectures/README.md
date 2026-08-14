@@ -1,22 +1,22 @@
 # Governed Memory Across Architecture Families
 
-Status: **active exploratory research** under #67. This directory is not canonical doctrine.
+Status: **#67 research complete; bounded follow-on research active under #275 and #276.** This directory is not canonical doctrine.
 
 ## Purpose
 
 Agent Memory is intended to govern retained state without assuming that memory must be represented as files, vectors, graphs, rows, events, latent state, or any single combination of them.
 
-This program asks a harder question than “which backend is best?”:
+The completed #67 program asked a harder question than “which backend is best?”:
 
 > **Which governance obligations remain invariant, and which implementation/evidence techniques change, when memory is represented and retrieved through fundamentally different architecture families?**
 
-The program became active after its original sequencing prerequisites were completed:
+The original program became active after its sequencing prerequisites were completed:
 
 - #46 runtime-evidence program
 - #63 portable governance evidence / AgenTrust interoperability
 - #68 memory isolation domains and governed boundary crossing
 
-Those programs now provide evidence and vocabulary that this exploration can pressure-test across architecture families.
+Its cross-architecture results are preserved here. New research must be bounded to a genuinely new implementation, capability, or abstraction question rather than reopening #67 as a permanent catch-all.
 
 ## Strategic scope intent
 
@@ -48,16 +48,24 @@ No current representation is protected by historical sequencing. If comparative 
 
 ## Research products
 
-This foundation slice is tracked by #224.
+The original architecture-family foundation was tracked by #224 and closed out under #67.
 
 - [`taxonomy.md`](taxonomy.md) — architecture-family vocabulary and boundaries
 - [`analysis-contract.md`](analysis-contract.md) — common questions every family must answer
 - [`governance-comparison-matrix.md`](governance-comparison-matrix.md) — bounded cross-family comparison with explicit evidence status
 - [`hybrid-composition-patterns.md`](hybrid-composition-patterns.md) — governance of multi-stage memory compositions
-- [`adversarial-scenarios.md`](adversarial-scenarios.md) — equivalent pressure tests for later representative substrates
+- [`adversarial-scenarios.md`](adversarial-scenarios.md) — equivalent pressure tests for representative substrates
 - [`opaque-latent-predictive-state.md`](opaque-latent-predictive-state.md) — #137 JEPA/latent predictive-state study and comparative architecture hypotheses
+- [`closeout-synthesis.md`](closeout-synthesis.md) — finite #67 synthesis and the distinctions that survived the cross-architecture program
 
-Follow-on family studies should eventually include file/note memory, lexical/vector RAG, knowledge graphs, GraphRAG, event logs, relational/document stores, hierarchical memory, shared/distributed memory, and opaque learned/latent state.
+### Bounded post-closeout research
+
+Current follow-on work does not reopen the completed taxonomy program.
+
+- [`first-party-module-adversarial-comparison.md`](first-party-module-adversarial-comparison.md) — #275 comparison of EvolveAI and CodeGenome against materially relevant external peers
+- [`first-party-module-adversarial-scenarios.json`](first-party-module-adversarial-scenarios.json) — matched negative-path scenarios for the #275 implementation comparisons
+- [`memory-native-logical-state-algebra.md`](memory-native-logical-state-algebra.md) — #276 pressure test for whether a new logical transition abstraction is actually needed
+- [`logical-state-algebra-scenarios.json`](logical-state-algebra-scenarios.json) — cross-substrate scenarios and explicit promotion gates for #276
 
 ## Evidence status
 
@@ -88,7 +96,7 @@ A paper, implementation, maintainer statement, benchmark, community report, loca
 
 ## Common architecture-neutral invariants under test
 
-The following are **hypotheses to pressure-test**, not conclusions this research is required to preserve:
+The original research pressure-tested these hypotheses repeatedly:
 
 ```text
 retrieval relevance != recall permission
@@ -102,15 +110,15 @@ predictive quality != action authority
 external/runtime evidence != lifecycle satisfaction
 ```
 
-A cross-architecture counterexample is valuable. A no-change result where the current doctrine survives a materially different architecture is also valuable.
+The closeout synthesis records where those distinctions survived. Follow-on work should attempt to falsify them when a new implementation creates a materially new counterexample rather than treating survival as guaranteed doctrine by repetition alone.
 
-## Relationship to #137 and #138
+## Relationship to learned / predictive memory research
 
-#137 tests the representation-agnostic hypothesis against opaque learned/JEPA-style predictive state. It should be treated as an adversarial architecture family and a serious candidate operational memory architecture, not an exotic footnote or a mechanism that must remain merely external to Agent Memory.
+#137 tested the representation-agnostic hypothesis against opaque learned/JEPA-style predictive state. #230 and #246 extended that work into operational-memory and long-horizon planning comparisons.
 
-#138 supplies recurring field claims, benchmark failures, context-assembly questions, long-horizon degradation hypotheses, and evaluation-contamination risks. It is a research feed into this program, not a source of doctrine by itself.
+Those completed research products are inputs to #274's learned/latent module lane. A new implementation should not create another generic “does predictive quality create authority?” research loop unless it exposes a genuinely new failure mode. Predictive quality remains evidence/influence, not action or mutation authority.
 
-## Research sequence
+## Original #67 research sequence
 
 ```text
 Phase A0  taxonomy + common analysis contract
@@ -121,10 +129,10 @@ Phase A4  equivalent cross-architecture experiments
 Phase A5  adversarial review and promotion decisions
 ```
 
-Do not choose representative products before the family taxonomy is stable enough to prevent one implementation from defining the category.
+That sequence is complete. #275 and #276 are finite follow-on questions generated by the closeout and #274 implementation program, not additional phases of #67.
 
 ## Promotion boundary
 
 Research findings may move into numbered doctrine, ADRs, schemas, profiles, fixtures, or conformance only when the evidence-promotion policy is satisfied.
 
-This directory should preserve rejected hypotheses and doctrine-survives results instead of silently deleting them. The goal is a reconstructable research record, not a persuasive essay that remembers only successful arguments.
+This directory preserves rejected hypotheses and doctrine-survives results instead of silently deleting them. The goal is a reconstructable research record, not a persuasive essay that remembers only successful arguments.
