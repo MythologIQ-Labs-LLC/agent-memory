@@ -21,6 +21,7 @@
 
 **Build & Evaluate**
 - [Implementation Guide](Implementation-Guide)
+- [Configuration and Profiles](Configuration-and-Profiles)
 - [Conformance and Evidence](Conformance-and-Evidence)
 - [Runtime Evidence](Runtime-Evidence)
 - [Research and Sources](Research-and-Sources)
