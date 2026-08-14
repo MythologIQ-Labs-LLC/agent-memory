@@ -30,12 +30,14 @@ An Accepted ADR does **not** mean every mapped product implements it. That would
 - **ADR-030:** Accepted, versioned compatibility/currentness for temporal-policy projections
 - **ADR-031:** Accepted, deterministic temporal commitments with separate evidence and authority layers
 - **ADR-032:** Accepted, governed mutable memory structure with deterministic or explicit-human canonical structural authority
+- **ADR-033:** Accepted, independent capability maturity and deterministic component/capability composition
+- **ADR-034:** Proposed, procedural/skill memory as retained state rather than standing execution authority
 
 Each Proposed ADR has its own acceptance evidence. A green implementation slice does not silently accept a doctrine decision whose ADR demands broader evidence.
 
 ## Important decision families
 
-Rather than memorizing thirty-two filenames, think in decision families.
+Rather than memorizing thirty-four filenames, think in decision families.
 
 ### Identity and provenance
 
@@ -65,6 +67,20 @@ A valid claim gives a writer the bounded opportunity to attempt a shared mutatio
 
 Decisions about component boundaries, scope, isolation domains, privacy, trust, conflict, and multi-memory behavior.
 
+ADR-033 establishes the component/capability composition model:
+
+```text
+component identity != capability identity
+
+required capability + maturity/posture
+  -> deterministic compatibility resolution
+  -> selected/composed implementation
+```
+
+A component may expose several independently matured capabilities, and several components may expose the same capability. Hidden registration order is not an acceptable routing policy. Ambiguous overlap must be resolved deterministically or fail explicitly, and fallback cannot silently lower maturity, isolation, currentness, deletion, failure, or authority guarantees.
+
+Capability routing remains separate from PAMA mutation authority and governed recall admission.
+
 ### Governed uncertainty and mutable structure
 
 ADR-020 establishes the general governed-consequence boundary around uncertain, learned, heuristic, or probabilistic discovery.
@@ -83,6 +99,23 @@ Memory shape may adapt. A probabilistic system may discover and recommend a bett
 Current PAMA 1.2 remains conservatively review-first for `domain_schema_mutation` until the narrower implementation evidence is earned.
 
 See **[Governed Uncertainty](Governed-Uncertainty)** and **[Mutable Memory Fabric](Mutable-Memory-Fabric)**.
+
+### Procedural memory and skills
+
+ADR-034 proposes a separate boundary for retained procedures:
+
+```text
+skill retained
+  != skill retrieved
+  != skill admitted / activated
+  != action execution authorized
+```
+
+A remembered procedure may shape a plan after governed recall admission. It does not become standing permission to execute shell commands, repository changes, external calls, deployments, payments, or any other consequential action.
+
+ADR-034 also distinguishes ordinary task skills from **metamemory**. A remembered routine for changing how Agent Memory extracts, consolidates, routes, retrieves, ranks, prunes, archives, or forgets memory is a memory-management/profile-change proposal. It remains subject to PAMA and ADR-032 rather than applying itself because it was recalled.
+
+Issue #295 owns the first executable procedural-memory acceptance path and the evidence required before ADR-034 can be promoted.
 
 ### Implementation portability
 
@@ -166,7 +199,7 @@ The canonical ADR files, not this Wiki summary, determine current decision text 
 ## Next
 
 - **[Governed Uncertainty](Governed-Uncertainty)** for governed consequences around probabilistic discovery
-- **[Mutable Memory Fabric](Mutable-Memory-Fabric)** for ADR-032, configurable modules, and structural adaptation
+- **[Mutable Memory Fabric](Mutable-Memory-Fabric)** for ADR-032/ADR-033, configurable components/capabilities, and structural adaptation
 - **[Governance Projection](Governance-Projection)** for ADR-029 and governance-consumer interoperability
 - **[Temporal Commitments](Cryptographic-Temporal-Commitments)** for ADR-031
 - **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for current external governance comparators
