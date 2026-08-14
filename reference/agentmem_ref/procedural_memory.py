@@ -259,8 +259,8 @@ class ProceduralMemoryRuntime:
             target_class=policy.M3,
             scope=artifact.scope,
             operation=operation,
-            current_strength="candidate" if current_version == 0 else "durable",
-            proposed_strength="durable",
+            current_strength="reinforced" if current_version == 0 else "promoted",
+            proposed_strength="promoted",
             downstream_authority=policy.A2,
             reversibility="reversible",
             risk_class="low" if operation == "promotion" else "medium",
@@ -278,8 +278,6 @@ class ProceduralMemoryRuntime:
 
     def commit_skill(self, skill_proposal: SkillProposal) -> SkillCommitResult:
         resolution = self.resolve_capability()
-        # Round-trip validation makes the exact committed payload and digest the
-        # thing we subsequently trust, not the in-memory dataclass alone.
         serialized = skill_proposal.artifact.serialize()
         SkillArtifact.from_text(serialized)
         result = self.adapter.commit_proposal(skill_proposal.proposal, serialized)
@@ -392,8 +390,8 @@ class ProceduralMemoryRuntime:
             target_class=policy.M3,
             scope="procedural-memory",
             operation="pruning",
-            current_strength="durable",
-            proposed_strength="pruned",
+            current_strength="promoted",
+            proposed_strength="archived",
             downstream_authority=policy.A1,
             reversibility="reversible",
             risk_class="low",
@@ -428,8 +426,8 @@ class ProceduralMemoryRuntime:
             target_class=policy.M5,
             scope=artifact.scope,
             operation="policy_mutation",
-            current_strength="candidate",
-            proposed_strength="durable",
+            current_strength="reinforced",
+            proposed_strength="promoted",
             downstream_authority=policy.A5,
             reversibility="reversible",
             risk_class="high",
