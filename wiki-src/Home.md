@@ -8,7 +8,7 @@
 
 Agent Memory is about retained state that can influence future behavior without quietly acquiring truth, scope, permanence, or authority it has not earned.
 
-It separates uncertain interpretation from governed consequence, preserves why state changed, and treats correction, isolation, temporal integrity, and forgetting as first-class architectural responsibilities rather than cleanup work.
+It separates uncertain interpretation from governed consequence, preserves why state changed, and treats correction, isolation, temporal integrity, forgetting, and structural adaptation as first-class architectural responsibilities rather than cleanup work.
 
 > **Agentic memory is retained state that can alter an agent's future interpretation, reasoning, planning, tool use, action, or adaptation across a meaningful persistence boundary.**
 
@@ -29,26 +29,57 @@ The loop is intentionally split into responsibilities that many memory systems b
 3. **Commit.** A permitted consequence becomes explicit retained state with reconstructable evidence.
 4. **Recall.** Retrieval creates candidates; governance decides what may enter active context.
 5. **Revise or forget.** Correction, supersession, staleness, deletion, and residual derived state remain distinct and auditable.
+6. **Adapt structure safely.** New memory shape may be discovered dynamically, but canonical structural mutation requires deterministic authorized policy or explicit human authority.
 
-The governing idea is compact:
+The governing ideas are compact:
 
 > **Probabilistic epistemics. Governed consequences.**  
-> **Uncertainty may propose. Authority constrains.**
+> **Uncertainty may propose. Authority constrains.**  
+> **Memory shape may adapt. Structural authority may not be probabilistic.**
 
 ## Start with what you need
 
 - **New to Agent Memory?** Start with **[Getting Started](Getting-Started)**, then **[Core Concepts](Core-Concepts)** for the vocabulary and invariants the architecture preserves.
 - **Want the architecture in pictures?** Open **[Decision Flows and Memory Lifecycle](Decision-Flows-and-Memory-Lifecycle)** for lifecycle, PAMA, recall, correction, deletion, isolation, and evidence flows.
+- **Designing a configurable or adaptive memory stack?** Read **[Mutable Memory Fabric](Mutable-Memory-Fabric)** for the Agent Runtime / Agent Memory / Agent Governance boundary, memory modules, routing, and structural-mutation safeguards.
 - **Working with temporal memory or temporal policy?** Start with **[Temporal Memory Architecture](Temporal-Memory-Architecture)**, then use **[Cryptographic Temporal Commitments](Cryptographic-Temporal-Commitments)** and **[Temporal Policy and Governed Memory](Temporal-Policy-and-Governed-Memory)** for the detailed evidence and consumer views.
-- **Implementing a memory system?** Use the **[Implementation Guide](Implementation-Guide)**, then move into **[PAMA](PAMA)**, **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)**, and **[Canonical and Derived State](Canonical-and-Derived-State)** as needed.
+- **Implementing a memory system?** Use the **[Implementation Guide](Implementation-Guide)**, then move into **[PAMA](PAMA)**, **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)**, **[Canonical and Derived State](Canonical-and-Derived-State)**, and **[Mutable Memory Fabric](Mutable-Memory-Fabric)** as needed.
 - **Integrating with governance or approval systems?** Read **[Governance Projection](Governance-Projection)** for the vendor-neutral memory-to-governance boundary and consumer-adapter ownership model.
 - **Reviewing security or isolation?** Start with **[Security and Privacy](Security-and-Privacy)** for scope, tenancy, isolation domains, sensitivity, leakage, and deletion boundaries.
 - **Checking what is actually proven?** Read **[Conformance and Evidence](Conformance-and-Evidence)** first, then **[Runtime Evidence](Runtime-Evidence)** for what has actually executed.
 - **Researching the foundations or influences?** Use **[Research and Sources](Research-and-Sources)** and **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)**.
 
+## Mutable memory fabric
+
+Agent Memory is the memory system, not whichever persistence or retrieval technology happens to be configured today.
+
+```text
+Agent Runtime
+    |
+    v
+Agent Memory
+  semantics / lifecycle / provenance / scope
+  PAMA / structural authority / routing / recall admission
+    |
+    +--> files / SQL / graphs / RAG / GraphRAG
+    +--> vector / learned / JEPA-style representations
+    +--> EvolveAI / CodeGenome candidate first-party modules
+    +--> external memory-system adapters
+    |
+    v
+Agent Governance peers
+  DashClaw / AGT / other policy, approval, enforcement systems
+```
+
+Short-, medium-, and long-term memory are policy characteristics, not mandatory backend assignments. A deployment can choose different module combinations while the Agent Memory behavioral contract remains stable.
+
+Structural adaptation is similarly separated from structural authority. Learned systems may discover and propose new domain or representation shape, but canonical structural consequences are committed only through deterministic versioned policy or explicit human authority, with review increasing as semantic impact, scope, migration cost, blast radius, and irreversibility grow.
+
+See **[Mutable Memory Fabric](Mutable-Memory-Fabric)** for the complete boundary.
+
 ## Temporal memory architecture
 
-Agent Memory now treats historical identity, signer evidence, lifecycle currentness, consumer compatibility, and policy authority as separate layers rather than one ambiguous timestamped record.
+Agent Memory treats historical identity, signer evidence, lifecycle currentness, consumer compatibility, and policy authority as separate layers rather than one ambiguous timestamped record.
 
 <p align="center">
   <picture>
@@ -86,6 +117,7 @@ A retrieval system can answer **what looks relevant**. A governed memory archite
 - Can the resulting consequence be reconstructed later?
 - Can the memory be corrected without destroying history?
 - Can a deletion request reach summaries, indexes, caches, graph edges, and other derived state?
+- Can the memory system change its own structure without letting a model quietly become the schema authority?
 
 That is the boundary Agent Memory is designed to make explicit.
 
@@ -108,9 +140,12 @@ supersession   != correction
 delete action  != forgetting completeness
 precedent      != standing permission
 projection     != policy decision
+module         != authority
+structural proposal != structural commit
+backend shape  != canonical memory semantics
 ```
 
-These are not slogans pasted over a storage layer. They determine where evidence, policy, scope, lifecycle, and authority must remain independently inspectable.
+These are not slogans pasted over a storage layer. They determine where evidence, policy, scope, lifecycle, structure, and authority must remain independently inspectable.
 
 ## Governance systems can consume memory without owning it
 
@@ -147,13 +182,14 @@ Agent Memory separates doctrine maturity from implementation evidence so that on
 
 | Area | Current state |
 |---|---|
-| **Accepted doctrine** | ADR-001 through ADR-020, ADR-022, ADR-024, ADR-028, ADR-030, and ADR-031 are **Accepted**. |
+| **Accepted doctrine** | ADR-001 through ADR-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, and ADR-032 are **Accepted**. |
 | **Portable governance evidence** | ADR-021 remains **Proposed** and independently maturity-gated. |
 | **Durable mutation / evidence candidates** | ADR-023 and ADR-025 through ADR-027 remain **Proposed** under their individual evidence gates. |
 | **Implementation portability** | ADR-028 is **Accepted**, preserving a language-neutral core with optional implementation/interoperability profiles. |
 | **Governance Context Projection** | ADR-029 remains **Proposed** and independently evidence-gated. |
 | **Temporal policy compatibility** | ADR-030 is **Accepted**. |
 | **Temporal commitments** | ADR-031 is **Accepted**. |
+| **Governed structural mutability** | ADR-032 is **Accepted**; current PAMA 1.2 remains conservatively review-first for `domain_schema_mutation` until narrower autonomous evidence is implemented. |
 | **External temporal trust evidence** | Signer-trust binding, transparency evidence, and the exact OpenSSL RFC 3161 comparator are merged and repository-validated at their declared boundaries. |
 | **Runtime evidence** | Executable reference paths cover governed mutation, deletion completeness, concurrency, temporal commitments, policy comparators, adversarial behavior, and systems characterization. |
 | **Reference implementation** | A narrow evidence vehicle, not a claim of universal production readiness or higher cumulative conformance. |
@@ -167,6 +203,7 @@ See **[Architecture Decisions](Architecture-Decisions)** for doctrine status and
 - **[Lifecycle and Forgetting](Lifecycle-and-Forgetting)** for strengthening, correction, dispute, pruning, and forgetting
 - **[Canonical and Derived State](Canonical-and-Derived-State)** for staleness, deletion propagation, residue, and rebuild authority
 - **[Governed Uncertainty](Governed-Uncertainty)** for deterministic boundaries around probabilistic discovery
+- **[Mutable Memory Fabric](Mutable-Memory-Fabric)** for configurable memory modules, routing, structural mutability, and the Agent Runtime / Agent Memory / Agent Governance boundary
 - **[Governance Projection](Governance-Projection)** for vendor-neutral remembered context supplied to external governance consumers
 - **[Temporal Memory Architecture](Temporal-Memory-Architecture)** for the full temporal evidence and aligned-consumer stack
 - **[Cryptographic Temporal Commitments](Cryptographic-Temporal-Commitments)** for exact temporal identity and evidence
