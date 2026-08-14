@@ -6,22 +6,22 @@
 
 This directory is the canonical documentation map for the Agent Memory reference architecture.
 
-The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all forty-one numbered documents in numerical order is legal, but there are more humane options.
+The repository is intentionally layered. Start with the smallest path that answers your question, then follow links deeper. Reading all forty-two numbered documents in numerical order is legal, but there are more humane options.
 
 ## Choose your path
 
 | Reader | Start here | Then continue to |
 |---|---|---|
 | Researcher / theorist | [`20-memory-foundations-across-scales.md`](20-memory-foundations-across-scales.md) | `21`, `23`, `24` |
-| Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24`, `41` |
-| Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`41`, schemas and fixtures |
-| Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `17`, `33`, `34`, ADR-004, ADR-020, ADR-022, ADR-024 |
-| Governance integration architect | [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) | `11`, `34`, ADR-021, ADR-028, ADR-029, `07` roadmap |
+| Agent architect | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `22`, `24`, `41`, `42` |
+| Implementer | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | `02`-`10`, `26`-`42`, schemas and fixtures |
+| Governance / adaptive-authority architect | [`pama/README.md`](pama/README.md) | `04`, `17`, `33`, `34`, ADR-004, ADR-020, ADR-022, ADR-024, ADR-032 |
+| Governance integration architect | [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) | `11`, `34`, `42`, ADR-021, ADR-028, ADR-029, `07` roadmap |
 | Security / privacy reviewer | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41` |
 | Evaluator / governance reviewer | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | `09`, `24`, `25`, audit records |
 | Source / provenance reviewer | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md), external source registry, `23` |
-| Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38` |
-| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-031 |
+| Product / UX designer | [`11-component-architecture.md`](11-component-architecture.md) | `19`, `22`, `26`, `38`, `42`, [`prd/`](prd/) |
+| ADR reviewer | [`adr/README.md`](adr/README.md) | ADR-001 through ADR-032 |
 
 ## Native PAMA doctrine
 
@@ -96,7 +96,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 24 | [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) | Deterministic substrate, probabilistic epistemics, bounded authority, doctrine challenges |
 | 25 | [`25-governed-uncertainty-documentation-conformance-audit.md`](25-governed-uncertainty-documentation-conformance-audit.md) | GU-1 through GU-10 documentation-conformance rubric |
 
-## 26-41: Executable, operational, ecosystem, and isolation contracts
+## 26-42: Executable, operational, ecosystem, isolation, and mutable-fabric contracts
 
 | # | Document | Purpose |
 |---|---|---|
@@ -116,6 +116,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 39 | [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) | Doctrine ownership versus candidate runtime implementation ownership |
 | 40 | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md) | Relationship-typed recognition, licensing boundaries, and visible credit for aligned external work |
 | 41 | [`41-memory-isolation-domains-and-governed-crossing.md`](41-memory-isolation-domains-and-governed-crossing.md) | Logical isolation domains, same-agent task/project separation, governed crossings, shared-memory domains, and derived-scope inheritance |
+| 42 | [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md) | Agent Runtime / Agent Memory / Agent Governance boundary, configurable memory modules, routing, and governed structural mutability |
 
 ## Profiles and future subsystems
 
@@ -125,6 +126,15 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) | Vendor-neutral derived precedent/context for external governance consumers without exporting final authority |
 | [`future/memory-compiler.md`](future/memory-compiler.md) | Bulk artifact-to-memory-unit conversion at scale, gated future subsystem |
 | [`future/multi-agent-shared-memory-protocol.md`](future/multi-agent-shared-memory-protocol.md) | Shared memory across agents and tenants, gated future subsystem |
+
+## RFCs and product requirements
+
+RFCs define implementation-facing architecture proposals without replacing canonical ADR doctrine. PRDs translate doctrine and RFC shape into product requirements and acceptance gates.
+
+| Collection | Start here | Current focus |
+|---|---|---|
+| RFCs | [`rfcs/README.md`](rfcs/README.md) | RFC-001 governed mutable memory fabric |
+| PRDs | [`prd/README.md`](prd/README.md) | PRD-001 configurable Agent Memory runtime |
 
 ## Programs
 
@@ -148,6 +158,7 @@ Current decision highlights relevant to the documentation map:
 - **ADR-028** is Accepted and preserves a language-neutral normative core with optional implementation/interoperability profiles.
 - **ADR-030** is Accepted and requires versioned compatibility/currentness before memory-derived projections are treated as current temporal or authorization input.
 - **ADR-031** is Accepted and binds material temporal claims into deterministic commitments while keeping signer trust, external witness evidence, lifecycle currentness, and PAMA authority separate.
+- **ADR-032** is Accepted and permits structural adaptation while requiring canonical structural-mutation authority to be deterministic and versioned or explicitly human-authorized.
 - **ADR-021, ADR-023, ADR-025, ADR-026, ADR-027, and ADR-029** remain Proposed unless and until their individual maturity reviews change the canonical ADR status. Merged implementation evidence does not silently promote doctrine.
 
 ## Governance Context Projection
@@ -173,6 +184,22 @@ The projection may preserve precedent, material conditions, scope, validity, pro
 ADR-029 complements [`ADR-028`](adr/ADR-028-language-neutral-core-and-optional-implementation-profiles.md): the core remains language-neutral, the governance projection remains vendor-neutral, and concrete consumer integrations remain optional profiles/adapters rather than normative dependencies.
 
 The first contract lives in [`profiles/governance-context-projection-profile.md`](profiles/governance-context-projection-profile.md) and [`../schemas/governance-context-projection.schema.json`](../schemas/governance-context-projection.schema.json). The implementation track is in [`07-integration-roadmap.md`](07-integration-roadmap.md).
+
+## Governed mutable memory fabric
+
+Accepted [`ADR-032`](adr/ADR-032-governed-mutable-memory-structure.md) and [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md) establish:
+
+```text
+Agent Runtime
+  -> Agent Memory governed fabric
+       -> configurable memory modules / substrates
+       -> memory-specific authority / lifecycle / admission
+  -> peer Agent Governance systems through adapters
+```
+
+Memory technologies may be selected and composed per deployment or memory characteristics. Backend shape, learned representations, graph reachability, and retrieval scores do not become Agent Memory authority. Structural discovery may be probabilistic; canonical structural consequence requires a deterministic authorized envelope or explicit human authority.
+
+Implementation design is tracked in [`rfcs/RFC-001-governed-mutable-memory-fabric.md`](rfcs/RFC-001-governed-mutable-memory-fabric.md) and [`prd/PRD-001-configurable-agent-memory-runtime.md`](prd/PRD-001-configurable-agent-memory-runtime.md).
 
 ## Governed-uncertainty audit trail
 
