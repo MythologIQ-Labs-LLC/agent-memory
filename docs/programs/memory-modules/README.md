@@ -1,6 +1,6 @@
 # Memory Component Capability Program
 
-This program turns Agent Memory's representation-neutral doctrine into configurable component/capability contracts, research comparisons, executable adapters, and version-bound qualification evidence.
+This program turns Agent Memory's representation-neutral doctrine into configurable component/capability contracts, executable adapters, and version-bound qualification evidence.
 
 ## Core model
 
@@ -12,29 +12,31 @@ one capability -> many candidate implementations
 
 configured capability != qualified capability
 qualified old version != qualified new version
+qualification evidence != authority
 ```
 
 Capability roles such as graph, vector, GraphRAG, lifecycle, procedural memory, structural reasoning, storage, exact retrieval, multimodal memory, or learned representation are not mutually exclusive product classes.
 
-## Current research artifacts
+## Current artifacts
 
 - [`first-party-capability-inventory.md`](first-party-capability-inventory.md) — evidence-bounded EvolveAI and CodeGenome capability/maturity map.
-- [`capability-vocabulary.md`](capability-vocabulary.md) — representation-neutral vocabulary spanning retained-content, graph/vector/temporal retrieval, procedural/metamemory, lifecycle, latent, multimodal, sharing, and operational capabilities.
+- [`capability-vocabulary.md`](capability-vocabulary.md) — representation-neutral capability vocabulary.
 - [`external-capability-frontier.md`](external-capability-frontier.md) — historical external-system mapping and gap classification.
-- [`external-capability-frontier-refresh-2026-08-14.md`](external-capability-frontier-refresh-2026-08-14.md) — fast-moving current release/license/capability refresh for the next qualification wave.
+- [`external-capability-frontier-refresh-2026-08-14.md`](external-capability-frontier-refresh-2026-08-14.md) — current release/license/capability refresh for the next qualification wave.
 - [`implementation-lane-selection.md`](implementation-lane-selection.md) — why governed procedural/skill memory was selected as the first product-shaped fabric proof.
-- [`component-adapter-qualification-contract.md`](component-adapter-qualification-contract.md) — #298 research conclusion defining install/declaration vs adapter invocation vs earned qualification evidence.
+- [`component-adapter-qualification-contract.md`](component-adapter-qualification-contract.md) — #298 research conclusion defining declaration vs adapter invocation vs earned qualification evidence.
+- [`component-qualification-runtime.md`](component-qualification-runtime.md) — executable #300 qualification schema, applicability binding, maturity progression, matched fixture, and real-provider CI behavior.
 - [`../runtime-evidence/procedural-memory.md`](../runtime-evidence/procedural-memory.md) — executable #295 evidence for capability routing, governed skill lifecycle, action-authority separation, and metamemory refusal.
 
 ## Current doctrine decisions
 
 - **ADR-033 Accepted:** capability identity/maturity is independent from component identity and overlapping implementations are composed or selected deterministically.
-- **ADR-034 Accepted:** procedural/skill memory is governed retained state, not standing execution authority; exact approval binds the exact procedure/state, and metamemory is a stricter configuration/policy-change surface.
-- **No new ADR currently required for #298:** version-bound adapter/qualification evidence is an implementation/conformance specialization of existing doctrine unless executable adapters expose a genuine doctrine-level contradiction.
+- **ADR-034 Accepted:** procedural/skill memory is governed retained state, not standing execution authority.
+- **No new ADR for #298/#300:** version-bound adapter/qualification evidence is an implementation/conformance specialization of existing doctrine unless real adapters expose a doctrine-level contradiction.
 
 ## Executable capability fabric already earned
 
-PR #297 implemented the reusable #287/#290 surfaces required by #295:
+PR #297 implemented the reusable capability declaration and deterministic routing layer:
 
 ```text
 machine-readable component capability declaration
@@ -53,31 +55,45 @@ deterministic provider resolution
 selected implementation
 ```
 
-The capability registry never turns provider selection into memory mutation or recall permission. Fallback cannot silently lower minimum maturity or required scope posture.
+Selection never grants memory mutation or recall permission. Fallback cannot silently lower minimum maturity or required scope posture.
 
-The checked-in EvolveAI and CodeGenome declarations are evidence-bounded examples. They preserve known limitations and do not promote either subsystem to `reference_qualified` merely because MythologIQ owns them.
+## Executable qualification layer now in implementation
 
-## Missing executable layer
-
-Selection is not yet the complete #280 component contract.
-
-The next layer is:
+PR #302 / issue #300 implements the next layer:
 
 ```text
-capability requirement
-  -> deterministic provider resolution
-  -> versioned adapter invocation
-  -> raw provider result + evidence
-  -> provider-neutral normalization
-  -> Agent Memory currentness/scope/lifecycle evaluation
-  -> PAMA or governed recall admission
-  -> commit/admit/refuse
-  -> version-bound qualification evidence
+selected capability implementation
+  -> versioned adapter/result boundary
+  -> raw provider result preserved
+  -> provider-neutral factual normalization
+  -> qualification profile checks
+  -> exact applicability digest
+  -> earned capability maturity
 ```
 
-#298 defines the common adapter and qualification record before #292/#293 are allowed to become provider-specific certification exercises.
+The machine-readable evidence surface is:
 
-The key separations are:
+`schemas/component-capability-qualification.schema.json`
+
+The reference runtime is:
+
+- `reference/agentmem_ref/qualification.py`
+- `reference/agentmem_ref/code_graph_qualification.py`
+- `reference/run_component_qualification.py`
+
+Qualification applicability binds exact component, implementation, capability, adapter, profile, fixture, and material runtime/configuration identity. Version/configuration drift does not silently inherit prior qualification.
+
+The maturity model now distinguishes:
+
+```text
+maturity_before
+profile_maturity_ceiling
+earned_maturity
+```
+
+This allows real evidence to advance a capability from `runtime_wired` to `evidence_proven` while preventing a bounded profile from accidentally claiming `reference_qualified`.
+
+The load-bearing separations remain:
 
 ```text
 selected component != authorized consequence
@@ -85,11 +101,12 @@ component result != canonical Agent Memory state
 component success != capability conformance
 maturity claim != executable proof
 adapter normalization != evidence laundering
+qualification != standing authority
 ```
 
 ## Governed procedural-memory reference slice
 
-The first concrete workload is already merged:
+The first concrete product workload is already merged:
 
 ```text
 procedure proposal
@@ -103,44 +120,77 @@ procedure proposal
   -> separate execution evidence
 ```
 
-The slice also proves correction/supersession, exact-content approval binding, stale replay refusal, cross-project admission refusal, revocation/residue honesty, and metamemory self-authorization refusal.
+The slice proves correction/supersession, exact-content approval binding, stale replay refusal, cross-project admission refusal, revocation/residue honesty, and metamemory self-authorization refusal.
 
-It deliberately uses a simple inspectable reference artifact and the existing `GovernedMemoryAdapter`. A new proprietary skill database/repository was not required to prove the semantics.
+## First deterministic portability proof
 
-## Next deterministic portability proof
-
-The first common adapter/qualification harness should use two real local code-graph providers:
+The first common qualification profile uses two real local code-graph providers:
 
 ```text
 CodeGenome
 Graphify
 ```
 
-Reasons:
+Current exact pins:
 
-- deterministic local execution;
-- no model/API variability required for the matched facts;
-- materially different implementations;
-- useful stale/currentness/update pressure;
-- Graphify's active project line is now Apache-2.0;
-- draft PR #278 already contains a small adversarial fixture and raw-output-preserving comparator design that can be harvested against current `main`.
+- CodeGenome `d2578729a46d495369bd7613845002d50cf20f4c`
+- Graphify `v0.9.43` / `7281f27eac568f77f50910f59f84543458f5dfd1`
 
-The result must remain a factual capability qualification, not a scalar product ranking.
+The matched fixture is deliberately adversarial:
+
+```text
+v1 main.rs
+  leaf              line 1
+  middle            line 5
+  top               line 9
+
+v1 decoy.rs
+  middle            line 5
+  decoy_leaf        line 12
+
+v2 main.rs
+  middle            line 5
+  top               line 9
+  replacement_leaf  line 13
+```
+
+The duplicate `middle` line forces file-bound target identity. The distinct leaf lines expose decoy contamination and stale v1 relationships.
+
+The first currentness proof uses an explicit full rebuild between v1 and v2. It does not pretend incremental update semantics have been proven.
+
+The matched result intentionally contains no scalar winner and cannot promote unrelated capabilities.
+
+## Qualification maturity interpretation
+
+```text
+declared
+implemented
+runtime_wired
+evidence_proven
+reference_qualified
+```
+
+`evidence_proven` means an exact-version qualification record reproduced the claimed capability behavior against an explicit workload/fixture.
+
+`reference_qualified` additionally requires the complete applicable Agent Memory conformance profile, including all required negative paths. It is capability-specific, version-specific, adapter/profile-specific, and not a repository-wide badge.
+
+The first CodeGenome/Graphify code-graph profile is capped at `evidence_proven` until the broader failure/fallback profile is implemented and passes.
 
 ## Work tracking
 
 - #274 — capability-oriented memory component program
-- #275 — initial adversarial first-party/external capability comparison, completed
+- #275 — initial adversarial first-party/external comparison, completed
 - #280 — broader component/capability runtime contract and routing fabric, open
 - #287 — machine-readable capability maturity declarations, completed by PR #297
 - #290 — capability-based routing and overlap resolution, completed by PR #297
-- #292 — EvolveAI capability qualification, open and gated by #298
-- #293 — CodeGenome capability qualification, open and gated by #298
+- #292 — EvolveAI capability qualification, open
+- #293 — broader CodeGenome capability qualification, open
 - #295 — governed procedural/skill memory reference vertical slice, completed by PR #297
-- #298 — executable component adapter and version-bound capability qualification contract, active research/next implementation gate
+- #298 — executable component adapter and version-bound qualification research, completed
+- #300 — common adapter + qualification harness and first real two-provider proof, implementation active in PR #302
 - #282 — restart-safe runtime and end-to-end acceptance harness
 
-## Current first-party pressure
+## First-party pressure
 
 ### EvolveAI
 
@@ -160,11 +210,11 @@ This caps strong deletion/audit/persistence qualification claims.
 
 ### CodeGenome
 
-Current planning pin:
+Current qualification pin:
 
 `d2578729a46d495369bd7613845002d50cf20f4c`
 
-The #275 file-identity and traversal-direction defects were repaired before this pin. Those fixes become permanent regression requirements for #293 rather than being forgotten after the bug tracker turns green.
+The #275 file-identity and traversal-direction defects were repaired before this pin. The #300 fixture makes both repairs permanent executable qualification pressure rather than historical bug-tracker trivia.
 
 ## Current portfolio conclusion
 
@@ -172,7 +222,7 @@ No new proprietary memory subsystem is justified by the current gap analysis.
 
 EvolveAI and CodeGenome remain broad multi-capability first-party subsystem candidates. Their overlapping graph/vector capabilities should be qualified and composed by capability, not split merely to remove implementation overlap.
 
-The external frontier is increasingly diverse: deterministic graphs, hybrid complete memory systems, file/skill memory, self-evolving skills, and hypergraph systems. That diversity strengthens the need for a shared adapter/qualification boundary rather than one shared storage ontology.
+The external frontier is diverse enough that a shared adapter/qualification boundary is more defensible than one shared storage ontology.
 
 ## Safeguards
 
@@ -189,6 +239,7 @@ procedural memory != execution permission
 approval for X != approval for modified Y
 metamemory proposal != configuration authority
 old qualification != new-version qualification
+matched capability result != universal product winner
 ```
 
 New proprietary subsystems should be created only after capability inventory and executable external comparison establish a real gap that cannot be cleanly satisfied by extending EvolveAI or CodeGenome, composing existing components, implementing generic semantics in Agent Memory core, or adopting/wrapping an external implementation.
