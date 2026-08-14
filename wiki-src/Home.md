@@ -154,7 +154,7 @@ Agent Memory separates doctrine maturity from implementation evidence so that on
 | **Governance Context Projection** | ADR-029 remains **Proposed** and independently evidence-gated. |
 | **Temporal policy compatibility** | ADR-030 is **Accepted**. |
 | **Temporal commitments** | ADR-031 is **Accepted**. |
-| **External temporal trust evidence** | #265 is under exact-head validation for signer-trust and transparency evidence. |
+| **External temporal trust evidence** | Signer-trust binding, transparency evidence, and the exact OpenSSL RFC 3161 comparator are merged and repository-validated at their declared boundaries. |
 | **Runtime evidence** | Executable reference paths cover governed mutation, deletion completeness, concurrency, temporal commitments, policy comparators, adversarial behavior, and systems characterization. |
 | **Reference implementation** | A narrow evidence vehicle, not a claim of universal production readiness or higher cumulative conformance. |
 | **Conformance claims** | Governed separately from individual evidence slices. Passing a runtime experiment does not automatically raise a cumulative conformance level. |

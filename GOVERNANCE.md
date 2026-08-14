@@ -24,7 +24,7 @@ The policy separates implementation method from repository authority:
 - direct delegation inside Agent Memory does not create authority to act in external repositories;
 - upstream contribution rules control when they are stricter.
 
-Organization-wide inheritance is tracked separately in #85 and is not claimed merely because Agent Memory has adopted the local policy.
+Agent Memory's policy is authoritative only for this repository. Organization-wide contribution-policy inheritance is governed outside this repository and is not implied by local adoption.
 
 DCO is not an active Agent Memory gate until explicit activation and enforcement are merged and discoverable.
 

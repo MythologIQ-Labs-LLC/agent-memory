@@ -24,7 +24,7 @@ A responsible human owns the objective, material risk, repository authority, and
 
 Direct delegation does not authorize unrelated upstream submissions, external-project comments, destructive administration, or expansion into work outside the stated scope.
 
-DCO is a planned provenance mechanism, not an invisible current gate. It becomes mandatory only when the repository explicitly activates and enforces it. See the policy and #85 for the organization rollout.
+DCO is a planned provenance mechanism, not an invisible current gate. It becomes mandatory only when the repository explicitly activates and enforces it. Agent Memory's local contribution policy does not claim organization-wide rollout authority.
 
 ## Before contributing
 

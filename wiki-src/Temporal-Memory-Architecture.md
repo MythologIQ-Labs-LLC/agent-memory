@@ -85,7 +85,7 @@ A cryptographic signature proves key possession for an exact commitment under th
 
 Signer trust is a separate claim.
 
-The #265 evidence layer binds trust to:
+The merged external-trust evidence layer binds trust to:
 
 ```text
 logical key reference
@@ -104,7 +104,7 @@ A historical signature can remain cryptographically valid after current signer t
 
 An external witness can strengthen temporal evidence without becoming the source of event truth.
 
-The current #265 comparator targets a bounded RFC 3161 claim using the official OpenSSL 3.6.3 release:
+The merged external comparator targets a bounded RFC 3161 claim using an exact OpenSSL 3.6.3 source checkout and source-tree fixture:
 
 ```text
 this exact commitment existed by independently verified time T
@@ -299,17 +299,17 @@ The repository includes executable evidence for:
 - Dogwood-facing projection compatibility/currentness;
 - Cedar/Cedarling policy boundaries.
 
-### #265 under exact-head validation
+### External temporal trust evidence
 
-The current #265 implementation adds:
+The completed #265 / PR #267 slice adds:
 
 - signer trust bound to exact key material;
 - revoked, expired, mismatched, and unverified trust negative paths;
 - provider-neutral inclusion and consistency evidence;
 - explicit non-claims for complete history and global non-equivocation;
-- a pinned real RFC 3161 comparator using the official OpenSSL 3.6.3 release asset.
+- a real RFC 3161 comparator built from exact OpenSSL 3.6.3 source and exercised against the upstream source-tree fixture.
 
-That slice remains evidence-gated until the exact external comparator and full repository validation pass.
+PR #267 passed the complete 28-workflow matrix at exact final head `3d3483feb10647ce02ed67c9d09b7022406196a6`. The external-evidence artifact is bound to that head with digest `sha256:82ea8c29cbc3637b6e4251d58ac224c0a77749e1b4db5bf544bc087d1df42357`. These are repository evidence claims, not production PKI or universal deployment guarantees.
 
 ## Related Wiki pages
 

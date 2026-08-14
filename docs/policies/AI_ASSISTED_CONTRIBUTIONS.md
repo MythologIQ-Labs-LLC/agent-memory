@@ -1,8 +1,6 @@
 # MythologIQ Labs AI-Assisted Contribution Standard
 
-**Status:** Agent Memory repository policy; proposed MythologIQ Labs organization default
-
-**Organization rollout:** tracked in [#85](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/85)
+**Status:** Agent Memory repository policy
 
 ## Purpose
 
@@ -121,11 +119,11 @@ Unless explicitly authorized, agents and bots must not:
 
 ## DCO and contribution provenance
 
-MythologIQ Labs intends to use the Developer Certificate of Origin as the default provenance mechanism for public repositories that accept external code or specification contributions, unless a repository documents another contribution agreement.
+Agent Memory may use the Developer Certificate of Origin as a provenance mechanism for external code or specification contributions if the repository explicitly activates it.
 
-**DCO is not automatically active merely because this policy mentions it.** A repository must explicitly activate the requirement and should add automated enforcement at the same time so contributors are not governed by an invisible manual gate.
+**DCO is not automatically active merely because this policy mentions it.** The repository must explicitly activate the requirement and should add automated enforcement at the same time so contributors are not governed by an invisible manual gate.
 
-Agent Memory does not claim DCO enforcement until that activation is merged and discoverable. The organization rollout and enforcement work are tracked in #85.
+Agent Memory does not claim DCO enforcement until that activation is merged and discoverable. Any organization-wide DCO policy is governed outside this repository.
 
 When DCO is active, an agent must never invent or apply a human `Signed-off-by` certification without that person's authorization.
 
@@ -184,9 +182,7 @@ Authorization is narrow. Permission to run CI does not imply permission to open 
 
 ## Relationship to local and upstream rules
 
-This document is an Agent Memory repository policy and the proposed MythologIQ Labs organization default.
-
-Organization-wide inheritance is not claimed until the #85 rollout is actually complete.
+This document is an Agent Memory repository policy. It does not claim organization-wide inheritance or rollout authority.
 
 A repository may impose stricter requirements for security, regulatory, contractual, release, or standards reasons. Local rules may narrow automation privileges but should not silently weaken the human-accountability baseline.
 
