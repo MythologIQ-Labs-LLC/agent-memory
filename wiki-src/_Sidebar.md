@@ -12,6 +12,7 @@
 - [Lifecycle and Forgetting](Lifecycle-and-Forgetting)
 - [Canonical and Derived State](Canonical-and-Derived-State)
 - [Governed Uncertainty](Governed-Uncertainty)
+- [Mutable Memory Fabric](Mutable-Memory-Fabric)
 - [Governance Projection](Governance-Projection)
 - [Temporal Memory Architecture](Temporal-Memory-Architecture)
 - [Cryptographic Temporal Commitments](Cryptographic-Temporal-Commitments)
