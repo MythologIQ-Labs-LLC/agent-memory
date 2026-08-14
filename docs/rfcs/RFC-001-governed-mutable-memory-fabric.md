@@ -40,7 +40,8 @@ Agent Memory is not one graph database, RAG implementation, vector store, JEPA r
 5. treat first-party systems such as EvolveAI and CodeGenome as multi-capability candidate components, not privileged doctrine;
 6. preserve external memory-system integrations under the same capability/governance boundary;
 7. make structural adaptation possible without giving probabilistic systems authority over canonical memory shape;
-8. keep Agent Runtime, Agent Memory, and Agent Governance as separately reasoned system boundaries.
+8. keep Agent Runtime, Agent Memory, and Agent Governance as separately reasoned system boundaries;
+9. distinguish configured capability claims from version-bound executable qualification evidence.
 
 ## Non-goals
 
@@ -51,7 +52,9 @@ Agent Memory is not one graph database, RAG implementation, vector store, JEPA r
 - making DashClaw, AGT, EvolveAI, CodeGenome, Graphiti, JEPA, GraphRAG, or any other implementation mandatory;
 - allowing component-specific identity, confidence, ontology, or retrieval score to become canonical Agent Memory authority;
 - defining a universal physical database schema;
-- treating a declared capability as runtime-available merely because documentation mentions it.
+- treating a declared capability as runtime-available merely because documentation mentions it;
+- treating a successful component invocation as Agent Memory conformance;
+- carrying qualification across component/adapter/profile versions without explicit compatibility evidence.
 
 ## Architectural model
 
@@ -72,6 +75,9 @@ Agent Memory is not one graph database, RAG implementation, vector store, JEPA r
           v
   deterministic component/capability resolution
           |
+          v
+  versioned component adapter
+          |
           +-------------------------------------+
           |                  |                  |
           v                  v                  v
@@ -81,7 +87,10 @@ Agent Memory is not one graph database, RAG implementation, vector store, JEPA r
           +------------------+------------------+
                              |
                              v
-                   configured composition
+               raw provider evidence + normalized result
+                             |
+                             v
+               Agent Memory currentness/scope/lifecycle
                              |
                              v
                    governed recall/admission
@@ -90,7 +99,7 @@ Agent Memory is not one graph database, RAG implementation, vector store, JEPA r
                       Agent Runtime context
 ```
 
-A component may implement several capabilities. A capability may be available from several components. Responsibilities, maturity, and provenance remain typed and inspectable.
+A component may implement several capabilities. A capability may be available from several components. Responsibilities, maturity, provenance, adapter identity, and qualification evidence remain typed and inspectable.
 
 ## Component/capability model
 
@@ -120,11 +129,11 @@ CodeGenome
   vector_similarity
 ```
 
-The exact capability vocabulary is defined separately. Issue #291 owns the graph/vector/GraphRAG/hybrid terminology.
+The exact capability vocabulary is defined separately in the memory-component program.
 
 ## Capability maturity model
 
-Each capability declaration should carry an independent maturity state. Initial vocabulary:
+Each capability declaration carries an independent maturity state. Current vocabulary:
 
 ```text
 declared
@@ -139,10 +148,12 @@ Meaning:
 - `declared`: documented/intended architecture;
 - `implemented`: material code exists;
 - `runtime_wired`: reachable through a supported runtime/product path;
-- `evidence_proven`: reproducible evidence demonstrates the claimed behavior;
-- `reference_qualified`: applicable Agent Memory conformance profile is satisfied.
+- `evidence_proven`: reproducible, version-bound qualification evidence demonstrates the claimed behavior;
+- `reference_qualified`: the applicable Agent Memory qualification/conformance profile is satisfied.
 
 A component-wide release/version must not silently imply that every capability has the same maturity.
+
+A maturity result is scoped to the exact implementation/adapter/profile evidence that earned it. A changed component, capability, adapter, qualification profile, or materially relevant runtime configuration requires explicit compatibility evidence before the prior result can be reused.
 
 ## Capability families
 
@@ -185,6 +196,20 @@ graph-augmented context assembly / GraphRAG
 
 Graph existence does not prove end-to-end GraphRAG. GraphRAG also does not cease to be a valid component capability merely because the same component implements lifecycle, code analysis, or vector retrieval.
 
+### Procedural / skill memory
+
+ADR-034 is Accepted. A component may retain, version, retrieve, or learn procedures/skills, but:
+
+```text
+skill retention
+  != retrieval
+  != recall admission / activation
+  != action authority
+  != execution evidence
+```
+
+A procedural-memory capability can be qualified for retention/retrieval behavior without acquiring standing authority over the actions described by the skill.
+
 ### Representation
 
 Examples: embeddings, learned latent state, JEPA-style representations, summaries/compression.
@@ -211,7 +236,7 @@ A first- or third-party memory service may expose several capability families si
 
 EvolveAI and CodeGenome are first-party candidate components. Neither should be reduced to one exclusive module category.
 
-At the initial #284 inventory boundary:
+At the current first-party inventory boundary:
 
 ```text
 EvolveAI
@@ -231,6 +256,8 @@ Capabilities are at different maturity levels. The pinned inventory is:
 `docs/programs/memory-modules/first-party-capability-inventory.md`
 
 First-party ownership changes packaging and maintenance posture, not authority semantics or maturity.
+
+Qualification is tracked independently under #292/#293 and the common executable qualification contract under #298.
 
 ## Memory tiers are policy characteristics, not backends
 
@@ -319,7 +346,7 @@ No confidence score, embedding similarity, learned utility estimate, or model re
 
 ## Component declaration contract
 
-A component profile should expose at least:
+A component installation/profile should expose at least:
 
 ```text
 component_id
@@ -351,7 +378,99 @@ failure behavior when capability-specific
 structural mutation requirements
 ```
 
+PR #297 implements the first subset of this declaration surface: identity/version, independent maturity, state/scope/failure posture, evidence refs/limitations, enablement, and deterministic provider resolution. The remaining executable semantics stay owned by #280/#298.
+
 Unsupported or incompatible configurations must fail deterministically rather than degrade into guessed behavior.
+
+## Component adapter contract
+
+Selection does not invoke or qualify a component by itself.
+
+A component adapter is a versioned semantic boundary between provider-native behavior and Agent Memory. It may be implemented over a library, CLI, MCP server, process, sidecar, HTTP API, or other transport.
+
+A versioned adapter should expose or make reconstructable equivalents of:
+
+```text
+adapter_id
+adapter_version
+component_id
+exact component implementation ref
+capability_id / capability_version
+operation / invocation kind
+runtime/configuration identity
+input reference(s) / digest(s)
+raw provider output/evidence reference(s)
+normalized Agent Memory result reference(s)
+currentness/freshness signal where available
+scope/partition signal where available
+failure/unavailable result
+trace/correlation reference
+```
+
+The adapter MUST preserve enough provider-native evidence to reconstruct the normalized claim.
+
+Normalization MUST NOT silently translate provider-specific semantics into Agent Memory authority:
+
+```text
+provider canonical != Agent Memory canonical
+provider confidence != Agent Memory truth
+provider PASS/BLOCK != PAMA authority
+provider reachability != recall admission
+provider success != capability qualification
+```
+
+## Capability qualification contract
+
+Installation declaration and qualification are separate surfaces.
+
+```text
+installation profile
+  -> what this deployment claims/configures
+
+qualification record
+  -> what exact behavior was actually proven
+     for an exact component/capability/adapter/profile/runtime identity
+```
+
+The qualification applicability identity should bind equivalents of:
+
+```text
+component_id
+component implementation version / exact source ref
+capability_id
+capability_version
+adapter_id
+adapter_version
+qualification_profile_id
+qualification_profile_version
+runtime/dependency configuration identity
+```
+
+A qualification record should bind:
+
+- exact subject/version identities;
+- source-rights/license posture;
+- fixture/workload identity and digest;
+- runtime/dependency/model/parser configuration where material;
+- operations exercised;
+- raw provider evidence/artifact refs;
+- normalized evidence refs;
+- scope/isolation outcomes;
+- currentness/invalidation outcomes;
+- correction/supersession outcomes;
+- deletion/residue outcomes where applicable;
+- rebuild/removal outcomes where applicable;
+- unavailable/failure outcomes;
+- authority/admission negative paths;
+- claimed and earned maturity;
+- limitations/blockers;
+- evidence/artifact digests.
+
+A prior `evidence_proven` or `reference_qualified` result does not silently survive version drift. Compatibility must be explicit.
+
+The detailed research contract is:
+
+`docs/programs/memory-modules/component-adapter-qualification-contract.md`
 
 ## Capability resolution and routing contract
 
@@ -388,23 +507,42 @@ Agent Memory
 
 External governance may tighten a consequence or supply approval/enforcement evidence. It does not redefine Agent Memory semantics, and returned approval does not become reusable standing memory authority.
 
-The DashClaw #219/#279 integration is the first concrete proof of this peer boundary.
+DashClaw #279 remains the first concrete proof of this peer boundary.
 
-## Acceptance scenario
+## Acceptance scenarios
+
+### Product-shaped memory scenario
 
 The first minimal fabric should prove a cross-session project-memory workload:
 
 1. Agent Runtime learns a project fact.
 2. Agent Memory classifies and proposes durable promotion.
-3. DashClaw governs the consequential mutation through the external-verdict seam.
+3. External governance governs the consequential mutation where configured.
 4. Agent Memory independently revalidates and commits through its governed mutation path.
 5. A later session recalls the memory and changes behavior because of it.
-6. A correction is proposed, reviewed, approved, committed, and supersedes the old current value.
+6. A correction is proposed, reviewed where required, committed, and supersedes the old current value.
 7. A later session uses the corrected value.
 8. stale approval, scope widening, and cross-tenant recall fail.
 9. evidence distinguishes decision, approval, mutation, lifecycle, and recall.
 10. the report states whether process-restart durability was proven or only cross-session reuse.
 11. the same behavioral contract can be rerun with a different component/capability composition.
+
+### Component portability / qualification scenario
+
+Before first-party capability qualification is considered complete, the fabric should also prove:
+
+1. one generic capability requirement resolves to two materially different real providers under separate configurations;
+2. each provider is invoked through its own versioned adapter;
+3. raw provider outputs are preserved;
+4. the same provider-neutral behavioral facts can be evaluated without erasing meaningful provider differences;
+5. stale/currentness behavior is exercised after source mutation;
+6. component failure/unavailability has explicit posture;
+7. component or adapter version drift invalidates or requires explicit compatibility for prior qualification;
+8. provider confidence/relevance/ontology never becomes Agent Memory authority;
+9. qualification evidence records source-rights posture;
+10. no scalar benchmark winner is mistaken for architecture.
+
+The first selected deterministic pair is CodeGenome + Graphify under #298 because both expose local code-graph behavior without requiring an LLM/model service.
 
 ## Open design questions
 
@@ -414,35 +552,48 @@ The first minimal fabric should prove a cross-session project-memory workload:
 - which structural S1 changes deserve an autonomous PAMA envelope;
 - how first-party components are packaged: libraries, processes, sidecars, or remote services;
 - how restart-safe governance metadata is reconstructed independently from a physical substrate;
-- which conformance levels are required before a capability can be called reference-qualified;
+- which exact qualification profiles are required before a capability can be called `reference_qualified`;
+- which version changes may reuse prior qualification through explicit compatibility evidence;
 - when overlap between EvolveAI and CodeGenome should remain domain-specialized versus move to a shared component;
-- whether any uncovered capability family justifies a new first-party subsystem after #284/#286.
+- whether any uncovered capability family justifies a new first-party subsystem after the current capability frontier.
 
 ## Relationship to current work
 
-- #274 owns the modular-memory program.
-- #275 evaluates first-party capabilities against external peers.
+- #274 owns the capability-oriented memory-component program.
+- #275 completed the initial adversarial first-party/external comparison and exposed real CodeGenome defects before qualification.
 - #276 currently finds no need for a new universal logical-state algebra in the tested scenarios.
 - #279 proves the Agent Memory <-> Agent Governance peer seam against DashClaw.
-- #280 implements the common component/capability contract and routing fabric.
-- #284 inventories EvolveAI/CodeGenome capability coverage and gaps.
-- #285 corrects the architecture taxonomy to capability-oriented composition.
-- #286 maps external capability coverage.
-- #287 implements capability maturity declarations.
-- #289 decides first-party subsystem boundaries after overlap analysis.
-- #290 implements capability-based selection and overlap resolution.
-- #291 defines precise graph/vector/GraphRAG/hybrid capability vocabulary.
-- #292 and #293 qualify EvolveAI and CodeGenome capabilities respectively.
+- #280 owns the full common component/capability runtime contract and routing fabric.
+- #287 completed machine-readable capability declarations/maturity.
+- #290 completed deterministic capability selection/overlap resolution.
+- #292 qualifies EvolveAI capabilities through the common qualification contract.
+- #293 qualifies CodeGenome capabilities through the common qualification contract.
+- #295 / PR #297 proved governed procedural memory and supplied the first real new capability path; ADR-034 is Accepted.
+- #298 defines the missing executable component adapter + version-bound qualification contract.
+- #282 owns restart-safe runtime behavior and the end-to-end acceptance harness.
 - ADR-032 defines structural mutation authority and schema lifecycle.
+- ADR-033 defines independent capability maturity and deterministic composition.
+- ADR-034 defines procedural memory as retained state, not execution authority.
 
-## Proposed implementation sequence
+## Current implementation sequence
 
-1. freeze capability vocabulary and component/capability declaration contracts;
-2. implement machine-readable capability maturity and deterministic overlap resolution;
-3. build the minimal configurable Agent Memory instance around existing reference components;
-4. prove the DashClaw governed durable-memory scenario;
-5. make governance metadata restart-safe;
-6. qualify at least two materially different capability compositions under the same acceptance contract;
-7. qualify EvolveAI and CodeGenome capability-by-capability;
-8. compare external alternatives against the same capability matrix;
-9. decide whether any missing capability justifies extending an existing subsystem, adopting an external implementation, extracting a shared component, or creating a new first-party subsystem.
+The earlier sequence is partially complete. The next sequence is now:
+
+1. **Completed:** capability vocabulary, machine-readable capability maturity, and deterministic overlap resolution (#287/#290/PR #297).
+2. **Completed:** first governed procedural-memory capability vertical slice and Accepted ADR-034 (#295/PR #297).
+3. define and implement the versioned component adapter + capability qualification record/harness (#298 -> #280);
+4. prove deterministic portability with freshly pinned CodeGenome + Graphify, harvesting the useful fixture/evidence design from stale draft PR #278 rather than merging it wholesale;
+5. qualify CodeGenome capability-by-capability through the common harness (#293);
+6. repair/re-pin EvolveAI's current deletion-ledger blocker, then qualify EvolveAI through the same harness (#292);
+7. prove the DashClaw governed durable-memory peer-governance scenario (#279) without allowing external approval to become standing memory authority;
+8. make governance/currentness metadata restart-safe and rerun product acceptance across materially different component compositions (#282);
+9. add one complete external general-memory adapter, with current Hindsight/MemOS/Acontext/MIRIX candidates evaluated under the same qualification contract;
+10. decide whether any remaining capability gap justifies extending an existing subsystem, adopting an external implementation, extracting a shared component, or creating a new first-party subsystem.
+
+## ADR disposition for the qualification layer
+
+Current recommendation: `no_new_adr`.
+
+The adapter/qualification work is an implementation and conformance specialization of accepted ADR-020, ADR-022, ADR-028, ADR-030, ADR-032, ADR-033, and ADR-034.
+
+Create or amend canonical doctrine only if executable adapters expose a stable representation-neutral contradiction those decisions cannot express.
