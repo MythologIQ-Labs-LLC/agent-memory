@@ -17,6 +17,8 @@ permissions:
 jobs:
   logical-state-algebra-pressure:
     runs-on: ubuntu-latest
+    env:
+      AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - name: Checkout Agent Memory
         uses: actions/checkout@v4
@@ -26,17 +28,20 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+
       - name: Run #276 acceptance tests
         env:
           PYTHONPATH: reference
-        run: python -m unittest reference.tests.test_logical_state_algebra_pressure
+        run: python -m unittest reference/tests/test_logical_state_algebra_pressure.py
 
       - name: Emit exact-head #276 evidence
         env:
           PYTHONPATH: reference
         run: |
           python reference/run_logical_state_algebra_pressure.py \
-            --agent-memory-commit "$GITHUB_SHA" \
+            --agent-memory-commit "$AGENT_MEMORY_COMMIT" \
             --output logical-state-algebra-pressure-evidence.json
 
       - name: Verify evidence is bound to exact head
@@ -47,7 +52,7 @@ jobs:
           from pathlib import Path
 
           report = json.loads(Path("logical-state-algebra-pressure-evidence.json").read_text())
-          assert report["agent_memory_commit"] == os.environ["GITHUB_SHA"]
+          assert report["agent_memory_commit"] == os.environ["AGENT_MEMORY_COMMIT"]
           assert report["aggregate"]["all_existing_contracts_express_scenarios"] is True
           assert report["aggregate"]["missing_generic_primitive_observed"] is False
           assert report["aggregate"]["stronger_engine_evidence_observed"] is False
@@ -57,6 +62,6 @@ jobs:
       - name: Upload exact-head research evidence
         uses: actions/upload-artifact@v4
         with:
-          name: logical-state-algebra-pressure-${{ github.sha }}
+          name: logical-state-algebra-pressure-${{ env.AGENT_MEMORY_COMMIT }}
           path: logical-state-algebra-pressure-evidence.json
           if-no-files-found: error
