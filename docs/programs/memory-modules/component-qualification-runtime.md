@@ -116,12 +116,14 @@ Profile:
 
 Providers:
 
-- CodeGenome `d2578729a46d495369bd7613845002d50cf20f4c`
+- CodeGenome `43a6b7147ec78ec5c616723fa1dd30f342174860`
 - Graphify `v0.9.43`, commit `7281f27eac568f77f50910f59f84543458f5dfd1`
+
+The CodeGenome pin was deliberately advanced from the planning revision `d2578729a46d495369bd7613845002d50cf20f4c` after the qualification fixture exposed a remaining cross-file semantic-resolution collision. CodeGenome #12 / PR #13 repaired symbol and caller-span resolution so file identity remains part of semantic traversal, and merged as `43a6b7147ec78ec5c616723fa1dd30f342174860`. The qualification therefore binds the repaired merged revision rather than suppressing the negative result.
 
 The workflow validates exact source refs before execution and verifies source-rights files from those exact revisions.
 
-The profile normalizes only shared factual call-graph behavior. It does not force the providers to emit the same native schema.
+The profile normalizes only shared factual call-graph behavior. It does not force the providers to emit the same native schema. Graphify's NetworkX node-link evidence uses the native `links` collection; the normalizer preserves that shape and accepts `edges` only as a compatibility fallback.
 
 ## Adversarial fixture
 
