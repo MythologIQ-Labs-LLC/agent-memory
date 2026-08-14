@@ -52,27 +52,27 @@ jobs:
 
       - name: Build pinned CodeGenome CLI
         working-directory: /tmp/codegenome
-        run: cargo build --release -p codegenome-cli
+        run: cargo build -p codegenome-cli
 
       - name: Execute CodeGenome ground-truth queries
         run: |
           mkdir -p /tmp/code-reality-raw
-          /tmp/codegenome/target/release/codegenome index \
+          /tmp/codegenome/target/debug/codegenome index \
             --source-dir "$FIXTURE_DIR" \
             --store-dir /tmp/codegenome-store \
             > /tmp/code-reality-raw/codegenome-index.txt
 
-          /tmp/codegenome/target/release/codegenome query \
+          /tmp/codegenome/target/debug/codegenome query \
             --store-dir /tmp/codegenome-store \
             --file main.rs --line 8 --direction downstream --json \
             > /tmp/code-reality-raw/codegenome-main-downstream.json
 
-          /tmp/codegenome/target/release/codegenome query \
+          /tmp/codegenome/target/debug/codegenome query \
             --store-dir /tmp/codegenome-store \
             --file main.rs --line 8 --direction upstream --json \
             > /tmp/code-reality-raw/codegenome-main-upstream.json
 
-          /tmp/codegenome/target/release/codegenome query \
+          /tmp/codegenome/target/debug/codegenome query \
             --store-dir /tmp/codegenome-store \
             --file decoy.rs --line 8 --direction downstream --json \
             > /tmp/code-reality-raw/codegenome-decoy-downstream.json
