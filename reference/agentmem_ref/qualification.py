@@ -234,7 +234,7 @@ def qualification_from_adapter_results(
         raw_provider_refs=tuple(ref for result in results for ref in result.raw_provider_refs),
         normalized_refs=tuple(ref for result in results for ref in result.normalized_refs),
         checks=tuple(checks),
-        artifact_digests=tuple(artifact_digests),
+        artifact_digests=tuple(dict.fromkeys(artifact_digests)),
         maturity_before=maturity_before,
         profile_maturity_ceiling=profile_maturity_ceiling,
         earned_maturity=earned_maturity,
