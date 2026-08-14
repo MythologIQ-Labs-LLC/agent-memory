@@ -80,9 +80,10 @@
     },
     "result": {
       "type": "object",
-      "required": ["claimed_maturity", "earned_maturity", "applicability_digest", "qualification_current", "authority_effect", "limitations"],
+      "required": ["maturity_before", "profile_maturity_ceiling", "earned_maturity", "applicability_digest", "qualification_current", "authority_effect", "limitations"],
       "properties": {
-        "claimed_maturity": {"$ref": "#/$defs/maturity"},
+        "maturity_before": {"$ref": "#/$defs/maturity"},
+        "profile_maturity_ceiling": {"$ref": "#/$defs/maturity"},
         "earned_maturity": {"$ref": "#/$defs/maturity"},
         "applicability_digest": {"$ref": "#/$defs/digest"},
         "qualification_current": {"type": "boolean"},
