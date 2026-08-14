@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/component-capability-qualification.schema.json",
+  "title": "Agent Memory Component Capability Qualification",
+  "description": "Evidence record for behavior actually proven by an exact component/capability/adapter/profile/runtime identity. Qualification is evidence, never memory authority.",
+  "type": "object",
+  "required": ["schema_version", "subject", "runtime", "source_rights", "evidence", "result"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "subject": {"$ref": "#/$defs/subject"},
+    "runtime": {"$ref": "#/$defs/runtime"},
+    "source_rights": {"$ref": "#/$defs/sourceRights"},
+    "evidence": {"$ref": "#/$defs/evidence"},
+    "result": {"$ref": "#/$defs/result"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nonEmpty": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "maturity": {"enum": ["declared", "implemented", "runtime_wired", "evidence_proven", "reference_qualified"]},
+    "subject": {
+      "type": "object",
+      "required": ["component_id", "component_version", "implementation_ref", "capability_id", "capability_version", "adapter_id", "adapter_version", "qualification_profile_id", "qualification_profile_version"],
+      "properties": {
+        "component_id": {"$ref": "#/$defs/nonEmpty"},
+        "component_version": {"$ref": "#/$defs/nonEmpty"},
+        "implementation_ref": {"$ref": "#/$defs/nonEmpty"},
+        "capability_id": {"$ref": "#/$defs/nonEmpty"},
+        "capability_version": {"$ref": "#/$defs/nonEmpty"},
+        "adapter_id": {"$ref": "#/$defs/nonEmpty"},
+        "adapter_version": {"$ref": "#/$defs/nonEmpty"},
+        "qualification_profile_id": {"$ref": "#/$defs/nonEmpty"},
+        "qualification_profile_version": {"$ref": "#/$defs/nonEmpty"}
+      },
+      "additionalProperties": false
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["configuration_digest", "fixture_id", "fixture_digest"],
+      "properties": {
+        "configuration_digest": {"$ref": "#/$defs/digest"},
+        "fixture_id": {"$ref": "#/$defs/nonEmpty"},
+        "fixture_digest": {"$ref": "#/$defs/digest"},
+        "dependency_refs": {"type": "array", "items": {"$ref": "#/$defs/nonEmpty"}, "uniqueItems": true},
+        "runtime_refs": {"type": "array", "items": {"$ref": "#/$defs/nonEmpty"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "sourceRights": {
+      "type": "object",
+      "required": ["license_id", "license_ref", "use_posture"],
+      "properties": {
+        "license_id": {"$ref": "#/$defs/nonEmpty"},
+        "license_ref": {"$ref": "#/$defs/nonEmpty"},
+        "use_posture": {"enum": ["runtime_allowed", "comparator_only", "disallowed"]}
+      },
+      "additionalProperties": false
+    },
+    "check": {
+      "type": "object",
+      "required": ["check_id", "passed"],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/nonEmpty"},
+        "passed": {"type": "boolean"},
+        "evidence_ref": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["operations", "raw_provider_refs", "normalized_refs", "checks", "artifact_digests"],
+      "properties": {
+        "operations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmpty"}, "uniqueItems": true},
+        "raw_provider_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmpty"}},
+        "normalized_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmpty"}},
+        "checks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/check"}},
+        "artifact_digests": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object",
+      "required": ["claimed_maturity", "earned_maturity", "applicability_digest", "qualification_current", "authority_effect", "limitations"],
+      "properties": {
+        "claimed_maturity": {"$ref": "#/$defs/maturity"},
+        "earned_maturity": {"$ref": "#/$defs/maturity"},
+        "applicability_digest": {"$ref": "#/$defs/digest"},
+        "qualification_current": {"type": "boolean"},
+        "authority_effect": {"const": "none"},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  }
+}
