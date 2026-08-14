@@ -29,12 +29,13 @@ An Accepted ADR does **not** mean every mapped product implements it. That would
 - **ADR-029:** Proposed, Governance Context Projection as derived context rather than authority
 - **ADR-030:** Accepted, versioned compatibility/currentness for temporal-policy projections
 - **ADR-031:** Accepted, deterministic temporal commitments with separate evidence and authority layers
+- **ADR-032:** Accepted, governed mutable memory structure with deterministic or explicit-human canonical structural authority
 
 Each Proposed ADR has its own acceptance evidence. A green implementation slice does not silently accept a doctrine decision whose ADR demands broader evidence.
 
 ## Important decision families
 
-Rather than memorizing thirty-one filenames, think in decision families.
+Rather than memorizing thirty-two filenames, think in decision families.
 
 ### Identity and provenance
 
@@ -64,9 +65,24 @@ A valid claim gives a writer the bounded opportunity to attempt a shared mutatio
 
 Decisions about component boundaries, scope, isolation domains, privacy, trust, conflict, and multi-memory behavior.
 
-### Governed uncertainty
+### Governed uncertainty and mutable structure
 
-ADR-020 establishes the deterministic governance boundary around uncertain or probabilistic discovery.
+ADR-020 establishes the general governed-consequence boundary around uncertain, learned, heuristic, or probabilistic discovery.
+
+ADR-032 adds a stronger rule for canonical structural mutation:
+
+```text
+probabilistic / learned structural discovery
+        -> proposal
+        -> deterministic impact + authority classification
+        -> bounded autonomous commit OR explicit human decision
+```
+
+Memory shape may adapt. A probabilistic system may discover and recommend a better shape, but it cannot be the authority that commits canonical structural semantics. Bounded rebuild-only and additive changes may be autonomous under versioned deterministic policy. Semantic migrations, destructive changes, scope/isolation widening, and authority-bearing structure require explicit human authority unless a future Accepted ADR defines an exact narrower delegation.
+
+Current PAMA 1.2 remains conservatively review-first for `domain_schema_mutation` until the narrower implementation evidence is earned.
+
+See **[Governed Uncertainty](Governed-Uncertainty)** and **[Mutable Memory Fabric](Mutable-Memory-Fabric)**.
 
 ### Implementation portability
 
@@ -149,7 +165,8 @@ The canonical ADR files, not this Wiki summary, determine current decision text 
 
 ## Next
 
-- **[Governed Uncertainty](Governed-Uncertainty)** for deterministic governance around probabilistic discovery
+- **[Governed Uncertainty](Governed-Uncertainty)** for governed consequences around probabilistic discovery
+- **[Mutable Memory Fabric](Mutable-Memory-Fabric)** for ADR-032, configurable modules, and structural adaptation
 - **[Governance Projection](Governance-Projection)** for ADR-029 and governance-consumer interoperability
 - **[Temporal Commitments](Cryptographic-Temporal-Commitments)** for ADR-031
 - **[Aligned Projects & Intellectual Lineage](Aligned-Projects-and-Intellectual-Lineage)** for current external governance comparators
