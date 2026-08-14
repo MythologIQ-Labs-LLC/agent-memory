@@ -38,9 +38,11 @@ ADR-029: Proposed
 ADR-030: Accepted
 ADR-031: Accepted
 ADR-032: Accepted
+ADR-033: Accepted
+ADR-034: Proposed
 ```
 
-ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, and ADR-032 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance. ADR-024 likewise required executable positive and negative shared-write coordination evidence before promotion.
+ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, and ADR-033 have satisfied their respective doctrine-maturity gates. ADR-020 is deliberately stronger than documentation-only acceptance: it required executable end-to-end runtime evidence and adversarial negative paths before acceptance. ADR-024 likewise required executable positive and negative shared-write coordination evidence before promotion.
 
 ADR-021 proposes the interoperability boundary for **portable memory-governance evidence**. It keeps Agent Memory authoritative for memory semantics, PAMA, lifecycle obligations, and canonical decision receipts while allowing external trust systems such as AgenTrust to verify and correlate evidence without redefining those semantics.
 
@@ -59,6 +61,10 @@ ADR-030 establishes that temporal and authorization consumers require a **versio
 ADR-031 establishes a **layered temporal-commitment model**. Material temporal claims that determine historical identity belong inside deterministic content commitments, while signer attestation, signer trust, external witnessed time/transparency evidence, currentness, and PAMA authority remain distinct claims.
 
 ADR-032 establishes **governed structural mutability**. Memory shape may adapt, and probabilistic or learned systems may discover and propose structural changes, but canonical structural consequences are committed only through a versioned deterministic authorized envelope or explicit authorized human decision. Authority escalates with semantic impact, blast radius, migration requirements, scope, authority effect, and irreversibility.
+
+ADR-033 establishes **capability-oriented deterministic composition**. Component identity and capability identity are orthogonal, capability maturity is independently declared/evidenced, overlapping implementations require deterministic selection/composition or explicit ambiguity failure, and routing cannot silently downgrade maturity or become mutation/recall authority.
+
+ADR-034 proposes that **procedural/skill memory is retained state rather than standing execution authority**. It separates retention, retrieval, recall admission/activation, and action execution, and treats learned metamemory as a stricter memory-management/profile-change surface governed by existing PAMA/ADR-032 rules. ADR-034 intentionally requires #295 executable evidence before acceptance.
 
 ## Current status policy
 
@@ -94,6 +100,8 @@ The repository now has executable evidence for stochastic containment, cross-sco
 Acceptance does not upgrade the narrow reference adapter to a higher cumulative conformance level. Doctrine maturity and implementation conformance remain separate claims.
 
 ADR-032 is a domain-specific strengthening of this boundary for canonical structural mutation: probabilistic systems may propose a structural change, but the authority determination that commits the canonical structural consequence must be deterministic and versioned or explicitly human-authorized.
+
+ADR-034 applies the same separation to reusable procedures and memory-management skills: learned skill discovery may propose; remembered procedure does not become execution or memory-profile authority.
 
 ## Portable memory-governance evidence
 
@@ -177,7 +185,8 @@ The remaining Proposed ADRs intentionally separate several related but non-ident
 - [`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md): require explicit authority before overwriting durable decision state;
 - [`ADR-026`](ADR-026-origin-is-provenance-not-evidentiary-authority.md): apply the same evidence discipline to claims regardless of origin;
 - [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): require governed re-admission when a corrected/rejected value later reappears;
-- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): expose vendor-neutral governance context as reconstructable derived state without turning consumer semantics into core memory doctrine.
+- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): expose vendor-neutral governance context as reconstructable derived state without turning consumer semantics into core memory doctrine;
+- [`ADR-034`](ADR-034-procedural-memory-is-not-execution-authority.md): make reusable procedural memory current/scoped/correctable without granting it standing action or memory-profile authority.
 
 These ADRs must not be collapsed into a single broad "memory safety" or "governance integration" claim. Each has its own acceptance evidence and may be accepted, narrowed, or rejected independently.
 
@@ -291,6 +300,44 @@ The doctrine distinguishes canonical semantic shape, application/domain ontology
 
 PAMA 1.2 remains conservatively stricter than the new doctrine because it routes all `domain_schema_mutation` outcomes to review or external verification. Issue #281 owns the implementation evidence needed before any narrower autonomous structural path is introduced.
 
+## Capability-oriented composition
+
+[`ADR-033`](ADR-033-capabilities-are-independently-declared-and-deterministically-composed.md) is **Accepted**.
+
+Its central boundary is:
+
+```text
+component identity != capability identity
+
+required capability + maturity/posture
+  -> deterministic compatibility resolution
+  -> selected/composed implementation
+  -> normal Agent Memory authority/admission remains controlling
+```
+
+A component may expose many capabilities and a capability may have many implementations. Maturity is per capability. Overlap must resolve through an explicit deterministic rule/composition or fail as ambiguous. Fallback cannot silently downgrade maturity, scope/isolation, currentness, deletion, failure, or authority posture.
+
+ADR-033 is the architectural basis for #287/#290 and the EvolveAI/CodeGenome capability qualification work. It does not itself claim those implementation paths are complete.
+
+## Procedural / skill memory
+
+[`ADR-034`](ADR-034-procedural-memory-is-not-execution-authority.md) is intentionally **Proposed**.
+
+Its central boundary is:
+
+```text
+procedural memory retention
+  != retrieval
+  != recall admission / activation
+  != action execution authority
+```
+
+A remembered procedure can influence a plan after governed admission, but actual actions remain under Agent Runtime / Agent Governance authority. Procedural correction uses normal currentness/supersession rules, and cross-scope skill reuse is governed by ADR-022.
+
+ADR-034 also treats learned metamemory as a stricter sub-class: a procedure that changes how Agent Memory extracts, consolidates, routes, retrieves, ranks, prunes, archives, or forgets memory is a proposed configuration/policy/structural consequence, not an ordinary recalled skill that can silently apply itself.
+
+Issue #295 owns the executable acceptance evidence required before ADR-034 can be considered for promotion.
+
 ## Canonical references
 
 - [`../01-layer-model.md`](../01-layer-model.md)
@@ -310,6 +357,10 @@ PAMA 1.2 remains conservatively stricter than the new doctrine because it routes
 - [`../34-adapter-contracts.md`](../34-adapter-contracts.md)
 - [`../41-memory-isolation-domains-and-governed-crossing.md`](../41-memory-isolation-domains-and-governed-crossing.md)
 - [`../42-governed-mutable-memory-fabric.md`](../42-governed-mutable-memory-fabric.md)
+- [`../programs/memory-modules/README.md`](../programs/memory-modules/README.md)
+- [`../programs/memory-modules/capability-vocabulary.md`](../programs/memory-modules/capability-vocabulary.md)
+- [`../programs/memory-modules/external-capability-frontier.md`](../programs/memory-modules/external-capability-frontier.md)
+- [`../programs/memory-modules/implementation-lane-selection.md`](../programs/memory-modules/implementation-lane-selection.md)
 - [`../profiles/durable-decision-memory-profile.md`](../profiles/durable-decision-memory-profile.md)
 - [`../profiles/governance-context-projection-profile.md`](../profiles/governance-context-projection-profile.md)
 - [`../profiles/temporal-commitment-evidence-profile.md`](../profiles/temporal-commitment-evidence-profile.md)
