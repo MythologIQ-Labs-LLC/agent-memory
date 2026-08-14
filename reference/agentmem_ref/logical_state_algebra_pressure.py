@@ -18,7 +18,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .architecture_family_evidence import run_architecture_family_evidence
+from .architecture_family_closeout import run_closeout_evidence
 from .autonomous_maintenance_harness import run_autonomous_maintenance_harness
 from .conditional_memory_harness import run_conditional_memory_harness
 
@@ -92,7 +92,7 @@ def run_logical_state_algebra_pressure(agent_memory_commit: str) -> dict[str, An
     scenario_contract = json.loads(SCENARIOS.read_text(encoding="utf-8"))
     expected_ids = {item["id"] for item in scenario_contract["scenarios"]}
 
-    architecture = run_architecture_family_evidence()
+    architecture = run_closeout_evidence()
     by_family = {item["family"]: item for item in architecture["families"]}
     maintenance = run_autonomous_maintenance_harness()
     conditional = run_conditional_memory_harness()
@@ -115,7 +115,7 @@ def run_logical_state_algebra_pressure(agent_memory_commit: str) -> dict[str, An
                 "transaction_not_derived_cleanup": relational["transaction_atomicity_is_derived_cleanup"] is False,
                 "provenance_reconstructable": relational["provenance_reconstructable"] is True,
             },
-            evidence_refs=["architecture_family_evidence:relational_document_store"],
+            evidence_refs=["architecture_family_closeout:relational_document_store"],
         ),
         _scenario(
             "LSA-02",
@@ -126,7 +126,7 @@ def run_logical_state_algebra_pressure(agent_memory_commit: str) -> dict[str, An
                 "reachability_not_permission": graph["retrieval_or_reachability_is_permission"] is False,
                 "provenance_reconstructable": graph["provenance_reconstructable"] is True,
             },
-            evidence_refs=["architecture_family_evidence:knowledge_graph_graphrag"],
+            evidence_refs=["architecture_family_closeout:knowledge_graph_graphrag"],
         ),
         _scenario(
             "LSA-03",
@@ -137,7 +137,7 @@ def run_logical_state_algebra_pressure(agent_memory_commit: str) -> dict[str, An
                 "historical_provenance_reconstructable": event["provenance_reconstructable"] is True,
                 "history_not_authority": event["authority_effect"] == "none",
             },
-            evidence_refs=["architecture_family_evidence:event_log_ledger"],
+            evidence_refs=["architecture_family_closeout:event_log_ledger"],
         ),
         _scenario(
             "LSA-04",
@@ -148,7 +148,7 @@ def run_logical_state_algebra_pressure(agent_memory_commit: str) -> dict[str, An
                 "deletion_closure_names_canonical_source": "canonical_source" in hybrid["deletion_closure"],
                 "derived_state_has_no_write_authority": hybrid["probabilistic_or_derived_state_has_write_authority"] is False,
             },
-            evidence_refs=["architecture_family_evidence:hybrid_composition"],
+            evidence_refs=["architecture_family_closeout:hybrid_composition"],
         ),
         _scenario(
             "LSA-05",
@@ -159,7 +159,7 @@ def run_logical_state_algebra_pressure(agent_memory_commit: str) -> dict[str, An
                 "stale_conflicting_write_not_committed": shared["stale_conflicting_write_committed"] is False,
                 "provenance_reconstructable": shared["provenance_reconstructable"] is True,
             },
-            evidence_refs=["architecture_family_evidence:shared_distributed"],
+            evidence_refs=["architecture_family_closeout:shared_distributed"],
         ),
         _scenario(
             "LSA-06",
