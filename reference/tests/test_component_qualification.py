@@ -72,7 +72,8 @@ class ComponentQualificationTests(unittest.TestCase):
                 ("direction-fidelity", True, "artifact:normalized.json"),
             ),
             artifact_digests=("sha256:" + "c" * 64,),
-            claimed_maturity="evidence_proven",
+            maturity_before="runtime_wired",
+            profile_maturity_ceiling="evidence_proven",
             earned_maturity=earned,
         )
 
@@ -111,7 +112,13 @@ class ComponentQualificationTests(unittest.TestCase):
                 trace_ref="trace",
             )
 
-    def test_qualification_cannot_promote_above_claimed_maturity(self):
+    def test_runtime_wired_can_earn_evidence_proven_within_profile_ceiling(self):
+        record = self._record(earned="evidence_proven")
+        self.assertEqual(record.maturity_before, "runtime_wired")
+        self.assertEqual(record.profile_maturity_ceiling, "evidence_proven")
+        self.assertEqual(record.earned_maturity, "evidence_proven")
+
+    def test_qualification_cannot_exceed_profile_maturity_ceiling(self):
         with self.assertRaises(QualificationError):
             QualificationRecord(
                 subject=self._subject(),
@@ -124,11 +131,12 @@ class ComponentQualificationTests(unittest.TestCase):
                 normalized_refs=("normalized",),
                 checks=(("positive", True, "evidence"),),
                 artifact_digests=("sha256:" + "e" * 64,),
-                claimed_maturity="runtime_wired",
+                maturity_before="runtime_wired",
+                profile_maturity_ceiling="evidence_proven",
                 earned_maturity="reference_qualified",
             )
 
-    def test_reference_qualified_requires_all_profile_checks(self):
+    def test_reference_qualified_requires_explicit_ceiling_and_all_profile_checks(self):
         with self.assertRaises(QualificationError):
             QualificationRecord(
                 subject=self._subject(),
@@ -141,7 +149,26 @@ class ComponentQualificationTests(unittest.TestCase):
                 normalized_refs=("normalized",),
                 checks=(("positive", True, "evidence"), ("stale-version", False, "negative")),
                 artifact_digests=("sha256:" + "f" * 64,),
-                claimed_maturity="reference_qualified",
+                maturity_before="evidence_proven",
+                profile_maturity_ceiling="reference_qualified",
+                earned_maturity="reference_qualified",
+            )
+
+    def test_reference_qualified_requires_runtime_allowed_source_rights(self):
+        with self.assertRaises(QualificationError):
+            QualificationRecord(
+                subject=self._subject(),
+                runtime=self._runtime(),
+                license_id="restricted",
+                license_ref="license",
+                use_posture="comparator_only",
+                operations=("query",),
+                raw_provider_refs=("raw",),
+                normalized_refs=("normalized",),
+                checks=(("positive", True, "evidence"),),
+                artifact_digests=("sha256:" + "f" * 64,),
+                maturity_before="evidence_proven",
+                profile_maturity_ceiling="reference_qualified",
                 earned_maturity="reference_qualified",
             )
 
