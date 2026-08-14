@@ -5,7 +5,10 @@ on:
     paths:
       - "schemas/component-capability-qualification.schema.json"
       - "reference/agentmem_ref/qualification.py"
+      - "reference/agentmem_ref/code_graph_qualification.py"
+      - "reference/run_component_qualification.py"
       - "reference/tests/test_component_qualification.py"
+      - "reference/tests/test_code_graph_qualification.py"
       - "reference/fixtures/component-qualification/**"
       - ".github/workflows/component-qualification-foundation.yml"
   workflow_dispatch:
@@ -28,10 +31,13 @@ jobs:
       - name: Install reference dependencies
         run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
 
-      - name: Run qualification contract tests
+      - name: Run qualification contract and normalizer tests
         env:
           PYTHONPATH: reference
-        run: python -m unittest reference/tests/test_component_qualification.py
+        run: |
+          python -m unittest \
+            reference/tests/test_component_qualification.py \
+            reference/tests/test_code_graph_qualification.py
 
       - name: Verify source mutation fixture is material
         run: |
@@ -41,16 +47,22 @@ jobs:
             reference/fixtures/component-qualification/v1/main.rs \
             reference/fixtures/component-qualification/v2/main.rs
 
-      - name: Verify decoy symbol line overlap is preserved
+      - name: Verify adversarial line identities are stable
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          def middle_line(path: str) -> int:
+          def line_of(path: str, prefix: str) -> int:
               lines = Path(path).read_text(encoding="utf-8").splitlines()
-              return next(i for i, line in enumerate(lines, 1) if line.startswith("fn middle"))
+              return next(i for i, line in enumerate(lines, 1) if line.startswith(prefix))
 
-          main_line = middle_line("reference/fixtures/component-qualification/v1/main.rs")
-          decoy_line = middle_line("reference/fixtures/component-qualification/v1/decoy.rs")
-          assert main_line == decoy_line, (main_line, decoy_line)
+          v1_main = "reference/fixtures/component-qualification/v1/main.rs"
+          v1_decoy = "reference/fixtures/component-qualification/v1/decoy.rs"
+          v2_main = "reference/fixtures/component-qualification/v2/main.rs"
+          assert line_of(v1_main, "fn middle") == 5
+          assert line_of(v1_decoy, "fn middle") == 5
+          assert line_of(v2_main, "fn middle") == 5
+          assert line_of(v1_main, "fn leaf") == 1
+          assert line_of(v1_decoy, "fn decoy_leaf") == 12
+          assert line_of(v2_main, "fn replacement_leaf") == 13
           PY
