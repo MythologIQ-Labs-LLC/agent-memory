@@ -31,7 +31,7 @@ An Accepted ADR does **not** mean every mapped product implements it. That would
 - **ADR-031:** Accepted, deterministic temporal commitments with separate evidence and authority layers
 - **ADR-032:** Accepted, governed mutable memory structure with deterministic or explicit-human canonical structural authority
 - **ADR-033:** Accepted, independent capability maturity and deterministic component/capability composition
-- **ADR-034:** Proposed, procedural/skill memory as retained state rather than standing execution authority
+- **ADR-034:** Accepted, procedural/skill memory as retained state rather than standing execution authority
 
 Each Proposed ADR has its own acceptance evidence. A green implementation slice does not silently accept a doctrine decision whose ADR demands broader evidence.
 
@@ -61,11 +61,9 @@ shared write intent
   -> durable mutation or refusal
 ```
 
-A valid claim gives a writer the bounded opportunity to attempt a shared mutation. It does not grant permission to make that mutation durable. ADR-024 was accepted only after executable valid, conflicting, stale, expired, unauthorized, audit, and PAMA-non-override paths passed the repository evidence gates.
+A valid claim gives a writer the bounded opportunity to attempt a shared mutation. It does not grant permission to make that mutation durable.
 
 ### Composition and security
-
-Decisions about component boundaries, scope, isolation domains, privacy, trust, conflict, and multi-memory behavior.
 
 ADR-033 establishes the component/capability composition model:
 
@@ -94,28 +92,35 @@ probabilistic / learned structural discovery
         -> bounded autonomous commit OR explicit human decision
 ```
 
-Memory shape may adapt. A probabilistic system may discover and recommend a better shape, but it cannot be the authority that commits canonical structural semantics. Bounded rebuild-only and additive changes may be autonomous under versioned deterministic policy. Semantic migrations, destructive changes, scope/isolation widening, and authority-bearing structure require explicit human authority unless a future Accepted ADR defines an exact narrower delegation.
+Memory shape may adapt. A probabilistic system may discover and recommend a better shape, but it cannot be the authority that commits canonical structural semantics. Bounded rebuild-only and additive changes may be autonomous under versioned deterministic policy. Semantic migrations, destructive changes, scope/isolation widening, and authority-bearing structure require explicit authority unless a future Accepted ADR defines an exact narrower delegation.
 
-Current PAMA 1.2 remains conservatively review-first for `domain_schema_mutation` until the narrower implementation evidence is earned.
+Current PAMA 1.2 remains conservatively review-first for `domain_schema_mutation` until narrower implementation evidence is earned.
 
 See **[Governed Uncertainty](Governed-Uncertainty)** and **[Mutable Memory Fabric](Mutable-Memory-Fabric)**.
 
 ### Procedural memory and skills
 
-ADR-034 proposes a separate boundary for retained procedures:
+ADR-034 establishes:
 
 ```text
 skill retained
   != skill retrieved
   != skill admitted / activated
-  != action execution authorized
+  != action authorized
+  != execution evidence
 ```
 
-A remembered procedure may shape a plan after governed recall admission. It does not become standing permission to execute shell commands, repository changes, external calls, deployments, payments, or any other consequential action.
+A remembered procedure may shape a plan after governed recall admission. It does not become standing permission to execute shell commands, repository changes, external calls, deployments, payments, or other consequential actions.
+
+The accepted #295 reference slice proves proposal without mutation, governed promotion, cross-session plan influence, separate action-governance/execution evidence, correction/supersession, exact-content approval binding, stale replay refusal, cross-project refusal, revocation/residue honesty, and metamemory refusal.
+
+The approval path binds the exact proposal, procedure version, content SHA-256, and state snapshot. Approval for one procedure cannot be reused to commit a substituted payload.
 
 ADR-034 also distinguishes ordinary task skills from **metamemory**. A remembered routine for changing how Agent Memory extracts, consolidates, routes, retrieves, ranks, prunes, archives, or forgets memory is a memory-management/profile-change proposal. It remains subject to PAMA and ADR-032 rather than applying itself because it was recalled.
 
-Issue #295 owns the first executable procedural-memory acceptance path and the evidence required before ADR-034 can be promoted.
+The evidence remains bounded to the reference runtime. It does not claim process-restart durability, a universal skill format, or universal production conformance.
+
+See the canonical runtime evidence at `docs/programs/runtime-evidence/procedural-memory.md` in the repository.
 
 ### Implementation portability
 
@@ -129,7 +134,7 @@ reference implementation language
 optional implementation or interoperability profile
 ```
 
-Python, Rust, UOR, AGT, MCP, and future ecosystems may participate without becoming the definition of Agent Memory. ADR-028 is Accepted.
+Python, Rust, UOR, AGT, MCP, and future ecosystems may participate without becoming the definition of Agent Memory.
 
 ### Interoperability and governance projection
 
@@ -145,16 +150,9 @@ Agent Memory decision / execution evidence
   -> external verifier / attestation system
 ```
 
-ADR-029's core ownership model is:
+ADR-029 keeps Governance Context Projection vendor-neutral and non-authoritative. ADR-021 keeps external evidence verification distinct from memory-semantic authority.
 
-```text
-Agent Memory core
-  -> Governance Context Projection
-  -> consumer-specific adapter
-  -> governance / approval / enforcement system
-```
-
-The projection is remembered context, not standing permission or a final policy verdict. ADR-029 complements ADR-028 by keeping the projection vendor-neutral while the normative core remains language-neutral. See **[Governance Projection](Governance-Projection)**.
+See **[Governance Projection](Governance-Projection)**.
 
 ### Temporal policy and temporal commitments
 
@@ -162,18 +160,18 @@ ADR-030 requires versioned compatibility/currentness before memory-derived conte
 
 ADR-031 establishes deterministic temporal commitments while keeping historical identity, evidence, lifecycle currentness, and PAMA authority distinct.
 
-See **[Temporal Commitments](Cryptographic-Temporal-Commitments)** for the reader-facing model and visual explanation.
+See **[Temporal Commitments](Cryptographic-Temporal-Commitments)**.
 
 ## When an ADR should change
 
 An accepted decision should be revisited when there is:
 
-- contradictory research with material architectural consequences
-- a reproducible implementation failure
-- a security or privacy failure mode the decision does not contain
-- a semantic incompatibility discovered in schemas or composition
-- evidence that a simpler architecture satisfies the same constraints
-- new interoperability requirements that invalidate the original boundary
+- contradictory research with material architectural consequences;
+- a reproducible implementation failure;
+- a security or privacy failure mode the decision does not contain;
+- a semantic incompatibility discovered in schemas or composition;
+- evidence that a simpler architecture satisfies the same constraints;
+- new interoperability requirements that invalidate the original boundary.
 
 Preference alone is not enough. Neither is “the new framework has a nicer README.”
 
@@ -181,12 +179,12 @@ Preference alone is not enough. Neither is “the new framework has a nicer READ
 
 A strong proposal states:
 
-1. current decision
-2. new evidence or failure mode
-3. proposed replacement or clarification
-4. affected docs, schemas, fixtures, and implementations
-5. compatibility impact
-6. falsification/rejection criteria
+1. current decision;
+2. new evidence or failure mode;
+3. proposed replacement or clarification;
+4. affected docs, schemas, fixtures, and implementations;
+5. compatibility impact;
+6. falsification/rejection criteria.
 
 Use the **Doctrine or architecture proposal** issue form for new ADR work.
 

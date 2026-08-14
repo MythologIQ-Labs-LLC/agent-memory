@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -14,178 +14,141 @@ procedure is not permission
 permission is not governance
 ```
 
-The external memory frontier now makes this boundary operationally urgent.
+The external memory frontier makes this boundary operationally important. Agent systems increasingly retain reusable procedures, playbooks, tool-use routines, skills, scripts, resources, condensed experience, or learned strategies that can materially change later behavior. The representation is not the stable architectural question.
 
-Modern agent-memory systems increasingly retain reusable procedures, strategies, playbooks, tool-use routines, and “skills” as memory. MemOS, MIRIX, Letta, Acontext, and research on execution-oriented/procedural memory all expose forms of retained know-how that can materially change later agent behavior.
-
-Some skill formats are human-readable Markdown. Others include scripts/resources, learned policies, condensed experience, or routing triggers. The substrate is not the stable architectural question.
-
-The stable question is whether storing or recalling a procedure silently grants the agent authority to activate or execute it.
+The stable question is whether storing or recalling a procedure silently grants authority to apply or execute it.
 
 It must not.
 
-A second frontier has also emerged: systems such as MemSkill and EvolveMem learn **how the memory system itself should remember**, including extraction, consolidation, retrieval, ranking, and forgetting strategies. These “metamemory” procedures are even more consequential because they alter future memory formation and recall.
+A related frontier is **metamemory**: retained or learned procedures about how the memory system itself should extract, consolidate, route, retrieve, rank, prune, archive, or forget memory. Metamemory has a higher consequence surface because applying it changes future memory formation and recall.
 
-Existing doctrine covers pieces of this problem:
+Existing doctrine supplies the controlling boundaries:
 
-- ADR-020 separates uncertain/learned proposals from governed consequences;
+- ADR-020 separates learned/probabilistic proposals from governed consequences;
 - ADR-022 governs cross-scope memory movement;
-- ADR-025 (Proposed) addresses explicit authority for durable decision overwrite;
-- ADR-027 (Proposed) addresses governed re-admission of rejected values;
+- ADR-028 preserves representation and implementation portability;
+- ADR-030 separates current compatible projections from historical/serializable state;
 - ADR-032 governs structural adaptation and forbids probabilistic self-authorization;
 - ADR-033 establishes capability-oriented composition and deterministic routing floors;
-- PAMA separates memory target class, operation, downstream authority, risk, and review requirements.
+- PAMA separates target class, operation, downstream authority, risk, and review requirements.
 
-The missing doctrine is the lifecycle and authority boundary for retained **procedural/skill memory** itself.
+## Decision
 
-## Decision candidate
+Agent Memory treats procedural/skill memory as **governed retained state with separate retrieval, admission/activation, action-authority, and execution boundaries**.
 
-Agent Memory SHOULD treat procedural/skill memory as governed retained state with a separate activation and execution boundary.
-
-> **A remembered procedure may influence a plan. It does not, by being remembered, grant permission to perform the procedure's actions.**
+> **A remembered procedure may influence a plan after governed admission. It does not, by being remembered, grant permission to perform the procedure's actions.**
 
 The architecture separates at least:
 
 ```text
 skill retention
-  store/version/scope/provenance the procedure
-
+  store / version / scope / provenance the procedure
+        |
+        v
 skill retrieval
   produce the procedure as a memory candidate
-
+        |
+        v
 skill admission / activation
-  permit the procedure to influence the current plan/context
-
-skill execution
-  perform tools/actions described by the procedure under Runtime/Governance authority
+  permit the current procedure to influence plan/context
+        |
+        v
+runtime action proposal
+  identify an action the agent wants to perform
+        |
+        v
+action governance where applicable
+  permit / review / block the exact action
+        |
+        v
+execution evidence
 ```
 
-No earlier stage implies the later stage.
+No earlier stage implies a later stage.
 
-## Procedural memory unit
+## Procedural-memory semantic boundary
 
-A procedural-memory implementation MAY use Markdown, structured JSON, files, database records, code bundles, learned policies, or another representation.
+A procedural-memory implementation MAY use Markdown, JSON, files, database records, code bundles, learned policies, or another representation.
 
-At the Agent Memory semantic boundary, a durable procedural memory SHOULD be able to represent or derive at least:
+At the Agent Memory boundary, a durable procedure MUST preserve or make reconstructable enough information to govern at least:
 
-```text
-logical procedure identity
-version / currentness
-scope / isolation domain
-purpose / applicability or trigger conditions
-procedure content/reference
-provenance/source episodes or authored source
-validation/evaluation evidence where available
-known constraints / hazards / prerequisites
-supersession/correction lineage
-sensitivity
-activation posture
-content/reference integrity
-```
+- logical procedure identity;
+- version and currentness;
+- scope and isolation domain;
+- purpose/applicability;
+- exact procedure content or integrity-bound reference;
+- provenance/source evidence;
+- validation evidence where available;
+- constraints, hazards, or prerequisites where applicable;
+- supersession/correction lineage;
+- activation posture.
 
-Exact field names are an implementation/schema question, not fixed by this ADR.
+Exact field names and serialization are implementation/profile choices rather than canonical doctrine.
 
-## Promotion into procedural memory
+## Promotion
 
-A procedure may originate from:
-
-- explicit human instruction;
-- imported project/user documentation;
-- repeated successful agent experience;
-- consolidation/synthesis over episodes;
-- external skill catalogs;
-- another governed memory domain;
-- learned skill-generation systems.
+A procedure may originate from human instruction, documentation, episodic experience, consolidation/synthesis, external skill catalogs, another governed memory domain, or a learned skill-generation system.
 
 Origin establishes provenance, not authority.
 
-Promotion from episodic experience into durable procedural memory is a consequential memory mutation and must pass the normal PAMA/currentness/scope path.
+Promotion into durable procedural memory is a memory mutation and MUST pass the normal PAMA/currentness/scope path. Learned confidence or expected utility cannot authorize the durable consequence.
 
-A model's confidence that a procedure is useful does not authorize durable promotion.
+A proposal MUST NOT mutate durable procedural state merely because it exists.
 
-## Activation/admission
+## Exact payload and approval binding
 
-Procedural recall produces a **candidate skill/procedure**.
+Where a procedural mutation requires review or approval, the authorization MUST bind the exact payload or integrity-bound reference, proposal identity, and current-state snapshot sufficiently to prevent approval substitution.
 
-Before the procedure may influence the active plan/context, Agent Memory must apply governed recall/admission constraints including as applicable:
+```text
+approval for skill X @ state N
+        !=
+approval for modified skill Y @ state N
+        !=
+approval for X after state N has changed
+```
 
-- currentness and supersession;
-- scope/isolation;
-- purpose/applicability;
-- sensitivity;
-- rejection/readmission state;
-- material validation status;
-- required authority ceilings;
-- source/provenance availability;
-- consumer/runtime compatibility.
+A generic `approved=true`, reused approval reference, stale cached approval, or approval for a predecessor version is not sufficient standing authority for a different payload or state.
 
-A high similarity score, trigger match, graph reachability, or learned router choice does not bypass admission.
+## Retrieval and admission
+
+Procedural retrieval produces a **candidate procedure**. Before the procedure may influence the active plan/context, governed admission must apply relevant currentness, supersession, scope/isolation, purpose/applicability, rejection/readmission, provenance, sensitivity, compatibility, and validation constraints.
+
+A high similarity score, graph reachability, trigger match, learned router choice, or component-selection result cannot bypass admission.
+
+Superseded or tombstoned procedures may remain retrievable for reconstruction while being refused as current guidance.
 
 ## Execution remains outside memory authority
 
-Once admitted, a procedural memory may recommend or shape Runtime behavior.
+Once admitted, procedural memory may shape planning and produce candidate runtime actions. Actual tool/action authority remains with Agent Runtime and/or Agent Governance as applicable.
 
-The Runtime and/or Agent Governance system remains responsible for actual action/tool execution authority.
+A stored skill containing a shell command, HTTP request, repository mutation, deployment step, payment action, or destructive operation does not inherit execution authority from its retention, prior validation, prior successful use, or prior approval in another state.
 
-```text
-Agent Memory
-  recalls/admit procedure
-        |
-        v
-Agent Runtime
-  forms plan / proposes action
-        |
-        v
-Agent Governance where applicable
-  permits / reviews / blocks action
-        |
-        v
-execution
-```
-
-A stored skill containing a shell command, HTTP call, repository mutation, payment step, deployment procedure, or destructive operation does not inherit authority merely because the skill was previously approved for another case.
+The identities for memory proposal, PAMA decision, memory commit receipt, recall/admission, action proposal, action-governance decision, and execution evidence SHOULD remain distinguishable and correlatable rather than being collapsed into one reusable "approved skill" token.
 
 ## Correction and supersession
 
-Procedural memories are versioned knowledge, not immortal scripts.
-
-When a procedure changes:
+Procedural memories are versioned retained state.
 
 ```text
 old current procedure
   -> correction/successor proposal
-  -> governance/currentness evaluation
+  -> current-state + authority evaluation
+  -> exact approval when required
   -> new current procedure
   -> old procedure retained as superseded history where required
 ```
 
-Superseded procedures MUST NOT be admitted as current merely because a retrieval component ranks them highly.
-
-Historical procedures may remain queryable for reconstruction, incident analysis, or rollback evidence without being current guidance.
+A superseded procedure MUST NOT regain current influence merely because retrieval ranks it highly. Stale proposals and approvals MUST fail after the governed state advances.
 
 ## Cross-scope transfer
 
-A useful skill in one project, tenant, environment, or toolchain does not automatically transfer to another.
+A useful procedure in one project, tenant, environment, or toolchain does not automatically transfer to another. Cross-scope procedural reuse is governed by ADR-022 and may require rescoping, compatibility validation, renewed authority, or new evidence.
 
-Cross-scope procedural reuse is a governed boundary crossing under ADR-022.
-
-Transfer may require:
-
-- re-scoping;
-- compatibility validation;
-- removal/generalization of environment-specific assumptions;
-- renewed authority/approval;
-- new validation evidence.
-
-The same procedure text in two domains does not imply the same applicability or authority.
+The same text in two domains does not imply the same applicability or authority.
 
 ## Procedure plus executable artifacts
 
-Some skill systems package instructions with executable scripts/resources.
-
-Agent Memory may retain and retrieve such artifacts as `resource_artifact_memory` associated with `procedural_skill_memory`.
-
-However:
+A skill may reference scripts or resources. Retention and integrity do not imply trust or execution permission:
 
 ```text
 artifact retained
@@ -194,156 +157,135 @@ artifact retained
   != execution authorized
 ```
 
-Integrity, provenance, malware/supply-chain checks, runtime sandboxing, and action governance remain separate controls.
+Supply-chain validation, sandboxing, external governance, and execution evidence remain separate concerns.
 
-## Metamemory is a stricter sub-class
+## Metamemory is a stricter profile
 
-A procedure about performing a user task is ordinary procedural memory.
+A procedure for performing a user task is ordinary procedural memory.
 
-A procedure about **how Agent Memory itself should form, consolidate, route, retrieve, rank, prune, archive, or forget memory** is a `metamemory_policy` capability.
-
-Metamemory has a higher consequence surface because recalling/applying it changes future memory-system behavior.
+A procedure that changes how Agent Memory forms, consolidates, routes, retrieves, ranks, prunes, archives, or forgets memory is a metamemory/profile-change proposal.
 
 The safe path is:
 
 ```text
 learned metamemory insight
-  -> versioned proposed memory-management/profile change
-  -> deterministic compatibility + regression analysis
-  -> PAMA / ADR-032 structural or policy classification
-  -> bounded authorized commit OR explicit human decision
+  -> retained/proposed management change
+  -> deterministic compatibility / impact / regression evidence
+  -> PAMA / ADR-032 classification
+  -> bounded authorized commit OR explicit review
 ```
 
-A recalled metamemory skill MUST NOT silently modify the active memory profile.
-
-This ADR does not create a separate metamemory authority system. Existing PAMA, ADR-020, ADR-032, configuration compatibility, and normal human-authority boundaries remain controlling.
+A recalled metamemory artifact MUST NOT silently modify the active memory profile. This ADR creates no parallel metamemory authority system.
 
 ## Learned and self-evolving skills
 
-Systems may learn skills from successful episodes, hard cases, failure logs, or benchmark feedback.
+Learned systems MAY propose new procedures, refinements, applicability triggers, retirement candidates, or metamemory changes. They MAY provide utility estimates or validation evidence.
 
-Agent Memory permits probabilistic/learned systems to:
+They do not self-authorize durable promotion, semantic correction, cross-scope transfer, retirement/deletion, active profile mutation, or action execution.
 
-- propose new procedural memories;
-- propose refinements;
-- estimate expected utility;
-- identify applicability triggers;
-- recommend retirement;
-- propose metamemory/profile changes.
+## Capability composition
 
-They do not self-authorize:
+Procedural memory is a capability under ADR-033 rather than a required dedicated product or repository.
 
-- durable promotion;
-- cross-scope transfer;
-- semantic correction;
-- deletion/retirement;
-- active profile mutation;
-- action execution.
+A component may declare `procedural_skill_memory` alongside other capabilities. Multiple implementations may satisfy the capability. Selection/composition is deterministic and maturity-aware, and provider choice does not become mutation authority or recall permission.
 
-For self-evolving retrieval or metamemory changes, regression evidence and rollback boundaries SHOULD be first-class inputs to the governance decision.
+The first reference profile intentionally uses a simple inspectable artifact and the existing governed adapter instead of creating a specialized skill database.
 
-## Evaluation evidence
+## Acceptance evidence
 
-Procedural memory quality is not adequately measured by retrieval accuracy alone.
+ADR-034 was promoted only after the #295 reference vertical slice exercised the decision end to end and the repository-wide doctrine validator passed at the implementation head.
 
-A capability profile SHOULD be able to bind a skill/procedure to evidence such as:
+The executable evidence surfaces are:
 
-- source episodes;
-- successful/failed applications;
-- environment/tool versions;
-- tests or validation runs;
-- negative cases;
-- last validation time;
-- known constraints;
-- observed outcome metrics.
+- `reference/agentmem_ref/capabilities.py` — independent capability maturity and deterministic provider resolution;
+- `schemas/component-capability-profile.schema.json` — machine-readable capability declaration profile;
+- `reference/agentmem_ref/procedural_memory.py` — procedural retention, exact approval binding, activation, action separation, revocation, and metamemory boundary;
+- `reference/tests/test_component_capabilities.py` — maturity, ambiguity, preference, and no-downgrade tests;
+- `reference/tests/test_procedural_memory.py` — positive and adversarial procedural-memory paths;
+- `reference/run_procedural_memory.py` — deterministic reconstructable evidence harness;
+- `.github/workflows/procedural-memory-evidence.yml` — exact-head focused evidence workflow;
+- `docs/programs/runtime-evidence/procedural-memory.md` — evidence map and claim boundary.
 
-This evidence informs currentness and applicability. It does not become standing execution permission.
+The evidence demonstrates:
 
-## First implementation profile
+1. procedure proposal does not mutate durable state;
+2. governed promotion creates a versioned, scoped, integrity-bound procedure;
+3. later-session governed recall admits the current procedure and changes the plan;
+4. admission does not execute actions;
+5. an action requires a separately bound governance decision before execution evidence can be recorded;
+6. correction requires review under the current PAMA profile and supersedes rather than erases the prior version;
+7. approval is bound to the exact procedure payload, proposal, version, and state, and a substituted payload is refused;
+8. an unbound review flag/reference cannot manufacture approval;
+9. stale proposal replay fails after state advances;
+10. a high-relevance foreign-project candidate is not admitted;
+11. revocation/tombstoning removes active influence while retained recovery content/residue is reported honestly;
+12. retained metamemory cannot apply itself through ordinary skill activation and instead yields a separate M5/A5 `policy_mutation` proposal;
+13. memory, approval, action-governance, and execution identities remain distinct;
+14. capability routing remains non-authoritative.
 
-The reference implementation SHOULD deliberately use a simple, inspectable representation before adopting a specialized skill database.
+## Evidence boundary
 
-A suitable v0 profile is:
+Acceptance is a doctrine-maturity decision, not a universal production-conformance claim.
 
-```text
-human-readable Markdown/structured skill artifact
-  + Agent Memory logical identity/provenance/scope/currentness
-  + governed promotion
-  + governed recall/admission
-  + explicit activation evidence
-  + separate Runtime/Governance execution
-```
+The reference proof is deliberately bounded:
 
-The first proof should not require embeddings, GraphRAG, a learned skill model, or a new first-party repository.
-
-Those capabilities can be composed later without changing the behavioral contract.
-
-## Required acceptance evidence before doctrine promotion
-
-This ADR intentionally remains Proposed until the first vertical slice demonstrates at least:
-
-1. an episodic or human-authored procedure can be proposed without immediate mutation;
-2. governed promotion creates durable procedural memory with provenance/scope;
-3. a later session retrieves and admits the current procedure;
-4. the admitted procedure changes the plan without automatically executing actions;
-5. execution still traverses the normal Runtime/Governance boundary;
-6. correction creates a superseding procedure and the old procedure is no longer admitted as current;
-7. stale procedure/approval replay cannot restore an old procedure as current;
-8. cross-project/tenant procedure admission is blocked without governed crossing;
-9. deletion/revocation makes derived/index/cache copies non-influential or reports incomplete residue honestly;
-10. an attempted metamemory/profile change cannot self-authorize through ordinary skill recall;
-11. decision, activation/admission, and execution evidence remain distinct.
+- it proves cross-session reuse inside one governed reference runtime;
+- it does **not** prove process-restart durability, which remains separate work;
+- it uses a reference in-memory procedural representation rather than selecting a universal skill store;
+- it models a separate action-governance/execution boundary without claiming a specific external governance product or real external tool execution;
+- it does not make Markdown, the reference serialization, EvolveAI, CodeGenome, or any external skill format canonical;
+- it does not grant `reference_qualified` maturity to first-party components merely because example declarations exist.
 
 ## Consequences
 
 ### Positive
 
-- makes a major emerging agent-memory capability first-class without giving memory execution authority;
-- creates a clean bridge between experience and reusable agent competence;
-- supports human-readable, external, learned, or first-party skill stores behind one semantic contract;
-- provides a concrete workload for ADR-033 component/capability composition;
-- gives metamemory evolution a safe home under existing governance rather than inventing a parallel authority model;
-- enables EvolveAI lifecycle and CodeGenome provenance to compose later.
+- reusable competence can persist across sessions without becoming standing authority;
+- procedural state gains scope, currentness, correction, supersession, provenance, and revocation semantics;
+- exact approval binding prevents "approved X, committed Y" substitution;
+- human-readable, external, learned, or first-party skill stores can fit behind one semantic boundary;
+- metamemory evolution has a governed path under existing PAMA/ADR-032 rules;
+- the capability provides a concrete workload for ADR-033 composition.
 
 ### Negative
 
-- a “skill” requires more lifecycle/evidence than a convenient prompt snippet;
-- runtime integrations must preserve an extra activation boundary;
-- existing external skill stores may need adapters to express Agent Memory scope/currentness/provenance;
+- a skill requires more lifecycle/evidence than a convenient prompt snippet;
+- runtime integrations must preserve an explicit activation/action-authority boundary;
+- external skill stores may need adapters for Agent Memory scope/currentness/provenance;
 - self-evolving memory systems cannot directly apply every learned optimization.
 
 ## Alternatives considered
 
 ### Treat skills as ordinary facts
 
-Rejected. Procedures have applicability, activation, validation, and execution consequences that facts do not.
+Rejected. Procedures have applicability, activation, validation, and downstream action consequences that ordinary facts do not.
 
-### Treat a recalled skill as already authorized execution
+### Treat a recalled skill as authorized execution
 
-Rejected. This collapses memory, procedure, permission, and governance into one artifact and creates standing-authority replay risk.
+Rejected. This collapses memory, procedure, permission, and governance into a replayable standing-authority artifact.
 
 ### Make one skill format canonical
 
-Rejected. External systems successfully use Markdown, files, structured records, scripts/resources, and learned policies. The representation should remain a capability/profile decision.
+Rejected. Representation remains a capability/profile concern.
 
 ### Put procedural memory entirely in Agent Runtime
 
-Rejected. Durable cross-session procedure identity, provenance, scope, correction, supersession, deletion, and recall are memory responsibilities even though execution is not.
+Rejected. Durable cross-session identity, provenance, scope, correction, supersession, deletion/revocation, and recall are memory responsibilities even though execution is not.
 
-### Create a new proprietary skill-memory repository immediately
+### Create a proprietary skill-memory repository immediately
 
-Rejected for the first slice. Current evidence shows the semantics can be proven with simple artifacts. A new subsystem should be created only if later conformance evidence demonstrates a substrate/capability gap that EvolveAI, CodeGenome, files, ordinary stores, or external adapters cannot satisfy cleanly.
+Rejected. The semantics are proven without another subsystem. A dedicated implementation should be created only if later conformance evidence establishes a capability/substrate gap that existing first-party components, ordinary stores, or external adapters cannot satisfy cleanly.
 
 ## Relationship to other ADRs
 
 - ADR-020 governs learned/probabilistic skill discovery and proposal.
 - ADR-022 governs skill scope and cross-domain transfer.
-- ADR-023, if accepted, strengthens correction-as-supersession behavior.
-- ADR-025, if accepted, applies when a procedural memory carries durable decision-like authority consequences.
-- ADR-027, if accepted, applies to rejected/unsafe procedures that attempt re-entry.
+- ADR-023, if accepted, further generalizes correction-as-supersession doctrine.
+- ADR-025, if accepted, applies when procedural state carries durable decision-like overwrite consequences.
+- ADR-027, if accepted, applies to rejected/unsafe procedures attempting re-entry.
 - ADR-028 preserves representation/language portability.
-- ADR-030 applies when a derived projection of procedural memory feeds authorization/temporal consumers.
-- ADR-032 governs metamemory/structural mutation.
-- ADR-033 governs capability declaration, maturity, and deterministic component composition.
+- ADR-030 governs compatible/current projections consumed by temporal or authorization systems.
+- ADR-032 governs metamemory and structural/profile mutation.
+- ADR-033 governs capability declaration, maturity, and deterministic composition.
 
 This ADR adds no exception to PAMA or existing authority rules.

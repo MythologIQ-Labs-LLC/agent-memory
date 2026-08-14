@@ -1,0 +1,47 @@
+{
+  "component_id": "codegenome-example",
+  "component_version": "d2578729",
+  "profile_version": "component-capability-v1",
+  "enabled": true,
+  "runtime_ref": "MythologIQ-Labs-LLC/CodeGenome@d2578729a46d495369bd7613845002d50cf20f4c",
+  "failure_posture": "fail_closed",
+  "provenance_refs": ["docs/programs/memory-modules/first-party-capability-inventory.md"],
+  "capabilities": [
+    {
+      "capability_id": "graph_traversal",
+      "capability_version": "1.0",
+      "maturity": "runtime_wired",
+      "state_posture": "derived",
+      "scope_posture": "inherits_agent_memory_scope",
+      "failure_posture": "explicit_unavailable",
+      "authority_effect": "none",
+      "enabled": true,
+      "evidence_refs": ["inventory:codegenome:graph-traversal"],
+      "limitations": ["code_domain_ontology_is_not_agent_memory_core"]
+    },
+    {
+      "capability_id": "vector_similarity",
+      "capability_version": "1.0",
+      "maturity": "implemented",
+      "state_posture": "derived",
+      "scope_posture": "inherits_agent_memory_scope",
+      "failure_posture": "explicit_unavailable",
+      "authority_effect": "none",
+      "enabled": true,
+      "evidence_refs": ["inventory:codegenome:vector-similarity"],
+      "limitations": ["primary_product_runtime_path_not_yet_qualified"]
+    },
+    {
+      "capability_id": "impact_propagation",
+      "capability_version": "1.0",
+      "maturity": "runtime_wired",
+      "state_posture": "derived",
+      "scope_posture": "inherits_agent_memory_scope",
+      "failure_posture": "explicit_unavailable",
+      "authority_effect": "proposal_only",
+      "enabled": true,
+      "evidence_refs": ["inventory:codegenome:impact-propagation"],
+      "limitations": ["impact_evidence_does_not_create_mutation_authority"]
+    }
+  ]
+}
