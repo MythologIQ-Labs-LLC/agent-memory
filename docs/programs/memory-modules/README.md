@@ -133,8 +133,10 @@ Graphify
 
 Current exact pins:
 
-- CodeGenome `d2578729a46d495369bd7613845002d50cf20f4c`
+- CodeGenome `43a6b7147ec78ec5c616723fa1dd30f342174860`
 - Graphify `v0.9.43` / `7281f27eac568f77f50910f59f84543458f5dfd1`
+
+The CodeGenome qualification pin was deliberately advanced after the adversarial fixture exposed another file-identity defect in semantic resolution. CodeGenome #12 / PR #13 fixed file-scoped symbol and caller-span resolution and merged as `43a6b7147ec78ec5c616723fa1dd30f342174860`.
 
 The matched fixture is deliberately adversarial:
 
@@ -158,7 +160,7 @@ The duplicate `middle` line forces file-bound target identity. The distinct leaf
 
 The first currentness proof uses an explicit full rebuild between v1 and v2. It does not pretend incremental update semantics have been proven.
 
-The matched result intentionally contains no scalar winner and cannot promote unrelated capabilities.
+The Graphify normalizer reads the provider's native NetworkX node-link `links` collection. The matched result intentionally contains no scalar winner and cannot promote unrelated capabilities.
 
 ## Qualification maturity interpretation
 
@@ -212,9 +214,9 @@ This caps strong deletion/audit/persistence qualification claims.
 
 Current qualification pin:
 
-`d2578729a46d495369bd7613845002d50cf20f4c`
+`43a6b7147ec78ec5c616723fa1dd30f342174860`
 
-The #275 file-identity and traversal-direction defects were repaired before this pin. The #300 fixture makes both repairs permanent executable qualification pressure rather than historical bug-tracker trivia.
+The initial #275 file-identity and traversal-direction defects were repaired before qualification. PR #302 then exposed a remaining semantic-resolver collision, which was repaired by CodeGenome #12 / PR #13 before the qualification pin advanced. These are permanent executable regression requirements rather than historical bug-tracker trivia.
 
 ## Current portfolio conclusion
 
