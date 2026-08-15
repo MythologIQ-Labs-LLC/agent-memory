@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "reference/agentmem_ref/dashclaw_external_verdict.py"
+      - "reference/agentmem_ref/dashclaw_governed_commit.py"
       - "reference/run_dashclaw_provider.py"
       - "reference/run_dashclaw_external_verdict.py"
       - "reference/tests/test_dashclaw_external_verdict.py"
@@ -40,6 +41,7 @@ jobs:
         run: |
           python -m py_compile \
             reference/agentmem_ref/dashclaw_external_verdict.py \
+            reference/agentmem_ref/dashclaw_governed_commit.py \
             reference/run_dashclaw_provider.py \
             reference/run_dashclaw_external_verdict.py
 
@@ -88,8 +90,16 @@ jobs:
           assert report["unauthorized_project"]["authority_resolved"] is False
           assert report["unauthorized_project"]["authority_reason"] == "authority_grant_not_found"
           assert report["unauthorized_project"]["committed"] is False
+          assert report["unauthorized_project"]["refusal"] == "requested_scope_authority_unresolved"
           assert report["unauthorized_project"]["substrate_untouched"] is True
-          assert report["cross_project_recall"]["admitted"] == []
+          assert report["cross_target_scope"]["seed_provider_decision"] == "allow"
+          assert report["cross_target_scope"]["seed_committed"] is True
+          assert report["cross_target_scope"]["attack_provider_decision"] == "escalate"
+          assert report["cross_target_scope"]["attack_committed"] is False
+          assert report["cross_target_scope"]["attack_refusal"] == "target_scope_authority_unresolved"
+          assert report["cross_target_scope"]["substrate_untouched"] is True
+          assert report["cross_target_scope"]["other_current_value"] == "other release branch release"
+          assert report["cross_project_recall"]["admitted"]
           PY
 
       - name: Pin and verify DashClaw v1 contract source
