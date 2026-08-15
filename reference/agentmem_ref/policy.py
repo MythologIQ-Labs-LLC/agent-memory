@@ -221,12 +221,26 @@ def _envelope(outcome: str, proposal: Proposal) -> tuple[tuple[str, ...], tuple[
     return (), (operation, "enter_pending_verification", "request_external_verification")
 
 
-def evaluate(proposal: Proposal) -> Decision:
-    """Resolve a proposal into a deterministic authority envelope."""
-    outcome = _base_outcome(proposal)
-    outcome, floor_reasons = _apply_floors(outcome, proposal)
+def evaluate_with_base_outcome(
+    proposal: Proposal,
+    *,
+    base_outcome: str,
+    allow_review_discharge: bool = True,
+) -> Decision:
+    """Apply the common PAMA floors/modifiers to an explicitly versioned base cell.
+
+    This is intentionally narrow. A caller may supply a different base outcome
+    only when another accepted, versioned policy owns that base cell. All
+    target-class, downstream-authority, scope, isolation, reversibility,
+    evidence, self-approval, and actor-authority constraints remain controlling.
+    """
+    if base_outcome not in _STRICTNESS:
+        raise ValueError(f"unsupported PAMA base outcome {base_outcome!r}")
+    outcome, floor_reasons = _apply_floors(base_outcome, proposal)
     outcome, modifier_reasons = _apply_modifiers(outcome, proposal)
-    outcome, review_reasons = _apply_review(outcome, proposal)
+    review_reasons: list[str] = []
+    if allow_review_discharge:
+        outcome, review_reasons = _apply_review(outcome, proposal)
     permitted, prohibited = _envelope(outcome, proposal)
     return Decision(
         outcome=outcome,
@@ -234,3 +248,8 @@ def evaluate(proposal: Proposal) -> Decision:
         prohibited_actions=prohibited,
         reasons=tuple(floor_reasons + modifier_reasons + review_reasons),
     )
+
+
+def evaluate(proposal: Proposal) -> Decision:
+    """Resolve a proposal into a deterministic authority envelope."""
+    return evaluate_with_base_outcome(proposal, base_outcome=_base_outcome(proposal))
