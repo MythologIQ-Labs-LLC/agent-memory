@@ -50,9 +50,9 @@ jobs:
       - name: Verify recursive background review path
         run: |
           grep -q 'skip_memory=True' _hermes/agent/background_review.py
-          grep -q 'review_agent.memory = parent_agent.memory' _hermes/agent/background_review.py
+          grep -q 'review_agent._memory_store = agent._memory_store' _hermes/agent/background_review.py
           grep -q '"memory", "skill_manage"' _hermes/agent/background_review.py
-          grep -q '_background_skill_write_origin' _hermes/agent/background_review.py
+          grep -q '_memory_write_origin = "background_review"' _hermes/agent/background_review.py
 
       - name: Verify approval replay bypass paths
         run: |
