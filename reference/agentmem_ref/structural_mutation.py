@@ -60,6 +60,9 @@ class StructuralProposal:
     proposed_schema: SchemaRef
     layer: str
     change_kind: str
+    semantic_diff: tuple[str, ...]
+    tenant_ref: str
+    isolation_domain_refs: tuple[str, ...]
     preserves_semantics: bool
     optional_additive: bool
     migration_required: bool
@@ -119,6 +122,9 @@ class StructuralImpact:
             "impact": {
                 "layer": proposal.layer,
                 "change_kind": proposal.change_kind,
+                "semantic_diff": list(proposal.semantic_diff),
+                "tenant_ref": proposal.tenant_ref or None,
+                "isolation_domain_refs": list(proposal.isolation_domain_refs),
                 "preserves_semantics": proposal.preserves_semantics,
                 "optional_additive": proposal.optional_additive,
                 "migration_required": proposal.migration_required,
@@ -178,6 +184,8 @@ class SchemaLifecycle:
     lifecycle_state: str = PROPOSED
     authorization_ref: str = ""
     approval_refs: tuple[str, ...] = ()
+    rollback_ref: str = ""
+    rollback_execution_ref: str = ""
     live_dependency_refs: tuple[str, ...] = ()
     pending_residue_refs: tuple[str, ...] = ()
 
@@ -207,6 +215,10 @@ def _validate_proposal(proposal: StructuralProposal) -> None:
         raise StructuralMutationError(f"unsupported structural layer {proposal.layer!r}")
     if proposal.change_kind not in _ALLOWED_CHANGE_KINDS:
         raise StructuralMutationError(f"unsupported structural change kind {proposal.change_kind!r}")
+    if not proposal.semantic_diff:
+        raise StructuralMutationError("structural proposal requires an explicit semantic diff")
+    if not proposal.isolation_domain_refs:
+        raise StructuralMutationError("structural proposal requires explicit isolation-domain bindings")
     if proposal.information_loss not in _ALLOWED_INFORMATION_LOSS:
         raise StructuralMutationError(f"unsupported information-loss posture {proposal.information_loss!r}")
     if proposal.scope_posture not in _ALLOWED_SCOPE:
@@ -368,7 +380,7 @@ def classify(
                 )
 
     impact = StructuralImpact(proposal=proposal, classification=classification, structural_policy=structural_policy)
-    impact.to_dict()  # schema validation is part of classification
+    impact.to_dict()
     return impact
 
 
@@ -418,7 +430,6 @@ def evaluate_pama_v13(
         base = policy.REQUIRE_EXTERNAL_VERIFICATION
         allow_review_discharge = True
     else:
-        # S2 and non-delegable S1 preserve the conservative 1.2 minimum.
         base = policy.REQUIRE_EXTERNAL_VERIFICATION if pama_proposal.risk_class in {"high", "critical"} else policy.REQUIRE_REVIEW
         allow_review_discharge = True
 
@@ -471,6 +482,7 @@ def authorize_lifecycle(
         lifecycle_state=AUTHORIZED,
         authorization_ref=decision_ref,
         approval_refs=approvals,
+        rollback_ref=impact.proposal.rollback_ref,
         live_dependency_refs=impact.proposal.live_dependency_refs,
         pending_residue_refs=impact.proposal.residue_obligations,
     )
@@ -480,6 +492,32 @@ def activate(lifecycle: SchemaLifecycle) -> SchemaLifecycle:
     if lifecycle.lifecycle_state != AUTHORIZED:
         raise StructuralMutationError("schema can activate only from authorized state")
     return replace(lifecycle, lifecycle_state=ACTIVE)
+
+
+def rollback(
+    lifecycle: SchemaLifecycle,
+    *,
+    rollback_ref: str,
+    execution_ref: str,
+) -> SchemaLifecycle:
+    """Represent governed rollback of an authorized/active successor.
+
+    The successor becomes superseded; restoring provider-specific physical state
+    remains outside this reference authority/lifecycle model.
+    """
+    if lifecycle.lifecycle_state not in {AUTHORIZED, ACTIVE}:
+        raise StructuralMutationError("schema rollback is only valid before or during active successor state")
+    if not lifecycle.rollback_ref:
+        raise StructuralMutationError("schema lifecycle has no declared rollback reference")
+    if rollback_ref != lifecycle.rollback_ref:
+        raise StructuralMutationError("rollback reference does not match the authorized structural proposal")
+    if not execution_ref:
+        raise StructuralMutationError("rollback requires an execution evidence reference")
+    return replace(
+        lifecycle,
+        lifecycle_state=SUPERSEDED,
+        rollback_execution_ref=execution_ref,
+    )
 
 
 def supersede(lifecycle: SchemaLifecycle) -> SchemaLifecycle:
