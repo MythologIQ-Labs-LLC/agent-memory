@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import json
-
-import pytest
+import tempfile
+import unittest
+from pathlib import Path
 
 from agentmem_ref import policy
 from agentmem_ref.adapter import RecallContext
@@ -42,16 +43,16 @@ def _proposal(
     proposal_id: str,
     *,
     operation: str,
+    target_reference: str = "memory:release-branch",
     state_snapshot: str = "",
     review_satisfied: bool = False,
     approval_refs: tuple[str, ...] = (),
-    project_ref: str = "project-alpha",
 ) -> policy.Proposal:
     return policy.Proposal(
         proposal_id=proposal_id,
         actor_id="agent:test",
         charter_version="charter-v1",
-        target_reference="memory:release-branch",
+        target_reference=target_reference,
         target_class=policy.M2,
         scope="tenant-acme",
         operation=operation,
@@ -67,7 +68,7 @@ def _proposal(
         tenant_ref="tenant-acme",
         isolation_domain_refs=("tenant-acme", "project-alpha"),
         required_isolation_domain_refs=("project-alpha",),
-        project_ref=project_ref,
+        project_ref="project-alpha",
         purpose="release-planning",
     )
 
@@ -81,165 +82,154 @@ def _context(*, project_ref: str = "project-alpha") -> RecallContext:
     )
 
 
-def test_release_branch_survives_restart_with_currentness_scope_and_stale_replay(tmp_path):
-    profile = _profile()
+class RestartSafeRuntimeTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        self.profile = _profile()
 
-    session_a = RestartSafeRuntime.create(tmp_path, tenant="tenant-acme", profile=profile)
-    learned = session_a.commit_proposal(
-        _proposal("proposal-release", operation="promotion"),
-        "release_branch = release",
-    )
-    assert learned.committed is True
-    release_uuid = learned.fact_uuid
-    assert release_uuid is not None
-    assert session_a.adapter.state_version("memory:release-branch") == 1
+    def tearDown(self) -> None:
+        self.temp.cleanup()
 
-    # Session B has no process-local state from A. Durable recovery must be
-    # sufficient to interpret and admit the retained memory.
-    session_b = RestartSafeRuntime.recover(tmp_path, profile=profile)
-    recalled = session_b.adapter.governed_recall("release_branch", _context())
-    assert recalled.admitted == [release_uuid]
+    def test_release_branch_survives_restart_with_currentness_scope_and_stale_replay(self) -> None:
+        session_a = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        learned = session_a.commit_proposal(
+            _proposal("proposal-release", operation="promotion"),
+            "release_branch = release",
+        )
+        self.assertTrue(learned.committed)
+        release_uuid = learned.fact_uuid
+        self.assertIsNotNone(release_uuid)
+        self.assertEqual(session_a.adapter.state_version("memory:release-branch"), 1)
 
-    correction = _proposal(
-        "proposal-main",
-        operation="correction",
-        state_snapshot="v1",
-        review_satisfied=True,
-        approval_refs=("approval:release-branch-main",),
-    )
-    corrected = session_b.commit_proposal(correction, "release_branch = main")
-    assert corrected.committed is True
-    main_uuid = corrected.fact_uuid
-    assert main_uuid is not None and main_uuid != release_uuid
-    assert session_b.adapter.state_version("memory:release-branch") == 2
+        session_b = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        recalled = session_b.adapter.governed_recall("release_branch", _context())
+        self.assertEqual(recalled.admitted, [release_uuid])
 
-    # Replaying the previously valid correction after its state boundary has
-    # moved must fail after the durable mutation, not merely during one process.
-    replay = session_b.commit_proposal(correction, "release_branch = main")
-    assert replay.committed is False
-    assert replay.refusal == "stale_authorization"
+        correction = _proposal(
+            "proposal-main",
+            operation="correction",
+            state_snapshot="v1",
+            review_satisfied=True,
+            approval_refs=("approval:release-branch-main",),
+        )
+        corrected = session_b.commit_proposal(correction, "release_branch = main")
+        self.assertTrue(corrected.committed)
+        main_uuid = corrected.fact_uuid
+        self.assertIsNotNone(main_uuid)
+        self.assertNotEqual(main_uuid, release_uuid)
+        self.assertEqual(session_b.adapter.state_version("memory:release-branch"), 2)
 
-    session_c = RestartSafeRuntime.recover(tmp_path, profile=profile)
-    current = session_c.adapter.governed_recall("release_branch", _context())
-    assert current.admitted == [main_uuid]
-    assert current.refusals[release_uuid] == "superseded_not_current"
-    assert session_c.adapter.current_fact_uuid("memory:release-branch") == main_uuid
-    assert session_c.adapter.state_version("memory:release-branch") == 2
+        replay = session_b.commit_proposal(correction, "release_branch = main")
+        self.assertFalse(replay.committed)
+        self.assertEqual(replay.refusal, "stale_authorization")
 
-    wrong_project = session_c.adapter.governed_recall(
-        "release_branch",
-        _context(project_ref="project-beta"),
-    )
-    assert main_uuid not in wrong_project.admitted
-    assert wrong_project.refusals[main_uuid] == "project_scope_mismatch"
+        session_c = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        current = session_c.adapter.governed_recall("release_branch", _context())
+        self.assertEqual(current.admitted, [main_uuid])
+        self.assertEqual(current.refusals[release_uuid], "superseded_not_current")
+        self.assertEqual(session_c.adapter.current_fact_uuid("memory:release-branch"), main_uuid)
+        history = session_c.adapter.rejected_value_history("memory:release-branch", "release_branch = release")
+        self.assertEqual(len(history), 1)
+        self.assertTrue(history[0]["active"])
 
-    # Session D proves the same current/superseded and stale-state posture after
-    # another full recovery boundary.
-    session_d = RestartSafeRuntime.recover(tmp_path, profile=profile)
-    after_restart = session_d.adapter.governed_recall("release_branch", _context())
-    assert after_restart.admitted == [main_uuid]
-    assert after_restart.refusals[release_uuid] == "superseded_not_current"
-    replay_after_restart = session_d.commit_proposal(correction, "release_branch = main")
-    assert replay_after_restart.committed is False
-    assert replay_after_restart.refusal == "stale_authorization"
+        wrong_project = session_c.adapter.governed_recall(
+            "release_branch",
+            _context(project_ref="project-beta"),
+        )
+        self.assertNotIn(main_uuid, wrong_project.admitted)
+        self.assertEqual(wrong_project.refusals[main_uuid], "project_scope_mismatch")
 
+        session_d = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        after_restart = session_d.adapter.governed_recall("release_branch", _context())
+        self.assertEqual(after_restart.admitted, [main_uuid])
+        self.assertEqual(after_restart.refusals[release_uuid], "superseded_not_current")
+        replay_after_restart = session_d.commit_proposal(correction, "release_branch = main")
+        self.assertFalse(replay_after_restart.committed)
+        self.assertEqual(replay_after_restart.refusal, "stale_authorization")
 
-def test_pending_visibility_obligations_survive_restart_without_fake_quiescence(tmp_path):
-    profile = _profile()
-    runtime = RestartSafeRuntime.create(tmp_path, tenant="tenant-acme", profile=profile)
+    def test_pending_visibility_obligations_survive_restart_without_fake_quiescence(self) -> None:
+        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        operation = VisibilityOperation(
+            operation_id="visibility:release-main",
+            memory_id="memory:release-branch",
+            memory_version=2,
+            operation_type="correction",
+            runtime_version=self.profile.runtime_version,
+            profile_version=self.profile.profile_version,
+            agent_memory_commit=COMMIT,
+            required_projection_ids=("search-index",),
+            component_versions=("reference-governed-memory@1.0.0",),
+            capability_versions=("governed-memory-core@1.0.0",),
+        )
+        tracker = VisibilityTracker(operation)
+        tracker.policy_decided()
+        tracker.canonical_committed()
+        tracker.projection_refresh_started("search-index")
+        self.assertFalse(tracker.evaluate()["quiescent"])
 
-    operation = VisibilityOperation(
-        operation_id="visibility:release-main",
-        memory_id="memory:release-branch",
-        memory_version=2,
-        operation_type="correction",
-        runtime_version=profile.runtime_version,
-        profile_version=profile.profile_version,
-        agent_memory_commit=COMMIT,
-        required_projection_ids=("search-index",),
-        component_versions=("reference-governed-memory@1.0.0",),
-        capability_versions=("governed-memory-core@1.0.0",),
-    )
-    tracker = VisibilityTracker(operation)
-    tracker.policy_decided()
-    tracker.canonical_committed()
-    tracker.projection_refresh_started("search-index")
-    before = tracker.evaluate()
-    assert before["settled"] is False
-    assert before["quiescent"] is False
-
-    runtime.persist_visibility_snapshot(operation.operation_id, tracker.snapshot_for_restart())
-    recovered = RestartSafeRuntime.recover(tmp_path, profile=profile)
-    restored_snapshot = recovered.visibility_snapshots[operation.operation_id]
-    restored = VisibilityTracker.restore_after_restart(restored_snapshot)
-    after = restored.evaluate()
-    assert after["settled"] is False
-    assert after["quiescent"] is False
-    assert "projection:search-index" in after["pending_required_obligations"]
-    assert recovered.recovery_evidence is not None
-    assert recovered.recovery_evidence.recovered_visibility_operations == (operation.operation_id,)
-
-
-def test_corrupt_or_torn_checkpoint_fails_closed(tmp_path):
-    profile = _profile()
-    runtime = RestartSafeRuntime.create(tmp_path, tenant="tenant-acme", profile=profile)
-    runtime.commit_proposal(_proposal("proposal-release", operation="promotion"), "release_branch = release")
-
-    governance_path = tmp_path / "governance.json"
-    governance = json.loads(governance_path.read_text(encoding="utf-8"))
-    governance["tenant"] = "attacker-tenant"
-    governance_path.write_text(json.dumps(governance), encoding="utf-8")
-
-    with pytest.raises(RuntimeRecoveryError, match="governance checkpoint digest mismatch"):
-        RestartSafeRuntime.recover(tmp_path, profile=profile)
-
-
-def test_missing_governance_state_fails_closed(tmp_path):
-    profile = _profile()
-    RestartSafeRuntime.create(tmp_path, tenant="tenant-acme", profile=profile)
-    (tmp_path / "governance.json").unlink()
-
-    with pytest.raises(RuntimeRecoveryError, match="required runtime state missing"):
-        RestartSafeRuntime.recover(tmp_path, profile=profile)
-
-
-def test_component_interpretation_cannot_silently_change_after_restart(tmp_path):
-    profile = _profile()
-    RestartSafeRuntime.create(tmp_path, tenant="tenant-acme", profile=profile)
-
-    upgraded_without_compatibility_evidence = _binding(component_version="2.0.0")
-    with pytest.raises(RuntimeRecoveryError, match="interpretation changed after restart"):
-        RestartSafeRuntime.recover(
-            tmp_path,
-            profile=profile,
-            available_bindings=(upgraded_without_compatibility_evidence,),
+        runtime.persist_visibility_snapshot(operation.operation_id, tracker.snapshot_for_restart())
+        recovered = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        restored = VisibilityTracker.restore_after_restart(
+            recovered.visibility_snapshots[operation.operation_id]
+        )
+        after = restored.evaluate()
+        self.assertFalse(after["settled"])
+        self.assertFalse(after["quiescent"])
+        self.assertIn("projection:search-index", after["pending_required_obligations"])
+        self.assertEqual(
+            recovered.recovery_evidence.recovered_visibility_operations,
+            (operation.operation_id,),
         )
 
-    changed_profile = _profile(profile_version="2.0.0")
-    with pytest.raises(RuntimeRecoveryError, match="profile/component interpretation changed"):
-        RestartSafeRuntime.recover(tmp_path, profile=changed_profile)
+    def test_corrupt_checkpoint_fails_closed(self) -> None:
+        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        runtime.commit_proposal(
+            _proposal("proposal-release", operation="promotion"),
+            "release_branch = release",
+        )
+        path = self.root / "governance.json"
+        governance = json.loads(path.read_text(encoding="utf-8"))
+        governance["tenant"] = "attacker-tenant"
+        path.write_text(json.dumps(governance), encoding="utf-8")
+        with self.assertRaisesRegex(RuntimeRecoveryError, "governance checkpoint digest mismatch"):
+            RestartSafeRuntime.recover(self.root, profile=self.profile)
+
+    def test_missing_governance_state_fails_closed(self) -> None:
+        RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        (self.root / "governance.json").unlink()
+        with self.assertRaisesRegex(RuntimeRecoveryError, "required runtime state missing"):
+            RestartSafeRuntime.recover(self.root, profile=self.profile)
+
+    def test_component_interpretation_cannot_silently_change_after_restart(self) -> None:
+        RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        with self.assertRaisesRegex(RuntimeRecoveryError, "interpretation changed after restart"):
+            RestartSafeRuntime.recover(
+                self.root,
+                profile=self.profile,
+                available_bindings=(_binding(component_version="2.0.0"),),
+            )
+        with self.assertRaisesRegex(RuntimeRecoveryError, "profile/component interpretation changed"):
+            RestartSafeRuntime.recover(self.root, profile=_profile(profile_version="2.0.0"))
+
+    def test_recovery_preserves_identifier_progress(self) -> None:
+        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        first = runtime.commit_proposal(
+            _proposal("proposal-first", operation="promotion"),
+            "release_branch = release",
+        )
+        recovered = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        second = recovered.commit_proposal(
+            _proposal(
+                "proposal-second",
+                operation="promotion",
+                target_reference="memory:deploy-branch",
+            ),
+            "deploy_branch = deploy",
+        )
+        self.assertTrue(second.committed)
+        self.assertNotEqual(second.fact_uuid, first.fact_uuid)
 
 
-def test_recovery_preserves_identifier_progress_to_avoid_object_collision(tmp_path):
-    profile = _profile()
-    runtime = RestartSafeRuntime.create(tmp_path, tenant="tenant-acme", profile=profile)
-    first = runtime.commit_proposal(
-        _proposal("proposal-first", operation="promotion"),
-        "release_branch = release",
-    )
-    first_uuid = first.fact_uuid
-    assert first_uuid is not None
-
-    recovered = RestartSafeRuntime.recover(tmp_path, profile=profile)
-    second = recovered.commit_proposal(
-        policy.Proposal(
-            **{
-                **_proposal("proposal-second", operation="promotion").__dict__,
-                "target_reference": "memory:deploy-branch",
-            }
-        ),
-        "deploy_branch = deploy",
-    )
-    assert second.committed is True
-    assert second.fact_uuid is not None
-    assert second.fact_uuid != first_uuid
+if __name__ == "__main__":
+    unittest.main()
