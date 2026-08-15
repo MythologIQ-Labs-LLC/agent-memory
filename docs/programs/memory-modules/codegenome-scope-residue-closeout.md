@@ -30,7 +30,7 @@ That is stronger and more precise than treating provider repository scope as if 
 
 The closeout therefore adds two explicit obligations for the only CodeGenome capability currently above source-level maturity:
 
-1. provider output is admitted only through an exact provider-scope → Agent Memory-scope binding;
+1. provider output is admitted only through an exact, version-bound provider-scope → Agent Memory-scope binding;
 2. source deletion after full rebuild proves old material is not current without pretending historical provider artifacts were physically erased.
 
 ## External scope binding
@@ -39,6 +39,8 @@ The reference closeout uses an explicit binding containing:
 
 ```text
 component_id
+component_version
+component_profile_digest
 provider_scope_ref
 agent_memory_scope_ref
 tenant_ref
@@ -47,20 +49,28 @@ binding_ref
 binding_version
 ```
 
+The component revision and component-profile digest are part of the binding. An upgrade or material profile change therefore invalidates the old scope admission rather than silently inheriting it.
+
 Admission is deterministic:
 
 ```text
-exact provider scope + exact Agent Memory scope + explicit binding
+exact component revision
++ exact component-profile digest
++ exact provider scope
++ exact Agent Memory scope
++ explicit binding
   -> candidate may cross the scope bridge
 
 missing binding
+stale component revision
+stale component-profile digest
 foreign provider scope
 foreign Agent Memory scope
 missing scope identity
   -> refuse
 ```
 
-The binding is not authority. It only proves which external provider scope is allowed to contribute candidate evidence to which Agent Memory scope.
+The binding is not authority. It only proves which exact external provider/profile scope is allowed to contribute candidate evidence to which Agent Memory scope.
 
 ```text
 scope binding
@@ -123,7 +133,8 @@ Lower-maturity capability rows remain lower maturity by design.
 
 `CodeGenome Scope and Residue Closeout`:
 
-- runs the scope/refusal unit cases;
+- runs exact/missing/stale/foreign scope-refusal cases;
+- binds scope admission to the exact CodeGenome revision and component-profile digest;
 - checks out the exact CodeGenome pin and verifies MIT source rights;
 - builds the exact CodeGenome CLI;
 - indexes the v1 and v2 fixtures into separate provider stores;
