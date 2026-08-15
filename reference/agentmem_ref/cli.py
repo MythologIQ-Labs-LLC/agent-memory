@@ -6,7 +6,13 @@ import argparse
 import json
 import sys
 
-from .doctor import DiagnosticInputError, diagnose, validate_configuration_file
+from .discovery import DiscoveryInputError
+from .doctor import (
+    DiagnosticInputError,
+    diagnose,
+    discover_configuration_file,
+    validate_configuration_file,
+)
 from .runtime_config import RuntimeConfigurationError
 
 
@@ -24,6 +30,20 @@ def _emit(value: dict, *, json_output: bool) -> None:
         )
         print(f"Routes: {value['route_count']}")
         print(f"Required projections: {', '.join(value['required_projection_ids']) or 'none'}")
+        print("Authority effect: none")
+        return
+    if value.get("command") == "discover":
+        print(f"Entry mode: {value['entry_mode']}")
+        print(f"Configured components: {len(value['configured_subjects']['components'])}")
+        print(f"Configured governance peers: {len(value['configured_subjects']['governance_peers'])}")
+        print(f"Declared probes: {value['probe_count']}")
+        print(f"Startability from declared probes: {value['startability']}")
+        for result in value["results"]:
+            print(
+                f"- {result['probe_id']}: {result['subject_id']} "
+                f"{result['probe_kind']} -> {result['status']}"
+            )
+        print("Configuration mutated: false")
         print("Authority effect: none")
         return
     print(f"Configuration: {value['configuration']['status']}")
@@ -55,7 +75,7 @@ def _failure(command: str, exc: Exception, *, json_output: bool) -> int:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="agent-memory",
-        description="Validate and diagnose the Agent Memory reference runtime.",
+        description="Validate, discover, and diagnose the Agent Memory reference runtime.",
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
 
@@ -66,10 +86,21 @@ def _parser() -> argparse.ArgumentParser:
     validate.add_argument("--qualifications", help="path to normalized independent qualification bindings")
     validate.add_argument("--json", action="store_true", help="emit machine-readable JSON")
 
+    discover = subcommands.add_parser(
+        "discover",
+        help="observe explicitly declared existing-stack signals without mutating configuration",
+    )
+    discover.add_argument("--config", required=True, help="path to a JSON serialization of the runtime contract")
+    discover.add_argument("--probes", required=True, help="path to an explicit read-only provider probe manifest")
+    discover.add_argument("--qualifications", help="path to normalized independent qualification bindings")
+    discover.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+
     doctor = subcommands.add_parser("doctor", help="diagnose configuration and bounded durable-state recovery")
     doctor.add_argument("--config", required=True, help="path to a JSON serialization of the runtime contract")
     doctor.add_argument("--qualifications", help="path to normalized independent qualification bindings")
     doctor.add_argument("--state-dir", help="Agent Memory bounded reference state directory to inspect/recover")
+    doctor.add_argument("--probe", action="store_true", help="execute explicitly declared read-only provider probes")
+    doctor.add_argument("--probes", help="path to an explicit read-only provider probe manifest")
     doctor.add_argument("--json", action="store_true", help="emit machine-readable JSON")
     return parser
 
@@ -85,19 +116,42 @@ def main(argv: list[str] | None = None) -> int:
             )
             _emit(value, json_output=json_output)
             return 0
+        if args.command == "discover":
+            value = discover_configuration_file(
+                args.config,
+                probe_path=args.probes,
+                qualification_path=args.qualifications,
+            )
+            _emit(value, json_output=json_output)
+            if value["startability"] == "blocked_by_required_probe":
+                return 1
+            return 0
         if args.command == "doctor":
+            if args.probes and not args.probe:
+                raise DiagnosticInputError("doctor --probes requires --probe")
             value = diagnose(
                 args.config,
                 qualification_path=args.qualifications,
                 state_dir=args.state_dir,
+                probe_path=args.probes,
+                probe=args.probe,
             )
             _emit(value, json_output=json_output)
             if value["recovery"].get("status") == "failed_closed":
                 return 1
             if value["currentness"].get("status") == "degraded":
                 return 1
+            if value["provider_availability"].get("startability") == "blocked_by_required_probe":
+                return 1
             return 0
-    except (DiagnosticInputError, RuntimeConfigurationError, KeyError, TypeError, ValueError) as exc:
+    except (
+        DiagnosticInputError,
+        DiscoveryInputError,
+        RuntimeConfigurationError,
+        KeyError,
+        TypeError,
+        ValueError,
+    ) as exc:
         return _failure(args.command, exc, json_output=json_output)
     raise AssertionError("unreachable command")
 
