@@ -84,9 +84,11 @@ def build_report(agent_memory_commit: str) -> dict:
             and blocked_doctor["provider_availability"]["status"] == "unavailable"
             and blocked_doctor["operational_readiness"] == "blocked_by_required_provider_probe"
         ),
-        "doctor_remains_opt_in_for_live_probes": (
+        "doctor_reports_partial_availability_without_hiding_optional_failure": (
             doctor_unprobed["provider_availability"]["status"] == "not_probed"
-            and doctor_probed["provider_availability"]["status"] == "available"
+            and doctor_probed["provider_availability"]["status"] == "partial"
+            and doctor_probed["provider_availability"]["status_counts"]["unavailable"] == 1
+            and doctor_probed["provider_availability"]["startability"] == "proven_for_declared_probes"
         ),
         "probe_success_does_not_claim_full_health": (
             doctor_probed["operational_readiness"] == "provider_probe_observed_state_not_checked"
