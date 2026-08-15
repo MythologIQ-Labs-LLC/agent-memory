@@ -4,6 +4,11 @@
 This is a reference/integration server, not a production deployment shape.
 DashClaw requires a public HTTPS provider URL, so use this behind a controlled
 HTTPS reverse proxy/tunnel for live interoperability testing.
+
+Mutation authority is never inferred from DashClaw identity alone. A reference
+static grant document may be supplied for integration testing; without one,
+mutation requests reach PAMA with unresolved actor authority and deny. The
+connection-test path remains independent and side-effect free.
 """
 
 from __future__ import annotations
@@ -13,13 +18,18 @@ import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from agentmem_ref.dashclaw_external_verdict import DashClawRequestError, evaluate_request
+from agentmem_ref.dashclaw_external_verdict import (
+    DashClawRequestError,
+    StaticAuthorityResolver,
+    evaluate_request,
+)
 
 MAX_BODY_BYTES = 64 * 1024
 
 
 class ProviderHandler(BaseHTTPRequestHandler):
     bearer_token: str | None = None
+    authority_resolver: StaticAuthorityResolver | None = None
 
     def log_message(self, format: str, *args) -> None:  # noqa: A003
         # Avoid logging request payloads or bearer tokens in the reference path.
@@ -65,7 +75,7 @@ class ProviderHandler(BaseHTTPRequestHandler):
             return
 
         try:
-            response = evaluate_request(payload)
+            response = evaluate_request(payload, self.authority_resolver)
         except DashClawRequestError as exc:
             # Missing identity cannot be answered with a contract-valid echoed
             # verdict. Non-2xx is therefore the honest conservative result;
@@ -85,6 +95,21 @@ def _load_token(path: str | None) -> str | None:
     return value
 
 
+def _load_authority_resolver(path: str | None) -> StaticAuthorityResolver | None:
+    if path is None:
+        return None
+    try:
+        document = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise SystemExit(f"cannot load authority grants: {exc}") from exc
+    if not isinstance(document, dict):
+        raise SystemExit("authority grants document must be a JSON object")
+    try:
+        return StaticAuthorityResolver.from_document(document)
+    except ValueError as exc:
+        raise SystemExit(f"invalid authority grants: {exc}") from exc
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Serve the Agent Memory DashClaw v1 external-verdict adapter")
     parser.add_argument("--bind", default="127.0.0.1", help="local bind address; default 127.0.0.1")
@@ -93,9 +118,17 @@ def main() -> None:
         "--bearer-token-file",
         help="optional UTF-8 file containing the exact bearer token DashClaw sends",
     )
+    parser.add_argument(
+        "--authority-grants-file",
+        help=(
+            "reference-only JSON grants binding org_id + agent_id to exact isolation domains; "
+            "without this file mutation authority remains unresolved and PAMA denies"
+        ),
+    )
     args = parser.parse_args()
 
     ProviderHandler.bearer_token = _load_token(args.bearer_token_file)
+    ProviderHandler.authority_resolver = _load_authority_resolver(args.authority_grants_file)
     server = ThreadingHTTPServer((args.bind, args.port), ProviderHandler)
     server.serve_forever()
 
