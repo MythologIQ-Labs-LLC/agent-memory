@@ -22,3 +22,8 @@ package-dir = {"" = "reference"}
 [tool.setuptools.packages.find]
 where = ["reference"]
 include = ["agentmem_ref*"]
+
+[tool.setuptools.data-files]
+"agent_memory_reference/schemas" = [
+  "schemas/runtime-configuration.schema.json",
+]
