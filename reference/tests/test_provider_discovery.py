@@ -108,11 +108,12 @@ class ProviderDiscoveryTests(unittest.TestCase):
         observed = diagnose(COMPOSED, probe=True, probe_path=PROBES)
 
         self.assertEqual(baseline["provider_availability"]["status"], "not_probed")
-        self.assertEqual(observed["provider_availability"]["status"], "available")
+        self.assertEqual(observed["provider_availability"]["status"], "partial")
         self.assertEqual(
             observed["provider_availability"]["startability"],
             "proven_for_declared_probes",
         )
+        self.assertEqual(observed["provider_availability"]["status_counts"]["unavailable"], 1)
         self.assertEqual(observed["operational_readiness"], "provider_probe_observed_state_not_checked")
         self.assertEqual(observed["authority_effect"], "none")
 
