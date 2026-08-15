@@ -43,10 +43,12 @@ jobs:
           ref: 21161ce7b88dbffeb7ed59757b4d02d24a9c2acd
           path: _evolveai
           persist-credentials: false
+          submodules: recursive
 
       - name: Verify exact provider and source rights
         run: |
           test "$(git -C _evolveai rev-parse HEAD)" = "21161ce7b88dbffeb7ed59757b4d02d24a9c2acd"
+          test -f _evolveai/vendor/GG-CORE/core-runtime/Cargo.toml
           grep -q "Apache License" _evolveai/LICENSE
           grep -q "Version 2.0" _evolveai/LICENSE
           grep -q 'const OP_DELETE: &str = "delete"' _evolveai/crates/evolve-core/src/tiers/l3_vault.rs
