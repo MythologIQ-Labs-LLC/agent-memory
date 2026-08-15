@@ -1,9 +1,13 @@
 """Capability declarations and deterministic component resolution.
 
-This module is the narrow executable surface for ADR-033 and issues #287/#290.
+This module is the narrow executable surface for ADR-033 and issues #287/#290/#280.
 It deliberately does not know about PAMA, recall admission, or memory mutation.
 Selecting a component says only which configured implementation may supply a
 capability. It never grants authority to use the resulting memory consequence.
+
+``component-capability-v2`` adds machine-readable behavior metadata for the
+lifecycle dimensions required by #280. Those fields describe what a capability
+supports and how its state relates to canonical memory; they are not authority.
 """
 
 from __future__ import annotations
@@ -20,6 +24,68 @@ MATURITY_ORDER = (
 )
 _MATURITY_RANK = {name: index for index, name in enumerate(MATURITY_ORDER)}
 
+CURRENTNESS_MODELS = frozenset(
+    {
+        "not_applicable",
+        "canonical_version",
+        "basis_versioned",
+        "provider_revalidated",
+        "external_asserted",
+    }
+)
+INVALIDATION_MODELS = frozenset(
+    {
+        "not_applicable",
+        "version_relation",
+        "explicit_signal",
+        "provider_revalidation",
+    }
+)
+CORRECTION_MODELS = frozenset(
+    {
+        "not_applicable",
+        "canonical_supersession",
+        "invalidate_derived",
+        "candidate_only",
+        "provider_revalidation",
+    }
+)
+DELETION_MODELS = frozenset(
+    {
+        "not_applicable",
+        "canonical_delete",
+        "derived_residue_then_purge",
+        "candidate_drop",
+        "provider_revalidation",
+    }
+)
+RESIDUE_MODELS = frozenset(
+    {
+        "not_applicable",
+        "none_expected",
+        "scan_required",
+        "derived_residual",
+        "provider_managed",
+    }
+)
+MIGRATION_REBUILD_MODELS = frozenset(
+    {
+        "not_applicable",
+        "rebuild_from_canonical",
+        "explicit_migration",
+        "requires_requalification",
+        "unsupported",
+    }
+)
+STRUCTURAL_MUTATION_REQUIREMENTS = frozenset(
+    {
+        "none",
+        "proposal_only",
+        "pama_required",
+        "external_authorization_required",
+    }
+)
+
 
 class CapabilityResolutionError(ValueError):
     """No configured provider can satisfy the exact requirement."""
@@ -27,6 +93,180 @@ class CapabilityResolutionError(ValueError):
 
 class AmbiguousCapabilityError(CapabilityResolutionError):
     """Several providers satisfy a requirement and configuration chooses none."""
+
+
+@dataclass(frozen=True)
+class CapabilityBehaviorContract:
+    """Machine-readable lifecycle behavior of one capability.
+
+    This contract is descriptive. For example, ``write=True`` says the
+    capability exposes a write surface; it does not authorize a write.
+    """
+
+    write: bool
+    read: bool
+    recall_candidate: bool
+    currentness_model: str
+    invalidation_model: str
+    correction_model: str
+    deletion_model: str
+    residue_model: str
+    migration_rebuild_model: str
+    structural_mutation_requirement: str
+
+    def __post_init__(self) -> None:
+        checks = (
+            ("currentness_model", self.currentness_model, CURRENTNESS_MODELS),
+            ("invalidation_model", self.invalidation_model, INVALIDATION_MODELS),
+            ("correction_model", self.correction_model, CORRECTION_MODELS),
+            ("deletion_model", self.deletion_model, DELETION_MODELS),
+            ("residue_model", self.residue_model, RESIDUE_MODELS),
+            ("migration_rebuild_model", self.migration_rebuild_model, MIGRATION_REBUILD_MODELS),
+            (
+                "structural_mutation_requirement",
+                self.structural_mutation_requirement,
+                STRUCTURAL_MUTATION_REQUIREMENTS,
+            ),
+        )
+        for name, value, allowed in checks:
+            if value not in allowed:
+                raise ValueError(f"unknown {name}: {value}")
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object]) -> "CapabilityBehaviorContract":
+        operation = value.get("operation_support")
+        if not isinstance(operation, Mapping):
+            raise ValueError("capability behavior requires operation_support")
+        return cls(
+            write=bool(operation["write"]),
+            read=bool(operation["read"]),
+            recall_candidate=bool(operation["recall_candidate"]),
+            currentness_model=str(value["currentness_model"]),
+            invalidation_model=str(value["invalidation_model"]),
+            correction_model=str(value["correction_model"]),
+            deletion_model=str(value["deletion_model"]),
+            residue_model=str(value["residue_model"]),
+            migration_rebuild_model=str(value["migration_rebuild_model"]),
+            structural_mutation_requirement=str(value["structural_mutation_requirement"]),
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "operation_support": {
+                "write": self.write,
+                "read": self.read,
+                "recall_candidate": self.recall_candidate,
+            },
+            "currentness_model": self.currentness_model,
+            "invalidation_model": self.invalidation_model,
+            "correction_model": self.correction_model,
+            "deletion_model": self.deletion_model,
+            "residue_model": self.residue_model,
+            "migration_rebuild_model": self.migration_rebuild_model,
+            "structural_mutation_requirement": self.structural_mutation_requirement,
+        }
+
+
+@dataclass(frozen=True)
+class CapabilityBehaviorRequirement:
+    """Optional routing constraints over declared behavior metadata."""
+
+    write: bool | None = None
+    read: bool | None = None
+    recall_candidate: bool | None = None
+    currentness_models: tuple[str, ...] = ()
+    invalidation_models: tuple[str, ...] = ()
+    correction_models: tuple[str, ...] = ()
+    deletion_models: tuple[str, ...] = ()
+    residue_models: tuple[str, ...] = ()
+    migration_rebuild_models: tuple[str, ...] = ()
+    structural_mutation_requirements: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        checks = (
+            ("currentness_models", self.currentness_models, CURRENTNESS_MODELS),
+            ("invalidation_models", self.invalidation_models, INVALIDATION_MODELS),
+            ("correction_models", self.correction_models, CORRECTION_MODELS),
+            ("deletion_models", self.deletion_models, DELETION_MODELS),
+            ("residue_models", self.residue_models, RESIDUE_MODELS),
+            ("migration_rebuild_models", self.migration_rebuild_models, MIGRATION_REBUILD_MODELS),
+            (
+                "structural_mutation_requirements",
+                self.structural_mutation_requirements,
+                STRUCTURAL_MUTATION_REQUIREMENTS,
+            ),
+        )
+        for name, values, allowed in checks:
+            unknown = sorted(set(values).difference(allowed))
+            if unknown:
+                raise ValueError(f"unknown {name}: {unknown}")
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object]) -> "CapabilityBehaviorRequirement":
+        operation = value.get("operation_support", {})
+        if not isinstance(operation, Mapping):
+            raise ValueError("behavior requirement operation_support must be an object")
+        return cls(
+            write=bool(operation["write"]) if "write" in operation else None,
+            read=bool(operation["read"]) if "read" in operation else None,
+            recall_candidate=(
+                bool(operation["recall_candidate"])
+                if "recall_candidate" in operation
+                else None
+            ),
+            currentness_models=tuple(str(item) for item in value.get("currentness_models", ())),
+            invalidation_models=tuple(str(item) for item in value.get("invalidation_models", ())),
+            correction_models=tuple(str(item) for item in value.get("correction_models", ())),
+            deletion_models=tuple(str(item) for item in value.get("deletion_models", ())),
+            residue_models=tuple(str(item) for item in value.get("residue_models", ())),
+            migration_rebuild_models=tuple(
+                str(item) for item in value.get("migration_rebuild_models", ())
+            ),
+            structural_mutation_requirements=tuple(
+                str(item) for item in value.get("structural_mutation_requirements", ())
+            ),
+        )
+
+    def matches(self, contract: CapabilityBehaviorContract) -> bool:
+        operation_checks = (
+            (self.write, contract.write),
+            (self.read, contract.read),
+            (self.recall_candidate, contract.recall_candidate),
+        )
+        if any(required is not None and required != actual for required, actual in operation_checks):
+            return False
+        enum_checks = (
+            (self.currentness_models, contract.currentness_model),
+            (self.invalidation_models, contract.invalidation_model),
+            (self.correction_models, contract.correction_model),
+            (self.deletion_models, contract.deletion_model),
+            (self.residue_models, contract.residue_model),
+            (self.migration_rebuild_models, contract.migration_rebuild_model),
+            (
+                self.structural_mutation_requirements,
+                contract.structural_mutation_requirement,
+            ),
+        )
+        return all(not allowed or actual in allowed for allowed, actual in enum_checks)
+
+    def to_dict(self) -> dict:
+        operation: dict[str, bool] = {}
+        if self.write is not None:
+            operation["write"] = self.write
+        if self.read is not None:
+            operation["read"] = self.read
+        if self.recall_candidate is not None:
+            operation["recall_candidate"] = self.recall_candidate
+        return {
+            "operation_support": operation,
+            "currentness_models": list(self.currentness_models),
+            "invalidation_models": list(self.invalidation_models),
+            "correction_models": list(self.correction_models),
+            "deletion_models": list(self.deletion_models),
+            "residue_models": list(self.residue_models),
+            "migration_rebuild_models": list(self.migration_rebuild_models),
+            "structural_mutation_requirements": list(self.structural_mutation_requirements),
+        }
 
 
 @dataclass(frozen=True)
@@ -41,6 +281,7 @@ class CapabilityDeclaration:
     evidence_refs: tuple[str, ...] = ()
     limitations: tuple[str, ...] = ()
     enabled: bool = True
+    behavior_contract: CapabilityBehaviorContract | None = None
 
     def __post_init__(self) -> None:
         if not self.capability_id or not self.capability_version:
@@ -52,6 +293,12 @@ class CapabilityDeclaration:
 
     @classmethod
     def from_dict(cls, value: Mapping[str, object]) -> "CapabilityDeclaration":
+        behavior_raw = value.get("behavior_contract")
+        behavior = None
+        if behavior_raw is not None:
+            if not isinstance(behavior_raw, Mapping):
+                raise ValueError("capability behavior_contract must be an object")
+            behavior = CapabilityBehaviorContract.from_dict(behavior_raw)
         return cls(
             capability_id=str(value["capability_id"]),
             capability_version=str(value["capability_version"]),
@@ -63,10 +310,11 @@ class CapabilityDeclaration:
             evidence_refs=tuple(str(item) for item in value.get("evidence_refs", ())),
             limitations=tuple(str(item) for item in value.get("limitations", ())),
             enabled=bool(value.get("enabled", True)),
+            behavior_contract=behavior,
         )
 
     def to_dict(self) -> dict:
-        return {
+        payload = {
             "capability_id": self.capability_id,
             "capability_version": self.capability_version,
             "maturity": self.maturity,
@@ -78,6 +326,9 @@ class CapabilityDeclaration:
             "limitations": list(self.limitations),
             "enabled": self.enabled,
         }
+        if self.behavior_contract is not None:
+            payload["behavior_contract"] = self.behavior_contract.to_dict()
+        return payload
 
 
 @dataclass(frozen=True)
@@ -100,6 +351,16 @@ class ComponentDeclaration:
             if identity in seen:
                 raise ValueError(f"duplicate capability declaration: {identity}")
             seen.add(identity)
+        if self.profile_version == "component-capability-v2":
+            missing = [
+                capability.capability_id
+                for capability in self.capabilities
+                if capability.behavior_contract is None
+            ]
+            if missing:
+                raise ValueError(
+                    f"component-capability-v2 requires behavior_contract for every capability: {missing}"
+                )
 
     @classmethod
     def from_dict(cls, value: Mapping[str, object]) -> "ComponentDeclaration":
@@ -139,6 +400,7 @@ class CapabilityRequirement:
     required_scope_postures: tuple[str, ...] = ()
     allowed_components: tuple[str, ...] = ()
     preferred_component: str = ""
+    behavior_requirement: CapabilityBehaviorRequirement | None = None
 
     def __post_init__(self) -> None:
         if self.minimum_maturity not in _MATURITY_RANK:
@@ -159,9 +421,10 @@ class ResolvedCapability:
     authority_effect: str
     evidence_refs: tuple[str, ...] = ()
     limitations: tuple[str, ...] = ()
+    behavior_contract: CapabilityBehaviorContract | None = None
 
     def to_dict(self) -> dict:
-        return {
+        payload = {
             "component_id": self.component_id,
             "component_version": self.component_version,
             "profile_version": self.profile_version,
@@ -175,6 +438,9 @@ class ResolvedCapability:
             "evidence_refs": list(self.evidence_refs),
             "limitations": list(self.limitations),
         }
+        if self.behavior_contract is not None:
+            payload["behavior_contract"] = self.behavior_contract.to_dict()
+        return payload
 
 
 @dataclass
@@ -220,6 +486,11 @@ class ComponentRegistry:
                     continue
                 if requirement.required_scope_postures and capability.scope_posture not in requirement.required_scope_postures:
                     continue
+                if requirement.behavior_requirement is not None:
+                    if capability.behavior_contract is None:
+                        continue
+                    if not requirement.behavior_requirement.matches(capability.behavior_contract):
+                        continue
                 eligible.append((component, capability))
 
         preferred = requirement.preferred_component or self.preferences.get(requirement.capability_id, "")
@@ -272,4 +543,5 @@ def _resolved(component: ComponentDeclaration, capability: CapabilityDeclaration
         authority_effect=capability.authority_effect,
         evidence_refs=capability.evidence_refs,
         limitations=capability.limitations,
+        behavior_contract=capability.behavior_contract,
     )
