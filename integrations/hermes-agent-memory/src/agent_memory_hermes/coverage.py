@@ -33,6 +33,41 @@ def _surface_status(surface: str, mode: str) -> str:
     return "uncovered"
 
 
+def _recursive_scenarios() -> list[dict[str, Any]]:
+    return [
+        {
+            "scenario_id": "self_reinforcing_skill_lineage",
+            "status": "governor_evaluable_when_lineage_available",
+            "requirement": "causally related experience/skill/output lineage must not be counted as independent corroboration",
+            "integration_support": "candidate schema preserves lineage_refs when upstream/caller provides them and always preserves Hermes tool/session scope",
+        },
+        {
+            "scenario_id": "correction_relearned_by_background_review",
+            "status": "governor_evaluable_when_supersession_evidence_available",
+            "requirement": "a corrected/rejected value remains non-current unless new independent evidence satisfies readmission policy",
+            "integration_support": "candidate schema preserves provenance_refs and blocks when the external governor rejects the reproposal",
+        },
+        {
+            "scenario_id": "stale_human_approval_replay",
+            "status": "uncovered_requires_future_durable_state_hook",
+            "requirement": "approval replay must revalidate reviewed before-state digest, candidate digest, and scope immediately before commit",
+            "blocking_surface": "approved_pending_memory_replay",
+        },
+        {
+            "scenario_id": "curator_archive_during_pending_dependency",
+            "status": "uncovered_requires_future_durable_state_hook",
+            "requirement": "skill retirement/archive must check live dependencies and residue obligations before durable transition",
+            "blocking_surface": "deterministic_curator_archive",
+        },
+        {
+            "scenario_id": "provider_mirror_failure_after_builtin_commit",
+            "status": "modeled",
+            "requirement": "built-in commit remains committed while failed external projection is unsettled/non-quiescent; no rollback may be claimed",
+            "integration_support": "MemoryProvider records canonical_builtin_state=committed, external_projection=failed, settled=false, quiescent=false",
+        },
+    ]
+
+
 def build_coverage_report(
     config: IntegrationConfig,
     *,
@@ -99,10 +134,12 @@ def build_coverage_report(
             "blocking_surfaces": list(STRICT_BLOCKERS),
             "reason": "six consequential durable mutation families remain outside plugin/provider interception",
         },
+        "recursive_evidence_scenarios": _recursive_scenarios(),
         "limitations": [
             "external MemoryProvider observation is post-commit and incomplete for background/approval/curator/Journey/direct-file mutation paths",
             "pre_tool_call cannot distinguish foreground from background_review origin at the pinned profile without additional Hermes metadata",
             "Agent Memory stage cannot be represented as a native staged durable mutation through the generic pre_tool_call hook",
+            "full causal lineage and supersession state are not exposed by Hermes pre_tool_call metadata; govern mode preserves such refs when supplied and must not invent them",
         ],
         "reasons_not_ready": reasons,
         "authority_effect": "none",
