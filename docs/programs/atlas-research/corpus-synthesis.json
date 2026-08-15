@@ -1,0 +1,351 @@
+{
+  "agent_memory_evidence_boundary": "f2fc966c403d7adf028c24240b85c6e4e576a25a",
+  "agent_memory_self_audit": [
+    {
+      "atlas_claim": "rejected-value tombstone gap",
+      "atlas_review_pin": "bba0aa4cab8e04d11f5380b215b3eea6998fe119",
+      "current_evidence": [
+        "#147",
+        "#148",
+        "reference/agentmem_ref/readmission.py"
+      ],
+      "current_status": "fixed"
+    },
+    {
+      "atlas_claim": "no discrete Atlas-style trust state",
+      "atlas_review_pin": "bba0aa4cab8e04d11f5380b215b3eea6998fe119",
+      "current_evidence": [
+        "docs/16-source-trust-and-reputation.md",
+        "#146"
+      ],
+      "current_status": "mischaracterized_as_gap",
+      "note": "Agent Memory deliberately separates trust, truth, evidence, certification, and authority."
+    },
+    {
+      "atlas_claim": "reference substrate is not a production memory service",
+      "atlas_review_pin": "bba0aa4cab8e04d11f5380b215b3eea6998fe119",
+      "current_evidence": [
+        "README.md",
+        "#274"
+      ],
+      "current_status": "still_valid_by_design",
+      "note": "Reference claims remain bounded while real external runtime/component evidence is tracked separately."
+    },
+    {
+      "atlas_claim": "no committed run outputs under reports/",
+      "atlas_review_pin": "bba0aa4cab8e04d11f5380b215b3eea6998fe119",
+      "current_evidence": [
+        ".github/workflows/",
+        "docs/programs/runtime-evidence/",
+        "docs/programs/atlas-research/report-inventory.lock.json"
+      ],
+      "current_status": "partially_valid_narrowed",
+      "note": "reports/ remains example-oriented, but reproducible exact-head CI evidence and durable locks now exist."
+    },
+    {
+      "atlas_claim": "no dependency manifest",
+      "atlas_review_pin": "bba0aa4cab8e04d11f5380b215b3eea6998fe119",
+      "current_evidence": [
+        "pyproject.toml",
+        "reference/requirements.txt"
+      ],
+      "current_status": "fixed"
+    },
+    {
+      "atlas_claim": "README/generated count drift",
+      "atlas_review_pin": "bba0aa4cab8e04d11f5380b215b3eea6998fe119",
+      "current_evidence": [
+        "README.md",
+        "scripts/"
+      ],
+      "current_status": "superseded_requires_fresh_measurement",
+      "note": "Historical counts are not carried forward as a current defect without exact recount."
+    }
+  ],
+  "atlas_snapshot": "90bfeed14764e268c82c925d4c39645c7480d015",
+  "authority_effect": "none",
+  "benchmarks": [
+    {
+      "agent_memory_owner": "#138",
+      "benchmark": "MemoryAgentBench",
+      "disposition": "correction_current_answer_preference_not_forgetting",
+      "pin": "455306dcabc3842526eb83cd4e225e5d486c5c5d",
+      "verification": "primary_source"
+    },
+    {
+      "agent_memory_owner": "#138",
+      "benchmark": "GoodAI LTM Benchmark",
+      "disposition": "post_score_reset_housekeeping_not_forgetting_evidence",
+      "pin": "188e7618413775f1ce783763d5ee0b5ccd4c31c9",
+      "verification": "primary_source"
+    },
+    {
+      "agent_memory_owner": "#138",
+      "benchmark": "PersistBench",
+      "disposition": "must_not_use_and_relevance_control_not_deletion",
+      "pin": "302ea2ff2cfce97e9458a9897a10b67a2c1d479f",
+      "verification": "primary_source"
+    },
+    {
+      "agent_memory_owner": "#138/#148/#282",
+      "benchmark": "ForgetEval",
+      "disposition": "control_plane_forgetting_fixture_shape_not_transitive_residue_proof",
+      "pin": "arXiv:2606.15903",
+      "verification": "primary_paper_and_repository"
+    }
+  ],
+  "comparators": [
+    {
+      "disposition": "consumed",
+      "distinct_value": "canonical-before-derived asynchronous currentness and retry",
+      "owners": [
+        "#308",
+        "#282"
+      ],
+      "pin": "132b46343e60ecf4057c427736c57b08f7615dfe",
+      "rank": 1,
+      "system": "Claude-Mem"
+    },
+    {
+      "disposition": "fixture_comparator",
+      "distinct_value": "rejected-value semantic re-entry adversarial fixtures",
+      "owners": [
+        "#147",
+        "#148"
+      ],
+      "pin": "df44e76c6c6a919977806feed9549bc6a892932d",
+      "rank": 2,
+      "system": "Verel"
+    },
+    {
+      "disposition": "bounded_future_research",
+      "distinct_value": "reliability degradation and independently authorized veto/influence",
+      "owners": [
+        "docs/16-source-trust-and-reputation.md",
+        "PAMA"
+      ],
+      "pin": "a113cf692a08bed85d7c6eb35d1086dbd9a7a1fd",
+      "rank": 3,
+      "system": "AgentRecall-X"
+    },
+    {
+      "disposition": "reference_comparator",
+      "distinct_value": "least-permissive principal/scope composition",
+      "owners": [
+        "docs/18-actor-scope-and-tenancy.md"
+      ],
+      "pin": "54e4d7d201b5c7ba3aed618ea343d9f4d3f40927",
+      "rank": 4,
+      "system": "Memory Engine"
+    },
+    {
+      "disposition": "existing_comparator",
+      "distinct_value": "bi-temporal graph representation and currentness",
+      "owners": [
+        "docs/05-memory-state-and-time.md"
+      ],
+      "pin": "425bf2481b51437e43455e09d241c5f46e3d95f3",
+      "rank": 5,
+      "system": "Graphiti"
+    },
+    {
+      "disposition": "consumed",
+      "distinct_value": "durable background progress/cursor success boundary",
+      "owners": [
+        "#308",
+        "#282"
+      ],
+      "pin": "b99e0f937e828504e0f93dbe35dfd6b1540e20b2",
+      "rank": 6,
+      "system": "Nanobot"
+    },
+    {
+      "disposition": "reference_only_agpl3",
+      "distinct_value": "human-editable canonical files with rebuildable derived state",
+      "owners": [
+        "#274",
+        "docs/SOURCE_RIGHTS_POLICY.md"
+      ],
+      "pin": "816accaa9befe8281668ba8819eaf74d11ce2385",
+      "rank": 7,
+      "system": "Basic Memory"
+    },
+    {
+      "disposition": "no_new_engine",
+      "distinct_value": "explicit conflict disposition alternatives",
+      "owners": [
+        "#12",
+        "docs/17-conflict-resolution-engine.md"
+      ],
+      "pin": "d1902419321352f0108c499bd8ed4ebd129fe138",
+      "rank": 8,
+      "system": "Memanto"
+    }
+  ],
+  "completion": {
+    "agent_memory_self_report_reconciled": true,
+    "all_seven_mechanisms_mapped": true,
+    "all_twenty_one_patterns_disposed": true,
+    "atlas_does_not_create_doctrine_authority": true,
+    "benchmark_findings_deduplicated": true,
+    "candidates_triaged_by_distinct_value": true,
+    "follow_ons_bounded_and_linked": true,
+    "freshness_handled": true,
+    "promoted_findings_primary_verified": true,
+    "rejected_findings_preserved": true,
+    "snapshot_reconstructable": true
+  },
+  "counts": {
+    "atlas_mechanisms": 7,
+    "design_patterns": 21,
+    "system_reports": 283,
+    "verified_claim_ledger_minimum": 8
+  },
+  "doctrine_disposition": "no_new_adr",
+  "mechanisms": [
+    {
+      "agent_memory_surfaces": [
+        "#147",
+        "#148",
+        "reference/agentmem_ref/readmission.py",
+        "fixtures/rejected-value-semantic-reentry.json"
+      ],
+      "atlas_label": "Rejected-value tombstone",
+      "coverage": "covered_semantics_differ",
+      "disposition": "fixture_hardening",
+      "mechanism_id": "rejected_value_tombstone",
+      "novel_gap": false,
+      "rationale": "Agent Memory enforces durable rejected-value readmission controls without requiring the Atlas-specific storage representation."
+    },
+    {
+      "agent_memory_surfaces": [
+        "docs/16-source-trust-and-reputation.md",
+        "docs/adr/ADR-009-source-trust-is-a-first-class-signal.md",
+        "#146"
+      ],
+      "atlas_label": "Explicit trust state",
+      "coverage": "covered_semantics_differ",
+      "disposition": "no_action",
+      "mechanism_id": "explicit_trust_state",
+      "novel_gap": false,
+      "rationale": "Agent Memory separates trust, evidence, truth, certification, and authority instead of requiring one discrete Atlas-style epistemic enum."
+    },
+    {
+      "agent_memory_surfaces": [
+        "docs/05-memory-state-and-time.md",
+        "reference/agentmem_ref/substrate.py",
+        "reference/agentmem_ref/graphiti_driver.py"
+      ],
+      "atlas_label": "Bi-temporal validity",
+      "coverage": "covered",
+      "disposition": "reference_only",
+      "mechanism_id": "bitemporal_validity",
+      "novel_gap": false,
+      "rationale": "Validity time and record/system time are already distinct in doctrine and reference/runtime evidence."
+    },
+    {
+      "agent_memory_surfaces": [
+        "docs/18-actor-scope-and-tenancy.md",
+        "reference/agentmem_ref/adapter.py",
+        "#293"
+      ],
+      "atlas_label": "Scope enforced in retrieval",
+      "coverage": "covered_broader_semantics",
+      "disposition": "no_action",
+      "mechanism_id": "scope_enforced_in_retrieval",
+      "novel_gap": false,
+      "rationale": "Agent Memory requires scope on read and extends the obligation to write, derivation, rebuild, and external-scope bridging."
+    },
+    {
+      "agent_memory_surfaces": [
+        "docs/30-memory-observability-and-audit-events.md",
+        "docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md",
+        "schemas/audit-event.schema.json"
+      ],
+      "atlas_label": "Append-only mutation audit",
+      "coverage": "covered",
+      "disposition": "no_action",
+      "mechanism_id": "append_only_mutation_audit",
+      "novel_gap": false,
+      "rationale": "Mutation evidence and audit-event semantics are already first-class and are not treated as truth or authority."
+    },
+    {
+      "agent_memory_surfaces": [
+        "docs/04-governance-and-pama.md",
+        "docs/33-pama-decision-table.md",
+        "docs/adr/ADR-004-pama-controls-mutation-authority.md"
+      ],
+      "atlas_label": "Human review surface",
+      "coverage": "partially_covered_semantics",
+      "disposition": "optional_product_surface",
+      "mechanism_id": "human_review_surface",
+      "novel_gap": false,
+      "rationale": "PAMA can require human review before durable consequence, but Agent Memory does not claim a canonical end-user review UI."
+    },
+    {
+      "agent_memory_surfaces": [
+        "#148",
+        "reference/agentmem_ref/forbidden_hits.py",
+        "fixtures/forbidden-hit-lifecycle-matrix.json",
+        "reference/tests/test_forbidden_hits.py"
+      ],
+      "atlas_label": "Negative retrieval assertion",
+      "coverage": "covered_broader_semantics",
+      "disposition": "fixture_hardening",
+      "mechanism_id": "negative_retrieval_assertion",
+      "novel_gap": false,
+      "rationale": "Agent Memory asserts must-not-surface and must-not-influence outcomes across lifecycle paths, a broader boundary than retrieval-only negatives."
+    }
+  ],
+  "patterns": [
+    {"agent_memory_surfaces":["docs/30-memory-observability-and-audit-events.md"],"atlas_label":"Append-only memory audit","atlas_stance":"established","coverage":"covered","disposition":"no_action","pattern_id":"append-only-memory-audit","rationale":"Existing audit/evidence surfaces already separate mutation telemetry from truth."},
+    {"agent_memory_surfaces":["docs/05-memory-state-and-time.md"],"atlas_label":"Bi-temporal fact validity","atlas_stance":"established","coverage":"covered","disposition":"reference_only","pattern_id":"bi-temporal-fact-validity","rationale":"Already represented; external implementations remain useful comparators."},
+    {"agent_memory_surfaces":["#274"],"atlas_label":"Cache-preserving injection","atlas_stance":"established","coverage":"optional_component_guidance","disposition":"reference_only","pattern_id":"cache-preserving-injection","rationale":"Useful deployment/cost guidance, not a core correctness primitive."},
+    {"agent_memory_surfaces":["docs/16-source-trust-and-reputation.md","#149"],"atlas_label":"Decay and reinforcement","atlas_stance":"established","coverage":"covered_semantics_differ","disposition":"reference_only","pattern_id":"decay-and-reinforcement","rationale":"Age/use/popularity must not become truth or independent corroboration; implementation may vary."},
+    {"agent_memory_surfaces":["#146","docs/adr/ADR-021-portable-memory-governance-evidence-boundary.md"],"atlas_label":"Evidence before belief","atlas_stance":"established","coverage":"covered","disposition":"no_action","pattern_id":"evidence-before-belief","rationale":"Source-neutral evidence and derivation lineage already own this boundary."},
+    {"agent_memory_surfaces":["docs/18-actor-scope-and-tenancy.md","#280"],"atlas_label":"Explicit write destination","atlas_stance":"established","coverage":"covered_broader_semantics","disposition":"reference_only","pattern_id":"explicit-write-destination","rationale":"Agent Memory requires explicit scope/ownership and deterministic routing for writes."},
+    {"agent_memory_surfaces":["#46","#274"],"atlas_label":"Gate the expensive path","atlas_stance":"established","coverage":"optional_component_guidance","disposition":"reference_only","pattern_id":"gate-the-expensive-path","rationale":"Cost gating is useful implementation guidance but does not create authority or correctness."},
+    {"agent_memory_surfaces":["docs/04-governance-and-pama.md","docs/adr/ADR-004-pama-controls-mutation-authority.md"],"atlas_label":"Governed write gateway","atlas_stance":"established","coverage":"covered","disposition":"no_action","pattern_id":"governed-write-gateway","rationale":"PAMA already governs consequential durable mutation."},
+    {"agent_memory_surfaces":["#230","#274","docs/26-governed-recall-planner.md"],"atlas_label":"Hybrid retrieval fusion","atlas_stance":"established","coverage":"covered_semantics_differ","disposition":"reference_only","pattern_id":"hybrid-retrieval-fusion","rationale":"Hybrid retrieval may propose candidates; governed admission remains separate."},
+    {"agent_memory_surfaces":["#274","docs/adr/ADR-033-capabilities-are-independently-declared-and-deterministically-composed.md"],"atlas_label":"Pluggable memory provider","atlas_stance":"established","coverage":"covered","disposition":"no_action","pattern_id":"pluggable-memory-provider","rationale":"Component/capability contracts already make providers replaceable without semantic privilege."},
+    {"agent_memory_surfaces":["docs/04-governance-and-pama.md","#274"],"atlas_label":"Promotion between tiers","atlas_stance":"established","coverage":"covered_semantics_differ","disposition":"reference_only","pattern_id":"promotion-between-tiers","rationale":"Promotion is governed consequence and capability-specific rather than an implicit tier heuristic."},
+    {"agent_memory_surfaces":["#282","#308"],"atlas_label":"Recoverable background work","atlas_stance":"established","coverage":"covered","disposition":"no_action","pattern_id":"recoverable-background-work","rationale":"Restart-safe currentness obligations and quiescence evidence now cover the reusable failure boundary."},
+    {"agent_memory_surfaces":["docs/18-actor-scope-and-tenancy.md","#293"],"atlas_label":"Scope as a first-class key","atlas_stance":"established","coverage":"covered_broader_semantics","disposition":"no_action","pattern_id":"scope-as-a-first-class-key","rationale":"Agent Memory treats scope as a governed boundary across more than retrieval keys."},
+    {"agent_memory_surfaces":["docs/adr/ADR-034-procedural-memory-is-not-execution-authority.md","#295"],"atlas_label":"Skills as procedural memory","atlas_stance":"established","coverage":"covered_semantics_differ","disposition":"reference_only","pattern_id":"skills-as-procedural-memory","rationale":"Retained procedures, execution evidence, and action authority remain separate."},
+    {"agent_memory_surfaces":["docs/16-source-trust-and-reputation.md","#146"],"atlas_label":"Trust-state machine","atlas_stance":"established","coverage":"covered_semantics_differ","disposition":"no_action","pattern_id":"trust-state-machine","rationale":"Agent Memory uses multidimensional trust/evidence/authority semantics rather than one required state machine."},
+    {"agent_memory_surfaces":["#274","#308"],"atlas_label":"Zero-LLM capture","atlas_stance":"established","coverage":"optional_component_guidance","disposition":"reference_only","pattern_id":"zero-llm-capture","rationale":"Synchronous deterministic capture can be useful but is deployment-specific, not universal doctrine."},
+    {"agent_memory_surfaces":["#147","#148"],"atlas_label":"Rejected-value tombstone","atlas_stance":"advocacy","coverage":"fixture_hardening","disposition":"fixture_hardening","pattern_id":"rejected-value-tombstone","rationale":"The failure is real and already implemented; Atlas terminology/storage shape is not canonical."},
+    {"agent_memory_surfaces":["#12","docs/17-conflict-resolution-engine.md"],"atlas_label":"Resolve, don't just detect","atlas_stance":"advocacy","coverage":"covered","disposition":"no_action","pattern_id":"resolve-not-just-detect","rationale":"Agent Memory already owns explicit conflict disposition and governance."},
+    {"agent_memory_surfaces":["#149","docs/26-governed-recall-planner.md"],"atlas_label":"Source-diverse context","atlas_stance":"mixed","coverage":"covered_semantics_differ","disposition":"fixture_hardening","pattern_id":"source-diverse-context","rationale":"Diversity can reduce source crowding, but repeated/adjacent material still needs provenance and non-corroboration controls."},
+    {"agent_memory_surfaces":["#274","docs/26-governed-recall-planner.md"],"atlas_label":"Retrieval hysteresis","atlas_stance":"category_bound","coverage":"optional_component_guidance","disposition":"reference_only","pattern_id":"retrieval-hysteresis","rationale":"Activation history may help conversational systems but is not a universal memory correctness invariant."},
+    {"agent_memory_surfaces":["docs/04-governance-and-pama.md","docs/17-conflict-resolution-engine.md"],"atlas_label":"Memory as an editing surface","atlas_stance":"category_bound","coverage":"optional_product_guidance","disposition":"reference_only","pattern_id":"memory-as-an-editing-surface","rationale":"Human editing is valuable product ergonomics, but authoritative edits still require lifecycle, scope, provenance, and mutation governance."}
+  ],
+  "promotions": [
+    {
+      "doctrine_change": "none",
+      "evidence": [
+        "#308",
+        "#282",
+        "docs/programs/runtime-evidence/"
+      ],
+      "finding": "write-to-readable visibility and quiescence",
+      "source_pressure": [
+        "Claude-Mem",
+        "Nanobot"
+      ],
+      "status": "implemented"
+    }
+  ],
+  "rejections": [
+    {"claim":"Atlas mark count should be an Agent Memory maturity score","reason":"Atlas explicitly says marks are not a maturity score; Goodhart pressure is observable."},
+    {"claim":"All 283 reports require equal-depth manual review","reason":"The frozen #304 stopping rule prioritizes distinct failure/capability value; metadata inventory remains complete."},
+    {"claim":"Atlas explicit trust-state enum is a required Agent Memory core field","reason":"Agent Memory expresses the underlying trust/evidence/authority distinction with different, broader semantics."},
+    {"claim":"Memanto warrants a new conflict engine","reason":"Completed #12 already owns a richer conflict-resolution contract."},
+    {"claim":"Basic Memory should be a default runtime dependency","reason":"Pinned source is AGPL-3.0; architecture lessons do not imply adoption rights/posture."},
+    {"claim":"Every interesting Atlas system should become an adapter","reason":"Adapters are justified only by a distinct executable capability/failure question."},
+    {"claim":"Atlas pattern names justify new ADRs","reason":"Secondary-source naming is not doctrine authority; no representation-neutral contradiction survived verification."}
+  ],
+  "research_program": "#304",
+  "schema_version": "1.0.0",
+  "source_posture": "secondary_source_index_and_hypothesis_generator"
+}
