@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/pama-decision.schema.json",
   "title": "Proportional Adaptive Mutation Authority Decision",
-  "description": "Doctrine-level compatibility contract for PAMA authority evaluations. PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. PAMA decision 1.1.0 adds the decision_overwrite operation; 1.2.0 adds domain_schema_mutation; historical 1.0.0 and 1.1.0 decisions remain valid.",
+  "description": "Doctrine-level compatibility contract for PAMA authority evaluations. PAMA decision 1.1.0 adds decision_overwrite, 1.2.0 adds domain_schema_mutation, and 1.3.0 adds explicit ADR-032 structural-impact bindings for deterministic S1 delegation while preserving historical 1.2.0 behavior.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -196,7 +196,13 @@
         },
         "uncertainty_summary": {"type": "string"},
         "freshness_requirement": {"type": "string"},
-        "sensitivity": {"type": "string"}
+        "sensitivity": {"type": "string"},
+        "structural_impact_ref": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "structural_class": {"enum": ["S1", "S2", "S3"]},
+        "structural_classifier_id": {"type": "string", "minLength": 1},
+        "structural_classifier_version": {"type": "string", "minLength": 1},
+        "structural_state_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "structural_dependency_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
       }
     },
     "policy": {
@@ -214,7 +220,9 @@
           "type": "array",
           "items": {"type": "string", "minLength": 1},
           "uniqueItems": true
-        }
+        },
+        "structural_policy_id": {"type": "string", "minLength": 1},
+        "structural_policy_version": {"type": "string", "minLength": 1}
       }
     },
     "decision": {
@@ -321,7 +329,96 @@
       "then": {
         "required": ["schema_version"],
         "properties": {
-          "schema_version": {"const": "1.2.0"}
+          "schema_version": {"enum": ["1.2.0", "1.3.0"]}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schema_version": {"const": "1.3.0"},
+          "mutation": {
+            "properties": {"operation": {"const": "domain_schema_mutation"}},
+            "required": ["operation"]
+          }
+        },
+        "required": ["schema_version", "mutation"]
+      },
+      "then": {
+        "properties": {
+          "basis": {
+            "required": [
+              "structural_impact_ref",
+              "structural_class",
+              "structural_classifier_id",
+              "structural_classifier_version",
+              "structural_state_digest",
+              "structural_dependency_digest"
+            ]
+          },
+          "policy": {
+            "required": ["structural_policy_id", "structural_policy_version"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schema_version": {"const": "1.3.0"},
+          "basis": {
+            "properties": {"structural_class": {"const": "S1"}},
+            "required": ["structural_class"]
+          },
+          "decision": {
+            "properties": {"outcome": {"enum": ["allow", "allow_with_ledger"]}},
+            "required": ["outcome"]
+          }
+        },
+        "required": ["schema_version", "basis", "decision"]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "required": ["selection_mode"],
+            "properties": {
+              "outcome": {"const": "allow_with_ledger"},
+              "selection_mode": {"const": "deterministic"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schema_version": {"const": "1.3.0"},
+          "basis": {
+            "properties": {"structural_class": {"enum": ["S2", "S3"]}},
+            "required": ["structural_class"]
+          },
+          "decision": {
+            "properties": {"outcome": {"enum": ["allow", "allow_with_ledger"]}},
+            "required": ["outcome"]
+          }
+        },
+        "required": ["schema_version", "basis", "decision"]
+      },
+      "then": {
+        "properties": {
+          "policy": {
+            "required": ["required_review_refs"],
+            "properties": {
+              "required_review_refs": {"minItems": 1}
+            }
+          },
+          "decision": {
+            "required": ["selection_mode"],
+            "properties": {
+              "outcome": {"const": "allow_with_ledger"},
+              "selection_mode": {"enum": ["human", "external"]}
+            }
+          }
         }
       }
     }
