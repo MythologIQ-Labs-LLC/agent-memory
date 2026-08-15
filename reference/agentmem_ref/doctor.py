@@ -174,6 +174,8 @@ def _provider_availability(discovery: Mapping[str, object]) -> dict[str, object]
         counts = {}
     probe_count = int(discovery.get("probe_count", 0))
     startability = str(discovery.get("startability", "not_proven"))
+    available_count = int(counts.get("available", 0))
+    unavailable_count = int(counts.get("unavailable", 0))
 
     if probe_count == 0:
         status = "not_configured"
@@ -183,7 +185,9 @@ def _provider_availability(discovery: Mapping[str, object]) -> dict[str, object]
         status = "probe_failed"
     elif int(counts.get("unsupported", 0)):
         status = "unsupported"
-    elif int(counts.get("available", 0)):
+    elif available_count and unavailable_count:
+        status = "partial"
+    elif available_count:
         status = "available"
     else:
         status = "unavailable"
