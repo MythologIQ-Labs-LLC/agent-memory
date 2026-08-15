@@ -26,6 +26,7 @@ from agentmem_ref.structural_mutation import (  # noqa: E402
     classify,
     evaluate_pama_v13,
     retire,
+    rollback,
     supersede,
 )
 from agentmem_ref.structural_pama import build_pama_decision_v13  # noqa: E402
@@ -42,6 +43,9 @@ def structural(**overrides) -> StructuralProposal:
         proposed_schema=SchemaRef("domain:project", "4.1.0", "project"),
         layer="domain",
         change_kind="additive_extension",
+        semantic_diff=("add optional project:depends_on:project relation",),
+        tenant_ref="tenant-a",
+        isolation_domain_refs=("tenant-a/project-a",),
         preserves_semantics=True,
         optional_additive=True,
         migration_required=False,
@@ -88,10 +92,10 @@ def pama(s: StructuralProposal, **overrides) -> policy.Proposal:
         estimator_versions=s.estimator_versions,
         confidence=s.confidence,
         state_snapshot=s.state_digest,
-        tenant_ref="tenant-a",
+        tenant_ref=s.tenant_ref,
         purpose="domain ontology evolution",
-        isolation_domain_refs=("tenant-a/project-a",),
-        required_isolation_domain_refs=("tenant-a/project-a",),
+        isolation_domain_refs=s.isolation_domain_refs,
+        required_isolation_domain_refs=s.isolation_domain_refs,
         project_ref="project-a",
     )
     values.update(overrides)
@@ -108,6 +112,7 @@ def build_report(agent_memory_commit: str) -> dict:
         proposed_schema=SchemaRef("projection:graph", "3", "project"),
         layer="derived",
         change_kind="rebuild_only",
+        semantic_diff=("replace graph projection layout without semantic change",),
         optional_additive=False,
         affected_memory_count=5000,
         rollback_ref="rollback:projection:graph:2",
@@ -137,14 +142,20 @@ def build_report(agent_memory_commit: str) -> dict:
         current_dependency_digest=s1.dependency_digest,
         decision_ref="decision:s1",
     )
-    s1_lifecycle = activate(s1_lifecycle)
-    s1_lifecycle = supersede(s1_lifecycle)
-    s1_lifecycle = retire(s1_lifecycle)
+    s1_active = activate(s1_lifecycle)
+    s1_superseded = supersede(s1_active)
+    s1_retired = retire(s1_superseded)
+    s1_rollback = rollback(
+        s1_active,
+        rollback_ref=s1.rollback_ref,
+        execution_ref="execution:rollback:s1",
+    )
 
     s2 = structural(
         proposal_id="schema:semantic-migration",
         proposed_schema=SchemaRef("domain:project", "5.0.0", "project"),
         change_kind="semantic_change",
+        semantic_diff=("change status enum into lifecycle state object",),
         preserves_semantics=False,
         optional_additive=False,
         migration_required=True,
@@ -175,10 +186,34 @@ def build_report(agent_memory_commit: str) -> dict:
         approval_refs=("approval:human:42",),
     )
 
+    disputed = structural(
+        proposal_id="schema:disputed-semantic-migration",
+        proposed_schema=SchemaRef("domain:project", "5.0.0", "project"),
+        change_kind="semantic_change",
+        semantic_diff=("reinterpret status as lifecycle state despite estimator disagreement",),
+        preserves_semantics=False,
+        optional_additive=False,
+        migration_required=True,
+        information_loss="possible",
+        historical_interpretation_preserved=False,
+        reversibility="compensatable",
+        rollback_ref="rollback:disputed:5",
+        estimator_refs=("estimator:a:claims-S1", "estimator:b:claims-S3"),
+        estimator_versions=("a:4", "b:11"),
+        confidence=0.999999,
+    )
+    disputed_impact = classify(disputed)
+    disputed_decision = evaluate_pama_v13(
+        pama(disputed), disputed_impact,
+        current_state_digest=disputed.state_digest,
+        current_dependency_digest=disputed.dependency_digest,
+    )
+
     s3 = structural(
         proposal_id="schema:destructive-widening",
         proposed_schema=SchemaRef("domain:project", "5.0.0", "tenant"),
         change_kind="destructive_retirement",
+        semantic_diff=("retire project field and reinterpret it as tenant governance state",),
         optional_additive=False,
         scope_posture="widened",
         authority_posture="governance_bearing",
@@ -218,6 +253,13 @@ def build_report(agent_memory_commit: str) -> dict:
         current_dependency_digest=high_conf.dependency_digest,
     )
 
+    repeated_impact = classify(s1)
+    repeated_decision = evaluate_pama_v13(
+        pama(s1), repeated_impact,
+        current_state_digest=s1.state_digest,
+        current_dependency_digest=s1.dependency_digest,
+    )
+
     stale_state_blocked = stale_dependency_blocked = False
     try:
         evaluate_pama_v13(
@@ -236,16 +278,36 @@ def build_report(agent_memory_commit: str) -> dict:
     except StructuralMutationError:
         stale_dependency_blocked = True
 
+    live_dependency_retirement_blocked = residue_retirement_blocked = False
+    try:
+        retire(s1_superseded, live_dependency_refs=("consumer:still-live",))
+    except StructuralMutationError:
+        live_dependency_retirement_blocked = True
+    try:
+        retire(s1_superseded, pending_residue_refs=("projection:old-schema",))
+    except StructuralMutationError:
+        residue_retirement_blocked = True
+
     invariants = {
         "derived_rebuild_is_s0_not_domain_mutation": s0_impact.classification.structural_class == S0,
         "bounded_additive_domain_extension_is_s1": s1_impact.classification.structural_class == S1,
+        "structural_record_preserves_semantic_diff_and_isolation_scope": (
+            s1_impact.to_dict()["impact"]["semantic_diff"] == list(s1.semantic_diff)
+            and s1_impact.to_dict()["impact"]["tenant_ref"] == s1.tenant_ref
+            and s1_impact.to_dict()["impact"]["isolation_domain_refs"] == list(s1.isolation_domain_refs)
+        ),
         "s1_autonomy_is_deterministic_and_ledgered": (
             s1_impact.classification.autonomous_eligible
             and s1_decision.outcome == policy.ALLOW_WITH_LEDGER
             and s1_document["decision"]["selection_mode"] == "deterministic"
             and "required_review_refs" not in s1_document["policy"]
         ),
-        "s1_lifecycle_reaches_retired_only_through_governed_states": s1_lifecycle.lifecycle_state == "retired",
+        "s1_lifecycle_reaches_retired_only_through_governed_states": s1_retired.lifecycle_state == "retired",
+        "declared_s1_rollback_is_reconstructable": (
+            s1_rollback.lifecycle_state == "superseded"
+            and s1_rollback.rollback_ref == s1.rollback_ref
+            and s1_rollback.rollback_execution_ref == "execution:rollback:s1"
+        ),
         "semantic_migration_is_s2_review_required": (
             s2_impact.classification.structural_class == S2
             and s2_pending.outcome == policy.REQUIRE_REVIEW
@@ -256,6 +318,10 @@ def build_report(agent_memory_commit: str) -> dict:
             and s2_document["decision"]["selection_mode"] == "human"
             and s2_document["policy"]["required_review_refs"] == ["approval:human:42"]
         ),
+        "probabilistic_classifier_disagreement_cannot_implicit_allow": (
+            disputed_impact.classification.structural_class == S2
+            and disputed_decision.outcome == policy.REQUIRE_REVIEW
+        ),
         "destructive_scope_authority_change_is_s3_and_blocked": (
             s3_impact.classification.structural_class == S3
             and s3_decision.outcome == policy.BLOCK
@@ -264,11 +330,19 @@ def build_report(agent_memory_commit: str) -> dict:
             low_impact.classification.structural_class == high_impact.classification.structural_class == S1
             and low_decision.outcome == high_decision.outcome == policy.ALLOW_WITH_LEDGER
         ),
+        "repeated_proposal_does_not_accumulate_authority": (
+            repeated_impact.impact_digest == s1_impact.impact_digest
+            and repeated_decision.outcome == s1_decision.outcome
+            and repeated_decision.permitted_actions == s1_decision.permitted_actions
+        ),
         "stale_state_snapshot_invalidates_structural_authorization": stale_state_blocked,
         "dependency_drift_invalidates_structural_authorization": stale_dependency_blocked,
+        "live_dependencies_block_retirement": live_dependency_retirement_blocked,
+        "residue_obligations_block_retirement": residue_retirement_blocked,
         "structural_evidence_grants_no_authority": (
             s1_impact.authority_effect == "none"
             and s2_impact.authority_effect == "none"
+            and disputed_impact.authority_effect == "none"
             and s3_impact.authority_effect == "none"
         ),
     }
@@ -288,12 +362,18 @@ def build_report(agent_memory_commit: str) -> dict:
             "s1_autonomous_additive": {
                 "impact": s1_impact.to_dict(),
                 "pama_decision": s1_document,
-                "final_lifecycle_state": s1_lifecycle.lifecycle_state,
+                "retired_lifecycle_state": s1_retired.lifecycle_state,
+                "rollback_lifecycle_state": s1_rollback.lifecycle_state,
+                "rollback_execution_ref": s1_rollback.rollback_execution_ref,
             },
             "s2_semantic_migration": {
                 "impact": s2_impact.to_dict(),
                 "pending_outcome": s2_pending.outcome,
                 "reviewed_pama_decision": s2_document,
+            },
+            "disputed_probabilistic_classification": {
+                "impact": disputed_impact.to_dict(),
+                "outcome": disputed_decision.outcome,
             },
             "s3_destructive_scope_authority": {
                 "impact": s3_impact.to_dict(),
@@ -306,7 +386,8 @@ def build_report(agent_memory_commit: str) -> dict:
         "limitations": [
             "PAMA 1.3 proves one bounded S1 autonomous profile; it does not make arbitrary additive changes autonomous.",
             "S0 is classified here but remains a derived maintenance path, not domain_schema_mutation.",
-            "S2/S3 remain explicitly human-authorized or blocked; no estimator confidence can lower their floor.",
+            "S2/S3 remain explicitly human-authorized or blocked; no estimator confidence, disagreement, or repetition can lower their floor.",
+            "Rollback records the authorized rollback reference and execution evidence; provider-specific physical restoration remains a component/runtime responsibility.",
             "The reference lifecycle demonstrates authority and retirement gates; provider-specific migration execution remains a component/runtime responsibility.",
         ],
     }
