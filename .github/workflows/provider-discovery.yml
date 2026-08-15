@@ -62,8 +62,10 @@ jobs:
           import json
           from pathlib import Path
           report = json.loads(Path("installed-doctor-probed.json").read_text())
-          if report["provider_availability"]["status"] != "available":
-              raise SystemExit("doctor did not expose observed provider availability")
+          if report["provider_availability"]["status"] != "partial":
+              raise SystemExit("doctor did not preserve mixed provider availability as partial")
+          if report["provider_availability"]["status_counts"]["unavailable"] != 1:
+              raise SystemExit("doctor hid optional unavailable provider evidence")
           if report["provider_availability"]["startability"] != "proven_for_declared_probes":
               raise SystemExit("doctor lost declared probe startability")
           if report["operational_readiness"] != "provider_probe_observed_state_not_checked":
@@ -130,5 +132,5 @@ jobs:
             echo "agent-memory doctor --config <config.json> --probe --probes <probes.json>"
             echo '```'
             echo ""
-            echo "Probe success establishes only the declared availability signal. It does not grant qualification, currentness, health, fallback authority, or mutation permission."
+            echo "Mixed optional availability is reported as partial while required-probe startability remains separate. Probe success does not grant qualification, currentness, health, fallback authority, or mutation permission."
           } >> "$GITHUB_STEP_SUMMARY"
