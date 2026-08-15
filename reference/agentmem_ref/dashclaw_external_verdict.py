@@ -1,16 +1,19 @@
 """DashClaw external-verdict v1 adapter for governed Agent Memory mutations.
 
-The adapter deliberately keeps four identities/consequences separate:
+The adapter deliberately keeps identity, scope authority, decision, approval,
+and execution separate:
 
 - DashClaw ``input_identity``: echoed verbatim; never recomputed here.
+- DashClaw ``org_id`` / ``agent_id``: authenticated peer identity inputs.
+- scope authority: resolved separately against an injected trusted resolver.
 - Agent Memory proposal identity/digest: internal reconstruction evidence.
 - PAMA decision: a decision projection only, never execution evidence.
 - governed commit receipt: produced later by ``GovernedMemoryAdapter``.
 
-DashClaw v5.24.0 owns host-side applicability. A correctly configured provider is
-scoped to ``agent_memory.mutation`` while ``dashclaw.connection_test`` bypasses
-that scope. This module still fails conservatively if called directly with an
-unsupported action type.
+DashClaw v5.24.0 owns host-side applicability. A correctly configured provider
+is scoped to ``agent_memory.mutation`` while ``dashclaw.connection_test``
+bypasses that scope. This module still fails conservatively if called directly
+with an unsupported action type.
 
 Stdlib only.
 """
@@ -20,7 +23,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import asdict, dataclass, replace
-from typing import Any, Mapping
+from typing import Any, Callable, Iterable, Mapping
 
 from . import policy
 from .adapter import GovernedMemoryAdapter
@@ -75,6 +78,7 @@ _REQUIRED_PROPOSAL_STRINGS = (
 _FORBIDDEN_PROPOSAL_FIELDS = {
     "actor_id",
     "tenant_ref",
+    "actor_authority_resolved",
     "approval_refs",
     "review_satisfied",
 }
@@ -93,6 +97,103 @@ class MutationEnvelopeError(ValueError):
 
 
 @dataclass(frozen=True)
+class AuthorityRequest:
+    """Identity + requested memory scope presented to a trusted resolver."""
+
+    org_id: str
+    agent_id: str
+    scope: str
+    project_ref: str
+    task_ref: str
+    isolation_domain_refs: tuple[str, ...]
+    target_reference: str
+
+
+@dataclass(frozen=True)
+class AuthorityResolution:
+    """Result returned by an authority source outside the agent-supplied act."""
+
+    authorized: bool
+    evidence_ref: str = ""
+    reason_code: str = "authority_unresolved"
+
+
+AuthorityResolver = Callable[[AuthorityRequest], AuthorityResolution]
+
+
+@dataclass(frozen=True)
+class StaticAuthorityGrant:
+    """Reference-only explicit grant used by tests and the stdlib HTTP server."""
+
+    org_id: str
+    agent_id: str
+    isolation_domain_refs: tuple[str, ...]
+    evidence_ref: str
+
+
+class StaticAuthorityResolver:
+    """Deterministic exact-match resolver for reference/integration use.
+
+    This is not a policy language. It is a tiny adapter for already-authorized
+    identity/scope bindings so the DashClaw wire cannot manufacture
+    ``actor_authority_resolved`` from an agent-supplied scope string.
+    """
+
+    def __init__(self, grants: Iterable[StaticAuthorityGrant]) -> None:
+        self._grants = tuple(grants)
+
+    def __call__(self, request: AuthorityRequest) -> AuthorityResolution:
+        org_ref = f"org:{request.org_id}"
+        for grant in self._grants:
+            if grant.org_id != request.org_id or grant.agent_id != request.agent_id:
+                continue
+            allowed = {org_ref, *grant.isolation_domain_refs}
+            if not set(request.isolation_domain_refs).issubset(allowed):
+                continue
+            if request.project_ref and request.project_ref not in allowed:
+                continue
+            if request.task_ref and request.task_ref not in allowed:
+                continue
+            return AuthorityResolution(
+                authorized=True,
+                evidence_ref=grant.evidence_ref,
+                reason_code="authority_grant_matched",
+            )
+        return AuthorityResolution(authorized=False, reason_code="authority_grant_not_found")
+
+    @classmethod
+    def from_document(cls, document: Mapping[str, Any]) -> "StaticAuthorityResolver":
+        raw_grants = document.get("grants")
+        if not isinstance(raw_grants, list):
+            raise ValueError("authority grants document must contain grants[]")
+        grants: list[StaticAuthorityGrant] = []
+        for index, raw in enumerate(raw_grants):
+            if not isinstance(raw, Mapping):
+                raise ValueError(f"grants[{index}] must be an object")
+            org_id = raw.get("org_id")
+            agent_id = raw.get("agent_id")
+            evidence_ref = raw.get("evidence_ref")
+            refs = raw.get("isolation_domain_refs")
+            if not isinstance(org_id, str) or not org_id:
+                raise ValueError(f"grants[{index}].org_id must be a non-empty string")
+            if not isinstance(agent_id, str) or not agent_id:
+                raise ValueError(f"grants[{index}].agent_id must be a non-empty string")
+            if not isinstance(evidence_ref, str) or not evidence_ref:
+                raise ValueError(f"grants[{index}].evidence_ref must be a non-empty string")
+            if not isinstance(refs, list) or any(not isinstance(item, str) or not item for item in refs):
+                raise ValueError(f"grants[{index}].isolation_domain_refs must be a string list")
+            grants.append(
+                StaticAuthorityGrant(
+                    org_id=org_id,
+                    agent_id=agent_id,
+                    isolation_domain_refs=tuple(refs),
+                    evidence_ref=evidence_ref,
+                )
+            )
+        return cls(grants)
+
+
+@dataclass(frozen=True)
 class BoundMutation:
     """Exact mutation content and reconstructed PAMA proposal for one request."""
 
@@ -104,6 +205,9 @@ class BoundMutation:
     content_sha256: str
     proposal: policy.Proposal
     proposal_digest: str
+    authority_resolved: bool
+    authority_evidence_ref: str
+    authority_reason: str
 
 
 @dataclass
@@ -165,12 +269,17 @@ def _validate_wire_request(request: Mapping[str, Any]) -> None:
         _require_string(request, field)
 
 
-def parse_mutation_request(request: Mapping[str, Any]) -> BoundMutation:
+def parse_mutation_request(
+    request: Mapping[str, Any],
+    authority_resolver: AuthorityResolver | None = None,
+) -> BoundMutation:
     """Reconstruct a PAMA proposal without importing act-supplied authority.
 
-    ``org_id`` and ``agent_id`` are the trusted tenant/actor bindings. The act
-    is not allowed to inject replacements, review satisfaction, or approval
-    references. Human approval arrives later as separate DashClaw evidence.
+    ``org_id`` and ``agent_id`` are trusted peer identity bindings, but identity
+    alone is not authorization to mutate a self-declared project or task scope.
+    A separate trusted resolver must reconstruct that authority. Without one,
+    the proposal reaches PAMA with ``actor_authority_resolved=False`` and blocks.
+    Human approval, if later required by PAMA, arrives separately again.
     """
 
     _validate_wire_request(request)
@@ -193,7 +302,7 @@ def parse_mutation_request(request: Mapping[str, Any]) -> BoundMutation:
     if forbidden:
         raise MutationEnvelopeError(
             "authority_injection_attempt",
-            "mutation proposal may not supply trusted actor/tenant or approval state",
+            "mutation proposal may not supply trusted actor/tenant/authority or approval state",
         )
 
     values: dict[str, str] = {}
@@ -245,10 +354,42 @@ def parse_mutation_request(request: Mapping[str, Any]) -> BoundMutation:
                 "project_isolation_not_bound",
                 "project_ref must be both a bound and required isolation domain",
             )
+        if values["scope"] != project_ref:
+            raise MutationEnvelopeError(
+                "scope_project_mismatch",
+                "proposal.scope must equal project_ref for this bounded project mutation envelope",
+            )
 
     confidence = raw.get("confidence")
     if confidence is not None and (isinstance(confidence, bool) or not isinstance(confidence, (int, float))):
         raise MutationEnvelopeError("malformed_mutation_envelope", "proposal.confidence must be numeric when present")
+
+    authority_request = AuthorityRequest(
+        org_id=request["org_id"],
+        agent_id=request["agent_id"],
+        scope=values["scope"],
+        project_ref=project_ref,
+        task_ref=task_ref,
+        isolation_domain_refs=isolation_refs,
+        target_reference=values["target_reference"],
+    )
+    resolution = (
+        authority_resolver(authority_request)
+        if authority_resolver is not None
+        else AuthorityResolution(authorized=False, reason_code="authority_resolver_missing")
+    )
+    if not isinstance(resolution, AuthorityResolution):
+        raise MutationEnvelopeError(
+            "invalid_authority_resolution",
+            "authority resolver must return AuthorityResolution",
+        )
+    if resolution.authorized and not resolution.evidence_ref:
+        raise MutationEnvelopeError(
+            "authority_evidence_missing",
+            "authorized scope resolution requires a reconstructable evidence_ref",
+        )
+    if resolution.authorized:
+        evidence_refs = tuple(dict.fromkeys(evidence_refs + (resolution.evidence_ref,)))
 
     proposal = policy.Proposal(
         proposal_id=values["proposal_id"],
@@ -267,7 +408,7 @@ def parse_mutation_request(request: Mapping[str, Any]) -> BoundMutation:
         estimator_refs=estimator_refs,
         estimator_versions=estimator_versions,
         confidence=float(confidence) if confidence is not None else None,
-        actor_authority_resolved=True,
+        actor_authority_resolved=resolution.authorized,
         approves_own_authority=False,
         approval_refs=(),
         review_satisfied=False,
@@ -290,6 +431,9 @@ def parse_mutation_request(request: Mapping[str, Any]) -> BoundMutation:
         content_sha256=actual_content_sha256,
         proposal=proposal,
         proposal_digest=_proposal_digest(proposal, actual_content_sha256),
+        authority_resolved=resolution.authorized,
+        authority_evidence_ref=resolution.evidence_ref,
+        authority_reason=resolution.reason_code,
     )
 
 
@@ -316,7 +460,10 @@ def _response(*, request: Mapping[str, Any], decision: str, reason: str, evidenc
     }
 
 
-def evaluate_request(request: Mapping[str, Any]) -> dict[str, Any]:
+def evaluate_request(
+    request: Mapping[str, Any],
+    authority_resolver: AuthorityResolver | None = None,
+) -> dict[str, Any]:
     """Evaluate one DashClaw v1 provider request with no mutation side effects."""
 
     _validate_wire_request(request)
@@ -346,7 +493,7 @@ def evaluate_request(request: Mapping[str, Any]) -> dict[str, Any]:
         )
 
     try:
-        mutation = parse_mutation_request(request)
+        mutation = parse_mutation_request(request, authority_resolver)
     except MutationEnvelopeError as exc:
         return _response(
             request=request,
@@ -363,6 +510,9 @@ def evaluate_request(request: Mapping[str, Any]) -> dict[str, Any]:
         "content_sha256": mutation.content_sha256,
         "target_reference": mutation.proposal.target_reference,
         "state_snapshot": mutation.proposal.state_snapshot,
+        "authority_resolved": mutation.authority_resolved,
+        "authority_evidence_ref": mutation.authority_evidence_ref,
+        "authority_reason": mutation.authority_reason,
         "pama_outcome": decision.outcome,
         "pama_policy_version": decision.policy_version,
         "execution_evidence": False,
