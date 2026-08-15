@@ -7,6 +7,8 @@ import argparse
 import json
 from pathlib import Path
 
+from agentmem_ref.code_graph_qualification import CODEGENOME_COMMIT
+from agentmem_ref.codegenome_profile import profile_digest
 from agentmem_ref.codegenome_scope_residue import ExternalScopeBinding, build_closeout_report
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +30,8 @@ def main() -> int:
     binding = ExternalScopeBinding(
         binding_ref="scope-binding:codegenome:qualification-fixture:tenant-a-project-a",
         component_id="codegenome",
+        component_version=CODEGENOME_COMMIT,
+        component_profile_digest=profile_digest(profile),
         provider_scope_ref="repo://qualification-fixture/codegenome-main",
         agent_memory_scope_ref="tenant://tenant-a/project/project-a",
         tenant_ref="tenant-a",
