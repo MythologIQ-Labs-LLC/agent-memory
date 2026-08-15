@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Mapping
 
 from .configured_restart import ConfigBoundRestartRuntime
+from .discovery import DiscoveryInputError, discover_configuration
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_behavior import validate_runtime_behavior_contract
 from .runtime_config import QualificationBinding
@@ -94,6 +95,26 @@ def validate_configuration_file(
     }
 
 
+def discover_configuration_file(
+    config_path: str | Path,
+    *,
+    probe_path: str | Path,
+    qualification_path: str | Path | None = None,
+) -> dict:
+    """Validate configuration, then observe only explicitly declared probe signals."""
+
+    value = load_configuration_value(config_path)
+    bindings = load_qualification_bindings(qualification_path)
+    plan = validate_runtime_behavior_contract(value, qualification_bindings=bindings)
+    report = discover_configuration(value, probe_path=probe_path)
+    report["configuration_digest"] = plan.configuration_digest
+    report["entry_mode"] = plan.entry_mode
+    report["runtime_id"] = plan.runtime_id
+    report["profile_id"] = plan.profile_id
+    report["qualification_binding_count"] = len(bindings)
+    return report
+
+
 def _currentness_summary(snapshots: Mapping[str, dict]) -> dict:
     if not snapshots:
         return {
@@ -147,11 +168,48 @@ def _currentness_summary(snapshots: Mapping[str, dict]) -> dict:
     }
 
 
+def _provider_availability(discovery: Mapping[str, object]) -> dict[str, object]:
+    counts = discovery.get("status_counts", {})
+    if not isinstance(counts, Mapping):
+        counts = {}
+    probe_count = int(discovery.get("probe_count", 0))
+    startability = str(discovery.get("startability", "not_proven"))
+    available_count = int(counts.get("available", 0))
+    unavailable_count = int(counts.get("unavailable", 0))
+
+    if probe_count == 0:
+        status = "not_configured"
+    elif startability == "blocked_by_required_probe":
+        status = "unavailable"
+    elif int(counts.get("probe_failed", 0)):
+        status = "probe_failed"
+    elif int(counts.get("unsupported", 0)):
+        status = "unsupported"
+    elif available_count and unavailable_count:
+        status = "partial"
+    elif available_count:
+        status = "available"
+    else:
+        status = "unavailable"
+
+    return {
+        "status": status,
+        "scope": "explicit_declared_probes_only",
+        "startability": startability,
+        "probe_count": probe_count,
+        "status_counts": dict(counts),
+        "results": discovery.get("results", []),
+        "authority_effect": "none",
+    }
+
+
 def diagnose(
     config_path: str | Path,
     *,
     qualification_path: str | Path | None = None,
     state_dir: str | Path | None = None,
+    probe_path: str | Path | None = None,
+    probe: bool = False,
 ) -> dict:
     value = load_configuration_value(config_path)
     bindings = load_qualification_bindings(qualification_path)
@@ -187,7 +245,24 @@ def diagnose(
         "authority_effect": "none",
     }
 
+    provider_blocked = False
+    provider_observed = False
+    if probe:
+        if probe_path is None:
+            raise DiagnosticInputError("doctor --probe requires an explicit provider probe manifest")
+        try:
+            discovery = discover_configuration(value, probe_path=probe_path)
+        except DiscoveryInputError as exc:
+            raise DiagnosticInputError(str(exc)) from exc
+        report["provider_availability"] = _provider_availability(discovery)
+        provider_observed = True
+        provider_blocked = report["provider_availability"]["startability"] == "blocked_by_required_probe"
+
     if state_dir is None:
+        if provider_blocked:
+            report["operational_readiness"] = "blocked_by_required_provider_probe"
+        elif provider_observed:
+            report["operational_readiness"] = "provider_probe_observed_state_not_checked"
         return report
 
     root = Path(state_dir)
@@ -199,7 +274,10 @@ def diagnose(
             "state_dir": str(root),
         }
         report["currentness"] = {"status": "not_observed"}
-        report["operational_readiness"] = "configuration_valid_state_not_initialized"
+        if provider_blocked:
+            report["operational_readiness"] = "blocked_by_required_provider_probe"
+        else:
+            report["operational_readiness"] = "configuration_valid_state_not_initialized"
         return report
 
     report["durable_state"] = {
@@ -235,6 +313,10 @@ def diagnose(
         report["operational_readiness"] = "degraded_currentness"
     elif report["currentness"]["status"] == "pending":
         report["operational_readiness"] = "pending_currentness"
+    elif provider_blocked:
+        report["operational_readiness"] = "blocked_by_required_provider_probe"
+    elif provider_observed:
+        report["operational_readiness"] = "declared_provider_probes_satisfied_current_state_recovered"
     else:
         report["operational_readiness"] = "provider_availability_not_probed"
     return report
