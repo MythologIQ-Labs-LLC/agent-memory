@@ -8,6 +8,8 @@ HTTPS reverse proxy/tunnel for live interoperability testing.
 Mutation authority is never inferred from DashClaw identity alone. A reference
 static grant document may be supplied for integration testing; without one,
 mutation requests reach PAMA with unresolved actor authority and deny. The
+current #279 endpoint is deliberately project-scoped, so organization identity
+cannot be interpreted as organization-wide memory mutation authority. The
 connection-test path remains independent and side-effect free.
 """
 
@@ -23,13 +25,14 @@ from agentmem_ref.dashclaw_external_verdict import (
     StaticAuthorityResolver,
     evaluate_request,
 )
+from agentmem_ref.dashclaw_governed_commit import ProjectScopedAuthorityResolver
 
 MAX_BODY_BYTES = 64 * 1024
 
 
 class ProviderHandler(BaseHTTPRequestHandler):
     bearer_token: str | None = None
-    authority_resolver: StaticAuthorityResolver | None = None
+    authority_resolver: ProjectScopedAuthorityResolver | None = None
 
     def log_message(self, format: str, *args) -> None:  # noqa: A003
         # Avoid logging request payloads or bearer tokens in the reference path.
@@ -95,7 +98,7 @@ def _load_token(path: str | None) -> str | None:
     return value
 
 
-def _load_authority_resolver(path: str | None) -> StaticAuthorityResolver | None:
+def _load_authority_resolver(path: str | None) -> ProjectScopedAuthorityResolver | None:
     if path is None:
         return None
     try:
@@ -105,7 +108,7 @@ def _load_authority_resolver(path: str | None) -> StaticAuthorityResolver | None
     if not isinstance(document, dict):
         raise SystemExit("authority grants document must be a JSON object")
     try:
-        return StaticAuthorityResolver.from_document(document)
+        return ProjectScopedAuthorityResolver(StaticAuthorityResolver.from_document(document))
     except ValueError as exc:
         raise SystemExit(f"invalid authority grants: {exc}") from exc
 
@@ -121,7 +124,7 @@ def main() -> None:
     parser.add_argument(
         "--authority-grants-file",
         help=(
-            "reference-only JSON grants binding org_id + agent_id to exact isolation domains; "
+            "reference-only JSON grants binding org_id + agent_id to exact project/isolation domains; "
             "without this file mutation authority remains unresolved and PAMA denies"
         ),
     )
