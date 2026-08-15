@@ -17,7 +17,7 @@ The contract separates:
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 import time
 from typing import Callable
 
@@ -164,6 +164,13 @@ class VisibilityTracker:
     def _offset_ns(self) -> int:
         return self._clock_ns() - self._origin_ns
 
+    def _require_phase(self, phase: str, *, allow_not_applicable: bool = False) -> None:
+        observation = self._phases.get(phase)
+        if observation is None:
+            raise ValueError(f"required prior phase not observed: {phase}")
+        if observation.status == NOT_APPLICABLE and not allow_not_applicable:
+            raise ValueError(f"required prior phase is not applicable: {phase}")
+
     def observe_phase(self, phase: str, *, detail: str = "") -> PhaseObservation:
         if phase not in PHASES:
             raise ValueError(f"unsupported phase: {phase}")
@@ -207,16 +214,19 @@ class VisibilityTracker:
         return obligation
 
     def policy_decided(self) -> None:
+        self._require_phase("request_received")
         self.observe_phase("policy_decision_complete")
 
     def canonical_committed(self) -> None:
+        self._require_phase("policy_decision_complete")
         self.observe_phase("canonical_commit_complete")
         self.set_obligation("canonical_outcome", SATISFIED, detail="canonical mutation durable")
 
     def canonical_refused(self, *, detail: str = "mutation explicitly refused") -> None:
+        self._require_phase("policy_decision_complete")
         self.set_obligation("canonical_outcome", SATISFIED, detail=detail)
         self.phase_not_applicable("canonical_commit_complete", detail=detail)
-        for obligation_id, obligation in self._obligations.items():
+        for obligation_id in tuple(self._obligations):
             if obligation_id == "canonical_outcome":
                 continue
             self.set_obligation(obligation_id, NOT_APPLICABLE, detail="no mutation obligations created")
@@ -229,42 +239,49 @@ class VisibilityTracker:
             self.phase_not_applicable(phase, detail="no mutation obligations created")
 
     def projection_refresh_started(self, projection_id: str) -> None:
+        self._require_phase("canonical_commit_complete")
         obligation_id = f"projection:{projection_id}"
         if obligation_id not in self._obligations:
             raise KeyError(f"undeclared projection: {projection_id}")
         self.observe_phase("required_projection_refresh_started")
 
     def projection_refresh_satisfied(self, projection_id: str) -> None:
+        self._require_phase("required_projection_refresh_started")
         obligation_id = f"projection:{projection_id}"
         self.set_obligation(obligation_id, SATISFIED, detail="projection current")
         if self._all_required_projection_obligations_terminal():
             self.observe_phase("required_projection_refresh_complete")
 
     def projection_refresh_failed(self, projection_id: str, *, detail: str) -> None:
+        self._require_phase("required_projection_refresh_started")
         obligation_id = f"projection:{projection_id}"
         self.set_obligation(obligation_id, FAILED, detail=detail)
         if self._all_required_projection_obligations_terminal():
             self.observe_phase("required_projection_refresh_complete", detail="required refresh reached terminal state")
 
     def projection_refresh_quarantined(self, projection_id: str, *, detail: str) -> None:
+        self._require_phase("required_projection_refresh_started")
         obligation_id = f"projection:{projection_id}"
         self.set_obligation(obligation_id, QUARANTINED, detail=detail)
         if self._all_required_projection_obligations_terminal():
             self.observe_phase("required_projection_refresh_complete", detail="required refresh reached terminal state")
 
     def governed_recall_current_visible(self) -> None:
+        self._require_phase("canonical_commit_complete")
         if "governed_recall_current" not in self._obligations:
             raise ValueError("operation declares no governed recall visibility obligation")
         self.observe_phase("governed_recall_current_visible")
         self.set_obligation("governed_recall_current", SATISFIED)
 
     def context_current_visible(self) -> None:
+        self._require_phase("governed_recall_current_visible")
         if "context_current" not in self._obligations:
             raise ValueError("operation declares no context visibility obligation")
         self.observe_phase("context_current_visible")
         self.set_obligation("context_current", SATISFIED)
 
     def stale_current_blocked(self) -> None:
+        self._require_phase("canonical_commit_complete")
         if "stale_current_blocked" not in self._obligations:
             raise ValueError("operation declares no stale-current admission obligation")
         self.set_obligation("stale_current_blocked", SATISFIED)
@@ -293,7 +310,7 @@ class VisibilityTracker:
         optional_residual = [
             obligation.obligation_id
             for obligation in self._obligations.values()
-            if not obligation.required and obligation.status != SATISFIED
+            if not obligation.required and obligation.status in {PENDING, FAILED, QUARANTINED}
         ]
 
         settled = all(obligation.status in TERMINAL_STATUSES for obligation in required)
