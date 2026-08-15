@@ -12,7 +12,7 @@
     {
       "probe_id": "reference-json-import",
       "subject_kind": "component",
-      "subject_id": "reference-derived-index",
+      "subject_id": "reference-projection-sidecar",
       "probe_kind": "python_import",
       "target": "json",
       "required_for_startability": false
@@ -20,7 +20,7 @@
     {
       "probe_id": "reference-unavailable-optional",
       "subject_kind": "component",
-      "subject_id": "reference-derived-index",
+      "subject_id": "reference-projection-sidecar",
       "probe_kind": "executable",
       "target": "agent-memory-definitely-not-a-real-provider-executable",
       "required_for_startability": false
