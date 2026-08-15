@@ -15,7 +15,7 @@ Existing doctrine already establishes several relevant boundaries:
 - ADR-014 governs schema/type evolution;
 - ADR-020 establishes that uncertainty may propose while authority constrains consequences;
 - ADR-028 keeps the normative core language- and implementation-neutral;
-- PAMA 1.2 names `domain_schema_mutation` as a consequential operation;
+- PAMA names `domain_schema_mutation` as a consequential operation;
 - progressive domain-schema research separates Agent Memory doctrine schema, application/domain ontology, and derived projection shape.
 
 The missing doctrine is the authority model for **structural adaptation itself**, including when Agent Memory may autonomously change memory shape and when the user must decide.
@@ -157,13 +157,24 @@ A human approval request for a structural mutation SHOULD present enough determi
 
 The user should decide large semantic changes with recommendations, not with unexplained raw model output.
 
-## Relationship to PAMA 1.2
+## Relationship to PAMA 1.2 and 1.3
 
-PAMA 1.2 conservatively maps all `domain_schema_mutation` risk levels to review or external verification. That implementation remains safe but is intentionally stricter than this ADR.
+PAMA 1.2 conservatively maps all `domain_schema_mutation` risk levels to review or external verification. That historical behavior remains valid and intentionally stricter than the autonomous envelope permitted by this ADR.
 
-A follow-on PAMA evolution MAY distinguish deterministic S0/S1 autonomous structural changes from S2/S3 review-required changes. Such evolution MUST preserve historical decision compatibility and MUST NOT allow estimator confidence to reduce the structural authority floor.
+PAMA 1.3 provides the first executable structural-delegation profile without rewriting 1.2 semantics. It binds a `domain_schema_mutation` decision to an exact, versioned structural-impact record, deterministic classifier/policy identity, and current state/dependency digests.
 
-Until that implementation exists, current PAMA behavior remains the controlling executable posture.
+The first delegated profile is deliberately narrow:
+
+- S0 is classified but remains unchanged-semantic derived maintenance rather than `domain_schema_mutation`;
+- a deterministically eligible S1 may resolve to `allow_with_ledger` with deterministic selection;
+- S2 remains human-review required by default;
+- S3 remains external-human or stricter and may be blocked by existing PAMA floors;
+- state or dependency drift invalidates the prior structural authorization;
+- estimator confidence, estimator disagreement, repetition, or prior autonomous success cannot lower the authority floor.
+
+Historical 1.2 decisions remain valid. Consequential consumers that cannot interpret PAMA 1.3 must fail safely rather than treating the structural bindings as optional metadata.
+
+Executable profile: [`../profiles/pama-1-3-structural-delegation.md`](../profiles/pama-1-3-structural-delegation.md).
 
 ## Consequences
 
@@ -201,13 +212,16 @@ Rejected because derived rebuilds and tightly bounded additive changes can be sa
 
 Rejected because physical and derived representation changes are not canonical semantic changes when higher-layer meaning remains intact.
 
-## Required follow-up
+## Implementation status and remaining follow-up
 
-- define a versioned structural-mutation classification/impact record;
-- evolve PAMA only where evidence supports an autonomous S0/S1 envelope;
+The first versioned structural-impact/classification record and bounded PAMA 1.3 S1 delegation are implemented under issue #281. The reference evidence covers deterministic S0-S3 classification, one narrow S1 autonomous path, S2 review, S3 blocking pressure, stale state/dependency invalidation, explicit rollback evidence, and supersession/retirement gates.
+
+Remaining implementation work belongs to concrete module/runtime integrations rather than to this doctrine decision itself, including:
+
 - bind module configuration to explicit structural capabilities and migration posture;
-- add conformance cases for additive, semantic, destructive, scope-widening, rollback, and residue paths;
-- ensure public architecture documentation distinguishes Agent Memory semantics from configured module/substrate shape.
+- exercise provider-specific migration/rebuild execution where a component claims it;
+- ensure public architecture surfaces continue to distinguish Agent Memory semantics from configured module/substrate shape;
+- add further structural delegation profiles only when evidence supports a distinct bounded class rather than broadening S1 by convenience.
 
 ## Doctrine
 
