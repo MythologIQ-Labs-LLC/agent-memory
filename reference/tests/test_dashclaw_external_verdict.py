@@ -11,18 +11,21 @@ from agentmem_ref.dashclaw_external_verdict import (
     DashClawRequestError,
     StaticAuthorityGrant,
     StaticAuthorityResolver,
-    commit_bound_mutation,
     evaluate_request,
     parse_mutation_request,
     sha256_text,
 )
+from agentmem_ref.dashclaw_governed_commit import DashClawGovernedCommitter
 from agentmem_ref.substrate import InMemoryTemporalGraph
 
 
 ORG = "fixture-org"
 AGENT = "release-agent"
+OTHER_AGENT = "other-project-agent"
 PROJECT = "project:fixture"
 OTHER_PROJECT = "project:other"
+MEMORY_ID = "repo:fixture:release-branch"
+OTHER_MEMORY_ID = "repo:other:release-branch"
 
 AUTHORITY = StaticAuthorityResolver(
     (
@@ -31,6 +34,12 @@ AUTHORITY = StaticAuthorityResolver(
             agent_id=AGENT,
             isolation_domain_refs=(PROJECT,),
             evidence_ref="authority-grant:fixture-release-agent",
+        ),
+        StaticAuthorityGrant(
+            org_id=ORG,
+            agent_id=OTHER_AGENT,
+            isolation_domain_refs=(OTHER_PROJECT,),
+            evidence_ref="authority-grant:other-project-agent",
         ),
     )
 )
@@ -46,11 +55,13 @@ def mutation_request(
     target_class: str = policy.M2,
     downstream_authority: str = policy.A1,
     project_ref: str = PROJECT,
+    agent_id: str = AGENT,
+    memory_id: str = MEMORY_ID,
 ) -> dict:
     return {
         "request_id": "evr-fixture",
         "org_id": ORG,
-        "agent_id": AGENT,
+        "agent_id": agent_id,
         "action_type": ACTION_MUTATION,
         "declared_goal": "retain release branch memory",
         "act": {
@@ -59,7 +70,7 @@ def mutation_request(
             "proposal": {
                 "proposal_id": "proposal-fixture",
                 "charter_version": "fixture-charter-v1",
-                "target_reference": "repo:fixture:release-branch",
+                "target_reference": memory_id,
                 "target_class": target_class,
                 "scope": project_ref,
                 "operation": operation,
@@ -144,6 +155,7 @@ class DashClawExternalVerdictTests(unittest.TestCase):
             target_class=policy.M5,
             downstream_authority=policy.A5,
         )
+        request["act"]["proposal"]["requested_scope_change"] = "organization"
         response = evaluate_request(request, AUTHORITY)
         self.assertEqual(response["decision"], "deny")
         self.assertEqual(response["reason"], "pama_block")
@@ -204,21 +216,20 @@ class DashClawExternalVerdictTests(unittest.TestCase):
 
     def test_review_commit_requires_exact_approval_identity_and_external_actor(self) -> None:
         memory = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=ORG)
+        committer = DashClawGovernedCommitter(memory, AUTHORITY)
         mutation = parse_mutation_request(
             mutation_request(operation="correction", risk="medium", state_snapshot="v0"),
             AUTHORITY,
         )
 
-        missing = commit_bound_mutation(memory, mutation)
-        wrong_identity = commit_bound_mutation(
-            memory,
+        missing = committer.commit(mutation)
+        wrong_identity = committer.commit(
             mutation,
             approval_ref="approval:1",
             approval_actor_id="operator",
             approved_input_identity="different",
         )
-        self_approval = commit_bound_mutation(
-            memory,
+        self_approval = committer.commit(
             mutation,
             approval_ref="approval:2",
             approval_actor_id=AGENT,
@@ -230,9 +241,10 @@ class DashClawExternalVerdictTests(unittest.TestCase):
         self.assertEqual(self_approval.refusal, "self_approval_forbidden")
         self.assertEqual(memory.state_version(mutation.proposal.target_reference), 0)
 
-    def test_blocked_provider_result_cannot_reach_substrate_via_bound_commit(self) -> None:
+    def test_blocked_provider_result_cannot_reach_substrate_via_governed_committer(self) -> None:
         substrate = InMemoryTemporalGraph()
         memory = GovernedMemoryAdapter(substrate, tenant=ORG)
+        committer = DashClawGovernedCommitter(memory, AUTHORITY)
         request = mutation_request(
             value="release branch main for every project",
             operation="scope_expansion",
@@ -240,22 +252,70 @@ class DashClawExternalVerdictTests(unittest.TestCase):
             target_class=policy.M5,
             downstream_authority=policy.A5,
         )
+        request["act"]["proposal"]["requested_scope_change"] = "organization"
         mutation = parse_mutation_request(request, AUTHORITY)
         before = tuple(substrate.write_log)
-        result = commit_bound_mutation(memory, mutation)
+        result = committer.commit(mutation)
         self.assertFalse(result.committed)
         self.assertEqual(result.refusal, "pama_blocked")
         self.assertEqual(tuple(substrate.write_log), before)
 
-    def test_unauthorized_scope_cannot_reach_substrate_via_bound_commit(self) -> None:
+    def test_unauthorized_requested_scope_cannot_reach_substrate(self) -> None:
         substrate = InMemoryTemporalGraph()
         memory = GovernedMemoryAdapter(substrate, tenant=ORG)
+        committer = DashClawGovernedCommitter(memory, AUTHORITY)
         mutation = parse_mutation_request(mutation_request(project_ref=OTHER_PROJECT), AUTHORITY)
         before = tuple(substrate.write_log)
-        result = commit_bound_mutation(memory, mutation)
+        result = committer.commit(mutation)
         self.assertFalse(result.committed)
-        self.assertEqual(result.refusal, "pama_blocked")
+        self.assertEqual(result.refusal, "requested_scope_authority_unresolved")
         self.assertEqual(tuple(substrate.write_log), before)
+
+    def test_current_target_scope_is_revalidated_for_current_actor(self) -> None:
+        substrate = InMemoryTemporalGraph()
+        memory = GovernedMemoryAdapter(substrate, tenant=ORG)
+        committer = DashClawGovernedCommitter(memory, AUTHORITY)
+
+        seed_request = mutation_request(
+            value="other release branch release",
+            project_ref=OTHER_PROJECT,
+            agent_id=OTHER_AGENT,
+            memory_id=OTHER_MEMORY_ID,
+            input_identity="sha256:other-seed",
+        )
+        seed = parse_mutation_request(seed_request, AUTHORITY)
+        seed_result = committer.commit(seed)
+        self.assertTrue(seed_result.committed)
+
+        attack_request = mutation_request(
+            value="other release branch main",
+            operation="correction",
+            risk="medium",
+            state_snapshot="v1",
+            project_ref=PROJECT,
+            agent_id=AGENT,
+            memory_id=OTHER_MEMORY_ID,
+            input_identity="sha256:cross-target-attack",
+        )
+        # Requested Project A scope is valid for AGENT, so the stateless provider
+        # projection legitimately reaches review. The stateful commit seam must
+        # additionally prove AGENT controls the target's existing Project B scope.
+        provider = evaluate_request(attack_request, AUTHORITY)
+        self.assertEqual(provider["decision"], "escalate")
+        attack = parse_mutation_request(attack_request, AUTHORITY)
+        before = tuple(substrate.write_log)
+        result = committer.commit(
+            attack,
+            approval_ref="approval:cross-target",
+            approval_actor_id="operator",
+            approved_input_identity=attack.input_identity,
+        )
+        self.assertFalse(result.committed)
+        self.assertEqual(result.refusal, "target_scope_authority_unresolved")
+        self.assertEqual(tuple(substrate.write_log), before)
+        other_uuid = memory.current_fact_uuid(OTHER_MEMORY_ID)
+        self.assertIsNotNone(other_uuid)
+        self.assertEqual(substrate.get_fact(other_uuid).fact_text, "other release branch release")
 
 
 if __name__ == "__main__":
