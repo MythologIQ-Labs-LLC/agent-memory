@@ -132,72 +132,82 @@ def build_report(agent_memory_commit: str) -> dict:
         residual_admission = runtime.projection_admission()
         removed_after_delete = runtime.remove_projection_component(MEMORY_ID)
 
+        rejection_history = runtime.adapter.rejected_value_history(
+            MEMORY_ID,
+            "deploy window is Thursday",
+        )
         invariants = {
-            "canonical_semantic_memory_committed": initial.committed and initial_fact is not None,
-            "derived_projection_materialized_current": (
+            "canonical_semantic_memory_committed": bool(initial.committed and initial_fact is not None),
+            "derived_projection_materialized_current": bool(
                 initial_projection.admitted and initial_projection.freshness == projections.CURRENT
             ),
-            "same_scope_recall_admitted": initial_fact is not None and same_scope.admitted == [initial_fact],
-            "foreign_project_recall_refused": (
+            "same_scope_recall_admitted": bool(
+                initial_fact is not None and same_scope.admitted == [initial_fact]
+            ),
+            "foreign_project_recall_refused": bool(
                 initial_fact is not None
                 and foreign_scope.refusals.get(initial_fact) == "project_scope_mismatch"
             ),
-            "correction_supersedes_canonical_fact": (
+            "correction_supersedes_canonical_fact": bool(
                 correction.committed
                 and corrected_fact is not None
                 and corrected_fact != initial_fact
-                and runtime.adapter.rejected_value_history(MEMORY_ID, "deploy window is Thursday")
+                and rejection_history
             ),
-            "correction_blocks_stale_projection": (
+            "correction_blocks_stale_projection": bool(
                 not stale_projection.admitted
                 and stale_projection.freshness == projections.STALE
                 and stale_projection.refusal == "projection_stale"
             ),
-            "deterministic_rebuild_does_not_change_canonical_identity": (
+            "deterministic_rebuild_does_not_change_canonical_identity": bool(
                 rebuild.committed
                 and rebuild.categorical
                 and canonical_before_rebuild == canonical_after_rebuild
                 and current_projection.admitted
             ),
-            "disable_preserves_canonical_identity_and_blocks_projection": (
+            "disable_preserves_canonical_identity_and_blocks_projection": bool(
                 disabled.canonical_identity_unchanged
                 and not disabled_admission.admitted
                 and disabled_admission.refusal == "component_disabled"
             ),
-            "remove_preserves_canonical_identity": (
+            "remove_preserves_canonical_identity": bool(
                 removed.canonical_identity_unchanged and not removed.projection_present
             ),
-            "restore_rebuild_preserves_canonical_identity": (
+            "restore_rebuild_preserves_canonical_identity": bool(
                 restored.canonical_identity_unchanged
                 and restored.projection_present
                 and restored_admission.admitted
                 and restored.projection_freshness == projections.CURRENT
             ),
-            "deletion_makes_derived_state_residual_not_current": (
+            "deletion_makes_derived_state_residual_not_current": bool(
                 deletion.committed
                 and deletion.fact_uuid == canonical_before_delete
                 and not residual_admission.admitted
                 and residual_admission.freshness == projections.RESIDUAL
                 and residual_admission.refusal == "projection_residual"
             ),
-            "derived_removal_after_delete_clears_projection_without_recreating_canonical": (
+            "derived_removal_after_delete_clears_projection_without_recreating_canonical": bool(
                 not removed_after_delete.projection_present
                 and runtime.adapter.current_fact_uuid(MEMORY_ID) is None
             ),
-            "composition_lifecycle_grants_no_authority": all(
-                item.authority_effect == "none"
-                for item in (
-                    initial_projection,
-                    stale_projection,
-                    current_projection,
-                    disabled,
-                    removed,
-                    restored,
-                    residual_admission,
-                    removed_after_delete,
+            "composition_lifecycle_grants_no_authority": bool(
+                all(
+                    item.authority_effect == "none"
+                    for item in (
+                        initial_projection,
+                        stale_projection,
+                        current_projection,
+                        disabled,
+                        removed,
+                        restored,
+                        residual_admission,
+                        removed_after_delete,
+                    )
                 )
             ),
         }
+        if not all(type(value) is bool for value in invariants.values()):
+            raise TypeError("every structural invariant must be a JSON boolean")
 
         routes = [
             {
@@ -241,7 +251,7 @@ def build_report(agent_memory_commit: str) -> dict:
                 "removed_after_delete": removed_after_delete.to_dict(),
             },
             "structural_invariants": invariants,
-            "structural_invariants_passed": all(bool(value) for value in invariants.values()),
+            "structural_invariants_passed": all(invariants.values()),
             "authority_effect": "none",
             "limitations": [
                 "The derived capability is the existing deterministic/reproducible reference projection sidecar, not an external vector or graph product.",
