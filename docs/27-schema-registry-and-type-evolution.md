@@ -169,6 +169,7 @@ current_schema_ref
 proposed_schema_ref
 structural_class
 semantic_diff
+tenant / isolation domains
 scope / isolation impact
 affected-state / blast-radius evidence
 dependent modules / projections / consumers
@@ -177,6 +178,7 @@ information-loss posture
 reversibility / rollback ref
 rebuild / residue obligations
 source / estimator evidence
+state + dependency snapshot digests
 deterministic classifier + policy version
 authority / approval refs
 ```
@@ -214,6 +216,7 @@ structural impact classification
 structural authorization
 migration execution
 schema activation
+schema rollback
 schema retirement
 ```
 
@@ -234,7 +237,7 @@ A consequential estimate should be representable as:
 }
 ```
 
-The same discipline applies when an estimator proposes a schema/domain-model change. Its confidence is evidence about the proposal, never structural authority.
+The same discipline applies when an estimator proposes a schema/domain-model change. Its confidence is evidence about the proposal, never structural authority. Repetition, prior autonomous success, or disagreement among probabilistic estimators likewise cannot lower the deterministic structural authority floor.
 
 ## Uncertainty type
 
@@ -340,6 +343,13 @@ Current compatibility:
 1.2.0
   adds mutation.operation = domain_schema_mutation
   preserves 1.0.0 and 1.1.0 historical meanings
+  domain schema mutation remains conservatively review-gated
+
+1.3.0
+  preserves historical 1.2.0 domain-schema decisions
+  binds domain_schema_mutation to an exact ADR-032 structural-impact record
+  permits only deterministically eligible S1 to use autonomous allow_with_ledger
+  keeps S2/S3 review / external-verification / block floors
 ```
 
 `decision_overwrite` is intentionally distinct from `correction`, `authority_change`, and `other`:
@@ -351,22 +361,48 @@ Current compatibility:
 
 `domain_schema_mutation` is intentionally distinct from ordinary fact insertion, Agent Memory doctrine-core schema change, unchanged-semantic index rebuild, and policy mutation. It represents durable application/domain-model changes capable of altering future extraction, typing, relation meaning, migration, or recall.
 
-Because new enum members can break closed consumers, the producer/version boundary must match the operation. A `decision_overwrite` record claiming 1.0.0 is invalid. A `domain_schema_mutation` record claiming a pre-1.2.0 version is invalid.
+Because new enum members and new authority semantics can break closed consumers, the producer/version boundary must match the operation and interpretation. A `decision_overwrite` record claiming 1.0.0 is invalid. A `domain_schema_mutation` record claiming a pre-1.2.0 version is invalid. A consumer that supports only 1.2.0 must explicitly reject a 1.3.0 structural decision rather than infer that its newer impact bindings are decorative.
 
 Consumers performing consequential mutation must therefore treat an unsupported PAMA decision schema version or unknown operation as an explicit compatibility failure, not silently coerce it to a familiar action.
 
-### Current PAMA 1.2 structural posture
+### Current PAMA structural posture
 
-PAMA 1.2 currently maps `domain_schema_mutation` conservatively:
+Historical PAMA 1.2 maps `domain_schema_mutation` conservatively:
 
 ```text
 low / medium -> require_review
 high / critical -> require_external_verification
 ```
 
-ADR-032 permits a future narrower autonomous path for deterministically proven S0/S1 structural changes. That doctrine does not silently alter current PAMA behavior. Issue #281 owns the compatibility/evidence work required before such a PAMA evolution can ship.
+PAMA 1.3 adds the first executable ADR-032 structural delegation profile. It does **not** make all additive changes autonomous.
 
-Estimator confidence must never lower the structural authority floor.
+The reference path is:
+
+```text
+structural proposal
+  -> exact semantic/scope/dependency impact record
+  -> deterministic S0-S3 classifier + versioned policy
+  -> state/dependency freshness check
+  -> common PAMA floors
+  -> authority decision
+```
+
+S0 remains unchanged-semantic derived maintenance and is refused as `domain_schema_mutation`.
+
+A bounded S1 application/domain extension may resolve to:
+
+```text
+outcome: allow_with_ledger
+selection_mode: deterministic
+```
+
+only when the exact structural record satisfies the versioned S1 policy. The reference policy currently limits S1 to configured local/application/project scopes, a configured affected-memory bound, preserved semantics/history/isolation, no migration or information loss, no scope/authority widening, no incompatible dependencies, and an explicit rollback reference. Those reference-policy values are not universal doctrine thresholds.
+
+S2 remains human-review required by default. S3 remains external-human or stricter and may be blocked by existing PAMA scope, M5/A5, isolation, reversibility, or other floors.
+
+Authorization is bound to the exact state and dependency snapshot digests used by structural impact analysis. Drift invalidates the prior structural authorization. Estimator confidence, estimator disagreement, repetition, or prior autonomous success cannot lower the structural authority floor.
+
+Canonical executable profile: [`profiles/pama-1-3-structural-delegation.md`](profiles/pama-1-3-structural-delegation.md).
 
 ## Migration
 
@@ -387,7 +423,7 @@ For durable runtime structural evolution also preserve relevant proposal, author
 
 Lossy migration requires explicit handling. "The old field didn't fit" is not provenance.
 
-A migration is not the same event as schema authorization, schema activation, or retirement. Those lifecycle states should remain distinguishable when consequence warrants it.
+A migration is not the same event as schema authorization, schema activation, rollback, supersession, or retirement. Those lifecycle states should remain distinguishable when consequence warrants it.
 
 ## Unknown fields and versions
 
@@ -421,7 +457,7 @@ Probabilistic systems may supply evidence or recommendations for these dimension
 
 ## Current repository schemas
 
-The repository schema registry includes machine-readable contracts for memory units, conformance results, audit events, decision receipts, PAMA decisions, calibration evidence, source records, portable/interchange evidence, isolation boundaries, governance projections, and other bounded profiles introduced by validated architecture slices.
+The repository schema registry includes machine-readable contracts for memory units, conformance results, audit events, decision receipts, PAMA decisions, structural mutation impact, calibration evidence, source records, portable/interchange evidence, isolation boundaries, governance projections, and other bounded profiles introduced by validated architecture slices.
 
 The canonical inventory is the [`../schemas/`](../schemas/) directory. Do not rely on a hand-maintained schema count in prose as a maturity signal.
 
@@ -431,7 +467,8 @@ Core examples include:
 - [`../schemas/conformance-report.schema.json`](../schemas/conformance-report.schema.json) — conformance results with estimator/policy versioning and the standardized metric family
 - [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json) — structured audit events with correlation/causation identifiers
 - [`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json) — reconstruction receipts for consequential decisions, including the versioned authority-decision backlink
-- [`../schemas/pama-decision.schema.json`](../schemas/pama-decision.schema.json) — PAMA authority decision records, with versioned closed-operation evolution
+- [`../schemas/pama-decision.schema.json`](../schemas/pama-decision.schema.json) — PAMA authority decision records, with versioned closed-operation and structural-delegation evolution
+- [`../schemas/structural-mutation-impact.schema.json`](../schemas/structural-mutation-impact.schema.json) — exact ADR-032 semantic/scope/dependency impact and deterministic S0-S3 classification evidence
 - [`../schemas/calibration-results.schema.json`](../schemas/calibration-results.schema.json) — labeled calibration case input for the calibration report generator
 - [`../schemas/source-record.schema.json`](../schemas/source-record.schema.json) — source-registry records with rights and reuse gating
 
@@ -456,6 +493,7 @@ Conformance fixtures are versioned artifacts with their own evolution rules, dis
 - historical 1.0 PAMA decision remains valid
 - `decision_overwrite` presented as PAMA decision 1.0 is rejected
 - `domain_schema_mutation` presented as pre-1.2 PAMA decision is rejected
+- 1.2-only consequential consumer receives PAMA 1.3 structural decision and rejects it explicitly
 - unknown PAMA operation/schema attempts durable mutation
 - historical 1.0 decision receipt remains valid under the compatibility schema
 - 1.1 decision receipt omits required decision backlink/outcome
@@ -470,8 +508,12 @@ Conformance fixtures are versioned artifacts with their own evolution rules, dis
 - unknown schema attempts durable mutation
 - high-confidence structural proposal cannot self-authorize
 - bounded additive change cannot bypass deterministic S1 eligibility evidence
+- repeated proposals cannot accumulate structural authority
+- probabilistic estimator disagreement cannot become an implicit allow
 - semantic migration cannot be mislabeled as derived rebuild
 - stale structural impact analysis cannot authorize commit
+- dependency drift cannot reuse stale structural authorization
+- declared rollback must bind the authorized rollback reference and execution evidence
 - retirement with live dependencies/residue cannot claim completion
 
 ## Related architecture
@@ -479,6 +521,7 @@ Conformance fixtures are versioned artifacts with their own evolution rules, dis
 - [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md)
 - [`adr/ADR-032-governed-mutable-memory-structure.md`](adr/ADR-032-governed-mutable-memory-structure.md)
 - [`profiles/pama-1-2-domain-schema-compatibility.md`](profiles/pama-1-2-domain-schema-compatibility.md)
+- [`profiles/pama-1-3-structural-delegation.md`](profiles/pama-1-3-structural-delegation.md)
 - [`explorations/memory-architectures/progressive-domain-schema-discovery.md`](explorations/memory-architectures/progressive-domain-schema-discovery.md)
 
 ## Doctrine
