@@ -7,6 +7,12 @@ private to its current reference runtime, so this #279 integration seam records
 the scope of successful mutations it commits and fails closed when an existing
 target cannot be reconstructed.
 
+The stored binding contains scope facts, not the identity of the actor who
+created them. On every later mutation, authority over the current target scope
+is re-resolved for the *current acting identity*. This prevents an actor who is
+authorized in Project A from correcting a Project B memory merely by naming its
+logical target reference and proposing a Project A replacement.
+
 This registry is process-local by design in the current slice. Its restart-safe
 persistence/reconstruction becomes part of #282 rather than being mistaken for
 durable governance merely because the underlying memory substrate persists.
@@ -28,8 +34,14 @@ from .dashclaw_external_verdict import (
 
 @dataclass(frozen=True)
 class TargetScopeBinding:
+    """Process-local scope facts bound to one current logical memory target."""
+
     memory_id: str
-    authority_request: AuthorityRequest
+    org_id: str
+    scope: str
+    project_ref: str
+    task_ref: str
+    isolation_domain_refs: tuple[str, ...]
     authority_evidence_ref: str
 
 
@@ -41,7 +53,8 @@ class DashClawGovernedCommitter:
         self._authority_resolver = authority_resolver
         self._target_scopes: dict[str, TargetScopeBinding] = {}
 
-    def _request_for_mutation(self, mutation: BoundMutation) -> AuthorityRequest:
+    @staticmethod
+    def _requested_scope(mutation: BoundMutation) -> AuthorityRequest:
         proposal = mutation.proposal
         return AuthorityRequest(
             org_id=mutation.org_id,
@@ -54,14 +67,27 @@ class DashClawGovernedCommitter:
         )
 
     @staticmethod
-    def _same_scope(left: AuthorityRequest, right: AuthorityRequest) -> bool:
+    def _current_scope_for_actor(mutation: BoundMutation, binding: TargetScopeBinding) -> AuthorityRequest:
+        """Ask whether the current actor controls the target's existing scope."""
+        return AuthorityRequest(
+            org_id=mutation.org_id,
+            agent_id=mutation.agent_id,
+            scope=binding.scope,
+            project_ref=binding.project_ref,
+            task_ref=binding.task_ref,
+            isolation_domain_refs=binding.isolation_domain_refs,
+            target_reference=binding.memory_id,
+        )
+
+    @staticmethod
+    def _same_scope(binding: TargetScopeBinding, requested: AuthorityRequest) -> bool:
         return (
-            left.org_id == right.org_id
-            and left.scope == right.scope
-            and left.project_ref == right.project_ref
-            and left.task_ref == right.task_ref
-            and set(left.isolation_domain_refs) == set(right.isolation_domain_refs)
-            and left.target_reference == right.target_reference
+            binding.org_id == requested.org_id
+            and binding.scope == requested.scope
+            and binding.project_ref == requested.project_ref
+            and binding.task_ref == requested.task_ref
+            and set(binding.isolation_domain_refs) == set(requested.isolation_domain_refs)
+            and binding.memory_id == requested.target_reference
         )
 
     def _refusal(self, mutation: BoundMutation, code: str) -> BoundCommitResult:
@@ -80,7 +106,7 @@ class DashClawGovernedCommitter:
         approval_actor_id: str | None = None,
         approved_input_identity: str | None = None,
     ) -> BoundCommitResult:
-        requested = self._request_for_mutation(mutation)
+        requested = self._requested_scope(mutation)
         requested_resolution = self._authority_resolver(requested)
         if not requested_resolution.authorized or not requested_resolution.evidence_ref:
             return self._refusal(mutation, "requested_scope_authority_unresolved")
@@ -96,12 +122,17 @@ class DashClawGovernedCommitter:
             return self._refusal(mutation, "target_scope_unresolved")
 
         if current_binding is not None:
-            current_resolution = self._authority_resolver(current_binding.authority_request)
+            current_request = self._current_scope_for_actor(mutation, current_binding)
+            current_resolution = self._authority_resolver(current_request)
             if not current_resolution.authorized or not current_resolution.evidence_ref:
                 return self._refusal(mutation, "target_scope_authority_unresolved")
 
+            # Ordinary correction/promotion cannot silently move an existing
+            # logical target across isolation boundaries. Explicit scope
+            # expansion remains visible to PAMA and still requires authority
+            # over both the old and requested scopes before it can proceed.
             if mutation.proposal.operation != "scope_expansion" and not self._same_scope(
-                current_binding.authority_request,
+                current_binding,
                 requested,
             ):
                 return self._refusal(mutation, "target_scope_mismatch")
@@ -116,7 +147,11 @@ class DashClawGovernedCommitter:
         if result.committed:
             self._target_scopes[memory_id] = TargetScopeBinding(
                 memory_id=memory_id,
-                authority_request=requested,
+                org_id=mutation.org_id,
+                scope=requested.scope,
+                project_ref=requested.project_ref,
+                task_ref=requested.task_ref,
+                isolation_domain_refs=requested.isolation_domain_refs,
                 authority_evidence_ref=requested_resolution.evidence_ref,
             )
         return result
