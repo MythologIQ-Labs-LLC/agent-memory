@@ -69,8 +69,11 @@ class VisibilityOperation:
     def __post_init__(self) -> None:
         if self.memory_version < 0:
             raise ValueError("memory_version must be non-negative")
-        if len(self.agent_memory_commit) != 40:
-            raise ValueError("agent_memory_commit must be an exact 40-character commit SHA")
+        if (
+            len(self.agent_memory_commit) != 40
+            or any(character not in "0123456789abcdef" for character in self.agent_memory_commit)
+        ):
+            raise ValueError("agent_memory_commit must be an exact 40-character lowercase hex commit SHA")
         if self.visibility_target not in {CURRENT_VALUE, ABSENCE, NO_READ_VISIBILITY}:
             raise ValueError("unsupported visibility_target")
         if len(set(self.required_projection_ids)) != len(self.required_projection_ids):
@@ -286,12 +289,15 @@ class VisibilityTracker:
             raise ValueError("operation declares no stale-current admission obligation")
         self.set_obligation("stale_current_blocked", SATISFIED)
 
-    def _all_required_projection_obligations_terminal(self) -> bool:
-        required = [
+    def _required_projection_obligations(self) -> list[Obligation]:
+        return [
             obligation
             for obligation in self._obligations.values()
             if obligation.required and obligation.kind == "projection_currentness"
         ]
+
+    def _all_required_projection_obligations_terminal(self) -> bool:
+        required = self._required_projection_obligations()
         return bool(required) and all(obligation.status in TERMINAL_STATUSES for obligation in required)
 
     def evaluate(self) -> dict:
@@ -348,9 +354,11 @@ class VisibilityTracker:
         return {"value_ns": max(0, second.offset_ns - first.offset_ns), "reason": "observed"}
 
     def metrics(self) -> dict:
-        projection_end = self._phases.get("required_projection_refresh_complete")
-        if projection_end is None and not self.operation.required_projection_ids:
+        required_projections = self._required_projection_obligations()
+        if not required_projections:
             projection_metric = {"value_ns": None, "reason": "not_applicable"}
+        elif any(obligation.status in {FAILED, QUARANTINED} for obligation in required_projections):
+            projection_metric = {"value_ns": None, "reason": "required_obligation_failed"}
         else:
             projection_metric = self._duration("canonical_commit_complete", "required_projection_refresh_complete")
         return {
