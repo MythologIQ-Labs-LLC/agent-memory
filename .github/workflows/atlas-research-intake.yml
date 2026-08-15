@@ -8,12 +8,14 @@ on:
       - 'docs/programs/atlas-research/**'
       - 'scripts/build_atlas_research_inventory.py'
       - 'scripts/validate_atlas_research_scaffold.py'
+      - 'scripts/validate_atlas_research_synthesis.py'
       - '.github/workflows/atlas-research-intake.yml'
   pull_request:
     paths:
       - 'docs/programs/atlas-research/**'
       - 'scripts/build_atlas_research_inventory.py'
       - 'scripts/validate_atlas_research_scaffold.py'
+      - 'scripts/validate_atlas_research_synthesis.py'
       - '.github/workflows/atlas-research-intake.yml'
   workflow_dispatch:
 
@@ -46,6 +48,9 @@ jobs:
       - name: Validate committed scaffold and inventory lock
         run: python scripts/validate_atlas_research_scaffold.py --allow-missing-inventory
 
+      - name: Validate bounded corpus synthesis
+        run: python scripts/validate_atlas_research_synthesis.py
+
       - name: Generate exact-pinned report inventory
         run: >-
           python scripts/build_atlas_research_inventory.py
@@ -57,17 +62,21 @@ jobs:
           python scripts/validate_atlas_research_scaffold.py
           --inventory /tmp/report-inventory.jsonl
 
-      - name: Record generated inventory digest
+      - name: Record durable research digests
         run: |
           sha256sum /tmp/report-inventory.jsonl | tee /tmp/report-inventory.sha256
+          sha256sum docs/programs/atlas-research/corpus-synthesis.json | tee /tmp/corpus-synthesis.sha256
           cat /tmp/report-inventory.sha256 >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/corpus-synthesis.sha256 >> "$GITHUB_STEP_SUMMARY"
 
       - name: Preserve generated inventory convenience evidence
         uses: actions/upload-artifact@v4
         with:
-          name: atlas-report-inventory-90bfeed
+          name: atlas-research-90bfeed-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             /tmp/report-inventory.jsonl
             /tmp/report-inventory.sha256
+            /tmp/corpus-synthesis.sha256
+            docs/programs/atlas-research/corpus-synthesis.json
           if-no-files-found: error
           retention-days: 30
