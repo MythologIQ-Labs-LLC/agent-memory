@@ -20,8 +20,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--codegenome-v2-main-downstream", type=Path, required=True)
     parser.add_argument("--codegenome-v2-main-upstream", type=Path, required=True)
     parser.add_argument("--codegenome-v2-decoy-downstream", type=Path, required=True)
+    parser.add_argument("--codegenome-unavailable-raw", type=Path, required=True)
+    parser.add_argument("--codegenome-unavailable-normalized", type=Path, required=True)
     parser.add_argument("--graphify-v1", type=Path, required=True)
     parser.add_argument("--graphify-v2", type=Path, required=True)
+    parser.add_argument("--graphify-unavailable-raw", type=Path, required=True)
+    parser.add_argument("--graphify-unavailable-normalized", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     return parser.parse_args()
 
@@ -38,8 +42,12 @@ def main() -> int:
         codegenome_v2_main_downstream=args.codegenome_v2_main_downstream,
         codegenome_v2_main_upstream=args.codegenome_v2_main_upstream,
         codegenome_v2_decoy_downstream=args.codegenome_v2_decoy_downstream,
+        codegenome_unavailable_raw=args.codegenome_unavailable_raw,
+        codegenome_unavailable_normalized=args.codegenome_unavailable_normalized,
         graphify_v1=args.graphify_v1,
         graphify_v2=args.graphify_v2,
+        graphify_unavailable_raw=args.graphify_unavailable_raw,
+        graphify_unavailable_normalized=args.graphify_unavailable_normalized,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")

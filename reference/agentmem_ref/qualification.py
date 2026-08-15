@@ -14,6 +14,8 @@ from typing import Sequence
 
 from .capabilities import MATURITY_ORDER, maturity_satisfies
 
+QUALIFICATION_SCHEMA_VERSION = "1.1.0"
+
 
 class QualificationError(ValueError):
     """Qualification evidence is invalid or not applicable."""
@@ -89,6 +91,10 @@ class AdapterResult:
     def __post_init__(self) -> None:
         if not self.operation or not self.runtime_identity or not self.trace_ref:
             raise ValueError("operation, runtime identity, and trace reference are required")
+        if not self.currentness:
+            raise ValueError("adapter currentness posture is required")
+        if not self.failure_result:
+            raise ValueError("adapter failure result is required")
         if not self.raw_provider_refs:
             raise ValueError("raw provider evidence must be preserved")
         if not self.normalized_refs:
@@ -97,6 +103,19 @@ class AdapterResult:
     @property
     def authority_effect(self) -> str:
         return "none"
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "operation": self.operation,
+            "runtime_identity": self.runtime_identity,
+            "input_refs": list(self.input_refs),
+            "raw_provider_refs": list(self.raw_provider_refs),
+            "normalized_refs": list(self.normalized_refs),
+            "currentness": self.currentness,
+            "failure_result": self.failure_result,
+            "trace_ref": self.trace_ref,
+            "authority_effect": "none",
+        }
 
 
 @dataclass(frozen=True)
@@ -114,6 +133,7 @@ class QualificationRecord:
     maturity_before: str
     profile_maturity_ceiling: str
     earned_maturity: str
+    adapter_results: tuple[AdapterResult, ...] = ()
     limitations: tuple[str, ...] = ()
     qualification_current: bool = True
 
@@ -137,6 +157,11 @@ class QualificationRecord:
             raise QualificationError("qualification must exercise at least one operation")
         if not self.raw_provider_refs or not self.normalized_refs or not self.artifact_digests:
             raise QualificationError("qualification must preserve raw, normalized, and digest evidence")
+        for result in self.adapter_results:
+            if result.subject != self.subject:
+                raise QualificationError("stored adapter result subject does not match qualification subject")
+            if result.authority_effect != "none":
+                raise QualificationError("stored adapter result cannot grant authority")
         if self.earned_maturity == "reference_qualified":
             if self.profile_maturity_ceiling != "reference_qualified":
                 raise QualificationError("reference_qualified requires an explicit reference-qualified profile ceiling")
@@ -144,6 +169,8 @@ class QualificationRecord:
                 raise QualificationError("reference_qualified requires runtime-allowed source rights")
             if not self.checks or not all(passed for _, passed, _ in self.checks):
                 raise QualificationError("reference_qualified requires every required profile check to pass")
+            if not self.adapter_results:
+                raise QualificationError("reference_qualified requires reconstructable adapter-result evidence")
 
     @property
     def applicability_digest(self) -> str:
@@ -152,6 +179,11 @@ class QualificationRecord:
     @property
     def authority_effect(self) -> str:
         return "none"
+
+    @property
+    def failure_results(self) -> tuple[str, ...]:
+        """Failure outcomes preserved by the exact qualification run."""
+        return tuple(result.failure_result for result in self.adapter_results)
 
     def assert_applicable(self, subject: QualificationSubject, runtime: QualificationRuntime) -> None:
         expected = applicability_digest(subject, runtime)
@@ -164,7 +196,7 @@ class QualificationRecord:
 
     def to_dict(self) -> dict[str, object]:
         return {
-            "schema_version": "1.0.0",
+            "schema_version": QUALIFICATION_SCHEMA_VERSION,
             "subject": self.subject.to_dict(),
             "runtime": self.runtime.applicability_dict(),
             "source_rights": {
@@ -176,6 +208,7 @@ class QualificationRecord:
                 "operations": list(self.operations),
                 "raw_provider_refs": list(self.raw_provider_refs),
                 "normalized_refs": list(self.normalized_refs),
+                "adapter_results": [result.to_dict() for result in self.adapter_results],
                 "checks": [
                     {"check_id": check_id, "passed": passed, "evidence_ref": evidence_ref}
                     for check_id, passed, evidence_ref in self.checks
@@ -238,5 +271,6 @@ def qualification_from_adapter_results(
         maturity_before=maturity_before,
         profile_maturity_ceiling=profile_maturity_ceiling,
         earned_maturity=earned_maturity,
+        adapter_results=tuple(results),
         limitations=tuple(limitations),
     )
