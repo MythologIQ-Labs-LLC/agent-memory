@@ -34,6 +34,8 @@ class CodeGenomeScopeResidueError(ValueError):
 class ExternalScopeBinding:
     binding_ref: str
     component_id: str
+    component_version: str
+    component_profile_digest: str
     provider_scope_ref: str
     agent_memory_scope_ref: str
     tenant_ref: str
@@ -44,6 +46,8 @@ class ExternalScopeBinding:
         for name in (
             "binding_ref",
             "component_id",
+            "component_version",
+            "component_profile_digest",
             "provider_scope_ref",
             "agent_memory_scope_ref",
             "tenant_ref",
@@ -54,6 +58,20 @@ class ExternalScopeBinding:
                 raise CodeGenomeScopeResidueError(f"{name} is required")
         if self.component_id != "codegenome":
             raise CodeGenomeScopeResidueError("scope binding must target codegenome")
+        if len(self.component_version) != 40 or any(
+            ch not in "0123456789abcdef" for ch in self.component_version
+        ):
+            raise CodeGenomeScopeResidueError("component_version must be 40 lowercase hex")
+        if not self.component_profile_digest.startswith("sha256:") or len(self.component_profile_digest) != 71:
+            raise CodeGenomeScopeResidueError("component_profile_digest must be sha256:<64 lowercase hex>")
+        try:
+            int(self.component_profile_digest.removeprefix("sha256:"), 16)
+        except ValueError as exc:
+            raise CodeGenomeScopeResidueError(
+                "component_profile_digest must be sha256:<64 lowercase hex>"
+            ) from exc
+        if self.component_profile_digest != self.component_profile_digest.lower():
+            raise CodeGenomeScopeResidueError("component_profile_digest must be lowercase")
 
     def to_dict(self) -> dict[str, str]:
         return asdict(self)
@@ -75,10 +93,12 @@ class ScopeAdmission:
 def evaluate_scope_bridge(
     *,
     binding: ExternalScopeBinding | None,
+    component_version: str,
+    component_profile_digest: str,
     provider_scope_ref: str,
     agent_memory_scope_ref: str,
 ) -> ScopeAdmission:
-    """Admit provider output only through an exact external-scope binding."""
+    """Admit provider output only through an exact version-bound external-scope binding."""
     if not provider_scope_ref or not agent_memory_scope_ref:
         return ScopeAdmission(
             admitted=False,
@@ -92,6 +112,22 @@ def evaluate_scope_bridge(
             admitted=False,
             reason="external_scope_binding_missing",
             binding_ref=None,
+            provider_scope_ref=provider_scope_ref,
+            agent_memory_scope_ref=agent_memory_scope_ref,
+        )
+    if component_version != binding.component_version:
+        return ScopeAdmission(
+            admitted=False,
+            reason="component_version_mismatch",
+            binding_ref=binding.binding_ref,
+            provider_scope_ref=provider_scope_ref,
+            agent_memory_scope_ref=agent_memory_scope_ref,
+        )
+    if component_profile_digest != binding.component_profile_digest:
+        return ScopeAdmission(
+            admitted=False,
+            reason="component_profile_mismatch",
+            binding_ref=binding.binding_ref,
             provider_scope_ref=provider_scope_ref,
             agent_memory_scope_ref=agent_memory_scope_ref,
         )
@@ -155,6 +191,7 @@ def build_closeout_report(
         raise CodeGenomeScopeResidueError("agent_memory_commit must be 40 lowercase hex")
 
     component = validate_profile(component_profile)
+    current_profile_digest = profile_digest(component_profile)
     traversal = next(
         capability for capability in component.capabilities if capability.capability_id == "code_graph_traversal"
     )
@@ -167,13 +204,33 @@ def build_closeout_report(
     v2_lines = _codegenome_start_lines(v2_main_downstream)
     source_deletion_current = 1 in v1_lines and 1 not in v2_lines and 13 in v2_lines
 
+    common_scope_args = {
+        "component_version": component.component_version,
+        "component_profile_digest": current_profile_digest,
+    }
     admitted = evaluate_scope_bridge(
         binding=binding,
         provider_scope_ref=binding.provider_scope_ref,
         agent_memory_scope_ref=binding.agent_memory_scope_ref,
+        **common_scope_args,
     )
     missing_binding = evaluate_scope_bridge(
         binding=None,
+        provider_scope_ref=binding.provider_scope_ref,
+        agent_memory_scope_ref=binding.agent_memory_scope_ref,
+        **common_scope_args,
+    )
+    stale_component = evaluate_scope_bridge(
+        binding=binding,
+        component_version="0" * 40,
+        component_profile_digest=current_profile_digest,
+        provider_scope_ref=binding.provider_scope_ref,
+        agent_memory_scope_ref=binding.agent_memory_scope_ref,
+    )
+    stale_profile = evaluate_scope_bridge(
+        binding=binding,
+        component_version=component.component_version,
+        component_profile_digest="sha256:" + "0" * 64,
         provider_scope_ref=binding.provider_scope_ref,
         agent_memory_scope_ref=binding.agent_memory_scope_ref,
     )
@@ -181,11 +238,13 @@ def build_closeout_report(
         binding=binding,
         provider_scope_ref=binding.provider_scope_ref + "/foreign",
         agent_memory_scope_ref=binding.agent_memory_scope_ref,
+        **common_scope_args,
     )
     foreign_agent_scope = evaluate_scope_bridge(
         binding=binding,
         provider_scope_ref=binding.provider_scope_ref,
         agent_memory_scope_ref=binding.agent_memory_scope_ref + "/foreign",
+        **common_scope_args,
     )
 
     invariants = {
@@ -195,8 +254,12 @@ def build_closeout_report(
             for ref in traversal.evidence_refs
         ),
         "external_scope_bridge_declared": traversal.scope_posture == "external_scope_bridge",
+        "scope_binding_version_bound": binding.component_version == component.component_version,
+        "scope_binding_profile_bound": binding.component_profile_digest == current_profile_digest,
         "exact_scope_binding_admitted": admitted.admitted,
         "missing_scope_binding_refused": not missing_binding.admitted,
+        "stale_component_scope_binding_refused": not stale_component.admitted,
+        "stale_profile_scope_binding_refused": not stale_profile.admitted,
         "foreign_provider_scope_refused": not foreign_provider.admitted,
         "foreign_agent_memory_scope_refused": not foreign_agent_scope.admitted,
         "source_deleted_old_leaf_not_current_after_rebuild": source_deletion_current,
@@ -205,7 +268,14 @@ def build_closeout_report(
         "physical_erasure_not_claimed": True,
         "no_authority_effect": all(
             result.authority_effect == "none"
-            for result in (admitted, missing_binding, foreign_provider, foreign_agent_scope)
+            for result in (
+                admitted,
+                missing_binding,
+                stale_component,
+                stale_profile,
+                foreign_provider,
+                foreign_agent_scope,
+            )
         ),
     }
 
@@ -217,7 +287,7 @@ def build_closeout_report(
             "component_id": component.component_id,
             "component_version": component.component_version,
             "component_profile_version": component.profile_version,
-            "component_profile_digest": profile_digest(component_profile),
+            "component_profile_digest": current_profile_digest,
         },
         "base_qualification": {
             "profile_id": PROFILE_ID,
@@ -228,6 +298,8 @@ def build_closeout_report(
             "binding": binding.to_dict(),
             "exact": admitted.to_dict(),
             "missing_binding": missing_binding.to_dict(),
+            "stale_component": stale_component.to_dict(),
+            "stale_profile": stale_profile.to_dict(),
             "foreign_provider": foreign_provider.to_dict(),
             "foreign_agent_memory_scope": foreign_agent_scope.to_dict(),
         },
