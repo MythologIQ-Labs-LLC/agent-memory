@@ -27,10 +27,13 @@ jobs:
 
       - name: Smoke-test installed discovery command
         run: |
-          agent-memory discover \
+          if ! agent-memory discover \
             --config reference/fixtures/runtime-configuration/reference-composed-runtime.json \
             --probes reference/fixtures/runtime-configuration/reference-provider-probes.json \
-            --json > installed-provider-discovery.json
+            --json > installed-provider-discovery.json; then
+            cat installed-provider-discovery.json
+            exit 1
+          fi
           python - <<'PY'
           import json
           from pathlib import Path
@@ -47,11 +50,14 @@ jobs:
 
       - name: Smoke-test installed doctor probe path
         run: |
-          agent-memory doctor \
+          if ! agent-memory doctor \
             --config reference/fixtures/runtime-configuration/reference-composed-runtime.json \
             --probe \
             --probes reference/fixtures/runtime-configuration/reference-provider-probes.json \
-            --json > installed-doctor-probed.json
+            --json > installed-doctor-probed.json; then
+            cat installed-doctor-probed.json
+            exit 1
+          fi
           python - <<'PY'
           import json
           from pathlib import Path
