@@ -3,7 +3,7 @@
 Issue: #306
 Parent research program: #304
 
-This directory defines the reproducible intake boundary for research based on `neoneye/agent-memory-atlas`. Atlas is used as a source index and hypothesis generator, not as doctrine authority or runtime conformance evidence.
+This directory defines the reproducible intake and synthesis boundary for research based on `neoneye/agent-memory-atlas`. Atlas is used as a source index and hypothesis generator, not as doctrine authority or runtime conformance evidence.
 
 ## Frozen source boundary
 
@@ -41,6 +41,8 @@ A high Atlas mark count is never a promotion criterion.
 - `report-inventory.jsonl`: deterministic generated output of `scripts/build_atlas_research_inventory.py`. It is intentionally not committed; CI regenerates it from the exact pinned Atlas checkout and refuses output that does not match `report-inventory.lock.json`.
 - `claim-ledger.jsonl`: independently verified or deliberately unresolved consequential claims. This is not generated from prose automatically.
 - `deduplication-map.json`: likely findings mapped to existing Agent Memory owners before new work is created.
+- `corpus-synthesis.json`: #304 completion record containing the exact seven-mechanism mapping, all 21 pattern dispositions, benchmark/candidate decisions, Agent Memory self-audit reconciliation, promotions, rejections, and completion flags.
+- `corpus-synthesis.md`: human-readable explanation of the bounded research closeout.
 - `schemas/`: research-record schemas. These schemas describe research infrastructure, not canonical runtime state.
 
 The generated Actions artifact is convenience evidence, not the durable identity boundary. It may expire. Durable reconstruction is provided by the pinned Atlas source identity + committed generator + committed inventory lock. This avoids checking in half a megabyte of regenerated secondary-source metadata while still making silent inventory drift fail closed.
@@ -78,7 +80,7 @@ These dimensions answer different questions. A representation-neutral catastroph
 
 ## Research batches
 
-The order is frozen for #304:
+The frozen #304 execution order was:
 
 1. self-audit calibration against Atlas's Agent Memory report;
 2. seven-mechanism crosswalk;
@@ -88,7 +90,7 @@ The order is frozen for #304:
 6. comparator and component candidate selection;
 7. synthesis and bounded promotion decisions.
 
-Do not perform the corpus review alphabetically.
+The corpus review is not alphabetical and completion is not defined as identical depth for all 283 reports.
 
 ## Frozen deep-review questions
 
@@ -110,7 +112,7 @@ Every deep-reviewed system answers the same questions:
 14. What exact claim would an Agent Memory fixture or comparator falsify?
 15. What should Agent Memory not copy from this system?
 
-Changing this question set during the corpus pass requires an explicit methodology revision rather than a silent edit.
+Changing this question set requires an explicit methodology revision rather than a silent edit.
 
 ## Promotion and stopping rule
 
@@ -125,3 +127,21 @@ Create a follow-on only when a verified claim exposes at least one of:
 Otherwise record `covered`, `reference`, `rejected`, `not_relevant`, or `unresolved` and stop.
 
 The expected ADR result remains `none` unless verified evidence proves a doctrine-level gap.
+
+## #304 synthesis boundary
+
+`corpus-synthesis.json` is intentionally narrower than a claim that every Atlas report was independently reproduced. It records the converged research result under the stopping rule above:
+
+```text
+283 snapshot-bound inventory records
+7/7 Atlas mechanisms mapped
+21/21 Atlas patterns disposed
+primary-source benchmark/candidate shortlist
+Agent Memory Atlas-report reconciliation
+bounded promotion(s)
+explicit rejection/no-action log
+no new ADR
+no Atlas-derived authority
+```
+
+`scripts/validate_atlas_research_synthesis.py` fails closed on missing or substituted mechanism/pattern IDs, duplicate entries, snapshot drift, incomplete completion flags, missing promotion/rejection evidence, or any authority/doctrine escalation.
