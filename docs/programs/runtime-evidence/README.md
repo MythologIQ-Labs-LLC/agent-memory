@@ -112,6 +112,9 @@ Documents are added when their slice is ready to execute, not in advance. A dire
 | [`telemetry-minimization.md`](telemetry-minimization.md) | P8 telemetry interoperability | strict content minimization plus expiry and rotation-aware targeted purge execute without turning telemetry into shadow memory |
 | [`systems-economic-characterization.md`](systems-economic-characterization.md) | P9 systems/economic characterization | structural work and scaling measurements plus runner-specific non-gating timings are emitted as exact-head evidence |
 | [`../../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md`](../../audits/governed-uncertainty/09-adr-020-runtime-evidence-acceptance-audit.md) | P10 ADR-020 evidence review | all fourteen ADR-020 minimum evidence gates mapped to executable repository evidence; acceptance separated from cumulative conformance |
+| [`dashclaw-external-verdict.md`](dashclaw-external-verdict.md) | #279 DashClaw governance-adapter provider-side proof | executable v1 provider projection and governed release-branch workload; live cross-repository public-HTTPS integration remains required before #279 closes |
+
+The DashClaw slice above is a later interoperability implementation product, not an additional phase of the already-completed #46 program.
 
 ## Preconditions
 
