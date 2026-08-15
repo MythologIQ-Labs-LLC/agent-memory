@@ -15,7 +15,7 @@ dependencies = []
 agent-memory-hermes = "agent_memory_hermes.cli:main"
 
 [project.entry-points."hermes_agent.plugins"]
-agent-memory = "agent_memory_hermes.plugin:register"
+agent-memory = "agent_memory_hermes.safe_plugin:register"
 
 [project.entry-points."hermes_agent.memory_providers"]
 agent-memory = "agent_memory_hermes.provider:register_memory"
