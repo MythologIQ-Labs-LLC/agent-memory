@@ -13,6 +13,11 @@ is re-resolved for the *current acting identity*. This prevents an actor who is
 authorized in Project A from correcting a Project B memory merely by naming its
 logical target reference and proposing a Project A replacement.
 
+This #279 profile is intentionally project-scoped. Authenticated organization
+identity is not organization-wide memory mutation authority. The
+``ProjectScopedAuthorityResolver`` therefore refuses requests that omit an exact
+project scope or try to smuggle a task outside the bound isolation domains.
+
 This registry is process-local by design in the current slice. Its restart-safe
 persistence/reconstruction becomes part of #282 rather than being mistaken for
 durable governance merely because the underlying memory substrate persists.
@@ -25,11 +30,31 @@ from dataclasses import dataclass
 from .adapter import GovernedMemoryAdapter
 from .dashclaw_external_verdict import (
     AuthorityRequest,
+    AuthorityResolution,
     AuthorityResolver,
     BoundCommitResult,
     BoundMutation,
     commit_bound_mutation,
 )
+
+
+class ProjectScopedAuthorityResolver:
+    """Constrain any trusted resolver to the bounded #279 project profile."""
+
+    def __init__(self, delegate: AuthorityResolver) -> None:
+        self._delegate = delegate
+
+    def __call__(self, request: AuthorityRequest) -> AuthorityResolution:
+        if not request.project_ref:
+            return AuthorityResolution(authorized=False, reason_code="project_scope_required")
+        if request.scope != request.project_ref:
+            return AuthorityResolution(authorized=False, reason_code="scope_project_mismatch")
+        domains = set(request.isolation_domain_refs)
+        if request.project_ref not in domains:
+            return AuthorityResolution(authorized=False, reason_code="project_isolation_not_bound")
+        if request.task_ref and request.task_ref not in domains:
+            return AuthorityResolution(authorized=False, reason_code="task_isolation_not_bound")
+        return self._delegate(request)
 
 
 @dataclass(frozen=True)
