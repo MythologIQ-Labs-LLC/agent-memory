@@ -28,6 +28,9 @@
       "required": [
         "layer",
         "change_kind",
+        "semantic_diff",
+        "tenant_ref",
+        "isolation_domain_refs",
         "preserves_semantics",
         "optional_additive",
         "migration_required",
@@ -48,6 +51,9 @@
       "properties": {
         "layer": {"enum": ["derived", "domain", "canonical"]},
         "change_kind": {"enum": ["rebuild_only", "additive_extension", "semantic_change", "destructive_retirement"]},
+        "semantic_diff": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
+        "tenant_ref": {"type": ["string", "null"], "minLength": 1},
+        "isolation_domain_refs": {"$ref": "#/$defs/nonEmptyUniqueStrings"},
         "preserves_semantics": {"type": "boolean"},
         "optional_additive": {"type": "boolean"},
         "migration_required": {"type": "boolean"},
