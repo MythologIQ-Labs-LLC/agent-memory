@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/runtime-configuration.schema.json",
+  "title": "Agent Memory Runtime Configuration",
+  "description": "Serialization-neutral runtime configuration contract for attaching Agent Memory to an existing stack or bootstrapping a bounded local profile. Configuration does not grant authority or prove qualification/currentness.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "runtime",
+    "canonical_state",
+    "durable_governance",
+    "components",
+    "routes",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "runtime": { "$ref": "#/$defs/runtime" },
+    "canonical_state": { "$ref": "#/$defs/canonicalState" },
+    "durable_governance": { "$ref": "#/$defs/durableGovernance" },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/componentRuntime" }
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/route" }
+    },
+    "governance_peers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/governancePeer" }
+    },
+    "evidence": { "$ref": "#/$defs/evidence" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "secretRef": {
+      "type": "string",
+      "pattern": "^(env|secret|vault|keyring)://[^\\s]+$"
+    },
+    "runtime": {
+      "type": "object",
+      "required": [
+        "runtime_id",
+        "runtime_version",
+        "profile_id",
+        "profile_version",
+        "entry_mode"
+      ],
+      "properties": {
+        "runtime_id": { "$ref": "#/$defs/nonEmptyString" },
+        "runtime_version": { "$ref": "#/$defs/nonEmptyString" },
+        "profile_id": { "$ref": "#/$defs/nonEmptyString" },
+        "profile_version": { "$ref": "#/$defs/nonEmptyString" },
+        "entry_mode": {
+          "type": "string",
+          "enum": ["attach_existing_stack", "bootstrap_agent_memory_first"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "canonicalState": {
+      "type": "object",
+      "required": [
+        "owner_component_id",
+        "owner_capability_id",
+        "owner_capability_version"
+      ],
+      "properties": {
+        "owner_component_id": { "$ref": "#/$defs/nonEmptyString" },
+        "owner_capability_id": { "$ref": "#/$defs/nonEmptyString" },
+        "owner_capability_version": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "additionalProperties": false
+    },
+    "durableGovernance": {
+      "type": "object",
+      "required": ["profile_id", "profile_version", "state_ref"],
+      "properties": {
+        "profile_id": { "$ref": "#/$defs/nonEmptyString" },
+        "profile_version": { "$ref": "#/$defs/nonEmptyString" },
+        "state_ref": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "additionalProperties": false
+    },
+    "sourceRights": {
+      "type": "object",
+      "required": ["license_id", "license_ref", "use_posture"],
+      "properties": {
+        "license_id": { "$ref": "#/$defs/nonEmptyString" },
+        "license_ref": { "$ref": "#/$defs/nonEmptyString" },
+        "use_posture": {
+          "type": "string",
+          "enum": ["runtime_allowed", "comparator_only", "disallowed"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "adapter": {
+      "type": "object",
+      "required": ["adapter_id", "adapter_version", "runtime_ref"],
+      "properties": {
+        "adapter_id": { "$ref": "#/$defs/nonEmptyString" },
+        "adapter_version": { "$ref": "#/$defs/nonEmptyString" },
+        "runtime_ref": { "$ref": "#/$defs/nonEmptyString" },
+        "secret_refs": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/secretRef" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "capability": {
+      "type": "object",
+      "required": [
+        "capability_id",
+        "capability_version",
+        "maturity",
+        "state_posture",
+        "scope_posture",
+        "failure_posture",
+        "authority_effect",
+        "enabled"
+      ],
+      "properties": {
+        "capability_id": { "$ref": "#/$defs/nonEmptyString" },
+        "capability_version": { "$ref": "#/$defs/nonEmptyString" },
+        "maturity": {
+          "type": "string",
+          "enum": [
+            "declared",
+            "implemented",
+            "runtime_wired",
+            "evidence_proven",
+            "reference_qualified"
+          ]
+        },
+        "state_posture": {
+          "type": "string",
+          "enum": ["canonical", "historical", "derived", "learned", "external"]
+        },
+        "scope_posture": {
+          "type": "string",
+          "enum": [
+            "enforces_agent_memory_scope",
+            "inherits_agent_memory_scope",
+            "external_scope_bridge"
+          ]
+        },
+        "failure_posture": {
+          "type": "string",
+          "enum": ["fail_closed", "explicit_unavailable", "fail_open_candidate_only"]
+        },
+        "authority_effect": {
+          "type": "string",
+          "enum": ["none", "proposal_only"]
+        },
+        "enabled": { "type": "boolean" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "componentDeclaration": {
+      "type": "object",
+      "required": [
+        "component_id",
+        "component_version",
+        "profile_version",
+        "enabled",
+        "failure_posture",
+        "capabilities"
+      ],
+      "properties": {
+        "component_id": { "$ref": "#/$defs/nonEmptyString" },
+        "component_version": { "$ref": "#/$defs/nonEmptyString" },
+        "profile_version": { "$ref": "#/$defs/nonEmptyString" },
+        "enabled": { "type": "boolean" },
+        "runtime_ref": { "type": "string" },
+        "failure_posture": {
+          "type": "string",
+          "enum": ["fail_closed", "explicit_unavailable", "fail_open_candidate_only"]
+        },
+        "provenance_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/capability" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "componentRuntime": {
+      "type": "object",
+      "required": ["declaration", "adapter", "source_rights"],
+      "properties": {
+        "declaration": { "$ref": "#/$defs/componentDeclaration" },
+        "adapter": { "$ref": "#/$defs/adapter" },
+        "source_rights": { "$ref": "#/$defs/sourceRights" }
+      },
+      "additionalProperties": false
+    },
+    "qualificationRequirement": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "adapter_id": { "$ref": "#/$defs/nonEmptyString" },
+        "adapter_version": { "$ref": "#/$defs/nonEmptyString" },
+        "profile_id": { "$ref": "#/$defs/nonEmptyString" },
+        "profile_version": { "$ref": "#/$defs/nonEmptyString" },
+        "minimum_earned_maturity": {
+          "type": "string",
+          "enum": [
+            "declared",
+            "implemented",
+            "runtime_wired",
+            "evidence_proven",
+            "reference_qualified"
+          ]
+        },
+        "applicability_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "required": { "const": true } },
+            "required": ["required"]
+          },
+          "then": {
+            "required": [
+              "adapter_id",
+              "adapter_version",
+              "profile_id",
+              "profile_version",
+              "minimum_earned_maturity",
+              "applicability_digest"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "currentness": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "projection_id": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "additionalProperties": false
+    },
+    "route": {
+      "type": "object",
+      "required": [
+        "route_id",
+        "capability_id",
+        "capability_version",
+        "minimum_maturity",
+        "allowed_components",
+        "qualification",
+        "currentness"
+      ],
+      "properties": {
+        "route_id": { "$ref": "#/$defs/nonEmptyString" },
+        "capability_id": { "$ref": "#/$defs/nonEmptyString" },
+        "capability_version": { "$ref": "#/$defs/nonEmptyString" },
+        "minimum_maturity": {
+          "type": "string",
+          "enum": [
+            "declared",
+            "implemented",
+            "runtime_wired",
+            "evidence_proven",
+            "reference_qualified"
+          ]
+        },
+        "allowed_components": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        },
+        "preferred_component": { "$ref": "#/$defs/nonEmptyString" },
+        "fallback_components": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        },
+        "required_state_postures": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["canonical", "historical", "derived", "learned", "external"] },
+          "uniqueItems": true
+        },
+        "required_scope_postures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "enforces_agent_memory_scope",
+              "inherits_agent_memory_scope",
+              "external_scope_bridge"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "qualification": { "$ref": "#/$defs/qualificationRequirement" },
+        "currentness": { "$ref": "#/$defs/currentness" }
+      },
+      "additionalProperties": false
+    },
+    "governancePeer": {
+      "type": "object",
+      "required": ["peer_id", "adapter_ref", "required"],
+      "properties": {
+        "peer_id": { "$ref": "#/$defs/nonEmptyString" },
+        "adapter_ref": { "$ref": "#/$defs/nonEmptyString" },
+        "required": { "type": "boolean" },
+        "secret_refs": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/secretRef" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["qualification_store_refs", "receipt_store_ref", "runtime_evidence_ref"],
+      "properties": {
+        "qualification_store_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "uniqueItems": true
+        },
+        "receipt_store_ref": { "$ref": "#/$defs/nonEmptyString" },
+        "runtime_evidence_ref": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
