@@ -129,7 +129,7 @@
       "required": ["value_ns", "reason"],
       "properties": {
         "value_ns": { "type": ["integer", "null"], "minimum": 0 },
-        "reason": { "enum": ["observed", "phase_missing", "not_applicable", "cross_restart_monotonic_segments"] }
+        "reason": { "enum": ["observed", "phase_missing", "not_applicable", "cross_restart_monotonic_segments", "required_obligation_failed"] }
       },
       "additionalProperties": false
     }
