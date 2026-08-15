@@ -67,7 +67,10 @@ class ConfigBoundRestartTests(unittest.TestCase):
         changed = validate_runtime_configuration(config, qualification_bindings=bindings)
         self.assertNotEqual(changed.configuration_digest, self.plan.configuration_digest)
 
-        with self.assertRaisesRegex(RuntimeRecoveryError, "runtime configuration changed"):
+        with self.assertRaisesRegex(
+            RuntimeRecoveryError,
+            "runtime configuration changed|runtime profile/component interpretation changed",
+        ):
             ConfigBoundRestartRuntime.recover(self.root, plan=changed)
 
     def test_torn_outer_binding_is_detected_after_base_checkpoint_moves(self) -> None:
