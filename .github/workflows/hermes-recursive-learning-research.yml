@@ -56,10 +56,14 @@ jobs:
 
       - name: Verify approval replay bypass paths
         run: |
-          grep -q 'apply_memory_pending' _hermes/hermes_cli/write_approval_commands.py
-          grep -q 'apply_skill_pending' _hermes/hermes_cli/write_approval_commands.py
-          grep -q 'bypassing the write gate' _hermes/tools/memory_tool.py
+          grep -q 'from tools.memory_tool import apply_memory_pending' _hermes/hermes_cli/write_approval_commands.py
+          grep -q 'result = apply_memory_pending(payload, memory_store)' _hermes/hermes_cli/write_approval_commands.py
+          grep -q 'def apply_memory_pending' _hermes/tools/memory_tool.py
+          grep -q 'return store.apply_batch' _hermes/tools/memory_tool.py
+          grep -q 'from tools.skill_manager_tool import apply_skill_pending' _hermes/hermes_cli/write_approval_commands.py
+          grep -q 'def apply_skill_pending' _hermes/tools/skill_manager_tool.py
           grep -q '_skill_gate_bypass.set(True)' _hermes/tools/skill_manager_tool.py
+          grep -q 'return skill_manage(' _hermes/tools/skill_manager_tool.py
 
       - name: Verify curator direct durable mutation path
         run: |
