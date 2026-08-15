@@ -8,6 +8,7 @@ on:
       - "reference/run_dashclaw_provider.py"
       - "reference/run_dashclaw_external_verdict.py"
       - "reference/tests/test_dashclaw_external_verdict.py"
+      - "reference/tests/test_dashclaw_project_authority.py"
       - "docs/programs/runtime-evidence/dashclaw-external-verdict.md"
       - ".github/workflows/dashclaw-external-verdict.yml"
   workflow_dispatch:
@@ -48,7 +49,10 @@ jobs:
       - name: Run provider contract and adversarial tests
         env:
           PYTHONPATH: reference
-        run: python -m unittest reference/tests/test_dashclaw_external_verdict.py
+        run: |
+          python -m unittest \
+            reference/tests/test_dashclaw_external_verdict.py \
+            reference/tests/test_dashclaw_project_authority.py
 
       - name: Execute governed durable-memory workload
         env:
