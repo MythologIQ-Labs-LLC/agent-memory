@@ -10,11 +10,11 @@ DashClaw contract:
 
 ```text
 release: v5.24.0
-commit:  2d8d59327096831dbe2e11daf147ca80afcba39d
+commit:  082b704262bebe0e86ef66d98c97f42d6358c3c3
 wire:    external-verdict v1
 ```
 
-The focused workflow fetches that exact source revision, verifies the exact tag, and preserves the upstream implementer guide with the Agent Memory workload evidence.
+The focused workflow fetches that exact source revision, verifies that the annotated `v5.24.0` tag dereferences to the same commit, and preserves the upstream implementer guide with the Agent Memory workload evidence.
 
 DashClaw v5.24.0 also resolves the domain-applicability question raised during #279. A configured provider can be scoped by exact `action_type` through DashClaw's host-side `EXTERNAL_VERDICT_ACTION_TYPES` setting. For this integration the intended scope is:
 
