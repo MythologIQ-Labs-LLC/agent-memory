@@ -5,9 +5,14 @@ on:
     paths:
       - "schemas/component-capability-qualification.schema.json"
       - "reference/agentmem_ref/qualification.py"
+      - "reference/agentmem_ref/component_fallback.py"
+      - "reference/agentmem_ref/component_failure_probe.py"
       - "reference/agentmem_ref/code_graph_qualification.py"
+      - "reference/run_component_failure_probe.py"
       - "reference/run_component_qualification.py"
       - "reference/tests/test_component_qualification.py"
+      - "reference/tests/test_component_fallback.py"
+      - "reference/tests/test_component_failure_probe.py"
       - "reference/tests/test_code_graph_qualification.py"
       - "reference/fixtures/component-qualification/**"
       - ".github/workflows/component-qualification-foundation.yml"
@@ -31,12 +36,14 @@ jobs:
       - name: Install reference dependencies
         run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
 
-      - name: Run qualification contract and normalizer tests
+      - name: Run qualification, failure, fallback, and normalizer tests
         env:
           PYTHONPATH: reference
         run: |
           python -m unittest \
             reference/tests/test_component_qualification.py \
+            reference/tests/test_component_fallback.py \
+            reference/tests/test_component_failure_probe.py \
             reference/tests/test_code_graph_qualification.py
 
       - name: Verify source mutation fixture is material

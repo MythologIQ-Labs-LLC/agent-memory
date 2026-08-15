@@ -5,9 +5,14 @@ on:
     paths:
       - "schemas/component-capability-qualification.schema.json"
       - "reference/agentmem_ref/qualification.py"
+      - "reference/agentmem_ref/component_fallback.py"
+      - "reference/agentmem_ref/component_failure_probe.py"
       - "reference/agentmem_ref/code_graph_qualification.py"
+      - "reference/run_component_failure_probe.py"
       - "reference/run_component_qualification.py"
       - "reference/tests/test_component_qualification.py"
+      - "reference/tests/test_component_fallback.py"
+      - "reference/tests/test_component_failure_probe.py"
       - "reference/tests/test_code_graph_qualification.py"
       - "reference/fixtures/component-qualification/**"
       - ".github/workflows/component-qualification-evidence.yml"
@@ -43,12 +48,14 @@ jobs:
       - name: Install Agent Memory reference dependencies
         run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
 
-      - name: Run qualification unit tests
+      - name: Run qualification, failure, fallback, and normalizer tests
         env:
           PYTHONPATH: reference
         run: |
           python -m unittest \
             reference/tests/test_component_qualification.py \
+            reference/tests/test_component_fallback.py \
+            reference/tests/test_component_failure_probe.py \
             reference/tests/test_code_graph_qualification.py
 
       - name: Prepare evidence directory
@@ -108,6 +115,24 @@ jobs:
             --direction downstream --json \
             > "$RAW_ROOT/codegenome/v2-decoy-downstream.json"
 
+      - name: Reproduce CodeGenome provider unavailable
+        env:
+          PYTHONPATH: reference
+        run: |
+          binary=/tmp/codegenome/target/debug/codegenome
+          mv "$binary" "$binary.available"
+          set +e
+          python reference/run_component_failure_probe.py \
+            --provider codegenome \
+            --executable "$binary" \
+            --raw-output "$RAW_ROOT/codegenome/unavailable-raw.json" \
+            --normalized-output "$RAW_ROOT/codegenome/unavailable-normalized.json" \
+            --trace-ref "qualification:codegenome:provider-unavailable"
+          status=$?
+          set -e
+          mv "$binary.available" "$binary"
+          exit "$status"
+
       - name: Fetch exact Graphify release source
         run: |
           git clone --filter=blob:none --no-checkout https://github.com/Graphify-Labs/graphify.git /tmp/graphify
@@ -135,7 +160,25 @@ jobs:
           cp /tmp/graphify-v1/graphify-out/graph.json "$RAW_ROOT/graphify/v1-graph.json"
           cp /tmp/graphify-v2/graphify-out/graph.json "$RAW_ROOT/graphify/v2-graph.json"
 
-      - name: Emit exact-head qualification report
+      - name: Reproduce Graphify provider unavailable
+        env:
+          PYTHONPATH: reference
+        run: |
+          binary=/tmp/graphify-venv/bin/graphify
+          mv "$binary" "$binary.available"
+          set +e
+          python reference/run_component_failure_probe.py \
+            --provider graphify \
+            --executable "$binary" \
+            --raw-output "$RAW_ROOT/graphify/unavailable-raw.json" \
+            --normalized-output "$RAW_ROOT/graphify/unavailable-normalized.json" \
+            --trace-ref "qualification:graphify:provider-unavailable"
+          status=$?
+          set -e
+          mv "$binary.available" "$binary"
+          exit "$status"
+
+      - name: Emit exact-head qualification and fallback report
         env:
           PYTHONPATH: reference
         run: |
@@ -148,11 +191,15 @@ jobs:
             --codegenome-v2-main-downstream "$RAW_ROOT/codegenome/v2-main-downstream.json" \
             --codegenome-v2-main-upstream "$RAW_ROOT/codegenome/v2-main-upstream.json" \
             --codegenome-v2-decoy-downstream "$RAW_ROOT/codegenome/v2-decoy-downstream.json" \
+            --codegenome-unavailable-raw "$RAW_ROOT/codegenome/unavailable-raw.json" \
+            --codegenome-unavailable-normalized "$RAW_ROOT/codegenome/unavailable-normalized.json" \
             --graphify-v1 "$RAW_ROOT/graphify/v1-graph.json" \
             --graphify-v2 "$RAW_ROOT/graphify/v2-graph.json" \
+            --graphify-unavailable-raw "$RAW_ROOT/graphify/unavailable-raw.json" \
+            --graphify-unavailable-normalized "$RAW_ROOT/graphify/unavailable-normalized.json" \
             --output "$RAW_ROOT/component-qualification-report.json"
 
-      - name: Verify schema, currentness, maturity, and authority boundaries
+      - name: Verify schema, currentness, failure, fallback, maturity, and authority boundaries
         env:
           PYTHONPATH: reference
         run: |
@@ -166,6 +213,8 @@ jobs:
           report = json.loads((root / "component-qualification-report.json").read_text())
           schema = json.loads(Path("schemas/component-capability-qualification.schema.json").read_text())
           validator = jsonschema.Draft202012Validator(schema)
+          assert report["schema_version"] == "1.1.0"
+          assert report["profile"] == {"id": "code-graph-traversal-currentness", "version": "1.1.0"}
           assert report["matched_result"]["both_passed"] is True
           assert report["matched_result"]["winner"] is None
           assert report["matched_result"]["authority_effect"] == "none"
@@ -173,19 +222,36 @@ jobs:
           for provider in ("codegenome", "graphify"):
               qualification = report["providers"][provider]["qualification"]
               validator.validate(qualification)
+              assert qualification["schema_version"] == "1.1.0"
               assert qualification["result"]["earned_maturity"] == "evidence_proven"
               assert qualification["result"]["authority_effect"] == "none"
               assert qualification["result"]["qualification_current"] is True
               assert qualification["source_rights"]["use_posture"] == "runtime_allowed"
+              adapter_results = qualification["evidence"]["adapter_results"]
+              assert [item["failure_result"] for item in adapter_results] == ["none", "provider_unavailable"]
+              assert adapter_results[1]["currentness"] == "unavailable"
+              assert adapter_results[1]["authority_effect"] == "none"
+              assert report["providers"][provider]["checks"]["provider_unavailable_explicit"] is True
           assert report["providers"]["codegenome"]["checks"]["full_rebuild_currentness"] is True
           assert report["providers"]["graphify"]["checks"]["full_rebuild_currentness"] is True
+
+          fallback = report["failure_fallback"]
+          assert fallback["authority_effect"] == "none"
+          assert fallback["primary_failure"]["failure_result"] == "provider_unavailable"
+          assert fallback["no_fallback_configured"]["status"] == "unavailable"
+          assert fallback["no_fallback_configured"]["reason"] == "fallback_not_configured"
+          assert fallback["explicit_graphify"]["status"] == "fallback_selected"
+          assert fallback["explicit_graphify"]["selected_component_id"] == "graphify"
+          assert fallback["explicit_graphify"]["authority_effect"] == "none"
+          assert fallback["weaker_graphify_refused"]["status"] == "unavailable"
+          assert "weaker_maturity" in fallback["weaker_graphify_refused"]["rejected_candidates"][0]["reasons"]
           PY
 
       - name: Display normalized report
         if: always()
         run: cat "$RAW_ROOT/component-qualification-report.json" || true
 
-      - name: Upload raw and normalized qualification evidence
+      - name: Upload raw, failure, fallback, and normalized qualification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
