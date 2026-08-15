@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/runtime-configuration.schema.json",
   "title": "Agent Memory Runtime Configuration",
-  "description": "Serialization-neutral runtime configuration contract for attaching Agent Memory to an existing stack or bootstrapping a bounded local profile. Configuration does not grant authority or prove qualification/currentness.",
+  "description": "Serialization-neutral runtime configuration contract for attaching Agent Memory to an existing stack or bootstrapping a bounded local profile. Configuration does not grant authority or prove qualification/currentness. component-capability-v2 declarations expose explicit lifecycle behavior metadata that routes may require.",
   "type": "object",
   "required": [
     "schema_version",
@@ -113,6 +113,112 @@
       },
       "additionalProperties": false
     },
+    "behaviorContract": {
+      "type": "object",
+      "required": [
+        "operation_support",
+        "currentness_model",
+        "invalidation_model",
+        "correction_model",
+        "deletion_model",
+        "residue_model",
+        "migration_rebuild_model",
+        "structural_mutation_requirement"
+      ],
+      "properties": {
+        "operation_support": {
+          "type": "object",
+          "required": ["write", "read", "recall_candidate"],
+          "properties": {
+            "write": { "type": "boolean" },
+            "read": { "type": "boolean" },
+            "recall_candidate": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "currentness_model": {
+          "type": "string",
+          "enum": ["not_applicable", "canonical_version", "basis_versioned", "provider_revalidated", "external_asserted"]
+        },
+        "invalidation_model": {
+          "type": "string",
+          "enum": ["not_applicable", "version_relation", "explicit_signal", "provider_revalidation"]
+        },
+        "correction_model": {
+          "type": "string",
+          "enum": ["not_applicable", "canonical_supersession", "invalidate_derived", "candidate_only", "provider_revalidation"]
+        },
+        "deletion_model": {
+          "type": "string",
+          "enum": ["not_applicable", "canonical_delete", "derived_residue_then_purge", "candidate_drop", "provider_revalidation"]
+        },
+        "residue_model": {
+          "type": "string",
+          "enum": ["not_applicable", "none_expected", "scan_required", "derived_residual", "provider_managed"]
+        },
+        "migration_rebuild_model": {
+          "type": "string",
+          "enum": ["not_applicable", "rebuild_from_canonical", "explicit_migration", "requires_requalification", "unsupported"]
+        },
+        "structural_mutation_requirement": {
+          "type": "string",
+          "enum": ["none", "proposal_only", "pama_required", "external_authorization_required"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "behaviorRequirement": {
+      "type": "object",
+      "properties": {
+        "operation_support": {
+          "type": "object",
+          "properties": {
+            "write": { "type": "boolean" },
+            "read": { "type": "boolean" },
+            "recall_candidate": { "type": "boolean" }
+          },
+          "minProperties": 1,
+          "additionalProperties": false
+        },
+        "currentness_models": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["not_applicable", "canonical_version", "basis_versioned", "provider_revalidated", "external_asserted"] },
+          "uniqueItems": true
+        },
+        "invalidation_models": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["not_applicable", "version_relation", "explicit_signal", "provider_revalidation"] },
+          "uniqueItems": true
+        },
+        "correction_models": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["not_applicable", "canonical_supersession", "invalidate_derived", "candidate_only", "provider_revalidation"] },
+          "uniqueItems": true
+        },
+        "deletion_models": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["not_applicable", "canonical_delete", "derived_residue_then_purge", "candidate_drop", "provider_revalidation"] },
+          "uniqueItems": true
+        },
+        "residue_models": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["not_applicable", "none_expected", "scan_required", "derived_residual", "provider_managed"] },
+          "uniqueItems": true
+        },
+        "migration_rebuild_models": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["not_applicable", "rebuild_from_canonical", "explicit_migration", "requires_requalification", "unsupported"] },
+          "uniqueItems": true
+        },
+        "structural_mutation_requirements": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["none", "proposal_only", "pama_required", "external_authorization_required"] },
+          "uniqueItems": true
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": false
+    },
     "capability": {
       "type": "object",
       "required": [
@@ -130,13 +236,7 @@
         "capability_version": { "$ref": "#/$defs/nonEmptyString" },
         "maturity": {
           "type": "string",
-          "enum": [
-            "declared",
-            "implemented",
-            "runtime_wired",
-            "evidence_proven",
-            "reference_qualified"
-          ]
+          "enum": ["declared", "implemented", "runtime_wired", "evidence_proven", "reference_qualified"]
         },
         "state_posture": {
           "type": "string",
@@ -144,11 +244,7 @@
         },
         "scope_posture": {
           "type": "string",
-          "enum": [
-            "enforces_agent_memory_scope",
-            "inherits_agent_memory_scope",
-            "external_scope_bridge"
-          ]
+          "enum": ["enforces_agent_memory_scope", "inherits_agent_memory_scope", "external_scope_bridge"]
         },
         "failure_posture": {
           "type": "string",
@@ -168,20 +264,14 @@
           "type": "array",
           "items": { "$ref": "#/$defs/nonEmptyString" },
           "uniqueItems": true
-        }
+        },
+        "behavior_contract": { "$ref": "#/$defs/behaviorContract" }
       },
       "additionalProperties": false
     },
     "componentDeclaration": {
       "type": "object",
-      "required": [
-        "component_id",
-        "component_version",
-        "profile_version",
-        "enabled",
-        "failure_posture",
-        "capabilities"
-      ],
+      "required": ["component_id", "component_version", "profile_version", "enabled", "failure_posture", "capabilities"],
       "properties": {
         "component_id": { "$ref": "#/$defs/nonEmptyString" },
         "component_version": { "$ref": "#/$defs/nonEmptyString" },
@@ -203,6 +293,26 @@
           "items": { "$ref": "#/$defs/capability" }
         }
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "profile_version": { "const": "component-capability-v2" } },
+            "required": ["profile_version"]
+          },
+          "then": {
+            "properties": {
+              "capabilities": {
+                "items": {
+                  "allOf": [
+                    { "$ref": "#/$defs/capability" },
+                    { "required": ["behavior_contract"] }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
       "additionalProperties": false
     },
     "componentRuntime": {
@@ -226,13 +336,7 @@
         "profile_version": { "$ref": "#/$defs/nonEmptyString" },
         "minimum_earned_maturity": {
           "type": "string",
-          "enum": [
-            "declared",
-            "implemented",
-            "runtime_wired",
-            "evidence_proven",
-            "reference_qualified"
-          ]
+          "enum": ["declared", "implemented", "runtime_wired", "evidence_proven", "reference_qualified"]
         },
         "applicability_digest": {
           "type": "string",
@@ -246,14 +350,7 @@
             "required": ["required"]
           },
           "then": {
-            "required": [
-              "adapter_id",
-              "adapter_version",
-              "profile_id",
-              "profile_version",
-              "minimum_earned_maturity",
-              "applicability_digest"
-            ]
+            "required": ["adapter_id", "adapter_version", "profile_id", "profile_version", "minimum_earned_maturity", "applicability_digest"]
           }
         }
       ],
@@ -270,28 +367,14 @@
     },
     "route": {
       "type": "object",
-      "required": [
-        "route_id",
-        "capability_id",
-        "capability_version",
-        "minimum_maturity",
-        "allowed_components",
-        "qualification",
-        "currentness"
-      ],
+      "required": ["route_id", "capability_id", "capability_version", "minimum_maturity", "allowed_components", "qualification", "currentness"],
       "properties": {
         "route_id": { "$ref": "#/$defs/nonEmptyString" },
         "capability_id": { "$ref": "#/$defs/nonEmptyString" },
         "capability_version": { "$ref": "#/$defs/nonEmptyString" },
         "minimum_maturity": {
           "type": "string",
-          "enum": [
-            "declared",
-            "implemented",
-            "runtime_wired",
-            "evidence_proven",
-            "reference_qualified"
-          ]
+          "enum": ["declared", "implemented", "runtime_wired", "evidence_proven", "reference_qualified"]
         },
         "allowed_components": {
           "type": "array",
@@ -312,16 +395,10 @@
         },
         "required_scope_postures": {
           "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "enforces_agent_memory_scope",
-              "inherits_agent_memory_scope",
-              "external_scope_bridge"
-            ]
-          },
+          "items": { "type": "string", "enum": ["enforces_agent_memory_scope", "inherits_agent_memory_scope", "external_scope_bridge"] },
           "uniqueItems": true
         },
+        "behavior_requirements": { "$ref": "#/$defs/behaviorRequirement" },
         "qualification": { "$ref": "#/$defs/qualificationRequirement" },
         "currentness": { "$ref": "#/$defs/currentness" }
       },
