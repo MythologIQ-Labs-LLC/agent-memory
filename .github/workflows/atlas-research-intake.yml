@@ -3,7 +3,7 @@ name: Atlas Research Intake
 on:
   push:
     branches:
-      - research/306-atlas-intake-scaffold
+      - main
     paths:
       - 'docs/programs/atlas-research/**'
       - 'scripts/build_atlas_research_inventory.py'
@@ -43,7 +43,7 @@ jobs:
       - name: Install schema validator
         run: python -m pip install jsonschema==4.26.0
 
-      - name: Validate committed scaffold
+      - name: Validate committed scaffold and inventory lock
         run: python scripts/validate_atlas_research_scaffold.py --allow-missing-inventory
 
       - name: Generate exact-pinned report inventory
@@ -52,15 +52,22 @@ jobs:
           --atlas-root _atlas
           --output /tmp/report-inventory.jsonl
 
-      - name: Validate generated inventory
+      - name: Validate generated inventory against durable lock
         run: >-
           python scripts/validate_atlas_research_scaffold.py
           --inventory /tmp/report-inventory.jsonl
 
-      - name: Preserve generated inventory evidence
+      - name: Record generated inventory digest
+        run: |
+          sha256sum /tmp/report-inventory.jsonl | tee /tmp/report-inventory.sha256
+          cat /tmp/report-inventory.sha256 >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve generated inventory convenience evidence
         uses: actions/upload-artifact@v4
         with:
           name: atlas-report-inventory-90bfeed
-          path: /tmp/report-inventory.jsonl
+          path: |
+            /tmp/report-inventory.jsonl
+            /tmp/report-inventory.sha256
           if-no-files-found: error
           retention-days: 30
