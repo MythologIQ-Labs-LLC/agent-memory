@@ -11,6 +11,7 @@ from agentmem_ref import policy, receipts
 from agentmem_ref.structural_mutation import (
     ACTIVE,
     RETIRED,
+    SUPERSEDED,
     S0,
     S1,
     S2,
@@ -24,6 +25,7 @@ from agentmem_ref.structural_mutation import (
     classify,
     evaluate_pama_v13,
     retire,
+    rollback,
     supersede,
 )
 from agentmem_ref.structural_pama import build_pama_decision_v13, enforce_v13_impact_binding
@@ -40,6 +42,9 @@ def make_structural_proposal(**overrides) -> StructuralProposal:
         proposed_schema=SchemaRef("domain:project", "4.1.0", "project"),
         layer="domain",
         change_kind="additive_extension",
+        semantic_diff=("add optional project:depends_on:project relation",),
+        tenant_ref="tenant-a",
+        isolation_domain_refs=("tenant-a/project-a",),
         preserves_semantics=True,
         optional_additive=True,
         migration_required=False,
@@ -86,10 +91,10 @@ def make_pama(structural: StructuralProposal, **overrides) -> policy.Proposal:
         estimator_versions=structural.estimator_versions,
         confidence=structural.confidence,
         state_snapshot=structural.state_digest,
-        tenant_ref="tenant-a",
+        tenant_ref=structural.tenant_ref,
         purpose="domain ontology evolution",
-        isolation_domain_refs=("tenant-a/project-a",),
-        required_isolation_domain_refs=("tenant-a/project-a",),
+        isolation_domain_refs=structural.isolation_domain_refs,
+        required_isolation_domain_refs=structural.isolation_domain_refs,
         project_ref="project-a",
     )
     values.update(overrides)
@@ -104,6 +109,7 @@ class StructuralMutationGovernanceTests(unittest.TestCase):
             proposed_schema=SchemaRef("projection:graph", "3", "project"),
             layer="derived",
             change_kind="rebuild_only",
+            semantic_diff=("replace graph projection layout without semantic change",),
             optional_additive=False,
             affected_memory_count=5000,
             rollback_ref="rollback:projection:graph:2",
@@ -126,6 +132,8 @@ class StructuralMutationGovernanceTests(unittest.TestCase):
         self.assertEqual(impact.classification.structural_class, S1)
         self.assertTrue(impact.classification.autonomous_eligible)
         self.assertEqual(impact.classification.required_authority, "deterministic_policy")
+        self.assertEqual(impact.to_dict()["impact"]["semantic_diff"], list(structural.semantic_diff))
+        self.assertEqual(impact.to_dict()["impact"]["isolation_domain_refs"], list(structural.isolation_domain_refs))
 
         pama = make_pama(structural)
         decision = evaluate_pama_v13(
@@ -184,6 +192,53 @@ class StructuralMutationGovernanceTests(unittest.TestCase):
         self.assertEqual(low_decision.outcome, high_decision.outcome)
         self.assertEqual(low_decision.permitted_actions, high_decision.permitted_actions)
 
+    def test_repeated_proposals_do_not_accumulate_authority(self):
+        structural = make_structural_proposal()
+        first_impact = classify(structural)
+        second_impact = classify(structural)
+        self.assertEqual(first_impact.impact_digest, second_impact.impact_digest)
+
+        first = evaluate_pama_v13(
+            make_pama(structural), first_impact,
+            current_state_digest=structural.state_digest,
+            current_dependency_digest=structural.dependency_digest,
+        )
+        second = evaluate_pama_v13(
+            make_pama(structural), second_impact,
+            current_state_digest=structural.state_digest,
+            current_dependency_digest=structural.dependency_digest,
+        )
+        self.assertEqual(first.outcome, second.outcome)
+        self.assertEqual(first.permitted_actions, second.permitted_actions)
+        self.assertEqual(first.reasons, second.reasons)
+
+    def test_probabilistic_classifier_disagreement_cannot_create_implicit_allow(self):
+        structural = make_structural_proposal(
+            proposal_id="schema:disputed-meaning-change",
+            proposed_schema=SchemaRef("domain:project", "5.0.0", "project"),
+            change_kind="semantic_change",
+            semantic_diff=("reinterpret status field as lifecycle state object",),
+            preserves_semantics=False,
+            optional_additive=False,
+            migration_required=True,
+            information_loss="possible",
+            historical_interpretation_preserved=False,
+            reversibility="compensatable",
+            rollback_ref="rollback:disputed:5",
+            estimator_refs=("estimator:a:claims-S1", "estimator:b:claims-S3"),
+            estimator_versions=("a:4", "b:11"),
+            confidence=0.999999,
+        )
+        impact = classify(structural)
+        self.assertEqual(impact.classification.structural_class, S2)
+        decision = evaluate_pama_v13(
+            make_pama(structural), impact,
+            current_state_digest=structural.state_digest,
+            current_dependency_digest=structural.dependency_digest,
+        )
+        self.assertEqual(decision.outcome, policy.REQUIRE_REVIEW)
+        self.assertNotIn(dsm.DOMAIN_SCHEMA_MUTATION, decision.permitted_actions)
+
     def test_s1_bound_failure_escalates_to_s2(self):
         policy_profile = StructuralPolicy(s1_max_affected_memories=100)
         impact = classify(make_structural_proposal(affected_memory_count=101), structural_policy=policy_profile)
@@ -196,6 +251,7 @@ class StructuralMutationGovernanceTests(unittest.TestCase):
             proposal_id="schema:meaning-change",
             proposed_schema=SchemaRef("domain:project", "5.0.0", "project"),
             change_kind="semantic_change",
+            semantic_diff=("change status from enum value to lifecycle state object",),
             preserves_semantics=False,
             optional_additive=False,
             migration_required=True,
@@ -258,6 +314,7 @@ class StructuralMutationGovernanceTests(unittest.TestCase):
             proposal_id="schema:widen-and-retire",
             proposed_schema=SchemaRef("domain:project", "5.0.0", "tenant"),
             change_kind="destructive_retirement",
+            semantic_diff=("retire legacy project field and reinterpret it as tenant governance state",),
             optional_additive=False,
             scope_posture="widened",
             authority_posture="governance_bearing",
@@ -301,6 +358,32 @@ class StructuralMutationGovernanceTests(unittest.TestCase):
                 current_state_digest=structural.state_digest,
                 current_dependency_digest=digest("deps:v5"),
             )
+
+    def test_declared_rollback_is_governed_and_reconstructable(self):
+        structural = make_structural_proposal()
+        impact = classify(structural)
+        decision = evaluate_pama_v13(
+            make_pama(structural), impact,
+            current_state_digest=structural.state_digest,
+            current_dependency_digest=structural.dependency_digest,
+        )
+        lifecycle = activate(authorize_lifecycle(
+            impact,
+            decision,
+            current_state_digest=structural.state_digest,
+            current_dependency_digest=structural.dependency_digest,
+            decision_ref="decision:s1:rollback",
+        ))
+        with self.assertRaisesRegex(StructuralMutationError, "does not match"):
+            rollback(lifecycle, rollback_ref="rollback:wrong", execution_ref="execution:rollback:1")
+        rolled_back = rollback(
+            lifecycle,
+            rollback_ref=structural.rollback_ref,
+            execution_ref="execution:rollback:1",
+        )
+        self.assertEqual(rolled_back.lifecycle_state, SUPERSEDED)
+        self.assertEqual(rolled_back.rollback_ref, structural.rollback_ref)
+        self.assertEqual(rolled_back.rollback_execution_ref, "execution:rollback:1")
 
     def test_retirement_waits_for_live_dependencies_and_residue(self):
         structural = make_structural_proposal()
