@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Execute the #279 provider-side governed durable-memory proof.
 
-This is a deterministic provider/workload harness. It proves the Agent Memory
-side of the frozen DashClaw v1 contract and the ordinary governed mutation path.
-It does not claim a live public-HTTPS DashClaw deployment or process-restart
-durability.
+This deterministic harness proves the Agent Memory side of DashClaw's frozen
+external-verdict v1 contract and the ordinary governed mutation path. It does
+not claim a live public-HTTPS DashClaw deployment or process-restart durability.
 """
 
 from __future__ import annotations
@@ -17,19 +16,21 @@ from agentmem_ref.dashclaw_external_verdict import (
     ACTION_MUTATION,
     StaticAuthorityGrant,
     StaticAuthorityResolver,
-    commit_bound_mutation,
     evaluate_request,
     parse_mutation_request,
     sha256_text,
 )
+from agentmem_ref.dashclaw_governed_commit import DashClawGovernedCommitter
 from agentmem_ref.substrate import InMemoryTemporalGraph
 
 ORG = "fixture-org"
 AGENT = "release-agent"
+OTHER_AGENT = "other-project-agent"
 HUMAN = "operator-kevin"
 PROJECT = "project:fixture"
 OTHER_PROJECT = "project:other"
 MEMORY_ID = "repo:fixture:release-branch"
+OTHER_MEMORY_ID = "repo:other:release-branch"
 
 AUTHORITY = StaticAuthorityResolver(
     (
@@ -38,6 +39,12 @@ AUTHORITY = StaticAuthorityResolver(
             agent_id=AGENT,
             isolation_domain_refs=(PROJECT,),
             evidence_ref="authority-grant:fixture-release-agent",
+        ),
+        StaticAuthorityGrant(
+            org_id=ORG,
+            agent_id=OTHER_AGENT,
+            isolation_domain_refs=(OTHER_PROJECT,),
+            evidence_ref="authority-grant:other-project-agent",
         ),
     )
 )
@@ -53,12 +60,14 @@ def _request(
     target_class: str = policy.M2,
     downstream_authority: str = policy.A1,
     project_ref: str = PROJECT,
+    agent_id: str = AGENT,
+    memory_id: str = MEMORY_ID,
     requested_scope_change: str = "",
 ) -> dict:
     proposal = {
         "proposal_id": f"proposal-{suffix}",
         "charter_version": "fixture-charter-v1",
-        "target_reference": MEMORY_ID,
+        "target_reference": memory_id,
         "target_class": target_class,
         "scope": project_ref,
         "operation": operation,
@@ -80,7 +89,7 @@ def _request(
     return {
         "request_id": f"evr-{suffix}",
         "org_id": ORG,
-        "agent_id": AGENT,
+        "agent_id": agent_id,
         "action_type": ACTION_MUTATION,
         "declared_goal": "retain the repository release branch for future planning",
         "act": {
@@ -96,6 +105,7 @@ def _request(
 def run() -> dict:
     substrate = InMemoryTemporalGraph()
     memory = GovernedMemoryAdapter(substrate=substrate, tenant=ORG)
+    committer = DashClawGovernedCommitter(memory, AUTHORITY)
     context = RecallContext(
         target_domain_refs=(f"org:{ORG}", PROJECT),
         principal_ref=AGENT,
@@ -113,7 +123,7 @@ def run() -> dict:
     unresolved_identity_only = evaluate_request(initial_request)
     initial_verdict = evaluate_request(initial_request, AUTHORITY)
     initial_mutation = parse_mutation_request(initial_request, AUTHORITY)
-    initial_commit = commit_bound_mutation(memory, initial_mutation)
+    initial_commit = committer.commit(initial_mutation)
     recall_v1 = memory.governed_recall("release branch", context)
 
     correction_request = _request(
@@ -126,23 +136,20 @@ def run() -> dict:
     correction_verdict = evaluate_request(correction_request, AUTHORITY)
     correction_mutation = parse_mutation_request(correction_request, AUTHORITY)
 
-    unapproved_correction = commit_bound_mutation(memory, correction_mutation)
-    wrong_identity_approval = commit_bound_mutation(
-        memory,
+    unapproved_correction = committer.commit(correction_mutation)
+    wrong_identity_approval = committer.commit(
         correction_mutation,
         approval_ref="dashclaw-approval:wrong-identity",
         approval_actor_id=HUMAN,
         approved_input_identity="sha256:different-act",
     )
-    self_approval = commit_bound_mutation(
-        memory,
+    self_approval = committer.commit(
         correction_mutation,
         approval_ref="dashclaw-approval:self",
         approval_actor_id=AGENT,
         approved_input_identity=correction_mutation.input_identity,
     )
-    correction_commit = commit_bound_mutation(
-        memory,
+    correction_commit = committer.commit(
         correction_mutation,
         approval_ref="dashclaw-approval:release-v2",
         approval_actor_id=HUMAN,
@@ -150,8 +157,7 @@ def run() -> dict:
     )
     recall_v2 = memory.governed_recall("release branch", context)
 
-    stale_replay = commit_bound_mutation(
-        memory,
+    stale_replay = committer.commit(
         correction_mutation,
         approval_ref="dashclaw-approval:release-v2",
         approval_actor_id=HUMAN,
@@ -171,7 +177,7 @@ def run() -> dict:
     attack_verdict = evaluate_request(attack_request, AUTHORITY)
     attack_mutation = parse_mutation_request(attack_request, AUTHORITY)
     writes_before_attack = tuple(substrate.write_log)
-    attack_commit = commit_bound_mutation(memory, attack_mutation)
+    attack_commit = committer.commit(attack_mutation)
     writes_after_attack = tuple(substrate.write_log)
 
     unauthorized_request = _request(
@@ -185,14 +191,56 @@ def run() -> dict:
     unauthorized_verdict = evaluate_request(unauthorized_request, AUTHORITY)
     unauthorized_mutation = parse_mutation_request(unauthorized_request, AUTHORITY)
     writes_before_unauthorized = tuple(substrate.write_log)
-    unauthorized_commit = commit_bound_mutation(memory, unauthorized_mutation)
+    unauthorized_commit = committer.commit(unauthorized_mutation)
     writes_after_unauthorized = tuple(substrate.write_log)
+
+    # Seed a second logical memory under a different project and actor using
+    # the same governed committer so its target-scope binding is reconstructable
+    # inside this process.
+    other_seed_request = _request(
+        suffix="other-project-seed",
+        value="other release branch release",
+        operation="promotion",
+        risk="low",
+        state_snapshot="v0",
+        project_ref=OTHER_PROJECT,
+        agent_id=OTHER_AGENT,
+        memory_id=OTHER_MEMORY_ID,
+    )
+    other_seed_verdict = evaluate_request(other_seed_request, AUTHORITY)
+    other_seed_mutation = parse_mutation_request(other_seed_request, AUTHORITY)
+    other_seed_commit = committer.commit(other_seed_mutation)
+
+    # The normal provider projection sees only the requested Project A scope and
+    # therefore allows this low-risk request. The stateful commit seam must still
+    # refuse because the existing logical target is bound to Project B and the
+    # acting Project A identity has no authority over that current target scope.
+    cross_target_request = _request(
+        suffix="cross-target-scope-attack",
+        value="other release branch main",
+        operation="correction",
+        risk="medium",
+        state_snapshot="v1",
+        project_ref=PROJECT,
+        agent_id=AGENT,
+        memory_id=OTHER_MEMORY_ID,
+    )
+    cross_target_verdict = evaluate_request(cross_target_request, AUTHORITY)
+    cross_target_mutation = parse_mutation_request(cross_target_request, AUTHORITY)
+    writes_before_cross_target = tuple(substrate.write_log)
+    cross_target_commit = committer.commit(
+        cross_target_mutation,
+        approval_ref="dashclaw-approval:cross-target",
+        approval_actor_id=HUMAN,
+        approved_input_identity=cross_target_mutation.input_identity,
+    )
+    writes_after_cross_target = tuple(substrate.write_log)
 
     cross_project = memory.governed_recall(
         "release branch",
         RecallContext(
             target_domain_refs=(f"org:{ORG}", OTHER_PROJECT),
-            principal_ref="other-agent",
+            principal_ref=OTHER_AGENT,
             project_ref=OTHER_PROJECT,
             purpose="release planning",
         ),
@@ -201,6 +249,8 @@ def run() -> dict:
     current_uuid = memory.current_fact_uuid(MEMORY_ID)
     current_fact = substrate.get_fact(current_uuid) if current_uuid else None
     v1_fact = substrate.get_fact(initial_commit.adapter_result.fact_uuid) if initial_commit.adapter_result else None
+    other_current_uuid = memory.current_fact_uuid(OTHER_MEMORY_ID)
+    other_current_fact = substrate.get_fact(other_current_uuid) if other_current_uuid else None
 
     report = {
         "schema_version": "1.0.0",
@@ -251,6 +301,15 @@ def run() -> dict:
             "refusal": unauthorized_commit.refusal,
             "substrate_untouched": writes_before_unauthorized == writes_after_unauthorized,
         },
+        "cross_target_scope": {
+            "seed_provider_decision": other_seed_verdict["decision"],
+            "seed_committed": other_seed_commit.committed,
+            "attack_provider_decision": cross_target_verdict["decision"],
+            "attack_committed": cross_target_commit.committed,
+            "attack_refusal": cross_target_commit.refusal,
+            "substrate_untouched": writes_before_cross_target == writes_after_cross_target,
+            "other_current_value": other_current_fact.fact_text if other_current_fact else None,
+        },
         "cross_project_recall": {
             "candidate_count": len(cross_project.candidates),
             "admitted": list(cross_project.admitted),
@@ -289,11 +348,20 @@ def run() -> dict:
     assert report["unauthorized_project"]["authority_resolved"] is False
     assert report["unauthorized_project"]["authority_reason"] == "authority_grant_not_found"
     assert report["unauthorized_project"]["committed"] is False
-    assert report["unauthorized_project"]["refusal"] == "pama_blocked"
+    assert report["unauthorized_project"]["refusal"] == "requested_scope_authority_unresolved"
     assert report["unauthorized_project"]["substrate_untouched"] is True
 
+    assert report["cross_target_scope"]["seed_provider_decision"] == "allow"
+    assert report["cross_target_scope"]["seed_committed"] is True
+    assert report["cross_target_scope"]["attack_provider_decision"] == "escalate"
+    assert report["cross_target_scope"]["attack_committed"] is False
+    assert report["cross_target_scope"]["attack_refusal"] == "target_scope_authority_unresolved"
+    assert report["cross_target_scope"]["substrate_untouched"] is True
+    assert report["cross_target_scope"]["other_current_value"] == "other release branch release"
+
     assert report["cross_project_recall"]["candidate_count"] >= 1
-    assert report["cross_project_recall"]["admitted"] == []
+    assert report["cross_project_recall"]["admitted"]
+    assert all(fact_uuid != initial_commit.adapter_result.fact_uuid for fact_uuid in report["cross_project_recall"]["admitted"])
 
     return report
 
