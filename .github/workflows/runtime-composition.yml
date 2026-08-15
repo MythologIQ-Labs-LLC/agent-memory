@@ -45,10 +45,11 @@ jobs:
           report = json.loads(Path("runtime-composition-evidence.json").read_text())
           if len(report["agent_memory_commit"]) != 40:
               raise SystemExit("composition evidence is not exact-head bound")
-          failed = [
-              name for name, passed in report["structural_invariants"].items()
-              if not passed
-          ]
+          invariants = report["structural_invariants"]
+          non_boolean = [name for name, value in invariants.items() if type(value) is not bool]
+          if non_boolean:
+              raise SystemExit(f"composition invariants are not JSON booleans: {non_boolean}")
+          failed = [name for name, passed in invariants.items() if not passed]
           if failed:
               raise SystemExit(f"runtime composition invariants failed: {failed}")
           if report["authority_effect"] != "none":
@@ -57,7 +58,7 @@ jobs:
           required = {"semantic_fact_memory", "exact_identity_retrieval", "rebuild_projection"}
           if not required.issubset(capabilities):
               raise SystemExit(f"missing composed capabilities: {sorted(required - capabilities)}")
-          print(f"validated {len(report['structural_invariants'])} runtime composition invariants")
+          print(f"validated {len(invariants)} boolean runtime composition invariants")
           PY
 
       - name: Upload runtime composition evidence
