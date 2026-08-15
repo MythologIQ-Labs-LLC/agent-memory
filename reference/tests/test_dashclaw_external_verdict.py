@@ -9,6 +9,8 @@ from agentmem_ref.dashclaw_external_verdict import (
     ACTION_CONNECTION_TEST,
     ACTION_MUTATION,
     DashClawRequestError,
+    StaticAuthorityGrant,
+    StaticAuthorityResolver,
     commit_bound_mutation,
     evaluate_request,
     parse_mutation_request,
@@ -20,6 +22,18 @@ from agentmem_ref.substrate import InMemoryTemporalGraph
 ORG = "fixture-org"
 AGENT = "release-agent"
 PROJECT = "project:fixture"
+OTHER_PROJECT = "project:other"
+
+AUTHORITY = StaticAuthorityResolver(
+    (
+        StaticAuthorityGrant(
+            org_id=ORG,
+            agent_id=AGENT,
+            isolation_domain_refs=(PROJECT,),
+            evidence_ref="authority-grant:fixture-release-agent",
+        ),
+    )
+)
 
 
 def mutation_request(
@@ -31,6 +45,7 @@ def mutation_request(
     input_identity: str = "sha256:dashclaw-fixture",
     target_class: str = policy.M2,
     downstream_authority: str = policy.A1,
+    project_ref: str = PROJECT,
 ) -> dict:
     return {
         "request_id": "evr-fixture",
@@ -46,7 +61,7 @@ def mutation_request(
                 "charter_version": "fixture-charter-v1",
                 "target_reference": "repo:fixture:release-branch",
                 "target_class": target_class,
-                "scope": PROJECT,
+                "scope": project_ref,
                 "operation": operation,
                 "current_strength": "observed" if state_snapshot == "v0" else "promoted",
                 "proposed_strength": "promoted",
@@ -55,9 +70,9 @@ def mutation_request(
                 "risk_class": risk,
                 "state_snapshot": state_snapshot,
                 "purpose": "release planning",
-                "isolation_domain_refs": [PROJECT],
-                "required_isolation_domain_refs": [PROJECT],
-                "project_ref": PROJECT,
+                "isolation_domain_refs": [project_ref],
+                "required_isolation_domain_refs": [project_ref],
+                "project_ref": project_ref,
                 "evidence_refs": ["fixture:user-statement"],
                 "content_sha256": sha256_text(value),
             },
@@ -83,20 +98,40 @@ class DashClawExternalVerdictTests(unittest.TestCase):
         self.assertEqual(response["input_identity"], request["input_identity"])
         self.assertEqual(response["evidence"], {"connection_test": True, "accepted": True})
 
+    def test_identity_alone_does_not_resolve_scope_authority(self) -> None:
+        response = evaluate_request(mutation_request())
+        self.assertEqual(response["decision"], "deny")
+        self.assertEqual(response["reason"], "pama_block")
+        self.assertFalse(response["evidence"]["authority_resolved"])
+        self.assertEqual(response["evidence"]["authority_reason"], "authority_resolver_missing")
+
     def test_input_identity_is_echoed_verbatim(self) -> None:
         request = mutation_request(input_identity="opaque:not-a-provider-digest")
-        response = evaluate_request(request)
+        response = evaluate_request(request, AUTHORITY)
         self.assertEqual(response["input_identity"], "opaque:not-a-provider-digest")
 
     def test_low_risk_promotion_maps_allow_with_ledger_to_allow(self) -> None:
-        response = evaluate_request(mutation_request())
+        response = evaluate_request(mutation_request(), AUTHORITY)
         self.assertEqual(response["decision"], "allow")
         self.assertEqual(response["reason"], "pama_allow_with_ledger")
         self.assertEqual(response["evidence"]["pama_outcome"], policy.ALLOW_WITH_LEDGER)
+        self.assertTrue(response["evidence"]["authority_resolved"])
+        self.assertEqual(response["evidence"]["authority_evidence_ref"], "authority-grant:fixture-release-agent")
         self.assertFalse(response["evidence"]["execution_evidence"])
 
+    def test_unauthorized_project_scope_is_blocked(self) -> None:
+        request = mutation_request(project_ref=OTHER_PROJECT)
+        response = evaluate_request(request, AUTHORITY)
+        self.assertEqual(response["decision"], "deny")
+        self.assertEqual(response["reason"], "pama_block")
+        self.assertFalse(response["evidence"]["authority_resolved"])
+        self.assertEqual(response["evidence"]["authority_reason"], "authority_grant_not_found")
+
     def test_correction_maps_review_to_escalate(self) -> None:
-        response = evaluate_request(mutation_request(operation="correction", risk="medium", state_snapshot="v1"))
+        response = evaluate_request(
+            mutation_request(operation="correction", risk="medium", state_snapshot="v1"),
+            AUTHORITY,
+        )
         self.assertEqual(response["decision"], "escalate")
         self.assertEqual(response["reason"], "pama_require_review")
 
@@ -109,60 +144,69 @@ class DashClawExternalVerdictTests(unittest.TestCase):
             target_class=policy.M5,
             downstream_authority=policy.A5,
         )
-        response = evaluate_request(request)
+        response = evaluate_request(request, AUTHORITY)
         self.assertEqual(response["decision"], "deny")
         self.assertEqual(response["reason"], "pama_block")
 
     def test_unsupported_action_fails_conservatively(self) -> None:
         request = mutation_request()
         request["action_type"] = "shell"
-        response = evaluate_request(request)
+        response = evaluate_request(request, AUTHORITY)
         self.assertEqual(response["decision"], "deny")
         self.assertEqual(response["reason"], "unsupported_action_type")
 
     def test_content_drift_is_denied_before_pama(self) -> None:
         request = mutation_request()
         request["act"]["memory_value"] = "release branch main"
-        response = evaluate_request(request)
+        response = evaluate_request(request, AUTHORITY)
         self.assertEqual(response["decision"], "deny")
         self.assertEqual(response["reason"], "content_binding_mismatch")
 
-    def test_act_cannot_inject_actor_tenant_or_review_authority(self) -> None:
+    def test_act_cannot_inject_actor_tenant_scope_authority_or_review(self) -> None:
         for field, value in (
             ("actor_id", "different-agent"),
             ("tenant_ref", "other-org"),
+            ("actor_authority_resolved", True),
             ("approval_refs", ["fake-approval"]),
             ("review_satisfied", True),
         ):
             with self.subTest(field=field):
                 request = mutation_request()
                 request["act"]["proposal"][field] = value
-                response = evaluate_request(request)
+                response = evaluate_request(request, AUTHORITY)
                 self.assertEqual(response["decision"], "deny")
                 self.assertEqual(response["reason"], "authority_injection_attempt")
 
     def test_conflicting_org_isolation_binding_is_denied(self) -> None:
         request = mutation_request()
         request["act"]["proposal"]["isolation_domain_refs"].append("org:other-org")
-        response = evaluate_request(request)
+        response = evaluate_request(request, AUTHORITY)
         self.assertEqual(response["decision"], "deny")
         self.assertEqual(response["reason"], "conflicting_trusted_binding")
+
+    def test_scope_must_match_project_ref(self) -> None:
+        request = mutation_request()
+        request["act"]["proposal"]["scope"] = OTHER_PROJECT
+        response = evaluate_request(request, AUTHORITY)
+        self.assertEqual(response["decision"], "deny")
+        self.assertEqual(response["reason"], "scope_project_mismatch")
 
     def test_missing_input_identity_cannot_fake_contract_verdict(self) -> None:
         request = mutation_request()
         del request["input_identity"]
         with self.assertRaises(DashClawRequestError):
-            evaluate_request(request)
+            evaluate_request(request, AUTHORITY)
 
     def test_provider_evidence_is_bounded(self) -> None:
-        response = evaluate_request(mutation_request())
+        response = evaluate_request(mutation_request(), AUTHORITY)
         serialized = json.dumps(response["evidence"], sort_keys=True, separators=(",", ":"))
         self.assertLessEqual(len(serialized), 4096)
 
     def test_review_commit_requires_exact_approval_identity_and_external_actor(self) -> None:
         memory = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=ORG)
         mutation = parse_mutation_request(
-            mutation_request(operation="correction", risk="medium", state_snapshot="v0")
+            mutation_request(operation="correction", risk="medium", state_snapshot="v0"),
+            AUTHORITY,
         )
 
         missing = commit_bound_mutation(memory, mutation)
@@ -196,7 +240,17 @@ class DashClawExternalVerdictTests(unittest.TestCase):
             target_class=policy.M5,
             downstream_authority=policy.A5,
         )
-        mutation = parse_mutation_request(request)
+        mutation = parse_mutation_request(request, AUTHORITY)
+        before = tuple(substrate.write_log)
+        result = commit_bound_mutation(memory, mutation)
+        self.assertFalse(result.committed)
+        self.assertEqual(result.refusal, "pama_blocked")
+        self.assertEqual(tuple(substrate.write_log), before)
+
+    def test_unauthorized_scope_cannot_reach_substrate_via_bound_commit(self) -> None:
+        substrate = InMemoryTemporalGraph()
+        memory = GovernedMemoryAdapter(substrate, tenant=ORG)
+        mutation = parse_mutation_request(mutation_request(project_ref=OTHER_PROJECT), AUTHORITY)
         before = tuple(substrate.write_log)
         result = commit_bound_mutation(memory, mutation)
         self.assertFalse(result.committed)
