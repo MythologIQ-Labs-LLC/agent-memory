@@ -15,6 +15,8 @@ from agentmem_ref import policy
 from agentmem_ref.adapter import GovernedMemoryAdapter, RecallContext
 from agentmem_ref.dashclaw_external_verdict import (
     ACTION_MUTATION,
+    StaticAuthorityGrant,
+    StaticAuthorityResolver,
     commit_bound_mutation,
     evaluate_request,
     parse_mutation_request,
@@ -26,7 +28,19 @@ ORG = "fixture-org"
 AGENT = "release-agent"
 HUMAN = "operator-kevin"
 PROJECT = "project:fixture"
+OTHER_PROJECT = "project:other"
 MEMORY_ID = "repo:fixture:release-branch"
+
+AUTHORITY = StaticAuthorityResolver(
+    (
+        StaticAuthorityGrant(
+            org_id=ORG,
+            agent_id=AGENT,
+            isolation_domain_refs=(PROJECT,),
+            evidence_ref="authority-grant:fixture-release-agent",
+        ),
+    )
+)
 
 
 def _request(
@@ -38,7 +52,7 @@ def _request(
     state_snapshot: str,
     target_class: str = policy.M2,
     downstream_authority: str = policy.A1,
-    scope: str = PROJECT,
+    project_ref: str = PROJECT,
     requested_scope_change: str = "",
 ) -> dict:
     proposal = {
@@ -46,7 +60,7 @@ def _request(
         "charter_version": "fixture-charter-v1",
         "target_reference": MEMORY_ID,
         "target_class": target_class,
-        "scope": scope,
+        "scope": project_ref,
         "operation": operation,
         "current_strength": "observed" if state_snapshot == "v0" else "promoted",
         "proposed_strength": "promoted",
@@ -55,9 +69,9 @@ def _request(
         "risk_class": risk,
         "state_snapshot": state_snapshot,
         "purpose": "release planning",
-        "isolation_domain_refs": [PROJECT],
-        "required_isolation_domain_refs": [PROJECT],
-        "project_ref": PROJECT,
+        "isolation_domain_refs": [project_ref],
+        "required_isolation_domain_refs": [project_ref],
+        "project_ref": project_ref,
         "evidence_refs": [f"fixture:{suffix}:authoritative-statement"],
         "content_sha256": sha256_text(value),
     }
@@ -96,8 +110,9 @@ def run() -> dict:
         risk="low",
         state_snapshot="v0",
     )
-    initial_verdict = evaluate_request(initial_request)
-    initial_mutation = parse_mutation_request(initial_request)
+    unresolved_identity_only = evaluate_request(initial_request)
+    initial_verdict = evaluate_request(initial_request, AUTHORITY)
+    initial_mutation = parse_mutation_request(initial_request, AUTHORITY)
     initial_commit = commit_bound_mutation(memory, initial_mutation)
     recall_v1 = memory.governed_recall("release branch", context)
 
@@ -108,8 +123,8 @@ def run() -> dict:
         risk="medium",
         state_snapshot="v1",
     )
-    correction_verdict = evaluate_request(correction_request)
-    correction_mutation = parse_mutation_request(correction_request)
+    correction_verdict = evaluate_request(correction_request, AUTHORITY)
+    correction_mutation = parse_mutation_request(correction_request, AUTHORITY)
 
     unapproved_correction = commit_bound_mutation(memory, correction_mutation)
     wrong_identity_approval = commit_bound_mutation(
@@ -151,21 +166,34 @@ def run() -> dict:
         state_snapshot="v2",
         target_class=policy.M5,
         downstream_authority=policy.A5,
-        scope="org:all-projects",
         requested_scope_change="organization",
     )
-    attack_verdict = evaluate_request(attack_request)
-    attack_mutation = parse_mutation_request(attack_request)
+    attack_verdict = evaluate_request(attack_request, AUTHORITY)
+    attack_mutation = parse_mutation_request(attack_request, AUTHORITY)
     writes_before_attack = tuple(substrate.write_log)
     attack_commit = commit_bound_mutation(memory, attack_mutation)
     writes_after_attack = tuple(substrate.write_log)
 
+    unauthorized_request = _request(
+        suffix="unauthorized-project",
+        value="release branch main",
+        operation="promotion",
+        risk="low",
+        state_snapshot="v2",
+        project_ref=OTHER_PROJECT,
+    )
+    unauthorized_verdict = evaluate_request(unauthorized_request, AUTHORITY)
+    unauthorized_mutation = parse_mutation_request(unauthorized_request, AUTHORITY)
+    writes_before_unauthorized = tuple(substrate.write_log)
+    unauthorized_commit = commit_bound_mutation(memory, unauthorized_mutation)
+    writes_after_unauthorized = tuple(substrate.write_log)
+
     cross_project = memory.governed_recall(
         "release branch",
         RecallContext(
-            target_domain_refs=(f"org:{ORG}", "project:other"),
+            target_domain_refs=(f"org:{ORG}", OTHER_PROJECT),
             principal_ref="other-agent",
-            project_ref="project:other",
+            project_ref=OTHER_PROJECT,
             purpose="release planning",
         ),
     )
@@ -179,6 +207,11 @@ def run() -> dict:
         "dashclaw_contract": "external-verdict-v1@v5.24.0",
         "provider_scope": [ACTION_MUTATION],
         "cross_session_not_restart": True,
+        "authority_boundary": {
+            "identity_only_decision": unresolved_identity_only["decision"],
+            "identity_only_authority_resolved": unresolved_identity_only["evidence"]["authority_resolved"],
+            "resolved_authority_evidence": initial_verdict["evidence"]["authority_evidence_ref"],
+        },
         "initial": {
             "provider_decision": initial_verdict["decision"],
             "provider_identity_echo": initial_verdict["input_identity"] == initial_request["input_identity"],
@@ -210,12 +243,24 @@ def run() -> dict:
             "refusal": attack_commit.refusal,
             "substrate_untouched": writes_before_attack == writes_after_attack,
         },
+        "unauthorized_project": {
+            "provider_decision": unauthorized_verdict["decision"],
+            "authority_resolved": unauthorized_verdict["evidence"]["authority_resolved"],
+            "authority_reason": unauthorized_verdict["evidence"]["authority_reason"],
+            "committed": unauthorized_commit.committed,
+            "refusal": unauthorized_commit.refusal,
+            "substrate_untouched": writes_before_unauthorized == writes_after_unauthorized,
+        },
         "cross_project_recall": {
             "candidate_count": len(cross_project.candidates),
             "admitted": list(cross_project.admitted),
             "refusals": dict(cross_project.refusals),
         },
     }
+
+    assert report["authority_boundary"]["identity_only_decision"] == "deny"
+    assert report["authority_boundary"]["identity_only_authority_resolved"] is False
+    assert report["authority_boundary"]["resolved_authority_evidence"] == "authority-grant:fixture-release-agent"
 
     assert report["initial"]["provider_decision"] == "allow"
     assert report["initial"]["provider_identity_echo"] is True
@@ -239,6 +284,14 @@ def run() -> dict:
     assert report["scope_attack"]["committed"] is False
     assert report["scope_attack"]["refusal"] == "pama_blocked"
     assert report["scope_attack"]["substrate_untouched"] is True
+
+    assert report["unauthorized_project"]["provider_decision"] == "deny"
+    assert report["unauthorized_project"]["authority_resolved"] is False
+    assert report["unauthorized_project"]["authority_reason"] == "authority_grant_not_found"
+    assert report["unauthorized_project"]["committed"] is False
+    assert report["unauthorized_project"]["refusal"] == "pama_blocked"
+    assert report["unauthorized_project"]["substrate_untouched"] is True
+
     assert report["cross_project_recall"]["candidate_count"] >= 1
     assert report["cross_project_recall"]["admitted"] == []
 
