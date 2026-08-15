@@ -34,7 +34,8 @@ DashClaw Decide
 Agent Memory DashClaw adapter
   |
   +-- validate wire + exact memory-content binding
-  +-- reconstruct trusted actor/tenant boundaries
+  +-- bind DashClaw org/agent identity
+  +-- resolve requested memory scope through trusted authority evidence
   +-- evaluate existing PAMA policy
   |
   v
@@ -54,9 +55,10 @@ GovernedMemoryAdapter.commit_proposal
 mutation + canonical receipt or refusal
 ```
 
-The load-bearing separation is:
+The load-bearing separations are:
 
 ```text
+identity != scope authority
 DashClaw verdict != Agent Memory execution
 DashClaw approval != standing Agent Memory authority
 DashClaw input_identity != Agent Memory proposal digest
@@ -95,27 +97,54 @@ proposal.content_sha256 = sha256(memory_value)
 
 A content mismatch is denied before PAMA evaluation, so a verdict for one value cannot be reused for another.
 
-## Trusted binding boundary
+## Identity is not scope authority
 
-DashClaw's top-level fields provide the trusted integration bindings:
+DashClaw's top-level fields provide trusted peer identity bindings:
 
 ```text
-org_id   -> Agent Memory tenant/org binding
-agent_id -> proposing actor binding
+org_id   -> Agent Memory tenant/org identity
+agent_id -> proposing actor identity
 ```
+
+They do **not** prove that the actor may mutate any project/task scope named inside `act`.
+
+The adapter therefore requires a separate `AuthorityResolver` to reconstruct the requested isolation-domain authority. Without a resolver, the proposal reaches PAMA with:
+
+```text
+actor_authority_resolved = false
+```
+
+and PAMA blocks it. An authorized resolution must also return a reconstructable `evidence_ref`; an unexplained boolean allow is rejected.
+
+The reference implementation includes a deliberately narrow `StaticAuthorityResolver` for tests and controlled integration. It exact-matches:
+
+```text
+org_id
+agent_id
+requested isolation domains
+```
+
+against previously configured grants. It is not a new policy language and is not intended to replace a real identity/authorization source.
 
 The nested `act.proposal` is not allowed to inject replacements for:
 
 ```text
 actor_id
 tenant_ref
+actor_authority_resolved
 approval_refs
 review_satisfied
 ```
 
-The adapter also binds the DashClaw org as `org:<org_id>` in the proposal's isolation domains and refuses a conflicting `org:` domain supplied by the act.
+The adapter binds the DashClaw org as `org:<org_id>` in the proposal's isolation domains and refuses a conflicting `org:` domain supplied by the act.
 
-When `project_ref` is present, the current bounded envelope requires it to appear in both the bound and required isolation-domain sets. This keeps the project scope explicit rather than relying on a descriptive string elsewhere in the request.
+For the current bounded project mutation envelope:
+
+- `project_ref` must be present in both bound and required isolation domains;
+- `proposal.scope` must equal `project_ref`;
+- the trusted resolver must authorize that project domain for the exact org/agent identity.
+
+The executable workload includes an `agent_id` that is valid for `project:fixture` attempting `project:other`. The request is denied because identity did not produce authority for the foreign project, and the substrate remains untouched.
 
 ## PAMA projection
 
@@ -131,7 +160,7 @@ PAMA block                          -> DashClaw deny
 
 No synthetic `warn` state is invented.
 
-Provider evidence records the PAMA outcome/version, proposal/content bindings, and explicitly records:
+Provider evidence records the authority-resolution posture, PAMA outcome/version, proposal/content bindings, and explicitly records:
 
 ```text
 execution_evidence = false
@@ -143,7 +172,7 @@ It is bounded under DashClaw's 4096-character provider-evidence ceiling.
 
 `dashclaw.connection_test` is handled explicitly and side-effect free.
 
-A valid synthetic test receives a contract-valid `allow` response with the DashClaw identity echoed. No proposal is committed and no Agent Memory memory/receipt state is created.
+A valid synthetic test receives a contract-valid `allow` response with the DashClaw identity echoed. No authority grant is required because no memory mutation follows. No proposal is committed and no Agent Memory memory/receipt state is created.
 
 A malformed top-level request that lacks the identity required for a valid echo receives a non-2xx HTTP response from the reference server. That is deliberate: fabricating a contract verdict without the required identity would be less honest than allowing DashClaw to apply its configured provider-unavailability posture.
 
@@ -171,6 +200,21 @@ After those checks, the proposal is passed through `GovernedMemoryAdapter.commit
 
 The deterministic workload is the #279 release-branch scenario.
 
+### Authority precondition
+
+The same well-formed promotion request is first evaluated without an authority resolver. DashClaw identity is present, but project mutation authority is unresolved, so PAMA blocks the request.
+
+The fixture then supplies the separately configured exact grant:
+
+```text
+org: fixture-org
+agent: release-agent
+isolation domain: project:fixture
+evidence: authority-grant:fixture-release-agent
+```
+
+Only that resolved path proceeds to the normal PAMA outcome.
+
 ### Initial promotion
 
 ```text
@@ -183,7 +227,8 @@ state = v0
 Expected and executed behavior:
 
 ```text
-PAMA allow_with_ledger
+scope authority resolved
+-> PAMA allow_with_ledger
 -> provider allow
 -> ordinary governed commit
 -> receipt emitted
@@ -202,7 +247,8 @@ state = v1
 Expected and executed behavior:
 
 ```text
-PAMA require_review
+scope authority resolved
+-> PAMA require_review
 -> provider escalate
 -> unapproved commit refused
 -> wrong input_identity approval refused
@@ -227,7 +273,9 @@ The approval remains authentic evidence but does not become standing authority o
 
 ### Authority/scope attack
 
-A critical `scope_expansion` targeting M5/A5 resolves to PAMA `block`, projects to DashClaw `deny`, and is refused by the bound commit seam before the substrate write log changes.
+A critical `scope_expansion` targeting M5/A5 inside the actor's resolved project context still resolves to PAMA `block`, projects to DashClaw `deny`, and is refused by the bound commit seam before the substrate write log changes.
+
+Separately, a low-risk mutation that merely names `project:other` is also denied because the trusted authority resolver has no grant for that project. This prevents an agent from converting an arbitrary scope string into `actor_authority_resolved=True`.
 
 ### Cross-project recall
 
@@ -261,6 +309,8 @@ Focused evidence workflow:
 
 The HTTP entrypoint is intentionally a small standard-library server. DashClaw requires a public HTTPS provider URL, so a live integration must place this reference endpoint behind controlled public HTTPS or deploy an equivalent production-grade service. The reference server itself is not claimed as a production deployment architecture.
 
+For controlled integration, the reference server accepts `--authority-grants-file` containing explicit org/agent/isolation-domain grants. If omitted, mutation authority remains unresolved and mutation requests deny. A real deployment should replace that static resolver with an appropriate trusted identity/authorization source rather than treating the grant file as product architecture.
+
 ## Current limitations / remaining #279 work
 
 This slice proves the provider contract and the stateful Agent Memory workload in the Agent Memory repository. It does **not** yet prove that the request traversed a live DashClaw guard over public HTTPS.
@@ -270,6 +320,7 @@ Still required before #279 closes:
 - configure a live DashClaw v5.24+ org with provider scope `agent_memory.mutation`;
 - run `dashclaw.connection_test` through DashClaw's production wire client;
 - execute real `allow`, `escalate`, and `deny` through DashClaw's guard seam;
+- connect the deployed adapter to a trusted authority resolver rather than assuming identity implies project authority;
 - capture DashClaw local/external/effective decision evidence and correlate it to the later Agent Memory proposal/receipt without collapsing their identities;
 - exercise provider unavailable behavior through DashClaw and verify the configured posture is represented honestly;
 - record the cross-repository integration result and any contract defects found.
