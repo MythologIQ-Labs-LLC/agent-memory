@@ -1,0 +1,66 @@
+name: Atlas Research Intake
+
+on:
+  push:
+    branches:
+      - research/306-atlas-intake-scaffold
+    paths:
+      - 'docs/programs/atlas-research/**'
+      - 'scripts/build_atlas_research_inventory.py'
+      - 'scripts/validate_atlas_research_scaffold.py'
+      - '.github/workflows/atlas-research-intake.yml'
+  pull_request:
+    paths:
+      - 'docs/programs/atlas-research/**'
+      - 'scripts/build_atlas_research_inventory.py'
+      - 'scripts/validate_atlas_research_scaffold.py'
+      - '.github/workflows/atlas-research-intake.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-atlas-intake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Agent Memory
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned Agent Memory Atlas
+        uses: actions/checkout@v4
+        with:
+          repository: neoneye/agent-memory-atlas
+          ref: 90bfeed14764e268c82c925d4c39645c7480d015
+          path: _atlas
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install schema validator
+        run: python -m pip install jsonschema==4.26.0
+
+      - name: Validate committed scaffold
+        run: python scripts/validate_atlas_research_scaffold.py --allow-missing-inventory
+
+      - name: Generate exact-pinned report inventory
+        run: >-
+          python scripts/build_atlas_research_inventory.py
+          --atlas-root _atlas
+          --output /tmp/report-inventory.jsonl
+
+      - name: Validate generated inventory
+        run: >-
+          python scripts/validate_atlas_research_scaffold.py
+          --inventory /tmp/report-inventory.jsonl
+
+      - name: Preserve generated inventory evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: atlas-report-inventory-90bfeed
+          path: /tmp/report-inventory.jsonl
+          if-no-files-found: error
+          retention-days: 30
