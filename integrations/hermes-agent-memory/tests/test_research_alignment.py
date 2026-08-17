@@ -6,7 +6,7 @@ import unittest
 
 from agent_memory_hermes import HERMES_COMMIT, MUTATION_SURFACES, STRICT_BLOCKERS
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 RESEARCH = ROOT / "docs/programs/hermes-research/hermes-mutation-surface.json"
 
 
