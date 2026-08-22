@@ -17,9 +17,10 @@ class InMemoryStorage {
     this.records = structuredClone(records);
     this.revision = 'rev-1';
     this.checkpoint = 'checkpoint-1';
-    this.idempotency = new Map();
+    this.corrections = new Map();
     this.events = [];
     this.failStale = false;
+    this.raceCommit = null;
   }
 
   async load() {
@@ -30,11 +31,16 @@ class InMemoryStorage {
     };
   }
 
-  async lookupIdempotency(_scope, key) {
-    return this.idempotency.get(key) ?? null;
+  async getCorrection(_scope, key) {
+    const record = this.corrections.get(key);
+    return record ? structuredClone(record) : null;
   }
 
   async commitCorrection(_scope, transaction) {
+    const existing = this.corrections.get(transaction.idempotency_key);
+    if (existing) return { ...structuredClone(existing), replayed: true };
+    if (this.raceCommit) return { ...structuredClone(this.raceCommit), replayed: true };
+
     if (this.failStale || transaction.expected_revision !== this.revision) {
       throw Object.assign(new Error('stale'), { code: 'STALE_REVISION' });
     }
@@ -44,34 +50,16 @@ class InMemoryStorage {
     this.revision = `rev-${Number(this.revision.split('-')[1]) + 1}`;
     this.checkpoint = `checkpoint-${this.events.length + 1}`;
 
-    const receipt = {
-      contract_version: '0.1',
-      adapter: 'agent-memory-runtime',
-      adapter_version: '0.1.0',
-      scope: structuredClone(scope),
-      prior_memory_id: transaction.event.prior_memory_id,
-      replacement_memory_id: transaction.event.replacement_memory_id,
-      supersession: {
-        prior_memory_id: transaction.event.prior_memory_id,
-        replacement_memory_id: transaction.event.replacement_memory_id,
-      },
-      event_id: transaction.event.event_id,
+    const commitRecord = {
       revision: this.revision,
       checkpoint: this.checkpoint,
       ledger_ref: `ledger:${transaction.event.event_id}`,
-      policy_version: transaction.event.policy_version,
-      authority_refs: [...transaction.event.authority_refs],
-      evidence_refs: [...transaction.event.evidence_refs],
-      replayed: false,
-      committed_at: transaction.event.committed_at,
-    };
-    this.idempotency.set(transaction.idempotency_key, receipt);
-    return {
-      revision: this.revision,
-      checkpoint: this.checkpoint,
-      ledger_ref: receipt.ledger_ref,
+      replacement: structuredClone(transaction.replacement),
+      event: structuredClone(transaction.event),
       replayed: false,
     };
+    this.corrections.set(transaction.idempotency_key, commitRecord);
+    return structuredClone(commitRecord);
   }
 }
 
@@ -179,6 +167,7 @@ test('correction appends replacement and explicit supersession without erasing p
     },
   });
 
+  assert.equal(receipt.adapter_version, '0.1.1');
   assert.equal(receipt.prior_memory_id, 'memory-original');
   assert.equal(receipt.replacement_memory_id, 'memory-correction-1');
   assert.equal(storage.records.length, 2);
@@ -187,11 +176,19 @@ test('correction appends replacement and explicit supersession without erasing p
   assert.equal(storage.events.length, 1);
   assert.equal(storage.events[0].event_type, 'correction_committed');
 
+  const persisted = storage.corrections.get('correction:one');
+  assert.deepEqual(
+    Object.keys(persisted).sort(),
+    ['checkpoint', 'event', 'ledger_ref', 'replacement', 'replayed', 'revision'],
+  );
+  assert.equal('contract_version' in persisted, false);
+  assert.equal('supersession' in persisted, false);
+
   const recalled = await governed.recall(recallRequest);
   assert.deepEqual(recalled.source_memory_refs, ['memory-correction-1']);
 });
 
-test('idempotent correction replay returns the original receipt and does not append twice', async () => {
+test('idempotent correction replay reconstructs the original semantic receipt in Agent Memory', async () => {
   const storage = new InMemoryStorage([baseRecord()]);
   const governed = adapter(storage);
   const request = {
@@ -208,9 +205,62 @@ test('idempotent correction replay returns the original receipt and does not app
   const second = await governed.correct(request);
 
   assert.equal(first.replacement_memory_id, second.replacement_memory_id);
+  assert.equal(first.event_id, second.event_id);
+  assert.equal(first.committed_at, second.committed_at);
+  assert.equal(first.ledger_ref, second.ledger_ref);
+  assert.equal(first.replayed, false);
   assert.equal(second.replayed, true);
   assert.equal(storage.records.length, 2);
   assert.equal(storage.events.length, 1);
+});
+
+test('commit-time idempotency race returns the original persisted transaction instead of candidate identities', async () => {
+  const storage = new InMemoryStorage([baseRecord()]);
+  storage.raceCommit = {
+    revision: 'rev-2',
+    checkpoint: 'checkpoint-2',
+    ledger_ref: 'ledger:event-existing',
+    replacement: {
+      memory_id: 'memory-existing',
+      kind: 'correction',
+      value_ref: 'value:main',
+      scope,
+      state: 'active',
+      evidence_refs: ['evidence:user-correction'],
+      authority_refs: ['authority:human-confirmed'],
+      supersedes: ['memory-original'],
+      created_at: '2026-08-22T20:59:59.000Z',
+    },
+    event: {
+      event_id: 'event-existing',
+      event_type: 'correction_committed',
+      prior_memory_id: 'memory-original',
+      replacement_memory_id: 'memory-existing',
+      state_snapshot: 'rev-1',
+      policy_version: 'policy-v1',
+      evidence_refs: ['evidence:user-correction'],
+      authority_refs: ['authority:human-confirmed'],
+      committed_at: '2026-08-22T20:59:59.000Z',
+    },
+    replayed: false,
+  };
+
+  const receipt = await adapter(storage).correct({
+    scope,
+    memory_id: 'memory-original',
+    idempotency_key: 'correction:race',
+    policy_version: 'policy-v1',
+    evidence_refs: ['evidence:user-correction'],
+    authority_refs: ['authority:human-confirmed'],
+    replacement: { value_ref: 'value:main' },
+  });
+
+  assert.equal(receipt.replacement_memory_id, 'memory-existing');
+  assert.equal(receipt.event_id, 'event-existing');
+  assert.equal(receipt.committed_at, '2026-08-22T20:59:59.000Z');
+  assert.equal(receipt.replayed, true);
+  assert.equal(storage.records.length, 1);
+  assert.equal(storage.events.length, 0);
 });
 
 test('correction requires explicit authority and evidence', async () => {
