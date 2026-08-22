@@ -1,6 +1,6 @@
 export const CONTRACT_VERSION = '0.1';
 export const ADAPTER_NAME = 'agent-memory-runtime';
-export const ADAPTER_VERSION = '0.1.0';
+export const ADAPTER_VERSION = '0.1.1';
 
 export class MemoryAdapterError extends Error {
   constructor(code, message, details = {}) {
@@ -64,7 +64,7 @@ function normalizeSnapshot(snapshot) {
 
 function assertStorage(storage) {
   const value = requireObject(storage, 'storage');
-  for (const method of ['load', 'lookupIdempotency', 'commitCorrection']) {
+  for (const method of ['load', 'getCorrection', 'commitCorrection']) {
     if (typeof value[method] !== 'function') {
       throw new MemoryAdapterError('invalid_storage_port', `storage.${method} must be a function`);
     }
@@ -175,6 +175,75 @@ function normalizeCorrectionRequest(request) {
   };
 }
 
+function normalizeCommitRecord(raw) {
+  const record = requireObject(raw, 'correction commit record');
+  const replacement = requireObject(record.replacement, 'correction commit record.replacement');
+  const event = requireObject(record.event, 'correction commit record.event');
+  return Object.freeze({
+    revision: requireString(record.revision, 'correction commit record.revision'),
+    checkpoint: record.checkpoint == null
+      ? null
+      : requireString(record.checkpoint, 'correction commit record.checkpoint'),
+    ledger_ref: requireString(record.ledger_ref, 'correction commit record.ledger_ref'),
+    replacement: Object.freeze({ ...replacement }),
+    event: Object.freeze({ ...event }),
+    replayed: Boolean(record.replayed),
+  });
+}
+
+function correctionReceipt(scope, rawCommit, replayedOverride) {
+  const commit = normalizeCommitRecord(rawCommit);
+  const replacementMemoryId = requireString(
+    commit.replacement.memory_id,
+    'correction commit record.replacement.memory_id',
+  );
+  const priorMemoryId = requireString(
+    commit.event.prior_memory_id,
+    'correction commit record.event.prior_memory_id',
+  );
+  const eventId = requireString(commit.event.event_id, 'correction commit record.event.event_id');
+  const policyVersion = requireString(
+    commit.event.policy_version,
+    'correction commit record.event.policy_version',
+  );
+  const committedAt = requireString(
+    commit.event.committed_at,
+    'correction commit record.event.committed_at',
+  );
+  const authorityRefs = requireStringArray(
+    commit.event.authority_refs,
+    'correction commit record.event.authority_refs',
+    { minItems: 1 },
+  );
+  const evidenceRefs = requireStringArray(
+    commit.event.evidence_refs,
+    'correction commit record.event.evidence_refs',
+    { minItems: 1 },
+  );
+
+  return Object.freeze({
+    contract_version: CONTRACT_VERSION,
+    adapter: ADAPTER_NAME,
+    adapter_version: ADAPTER_VERSION,
+    scope,
+    prior_memory_id: priorMemoryId,
+    replacement_memory_id: replacementMemoryId,
+    supersession: Object.freeze({
+      prior_memory_id: priorMemoryId,
+      replacement_memory_id: replacementMemoryId,
+    }),
+    event_id: eventId,
+    revision: commit.revision,
+    checkpoint: commit.checkpoint,
+    ledger_ref: commit.ledger_ref,
+    policy_version: policyVersion,
+    authority_refs: Object.freeze(authorityRefs),
+    evidence_refs: Object.freeze(evidenceRefs),
+    replayed: replayedOverride ?? commit.replayed,
+    committed_at: committedAt,
+  });
+}
+
 export function createGovernedMemoryAdapter({
   storage,
   clock = () => new Date(),
@@ -216,8 +285,8 @@ export function createGovernedMemoryAdapter({
 
     async correct(rawRequest) {
       const request = normalizeCorrectionRequest(rawRequest);
-      const replay = await persistence.lookupIdempotency(request.scope, request.idempotency_key);
-      if (replay) return Object.freeze({ ...replay, replayed: true });
+      const replay = await persistence.getCorrection(request.scope, request.idempotency_key);
+      if (replay) return correctionReceipt(request.scope, replay, true);
 
       const snapshot = normalizeSnapshot(await persistence.load(request.scope));
       const supersededIds = supersededSet(snapshot.records);
@@ -279,34 +348,7 @@ export function createGovernedMemoryAdapter({
         throw error;
       }
 
-      const result = requireObject(committed, 'correction commit result');
-      const revision = requireString(result.revision, 'correction commit result.revision');
-      const ledgerRef = requireString(result.ledger_ref, 'correction commit result.ledger_ref');
-      const checkpoint = result.checkpoint == null
-        ? null
-        : requireString(result.checkpoint, 'correction commit result.checkpoint');
-
-      return Object.freeze({
-        contract_version: CONTRACT_VERSION,
-        adapter: ADAPTER_NAME,
-        adapter_version: ADAPTER_VERSION,
-        scope: request.scope,
-        prior_memory_id: request.memory_id,
-        replacement_memory_id: replacementMemoryId,
-        supersession: Object.freeze({
-          prior_memory_id: request.memory_id,
-          replacement_memory_id: replacementMemoryId,
-        }),
-        event_id: eventId,
-        revision,
-        checkpoint,
-        ledger_ref: ledgerRef,
-        policy_version: request.policy_version,
-        authority_refs: Object.freeze(request.authority_refs),
-        evidence_refs: Object.freeze(request.evidence_refs),
-        replayed: Boolean(result.replayed),
-        committed_at: committedAt,
-      });
+      return correctionReceipt(request.scope, committed);
     },
   });
 }
