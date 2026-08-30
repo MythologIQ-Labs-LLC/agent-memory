@@ -1,13 +1,15 @@
 """Capability declarations and deterministic component resolution.
 
-This module is the narrow executable surface for ADR-033 and issues #287/#290/#280.
+This module is the narrow executable surface for ADR-033 and issues #287/#290/#280/#343.
 It deliberately does not know about PAMA, recall admission, or memory mutation.
 Selecting a component says only which configured implementation may supply a
 capability. It never grants authority to use the resulting memory consequence.
 
 ``component-capability-v2`` adds machine-readable behavior metadata for the
-lifecycle dimensions required by #280. Those fields describe what a capability
-supports and how its state relates to canonical memory; they are not authority.
+lifecycle dimensions required by #280. ``component-capability-v3`` preserves
+that behavior contract and adds a separate operational contract so substrate
+mechanics can constrain provider eligibility without becoming memory semantics
+or authority.
 """
 
 from __future__ import annotations
@@ -83,6 +85,47 @@ STRUCTURAL_MUTATION_REQUIREMENTS = frozenset(
         "proposal_only",
         "pama_required",
         "external_authorization_required",
+    }
+)
+
+WRITE_ATOMICITY_MODELS = frozenset(
+    {
+        "none",
+        "process_local",
+        "single_record_atomic",
+        "transactional_multi_record",
+    }
+)
+CONCURRENCY_CONTROL_MODELS = frozenset(
+    {
+        "none",
+        "process_local",
+        "optimistic_revision",
+        "pessimistic_lock",
+        "serializable",
+    }
+)
+IDEMPOTENCY_MODELS = frozenset(
+    {
+        "none",
+        "process_local",
+        "durable_keyed",
+    }
+)
+RESTART_RECOVERY_MODELS = frozenset(
+    {
+        "none",
+        "process_local_only",
+        "reconstructable",
+        "checkpoint_replay",
+    }
+)
+RECONCILIATION_MODELS = frozenset(
+    {
+        "none",
+        "process_local_only",
+        "deterministic_readback",
+        "authoritative_rebuild",
     }
 )
 
@@ -270,6 +313,105 @@ class CapabilityBehaviorRequirement:
 
 
 @dataclass(frozen=True)
+class CapabilityOperationalContract:
+    """Substrate mechanics that affect provider eligibility, not memory meaning.
+
+    Operational quality cannot grant authority. It only describes whether a
+    provider can safely satisfy a caller's explicit execution/recovery posture.
+    """
+
+    write_atomicity: str
+    concurrency_control: str
+    idempotency: str
+    restart_recovery: str
+    reconciliation: str
+
+    def __post_init__(self) -> None:
+        checks = (
+            ("write_atomicity", self.write_atomicity, WRITE_ATOMICITY_MODELS),
+            ("concurrency_control", self.concurrency_control, CONCURRENCY_CONTROL_MODELS),
+            ("idempotency", self.idempotency, IDEMPOTENCY_MODELS),
+            ("restart_recovery", self.restart_recovery, RESTART_RECOVERY_MODELS),
+            ("reconciliation", self.reconciliation, RECONCILIATION_MODELS),
+        )
+        for name, value, allowed in checks:
+            if value not in allowed:
+                raise ValueError(f"unknown {name}: {value}")
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object]) -> "CapabilityOperationalContract":
+        return cls(
+            write_atomicity=str(value["write_atomicity"]),
+            concurrency_control=str(value["concurrency_control"]),
+            idempotency=str(value["idempotency"]),
+            restart_recovery=str(value["restart_recovery"]),
+            reconciliation=str(value["reconciliation"]),
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "write_atomicity": self.write_atomicity,
+            "concurrency_control": self.concurrency_control,
+            "idempotency": self.idempotency,
+            "restart_recovery": self.restart_recovery,
+            "reconciliation": self.reconciliation,
+        }
+
+
+@dataclass(frozen=True)
+class CapabilityOperationalRequirement:
+    """Optional routing constraints over substrate operational guarantees."""
+
+    write_atomicity: tuple[str, ...] = ()
+    concurrency_control: tuple[str, ...] = ()
+    idempotency: tuple[str, ...] = ()
+    restart_recovery: tuple[str, ...] = ()
+    reconciliation: tuple[str, ...] = ()
+
+    def __post_init__(self) -> None:
+        checks = (
+            ("write_atomicity", self.write_atomicity, WRITE_ATOMICITY_MODELS),
+            ("concurrency_control", self.concurrency_control, CONCURRENCY_CONTROL_MODELS),
+            ("idempotency", self.idempotency, IDEMPOTENCY_MODELS),
+            ("restart_recovery", self.restart_recovery, RESTART_RECOVERY_MODELS),
+            ("reconciliation", self.reconciliation, RECONCILIATION_MODELS),
+        )
+        for name, values, allowed in checks:
+            unknown = sorted(set(values).difference(allowed))
+            if unknown:
+                raise ValueError(f"unknown operational requirement {name}: {unknown}")
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, object]) -> "CapabilityOperationalRequirement":
+        return cls(
+            write_atomicity=tuple(str(item) for item in value.get("write_atomicity", ())),
+            concurrency_control=tuple(str(item) for item in value.get("concurrency_control", ())),
+            idempotency=tuple(str(item) for item in value.get("idempotency", ())),
+            restart_recovery=tuple(str(item) for item in value.get("restart_recovery", ())),
+            reconciliation=tuple(str(item) for item in value.get("reconciliation", ())),
+        )
+
+    def matches(self, contract: CapabilityOperationalContract) -> bool:
+        checks = (
+            (self.write_atomicity, contract.write_atomicity),
+            (self.concurrency_control, contract.concurrency_control),
+            (self.idempotency, contract.idempotency),
+            (self.restart_recovery, contract.restart_recovery),
+            (self.reconciliation, contract.reconciliation),
+        )
+        return all(not allowed or actual in allowed for allowed, actual in checks)
+
+    def to_dict(self) -> dict:
+        return {
+            "write_atomicity": list(self.write_atomicity),
+            "concurrency_control": list(self.concurrency_control),
+            "idempotency": list(self.idempotency),
+            "restart_recovery": list(self.restart_recovery),
+            "reconciliation": list(self.reconciliation),
+        }
+
+
+@dataclass(frozen=True)
 class CapabilityDeclaration:
     capability_id: str
     capability_version: str
@@ -282,6 +424,7 @@ class CapabilityDeclaration:
     limitations: tuple[str, ...] = ()
     enabled: bool = True
     behavior_contract: CapabilityBehaviorContract | None = None
+    operational_contract: CapabilityOperationalContract | None = None
 
     def __post_init__(self) -> None:
         if not self.capability_id or not self.capability_version:
@@ -299,6 +442,14 @@ class CapabilityDeclaration:
             if not isinstance(behavior_raw, Mapping):
                 raise ValueError("capability behavior_contract must be an object")
             behavior = CapabilityBehaviorContract.from_dict(behavior_raw)
+
+        operational_raw = value.get("operational_contract")
+        operational = None
+        if operational_raw is not None:
+            if not isinstance(operational_raw, Mapping):
+                raise ValueError("capability operational_contract must be an object")
+            operational = CapabilityOperationalContract.from_dict(operational_raw)
+
         return cls(
             capability_id=str(value["capability_id"]),
             capability_version=str(value["capability_version"]),
@@ -311,6 +462,7 @@ class CapabilityDeclaration:
             limitations=tuple(str(item) for item in value.get("limitations", ())),
             enabled=bool(value.get("enabled", True)),
             behavior_contract=behavior,
+            operational_contract=operational,
         )
 
     def to_dict(self) -> dict:
@@ -328,6 +480,8 @@ class CapabilityDeclaration:
         }
         if self.behavior_contract is not None:
             payload["behavior_contract"] = self.behavior_contract.to_dict()
+        if self.operational_contract is not None:
+            payload["operational_contract"] = self.operational_contract.to_dict()
         return payload
 
 
@@ -351,15 +505,29 @@ class ComponentDeclaration:
             if identity in seen:
                 raise ValueError(f"duplicate capability declaration: {identity}")
             seen.add(identity)
-        if self.profile_version == "component-capability-v2":
-            missing = [
+
+        if self.profile_version in {"component-capability-v2", "component-capability-v3"}:
+            missing_behavior = [
                 capability.capability_id
                 for capability in self.capabilities
                 if capability.behavior_contract is None
             ]
-            if missing:
+            if missing_behavior:
                 raise ValueError(
-                    f"component-capability-v2 requires behavior_contract for every capability: {missing}"
+                    f"{self.profile_version} requires behavior_contract for every capability: "
+                    f"{missing_behavior}"
+                )
+
+        if self.profile_version == "component-capability-v3":
+            missing_operational = [
+                capability.capability_id
+                for capability in self.capabilities
+                if capability.operational_contract is None
+            ]
+            if missing_operational:
+                raise ValueError(
+                    "component-capability-v3 requires operational_contract for every capability: "
+                    f"{missing_operational}"
                 )
 
     @classmethod
@@ -401,6 +569,7 @@ class CapabilityRequirement:
     allowed_components: tuple[str, ...] = ()
     preferred_component: str = ""
     behavior_requirement: CapabilityBehaviorRequirement | None = None
+    operational_requirement: CapabilityOperationalRequirement | None = None
 
     def __post_init__(self) -> None:
         if self.minimum_maturity not in _MATURITY_RANK:
@@ -422,6 +591,7 @@ class ResolvedCapability:
     evidence_refs: tuple[str, ...] = ()
     limitations: tuple[str, ...] = ()
     behavior_contract: CapabilityBehaviorContract | None = None
+    operational_contract: CapabilityOperationalContract | None = None
 
     def to_dict(self) -> dict:
         payload = {
@@ -440,6 +610,8 @@ class ResolvedCapability:
         }
         if self.behavior_contract is not None:
             payload["behavior_contract"] = self.behavior_contract.to_dict()
+        if self.operational_contract is not None:
+            payload["operational_contract"] = self.operational_contract.to_dict()
         return payload
 
 
@@ -490,6 +662,11 @@ class ComponentRegistry:
                     if capability.behavior_contract is None:
                         continue
                     if not requirement.behavior_requirement.matches(capability.behavior_contract):
+                        continue
+                if requirement.operational_requirement is not None:
+                    if capability.operational_contract is None:
+                        continue
+                    if not requirement.operational_requirement.matches(capability.operational_contract):
                         continue
                 eligible.append((component, capability))
 
@@ -544,4 +721,5 @@ def _resolved(component: ComponentDeclaration, capability: CapabilityDeclaration
         evidence_refs=capability.evidence_refs,
         limitations=capability.limitations,
         behavior_contract=capability.behavior_contract,
+        operational_contract=capability.operational_contract,
     )
