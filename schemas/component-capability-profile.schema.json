@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/component-capability-profile.schema.json",
   "title": "Agent Memory Component Capability Profile",
-  "description": "Machine-readable reference contract for independently matured component capabilities. component-capability-v2 requires explicit lifecycle behavior metadata. Capability selection and behavior declarations do not create memory authority.",
+  "description": "Machine-readable reference contract for independently matured component capabilities. component-capability-v2 requires explicit lifecycle behavior metadata; component-capability-v3 additionally requires an operational substrate contract. Capability selection and contract declarations do not create memory authority.",
   "type": "object",
   "required": [
     "component_id",
@@ -37,7 +37,7 @@
     {
       "if": {
         "properties": {
-          "profile_version": { "const": "component-capability-v2" }
+          "profile_version": { "enum": ["component-capability-v2", "component-capability-v3"] }
         },
         "required": ["profile_version"]
       },
@@ -48,6 +48,26 @@
               "allOf": [
                 { "$ref": "#/$defs/capability" },
                 { "required": ["behavior_contract"] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "profile_version": { "const": "component-capability-v3" }
+        },
+        "required": ["profile_version"]
+      },
+      "then": {
+        "properties": {
+          "capabilities": {
+            "items": {
+              "allOf": [
+                { "$ref": "#/$defs/capability" },
+                { "required": ["operational_contract"] }
               ]
             }
           }
@@ -151,6 +171,55 @@
       },
       "additionalProperties": false
     },
+    "operationalContract": {
+      "type": "object",
+      "required": [
+        "write_atomicity",
+        "concurrency_control",
+        "idempotency",
+        "restart_recovery",
+        "reconciliation"
+      ],
+      "properties": {
+        "write_atomicity": {
+          "type": "string",
+          "enum": [
+            "none",
+            "process_local",
+            "single_record_atomic",
+            "transactional_multi_record"
+          ]
+        },
+        "concurrency_control": {
+          "type": "string",
+          "enum": [
+            "none",
+            "process_local",
+            "optimistic_revision",
+            "pessimistic_lock",
+            "serializable"
+          ]
+        },
+        "idempotency": {
+          "type": "string",
+          "enum": ["none", "process_local", "durable_keyed"]
+        },
+        "restart_recovery": {
+          "type": "string",
+          "enum": ["none", "process_local_only", "reconstructable", "checkpoint_replay"]
+        },
+        "reconciliation": {
+          "type": "string",
+          "enum": [
+            "none",
+            "process_local_only",
+            "deterministic_readback",
+            "authoritative_rebuild"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
     "capability": {
       "type": "object",
       "required": [
@@ -207,7 +276,8 @@
           "items": { "type": "string", "minLength": 1 },
           "uniqueItems": true
         },
-        "behavior_contract": { "$ref": "#/$defs/behaviorContract" }
+        "behavior_contract": { "$ref": "#/$defs/behaviorContract" },
+        "operational_contract": { "$ref": "#/$defs/operationalContract" }
       },
       "additionalProperties": false
     }
