@@ -256,9 +256,17 @@ class EpistemicBeliefMemory:
             target_class=target_class,
             downstream_authority=downstream_authority,
             risk_class=risk_class,
-            current_strength="observed" if current is None else "promoted",
+            current_strength=(
+                "observed"
+                if current is None
+                else (
+                    "tentative"
+                    if current.epistemic_status == "disputed"
+                    else "promoted"
+                )
+            ),
             proposed_strength=(
-                "disputed"
+                "tentative"
                 if revision.epistemic_status == "disputed"
                 else "promoted"
             ),
@@ -331,8 +339,12 @@ class EpistemicBeliefMemory:
             target_class=target_class,
             scope=revision.scope.scope,
             operation="pruning",
-            current_strength="promoted",
-            proposed_strength="retracted",
+            current_strength=(
+                "tentative"
+                if current.epistemic_status == "disputed"
+                else "promoted"
+            ),
+            proposed_strength="archived",
             downstream_authority=downstream_authority,
             reversibility="reversible",
             risk_class=risk_class,
