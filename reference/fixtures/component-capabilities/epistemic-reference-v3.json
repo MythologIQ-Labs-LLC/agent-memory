@@ -21,7 +21,8 @@
       "enabled": true,
       "evidence_refs": [
         "reference/agentmem_ref/epistemic_memory.py",
-        "reference/tests/test_epistemic_memory.py"
+        "reference/tests/test_epistemic_memory.py",
+        "docs/programs/memory-modules/epistemic-belief-memory-reference.md"
       ],
       "limitations": [
         "Reference revision index is process-local and is not restart reconstructable.",
