@@ -16,7 +16,7 @@
       "capability_version": "1.0",
       "maturity": "evidence_proven",
       "state_posture": "derived",
-      "scope_posture": "bridged_scope",
+      "scope_posture": "external_scope_bridge",
       "failure_posture": "fail_closed",
       "authority_effect": "none",
       "enabled": true,
