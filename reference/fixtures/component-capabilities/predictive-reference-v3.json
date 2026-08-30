@@ -29,6 +29,7 @@
         "Reference prediction and comparison indexes are process-local and are not restart reconstructable.",
         "Prediction confidence and outcome-comparison disposition are descriptive evidence and not authority.",
         "Observed outcome summaries remain comparison evidence and are not promoted to semantic fact memory by this component.",
+        "Predictive deletion/residue behavior is outside this bounded runtime slice.",
         "This component stores predictive artifacts; it does not execute a simulation engine or external world model."
       ],
       "behavior_contract": {
@@ -40,8 +41,8 @@
         "currentness_model": "basis_versioned",
         "invalidation_model": "version_relation",
         "correction_model": "invalidate_derived",
-        "deletion_model": "candidate_drop",
-        "residue_model": "scan_required",
+        "deletion_model": "not_applicable",
+        "residue_model": "not_applicable",
         "migration_rebuild_model": "unsupported",
         "structural_mutation_requirement": "none"
       },
