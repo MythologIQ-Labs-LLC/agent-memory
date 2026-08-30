@@ -12,6 +12,8 @@ Composition is also where uncertainty can become dangerous: an estimate produced
 
 Agent Memory is a composed system.
 
+Current accepted responsibilities remain:
+
 ```text
 Agent Memory
   = Identity
@@ -27,24 +29,123 @@ Agent Memory
   + Conformance
 ```
 
+[ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) proposes composing those bounded responsibilities into an explicit persistent-cognition topology:
+
+```text
+Agent Memory
+|
++-- Cognitive Plane
+|   +-- Cognitive Mesh
+|   +-- Working Memory & Attention
+|   +-- Cognitive Metabolism
+|   +-- Consolidation & Abstraction
+|   +-- Procedural Memory & Skills
+|   +-- Predictive / World Modeling
+|   +-- Metacognitive Signals
+|
++-- Reality Plane
+|   +-- Reality Graphs
+|       +-- Code Reality Graph
+|       +-- other domain reality graphs
+|
++-- Authority Plane
+|   +-- PAMA
+|   +-- Governed Recall Admission
+|   +-- Certification & Durable Commit
+|   +-- Scope / Isolation
+|   +-- Correction / Supersession
+|   +-- Deletion / Inheritance Authority
+|
++`-- Cross-cutting
++    +-- Identity & Continuity
++    +-- Evidence & Provenance
++    `-- Conformance / Calibration / Evaluation
+```
+
+Until ADR-035 is accepted, this is a proposed composition model rather than a replacement for accepted component doctrine.
+
+The planes are responsibility groupings. They are not repositories, exclusive component categories, deployment zones, or capability-maturity claims.
+
+```text
+module identity != component identity
+component identity != capability identity
+```
+
+ADR-033 remains controlling for implementation selection and maturity.
+
 This is one concept at the architecture level and many components at the implementation level.
+
+## Cognitive Mesh composition contract
+
+Under ADR-035, the Cognitive Mesh is the proposed shared representational and handoff substrate for persistent cognition.
+
+It is not a universal truth store, a replacement for the identity/evidence/lifecycle contracts below, or a mandate that every implementation share one physical graph.
+
+A mesh handoff may carry, where applicable:
+
+```text
+logical_object_ref
+object_type
+relationship_type
+canonical_or_derived_posture
+activation_posture
+currentness
+scope / isolation domains
+provenance / evidence refs
+signal semantics
+estimator identity/version
+confidence / uncertainty
+lifecycle posture
+authority ceiling
+provider/component identity
+```
+
+The receiving module must preserve material semantics rather than flattening them into an opaque object.
+
+The core anti-collapse rules are:
+
+```text
+common mesh != common behavior
+relationship != truth
+activation != authority
+confidence != permission
+persistence != correctness
+provider verdict != Agent Memory authority
+```
+
+A Cognitive Metabolism implementation may propose reinforcement, decay, consolidation, or restructuring. A Reality Graph may propose or evidence a relation. A predictive model may produce an expectation. None of those outputs owns the consequential mutation, recall, or action decision.
+
+The executable bounded reference evidence for this seam is documented in [`programs/runtime-evidence/cognitive-mesh.md`](programs/runtime-evidence/cognitive-mesh.md).
+
+## Initial first-party architectural mapping
+
+ADR-035 proposes the following primary responsibility mapping while ADR-033 preserves multi-capability composition:
+
+| First-party component | Primary proposed module role | Boundary |
+|---|---|---|
+| EvolveAI | Cognitive Metabolism | lifecycle/decay/consolidation signals remain proposals; native verdicts do not become PAMA authority |
+| CodeGenome | Code Reality Graph | code-domain graph/evidence does not become universal Cognitive Mesh ontology or memory authority |
+| Agent Memory core | Cognitive Mesh contracts, authority boundaries, governed recall, conformance | core owns doctrine/interfaces rather than monopolizing provider mechanisms |
+
+This mapping does not upgrade provider capability maturity. Qualification remains capability-, version-, adapter-, and evidence-scoped.
 
 ## System boundary
 
-The system boundary includes any component that participates in governed memory state transition or governed memory admission.
+The system boundary includes any component that participates in governed memory state transition, persistent cognitive influence, or governed memory admission.
 
 A component is inside Agent Memory if it answers at least one of these questions:
 
-1. What is this memory object?
-2. Why is this memory supported?
-3. What does the system estimate about this memory?
-4. How should this memory be scored or routed?
+1. What is this memory or cognitive object?
+2. Why is this object or relation supported?
+3. What does the system estimate about this object?
+4. How should this memory be scored, activated, consolidated, or routed?
 5. What state is this memory in?
-6. Who may mutate, share, prune, or delete this memory?
-7. Can this memory become durable?
-8. May this memory enter the current agent context?
-9. How is this memory corrected, disputed, or pruned?
-10. How is memory behavior tested?
+6. What does a domain reality model currently support?
+7. Who may mutate, share, prune, delete, inherit, or expose this memory?
+8. Can this memory become durable?
+9. May this memory enter the current agent context?
+10. How is this memory corrected, disputed, or pruned?
+11. How is memory and composed cognition behavior tested?
 
 ## Outside the system boundary
 
@@ -124,6 +225,29 @@ Guarantees:
 - confidence and source separation
 - material disagreement remains visible
 - no mutation authority by graph confidence alone
+- domain ontology does not silently become the universal Cognitive Mesh ontology
+
+### Cognitive Metabolism contract
+
+Input:
+
+```text
+memory/cognitive object, interactions, lifecycle state, evidence, learned or heuristic signals
+```
+
+Output:
+
+```text
+reinforcement, decay, retention, consolidation, synthesis, or restructuring proposal
+```
+
+Guarantees:
+
+- proposal semantics and estimator provenance remain explicit
+- learned/heuristic signals may recommend but do not authorize consequence
+- repetition and salience do not establish truth
+- decay or forgetting pressure does not establish deletion authority
+- provider-native PASS/BLOCK or equivalent verdict does not become PAMA authority
 
 ### Lifecycle contract
 
@@ -232,7 +356,7 @@ Guarantees:
 - certificate binds to relevant policy/evidence context
 - correction remains possible
 
-### Runtime memory contract
+### Runtime memory / working cognition contract
 
 Input:
 
@@ -243,13 +367,14 @@ memory units, graph relations, context request, policy constraints
 Output:
 
 ```text
-retrieval candidates, admitted memory, assembled context, operational memory view
+retrieval candidates, admitted memory, assembled context, active cognitive view
 ```
 
 Guarantees:
 
 - candidate generation may be probabilistic
 - scope, tenancy, sensitivity, dispute, and policy constraints apply before admission
+- persistent memory remains distinct from currently active cognition
 - user or agent usable memory
 - no hidden durable mutation
 
@@ -293,8 +418,9 @@ Guarantees:
 
 - trap-class checks
 - uncertainty and calibration transparency
-- component and composition boundaries are testable
+- component, module, and composition boundaries are testable
 - stochastic systems are judged against invariants, not identical sampled outputs
+- architecture acceptance is kept distinct from provider capability maturity
 
 ## Cross-component handoff record
 
@@ -302,8 +428,11 @@ When one component passes consequential memory information to another, the hando
 
 ```text
 memory_id
+logical_object_ref
+object_type
 source_component
 target_component
+module_role
 handoff_reason
 state_snapshot
 signal_type
@@ -314,6 +443,10 @@ estimator_version
 calibration_ref
 uncertainty_summary
 evidence_refs
+scope_refs
+canonical_or_derived_posture
+activation_posture
+currentness
 policy_refs
 policy_version
 authority_refs
@@ -334,11 +467,14 @@ Across adapters and service boundaries:
 3. relevance must not become access permission
 4. utility must not become deletion authority
 5. saturation must not become factual truth
-6. disagreement must not vanish through undocumented averaging
-7. estimator version must not be confused with policy version
-8. a blocked action must remain blocked downstream
-9. stochastic action selection must remain within the permitted action set
-10. committed consequences must remain auditable after the handoff chain completes
+6. activation must not become authority
+7. a provider-native verdict must not become Agent Memory authority
+8. disagreement must not vanish through undocumented averaging
+9. estimator version must not be confused with policy version
+10. a blocked action must remain blocked downstream
+11. stochastic action selection must remain within the permitted action set
+12. committed consequences must remain auditable after the handoff chain completes
+13. module identity, component identity, and capability identity must remain distinguishable
 
 ## Composition-specific failure modes
 
@@ -349,6 +485,14 @@ confidence=0.92 -> receiving service treats 0.92 as approval probability
 ```
 
 Mitigation: preserve score semantics and estimator provenance.
+
+### Cognitive type erasure
+
+```text
+learned association -> receiving service treats relation as observed fact
+```
+
+Mitigation: preserve object/relation type, provenance, and canonical/derived posture through the Cognitive Mesh handoff.
 
 ### Boolean coercion of uncertainty
 
@@ -365,6 +509,14 @@ retriever recommends delete -> storage service interprets recommendation as auth
 ```
 
 Mitigation: require explicit governance outcome and permitted action set.
+
+### Cognitive-metabolism authority leakage
+
+```text
+reinforcement=1.0 or provider verdict=PASS -> runtime commits crystallization/action
+```
+
+Mitigation: convert provider output into typed proposal/evidence and pass the consequential operation through PAMA.
 
 ### Scope laundering
 
@@ -407,13 +559,13 @@ Mitigation: preserve uncertainty and calibrate the consequential decision bounda
 Wrong:
 
 ```text
-Vault owns identity, truth, scoring, certification, and correction.
+Cognitive Mesh owns identity, truth, scoring, certification, recall, and correction.
 ```
 
 Correct:
 
 ```text
-Vault hosts runtime memory and calls identity, scoring, governance, and certification boundaries.
+Cognitive Mesh preserves shared identity/handoff semantics while bounded modules retain distinct responsibilities and authority boundaries.
 ```
 
 ### Graph absolutism
@@ -458,6 +610,20 @@ Correct:
 This memory is a retrieval candidate. Recall-time governance still applies scope, sensitivity, dispute, and policy filters.
 ```
 
+### Provider-verdict absolutism
+
+Wrong:
+
+```text
+EvolveAI/another provider says PASS, therefore the requested mutation or action is allowed.
+```
+
+Correct:
+
+```text
+Provider verdict is typed evidence or a risk candidate. PAMA remains the Agent Memory consequence-authority boundary.
+```
+
 ### Product-local doctrine
 
 Wrong:
@@ -474,15 +640,17 @@ Each repo implements its slice while referencing shared doctrine boundaries.
 
 ## Integration posture
 
-Use typed adapters between components.
+Use typed adapters between components and modules.
 
 Do not use implicit shared assumptions.
 
 Recommended adapters:
 
+- cognitive-mesh object/handoff adapter
 - identity adapter
 - evidence adapter
 - graph adapter
+- cognitive-metabolism proposal adapter
 - lifecycle proposal adapter
 - scoring / estimator adapter
 - PAMA adapter
@@ -494,26 +662,36 @@ Recommended adapters:
 
 Adapters that carry consequential estimates should document both data schema and semantic contract.
 
+A provider adapter is not qualified merely because an architectural module mapping exists. Native/provider evidence, adapter semantics, exact version binding, and capability maturity remain separately evaluated under ADR-033.
+
 ## Composition conformance
 
 At least these end-to-end paths should be tested:
 
 ```text
+experience -> Cognitive Mesh identity -> typed provider signal -> PAMA -> commit/refusal -> governed recall -> active cognition
 semantic retrieval -> scope filter -> context admission
 confidence estimator -> PAMA -> transition commit
 saturation estimator -> candidate proposal -> certification
+reality graph relation -> typed evidence -> governed cognitive consequence
+provider PASS/BLOCK -> typed candidate signal -> PAMA authority remains controlling
 sensitivity classifier -> sharing policy -> export
 utility estimator -> retention policy -> prune/delete decision
 conflict detector -> dispute policy -> correction/reconciliation
 multi-memory retrieval -> composition policy -> context assembly
+module unavailable -> explicit failure / deterministic replacement -> logical identity preserved
 ```
 
 Tests should inject uncertainty and disagreement at the seams, not only inside individual components.
+
+The current Cognitive Mesh reference evidence proves the architectural seam with provider-labelled signals and existing Agent Memory governance. It does not yet claim that native EvolveAI or CodeGenome outputs are directly wired into that mesh path. Native first-party provider integration remains a separate evidence boundary.
 
 ## System rule
 
 Agent Memory is unified by contracts, not by repository location.
 
 The concepts should be segmented by responsibility, then recomposed through governed, typed handoffs.
+
+A cohesive Cognitive Mesh does not mean a monolith. The mesh is useful precisely because identity and relationships can be shared while evidence, reality modeling, metabolism, recall, and authority continue to fail differently and therefore remain bounded.
 
 A safe component is necessary. A safe composition is the actual requirement.
