@@ -12,6 +12,66 @@ A second boundary is equally important:
 
 **Probabilistic or learned components may estimate what is likely, relevant, conflicting, stale, useful, or risky. They do not acquire authority from those estimates. Consequential memory transitions occur only through deterministic or formally bounded governance.**
 
+## Relationship to the proposed Cognitive Mesh architecture
+
+[ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) proposes a system-level topology above this responsibility model. Until ADR-035 is accepted, the layers below remain current canonical doctrine and the three-plane topology remains a proposed composition of them.
+
+The models answer different questions:
+
+```text
+layer model
+  -> what semantic responsibility is being exercised?
+
+ADR-035 planes
+  -> where does that responsibility participate in persistent cognition?
+
+component/capability model
+  -> which implementation performs the responsibility at what proven maturity?
+```
+
+They must not be collapsed into one taxonomy.
+
+The proposed mapping is:
+
+```text
+COGNITIVE PLANE
+  Cognitive Mesh
+  Saturation / lifecycle routing
+  Lifecycle state machine
+  Runtime memory / working cognition
+  Consolidation / abstraction
+  Procedural memory
+  predictive / metacognitive signals
+
+REALITY PLANE
+  Domain Reality Graphs
+  Code Reality Graph via CodeGenome where qualified
+  future environment/task/social/organizational graphs
+
+AUTHORITY PLANE
+  PAMA governance
+  certification / crystallization
+  governed recall admission
+  correction / dispute consequence
+  scope / isolation / deletion / inheritance authority
+
+CROSS-CUTTING
+  Identity substrate
+  Evidence and provenance
+  Conformance and calibration
+```
+
+This mapping does not grant a plane or module exclusive ownership of a capability. ADR-033 remains controlling:
+
+```text
+module identity != component identity
+component identity != capability identity
+```
+
+EvolveAI is the proposed initial Cognitive Metabolism implementation role because its evidenced capabilities include lifecycle/decay/orchestration/consolidation mechanisms. CodeGenome is the proposed initial Code Reality Graph implementation role because its evidenced capabilities are code-domain graph, structural, provenance, freshness, and traversal functions. Those architectural mappings do not promote any capability maturity and do not make either provider's internal ontology canonical.
+
+The proposed Cognitive Mesh is likewise not a ninth memory layer or a universal database schema. It is the shared identity-and-handoff substrate through which typed cognitive objects may participate in several bounded responsibilities while retaining provenance, uncertainty, scope, lifecycle posture, and authority semantics.
+
 ## Layer 1: Identity substrate
 
 ### Owner
@@ -286,3 +346,5 @@ Required properties:
 6. Do not collapse probabilistic inference into permission.
 7. Do not collapse deterministic execution into correctness.
 8. Do not collapse policy outcome and estimator output into one opaque score.
+9. Do not collapse the Cognitive Mesh into a universal truth store or implementation-specific ontology.
+10. Do not collapse module identity, component identity, and capability identity.
