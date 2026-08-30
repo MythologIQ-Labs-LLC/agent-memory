@@ -97,6 +97,7 @@ jobs:
           npm install --no-audit --no-fund "$MEMOS_PACKAGE@$MEMOS_VERSION"
           PACKAGE_ROOT="/tmp/memos-runtime/node_modules/@memtensor/memos-local-plugin"
           test -f "$PACKAGE_ROOT/dist/core/index.js"
+          test -f "$PACKAGE_ROOT/core/pipeline/memory-core.ts"
           node - <<'NODE'
           const fs = require('fs');
           const pkg = JSON.parse(fs.readFileSync('/tmp/memos-runtime/node_modules/@memtensor/memos-local-plugin/package.json', 'utf8'));
@@ -104,6 +105,8 @@ jobs:
           if (pkg.version !== process.env.MEMOS_VERSION) throw new Error(`unexpected installed version: ${pkg.version}`);
           if (pkg.license !== 'MIT') throw new Error(`installed package license metadata drifted: ${pkg.license}`);
           NODE
+          cmp /tmp/memos-source/apps/memos-local-plugin/core/pipeline/memory-core.ts "$PACKAGE_ROOT/core/pipeline/memory-core.ts"
+          cmp /tmp/memos-source/apps/memos-local-plugin/agent-contract/memory-core.ts "$PACKAGE_ROOT/agent-contract/memory-core.ts"
           cp "$PACKAGE_ROOT/package.json" "$GITHUB_WORKSPACE/$RAW_ROOT/installed-package.json"
 
       - name: Execute focused qualification and substitution tests
