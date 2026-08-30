@@ -4,9 +4,9 @@
 
 A memory checkpoint can be structurally valid and still make recall worse.
 
-A correction can become harder to retrieve than the value it replaced. A durable anchor can disappear from ordinary recall. A high-relevance item from another scope can leak into the candidate set. Two states that should produce different recall can collapse into the same result.
+A correction can become harder to retrieve than the value it replaced. A durable anchor can disappear from ordinary recall. A scope boundary can fail at admission or context assembly even though the underlying store remains intact. Two states that should produce different recall can collapse into the same result.
 
-This profile gives Agent Memory a bounded way to test those failures across a checkpoint transition.
+This profile gives Agent Memory a bounded way to test those regressions across a checkpoint transition.
 
 It is an evidence profile. It does not approve a checkpoint, create standing permission, or replace PAMA, certification, recall admission, or deployment policy.
 
@@ -64,13 +64,41 @@ probe-suite digest
 retriever component + version
 retriever profile + version
 material configuration digest
+recall stage
+deterministic tie-policy reference
 assessment profile + version
 completion time
 ```
 
+The material configuration digest should commit the settings that can change the tested retrieval behavior, such as representation or embedding identity, preprocessing, index/query configuration, filtering, top-k, reranking, and other provider-specific load-bearing options.
+
 A consumer may also define an inclusive evidence window.
 
-A successful assessment for a different checkpoint, suite, retriever profile, or material configuration remains valid evidence about that run. It simply cannot satisfy the current requirement. Missing or substituted evidence is not success.
+A successful assessment for a different checkpoint, suite, retriever profile, recall stage, tie policy, or material configuration remains valid evidence about that run. It simply cannot satisfy the current requirement. Missing or substituted evidence is not success.
+
+## Recall stage is part of the claim
+
+Agent Memory deliberately separates:
+
+```text
+candidate discovery
+!=
+admission
+!=
+context surfacing
+```
+
+A provider may intentionally return a foreign-scope candidate so governance can inspect and reject it. That is not automatically a failure of Agent Memory's scope boundary.
+
+For that reason, the assessment declares which ranked recall surface is under test:
+
+```text
+candidate
+admitted
+context_surfaced
+```
+
+A scope-isolation assessment at `admitted` means forbidden material must not be present in the admitted ranked result. A stricter deployment may choose to assess the candidate stage as well, but that is an additional claim rather than a rewrite of the core recall doctrine.
 
 ## Reference decision tree
 
@@ -82,10 +110,10 @@ assessment evidence presented
 |
 +-- applicable assessment exists
     |
-    +-- required behavior was not exercised
+    +-- any applicable result is contradicted
     |   -> requirement not satisfied
     |
-    +-- any applicable result is contradicted
+    +-- required behavior was not exercised
     |   -> requirement not satisfied
     |
     +-- any applicable result is inconclusive
@@ -98,7 +126,9 @@ assessment evidence presented
 
 The helper answers only whether this assessment requirement is satisfied. PAMA, certification, release policy, or another governed process decides what consequence follows.
 
-## Probe set
+## Required probe set
+
+The core profile requires all four probes. Implementations may add diagnostic probes, but they may not make one of the four core invariants optional while still claiming this profile.
 
 ### Correction precedence
 
@@ -112,7 +142,7 @@ If the anchor is already missing from the baseline observation, the probe is inc
 
 ### Scope isolation
 
-The bound query must not retrieve a forbidden logical memory or an item carrying a forbidden scope reference.
+At the declared recall stage, the bound query must not return a forbidden logical memory or an item carrying a forbidden scope reference.
 
 This is a negative confidentiality property. An empty result can verify that this probe observed no forbidden hit. It does not prove useful recall or liveness. Positive probes establish those properties separately.
 
@@ -120,11 +150,13 @@ This is a negative confidentiality property. An empty result can verify that thi
 
 Two deliberately different states and contexts must not collapse into the same retrieval result when the fixture expects different memory to be active.
 
-The profile rejects a differentiation probe that uses the same context on both sides or declares identical expected sets.
+The profile rejects a differentiation probe that uses the same context on both sides or declares identical expected sets. It also detects state-specific expected memory leaking into the wrong state even when the overall ranked lists are not byte-identical.
 
-## Repeated trials
+## Ordering and repeated trials
 
-The suite may run a probe more than once. Agent Memory does not require a probabilistic retriever to emit byte-identical ordering on every run. Instead, the required invariant is evaluated on every trial:
+Rank-sensitive probes need deterministic ordering at the assessment boundary. If a provider can produce tied scores, the adapter must apply a declared deterministic tie policy before presenting the ranked result. The tie-policy reference is part of applicability.
+
+The suite may run a probe more than once. Agent Memory does not require a probabilistic retriever to emit identical ordering on every run. Instead, the required invariant is evaluated on every trial:
 
 ```text
 any contradiction -> contradicted
@@ -140,11 +172,11 @@ The assessment must describe the state that was actually exercised.
 
 The reference harness reads the baseline and candidate state digests before the first retrieval and again after the final retrieval. If either state does not match the declared precondition, or changes while the probes are running, artifact construction stops.
 
-Binding retrieval evidence from state S1 to checkpoint state S2 is not valid simply because both belong to the same logical memory system.
+Binding retrieval evidence from state S1 to checkpoint state S2 is not valid merely because both belong to the same logical memory system.
 
 ## Conflicting and historical evidence
 
-More than one assessment can apply to the same requirement. The reference rule is conservative: an applicable contradiction or inconclusive result keeps the requirement unsatisfied even if another applicable run verified the behavior. Conflicting evidence should be investigated, not resolved by selecting the pleasant result.
+More than one assessment can apply to the same requirement. The reference rule is conservative: an applicable contradiction keeps the requirement unsatisfied even if another applicable run verified the behavior. Conflicting evidence should be investigated, not resolved by selecting the pleasant result.
 
 A later remediation normally creates a new candidate state. The failed assessment remains historical evidence for the old candidate while a verified assessment can become applicable to the remediated candidate.
 
@@ -153,11 +185,11 @@ old candidate + contradicted assessment -> preserve history
 new candidate + verified assessment -> may satisfy the new requirement
 ```
 
-## Identity and minimized evidence
+## Minimized evidence
 
 Retrieved items use a logical reference as the cross-observation identity. A version reference may be recorded as additional evidence, but a changed physical representation must not silently create a new logical memory.
 
-The reference artifact records digests of bound retrieval observations instead of requiring raw memory content in the assessment record. Deployments that need richer evidence can retain it separately under normal privacy and custody rules.
+The reference artifact records digests of bound retrieval observations instead of raw memory content. Deployments that need richer evidence can retain it separately under normal privacy and custody rules.
 
 Duplicate logical references or duplicate ranks in one observation are rejected because they make precedence and ordering claims ambiguous.
 
@@ -193,7 +225,7 @@ reference/agentmem_ref/checkpoint_behavior.py
 reference/tests/test_checkpoint_behavior.py
 ```
 
-The tests cover the four positive invariants plus correction loss and outranking, anchor loss and demotion, forbidden-scope retrieval, state collapse, unavailable evidence, state changes during assessment, applicability mismatch, conflicting applicable assessments, optional diagnostic failures, and remediation without history deletion.
+The executable tests cover the four core invariants, applicability mismatch, state changes during assessment, unavailable evidence, conflicting applicable assessments, recall-stage and tie-policy binding, machine-readable minimized evidence, and remediation without history deletion.
 
 ## Non-goals
 
