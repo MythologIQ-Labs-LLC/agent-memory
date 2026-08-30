@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -677,6 +677,8 @@ experience / observation
 7. an adversarial path proves that learned reinforcement, graph confidence, prediction confidence, or a provider-native verdict cannot independently grant durable or action authority;
 8. module replacement or absence fails explicitly without corrupting canonical cognitive identity;
 9. conformance documentation distinguishes architectural acceptance from implementation maturity.
+
+The bounded evidence satisfying these requirements is recorded in [`../programs/runtime-evidence/adr-035-acceptance-matrix.md`](../programs/runtime-evidence/adr-035-acceptance-matrix.md). Acceptance does not promote unrelated provider capability maturity or claim universal production conformance.
 
 ## Decision summary
 
