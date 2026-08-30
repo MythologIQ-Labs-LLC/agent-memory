@@ -40,6 +40,7 @@ ADR-031: Accepted
 ADR-032: Accepted
 ADR-033: Accepted
 ADR-034: Accepted
+ADR-035: Proposed
 ```
 
 ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, and ADR-034 have satisfied their doctrine-maturity gates.
@@ -280,6 +281,26 @@ Acceptance is backed by the #295 reference vertical slice and the focused exact-
 
 The adversarial path explicitly proves that approval for one procedure payload cannot commit a substituted payload. Acceptance remains bounded to the reference evidence and does not claim process-restart durability or universal production conformance.
 
+### Governed cognitive framework
+
+[`ADR-035`](ADR-035-agent-memory-is-a-governed-cognitive-framework.md) is **Proposed**.
+
+Its candidate system identity is:
+
+```text
+Agent Memory
+  -> shared Cognitive Mesh
+  -> bounded Cognitive, Reality, and Authority planes
+  -> independently composed/qualified implementations
+  -> PAMA-governed consequence
+```
+
+ADR-035 makes the cognitive substrate explicit without reversing ADR-033. Module identity, component identity, and capability identity remain distinct.
+
+The proposed first-party responsibility mapping treats EvolveAI as the initial Cognitive Metabolism implementation and CodeGenome as the initial Code Reality Graph implementation. Those mappings do not promote capability maturity, make either provider's internal ontology canonical, or require immediate repository/submodule consolidation.
+
+Acceptance requires a bounded Cognitive Mesh contract, canonical documentation integration, an end-to-end cognitive path through evidence and PAMA, an adversarial authority-containment path, and explicit module-replacement behavior.
+
 ## Remaining Proposed ADRs
 
 The remaining Proposed decisions intentionally stay separate:
@@ -289,7 +310,8 @@ The remaining Proposed decisions intentionally stay separate:
 - [`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md): explicit authority for durable decision overwrite;
 - [`ADR-026`](ADR-026-origin-is-provenance-not-evidentiary-authority.md): source-neutral evidence authority;
 - [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): governed re-admission of rejected values;
-- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): vendor-neutral governance context projection.
+- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): vendor-neutral governance context projection;
+- [`ADR-035`](ADR-035-agent-memory-is-a-governed-cognitive-framework.md): shared Cognitive Mesh and governed cognitive-framework topology.
 
 These must not be collapsed into a generic "memory safety" claim. Each has its own evidence and acceptance boundary.
 
