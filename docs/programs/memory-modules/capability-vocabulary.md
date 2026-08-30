@@ -2,7 +2,7 @@
 
 Status: **research conclusion / implementation vocabulary candidate**
 
-Issues: #274, #284, #286, #287, #290, #291
+Issues: #274, #284, #286, #287, #290, #291, #343
 
 ## Purpose
 
@@ -16,6 +16,8 @@ capability presence != capability maturity
 candidate retrieval != recall admission
 memory representation != memory truth
 memory procedure != execution permission
+behavioral compatibility != operational compatibility
+operational quality != authority
 ```
 
 ## Capability maturity
@@ -43,11 +45,15 @@ These describe what kind of retained state a component can materially represent.
 | `transient_memory` | Retained state expected to be short-lived or cheaply disposable. | Transience is lifecycle posture, not a storage technology. |
 | `episodic_event_memory` | Event/interaction traces preserving time, sequence, source, or episode context. | An event may be historically true without remaining current guidance. |
 | `semantic_fact_memory` | Retained declarative facts, assertions, concepts, or stable summaries. | Consolidated meaning remains derived from evidence unless independently established. |
+| `epistemic_belief_memory` | Retained claims, beliefs, hypotheses, confidence, supporting/contradicting evidence, and revision state. | Belief remains distinct from fact, observed history, and authority even when confidence is high. |
+| `predictive_counterfactual_memory` | Retained predictions, simulations, expected outcomes, counterfactual trajectories, and later outcome comparisons. | Predicted or simulated history must not become observed history by storage accident. |
 | `procedural_skill_memory` | Retained reusable procedures, skills, playbooks, strategies, or action guidance. | Retention/retrieval is not activation or execution authority. |
 | `resource_artifact_memory` | Retained files, documents, media, tool outputs, templates, or other reusable artifacts. | Artifact availability does not imply admissibility or execution permission. |
 | `negative_failure_memory` | Retained failures, anti-patterns, rejected paths, hazards, or negative precedents. | Similarity to a failure is risk evidence, not an autonomous block/allow verdict. |
 | `policy_memory` | Retained policy or policy-like state whose currentness materially affects permitted behavior. | Governed separately by high-authority policy-memory doctrine. |
 | `metamemory_policy` | Retained/evolved procedures for how future memory should be extracted, consolidated, routed, retrieved, ranked, pruned, or forgotten. | This changes the memory system's future behavior and is not ordinary procedural memory authority. |
+
+`epistemic_belief_memory` exists because a belief or hypothesis needs revision and contradiction semantics without being laundered into `semantic_fact_memory`. `predictive_counterfactual_memory` exists because simulated or expected trajectories need later comparison with outcomes while retaining an explicit boundary from observation.
 
 `metamemory_policy` is intentionally named as a capability surface rather than a new authority class. MemSkill-style memory skills and EvolveMem-style retrieval evolution demonstrate that memory systems can learn *how to remember* independently from what they remember. Under Agent Memory, those learned outputs remain proposals to a governed configuration/maintenance path.
 
@@ -180,6 +186,61 @@ These capabilities are constrained by ADR-022 isolation and governed boundary cr
 
 Multimodal support is not one yes/no capability because ingestion, representation, and retrieval may mature independently.
 
+## Capability Contract v3: behavior and operation remain separate
+
+`component-capability-v2` made lifecycle behavior explicit. `component-capability-v3` preserves that contract and adds a separate substrate operational contract.
+
+```text
+behavior_contract
+  operation support
+  currentness
+  invalidation
+  correction
+  deletion
+  residue
+  migration / rebuild
+  structural mutation requirement
+
+!=
+
+operational_contract
+  write atomicity
+  concurrency control
+  idempotency
+  restart recovery
+  reconciliation
+```
+
+This distinction is required for replaceability. Two providers can both expose `graph_state`, `epistemic_belief_memory`, or another identical capability while having materially different transaction, replay, and recovery guarantees.
+
+A v3 provider therefore declares both contracts. A routing requirement may constrain operational properties in addition to capability identity, maturity, state/scope posture, and behavior. If a provider cannot satisfy the required operational posture, it is ineligible even when it exposes the requested capability.
+
+An explicitly preferred provider that is operationally ineligible fails resolution. Agent Memory does not silently fall back merely to make a configuration appear successful. Equally qualified providers remain ambiguous unless an explicit preference resolves the choice.
+
+Operational quality remains non-authoritative:
+
+```text
+atomic write != permission
+idempotent replay != permission
+restart recovery != correctness
+reconciliation != lifecycle completion
+provider selection != PAMA authority
+```
+
+Persistent state is not sufficient evidence that governance-critical interpretation survived reconstruction. Likewise, successful readback or reconciliation is evidence about substrate behavior, not proof that a memory consequence was authorized or that its lifecycle completed correctly.
+
+### Operational contract vocabulary
+
+| Dimension | Values | Meaning |
+|---|---|---|
+| `write_atomicity` | `none`, `process_local`, `single_record_atomic`, `transactional_multi_record` | What atomic write boundary the provider can establish. |
+| `concurrency_control` | `none`, `process_local`, `optimistic_revision`, `pessimistic_lock`, `serializable` | How conflicting concurrent mutations are detected or ordered. |
+| `idempotency` | `none`, `process_local`, `durable_keyed` | Whether repeated operations can be recognized safely across the relevant persistence boundary. |
+| `restart_recovery` | `none`, `process_local_only`, `reconstructable`, `checkpoint_replay` | Whether governance-relevant runtime state can be reconstructed after process loss. |
+| `reconciliation` | `none`, `process_local_only`, `deterministic_readback`, `authoritative_rebuild` | Whether persisted/materialized state can be independently checked and repaired against its authority/source basis. |
+
+A process-local-only provider cannot satisfy a requirement for durable restart reconstruction or independent reconciliation simply because its in-process tests are tidy. Processes, regrettably, do eventually stop.
+
 ### Operational/evidence capabilities
 
 These help qualify components but are not themselves memory authority:
@@ -192,6 +253,8 @@ These help qualify components but are not themselves memory authority:
 | `provenance_binding` | Bind retained/derived state to source/evidence identities. |
 | `evaluation_harness` | Execute repeatable quality/fitness experiments against a component or memory strategy. |
 | `agent_protocol_exposure` | Expose component operations through MCP or equivalent agent-facing protocol. |
+
+These capability names remain useful for describing supplied functions. The v3 `operational_contract` is different: it describes execution guarantees that may make a provider eligible or ineligible for a requested capability operation.
 
 ## Core responsibilities that are not delegated capabilities
 
@@ -221,7 +284,7 @@ One memory operation may legitimately use several capabilities:
 source episode
   -> episodic_event_memory
   -> consolidation_synthesis
-  -> semantic_fact_memory + procedural_skill_memory
+  -> semantic_fact_memory + epistemic_belief_memory + procedural_skill_memory
   -> vector_representation
   -> graph_state
   -> lexical/vector/graph candidate retrieval
@@ -229,7 +292,9 @@ source episode
   -> Agent Memory recall admission
 ```
 
-Each stage must retain enough provenance/currentness information that stale, superseded, foreign-scope, or deleted source state cannot be laundered through a later representation.
+Predictive/counterfactual state may participate in planning or comparison, but it remains explicitly typed as predictive/counterfactual until later evidence records an observed outcome.
+
+Each stage must retain enough provenance/currentness information that stale, superseded, foreign-scope, deleted, hypothetical, or predicted source state cannot be laundered through a later representation.
 
 ## Implications for current first-party systems
 
@@ -243,4 +308,6 @@ CodeGenome spans code-domain graph state/query/traversal, structural reasoning, 
 
 ## Research implication
 
-Future comparisons should score **capability behavior and maturity**, not whole products. A system can outperform another in vector candidate retrieval while underperforming it in lifecycle correction or procedural memory. A single product leaderboard erases exactly the architectural information this program needs.
+Future comparisons should score **capability behavior, operational posture, and maturity**, not whole products. A system can outperform another in vector candidate retrieval while underperforming it in lifecycle correction, restart recovery, idempotency, or procedural memory. A single product leaderboard erases exactly the architectural information this program needs.
+
+External providers should be qualified against this contract in later adaptor slices. No external SDK is required to prove v3 itself.
