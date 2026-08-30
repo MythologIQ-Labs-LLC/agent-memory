@@ -29,7 +29,7 @@
         "Qualification is limited to @memtensor/memos-local-plugin v2.0.17 trace-bundle resource memory.",
         "Stable-key evidence uses caller-supplied trace IDs through importBundle plus updateTrace; conversational onTurnEnd writes are not claimed idempotent.",
         "Candidate retrieval is the deterministic listTraces query surface; semantic ranking, L2/L3 memory, skills, and agent adapters are outside this evidence boundary.",
-        "Concurrent mutation ordering is not qualified by this slice.",
+        "Write atomicity and concurrent mutation ordering are not fault-injection qualified and remain declared none.",
         "Repository root LICENSE is Apache-2.0 while the package manifest declares MIT; the discrepancy is retained as provenance and runtime rights rely on the exact tagged repository license grant."
       ],
       "behavior_contract": {
@@ -47,7 +47,7 @@
         "structural_mutation_requirement": "none"
       },
       "operational_contract": {
-        "write_atomicity": "transactional_multi_record",
+        "write_atomicity": "none",
         "concurrency_control": "none",
         "idempotency": "durable_keyed",
         "restart_recovery": "reconstructable",
