@@ -63,19 +63,28 @@ jobs:
           test "$ACTUAL_COMMIT" = "$EXPECTED_COMMIT"
           grep -q "MIT License" /tmp/hindsight-source/LICENSE
           grep -q 'version = "0.9.0"' /tmp/hindsight-source/hindsight-embed/pyproject.toml
+          grep -q 'version = "0.9.0"' /tmp/hindsight-source/hindsight-api/pyproject.toml
           grep -q '"chunks"' /tmp/hindsight-source/hindsight-api-slim/hindsight_api/config.py
           grep -q 'ENV_RETAIN_EXTRACTION_MODE = "HINDSIGHT_API_RETAIN_EXTRACTION_MODE"' /tmp/hindsight-source/hindsight-api-slim/hindsight_api/config.py
           printf '%s\n' "$ACTUAL_COMMIT" > /tmp/hindsight-source-commit.txt
 
-      - name: Install exact Hindsight embedded package
+      - name: Install exact Hindsight embedded runtime
         run: |
-          python -m pip install --disable-pip-version-check "hindsight-embed==0.9.0"
+          python -m pip install --disable-pip-version-check \
+            "hindsight-embed==0.9.0" \
+            "hindsight-api==0.9.0"
           python - <<'PY'
           from importlib import metadata
-          version = metadata.version("hindsight-embed")
-          if version != "0.9.0":
-              raise SystemExit(f"unexpected hindsight-embed version: {version}")
-          print(version)
+          expected = {
+              "hindsight-embed": "0.9.0",
+              "hindsight-api": "0.9.0",
+              "hindsight-api-slim": "0.9.0",
+          }
+          for package, wanted in expected.items():
+              actual = metadata.version(package)
+              if actual != wanted:
+                  raise SystemExit(f"unexpected {package} version: {actual}")
+              print(f"{package}={actual}")
           PY
 
       - name: Execute focused Agent Memory qualification tests
