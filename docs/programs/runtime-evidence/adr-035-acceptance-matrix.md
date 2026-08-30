@@ -1,10 +1,10 @@
 # ADR-035 Acceptance Evidence Matrix
 
-Status: **acceptance review active; one material evidence gap remains**
+Status: **all nine acceptance requirements satisfied at the bounded evidence boundary; explicit doctrine promotion in review**
 
-ADR-035 remains **Proposed**.
+ADR-035 remains canonical only after the separate promotion PR carrying this matrix and the ADR status change merges.
 
-This matrix evaluates the acceptance requirements in [`../../adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md`](../../adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) against current repository evidence. It is deliberately stricter than asking whether a document, fixture, or first-party project merely exists.
+This matrix evaluates the acceptance requirements in [`../../adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md`](../../adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) against repository-main evidence after the native EvolveAI Cognitive Metabolism integration landed in PR #340.
 
 ## Decision rule
 
@@ -16,83 +16,74 @@ documented architecture
   != doctrine acceptance
 ```
 
-A requirement is marked `satisfied` only at the boundary the ADR actually names. `partial` means useful evidence exists but a material part of the claimed seam is not yet exercised directly.
+A `satisfied` requirement means the boundary named by ADR-035 has evidence. It does not promote unrelated provider capabilities or claim universal production conformance.
 
 ## Matrix
 
-| # | ADR-035 acceptance requirement | Status | Evidence / remaining boundary |
+| # | ADR-035 acceptance requirement | Status | Evidence boundary |
 |---|---|---|---|
-| 1 | Cognitive Mesh boundary documented without creating a universal implementation-specific ontology | **satisfied** | ADR-035 defines the mesh contract; `reference/agentmem_ref/cognitive_mesh.py` keeps `object_type` and `module_role` open rather than imposing a closed provider ontology; `docs/01-layer-model.md` explicitly states the mesh is not a ninth memory layer or universal database schema. |
-| 2 | Three-plane architecture integrated consistently into canonical documentation | **satisfied in integration slice** | `docs/11-component-architecture.md`, `docs/01-layer-model.md`, and `docs/13-system-composition-boundaries.md` distinguish the three-plane topology from layer/component/capability taxonomies and preserve existing authority boundaries. This row becomes repository-main evidence only after the integration slice merges. |
-| 3 | EvolveAI mapped to Cognitive Metabolism without falsely promoting unqualified capabilities | **satisfied** | ADR-035 and component/layer docs make the role mapping architectural only. Existing EvolveAI qualification remains capability/version scoped; native qualification evidence explicitly records limits such as MockEngine embedding quality, provider-native Shadow verdict not being Agent Memory authority, and incomplete transitive forgetting. |
-| 4 | CodeGenome mapped to Code Reality Graph without promoting its ontology to universal memory semantics | **satisfied** | ADR-035 and composition docs constrain CodeGenome to the code-domain Reality Graph role and explicitly prohibit treating its ontology as the universal Cognitive Mesh ontology. Existing CodeGenome maturity remains independently capability scoped. |
-| 5 | Module identity, component identity, and capability identity remain distinct and consistent with ADR-033 | **satisfied** | ADR-033 remains Accepted and controlling. ADR-035, the layer model, and composition docs preserve `module identity != component identity != capability identity`. |
-| 6 | At least one end-to-end reference path demonstrates Cognitive Mesh identity -> Evidence/Provenance -> Cognitive Metabolism or Reality Graph processing -> candidate cognitive change -> PAMA -> commit/refusal -> governed recall -> active cognition | **partial** | #338 proves the complete Agent Memory path from a typed provider-labelled signal through PAMA, durable consequence/refusal, governed recall, and active cognition. Separately, EvolveAI has pinned native workload evidence for lifecycle orchestration and REM synthesis. The remaining gap is a direct adapter seam in which actual provider-native EvolveAI or CodeGenome output is normalized into the Cognitive Mesh `CognitiveSignal` path and carried through the governed consequence/recall loop. A provider name on a fixture is not treated as provider-native processing. |
-| 7 | Adversarial path proves learned reinforcement, graph confidence, prediction confidence, or provider-native verdict cannot independently grant durable/action authority | **satisfied** | #338 focused tests and deterministic evidence show confidence `0.01` and `1.0` receive the same review-required crystallization outcome; CodeGenome-labelled graph confidence `1.0` cannot commit; predictive confidence `1.0` plus provider `PASS` cannot grant A4 action authority. |
-| 8 | Module replacement or absence fails explicitly without corrupting canonical cognitive identity | **satisfied at reference boundary** | #338 proves missing provider -> `CognitiveModuleUnavailable` with zero writes, then explicit replacement commits while preserving the logical `MeshObject.object_ref` independently of the new physical fact UUID. Restart-persistent provider mapping is not claimed because the ADR requirement does not require that stronger boundary. |
-| 9 | Conformance documentation distinguishes architectural acceptance from implementation maturity | **satisfied** | ADR status semantics, ADR-033 capability maturity, `docs/programs/runtime-evidence/cognitive-mesh.md`, and this matrix explicitly separate doctrine, reference evidence, native provider integration, and capability qualification. |
+| 1 | Cognitive Mesh boundary documented without creating a universal implementation-specific ontology | **satisfied** | ADR-035 defines the mesh contract; `reference/agentmem_ref/cognitive_mesh.py` keeps `object_type` and `module_role` open; `docs/01-layer-model.md` states the mesh is not a ninth memory layer or universal database schema. |
+| 2 | Three-plane architecture integrated consistently into canonical documentation | **satisfied** | PR #339 landed `docs/11-component-architecture.md`, `docs/01-layer-model.md`, and `docs/13-system-composition-boundaries.md` with the Cognitive, Reality, and Authority topology while preserving layer/component/capability distinctions. |
+| 3 | EvolveAI mapped to Cognitive Metabolism without falsely promoting unqualified capabilities | **satisfied** | The mapping is architectural only. Existing EvolveAI qualification remains capability/version scoped and preserves its known limitations. PR #340 retains `proposal_only` posture for native REM/consolidation output. |
+| 4 | CodeGenome mapped to Code Reality Graph without promoting its ontology to universal memory semantics | **satisfied** | ADR-035 and composition doctrine constrain CodeGenome to the code-domain Reality Graph role. Its ontology does not become the universal Cognitive Mesh ontology, and its capability maturity remains independently qualified. |
+| 5 | Module identity, component identity, and capability identity remain distinct and consistent with ADR-033 | **satisfied** | ADR-033 remains Accepted and controlling. ADR-035 preserves `module identity != component identity != capability identity`. |
+| 6 | At least one end-to-end path demonstrates Cognitive Mesh identity -> Evidence/Provenance -> Cognitive Metabolism or Reality Graph processing -> candidate cognitive change -> PAMA -> commit/refusal -> governed recall -> active cognition | **satisfied** | PR #340, merged at `5ef4f6936cbe0af4846135bee0562c4d4c23a3ab`, checks out pinned `EvolveAI@21161ce7b88dbffeb7ed59757b4d02d24a9c2acd`, executes native `MemoryProcessor` encode/detach behavior, retains raw provider evidence, normalizes the native synthesis observation through the versioned Cognitive Metabolism adapter into `CognitiveSignal`, then carries it through `CognitiveMeshRuntime`, PAMA, governed durable commit/refusal, governed recall, and active cognition. The exact-head `EvolveAI Cognitive Mesh Evidence` workflow passed all steps. |
+| 7 | Adversarial path proves learned reinforcement, graph confidence, prediction confidence, or provider-native verdict cannot independently grant durable/action authority | **satisfied** | PR #338 proves estimator confidence and provider verdict cannot grant authority. PR #340 additionally proves native EvolveAI synthesis cannot self-authorize crystallization and is refused when it requests authority it has not earned. |
+| 8 | Module replacement or absence fails explicitly without corrupting canonical cognitive identity | **satisfied at reference boundary** | PR #338 proves unavailable providers produce explicit failure with zero writes and that replacement preserves logical `MeshObject.object_ref` independently of physical provider fact identity. Stronger universal restart-persistent provider mapping is not claimed. |
+| 9 | Conformance documentation distinguishes architectural acceptance from implementation maturity | **satisfied** | ADR status semantics, ADR-033 capability maturity, `docs/programs/runtime-evidence/cognitive-mesh.md`, this matrix, and PR #340's non-claims separate doctrine acceptance, reference evidence, native integration, and provider capability qualification. |
 
-## Current acceptance result
+## Acceptance result
 
 ```text
-requirements satisfied:          7
-satisfied in integration slice:  1
-partial:                         1
-blocking acceptance gap:         requirement 6
+requirements satisfied: 9 / 9
+material acceptance gaps: 0
+provider capability promotions implied: 0
+universal production conformance claimed: false
 ```
 
-After this documentation slice merges, documentation consistency is no longer the acceptance blocker.
+## Native provider evidence now on main
 
-The remaining blocker is **native provider-to-mesh integration evidence**.
-
-## Required next evidence slice
-
-The smallest sufficient next slice is not another cognitive subsystem. It is an adapter boundary that consumes already-evidenced first-party provider output and emits a typed Cognitive Mesh signal.
-
-Preferred first path: EvolveAI Cognitive Metabolism.
+The accepted evidence boundary is intentionally narrow:
 
 ```text
-pinned EvolveAI native workload output
+EvolveAI@21161ce7b88dbffeb7ed59757b4d02d24a9c2acd
+  -> native MemoryProcessor encode x3
+  -> native detach() / lifecycle synthesis
+  -> retained raw provider artifact
   -> versioned EvolveAI Cognitive Metabolism adapter
   -> CognitiveSignal
-       module_role=cognitive_metabolism
-       source_component=evolveai
-       signal_type=<declared metabolic proposal>
-       estimator/provider refs preserved
-       evidence refs preserved
-       uncertainty/provider verdict preserved where present
-  -> CognitiveMeshRuntime.apply_signal(...)
+  -> CognitiveMeshRuntime
   -> PAMA
   -> governed durable commit or refusal
   -> governed recall
   -> active cognition
 ```
 
-The adapter must prove:
+The adapter proves:
 
-1. source EvolveAI commit/version is pinned and reconstructable;
-2. the selected native observation is actually produced by the provider workload, not recreated as an Agent Memory fixture;
+1. provider identity and revision are pinned and reconstructable;
+2. the source observation is produced by native EvolveAI behavior rather than recreated as an Agent Memory fixture;
 3. normalized signal semantics are explicit;
-4. provider confidence/verdict remains evidence only;
+4. no confidence is invented where the provider emits none;
 5. provider output cannot bypass PAMA;
-6. logical mesh identity remains independent of provider storage identity;
-7. raw provider evidence is retained alongside normalization;
-8. the resulting evidence does **not** promote unrelated EvolveAI capabilities.
+6. logical Cognitive Mesh identity remains independent of provider storage identity;
+7. raw provider evidence and its digest survive normalization;
+8. the integration does not promote unrelated EvolveAI capabilities.
 
-A CodeGenome Reality Graph adapter can follow the same pattern, but both providers are not required to accept ADR-035 if one genuinely native end-to-end path satisfies requirement 6 and the second mapping remains truthfully bounded.
+CodeGenome does not need an equivalent native seam to accept ADR-035 because the ADR requires at least one native end-to-end module path. A Code Reality Graph seam remains a separate future implementation scope and must preserve the same evidence/authority boundaries.
 
-## Promotion rule
+## Promotion decision boundary
 
-ADR-035 should move to `Accepted` only after:
+With PR #340 on `main`, the evidence prerequisites named by ADR-035 are satisfied. The remaining act is deliberately doctrinal rather than evidentiary:
 
 ```text
-this integration documentation is on main
+all nine requirements satisfied
 +
-native provider-to-Cognitive-Mesh evidence is green at an exact commit
+explicit ADR promotion diff
 +
-requirement 6 is changed from partial to satisfied
-+
-repository doctrine validation passes
+exact-head doctrine / architecture validation
+=
+eligible to merge ADR-035 as Accepted
 ```
 
-The acceptance change should be a separate, explicit promotion commit/PR. Evidence completion must not silently mutate ADR status.
+The promotion PR must not alter EvolveAI or CodeGenome capability maturity, packaging, repository ownership, or PAMA authority semantics. Those remain separate decisions and evidence programs.
