@@ -102,6 +102,19 @@ class ComponentCapabilityV3Tests(unittest.TestCase):
         )
         self.assertNotEqual(parsed.capabilities[0].maturity, parsed.capabilities[1].maturity)
 
+    def test_schema_rejects_v3_without_behavior_or_operational_contract(self):
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        source = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        validator = jsonschema.Draft202012Validator(schema)
+        for required_contract in ("behavior_contract", "operational_contract"):
+            value = json.loads(json.dumps(source))
+            value["capabilities"][0].pop(required_contract)
+            errors = list(validator.iter_errors(value))
+            self.assertTrue(
+                errors,
+                f"component-capability-v3 unexpectedly accepted missing {required_contract}",
+            )
+
     def test_v1_and_v2_remain_backwards_compatible(self):
         v1 = ComponentDeclaration(
             component_id="legacy-v1",
