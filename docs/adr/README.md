@@ -40,12 +40,12 @@ ADR-031: Accepted
 ADR-032: Accepted
 ADR-033: Accepted
 ADR-034: Accepted
-ADR-035: Proposed
+ADR-035: Accepted
 ```
 
-ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, and ADR-034 have satisfied their doctrine-maturity gates.
+ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, and ADR-035 have satisfied their doctrine-maturity gates.
 
-Several accepted decisions deliberately required stronger-than-documentation evidence. ADR-020 required executable end-to-end governed-consequence evidence and adversarial negative paths. ADR-024 required executable shared-write coordination evidence. ADR-034 required a real procedural-memory vertical slice proving that retained/recalled skills do not become standing execution or metamemory authority.
+Several accepted decisions deliberately required stronger-than-documentation evidence. ADR-020 required executable end-to-end governed-consequence evidence and adversarial negative paths. ADR-024 required executable shared-write coordination evidence. ADR-034 required a real procedural-memory vertical slice proving that retained/recalled skills do not become standing execution or metamemory authority. ADR-035 required an executable Cognitive Mesh path plus native first-party Cognitive Metabolism evidence crossing the mesh/PAMA/recall boundary without provider authority laundering.
 
 ## Current status policy
 
@@ -283,9 +283,9 @@ The adversarial path explicitly proves that approval for one procedure payload c
 
 ### Governed cognitive framework
 
-[`ADR-035`](ADR-035-agent-memory-is-a-governed-cognitive-framework.md) is **Proposed**.
+[`ADR-035`](ADR-035-agent-memory-is-a-governed-cognitive-framework.md) is **Accepted**.
 
-Its candidate system identity is:
+Its canonical system identity is:
 
 ```text
 Agent Memory
@@ -297,9 +297,17 @@ Agent Memory
 
 ADR-035 makes the cognitive substrate explicit without reversing ADR-033. Module identity, component identity, and capability identity remain distinct.
 
-The proposed first-party responsibility mapping treats EvolveAI as the initial Cognitive Metabolism implementation and CodeGenome as the initial Code Reality Graph implementation. Those mappings do not promote capability maturity, make either provider's internal ontology canonical, or require immediate repository/submodule consolidation.
+The first-party responsibility mapping treats EvolveAI as the initial Cognitive Metabolism implementation and CodeGenome as the initial Code Reality Graph implementation. Those mappings do not promote capability maturity, make either provider's internal ontology canonical, or require immediate repository/submodule consolidation.
 
-Acceptance requires a bounded Cognitive Mesh contract, canonical documentation integration, an end-to-end cognitive path through evidence and PAMA, an adversarial authority-containment path, and explicit module-replacement behavior.
+Acceptance is backed by:
+
+- the Cognitive Mesh contract and three-plane integration in canonical architecture documentation;
+- PR #338's executable reference path and adversarial authority-containment/module-replacement evidence;
+- PR #339's canonical documentation alignment and requirement-by-requirement acceptance matrix;
+- PR #340, merged at `5ef4f6936cbe0af4846135bee0562c4d4c23a3ab`, which executes pinned `EvolveAI@21161ce7b88dbffeb7ed59757b4d02d24a9c2acd` native lifecycle synthesis, retains the raw provider artifact, normalizes it through the versioned Cognitive Metabolism adapter, and carries it through Cognitive Mesh, PAMA, durable commit/refusal, governed recall, and active cognition;
+- [`../programs/runtime-evidence/adr-035-acceptance-matrix.md`](../programs/runtime-evidence/adr-035-acceptance-matrix.md), which records all nine acceptance requirements as satisfied at their bounded evidence boundary.
+
+Acceptance does not claim a complete brain implementation, universal provider conformance, mature prediction/world modeling, or automatic maturity promotion for EvolveAI or CodeGenome.
 
 ## Remaining Proposed ADRs
 
@@ -310,8 +318,7 @@ The remaining Proposed decisions intentionally stay separate:
 - [`ADR-025`](ADR-025-durable-decision-overwrites-require-explicit-authority.md): explicit authority for durable decision overwrite;
 - [`ADR-026`](ADR-026-origin-is-provenance-not-evidentiary-authority.md): source-neutral evidence authority;
 - [`ADR-027`](ADR-027-rejected-values-require-governed-readmission.md): governed re-admission of rejected values;
-- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): vendor-neutral governance context projection;
-- [`ADR-035`](ADR-035-agent-memory-is-a-governed-cognitive-framework.md): shared Cognitive Mesh and governed cognitive-framework topology.
+- [`ADR-029`](ADR-029-governance-projection-is-derived-context-not-authority.md): vendor-neutral governance context projection.
 
 These must not be collapsed into a generic "memory safety" claim. Each has its own evidence and acceptance boundary.
 
