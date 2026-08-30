@@ -24,12 +24,21 @@ jobs:
     timeout-minutes: 35
     env:
       PYTHONPATH: reference
+      AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
       HINDSIGHT_QUALIFICATION_HOME: /tmp/hindsight-qualification-home
       HF_HOME: /tmp/hindsight-qualification-hf
       TRANSFORMERS_CACHE: /tmp/hindsight-qualification-hf
     steps:
       - name: Checkout Agent Memory exact head
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.AGENT_MEMORY_COMMIT }}
+
+      - name: Verify Agent Memory exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$AGENT_MEMORY_COMMIT"
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -71,7 +80,7 @@ jobs:
 
       - name: Execute focused Agent Memory qualification tests
         run: |
-          python -m pytest -q \
+          python -m unittest \
             reference/tests/test_hindsight_qualification.py \
             reference/tests/test_component_qualification_v12.py
 
@@ -91,7 +100,7 @@ jobs:
       - name: Emit Capability Qualification v1.2 evidence
         run: |
           python reference/run_hindsight_v090_qualification.py \
-            --agent-memory-commit "$GITHUB_SHA" \
+            --agent-memory-commit "$AGENT_MEMORY_COMMIT" \
             --raw-evidence artifacts/hindsight-v090/raw-provider-evidence.json \
             --component-profile reference/fixtures/component-capabilities/hindsight-v0.9.0.json \
             --output artifacts/hindsight-v090/qualification.json
@@ -157,6 +166,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hindsight-v090-qualification-${{ github.sha }}
+          name: hindsight-v090-qualification-${{ env.AGENT_MEMORY_COMMIT }}
           path: artifacts/hindsight-v090
           if-no-files-found: warn
