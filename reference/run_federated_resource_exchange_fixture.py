@@ -266,10 +266,23 @@ def _daemon(
 
 def _h_cli_json(profile: str, args: list[str], commands: list[dict[str, Any]], name: str) -> Any:
     result = _run(["hindsight-embed", "-p", profile, "-o", "json", *args], commands, name)
+    return _decode_json_prefix(result.stdout, name)
+
+
+def _decode_json_prefix(stdout: str, name: str) -> Any:
+    """Decode the provider JSON value while preserving launcher chatter separately.
+
+    Hindsight Embed v0.9.0 may lazily install its exact CLI on the first
+    forwarded command and append installer status text to stdout after the JSON
+    response. Raw stdout remains captured in command evidence; qualification
+    uses only the first syntactically valid JSON value.
+    """
+    text = stdout.lstrip()
     try:
-        return json.loads(result.stdout)
+        value, _end = json.JSONDecoder().raw_decode(text)
     except json.JSONDecodeError as exc:
-        raise RuntimeError(f"{name} did not emit JSON: {result.stdout[:500]!r}") from exc
+        raise RuntimeError(f"{name} did not begin with JSON: {stdout[:500]!r}") from exc
+    return value
 
 
 def _memos_endpoint(
