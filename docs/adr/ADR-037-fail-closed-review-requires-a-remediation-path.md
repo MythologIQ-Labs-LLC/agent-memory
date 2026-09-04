@@ -50,6 +50,26 @@ The one way this becomes authority laundering is a fleet manufacturing consensus
 
 Evidence from N agents sharing a substrate, a prompt, a model, or an upstream observation is **one** evidence, not N. Independence must be established, not inferred from cardinality — the same standard `reusable_grants` already applies to human precedents via `minimum_independent_human_evidence` (≥2, refused below).
 
+### 2b. Independence is necessary and not sufficient — agreement is not evidence
+
+Independence defeats laundering by repetition. It does **not** establish correctness. Two genuinely independent parties can both be wrong, and a quorum of unqualified opinions remains opinion however uncorrelated it is. Counting agreement is not a substitute for checking anything.
+
+The repository already draws this line, and it is the same line:
+
+- `docs/24-determinism-probability-and-governed-uncertainty.md:41` — probabilistic discovery "may produce beliefs, rankings, hypotheses, candidates, confidence estimates, risk estimates, and proposed actions", while consequential behavior must occur inside an explicit governance envelope. Beliefs are inputs; they are not the envelope.
+- `docs/24:140` — **"A deterministic threshold applied to a noisy estimate is not epistemic certainty."**
+- `policy.py:8` — estimator confidence is an *input to* the decision; it never itself confers authority.
+
+So a discharge requires evidence of a **checkable class**, not merely a separated party's assertion. Checkable means at least one of:
+
+- **bound to an artifact** a third party can re-examine — a receipt, a digest, a committed fixture, a qualification record;
+- **reproducible** — the same procedure against the same inputs yields the same result for someone who did not run it the first time;
+- **calibrated** — an estimate carrying its estimator identity, version, and calibration reference, so its error characteristics are known rather than assumed.
+
+An assertion from a separated party with none of these is an opinion held at arm's length. It satisfies §2 and still fails here.
+
+This has a consequence worth stating plainly, because it is the one that will be argued: **raising the count does not raise the class.** Ten independent unqualified assertions do not become one qualified evidence. If a discharge is failing for want of evidential class, the remedy is to produce checkable evidence, not to gather more agreement.
+
 ### 3. `enter_pending_verification` becomes a real parked state
 
 Generalize `DurableDecisionRegistry`'s lifecycle: a proposal that cannot discharge parks with its decision, its unmet criteria, and its correlation identity, and is resumable when qualifying evidence arrives. Parking is a governed outcome that emits evidence, not a silent failure.
@@ -68,6 +88,7 @@ A parked proposal carries no permission. Resumption re-evaluates against current
 
 **Costs, accepted.**
 
+- Some proposals will park with plentiful agreement and no qualifying evidence. That is the control working, and it will feel like the control failing.
 - 51 call sites must present real evidence or park. That is the point, and it is why the path lands first.
 - Parked proposals are state that must be retained, bounded, and expired — retention is [#363](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/363)'s domain, and this ADR adds to its load.
 - Establishing independence is harder than counting approvals, and will sometimes conclude that plentiful evidence is one evidence.
@@ -81,6 +102,7 @@ A parked proposal carries no permission. Resumption re-evaluates against current
 
 1. **May an agent's parked proposal be resumed by evidence that agent itself later produces**, given the proposer ≠ approver invariant? A same-actor resumption looks like deferred self-approval. Suggested: no at any risk class, consistent with `self_approval_prohibited`.
 2. **What establishes independence between two agents** — distinct model, distinct substrate, distinct observation channel, distinct operator? §2 sets the bar without defining the test, and the test is the load-bearing part.
+2b. **Which checkable classes in §2b are sufficient alone, and which only in combination**, per risk class? A reproducible procedure may suffice at medium risk where a calibrated estimate does not.
 3. **Does `delegated_policy` at medium risk require one separated agent or two?** `reusable_grants` demands ≥2 independent human precedents for review reduction; the agent analogue is unstated.
 
 ## Related
