@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-"""Run the real pinned Agent Manifest 0.11.0 inbound evidence comparator for #223."""
+"""Run the real pinned Agent Manifest inbound evidence comparator for #223.
+
+The pinned version is AGENT_MANIFEST_SDK_VERSION; it is not duplicated here.
+"""
 
 from __future__ import annotations
 
@@ -25,6 +28,7 @@ from agentmem_ref.agent_manifest_external_evidence import (
     AGENT_MANIFEST_VERSION,
     normalize_agent_manifest_evidence,
 )
+from agentmem_ref.agent_manifest_correlation import AGENT_MANIFEST_SDK_VERSION
 
 
 SYSTEM_PROMPT_HASH = "sha256:" + "a" * 64
@@ -145,8 +149,10 @@ def _pama_checks(evidence_refs: tuple[str, ...]) -> tuple[dict, dict]:
 
 def run(agent_memory_commit: str) -> dict:
     package_version = importlib.metadata.version("agent-manifest")
-    if package_version != "0.11.0":
-        raise RuntimeError(f"expected agent-manifest==0.11.2, got {package_version}")
+    if package_version != AGENT_MANIFEST_SDK_VERSION:
+        raise RuntimeError(
+            f"expected agent-manifest=={AGENT_MANIFEST_SDK_VERSION}, got {package_version}"
+        )
 
     now = datetime.now(timezone.utc).replace(microsecond=0)
     observed_at = _iso(now)
@@ -228,7 +234,7 @@ def run(agent_memory_commit: str) -> dict:
 
     raw_render = json.dumps(normalized, sort_keys=True)
     checks = {
-        "exact_agent_manifest_package": package_version == "0.11.0",
+        "exact_agent_manifest_package": package_version == AGENT_MANIFEST_SDK_VERSION,
         "exact_source_release_pin_recorded": AGENT_MANIFEST_RELEASE == "9d26ac84461e829dba8ff97ca35748eeb874debe",
         "cose_manifest_valid": valid_dict["result"] == "VALID" and valid_dict["signature_verified"] is True,
         "identity_evidence_applicable": identity["applicability"]["status"] == "applicable",
