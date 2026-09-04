@@ -76,10 +76,17 @@ class DeletionAuthorityTest(unittest.TestCase):
     def test_cross_tenant_delete_refuses_and_the_fact_survives(self):
         """D4: previously the fact was physically removed by another tenant."""
         intruder = GovernedMemoryAdapter(self.substrate, tenant=OTHER)
+        proposal = _proposal("p-del", "mem:B", tenant=OTHER,
+                             operation="permanent_deletion", risk="critical")
         result = intruder.governed_delete(
-            _proposal("p-del", "mem:B", tenant=OTHER,
-                      operation="permanent_deletion", risk="critical"),
+            proposal,
             self.victim.fact_uuid,
+            external_verification=policy.ExternalVerification(
+                bound_proposal_id=proposal.proposal_id,
+                verifier_principal_id="principal:operator",
+                authority_kind="human_confirmation",
+                max_risk_class="critical",
+            ),
         )
         self.assertFalse(result.committed)
         self.assertEqual("cross_tenant_delete", result.refusal)
@@ -103,9 +110,20 @@ class DeletionAuthorityTest(unittest.TestCase):
         self.assertIsNotNone(self.adapter.tombstone(self.victim.fact_uuid))
 
     def test_positive_path_still_permanently_deletes(self):
+        # AMENDED Loop 7 (ledger Entry #17): permanent_deletion/critical resolves
+        # to require_external_verification, which is no longer dischargeable by
+        # assertion. A critical permanent deletion now carries an attestation --
+        # which is what a caller performing one should always have had.
+        proposal = _proposal("p-del", "mem:A", operation="permanent_deletion", risk="critical")
         result = self.adapter.governed_delete(
-            _proposal("p-del", "mem:A", operation="permanent_deletion", risk="critical"),
+            proposal,
             self.victim.fact_uuid,
+            external_verification=policy.ExternalVerification(
+                bound_proposal_id=proposal.proposal_id,
+                verifier_principal_id="principal:operator",
+                authority_kind="human_confirmation",
+                max_risk_class="critical",
+            ),
         )
         self.assertTrue(result.committed)
         self.assertIsNone(self.substrate.get_fact(self.victim.fact_uuid))

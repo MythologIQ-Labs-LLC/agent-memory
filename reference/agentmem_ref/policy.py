@@ -16,7 +16,7 @@ Stdlib only.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 POLICY_VERSION = "ref-p1"
 
@@ -152,6 +152,34 @@ class Proposal:
 
 
 @dataclass(frozen=True)
+class ExternalVerification:
+    """Attestation that an external authority verified this specific proposal.
+
+    GAP-ARCH-04. Deliberately NOT a `verified: bool` on Proposal -- that would be
+    a fourth caller-asserted boolean, the pattern removed from
+    `approves_own_authority` and `ratification_evidence_present`, and it would
+    let "i-said-so" become "i-said-so" plus verified=True.
+
+    It carries facts policy cross-checks *relationally against the proposal*:
+    the binding stops an attestation being replayed on a different proposal, and
+    the verifier principal is compared to the actor so self-verification is
+    derived rather than trusted.
+
+    Honest limit: this is still constructed by the caller, so an actor who can
+    build a Proposal can build one. What changes is that the assertion path is
+    closed entirely -- ordinary `evaluate` can no longer discharge external
+    verification at all. Making the attestation unforgeable means applying the
+    RatificationRegistry pattern to attestations: written by the verifier,
+    resolved rather than trusted. That is a further cycle and is not claimed here.
+    """
+
+    bound_proposal_id: str
+    verifier_principal_id: str
+    authority_kind: str
+    max_risk_class: str
+
+
+@dataclass(frozen=True)
 class Decision:
     outcome: str
     permitted_actions: tuple[str, ...]
@@ -240,6 +268,13 @@ def _apply_review(outcome: str, proposal: Proposal) -> tuple[str, list[str]]:
         return outcome, []
     if not proposal.approval_refs or proposal.approves_own_authority:
         return outcome, ["review claimed without an external approval record"]
+    if outcome == REQUIRE_EXTERNAL_VERIFICATION:
+        # GAP-ARCH-04 (LD1): an asserted boolean cannot discharge external
+        # verification. Before this, review_satisfied plus the literal string
+        # "i-said-so" collapsed policy_mutation/critical to allow_with_ledger,
+        # making require_review and require_external_verification the same thing
+        # under assertion. Use evaluate_with_external_verification instead.
+        return outcome, ["external_verification_requires_attestation"]
     return ALLOW_WITH_LEDGER, [f"review discharged by {list(proposal.approval_refs)}"]
 
 
@@ -290,6 +325,67 @@ def evaluate_with_base_outcome(
         prohibited_actions=prohibited,
         reasons=tuple(floor_reasons + modifier_reasons + review_reasons),
         review_discharge=review_discharge,
+    )
+
+
+_HIGH_RISK = ("high", "critical")
+_RISK_RANK = {"low": 0, "medium": 1, "high": 2, "critical": 3}
+HUMAN_CONFIRMATION = "human_confirmation"
+
+
+def attestation_refusal(
+    proposal: Proposal, attestation: ExternalVerification
+) -> str | None:
+    """Cross-check an attestation against the proposal it claims to verify.
+
+    GAP-ARCH-04 (LD3). Each check is relational: none of them can be satisfied
+    by the attestation alone.
+    """
+    if attestation.bound_proposal_id != proposal.proposal_id:
+        # Stops an attestation being replayed on a different proposal.
+        return "attestation_not_bound_to_proposal"
+    if attestation.verifier_principal_id == proposal.actor_id:
+        # Self-verification derived from identity, as Loop 5 did for approval.
+        return "attestation_self_verified"
+    if (
+        proposal.risk_class in _HIGH_RISK
+        and attestation.authority_kind != HUMAN_CONFIRMATION
+    ):
+        return "human_confirmation_required"
+    if attestation.max_risk_class not in _RISK_RANK:
+        return "attestation_invalid_risk_ceiling"
+    if _RISK_RANK[proposal.risk_class] > _RISK_RANK[attestation.max_risk_class]:
+        return "attestation_risk_ceiling_exceeded"
+    return None
+
+
+def evaluate_with_external_verification(
+    proposal: Proposal,
+    attestation: ExternalVerification,
+    *,
+    base_outcome: str | None = None,
+) -> Decision:
+    """Evaluate with an attested external verification available to discharge.
+
+    Mirrors `reusable_grants.evaluate_pama_with_reusable_grant`, which is
+    already this repository's pattern for evidence-gated discharge through a
+    dedicated entry point. Ordinary `evaluate` cannot reach this path.
+    """
+    base = _base_outcome(proposal) if base_outcome is None else base_outcome
+    decision = evaluate_with_base_outcome(proposal, base_outcome=base)
+    if decision.outcome != REQUIRE_EXTERNAL_VERIFICATION:
+        return decision
+    refusal = attestation_refusal(proposal, attestation)
+    if refusal is not None:
+        return replace(decision, reasons=decision.reasons + (refusal,))
+    permitted, prohibited = _envelope(ALLOW_WITH_LEDGER, proposal)
+    return Decision(
+        outcome=ALLOW_WITH_LEDGER,
+        permitted_actions=permitted,
+        prohibited_actions=prohibited,
+        reasons=decision.reasons
+        + (f"external verification attested by {attestation.verifier_principal_id}",),
+        review_discharge="verified",
     )
 
 

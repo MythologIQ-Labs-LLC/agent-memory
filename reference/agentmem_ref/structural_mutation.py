@@ -405,6 +405,7 @@ def evaluate_pama_v13(
     *,
     current_state_digest: str,
     current_dependency_digest: str,
+    external_verification: "policy.ExternalVerification | None" = None,
 ) -> policy.Decision:
     """Evaluate PAMA 1.3 structural delegation without weakening existing floors."""
     if pama_proposal.operation != "domain_schema_mutation":
@@ -433,11 +434,20 @@ def evaluate_pama_v13(
         base = policy.REQUIRE_EXTERNAL_VERIFICATION if pama_proposal.risk_class in {"high", "critical"} else policy.REQUIRE_REVIEW
         allow_review_discharge = True
 
-    decision = policy.evaluate_with_base_outcome(
-        pama_proposal,
-        base_outcome=base,
-        allow_review_discharge=allow_review_discharge,
-    )
+    if external_verification is not None:
+        # GAP-ARCH-04 (LD6). This path passes base_outcome=REQUIRE_EXTERNAL_
+        # VERIFICATION for high/critical risk, so the LD1 cap applies here too.
+        # Before this cycle no test reached the discharge, so the behaviour
+        # change would have been invisible to a green suite.
+        decision = policy.evaluate_with_external_verification(
+            pama_proposal, external_verification, base_outcome=base
+        )
+    else:
+        decision = policy.evaluate_with_base_outcome(
+            pama_proposal,
+            base_outcome=base,
+            allow_review_discharge=allow_review_discharge,
+        )
     return replace(
         decision,
         reasons=decision.reasons

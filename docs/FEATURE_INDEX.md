@@ -7,8 +7,8 @@ Single canonical cross-reference of every user-touchable feature in Agent Memory
 
 ## Coverage Summary
 
-- Total entries: **10**
-- **Verified**: 10
+- Total entries: **11**
+- **Verified**: 11
 - **Unverified**: 0
 - **N/A (operator-justified)**: 0
 
@@ -26,8 +26,9 @@ Single canonical cross-reference of every user-touchable feature in Agent Memory
 | FX006 | Recall refuses candidates with no scope metadata as `unknown_scope`, matching the JS runtime | `reference/agentmem_ref/adapter.py` `_admission_refusal` | `docs/34-adapter-contracts.md`:139; `docs/plan-sprint2b-recall-authority-record.md` LD1 | `reference/tests/test_recall_unknown_scope.py` | verified | api | GAP-ARCH-18. Closes a Python/JS divergence; parity source `integrations/agent-memory-runtime/src/index.mjs:114`. Refusal ordering asserted so the blast-radius shield is pinned |
 | FX007 | Every governed recall emits an audit event and a schema-valid per-candidate admission decision | `reference/agentmem_ref/adapter.py` `governed_recall`, `_recall_decision`, `_recall_event` | `docs/34-adapter-contracts.md`:136; `docs/plan-sprint2b-recall-authority-record.md` LD3, LD4, LD6 | `reference/tests/test_recall_authority_record.py` | verified | api | GAP-SEC-02 record leg only -- gap remains OPEN. `signal_type: recall_admission`; `policy.status` pinned `unavailable`, never `evaluated` |
 | FX008 | Governed deletion enforces existence, tenant ownership, target binding, and staleness | `reference/agentmem_ref/adapter.py` `_delete_refusal`, `governed_delete`; `restart_runtime.py` `fact_memory` | `docs/plan-sprint2c-deletion-authority.md` LD1-LD5 | `reference/tests/test_deletion_authority.py` | verified | api | GAP-SEC-03. 11 tests. Closes a cross-tenant physical delete and a falsified tombstone; guard ordering and restart survival asserted |
-| FX009 | Review discharge derives self-approval from identity and records what the discharge rested on | `reference/agentmem_ref/policy.py` `_apply_modifiers`, `evaluate_with_base_outcome`; `Decision.review_discharge` | `docs/plan-sprint2d-derived-authority.md` LD1-LD4 | `reference/tests/test_derived_authority.py` | verified | api | GAP-ARCH-04 self-approval leg only -- gap remains OPEN. Generalizes `decision_overwrite.py:171` and `enforcement_evidence.py:61-80`. Reaches `crossing.py` via `policy.evaluate` |
+| FX009 | Review discharge derives self-approval from identity and records what the discharge rested on (now produces `verified`, Loop 7) | `reference/agentmem_ref/policy.py` `_apply_modifiers`, `evaluate_with_base_outcome`; `Decision.review_discharge` | `docs/plan-sprint2d-derived-authority.md` LD1-LD4 | `reference/tests/test_derived_authority.py` | verified | api | GAP-ARCH-04 self-approval leg only -- gap remains OPEN. Generalizes `decision_overwrite.py:171` and `enforcement_evidence.py:61-80`. Reaches `crossing.py` via `policy.evaluate` |
 | FX010 | Reusable grant evaluation verifies against an independently-held ratification record | `reference/agentmem_ref/reusable_grants.py` `RatificationRegistry`, `grant_body_digest`, `evaluate_reusable_grant` | `docs/plan-sprint2e-ratification-anchor.md` LD1-LD5 | `reference/tests/test_ratification_anchor.py` | verified | api | GAP-SEC-04 grant path. Implements the operator's option-C decision; option D retained as a labelled profile. Defeats the recompute attack that beat a digest-only fix. No schema modified |
+| FX011 | External verification is dischargeable only through a proposal-bound attestation, never by assertion | `reference/agentmem_ref/policy.py` `ExternalVerification`, `evaluate_with_external_verification`, `_apply_review` cap; `decision_overwrite.py`; `structural_mutation.py`; `adapter.py` `governed_delete` | `docs/33-pama-decision-table.md` "Discharging a decision"; `docs/plan-sprint2f-verified-discharge.md` | `reference/tests/test_verified_discharge.py` | verified | api | GAP-ARCH-04 external-verification leg. Attestation is caller-constructed and therefore forgeable; unforgeability is open work |
 
 ---
 

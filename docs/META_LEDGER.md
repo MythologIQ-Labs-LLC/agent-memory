@@ -709,3 +709,95 @@ external verification by assertion are `decision_overwrite`, which builds its
 `Proposal` directly and bypasses that bridge. Loop 7.
 
 Review Boundary honored: staged, not committed.
+---
+
+### Entry #17: SESSION SEAL - Phase 8 (Sprint 2f verified discharge)
+
+**Entry ID**: `45a627a0f157`
+**Content Hash**: `4b3357931d84b53d1057086333fd53a4b3229cef6373947f70201245b63e988c`
+**Previous Hash**: `cb0ac64eb16e4b1efd28425fe2110b8e361389a93ae1b7a8fa7a5bb7b9870a37`
+**Chain Hash**: `2fd54bae86d94ca781390dadbeed36954306c40cb803bbaf4253858694d12929`
+**Timestamp**: 2026-09-04T17:54:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L3
+**Verdict**: PASS
+**Session**: 2026-09-04T1754-81306b
+**SSDF Practices**: PO.1.4, PS.2.1, PW.1.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index 302504e5f5db7be503d1dcc311ff8d97b32ac457):
+`b5ad08b0717c7f0778adcdf6c344b2b809d3e3a56cc05446277fffbec4c237e4`
+
+**Gap**: GAP-ARCH-04 external-verification leg **closed**. The `review_satisfied`
+discharge of `require_review` (74 sites) remains open.
+
+**Definition of Done**: 12 of 12 PASS. `policy.evaluate` with `review_satisfied`
+and the string "i-said-so" now returns `require_external_verification` for
+`policy_mutation/critical`, `scope_expansion/high`, and
+`permanent_deletion/critical`; `require_review` discharge is unchanged and still
+records `asserted`; a bound, non-self, human-confirmation attestation discharges
+and records `verified`; each attestation check refuses by name; an attestation
+bound to another proposal is refused; `decision_overwrite` still commits its
+high-risk overwrite through the attested path; **948 tests pass, 0 failures**
+(937 prior + 11 new, six declared amendments); schemas and fixtures clean, no
+schema modified.
+
+**Decision**: research reframed this leg entirely. `decision_overwrite` was
+believed to bypass a control; it does not. `_grant_refusal:329-367` binds the
+grant to the proposal and target, derives self-approval from identity, enforces a
+risk ceiling, and **requires HUMAN_CONFIRMATION for high or critical risk** --
+which is what external verification means doctrinally. Its discharge was
+legitimate. The defect was that `policy` had no channel for verified authority,
+so a human-confirmed proposal-bound grant and the literal string "i-said-so"
+arrived identically and discharged identically.
+
+The fix caps assertion at `require_review` and adds an explicit attested entry
+point, mirroring `evaluate_pama_with_reusable_grant`. The attestation is a frozen
+record cross-checked relationally against the proposal, deliberately **not** a
+fourth caller-asserted boolean.
+
+**Stated limit, not discovered later**: the attestation is caller-constructed and
+therefore forgeable. What changes is that the assertion path is closed entirely.
+Binding attestations to evidence the presenter cannot write is the same problem
+`RatificationRegistry` solved for grants, and applying that pattern to
+attestations is open work. This is recorded in the plan, in
+`docs/33-pama-decision-table.md`, and here.
+
+Audit VETOed iteration 1 on three grounds. V1 found an **uncovered production
+path**: `structural_mutation.py:436` passes
+`base_outcome=REQUIRE_EXTERNAL_VERIFICATION` with discharge allowed, so the cap
+reaches it -- and instrumentation showed no test exercised that discharge, so a
+green suite would have proved nothing about the change. Coverage was added rather
+than assumed. V2 found the amendment count wrong by a factor of three, and named
+the one amendment with a governance consequence.
+
+**AMENDED TESTS -- first exception to a discipline five seals have cited.**
+Entries #11-#16 each recorded "no prior test amended". This cycle amends six
+sites, deliberately, because the behaviour they depended on is being removed:
+four in `test_derived_authority.py`, two in `test_deletion_authority.py`.
+
+**One of them is evidence in ledger Entry #15.**
+`test_derived_authority.py` `test_third_party_discharge_still_works` was Loop 5's
+DoD 3. It asserted that `policy_mutation/critical` with a third-party approval
+discharged to `allow_with_ledger`. That was true when Entry #15 sealed. Loop 7
+narrows it: external verification is no longer dischargeable by assertion, so the
+test now exercises the same property -- a third-party discharge works -- at a
+review-requiring outcome, which is what it was actually about. Entry #15 is named
+here so the ledger reads as a sequence rather than as two entries that disagree
+with nothing connecting them.
+
+**SCOPE ADDITION discovered during implementation, disclosed**: capping the
+discharge made `governed_delete` unable to perform `permanent_deletion` at high or
+critical risk at all, because the adapter calls `policy.evaluate` and had no
+channel for an attestation. That would have removed a legitimate operation rather
+than governing it. `governed_delete` gains an optional `external_verification`
+parameter. `adapter.py` was not in the plan's Affected Files; this is recorded
+rather than absorbed.
+
+**Documentation** (operator instruction, 2026-09-04): `docs/33-pama-decision-table.md`
+gains a "Discharging a decision" section stating what each outcome requires, that
+self-approval is derived from identity, and the attestation's limit. `README.md`
+gains the installable-distribution path Sprint 1 delivered but never documented.
+
+Review Boundary: staged, not committed. Prior work is committed at `fe7724e` and
+`97721dc`.

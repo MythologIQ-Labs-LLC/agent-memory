@@ -620,10 +620,28 @@ class GovernedMemoryAdapter:
             return "target_binding_mismatch"
         return None
 
-    def governed_delete(self, proposal: policy.Proposal, fact_uuid: str, derived_refs: tuple[str, ...] = ()) -> CommitResult:
-        """Delete through the authority gate, leaving a tombstone the substrate cannot."""
+    def governed_delete(
+        self,
+        proposal: policy.Proposal,
+        fact_uuid: str,
+        derived_refs: tuple[str, ...] = (),
+        external_verification: "policy.ExternalVerification | None" = None,
+    ) -> CommitResult:
+        """Delete through the authority gate, leaving a tombstone the substrate cannot.
+
+        GAP-ARCH-04: `permanent_deletion` at high or critical risk resolves to
+        `require_external_verification`, which can no longer be discharged by
+        assertion. Supply an attestation to perform one. Discovered during Loop 7
+        implementation: without this parameter the adapter could not perform a
+        critical permanent deletion at all, which would have removed a legitimate
+        operation rather than governing it.
+        """
         correlation = self._ids.next()
-        decision = policy.evaluate(proposal)
+        decision = (
+            policy.evaluate(proposal)
+            if external_verification is None
+            else policy.evaluate_with_external_verification(proposal, external_verification)
+        )
         # GAP-SEC-03: deletion is the more destructive path and had the weaker
         # guard. Ordered so a refusal names the real problem (LD4): a nonexistent
         # fact must not report a tenant error, and a foreign fact must not report

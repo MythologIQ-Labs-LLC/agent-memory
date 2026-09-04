@@ -27,11 +27,11 @@ MUST be current at every cycle close. Drift signal: wrong version / wrong state 
 | Concept | `docs/CONCEPT.md` | stable; hashed into genesis; owner decision: "supported runtime" is the 1.0 objective |
 | Architecture Plan | `docs/ARCHITECTURE_PLAN.md` | Dependencies table and file tree synced at Sprint 1; risk grade L3 |
 | Backlog | `docs/BACKLOG.md` | B1-B4 open; B5 complete |
-| Feature Index | `docs/FEATURE_INDEX.md` | 10 entries, 10 verified (FX001-FX010) |
+| Feature Index | `docs/FEATURE_INDEX.md` | 11 entries, 11 verified (FX001-FX011) |
 | Shadow Genome | `docs/SHADOW_GENOME.md` | 5 entries, 4 resolved |
 | Process Shadow Genome | `docs/PROCESS_SHADOW_GENOME.md` | append-only JSONL of process events (capability shortfalls, gate skips, overrides) |
 | Changelog | `CHANGELOG.md` | **absent** (GAP-REL-01, Sprint 8); register here when created |
-| README | `README.md` | Conformance badge reworded to spec-scoped at Sprint 1 |
+| README | `README.md` | Conformance badge spec-scoped (Sprint 1); installable-distribution section added (Loop 7) |
 | Roadmap events | `.qor/roadmaps/agent-memory-1_0-completion/events.jsonl` | 32 events; 7 frontier nodes open |
 
 ## Tier 2 — Doctrine & Policy
@@ -80,6 +80,8 @@ Live for plan duration; archived at substantiate. Drift signal: plan shipped but
 | Sprint 2d research brief | `docs/research-brief-sprint2d-derived-authority-2026-09-04.md` | sprint2d-derived-authority |
 | Sprint 2e plan | `docs/plan-sprint2e-ratification-anchor.md` | sprint2e-ratification-anchor |
 | Sprint 2e research brief | `docs/research-brief-sprint2e-ratification-anchor-2026-09-04.md` | sprint2e-ratification-anchor |
+| Sprint 2f plan | `docs/plan-sprint2f-verified-discharge.md` | sprint2f-verified-discharge |
+| Sprint 2f research brief | `docs/research-brief-sprint2f-verified-discharge-2026-09-04.md` | sprint2f-verified-discharge |
 
 ## Tier 5 — Reference Material
 

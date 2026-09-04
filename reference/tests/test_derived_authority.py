@@ -59,9 +59,18 @@ class DerivedSelfApprovalTest(unittest.TestCase):
                 self.assertEqual(policy.BLOCK, derived.outcome)
 
     def test_third_party_discharge_still_works(self):
-        """DoD 3: the fix must not block legitimate review."""
+        """DoD 3: the fix must not block legitimate review.
+
+        AMENDED in Loop 7 (ledger Entry #17). This was Loop 5's DoD 3, cited as
+        evidence in Entry #15, and it asserted that policy_mutation/critical
+        discharged to allow_with_ledger on a third-party assertion. Loop 7
+        deliberately removed that: external verification is no longer
+        dischargeable by assertion. The test now exercises the same property --
+        a third-party discharge works -- at a review-requiring outcome, which is
+        what it was actually about.
+        """
         decision = policy.evaluate(_proposal(
-            review_satisfied=True, approval_refs=("approver:1",)
+            "correction", "low", review_satisfied=True, approval_refs=("approver:1",)
         ))
         self.assertEqual(policy.ALLOW_WITH_LEDGER, decision.outcome)
 
@@ -79,6 +88,7 @@ class DerivedSelfApprovalTest(unittest.TestCase):
         discharge. A substring implementation passes DoD 1 and 2 and fails only
         here."""
         decision = policy.evaluate(_proposal(
+            "correction", "low",
             actor_id="a", review_satisfied=True, approval_refs=("grant:human",)
         ))
         self.assertEqual(policy.ALLOW_WITH_LEDGER, decision.outcome)
@@ -94,8 +104,10 @@ class ReviewDischargeProvenanceTest(unittest.TestCase):
     """DoD 6: a receipt must be able to say what a discharge rested on."""
 
     def test_asserted_discharge_is_recorded(self):
+        # AMENDED Loop 7: an asserted discharge is now capped at require_review,
+        # so provenance is exercised where a discharge can still occur.
         decision = policy.evaluate(_proposal(
-            review_satisfied=True, approval_refs=("approver:1",)
+            "correction", "low", review_satisfied=True, approval_refs=("approver:1",)
         ))
         self.assertEqual(policy.ALLOW_WITH_LEDGER, decision.outcome)
         self.assertEqual("asserted", decision.review_discharge)
@@ -118,7 +130,7 @@ class ReviewDischargeProvenanceTest(unittest.TestCase):
         """LD3: "verified" is reserved for the evidence-bound discharge."""
         for refs in (("approver:1",), ("grant:human", "approver:2")):
             decision = policy.evaluate(_proposal(
-                review_satisfied=True, approval_refs=refs
+                "correction", "low", review_satisfied=True, approval_refs=refs
             ))
             self.assertNotEqual("verified", decision.review_discharge)
 

@@ -473,6 +473,15 @@ python scripts/validate_doctrine_boundaries.py
 python -m unittest discover -s reference/tests -t reference
 ```
 
+`reference/requirements.txt` is the pinned set the validation profile runs against. To use the reference runtime as a library or CLI instead, install the distribution:
+
+```bash
+python -m pip install .
+agent-memory --help
+```
+
+The installed package carries the canonical schemas, so `agentmem_ref.receipts` resolves them from outside a checkout. The **[CLI doctor](.github/workflows/cli-doctor.yml)** workflow's `wheel-install` job proves that path from a fresh environment on every change.
+
 The **[Validate Doctrine Evidence](.github/workflows/validate-doctrine-evidence.yml)** workflow executes the repository's declared validation/evidence path on pushes and pull requests.
 
 > [!WARNING]
