@@ -28,7 +28,7 @@ Several things, at different evidential weight.
 
 **Against the P4.5a portable-evidence contract.** A content-free projection of a canonical decision receipt is signed with Ed25519 and verified using only the configured public trust key. The verifier independently checks receipt, runtime-action, policy, authority-state, temporal, and isolation-domain bindings while preserving governance disposition, runtime execution, and lifecycle satisfaction as separate outcomes. Adversarial vectors exercise tampering, replay, stale authority, wrong domains, key rotation, revocation timing, detached receipt verification, and valid deletion with residual lifecycle state.
 
-**Against the P4.5b Agent Manifest comparator.** CI installs `agent-manifest==0.11.0`, pinned to release commit `98cead8e8809e3302dc388ca869882d15b812b7f`, and executes its own v0.2 memory checkpoint/delta implementation. Agent Memory content-addresses the checkpoint tuple and binds it through the canonical receipt and P4.5a state references. The executed upstream log appends a real `DEL`; the resulting accepted checkpoint is exercised once with lifecycle `residual` and once with lifecycle `satisfied`, proving checkpoint integrity does not manufacture forgetting. Because a checkpoint root alone does not disclose the appended operation class, the portable correlation artifact deliberately carries signed Agent Memory `memory_action` rather than an unproven Agent Manifest `operation_kind` claim.
+**Against the P4.5b Agent Manifest comparator.** CI installs `agent-manifest==0.11.2`, pinned to release commit `9d26ac84461e829dba8ff97ca35748eeb874debe`, and executes its own v0.2 memory checkpoint/delta implementation. Agent Memory content-addresses the checkpoint tuple and binds it through the canonical receipt and P4.5a state references. The executed upstream log appends a real `DEL`; the resulting accepted checkpoint is exercised once with lifecycle `residual` and once with lifecycle `satisfied`, proving checkpoint integrity does not manufacture forgetting. Because a checkpoint root alone does not disclose the appended operation class, the portable correlation artifact deliberately carries signed Agent Memory `memory_action` rather than an unproven Agent Manifest `operation_kind` claim.
 
 **Against the P4.5c TRACE/cMCP action-evidence surface.** The reference adapter wraps P4.5a evidence in the existing six-field cMCP `external_execution_evidence` envelope, hashes the detached payload with RFC 8785/JCS, and preserves `linked_call_id` as a separate audit identity from Agent Memory `action_ref`. Local vectors exercise TRACE-style receipt outcomes, wrong-call and wrong-action replay, payload/signature tampering, missing trust, domain mismatch, and lifecycle separation. A second CI path creates an isolated environment with `cmcp-runtime==0.4.0` and calls the released `cmcp_verify.verify_audit_bundle()` verifier against the emitted envelope.
 
@@ -84,8 +84,8 @@ python -m unittest discover -s reference/tests -t reference
 python -m venv /tmp/agent-memory-p45c-cmcp
 /tmp/agent-memory-p45c-cmcp/bin/python -m pip install \
   cmcp-runtime==0.4.0 \
-  agentrust-trace==0.8.0 \
-  agent-manifest==0.11.0 \
+  agentrust-trace==0.9.0 \
+  agent-manifest==0.11.2 \
   rfc8785==0.1.4
 PYTHONPATH=reference \
   /tmp/agent-memory-p45c-cmcp/bin/python reference/run_trace_cmcp_comparator.py

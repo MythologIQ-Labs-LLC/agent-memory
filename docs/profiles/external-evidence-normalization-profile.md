@@ -58,8 +58,8 @@ TRACE is the first reference comparator because the repository already has execu
 
 ```text
 peer:                TRACE
-TRACE SDK:           agentrust-trace==0.8.0
-TRACE release ref:   671f2a8b22f1c995798a0c6d711b4b0b77dad4c7
+TRACE SDK:           agentrust-trace==0.9.0
+TRACE release ref:   94271a1630601c94e80a23263d9750cb8d39f1f4
 reference contract:  TRACE action-receipt verification / external action-evidence surface
 ```
 

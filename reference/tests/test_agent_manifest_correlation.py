@@ -155,8 +155,8 @@ class AgentManifestCorrelationTests(unittest.TestCase):
     )
     def test_pinned_release_and_repository_identity_are_explicit(self):
         self.assertEqual(importlib.metadata.version("agent-manifest"), AGENT_MANIFEST_SDK_VERSION)
-        self.assertEqual(AGENT_MANIFEST_SDK_VERSION, "0.11.0")
-        self.assertEqual(AGENT_MANIFEST_UPSTREAM_COMMIT, "98cead8e8809e3302dc388ca869882d15b812b7f")
+        self.assertEqual(AGENT_MANIFEST_SDK_VERSION, "0.11.2")
+        self.assertEqual(AGENT_MANIFEST_UPSTREAM_COMMIT, "9d26ac84461e829dba8ff97ca35748eeb874debe")
 
     def test_upstream_v02_normative_kv_root_vector_matches(self):
         root = build_memory_tree(

@@ -11,15 +11,15 @@ The executable comparator is pinned to:
 ```text
 repository: https://github.com/agentrust-io/agent-manifest
 spec:       Agent Manifest v0.2
-package:    agent-manifest==0.11.0
-tag commit: 98cead8e8809e3302dc388ca869882d15b812b7f
+package:    agent-manifest==0.11.2
+tag commit: 9d26ac84461e829dba8ff97ca35748eeb874debe
 ```
 
 Pinned upstream source surfaces:
 
-- [v0.2 memory checkpoint/delta implementation](https://github.com/agentrust-io/agent-manifest/blob/98cead8e8809e3302dc388ca869882d15b812b7f/python/src/agent_manifest/_memory_delta.py)
-- [v0.2 RFC 9162 Merkle implementation](https://github.com/agentrust-io/agent-manifest/blob/98cead8e8809e3302dc388ca869882d15b812b7f/python/src/agent_manifest/_merkle.py)
-- [v0.2 specification](https://github.com/agentrust-io/agent-manifest/blob/98cead8e8809e3302dc388ca869882d15b812b7f/spec/agent-manifest-spec-v0.2.md)
+- [v0.2 memory checkpoint/delta implementation](https://github.com/agentrust-io/agent-manifest/blob/9d26ac84461e829dba8ff97ca35748eeb874debe/python/src/agent_manifest/_memory_delta.py)
+- [v0.2 RFC 9162 Merkle implementation](https://github.com/agentrust-io/agent-manifest/blob/9d26ac84461e829dba8ff97ca35748eeb874debe/python/src/agent_manifest/_merkle.py)
+- [v0.2 specification](https://github.com/agentrust-io/agent-manifest/blob/9d26ac84461e829dba8ff97ca35748eeb874debe/spec/agent-manifest-spec-v0.2.md)
 
 The upstream package is a **test comparator**, not an Agent Memory runtime dependency. P4.5b deliberately calls the upstream checkpoint verifier instead of copying its Merkle, sequence, TTL, drift, or delta-budget logic into this repository.
 
@@ -120,7 +120,7 @@ Agent Memory does not reproduce:
 - delta-budget evaluation
 - Agent Manifest drift classification
 
-Those are executed by `agent-manifest==0.11.0` in CI. The local correlation layer only binds the resulting checkpoint identity and verdict to Agent Memory evidence.
+Those are executed by `agent-manifest==0.11.2` in CI. The local correlation layer only binds the resulting checkpoint identity and verdict to Agent Memory evidence.
 
 ## DEL is not forgetting
 
@@ -186,7 +186,7 @@ The upstream verifier receives the operation log because it owns checkpoint veri
 
 `../../../reference/tests/test_agent_manifest_correlation.py` executes:
 
-- the exact `agent-manifest==0.11.0` package identity
+- the exact `agent-manifest==0.11.2` package identity
 - the pinned upstream commit identity
 - the Agent Manifest v0.2 normative KV root vector
 - a valid RFC 9162 checkpoint advance whose upstream operation log contains `DEL`
@@ -210,7 +210,7 @@ Run:
 python -m pip install \
   jsonschema==4.26.0 \
   cryptography==50.0.0 \
-  agent-manifest==0.11.0
+  agent-manifest==0.11.2
 python -m unittest discover -s reference/tests -t reference
 python scripts/validate_schemas.py
 ```

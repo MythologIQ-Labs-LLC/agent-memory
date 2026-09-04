@@ -3,8 +3,8 @@
 Run this in an isolated environment containing the pinned external packages:
 
     cmcp-runtime==0.4.0
-    agentrust-trace==0.8.0
-    agent-manifest==0.11.0
+    agentrust-trace==0.9.0
+    agent-manifest==0.11.2
     rfc8785==0.1.4
 
 The isolation is intentional: cmcp-runtime 0.4.0's AGT dependency line resolves a
@@ -47,8 +47,8 @@ def _audit_entry(call_id: str, external_execution_evidence: dict) -> dict:
 def main() -> None:
     expected_versions = {
         "cmcp-runtime": "0.4.0",
-        "agentrust-trace": "0.8.0",
-        "agent-manifest": "0.11.0",
+        "agentrust-trace": "0.9.0",
+        "agent-manifest": "0.11.2",
         "rfc8785": "0.1.4",
     }
     actual_versions = {name: importlib.metadata.version(name) for name in expected_versions}

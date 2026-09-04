@@ -30,8 +30,8 @@ from .external_evidence import (
 )
 
 AGENT_MANIFEST_PEER = "Agent Manifest"
-AGENT_MANIFEST_VERSION = "agent-manifest==0.11.0"
-AGENT_MANIFEST_RELEASE = "98cead8e8809e3302dc388ca869882d15b812b7f"
+AGENT_MANIFEST_VERSION = "agent-manifest==0.11.2"
+AGENT_MANIFEST_RELEASE = "9d26ac84461e829dba8ff97ca35748eeb874debe"
 AGENT_MANIFEST_VERIFIER_ID = "agent_manifest.verify_manifest==0.11.0"
 ADAPTER_ID = "agent-memory-agent-manifest-external-evidence"
 ADAPTER_VERSION = "0.1.0"

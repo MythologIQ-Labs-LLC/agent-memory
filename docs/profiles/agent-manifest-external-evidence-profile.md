@@ -6,9 +6,9 @@ Status: reference interoperability profile for #223. Agent Manifest remains an o
 
 ```text
 repository: agentrust-io/agent-manifest
-package: agent-manifest==0.11.0
+package: agent-manifest==0.11.2
 release/tag: python-v0.11.0
-source commit: 98cead8e8809e3302dc388ca869882d15b812b7f
+source commit: 9d26ac84461e829dba8ff97ca35748eeb874debe
 manifest envelope: v0.2 COSE
 ```
 

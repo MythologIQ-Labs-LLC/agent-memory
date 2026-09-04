@@ -21,8 +21,8 @@ from .portable_evidence import TrustKey, sha256_ref, verify_evidence
 CORRELATION_TYPE = "agent-memory-agent-manifest-correlation"
 CORRELATION_VERSION = "1.0.0"
 AGENT_MANIFEST_SPEC_VERSION = "0.2"
-AGENT_MANIFEST_SDK_VERSION = "0.11.0"
-AGENT_MANIFEST_UPSTREAM_COMMIT = "98cead8e8809e3302dc388ca869882d15b812b7f"
+AGENT_MANIFEST_SDK_VERSION = "0.11.2"
+AGENT_MANIFEST_UPSTREAM_COMMIT = "9d26ac84461e829dba8ff97ca35748eeb874debe"
 
 DELTA_REASONS = {"accepted", "drift", "rollback", "expired", "budget"}
 REPRESENTATIONS = {"kv", "vector", "graph"}
