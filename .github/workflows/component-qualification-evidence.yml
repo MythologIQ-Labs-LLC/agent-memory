@@ -35,10 +35,10 @@ jobs:
       RAW_ROOT: /tmp/component-qualification-raw
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -253,7 +253,7 @@ jobs:
 
       - name: Upload raw, failure, fallback, and normalized qualification evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: component-qualification-${{ env.AGENT_MEMORY_COMMIT }}
           path: /tmp/component-qualification-raw

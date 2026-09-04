@@ -30,7 +30,7 @@ jobs:
       TRANSFORMERS_CACHE: /tmp/hindsight-qualification-hf
     steps:
       - name: Checkout Agent Memory exact head
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ env.AGENT_MEMORY_COMMIT }}
 
@@ -41,7 +41,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$AGENT_MEMORY_COMMIT"
 
       - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
@@ -173,7 +173,7 @@ jobs:
 
       - name: Upload raw and normalized qualification evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hindsight-v090-qualification-${{ env.AGENT_MEMORY_COMMIT }}
           path: artifacts/hindsight-v090

@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -30,7 +30,7 @@ jobs:
           python -m unittest reference/tests/test_policy_projection_compatibility.py 2>&1 | tee policy-projection-compatibility-tests.txt
 
       - name: Checkout pinned Dogwood public source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: dogwood-policy/dogwood
           ref: c6237c88099b3f492ecc5fcee42df06a19224b97
@@ -57,7 +57,7 @@ jobs:
           sha256sum dogwood-public/Cargo.lock | tee dogwood-cargo-lock-digest.txt
 
       - name: Upload compatibility evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: policy-projection-compatibility-evidence
           path: |

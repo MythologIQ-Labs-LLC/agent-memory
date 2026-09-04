@@ -29,10 +29,10 @@ jobs:
       EVIDENCE_DIR: /tmp/dashclaw-external-verdict
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -127,7 +127,7 @@ jobs:
           printf '%s\n' "$DASHCLAW_COMMIT" > "$EVIDENCE_DIR/dashclaw-head.txt"
 
       - name: Upload provider evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dashclaw-external-verdict-${{ env.AGENT_MEMORY_COMMIT }}
           path: /tmp/dashclaw-external-verdict

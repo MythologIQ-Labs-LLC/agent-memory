@@ -26,10 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -72,7 +72,7 @@ jobs:
           cat /tmp/memory-component-program-closeout/closeout-evidence.json
 
       - name: Upload exact-head closeout evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: memory-component-program-closeout-${{ github.event.pull_request.head.sha || github.sha }}
           path: /tmp/memory-component-program-closeout/closeout-evidence.json

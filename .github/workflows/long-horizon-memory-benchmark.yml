@@ -11,8 +11,8 @@ jobs:
   local-representations:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: |
@@ -36,7 +36,7 @@ jobs:
               assert row['current_only']['stage_2']['final_success_rate'] >= 0
           print([(x['representation'],x['adaptation']) for x in r['representations']])
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: long-horizon-memory-local
           path: long-horizon-memory.json
@@ -45,8 +45,8 @@ jobs:
   vjepa2-1-frozen-representation:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Fetch pinned V-JEPA source
@@ -90,7 +90,7 @@ jobs:
           open('long-horizon-vjepa2.json','w').write(json.dumps(report,indent=2,sort_keys=True)+'\n')
           assert result['current_only']['stage_2']['final_success_rate'] >= 0
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: long-horizon-memory-vjepa2
           path: long-horizon-vjepa2.json
