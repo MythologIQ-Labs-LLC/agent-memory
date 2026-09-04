@@ -22,10 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout exact Hermes source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: NousResearch/hermes-agent
           ref: 165c889e5b4277b56dadd42949a4112c1e6175a6
@@ -126,7 +126,7 @@ jobs:
           cat /tmp/hermes-research/hermes-research-evidence.json
 
       - name: Upload exact-head Hermes research evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hermes-recursive-learning-${{ github.event.pull_request.head.sha || github.sha }}
           path: /tmp/hermes-research/hermes-research-evidence.json

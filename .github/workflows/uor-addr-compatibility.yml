@@ -16,9 +16,9 @@ jobs:
       UOR_SOURCE_COMMIT: d78f82f26034880e91b1d54c21900a33ab73f695
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - name: Install Python dependencies
@@ -27,7 +27,7 @@ jobs:
           python -m pip install --disable-pip-version-check 'uor-addr==0.2.0'
           python -c 'import importlib.metadata; assert importlib.metadata.version("uor-addr") == "0.2.0"'
       - name: Checkout exact UOR source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: UOR-Foundation/uor-addr
           ref: ${{ env.UOR_SOURCE_COMMIT }}
@@ -82,7 +82,7 @@ jobs:
           assert all(value is False for value in report['non_authority'].values())
           PY
       - name: Upload UOR compatibility evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: uor-addr-compatibility-evidence
           path: uor-addr-compatibility.json

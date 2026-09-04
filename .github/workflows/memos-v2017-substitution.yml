@@ -37,7 +37,7 @@ jobs:
       RAW_ROOT: artifacts/memos-v2017
     steps:
       - name: Checkout Agent Memory exact head
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ env.AGENT_MEMORY_COMMIT }}
 
@@ -48,12 +48,12 @@ jobs:
           test "$(git rev-parse HEAD)" = "$AGENT_MEMORY_COMMIT"
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
@@ -217,7 +217,7 @@ jobs:
 
       - name: Upload raw, qualification, and substitution evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: memos-v2017-substitution-${{ env.AGENT_MEMORY_COMMIT }}
           path: artifacts/memos-v2017

@@ -21,10 +21,10 @@ jobs:
       AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -60,7 +60,7 @@ jobs:
           PY
 
       - name: Upload exact-head research evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: logical-state-algebra-pressure-${{ env.AGENT_MEMORY_COMMIT }}
           path: logical-state-algebra-pressure-evidence.json

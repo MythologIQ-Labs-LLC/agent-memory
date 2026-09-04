@@ -27,10 +27,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout pinned Agent Memory Atlas
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: neoneye/agent-memory-atlas
           ref: 90bfeed14764e268c82c925d4c39645c7480d015
@@ -38,7 +38,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -70,7 +70,7 @@ jobs:
           cat /tmp/corpus-synthesis.sha256 >> "$GITHUB_STEP_SUMMARY"
 
       - name: Preserve generated inventory convenience evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: atlas-research-90bfeed-${{ github.event.pull_request.head.sha || github.sha }}
           path: |

@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -46,7 +46,7 @@ jobs:
           --output concurrency-evidence.json
 
       - name: Upload concurrency-conflict evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: concurrency-conflict-evidence
           path: concurrency-evidence.json
@@ -61,7 +61,7 @@ jobs:
           --output benchmark-security.json
 
       - name: Upload P5 benchmark security scorecard
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: p5-benchmark-security-scorecard
           path: benchmark-security.json
@@ -77,7 +77,7 @@ jobs:
           --output security-evidence-depth.json
 
       - name: Upload security evidence-depth report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: security-evidence-depth-report
           path: security-evidence-depth.json
@@ -92,7 +92,7 @@ jobs:
           --output security-finding-depth.json
 
       - name: Upload scanner finding evidence-depth report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: scanner-finding-evidence-depth-report
           path: security-finding-depth.json
@@ -113,7 +113,7 @@ jobs:
             --output mem0-comparator.json
 
       - name: Upload pinned Mem0 P6 comparator evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: p6-mem0-comparator-evidence
           path: mem0-comparator.json
@@ -128,7 +128,7 @@ jobs:
           --output deletion-completeness.json
 
       - name: Upload deletion-completeness evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: deletion-completeness-evidence
           path: deletion-completeness.json

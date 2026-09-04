@@ -34,10 +34,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout exact repaired EvolveAI
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: MythologIQ-Labs-LLC/EvolveAI
           ref: 21161ce7b88dbffeb7ed59757b4d02d24a9c2acd
@@ -54,7 +54,7 @@ jobs:
           grep -q 'const OP_DELETE: &str = "delete"' _evolveai/crates/evolve-core/src/tiers/l3_vault.rs
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
@@ -158,7 +158,7 @@ jobs:
           cat /tmp/evolveai-qualification/evidence.sha256 >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload exact-head EvolveAI qualification evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: evolveai-multicapability-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
