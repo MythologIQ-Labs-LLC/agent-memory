@@ -28,6 +28,8 @@ reference/agentmem_ref/_schemas/
 
 # Qor-logic local governance state; never part of the repository
 .agent/
+# Qor-logic working state: development-time toolkit, never part of the package.
+.qor/
 .qor/gates/
 # qor:seed -- do not edit between markers
 .qor/session/
