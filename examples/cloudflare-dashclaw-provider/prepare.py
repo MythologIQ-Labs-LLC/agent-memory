@@ -90,7 +90,30 @@ def _write_package(target: Path) -> dict[str, dict[str, str]]:
     return manifest
 
 
+def _is_agentmem_module(module_name: str) -> bool:
+    return module_name == "agentmem_ref" or module_name.startswith("agentmem_ref.")
+
+
 def _import_check(root: Path) -> None:
+    """Import the prepared portable copies, then leave `sys.modules` as found.
+
+    The prepared copies must not linger in `sys.modules` — they shadow the
+    canonical package. But evicting every `agentmem_ref` module without putting
+    the originals back is not neutral either: any caller that already holds a
+    reference to a canonical function keeps the *old* module's globals, while a
+    later `mock.patch("agentmem_ref.x.y")` re-imports and patches a *new* module
+    object. The patch then targets something the running code never consults.
+
+    That is not hypothetical. Run in one process with the rest of the suite, the
+    purge made five `test_temporal_trust` cases fail: they patch
+    `agentmem_ref.temporal_trust.public_key_digest`, the patch landed on a fresh
+    module, and the stale bound function called the real digest with a dummy key.
+
+    So snapshot what was loaded, and restore it afterwards.
+    """
+    preserved = {
+        name: module for name, module in sys.modules.items() if _is_agentmem_module(name)
+    }
     sys.path.insert(0, str(root))
     try:
         for module_name in (
@@ -103,8 +126,9 @@ def _import_check(root: Path) -> None:
     finally:
         sys.path.remove(str(root))
         for module_name in list(sys.modules):
-            if module_name == "agentmem_ref" or module_name.startswith("agentmem_ref."):
+            if _is_agentmem_module(module_name):
                 sys.modules.pop(module_name, None)
+        sys.modules.update(preserved)
 
 
 def main() -> None:
