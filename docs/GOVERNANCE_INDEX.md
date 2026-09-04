@@ -40,8 +40,8 @@ Stable; changes are explicit doctrine events. Drift signal: rules contradict eac
 
 | Artifact | Path |
 |----------|------|
-| ADR index (canonical status) | `docs/adr/README.md` (29 Accepted, 6 Proposed) |
-| ADRs | `docs/adr/ADR-001` through `ADR-035` |
+| ADR index (canonical status) | `docs/adr/README.md` (30 Accepted, 6 Proposed) |
+| ADRs | `docs/adr/ADR-001` through `ADR-036` |
 | PAMA foundation | `docs/pama/README.md`, `docs/04-governance-and-pama.md`, `docs/33-pama-decision-table.md` |
 | Memory threat model | `docs/15-memory-threat-model.md` |
 | Source rights policy | `docs/SOURCE_RIGHTS_POLICY.md` |
