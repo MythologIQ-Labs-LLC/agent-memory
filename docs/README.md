@@ -117,6 +117,7 @@ Native contributor-authored doctrine does not need to masquerade as an external 
 | 40 | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md) | Relationship-typed recognition, licensing boundaries, and visible credit for aligned external work |
 | 41 | [`41-memory-isolation-domains-and-governed-crossing.md`](41-memory-isolation-domains-and-governed-crossing.md) | Logical isolation domains, same-agent task/project separation, governed crossings, shared-memory domains, and derived-scope inheritance |
 | 42 | [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md) | Agent Runtime / Agent Memory / Agent Governance boundary, configurable memory modules, routing, and governed structural mutability |
+| 43 | [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md) | Which substrates exist and where, their maturity, qualified external components, and which named concepts (Code Reality Graph, GraphRAG, Markdown, Postgres) are roles or mechanisms rather than substrates |
 
 ## Profiles and future subsystems
 

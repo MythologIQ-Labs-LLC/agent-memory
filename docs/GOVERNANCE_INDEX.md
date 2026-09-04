@@ -132,6 +132,7 @@ Informational, slow-drift. Drift signal: factual claims diverge from current cod
 | Doctrine 40 | `docs/40-aligned-projects-and-intellectual-lineage.md` |
 | Doctrine 41 | `docs/41-memory-isolation-domains-and-governed-crossing.md` |
 | Doctrine 42 | `docs/42-governed-mutable-memory-fabric.md` |
+| Doctrine 43 | `docs/43-substrate-inventory-and-maturity.md` |
 | Canonical architecture synthesis | `docs/AGENTIC_MEMORY_SYSTEMS_CANONICAL_ARCHITECTURE.md` |
 | Documentation map | `docs/README.md` (reachability gaps: GAP-DOC-04) |
 | Implementation maps | `docs/05-repo-implementation-map.md`, `docs/39-implementation-ownership-map.md` (stale: GAP-DOC-05) |
