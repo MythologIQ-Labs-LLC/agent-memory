@@ -9,8 +9,8 @@ Parent implementation issue: #63.
 The executable/reference surfaces are pinned to:
 
 ```text
-TRACE SDK:        agentrust-trace==0.8.0
-TRACE release:    671f2a8b22f1c995798a0c6d711b4b0b77dad4c7
+TRACE SDK:        agentrust-trace==0.9.0
+TRACE release:    94271a1630601c94e80a23263d9750cb8d39f1f4
 cMCP runtime:     cmcp-runtime==0.4.0
 cMCP release:     a2e95151356c9ae6c545330c900f3d4af0e447c1
 RFC 8785 library: rfc8785==0.1.4
@@ -18,7 +18,7 @@ RFC 8785 library: rfc8785==0.1.4
 
 Relevant upstream contracts:
 
-- [TRACE action-receipt verification guidance](https://github.com/agentrust-io/trace-spec/blob/671f2a8b22f1c995798a0c6d711b4b0b77dad4c7/docs/verification.md)
+- [TRACE action-receipt verification guidance](https://github.com/agentrust-io/trace-spec/blob/94271a1630601c94e80a23263d9750cb8d39f1f4/docs/verification.md)
 - [TRACE action-receipt planning](https://github.com/agentrust-io/trace-spec/issues/66)
 - [TRACE external execution evidence guidance](https://github.com/agentrust-io/trace-spec/issues/34)
 - [cMCP external execution evidence schema](https://github.com/agentrust-io/cmcp/blob/a2e95151356c9ae6c545330c900f3d4af0e447c1/schemas/audit-entry.schema.json)
@@ -273,8 +273,8 @@ Run the local profile:
 python -m pip install \
   jsonschema==4.26.0 \
   cryptography==50.0.0 \
-  agent-manifest==0.11.0 \
-  agentrust-trace==0.8.0 \
+  agent-manifest==0.11.2 \
+  agentrust-trace==0.9.0 \
   rfc8785==0.1.4
 python -m unittest discover -s reference/tests -t reference
 python scripts/validate_schemas.py
@@ -286,8 +286,8 @@ Run the isolated upstream comparator:
 python -m venv /tmp/agent-memory-p45c-cmcp
 /tmp/agent-memory-p45c-cmcp/bin/python -m pip install \
   cmcp-runtime==0.4.0 \
-  agentrust-trace==0.8.0 \
-  agent-manifest==0.11.0 \
+  agentrust-trace==0.9.0 \
+  agent-manifest==0.11.2 \
   rfc8785==0.1.4
 PYTHONPATH=reference \
   /tmp/agent-memory-p45c-cmcp/bin/python reference/run_trace_cmcp_comparator.py

@@ -29,8 +29,8 @@ repository: agentrust-io/cmcp
 release: v0.4.0
 source commit: a2e95151356c9ae6c545330c900f3d4af0e447c1
 runtime package: cmcp-runtime==0.4.0
-TRACE package: agentrust-trace==0.8.0
-Agent Manifest package: agent-manifest==0.11.0
+TRACE package: agentrust-trace==0.9.0
+Agent Manifest package: agent-manifest==0.11.2
 ```
 
 The v0.4.0 pin matters semantically. That release tightened attestation verification after earlier versions could over-report assurance for incomplete or forged TPM evidence.

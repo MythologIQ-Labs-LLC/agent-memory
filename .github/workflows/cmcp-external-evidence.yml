@@ -32,16 +32,16 @@ jobs:
           python -m venv /tmp/agent-memory-cmcp-inbound
           /tmp/agent-memory-cmcp-inbound/bin/python -m pip install --disable-pip-version-check \
             cmcp-runtime==0.4.0 \
-            agentrust-trace==0.8.0 \
-            agent-manifest==0.11.0 \
+            agentrust-trace==0.9.0 \
+            agent-manifest==0.11.2 \
             rfc8785==0.1.4 \
             jsonschema==4.26.0
           /tmp/agent-memory-cmcp-inbound/bin/python - <<'PY'
           import importlib.metadata
           expected = {
               "cmcp-runtime": "0.4.0",
-              "agentrust-trace": "0.8.0",
-              "agent-manifest": "0.11.0",
+              "agentrust-trace": "0.9.0",
+              "agent-manifest": "0.11.2",
           }
           for package, version in expected.items():
               actual = importlib.metadata.version(package)

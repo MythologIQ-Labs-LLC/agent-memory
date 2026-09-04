@@ -35,7 +35,7 @@ jobs:
           /tmp/agent-memory-agent-manifest/bin/python - <<'PY'
           import importlib.metadata
           actual = importlib.metadata.version("agent-manifest")
-          assert actual == "0.11.0", actual
+          assert actual == "0.11.2", actual
           print(f"agent-manifest=={actual}")
           PY
 

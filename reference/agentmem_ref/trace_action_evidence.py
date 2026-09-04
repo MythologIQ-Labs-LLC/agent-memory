@@ -33,8 +33,8 @@ from .portable_evidence import RuntimeObservation, TrustKey, sha256_ref, verify_
 
 PROFILE = "agent-memory.trace-action-evidence.v1"
 EVIDENCE_TYPE = "opaque-receipt"
-TRACE_SDK_VERSION = "0.8.0"
-TRACE_RELEASE_COMMIT = "671f2a8b22f1c995798a0c6d711b4b0b77dad4c7"
+TRACE_SDK_VERSION = "0.9.0"
+TRACE_RELEASE_COMMIT = "94271a1630601c94e80a23263d9750cb8d39f1f4"
 CMCP_RUNTIME_VERSION = "0.4.0"
 CMCP_RELEASE_COMMIT = "a2e95151356c9ae6c545330c900f3d4af0e447c1"
 

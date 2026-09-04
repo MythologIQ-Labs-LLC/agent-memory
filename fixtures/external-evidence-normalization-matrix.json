@@ -18,7 +18,7 @@
       "observer": "conformance-suite",
       "method": "external-evidence-normalization-matrix",
       "timestamp": "2026-08-12T20:00:00Z",
-      "source_refs": ["issue://180", "peer://TRACE/agentrust-trace==0.8.0"]
+      "source_refs": ["issue://180", "peer://TRACE/agentrust-trace==0.9.0"]
     },
     "evidence": [
       {
@@ -45,8 +45,8 @@
   },
   "pinned_reference": {
     "source_peer": "TRACE",
-    "source_version": "agentrust-trace==0.8.0",
-    "source_release_ref": "671f2a8b22f1c995798a0c6d711b4b0b77dad4c7",
+    "source_version": "agentrust-trace==0.9.0",
+    "source_release_ref": "94271a1630601c94e80a23263d9750cb8d39f1f4",
     "source_contract": "TRACE action-receipt verification / external action-evidence surface"
   },
   "context": {
@@ -60,8 +60,8 @@
   "base_adapter_result": {
     "parse_status": "parsed",
     "source_peer": "TRACE",
-    "source_version": "agentrust-trace==0.8.0",
-    "source_release_ref": "671f2a8b22f1c995798a0c6d711b4b0b77dad4c7",
+    "source_version": "agentrust-trace==0.9.0",
+    "source_release_ref": "94271a1630601c94e80a23263d9750cb8d39f1f4",
     "record_ref": "trace://receipt/fixture-1",
     "evidence_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "adapter_id": "agent-memory.trace-reference-adapter",

@@ -17,8 +17,8 @@ dependencies = [
 
 [project.optional-dependencies]
 comparators = [
-  "agent-manifest==0.11.0",
-  "agentrust-trace==0.8.0",
+  "agent-manifest==0.11.2",
+  "agentrust-trace==0.9.0",
 ]
 
 [project.scripts]

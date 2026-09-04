@@ -62,8 +62,8 @@
       ],
       "properties": {
         "spec_version": {"const": "0.2"},
-        "sdk_version": {"const": "0.11.0"},
-        "upstream_commit": {"const": "98cead8e8809e3302dc388ca869882d15b812b7f"},
+        "sdk_version": {"const": "0.11.2"},
+        "upstream_commit": {"const": "9d26ac84461e829dba8ff97ca35748eeb874debe"},
         "representation": {"enum": ["kv", "vector", "graph"]},
         "checkpoint_ref": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
         "previous_checkpoint": {"$ref": "#/$defs/checkpoint"},
