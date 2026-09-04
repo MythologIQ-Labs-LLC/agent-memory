@@ -42,9 +42,10 @@ ADR-033: Accepted
 ADR-034: Accepted
 ADR-035: Accepted
 ADR-036: Accepted
+ADR-037: Accepted
 ```
 
-ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, ADR-035, and ADR-036 have satisfied their doctrine-maturity gates.
+ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, ADR-035, ADR-036, and ADR-037 have satisfied their doctrine-maturity gates.
 
 Several accepted decisions deliberately required stronger-than-documentation evidence. ADR-020 required executable end-to-end governed-consequence evidence and adversarial negative paths. ADR-024 required executable shared-write coordination evidence. ADR-034 required a real procedural-memory vertical slice proving that retained/recalled skills do not become standing execution or metamemory authority. ADR-035 required an executable Cognitive Mesh path plus native first-party Cognitive Metabolism evidence crossing the mesh/PAMA/recall boundary without provider authority laundering.
 
@@ -370,3 +371,44 @@ intellectual history has value, but provenance is not an attribution obligation.
 Nothing changes for genuinely third-party components. UOR Framework, Graphiti,
 Hindsight, and MemOS keep their reuse postures and continue to qualify through
 the component-qualification path with `authority_effect: none`.
+
+### Fail-closed review requires a remediation path
+
+[`ADR-037`](ADR-037-fail-closed-review-requires-a-remediation-path.md) is **Accepted**.
+
+`require_review` is to fail closed, and must not do so until the remediation path
+is traversable. `enter_pending_verification`, `collect_more_evidence`, and
+`defer` are named in every blocking envelope and consumed by nothing; parking
+becomes a real state generalizing `DurableDecisionRegistry`'s PENDING lifecycle.
+
+Sufficiency is a **separation-of-parties** test, not a human test. The codebase
+already admits `delegated_policy` as non-human authority at low and medium risk
+and requires human confirmation only at high/critical. Agent-produced evidence
+may exceed human ratification in value; provenance class is not a proxy for
+evidential quality.
+
+The bar is **independence**, and repetition is not independence:
+`authority_laundering_harness` holds `repetition_not_independent_corroboration`
+and `autonomous_maintenance_harness` refuses row count as corroboration.
+Evidence from N agents sharing a substrate, model, or upstream observation is
+one evidence.
+
+Four owner rulings are recorded. **Self-produced evidence is permissible;
+self-certified sufficiency is not** — a blocked agent may run a test or generate
+a receipt, but may not declare its own output sufficient, and resumption is an
+evaluator operation. Independence is defined by **evidential lineage and shared
+failure domains**, not agent identity, and a second deterministic reproduction
+validates one evidence item rather than adding a second. Evidential classes are
+**ranked**: artifact-bound and reproducible satisfy directly, a calibrated
+estimator may only contribute and never discharges alone. `delegated_policy` at
+medium risk needs **one** separated principal, not two -- the
+`minimum_independent_human_evidence >= 2` rule governs creation of reusable
+authority from precedent and must not be generalized into a quorum.
+
+Four variables are kept deliberately distinct -- authority separation, evidence
+qualification, independence, and risk -- because collapsing them is how
+governance becomes numerology.
+
+Acceptance is doctrine, not implementation. The implementation order is rigid:
+parked state, then evidence qualification and dependence lineage, then governed
+resumption, and only then the fail-closed conversion of the 51 callers.
