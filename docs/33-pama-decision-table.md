@@ -85,12 +85,25 @@ Operational mutation types are defined in `04-governance-and-pama.md`. Risk clas
 | Link deletion | allow_with_ledger | require_review | require_review | require_external_verification |
 | Correction | require_review | require_review | require_review | require_external_verification |
 | Decision overwrite | require_review | require_review | require_external_verification | require_external_verification |
+| Domain schema mutation | require_review | require_review | require_external_verification | require_external_verification |
 | Promotion | allow_with_ledger | require_review | require_review | require_external_verification |
 | Crystallization | require_review | require_review | require_external_verification | require_external_verification |
 | Pruning | allow_with_ledger | allow_with_ledger | require_review | require_external_verification |
 | Permanent deletion | require_review | require_review | require_external_verification | require_external_verification |
 | Scope expansion | require_review | require_review | require_external_verification | block |
 | Policy mutation | require_review | require_external_verification | require_external_verification | require_external_verification |
+
+Operations admitted by `pama-decision.schema.json` but deliberately absent from
+this table: `capability_promotion`, `authority_change`, and `other`. They carry no
+base cell by decision, not by omission -- they resolve through the reference
+implementation's conservative `require_review` fallback
+(`reference/agentmem_ref/policy.py` `_base_outcome`), which is the correct floor
+for an operation whose risk profile this table has not characterised. Removing the
+fallback would turn an unknown operation into a `KeyError` on the authority path.
+
+`Domain schema mutation` was introduced by ADR-032 after this table was first
+written; its cells are transcribed from the reference implementation, which has
+carried them since.
 
 Reading notes:
 

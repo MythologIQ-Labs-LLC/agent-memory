@@ -19,13 +19,30 @@ from __future__ import annotations
 
 import json
 from functools import lru_cache
+from importlib import resources
 from pathlib import Path
 
 import jsonschema
 
 from . import policy
 
-SCHEMA_DIR = Path(__file__).resolve().parents[2] / "schemas"
+_SOURCE_SCHEMAS = Path(__file__).resolve().parents[2] / "schemas"
+
+
+def _packaged_schemas() -> Path:
+    return Path(str(resources.files(__package__) / "_schemas"))
+
+
+def schema_dir() -> Path:
+    """Canonical schemas: source tree when present, packaged copy when installed."""
+    if _SOURCE_SCHEMAS.is_dir():
+        return _SOURCE_SCHEMAS
+    packaged = _packaged_schemas()
+    if packaged.is_dir():
+        return packaged
+    raise FileNotFoundError(
+        "canonical schemas are unavailable; install the distribution with its packaged schema data"
+    )
 
 #: Sentinel recorded when governance permitted no action at all.
 NO_ACTION = "none"
@@ -41,7 +58,7 @@ _DEFERRED_OUTCOMES = {
 
 @lru_cache(maxsize=None)
 def _validator(schema_name: str) -> jsonschema.Draft202012Validator:
-    schema = json.loads((SCHEMA_DIR / schema_name).read_text(encoding="utf-8"))
+    schema = json.loads((schema_dir() / schema_name).read_text(encoding="utf-8"))
     return jsonschema.Draft202012Validator(schema)
 
 

@@ -15,7 +15,7 @@ From working memory to inherited state. From biological theory to executable con
 [![Validate Doctrine Evidence](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml/badge.svg)](https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/workflows/validate-doctrine-evidence.yml)
 ![Architecture](https://img.shields.io/badge/Architecture-Reference%20Architecture-334155)
 [![ADRs](https://img.shields.io/badge/ADRs-Canonical%20Index-2563eb)](docs/adr/README.md)
-![Conformance](https://img.shields.io/badge/Conformance-Level%206%20Spec-7c3aed)
+[![Conformance](https://img.shields.io/badge/Conformance-Levels%201--6%20Defined-7c3aed)](docs/06-conformance-test-plan.md)
 [![Fixtures](https://img.shields.io/badge/Fixtures-Validated%20Corpus-0f766e)](fixtures/)
 ![Research](https://img.shields.io/badge/Research-Open%20Evidence-b45309)
 [![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)

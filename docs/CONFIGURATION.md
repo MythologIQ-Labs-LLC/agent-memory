@@ -316,6 +316,7 @@ Likely command surfaces may include equivalents of:
 ```text
 agent-memory init
 agent-memory config validate
+agent-memory discover
 agent-memory component list
 agent-memory component add
 agent-memory qualify

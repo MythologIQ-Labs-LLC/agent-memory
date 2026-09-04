@@ -55,6 +55,23 @@ _BASE_TABLE: dict[tuple[str, str], str] = {
     ("runtime_assembly", "medium"): ALLOW_WITH_LEDGER,
     ("runtime_assembly", "high"): REQUIRE_REVIEW,
     ("runtime_assembly", "critical"): REQUIRE_REVIEW,
+    # GAP-ARCH-09: transcribed from docs/33-pama-decision-table.md:80-93.
+    # Previously absent, so all twelve fell through _base_outcome's
+    # REQUIRE_REVIEW default -- weaker than doctrine at
+    # score_adjustment/critical (block) and link_deletion/critical
+    # (require_external_verification), stricter than doctrine at five others.
+    ("score_adjustment", "low"): ALLOW_WITH_LEDGER,
+    ("score_adjustment", "medium"): ALLOW_WITH_LEDGER,
+    ("score_adjustment", "high"): REQUIRE_REVIEW,
+    ("score_adjustment", "critical"): BLOCK,
+    ("link_creation", "low"): ALLOW_WITH_LEDGER,
+    ("link_creation", "medium"): ALLOW_WITH_LEDGER,
+    ("link_creation", "high"): REQUIRE_REVIEW,
+    ("link_creation", "critical"): REQUIRE_REVIEW,
+    ("link_deletion", "low"): ALLOW_WITH_LEDGER,
+    ("link_deletion", "medium"): REQUIRE_REVIEW,
+    ("link_deletion", "high"): REQUIRE_REVIEW,
+    ("link_deletion", "critical"): REQUIRE_EXTERNAL_VERIFICATION,
     ("correction", "low"): REQUIRE_REVIEW,
     ("correction", "medium"): REQUIRE_REVIEW,
     ("correction", "high"): REQUIRE_REVIEW,
@@ -141,6 +158,12 @@ class Decision:
     prohibited_actions: tuple[str, ...]
     reasons: tuple[str, ...] = field(default_factory=tuple)
     policy_version: str = POLICY_VERSION
+    # GAP-ARCH-04 (LD3): what a review discharge rested on. "asserted" means the
+    # caller set review_satisfied and supplied approval refs that nothing
+    # verified. "verified" is reserved for the evidence-bound discharge and is
+    # not produced by this cycle. Generalizes enforcement_evidence's
+    # unverified/verified distinction, which policy had no equivalent of.
+    review_discharge: str = ""
 
 
 def _strictest(*outcomes: str) -> str:
@@ -168,7 +191,18 @@ def _apply_modifiers(outcome: str, proposal: Proposal) -> tuple[str, list[str]]:
     reasons: list[str] = []
     if not proposal.actor_authority_resolved:
         return BLOCK, ["M-AUTH: actor authority could not be reconstructed"]
-    if proposal.approves_own_authority:
+    # GAP-ARCH-04 (LD1, LD2): derive self-approval from identity rather than
+    # trusting the proposer's boolean. Generalizes decision_overwrite.py:171,
+    # which already computes this (grant.principal_id == proposal.proposing_actor).
+    # Placed here, beside the asserted flag, so derived and asserted have
+    # identical reach -- _apply_review runs only for review-requiring outcomes,
+    # so deriving there would leave a self-approving allow_with_ledger proposal
+    # permitted when derived and blocked when asserted.
+    # Exact match on the whole ref: `any(actor_id in ref ...)` would let
+    # actor_id="a" self-approve against ("grant:human",).
+    approval_refs = {str(ref).strip() for ref in proposal.approval_refs}
+    derived_self_approval = str(proposal.actor_id).strip() in approval_refs
+    if proposal.approves_own_authority or derived_self_approval:
         return BLOCK, ["invariant 4: an actor may not approve its own authority expansion"]
     required_domains = set(proposal.required_isolation_domain_refs)
     bound_domains = set(proposal.isolation_domain_refs)
@@ -239,14 +273,23 @@ def evaluate_with_base_outcome(
     outcome, floor_reasons = _apply_floors(base_outcome, proposal)
     outcome, modifier_reasons = _apply_modifiers(outcome, proposal)
     review_reasons: list[str] = []
+    review_discharge = ""
     if allow_review_discharge:
+        before_review = outcome
         outcome, review_reasons = _apply_review(outcome, proposal)
+        # LD3: detected from what _apply_review already returns rather than by
+        # re-deriving its condition or widening its signature. The refusal path
+        # also returns a non-empty reason list, but leaves the outcome unchanged,
+        # so it cannot be mistaken for a discharge.
+        if outcome != before_review and outcome == ALLOW_WITH_LEDGER and review_reasons:
+            review_discharge = "asserted"
     permitted, prohibited = _envelope(outcome, proposal)
     return Decision(
         outcome=outcome,
         permitted_actions=permitted,
         prohibited_actions=prohibited,
         reasons=tuple(floor_reasons + modifier_reasons + review_reasons),
+        review_discharge=review_discharge,
     )
 
 

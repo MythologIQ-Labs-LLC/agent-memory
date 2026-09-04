@@ -1,6 +1,6 @@
 # Native EvolveAI Cognitive Mesh Evidence
 
-Status: **implementation/evidence slice under validation; ADR-035 remains Proposed**
+Status: **implementation/evidence slice under validation; ADR-035 is Accepted**
 
 This slice closes the provider-native seam identified by the ADR-035 acceptance review. It reuses the existing pinned EvolveAI public-facade workload rather than recreating EvolveAI behavior inside Agent Memory.
 

@@ -1,6 +1,6 @@
 # ADR-035 Cognitive Mesh Reference Evidence
 
-Status: **reference slice implemented; ADR-035 remains Proposed**
+Status: **reference slice implemented; ADR-035 is Accepted**
 
 This evidence slice proves a bounded composition path for the Cognitive Mesh proposed by ADR-035. It does not claim a complete cognitive substrate, production cognition, or universal ontology.
 
@@ -187,4 +187,4 @@ This evidence does not establish:
 - transitive deletion completeness across every future cognitive derivative;
 - that ADR-035 has satisfied all doctrine acceptance gates.
 
-ADR-035 remains **Proposed** until its full acceptance boundary is reviewed against repository-wide doctrine and evidence.
+ADR-035 is **Accepted**; the bounded evidence satisfying its acceptance requirements is recorded in `adr-035-acceptance-matrix.md`.

@@ -85,6 +85,13 @@ class AdmissionResult:
     candidates: list[str] = field(default_factory=list)
     admitted: list[str] = field(default_factory=list)
     refusals: dict[str, str] = field(default_factory=dict)
+    # GAP-SEC-02 (LD5): additive record fields. Defaulted so the 70 existing
+    # governed_recall call sites, which read only candidates/admitted/refusals,
+    # are unaffected. Schema-backing this class is GAP-ARCH-01 / Sprint 4; this
+    # cycle must not freeze a contract that boundary freeze will re-shape.
+    decisions: dict[str, dict] = field(default_factory=dict)
+    policy_version: str = ""
+    evaluated_at: str = ""
 
 
 @dataclass(frozen=True)
@@ -118,12 +125,25 @@ class GovernedMemoryAdapter:
         self._tenant = tenant
         self._clock = clock or Clock()
         self._selector = selector or DeterministicSelector()
-        self._ids = DeterministicIds("ref")
+        # GAP-SEC-08 (LD1): draw identifiers from the substrate when it offers
+        # a counter, so adapters sharing a substrate cannot mint colliding ids.
+        # Attribute discovery, not a Protocol member: TemporalGraphPort is a
+        # Protocol and declaring next_id would break external implementations.
+        # Single-adapter sequences are unchanged -- a substrate counter starting
+        # at zero with one consumer emits exactly what the per-adapter counter
+        # emitted before.
+        substrate_ids = getattr(substrate, "_ids", None)
+        self._ids = substrate_ids if isinstance(substrate_ids, DeterministicIds) else DeterministicIds("ref")
         self.containment_violations: list[str] = []
         self._state_version: dict[str, int] = {}
         self._disputed: set[str] = set()
         self._tombstones: dict[str, dict] = {}
         self._fact_scope: dict[str, dict] = {}
+        # GAP-SEC-03 (LD2): fact -> the memory it was written for. _fact_scope
+        # carries no memory reference and _current_fact_by_memory holds only the
+        # *current* fact per memory, so neither can authorize deleting a
+        # superseded fact. Snapshotted by restart_runtime (LD2b).
+        self._fact_memory: dict[str, str] = {}
         self._shared_domain_members: dict[str, set[str]] = {}
         self._current_fact_by_memory: dict[str, str] = {}
         self._rejected_values = RejectedValueRegistry()
@@ -357,6 +377,7 @@ class GovernedMemoryAdapter:
             "task_ref": proposal.task_ref,
             "purpose": proposal.purpose,
         }
+        self._fact_memory[uuid] = proposal.target_reference
         self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
         return uuid
 
@@ -372,7 +393,11 @@ class GovernedMemoryAdapter:
         evaluation. Candidate presence remains distinct from admission authority.
         """
         context = context or RecallContext(target_domain_refs=(self._tenant,))
-        result = AdmissionResult()
+        evaluated_at = self._clock.now()
+        result = AdmissionResult(
+            policy_version=policy.POLICY_VERSION, evaluated_at=evaluated_at
+        )
+        correlation = self._ids.next()
         for fact, _score in self._substrate.search(query, group_ids=[self._tenant]):
             result.candidates.append(fact.uuid)
             refusal = self._admission_refusal(fact, context)
@@ -380,7 +405,124 @@ class GovernedMemoryAdapter:
                 result.refusals[fact.uuid] = refusal
             else:
                 result.admitted.append(fact.uuid)
+            # GAP-SEC-02 (LD4): record the built-in decision. Every refusal
+            # reason was previously computed and discarded -- ContextualRecall-
+            # Adapter only ever sees candidates that already passed, so built-in
+            # decisions were recorded by neither layer.
+            result.decisions[fact.uuid] = self._recall_decision(
+                fact.uuid, context, refusal, evaluated_at
+            )
+        self.events.append(
+            self._recall_event(query, context, result, correlation, evaluated_at)
+        )
         return result
+
+    def _recall_decision(
+        self,
+        candidate_ref: str,
+        context: RecallContext,
+        refusal: str | None,
+        evaluated_at: str,
+    ) -> dict:
+        """A built-in admission decision in the canonical recall-decision shape.
+
+        Reuses `contextual-recall-admission.schema.json` rather than inventing a
+        record, so both recall layers speak one vocabulary.
+        """
+        decision = {
+            "schema_version": "1.0.0",
+            "profile_version": "0.1.0",
+            "decision_id": self._ids.next(),
+            "candidate_ref": candidate_ref,
+            "policy": {
+                # LD6: the recall path does not call policy.evaluate. Recording
+                # "evaluated" would fabricate a decision the reference never
+                # made; of the four enum members, "unavailable" is the honest
+                # one -- no contextual policy was available to evaluate. A value
+                # meaning "built-in admission" does not exist in the schema and
+                # belongs to Sprint 4 / GAP-ARCH-01.
+                "policy_ref": "contextual-recall-policy:none",
+                "policy_version": policy.POLICY_VERSION,
+                "status": "unavailable",
+                "selection_mode": "deterministic",
+            },
+            "context": {
+                "target_domain_refs": list(context.target_domain_refs),
+                "principal_ref": context.principal_ref,
+                "project_ref": context.project_ref,
+                "task_ref": context.task_ref,
+                "purpose": context.purpose,
+                "destination_ref": "",
+            },
+            "outcome": "admit" if refusal is None else "block",
+            "reason_code": refusal or "builtin_admission",
+            "evidence_refs": [],
+            "evaluated_at": evaluated_at,
+            "interpretation": {
+                "authority_effect": "current_recall_only",
+                "prior_admission_authority": "none",
+                "memory_mutation": "not_performed",
+                "relevance_authority": "none",
+                "risk_signal_authority": "none",
+            },
+        }
+        receipts.validate("contextual-recall-admission.schema.json", decision)
+        return decision
+
+    def _recall_event(
+        self,
+        query: str,
+        context: RecallContext,
+        result: AdmissionResult,
+        correlation: str,
+        evaluated_at: str,
+    ) -> dict:
+        """One governance record per governed recall.
+
+        Field placement is dictated by the schema, which sets
+        `additionalProperties: False`: only named properties at top level, and
+        the rest under `payload` (`additionalProperties: true`).
+        `signal_type`/`signal_semantics` are the literals docs/34:136 requires.
+        """
+        # `receipts.build_audit_event` is the commit-path builder: it requires a
+        # single `memory_id` and supports neither `principal`, `signal`, nor
+        # `payload`. A recall event legitimately spans many candidates and has no
+        # single memory_id -- docs/34 puts `memory_id` on the per-unit decisions,
+        # which `_recall_decision` carries. So the document is built here and
+        # validated against the same schema, rather than widening the commit
+        # builder for a shape it does not model.
+        document = {
+            "schema_version": "1.0.0",
+            "event_id": self._ids.next(),
+            "event_type": "memory.recall",
+            "event_version": "1.0.0",
+            "timestamp": evaluated_at,
+            "component": "governed-adapter",
+            "correlation_id": correlation,
+            "principal": context.principal_ref,
+            "policy_version": policy.POLICY_VERSION,
+            "signal": {
+                "signal_type": "recall_admission",
+                "signal_semantics": (
+                    f"{len(result.admitted)} of {len(result.candidates)} candidates admitted"
+                ),
+            },
+            "payload": {
+                "query": query,
+                "target_domain_refs": list(context.target_domain_refs),
+                "project_ref": context.project_ref,
+                "task_ref": context.task_ref,
+                "purpose": context.purpose,
+                "candidate_count": len(result.candidates),
+                "admitted_count": len(result.admitted),
+                "outcomes": {
+                    uuid: ("admit" if uuid in result.admitted else result.refusals[uuid])
+                    for uuid in result.candidates
+                },
+            },
+        }
+        receipts.validate("memory-audit-event.schema.json", document)
+        return document
 
     def _admission_refusal(self, fact: Fact, context: RecallContext) -> str | None:
         if fact.group_id != self._tenant:
@@ -396,7 +538,12 @@ class GovernedMemoryAdapter:
 
         scope = self._fact_scope.get(fact.uuid)
         if scope is None:
-            return None
+            # GAP-ARCH-18 (LD1): docs/34:139 -- "candidates that arrive without
+            # scope metadata are rejected from admission; unknown scope is
+            # treated as out-of-scope, never as local". The string is dictated
+            # by the JS runtime, which already refuses this case:
+            # integrations/agent-memory-runtime/src/index.mjs:114.
+            return "unknown_scope"
 
         memory_domains = set(scope["domain_refs"])
         required_domains = set(scope.get("required_domain_refs", ()))
@@ -452,12 +599,41 @@ class GovernedMemoryAdapter:
 
     # -- deletion -------------------------------------------------------
 
+    def _delete_refusal(self, proposal: policy.Proposal, fact_uuid: str) -> str | None:
+        """Authority checks the delete path never performed (GAP-SEC-03).
+
+        One substrate lookup answers existence (D5) and ownership (D4); the
+        binding map answers whether the fact belongs to the memory the proposal
+        claims (D2), which is also what stops a falsified tombstone (D3).
+        """
+        fact = self._substrate.get_fact(fact_uuid)
+        if fact is None:
+            return "fact_not_found"
+        if fact.group_id != self._tenant:
+            return "cross_tenant_delete"
+        bound_memory = self._fact_memory.get(fact_uuid)
+        if bound_memory is None:
+            # Unknown provenance is not permission -- same stance as Loop 3's
+            # unknown_scope on the read path.
+            return "target_binding_unknown"
+        if bound_memory != proposal.target_reference:
+            return "target_binding_mismatch"
+        return None
+
     def governed_delete(self, proposal: policy.Proposal, fact_uuid: str, derived_refs: tuple[str, ...] = ()) -> CommitResult:
         """Delete through the authority gate, leaving a tombstone the substrate cannot."""
         correlation = self._ids.next()
         decision = policy.evaluate(proposal)
-        selected = self._select_action(decision, proposal, blocked_by_stale=False)
-        committed = selected == proposal.operation
+        # GAP-SEC-03: deletion is the more destructive path and had the weaker
+        # guard. Ordered so a refusal names the real problem (LD4): a nonexistent
+        # fact must not report a tenant error, and a foreign fact must not report
+        # a binding error.
+        refusal = self._delete_refusal(proposal, fact_uuid)
+        stale = self._is_stale(proposal)
+        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        committed = refusal is None and selected == proposal.operation
+        if refusal is None and stale:
+            refusal = "stale_decision"
         before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
 
         if committed:
@@ -500,6 +676,7 @@ class GovernedMemoryAdapter:
             events=[event],
             committed=committed,
             fact_uuid=fact_uuid if committed else None,
+            refusal=refusal,
         )
 
     def undeclared_residue(self, fact_uuid: str) -> list[str]:
