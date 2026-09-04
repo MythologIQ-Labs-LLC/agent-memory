@@ -105,6 +105,32 @@ Retrieval does not answer:
 
 ---
 
+## Ownership: contracts are Agent Memory's, implementations live here
+
+Read this before mapping any component to any external product.
+
+**Agent Memory owns the architectural contracts.** A provider may be named as the initial or candidate implementation of one. That naming is an implementation mapping, never a transfer of ownership, naming, or authority.
+
+| Contract | Owner | Initial implementation | Status |
+|---|---|---|---|
+| Reality Graphs / Code Reality Graph | **Agent Memory** | CodeGenome | declared ([ADR-035](docs/adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md), [ownership map](docs/39-implementation-ownership-map.md)) |
+| Lifecycle Engine | **Agent Memory** | EvolveAI proposer, COREFORGE Vault committer | declared, contested |
+| Evidence and Provenance | **Agent Memory** | CodeGenome, FailSafe receipts, COREFORGE ledgers | declared, contested |
+| Saturation and Decay | **Agent Memory** | EvolveAI | declared |
+
+So a Code Reality Graph derived from CodeGenome is an **Agent Memory artifact under an Agent Memory name**, developed in a modular structure in this repository. It is not a CodeGenome export that Agent Memory consumes.
+
+**Functional memory implementations reside in this repository.** Epistemic belief, procedural/skill, predictive/counterfactual, and conditional memory influence are governed reference implementations here, not integrations pointed elsewhere. See [substrate inventory & maturity](docs/43-substrate-inventory-and-maturity.md) for what exists, where it lives, and how mature it is.
+
+Two failure modes this section exists to prevent, both of which have happened:
+
+- Reading "CodeGenome implements the Code Reality Graph" as "the Code Reality Graph is CodeGenome's". The ownership map says the opposite.
+- Reading "no qualification artifact exists" as "the decision has not been made". Maturity and ownership are independent axes; a contract can be owned and named while its implementation is still `declared`.
+
+Mapping a component to a role **does not promote its capability maturity** and does not make its internal ontology canonical ([`docs/01-layer-model.md`](docs/01-layer-model.md)).
+
+---
+
 ## Native doctrine: Proportional Adaptive Mutation Authority
 
 **Proportional Adaptive Mutation Authority (PAMA) is native Agent Memory doctrine authored by Kevin R. Knapp.** It is not an external dependency, related-product import, or source-registry item.
