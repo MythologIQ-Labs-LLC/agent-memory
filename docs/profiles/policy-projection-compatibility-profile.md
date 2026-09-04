@@ -1,6 +1,6 @@
 # Policy Projection Compatibility Profile
 
-Status: reference profile under #256. ADR-030 remains Proposed until its executable evidence gates pass.
+Status: reference profile under #256. ADR-030 is Accepted (2026-08-13).
 
 ## Boundary
 

@@ -13,6 +13,8 @@ import json
 import sys
 import unittest
 from datetime import datetime, timedelta, timezone
+
+from tests import pin_support
 from pathlib import Path
 
 import jsonschema
@@ -147,6 +149,10 @@ class AgentManifestCorrelationTests(unittest.TestCase):
             representation="kv",
         )
 
+    @unittest.skipUnless(
+        pin_support.pinned("agent-manifest", AGENT_MANIFEST_SDK_VERSION),
+        "agent-manifest is not installed at the pinned version",
+    )
     def test_pinned_release_and_repository_identity_are_explicit(self):
         self.assertEqual(importlib.metadata.version("agent-manifest"), AGENT_MANIFEST_SDK_VERSION)
         self.assertEqual(AGENT_MANIFEST_SDK_VERSION, "0.11.0")

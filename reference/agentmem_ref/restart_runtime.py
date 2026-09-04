@@ -22,7 +22,7 @@ from typing import Iterable
 
 from .adapter import Clock, GovernedMemoryAdapter
 from .readmission import RejectedValueRegistry, RejectionRecord
-from .substrate import DeterministicIds, Episode, Fact, InMemoryTemporalGraph
+from .substrate import Episode, Fact, InMemoryTemporalGraph
 
 
 SCHEMA_VERSION = "1.0.0"
@@ -218,6 +218,9 @@ def _snapshot_governance(
             "disputed": sorted(adapter._disputed),
             "tombstones": adapter._tombstones,
             "fact_scope": adapter._fact_scope,
+            # GAP-SEC-03 (LD2b): without this the binding map restores empty and
+            # every post-restart delete refuses target_binding_unknown.
+            "fact_memory": dict(sorted(adapter._fact_memory.items())),
             "shared_domain_members": {
                 key: sorted(value) for key, value in sorted(adapter._shared_domain_members.items())
             },
@@ -245,8 +248,13 @@ def _restore_adapter(substrate: InMemoryTemporalGraph, snapshot: dict) -> tuple[
     adapter = GovernedMemoryAdapter(substrate, tenant=tenant)
     try:
         adapter._clock = Clock(start=int(raw.get("clock_tick", 0)))
-        adapter._ids = DeterministicIds("ref")
-        adapter._ids._n = int(raw.get("id_counter", 0))
+        # GAP-SEC-08 (LD6): do NOT rebind to a private counter -- that detaches
+        # the adapter from the substrate counter and silently reverts the
+        # collision fix on the first restart. Advance the shared counter
+        # instead. `max` because a multi-tenant restore runs this once per
+        # adapter against one substrate, and plain assignment would rewind the
+        # counter below another tenant's restored identifiers.
+        adapter._ids._n = max(adapter._ids._n, int(raw.get("id_counter", 0)))
         adapter._state_version = {str(key): int(value) for key, value in raw.get("state_version", {}).items()}
         adapter._disputed = set(raw.get("disputed", ()))
         adapter._tombstones = dict(raw.get("tombstones", {}))
@@ -257,6 +265,7 @@ def _restore_adapter(substrate: InMemoryTemporalGraph, snapshot: dict) -> tuple[
             restored["required_domain_refs"] = tuple(restored.get("required_domain_refs", ()))
             fact_scope[key] = restored
         adapter._fact_scope = fact_scope
+        adapter._fact_memory = {str(k): str(v) for k, v in raw.get("fact_memory", {}).items()}
         adapter._shared_domain_members = {
             key: set(value) for key, value in raw.get("shared_domain_members", {}).items()
         }

@@ -2,7 +2,7 @@
 
 **Status: future subsystem. Not a core component.** This note exists because the prerequisite guardrails now exist or are being explicitly matured: actor scope, consent, and tenancy ([`../29-actor-scope-consent-and-tenancy.md`](../29-actor-scope-consent-and-tenancy.md)), privacy and sensitivity ([`../19-privacy-and-sensitivity-classifier.md`](../19-privacy-and-sensitivity-classifier.md)), interoperability profiles ([`../35-interoperability-profiles.md`](../35-interoperability-profiles.md)), and the **Proposed** memory-isolation-domain contract ([`../41-memory-isolation-domains-and-governed-crossing.md`](../41-memory-isolation-domains-and-governed-crossing.md)). Promotion into the component architecture still requires its own ADR, protocol specification, and conformance surface.
 
-The isolation-domain material below is reconciliation with **Proposed ADR-022**, not promotion of this future subsystem and not acceptance of ADR-022.
+The isolation-domain material below is reconciliation with **ADR-022 (Accepted)**, not promotion of this future subsystem.
 
 ## Concept
 

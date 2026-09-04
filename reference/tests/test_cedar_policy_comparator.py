@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import tempfile
 import unittest
+from pathlib import Path
 
 from agentmem_ref import policy
 from agentmem_ref.cedar_policy_comparator import (
@@ -70,6 +72,15 @@ class CedarPolicyComparatorTests(unittest.TestCase):
 
     def test_policy_digest_is_pinned(self):
         self.assertEqual(policy_sha256(), CEDAR_POLICY_SHA256)
+
+    def test_policy_digest_is_eol_independent(self):
+        text = "permit(principal, action, resource);\n// line two\n"
+        with tempfile.TemporaryDirectory() as tmp:
+            lf = Path(tmp) / "lf.cedar"
+            crlf = Path(tmp) / "crlf.cedar"
+            lf.write_bytes(text.encode("utf-8"))
+            crlf.write_bytes(text.replace("\n", "\r\n").encode("utf-8"))
+            self.assertEqual(policy_sha256(lf), policy_sha256(crlf))
 
     def test_minimized_context_has_no_raw_payload_surface(self):
         projection = self._projection()

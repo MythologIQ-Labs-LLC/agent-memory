@@ -96,6 +96,21 @@ class InMemoryTemporalGraph:
         self._episodes: dict[str, Episode] = {}
         self._facts: dict[str, Fact] = {}
         self.write_log: list[tuple[str, str]] = []
+        # GAP-SEC-08: identifiers are minted per substrate, not per adapter.
+        # Two adapters sharing one substrate previously ran independent
+        # counters and collided on every id -- fact uuid, receipt_id,
+        # correlation_id, and all four event ids -- silently replacing each
+        # other's facts and merging each other's evidence records.
+        self._ids = DeterministicIds("ref")
+
+    def next_id(self) -> str:
+        """Mint the next substrate-scoped identifier.
+
+        Discovered by attribute rather than declared on ``TemporalGraphPort``:
+        adding a Protocol member would break every external implementation,
+        and the declared contract is Sprint 4's to change.
+        """
+        return self._ids.next()
 
     # -- writes ---------------------------------------------------------
 
@@ -104,7 +119,23 @@ class InMemoryTemporalGraph:
         self.write_log.append(("add_episode", episode.uuid))
 
     def write_fact(self, fact: Fact) -> None:
-        """Direct write. No authority check, by design and by observation."""
+        """Direct write. No authority check, by design and by observation.
+
+        GAP-SEC-08 guard: refuse a uuid that already holds a *different* fact
+        rather than replacing it. Defence in depth behind the substrate-scoped
+        counter -- a foreign substrate without ``next_id`` still falls back to
+        per-adapter counters, and this turns the resulting cross-tenant data
+        loss into a loud failure at the point of harm. An identical re-write
+        stays a no-op, so replay remains idempotent.
+        """
+        existing = self._facts.get(fact.uuid)
+        if existing is not None and existing != fact:
+            raise ValueError(
+                f"refusing to overwrite fact {fact.uuid!r} "
+                f"(stored group_id={existing.group_id!r}, "
+                f"incoming group_id={fact.group_id!r}): "
+                "identifier collision would destroy a committed fact"
+            )
         self._facts[fact.uuid] = fact
         self.write_log.append(("write_fact", fact.uuid))
 

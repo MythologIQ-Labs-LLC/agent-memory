@@ -199,6 +199,7 @@ def ratify_reusable_grant(
     expires_at: str,
     revocation_mechanism_ref: str,
     evidence_refs: tuple[str, ...] = (),
+    registry: "RatificationRegistry | None" = None,
 ) -> dict:
     """Create reusable authority only from a separate, verified ratification."""
 
@@ -267,6 +268,13 @@ def ratify_reusable_grant(
         "can_create_autonomy_policy": False,
     }
     receipts.validate("reusable-grant.schema.json", grant)
+    if registry is not None:
+        # GAP-SEC-04 (LD1): registration is a consequence of ratification, not a
+        # public method. Everything above this line -- scope, material
+        # conditions, policy version, revocation mechanism, expiry bounds -- has
+        # already been checked against the proposal, so a record can only exist
+        # for a grant that a valid ratification produced.
+        registry._record_ratification(grant)
     return grant
 
 
@@ -299,6 +307,67 @@ def revoke_reusable_grant(
     return document
 
 
+
+# GAP-SEC-04 body keys: the exact set and order ratify_reusable_grant digests
+# into grant_id. Kept beside the builder so the two cannot drift apart.
+_GRANT_BODY_KEYS = (
+    "proposal_id", "ratification_ref", "ratifying_principal_ref",
+    "ratifier_authority_evidence_ref", "ratifier_authority_verified",
+    "operation", "scope_refs", "material_conditions", "policy_version_ref",
+    "issued_at", "expires_at", "revocation_mechanism_ref", "evidence_refs",
+)
+
+
+def grant_body_digest(grant: dict) -> str:
+    """Recompute the content-addressed grant_id from the grant's own body."""
+    body = {key: grant[key] for key in _GRANT_BODY_KEYS if key in grant}
+    return f"reusable-grant:{_digest(body)}"
+
+
+class RatificationRegistry:
+    """Ratification records held independently of the grants that cite them.
+
+    GAP-SEC-04. A grant is content-addressed, so it can attest to its own
+    consistency but never to its own authenticity: an actor who edits the body
+    recomputes the id and the artifact remains perfectly self-consistent. Self-
+    certification is not verification.
+
+    This registry supplies the term the presenter does not write. There is
+    deliberately **no public method that registers an arbitrary grant** -- a
+    record is written only from inside ``ratify_reusable_grant``, whose
+    preconditions refuse a ratification that does not match its proposal. An
+    actor cannot obtain a registration for a tampered grant without performing a
+    valid ratification of the tampered values, which those preconditions reject.
+
+    Like ``decision_overwrite.DurableDecisionRegistry``, this demonstrates the
+    authority boundary; it is not a production evidence service. In a single
+    process the presenter/host separation is by ownership, not enforcement: a
+    caller handed this instance can reach ``_records``. Deployments that cannot
+    hold that separation are running the declared host-trust-boundary profile
+    and should say so, rather than assuming this class enforces more than it can.
+    """
+
+    def __init__(self) -> None:
+        self._records: dict[str, dict] = {}
+
+    def resolve(self, grant_id: str) -> dict | None:
+        """Return the held ratification record for a grant id, or None."""
+        record = self._records.get(grant_id)
+        return dict(record) if record is not None else None
+
+    def __len__(self) -> int:
+        return len(self._records)
+
+    def _record_ratification(self, grant: dict) -> None:
+        """Called only by ratify_reusable_grant. Never public."""
+        grant_id = grant["grant_id"]
+        if grant_id in self._records:
+            raise ValueError(f"ratification already recorded for {grant_id}")
+        self._records[grant_id] = {
+            key: grant[key] for key in _GRANT_BODY_KEYS if key in grant
+        }
+
+
 def evaluate_reusable_grant(
     grant: dict,
     projection: dict,
@@ -308,6 +377,7 @@ def evaluate_reusable_grant(
     observed_at: str,
     ratification_evidence_present: bool,
     revocation: dict | None = None,
+    registry: "RatificationRegistry | None" = None,
 ) -> dict:
     """Revalidate a ratified grant against current deterministic context."""
 
@@ -336,9 +406,39 @@ def evaluate_reusable_grant(
     if status == "current" and current_policy_version_ref != grant["policy_version_ref"]:
         status = "stale"
         reasons.append("policy_version_drift")
-    if status == "current" and ratification_evidence_present is not True:
+    # GAP-SEC-04 (LD2, LD3): verify against a ratification record the presenter
+    # does not write, or record plainly that we did not.
+    if registry is not None:
+        if status == "current" and grant_body_digest(grant) != grant["grant_id"]:
+            status = "invalid"
+            reasons.append("grant_body_tampered")
+        held = registry.resolve(grant["grant_id"]) if status == "current" else None
+        if status == "current" and held is None:
+            # The recompute attack lands here: a tampered body yields a new id,
+            # and obtaining a registration for it would require ratifying the
+            # tampered values, which ratify_reusable_grant refuses.
+            status = "invalid"
+            reasons.append("ratification_evidence_unregistered")
+        if status == "current" and held is not None:
+            # Consistency assertion, not an attack control: because grant_id is
+            # a digest of the body, a divergence here means ratification and
+            # registration disagreed, which is a bug rather than a forgery.
+            diverged = [
+                key for key in _GRANT_BODY_KEYS
+                if key in held and _canonical(held[key]) != _canonical(grant.get(key))
+            ]
+            if diverged:
+                status = "invalid"
+                reasons.append("grant_diverges_from_ratification")
+        if status == "current":
+            reasons.append("ratification_evidence_verified")
+    elif status == "current" and ratification_evidence_present is not True:
         status = "invalid"
         reasons.append("ratification_evidence_missing")
+    elif status == "current":
+        # Declared host-trust-boundary profile. Labelled, never silent: absence
+        # of a marker must not be readable as the stronger claim.
+        reasons.append("ratification_evidence_asserted")
     if status == "current" and expected_operation != grant["operation"]:
         status = "not_applicable"
         reasons.append("operation_mismatch")

@@ -120,3 +120,41 @@ jobs:
             echo "agent-memory doctor --config <config.json> --state-dir <state-dir>"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
+  wheel-install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check build
+      - run: python -m build --outdir dist .
+      - run: python -m venv /tmp/wheel-venv && /tmp/wheel-venv/bin/python -m pip install --disable-pip-version-check dist/*.whl
+      - name: Installed package resolves canonical schemas
+        working-directory: /tmp
+        run: |
+          /tmp/wheel-venv/bin/python - <<'PY'
+          import sys
+          import agentmem_ref.receipts as receipts
+          try:
+              receipts.validate("decision-receipt.schema.json", {})
+          except ValueError as exc:
+              if "decision-receipt.schema.json at" in str(exc):
+                  print("schema resolved from wheel:", exc)
+                  sys.exit(0)
+              print("unexpected ValueError:", exc)
+              sys.exit(1)
+          except FileNotFoundError as exc:
+              print("schema NOT resolved from wheel:", exc)
+              sys.exit(1)
+          print("validate returned without error; empty receipt should not validate")
+          sys.exit(1)
+          PY
+      - name: Installed evidence modules import
+        working-directory: /tmp
+        run: /tmp/wheel-venv/bin/python -c "import agentmem_ref.portable_evidence"
+      - name: Installed console command
+        working-directory: /tmp
+        run: /tmp/wheel-venv/bin/agent-memory --help

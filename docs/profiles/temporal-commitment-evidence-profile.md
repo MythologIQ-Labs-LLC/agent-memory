@@ -1,6 +1,6 @@
 # Temporal Commitment Evidence Profile
 
-Status: reference profile under #259. ADR-031 remains Proposed until final exact-head evidence passes.
+Status: reference profile under #259. ADR-031 is Accepted (2026-08-13).
 
 ## Boundary
 

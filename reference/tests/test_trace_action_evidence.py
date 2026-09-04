@@ -9,6 +9,8 @@ import unittest
 from pathlib import Path
 
 import jsonschema
+
+from tests import pin_support
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -114,6 +116,10 @@ class TraceActionEvidenceTests(unittest.TestCase):
             **kwargs,
         )
 
+    @unittest.skipUnless(
+        pin_support.pinned("agentrust-trace", TRACE_SDK_VERSION),
+        "agentrust-trace is not installed at the pinned version",
+    )
     def test_pinned_trace_release_identity_is_explicit(self):
         self.assertEqual(importlib.metadata.version("agentrust-trace"), TRACE_SDK_VERSION)
         self.assertEqual(TRACE_SDK_VERSION, "0.8.0")

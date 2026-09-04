@@ -176,7 +176,19 @@ class DurableDecisionRegistry:
             isolation_domain_refs=proposal.isolation_domain_refs,
             required_isolation_domain_refs=proposal.required_isolation_domain_refs,
         )
-        decision = policy.evaluate(pama_proposal)
+        # GAP-ARCH-04 (LD5): express the authority already validated by
+        # _grant_refusal through a channel policy can tell apart from assertion.
+        # This is not new authority -- _grant_refusal binds the grant to this
+        # proposal and target, derives self-approval from identity, enforces the
+        # risk ceiling, and requires HUMAN_CONFIRMATION for high/critical risk,
+        # every one of which is stricter than the attestation's own checks.
+        attestation = policy.ExternalVerification(
+            bound_proposal_id=pama_proposal.proposal_id,
+            verifier_principal_id=grant.principal_id,
+            authority_kind=grant.authority_kind,
+            max_risk_class=grant.max_risk_class,
+        )
+        decision = policy.evaluate_with_external_verification(pama_proposal, attestation)
         selected_action = (
             pama_proposal.operation
             if pama_proposal.operation in decision.permitted_actions

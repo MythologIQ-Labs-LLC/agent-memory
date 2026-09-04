@@ -70,9 +70,9 @@ Those are precisely why the architecture separates retrieval from admission, del
 
 Closer, and deliberately not declared complete by visualization.
 
-- **ADR-020 remains Proposed.** P4 executes a substantial deletion-completeness evidence bar, but the ADR's independent acceptance process governs its status.
+- **ADR-020 is Accepted.** P4 executes a substantial deletion-completeness evidence bar.
 - **ADR-021 remains Proposed.** P4.5 local implementation is complete and supplies executable evidence for the portable boundary, including Agent Manifest and TRACE/cMCP correlation, but ADR acceptance remains a separate decision.
-- **ADR-022 remains Proposed.** Isolation-domain implementation issue #68 remains open, so a finalized isolation-domain diagram would outrun the contract and its critical fixtures.
+- **ADR-022 is Accepted.** Isolation-domain evidence is recorded under `docs/audits/isolation/` (issue #68 gap reconciliation).
 
 ## Canonical and evidence sources
 

@@ -85,12 +85,57 @@ Operational mutation types are defined in `04-governance-and-pama.md`. Risk clas
 | Link deletion | allow_with_ledger | require_review | require_review | require_external_verification |
 | Correction | require_review | require_review | require_review | require_external_verification |
 | Decision overwrite | require_review | require_review | require_external_verification | require_external_verification |
+| Domain schema mutation | require_review | require_review | require_external_verification | require_external_verification |
 | Promotion | allow_with_ledger | require_review | require_review | require_external_verification |
 | Crystallization | require_review | require_review | require_external_verification | require_external_verification |
 | Pruning | allow_with_ledger | allow_with_ledger | require_review | require_external_verification |
 | Permanent deletion | require_review | require_review | require_external_verification | require_external_verification |
 | Scope expansion | require_review | require_review | require_external_verification | block |
 | Policy mutation | require_review | require_external_verification | require_external_verification | require_external_verification |
+
+Operations admitted by `pama-decision.schema.json` but deliberately absent from
+this table: `capability_promotion`, `authority_change`, and `other`. They carry no
+base cell by decision, not by omission -- they resolve through the reference
+implementation's conservative `require_review` fallback
+(`reference/agentmem_ref/policy.py` `_base_outcome`), which is the correct floor
+for an operation whose risk profile this table has not characterised. Removing the
+fallback would turn an unknown operation into a `KeyError` on the authority path.
+
+`Domain schema mutation` was introduced by ADR-032 after this table was first
+written; its cells are transcribed from the reference implementation, which has
+carried them since.
+
+## Discharging a decision
+
+An outcome of `require_review` or `require_external_verification` is not final:
+an external authority can satisfy it. What that authority has to present differs
+by outcome, and the difference is enforced rather than advisory.
+
+**`require_review`** is discharged by an approval the proposer did not give.
+The reference implementation accepts a caller-asserted `review_satisfied` with a
+non-empty `approval_refs`, and records `review_discharge: "asserted"` on the
+resulting decision so a reader can see what the discharge rested on. Self-approval
+is derived from identity -- an actor naming itself among its own approval refs is
+`block`, regardless of what it asserts about itself.
+
+**`require_external_verification` cannot be discharged by assertion at all.**
+It requires an attestation bound to the specific proposal, naming a verifier
+distinct from the actor, carrying `human_confirmation` for high or critical risk,
+and declaring a risk ceiling the proposal does not exceed. Decisions discharged
+this way record `review_discharge: "verified"`.
+
+The distinction matters because without it the two outcomes collapse into one:
+an asserted boolean plus any string discharged both, so the table's strictest
+non-blocking cell became indistinguishable from its second-strictest. Reference
+implementation: `policy.evaluate_with_external_verification` and
+`policy.ExternalVerification`.
+
+**Limit, stated plainly.** The attestation is constructed by the caller, so it
+proves the caller performed the checks it claims, not that a verifier exists.
+What it removes is the assertion path -- ordinary evaluation can no longer reach
+the discharge. Binding an attestation to evidence the presenter cannot write is
+the same problem `reusable_grants.RatificationRegistry` solves for grants, and
+applying that pattern to attestations remains open work.
 
 Reading notes:
 

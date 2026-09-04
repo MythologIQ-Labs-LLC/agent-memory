@@ -138,7 +138,8 @@ def _sha256_bytes(data: bytes) -> str:
 
 
 def policy_sha256(policy_path: Path = CEDAR_POLICY_PATH) -> str:
-    return _sha256_bytes(policy_path.read_bytes())
+    """Digest of the policy text with line endings normalized, so the pin holds on any checkout."""
+    return _sha256_bytes(policy_path.read_bytes().replace(b"\r\n", b"\n"))
 
 
 def request_digest(request: dict[str, Any]) -> str:

@@ -102,17 +102,26 @@ def characterize_write_amplification() -> dict:
 
 
 def _seed_substrate(size: int) -> tuple[InMemoryTemporalGraph, GovernedMemoryAdapter]:
+    """Seed through the governed path (GAP-ARCH-18, LD2).
+
+    Direct `substrate.write_fact` produces facts with no `_fact_scope` entry,
+    which recall now refuses as `unknown_scope` per docs/34:139. Seeding through
+    `commit_proposal` also makes this characterize recall over *governed* facts,
+    which is the production shape. Only `characterize_recall` consumes this
+    helper, and it reports counts and timing -- the module's evidence-byte
+    figures come from `characterize_write_amplification`, which builds its own
+    adapter, so no published number moves.
+    """
     substrate = InMemoryTemporalGraph()
+    adapter = GovernedMemoryAdapter(substrate, tenant=TENANT, clock=Clock())
     for index in range(size):
-        substrate.write_fact(
-            Fact(
-                uuid=f"fact:p9:{index}",
-                fact_text=f"systems characterization token-{index}",
-                group_id=TENANT,
-                created_at="2026-01-01T00:00:00Z",
-            )
+        result = adapter.commit_proposal(
+            _proposal(f"proposal:p9-seed-{index}", f"memory:p9-seed-{index}"),
+            f"systems characterization token-{index}",
         )
-    return substrate, GovernedMemoryAdapter(substrate, tenant=TENANT, clock=Clock())
+        if not result.committed:
+            raise RuntimeError("P9 recall seeding did not commit")
+    return substrate, adapter
 
 
 def characterize_recall(size: int, repeats: int) -> dict:

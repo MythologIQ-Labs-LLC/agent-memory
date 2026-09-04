@@ -120,7 +120,7 @@ Two rules keep the measurement honest. State that cannot be enumerated goes in t
 
 ## Where this sits
 
-This slice exists because ADR-020's proof bar requires that derived-memory deletion residue be *tested*, and that single line sits on top of everything above. The bar was fixed before the implementation that had to clear it, and all seven of its items now execute: a declaration surface for tier-3 state, freshness computed as a relation rather than a flag, correction that supersedes without erasing, a transitive purge, an independent sweep that catches a one-hop purge, and refusal of automatic estimator-mediated rebuild. ADR-020 remains Proposed: it has further validation items, and clearing one bar is not acceptance.
+This slice exists because ADR-020's proof bar requires that derived-memory deletion residue be *tested*, and that single line sits on top of everything above. The bar was fixed before the implementation that had to clear it, and all seven of its items now execute: a declaration surface for tier-3 state, freshness computed as a relation rather than a flag, correction that supersedes without erasing, a transitive purge, an independent sweep that catches a one-hop purge, and refusal of automatic estimator-mediated rebuild. ADR-020 is now Accepted; clearing this one bar was one of its validation items, not the whole acceptance.
 
 ## Canonical sources
 
