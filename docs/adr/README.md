@@ -42,6 +42,7 @@ ADR-033: Accepted
 ADR-034: Accepted
 ADR-035: Accepted
 ADR-036: Accepted
+ADR-037: Proposed
 ```
 
 ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, ADR-035, and ADR-036 have satisfied their doctrine-maturity gates.
@@ -370,3 +371,27 @@ intellectual history has value, but provenance is not an attribution obligation.
 Nothing changes for genuinely third-party components. UOR Framework, Graphiti,
 Hindsight, and MemOS keep their reuse postures and continue to qualify through
 the component-qualification path with `authority_effect: none`.
+
+### Fail-closed review requires a remediation path
+
+[`ADR-037`](ADR-037-fail-closed-review-requires-a-remediation-path.md) is **Proposed**.
+
+`require_review` is to fail closed, and must not do so until the remediation path
+is traversable. `enter_pending_verification`, `collect_more_evidence`, and
+`defer` are named in every blocking envelope and consumed by nothing; parking
+becomes a real state generalizing `DurableDecisionRegistry`'s PENDING lifecycle.
+
+Sufficiency is a **separation-of-parties** test, not a human test. The codebase
+already admits `delegated_policy` as non-human authority at low and medium risk
+and requires human confirmation only at high/critical. Agent-produced evidence
+may exceed human ratification in value; provenance class is not a proxy for
+evidential quality.
+
+The bar is **independence**, and repetition is not independence:
+`authority_laundering_harness` holds `repetition_not_independent_corroboration`
+and `autonomous_maintenance_harness` refuses row count as corroboration.
+Evidence from N agents sharing a substrate, model, or upstream observation is
+one evidence.
+
+Three questions remain open for the owner, including whether an agent may resume
+its own parked proposal and what establishes independence between two agents.
