@@ -31,7 +31,7 @@ MUST be current at every cycle close. Drift signal: wrong version / wrong state 
 | Shadow Genome | `docs/SHADOW_GENOME.md` | 5 entries, 4 resolved |
 | Process Shadow Genome | `docs/PROCESS_SHADOW_GENOME.md` | append-only JSONL of process events (capability shortfalls, gate skips, overrides) |
 | Changelog | `CHANGELOG.md` | **absent** (GAP-REL-01, Sprint 8); register here when created |
-| README | `README.md` | Conformance badge spec-scoped (Sprint 1); installable-distribution section added (Loop 7) |
+| README | `README.md` | Conformance badge spec-scoped (Sprint 1); installable distribution (Loop 7); **ownership section** — contracts are Agent Memory's, implementations live here (2026-09-04) |
 | Roadmap events | `.qor/roadmaps/agent-memory-1_0-completion/events.jsonl` | 32 events; 7 frontier nodes open |
 
 ## Tier 2 — Doctrine & Policy
