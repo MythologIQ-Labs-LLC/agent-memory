@@ -20,12 +20,12 @@ import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from agentmem_ref.dashclaw_authority import ProjectScopedAuthorityResolver
 from agentmem_ref.dashclaw_external_verdict import (
     DashClawRequestError,
     StaticAuthorityResolver,
     evaluate_request,
 )
-from agentmem_ref.dashclaw_governed_commit import ProjectScopedAuthorityResolver
 
 MAX_BODY_BYTES = 64 * 1024
 

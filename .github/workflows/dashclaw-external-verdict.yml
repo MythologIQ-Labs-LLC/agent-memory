@@ -4,13 +4,17 @@ on:
   pull_request:
     paths:
       - "reference/agentmem_ref/dashclaw_external_verdict.py"
+      - "reference/agentmem_ref/dashclaw_authority.py"
       - "reference/agentmem_ref/dashclaw_governed_commit.py"
       - "reference/run_dashclaw_provider.py"
       - "reference/run_dashclaw_external_verdict.py"
       - "reference/tests/test_dashclaw_external_verdict.py"
       - "reference/tests/test_dashclaw_project_authority.py"
       - "reference/tests/test_dashclaw_target_scope_recovery.py"
+      - "reference/tests/test_dashclaw_cloudflare_packaging.py"
+      - "examples/cloudflare-dashclaw-provider/**"
       - "docs/programs/runtime-evidence/dashclaw-external-verdict.md"
+      - "docs/programs/runtime-evidence/dashclaw-live-cloudflare-conformance-plan.md"
       - ".github/workflows/dashclaw-external-verdict.yml"
   workflow_dispatch:
 
@@ -43,9 +47,12 @@ jobs:
         run: |
           python -m py_compile \
             reference/agentmem_ref/dashclaw_external_verdict.py \
+            reference/agentmem_ref/dashclaw_authority.py \
             reference/agentmem_ref/dashclaw_governed_commit.py \
             reference/run_dashclaw_provider.py \
-            reference/run_dashclaw_external_verdict.py
+            reference/run_dashclaw_external_verdict.py \
+            examples/cloudflare-dashclaw-provider/prepare.py \
+            examples/cloudflare-dashclaw-provider/src/entry.py
 
       - name: Run provider contract and adversarial tests
         env:
@@ -54,7 +61,19 @@ jobs:
           python -m unittest \
             reference/tests/test_dashclaw_external_verdict.py \
             reference/tests/test_dashclaw_project_authority.py \
-            reference/tests/test_dashclaw_target_scope_recovery.py
+            reference/tests/test_dashclaw_target_scope_recovery.py \
+            reference/tests/test_dashclaw_cloudflare_packaging.py
+
+      - name: Verify portable Cloudflare provider source preparation
+        run: python examples/cloudflare-dashclaw-provider/prepare.py --check
+
+      - name: Dry-run Cloudflare Python Worker bundle
+        run: |
+          python -m pip install --disable-pip-version-check uv
+          python examples/cloudflare-dashclaw-provider/prepare.py
+          cd examples/cloudflare-dashclaw-provider
+          uvx --from workers-py pywrangler deploy --dry-run --outdir dist
+          test -d dist
 
       - name: Execute governed durable-memory workload
         env:
