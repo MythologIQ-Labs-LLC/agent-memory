@@ -68,7 +68,7 @@ module identity != component identity
 component identity != capability identity
 ```
 
-EvolveAI is the proposed initial Cognitive Metabolism implementation role because its evidenced capabilities include lifecycle/decay/orchestration/consolidation mechanisms. CodeGenome is the proposed initial Code Reality Graph implementation role because its evidenced capabilities are code-domain graph, structural, provenance, freshness, and traversal functions. Those architectural mappings do not promote any capability maturity and do not make either provider's internal ontology canonical.
+EvolveAI is the proposed initial Cognitive Metabolism implementation role because its evidenced capabilities include lifecycle/decay/orchestration/consolidation mechanisms. CodeGenome is the proposed initial Code Reality Graph implementation role because its evidenced capabilities are code-domain graph, structural, provenance, freshness, and traversal functions. Those architectural mappings do not promote any capability maturity and do not make either component's internal ontology canonical. Both components share Agent Memory's owner, so under [ADR-036](adr/ADR-036-same-owner-components-are-first-party-modules.md) they are first-party module candidates rather than attributed providers: work adopted from them is named for the Agent Memory contract it implements (Code Reality Graph, Cognitive Metabolism), not for its originating repository.
 
 The proposed Cognitive Mesh is likewise not a ninth memory layer or a universal database schema. It is the shared identity-and-handoff substrate through which typed cognitive objects may participate in several bounded responsibilities while retaining provenance, uncertainty, scope, lifecycle posture, and authority semantics.
 

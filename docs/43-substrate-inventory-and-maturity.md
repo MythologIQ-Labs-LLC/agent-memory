@@ -91,7 +91,9 @@ Each of these is real and each lives somewhere — just not as a substrate. This
 
 So the ownership split is settled: **Agent Memory owns the contract and the naming; CodeGenome is the initial implementation of it.** A Code Reality Graph derived from CodeGenome is an Agent Memory artifact under an Agent Memory name, not a CodeGenome export.
 
-**Status: `declared`** — the contract is owned and the implementation candidate is named; no qualification artifact has been earned yet.
+**Status: `declared`** — the contract is owned and the implementation candidate is named; no module has been built yet.
+
+**CodeGenome is adoptable wholesale** ([ADR-036](adr/ADR-036-same-owner-components-are-first-party-modules.md)): it shares Agent Memory's owner, so it is a first-party module candidate rather than an attributed provider. Adopted work is named **Agent Memory's Code Reality Graph (CRG) module** — no provider label, no originating-repository name, no attribution obligation. It will therefore never earn a qualification artifact here, because qualifying your own module against your own contract measures nothing; its maturity is ordinary module maturity.
 
 **What exists here now**: `reference/agentmem_ref/code_graph_qualification.py` is a provider-neutral CodeGenome/Graphify qualification normalizer (issue #300). It preserves provider-native outputs as separate artifacts and normalizes only the shared factual surface, and its docstring states it "cannot grant Agent Memory authority". Profiles live at `docs/programs/memory-modules/codegenome-multicapability-profile.md` and `codegenome-scope-residue-closeout.md`.
 

@@ -41,9 +41,10 @@ ADR-032: Accepted
 ADR-033: Accepted
 ADR-034: Accepted
 ADR-035: Accepted
+ADR-036: Accepted
 ```
 
-ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, and ADR-035 have satisfied their doctrine-maturity gates.
+ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, ADR-035, and ADR-036 have satisfied their doctrine-maturity gates.
 
 Several accepted decisions deliberately required stronger-than-documentation evidence. ADR-020 required executable end-to-end governed-consequence evidence and adversarial negative paths. ADR-024 required executable shared-write coordination evidence. ADR-034 required a real procedural-memory vertical slice proving that retained/recalled skills do not become standing execution or metamemory authority. ADR-035 required an executable Cognitive Mesh path plus native first-party Cognitive Metabolism evidence crossing the mesh/PAMA/recall boundary without provider authority laundering.
 
@@ -348,3 +349,24 @@ These must not be collapsed into a generic "memory safety" claim. Each has its o
 - [`../profiles/durable-decision-memory-profile.md`](../profiles/durable-decision-memory-profile.md)
 - [`../profiles/governance-context-projection-profile.md`](../profiles/governance-context-projection-profile.md)
 - [`../profiles/temporal-commitment-evidence-profile.md`](../profiles/temporal-commitment-evidence-profile.md)
+
+### Same-owner components are first-party modules
+
+[`ADR-036`](ADR-036-same-owner-components-are-first-party-modules.md) is **Accepted**.
+
+A component sharing Agent Memory's owner is a first-party module candidate, not
+an attributed provider. Adoption is wholesale and unrestricted; the adopted work
+is named for the Agent Memory contract it implements rather than for its
+originating repository. CodeGenome-derived work is Agent Memory's **Code Reality
+Graph (CRG)** module; EvolveAI-derived work is Agent Memory's **Cognitive
+Metabolism** module.
+
+The test is ownership, not licence: a licence constrains licensees, and the owner
+is not one. Lineage stays recorded in
+[`../40-aligned-projects-and-intellectual-lineage.md`](../40-aligned-projects-and-intellectual-lineage.md)
+and [`../08-source-material-index.md`](../08-source-material-index.md) because
+intellectual history has value, but provenance is not an attribution obligation.
+
+Nothing changes for genuinely third-party components. UOR Framework, Graphiti,
+Hindsight, and MemOS keep their reuse postures and continue to qualify through
+the component-qualification path with `authority_effect: none`.

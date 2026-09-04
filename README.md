@@ -120,6 +120,17 @@ Read this before mapping any component to any external product.
 
 So a Code Reality Graph derived from CodeGenome is an **Agent Memory artifact under an Agent Memory name**, developed in a modular structure in this repository. It is not a CodeGenome export that Agent Memory consumes.
 
+**Same-owner components are first-party modules, not attributed providers** ([ADR-036](docs/adr/ADR-036-same-owner-components-are-first-party-modules.md)). CodeGenome, EvolveAI, GG-CORE/COREFORGE, and FailSafe share Agent Memory's owner. They may be adopted **wholesale, without restriction**, and once adopted are named for the contract they implement:
+
+| Adopted from | Named here as |
+|---|---|
+| CodeGenome | **Code Reality Graph (CRG)** module |
+| EvolveAI | **Cognitive Metabolism** module |
+
+The test is **ownership, not licence** — a licence constrains licensees, and the owner is not one. No attribution obligation, provider label, or originating-repository name is required in the module, its API, or its docs. Lineage is still recorded in [aligned projects](docs/40-aligned-projects-and-intellectual-lineage.md) and the [source material index](docs/08-source-material-index.md), because intellectual history has value — but provenance is not a licensing duty.
+
+None of this applies to genuinely third-party components. UOR Framework, Graphiti, Hindsight, and MemOS remain external, keep their reuse postures, and qualify through the component-qualification path with `authority_effect: none`.
+
 **Functional memory implementations reside in this repository.** Epistemic belief, procedural/skill, predictive/counterfactual, and conditional memory influence are governed reference implementations here, not integrations pointed elsewhere. See [substrate inventory & maturity](docs/43-substrate-inventory-and-maturity.md) for what exists, where it lives, and how mature it is.
 
 Two failure modes this section exists to prevent, both of which have happened:
