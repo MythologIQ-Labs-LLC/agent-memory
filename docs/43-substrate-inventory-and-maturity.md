@@ -32,6 +32,22 @@ Verified by enumerating classes implementing the full `TemporalGraphPort` surfac
 
 **No other substrate exists in this repository.** Any additional substrate is prospective work, not an implementation with a location.
 
+---
+
+## 2b. First-party memory implementations
+
+**Correction.** The first draft of this document scoped itself to `TemporalGraphPort` implementations and so answered "which substrates exist" while missing "which functional memory implementations exist". Those are not the same question, and the second is the more useful one. Agent Memory carries a family of governed memory implementations in-repo today:
+
+| Implementation | Location | What it is |
+|---|---|---|
+| Epistemic belief memory | `reference/agentmem_ref/epistemic_memory.py` | Bounded `epistemic_belief_memory` runtime surface, Capability Contract v3 |
+| Procedural / skill memory | `reference/agentmem_ref/procedural_memory.py` | ADR-034 vertical slice; a skill is bounded JSON metadata plus human-readable procedure, not a specialized skill store |
+| Predictive / counterfactual memory | `reference/agentmem_ref/predictive_memory.py` | Bounded `predictive_counterfactual_memory` surface, Capability Contract v3 |
+| Conditional memory influence | `reference/agentmem_ref/conditional_memory_influence.py` | Vendor-neutral admission evidence for model-internal conditional memory |
+| Code-graph qualification | `reference/agentmem_ref/code_graph_qualification.py` | Provider-neutral CodeGenome/Graphify normalizer (#300) |
+
+These are **memory implementations**, not substrates: they sit above `TemporalGraphPort` and use a substrate for persistence. A substrate is where facts live; a memory implementation is a governed surface with its own contract, lifecycle, and admission semantics.
+
 ### Maturity ladder
 
 Schema-enforced in `schemas/component-capability-qualification.schema.json`:
@@ -68,11 +84,18 @@ Each of these is real and each lives somewhere — just not as a substrate. This
 
 ### Code Reality Graph
 
-An **architectural role** in the layer model (`docs/01-layer-model.md:48`, `docs/11-component-architecture.md:41`).
+**Agent Memory owns this contract. That is a decided and accepted position, not an open question.**
 
-**CodeGenome** is the *proposed* first-party implementation of the role (`docs/11:77`). `docs/01:71` is explicit that the mapping "does not promote any capability maturity and does not make either provider's internal ontology canonical."
+- `docs/39-implementation-ownership-map.md:28` — *"Reality Graphs | **Agent Memory contract**; CodeGenome candidate implementation | Runtime Memory | declared"*
+- `ADR-035` (**Accepted**) `:272` — *"CodeGenome is the initial first-party implementation of the Code Reality Graph"*, and `:661` — mapped *"without promoting its domain ontology to universal memory semantics"*
 
-**Maturity: role is doctrine-defined; no implementation is qualified in this repository.** There is no CodeGenome code, capability declaration, or qualification artifact here.
+So the ownership split is settled: **Agent Memory owns the contract and the naming; CodeGenome is the initial implementation of it.** A Code Reality Graph derived from CodeGenome is an Agent Memory artifact under an Agent Memory name, not a CodeGenome export.
+
+**Status: `declared`** — the contract is owned and the implementation candidate is named; no qualification artifact has been earned yet.
+
+**What exists here now**: `reference/agentmem_ref/code_graph_qualification.py` is a provider-neutral CodeGenome/Graphify qualification normalizer (issue #300). It preserves provider-native outputs as separate artifacts and normalizes only the shared factual surface, and its docstring states it "cannot grant Agent Memory authority". Profiles live at `docs/programs/memory-modules/codegenome-multicapability-profile.md` and `codegenome-scope-residue-closeout.md`.
+
+**What does not exist here**: a named, Agent-Memory-owned Code Reality Graph *module*. See §6.
 
 External equivalents: code-property-graph and code-knowledge-graph tooling (Sourcegraph SCIP, Glean, CodeQL's database). None is qualified against a capability contract here.
 
@@ -100,13 +123,33 @@ External equivalents: pgvector, Supabase, Timescale for temporal workloads. Any 
 
 ---
 
-## 5. Summary — what actually exists
+## 5. Structural finding — there is no modular structure to own a named module
+
+`reference/agentmem_ref/` contains **122 modules and zero subdirectories**. It is entirely flat.
+
+That is the concrete obstacle to the stated intent that a derived Code Reality Graph be "Agent Memory owned and named within a modular structure". There is no package boundary for a named memory module to occupy, so every implementation — epistemic, procedural, predictive, conditional, code-graph qualification — sits in the same undifferentiated namespace as `receipts`, `policy`, and 100+ comparator, harness, and evidence-emitter modules.
+
+The ownership decision (§4, Code Reality Graph) is settled and documented. The **structure to express it is not built**. Those are different gaps and only the second is open:
+
+| | State |
+|---|---|
+| Agent Memory owns the Code Reality Graph contract | **decided**, ADR-035 Accepted + `docs/39:28` |
+| CodeGenome named as initial implementation | **decided**, same sources |
+| Named Agent-Memory-owned Code Reality Graph module | **not built** |
+| Modular package structure to hold it | **not built** — `agentmem_ref/` is flat |
+
+This interacts directly with [#362](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/362) (no public consumer API): a module structure and a public surface are the same design conversation, and Sprint 4's boundary freeze is where both belong.
+
+---
+
+## 6. Summary — what actually exists
 
 | | Count | At what maturity |
 |---|---|---|
 | First-party substrates | **2** | one reference implementation, one `declared` |
+| First-party memory implementations | **5** | in-repo, above the substrate layer (§2b) |
 | Qualified external components | **2** | both `evidence_proven`, both `authority_effect: none` |
-| Architectural roles with no implementation here | 1 (Code Reality Graph) | doctrine-defined |
+| Contracts Agent Memory owns whose module is not yet built | 1 (Code Reality Graph) | **ownership decided**; module and structure open |
 | Capability families with no declaration here | 1 (GraphRAG) | doctrine-defined |
 | Persistence mechanisms named as examples | 4+ (Markdown, files, Postgres/SQLite, object stores, event logs) | not substrates |
 
@@ -114,6 +157,6 @@ External equivalents: pgvector, Supabase, Timescale for temporal workloads. Any 
 
 ---
 
-## 6. Maintenance
+## 7. Maintenance
 
 Update in the same change that adds a substrate, declares a capability, or lands a qualification artifact. A substrate added without a row here is a `docs/GOVERNANCE_INDEX.md` Tier 1 drift bug.
