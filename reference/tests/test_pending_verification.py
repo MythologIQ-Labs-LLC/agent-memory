@@ -306,22 +306,41 @@ class ParkedProposalCarriesNoAuthority(unittest.TestCase):
         "verify",
     )
 
-    def test_registry_exposes_no_method_that_discharges_or_permits(self):
-        # Introspect an instance, not the class: a discharge method added as an
-        # instance attribute would be invisible to dir() on the class.
+    def test_registry_surface_is_park_get_parked_resume_events(self):
+        """DECLARED AMENDMENT (Loop 10, entry #20).
+
+        Loop 8 asserted `resume` was absent, which was correct then: step 3 was
+        gated on step 2 existing. Step 3 has landed, so `resume` is now part of
+        the surface and the assertion inverts. Everything else in the forbidden
+        list still holds -- resumption returns a re-evaluation, not a
+        permission, so no `discharge`, `approve` or `permit` appears.
+        """
         surface = {n for n in dir(PendingVerificationRegistry()) if not n.startswith("_")}
-        self.assertEqual(surface, {"park", "get", "parked", "events"})
+        self.assertEqual(surface, {"park", "get", "parked", "resume", "events"})
         for forbidden in self._FORBIDDEN:
+            if forbidden == "resume":
+                continue
             self.assertNotIn(forbidden, surface)
 
-    def test_resume_is_absent_not_stubbed(self):
-        """A stub is an invitation; its absence is a statement.
+    def test_resume_exists_on_the_registry_and_never_on_the_record(self):
+        """DECLARED AMENDMENT (Loop 10, entry #20).
 
-        ``NotImplementedError`` would still put ``resume`` on the surface, where
-        the next reader treats it as scheduled rather than gated on step 2.
+        Loop 8 asserted `resume` was absent entirely. Step 3 has landed, so the
+        registry now has it -- and the half of the original assertion that
+        still matters holds unchanged: **`ParkedProposal` must never grow one.**
+        Resumption is an evaluator operation (ADR-037 section 3); a `resume` on
+        the record itself would put the transition in the hands of whoever holds
+        the record, which is how a parked proposal becomes a standing authority.
         """
-        self.assertFalse(hasattr(PendingVerificationRegistry, "resume"))
+        self.assertTrue(hasattr(PendingVerificationRegistry, "resume"))
         self.assertFalse(hasattr(ParkedProposal, "resume"))
+
+    def test_resuming_an_unparked_proposal_refuses(self):
+        from agentmem_ref.resumption import NOT_PARKED
+
+        result = PendingVerificationRegistry().resume("never-parked")
+        self.assertFalse(result.resumed)
+        self.assertEqual(result.refusal, NOT_PARKED)
 
     def test_parked_record_exposes_no_mutator(self):
         proposal = _review_proposal()

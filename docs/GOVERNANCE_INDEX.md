@@ -1,6 +1,6 @@
 # Governance Index
 
-**Last Reviewed**: 2026-09-04
+**Last Reviewed**: 2026-09-05
 
 A single authoritative map of every governance artifact in this project, organized
 into six freshness tiers with explicit drift contracts. A stale entry here is
@@ -86,6 +86,8 @@ Live for plan duration; archived at substantiate. Drift signal: plan shipped but
 | Sprint 2g research brief | `docs/research-brief-sprint2g-parked-verification-2026-09-04.md` | sprint2g-parked-verification |
 | Sprint 2h plan | `docs/plan-sprint2h-evidence-qualification.md` | sprint2h-evidence-qualification |
 | Sprint 2h research brief | `docs/research-brief-sprint2h-evidence-qualification-2026-09-05.md` | sprint2h-evidence-qualification |
+| Sprint 2i plan | `docs/plan-sprint2i-governed-resumption.md` | sprint2i-governed-resumption |
+| Sprint 2i research brief | `docs/research-brief-sprint2i-governed-resumption-2026-09-05.md` | sprint2i-governed-resumption |
 
 ## Tier 5 — Reference Material
 
