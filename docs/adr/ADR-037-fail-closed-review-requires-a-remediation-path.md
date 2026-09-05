@@ -92,7 +92,9 @@ Self-produced evidence is permissible. Self-certified sufficiency is not.
 
 ### 4. `collect_more_evidence` must state what would discharge *this* proposal
 
-Today an actor learns only that it is blocked. It must learn what would unblock it: which criteria are unmet, what class of evidence satisfies each, and what independence bar applies at this risk class. A remediation route an agent cannot compute is not a route.
+Today an actor learns only that it is blocked. It must learn what would unblock it: which criteria are unmet, what class of evidence satisfies each, and what strength bar applies at this risk class. A remediation route an agent cannot compute is not a route.
+
+*Amended by R5.* This section originally said "independence bar", which read as a count and had no referent. The bar is a **strength** ladder: the count is one at every risk class, and risk varies how strong that one group must be. Owned by step 3.
 
 ### 5. The parked state must not become a standing authority
 
@@ -140,6 +142,27 @@ Distinct agents, models, providers, prompts, operators, or machines may support 
 **R3 — Evidential classes are ranked, not equal.**
 Artifact-bound evidence with a deterministic verifier satisfies an evidence criterion directly. A reproducible procedure does too, when inputs, method/version, result, and verifier are bound. A calibrated estimator is weaker: it may contribute under explicit policy, particularly at low or medium risk, but must never become authority and must never be the sole basis for discharging `require_review`.
 
+**R5 — Risk defines how strong, not how many.** *(operator ruling, 2026-09-05, resolving [#379](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/379))*
+
+§4 required stating "what independence bar applies at this risk class". Step 3 reported it as `undefined` because no such bar existed in accepted doctrine, and §2b and line 128 of this ADR both argue against inventing a count.
+
+**The count is one at every risk class.** What is required is the *existence* of one qualifying independent dependence group — R2's lineage grouping already defines what one group is. That does not vary by risk and is not a number to be tuned. **Risk varies the strength that one group must reach:**
+
+| Risk | Authority kind | Qualification class | Binding status |
+|---|---|---|---|
+| low | `delegated_policy` or `human_confirmation` | directly-satisfying; a calibrated estimator may contribute | `asserted` |
+| medium | `delegated_policy` or `human_confirmation` | directly-satisfying; a calibrated estimator may contribute | `asserted` |
+| high | `human_confirmation` only | directly-satisfying only | **`verified`** |
+| critical | `human_confirmation` only | directly-satisfying only | **`verified`** |
+
+**Two of these three rows are pre-existing implemented doctrine, and one is new.** Saying which is which matters, because presenting all three as novel would overstate the ruling and presenting the new one as pre-existing would smuggle a ruling in as a restatement.
+
+- **Authority kind — pre-existing.** `policy.attestation_refusal` already requires `human_confirmation` when `risk_class in _HIGH_RISK`, and `decision_overwrite._grant_refusal` already returns `delegation_not_permitted_for_risk` above medium.
+- **Qualification class — pre-existing.** R3 already says a calibrated estimator "may contribute under explicit policy, particularly at low or medium risk", never authority and never a sole basis.
+- **Binding status — new.** R3 speaks of artifact-bound evidence "with a deterministic verifier", which presumes the verifier works; step 2 then split `asserted` (a verifier is named) from `verified` (one ran and passed). Requiring `verified` at high and critical makes the **evidence** axis as strict as the **authority** axis already is, at the same risk classes.
+
+**What is in force today.** The ladder is what step 4 will enforce. Only one row bites now: the authority kind on the `require_external_verification` path, via `attestation_refusal`. `_apply_review` still discharges `require_review` on `review_satisfied` plus `approval_refs` at any risk class with no authority-kind check — and `require_review` occupies nine base-table cells at high or critical risk. The §4 report marks each row in force or pending accordingly, because stating a bar the system does not enforce is the defect step 3 was corrected for.
+
 **R4 — `delegated_policy` at medium risk requires one separated, properly authorized principal, not two.**
 The principal still needs qualifying evidence and valid scope/risk authority. Requiring two by default would quietly rebuild the quorum model §2b exists to reject. The `minimum_independent_human_evidence >= 2` rule in `reusable_grants` has a **different job**: it governs the creation of *reusable authority from historical precedent*, followed by a separate ratification transition. It must not be generalized into a two-approver requirement for ordinary review.
 
@@ -150,7 +173,7 @@ The gate does not close until the first three exist. This ordering is part of th
 1. **Parked proposal state** — `enter_pending_verification` as a real, resumable, evidence-emitting outcome. **DONE** (Loop 8, ledger entry #18): `reference/agentmem_ref/pending_verification.py`.
 2. **Evidence qualification and dependence lineage** — R2 and R3 made computable, including dependence-group collapse. **DONE** (Loop 9, ledger entry #19): `reference/agentmem_ref/evidence_qualification.py`.
 3. **Governed resumption and re-evaluation** — evaluator-owned, policy re-evaluated from scratch, staleness applied. **Also owns §4**. **DONE** (Loop 10, ledger entry #20): `reference/agentmem_ref/resumption.py`.
-4. **Fail-closed `require_review`** — convert the 51 caller sites. **Now permissible**: all three prerequisites exist. *Next.*
+4. **Fail-closed `require_review`** — convert the 51 caller sites. **Unblocked**: all three prerequisites exist (steps 1-3), and §4's independence bar — the last outstanding item for a coherent `collect_more_evidence` message — is resolved by **R5** (Loop 11, ledger entry #21). *Next.*
 
 **What step 1 settled, so steps 2–3 do not re-litigate it.** Two questions surfaced in audit and were decided:
 

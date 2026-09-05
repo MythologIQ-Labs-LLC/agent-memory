@@ -32,20 +32,50 @@ the report names the assertion route as step 4's, rather than listing an
 evidence criterion no evidence can currently satisfy. **Telling an agent to
 collect evidence that cannot help is worse than telling it to wait.**
 
-The independence bar
---------------------
+The strength ladder (ADR-037 R5)
+-------------------------------
 
 ADR-037 §4 requires stating "what independence bar applies at this risk class".
-**No such bar exists in accepted doctrine.** The only count threshold anywhere is
-``reusable_grants.minimum_independent_human_evidence >= 2``, which R4 explicitly
-forbids generalizing; §2b argues against counting outright; and ADR-037 line 128
-warns by name against inventing ``independent_verified_approver_count >= 2``.
+Step 3 reported it as ``undefined`` because no such bar existed in accepted
+doctrine. The operator ruled on GH #379: **risk defines how strong.**
 
-So this module reports the bar as ``undefined`` with a pointer to the open
-question, and an ADR amendment proposal is filed rather than the semantics being
-chosen in an implementation cycle. A message saying "this criterion has no
-defined bar" is more useful to an agent than a confidently invented number, and
-far more useful than silence.
+So the bar is not a count. **The count is one at every risk class** -- existence
+of a qualifying independent dependence group, which R2's lineage grouping already
+defines -- and risk varies the *strength* that one group must reach:
+
+    low / medium    delegated_policy or human_confirmation
+                    directly-satisfying class; an estimator may contribute
+                    `asserted` binding status sufficient
+
+    high / critical human_confirmation only
+                    directly-satisfying class only
+                    `verified` binding status required
+
+Two of those three rows are pre-existing implemented doctrine: the authority kind
+comes from ``policy.attestation_refusal`` and ``decision_overwrite._grant_refusal``,
+and the estimator row is R3 verbatim. **The binding-status row is the new ruling.**
+
+Nothing here holds a count, and nothing compares against an integer. ADR-037 line
+128 describes exactly how the other choice decays.
+
+The high/critical boundary is read from ``policy._HIGH_RISK`` **on every call**, so
+a change to the risk boundary moves the ladder with it. A table built at import
+would read it once and hold a copy, which is re-listing the constant with extra
+steps.
+
+What is in force today
+----------------------
+
+The ladder is what step 4 will enforce. Only one row bites now::
+
+    require_external_verification  authority kind      IN FORCE (attestation_refusal)
+                                   class, binding      pending step 4
+    require_review                 every row           pending step 4
+
+``_apply_review`` still discharges on ``review_satisfied`` plus ``approval_refs``
+at any risk class, with no authority-kind check -- and ``require_review`` occupies
+nine base-table cells at high or critical risk. Reporting the ladder as currently
+binding there would state a bar the system does not enforce.
 
 The evaluator boundary
 ----------------------
@@ -79,14 +109,9 @@ CRITERION_SEPARATION = "authority_separation"
 CRITERION_INDEPENDENCE = "independence"
 CRITERION_GATE = "gate_not_yet_converted"
 
-#: The independence bar has no referent in accepted doctrine. See module docs.
-UNDEFINED_BAR = "undefined"
-INDEPENDENCE_OPEN_QUESTION = (
-    "ADR-037 section 4 requires an independence bar per risk class; none exists "
-    "in accepted doctrine. The only count threshold is reusable_grants' >=2, "
-    "which R4 forbids generalizing, and ADR-037:128 warns against inventing "
-    "independent_verified_approver_count >= 2. Open ADR amendment question."
-)
+#: Enforcement status of a ladder row, per parked outcome.
+IN_FORCE = "in force"
+PENDING_STEP_4 = "pending ADR-037 step 4"
 
 # Refusal reasons.
 STALE = "stale_authorization"
@@ -117,10 +142,6 @@ class CriteriaReport:
     proposal_id: str
     outcome: str
     unmet: tuple[UnmetCriterion, ...]
-
-    @property
-    def has_undefined_bar(self) -> bool:
-        return any(c.bar == UNDEFINED_BAR for c in self.unmet)
 
 
 @dataclass(frozen=True)
@@ -191,17 +212,56 @@ def criteria_for(
             )
         )
 
-    # §4's third requirement. Reported as undefined rather than invented.
+    # §4's third requirement, resolved by ADR-037 R5. The risk class is DERIVED
+    # from the record, never accepted from a caller: all three ladder rows key
+    # off it, so one wrong value would understate every axis at once.
+    strength = strength_for(record.proposal.risk_class)
+    authority_status = (
+        IN_FORCE if outcome == policy.REQUIRE_EXTERNAL_VERIFICATION else PENDING_STEP_4
+    )
     unmet.append(
         UnmetCriterion(
             kind=CRITERION_INDEPENDENCE,
-            detail="how many independent groups this risk class requires",
-            satisfied_by="",
-            bar=UNDEFINED_BAR,
-            note=INDEPENDENCE_OPEN_QUESTION,
+            detail=(
+                "one qualifying independent dependence group. The count is one at "
+                "every risk class; risk varies how strong that one must be."
+            ),
+            satisfied_by="a dependence group meeting the strength ladder below",
+            bar=(
+                f"authority: {strength['authority_kind']} ({authority_status}); "
+                f"class: {strength['qualification_class']} ({PENDING_STEP_4}); "
+                f"binding status: {strength['binding_status']} ({PENDING_STEP_4})"
+            ),
+            note="ADR-037 R5 (risk defines how strong), GH #379",
         )
     )
     return CriteriaReport(record.proposal_id, outcome, tuple(unmet))
+
+
+def strength_for(risk_class: str) -> dict[str, str]:
+    """The strength ladder for a risk class. ADR-037 R5.
+
+    A pure lookup. It reports what would satisfy each axis and carries no
+    authority of its own -- comparing supplied evidence against this is step 4's
+    work, and no function here does it.
+
+    ``policy._HIGH_RISK`` is read on every call rather than captured at import,
+    so the ladder tracks the risk boundary instead of holding a stale copy.
+    """
+    strict = risk_class in policy._HIGH_RISK
+    return {
+        "authority_kind": (
+            "human_confirmation" if strict
+            else "delegated_policy or human_confirmation"
+        ),
+        "qualification_class": (
+            "artifact_bound or reproducible_procedure"
+            if strict
+            else "artifact_bound or reproducible_procedure; "
+                 "a calibrated estimator may contribute but is never a sole basis"
+        ),
+        "binding_status": eq.VERIFIED if strict else eq.ASSERTED,
+    }
 
 
 def resume_parked(

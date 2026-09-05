@@ -4,13 +4,13 @@
 
 | Attribute | Value |
 |-----------|-------|
-| **Last Updated** | 2026-09-05T02:20:00-04:00 |
+| **Last Updated** | 2026-09-05T03:40:00-04:00 |
 | **Updated By** | Judge |
-| **Phase** | SUBSTANTIATED (Sprint 2i governed resumption, ADR-037 step 3 of 4) |
-| **Iteration** | 10 |
-| **Session Seal** | Entry #20 (session 2026-09-05T0140-688455) |
+| **Phase** | SUBSTANTIATED (Sprint 2j strength ladder, ADR-037 R5) |
+| **Iteration** | 11 |
+| **Session Seal** | Entry #21 (session 2026-09-05T0310-7132cd) |
 
-Snapshot refreshed at the Sprint 2i seal (Loop 10). Genesis values came from the `/qor-deep-audit` reconnaissance (see `docs/RESEARCH_BRIEF.md`); deltas through Loops 2-8 are measured from the sealed tree, with the suite run under the pinned `cryptography==50.0.1` the repo declares -- not the ambient interpreter.
+Snapshot refreshed at the Sprint 2j seal (Loop 11). Genesis values came from the `/qor-deep-audit` reconnaissance (see `docs/RESEARCH_BRIEF.md`); deltas through Loops 2-8 are measured from the sealed tree, with the suite run under the pinned `cryptography==50.0.1` the repo declares -- not the ambient interpreter.
 
 ---
 
@@ -34,7 +34,7 @@ agent-memory/
 |   |-- run_*.py               68 evidence emitters
 |   |-- native/                1 Rust driver
 |   |-- policies/, fixtures/ (15 JSON), testdata/
-|   `-- tests/                 131 test files, 1020 tests
+|   `-- tests/                 131 test files, 1026 tests
 |-- integrations/
 |   |-- agent-memory-runtime/  JS, 1 source + 1 test, private
 |   `-- hermes-agent-memory/   Python, 10 modules, 6 tests
@@ -119,7 +119,7 @@ Pre-existing at genesis. Any new file under `/qor-plan` must meet the razor.
 
 | Component | Test File | Exists | Passing |
 |-----------|-----------|--------|---------|
-| Reference runtime (all) | `reference/tests/` (131 files) | OK | 1020 pass / 0 fail / 7 skip under pinned `cryptography==50.0.1`; CI green on `main` |
+| Reference runtime (all) | `reference/tests/` (131 files) | OK | 1026 pass / 0 fail / 7 skip under pinned `cryptography==50.0.1`; CI green on `main` |
 | Cedar digest pin | `reference/tests/test_cedar_policy_comparator.py:71` | OK | FAIL on Windows checkouts (GAP-RT-02) |
 | Third-party version pins | `test_agent_manifest_correlation.py:151`, `test_trace_action_evidence.py:118` | OK | FAIL unless env matches requirements (GAP-RT-03) |
 | Graphiti substrate | `reference/tests/test_graphiti_substrate.py` | OK | SKIPPED (7) without graphiti/kuzu (GAP-RT-07) |
@@ -156,7 +156,7 @@ Sprint 1 install correctness (branch `feat/agent-memory-genesis`, staged, uncomm
 | Merkle Chain | VALID | Entries #1-#8; Entry #6 hashes recomputed once for a verdict-line format fix (recorded in-entry) |
 | Blueprint Sync | SYNCED | File tree and Dependencies table updated at Sprint 1 |
 | Section 4 Compliance | VIOLATIONS (pre-existing) | New code clean; 58 file + 175 function pre-existing overages (GAP-RT-04, Sprint 11) |
-| Test Status | PASS | 1020 run, 0 fail, 7 skipped (Graphiti/kuzu absent) under the pinned `cryptography==50.0.1`; fresh-venv wheel smoke exit 0 |
+| Test Status | PASS | 1026 run, 0 fail, 7 skipped (Graphiti/kuzu absent) under the pinned `cryptography==50.0.1`; fresh-venv wheel smoke exit 0 |
 
 ---
 
