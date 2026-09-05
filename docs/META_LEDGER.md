@@ -1130,3 +1130,114 @@ implementation detail.
 
 Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V4 closed and recorded.
 Review Boundary: staged, not committed.
+---
+
+### Entry #21: SESSION SEAL - Phase 12 (Sprint 2j strength ladder)
+
+**Entry ID**: `9ce5bee2808d`
+**Content Hash**: `b3f42fe5cf55d3452189622fc5931426045bb096403d31d63f33e28563aff610`
+**Previous Hash**: `62243685ea6622ca21b2173f133a57eb88a7be56ae9cbc871c654a5d24030a81`
+**Chain Hash**: `275a2d95c988a95c4f115ba6889ff427d90c6b9c9f3c47dce15dfee66c08cd24`
+**Timestamp**: 2026-09-05T03:40:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L3
+**Verdict**: PASS
+**Session**: 2026-09-05T0310-7132cd
+**Plan**: docs/plan-sprint2j-strength-ladder.md (iteration 4)
+**SSDF Practices**: PO.1.4, PS.2.1, PW.1.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index eae5c26fcd9747053bdd2a91cf42424cf8eebdd7):
+`032f9cbde792eb907e0d6982a4f5b3f846d1590b99a64296f5ea31175cc8693b`
+
+**Origin**: an operator ruling, not a discovered defect. Step 3 reported ADR-037
+section 4's independence bar as `undefined` and filed **GH #379** rather than
+inventing one. The operator ruled: **"risk defines how strong"** -- option 2 of
+three.
+
+**Scope**: record the ruling as doctrine and make the section 4 report state it.
+**No enforcement**: refusing on the ladder is step 4, and `policy.py` is
+unmodified by empty diff.
+
+**The ruling, implemented**: the bar is not a count. **The count is one at every
+risk class** -- existence of one qualifying independent dependence group, which
+R2's lineage grouping already defines -- and risk varies the strength that one
+group must reach. Nothing holds a count; nothing compares against an integer.
+
+| Risk | Authority kind | Qualification class | Binding status |
+|---|---|---|---|
+| low / medium | `delegated_policy` or `human_confirmation` | directly-satisfying; estimator may contribute | `asserted` |
+| high / critical | `human_confirmation` only | directly-satisfying only | **`verified`** |
+
+**Two of three rows are pre-existing implemented doctrine; one is new, and the
+ADR says which is which.** Authority kind was already enforced by
+`policy.attestation_refusal` and `decision_overwrite._grant_refusal`. The
+estimator row is R3 verbatim. **Binding status is the new ruling**: R3 speaks of
+artifact-bound evidence "with a deterministic verifier", which presumes the
+verifier works, and step 2 split `asserted` from `verified`. Requiring `verified`
+at high and critical makes the evidence axis as strict as the authority axis
+already is at the same classes. Presenting all three as novel would have
+overstated a ruling the operator gave in six words; presenting the third as
+pre-existing would have smuggled a ruling in as a restatement.
+
+**Definition of Done**: 11 of 11 PASS, plus 9b/9c, 5b, 6b, 8b. Test count 1020 to
+1026 (+6), 0 failures, 7 skipped, under the pinned `cryptography==50.0.1`.
+Validators clean.
+
+**Negative control**: six mutations, each caught, control restored green --
+re-listing `("high","critical")` locally instead of reading `_HIGH_RISK`;
+`criteria_for` taking a caller-supplied risk class; every row marked in force;
+**a count bar introduced**; high risk accepting `asserted`; high risk still
+admitting an estimator.
+
+**LD5 proved itself.** The plan committed *in advance* that Loop 10's
+`test_no_numeric_threshold_appears_anywhere_in_the_report` must pass unmodified,
+and that needing to weaken it would mean the cycle failed regardless of what else
+was green. That test was written to catch an invented count -- and it is the test
+that caught mutation M4. The commitment was falsifiable and it fired.
+
+**Decision**: audit VETOed twice, on three grounds.
+
+*V1* -- DoD 5 required the high/critical rows to derive from `policy._HIGH_RISK`,
+"asserted by monkeypatching and observing the ladder move". Measured: a dict
+built at import reads the constant **once and holds a copy**, and does not move
+under a monkeypatch; a call-time function does. `STRENGTH_LADDER` as a table
+could not satisfy the plan's own test. The ladder is a function.
+
+*V2* -- the ladder's authority row is **not in force for `require_review`**.
+Measured: `require_review` occupies nine `_BASE_TABLE` cells at high or critical
+risk, while the authority row comes from `attestation_refusal` and
+`_grant_refusal`, both on the external-verification path. `_apply_review` still
+discharges on `review_satisfied` plus `approval_refs` at any risk with no
+authority-kind check. Reporting the ladder as currently binding there would state
+a bar the system does not enforce -- the same class of defect Loop 10's V4
+corrected. Each row is now marked in force or pending step 4, per outcome.
+
+*V3* -- the plan said `criteria_for` "gains a risk class". It needs one and
+already has it: `record.proposal.risk_class`. A parameter would let a caller pass
+`low` for a proposal recorded `critical`, **understating all three rows at once**,
+since every row keys off the same value. That is the caller-asserted-input defect
+in a governance control -- the **ninth** instance, after `approves_own_authority`,
+`review_satisfied`, `ratification_evidence_present`, the duplicated version
+literals, and the `verifier_principal_id` near-miss Loop 10 caught on this same
+module. The plan invoked the pattern by name in LD3 to justify deriving the risk
+*boundary* from a shared constant, then accepted the risk *class* from the caller
+one decision later. Now derived from the record.
+
+**Audit conditions on the PASS**: C1, close #379 with the ruling quoted and R5
+linked -- removing the in-code pointer while leaving the issue open would just
+invert the inconsistency. C2, the ADR's implementation-order section records that
+step 4's last blocker is cleared, so "now permissible" and a resolved bar cannot
+read as contradicting each other. Both satisfied.
+
+**Found during implementation, disclosed**: removing `UNDEFINED_BAR` left
+`CriteriaReport.has_undefined_bar` referencing it -- a property that would have
+raised `NameError` the moment anything called it, and which the suite did not
+catch because the only caller had been replaced. LD6 says the constant goes; the
+concept goes with it. The property is removed and a test now asserts its absence.
+
+**Unblocks**: ADR-037 step 4. All three prerequisites exist and section 4's bar is
+resolved.
+
+Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V3 closed and recorded.
+Review Boundary: staged, not committed.

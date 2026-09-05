@@ -19,9 +19,11 @@ from agentmem_ref.resumption import (
     CRITERION_GATE,
     CRITERION_INDEPENDENCE,
     CRITERION_SEPARATION,
+    IN_FORCE,
+    PENDING_STEP_4,
     STALE,
-    UNDEFINED_BAR,
     criteria_for,
+    strength_for,
     resume_parked,
 )
 
@@ -285,18 +287,97 @@ class AdmissionAmendsOnlyEvidenceRefs(unittest.TestCase):
         self.assertNotIn("ev-bad", result.admitted_refs)
 
 
-class TheIndependenceBarIsReportedUndefined(unittest.TestCase):
-    """DoD 9, 10 -- LD1. The hardest decision in three cycles."""
+class TheStrengthLadder(unittest.TestCase):
+    """ADR-037 R5, operator ruling on #379: risk defines how strong."""
 
-    def test_the_bar_is_undefined_and_carries_the_open_question(self):
+    def test_low_and_medium_permit_delegation_estimators_and_asserted(self):
+        for risk in ("low", "medium"):
+            ladder = strength_for(risk)
+            self.assertIn("delegated_policy", ladder["authority_kind"])
+            self.assertIn("estimator", ladder["qualification_class"])
+            self.assertEqual(ladder["binding_status"], eq.ASSERTED)
+
+    def test_high_and_critical_require_human_confirmation_and_verified(self):
+        for risk in ("high", "critical"):
+            ladder = strength_for(risk)
+            self.assertEqual(ladder["authority_kind"], "human_confirmation")
+            self.assertNotIn("delegated_policy", ladder["authority_kind"])
+            self.assertNotIn("estimator", ladder["qualification_class"])
+            self.assertEqual(ladder["binding_status"], eq.VERIFIED)
+
+    def test_the_boundary_derives_from_policy_HIGH_RISK_at_call_time(self):
+        """DoD 5. An import-time table holds a stale copy; this must not.
+
+        Re-listing ("high","critical") locally would be the eighth instance of
+        the control-in-one-module pattern.
+        """
+        original = policy._HIGH_RISK
+        try:
+            self.assertEqual(strength_for("medium")["binding_status"], eq.ASSERTED)
+            policy._HIGH_RISK = ("medium", "high", "critical")
+            self.assertEqual(strength_for("medium")["binding_status"], eq.VERIFIED)
+        finally:
+            policy._HIGH_RISK = original
+        self.assertEqual(strength_for("medium")["binding_status"], eq.ASSERTED)
+
+    def test_no_strength_ladder_constant_exists(self):
+        """DoD 5b. The table form must not return quietly."""
+        import agentmem_ref.resumption as module
+
+        self.assertFalse(hasattr(module, "STRENGTH_LADDER"))
+        self.assertFalse(hasattr(module, "UNDEFINED_BAR"))
+        self.assertFalse(hasattr(module, "INDEPENDENCE_OPEN_QUESTION"))
+        # LD6 removes the concept, not just the constant: a property still
+        # testing `bar == UNDEFINED_BAR` would NameError the moment it ran.
+        from agentmem_ref.resumption import CriteriaReport
+
+        self.assertFalse(hasattr(CriteriaReport, "has_undefined_bar"))
+
+    def test_the_report_states_the_ladder_not_an_undefined_bar(self):
         _, record = _park(_review_proposal())
         report = criteria_for(record)
 
         independence = [c for c in report.unmet if c.kind == CRITERION_INDEPENDENCE]
         self.assertEqual(len(independence), 1)
-        self.assertEqual(independence[0].bar, UNDEFINED_BAR)
-        self.assertIn("R4", independence[0].note)
-        self.assertTrue(report.has_undefined_bar)
+        self.assertIn("count is one at every risk class", independence[0].detail)
+        self.assertIn("R5", independence[0].note)
+        self.assertIn("#379", independence[0].note)
+
+    def test_rows_are_marked_in_force_or_pending_per_outcome(self):
+        """DoD 6b / audit V2. Asserted at high risk, where the paths diverge."""
+        _, ext_record = _park(_external_proposal())
+        ext = [c for c in criteria_for(ext_record).unmet
+               if c.kind == CRITERION_INDEPENDENCE][0]
+        self.assertIn(f"human_confirmation ({IN_FORCE})", ext.bar)
+
+        # require_review at high risk: nothing in the ladder bites yet, because
+        # _apply_review discharges on assertion with no authority-kind check.
+        review_high = _proposal(pid="prop-rr-high", operation="link_creation",
+                                risk_class="high")
+        self.assertEqual(policy.evaluate(review_high).outcome, policy.REQUIRE_REVIEW)
+        _, rr_record = _park(review_high)
+        rr = [c for c in criteria_for(rr_record).unmet
+              if c.kind == CRITERION_INDEPENDENCE][0]
+        self.assertIn(f"human_confirmation ({PENDING_STEP_4})", rr.bar)
+        self.assertNotIn(IN_FORCE, rr.bar)
+
+    def test_criteria_for_takes_no_risk_class_parameter(self):
+        """DoD 8b / audit V3. The ninth instance, declined.
+
+        A parameter would let a caller pass `low` for a `critical` record,
+        understating all three ladder rows at once.
+        """
+        import inspect
+
+        self.assertNotIn("risk_class", inspect.signature(criteria_for).parameters)
+
+        critical = _proposal(pid="prop-crit", operation="link_creation",
+                             risk_class="critical")
+        _, record = _park(critical)
+        bar = [c for c in criteria_for(record).unmet
+               if c.kind == CRITERION_INDEPENDENCE][0].bar
+        self.assertIn("human_confirmation", bar)
+        self.assertIn(eq.VERIFIED, bar)
 
     def test_no_numeric_threshold_appears_anywhere_in_the_report(self):
         """ADR-037:128 warns by name against inventing such a number."""
