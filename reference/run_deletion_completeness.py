@@ -24,7 +24,14 @@ from agentmem_ref.deletion_completeness import (  # noqa: E402
 )
 from agentmem_ref.portable_evidence import IssuerKey  # noqa: E402
 from agentmem_ref.projection_governance import ProjectionGovernor  # noqa: E402
+from agentmem_ref.evidence_qualification import group_by_dependence  # noqa: E402
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
+from agentmem_ref.verification import (  # noqa: E402
+    TRANSITION_VERIFIER,
+    TransitionRule,
+    TransitionRuleCorpus,
+    VerifierRegistry,
+)
 
 TENANT = "tenant:opaque:deletion-evidence"
 SOURCE = "memory:internal:alpha"
@@ -78,8 +85,38 @@ def _delete_proposal(proposal_id: str) -> policy.Proposal:
     )
 
 
+def _deletion_corpus() -> TransitionRuleCorpus:
+    """The evaluator's adjudication of this purge (ADR-037 step 4b-2, entry #24).
+
+    Authored ahead of the proposal: this source may be purged. The runner
+    presents a purge against it and cannot author one. Replaces the
+    `review_satisfied=True` route the flip removed.
+    """
+    return TransitionRuleCorpus((TransitionRule(
+        rule_id="rule:deletion-completeness", target_reference=SOURCE,
+        criterion="permanent-deletion", from_state="current",
+        permitted_to_values=("purged",),
+    ),))
+
+
+def _deletion_registry() -> VerifierRegistry:
+    registry = VerifierRegistry()
+    registry.register(TRANSITION_VERIFIER, _deletion_corpus().verifier())
+    return registry
+
+
+def _deletion_evidence():
+    return _deletion_corpus().evidence_for(
+        target_reference=SOURCE, criterion="permanent-deletion",
+        pre_state="current", proposed_value="purged",
+    )
+
+
 def _governor() -> ProjectionGovernor:
-    adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock())
+    adapter = GovernedMemoryAdapter(
+        InMemoryTemporalGraph(), TENANT, Clock(),
+        verifier_registry=_deletion_registry(),
+    )
     gov = ProjectionGovernor(adapter)
     adapter.commit_proposal(_seed_proposal(), "private memory content not emitted")
     gov.declare(
@@ -127,6 +164,8 @@ def _declared_residual(commit: str) -> dict:
         _delete_proposal("prop-report-declared"),
         SOURCE,
         retained_by_policy={"internal:summary:two"},
+        evidence=_deletion_evidence(),
+        verifier_registry=_deletion_registry(),
     )
     measurement = measure_deletion_completeness(result.buckets, gov.sweep(set()))
     return _chain(result.receipt, measurement, commit, "action:delete:declared-residual")
@@ -135,7 +174,16 @@ def _declared_residual(commit: str) -> dict:
 def _undeclared_residual(commit: str) -> dict:
     gov = _governor()
     delete = _delete_proposal("prop-report-undeclared")
-    decision = policy.evaluate(delete)
+    # ADR-037 step 4b-2 (entry #24). This scenario reports how an
+    # undeclared-residue gate failure is *measured*; it still needs a decision
+    # that permits the deletion, which now comes from the evaluator's
+    # adjudication rather than from `review_satisfied=True`.
+    decision = policy.evaluate_with_qualified_evidence(
+        delete,
+        group_by_dependence(
+            _deletion_evidence(), verifiers=_deletion_registry().as_mapping()
+        ),
+    )
     receipt = receipts.build_receipt(
         receipt_id="receipt:delete:undeclared-report",
         proposal=delete,
@@ -156,7 +204,11 @@ def _undeclared_residual(commit: str) -> dict:
 
 def _satisfied(commit: str) -> dict:
     gov = _governor()
-    result = gov.purge(_delete_proposal("prop-report-clean"), SOURCE)
+    result = gov.purge(
+        _delete_proposal("prop-report-clean"), SOURCE,
+        evidence=_deletion_evidence(),
+        verifier_registry=_deletion_registry(),
+    )
     measurement = measure_deletion_completeness(result.buckets, gov.sweep(set()))
     return _chain(result.receipt, measurement, commit, "action:delete:zero-residue")
 

@@ -19,7 +19,42 @@ from agentmem_ref.restart_runtime import (  # noqa: E402
     RuntimeProfile,
     RuntimeRecoveryError,
 )
+from agentmem_ref.verification import (  # noqa: E402
+    TRANSITION_VERIFIER,
+    TransitionRule,
+    TransitionRuleCorpus,
+    VerifierRegistry,
+)
 from agentmem_ref.visibility import VisibilityOperation, VisibilityTracker  # noqa: E402
+
+BRANCH_MEMORY = "memory:release-branch"
+
+
+def _branch_corpus() -> TransitionRuleCorpus:
+    """The evaluator's adjudication of release-branch corrections.
+
+    ADR-037 step 4b-2 (entry #24): authored ahead of the proposal, replacing the
+    `review_satisfied=True` route the flip removed.
+    """
+    return TransitionRuleCorpus((TransitionRule(
+        rule_id="rule:release-branch", target_reference=BRANCH_MEMORY,
+        criterion="value-correction", from_state="release_branch = release",
+        permitted_to_values=("release_branch = main",),
+    ),))
+
+
+def _branch_registry() -> VerifierRegistry:
+    registry = VerifierRegistry()
+    registry.register(TRANSITION_VERIFIER, _branch_corpus().verifier())
+    return registry
+
+
+def _branch_evidence():
+    return _branch_corpus().evidence_for(
+        target_reference=BRANCH_MEMORY, criterion="value-correction",
+        pre_state="release_branch = release",
+        proposed_value="release_branch = main",
+    )
 
 
 def _profile() -> RuntimeProfile:
@@ -89,14 +124,19 @@ def build_report(agent_memory_commit: str) -> dict:
     profile = _profile()
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
-        session_a = RestartSafeRuntime.create(root, tenant="tenant-acme", profile=profile)
+        session_a = RestartSafeRuntime.create(
+            root, tenant="tenant-acme", profile=profile,
+            verifier_registry=_branch_registry(),
+        )
         learned = session_a.commit_proposal(
             _proposal("proposal-release", operation="promotion"),
             "release_branch = release",
         )
         release_uuid = learned.fact_uuid
 
-        session_b = RestartSafeRuntime.recover(root, profile=profile)
+        session_b = RestartSafeRuntime.recover(
+            root, profile=profile, verifier_registry=_branch_registry(),
+        )
         release_recall = session_b.adapter.governed_recall("release_branch", _context())
 
         correction = _proposal(
@@ -106,9 +146,13 @@ def build_report(agent_memory_commit: str) -> dict:
             review_satisfied=True,
             approval_refs=("approval:release-branch-main",),
         )
-        corrected = session_b.commit_proposal(correction, "release_branch = main")
+        corrected = session_b.commit_proposal(
+            correction, "release_branch = main", evidence=_branch_evidence()
+        )
         main_uuid = corrected.fact_uuid
-        stale_replay = session_b.commit_proposal(correction, "release_branch = main")
+        stale_replay = session_b.commit_proposal(
+            correction, "release_branch = main", evidence=_branch_evidence()
+        )
 
         visibility = VisibilityTracker(
             VisibilityOperation(
@@ -132,7 +176,9 @@ def build_report(agent_memory_commit: str) -> dict:
             visibility.snapshot_for_restart(),
         )
 
-        session_d = RestartSafeRuntime.recover(root, profile=profile)
+        session_d = RestartSafeRuntime.recover(
+            root, profile=profile, verifier_registry=_branch_registry(),
+        )
         current = session_d.adapter.governed_recall("release_branch", _context())
         wrong_scope = session_d.adapter.governed_recall("release_branch", _context("project-beta"))
         restored_visibility = VisibilityTracker.restore_after_restart(
@@ -155,7 +201,9 @@ def build_report(agent_memory_commit: str) -> dict:
         governance_path.write_text(json.dumps(governance), encoding="utf-8")
         corrupt_state_failed_closed = False
         try:
-            RestartSafeRuntime.recover(root, profile=profile)
+            RestartSafeRuntime.recover(
+            root, profile=profile, verifier_registry=_branch_registry(),
+        )
         except RuntimeRecoveryError:
             corrupt_state_failed_closed = True
 

@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from agentmem_ref import domain_schema_mutation as dsm, policy  # noqa: E402
 from agentmem_ref.structural_mutation import (  # noqa: E402
+
     S0,
     S1,
     S2,
@@ -30,6 +31,12 @@ from agentmem_ref.structural_mutation import (  # noqa: E402
     supersede,
 )
 from agentmem_ref.structural_pama import build_pama_decision_v13  # noqa: E402
+from agentmem_ref.verification import (  # noqa: E402
+    TRANSITION_VERIFIER,
+    TransitionRule,
+    TransitionRuleCorpus,
+    VerifierRegistry,
+)
 
 
 def digest(label: str) -> str:
@@ -171,10 +178,26 @@ def build_report(agent_memory_commit: str) -> dict:
         current_dependency_digest=s2.dependency_digest,
     )
     s2_reviewed_pama = pama(s2, review_satisfied=True, approval_refs=("approval:human:42",))
+    # ADR-037 step 4b-2 (entry #24). The S2 human-review requirement is
+    # unchanged; only the discharge route is. The evaluator holds an
+    # adjudication of this schema migration, authored ahead of the proposal.
+    _s2_corpus = TransitionRuleCorpus((TransitionRule(
+        rule_id="rule:s2-schema-migration",
+        target_reference=s2_reviewed_pama.target_reference,
+        criterion="schema-migration", from_state="v1",
+        permitted_to_values=("v2",),
+    ),))
+    _s2_registry = VerifierRegistry()
+    _s2_registry.register(TRANSITION_VERIFIER, _s2_corpus.verifier())
     s2_reviewed = evaluate_pama_v13(
         s2_reviewed_pama, s2_impact,
         current_state_digest=s2.state_digest,
         current_dependency_digest=s2.dependency_digest,
+        evidence=_s2_corpus.evidence_for(
+            target_reference=s2_reviewed_pama.target_reference,
+            criterion="schema-migration", pre_state="v1", proposed_value="v2",
+        ),
+        verifier_registry=_s2_registry,
     )
     s2_document = build_pama_decision_v13(
         s2_reviewed_pama,

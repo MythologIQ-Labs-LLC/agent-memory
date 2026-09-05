@@ -15,6 +15,38 @@ from agentmem_ref import policy, projections  # noqa: E402
 from agentmem_ref.adapter import RecallContext  # noqa: E402
 from agentmem_ref.runtime_composition import ConfiguredCompositionRuntime  # noqa: E402
 from agentmem_ref.runtime_config import validate_runtime_configuration  # noqa: E402
+from agentmem_ref.verification import (  # noqa: E402
+    TRANSITION_VERIFIER,
+    TransitionRule,
+    TransitionRuleCorpus,
+    VerifierRegistry,
+)
+
+
+def _composition_corpus() -> TransitionRuleCorpus:
+    """The evaluator's adjudications for this composition run.
+
+    ADR-037 step 4b-2 (entry #24): authored ahead of the proposals that cite
+    them, replacing the `review_satisfied=True` route the flip removed.
+    """
+    return TransitionRuleCorpus((
+        TransitionRule(
+            rule_id="rule:composition-correction", target_reference=MEMORY_ID,
+            criterion="value-correction", from_state="deploy window is Thursday",
+            permitted_to_values=("deploy window is Friday",),
+        ),
+        TransitionRule(
+            rule_id="rule:composition-deletion", target_reference=MEMORY_ID,
+            criterion="permanent-deletion", from_state="current",
+            permitted_to_values=("deleted",),
+        ),
+    ))
+
+
+def _composition_registry() -> VerifierRegistry:
+    registry = VerifierRegistry()
+    registry.register(TRANSITION_VERIFIER, _composition_corpus().verifier())
+    return registry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -80,6 +112,7 @@ def build_report(agent_memory_commit: str) -> dict:
             Path(directory),
             tenant=TENANT,
             plan=plan,
+            verifier_registry=_composition_registry(),
         )
 
         initial = runtime.retain(
@@ -100,6 +133,10 @@ def build_report(agent_memory_commit: str) -> dict:
                 approval_refs=("approval:memory-owner",),
             ),
             "deploy window is Friday",
+            evidence=_composition_corpus().evidence_for(
+                target_reference=MEMORY_ID, criterion="value-correction",
+                pre_state="deploy window is Thursday",
+                proposed_value="deploy window is Friday"),
         )
         corrected_fact = correction.fact_uuid
         stale_projection = runtime.projection_admission()
@@ -127,7 +164,10 @@ def build_report(agent_memory_commit: str) -> dict:
                 operation="permanent_deletion",
                 review_satisfied=True,
                 approval_refs=("approval:data-protection-officer",),
-            )
+            ),
+            evidence=_composition_corpus().evidence_for(
+                target_reference=MEMORY_ID, criterion="permanent-deletion",
+                pre_state="current", proposed_value="deleted"),
         )
         residual_admission = runtime.projection_admission()
         removed_after_delete = runtime.remove_projection_component(MEMORY_ID)
