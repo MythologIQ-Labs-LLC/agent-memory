@@ -10,13 +10,16 @@ This module builds that record and nothing else.
 What it deliberately does NOT do, because ADR-037 fixes the order:
 
   step 2  evidence qualification and dependence lineage -- not here
-  step 3  governed resumption -- **nothing in this module discharges a park**
+  step 3  governed resumption -- **landed**, see ``resume`` and ``resumption``
   step 4  fail-closed ``require_review`` -- ``policy._apply_review`` is untouched
 
-There is no ``resume``. Not as a stub, not raising ``NotImplementedError``.
-A stub is an invitation; its absence is a statement. A parked proposal carries
-no authority, and the type is shaped so that misreading it as authority takes
-deliberate effort rather than a moment's inattention (ADR-037 section 5).
+``resume`` was deliberately absent until step 3 (entry #20) -- not stubbed, not
+raising ``NotImplementedError``, because a stub is an invitation and its absence
+was a statement. Step 2's qualification machinery had to exist first, or a
+proposal could leave the parked state without the means to decide whether it
+should. It now exists and still grants nothing: a parked proposal carries no
+authority, and resumption returns a re-evaluation rather than a permission
+(ADR-037 section 5).
 
 Parking is for refusals **with a route**. The envelope has three states, and
 only the middle band parks::
@@ -97,10 +100,9 @@ class ParkedProposal:
 class PendingVerificationRegistry:
     """Records refusals that have somewhere to go. Discharges nothing.
 
-    The public surface is deliberately three methods: ``park``, ``get``, and
-    ``parked``. None returns a permission, mutates a decision, or advances a
-    lifecycle. Adding one that does is step 3's work, and step 3 is gated on
-    step 2 existing.
+    ``park``, ``get`` and ``parked`` return no permission and mutate no
+    decision. ``resume`` (step 3, entry #20) re-evaluates and returns a fresh
+    ``Decision``; it too grants nothing and leaves the parked record unchanged.
     """
 
     def __init__(self, *, now: Callable[[], datetime] | None = None) -> None:
@@ -160,6 +162,38 @@ class PendingVerificationRegistry:
         self._parked[proposal.proposal_id] = record
         self._emit(record)
         return record
+
+    def resume(self, proposal_id: str, **kwargs):
+        """Re-evaluate a parked proposal. ADR-037 step 3 (ledger entry #20).
+
+        Absent until step 3, deliberately: step 2's qualification machinery had
+        to exist before anything could leave the parked state, or a proposal
+        could resume without the means to decide whether it should.
+
+        This returns a ``ResumptionResult`` carrying a freshly computed
+        ``Decision``. It grants nothing, commits nothing, and does not mark the
+        record discharged -- the parked record is unchanged by resumption,
+        successful or not. Only ``evidence`` among the keyword arguments is the
+        actor's contribution; the attestation, verifier registry, current state
+        version and current policy version are the evaluator's.
+
+        Imported here rather than at module scope so the two modules do not
+        import each other in a cycle.
+        """
+        from .resumption import resume_parked
+
+        record = self._parked.get(proposal_id)
+        if record is None:
+            from .resumption import NOT_PARKED, CriteriaReport, ResumptionResult
+
+            return ResumptionResult(
+                proposal_id=proposal_id,
+                resumed=False,
+                decision=None,
+                refusal=NOT_PARKED,
+                report=CriteriaReport(proposal_id, "", ()),
+            )
+        return resume_parked(record, **kwargs)
 
     def get(self, proposal_id: str) -> ParkedProposal | None:
         """The parked record, or None. Reading does not discharge."""

@@ -1012,3 +1012,121 @@ dedupes correctly via `by_source.setdefault`; there is no defect to fix there.
 
 Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V5 closed and recorded.
 Review Boundary: staged, not committed.
+---
+
+### Entry #20: SESSION SEAL - Phase 11 (Sprint 2i governed resumption)
+
+**Entry ID**: `348d5f58d97e`
+**Content Hash**: `f442ffcbce0ed02625eb34e502de19047ae5591f72dbc7409c94d3d4fd966a0a`
+**Previous Hash**: `23d71557eeb046ad071585e3a20a2edc4c39b7c8a7b4460febf725ac98b968f5`
+**Chain Hash**: `62243685ea6622ca21b2173f133a57eb88a7be56ae9cbc871c654a5d24030a81`
+**Timestamp**: 2026-09-05T02:20:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L3
+**Verdict**: PASS
+**Session**: 2026-09-05T0140-688455
+**Plan**: docs/plan-sprint2i-governed-resumption.md (iteration 4)
+**SSDF Practices**: PO.1.4, PS.2.1, PW.1.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index 65e471134b71188389d6920f05be5c7f6fd318ae):
+`562ff31ddde811b2bd27bbbe32bada0cb53bc4127cde941c75fb70ad41783fcd`
+
+**Scope**: ADR-037 implementation **step 3 of 4**, plus **section 4**, which step 2
+assigned here. Step 4 is not built: `policy.py` is unmodified by empty diff, and
+the 51 assertion sites are unconverted. **After this seal all three prerequisites
+exist, so step 4 becomes permissible** -- which is what the ordering was for.
+
+**Graded L3**, higher than steps 1 and 2. Those described; this transitions. A
+resumption that returns `allow` for a proposal that should still be parked is an
+authority bypass rather than a wrong shape.
+
+**The honest range, measured and stated in the plan rather than discovered later**:
+`require_external_verification` is resumable through a bound, separated
+attestation (to `allow_with_ledger`). `require_review` is **not**. Evidence
+reaches the evaluator only as `proposal.evidence_refs`, and M-EVID is an
+emptiness check, so appending qualified, independently verified evidence to a
+proposal that already had one reference changes the outcome not at all. Its only
+discharge today is `review_satisfied` plus `approval_refs` -- exactly the
+assertion route step 4 converts. Step 2's headline finding applies to step 3's
+own mechanism.
+
+**Definition of Done**: 15 of 15 PASS. Test count 999 to 1020 (+21), 0 failures,
+7 skipped, under the pinned `cryptography==50.0.1`. Validators clean.
+
+**Negative control**: six mutations, each caught, control restored green --
+staleness returning a computed decision (refuse-then-evaluate); the attestation
+ignored in favour of plain `evaluate`; resumption rewriting `risk_class`; an
+invented independence bar; a newly-yielded `block` resuming; refuted evidence
+admitted.
+
+**AMENDED TESTS -- second exception, declared.** Loop 8 asserted `resume` was
+absent from `PendingVerificationRegistry`, which was correct then: step 3 was
+gated on step 2 existing. Step 3 has landed, so two tests invert. The half of the
+original assertion that still matters is retained and strengthened:
+**`ParkedProposal` must never grow a `resume`.** Resumption is an evaluator
+operation; a `resume` on the record itself would put the transition in the hands
+of whoever holds the record, which is how a parked proposal becomes a standing
+authority.
+
+**Decision**: audit VETOed twice, on four grounds.
+
+*V1* -- LD6 required excluding evidence "whose verifier principal is the
+proposing actor". Measured: `EvidenceItem` has **no principal field**, and its
+`verifier` is a name step 2 deliberately made non-authoritative. Left
+unspecified, the easiest fix is adding `verifier_principal_id` to `EvidenceItem`
+-- putting a separation control's input back in the hands of the party it
+constrains, for the eighth time. The principal lives on
+`ExternalVerification.verifier_principal_id`, where Loop 7 already derives
+`attestation_self_verified`. **No new separation logic is written this cycle**,
+and DoD 6b asserts no principal field is added.
+
+*V2* -- DoD 6 required consulting `attestation_refusal`, which takes an
+`ExternalVerification`; the signature had no attestation parameter. The plan had
+conflated evidence qualification (step 2) with external attestation (Loop 7) --
+two objects Loops 2 and 7 kept apart. Both are needed at resumption.
+
+*V3* -- section 5 requires re-evaluation "against current policy and current
+state". The plan handled state and ignored policy, though `ParkedProposal`
+carries `policy_version` precisely to detect drift. Drift is now compared and
+**reported without refusing**, since re-evaluating under current policy is the
+correct behaviour, and a decision that changed for policy reasons rather than
+evidence reasons is a materially different fact to the actor.
+
+*V4* -- the mechanism was inert for the majority outcome and the plan implied
+otherwise, **and the discharge function was missing entirely**. LD2 named
+`attestation_refusal` -- the guard -- and never
+`evaluate_with_external_verification`, which is what actually discharges. As
+written it would have validated an attestation and then re-evaluated through a
+path that ignores it. The one path that genuinely works would not have worked.
+
+**Audit conditions on the PASS**: C1, do not pre-call `attestation_refusal` --
+`evaluate_with_external_verification` calls it internally and surfaces the result
+in `decision.reasons`, and a second copy of a control already correctly placed in
+the shared evaluator is two things that can diverge. Nine cycles have gone into
+controls present in one place and absent from another; a redundant copy is the
+same mistake with the polarity reversed. C2, pin the Loop 7 early return this
+cycle now depends on: an otherwise-valid attestation must not discharge a parked
+`require_review`, because that early return is the only thing stopping an
+attestation becoming a general-purpose discharge. Both satisfied.
+
+**Section 4's independence bar: refused rather than invented.** Section 4
+requires stating "what independence bar applies at this risk class". **No such
+bar exists in accepted doctrine.** The only count threshold is
+`reusable_grants.minimum_independent_human_evidence >= 2`, which R4 explicitly
+forbids generalizing; section 2b argues against counting outright; and ADR-037
+line 128 warns by name against inventing
+`independent_verified_approver_count >= 2`. The report states `bar: undefined`
+with the open question attached, a test asserts no numeric threshold appears
+anywhere in it, and the question is filed as **GH #379** rather than answered
+inside an implementation cycle. A message saying "this criterion has no defined
+bar" is more useful to an agent than a confidently invented number.
+
+**Recorded, not acted on**: `DELEGATED_POLICY`, a non-human authority kind valid
+at low and medium risk, exists only in `decision_overwrite.py`; `policy.py` has
+no concept of it. Seventh instance of the control-in-one-module pattern, adjacent
+to R4. Generalizing an authority kind is a doctrine change, not a step-3
+implementation detail.
+
+Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V4 closed and recorded.
+Review Boundary: staged, not committed.
