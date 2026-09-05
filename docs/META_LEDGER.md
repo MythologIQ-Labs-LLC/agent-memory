@@ -1241,3 +1241,122 @@ resolved.
 
 Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V3 closed and recorded.
 Review Boundary: staged, not committed.
+---
+
+### Entry #22: SESSION SEAL - Phase 13 (Sprint 2k qualified discharge)
+
+**Entry ID**: `88a283e31768`
+**Content Hash**: `a68c45062a3a1e8ec9528254ba2e5e9198b96704ad3adc5291d6f23ed75747e1`
+**Previous Hash**: `275a2d95c988a95c4f115ba6889ff427d90c6b9c9f3c47dce15dfee66c08cd24`
+**Chain Hash**: `b021c6289ad796dee897271869ae298b4f909f997e9cb622fab6c9b98bf949d7`
+**Timestamp**: 2026-09-05T05:00:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L3
+**Verdict**: PASS
+**Session**: 2026-09-05T0420-481bd9
+**Plan**: docs/plan-sprint2k-qualified-discharge.md (iteration 4)
+**SSDF Practices**: PO.1.4, PS.2.1, PW.1.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index ee2db5910b77d8ca604079a2f9d6d297b14320e5):
+`de1bbd726794685b6464da7c2e2656fb2eb1153eddc745ba2ff2797d285c056e`
+
+**The research finding that reshaped the step.** ADR-037 writes step 4 as one
+action: convert the 51 sites so `require_review` fails closed. Measured, every
+public entry point in `policy` was enumerated -- `evaluate` and
+`evaluate_with_base_outcome` take no evidence, and
+`evaluate_with_external_verification` early-returns unless the outcome is
+`require_external_verification`. **No path existed by which a `require_review`
+proposal could discharge on qualified evidence.** Flipping the gate would have
+left all 51 sites refused with no route: the exact halt this ADR's own sequencing
+principle forbids -- "a control whose remediation path does not yet work is a
+halt, and the pressure it creates becomes a workaround that outlives it."
+
+The principle applies recursively, so step 4 splits. **4a builds the discharge
+path (this cycle). 4b flips and converts.** Treating step 4 as atomic because the
+ADR numbered it that way would have shipped the halt.
+
+**Blast radius, probed rather than estimated**: `_apply_review` was patched to
+refuse and the suite run -- **55 tests break across roughly 30 files** (41
+failures, 14 errors). They are two different kinds of work. A minority assert the
+gate's own behaviour and are genuine declared amendments. The majority use
+assertion as **scaffolding** to reach unrelated behaviour -- semantic
+readmission, interchange propagation, epistemic and predictive memory, deletion
+completeness, boundary crossing -- and must be given real qualified evidence
+instead. Amending those would silently delete coverage rather than update it: a
+test that stops reaching the behaviour it was written for is not a passing test.
+
+**Scope**: 4a only, and purely additive. `_apply_review` is unmodified --
+**zero lines removed from `policy.py`** -- so all 51 asserted sites keep working
+and both paths coexist. That is what makes 4b a migration rather than a break.
+
+**What was built**: `policy.evaluate_with_qualified_evidence`, enforcing R5's
+ladder and nothing else.
+
+| Risk | What discharges |
+|---|---|
+| low / medium | one qualifying independent group at `asserted`, recording `delegated_policy` |
+| high / critical | one qualifying group at `verified` **and** a `human_confirmation` attestation |
+
+**Definition of Done**: 15 of 15 PASS, plus 1b-1e and 7b. Test count 1026 to 1050
+(+24), 0 failures, 7 skipped, under the pinned `cryptography==50.0.1`. Validators
+clean.
+
+**Negative control**: six mutations, each caught, control restored green --
+mirroring Loop 7's base so assertion discharges first; the early return dropped;
+the authority axis relaxing at high risk; estimators counted as qualifying; no
+authority recorded; the required binding status ignored.
+
+**Decision**: audit VETOed twice, on three grounds.
+
+*V1 -- the defect this cycle existed to prevent, in the cycle's own plan.* LD1
+mirrored Loop 7's base computation, which defaults `allow_review_discharge=True`.
+Measured, a `require_review` proposal carrying `review_satisfied=True` and one
+approval ref arrives **already `allow_with_ledger`**, passes the early return
+untouched, and is returned with **zero evidence examined**. The ladder would never
+be consulted. That is worse than a hole, because assertion works today anyway:
+**4b's migration would have been a no-op wearing the appearance of enforcement**,
+behind a function name asserting qualified evidence was required, and it would
+have survived 4b's own tests if those kept the assertion in the fixture. A control
+that reports success without checking is worse than no control. The base is now
+computed with `allow_review_discharge=False`, so the ladder is the only route
+through this function.
+
+*V2* -- DoD 7 required non-`require_review` outcomes to be byte-identical to
+`evaluate`'s result, which is satisfiable only while the base allows assertion
+discharge. Once V1 was fixed the two legitimately diverge, and the tempting way to
+make DoD 7 pass was to revert V1. Restated against the no-assertion base, naming
+the reversion it would otherwise invite.
+
+*V3* -- R5's ladder has an authority row at every risk class, and the plan
+enforced only the high/critical half. Nothing checked, asserted or recorded an
+authority kind at low or medium, leaving two incompatible readings: that authority
+is unchecked below high risk, or that an attestation is required there too. They
+differ on whether an autonomous caller can discharge without a separated
+principal. Neither was adopted. **At low and medium risk the evidence-based
+discharge IS the delegated policy in action** -- `DELEGATED_POLICY` is this
+repository's name for non-human authority valid at exactly those classes -- so the
+row is satisfied by construction and the decision records it.
+
+**Audit conditions on the PASS**: C1, record the authority on a new **defaulted**
+`Decision.discharge_authority`, on the Loop 7 / Loop 3 precedent, and never by
+overloading `review_discharge` -- which records how *strong* a discharge was
+(`asserted` / `verified`), not *whose authority* produced it. Collapsing them
+would merge two of ADR-037's four variables inside the module that defines them.
+C2, assert the two discharge paths are distinguishable **after the fact**, because
+once 4b converts 51 sites a decision with no authority recorded is
+indistinguishable from one that never went through the ladder. Both satisfied.
+
+**One definition of the ladder.** R5's ladder now lives in `policy` as
+`strength_ladder_for`, and `resumption.strength_for` delegates to it. Behaviour
+across all four risk classes was captured before the refactor and compared after:
+identical. Two copies of doctrine are two things that can diverge.
+
+**Recorded, not acted on**: `DELEGATED_POLICY` is now named in `policy` as a
+discharge authority but the *rule* governing it -- valid at low and medium risk
+only -- still lives solely in `decision_overwrite._grant_refusal`. Naming the
+authority is not generalizing the constant; that remains the seventh-instance item
+from Loop 10's research, and generalizing an authority kind is a doctrine change.
+
+Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V3 closed and recorded.
+Review Boundary: staged, not committed.

@@ -173,7 +173,10 @@ The gate does not close until the first three exist. This ordering is part of th
 1. **Parked proposal state** — `enter_pending_verification` as a real, resumable, evidence-emitting outcome. **DONE** (Loop 8, ledger entry #18): `reference/agentmem_ref/pending_verification.py`.
 2. **Evidence qualification and dependence lineage** — R2 and R3 made computable, including dependence-group collapse. **DONE** (Loop 9, ledger entry #19): `reference/agentmem_ref/evidence_qualification.py`.
 3. **Governed resumption and re-evaluation** — evaluator-owned, policy re-evaluated from scratch, staleness applied. **Also owns §4**. **DONE** (Loop 10, ledger entry #20): `reference/agentmem_ref/resumption.py`.
-4. **Fail-closed `require_review`** — convert the 51 caller sites. **Unblocked**: all three prerequisites exist (steps 1-3), and §4's independence bar — the last outstanding item for a coherent `collect_more_evidence` message — is resolved by **R5** (Loop 11, ledger entry #21). *Next.*
+4. **Fail-closed `require_review`** — convert the 51 caller sites. **This step splits**, because the sequencing principle above applies recursively:
+
+   - **4a — the discharge path.** **DONE** (Loop 12, ledger entry #22): `policy.evaluate_with_qualified_evidence`. Measured before it was built: *no* entry point in `policy` discharged `require_review` on qualified evidence — `evaluate` and `evaluate_with_base_outcome` take no evidence, and `evaluate_with_external_verification` early-returns unless the outcome is `require_external_verification`. Flipping the gate first would therefore have left all 51 sites refused with **no route** — the exact halt this ADR forbids. Additive: `_apply_review` untouched, both paths coexist.
+   - **4b — the flip and the conversion.** *Next.* A probed hard flip breaks **55 tests across ~30 files**, and they are two different kinds of work: a minority assert the gate's own behaviour and are genuine declared amendments; the majority use assertion as *scaffolding* to reach unrelated behaviour and must be given real qualified evidence instead — amending those would silently delete coverage rather than update it.
 
 **What step 1 settled, so steps 2–3 do not re-litigate it.** Two questions surfaced in audit and were decided:
 
