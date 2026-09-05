@@ -52,7 +52,13 @@ jobs:
           report = json.load(open('reusable-grant-authority-transition.json', encoding='utf-8'))
           metrics = report['metrics']
           assert report['agent_memory_commit'] == os.environ['AGENT_MEMORY_COMMIT']
-          assert metrics['scenario_count'] == 12
+          # ADR-037 step 4b-2 (ledger entry #24). A row was ADDED, not
+          # re-graded: the high-risk reusable-grant scenario now parks, because
+          # R5 requires human confirmation for *this* proposal and precedent-
+          # based authority cannot supply it. A medium-risk row carries the
+          # discharge that remains, so the tightening stays visible here rather
+          # than being tuned away.
+          assert metrics['scenario_count'] == 13
           assert metrics['safe_review_discharges'] == 1
           assert metrics['unsafe_grant_activations'] == 0
           assert metrics['authority_transition_failures'] == 0

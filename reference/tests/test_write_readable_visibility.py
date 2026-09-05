@@ -5,7 +5,11 @@ from __future__ import annotations
 import sys
 import unittest
 
-from tests.qualified_fixtures import corpus_for, registry_for, rule
+# Relative import: this module is loaded as `tests.X` under
+# `discover -t reference` and as `reference.tests.X` by the targeted CI step, and
+# a relative import resolves under both. An absolute `from tests...` only works
+# under the first.
+from .qualified_fixtures import corpus_for, registry_for, rule
 
 
 def _visibility_corpus():
