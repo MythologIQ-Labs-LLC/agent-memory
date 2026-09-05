@@ -245,23 +245,12 @@ def strength_for(risk_class: str) -> dict[str, str]:
     authority of its own -- comparing supplied evidence against this is step 4's
     work, and no function here does it.
 
-    ``policy._HIGH_RISK`` is read on every call rather than captured at import,
-    so the ladder tracks the risk boundary instead of holding a stale copy.
+    **Delegates to** ``policy.strength_ladder_for``. The ladder is defined once,
+    in the lower-level module, and read here: two copies of doctrine are two
+    things that can diverge. ``policy._HIGH_RISK`` is still read on every call,
+    so the ladder tracks the risk boundary rather than holding a stale copy.
     """
-    strict = risk_class in policy._HIGH_RISK
-    return {
-        "authority_kind": (
-            "human_confirmation" if strict
-            else "delegated_policy or human_confirmation"
-        ),
-        "qualification_class": (
-            "artifact_bound or reproducible_procedure"
-            if strict
-            else "artifact_bound or reproducible_procedure; "
-                 "a calibrated estimator may contribute but is never a sole basis"
-        ),
-        "binding_status": eq.VERIFIED if strict else eq.ASSERTED,
-    }
+    return policy.strength_ladder_for(risk_class)
 
 
 def resume_parked(
