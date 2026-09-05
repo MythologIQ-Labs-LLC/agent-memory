@@ -98,6 +98,8 @@ Live for plan duration; archived at substantiate. Drift signal: plan shipped but
 | Sprint 2m research brief | `docs/research-brief-sprint2m-fail-closed-flip-2026-09-05.md` | sprint2m-fail-closed-flip |
 | Sprint 2n plan | `docs/plan-sprint2n-seal-anchors.md` | sprint2n-seal-anchors |
 | Sprint 2n research brief | `docs/research-brief-sprint2n-seal-anchors-2026-09-05.md` | sprint2n-seal-anchors |
+| Sprint 3a plan | `docs/plan-sprint3a-modular-package.md` | sprint3a-modular-package |
+| Sprint 3a research brief | `docs/research-brief-sprint3a-modular-package-2026-09-05.md` | sprint3a-modular-package |
 
 ## Tier 5 — Reference Material
 

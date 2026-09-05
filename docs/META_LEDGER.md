@@ -1706,3 +1706,91 @@ to retrieve is durable in the wrong sense.
 
 Audit: VETO, PASS -- attempts 1-2 of 5. Grounds V1-V2 closed and recorded.
 Review Boundary: staged, not committed.
+---
+
+### Entry #26: SESSION SEAL - Phase 17 (Sprint 3a modular package structure)
+
+**Entry ID**: `f0b8b3bb3a40`
+**Content Hash**: `cc34f31824fe1604fd2b4d902bb85302bdbb1f04f0db2e0ba8b896771a8184e6`
+**Previous Hash**: `a3c420ff9646a0431b7445cacb2af841ff956f2a90c29d4d84f8c6d762137539`
+**Chain Hash**: `2ad640965f8b8726eafa30ccc9b8fef58a54fd805af22badf86414c383f504b4`
+**Timestamp**: 2026-09-05T17:30:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L3
+**Verdict**: PASS
+**Session**: 2026-09-05T1400-b7a3e1
+**Plan**: docs/plan-sprint3a-modular-package.md (iteration 3; change_class feature -- a non-breaking layout refactor)
+**SSDF Practices**: PW.1.1, PW.4.1, PW.7.2, PS.1.1
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index d953c9160aeefc912da595c8215bc1ae057ad2e2):
+`f2993a6bb2b6d8c97fef16e156beb4f8d6e7d1b395697dc2cc48190c26bfc7f2`
+
+**Anchor**: `refs/seals/entry-26`.
+
+**What moved.** `reference/agentmem_ref` was 126 flat modules. It is now seven
+layered subpackages in dependency order -- `core < state < contracts < runtime
+< memory < crg < harness` -- with 124 modules moved by `git mv`, every relative
+import rewritten to the new layout, and a `sys.modules` alias at every old path
+so `agentmem_ref.policy is agentmem_ref.core.policy`: the identical object, not
+a copy, so the `_HIGH_RISK` monkeypatch tests from Loops 11-12 still reach the
+evaluator. `agentmem_ref.crg` is Agent Memory's Code Reality Graph, with the
+`codegenome_*` modules inside it as the first-party implementation profile
+(ADR-035, ADR-036). The layer order, the table and the top-level residents live
+in one place, `scripts/restructure_package.py`, and the layout test reads them
+from there -- the test cannot be written to a different order than the mover.
+
+**What did not move.** Behaviour. `__init__` exports the same five names.
+No function, class, signature, schema, fixture or policy changed. No existing
+test changed: `git status reference/tests` shows one new file. 1109 tests to
+1117 (+8, the layout test), 0 failures, 7 skipped under the pinned
+`cryptography==50.0.1`. Every `run_*.py` invocation CI makes: 45 distinct CI commands: 30 pass; 14 fail only for missing local prerequisites (upstream raw artifacts, hindsight-embed, uor_addr, openssl TSA fixtures) after importing the layered package cleanly; 1 pre-existing failure identical on main (run_dashclaw_external_verdict.py asserts an approved correction commits, which the ADR-037 flip parks) -- surfaced to the operator, not fixed in this cycle.
+`verify_seals` 16/16, validators clean.
+
+**The hazard the audit condition targeted.** Twenty-two sites computed roots as
+`Path(__file__).resolve().parents[N]`; one level deeper shifts every one, and
+`receipts.schema_dir()` is among them. They now import `REPO_ROOT` /
+`REFERENCE_ROOT` from a top-level `_paths.py`, and `receipts._packaged_schemas`
+names the package explicitly rather than `__package__`. Audit C1 required that
+packaged-schema resolution be proven **with the source tree actually absent**,
+because `_SOURCE_SCHEMAS.is_dir()` is true from anywhere inside the checkout:
+the wheel was built, installed in a fresh venv, and run from the scratch
+directory -- `schema_dir()` returned `site-packages/agentmem_ref/_schemas`,
+`agent-memory --help` exit 0, alias identity and the `crg` doctrine held.
+
+**Found at implementation, amended before the move.** The plan's layer names
+`substrate` and `capabilities` are also module names, and a package directory
+shadows a same-named module file: the alias at `agentmem_ref/substrate.py`
+would have been unreachable and `agentmem_ref.substrate` would have become the
+subpackage -- an identity break at two of the highest in-degree seams. Plan
+iteration 3 renames the layers `state` and `contracts`; the mover refuses any
+layer name that collides with a module.
+
+**One consumer of module text.** `examples/cloudflare-dashclaw-provider/
+prepare.py` copies three canonical sources into a flat Worker bundle by exact
+match and refuses on any other shape. It now reads them from their layered
+locations and flattens `from ..core import policy` to `from . import policy` as a
+packaging-only change, before its existing exact-match transform. Three tests
+that had errored pass; the bundle's `--check` runs clean.
+
+**Documentation.** 214 `reference/agentmem_ref/<x>.py` references in docs, wiki
+source, READMEs and workflow path triggers rewritten to the new locations.
+Sealed historical records -- this ledger, earlier sprint plans and briefs, JSON
+evidence records -- were deliberately **not** rewritten: their content hashes
+are ledger-bound and they describe the layout as it stood when sealed.
+
+**Adversarial pass**: seven mutations, each caught, control green -- an alias
+replaced by a star-import copy; a core module importing `memory`; a *lazy*
+in-function import of a later layer; `parents[N]` reintroduced; `__init__`
+routed through an alias; a module physically in the wrong layer; the `crg`
+doctrine removed.
+
+**Decision**: audit VETOed once, on three grounds. *V1* -- the layer order is
+what the layout test enforces and the plan did not state it; `crg` imports
+`memory`, so a test written with `crg` beside or below `memory` either fails on
+the real direction or is written to whatever passes. *V2* -- `__init__` would
+have routed through aliases, which LD6 forbids for internal code. *V3* -- the
+top-level residents were unstated. PASS carried C1, satisfied as above.
+
+Audit: VETO, PASS -- attempts 1-2 of 5. Grounds V1-V3 closed and recorded.
+Review Boundary: staged, not committed.
