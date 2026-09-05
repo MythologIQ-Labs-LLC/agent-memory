@@ -147,10 +147,17 @@ The principal still needs qualifying evidence and valid scope/risk authority. Re
 
 The gate does not close until the first three exist. This ordering is part of the decision.
 
-1. **Parked proposal state** — `enter_pending_verification` as a real, resumable, evidence-emitting outcome.
-2. **Evidence qualification and dependence lineage** — R2 and R3 made computable, including dependence-group collapse.
+1. **Parked proposal state** — `enter_pending_verification` as a real, resumable, evidence-emitting outcome. **DONE** (Loop 8, ledger entry #18): `reference/agentmem_ref/pending_verification.py`.
+2. **Evidence qualification and dependence lineage** — R2 and R3 made computable, including dependence-group collapse. *Next.*
 3. **Governed resumption and re-evaluation** — evaluator-owned, policy re-evaluated from scratch, staleness applied.
 4. **Fail-closed `require_review`** — convert the 51 caller sites.
+
+**What step 1 settled, so steps 2–3 do not re-litigate it.** Two questions surfaced in audit and were decided:
+
+- **Which outcomes park.** Only `require_review` and `require_external_verification` — refusals that granted a route. `allow`/`allow_with_ledger` are refused because nothing was refused; `block` is refused because `_envelope` names `enter_pending_verification` in its *prohibited* set, so parking one would contradict the recorded envelope and create a record no evidence could ever discharge.
+- **What the record retains.** The whole `Proposal`, not an identity summary. Step 3 must re-evaluate from scratch and `policy.evaluate` takes a `Proposal`; retaining it is also what carries `state_snapshot` forward so the staleness guard can be applied at resumption. The record shape is therefore fixed and step 3 does not reshape it.
+
+The registry has **no** `resume` method — not a stub, not one raising. Step 3 adds it, and step 3 is gated on step 2.
 
 Do not flip the gate before 1–3 exist. A control whose remediation path does not yet work is a halt, and the pressure it creates becomes a workaround that outlives it.
 
