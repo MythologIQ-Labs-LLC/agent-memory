@@ -5,6 +5,14 @@ from __future__ import annotations
 import sys
 import unittest
 
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from agentmem_ref import policy, projections  # noqa: E402
+
+# Imported AFTER the sys.path setup above: `qualified_fixtures` imports
+# `agentmem_ref`, so it cannot load until `reference/` is on the path.
 # Relative import: this module is loaded as `tests.X` under
 # `discover -t reference` and as `reference.tests.X` by the targeted CI step, and
 # a relative import resolves under both. An absolute `from tests...` only works
@@ -19,11 +27,7 @@ def _visibility_corpus():
         criterion="value-correction", from_state="deploy window Thursday",
         to_values=("deploy window Friday",),
     ))
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from agentmem_ref import policy, projections  # noqa: E402
 from agentmem_ref.adapter import Clock, GovernedMemoryAdapter  # noqa: E402
 from agentmem_ref.projection_governance import ProjectionGovernor  # noqa: E402
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
