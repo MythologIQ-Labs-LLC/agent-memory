@@ -1360,3 +1360,112 @@ from Loop 10's research, and generalizing an authority kind is a doctrine change
 
 Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V3 closed and recorded.
 Review Boundary: staged, not committed.
+---
+
+### Entry #23: SESSION SEAL - Phase 14 (Sprint 2l evidence producers)
+
+**Entry ID**: `b71fa09aed81`
+**Content Hash**: `3a921782e97325771b96b3ad54768b99314be838420a69959d72cd712171c315`
+**Previous Hash**: `b021c6289ad796dee897271869ae298b4f909f997e9cb622fab6c9b98bf949d7`
+**Chain Hash**: `585789db3ea037d23d337f896e7a2a86584cc893a05a129f5913207982fdec63`
+**Timestamp**: 2026-09-05T06:10:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L3
+**Verdict**: PASS
+**Session**: 2026-09-05T0540-4fc4e9
+**Plan**: docs/plan-sprint2l-evidence-producers.md (iteration 3)
+**SSDF Practices**: PO.1.4, PS.2.1, PW.1.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index 83c22a5fa0f707f2f663da859250b6b4ed5b23cd):
+`c2aa34165f9a6a03b25c384280a3e2c918c6e8bfb99bddf656b4f4fae8d46efb`
+
+**The classification that reshaped the step.** Step 4a split the affected sites
+by kind of test. That distinction holds for the flip but is **not** the axis
+governing conversion. Measured across the seven production modules that set
+`review_satisfied=True`, by whether each already holds a digest or reproducible
+procedure:
+
+| Module | digest material |
+|---|---|
+| `dashclaw_external_verdict` | 23 |
+| `procedural_memory` | 21 -- `content_sha256`, `skill_version_ref` |
+| `reusable_grants` | 9 -- `grant_body_digest`, built in Loop 6 |
+| `decision_overwrite`, `forbidden_hits`, `visibility_characterization`, `benchmark_security` | **0** |
+
+**Only three of seven can produce genuine artifact-bound evidence.** For the
+other four, "conversion" would mean **inventing** an `artifact_ref` and a
+`digest` to satisfy the classifier -- the caller-asserted defect this program
+has spent thirteen cycles closing, dressed as a migration. ADR-037 already ruled
+on them: present real evidence **or park**. Which of those applies is an
+operator scope decision, raised rather than assumed.
+
+**Scope**: 4b-1 only. The three migratable modules, additively. **Zero lines
+removed from any of them**; `review_satisfied` is still set; `policy.py` and
+`evidence_qualification.py` untouched; the legacy asserted path still discharges
+and is asserted to, in the same suite.
+
+**Why 4b splits, stated honestly.** Unlike 4a's split, there is **no doctrinal
+halt** here -- converting three modules and flipping together would strand
+nobody. The justification is risk and reviewability: the flip breaks 57 tests
+across 18 files, and a mistake in any one converted module would be masked by the
+other 54 failures. Recorded as a judgement call rather than dressed in 4a's
+clothes.
+
+**Definition of Done**: 12 of 12 PASS, plus 4b and 5b. Test count 1050 to 1071
+(+21), 0 failures, 7 skipped, under the pinned `cryptography==50.0.1`. Validators
+clean.
+
+**Negative control**: six mutations, each caught, control restored green -- a
+verifier returning `True` unconditionally; a minted digest replacing
+`content_sha256`; provider and module evidence sharing a failure domain so the
+groups collapse; a module shipping its own verifier registry; a dropped
+`artifact_ref` degrading the class silently; the DashClaw content verifier
+ignoring the digest.
+
+**Decision**: audit VETOed twice, on three grounds.
+
+*V1* -- LD2 and LD5 could not both hold. LD2 claimed `procedural_memory` reaches
+`verified`; LD5 said modules name verifiers and never supply them. If a module
+may only name one, nothing ever runs the re-hash, every item stays `asserted`,
+and the claim was aspirational -- passing only through a test that supplied the
+verifier itself. LD5 had conflated **holding the registry** (always the
+evaluator's; registering your own verifier is certifying your own evidence) with
+**supplying an implementation** (the module may; offering a mechanism is not
+exercising authority over it). The algorithm already existed at
+`procedural_memory:143` and needed a door, not a new capability. An unregistered
+verifier still leaves the item `asserted`, so the evaluator's authority is
+intact.
+
+*V2* -- DoD 5 asserted discharge "at low risk" for every module. Measured,
+`procedural_memory` constructs `risk_class="high"` as well as low, so the path
+where discharge is hardest went unexercised while the DoD reported the migration
+proven. Each module is now exercised at the risk classes it actually constructs,
+with the full R5 requirement asserted at high, plus a negative half: `asserted`-
+only evidence must **not** discharge there, so a pass cannot come from the ladder
+being lenient.
+
+*V3* -- DoD 4 required provider-produced evidence to be "distinguishable from
+module-produced", and **`EvidenceItem` carries no producer field of any kind**.
+That is deliberate: Loop 10's audit declined exactly this, calling it the eighth
+instance, and its test now asserts the absence of `verifier_principal_id`,
+`principal`, `actor_id` and `produced_by`. An implementer taking the wording at
+face value would have added `produced_by` -- satisfying the DoD, breaking Loop
+10's test, and reintroducing the defect for the tenth time, in the cycle whose
+LD1 exists to prevent exactly that. **R2's lineage machinery already answers R1's
+question**: provider and module evidence differ in artifact root and failure
+domain, so they land in different dependence groups. That is the stronger
+property -- a `produced_by` string asserts an origin, while distinct dependence
+groups are a derived statement that the two cannot fail together.
+
+**The honest strength of this migration.** At low and medium risk R5 accepts
+`asserted`, so a converted site naming an unrun verifier is only modestly
+stronger than the `approval_refs` it replaces -- the residual FX013 already
+records, not re-litigated here. What changes materially: the claim becomes
+checkable, the class becomes derived rather than claimed, and `procedural_memory`
+reaches `verified` today because it can re-hash. Settling for `asserted` because
+low risk permits it would have taken the weakest reading of the ladder in the one
+place the strongest was available.
+
+Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V3 closed and recorded.
+Review Boundary: staged, not committed.

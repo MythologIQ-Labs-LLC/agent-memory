@@ -598,3 +598,54 @@ def _project_ref(domain_refs: tuple[str, ...]) -> str:
         if value.startswith("project:"):
             return value
     return ""
+
+
+#: Name a proposal may cite. Naming is not holding: an evaluator that has not
+#: registered this leaves the item `asserted` (step 2).
+PAYLOAD_VERIFIER = "procedural-memory:skill-payload-sha256"
+
+
+def evidence_for(artifact: "SkillArtifact") -> tuple:
+    """Evidence for a skill artifact, built from material already held.
+
+    ADR-037 step 4b-1. Nothing here is minted to satisfy the classifier:
+    `content_sha256` and `version_reference` predate this cycle, and the digest
+    is recomputed from the payload on every access.
+
+    A module-level function taking the artifact, because that is all it needs --
+    the same shape as `reusable_grants.evidence_for` and
+    `dashclaw_external_verdict.evidence_for`. It *produces*; it does not
+    certify. There is no discharge here and no verifier registry -- see
+    `payload_verifier`, which the evaluator may register or decline (R1:
+    producing evidence and certifying it are different acts).
+    """
+    from .evidence_qualification import EvidenceItem
+
+    return (
+        EvidenceItem(
+            ref=artifact.version_reference,
+            artifact_ref=artifact.version_reference,
+            digest=artifact.content_sha256,
+            verifier=PAYLOAD_VERIFIER,
+            failure_domain="procedural-memory-skill-payload",
+        ),
+    )
+
+
+def payload_verifier(artifact: "SkillArtifact"):
+    """A real verifier the evaluator may register, bound to one artifact.
+
+    Recomputes `content_sha256` from the payload and compares it to the digest
+    the evidence item carries -- the same comparison this module already makes
+    at `_verify_skill_binding`. Supplying the implementation is not holding the
+    registry: the evaluator still decides whether to trust it, and an
+    unregistered verifier leaves the item `asserted`.
+
+    Returns False for a tampered payload, so the item classifies `refuted`
+    rather than merely unverified.
+    """
+
+    def verify(item) -> bool:
+        return bool(item.digest) and item.digest == artifact.content_sha256
+
+    return verify
