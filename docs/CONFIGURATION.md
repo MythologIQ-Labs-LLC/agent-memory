@@ -359,3 +359,14 @@ A configuration or extension change is not complete merely because it starts suc
 - produces evidence appropriate to the claim being made.
 
 Configuration is an implementation surface. Agent Memory semantics remain governed by canonical doctrine, schemas, profiles, evidence, and accepted architecture decisions.
+
+## Seal anchors
+
+Every `SESSION SEAL` in `docs/META_LEDGER.md` records the `git write-tree` oid of the staged index at seal time. Those trees are anchored as parentless commits under `refs/seals/entry-<N>` so they are reachable, pushed, and safe from `git gc`. **A default `git clone` does not fetch this namespace.** To verify seals in a checkout:
+
+```
+git fetch origin 'refs/seals/*:refs/seals/*'
+python scripts/verify_seals.py
+```
+
+`verify_seals.py` fails -- rather than passing vacuously -- if the ledger records seals and the namespace is empty. New seals are anchored at substantiate with `python scripts/anchor_seal.py <entry>` and pushed with `git push origin 'refs/seals/*:refs/seals/*'`.
