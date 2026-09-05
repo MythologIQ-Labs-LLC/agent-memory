@@ -28,7 +28,11 @@ from agentmem_ref.reusable_grants import (
 class ReusableGrantTests(unittest.TestCase):
     def test_adversarial_harness(self):
         report = run_harness()
-        self.assertEqual(report["metrics"]["scenario_count"], 12)
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # A row was added, not re-graded: the high-risk scenario now parks
+        # (R5 requires human confirmation for this proposal, which precedent
+        # cannot supply) and a medium-risk row shows the discharge that remains.
+        self.assertEqual(report["metrics"]["scenario_count"], 13)
         self.assertEqual(report["metrics"]["safe_review_discharges"], 1)
         self.assertEqual(report["metrics"]["unsafe_grant_activations"], 0)
         self.assertEqual(report["metrics"]["authority_transition_failures"], 0)

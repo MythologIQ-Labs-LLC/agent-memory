@@ -16,6 +16,13 @@ from __future__ import annotations
 
 import sys
 import unittest
+
+from tests.qualified_fixtures import (
+    commit_adjudicated,
+    corpus_for,
+    governed_adapter,
+    rule,
+)
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -60,14 +67,36 @@ def proposal(
 class RejectedValueReadmissionTests(unittest.TestCase):
     def setUp(self) -> None:
         self.substrate = InMemoryTemporalGraph()
-        self.adapter = GovernedMemoryAdapter(self.substrate, TENANT, Clock())
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The evaluator holds an adjudication authored ahead of any proposal:
+        # from VALUE_A this memory may move to VALUE_B, and back. A proposal is
+        # checked against it and cannot author it.
+        self.corpus = corpus_for(
+            rule(rule_id="rule:deploy-window", target=MEMORY,
+                 criterion="value-correction", from_state=VALUE_A,
+                 to_values=(VALUE_B,)),
+            rule(rule_id="rule:deploy-window-reversal", target=MEMORY,
+                 criterion="value-reversal", from_state=VALUE_B,
+                 to_values=(VALUE_A,)),
+        )
+        self.adapter = governed_adapter(self.substrate, TENANT, Clock(), self.corpus)
 
         self.original = self.adapter.commit_proposal(proposal("prop-original"), VALUE_A)
         self.assertTrue(self.original.committed)
 
-        self.replacement = self.adapter.commit_proposal(
-            proposal("prop-correction", operation="correction", evidence_refs=("ev:correction",), approved=True),
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # `review_satisfied=True` no longer discharges require_review, so the
+        # correction now presents a genuine change record -- an artifact stating
+        # what changed, from what, to what and on whose authority, with a
+        # verifier that confirms it describes this commit. The scenario under
+        # test is readmission, not review discharge, so the fixture supplies
+        # honest evidence rather than a bypass.
+        self.replacement = commit_adjudicated(
+            self.adapter, self.corpus,
+            proposal("prop-correction", operation="correction",
+                     evidence_refs=("ev:correction",), approved=True),
             VALUE_B,
+            pre_state=VALUE_A,
         )
         self.assertTrue(self.replacement.committed)
 
@@ -111,7 +140,11 @@ class RejectedValueReadmissionTests(unittest.TestCase):
         self.assertEqual(result.refusal, "rejected_value_requires_reconciliation")
 
     def test_explicit_approved_correction_can_reverse_prior_rejection(self):
-        reversal = self.adapter.commit_proposal(
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The reversal now cites a change record reinstating VALUE_A, which is
+        # exactly the proposition under review.
+        reversal = commit_adjudicated(
+            self.adapter, self.corpus,
             proposal(
                 "prop-approved-reversal",
                 operation="correction",
@@ -119,6 +152,8 @@ class RejectedValueReadmissionTests(unittest.TestCase):
                 approved=True,
             ),
             VALUE_A,
+            pre_state=VALUE_B,
+            criterion="value-reversal",
         )
 
         self.assertTrue(reversal.committed)

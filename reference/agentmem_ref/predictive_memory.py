@@ -255,6 +255,8 @@ class PredictiveCounterfactualMemory:
         downstream_authority: str = policy.A1,
         risk_class: str = "low",
         review_satisfied: bool = False,
+        evidence=None,
+        attestation=None,
         approval_refs: tuple[str, ...] = (),
     ) -> PredictionRevisionResult:
         """Retain/revise predictive state through Cognitive Mesh and PAMA."""
@@ -309,6 +311,8 @@ class PredictiveCounterfactualMemory:
             proposal_id=f"proposal:{revision.revision_ref}",
             review_satisfied=review_satisfied,
             approval_refs=approval_refs,
+            evidence=evidence,
+            attestation=attestation,
         )
 
         if transition.commit.committed:
@@ -343,6 +347,8 @@ class PredictiveCounterfactualMemory:
         downstream_authority: str = policy.A1,
         risk_class: str = "low",
         review_satisfied: bool = False,
+        evidence=None,
+        attestation=None,
         approval_refs: tuple[str, ...] = (),
     ) -> PredictionComparisonResult:
         """Retain a derived comparison without rewriting prediction history."""
@@ -421,6 +427,8 @@ class PredictiveCounterfactualMemory:
             proposal_id=f"proposal:{comparison.comparison_ref}",
             review_satisfied=review_satisfied,
             approval_refs=approval_refs,
+            evidence=evidence,
+            attestation=attestation,
         )
 
         if transition.commit.committed:

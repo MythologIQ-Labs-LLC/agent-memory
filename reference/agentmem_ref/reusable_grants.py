@@ -15,6 +15,7 @@ from typing import Iterable
 import rfc8785
 
 from . import policy, receipts
+from .evidence_qualification import EvidenceItem, group_by_dependence
 from .precedent_applicability import REDUCE_REVIEW, evaluate_projection
 
 VERSION = "0.1.0"
@@ -327,6 +328,10 @@ def grant_body_digest(grant: dict) -> str:
 #: Name a proposal may cite. Naming is not holding.
 GRANT_BODY_VERIFIER = "reusable-grants:grant-body-digest"
 
+#: The applicability adjudication this module performs. Named so a decision can
+#: record which procedure produced its evidence.
+REUSABLE_GRANT_VERIFIER = "reusable-grants:applicability"
+
 
 def evidence_for(grant: dict) -> tuple:
     """Evidence for a reusable grant, built from material already held.
@@ -365,6 +370,25 @@ def grant_body_verifier(grant: dict):
         return bool(item.digest) and item.digest == grant_body_digest(grant)
 
     return verify
+
+
+def _reusable_grant_verifier(item) -> bool:
+    """`evaluate_reusable_grant` already ran every applicability check.
+
+    This confirms the evidence records that outcome and was produced by this
+    procedure at this version. The adjudication itself is the deterministic
+    resolution above, which the caller cannot author.
+    """
+    return (
+        item.method == "reusable-grant-applicability"
+        and item.method_version == "1"
+        and item.result == "satisfies_reusable_approval"
+    )
+
+
+#: Held by this module because the procedure is this module's; the evaluator
+#: still chooses whether to route through `evaluate_pama_with_reusable_grant`.
+_GRANT_VERIFIERS = {REUSABLE_GRANT_VERIFIER: _reusable_grant_verifier}
 
 
 class RatificationRegistry:
@@ -544,12 +568,34 @@ def evaluate_pama_with_reusable_grant(proposal: policy.Proposal, grant_evaluatio
         return baseline
     if proposal.scope not in grant_evaluation["scope_refs"]:
         return baseline
-    return policy.evaluate(
-        replace(
-            proposal,
-            review_satisfied=True,
-            approval_refs=(grant_evaluation["approval_ref"],),
-        )
+    # ADR-037 step 4b-2 (entry #24). This used to discharge by setting
+    # `review_satisfied=True`, which no longer works and would now be the
+    # legacy-state coupling the operator ruled against.
+    #
+    # A current reusable grant IS an adjudication of the shape the operator
+    # sanctioned: it pre-exists this proposal, the caller cannot author it (it
+    # requires ratification recorded in an independently-held
+    # `RatificationRegistry`, with Loop 6's tamper detection), and
+    # `evaluate_reusable_grant` resolves it deterministically against the
+    # current projection -- refusing on material change, scope mismatch,
+    # staleness or revocation. So it is presented as reproducible-procedure
+    # evidence rather than as an assertion that review happened.
+    #
+    # The grant's *authority* still travels separately, in `approval_ref` on the
+    # evaluation and in the receipt. Only the adjudication is evidence.
+    evidence = (
+        EvidenceItem(
+            ref=grant_evaluation["grant_id"],
+            inputs=f"{proposal.target_reference}@{proposal.scope}->{proposal.operation}",
+            method="reusable-grant-applicability",
+            method_version="1",
+            result="satisfies_reusable_approval",
+            verifier=REUSABLE_GRANT_VERIFIER,
+            failure_domain=f"reusable-grant:{grant_evaluation['grant_id']}",
+        ),
+    )
+    return policy.evaluate_with_qualified_evidence(
+        proposal, group_by_dependence(evidence, verifiers=_GRANT_VERIFIERS)
     )
 
 

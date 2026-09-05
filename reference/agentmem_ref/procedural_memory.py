@@ -318,12 +318,36 @@ class ProceduralMemoryRuntime:
         )
         return replace(skill_proposal, proposal=approved_proposal, approval=approval)
 
-    def commit_skill(self, skill_proposal: SkillProposal) -> SkillCommitResult:
+    def commit_skill(self, skill_proposal: SkillProposal, *, evidence=None) -> SkillCommitResult:
         resolution = self.resolve_capability()
         self._validate_skill_proposal_binding(skill_proposal, require_approval=None)
         serialized = skill_proposal.artifact.serialize()
         SkillArtifact.from_text(serialized)
-        result = self.adapter.commit_proposal(skill_proposal.proposal, serialized)
+        # ADR-037 step 4b-2 (entry #24). Evidence is deliberately NOT attached
+        # here, and the reason is worth keeping.
+        #
+        # 4b-1 established that this module can produce genuine artifact-bound
+        # evidence: `content_sha256` with `payload_verifier` re-deriving it. That
+        # evidence establishes **payload integrity** -- this artifact is what it
+        # claims to be.
+        #
+        # It does not establish the proposition a *correction* puts under review,
+        # which is that v2 should supersede v1. Attaching it here made an
+        # unapproved v2 commit, which is the same circularity the operator
+        # rejected in the change-record pattern: the artifact describing itself
+        # is not an argument for adopting it.
+        #
+        # `validation_refs` would be the semantically relevant material, but it
+        # is a bare tuple of strings -- `unqualified` under R3, with no digest
+        # and no verifier. So a skill correction parks until a genuine
+        # adjudication exists. The caller receives the criteria report.
+        #
+        # `evidence` is forwarded (DoD 20) so an evaluator that DOES hold a
+        # relevant adjudication -- a skill-version-advance policy, say -- can
+        # supply it. This module does not author one.
+        result = self.adapter.commit_proposal(
+            skill_proposal.proposal, serialized, evidence=evidence
+        )
         if result.committed and self.adapter.state_version(skill_proposal.artifact.memory_reference) != skill_proposal.artifact.version:
             raise RuntimeError("committed procedural skill version diverged from governed state version")
         return SkillCommitResult(skill_proposal.artifact, resolution, result)

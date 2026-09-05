@@ -164,12 +164,20 @@ class DurableDecisionFixtureTests(unittest.TestCase):
 
         result = registry.commit(proposal.proposal_id, _grant(data))
         expected = data["expected_behavior"]
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The fixture's declared behaviour changed with the flip: the grant still
+        # resolves, and the overwrite now parks because authority is not
+        # evidence. The assertions below read the fixture, so the change is
+        # declared there rather than hidden in the test.
         self.assertEqual(result.status, expected["commit_status"])
+        self.assertEqual(result.reason, expected["commit_reason"])
         self.assertEqual(registry.decision_status(proposal.target_decision_id), expected["target_status"])
-        self.assertEqual(registry.decision_status(proposal.replacement.decision_id), expected["replacement_status"])
+        self.assertIsNone(registry.decision(proposal.replacement.decision_id))
         self.assertEqual(len(registry.supersession_journal), expected["supersession_journal_count"])
         self.assertEqual(result.decision.outcome, expected["pama_outcome"])
-        self.assertEqual(result.supersession_evidence["authority_kind"], expected["authority_kind"])
+        self.assertEqual(result.grant.authority_kind, expected["authority_kind"])
+        self.assertTrue(expected["authority_resolved"])
+        self.assertEqual(len(registry.pending_verification.parked()), 1)
 
 
 if __name__ == "__main__":

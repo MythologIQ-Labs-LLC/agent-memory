@@ -20,6 +20,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from . import policy
+from .pending_verification import PendingVerificationRegistry
+from .resumption import CRITERION_GATE, criteria_for
 from .adapter import Clock, GovernedMemoryAdapter, RecallContext
 from .substrate import Fact, InMemoryTemporalGraph
 
@@ -324,8 +326,33 @@ def _rejected_reentry() -> ForbiddenHitObservation:
         state_snapshot="v1",
     )
     corrected = adapter.commit_proposal(correction, "deploy window Friday")
-    if not original.committed or not corrected.committed:
-        raise RuntimeError("readmission setup did not commit expected original/correction pair")
+    if not original.committed:
+        raise RuntimeError("readmission setup did not commit the original")
+    if not corrected.committed:
+        # ADR-037 step 4b-2 (entry #24), operator ruling 2026-09-05.
+        #
+        # The correction used to commit on `review_satisfied=True` plus
+        # `approval:human`. That route is gone, and this module has nothing that
+        # establishes the proposition under review -- that the deploy window is
+        # Friday rather than Thursday. Its executable observations and fixture
+        # matrix establish forbidden-hit *lifecycle behaviour*, which is a
+        # different proposition; reusing them here would be evidence-purpose
+        # laundering.
+        #
+        # So the correction parks, and the re-entry observation it was setup for
+        # is **declared blocked** rather than grandfathered through assertion.
+        # The row stays in the matrix, carrying the unmet criterion, so the gap
+        # is visible instead of silently absent.
+        registry = PendingVerificationRegistry()
+        record = registry.park(correction, policy.evaluate(correction))
+        unmet = next(
+            (c.kind for c in criteria_for(record).unmet if c.kind == CRITERION_GATE),
+            criteria_for(record).unmet[0].kind,
+        )
+        return _write_refusal_observation(
+            "rejected-value-reentry",
+            f"correction_parked_pending_verification:{unmet}",
+        )
     reentry = adapter.commit_proposal(
         _proposal(
             proposal_id="fh:reentry",

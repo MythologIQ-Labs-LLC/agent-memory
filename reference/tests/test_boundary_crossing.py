@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import sys
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -56,6 +58,29 @@ def request(**overrides) -> CrossingRequest:
     return CrossingRequest(**base)
 
 
+def _crossing_corpus(target, to_domain="domain:partner-analytics"):
+    """The evaluator's adjudication of permitted export destinations.
+
+    ADR-037 step 4b-2 (entry #24): authored ahead of any proposal, so a caller
+    can present a crossing against it but cannot author one. Authority
+    (`approval:security-owner`) stays in the receipt, not in the evidential
+    class.
+    """
+    return corpus_for(rule(
+        rule_id="rule:approved-export", target=target, criterion="scope-expansion",
+        from_state="domain:internal", to_values=(to_domain,),
+    ))
+
+
+def _crossing_evidence(target, to_domain="domain:partner-analytics"):
+    corpus = _crossing_corpus(target, to_domain)
+    return (
+        corpus.evidence_for(target_reference=target, criterion="scope-expansion",
+                            pre_state="domain:internal", proposed_value=to_domain),
+        registry_for(corpus),
+    )
+
+
 class BoundaryCrossingTests(unittest.TestCase):
     def test_unreviewed_scope_crossing_is_receipted_but_not_committed(self):
         result = evaluate_crossing(
@@ -72,6 +97,7 @@ class BoundaryCrossingTests(unittest.TestCase):
         self.assertEqual(result.receipt["destination_domain_refs"], ["domain:shared-security"])
 
     def test_external_review_can_commit_crossing_without_changing_source_semantics(self):
+        _ev, _reg = _crossing_evidence("mem:security-summary", "domain:shared-security")
         result = evaluate_crossing(
             request(),
             proposal(
@@ -82,6 +108,8 @@ class BoundaryCrossingTests(unittest.TestCase):
             timestamp="2026-08-11T20:00:01Z",
             decision_receipt_ref="decision:scope-expansion",
             ledger_ref="ledger:crossing-1",
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_ev, verifier_registry=_reg,
         )
 
         self.assertTrue(result.committed)
@@ -138,6 +166,7 @@ class BoundaryCrossingTests(unittest.TestCase):
         self.assertEqual(result.receipt["outcome"], "review_required")
 
     def test_reviewed_privacy_minimized_export_can_commit_without_redaction_becoming_authority(self):
+        _ev2, _reg2 = _crossing_evidence("mem:security-summary", "domain:external-partner")
         result = evaluate_crossing(
             request(
                 operation="export",
@@ -156,6 +185,10 @@ class BoundaryCrossingTests(unittest.TestCase):
             timestamp="2026-08-11T20:00:05Z",
             decision_receipt_ref="decision:authorized-redacted-export",
             ledger_ref="ledger:authorized-redacted-export",
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            # The redaction still confers no authority -- that property is
+            # asserted below and unchanged. Only the discharge route moved.
+            evidence=_ev2, verifier_registry=_reg2,
         )
 
         self.assertTrue(result.committed)

@@ -205,9 +205,30 @@ class DurableDecisionOverwriteTests(unittest.TestCase):
             ),
         )
 
-        self.assertEqual(result.status, COMMITTED)
-        self.assertEqual(result.decision.outcome, policy.ALLOW_WITH_LEDGER)
-        self.assertEqual(result.supersession_evidence["authority_kind"], DELEGATED_POLICY)
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # Operator ruling: decision_overwrite parks its low/medium require_review
+        # path unless genuine proposal evidence is available, and the
+        # AuthorityGrant must NOT be used as that evidence -- it answers the
+        # authority question, not the evidence question. A valid grant can
+        # authorise review of a bad proposal.
+        #
+        # The property this test was written for is unchanged and still asserted
+        # below: delegated_policy IS a valid non-human authority at low risk, and
+        # the grant resolves. What changed is that resolving authority no longer
+        # commits on its own.
+        self.assertEqual(result.status, PENDING)
+        self.assertEqual(result.reason, "parked_pending_verification")
+        self.assertIsNotNone(result.grant)
+        self.assertEqual(result.grant.authority_kind, DELEGATED_POLICY)
+
+        # And it parks durably: the record outlives the call and names what is
+        # missing, so the caller has a traversable route rather than a refusal.
+        parked = registry.pending_verification.parked()
+        self.assertEqual(len(parked), 1)
+        from agentmem_ref.resumption import criteria_for
+        self.assertTrue(criteria_for(parked[0]).unmet)
+        self.assertEqual(result.decision.outcome, policy.REQUIRE_REVIEW)
+        self.assertIsNone(result.supersession_evidence)
 
     def test_high_risk_overwrite_requires_human_even_when_prior_decision_was_not_human_confirmed(self):
         registry = _registry(human_confirmed=False)

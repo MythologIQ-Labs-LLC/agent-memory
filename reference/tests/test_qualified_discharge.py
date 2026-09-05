@@ -96,8 +96,12 @@ class AssertionGetsNoFreePass(unittest.TestCase):
         4b's migration a no-op wearing the appearance of enforcement.
         """
         proposal = _proposal("low", review_satisfied=True, approval_refs=("approver-1",))
-        # Ordinary evaluate DOES discharge it -- that path is untouched.
-        self.assertEqual(policy.evaluate(proposal).outcome, policy.ALLOW_WITH_LEDGER)
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # Loop 12 asserted here that ordinary `evaluate` still discharged this.
+        # The flip removed that route, so the assertion inverts: plain evaluate
+        # now refuses too. The property this test exists for is unchanged and
+        # now holds on both paths.
+        self.assertEqual(policy.evaluate(proposal).outcome, policy.REQUIRE_REVIEW)
 
         decision = policy.evaluate_with_qualified_evidence(proposal, _analysis([]))
 
@@ -113,12 +117,19 @@ class AssertionGetsNoFreePass(unittest.TestCase):
         self.assertEqual(decision.outcome, policy.REQUIRE_REVIEW)
         self.assertIn(policy.INSUFFICIENT_EVIDENCE_CLASS, decision.reasons)
 
-    def test_the_asserted_route_itself_is_untouched(self):
-        """DoD 11. _apply_review is unmodified, so all 51 sites keep working."""
+    def test_the_asserted_route_is_gone(self):
+        """ADR-037 step 4b-2: expected semantic change (entry #24).
+
+        Loop 12 asserted the asserted route still worked, because 4a was
+        deliberately additive. Step 4b-2 removes it: `review_satisfied` plus
+        arbitrary `approval_refs` no longer discharges `require_review`, and the
+        refusal names the route out.
+        """
         proposal = _proposal("low", review_satisfied=True, approval_refs=("approver-1",))
         decision = policy.evaluate(proposal)
-        self.assertEqual(decision.outcome, policy.ALLOW_WITH_LEDGER)
-        self.assertIn("review discharged by", " ".join(decision.reasons))
+        self.assertEqual(decision.outcome, policy.REQUIRE_REVIEW)
+        self.assertIn(policy.REVIEW_REQUIRES_QUALIFIED_EVIDENCE, decision.reasons)
+        self.assertNotIn("review discharged by", " ".join(decision.reasons))
 
 
 class HighAndCriticalRequireBothAxes(unittest.TestCase):

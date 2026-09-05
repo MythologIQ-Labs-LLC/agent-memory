@@ -119,16 +119,23 @@ class RequireReviewIsNotResumableThisCycle(unittest.TestCase):
         self.assertFalse(result.resumed)
         self.assertEqual(result.decision.outcome, policy.REQUIRE_REVIEW)
 
-    def test_the_report_names_step_4_rather_than_an_unsatisfiable_criterion(self):
-        """Telling an agent to collect evidence that cannot help is worse than
-        telling it to wait."""
+    def test_the_report_now_names_the_evidence_criterion_step_4_landed(self):
+        """ADR-037 step 4b-2: expected semantic change (entry #24).
+
+        Loop 10 reported CRITERION_GATE -- "wait for step 4" -- because evidence
+        genuinely could not move require_review while assertion discharged it.
+        Step 4 has landed, so that message would now point a caller at completed
+        work. The report names R5's ladder instead, which is the traversable
+        route the operator's criterion 7 requires.
+        """
         _, record = _park(_review_proposal())
         report = criteria_for(record)
 
-        gate = [c for c in report.unmet if c.kind == CRITERION_GATE]
-        self.assertEqual(len(gate), 1)
-        self.assertIn("step 4", gate[0].satisfied_by)
-        self.assertIn("assertion route", gate[0].detail)
+        self.assertEqual([c for c in report.unmet if c.kind == CRITERION_GATE], [])
+        qualification = [c for c in report.unmet
+                         if c.kind == "evidence_qualification"]
+        self.assertEqual(len(qualification), 1)
+        self.assertIn("evaluate_with_qualified_evidence", qualification[0].satisfied_by)
 
 
 class StalenessRefusesBeforeEvaluation(unittest.TestCase):
@@ -350,16 +357,19 @@ class TheStrengthLadder(unittest.TestCase):
                if c.kind == CRITERION_INDEPENDENCE][0]
         self.assertIn(f"human_confirmation ({IN_FORCE})", ext.bar)
 
-        # require_review at high risk: nothing in the ladder bites yet, because
-        # _apply_review discharges on assertion with no authority-kind check.
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # Loop 11 asserted that require_review rows were pending step 4, because
+        # _apply_review discharged on assertion with no authority-kind check.
+        # 4b-2 removed that route, so every ladder row now bites on this path
+        # too and the marking inverts.
         review_high = _proposal(pid="prop-rr-high", operation="link_creation",
                                 risk_class="high")
         self.assertEqual(policy.evaluate(review_high).outcome, policy.REQUIRE_REVIEW)
         _, rr_record = _park(review_high)
         rr = [c for c in criteria_for(rr_record).unmet
               if c.kind == CRITERION_INDEPENDENCE][0]
-        self.assertIn(f"human_confirmation ({PENDING_STEP_4})", rr.bar)
-        self.assertNotIn(IN_FORCE, rr.bar)
+        self.assertIn(f"human_confirmation ({IN_FORCE})", rr.bar)
+        self.assertNotIn(PENDING_STEP_4, rr.bar)
 
     def test_criteria_for_takes_no_risk_class_parameter(self):
         """DoD 8b / audit V3. The ninth instance, declined.

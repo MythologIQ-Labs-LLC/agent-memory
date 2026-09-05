@@ -5,6 +5,26 @@ from __future__ import annotations
 import json
 import sys
 import unittest
+
+from agentmem_ref.evidence_qualification import group_by_dependence
+from tests.qualified_fixtures import corpus_for, registry_for, rule
+
+
+def deletion_corpus():
+    """The evaluator's adjudication of permitted deletions (ADR-037 4b-2,
+    entry #24). Authored ahead of any proposal."""
+    return corpus_for(rule(
+        rule_id="rule:approved-deletion", target=SOURCE,
+        criterion="permanent-deletion", from_state="current",
+        to_values=("purged",),
+    ))
+
+
+def deletion_evidence():
+    return deletion_corpus().evidence_for(
+        target_reference=SOURCE, criterion="permanent-deletion",
+        pre_state="current", proposed_value="purged",
+    )
 from pathlib import Path
 
 import jsonschema
@@ -65,7 +85,10 @@ def proposal(**overrides) -> policy.Proposal:
 
 
 def make_governor() -> ProjectionGovernor:
-    adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock())
+    adapter = GovernedMemoryAdapter(
+        InMemoryTemporalGraph(), TENANT, Clock(),
+        verifier_registry=registry_for(deletion_corpus()),
+    )
     gov = ProjectionGovernor(adapter)
     adapter.commit_proposal(
         policy.Proposal(
@@ -143,7 +166,12 @@ class DeletionCompletenessEvidenceTests(unittest.TestCase):
 
     def test_declared_residual_is_observed_and_portably_reported(self):
         gov = make_governor()
-        result = gov.purge(proposal(), SOURCE, retained_by_policy={"summary:two"})
+        result = gov.purge(
+            proposal(), SOURCE, retained_by_policy={"summary:two"},
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=deletion_evidence(),
+            verifier_registry=registry_for(deletion_corpus()),
+        )
         self.assertTrue(result.committed)
 
         observed = gov.sweep(set())
@@ -163,7 +191,18 @@ class DeletionCompletenessEvidenceTests(unittest.TestCase):
     def test_undeclared_residue_hard_gate_failure_is_portably_reported(self):
         gov = make_governor()
         delete = proposal(proposal_id="prop-delete-partial")
-        decision = policy.evaluate(delete)
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # This test is about how an undeclared-residue gate failure is REPORTED,
+        # not about how the deletion is authorised. It needs a decision that
+        # permits the deletion, which now comes from qualified evidence rather
+        # than from `review_satisfied=True`.
+        decision = policy.evaluate_with_qualified_evidence(
+            delete,
+            group_by_dependence(
+                deletion_evidence(),
+                verifiers=registry_for(deletion_corpus()).as_mapping(),
+            ),
+        )
         self.assertIn("permanent_deletion", decision.permitted_actions)
         canonical_receipt = receipts.build_receipt(
             receipt_id="receipt:delete:partial",
@@ -197,7 +236,12 @@ class DeletionCompletenessEvidenceTests(unittest.TestCase):
 
     def test_transitive_purge_zero_residue_is_portably_satisfied(self):
         gov = make_governor()
-        result = gov.purge(proposal(proposal_id="prop-delete-clean"), SOURCE)
+        result = gov.purge(
+            proposal(proposal_id="prop-delete-clean"), SOURCE,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=deletion_evidence(),
+            verifier_registry=registry_for(deletion_corpus()),
+        )
         self.assertTrue(result.committed)
         self.assertTrue(result.hard_gate_passed)
 
@@ -216,7 +260,12 @@ class DeletionCompletenessEvidenceTests(unittest.TestCase):
 
     def test_public_chains_exclude_memory_and_projection_identifiers(self):
         gov = make_governor()
-        result = gov.purge(proposal(), SOURCE, retained_by_policy={"summary:two"})
+        result = gov.purge(
+            proposal(), SOURCE, retained_by_policy={"summary:two"},
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=deletion_evidence(),
+            verifier_registry=registry_for(deletion_corpus()),
+        )
         measurement = measure_deletion_completeness(result.buckets, gov.sweep(set()))
         chain = chain_for(result.receipt, measurement, "action:delete:privacy")
 
@@ -228,7 +277,12 @@ class DeletionCompletenessEvidenceTests(unittest.TestCase):
 
     def test_chain_and_embedded_portable_evidence_validate(self):
         gov = make_governor()
-        result = gov.purge(proposal(proposal_id="prop-delete-schema"), SOURCE)
+        result = gov.purge(
+            proposal(proposal_id="prop-delete-schema"), SOURCE,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=deletion_evidence(),
+            verifier_registry=registry_for(deletion_corpus()),
+        )
         measurement = measure_deletion_completeness(result.buckets, gov.sweep(set()))
         chain = chain_for(result.receipt, measurement, "action:delete:schema")
 

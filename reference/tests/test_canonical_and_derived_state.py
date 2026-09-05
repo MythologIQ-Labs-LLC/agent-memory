@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import sys
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -51,6 +53,25 @@ def make_proposal(**overrides) -> policy.Proposal:
     return policy.Proposal(**base)
 
 
+def purge_corpus():
+    """The evaluator's adjudication of permitted purges (ADR-037 step 4b-2).
+
+    Authored ahead of any proposal: this source may be purged once declared for
+    deletion. The caller presents a purge against it and cannot author it.
+    """
+    return corpus_for(rule(
+        rule_id="rule:approved-purge", target=SOURCE, criterion="permanent-deletion",
+        from_state="current", to_values=("purged",),
+    ))
+
+
+def purge_evidence():
+    return purge_corpus().evidence_for(
+        target_reference=SOURCE, criterion="permanent-deletion",
+        pre_state="current", proposed_value="purged",
+    )
+
+
 def approved_purge(**overrides) -> policy.Proposal:
     """A purge an external authority has actually approved."""
     return make_proposal(
@@ -68,7 +89,8 @@ class ProjectionDeclarationTests(unittest.TestCase):
     """Item 1: a declaration exists, with basis recorded at build time."""
 
     def setUp(self) -> None:
-        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock())
+        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock(),
+            verifier_registry=registry_for(purge_corpus()))
         self.gov = ProjectionGovernor(self.adapter)
         self.adapter.commit_proposal(make_proposal(), "deploy window is Thursday")
 
@@ -85,7 +107,8 @@ class FreshnessRelationTests(unittest.TestCase):
     """Item 2: stale and residual are computed, never asserted by a flag."""
 
     def setUp(self) -> None:
-        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock())
+        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock(),
+            verifier_registry=registry_for(purge_corpus()))
         self.gov = ProjectionGovernor(self.adapter)
         self.adapter.commit_proposal(make_proposal(), "deploy window is Thursday")
         self.gov.declare(
@@ -109,7 +132,8 @@ class CorrectionPropagationTests(unittest.TestCase):
     """Item 3: correction marks dependents stale and supersedes without erasing."""
 
     def setUp(self) -> None:
-        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock())
+        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock(),
+            verifier_registry=registry_for(purge_corpus()))
         self.gov = ProjectionGovernor(self.adapter)
         self.adapter.commit_proposal(make_proposal(), "deploy window is Thursday")
         self.gov.declare(
@@ -143,7 +167,8 @@ class TransitivePurgeTests(unittest.TestCase):
     """Items 4 and 5: transitive closure, and an independent sweep that can fail."""
 
     def setUp(self) -> None:
-        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock())
+        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock(),
+            verifier_registry=registry_for(purge_corpus()))
         self.gov = ProjectionGovernor(self.adapter)
         self.adapter.commit_proposal(make_proposal(), "deploy window is Thursday")
         # A chain: canonical -> summary -> summary-of-summary.
@@ -161,7 +186,8 @@ class TransitivePurgeTests(unittest.TestCase):
         self.assertEqual(set(closure), {"sum:1", "sum:2"})
 
     def test_purge_reaches_the_whole_closure_and_sweeps_clean(self):
-        result = self.gov.purge(approved_purge(), SOURCE)
+        result = self.gov.purge(approved_purge(), SOURCE,
+            evidence=purge_evidence(), verifier_registry=registry_for(purge_corpus()))
 
         self.assertTrue(result.committed)
         self.assertEqual(set(result.buckets[residue.PURGED]), {"sum:1", "sum:2"})
@@ -184,7 +210,8 @@ class TransitivePurgeTests(unittest.TestCase):
         self.gov.correct(SOURCE)
         self.assertTrue(self.gov.store.superseded("sum:1"))
 
-        self.gov.purge(approved_purge(), SOURCE)
+        self.gov.purge(approved_purge(), SOURCE,
+            evidence=purge_evidence(), verifier_registry=registry_for(purge_corpus()))
 
         self.assertEqual(self.gov.store.superseded("sum:1"), ())
 
@@ -195,7 +222,8 @@ class TransitivePurgeTests(unittest.TestCase):
             reachable=False, note="third-party export",
         )
 
-        result = self.gov.purge(approved_purge(), SOURCE)
+        result = self.gov.purge(approved_purge(), SOURCE,
+            evidence=purge_evidence(), verifier_registry=registry_for(purge_corpus()))
 
         self.assertIn("export:1", result.buckets[residue.DECLARED_UNCONTROLLABLE])
         self.assertEqual(result.undeclared, [], "declared residue is not undeclared residue")
@@ -211,7 +239,8 @@ class RebuildAuthorityTests(unittest.TestCase):
     """Item 6: invalidation must not become a write channel."""
 
     def setUp(self) -> None:
-        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock())
+        self.adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock(),
+            verifier_registry=registry_for(purge_corpus()))
         self.gov = ProjectionGovernor(self.adapter)
         self.adapter.commit_proposal(make_proposal(), "deploy window is Thursday")
         self.gov.declare(
@@ -243,7 +272,14 @@ class RebuildAuthorityTests(unittest.TestCase):
             review_satisfied=True,
         )
 
-        result = self.gov.propose_rebuild("sum:1", authorized)
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        result = self.gov.propose_rebuild(
+            "sum:1", authorized,
+            evidence=purge_corpus().evidence_for(
+                target_reference=SOURCE, criterion="permanent-deletion",
+                pre_state="current", proposed_value="purged"),
+            verifier_registry=registry_for(purge_corpus()),
+        )
 
         self.assertTrue(result.committed)
         self.assertEqual(self.gov.store.get("sum:1").version, 2)
@@ -261,7 +297,8 @@ class ClosureSafetyTests(unittest.TestCase):
     """The spike asks whether the derivation graph is well-founded. Assume not."""
 
     def test_cyclic_derivation_terminates(self):
-        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock())
+        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), TENANT, Clock(),
+            verifier_registry=registry_for(purge_corpus()))
         gov = ProjectionGovernor(adapter)
         adapter.commit_proposal(make_proposal(), "a claim")
         gov.declare("a", (SOURCE,), projections.DETERMINISTIC,

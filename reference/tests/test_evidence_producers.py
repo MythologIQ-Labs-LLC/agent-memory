@@ -280,9 +280,15 @@ class ProducersProduceAndNothingMore(unittest.TestCase):
 class TheMigrationIsAdditive(unittest.TestCase):
     """DoD 9, 10 -- LD6, LD7. 'Additive' is a checked claim."""
 
-    def test_the_legacy_asserted_path_still_discharges(self):
+    def test_the_legacy_asserted_path_no_longer_discharges(self):
+        """ADR-037 step 4b-2: expected semantic change (entry #24).
+
+        Loop 13 asserted the legacy path still worked, which was the point of an
+        additive migration. 4b-2 removes it, so the three producers' evidence
+        paths are now the only way through -- which is what they were built for.
+        """
         proposal = _proposal("low", review_satisfied=True, approval_refs=("approver-1",))
-        self.assertEqual(policy.evaluate(proposal).outcome, policy.ALLOW_WITH_LEDGER)
+        self.assertEqual(policy.evaluate(proposal).outcome, policy.REQUIRE_REVIEW)
 
     def test_procedural_memory_still_sets_review_satisfied(self):
         """LD7. Removing it belongs to the flip, not here."""

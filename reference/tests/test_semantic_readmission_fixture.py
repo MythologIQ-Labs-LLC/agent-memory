@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
 from pathlib import Path
 
 from agentmem_ref import policy
@@ -52,7 +54,20 @@ class SemanticReadmissionFixtureTests(unittest.TestCase):
         expected = data["expected_behavior"]
         signal_data = data["semantic_signal"]
 
-        adapter = SemanticReadmissionAdapter(InMemoryTemporalGraph(), tenant="tenant-a", clock=Clock())
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        corpus = corpus_for(rule(
+            rule_id="rule:fixture-correction", target="mem:deploy-window",
+            criterion="value-correction", from_state=values["original"],
+            to_values=(values["current_correction"],),
+        ), rule(
+            rule_id="rule:fixture-reversal", target="mem:deploy-window",
+            criterion="value-reversal", from_state=values["current_correction"],
+            to_values=(values["semantic_paraphrase"],),
+        ))
+        adapter = SemanticReadmissionAdapter(
+            InMemoryTemporalGraph(), tenant="tenant-a", clock=Clock(),
+            verifier_registry=registry_for(corpus),
+        )
         original = adapter.commit_proposal(_proposal("fixture-original"), values["original"])
         self.assertTrue(original.committed)
         corrected = adapter.commit_proposal(
@@ -64,6 +79,10 @@ class SemanticReadmissionFixtureTests(unittest.TestCase):
                 reviewed=True,
             ),
             values["current_correction"],
+            evidence=corpus.evidence_for(
+                target_reference="mem:deploy-window", criterion="value-correction",
+                pre_state=values["original"],
+                proposed_value=values["current_correction"]),
         )
         self.assertTrue(corrected.committed)
 
@@ -103,6 +122,13 @@ class SemanticReadmissionFixtureTests(unittest.TestCase):
             ),
             values["semantic_paraphrase"],
             semantic_signal=signal,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            # The fixture's declared property -- an approved correction may
+            # re-enter through PAMA -- is unchanged. Only the discharge route is.
+            evidence=corpus.evidence_for(
+                target_reference="mem:deploy-window", criterion="value-reversal",
+                pre_state=values["current_correction"],
+                proposed_value=values["semantic_paraphrase"]),
         )
         self.assertEqual(approved.committed, expected["approved_correction_may_reenter_through_pama"])
 

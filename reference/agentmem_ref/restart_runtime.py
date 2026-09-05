@@ -233,7 +233,7 @@ def _snapshot_governance(
     }
 
 
-def _restore_adapter(substrate: InMemoryTemporalGraph, snapshot: dict) -> tuple[GovernedMemoryAdapter, dict[str, dict]]:
+def _restore_adapter(substrate: InMemoryTemporalGraph, snapshot: dict, verifier_registry=None) -> tuple[GovernedMemoryAdapter, dict[str, dict]]:
     if snapshot.get("schema_version") != SCHEMA_VERSION:
         raise RuntimeRecoveryError("unsupported governance state schema")
     tenant = snapshot.get("tenant")
@@ -245,7 +245,7 @@ def _restore_adapter(substrate: InMemoryTemporalGraph, snapshot: dict) -> tuple[
     if raw.get("selector_mode") != "deterministic":
         raise RuntimeRecoveryError("selector recovery is unsupported or ambiguous")
 
-    adapter = GovernedMemoryAdapter(substrate, tenant=tenant)
+    adapter = GovernedMemoryAdapter(substrate, tenant=tenant, verifier_registry=verifier_registry)
     try:
         adapter._clock = Clock(start=int(raw.get("clock_tick", 0)))
         # GAP-SEC-08 (LD6): do NOT rebind to a private counter -- that detaches
@@ -375,6 +375,7 @@ class JsonRuntimeStateStore:
         *,
         expected_profile: RuntimeProfile,
         available_bindings: Iterable[CapabilityBinding],
+        verifier_registry=None,
     ) -> tuple[GovernedMemoryAdapter, dict[str, dict], RecoveryEvidence]:
         manifest = _read_json(self.manifest_path)
         if manifest.get("schema_version") != SCHEMA_VERSION:
@@ -437,11 +438,13 @@ class RestartSafeRuntime:
         *,
         tenant: str,
         profile: RuntimeProfile,
+        verifier_registry=None,
     ) -> "RestartSafeRuntime":
+        """ADR-037 step 4b-2, DoD 20: the host configures verifier trust here."""
         store = JsonRuntimeStateStore(root)
         if store.exists():
             raise RuntimeRecoveryError("runtime state already exists; use recover()")
-        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=tenant)
+        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=tenant, verifier_registry=verifier_registry)
         runtime = cls(store=store, profile=profile, adapter=adapter)
         runtime.recovery_evidence = runtime.checkpoint()
         return runtime
@@ -453,12 +456,16 @@ class RestartSafeRuntime:
         *,
         profile: RuntimeProfile,
         available_bindings: Iterable[CapabilityBinding] | None = None,
+        verifier_registry=None,
     ) -> "RestartSafeRuntime":
+        """ADR-037 step 4b-2, DoD 20: a recovered runtime carries host-configured
+        verifier trust too, so restart is not a way to lose the channel."""
         available = tuple(available_bindings if available_bindings is not None else profile.bindings)
         store = JsonRuntimeStateStore(root)
         adapter, visibility, evidence = store.recover(
             expected_profile=profile,
             available_bindings=available,
+            verifier_registry=verifier_registry,
         )
         return cls(
             store=store,
@@ -477,13 +484,29 @@ class RestartSafeRuntime:
         self.recovery_evidence = evidence
         return evidence
 
-    def commit_proposal(self, proposal, fact_text: str, episode=None):
-        result = self.adapter.commit_proposal(proposal, fact_text, episode)
+    def commit_proposal(self, proposal, fact_text: str, episode=None, *,
+                        evidence=None, attestation=None):
+        """Forward the governed commit, including the qualified-evidence channel.
+
+        ADR-037 step 4b-2, DoD 20: a wrapper that dropped `evidence` would leave
+        the capability present underneath and unreachable from here -- a path
+        that neither forwards nor parks honestly. It forwards; it does **not**
+        become an alternate trust authority. Verifier trust stays with the
+        adapter's evaluator-owned registry, and there is deliberately no
+        `verifiers=` parameter here either.
+        """
+        result = self.adapter.commit_proposal(
+            proposal, fact_text, episode, evidence=evidence, attestation=attestation
+        )
         self.checkpoint()
         return result
 
-    def governed_delete(self, proposal, fact_uuid: str, derived_refs: tuple[str, ...] = ()):
-        result = self.adapter.governed_delete(proposal, fact_uuid, derived_refs)
+    def governed_delete(self, proposal, fact_uuid: str, derived_refs: tuple[str, ...] = (),
+                        external_verification=None, evidence=None):
+        """Forwards the deletion channels too (ADR-037 step 4b-2, DoD 20)."""
+        result = self.adapter.governed_delete(
+            proposal, fact_uuid, derived_refs, external_verification, evidence
+        )
         self.checkpoint()
         return result
 

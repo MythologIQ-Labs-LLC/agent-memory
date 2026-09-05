@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import sys
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
 from dataclasses import replace
 from pathlib import Path
 
@@ -32,7 +34,21 @@ PURPOSE = "release_planning"
 class ProceduralMemoryTests(unittest.TestCase):
     def setUp(self) -> None:
         self.substrate = InMemoryTemporalGraph()
-        self.adapter = GovernedMemoryAdapter(self.substrate, tenant=TENANT, clock=Clock())
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The evaluator holds a general skill-version-advance adjudication,
+        # authored ahead of any proposal: a release skill may advance from v1 to
+        # v2. It is a policy about version progression, not a per-proposal fiat
+        # -- a jump to v3, or a replay of v1, is refuted by the same rule.
+        self.skill_corpus = corpus_for(rule(
+            rule_id="rule:skill-version-advance",
+            target="skill:release-workflow",
+            criterion="skill-version-advance",
+            from_state="v1", to_values=("v2",),
+        ))
+        self.adapter = GovernedMemoryAdapter(
+            self.substrate, tenant=TENANT, clock=Clock(),
+            verifier_registry=registry_for(self.skill_corpus),
+        )
         self.registry = ComponentRegistry()
         self.registry.register(reference_procedural_component())
         self.runtime = ProceduralMemoryRuntime(
@@ -148,7 +164,17 @@ class ProceduralMemoryTests(unittest.TestCase):
             v2_candidate,
             approval_ref="approval:human-release-owner",
         )
-        committed = self.runtime.commit_skill(reviewed)
+        # The correction now needs an adjudication of the transition, not just
+        # an approval: the approval answers who authorised it, which is a
+        # different axis. The version-advance rule is the evaluator's.
+        committed = self.runtime.commit_skill(
+            reviewed,
+            evidence=self.skill_corpus.evidence_for(
+                target_reference=v2.memory_reference,
+                criterion="skill-version-advance",
+                pre_state="v1", proposed_value="v2",
+            ),
+        )
         self.assertTrue(committed.commit.committed)
         self.assertEqual(self.adapter.state_version(v2.memory_reference), 2)
         self.assertEqual(reviewed.approval.content_sha256, v2.content_sha256)
@@ -188,7 +214,19 @@ class ProceduralMemoryTests(unittest.TestCase):
             self.runtime.commit_skill(substituted)
 
         self.assertEqual(self.adapter.state_version(v1.memory_reference), 1)
-        committed = self.runtime.commit_skill(approved)
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The exact-binding property this test exists for is untouched -- the
+        # substituted artifact still raises above. Only the discharge route
+        # changed, so the legitimate commit now cites the evaluator's
+        # version-advance adjudication.
+        committed = self.runtime.commit_skill(
+            approved,
+            evidence=self.skill_corpus.evidence_for(
+                target_reference=v1.memory_reference,
+                criterion="skill-version-advance",
+                pre_state="v1", proposed_value="v2",
+            ),
+        )
         self.assertTrue(committed.commit.committed)
         self.assertEqual(self.adapter.state_version(v1.memory_reference), 2)
 

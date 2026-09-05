@@ -190,8 +190,12 @@ class EpistemicBeliefMemory:
         risk_class: str = "low",
         review_satisfied: bool = False,
         approval_refs: tuple[str, ...] = (),
+        evidence=None,
+        attestation=None,
     ) -> EpistemicRevisionResult:
         """Retain or revise a belief through Cognitive Mesh and PAMA.
+
+        ADR-037 step 4b-2, DoD 20: forwards the qualified-evidence channel.
 
         A refused proposal is returned to the caller but is never appended to
         current/history state. Confidence is carried as estimator evidence only.
@@ -205,6 +209,8 @@ class EpistemicBeliefMemory:
                 risk_class=risk_class,
                 review_satisfied=review_satisfied,
                 approval_refs=approval_refs,
+                evidence=evidence,
+                attestation=attestation,
             )
 
         current = self.current(revision.belief_ref)
@@ -274,6 +280,8 @@ class EpistemicBeliefMemory:
             proposal_id=f"proposal:{revision.revision_ref}",
             review_satisfied=review_satisfied,
             approval_refs=approval_refs,
+            evidence=evidence,
+            attestation=attestation,
         )
 
         if transition.commit.committed:
@@ -305,6 +313,8 @@ class EpistemicBeliefMemory:
         risk_class: str = "low",
         review_satisfied: bool = False,
         approval_refs: tuple[str, ...] = (),
+        evidence=None,
+        attestation=None,
     ) -> EpistemicRevisionResult:
         """Append a retraction while pruning the current claim from active recall."""
         if revision.epistemic_status != "retracted":

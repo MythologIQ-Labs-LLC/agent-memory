@@ -52,13 +52,19 @@ class AssertionCannotDischargeExternalVerificationTest(unittest.TestCase):
                 decision = policy.evaluate(_proposal(operation, risk, **self.ASSERTED))
                 self.assertEqual(policy.REQUIRE_EXTERNAL_VERIFICATION, decision.outcome)
 
-    def test_require_review_discharge_is_untouched(self):
-        """DoD 3: the 74 review-level discharges keep working."""
+    def test_require_review_discharge_is_no_longer_asserted_either(self):
+        """ADR-037 step 4b-2: expected semantic change (entry #24).
+
+        Loop 7's DoD 3 asserted that capping external verification left the
+        review-level discharges working. 4b-2 removes those too: the cap and the
+        flip together mean **no** outcome is dischargeable by assertion. This
+        test now records the completion of what Loop 7 started.
+        """
         decision = policy.evaluate(_proposal(
             "correction", "low", review_satisfied=True, approval_refs=("approver:1",)
         ))
-        self.assertEqual(policy.ALLOW_WITH_LEDGER, decision.outcome)
-        self.assertEqual("asserted", decision.review_discharge)
+        self.assertEqual(policy.REQUIRE_REVIEW, decision.outcome)
+        self.assertEqual("", decision.review_discharge)
 
 
 class AttestedDischargeTest(unittest.TestCase):

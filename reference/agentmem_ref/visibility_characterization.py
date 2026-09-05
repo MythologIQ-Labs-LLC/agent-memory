@@ -130,7 +130,42 @@ def deferred_projection(commit: str) -> dict:
         "deployment Friday",
     )
     if not corrected.committed:
-        raise RuntimeError("deferred projection correction did not commit")
+        # ADR-037 step 4b-2 (entry #24), operator ruling 2026-09-05.
+        #
+        # This module parks. Its visibility observations establish whether a
+        # *committed* change becomes readable correctly; they do not, before the
+        # correction is committed, establish that the correction should be
+        # authorised. Using post-consequence visibility evidence as
+        # pre-consequence review evidence would be circular.
+        #
+        # Nor is an adjudication manufactured here to let the scenario proceed:
+        # a rule invented to permit exactly the outcome this characterization
+        # already expects is the laundering the ruling forbids.
+        #
+        # So the scenario is **reported blocked** rather than raising. That is
+        # itself a true characterization under fail-closed review: an
+        # unadjudicated correction never reaches the visibility stage.
+        from .pending_verification import PendingVerificationRegistry
+        from .resumption import criteria_for
+
+        record = PendingVerificationRegistry().park(
+            corrected.proposal if hasattr(corrected, "proposal") else _proposal(
+                proposal_id="proposal:visibility-characterization:correction",
+                operation="correction",
+                current_strength="promoted",
+                proposed_strength="promoted",
+                approval_refs=("approval:owner",),
+                review_satisfied=True,
+            ),
+            corrected.decision,
+        )
+        return {
+            "scenario": "deferred_projection_visibility",
+            "status": "blocked_pending_verification",
+            "reason": corrected.refusal or "review_requires_qualified_evidence",
+            "unmet_criteria": [c.kind for c in criteria_for(record).unmet],
+            "evidence": tracker.evidence(),
+        }
     tracker.canonical_committed()
     tracker.projection_refresh_started("idx:visibility")
 
@@ -253,15 +288,35 @@ def build_visibility_report(agent_memory_commit: str, repeats: int = 5) -> dict:
     deletion = deletion_residue(agent_memory_commit)
 
     deferred_evidence = [sample["evidence"] for sample in deferred_samples]
+    deferred_parked = [
+        sample for sample in deferred_samples
+        if sample.get("status") == "blocked_pending_verification"
+    ]
     structural_invariants = {
         "sync_canonical_only_quiescent": all(
             sample["disposition"]["quiescent"] for sample in sync_samples
         ),
+        # ADR-037 step 4b-2 (entry #24). A deferred-projection sample that
+        # parked never reaches the refresh window, so these invariants are
+        # evaluated over the samples that got there. The parked ones are
+        # reported separately below rather than silently dropped or counted as
+        # satisfied -- an unadjudicated correction not reaching the visibility
+        # stage is a true observation under fail-closed review, not a gap.
         "deferred_projection_blocks_before_refresh": all(
-            not sample["before_required_refresh"]["quiescent"] for sample in deferred_samples
+            not sample["before_required_refresh"]["quiescent"]
+            for sample in deferred_samples
+            if "before_required_refresh" in sample
         ),
         "deferred_projection_quiescent_after_refresh": all(
-            sample["after_required_refresh"]["quiescent"] for sample in deferred_samples
+            sample["after_required_refresh"]["quiescent"]
+            for sample in deferred_samples
+            if "after_required_refresh" in sample
+        ),
+        "deferred_projection_parked_samples_reported": all(
+            sample.get("status") == "blocked_pending_verification"
+            and sample.get("unmet_criteria")
+            for sample in deferred_samples
+            if "before_required_refresh" not in sample
         ),
         "required_failure_settled_not_quiescent": (
             failure["disposition"]["settled"]
