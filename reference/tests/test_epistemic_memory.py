@@ -2,6 +2,26 @@ from __future__ import annotations
 
 import json
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
+
+
+BELIEF_REF = "belief:deployment-safety"
+
+
+def _belief_corpus():
+    return corpus_for(
+        rule(rule_id="rule:belief-revision", target=BELIEF_REF,
+             criterion="belief-revision", from_state="current",
+             to_values=("revised", "disputed", "retracted")),
+    )
+
+
+def _belief_evidence():
+    return _belief_corpus().evidence_for(
+        target_reference=BELIEF_REF, criterion="belief-revision",
+        pre_state="current", proposed_value="revised",
+    )
 from pathlib import Path
 
 import jsonschema
@@ -55,7 +75,7 @@ def context() -> RecallContext:
 def revision(
     revision_ref: str,
     *,
-    belief_ref: str = "belief:deployment-safety",
+    belief_ref: str = "belief:deployment-safety",  # noqa: matches BELIEF_REF below
     claim_text: str = "Staged deployment is likely safe for this service",
     confidence: float | None = 0.7,
     source_component: str = "EpistemicReference",
@@ -92,7 +112,16 @@ def runtime(*components: str) -> tuple[
     InMemoryTemporalGraph,
 ]:
     substrate = InMemoryTemporalGraph()
-    adapter = GovernedMemoryAdapter(substrate, tenant=TENANT, clock=Clock())
+    # ADR-037 step 4b-2: expected semantic change (entry #24).
+    # The evaluator holds an adjudication of belief revision, authored ahead of
+    # any proposal: a belief may be revised or disputed under the epistemic
+    # revision policy. A caller presents a revision against it; it cannot
+    # author one.
+    corpus = _belief_corpus()
+    adapter = GovernedMemoryAdapter(
+        substrate, tenant=TENANT, clock=Clock(),
+        verifier_registry=registry_for(corpus),
+    )
     memory = EpistemicBeliefMemory(
         adapter=adapter,
         available_components=tuple(components),
@@ -191,6 +220,7 @@ class EpistemicBeliefMemoryTests(unittest.TestCase):
             actor_id="agent:epistemic-test",
             review_satisfied=True,
             approval_refs=("approval:epistemic-review",),
+            evidence=_belief_evidence(),
         )
 
         self.assertTrue(second_result.commit.committed)
@@ -229,6 +259,8 @@ class EpistemicBeliefMemoryTests(unittest.TestCase):
             actor_id="agent:epistemic-test",
             review_satisfied=True,
             approval_refs=("approval:dispute-review",),
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_belief_evidence(),
         )
 
         self.assertTrue(result.commit.committed)
@@ -337,6 +369,10 @@ class EpistemicBeliefMemoryTests(unittest.TestCase):
             actor_id="agent:epistemic-test",
             review_satisfied=True,
             approval_refs=("approval:provider-change-review",),
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            # The property under test -- provider replacement changes neither
+            # belief identity nor authority -- is untouched.
+            evidence=_belief_evidence(),
         )
 
         self.assertTrue(second_result.commit.committed)

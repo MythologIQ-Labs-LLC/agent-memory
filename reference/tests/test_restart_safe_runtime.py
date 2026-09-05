@@ -3,6 +3,19 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
+
+BRANCH_MEMORY = "memory:deploy-branch"
+
+
+def _branch_corpus():
+    """The evaluator's adjudication of release-branch corrections."""
+    return corpus_for(rule(
+        rule_id="rule:release-branch", target=BRANCH_MEMORY,
+        criterion="value-correction", from_state="release_branch = release",
+        to_values=("release_branch = main",),
+    ))
 from pathlib import Path
 
 from agentmem_ref import policy
@@ -92,7 +105,8 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         self.temp.cleanup()
 
     def test_release_branch_survives_restart_with_currentness_scope_and_stale_replay(self) -> None:
-        session_a = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        session_a = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         learned = session_a.commit_proposal(
             _proposal("proposal-release", operation="promotion"),
             "release_branch = release",
@@ -102,7 +116,8 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         self.assertIsNotNone(release_uuid)
         self.assertEqual(session_a.adapter.state_version("memory:release-branch"), 1)
 
-        session_b = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        session_b = RestartSafeRuntime.recover(self.root, profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         recalled = session_b.adapter.governed_recall("release_branch", _context())
         self.assertEqual(recalled.admitted, [release_uuid])
 
@@ -113,7 +128,14 @@ class RestartSafeRuntimeTests(unittest.TestCase):
             review_satisfied=True,
             approval_refs=("approval:release-branch-main",),
         )
-        corrected = session_b.commit_proposal(correction, "release_branch = main")
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        corrected = session_b.commit_proposal(
+            correction, "release_branch = main",
+            evidence=_branch_corpus().evidence_for(
+                target_reference=BRANCH_MEMORY, criterion="value-correction",
+                pre_state="release_branch = release",
+                proposed_value="release_branch = main"),
+        )
         self.assertTrue(corrected.committed)
         main_uuid = corrected.fact_uuid
         self.assertIsNotNone(main_uuid)
@@ -124,7 +146,8 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         self.assertFalse(replay.committed)
         self.assertEqual(replay.refusal, "stale_authorization")
 
-        session_c = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        session_c = RestartSafeRuntime.recover(self.root, profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         current = session_c.adapter.governed_recall("release_branch", _context())
         self.assertEqual(current.admitted, [main_uuid])
         self.assertEqual(current.refusals[release_uuid], "superseded_not_current")
@@ -140,7 +163,8 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         self.assertNotIn(main_uuid, wrong_project.admitted)
         self.assertEqual(wrong_project.refusals[main_uuid], "project_scope_mismatch")
 
-        session_d = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        session_d = RestartSafeRuntime.recover(self.root, profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         after_restart = session_d.adapter.governed_recall("release_branch", _context())
         self.assertEqual(after_restart.admitted, [main_uuid])
         self.assertEqual(after_restart.refusals[release_uuid], "superseded_not_current")
@@ -149,7 +173,8 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         self.assertEqual(replay_after_restart.refusal, "stale_authorization")
 
     def test_pending_visibility_obligations_survive_restart_without_fake_quiescence(self) -> None:
-        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         operation = VisibilityOperation(
             operation_id="visibility:release-main",
             memory_id="memory:release-branch",
@@ -169,7 +194,8 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         self.assertFalse(tracker.evaluate()["quiescent"])
 
         runtime.persist_visibility_snapshot(operation.operation_id, tracker.snapshot_for_restart())
-        recovered = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        recovered = RestartSafeRuntime.recover(self.root, profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         restored = VisibilityTracker.restore_after_restart(
             recovered.visibility_snapshots[operation.operation_id]
         )
@@ -183,7 +209,8 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         )
 
     def test_corrupt_checkpoint_fails_closed(self) -> None:
-        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         runtime.commit_proposal(
             _proposal("proposal-release", operation="promotion"),
             "release_branch = release",
@@ -193,16 +220,20 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         governance["tenant"] = "attacker-tenant"
         path.write_text(json.dumps(governance), encoding="utf-8")
         with self.assertRaisesRegex(RuntimeRecoveryError, "governance checkpoint digest mismatch"):
-            RestartSafeRuntime.recover(self.root, profile=self.profile)
+            RestartSafeRuntime.recover(self.root, profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
 
     def test_missing_governance_state_fails_closed(self) -> None:
-        RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         (self.root / "governance.json").unlink()
         with self.assertRaisesRegex(RuntimeRecoveryError, "required runtime state missing"):
-            RestartSafeRuntime.recover(self.root, profile=self.profile)
+            RestartSafeRuntime.recover(self.root, profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
 
     def test_component_interpretation_cannot_silently_change_after_restart(self) -> None:
-        RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         with self.assertRaisesRegex(RuntimeRecoveryError, "interpretation changed after restart"):
             RestartSafeRuntime.recover(
                 self.root,
@@ -213,12 +244,14 @@ class RestartSafeRuntimeTests(unittest.TestCase):
             RestartSafeRuntime.recover(self.root, profile=_profile(profile_version="2.0.0"))
 
     def test_recovery_preserves_identifier_progress(self) -> None:
-        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile)
+        runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         first = runtime.commit_proposal(
             _proposal("proposal-first", operation="promotion"),
             "release_branch = release",
         )
-        recovered = RestartSafeRuntime.recover(self.root, profile=self.profile)
+        recovered = RestartSafeRuntime.recover(self.root, profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()))
         second = recovered.commit_proposal(
             _proposal(
                 "proposal-second",

@@ -42,12 +42,13 @@ def apply_receiver_correction(
     superseded_fact_uuid: str,
     corrected_text: str,
     invalid_at: str,
+    evidence=None,
 ) -> CorrectionPropagationResult:
     """Commit a receiver-local correction and supersede, rather than erase, old state."""
     if proposal.operation != "correction":
         raise ValueError("receiver correction propagation requires operation=correction")
 
-    commit = adapter.commit_proposal(proposal, corrected_text)
+    commit = adapter.commit_proposal(proposal, corrected_text, evidence=evidence)
     replacement = commit.fact_uuid if commit.committed else None
     if commit.committed:
         substrate.invalidate_fact(superseded_fact_uuid, invalid_at=invalid_at, expired_at=invalid_at)
@@ -67,6 +68,7 @@ def apply_receiver_deletion(
     fact_uuid: str,
     retained_by_policy: set[str] | None = None,
     late_projections: tuple[Projection, ...] = (),
+    evidence=None,
 ) -> DeletionPropagationResult:
     """Execute receiver-local deletion and independently measure retained residue.
 
@@ -83,6 +85,7 @@ def apply_receiver_deletion(
         proposal,
         fact_uuid,
         derived_refs=tuple(sorted(plan.declared)),
+        evidence=evidence,
     )
 
     if not commit.committed:

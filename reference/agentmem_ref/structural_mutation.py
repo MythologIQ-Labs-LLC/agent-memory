@@ -406,8 +406,16 @@ def evaluate_pama_v13(
     current_state_digest: str,
     current_dependency_digest: str,
     external_verification: "policy.ExternalVerification | None" = None,
+    evidence=None,
+    verifier_registry=None,
 ) -> policy.Decision:
-    """Evaluate PAMA 1.3 structural delegation without weakening existing floors."""
+    """Evaluate PAMA 1.3 structural delegation without weakening existing floors.
+
+    ADR-037 step 4b-2, DoD 20: `evidence` forwards the qualified-evidence
+    channel, so a structural mutation that resolves to `require_review` has a
+    reachable route rather than a dead end. Verifier trust is the evaluator's
+    typed registry, not a caller-supplied mapping.
+    """
     if pama_proposal.operation != "domain_schema_mutation":
         raise StructuralMutationError("structural PAMA evaluator requires domain_schema_mutation")
     if pama_proposal.proposal_id != impact.proposal.proposal_id:
@@ -441,6 +449,17 @@ def evaluate_pama_v13(
         # change would have been invisible to a green suite.
         decision = policy.evaluate_with_external_verification(
             pama_proposal, external_verification, base_outcome=base
+        )
+    elif evidence:
+        from .evidence_qualification import group_by_dependence
+
+        decision = policy.evaluate_with_qualified_evidence(
+            pama_proposal,
+            group_by_dependence(
+                evidence,
+                verifiers=(verifier_registry.as_mapping() if verifier_registry else None),
+            ),
+            base_outcome=base,
         )
     else:
         decision = policy.evaluate_with_base_outcome(

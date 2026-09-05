@@ -4,6 +4,17 @@ from __future__ import annotations
 
 import sys
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
+
+
+def _visibility_corpus():
+    """The evaluator's adjudication of this correction (ADR-037 4b-2)."""
+    return corpus_for(rule(
+        rule_id="rule:visibility-correction", target=SOURCE,
+        criterion="value-correction", from_state="deploy window Thursday",
+        to_values=("deploy window Friday",),
+    ))
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -90,7 +101,8 @@ def operation(
 class VisibilityContractTests(unittest.TestCase):
     def test_sync_canonical_only_write_reaches_quiescence_without_fake_projection_latency(self):
         substrate = InMemoryTemporalGraph()
-        adapter = GovernedMemoryAdapter(substrate, TENANT, Clock())
+        adapter = GovernedMemoryAdapter(substrate, TENANT, Clock(),
+            verifier_registry=registry_for(_visibility_corpus()))
         result = adapter.commit_proposal(proposal(), "visibility token current")
         self.assertTrue(result.committed)
 
@@ -119,7 +131,8 @@ class VisibilityContractTests(unittest.TestCase):
 
     def test_deferred_projection_blocks_quiescence_while_old_physical_fact_is_not_admitted(self):
         substrate = InMemoryTemporalGraph()
-        adapter = GovernedMemoryAdapter(substrate, TENANT, Clock())
+        adapter = GovernedMemoryAdapter(substrate, TENANT, Clock(),
+            verifier_registry=registry_for(_visibility_corpus()))
         first = adapter.commit_proposal(proposal(), "deploy window Thursday")
         self.assertTrue(first.committed)
 
@@ -144,6 +157,11 @@ class VisibilityContractTests(unittest.TestCase):
                 review_satisfied=True,
             ),
             "deploy window Friday",
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_visibility_corpus().evidence_for(
+                target_reference=SOURCE, criterion="value-correction",
+                pre_state="deploy window Thursday",
+                proposed_value="deploy window Friday"),
         )
         self.assertTrue(corrected.committed)
         self.assertEqual(adapter.state_version(SOURCE), 2)

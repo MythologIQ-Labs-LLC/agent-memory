@@ -2,6 +2,27 @@ from __future__ import annotations
 
 import json
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
+
+PREDICTION_REF = "prediction:deployment"
+
+
+def _prediction_corpus():
+    """The evaluator's adjudication of prediction revision, authored ahead of
+    any proposal (ADR-037 step 4b-2, entry #24)."""
+    return corpus_for(rule(
+        rule_id="rule:prediction-revision", target=PREDICTION_REF,
+        criterion="prediction-revision", from_state="current",
+        to_values=("revised",),
+    ))
+
+
+def _prediction_evidence():
+    return _prediction_corpus().evidence_for(
+        target_reference=PREDICTION_REF, criterion="prediction-revision",
+        pre_state="current", proposed_value="revised",
+    )
 from pathlib import Path
 
 import jsonschema
@@ -118,7 +139,10 @@ def runtime(*components: str) -> tuple[
     InMemoryTemporalGraph,
 ]:
     substrate = InMemoryTemporalGraph()
-    adapter = GovernedMemoryAdapter(substrate, tenant=TENANT, clock=Clock())
+    adapter = GovernedMemoryAdapter(
+        substrate, tenant=TENANT, clock=Clock(),
+        verifier_registry=registry_for(_prediction_corpus()),
+    )
     memory = PredictiveCounterfactualMemory(
         adapter=adapter,
         available_components=tuple(components),
@@ -232,6 +256,8 @@ class PredictiveCounterfactualMemoryTests(unittest.TestCase):
             second,
             actor_id="agent:predictive-test",
             review_satisfied=True,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_prediction_evidence(),
             approval_refs=("approval:prediction-revision",),
         )
         self.assertTrue(approved.commit.committed)
@@ -378,6 +404,8 @@ class PredictiveCounterfactualMemoryTests(unittest.TestCase):
             second,
             actor_id="agent:predictive-test",
             review_satisfied=True,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_prediction_evidence(),
             approval_refs=("approval:provider-revision",),
         )
 

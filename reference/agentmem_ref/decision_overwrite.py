@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from typing import Callable
 
 from . import policy, receipts
+from .pending_verification import PendingVerificationRegistry
 
 PENDING = "pending"
 REJECTED = "rejected"
@@ -30,6 +31,9 @@ COMMITTED = "committed"
 HUMAN_CONFIRMATION = "human_confirmation"
 DELEGATED_POLICY = "delegated_policy"
 AGENT_CONSENSUS = "agent_consensus"
+
+#: The remediation the envelope grants a parked proposal (ADR-037 step 4b-2).
+ENTER_PENDING_VERIFICATION = "enter_pending_verification"
 
 _RISK_ORDER = {"low": 0, "medium": 1, "high": 2, "critical": 3}
 
@@ -111,6 +115,12 @@ class DurableDecisionRegistry:
         self._versions: dict[str, int] = {}
         self._proposals: dict[str, OverwriteResult] = {}
         self.supersession_journal: list[dict] = []
+        # ADR-037 step 4b-2 (entry #24). Held here, not constructed inline, so a
+        # parked record outlives the call that made it -- otherwise parking is a
+        # no-op with an event attached, and nothing can ever resume or report on
+        # it. This registry is the type Loop 8 generalised the parking lifecycle
+        # from, which makes an ephemeral park here particularly incongruous.
+        self.pending_verification = PendingVerificationRegistry()
         self.events: list[dict] = []
         self._event_counter = 0
         self._receipt_counter = 0
@@ -189,24 +199,52 @@ class DurableDecisionRegistry:
             max_risk_class=grant.max_risk_class,
         )
         decision = policy.evaluate_with_external_verification(pama_proposal, attestation)
-        selected_action = (
-            pama_proposal.operation
-            if pama_proposal.operation in decision.permitted_actions
-            else receipts.NO_ACTION
-        )
+        # ADR-037 step 4b-2 (entry #24). `NO_ACTION` is legal only when nothing
+        # was permitted (`receipts.enforce_selection`). A parked proposal DOES
+        # have a permitted action -- `enter_pending_verification` -- so recording
+        # NO_ACTION would raise, and the module would *fail* where the operator's
+        # ruling requires it to *park*. Recording the park is the honest
+        # selection and satisfies the existing control unchanged.
+        if pama_proposal.operation in decision.permitted_actions:
+            selected_action = pama_proposal.operation
+        elif ENTER_PENDING_VERIFICATION in decision.permitted_actions:
+            selected_action = ENTER_PENDING_VERIFICATION
+        else:
+            selected_action = receipts.NO_ACTION
 
         before_state = proposal.state_snapshot
         after_state = before_state
         self._receipt_counter += 1
         receipt_id = f"decision-overwrite-receipt:{self._receipt_counter}"
 
-        if selected_action == receipts.NO_ACTION:
+        if decision.outcome == policy.REQUIRE_REVIEW:
+            # ADR-037 step 4b-2. The asserted route that used to discharge this
+            # at low and medium risk is gone. The AuthorityGrant is NOT offered
+            # as evidence: it answers the authority question, not the evidence
+            # question, and a valid grant can authorise review of a bad
+            # proposal. Collapsing the two would merge two of ADR-037's four
+            # axes (operator ruling, 2026-09-05).
+            #
+            # `enter_pending_verification` is a permitted action for
+            # require_review, so parking is the remediation this envelope
+            # grants -- not an overreach.
+            if pama_proposal.proposal_id not in {
+                record.proposal_id for record in self.pending_verification.parked()
+            }:
+                self.pending_verification.park(pama_proposal, decision)
+
+        if selected_action in (receipts.NO_ACTION, ENTER_PENDING_VERIFICATION):
             receipt = receipts.build_receipt(
                 receipt_id=receipt_id,
                 proposal=pama_proposal,
                 decision=decision,
-                selected_action=receipts.NO_ACTION,
-                selection_mode="none",
+                selected_action=selected_action,
+                selection_mode=(
+                    # `none` only when nothing was selected. Parking IS a
+                    # selection, and it follows deterministically from the
+                    # policy decision -- the schema's own vocabulary for that.
+                    "none" if selected_action == receipts.NO_ACTION else "deterministic"
+                ),
                 timestamp=now,
                 before_state=before_state,
                 after_state=after_state,
@@ -214,7 +252,7 @@ class DurableDecisionRegistry:
             pama_decision = receipts.build_pama_decision(
                 pama_proposal,
                 decision,
-                receipts.NO_ACTION,
+                selected_action,
                 None,
                 receipt_id,
             )
@@ -223,6 +261,16 @@ class DurableDecisionRegistry:
             result.decision = decision
             result.receipt = receipt
             result.pama_decision = pama_decision
+            if selected_action == ENTER_PENDING_VERIFICATION:
+                # ADR-037 step 4b-2. A parked proposal is not rejected: it is
+                # awaiting qualifying evidence, and `PENDING` is the status this
+                # registry already uses for that. Calling it rejected would
+                # report a dead end where a remediation path exists, which is
+                # the distinction the operator drew between parking and failing.
+                result.status = PENDING
+                result.reason = "parked_pending_verification"
+                result.grant = grant
+                return result
             return self._reject(result, grant, now, "pama_not_permitted", receipt_ref=receipt_id)
 
         new_version = self._versions[proposal.target_decision_id] + 1

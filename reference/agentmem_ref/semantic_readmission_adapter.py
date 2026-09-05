@@ -46,9 +46,20 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
         fact_text: str,
         semantic_signal: SemanticSimilaritySignal | None = None,
         episode=None,
+        *,
+        evidence=None,
+        attestation=None,
     ) -> SemanticCommitResult:
+        """ADR-037 step 4b-2, DoD 20: this subclass reaches a governed mutation,
+        so it forwards the qualified-evidence channel rather than burying it.
+
+        A semantic signal still creates no permission of its own -- it never
+        did, and evidence does not change that. PAMA still decides."""
         if semantic_signal is None:
-            downstream = super().commit_proposal(proposal, fact_text, episode)
+            downstream = super().commit_proposal(
+                proposal, fact_text, episode,
+                evidence=evidence, attestation=attestation,
+            )
             return SemanticCommitResult(
                 committed=downstream.committed,
                 refusal=downstream.refusal,
@@ -104,7 +115,9 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
         # A non-match creates no permission. A matched signal whose review has
         # already been satisfied by an external approved correction likewise
         # creates no authority of its own. In both cases PAMA still decides.
-        downstream = super().commit_proposal(proposal, fact_text, episode)
+        downstream = super().commit_proposal(
+            proposal, fact_text, episode, evidence=evidence, attestation=attestation
+        )
         events = [signal_event] + list(downstream.events)
         return SemanticCommitResult(
             committed=downstream.committed,
@@ -114,8 +127,18 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
             events=events,
         )
 
-    def governed_delete(self, proposal: policy.Proposal, fact_uuid: str, derived_refs: tuple[str, ...] = ()) -> CommitResult:
-        result = super().governed_delete(proposal, fact_uuid, derived_refs)
+    def governed_delete(
+        self,
+        proposal: policy.Proposal,
+        fact_uuid: str,
+        derived_refs: tuple[str, ...] = (),
+        external_verification=None,
+        evidence=None,
+    ) -> CommitResult:
+        """ADR-037 step 4b-2, DoD 20: forwards the deletion channels."""
+        result = super().governed_delete(
+            proposal, fact_uuid, derived_refs, external_verification, evidence
+        )
         if result.committed and proposal.operation == "permanent_deletion":
             purged = self._rejected_values.purge_memory(proposal.target_reference)
             event = self._purge_event(proposal, result.receipt["receipt_id"], purged)

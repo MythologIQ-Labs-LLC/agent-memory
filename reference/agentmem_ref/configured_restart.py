@@ -396,9 +396,13 @@ class ConfigBoundRestartRuntime:
         *,
         tenant: str,
         plan: RuntimeConfigurationPlan,
+        verifier_registry=None,
     ) -> "ConfigBoundRestartRuntime":
+        """ADR-037 step 4b-2, DoD 20: forwards host-configured verifier trust."""
         profile = _profile_from_plan(plan)
-        base = RestartSafeRuntime.create(root, tenant=tenant, profile=profile)
+        base = RestartSafeRuntime.create(
+            root, tenant=tenant, profile=profile, verifier_registry=verifier_registry
+        )
         binding_store = ConfigBindingStore(root)
         evidence = binding_store.checkpoint(plan=plan, base_evidence=base.recovery_evidence)
         return cls(base=base, plan=plan, binding_store=binding_store, recovery_evidence=evidence)
@@ -430,13 +434,29 @@ class ConfigBoundRestartRuntime:
         )
         return self.recovery_evidence
 
-    def commit_proposal(self, proposal, fact_text: str, episode=None):
-        result = self.base.adapter.commit_proposal(proposal, fact_text, episode)
+    def commit_proposal(self, proposal, fact_text: str, episode=None, *,
+                        evidence=None, attestation=None):
+        """Forward the governed commit, including the qualified-evidence channel.
+
+        ADR-037 step 4b-2, DoD 20. This was the wrapper the operator named: the
+        capability exists on the adapter underneath, and a wrapper that dropped
+        `evidence` would bury it one layer up -- a path that neither forwards
+        nor parks honestly. Forwarding only; verifier trust remains with the
+        adapter's evaluator-owned registry, and no `verifiers=` escape hatch
+        appears here.
+        """
+        result = self.base.adapter.commit_proposal(
+            proposal, fact_text, episode, evidence=evidence, attestation=attestation
+        )
         self.checkpoint()
         return result
 
-    def governed_delete(self, proposal, fact_uuid: str, derived_refs: tuple[str, ...] = ()):
-        result = self.base.adapter.governed_delete(proposal, fact_uuid, derived_refs)
+    def governed_delete(self, proposal, fact_uuid: str, derived_refs: tuple[str, ...] = (),
+                        external_verification=None, evidence=None):
+        """Forwards the deletion channels too (ADR-037 step 4b-2, DoD 20)."""
+        result = self.base.adapter.governed_delete(
+            proposal, fact_uuid, derived_refs, external_verification, evidence
+        )
         self.checkpoint()
         return result
 

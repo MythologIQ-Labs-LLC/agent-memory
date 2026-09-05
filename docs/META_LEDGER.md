@@ -1469,3 +1469,166 @@ place the strongest was available.
 
 Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V3 closed and recorded.
 Review Boundary: staged, not committed.
+---
+
+### Entry #24: SESSION SEAL - Phase 15 (Sprint 2m fail-closed flip)
+
+**Entry ID**: `c2231edec01e`
+**Content Hash**: `dac0bd28caa80badb0d4a432ff3dd58381a5cf00d8929aa3a9d7c7d72f91da74`
+**Previous Hash**: `585789db3ea037d23d337f896e7a2a86584cc893a05a129f5913207982fdec63`
+**Chain Hash**: `35e3a2176ff29d590703999a462f771793985f998c30c742c336dbd297816b35`
+**Timestamp**: 2026-09-05T09:30:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L3 (top of the scale)
+**Verdict**: PASS
+**Session**: 2026-09-05T0700-ac3145
+**Plan**: docs/plan-sprint2m-fail-closed-flip.md (iteration 5)
+**SSDF Practices**: PO.1.4, PS.2.1, PW.1.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index 5be07a02a9a10ab5d86bd87e2455d19da87af953):
+`48e2181bc8272651ec02cbd764bd6af1f4d486d9e58317d66c77c716a22dc033`
+
+**ADR-037 step 4b-2. Step 4 is complete, and with it the ADR is enforced rather
+than described.** `review_satisfied=True` plus arbitrary `approval_refs` no
+longer discharges `require_review` -- the last route by which an unverifiable
+claim became an authority decision, load-bearing since the first policy
+implementation.
+
+**This was a deliberate live behavioural change**, on the operator's explicit
+instruction: preserve the invariants, not the historical outcomes, because those
+outcomes were partly obtained through an invalid discharge path. The 1071-test
+baseline was not a target.
+
+**R6, recorded as doctrine.** The operator's ruling supersedes the "has a digest"
+classification Loop 13 used: *a caller converts only if it already possesses
+semantically relevant material that can truthfully populate an existing R3
+qualifying class; no new binding may be created merely because the migration
+requires one; otherwise it parks.* Evidence supports the proposition; authority
+permits the consequence. They are not interchangeable.
+
+**Three cross, four park.** `procedural_memory`, `reusable_grants` and
+`dashclaw_external_verdict` present real evidence. `decision_overwrite`
+low/medium, `forbidden_hits`, `visibility_characterization` and
+`benchmark_security` park, each for a recorded reason: an `AuthorityGrant`
+answers authority not evidence; forbidden-hit lifecycle observations establish a
+different proposition than "Thursday is wrong"; post-consequence visibility
+evidence cannot justify a pre-consequence correction; and benchmark hard gates
+measure the system, not the warrant for one deletion. `decision_overwrite` high
+keeps its external-verification semantics untouched.
+
+**The fixture pattern was rejected once and rebuilt.** A first attempt used a
+change record -- "A became B, under authority X, for commit Y" -- with a verifier
+proving the record described commit Y. The operator identified it as circular:
+that establishes binding and integrity, never that A *should* become B. Replaced
+with `TransitionRule` / `TransitionRuleCorpus`: an adjudication that **pre-exists
+the proposal**, binding a canonical pre-state, permitted resulting values and a
+criterion, which the verifier **re-runs** against the actual transition. It
+classifies `reproducible_procedure`, R3's other directly-satisfying class.
+
+**The laundering test is the load-bearing result.** *Can a caller create both the
+proposal and a matching fixture, after deciding what it wants, and satisfy the
+verifier?* No: rules are resolved from a corpus the evaluator holds, and an
+attacker-authored rule refutes. Asserted directly, alongside a control proving
+the mechanism still works when the rule is genuinely held.
+
+**Verifier trust is evaluator-held.** The operator refused a caller-supplied
+`verifiers=` mapping -- it would be `review_satisfied=True` rebuilt with more
+Python -- so trust moved to a `VerifierRegistry` configured at construction. No
+governed operation accepts a mapping, asserted over their signatures. An empty
+registry is the safe default: a named-but-unheld verifier leaves evidence
+`asserted`.
+
+**SCOPE ADDITION, disclosed and sanctioned.** After the flip **no governed entry
+point could present evidence**: `commit_proposal`, `governed_delete`,
+`evaluate_crossing`, `import_bundle`, `evaluate_source_notice`, `purge`,
+`propose_rebuild` and `evaluate_pama_v13` all evaluated directly. Their callers
+would have had a remediation path in doctrine and no way to reach it -- the dead
+end this ADR prohibits. Each gained an `evidence`/`attestation` channel. The
+operator sanctioned it with the boundary above, and added **DoD 20**: every path
+capable of reaching a governed mutation must forward or demonstrably park, with
+no third category where the capability exists underneath but is buried by a
+wrapper. `configured_restart`, `restart_runtime`, `runtime_composition` and the
+subclass adapters all forward; a meta-test enumerates them.
+
+**Definition of Done**: 20 of 20 PASS. Test count 1071 to 1095, 0 failures, 7
+skipped, under the pinned `cryptography==50.0.1`. Validators clean (58 schemas,
+64 fixtures).
+
+**Adversarial pass: six mutations, two survived and both were investigated.**
+Restoring assertion discharge, a caller-authored rule verifying, a per-call
+verifier mapping, and `decision_overwrite` ceasing to park were all caught. Of
+the two survivors, **A6 was inert** -- with `allow_review_discharge=False` the
+legacy field has no power left, which is the flip working. **A3 was a real gap**:
+removing the adjudicator's `rule.admits(...)` re-check left the suite green,
+because every existing test produced its `result` field honestly. That made the
+re-check the only thing between a forged `result="admitted"` and a verified item,
+with nothing asserting it. Two tests were added -- a forged result and a forged
+pre-state, each citing a rule the evaluator genuinely holds -- and the mutation
+is now caught.
+
+**Test reclassification: 59 changed expectations across 24 files, each marked.**
+Acceptance criterion 6 forbids a mass snapshot update, so every changed test
+carries a marker naming its classification and this entry, and
+`test_flip_migration_markers.py` enumerates the files and counts them. **None was
+classified as an actual regression**; all were expected semantic change.
+
+**Two published conformance fixtures changed, explicitly.**
+`durable-decision-delegated-low-risk-overwrite.json` previously declared
+`commit_status: committed` obtained through the asserted route; it now declares
+`pending` / `parked_pending_verification`, with the grant still resolving --
+authority alone no longer commits. `forbidden-hit-lifecycle-matrix.json`'s
+rejected-value-reentry row records that its premise is now unreachable, retained
+rather than deleted so the gap stays visible. Both carry an `adr_037_note`.
+
+**A tightening recorded rather than tuned away**: a reusable grant no longer
+discharges review at **high** risk, because R5's authority row requires human
+confirmation for *this* proposal and precedent-based authority cannot supply it.
+A medium-risk row was **added** rather than re-grading the high-risk one, so the
+change stays visible in the harness.
+
+**A false report avoided.** `benchmark_security`'s deletion is irreversible,
+which invites assuming it already sits on the external-verification path. Its
+`_proposal` default is `risk_class="low"`, and M-IRREV escalates an irreversible
+low-risk mutation to `require_review` -- so it does park, and the operator's
+ruling holds for all four sites exactly as given.
+
+**Decision**: audit VETOed twice, on three grounds.
+
+*V1* -- the four sites were **refused, not parked**, and the plan contradicted
+itself about whether they were modified. `decision_overwrite:192-208` selected
+`NO_ACTION`, and no site referenced `PendingVerificationRegistry`. Flipping and
+leaving four production paths at a clean dead end is the halt this ADR spent
+three cycles avoiding. `enter_pending_verification` is already a *permitted*
+action for `require_review`, so parking is the remediation the envelope grants.
+
+*V2* -- DoD 6 named no mechanism for the criterion most likely to be quietly
+violated. Made mechanical: a marker per changed test, counted by a meta-test.
+
+*V3* -- the four sites were treated as one shape when they are two. An inline
+`PendingVerificationRegistry()` in `decision_overwrite` would have satisfied a
+naive DoD while dying at the end of the call -- **a parked record that outlives
+no call is a no-op with an event attached**. Its registry is now held on
+`DurableDecisionRegistry`; the three harnesses report the parked outcome instead.
+
+**Found during implementation, disclosed.** `receipts.enforce_selection` makes
+`NO_ACTION` illegal when actions were permitted, so a parking
+`decision_overwrite` raised where the ruling requires it to park. It now records
+`enter_pending_verification` as its selected action -- the honest selection,
+satisfying the existing control unchanged -- and reports `PENDING` rather than
+`REJECTED`, because a parked proposal awaits evidence rather than being refused.
+
+**Also corrected**: `criteria_for` still reported `gate_not_yet_converted`
+("wait for step 4") after step 4 landed, which would have pointed a parked caller
+at completed work. It now reports R5's ladder, and every row's in-force marking
+flipped from pending to in force.
+
+**Recorded, not acted on**: `procedural_memory`'s artifact evidence establishes
+payload *integrity*, not that v2 should supersede v1. Attaching it blanket-style
+made an unapproved correction commit -- the same circularity R6 rejects -- so it
+is not attached. Skill corrections park unless an evaluator holds a
+version-advance adjudication. `validation_refs` would be the semantically
+relevant material but is a bare tuple of strings, `unqualified` under R3.
+
+Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V3 closed and recorded.
+Review Boundary: staged, not committed.

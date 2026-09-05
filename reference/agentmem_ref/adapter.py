@@ -17,10 +17,14 @@ Stdlib only apart from the schema validation reached through `receipts`.
 
 from __future__ import annotations
 
+from typing import Callable, Mapping, Sequence
+
 import random
 from dataclasses import dataclass, field
 
 from . import policy, receipts
+from .evidence_qualification import EvidenceItem
+from .verification import VerifierRegistry
 from .readmission import RejectedValueRegistry
 from .substrate import DeterministicIds, Episode, Fact, TemporalGraphPort
 
@@ -120,7 +124,14 @@ class GovernedMemoryAdapter:
         tenant: str,
         clock: Clock | None = None,
         selector=None,
+        verifier_registry: "VerifierRegistry | None" = None,
     ) -> None:
+        # ADR-037 step 4b-2. Verifier trust is configured HERE, by the host that
+        # builds the adapter -- not passed per operation by whoever is making a
+        # proposal. Registering your own verifier is certifying your own
+        # evidence. An empty registry is the safe default: evidence naming a
+        # verifier nobody holds stays `asserted`, exactly as step 2 defined.
+        self._verifier_registry = verifier_registry or VerifierRegistry()
         self._substrate = substrate
         self._tenant = tenant
         self._clock = clock or Clock()
@@ -164,13 +175,60 @@ class GovernedMemoryAdapter:
 
     # -- write path -----------------------------------------------------
 
-    def commit_proposal(self, proposal: policy.Proposal, fact_text: str, episode: Episode | None = None) -> CommitResult:
+    def commit_proposal(
+        self,
+        proposal: policy.Proposal,
+        fact_text: str,
+        episode: Episode | None = None,
+        *,
+        evidence: "Sequence[EvidenceItem] | None" = None,
+        attestation: policy.ExternalVerification | None = None,
+    ) -> CommitResult:
+        """Commit a proposal through the governed path.
+
+        SCOPE ADDITION, disclosed (ADR-037 step 4b-2, entry #24). The flip
+        removed the asserted discharge for `require_review`, and this adapter --
+        the primary governed entry point -- had **no** way to present evidence:
+        it called `policy.evaluate` directly. Every adapter caller would have
+        been left with a refusal and no reachable remediation, which is the halt
+        ADR-037's sequencing principle forbids.
+
+        `evidence` is optional and defaults to None, so a caller that supplies
+        none behaves exactly as before -- it simply parks where it used to
+        discharge on assertion. Supplying evidence routes through
+        `policy.evaluate_with_qualified_evidence`, which enforces R5's ladder.
+
+        **There is deliberately no `verifiers=` parameter.** Verifier trust is
+        held by this adapter's `verifier_registry`, configured by the host that
+        constructs it. A per-call mapping would let a caller register its own
+        verifier, which is certifying its own evidence -- `review_satisfied=True`
+        rebuilt with more Python (operator ruling, 2026-09-05).
+
+        Evidence never touches `review_satisfied` or `approval_refs`. Those are
+        legacy migration state; qualified discharge is its own path.
+
+        Mirrors Loop 7's disclosed addition of `external_verification` to
+        `governed_delete` for the same reason: capping a discharge without
+        providing the replacement channel removes a legitimate operation rather
+        than governing it.
+        """
         correlation = self._ids.next()
         if episode is not None:
             self._substrate.add_episode(episode)
         propose_event = self._event("memory.propose", proposal.target_reference, correlation)
 
-        decision = policy.evaluate(proposal)
+        if evidence:
+            from .evidence_qualification import group_by_dependence
+
+            decision = policy.evaluate_with_qualified_evidence(
+                proposal,
+                group_by_dependence(
+                    evidence, verifiers=self._verifier_registry.as_mapping()
+                ),
+                attestation=attestation,
+            )
+        else:
+            decision = policy.evaluate(proposal)
         authorize_event = self._event(
             "memory.authorize",
             proposal.target_reference,
@@ -626,8 +684,16 @@ class GovernedMemoryAdapter:
         fact_uuid: str,
         derived_refs: tuple[str, ...] = (),
         external_verification: "policy.ExternalVerification | None" = None,
+        evidence: "Sequence[EvidenceItem] | None" = None,
     ) -> CommitResult:
         """Delete through the authority gate, leaving a tombstone the substrate cannot.
+
+        ADR-037 step 4b-2, DoD 20: `evidence` joins `external_verification` for
+        the same reason Loop 7 added that one. An irreversible deletion at low
+        or medium risk resolves to `require_review`, which no longer discharges
+        on assertion -- so without this channel the adapter could not perform a
+        legitimate deletion at all, only refuse one. Verifier trust remains the
+        adapter's evaluator-owned registry; there is no `verifiers=` here.
 
         GAP-ARCH-04: `permanent_deletion` at high or critical risk resolves to
         `require_external_verification`, which can no longer be discharged by
@@ -637,11 +703,24 @@ class GovernedMemoryAdapter:
         operation rather than governing it.
         """
         correlation = self._ids.next()
-        decision = (
-            policy.evaluate(proposal)
-            if external_verification is None
-            else policy.evaluate_with_external_verification(proposal, external_verification)
-        )
+        if evidence:
+            from .evidence_qualification import group_by_dependence
+
+            decision = policy.evaluate_with_qualified_evidence(
+                proposal,
+                group_by_dependence(
+                    evidence, verifiers=self._verifier_registry.as_mapping()
+                ),
+                attestation=external_verification,
+            )
+        else:
+            decision = (
+                policy.evaluate(proposal)
+                if external_verification is None
+                else policy.evaluate_with_external_verification(
+                    proposal, external_verification
+                )
+            )
         # GAP-SEC-03: deletion is the more destructive path and had the weaker
         # guard. Ordered so a refusal names the real problem (LD4): a nonexistent
         # fact must not report a tenant error, and a foreign fact must not report

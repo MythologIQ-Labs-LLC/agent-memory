@@ -114,14 +114,43 @@ def build_export_bundle(
     )
 
 
+def _evaluate(proposal, evidence, attestation, verifier_registry):
+    """Route through the qualified path when evidence is supplied.
+
+    ADR-037 step 4b-2. Same shape as `crossing._evaluate`.
+    """
+    if evidence:
+        from .evidence_qualification import group_by_dependence
+
+        return policy.evaluate_with_qualified_evidence(
+            proposal,
+            group_by_dependence(
+                evidence,
+                verifiers=(verifier_registry.as_mapping() if verifier_registry else None),
+            ),
+            attestation=attestation,
+        )
+    return policy.evaluate(proposal)
+
+
 def import_bundle(
     bundle: ExportBundle,
     *,
     receiver_domain_ref: str,
     receiver_proposal: policy.Proposal,
     expected_owner_principal: str | None = None,
+    evidence=None,
+    attestation: policy.ExternalVerification | None = None,
+    verifier_registry=None,
 ) -> ImportResult:
     """Evaluate one import under receiver-local authority.
+
+    SCOPE ADDITION, disclosed (ADR-037 step 4b-2, entry #24): `evidence`, with
+    the same shape and reasoning as the adapter's and crossing's. Note that this
+    is a case where the distinction matters especially: the sender's crossing
+    receipt records the sender's authority, and reusing it as the receiver's
+    evidence would be exactly the authority/evidence collapse the operator ruled
+    against. The receiver supplies its own.
 
     The sender's crossing receipt is evidence that the sender authorized an
     export. It is never reused as the receiver's allow decision.
@@ -151,7 +180,7 @@ def import_bundle(
         )
         return ImportResult(decision, False, None, "receiver_reauthorization_required")
 
-    decision = policy.evaluate(receiver_proposal)
+    decision = _evaluate(receiver_proposal, evidence, attestation, verifier_registry)
     if decision.outcome not in (policy.ALLOW, policy.ALLOW_WITH_LEDGER):
         return ImportResult(decision, False, None, f"receiver_{decision.outcome}")
 
@@ -194,6 +223,9 @@ def evaluate_source_notice(
     notice: SourceLifecycleNotice,
     *,
     receiver_proposal: policy.Proposal,
+    evidence=None,
+    attestation: policy.ExternalVerification | None = None,
+    verifier_registry=None,
 ) -> NoticeResult:
     """Recognize a source lifecycle change without importing remote authority.
 
@@ -233,7 +265,7 @@ def evaluate_source_notice(
         )
         return NoticeResult(decision, True, "none", "wrong_local_consequence")
 
-    decision = policy.evaluate(receiver_proposal)
+    decision = _evaluate(receiver_proposal, evidence, attestation, verifier_registry)
     if decision.outcome not in (policy.ALLOW, policy.ALLOW_WITH_LEDGER):
         return NoticeResult(decision, True, "pending_local_governance", f"receiver_{decision.outcome}")
 

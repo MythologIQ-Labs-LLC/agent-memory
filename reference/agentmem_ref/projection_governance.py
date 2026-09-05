@@ -66,6 +66,25 @@ class RebuildResult:
     categorical: bool = False
 
 
+def _evaluate(proposal, evidence, verifier_registry):
+    """Route through the qualified path when evidence is supplied.
+
+    ADR-037 step 4b-2, DoD 20: both governed entry points below reach a
+    mutation, so both forward the channel rather than burying it.
+    """
+    if evidence:
+        from .evidence_qualification import group_by_dependence
+
+        return policy.evaluate_with_qualified_evidence(
+            proposal,
+            group_by_dependence(
+                evidence,
+                verifiers=(verifier_registry.as_mapping() if verifier_registry else None),
+            ),
+        )
+    return policy.evaluate(proposal)
+
+
 class ProjectionGovernor:
     """Governs derived state on top of a `GovernedMemoryAdapter`."""
 
@@ -160,9 +179,14 @@ class ProjectionGovernor:
         proposal: policy.Proposal,
         memory_id: str,
         retained_by_policy: set[str] | None = None,
+        evidence=None,
+        verifier_registry=None,
     ) -> PurgeResult:
-        """Purge a canonical unit and the transitive closure of its derivations."""
-        decision = policy.evaluate(proposal)
+        """Purge a canonical unit and the transitive closure of its derivations.
+
+        ADR-037 step 4b-2, DoD 20: forwards the qualified-evidence channel.
+        """
+        decision = _evaluate(proposal, evidence, verifier_registry)
         permitted = proposal.operation in decision.permitted_actions
         if not permitted:
             deferral = self._deferral(decision)
@@ -213,8 +237,13 @@ class ProjectionGovernor:
         self,
         projection_id: str,
         proposal: policy.Proposal | None = None,
+        evidence=None,
+        verifier_registry=None,
     ) -> RebuildResult:
-        """Rebuild is a governed mutation unless it is deterministic and reproducible."""
+        """Rebuild is a governed mutation unless it is deterministic and reproducible.
+
+        ADR-037 step 4b-2, DoD 20: forwards the qualified-evidence channel.
+        """
         projection = self.store.get(projection_id)
         if projection is None:
             return RebuildResult(decision=None, refusal="unknown projection")
@@ -229,7 +258,7 @@ class ProjectionGovernor:
                 refusal="estimator-mediated rebuild requires an authority decision",
             )
 
-        decision = policy.evaluate(proposal)
+        decision = _evaluate(proposal, evidence, verifier_registry)
         if proposal.operation not in decision.permitted_actions:
             return RebuildResult(decision=decision, refusal="rebuild not authorized")
         self._rebase(projection)

@@ -73,6 +73,22 @@ def _outcome_for(decision: policy.Decision) -> tuple[str, bool]:
     return "blocked", False
 
 
+def _evaluate(proposal, evidence, attestation, verifier_registry):
+    """Route through the qualified path when evidence is supplied."""
+    if evidence:
+        from .evidence_qualification import group_by_dependence
+
+        return policy.evaluate_with_qualified_evidence(
+            proposal,
+            group_by_dependence(
+                evidence,
+                verifiers=(verifier_registry.as_mapping() if verifier_registry else None),
+            ),
+            attestation=attestation,
+        )
+    return policy.evaluate(proposal)
+
+
 def evaluate_crossing(
     request: CrossingRequest,
     proposal: policy.Proposal,
@@ -81,6 +97,9 @@ def evaluate_crossing(
     timestamp: str,
     decision_receipt_ref: str = "",
     ledger_ref: str = "",
+    evidence=None,
+    attestation: policy.ExternalVerification | None = None,
+    verifier_registry=None,
 ) -> CrossingResult:
     """Evaluate and receipt one requested memory-boundary crossing.
 
@@ -89,6 +108,13 @@ def evaluate_crossing(
     authority domain is the PAMA consequence under evaluation. This prevents a
     caller from obtaining a weaker envelope by describing an export as a copy
     or summary operation.
+
+    SCOPE ADDITION, disclosed (ADR-037 step 4b-2, entry #24). The flip removed
+    the asserted discharge for `require_review`, and this entry point evaluated
+    the proposal directly -- leaving every crossing caller refused with no
+    reachable remediation. `evidence` defaults to None, so a caller supplying
+    none behaves exactly as before and simply parks where it used to discharge
+    on assertion. Same reasoning and same shape as the adapter's addition.
     """
     if request.operation not in CROSSING_OPERATIONS:
         raise ValueError(f"unsupported crossing operation: {request.operation}")
@@ -104,7 +130,7 @@ def evaluate_crossing(
             reasons=("boundary crossing must be evaluated as scope_expansion",),
         )
     else:
-        decision = policy.evaluate(proposal)
+        decision = _evaluate(proposal, evidence, attestation, verifier_registry)
 
     outcome, committed = _outcome_for(decision)
     representation = {

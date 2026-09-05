@@ -120,8 +120,12 @@ class ConfiguredCompositionRuntime:
         *,
         tenant: str,
         plan: RuntimeConfigurationPlan,
+        verifier_registry=None,
     ) -> "ConfiguredCompositionRuntime":
-        durable = ConfigBoundRestartRuntime.create(root, tenant=tenant, plan=plan)
+        """ADR-037 step 4b-2, DoD 20: forwards host-configured verifier trust."""
+        durable = ConfigBoundRestartRuntime.create(
+            root, tenant=tenant, plan=plan, verifier_registry=verifier_registry
+        )
         return cls(durable_runtime=durable, plan=plan)
 
     def _route_for(self, capability_id: str):
@@ -164,9 +168,16 @@ class ConfiguredCompositionRuntime:
     def projection_id(self) -> str:
         return self._projection_id
 
-    def retain(self, proposal, fact_text: str):
-        """Commit canonical memory, then materialize the configured derived declaration."""
-        result = self.durable_runtime.commit_proposal(proposal, fact_text)
+    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None):
+        """Commit canonical memory, then materialize the configured derived declaration.
+
+        Forwards the qualified-evidence channel (ADR-037 step 4b-2, DoD 20).
+        Without it this composition would be a path that reaches a governed
+        mutation while making the remediation route unreachable.
+        """
+        result = self.durable_runtime.commit_proposal(
+            proposal, fact_text, evidence=evidence, attestation=attestation
+        )
         if result.committed and self._projection_component_enabled:
             if self.projections.store.get(self._projection_id) is None:
                 self.projections.declare(
@@ -180,13 +191,17 @@ class ConfiguredCompositionRuntime:
                 )
         return result
 
-    def correct(self, proposal, fact_text: str):
+    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None):
         """Commit a governed correction; derived currentness changes by relation.
 
         No rebuild is triggered here. A correction therefore cannot use
         invalidation as an implicit write channel.
+
+        Forwards the qualified-evidence channel (ADR-037 step 4b-2, DoD 20).
         """
-        return self.durable_runtime.commit_proposal(proposal, fact_text)
+        return self.durable_runtime.commit_proposal(
+            proposal, fact_text, evidence=evidence, attestation=attestation
+        )
 
     def recall(self, query: str, context: RecallContext):
         """Route retrieval through the configured governed canonical component."""
@@ -282,7 +297,8 @@ class ConfiguredCompositionRuntime:
             before_version=before_version,
         )
 
-    def delete_current(self, proposal):
+    def delete_current(self, proposal, *, evidence=None, external_verification=None):
+        """ADR-037 step 4b-2, DoD 20: forwards the deletion channels."""
         current = self.adapter.current_fact_uuid(proposal.target_reference)
         if current is None:
             raise RuntimeRecoveryError("cannot delete memory with no current canonical fact")
@@ -290,6 +306,8 @@ class ConfiguredCompositionRuntime:
             proposal,
             current,
             derived_refs=(self._projection_id,),
+            external_verification=external_verification,
+            evidence=evidence,
         )
 
     def _lifecycle_evidence(

@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
 from pathlib import Path
 
 from agentmem_ref import policy, projections
@@ -65,13 +67,33 @@ def _context(project_ref: str = PROJECT) -> RecallContext:
     )
 
 
+def _deletion_corpus():
+    return corpus_for(rule(
+        rule_id="rule:deploy-window-deletion", target=MEMORY_ID,
+        criterion="permanent-deletion", from_state="current",
+        to_values=("deleted",),
+    ))
+
+
 class ConfiguredRuntimeCompositionTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temp = tempfile.TemporaryDirectory()
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The host configures verifier trust at construction; a caller making a
+        # correction cannot reach it.
+        self.corpus = corpus_for(
+            rule(rule_id="rule:deploy-window-correction", target=MEMORY_ID,
+                 criterion="value-correction", from_state="deploy window is Thursday",
+                 to_values=("deploy window is Friday",)),
+            rule(rule_id="rule:deploy-window-deletion", target=MEMORY_ID,
+                 criterion="permanent-deletion", from_state="current",
+                 to_values=("deleted",)),
+        )
         self.runtime = ConfiguredCompositionRuntime.create(
             Path(self.temp.name),
             tenant=TENANT,
             plan=_plan(),
+            verifier_registry=registry_for(self.corpus),
         )
 
     def tearDown(self) -> None:
@@ -118,6 +140,10 @@ class ConfiguredRuntimeCompositionTests(unittest.TestCase):
                 approval_refs=("approval:memory-owner",),
             ),
             "deploy window is Friday",
+            evidence=self.corpus.evidence_for(
+                target_reference=MEMORY_ID, criterion="value-correction",
+                pre_state="deploy window is Thursday",
+                proposed_value="deploy window is Friday"),
         )
         self.assertTrue(correction.committed)
         self.assertNotEqual(correction.fact_uuid, initial.fact_uuid)
@@ -143,6 +169,10 @@ class ConfiguredRuntimeCompositionTests(unittest.TestCase):
                 approval_refs=("approval:memory-owner",),
             ),
             "deploy window is Friday",
+            evidence=self.corpus.evidence_for(
+                target_reference=MEMORY_ID, criterion="value-correction",
+                pre_state="deploy window is Thursday",
+                proposed_value="deploy window is Friday"),
         )
         fact_before = self.runtime.adapter.current_fact_uuid(MEMORY_ID)
         version_before = self.runtime.adapter.state_version(MEMORY_ID)
@@ -195,7 +225,11 @@ class ConfiguredRuntimeCompositionTests(unittest.TestCase):
                 operation="permanent_deletion",
                 review_satisfied=True,
                 approval_refs=("approval:data-protection-officer",),
-            )
+            ),
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_deletion_corpus().evidence_for(
+                target_reference=MEMORY_ID, criterion="permanent-deletion",
+                pre_state="current", proposed_value="deleted"),
         )
         self.assertTrue(deleted.committed)
         self.assertEqual(deleted.fact_uuid, retained.fact_uuid)

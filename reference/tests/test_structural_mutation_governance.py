@@ -6,6 +6,8 @@ from dataclasses import replace
 import hashlib
 import unittest
 
+from tests.qualified_fixtures import corpus_for, registry_for, rule
+
 from agentmem_ref import domain_schema_mutation as dsm
 from agentmem_ref import policy, receipts
 from agentmem_ref.structural_mutation import (
@@ -283,10 +285,23 @@ class StructuralMutationGovernanceTests(unittest.TestCase):
             review_satisfied=True,
             approval_refs=("approval:human:42",),
         )
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The S2 human-review requirement is unchanged and still asserted; only
+        # the discharge route moved. The evaluator holds an adjudication of this
+        # schema transition, authored ahead of the proposal.
+        _corpus = corpus_for(rule(
+            rule_id="rule:schema-s2-migration", target=reviewed_pama.target_reference,
+            criterion="schema-migration", from_state="v1", to_values=("v2",),
+        ))
         reviewed = evaluate_pama_v13(
             reviewed_pama, impact,
             current_state_digest=structural.state_digest,
             current_dependency_digest=structural.dependency_digest,
+            evidence=_corpus.evidence_for(
+                target_reference=reviewed_pama.target_reference,
+                criterion="schema-migration", pre_state="v1", proposed_value="v2",
+            ),
+            verifier_registry=registry_for(_corpus),
         )
         self.assertEqual(reviewed.outcome, policy.ALLOW_WITH_LEDGER)
         document = build_pama_decision_v13(

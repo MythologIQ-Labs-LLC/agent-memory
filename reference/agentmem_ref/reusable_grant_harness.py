@@ -202,7 +202,26 @@ def run_harness() -> dict:
     grant = _grant(safe_proposal)
     current_eval = _evaluate(grant, safe_proj)
     pama_after = evaluate_pama_with_reusable_grant(_pama(), current_eval)
-    rows.append({"id": "explicit-ratification-bounded-use", "passed": current_eval["status"] == "current" and current_eval["satisfies_reusable_approval"] and pama_after.outcome == policy.ALLOW_WITH_LEDGER, "evaluation_status": current_eval["status"], "pama_outcome": pama_after.outcome})
+    # ADR-037 step 4b-2 (entry #24): expected semantic change.
+    #
+    # This scenario runs at HIGH risk, where R5's authority row requires
+    # `human_confirmation` for *this* proposal. A reusable grant is
+    # precedent-based authority: it was ratified for a class of decisions, not
+    # for this proposal id, so it cannot supply that. Forging an attestation
+    # bound to this proposal from a ratification granted for another one would
+    # be exactly the binding forgery `attestation_refusal` exists to catch.
+    #
+    # So a current, correctly-applicable reusable grant now discharges review at
+    # low and medium risk and **parks at high**. The applicability machinery is
+    # unchanged and still asserted: the grant is current and satisfies reusable
+    # approval. Only the discharge outcome tightened.
+    rows.append({"id": "explicit-ratification-bounded-use", "passed": current_eval["status"] == "current" and current_eval["satisfies_reusable_approval"] and pama_after.outcome == policy.REQUIRE_REVIEW, "evaluation_status": current_eval["status"], "pama_outcome": pama_after.outcome})
+
+    # The same grant at medium risk, where R5 admits delegated authority. This
+    # row is added rather than re-grading the one above, so the tightening at
+    # high risk stays visible instead of being tuned away.
+    medium_after = evaluate_pama_with_reusable_grant(_pama(risk="medium"), current_eval)
+    rows.append({"id": "explicit-ratification-bounded-use-medium", "passed": medium_after.outcome == policy.ALLOW_WITH_LEDGER, "pama_outcome": medium_after.outcome})
 
     policy_heavy = projection("projection:policy-heavy", human_count=1, policy_count=6)
     policy_heavy_app = evaluate_projection(policy_heavy)
@@ -259,7 +278,7 @@ def run_harness() -> dict:
     failed = [row for row in rows if not row["passed"]]
     metrics = {
         "scenario_count": len(rows),
-        "safe_review_discharges": sum(row["id"] == "explicit-ratification-bounded-use" and row["passed"] for row in rows),
+        "safe_review_discharges": sum(row["id"] == "explicit-ratification-bounded-use-medium" and row["passed"] for row in rows),
         "unsafe_grant_activations": sum(row["id"] in {"cross-scope-no-reuse", "material-change-no-reuse", "policy-drift-stale", "expiry-stale", "explicit-revocation-immediate", "missing-ratification-evidence"} and not row["passed"] for row in rows),
         "authority_transition_failures": sum(row["id"] in {"repeated-human-proposes-only", "explicit-ratification-bounded-use", "missing-ratification-evidence"} and not row["passed"] for row in rows),
         "policy_derived_attribution_errors": sum(row["id"] in {"policy-repetition-not-human-evidence", "grant-execution-not-human-adjudication"} and not row["passed"] for row in rows),

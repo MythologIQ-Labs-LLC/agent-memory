@@ -6,6 +6,17 @@ never by the proposer." The invariant was checked -- but only against
 """
 import unittest
 
+from agentmem_ref import evidence_qualification as _eq
+
+
+def _qualifying():
+    """One qualifying independent group, for tests whose subject is not the
+    discharge route itself (ADR-037 step 4b-2)."""
+    return _eq.group_by_dependence([
+        _eq.EvidenceItem(ref="ev-1", artifact_ref="art://x", digest="sha256:abc",
+                         verifier="digest-check")
+    ])
+
 from agentmem_ref import policy
 
 
@@ -69,9 +80,15 @@ class DerivedSelfApprovalTest(unittest.TestCase):
         a third-party discharge works -- at a review-requiring outcome, which is
         what it was actually about.
         """
-        decision = policy.evaluate(_proposal(
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # AMENDED AGAIN. The property under test is unchanged -- a legitimate
+        # third party is not blocked by the derived self-approval control -- but
+        # assertion no longer discharges, so it is exercised through the route
+        # that now does. A third party still works; only the door moved.
+        proposal = _proposal(
             "correction", "low", review_satisfied=True, approval_refs=("approver:1",)
-        ))
+        )
+        decision = policy.evaluate_with_qualified_evidence(proposal, _qualifying())
         self.assertEqual(policy.ALLOW_WITH_LEDGER, decision.outcome)
 
     def test_asserted_flag_still_blocks_without_derivation(self):
@@ -87,10 +104,15 @@ class DerivedSelfApprovalTest(unittest.TestCase):
         """DoD 5: `any(actor_id in ref ...)` would block this legitimate
         discharge. A substring implementation passes DoD 1 and 2 and fails only
         here."""
-        decision = policy.evaluate(_proposal(
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The substring defect this test exists to catch is unaffected by the
+        # flip; only the discharge route changed. A substring implementation
+        # still fails here, which is the point.
+        proposal = _proposal(
             "correction", "low",
             actor_id="a", review_satisfied=True, approval_refs=("grant:human",)
-        ))
+        )
+        decision = policy.evaluate_with_qualified_evidence(proposal, _qualifying())
         self.assertEqual(policy.ALLOW_WITH_LEDGER, decision.outcome)
 
     def test_whitespace_around_refs_does_not_evade(self):
@@ -103,14 +125,29 @@ class DerivedSelfApprovalTest(unittest.TestCase):
 class ReviewDischargeProvenanceTest(unittest.TestCase):
     """DoD 6: a receipt must be able to say what a discharge rested on."""
 
-    def test_asserted_discharge_is_recorded(self):
-        # AMENDED Loop 7: an asserted discharge is now capped at require_review,
-        # so provenance is exercised where a discharge can still occur.
+    def test_asserted_discharge_no_longer_exists(self):
+        """ADR-037 step 4b-2: expected semantic change (entry #24).
+
+        Loop 7 amended this to exercise provenance where an asserted discharge
+        could still occur. 4b-2 removes the asserted route entirely, so there is
+        no such place left. The subject of the original test is gone, and what
+        replaces it is the assertion that it is gone: an asserted discharge
+        neither happens nor is recorded.
+        """
         decision = policy.evaluate(_proposal(
             "correction", "low", review_satisfied=True, approval_refs=("approver:1",)
         ))
+        self.assertEqual(policy.REQUIRE_REVIEW, decision.outcome)
+        self.assertNotEqual("asserted", decision.review_discharge)
+
+    def test_qualified_discharge_records_its_authority(self):
+        """The provenance property DoD 6 was written for, on the surviving route."""
+        proposal = _proposal(
+            "correction", "low", review_satisfied=True, approval_refs=("approver:1",)
+        )
+        decision = policy.evaluate_with_qualified_evidence(proposal, _qualifying())
         self.assertEqual(policy.ALLOW_WITH_LEDGER, decision.outcome)
-        self.assertEqual("asserted", decision.review_discharge)
+        self.assertEqual(policy.DELEGATED_POLICY, decision.discharge_authority)
 
     def test_no_discharge_leaves_the_field_empty(self):
         decision = policy.evaluate(_proposal())

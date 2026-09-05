@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import unittest
 
+from tests.qualified_fixtures import corpus_for, registry_for, rule
+
 from agentmem_ref import policy
 from agentmem_ref.adapter import Clock
 from agentmem_ref.readmission import SemanticSimilaritySignal
@@ -64,9 +66,36 @@ def _semantic_signal(adapter: SemanticReadmissionAdapter, *, candidate_match: bo
     )
 
 
+def _correction_corpus():
+    """The evaluator's adjudication: from VALUE_A this memory may become VALUE_B."""
+    return corpus_for(
+        rule(rule_id="rule:semantic-correction", target=MEMORY_ID,
+             criterion="value-correction", from_state=VALUE_A, to_values=(VALUE_B,)),
+        # An adjudicated reversal, authored ahead of the proposal that will cite
+        # it. The evaluator decided in advance that a paraphrase of the original
+        # is a permitted reversal target; the caller cannot add this.
+        rule(rule_id="rule:semantic-reversal", target=MEMORY_ID,
+             criterion="value-reversal", from_state=VALUE_B,
+             to_values=(PARAPHRASE_A,)),
+        rule(rule_id="rule:semantic-deletion", target=MEMORY_ID,
+             criterion="lifecycle-deletion", from_state=VALUE_B,
+             to_values=("deleted",)),
+    )
+
+
 class SemanticReadmissionAdapterTests(unittest.TestCase):
     def _corrected_adapter(self) -> tuple[SemanticReadmissionAdapter, str]:
-        adapter = SemanticReadmissionAdapter(InMemoryTemporalGraph(), tenant=TENANT, clock=Clock())
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        # The correction no longer discharges on `review_satisfied=True`. The
+        # evaluator holds an adjudication authored ahead of the proposal, and
+        # the adapter is constructed with the registry that trusts it -- a
+        # caller cannot reach either. The scenario under test is semantic
+        # readmission, not review discharge.
+        corpus = _correction_corpus()
+        adapter = SemanticReadmissionAdapter(
+            InMemoryTemporalGraph(), tenant=TENANT, clock=Clock(),
+            verifier_registry=registry_for(corpus),
+        )
         first = adapter.commit_proposal(_proposal("original"), VALUE_A)
         self.assertTrue(first.committed)
 
@@ -79,6 +108,10 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
                 review_satisfied=True,
             ),
             VALUE_B,
+            evidence=corpus.evidence_for(
+                target_reference=MEMORY_ID, criterion="value-correction",
+                pre_state=VALUE_A, proposed_value=VALUE_B,
+            ),
         )
         self.assertTrue(correction.committed)
         return adapter, correction.fact_uuid
@@ -172,6 +205,15 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
             ),
             PARAPHRASE_A,
             semantic_signal=signal,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            # The evaluator adjudicated ahead of time that a paraphrase reversal
+            # from VALUE_B is permitted. The externally approved reversal still
+            # passes through PAMA -- which is what this test is about; only the
+            # discharge route changed.
+            evidence=_correction_corpus().evidence_for(
+                target_reference=MEMORY_ID, criterion="value-reversal",
+                pre_state=VALUE_B, proposed_value=PARAPHRASE_A,
+            ),
         )
 
         self.assertTrue(result.committed)
@@ -204,6 +246,11 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
                 review_satisfied=True,
             ),
             current_fact_uuid,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_correction_corpus().evidence_for(
+                target_reference=MEMORY_ID, criterion="lifecycle-deletion",
+                pre_state=VALUE_B, proposed_value="deleted",
+            ),
         )
 
         self.assertTrue(deletion.committed)

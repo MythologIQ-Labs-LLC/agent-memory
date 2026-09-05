@@ -150,8 +150,15 @@ class CognitiveMeshRuntime:
         proposal_id: str | None = None,
         review_satisfied: bool = False,
         approval_refs: tuple[str, ...] = (),
+        evidence=None,
+        attestation=None,
     ) -> CognitiveTransition:
-        """Turn a provider signal into a proposal, never directly into authority."""
+        """Turn a provider signal into a proposal, never directly into authority.
+
+        ADR-037 step 4b-2, DoD 20: forwards the qualified-evidence channel. A
+        provider signal still creates no authority of its own -- that was true
+        before and evidence does not change it. PAMA still decides.
+        """
         self._require_component(signal.source_component)
         evidence_refs = tuple(
             dict.fromkeys(
@@ -194,7 +201,10 @@ class CognitiveMeshRuntime:
             valid_at=experience.observed_at,
             group_id=cognitive_object.scope,
         )
-        commit = self._adapter.commit_proposal(proposal, experience.content, episode=episode)
+        commit = self._adapter.commit_proposal(
+            proposal, experience.content, episode=episode,
+            evidence=evidence, attestation=attestation,
+        )
         if commit.committed and commit.fact_uuid:
             self._object_by_fact[commit.fact_uuid] = cognitive_object.object_ref
         return CognitiveTransition(

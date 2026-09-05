@@ -171,21 +171,40 @@ def criteria_for(
     outcome = record.decision.outcome
 
     if outcome == policy.REQUIRE_REVIEW:
-        # Measured: appending qualified evidence does not move require_review,
-        # because M-EVID is an emptiness check. Reporting an evidence criterion
-        # here would send an agent to collect what cannot help.
+        # ADR-037 step 4b-2 (entry #24). Before the flip this reported
+        # CRITERION_GATE -- "wait for step 4" -- because evidence genuinely could
+        # not move require_review while assertion discharged it. Step 4 has
+        # landed, so that message is now stale and would point a caller at
+        # completed work instead of at a traversable route.
+        #
+        # The real criterion is R5's ladder, which is now enforced.
+        strength = strength_for(record.proposal.risk_class)
         unmet.append(
             UnmetCriterion(
-                kind=CRITERION_GATE,
+                kind=CRITERION_QUALIFICATION,
                 detail=(
-                    "require_review is discharged today by review_satisfied plus "
-                    "approval_refs -- the assertion route ADR-037 step 4 converts. "
-                    "Evidence cannot discharge it until that lands."
+                    "require_review requires qualified independent evidence; "
+                    "review_satisfied plus approval_refs no longer discharges it"
                 ),
-                satisfied_by="ADR-037 step 4 (fail-closed require_review)",
-                bar="not applicable in this cycle",
+                satisfied_by=(
+                    "policy.evaluate_with_qualified_evidence with one qualifying "
+                    "independent dependence group"
+                ),
+                bar=(
+                    f"class: {strength['qualification_class']}; "
+                    f"binding status: {strength['binding_status']}"
+                ),
             )
         )
+        if record.proposal.risk_class in policy._HIGH_RISK:
+            unmet.append(
+                UnmetCriterion(
+                    kind=CRITERION_SEPARATION,
+                    detail="human confirmation is also required at this risk class",
+                    satisfied_by="policy.ExternalVerification",
+                    bar=strength["authority_kind"],
+                )
+            )
     elif outcome == policy.REQUIRE_EXTERNAL_VERIFICATION:
         unmet.append(
             UnmetCriterion(
@@ -216,9 +235,13 @@ def criteria_for(
     # from the record, never accepted from a caller: all three ladder rows key
     # off it, so one wrong value would understate every axis at once.
     strength = strength_for(record.proposal.risk_class)
-    authority_status = (
-        IN_FORCE if outcome == policy.REQUIRE_EXTERNAL_VERIFICATION else PENDING_STEP_4
-    )
+    # ADR-037 step 4b-2 (entry #24). Before the flip only the authority row on
+    # the external-verification path bit; every other row was pending step 4.
+    # The flip enforces all three rows for require_review too, through
+    # `evaluate_with_qualified_evidence`, so they are now in force. Leaving them
+    # marked pending would point a caller at completed work.
+    authority_status = IN_FORCE
+    row_status = IN_FORCE
     unmet.append(
         UnmetCriterion(
             kind=CRITERION_INDEPENDENCE,
@@ -229,8 +252,8 @@ def criteria_for(
             satisfied_by="a dependence group meeting the strength ladder below",
             bar=(
                 f"authority: {strength['authority_kind']} ({authority_status}); "
-                f"class: {strength['qualification_class']} ({PENDING_STEP_4}); "
-                f"binding status: {strength['binding_status']} ({PENDING_STEP_4})"
+                f"class: {strength['qualification_class']} ({row_status}); "
+                f"binding status: {strength['binding_status']} ({row_status})"
             ),
             note="ADR-037 R5 (risk defines how strong), GH #379",
         )

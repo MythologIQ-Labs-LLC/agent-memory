@@ -4,6 +4,51 @@ from __future__ import annotations
 
 import sys
 import unittest
+
+from tests.qualified_fixtures import corpus_for, registry_for, rule
+
+
+def _prop_corpus():
+    """Adjudications held by each store's evaluator, authored ahead of any
+    proposal (ADR-037 step 4b-2, entry #24). The receiver's is its OWN: a
+    sender receipt records the sender's authority and is never reused as the
+    receiver's evidence."""
+    return corpus_for(
+        rule(rule_id="rule:source-deletion", target=MEMORY_ID,
+             criterion="permanent-deletion", from_state="current",
+             to_values=("deleted",)),
+        rule(rule_id="rule:seed-promotion", target=MEMORY_ID,
+             criterion="promotion", from_state="absent",
+             to_values=("original governed decision",)),
+        rule(rule_id="rule:source-correction", target=MEMORY_ID,
+             criterion="value-correction", from_state="original governed decision",
+             to_values=("corrected governed decision",)),
+        rule(rule_id="rule:receiver-local", target=MEMORY_ID,
+             criterion="lifecycle-notice", from_state="current",
+             to_values=("corrected", "deleted")),
+    )
+
+
+def _seed_evidence():
+    return _prop_corpus().evidence_for(
+        target_reference=MEMORY_ID, criterion="promotion",
+        pre_state="absent", proposed_value="original governed decision",
+    )
+
+
+def _correction_evidence():
+    return _prop_corpus().evidence_for(
+        target_reference=MEMORY_ID, criterion="value-correction",
+        pre_state="original governed decision",
+        proposed_value="corrected governed decision",
+    )
+
+
+def _notice_evidence(to_value):
+    return _prop_corpus().evidence_for(
+        target_reference=MEMORY_ID, criterion="lifecycle-notice",
+        pre_state="current", proposed_value=to_value,
+    )
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -110,16 +155,20 @@ class TwoStorePropagationTests(unittest.TestCase):
     def setUp(self):
         self.sender_store = InMemoryTemporalGraph()
         self.receiver_store = InMemoryTemporalGraph()
-        self.sender = GovernedMemoryAdapter(self.sender_store, "tenant-a")
-        self.receiver = GovernedMemoryAdapter(self.receiver_store, "tenant-b")
+        self.sender = GovernedMemoryAdapter(self.sender_store, "tenant-a",
+            verifier_registry=registry_for(_prop_corpus()))
+        self.receiver = GovernedMemoryAdapter(self.receiver_store, "tenant-b",
+            verifier_registry=registry_for(_prop_corpus()))
 
         sender_initial = self.sender.commit_proposal(
             proposal(actor="agent:source", operation="promotion", tenant="tenant-a"),
             "original governed decision",
+            evidence=_seed_evidence(),
         )
         receiver_initial = self.receiver.commit_proposal(
             proposal(actor="agent:receiver", operation="promotion", tenant="tenant-b"),
             "original governed decision",
+            evidence=_seed_evidence(),
         )
         self.assertTrue(sender_initial.committed)
         self.assertTrue(receiver_initial.committed)
@@ -131,6 +180,8 @@ class TwoStorePropagationTests(unittest.TestCase):
         sender_correction = self.sender.commit_proposal(
             proposal(actor="agent:source", operation="correction", tenant="tenant-a"),
             "corrected governed decision",
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_correction_evidence(),
         )
         self.assertTrue(sender_correction.committed)
 
@@ -149,6 +200,11 @@ class TwoStorePropagationTests(unittest.TestCase):
             link(),
             notice,
             receiver_proposal=receiver_correction_proposal,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            # The RECEIVER supplies its own evidence; the sender's receipt is
+            # never reused as the receiver's allow decision.
+            evidence=_notice_evidence("corrected"),
+            verifier_registry=registry_for(_prop_corpus()),
         )
         self.assertEqual(notice_result.local_action, "schedule_local_correction")
 
@@ -159,6 +215,8 @@ class TwoStorePropagationTests(unittest.TestCase):
             superseded_fact_uuid=self.receiver_fact,
             corrected_text="corrected governed decision",
             invalid_at="2026-08-11T21:00:00Z",
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_correction_evidence(),
         )
         self.assertTrue(propagated.commit.committed)
         self.assertIsNotNone(propagated.replacement_fact_uuid)
@@ -185,6 +243,9 @@ class TwoStorePropagationTests(unittest.TestCase):
         sender_delete = self.sender.governed_delete(
             proposal(actor="agent:source", operation="permanent_deletion", tenant="tenant-a"),
             self.sender_fact,
+            evidence=_prop_corpus().evidence_for(
+                target_reference=MEMORY_ID, criterion="permanent-deletion",
+                pre_state="current", proposed_value="deleted"),
         )
         self.assertTrue(sender_delete.committed)
 
@@ -197,6 +258,9 @@ class TwoStorePropagationTests(unittest.TestCase):
                 (sender_delete.receipt["receipt_id"],), source_receipt_ref=sender_delete.receipt["receipt_id"],
             ),
             receiver_proposal=receiver_delete_proposal,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_notice_evidence("deleted"),
+            verifier_registry=registry_for(_prop_corpus()),
         )
         self.assertEqual(notice_result.local_action, "schedule_local_deletion")
 
@@ -205,6 +269,10 @@ class TwoStorePropagationTests(unittest.TestCase):
             projections,
             proposal=receiver_delete_proposal,
             fact_uuid=self.receiver_fact,
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            evidence=_prop_corpus().evidence_for(
+                target_reference=MEMORY_ID, criterion="permanent-deletion",
+                pre_state="current", proposed_value="deleted"),
         )
         self.assertTrue(propagated.commit.committed)
         self.assertIsNone(self.receiver_store.get_fact(self.receiver_fact))
@@ -242,6 +310,12 @@ class TwoStorePropagationTests(unittest.TestCase):
             proposal=receiver_delete_proposal,
             fact_uuid=self.receiver_fact,
             late_projections=(late,),
+            # ADR-037 step 4b-2: expected semantic change (entry #24).
+            # The property under test -- a late projection prevents a false
+            # forgetting claim -- is unchanged.
+            evidence=_prop_corpus().evidence_for(
+                target_reference=MEMORY_ID, criterion="permanent-deletion",
+                pre_state="current", proposed_value="deleted"),
         )
 
         self.assertTrue(propagated.commit.committed)

@@ -142,6 +142,32 @@ Distinct agents, models, providers, prompts, operators, or machines may support 
 **R3 — Evidential classes are ranked, not equal.**
 Artifact-bound evidence with a deterministic verifier satisfies an evidence criterion directly. A reproducible procedure does too, when inputs, method/version, result, and verifier are bound. A calibrated estimator is weaker: it may contribute under explicit policy, particularly at low or medium risk, but must never become authority and must never be the sole basis for discharging `require_review`.
 
+**R6 — Conversion requires semantically relevant material; otherwise the proposal parks.** *(operator ruling, 2026-09-05, governing step 4b)*
+
+> A caller converts only if it already possesses **semantically relevant** material that can **truthfully** populate an existing R3 qualifying class. **No new binding may be created merely because the migration requires one.** Otherwise the proposal parks.
+
+"Has a digest" was reconnaissance, not the rule. R3 recognises two directly-satisfying classes — artifact-bound *and* reproducible procedure — so a digest was never the test. And checkability is necessary but not sufficient: the material must establish **the proposition under review**.
+
+> **Evidence supports the proposition ≠ authority permits the consequence.**
+
+**The tempting case, and why it fails.** `decision_overwrite`'s `AuthorityGrant` is unusually strong — bound to proposal, target, scope, actor, risk ceiling and lifetime, with `_grant_refusal` deterministic. It would classify beautifully as a reproducible procedure. **It answers the authority question, not the evidence question.** A perfectly valid grant can authorise review of a *bad* proposal, so it cannot also be proof that the proposal deserves discharge. Using it would collapse two of the four axes this ADR exists to keep apart.
+
+**Descriptive records do not qualify.** A record stating "A became B, under authority X, for commit Y", with a verifier confirming it describes commit Y, establishes binding and integrity only:
+
+> proposal says B → record says the proposal changes A to B → verifier confirms it does → therefore B is justified.
+
+Circular. Qualifying evidence must **adjudicate** the transition: a rule that pre-exists the proposal, binding a canonical pre-state, the permissible resulting state, and the criterion, which the verifier re-runs against the actual proposed transition. A different value, a stale pre-state, a wrong target, or a forged result must refute.
+
+**The test that decides any candidate pattern:**
+
+> Can a caller create both the proposal **and** a matching fixture, after deciding what it wants, and satisfy the verifier?
+
+If yes, it is laundering. If the evaluator resolves a pre-existing rule from a corpus the caller cannot write, it is sound.
+
+**Verifier trust is evaluator-held.** A module may supply a verifier *implementation*; the evaluator owns the *registry* and decides which are trusted. No governed operation accepts a caller-supplied verifier mapping — registering your own verifier is certifying your own evidence.
+
+**Authority stays outside the evidential proof**, in the receipt and `discharge_authority`, or in a separate attestation. It must not elevate the evidential class.
+
 **R5 — Risk defines how strong, not how many.** *(operator ruling, 2026-09-05, resolving [#379](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/379))*
 
 §4 required stating "what independence bar applies at this risk class". Step 3 reported it as `undefined` because no such bar existed in accepted doctrine, and §2b and line 128 of this ADR both argue against inventing a count.
@@ -177,7 +203,11 @@ The gate does not close until the first three exist. This ordering is part of th
 
    - **4a — the discharge path.** **DONE** (Loop 12, ledger entry #22): `policy.evaluate_with_qualified_evidence`. Measured before it was built: *no* entry point in `policy` discharged `require_review` on qualified evidence — `evaluate` and `evaluate_with_base_outcome` take no evidence, and `evaluate_with_external_verification` early-returns unless the outcome is `require_external_verification`. Flipping the gate first would therefore have left all 51 sites refused with **no route** — the exact halt this ADR forbids. Additive: `_apply_review` untouched, both paths coexist.
    - **4b-1 — migrating the evidence producers.** **DONE** (Loop 13, ledger entry #23). The axis governing conversion is not test-versus-production but **whether a module already holds a digest or reproducible procedure**. Measured across the seven modules that set `review_satisfied=True`: `procedural_memory`, `dashclaw_external_verdict` and `reusable_grants` can produce genuine artifact-bound evidence; `decision_overwrite`, `forbidden_hits`, `visibility_characterization` and `benchmark_security` hold only a name. The first three are migrated, additively. **For the other four, conversion would mean inventing an `artifact_ref` and `digest` to satisfy the classifier — the caller-asserted defect dressed as a migration — so this ADR's own ruling applies: they present real evidence or they park.** Which of those, is an operator decision, raised rather than assumed.
-   - **4b-2 — the flip and the conversion.** *Next.* A probed hard flip breaks **55 tests across ~30 files**, and they are two different kinds of work: a minority assert the gate's own behaviour and are genuine declared amendments; the majority use assertion as *scaffolding* to reach unrelated behaviour and must be given real qualified evidence instead — amending those would silently delete coverage rather than update it.
+   - **4b-2 — the flip and the conversion.** **DONE** (Loop 14, ledger entry #24). `review_satisfied=True` plus arbitrary `approval_refs` no longer discharges `require_review`. Three sites cross with real evidence; **four park** — `decision_overwrite` low/medium, `forbidden_hits`, `visibility_characterization`, `benchmark_security` — under R6, because none possesses material establishing the proposition under review. `decision_overwrite` high keeps its external-verification semantics unchanged.
+
+**Step 4 is complete, and with it this ADR is enforced rather than described.**
+
+*What the flip required, discovered during implementation and disclosed.* After removing the asserted route, **no governed entry point could present evidence**: `commit_proposal`, `governed_delete`, `evaluate_crossing`, `import_bundle`, `evaluate_source_notice`, `purge`, `propose_rebuild` and `evaluate_pama_v13` all evaluated directly. Their callers would have had a remediation path in doctrine and no way to reach it — the dead end this ADR prohibits. Each gained an `evidence`/`attestation` channel, and every wrapper that forwards to one (`configured_restart`, `restart_runtime`, `runtime_composition`, and the subclass adapters) forwards it too: **no path capable of reaching a governed mutation may bury the capability one layer up.** A probed hard flip breaks **55 tests across ~30 files**, and they are two different kinds of work: a minority assert the gate's own behaviour and are genuine declared amendments; the majority use assertion as *scaffolding* to reach unrelated behaviour and must be given real qualified evidence instead — amending those would silently delete coverage rather than update it.
 
 **What step 1 settled, so steps 2–3 do not re-litigate it.** Two questions surfaced in audit and were decided:
 

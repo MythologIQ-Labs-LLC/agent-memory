@@ -281,7 +281,18 @@ def _apply_review(outcome: str, proposal: Proposal) -> tuple[str, list[str]]:
         # making require_review and require_external_verification the same thing
         # under assertion. Use evaluate_with_external_verification instead.
         return outcome, ["external_verification_requires_attestation"]
-    return ALLOW_WITH_LEDGER, [f"review discharged by {list(proposal.approval_refs)}"]
+    # ADR-037 step 4b-2 (entry #24). Assertion no longer discharges
+    # `require_review` either. `review_satisfied=True` plus arbitrary
+    # `approval_refs` was the last route by which an unverifiable claim became
+    # an authority decision, and it had been load-bearing since the first policy
+    # implementation.
+    #
+    # The remediation path exists and lands first, per this ADR's sequencing:
+    # `evaluate_with_qualified_evidence` discharges on evidence meeting R5's
+    # ladder (step 4a), and a caller that cannot meet it parks with a criteria
+    # report naming the unmet axis (steps 1-3). The reason below is the entry
+    # point to that path, not a dead end.
+    return outcome, [REVIEW_REQUIRES_QUALIFIED_EVIDENCE]
 
 
 def _envelope(outcome: str, proposal: Proposal) -> tuple[tuple[str, ...], tuple[str, ...]]:
@@ -428,6 +439,7 @@ DELEGATED_POLICY = "delegated_policy"
 # Refusal reasons, one per ladder axis, so a caller -- and step 4b's migration --
 # can tell WHICH row it missed. A single "review_not_discharged" would make that
 # conversion guesswork.
+REVIEW_REQUIRES_QUALIFIED_EVIDENCE = "review_requires_qualified_evidence"
 INSUFFICIENT_EVIDENCE_CLASS = "insufficient_evidence_class"
 INSUFFICIENT_BINDING_STATUS = "insufficient_binding_status"
 

@@ -15,8 +15,12 @@
   },
   "governed_uncertainty": {
     "requested_action": "claim_forbidden_hit_coverage",
-    "permitted_actions": ["report_explicit_negative_assertions"],
-    "prohibited_actions": ["infer_safety_from_positive_recall_only"],
+    "permitted_actions": [
+      "report_explicit_negative_assertions"
+    ],
+    "prohibited_actions": [
+      "infer_safety_from_positive_recall_only"
+    ],
     "selected_action": "report_explicit_negative_assertions",
     "selection_mode": "deterministic",
     "expected_invariants": [
@@ -36,7 +40,9 @@
       "observer": "reference-conformance",
       "method": "negative lifecycle assertion mapping",
       "timestamp": "2026-08-12T18:30:00Z",
-      "source_refs": ["issue://148"]
+      "source_refs": [
+        "issue://148"
+      ]
     },
     "evidence": [
       {
@@ -49,14 +55,24 @@
     "saturation": {
       "sigma": 0.0,
       "calibrated": false,
-      "durability_dimensions": ["conformance_assertion"]
+      "durability_dimensions": [
+        "conformance_assertion"
+      ]
     },
     "authority": {
       "pama_outcome": "allow_with_ledger",
       "risk_class": "low",
-      "policy_refs": ["ADR-015", "ADR-020", "ADR-022"],
-      "permitted_actions": ["report_explicit_negative_assertions"],
-      "prohibited_actions": ["infer_safety_from_positive_recall_only"],
+      "policy_refs": [
+        "ADR-015",
+        "ADR-020",
+        "ADR-022"
+      ],
+      "permitted_actions": [
+        "report_explicit_negative_assertions"
+      ],
+      "prohibited_actions": [
+        "infer_safety_from_positive_recall_only"
+      ],
       "selection_mode": "deterministic"
     },
     "created_at": "2026-08-12T18:30:00Z"
@@ -142,13 +158,13 @@
     {
       "assertion_id": "rejected-value-reentry",
       "forbidden_class": "rejected_value_reentry",
-      "source_lifecycle_state": "rejected",
+      "source_lifecycle_state": "blocked_pending_verification",
       "source_evidence": "reference/tests/test_rejected_value_readmission.py",
       "candidate_discovered": false,
       "admitted": false,
       "context_surfaced": false,
       "downstream_influence": false,
-      "expected_refusal": "rejected_value_requires_reconciliation"
+      "expected_refusal": "correction_parked_pending_verification:evidence_qualification"
     },
     {
       "assertion_id": "stale-authorized-write",
@@ -161,5 +177,8 @@
       "downstream_influence": false,
       "expected_refusal": "stale_authorization"
     }
-  ]
+  ],
+  "adr_037_notes": {
+    "rejected-value-reentry": "Changed by ADR-037 step 4b-2 (ledger entry #24), operator ruling 2026-09-05. This row previously expected 'rejected_value_requires_reconciliation', which required first committing a correction on review_satisfied=True plus approval:human. That discharge path was removed, and forbidden_hits holds nothing establishing that the deploy window is Friday rather than Thursday -- its executable observations and this matrix establish forbidden-hit LIFECYCLE behaviour, a different proposition. Reusing them as review evidence would be evidence-purpose laundering. So the correction parks and the re-entry premise is unreachable. The row is retained, carrying the unmet criterion, so the gap is visible rather than silently absent."
+  }
 }
