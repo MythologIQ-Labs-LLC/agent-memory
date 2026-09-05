@@ -801,3 +801,99 @@ gains the installable-distribution path Sprint 1 delivered but never documented.
 
 Review Boundary: staged, not committed. Prior work is committed at `fe7724e` and
 `97721dc`.
+---
+
+### Entry #18: SESSION SEAL - Phase 9 (Sprint 2g parked verification)
+
+**Entry ID**: `3961f7d97ed9`
+**Content Hash**: `f67fd881819b614be4ecbb8ecbac7815c6849cc581ac87315bc4072c4ef033de`
+**Previous Hash**: `2fd54bae86d94ca781390dadbeed36954306c40cb803bbaf4253858694d12929`
+**Chain Hash**: `07bde207e78cc97268e85c782f55d407fc30030349d190132224a9a656230a58`
+**Timestamp**: 2026-09-04T23:59:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-09-04T2347-39681d
+**Plan**: docs/plan-sprint2g-parked-verification.md (iteration 4)
+**SSDF Practices**: PO.1.4, PS.2.1, PW.1.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index 2f7f6177dea169708ed15365f27c86fb46e32cbd):
+`e3cecc621ff23efb0120b202d7ec0a39cd74d8cd54867a70ba09e2196a80aa8a`
+
+**Scope**: ADR-037 implementation **step 1 of 4**, and only step 1. The operator
+fixed a rigid order -- parked state, then evidence qualification, then governed
+resumption, then fail-closed conversion of the 51 caller sites -- and directed
+that the gate not flip before the first three exist. Steps 2-4 are not built.
+`policy._apply_review` is unmodified, verified by empty diff. Assertion still
+discharges `require_review` after this cycle, deliberately.
+
+**Reality = Promise**: two new files, four documentation updates, no existing
+module modified, no schema modified. No UNPLANNED changes.
+
+**Definition of Done**: 11 of 11 PASS.
+| # | Item | Result |
+|---|---|---|
+| 1 | Park records the `Proposal`, decision, correlation, `parked_at`, `policy_version` | PASS |
+| 1b | Retained proposal re-evaluates to the recorded decision | PASS -- `policy.evaluate(record.proposal) == record.decision` |
+| 1c | `state_snapshot` rides along for the staleness guard | PASS |
+| 2 | `permitted_actions` equals the decision's, per outcome | PASS -- asserted by equality, never a literal |
+| 3 | One schema-valid event; modeled fields top-level | PASS -- absence from `payload` asserted |
+| 4 | Duplicate park raises; first record intact | PASS |
+| 5 | `allow` and `allow_with_ledger` refused | PASS |
+| 6 | `require_external_verification` parks with its own route | PASS |
+| 7 | `block` refused | PASS -- prohibition asserted from the decision |
+| 8/9 | No method discharges or permits; `resume` absent, not stubbed | PASS |
+| 10 | Full suite; `_apply_review` unmodified | PASS -- 971 pass / 0 fail / 7 skip; `policy.py` diff empty |
+| 11 | Validators clean, no schema modified | PASS -- 58 schemas, 64 fixtures, exit 0 |
+
+**Test count**: 951 -> 971 (+20). Run under the pinned `cryptography==50.0.1` the
+repository declares, not the ambient interpreter's 48.0.0.
+
+**Negative control**: five mutations, each caught, control restored green --
+park accepting `block`; the route hardcoded to `enter_pending_verification`;
+a `resume` stub raising `NotImplementedError`; `correlation_id` demoted into
+`payload`; duplicate park overwriting instead of raising.
+
+**Decision**: audit VETOed twice, on four grounds, and every one was a design
+correction rather than wording.
+
+*V1* -- the planned record held identity fields only (`proposal_id`, `actor_id`,
+`target_reference`, `operation`, `risk_class`). `policy.evaluate` takes a
+`Proposal` of 28 fields, and the floors and modifiers read `target_class`,
+`downstream_authority`, `reversibility`, `evidence_refs`, and the isolation-domain
+fields. Step 3 could not have re-evaluated from that summary, so it would have had
+to reshape the record -- the exact cost this cycle existed to avoid. The record now
+retains the `Proposal`.
+
+*V2* -- the plan parked `block` and treated its empty `permitted_actions` as a
+feature. `_envelope` names `enter_pending_verification` in the **prohibited** set
+for `block`. Parking one contradicts the envelope being recorded and produces a
+record no evidence can ever discharge: permanent parked residue charged against
+retention. `block` is now refused, on the same footing as `allow` but for the
+opposite reason -- `allow` had no refusal to record, `block` has no route out.
+
+*V3* -- staleness had no anchor. Fixed by V1: `state_snapshot` is a `Proposal`
+field, so it is recorded as a reason rather than acquired by luck.
+
+*V4* -- DoD 2 and DoD 6 could not both be satisfied. Measured: `require_review`
+permits `enter_pending_verification`; `require_external_verification` permits
+`request_external_verification` instead. The danger was not the failing test but
+the fix an implementer reaches for -- hardcoding the review route to make DoD 2
+pass, which is the caller-asserted-input defect this program has now found four
+times. The envelope has three states, not two: permitted, unlisted, prohibited.
+
+**Audit conditions on the PASS**: C1, modeled event fields (`correlation_id`,
+`policy_version`, `state_snapshot`) take their modeled top-level home rather than
+`payload` -- legal either way, but a modeled field buried in `payload` is invisible
+to any consumer joining on it. C2, parked records have no eviction path in this
+cycle and retention belongs to #363, recorded as a deferral rather than left to be
+discovered. Both satisfied.
+
+**Known limitation, disclosed**: `decision_overwrite._event` places
+`state_snapshot` inside `payload`, the placement C1 rules against. It is
+pre-existing, out of this cycle's scope, and named here so it is not later read as
+precedent.
+
+Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V4 closed and recorded.
+Review Boundary: staged, not committed.

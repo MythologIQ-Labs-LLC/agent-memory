@@ -7,8 +7,8 @@ Single canonical cross-reference of every user-touchable feature in Agent Memory
 
 ## Coverage Summary
 
-- Total entries: **11**
-- **Verified**: 11
+- Total entries: **12**
+- **Verified**: 12
 - **Unverified**: 0
 - **N/A (operator-justified)**: 0
 
@@ -29,6 +29,7 @@ Single canonical cross-reference of every user-touchable feature in Agent Memory
 | FX009 | Review discharge derives self-approval from identity and records what the discharge rested on (now produces `verified`, Loop 7) | `reference/agentmem_ref/policy.py` `_apply_modifiers`, `evaluate_with_base_outcome`; `Decision.review_discharge` | `docs/plan-sprint2d-derived-authority.md` LD1-LD4 | `reference/tests/test_derived_authority.py` | verified | api | GAP-ARCH-04 self-approval leg only -- gap remains OPEN. Generalizes `decision_overwrite.py:171` and `enforcement_evidence.py:61-80`. Reaches `crossing.py` via `policy.evaluate` |
 | FX010 | Reusable grant evaluation verifies against an independently-held ratification record | `reference/agentmem_ref/reusable_grants.py` `RatificationRegistry`, `grant_body_digest`, `evaluate_reusable_grant` | `docs/plan-sprint2e-ratification-anchor.md` LD1-LD5 | `reference/tests/test_ratification_anchor.py` | verified | api | GAP-SEC-04 grant path. Implements the operator's option-C decision; option D retained as a labelled profile. Defeats the recompute attack that beat a digest-only fix. No schema modified |
 | FX011 | External verification is dischargeable only through a proposal-bound attestation, never by assertion | `reference/agentmem_ref/policy.py` `ExternalVerification`, `evaluate_with_external_verification`, `_apply_review` cap; `decision_overwrite.py`; `structural_mutation.py`; `adapter.py` `governed_delete` | `docs/33-pama-decision-table.md` "Discharging a decision"; `docs/plan-sprint2f-verified-discharge.md` | `reference/tests/test_verified_discharge.py` | verified | api | GAP-ARCH-04 external-verification leg. Attestation is caller-constructed and therefore forgeable; unforgeability is open work |
+| FX012 | A refused proposal is parked with its decision, its remediation route, and its correlation identity, emitting schema-valid evidence | `reference/agentmem_ref/pending_verification.py` `ParkedProposal`, `PendingVerificationRegistry.park` | `docs/adr/ADR-037-fail-closed-review-requires-a-remediation-path.md` sections 3 and 5; `docs/plan-sprint2g-parked-verification.md` LD1-LD7 | `reference/tests/test_pending_verification.py` | verified | api | ADR-037 **step 1 of 4**. 20 tests. Parks only `require_review` and `require_external_verification`; refuses `allow` (nothing was refused) and `block` (its envelope names `enter_pending_verification` as prohibited, so the record could never resume). Retains the whole `Proposal` so step 3 can re-evaluate and apply the staleness guard. No `resume` method exists. Steps 2-4 not built; `_apply_review` untouched |
 
 ---
 
