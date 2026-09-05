@@ -897,3 +897,118 @@ precedent.
 
 Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V4 closed and recorded.
 Review Boundary: staged, not committed.
+---
+
+### Entry #19: SESSION SEAL - Phase 10 (Sprint 2h evidence qualification)
+
+**Entry ID**: `e2c500fff592`
+**Content Hash**: `2555d59b5c3826708f6bb77c53bc438a5b4f84dc1a9a335f534b9d1e59ce305d`
+**Previous Hash**: `07bde207e78cc97268e85c782f55d407fc30030349d190132224a9a656230a58`
+**Chain Hash**: `23d71557eeb046ad071585e3a20a2edc4c39b7c8a7b4460febf725ac98b968f5`
+**Timestamp**: 2026-09-05T01:10:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-09-05T0045-37f432
+**Plan**: docs/plan-sprint2h-evidence-qualification.md (iteration 4)
+**SSDF Practices**: PO.1.4, PS.2.1, PW.1.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index 87eb6a6c9dbca6cf801163f7de191329b0db3846):
+`7d281120671c481a5560ec115ebeb55ff71ec3c5528aaa823cec96a2d88d28ed`
+
+**Scope**: ADR-037 implementation **step 2 of 4**, and only step 2. R2 and R3
+made computable. Resumption (step 3) and fail-closed conversion (step 4) are not
+built. `policy.py` is unmodified, verified by empty diff; `PendingVerificationRegistry`
+is not imported, asserted over the module's parsed import statements.
+
+**The gap this closes, measured**: `policy._apply_modifiers:252` was the shared
+evaluator's entire treatment of evidence -- `if not proposal.evidence_refs`. On
+`semantic/write/low/reversible`, `(" ",)` and `("i-said-so",)` and ten copies of
+one reference all cleared M-EVID exactly as `("receipt://sha256:deadbeef",)` did.
+Evidence was a truthiness check on a tuple. This is the **sixth** control found
+implemented in one module and absent from the shared evaluator.
+
+**Reality = Promise**: two new files, five documentation updates, no existing
+module modified, no schema modified. No UNPLANNED changes.
+
+**Definition of Done**: 16 of 16 PASS. Test count 971 -> 999 (+28), 0 failures,
+7 skipped, under the pinned `cryptography==50.0.1`. Validators clean (58 schemas,
+64 fixtures).
+
+**Negative control**: six mutations, each caught, control restored green --
+`artifact_bound` requiring only one binding; a failing verifier collapsing to
+`asserted`; relation 3 removed; groups counted at their strongest status rather
+than weakest; estimator groups counted as directly satisfying; a named-but-unheld
+verifier trusted.
+
+**Decision**: audit VETOed twice, on five grounds, and the first was the most
+important thing this cycle produced.
+
+*V1* -- the plan claimed that deriving a class from present bindings was "the
+direct answer" to the caller-asserted defect found six times. It is not. The
+bindings are themselves caller-supplied strings: `digest="deadbeef"` with
+`verifier="trust-me"` classifies `artifact_bound` with nothing checked. That is
+the same defect with more fields to fill in, and shipping it under a closure
+claim would have been worse than not claiming it. The repository had already
+solved this shape twice -- `ratification_evidence_verified`/`_asserted` (Loop 6)
+and `review_discharge` recording `asserted`/`verified` (Loop 7) -- and the plan
+had ignored both. Classification now carries a binding status, and **the claim
+is narrowed to what the work supports**: evidence stops being an opaque string
+and becomes a typed, ranked claim that names its own verifier. The
+caller-asserted pattern remains open.
+
+*V2* -- the stated algorithm (union-find over `derived_from` and shared
+`failure_domain`) could not satisfy its own DoD 9. Two runs of one deterministic
+procedure share no derivation edge and need declare no failure domain, so they
+would have reported as two independent groups -- precisely the laundering R2
+names by name. A third relation, identical `(method, method_version, inputs)`,
+is the mechanism. DoD 9 now also asserts the absence of the other two relations
+so the test cannot pass by accident.
+
+*V3* -- ADR-037 §4 (`collect_more_evidence` must state what would discharge
+*this* proposal) was owned by **no step** of the ADR's own four-step order. It is
+now assigned to step 3, with the reason: it needs a risk class, and step 2
+refuses one so it cannot return a sufficiency verdict. The ADR is amended.
+
+*V4* -- introducing a verifier introduced a state the plan had not: a verifier
+that runs and **fails**. Two statuses meant the obvious implementation was
+`"verified" if passed else "asserted"`, making "nobody has checked this digest"
+and "somebody checked it and it did not match" the same state. The second is a
+refutation, and collapsing it lets a proposer whose artifact failed keep
+re-presenting it as merely unchecked. `refuted` is a distinct third status that
+never collapses into `asserted`. Neither prior precedent carried a third state,
+because neither runs a verifier that can fail -- this was new to the repository,
+not a repeated oversight.
+
+*V5* -- Loop 8's V1 shape returned. The result broke groups down by class only,
+so a group holding an `asserted` artifact and one holding a `verified` artifact
+were indistinguishable -- collapsing the very distinction V1 had just
+introduced, and forcing step 4 to reach past the result and re-derive the
+grouping. `DependenceAnalysis` now counts by (class rank x binding status), and
+DoD 10 answers step 4's actual question from the result alone.
+
+**Audit conditions on the PASS**: C1, counting discipline -- a group counts at
+its **weakest** status, so a group holding a `verified` and a `refuted` item is
+never counted as verified and is reported among the refuted-carrying groups; and
+no total mixes `unqualified` groups with qualifying ones, because ten distinct
+bare strings legitimately form ten groups and qualify nothing. C2, FX013's index
+note carries the narrowed claim including the residual, on the FX011 precedent.
+Both satisfied.
+
+**Naming, found in research before it was spent**: `EVIDENCE_CLASSES` was already
+taken. `derivation_currentness.py:26` uses it for polarity and role -- ordinary,
+negative, adversarial, correction, incident -- with two schema consumers. R3
+ranks checkability, an orthogonal axis. The module says `qualification_class`.
+Discovering this after step 4 would have been an expensive rename across a
+schema surface.
+
+**Recorded, not acted on**: `reusable_grants` establishes independence by
+`source_ref` identity plus a caller-asserted `independent_adjudication` boolean,
+which R2 says is not sufficient on its own. R4 fences that module off -- it
+governs reusable authority from historical precedent and must not be generalized
+-- so the tension is recorded rather than resolved. `_eligible_human_precedents`
+dedupes correctly via `by_source.setdefault`; there is no defect to fix there.
+
+Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V5 closed and recorded.
+Review Boundary: staged, not committed.

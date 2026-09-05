@@ -7,8 +7,8 @@ Single canonical cross-reference of every user-touchable feature in Agent Memory
 
 ## Coverage Summary
 
-- Total entries: **12**
-- **Verified**: 12
+- Total entries: **13**
+- **Verified**: 13
 - **Unverified**: 0
 - **N/A (operator-justified)**: 0
 
@@ -30,6 +30,7 @@ Single canonical cross-reference of every user-touchable feature in Agent Memory
 | FX010 | Reusable grant evaluation verifies against an independently-held ratification record | `reference/agentmem_ref/reusable_grants.py` `RatificationRegistry`, `grant_body_digest`, `evaluate_reusable_grant` | `docs/plan-sprint2e-ratification-anchor.md` LD1-LD5 | `reference/tests/test_ratification_anchor.py` | verified | api | GAP-SEC-04 grant path. Implements the operator's option-C decision; option D retained as a labelled profile. Defeats the recompute attack that beat a digest-only fix. No schema modified |
 | FX011 | External verification is dischargeable only through a proposal-bound attestation, never by assertion | `reference/agentmem_ref/policy.py` `ExternalVerification`, `evaluate_with_external_verification`, `_apply_review` cap; `decision_overwrite.py`; `structural_mutation.py`; `adapter.py` `governed_delete` | `docs/33-pama-decision-table.md` "Discharging a decision"; `docs/plan-sprint2f-verified-discharge.md` | `reference/tests/test_verified_discharge.py` | verified | api | GAP-ARCH-04 external-verification leg. Attestation is caller-constructed and therefore forgeable; unforgeability is open work |
 | FX012 | A refused proposal is parked with its decision, its remediation route, and its correlation identity, emitting schema-valid evidence | `reference/agentmem_ref/pending_verification.py` `ParkedProposal`, `PendingVerificationRegistry.park` | `docs/adr/ADR-037-fail-closed-review-requires-a-remediation-path.md` sections 3 and 5; `docs/plan-sprint2g-parked-verification.md` LD1-LD7 | `reference/tests/test_pending_verification.py` | verified | api | ADR-037 **step 1 of 4**. 20 tests. Parks only `require_review` and `require_external_verification`; refuses `allow` (nothing was refused) and `block` (its envelope names `enter_pending_verification` as prohibited, so the record could never resume). Retains the whole `Proposal` so step 3 can re-evaluate and apply the staleness guard. No `resume` method exists. Steps 2-4 not built; `_apply_review` untouched |
+| FX013 | Evidence carries a derived checkability class and binding status, and correlated items collapse into lineage-derived dependence groups | `reference/agentmem_ref/evidence_qualification.py` `qualify`, `group_by_dependence`, `DependenceAnalysis` | `docs/adr/ADR-037-fail-closed-review-requires-a-remediation-path.md` R2, R3; `docs/plan-sprint2h-evidence-qualification.md` LD1-LD9 | `reference/tests/test_evidence_qualification.py` | verified | api | ADR-037 **step 2 of 4**. 28 tests. Class is derived from which bindings are present -- `EvidenceItem` has no class field, so the claim cannot be expressed. Three lineage relations (`derived_from`, shared `failure_domain`, identical `(method, method_version, inputs)`); a declaration may only merge groups, never split one. **Bindings are caller-supplied strings: presence is not verification, `asserted` is the default because no verifier has run, and this cycle does NOT close the caller-asserted pattern** -- same residual class as FX011. `refuted` is a distinct third status so a failed check never reads as an unmade one. Named `qualification_class`, not `evidence_class`, which `derivation_currentness` owns for an orthogonal axis. Steps 3-4 not built; `policy.py` untouched |
 
 ---
 

@@ -84,6 +84,8 @@ Live for plan duration; archived at substantiate. Drift signal: plan shipped but
 | Sprint 2f research brief | `docs/research-brief-sprint2f-verified-discharge-2026-09-04.md` | sprint2f-verified-discharge |
 | Sprint 2g plan | `docs/plan-sprint2g-parked-verification.md` | sprint2g-parked-verification |
 | Sprint 2g research brief | `docs/research-brief-sprint2g-parked-verification-2026-09-04.md` | sprint2g-parked-verification |
+| Sprint 2h plan | `docs/plan-sprint2h-evidence-qualification.md` | sprint2h-evidence-qualification |
+| Sprint 2h research brief | `docs/research-brief-sprint2h-evidence-qualification-2026-09-05.md` | sprint2h-evidence-qualification |
 
 ## Tier 5 — Reference Material
 

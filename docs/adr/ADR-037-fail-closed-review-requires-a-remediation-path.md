@@ -148,8 +148,8 @@ The principal still needs qualifying evidence and valid scope/risk authority. Re
 The gate does not close until the first three exist. This ordering is part of the decision.
 
 1. **Parked proposal state** — `enter_pending_verification` as a real, resumable, evidence-emitting outcome. **DONE** (Loop 8, ledger entry #18): `reference/agentmem_ref/pending_verification.py`.
-2. **Evidence qualification and dependence lineage** — R2 and R3 made computable, including dependence-group collapse. *Next.*
-3. **Governed resumption and re-evaluation** — evaluator-owned, policy re-evaluated from scratch, staleness applied.
+2. **Evidence qualification and dependence lineage** — R2 and R3 made computable, including dependence-group collapse. **DONE** (Loop 9, ledger entry #19): `reference/agentmem_ref/evidence_qualification.py`.
+3. **Governed resumption and re-evaluation** — evaluator-owned, policy re-evaluated from scratch, staleness applied. **Also owns §4** (see below). *Next.*
 4. **Fail-closed `require_review`** — convert the 51 caller sites.
 
 **What step 1 settled, so steps 2–3 do not re-litigate it.** Two questions surfaced in audit and were decided:
@@ -158,6 +158,12 @@ The gate does not close until the first three exist. This ordering is part of th
 - **What the record retains.** The whole `Proposal`, not an identity summary. Step 3 must re-evaluate from scratch and `policy.evaluate` takes a `Proposal`; retaining it is also what carries `state_snapshot` forward so the staleness guard can be applied at resumption. The record shape is therefore fixed and step 3 does not reshape it.
 
 The registry has **no** `resume` method — not a stub, not one raising. Step 3 adds it, and step 3 is gated on step 2.
+
+**What step 2 settled.**
+
+- **§4 belongs to step 3.** As written, this ADR's four-step order named no owner for §4 (`collect_more_evidence` must state which criteria are unmet, what class satisfies each, and what independence bar applies at this risk class). It is not step 2's: computing "what independence bar applies at this risk class" needs a risk class, and the qualification module deliberately refuses one so it cannot return a sufficiency verdict. It lands in **step 3**, which already re-evaluates against a risk class and already holds the parked record that would carry the message. Recorded here so the requirement is owned rather than falling between four cycles that each correctly declared it out of scope.
+- **Qualification is derived, and it is not yet verification.** A class comes from which bindings an item carries, never from a claim it makes. But the bindings are themselves caller-supplied strings, so every class pairs with a binding status: `asserted` (nobody has checked), `verified` (a verifier in the evaluator's registry ran and passed), `refuted` (it ran and failed). `refuted` is distinct on purpose — collapsing it into `asserted` would make a failed check indistinguishable from an unmade one. **This does not close the caller-asserted-input pattern**; it makes evidence a typed claim that names its own verifier.
+- **Independence is three relations, not two.** Derivation edges and shared failure domains are both insufficient alone: two runs of one deterministic procedure share neither, and R2 says in as many words that they are one evidence item. Identical `(method, method_version, inputs)` is the third relation. A declared failure domain may only **merge** groups, never split one — the constrained party can weaken its own independence claim and never strengthen it.
 
 Do not flip the gate before 1–3 exist. A control whose remediation path does not yet work is a halt, and the pressure it creates becomes a workaround that outlives it.
 
