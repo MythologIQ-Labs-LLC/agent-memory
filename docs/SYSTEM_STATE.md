@@ -4,13 +4,13 @@
 
 | Attribute | Value |
 |-----------|-------|
-| **Last Updated** | 2026-09-05T09:30:00-04:00 |
+| **Last Updated** | 2026-09-05T12:30:00-04:00 |
 | **Updated By** | Judge |
-| **Phase** | SUBSTANTIATED (Sprint 2m fail-closed flip, ADR-037 step 4b-2 -- step 4 COMPLETE) |
-| **Iteration** | 14 |
-| **Session Seal** | Entry #24 (session 2026-09-05T0700-ac3145) |
+| **Phase** | SUBSTANTIATED (Sprint 2n seal anchors -- ledger Merkle seals durable and remotely verifiable) |
+| **Iteration** | 15 |
+| **Session Seal** | Entry #25 (session 2026-09-05T1100-c2c873) |
 
-Snapshot refreshed at the Sprint 2m seal (Loop 14). ADR-037 is now enforced rather than described: assertion no longer discharges require_review anywhere. Genesis values came from the `/qor-deep-audit` reconnaissance (see `docs/RESEARCH_BRIEF.md`); deltas through Loops 2-8 are measured from the sealed tree, with the suite run under the pinned `cryptography==50.0.1` the repo declares -- not the ambient interpreter.
+Snapshot refreshed at the Sprint 2n seal (Loop 15). Every SESSION SEAL is now anchored under `refs/seals/` and verifiable from origin. ADR-037 is now enforced rather than described: assertion no longer discharges require_review anywhere. Genesis values came from the `/qor-deep-audit` reconnaissance (see `docs/RESEARCH_BRIEF.md`); deltas through Loops 2-8 are measured from the sealed tree, with the suite run under the pinned `cryptography==50.0.1` the repo declares -- not the ambient interpreter.
 
 ---
 
@@ -34,7 +34,7 @@ agent-memory/
 |   |-- run_*.py               68 evidence emitters
 |   |-- native/                1 Rust driver
 |   |-- policies/, fixtures/ (15 JSON), testdata/
-|   `-- tests/                 136 test files, 1095 tests
+|   `-- tests/                 137 test files, 1109 tests
 |-- integrations/
 |   |-- agent-memory-runtime/  JS, 1 source + 1 test, private
 |   `-- hermes-agent-memory/   Python, 10 modules, 6 tests
@@ -51,7 +51,7 @@ agent-memory/
 | Metric | Value |
 |--------|-------|
 | Total Source Files | 121 (`reference/agentmem_ref`) + 68 emitters + 12 scripts + 11 integration modules |
-| Total Test Files | 136 (`reference/tests`) + 6 (hermes) + 1 (JS) |
+| Total Test Files | 137 (`reference/tests`) + 6 (hermes) + 1 (JS) |
 | Total Lines of Code | 60,376 under `reference/` |
 | Average File Size | ~300 lines (`agentmem_ref`) |
 | Max File Size | 733 lines (file: `reference/agentmem_ref/runtime_config.py`) |
@@ -119,7 +119,7 @@ Pre-existing at genesis. Any new file under `/qor-plan` must meet the razor.
 
 | Component | Test File | Exists | Passing |
 |-----------|-----------|--------|---------|
-| Reference runtime (all) | `reference/tests/` (136 files) | OK | 1095 pass / 0 fail / 7 skip under pinned `cryptography==50.0.1`; CI green on `main` |
+| Reference runtime (all) | `reference/tests/` (137 files) | OK | 1109 pass / 0 fail / 7 skip under pinned `cryptography==50.0.1`; CI green on `main` |
 | Cedar digest pin | `reference/tests/test_cedar_policy_comparator.py:71` | OK | FAIL on Windows checkouts (GAP-RT-02) |
 | Third-party version pins | `test_agent_manifest_correlation.py:151`, `test_trace_action_evidence.py:118` | OK | FAIL unless env matches requirements (GAP-RT-03) |
 | Graphiti substrate | `reference/tests/test_graphiti_substrate.py` | OK | SKIPPED (7) without graphiti/kuzu (GAP-RT-07) |
@@ -156,7 +156,7 @@ Sprint 1 install correctness (branch `feat/agent-memory-genesis`, staged, uncomm
 | Merkle Chain | VALID | Entries #1-#8; Entry #6 hashes recomputed once for a verdict-line format fix (recorded in-entry) |
 | Blueprint Sync | SYNCED | File tree and Dependencies table updated at Sprint 1 |
 | Section 4 Compliance | VIOLATIONS (pre-existing) | New code clean; 58 file + 175 function pre-existing overages (GAP-RT-04, Sprint 11) |
-| Test Status | PASS | 1095 run, 0 fail, 7 skipped (Graphiti/kuzu absent) under the pinned `cryptography==50.0.1`; fresh-venv wheel smoke exit 0 |
+| Test Status | PASS | 1109 run, 0 fail, 7 skipped (Graphiti/kuzu absent) under the pinned `cryptography==50.0.1`; fresh-venv wheel smoke exit 0 |
 
 ---
 

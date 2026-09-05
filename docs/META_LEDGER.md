@@ -1632,3 +1632,77 @@ relevant material but is a bare tuple of strings, `unqualified` under R3.
 
 Audit: VETO, VETO, PASS -- attempts 1-3 of 5. Grounds V1-V3 closed and recorded.
 Review Boundary: staged, not committed.
+---
+
+### Entry #25: SESSION SEAL - Phase 16 (Sprint 2n seal anchors)
+
+**Entry ID**: `f199bd6bbfcb`
+**Content Hash**: `182235215086fd78919d72f4595c86b09d86ed06762e9ae0b5c7d58223a04745`
+**Previous Hash**: `35e3a2176ff29d590703999a462f771793985f998c30c742c336dbd297816b35`
+**Chain Hash**: `a3c420ff9646a0431b7445cacb2af841ff956f2a90c29d4d84f8c6d762137539`
+**Timestamp**: 2026-09-05T12:30:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-09-05T1100-c2c873
+**Plan**: docs/plan-sprint2n-seal-anchors.md (iteration 2; change_class hotfix)
+**SSDF Practices**: PO.1.4, PS.2.1, PW.7.2
+
+**Merkle Seal** (SHA256 over `git write-tree` of the staged index 03ea75dc2a0a23a8343a2aa2d908202b2108d483):
+`90a1a524108ac7cfe14f4b2292c25cff477129d0e784531370372322ca70c0e4`
+
+**Anchor**: `refs/seals/entry-25` -- this seal's tree is wrapped in a parentless
+commit and pushed, so it is reachable, gc-safe, and verifiable from origin with
+`git fetch origin 'refs/seals/*:refs/seals/*' && python scripts/verify_seals.py`.
+
+**The defect, outstanding since Loop 8 and fifteen seals deep.** Every SESSION
+SEAL records the `git write-tree` oid of the staged index. `write-tree` creates
+a tree object referenced from nothing: measured, 15 sealed trees (#8, #11-#24)
+were present locally, **reachable from no ref, present on origin as none, and
+subject to default gc pruning**. Every Merkle seal in this ledger was verifiable
+only locally, only until gc, and never by anyone reviewing the repository.
+
+**No re-seal.** `chain_hash(content, prev)` takes the plan's content hash and the
+previous chain hash; the Merkle is not an input. Anchoring changed no entry,
+broke no chain, and amended nothing -- it made the existing seals durable.
+
+**Mechanism.** Each sealed tree is wrapped in a **parentless** commit via
+`git commit-tree` -- a seal is a snapshot of one staged index, not a point on
+`main`'s history, and a parent would misrepresent it -- referenced from
+`refs/seals/entry-<N>` and pushed. `git rev-parse refs/seals/entry-<N>^{tree}`
+equals the ledger's oid. All 15 existing anchors are on origin.
+
+**Self-sustaining, not a one-off.** `scripts/anchor_seal.py` verifies the ledger
+oid is a present tree before creating, is idempotent, and **refuses to overwrite**
+a ref pointing elsewhere -- a wrong anchor that verifies is worse than none, and
+silently correcting one would destroy the evidence something went wrong.
+`scripts/verify_seals.py` iterates SESSION SEAL entries and fails on any without
+a parseable Merkle, fails on an **empty namespace** rather than passing
+vacuously, and reports strays. A CI workflow fetches `refs/seals/*` explicitly,
+because a default checkout does not and a check that sees nothing has checked
+nothing. The anchor step is part of substantiate from this entry on.
+
+**Definition of Done**: 11 of 11 PASS, plus 1b. Test count 1095 to 1109 (+14), 0
+failures, 7 skipped under the pinned `cryptography==50.0.1`. Validators clean.
+`verify-ledger` clean; every prior chain hash byte-identical.
+
+**Adversarial pass**: five mutations, each caught, control green -- the anchor
+overwriting a wrong ref; the verifier passing on an empty namespace; the
+verifier iterating parsed lines so a mis-parse drops out; a repointed ref
+ignored; strays unreported.
+
+**Decision**: audit VETOed once, on two grounds. *V1* -- a regex-driven
+verifier would treat a mis-parsed seal line as "not recorded", indistinguishable
+from a non-seal entry, and pass; the verifier now iterates seal entries and fails
+on an unparseable one. *V2* -- the plan scoped anchoring to #11-#25, but
+**entry #8 carries a Merkle**; #9 and #10 do not because they are an attestation
+and an amendment, not seals. The rule is "every SESSION SEAL", which is 15
+existing seals, not 14. Anchoring by a number threshold would have left #8
+unverifiable forever while reporting the repair complete. PASS carried one
+condition, satisfied: the fetch command is stated in the verifier's failure
+message and in `docs/CONFIGURATION.md`, because a durable seal nobody knows how
+to retrieve is durable in the wrong sense.
+
+Audit: VETO, PASS -- attempts 1-2 of 5. Grounds V1-V2 closed and recorded.
+Review Boundary: staged, not committed.
