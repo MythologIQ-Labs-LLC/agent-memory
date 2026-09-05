@@ -324,6 +324,49 @@ def grant_body_digest(grant: dict) -> str:
     return f"reusable-grant:{_digest(body)}"
 
 
+#: Name a proposal may cite. Naming is not holding.
+GRANT_BODY_VERIFIER = "reusable-grants:grant-body-digest"
+
+
+def evidence_for(grant: dict) -> tuple:
+    """Evidence for a reusable grant, built from material already held.
+
+    ADR-037 step 4b-1. The digest is `grant_body_digest`, built in Loop 6 over
+    `_GRANT_BODY_KEYS` precisely so a grant could not be tampered with after
+    ratification. Nothing is minted for the classifier.
+
+    Produces only. Discharge is the caller's, through
+    `policy.evaluate_with_qualified_evidence`.
+    """
+    from .evidence_qualification import EvidenceItem
+
+    return (
+        EvidenceItem(
+            ref=str(grant.get("grant_id", "")),
+            artifact_ref=str(grant.get("grant_id", "")),
+            digest=grant_body_digest(grant),
+            verifier=GRANT_BODY_VERIFIER,
+            failure_domain="reusable-grant-body",
+        ),
+    )
+
+
+def grant_body_verifier(grant: dict):
+    """A real verifier the evaluator may register, bound to one grant body.
+
+    Recomputes the body digest and compares. A grant is content-addressed, so
+    this attests to consistency and never to authenticity -- the distinction
+    `RatificationRegistry` below exists to enforce. Editing the body changes
+    the digest, so a tampered grant classifies `refuted` rather than merely
+    unverified.
+    """
+
+    def verify(item) -> bool:
+        return bool(item.digest) and item.digest == grant_body_digest(grant)
+
+    return verify
+
+
 class RatificationRegistry:
     """Ratification records held independently of the grants that cite them.
 

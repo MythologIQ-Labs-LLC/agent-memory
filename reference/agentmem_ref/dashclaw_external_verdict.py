@@ -226,6 +226,60 @@ def sha256_text(value: str) -> str:
     return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+#: Names a proposal may cite. Naming is not holding.
+CONTENT_VERIFIER = "dashclaw:mutation-content-sha256"
+PROVIDER_VERIFIER = "dashclaw:provider-execution-evidence"
+
+
+def evidence_for(bound: "BoundMutation") -> tuple:
+    """Evidence for one bound mutation, in two distinct dependence groups.
+
+    ADR-037 step 4b-1, and the adversarial case for R1: the **provider**
+    produces the verdict, this module does not certify it.
+
+    Separation is shown by **lineage, not by a label**. `EvidenceItem` carries
+    no producer field -- Loop 10 declined one -- so the two sources are told
+    apart the way R2 defines independence: different artifact roots and
+    different failure domains, which puts them in different dependence groups.
+    That is a derived statement that the two cannot fail together, which is
+    stronger than an asserted origin.
+
+    Nothing here is minted: `content_sha256` and `authority_evidence_ref` are
+    fields `BoundMutation` already carried.
+    """
+    from .evidence_qualification import EvidenceItem
+
+    items = [
+        EvidenceItem(
+            ref=bound.proposal_digest,
+            artifact_ref=f"agentmem://mutation/{bound.input_identity}",
+            digest=bound.content_sha256,
+            verifier=CONTENT_VERIFIER,
+            failure_domain="agent-memory-mutation-content",
+        )
+    ]
+    if bound.authority_resolved and bound.authority_evidence_ref:
+        items.append(
+            EvidenceItem(
+                ref=bound.authority_evidence_ref,
+                artifact_ref=f"dashclaw://authority/{bound.authority_evidence_ref}",
+                digest=sha256_text(bound.authority_evidence_ref),
+                verifier=PROVIDER_VERIFIER,
+                failure_domain="dashclaw-provider-authority",
+            )
+        )
+    return tuple(items)
+
+
+def content_verifier(fact_text: str):
+    """A real verifier the evaluator may register, bound to one mutation body."""
+
+    def verify(item) -> bool:
+        return bool(item.digest) and item.digest == sha256_text(fact_text)
+
+    return verify
+
+
 def _require_string(payload: Mapping[str, Any], name: str) -> str:
     value = payload.get(name)
     if not isinstance(value, str) or not value:
