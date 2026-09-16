@@ -18,6 +18,7 @@ import sys
 import unittest
 
 from tests.qualified_fixtures import (
+    attestation_for,
     commit_adjudicated,
     corpus_for,
     governed_adapter,
@@ -28,7 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import policy  # noqa: E402
-from agentmem_ref.adapter import Clock, GovernedMemoryAdapter  # noqa: E402
+from agentmem_ref.adapter import Clock  # noqa: E402
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
 TENANT = "tenant-a"
@@ -42,7 +43,6 @@ def proposal(
     *,
     operation: str = "promotion",
     evidence_refs: tuple[str, ...] = ("ev:source-a",),
-    approved: bool = False,
 ) -> policy.Proposal:
     return policy.Proposal(
         proposal_id=proposal_id,
@@ -59,8 +59,6 @@ def proposal(
         risk_class="low",
         evidence_refs=evidence_refs,
         tenant_ref=TENANT,
-        approval_refs=("approval:owner",) if approved else (),
-        review_satisfied=approved,
     )
 
 
@@ -84,21 +82,23 @@ class RejectedValueReadmissionTests(unittest.TestCase):
         self.original = self.adapter.commit_proposal(proposal("prop-original"), VALUE_A)
         self.assertTrue(self.original.committed)
 
-        # ADR-037 step 4b-2: expected semantic change (entry #24).
-        # `review_satisfied=True` no longer discharges require_review, so the
-        # correction now presents a genuine change record -- an artifact stating
-        # what changed, from what, to what and on whose authority, with a
-        # verifier that confirms it describes this commit. The scenario under
-        # test is readmission, not review discharge, so the fixture supplies
-        # honest evidence rather than a bypass.
+        # The correction is authorized by evaluator-held transition evidence.
+        # It deliberately carries none of the legacy caller approval fields.
         self.replacement = commit_adjudicated(
             self.adapter, self.corpus,
             proposal("prop-correction", operation="correction",
-                     evidence_refs=("ev:correction",), approved=True),
+                     evidence_refs=("ev:correction",)),
             VALUE_B,
             pre_state=VALUE_A,
         )
         self.assertTrue(self.replacement.committed)
+
+    def _reversal(self, proposal_id: str = "prop-approved-reversal") -> policy.Proposal:
+        return proposal(
+            proposal_id,
+            operation="correction",
+            evidence_refs=("ev:new-independent-evidence",),
+        )
 
     def test_correction_supersedes_old_row_and_records_rejection_history(self):
         recall = self.adapter.governed_recall("deploy window Thursday")
@@ -139,21 +139,56 @@ class RejectedValueReadmissionTests(unittest.TestCase):
         self.assertFalse(result.committed)
         self.assertEqual(result.refusal, "rejected_value_requires_reconciliation")
 
-    def test_explicit_approved_correction_can_reverse_prior_rejection(self):
-        # ADR-037 step 4b-2: expected semantic change (entry #24).
-        # The reversal now cites a change record reinstating VALUE_A, which is
-        # exactly the proposition under review.
+    def test_qualified_evidence_without_reversal_attestation_still_blocks(self):
+        reversal_proposal = self._reversal("prop-evidence-only-reversal")
         reversal = commit_adjudicated(
-            self.adapter, self.corpus,
-            proposal(
-                "prop-approved-reversal",
-                operation="correction",
-                evidence_refs=("ev:new-independent-evidence",),
-                approved=True,
-            ),
-            VALUE_A,
-            pre_state=VALUE_B,
-            criterion="value-reversal",
+            self.adapter, self.corpus, reversal_proposal, VALUE_A,
+            pre_state=VALUE_B, criterion="value-reversal",
+        )
+
+        self.assertEqual(reversal.decision.outcome, policy.ALLOW_WITH_LEDGER)
+        self.assertFalse(reversal.committed)
+        self.assertEqual(reversal.refusal, "rejected_value_requires_reconciliation")
+        self.assertEqual(self.adapter.state_version(MEMORY), 2)
+
+    def test_wrong_proposal_reversal_attestation_still_blocks(self):
+        reversal_proposal = self._reversal("prop-wrong-binding")
+        wrong_attestation = attestation_for(self._reversal("prop-other"))
+        reversal = commit_adjudicated(
+            self.adapter, self.corpus, reversal_proposal, VALUE_A,
+            pre_state=VALUE_B, criterion="value-reversal",
+            attestation=wrong_attestation,
+        )
+
+        self.assertFalse(reversal.committed)
+        self.assertEqual(reversal.refusal, "rejected_value_requires_reconciliation")
+
+    def test_self_verified_reversal_attestation_still_blocks(self):
+        reversal_proposal = self._reversal("prop-self-verified")
+        self_attestation = attestation_for(
+            reversal_proposal, principal=reversal_proposal.actor_id
+        )
+        reversal = commit_adjudicated(
+            self.adapter, self.corpus, reversal_proposal, VALUE_A,
+            pre_state=VALUE_B, criterion="value-reversal",
+            attestation=self_attestation,
+        )
+
+        self.assertFalse(reversal.committed)
+        self.assertEqual(reversal.refusal, "rejected_value_requires_reconciliation")
+
+    def test_explicit_governed_correction_can_reverse_prior_rejection(self):
+        # Evidence authorizes the correction through PAMA. A distinct bound
+        # attestation authorizes the reversal. The proposal itself carries no
+        # evaluator-owned approval state.
+        reversal_proposal = self._reversal()
+        self.assertFalse(reversal_proposal.review_satisfied)
+        self.assertEqual(reversal_proposal.approval_refs, ())
+        attestation = attestation_for(reversal_proposal)
+        reversal = commit_adjudicated(
+            self.adapter, self.corpus, reversal_proposal, VALUE_A,
+            pre_state=VALUE_B, criterion="value-reversal",
+            attestation=attestation,
         )
 
         self.assertTrue(reversal.committed)
@@ -164,6 +199,14 @@ class RejectedValueReadmissionTests(unittest.TestCase):
         self.assertFalse(old_history[0]["active"])
         self.assertEqual(old_history[0]["readmission_proposal_id"], "prop-approved-reversal")
         self.assertIsNotNone(old_history[0]["readmitted_at"])
+        self.assertEqual(
+            old_history[0]["readmission_verifier_principal_id"],
+            attestation.verifier_principal_id,
+        )
+        self.assertEqual(
+            old_history[0]["readmission_authority_kind"],
+            attestation.authority_kind,
+        )
 
         replaced_history = self.adapter.rejected_value_history(MEMORY, VALUE_B)
         self.assertEqual(len(replaced_history), 1)

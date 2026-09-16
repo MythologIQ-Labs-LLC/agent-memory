@@ -61,6 +61,8 @@ class RejectionRecord:
     lifecycle_state: str = REJECTED
     readmitted_at: str | None = None
     readmission_proposal_id: str | None = None
+    readmission_verifier_principal_id: str | None = None
+    readmission_authority_kind: str | None = None
 
     @property
     def rejection_id(self) -> str:
@@ -81,6 +83,8 @@ class RejectionRecord:
             "lifecycle_state": self.lifecycle_state,
             "readmitted_at": self.readmitted_at,
             "readmission_proposal_id": self.readmission_proposal_id,
+            "readmission_verifier_principal_id": self.readmission_verifier_principal_id,
+            "readmission_authority_kind": self.readmission_authority_kind,
         }
 
 
@@ -213,6 +217,8 @@ class RejectedValueRegistry:
         value: str,
         proposal_id: str,
         readmitted_at: str,
+        verifier_principal_id: str | None = None,
+        authority_kind: str | None = None,
     ) -> RejectionRecord | None:
         record = self.active(memory_id, value)
         if record is None:
@@ -221,6 +227,8 @@ class RejectedValueRegistry:
         record.lifecycle_state = READMITTED
         record.readmitted_at = readmitted_at
         record.readmission_proposal_id = proposal_id
+        record.readmission_verifier_principal_id = verifier_principal_id
+        record.readmission_authority_kind = authority_kind
         return record
 
     def history(self, memory_id: str, value: str) -> tuple[dict, ...]:

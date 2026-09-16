@@ -280,7 +280,7 @@ class GovernedMemoryAdapter:
         events = [propose_event, authorize_event]
 
         stale = self._is_stale(proposal)
-        readmission_blocked = self._readmission_blocked(proposal, fact_text)
+        readmission_blocked = self._readmission_blocked(proposal, fact_text, attestation)
         selected = self._select_action(
             decision,
             proposal,
@@ -309,6 +309,12 @@ class GovernedMemoryAdapter:
                     value=fact_text,
                     proposal_id=proposal.proposal_id,
                     readmitted_at=self._clock.now(),
+                    verifier_principal_id=(
+                        attestation.verifier_principal_id if attestation is not None else None
+                    ),
+                    authority_kind=(
+                        attestation.authority_kind if attestation is not None else None
+                    ),
                 )
             fact_uuid = self._write(proposal, fact_text)
             self._current_fact_by_memory[proposal.target_reference] = fact_uuid
@@ -376,20 +382,26 @@ class GovernedMemoryAdapter:
         current = f"v{self._state_version.get(proposal.target_reference, 0)}"
         return proposal.state_snapshot != current
 
-    def _readmission_blocked(self, proposal: policy.Proposal, fact_text: str) -> bool:
+    def _readmission_blocked(
+        self,
+        proposal: policy.Proposal,
+        fact_text: str,
+        attestation: policy.ExternalVerification | None,
+    ) -> bool:
         """Fail closed when an exact rejected value attempts silent re-entry.
 
-        An externally approved correction is an explicit reversal path. It may
-        re-admit a previously rejected value because policy has already required
-        review for correction. Ordinary promotion/import-style writes cannot.
+        ADR-027 requires an explicit governed reversal rather than a caller-set
+        approval flag. Qualified evidence may authorize the correction through
+        PAMA, but re-admission additionally requires a proposal-bound external
+        attestation. The two inputs remain separate: evidence supports the
+        proposition; the attestation supplies reversal authority.
         """
         if self._rejected_values.active(proposal.target_reference, fact_text) is None:
             return False
         approved_reversal = (
             proposal.operation == "correction"
-            and proposal.review_satisfied
-            and bool(proposal.approval_refs)
-            and not proposal.approves_own_authority
+            and attestation is not None
+            and policy.attestation_refusal(proposal, attestation) is None
         )
         return not approved_reversal
 

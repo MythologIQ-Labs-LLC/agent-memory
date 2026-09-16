@@ -186,6 +186,8 @@ def _restore_rejections(rows: Iterable[dict]) -> RejectedValueRegistry:
                 lifecycle_state=raw.get("lifecycle_state", "rejected"),
                 readmitted_at=raw.get("readmitted_at"),
                 readmission_proposal_id=raw.get("readmission_proposal_id"),
+                readmission_verifier_principal_id=raw.get("readmission_verifier_principal_id"),
+                readmission_authority_kind=raw.get("readmission_authority_kind"),
             )
             key = (record.memory_id, record.value_fingerprint)
             registry._records.setdefault(key, []).append(record)
