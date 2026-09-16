@@ -53,7 +53,8 @@ authority refs
 scope
 rejected_at
 lifecycle state
-readmission metadata, when exact re-admission occurs
+readmission proposal and time, when exact re-admission occurs
+readmission verifier principal and authority kind, when exact re-admission occurs
 ```
 
 `rejection_id` is deterministic over the scoped exact fingerprint and correction proposal identity. It lets later evidence refer to the rejection without making the fingerprint itself a global identifier.
@@ -139,19 +140,35 @@ Implementations that do not enable a semantic profile still retain the determini
 
 ## Approved reversal
 
-A prior rejection is not an eternal ban.
+A prior rejection is not an eternal ban, but reversal is intentionally stronger than an ordinary correction.
 
-If a proposal is already an externally approved correction with reconstructable approval evidence and no self-approval, the semantic gate may allow that proposal to continue to the ordinary PAMA path:
+ADR-037 separates evidence from authority, and this profile keeps that separation. A modern reversal requires two independent conditions:
+
+```text
+qualified evidence
+  -> PAMA may authorize the correction
+
+proposal-bound external attestation
+  -> explicitly authorizes reversal of the active rejection
+```
+
+Caller-set `review_satisfied` and `approval_refs` are legacy proposal state and are **not** reversal authority. Public API proposal envelopes cannot assert them.
+
+For a matched semantic candidate:
 
 ```text
 semantic match
-  + explicit approved correction
-  -> semantic review requirement satisfied for routing
-  -> PAMA still evaluates
-  -> commit or refusal according to current authority
+  + correction authorized through current PAMA evidence rules
+  + valid proposal-bound external reversal attestation
+  -> semantic reconciliation gate permits the proposal to reach PAMA
+  -> PAMA still determines commit or refusal
 ```
 
-The semantic estimator still does not authorize the reversal. Human/external approval and PAMA do.
+Evidence without reversal attestation remains in reconciliation. An attestation bound to another proposal, or one supplied by the proposing actor as its own verifier, does not satisfy the reversal gate. Semantic similarity itself never supplies authority.
+
+For exact rejected-value re-admission the same two-key rule applies: an explicit correction must be authorized through the ordinary PAMA path and must carry valid external reversal authority before the exact rejection can be readmitted.
+
+When an exact rejection is readmitted, the reference history retains the reversal proposal, time, verifier principal, and authority kind so the transition remains reconstructable without retaining the raw rejected content.
 
 A semantic reversal does not necessarily mark the old **exact fingerprint** as readmitted. A paraphrase can be accepted while the historically rejected exact value remains a distinct rejection record. Implementations should merge those identities only if a stronger structured identity model proves that equivalence under its domain contract.
 
@@ -195,7 +212,9 @@ The reference profile lives in:
 
 ```text
 reference/agentmem_ref/core/readmission.py
+reference/agentmem_ref/runtime/adapter.py
 reference/agentmem_ref/runtime/semantic_readmission_adapter.py
+reference/tests/test_rejected_value_readmission.py
 reference/tests/test_semantic_readmission.py
 reference/tests/test_semantic_readmission_adapter.py
 fixtures/rejected-value-semantic-reentry.json
@@ -246,13 +265,25 @@ semantic signal does not bind to current active rejection
 -> no durable mutation
 ```
 
+### Evidence-only reversal
+
+Expected:
+
+```text
+qualified evidence permits correction through PAMA
+no valid reversal attestation
+-> rejected_value_requires_reconciliation or semantic_reconciliation_required
+-> no durable mutation
+```
+
 ### Approved semantic reversal
 
 Expected:
 
 ```text
 semantic candidate_match=true
-external correction approval current
+valid proposal-bound external reversal attestation
+qualified correction evidence current
 -> proceed to PAMA
 -> PAMA determines commit/refusal
 ```
