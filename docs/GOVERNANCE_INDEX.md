@@ -1,7 +1,7 @@
 # Governance Index
 
-**Last Reviewed**: 2026-09-12  
-**Evidence Boundary**: `main` `56e44d3cd3cb9c4186596f6a064dd554d14c1940`
+**Last Reviewed**: 2026-09-16  
+**Evidence Boundary**: `main` `7d7f86aeef8a80da6fab0e93c87153c33d8f3b78`
 
 This is the current map of Agent Memory's governance surfaces and their freshness obligations. It is intentionally **not** an exhaustive hand-maintained list of every historical sprint plan. Historical plans are evidence and remain discoverable through `docs/plan-*.md`, `docs/research-brief-*.md`, and `docs/META_LEDGER.md`; forcing each one into a current-state index created exactly the kind of drift this file is meant to prevent.
 
@@ -9,26 +9,26 @@ The tier model is a repository-maintenance convention. Qor-logic is development-
 
 > **Current-roadmap authority:** `.qor/roadmaps/agent-memory-1_0-completion/events.jsonl` is **not present on current `main`**. Historical ledger entries that refer to that roadmap remain valid historical evidence, but the absent path must not be used as a current work queue. Current execution state lives in `docs/BACKLOG.md`, `docs/SYSTEM_STATE.md`, and live GitHub issues/PRs.
 
-## Tier 1 — Current Canonical State
+## Tier 1: Current Canonical State
 
 These surfaces MUST describe current repository reality. A wrong version, stale status, or nonexistent current path is a Tier 1 drift bug.
 
 | Artifact | Path | Current marker |
 |----------|------|----------------|
 | Meta Ledger | `docs/META_LEDGER.md` | Entries #1-#59; latest SESSION SEAL #58 (Sprint 4c-2 / contract 1.2.0), followed by Entry #59 amendment |
-| System State | `docs/SYSTEM_STATE.md` | reconciled 2026-09-12 against `main` `56e44d3`; Python public API 1.2.0; production hardening remains open |
+| System State | `docs/SYSTEM_STATE.md` | reconciled 2026-09-16 against `main` `7d7f86ae`; public API 1.2.0 and post-1.2 authority consistency sweep complete; #364/#363 remain |
 | Concept | `docs/CONCEPT.md` | current objective points to Backlog/System State/live issues, not the absent `.qor` roadmap |
-| Backlog | `docs/BACKLOG.md` | current blocker/order: #395 -> #364 -> #363; held/integration work explicitly separated |
-| Feature Index | `docs/FEATURE_INDEX.md` | 26 feature rows are verified; FX025 is intentionally reserved for the held Sprint 4b slice |
-| ADR index | `docs/adr/README.md` | ADR-001 through ADR-038; 32 Accepted, 6 Proposed |
-| Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; hard deps `jsonschema`, `cryptography`, `rfc8785`; comparator pins `agent-manifest==0.11.2`, `agentrust-trace==0.9.0` |
-| README | `README.md` | current maturity language explicitly separates repository validation from production-memory proof |
+| Backlog | `docs/BACKLOG.md` | active blocker/order: #364 -> #363; held/integration/dependency qualification work explicitly separated |
+| Feature Index | `docs/FEATURE_INDEX.md` | 26 feature rows verified at last feature-index reconciliation; FX025 intentionally reserved for the held Sprint 4b slice |
+| ADR index | `docs/adr/README.md` | ADR-001 through ADR-038; artifact status is authoritative rather than duplicated here |
+| Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; hard deps `jsonschema`, `cryptography`, `rfc8785`; comparator pins remain `agent-manifest==0.11.2`, `agentrust-trace==0.9.0` pending PRs #405/#404 |
+| README | `README.md` | maturity language separates repository validation from production-memory proof |
 | Shadow Genome | `docs/SHADOW_GENOME.md` | append-only failure/lesson record; individual resolution state lives in each entry rather than a duplicated count here |
 | Process Shadow Genome | `docs/PROCESS_SHADOW_GENOME.md` | append-only process events and remediation history |
 
 `CHANGELOG.md` is absent on current `main`; release chronology must not be inferred from a nonexistent changelog.
 
-## Tier 2 — Doctrine and Contract Authority
+## Tier 2: Doctrine and Contract Authority
 
 Stable architectural rules. Changes require explicit doctrine/contract work; current status is determined from the artifact itself, not a duplicated count here.
 
@@ -39,27 +39,36 @@ Stable architectural rules. Changes require explicit doctrine/contract work; cur
 | Public API contract | `docs/44-public-api-contract.md`, `reference/agentmem_ref/api/`, `schemas/api-*.schema.json` |
 | Threat/security doctrine | `docs/15-memory-threat-model.md`, `docs/19-privacy-and-sensitivity-classifier.md`, `docs/29-actor-scope-consent-and-tenancy.md`, `docs/41-memory-isolation-domains-and-governed-crossing.md` |
 | Evidence and provenance doctrine | `docs/16-source-trust-and-reputation.md`, `docs/30-memory-observability-and-audit-events.md`, `docs/policies/EVIDENCE_PROMOTION.md` |
-| Lifecycle / correction / deletion doctrine | `docs/02-lifecycle-state-machine.md`, `docs/17-conflict-resolution-engine.md`, `docs/28-retention-deletion-and-tombstones.md`, `docs/31-recovery-rollback-and-replay.md` |
+| Lifecycle / correction / deletion doctrine | `docs/02-lifecycle-state-machine.md`, `docs/17-conflict-resolution-engine.md`, `docs/28-retention-deletion-and-tombstones.md`, `docs/31-recovery-rollback-and-replay.md`, `docs/profiles/semantic-readmission-profile.md` |
 | Schema contracts | `schemas/*.schema.json`, registry doctrine in `docs/27-schema-registry-and-type-evolution.md` |
 | Project governance | `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `.github/CODEOWNERS` |
 
-## Tier 3 — Active Initiatives
+## Tier 3: Active Initiatives
 
-Live until closed or explicitly parked. GitHub issue state is authoritative for whether these remain active.
+Live until closed or explicitly parked. GitHub issue/PR state is authoritative for whether these remain active.
 
 | Initiative | Tracking surface | Current state |
 |------------|------------------|---------------|
-| Public API/adapter semantic consistency | issue #395 | open; next inconsistency target after this drift pass |
-| Recall and scope authority completion | issue #364 | open; two authority legs remain after the decision-record work |
-| Production state / persistence profile | issue #363 | open; blocks production-readiness claims |
+| Recall and scope authority completion | issue #364 | **active development front**; host-authenticated principal boundary retained, membership mutation and durable scope-widening binding remain |
+| Production state / persistence profile | issue #363 | **next major runtime tranche**; blocks production-readiness claims |
 | DashClaw correction discharge | issue #392 | open but blocked on rule authorship/ownership decision |
 | Live DashClaw conformance | issue #361 | open |
 | QOR Agent / Cloudflare proving ground | issue #332 | open |
 | Governed canonical knowledge profile | issue #387 | open |
 | Field efficacy benchmark | issue #388 | open |
-| Governance-memory efficacy review skill | PR #389 | open; supporting tooling for #388, not field-efficacy evidence |
+| Governance-memory efficacy review skill | PR #389 | open; must be rebased/revalidated against current `main` |
+| TRACE dependency qualification | PR #404 | `agentrust-trace` 0.10.0 proposed; qualification required before merge |
+| Agent Manifest dependency qualification | PR #405 | `agent-manifest` 0.12.0 proposed; qualification required before merge |
 
-## Tier 4 — Active or Held Plan Artifacts
+### Recently closed consistency work
+
+These are no longer Tier 3 initiatives but matter to the current evidence boundary:
+
+- #395 / PR #400: adapter attestation dispatch aligned across approval, commit, and delete.
+- #401 / PR #402: domain-schema review routed through shared ADR-037 authority/evidence semantics.
+- #403 / PR #406: rejected-value reversal moved off legacy proposal approval flags to qualified correction evidence plus proposal-bound external reversal authority; restart preserves the authority metadata.
+
+## Tier 4: Active or Held Plan Artifacts
 
 Only plans whose lifecycle is still active/held belong here. Completed plans are historical evidence and do not need a permanent live row.
 
@@ -70,7 +79,7 @@ Only plans whose lifecycle is still active/held belong here. Completed plans are
 
 The implemented Sprint 1 through Sprint 4c-2 plans remain in `docs/` and are bound into the ledger. Their continued existence is historical evidence, not a claim that the work is still pending.
 
-## Tier 5 — Reference Material
+## Tier 5: Reference Material
 
 Informational and slower-drift. A factual claim in these documents must still be corrected when it materially diverges from current code, but historical measurements should be labeled rather than rewritten as if they were always current.
 
@@ -90,7 +99,7 @@ Informational and slower-drift. A factual claim in these documents must still be
 
 Deep-audit gap labels embedded in reference docs are historical observations unless the gap is also carried by the current backlog or an open issue. A 2026-09-01 gap label is not automatically current merely because the prose still exists.
 
-## Tier 6 — Historical Governance Evidence
+## Tier 6: Historical Governance Evidence
 
 Frozen or provenance-oriented artifacts. Their job is to preserve what was decided, measured, or planned at the time, not to impersonate current status.
 
@@ -106,6 +115,16 @@ Frozen or provenance-oriented artifacts. Their job is to preserve what was decid
 | Historical branch state | branches such as `feat/agent-memory-genesis`; compare for unique commits before deletion, but do not use them as current-state authority |
 
 `docs/META_LEDGER.md` is itself Tier 1 because its chain must remain current, while the decisions it contains are historical evidence. Those two facts are not contradictory.
+
+## Current Development Sequence
+
+The Tier 1 current-state surfaces agree on this order:
+
+1. **#364:** bind governed scope crossing to its durable consequence, then govern shared-domain membership mutation. Preserve the declared host-authentication boundary for principal identity unless an explicit ADR changes it.
+2. **#363:** establish an explicit production persistence/checkpoint/state-provider contract before selecting a storage implementation; eliminate private-state scraping as the runtime interface and define transactional generation, auxiliary-state persistence, and migration behavior.
+3. **#404 / #405:** qualify new TRACE and Agent Manifest versions as evidence/interoperability dependencies.
+4. **#332 / #361:** execute live external proving once the state boundary is credible; #392 remains held until transition-rule authorship is explicit.
+5. **#389 / #387 / #388:** revalidate the efficacy tooling and then measure field efficacy separately from conformance.
 
 ## Drift Contract
 
