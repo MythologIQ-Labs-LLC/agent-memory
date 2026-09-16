@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import unittest
 
-from tests.qualified_fixtures import corpus_for, registry_for, rule
+from tests.qualified_fixtures import attestation_for, corpus_for, registry_for, rule
 from pathlib import Path
 
 from agentmem_ref import policy
@@ -23,8 +23,6 @@ def _proposal(
     *,
     operation: str = "promotion",
     snapshot: str = "",
-    approvals: tuple[str, ...] = (),
-    reviewed: bool = False,
 ) -> policy.Proposal:
     return policy.Proposal(
         proposal_id=proposal_id,
@@ -40,8 +38,6 @@ def _proposal(
         reversibility="reversible",
         risk_class="low",
         evidence_refs=(f"evidence:{proposal_id}",),
-        approval_refs=approvals,
-        review_satisfied=reviewed,
         state_snapshot=snapshot,
         tenant_ref="tenant-a",
     )
@@ -71,13 +67,7 @@ class SemanticReadmissionFixtureTests(unittest.TestCase):
         original = adapter.commit_proposal(_proposal("fixture-original"), values["original"])
         self.assertTrue(original.committed)
         corrected = adapter.commit_proposal(
-            _proposal(
-                "fixture-correction",
-                operation="correction",
-                snapshot="v1",
-                approvals=("approval:fixture-owner",),
-                reviewed=True,
-            ),
+            _proposal("fixture-correction", operation="correction", snapshot="v1"),
             values["current_correction"],
             evidence=corpus.evidence_for(
                 target_reference="mem:deploy-window", criterion="value-correction",
@@ -112,23 +102,24 @@ class SemanticReadmissionFixtureTests(unittest.TestCase):
         self.assertEqual(semantic.committed, expected["ordinary_semantic_reentry_commits"])
         self.assertFalse(expected["semantic_signal_is_authority"])
 
+        reversal_proposal = _proposal(
+            "fixture-approved-reversal",
+            operation="correction",
+            snapshot="v2",
+        )
         approved = adapter.commit_with_semantic_signal(
-            _proposal(
-                "fixture-approved-reversal",
-                operation="correction",
-                snapshot="v2",
-                approvals=("approval:fixture-reversal",),
-                reviewed=True,
-            ),
+            reversal_proposal,
             values["semantic_paraphrase"],
             semantic_signal=signal,
             # ADR-037 step 4b-2: expected semantic change (entry #24).
-            # The fixture's declared property -- an approved correction may
-            # re-enter through PAMA -- is unchanged. Only the discharge route is.
+            # The fixture's declared property remains the same: a correction
+            # authorized by evidence plus separate bound reversal authority may
+            # re-enter through PAMA. Only the legacy assertion route is gone.
             evidence=corpus.evidence_for(
                 target_reference="mem:deploy-window", criterion="value-reversal",
                 pre_state=values["current_correction"],
                 proposed_value=values["semantic_paraphrase"]),
+            attestation=attestation_for(reversal_proposal),
         )
         self.assertEqual(approved.committed, expected["approved_correction_may_reenter_through_pama"])
 
