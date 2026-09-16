@@ -75,6 +75,7 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
             routing,
             event_type="memory.semantic_readmission_signal",
             valid_active_rejection=signal_valid,
+            attestation=attestation,
         )
         self.events.append(signal_event)
 
@@ -86,6 +87,7 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
                 event_type="memory.semantic_readmission_signal_rejected",
                 valid_active_rejection=False,
                 refusal="semantic_reconciliation_signal_invalid",
+                attestation=attestation,
             )
             self.events.append(refusal_event)
             return SemanticCommitResult(
@@ -95,7 +97,7 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
                 events=[signal_event, refusal_event],
             )
 
-        if routing.review_required and not self._approved_reversal(proposal):
+        if routing.review_required and not self._approved_reversal(proposal, attestation):
             review_event = self._semantic_event(
                 proposal,
                 semantic_signal,
@@ -103,6 +105,7 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
                 event_type="memory.semantic_readmission_review_required",
                 valid_active_rejection=True,
                 refusal="semantic_reconciliation_required",
+                attestation=attestation,
             )
             self.events.append(review_event)
             return SemanticCommitResult(
@@ -113,8 +116,8 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
             )
 
         # A non-match creates no permission. A matched signal whose review has
-        # already been satisfied by an external approved correction likewise
-        # creates no authority of its own. In both cases PAMA still decides.
+        # already been satisfied by external reversal authority likewise creates
+        # no authority of its own. In both cases PAMA still decides.
         downstream = super().commit_proposal(
             proposal, fact_text, episode, evidence=evidence, attestation=attestation
         )
@@ -185,12 +188,14 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
         ) is not None
 
     @staticmethod
-    def _approved_reversal(proposal: policy.Proposal) -> bool:
+    def _approved_reversal(
+        proposal: policy.Proposal,
+        attestation: policy.ExternalVerification | None,
+    ) -> bool:
         return (
             proposal.operation == "correction"
-            and proposal.review_satisfied
-            and bool(proposal.approval_refs)
-            and not proposal.approves_own_authority
+            and attestation is not None
+            and policy.attestation_refusal(proposal, attestation) is None
         )
 
     def _semantic_event(
@@ -202,6 +207,7 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
         event_type: str,
         valid_active_rejection: bool,
         refusal: str | None = None,
+        attestation: policy.ExternalVerification | None = None,
     ) -> dict:
         signal_payload = {
             "signal_type": "semantic_rejected_value_similarity",
@@ -212,6 +218,9 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
         }
         if signal.confidence is not None:
             signal_payload["uncertainty"] = {"reported_confidence": signal.confidence}
+        attestation_refusal = (
+            None if attestation is None else policy.attestation_refusal(proposal, attestation)
+        )
         payload = {
             "proposal_id": proposal.proposal_id,
             "rejection_ref": signal.rejection_ref,
@@ -219,9 +228,11 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
             "routing_consequence": routing.consequence,
             "review_required": routing.review_required,
             "valid_active_rejection": valid_active_rejection,
-            "proposal_review_satisfied": proposal.review_satisfied,
-            "proposal_approval_refs": list(proposal.approval_refs),
+            "reversal_attestation_present": attestation is not None,
+            "reversal_attestation_valid": attestation is not None and attestation_refusal is None,
         }
+        if attestation_refusal:
+            payload["reversal_attestation_refusal"] = attestation_refusal
         if refusal:
             payload["refusal"] = refusal
         document = {
