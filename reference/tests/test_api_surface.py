@@ -98,6 +98,43 @@ class PublicSurface(unittest.TestCase):
         self.assertTrue(committed["committed"]); self.assertEqual(committed["receipt"]["decision_outcome"], policy.ALLOW_WITH_LEDGER)
         self.assertEqual(self.memory.state_version(TARGET), 2)
 
+    def test_public_api_readmission_requires_separate_reversal_authority(self):
+        first = _correction(
+            "medium", "v1", proposal_id="proposal:public-to-main"
+        )
+        corrected = surface.commit(
+            self.memory, first, "release branch main", evidence=_skill_evidence()
+        )
+        self.assertTrue(corrected["committed"])
+        self.assertEqual(self.memory.state_version(TARGET), 2)
+
+        reversal = _correction(
+            "medium", "v2", proposal_id="proposal:public-back-to-release"
+        )
+        evidence_only = surface.commit(
+            self.memory, reversal, "release branch release", evidence=_skill_evidence()
+        )
+        self.assertFalse(evidence_only["committed"])
+        self.assertEqual(evidence_only["outcome"], policy.ALLOW_WITH_LEDGER)
+        self.assertEqual(
+            evidence_only["refusal"], "rejected_value_requires_reconciliation"
+        )
+        self.assertEqual(self.memory.state_version(TARGET), 2)
+
+        approved = surface.commit(
+            self.memory,
+            reversal,
+            "release branch release",
+            evidence=_skill_evidence(),
+            attestation=_attestation("proposal:public-back-to-release"),
+        )
+        self.assertTrue(approved["committed"])
+        self.assertEqual(self.memory.state_version(TARGET), 3)
+        history = self.memory.rejected_value_history(TARGET, "release branch release")
+        self.assertEqual(history[0]["readmission_proposal_id"], "proposal:public-back-to-release")
+        self.assertEqual(history[0]["readmission_verifier_principal_id"], "human:reviewer")
+        self.assertEqual(history[0]["readmission_authority_kind"], policy.HUMAN_CONFIRMATION)
+
     def test_commit_attestation_only_discharges_external_verification_at_critical(self):
         result = surface.commit(
             self.memory,
