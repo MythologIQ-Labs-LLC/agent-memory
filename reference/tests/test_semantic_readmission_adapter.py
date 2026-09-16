@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import unittest
 
-from tests.qualified_fixtures import corpus_for, registry_for, rule
+from tests.qualified_fixtures import attestation_for, corpus_for, registry_for, rule
 
 from agentmem_ref import policy
 from agentmem_ref.adapter import Clock
@@ -25,8 +25,6 @@ def _proposal(
     operation: str = "promotion",
     state_snapshot: str = "",
     actor_authority_resolved: bool = True,
-    approval_refs: tuple[str, ...] = (),
-    review_satisfied: bool = False,
 ) -> policy.Proposal:
     return policy.Proposal(
         proposal_id=proposal_id,
@@ -43,8 +41,6 @@ def _proposal(
         risk_class="low",
         evidence_refs=(f"evidence:{proposal_id}",),
         actor_authority_resolved=actor_authority_resolved,
-        approval_refs=approval_refs,
-        review_satisfied=review_satisfied,
         state_snapshot=state_snapshot,
         tenant_ref=TENANT,
         purpose="semantic-readmission-test",
@@ -85,12 +81,9 @@ def _correction_corpus():
 
 class SemanticReadmissionAdapterTests(unittest.TestCase):
     def _corrected_adapter(self) -> tuple[SemanticReadmissionAdapter, str]:
-        # ADR-037 step 4b-2: expected semantic change (entry #24).
-        # The correction no longer discharges on `review_satisfied=True`. The
-        # evaluator holds an adjudication authored ahead of the proposal, and
-        # the adapter is constructed with the registry that trusts it -- a
-        # caller cannot reach either. The scenario under test is semantic
-        # readmission, not review discharge.
+        # The correction uses evaluator-held evidence only. Legacy caller-set
+        # approval fields are deliberately absent; the scenario under test is
+        # semantic readmission, not the pre-ADR-037 assertion path.
         corpus = _correction_corpus()
         adapter = SemanticReadmissionAdapter(
             InMemoryTemporalGraph(), tenant=TENANT, clock=Clock(),
@@ -104,8 +97,6 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
                 "correction",
                 operation="correction",
                 state_snapshot="v1",
-                approval_refs=("approval:owner",),
-                review_satisfied=True,
             ),
             VALUE_B,
             evidence=corpus.evidence_for(
@@ -115,6 +106,19 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
         )
         self.assertTrue(correction.committed)
         return adapter, correction.fact_uuid
+
+    def _reversal(self, proposal_id: str = "approved-semantic-reversal") -> policy.Proposal:
+        return _proposal(
+            proposal_id,
+            operation="correction",
+            state_snapshot="v2",
+        )
+
+    def _reversal_evidence(self):
+        return _correction_corpus().evidence_for(
+            target_reference=MEMORY_ID, criterion="value-reversal",
+            pre_state=VALUE_B, proposed_value=PARAPHRASE_A,
+        )
 
     def test_exact_reentry_remains_deterministically_blocked(self):
         adapter, _ = self._corrected_adapter()
@@ -149,6 +153,7 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
             result.events[0]["signal"]["signal_semantics"],
             "candidate_match_for_reconciliation_not_authority",
         )
+        self.assertFalse(result.events[-1]["payload"]["reversal_attestation_present"])
 
     def test_semantic_nonmatch_does_not_authorize_pama_blocked_mutation(self):
         adapter, _ = self._corrected_adapter()
@@ -191,29 +196,58 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
         self.assertIsNone(result.downstream)
         self.assertEqual(adapter.state_version(MEMORY_ID), before_state)
 
+    def test_qualified_evidence_without_reversal_attestation_stays_in_reconciliation(self):
+        adapter, _ = self._corrected_adapter()
+        signal = _semantic_signal(adapter, candidate_match=True)
+        reversal_proposal = self._reversal("evidence-only-semantic-reversal")
+
+        result = adapter.commit_with_semantic_signal(
+            reversal_proposal,
+            PARAPHRASE_A,
+            semantic_signal=signal,
+            evidence=self._reversal_evidence(),
+        )
+
+        self.assertFalse(result.committed)
+        self.assertEqual(result.refusal, "semantic_reconciliation_required")
+        self.assertIsNone(result.downstream)
+        self.assertEqual(adapter.state_version(MEMORY_ID), 2)
+
+    def test_wrong_proposal_attestation_does_not_bypass_semantic_reconciliation(self):
+        adapter, _ = self._corrected_adapter()
+        signal = _semantic_signal(adapter, candidate_match=True)
+        reversal_proposal = self._reversal("wrong-binding-semantic-reversal")
+        wrong_attestation = attestation_for(self._reversal("other-semantic-reversal"))
+
+        result = adapter.commit_with_semantic_signal(
+            reversal_proposal,
+            PARAPHRASE_A,
+            semantic_signal=signal,
+            evidence=self._reversal_evidence(),
+            attestation=wrong_attestation,
+        )
+
+        self.assertFalse(result.committed)
+        self.assertEqual(result.refusal, "semantic_reconciliation_required")
+        self.assertEqual(
+            result.events[-1]["payload"]["reversal_attestation_refusal"],
+            "attestation_not_bound_to_proposal",
+        )
+
     def test_externally_approved_semantic_reversal_still_passes_through_pama(self):
         adapter, _ = self._corrected_adapter()
         signal = _semantic_signal(adapter, candidate_match=True)
+        reversal_proposal = self._reversal()
+        self.assertFalse(reversal_proposal.review_satisfied)
+        self.assertEqual(reversal_proposal.approval_refs, ())
+        attestation = attestation_for(reversal_proposal)
 
         result = adapter.commit_with_semantic_signal(
-            _proposal(
-                "approved-semantic-reversal",
-                operation="correction",
-                state_snapshot="v2",
-                approval_refs=("approval:owner-reversal",),
-                review_satisfied=True,
-            ),
+            reversal_proposal,
             PARAPHRASE_A,
             semantic_signal=signal,
-            # ADR-037 step 4b-2: expected semantic change (entry #24).
-            # The evaluator adjudicated ahead of time that a paraphrase reversal
-            # from VALUE_B is permitted. The externally approved reversal still
-            # passes through PAMA -- which is what this test is about; only the
-            # discharge route changed.
-            evidence=_correction_corpus().evidence_for(
-                target_reference=MEMORY_ID, criterion="value-reversal",
-                pre_state=VALUE_B, proposed_value=PARAPHRASE_A,
-            ),
+            evidence=self._reversal_evidence(),
+            attestation=attestation,
         )
 
         self.assertTrue(result.committed)
@@ -222,13 +256,14 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
         self.assertEqual(result.downstream.decision.outcome, policy.ALLOW_WITH_LEDGER)
         self.assertTrue(result.routing.review_required)
         self.assertEqual(adapter.state_version(MEMORY_ID), 3)
+        self.assertTrue(result.events[0]["payload"]["reversal_attestation_valid"])
 
-    def test_correction_rejection_record_carries_authority_and_lifecycle(self):
+    def test_correction_rejection_record_does_not_infer_legacy_authority(self):
         adapter, _ = self._corrected_adapter()
         records = adapter.active_rejection_records(MEMORY_ID)
 
         self.assertEqual(len(records), 1)
-        self.assertEqual(records[0]["authority_refs"], ["approval:owner"])
+        self.assertEqual(records[0]["authority_refs"], [])
         self.assertEqual(records[0]["scope"], TENANT)
         self.assertEqual(records[0]["lifecycle_state"], "rejected")
         self.assertNotIn("value", records[0])
@@ -242,11 +277,8 @@ class SemanticReadmissionAdapterTests(unittest.TestCase):
                 "permanent-delete",
                 operation="permanent_deletion",
                 state_snapshot="v2",
-                approval_refs=("approval:deletion",),
-                review_satisfied=True,
             ),
             current_fact_uuid,
-            # ADR-037 step 4b-2: expected semantic change (entry #24).
             evidence=_correction_corpus().evidence_for(
                 target_reference=MEMORY_ID, criterion="lifecycle-deletion",
                 pre_state=VALUE_B, proposed_value="deleted",
