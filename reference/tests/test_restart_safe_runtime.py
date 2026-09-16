@@ -4,18 +4,25 @@ import json
 import tempfile
 import unittest
 
-from tests.qualified_fixtures import corpus_for, registry_for, rule
+from tests.qualified_fixtures import attestation_for, corpus_for, registry_for, rule
 
 BRANCH_MEMORY = "memory:deploy-branch"
 
 
 def _branch_corpus():
     """The evaluator's adjudication of release-branch corrections."""
-    return corpus_for(rule(
-        rule_id="rule:release-branch", target=BRANCH_MEMORY,
-        criterion="value-correction", from_state="release_branch = release",
-        to_values=("release_branch = main",),
-    ))
+    return corpus_for(
+        rule(
+            rule_id="rule:release-branch", target=BRANCH_MEMORY,
+            criterion="value-correction", from_state="release_branch = release",
+            to_values=("release_branch = main",),
+        ),
+        rule(
+            rule_id="rule:release-branch-reversal", target=BRANCH_MEMORY,
+            criterion="value-reversal", from_state="release_branch = main",
+            to_values=("release_branch = release",),
+        ),
+    )
 from pathlib import Path
 
 from agentmem_ref import policy
@@ -171,6 +178,68 @@ class RestartSafeRuntimeTests(unittest.TestCase):
         replay_after_restart = session_d.commit_proposal(correction, "release_branch = main")
         self.assertFalse(replay_after_restart.committed)
         self.assertEqual(replay_after_restart.refusal, "stale_authorization")
+
+    def test_readmission_authority_metadata_survives_restart(self) -> None:
+        # ADR-037 step 4b-2: expected semantic change (entry #24).
+        runtime = RestartSafeRuntime.create(
+            self.root,
+            tenant="tenant-acme",
+            profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()),
+        )
+        original = runtime.commit_proposal(
+            _proposal("proposal-release", operation="promotion"),
+            "release_branch = release",
+        )
+        self.assertTrue(original.committed)
+        correction = _proposal("proposal-main", operation="correction", state_snapshot="v1")
+        corrected = runtime.commit_proposal(
+            correction,
+            "release_branch = main",
+            evidence=_branch_corpus().evidence_for(
+                target_reference=BRANCH_MEMORY,
+                criterion="value-correction",
+                pre_state="release_branch = release",
+                proposed_value="release_branch = main",
+            ),
+        )
+        self.assertTrue(corrected.committed)
+
+        reversal = _proposal(
+            "proposal-release-again", operation="correction", state_snapshot="v2"
+        )
+        attestation = attestation_for(reversal)
+        readmitted = runtime.commit_proposal(
+            reversal,
+            "release_branch = release",
+            evidence=_branch_corpus().evidence_for(
+                target_reference=BRANCH_MEMORY,
+                criterion="value-reversal",
+                pre_state="release_branch = main",
+                proposed_value="release_branch = release",
+            ),
+            attestation=attestation,
+        )
+        self.assertTrue(readmitted.committed)
+
+        recovered = RestartSafeRuntime.recover(
+            self.root,
+            profile=self.profile,
+            verifier_registry=registry_for(_branch_corpus()),
+        )
+        history = recovered.adapter.rejected_value_history(
+            "memory:release-branch", "release_branch = release"
+        )
+        self.assertEqual(len(history), 1)
+        self.assertFalse(history[0]["active"])
+        self.assertEqual(history[0]["readmission_proposal_id"], reversal.proposal_id)
+        self.assertEqual(
+            history[0]["readmission_verifier_principal_id"],
+            attestation.verifier_principal_id,
+        )
+        self.assertEqual(
+            history[0]["readmission_authority_kind"], attestation.authority_kind
+        )
 
     def test_pending_visibility_obligations_survive_restart_without_fake_quiescence(self) -> None:
         runtime = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile,
