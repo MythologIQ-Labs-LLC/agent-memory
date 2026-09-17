@@ -1,11 +1,11 @@
 """Governed shared-domain membership authority transitions.
 
 Shared-memory membership is authority state: changing it changes who may admit
-memory from a shared domain.  It therefore cannot be treated as ordinary
+memory from a shared domain. It therefore cannot be treated as ordinary
 configuration after bootstrap.
 
 The embedding host remains responsible for authenticating principals and for
-initial domain bootstrap.  Runtime membership changes are evaluated as PAMA
+initial domain bootstrap. Runtime membership changes are evaluated as PAMA
 ``authority_change`` operations with an A5 authority floor, independent
 qualified evidence, exact before-state binding, and a proposal-bound external
 attestation.
@@ -17,9 +17,16 @@ from dataclasses import dataclass
 from typing import Sequence
 
 from ..core import policy
-from ..core.evidence_qualification import EvidenceItem, group_by_dependence
+from ..core.evidence_qualification import (
+    ASSERTED,
+    REPRODUCIBLE_PROCEDURE,
+    VERIFIED,
+    EvidenceItem,
+    qualify,
+)
 
 SLOT = "shared_membership_authority"
+CRITERION = "shared-membership-authority"
 
 
 @dataclass(frozen=True)
@@ -42,7 +49,7 @@ class SharedMembershipResult:
 
 
 def membership_state(members: Sequence[str]) -> str:
-    """Canonical membership state used by adjudication fixtures and receipts."""
+    """Canonical membership state used by adjudication evidence and receipts."""
     return ",".join(sorted(set(members)))
 
 
@@ -84,6 +91,44 @@ def _refuse(
     )
 
 
+def _evidence_refusal(adapter, proposal: policy.Proposal, change: SharedMembershipChange,
+                      evidence: Sequence[EvidenceItem]) -> str | None:
+    """Require qualified evidence for this exact before/after transition.
+
+    R3 permits several evidence classes in general. This authority profile is
+    intentionally narrower: shared-membership changes require a reproducible
+    adjudication whose inputs name the exact domain, canonical current member
+    set, and canonical proposed member set. A strong piece of evidence about a
+    *different* transition must not be reusable here.
+    """
+    before = membership_state(change.expected_members)
+    after = membership_state(change.resulting_members)
+    expected_inputs = f"{change.domain_ref}@{before}->{after}"
+    required_binding = policy.strength_ladder_for(proposal.risk_class)["binding_status"]
+    verifiers = adapter._verifier_registry.as_mapping()
+
+    saw_direct = False
+    saw_bound = False
+    for item in evidence:
+        qualified = qualify(item, verifiers=verifiers)
+        if qualified.qualification_class != REPRODUCIBLE_PROCEDURE:
+            continue
+        saw_direct = True
+        if item.inputs != expected_inputs or item.result != "admitted":
+            continue
+        saw_bound = True
+        if required_binding == VERIFIED and qualified.binding_status == VERIFIED:
+            return None
+        if required_binding == ASSERTED and qualified.binding_status in (ASSERTED, VERIFIED):
+            return None
+
+    if saw_bound:
+        return "membership_evidence_binding_insufficient"
+    if saw_direct:
+        return "membership_evidence_transition_mismatch"
+    return "membership_evidence_class_insufficient"
+
+
 def change_shared_domain_membership(
     adapter,
     change: SharedMembershipChange,
@@ -94,12 +139,12 @@ def change_shared_domain_membership(
 ) -> SharedMembershipResult:
     """Apply one exact membership transition through independent evidence + authority.
 
-    Evidence answers whether the requested transition is justified.  The
+    Evidence answers whether the requested transition is justified. The
     proposal-bound external attestation answers who may authorize an A5
-    authority change.  Neither substitutes for the other.
+    authority change. Neither substitutes for the other.
 
     The adapter's verifier registry is host-owned and intentionally not exposed
-    as a per-call parameter.  A proposing caller therefore cannot register the
+    as a per-call parameter. A proposing caller therefore cannot register the
     verifier that certifies its own evidence.
     """
     if not change.domain_ref:
@@ -135,25 +180,11 @@ def change_shared_domain_membership(
     if proposal.state_snapshot and proposal.state_snapshot != f"v{current_version}":
         return _refuse(proposal, change.domain_ref, current, "stale_authorization")
 
-    # Evidence quality is independent from authority.  Reuse the shared R5
-    # ladder and dependence grouping rather than inventing a membership-specific
-    # threshold.  For high/critical risk this therefore requires verified
-    # evidence; lower risk retains the existing asserted binding floor.
-    analysis = group_by_dependence(
-        evidence,
-        verifiers=adapter._verifier_registry.as_mapping(),
-    )
-    required_binding = policy.strength_ladder_for(proposal.risk_class)["binding_status"]
-    if not analysis.qualifying_group_count(status=required_binding):
-        asserted = analysis.qualifying_group_count(status="asserted")
-        reason = (
-            "membership_evidence_binding_insufficient"
-            if asserted
-            else "membership_evidence_class_insufficient"
-        )
-        return _refuse(proposal, change.domain_ref, current, reason)
+    evidence_refusal = _evidence_refusal(adapter, proposal, change, evidence)
+    if evidence_refusal is not None:
+        return _refuse(proposal, change.domain_ref, current, evidence_refusal)
 
-    # A5 is a governance/security authority boundary.  The ordinary evaluator
+    # A5 is a governance/security authority boundary. The ordinary evaluator
     # raises the fallback review outcome to external verification; only the
     # shared external-verification evaluator may discharge that state.
     decision = (
@@ -191,6 +222,7 @@ def change_shared_domain_membership(
     record = {
         "proposal_id": proposal.proposal_id,
         "domain_ref": change.domain_ref,
+        "criterion": CRITERION,
         "reason": change.reason,
         "before_members": list(current),
         "after_members": list(resulting),
