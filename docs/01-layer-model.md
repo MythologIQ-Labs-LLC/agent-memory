@@ -12,9 +12,9 @@ A second boundary is equally important:
 
 **Probabilistic or learned components may estimate what is likely, relevant, conflicting, stale, useful, or risky. They do not acquire authority from those estimates. Consequential memory transitions occur only through deterministic or formally bounded governance.**
 
-## Relationship to the proposed Cognitive Mesh architecture
+## Relationship to the Cognitive Mesh architecture
 
-[ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) proposes a system-level topology above this responsibility model. Until ADR-035 is accepted, the layers below remain current canonical doctrine and the three-plane topology remains a proposed composition of them.
+[ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) establishes the accepted system-level topology above this responsibility model. The layers below remain canonical semantic responsibility boundaries within that accepted three-plane composition.
 
 The models answer different questions:
 
@@ -31,7 +31,7 @@ component/capability model
 
 They must not be collapsed into one taxonomy.
 
-The proposed mapping is:
+The accepted mapping is:
 
 ```text
 COGNITIVE PLANE
@@ -68,9 +68,9 @@ module identity != component identity
 component identity != capability identity
 ```
 
-EvolveAI is the proposed initial Cognitive Metabolism implementation role because its evidenced capabilities include lifecycle/decay/orchestration/consolidation mechanisms. CodeGenome is the proposed initial Code Reality Graph implementation role because its evidenced capabilities are code-domain graph, structural, provenance, freshness, and traversal functions. Those architectural mappings do not promote any capability maturity and do not make either component's internal ontology canonical. Both components share Agent Memory's owner, so under [ADR-036](adr/ADR-036-same-owner-components-are-first-party-modules.md) they are first-party module candidates rather than attributed providers: work adopted from them is named for the Agent Memory contract it implements (Code Reality Graph, Cognitive Metabolism), not for its originating repository.
+EvolveAI is the initial Cognitive Metabolism implementation role because its evidenced capabilities include lifecycle/decay/orchestration/consolidation mechanisms. CodeGenome is the initial Code Reality Graph implementation role because its evidenced capabilities are code-domain graph, structural, provenance, freshness, and traversal functions. Those architectural mappings do not promote any capability maturity and do not make either component's internal ontology canonical. Both components share Agent Memory's owner, so under [ADR-036](adr/ADR-036-same-owner-components-are-first-party-modules.md) they are first-party modules rather than attributed providers: work adopted from them is named for the Agent Memory contract it implements (Code Reality Graph, Cognitive Metabolism), not for its originating repository.
 
-The proposed Cognitive Mesh is likewise not a ninth memory layer or a universal database schema. It is the shared identity-and-handoff substrate through which typed cognitive objects may participate in several bounded responsibilities while retaining provenance, uncertainty, scope, lifecycle posture, and authority semantics.
+The Cognitive Mesh is likewise not a ninth memory layer or a universal database schema. It is the shared identity-and-handoff substrate through which typed cognitive objects may participate in several bounded responsibilities while retaining provenance, uncertainty, scope, lifecycle posture, and authority semantics.
 
 ## Layer 1: Identity substrate
 
