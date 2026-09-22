@@ -1,8 +1,9 @@
 """Shared-memory membership revocation propagation.
 
 A shared-space membership change is current authority state, not a command to
-mutate every downstream store. This reference seam updates the shared-domain
-recall membership and recomputes the authority inherited by derived state.
+mutate every downstream store. Membership authority must already have been
+changed through ``memory.shared_membership`` before this projection helper runs.
+This seam then recomputes the authority inherited by derived state.
 """
 
 from __future__ import annotations
@@ -29,19 +30,31 @@ def propagate_shared_membership_revocation(
     current_derived_scope: DerivedScope,
     source_scopes: tuple[SourceScope, ...],
 ) -> SharedRevocationResult:
-    """Apply current membership and recompute downstream derived authority.
+    """Recompute downstream derived authority after a governed revocation.
 
+    This function deliberately does **not** mutate shared-domain membership.
+    The membership change is an ``authority_change`` consequence owned by
+    ``memory.shared_membership.commit_shared_domain_membership_change``.
+
+    The current adapter membership must already equal ``remaining_members``;
+    otherwise this helper refuses instead of making an ungoverned correction.
     Only sources actually bound to ``domain_ref`` lose the revoked principal
-    from their allowed audience. Other source authority remains unchanged.
-    The result reports whether the existing derived scope is still current; it
-    does not silently rewrite, delete, or re-authorize the downstream object.
+    from their allowed audience. Other source authority remains unchanged. The
+    result reports whether the existing derived scope is still current; it does
+    not silently rewrite, delete, or re-authorize the downstream object.
     """
     if not domain_ref or not revoked_principal:
         raise ValueError("shared revocation requires a domain and principal")
     if revoked_principal in remaining_members:
         raise ValueError("revoked principal cannot remain a member")
 
-    adapter.set_shared_domain_members(domain_ref, remaining_members)
+    raw_members = getattr(adapter, "_shared_domain_members", None)
+    if not isinstance(raw_members, dict):
+        raise TypeError("adapter does not expose shared-domain membership state")
+    current_members = tuple(sorted(raw_members.get(domain_ref, ())))
+    expected_members = tuple(sorted(set(remaining_members)))
+    if current_members != expected_members:
+        raise ValueError("shared membership authority change must be committed before propagation")
 
     updated: list[SourceScope] = []
     affected: list[str] = []
