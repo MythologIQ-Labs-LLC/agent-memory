@@ -9,9 +9,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from agentmem_ref import policy, receipts  # noqa: E402
+from agentmem_ref import policy  # noqa: E402
 from agentmem_ref.adapter import GovernedMemoryAdapter, RecallContext  # noqa: E402
-from agentmem_ref.memory.shared_membership import (  # noqa: E402
+from agentmem_ref.shared_revocation import (  # noqa: E402
+    REQUEST_EXTERNAL,
     SLOT,
     SharedDomainMembershipChange,
     bootstrap_shared_domain_members,
@@ -129,16 +130,18 @@ class SharedMembershipGovernance(unittest.TestCase):
         self.memory = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=TENANT)
         bootstrap_shared_domain_members(self.memory, SHARED, (ALICE, BOB))
 
-    def test_authority_change_parks_without_external_verification(self):
+    def test_authority_change_requests_external_verification_without_mutation(self):
         proposal = _membership_proposal("proposal:membership:1")
         result = commit_shared_domain_membership_change(self.memory, _remove_alice(), proposal)
 
         self.assertFalse(result.committed)
         self.assertEqual(result.decision.outcome, policy.REQUIRE_EXTERNAL_VERIFICATION)
-        self.assertEqual(result.receipt["selected_action"], receipts.NO_ACTION)
+        self.assertEqual(result.receipt["selected_action"], REQUEST_EXTERNAL)
+        self.assertEqual(result.pama_decision["decision"]["outcome"], policy.REQUIRE_EXTERNAL_VERIFICATION)
+        self.assertEqual(result.refusal, "external_verification_required")
         self.assertEqual(current_shared_domain_members(self.memory, SHARED), (ALICE, BOB))
 
-    def test_bound_external_verification_commits_and_changes_recall_immediately(self):
+    def test_bound_external_verification_commits_without_rewriting_pama_to_allow(self):
         fact_uuid = _shared_fact(self.memory)
         before = self.memory.governed_recall(
             "shared credential rotation guidance",
@@ -155,8 +158,10 @@ class SharedMembershipGovernance(unittest.TestCase):
         )
 
         self.assertTrue(result.committed)
-        self.assertEqual(result.decision.outcome, policy.ALLOW_WITH_LEDGER)
-        self.assertEqual(result.receipt["selected_action"], "authority_change")
+        self.assertEqual(result.decision.outcome, policy.REQUIRE_EXTERNAL_VERIFICATION)
+        self.assertEqual(result.receipt["selected_action"], REQUEST_EXTERNAL)
+        self.assertEqual(result.pama_decision["decision"]["outcome"], policy.REQUIRE_EXTERNAL_VERIFICATION)
+        self.assertIsNotNone(result.external_authority_ref)
         self.assertEqual(current_shared_domain_members(self.memory, SHARED), (BOB,))
         after = self.memory.governed_recall(
             "shared credential rotation guidance",
@@ -164,7 +169,9 @@ class SharedMembershipGovernance(unittest.TestCase):
         )
         self.assertNotIn(fact_uuid, after.admitted)
         self.assertEqual(after.refusals[fact_uuid], "shared_space_non_member")
-        self.assertIn(SLOT, self.memory.extension_state)
+        record = self.memory.extension_state[SLOT]["changes"]["change:remove-alice"]
+        self.assertEqual(record["pama_outcome"], policy.REQUIRE_EXTERNAL_VERIFICATION)
+        self.assertEqual(record["external_verification"]["verifier_principal_id"], "principal:security-admin")
 
     def test_self_verification_cannot_change_membership(self):
         proposal = _membership_proposal("proposal:membership:self", actor="principal:security-admin")
@@ -176,7 +183,7 @@ class SharedMembershipGovernance(unittest.TestCase):
         )
         self.assertFalse(result.committed)
         self.assertEqual(result.decision.outcome, policy.REQUIRE_EXTERNAL_VERIFICATION)
-        self.assertIn("attestation_self_verified", result.decision.reasons)
+        self.assertEqual(result.refusal, "attestation_self_verified")
         self.assertEqual(current_shared_domain_members(self.memory, SHARED), (ALICE, BOB))
 
     def test_weaker_target_or_authority_class_is_refused_before_mutation(self):
@@ -258,7 +265,7 @@ class SharedMembershipGovernance(unittest.TestCase):
                 attestation=_attestation(proposal.proposal_id),
             )
             self.assertFalse(replay.committed)
-            self.assertIn(replay.refusal, {"membership_change_replay", "stale_membership_binding"})
+            self.assertEqual(replay.refusal, "membership_change_replay")
             self.assertEqual(current_shared_domain_members(restored.adapter, SHARED), (BOB,))
 
 
