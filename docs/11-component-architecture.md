@@ -16,13 +16,13 @@ It is not one monolithic product, library, database, score, graph, vault, protoc
 
 PAMA is a native governance component of this architecture, not an external product dependency.
 
-## Proposed cognitive-framework extension
+## Accepted cognitive-framework architecture
 
-> **Status:** Proposed by [ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md). This section describes the candidate system topology. Existing Accepted ADR boundaries remain controlling until ADR-035 satisfies its acceptance requirements.
+> **Status:** Accepted by [ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md). This section describes the canonical system topology. Existing Accepted ADR boundaries remain controlling within that composition.
 
-ADR-035 proposes making explicit what the existing component architecture only implies: the bounded components participate in one persistent cognitive system rather than merely surrounding a collection of memory providers.
+ADR-035 makes explicit what the existing component architecture already implied: the bounded components participate in one persistent cognitive system rather than merely surrounding a collection of memory providers.
 
-The proposed top-level architecture is:
+The accepted top-level architecture is:
 
 ```text
 Agent Memory
@@ -71,7 +71,7 @@ one component -> many capabilities
 one capability -> many candidate implementations
 ```
 
-Under the proposed mapping:
+Under the accepted mapping:
 
 - **EvolveAI** is the initial first-party reference/research implementation for **Cognitive Metabolism**, while its retrieval, graph, persistence, provenance, and other capabilities continue to mature independently;
 - **CodeGenome** is the initial first-party implementation of the **Code Reality Graph**, while its graph, retrieval, structural-reasoning, provenance, freshness, and evaluation capabilities continue to mature independently;
@@ -79,9 +79,9 @@ Under the proposed mapping:
 
 This mapping is architectural responsibility, not capability promotion. First-party ownership does not confer `reference_qualified` maturity.
 
-### Proposed Cognitive Mesh
+### Cognitive Mesh
 
-The Cognitive Mesh is the candidate shared substrate through which persistent cognitive objects and typed relationships can participate in multiple bounded modules without losing their semantic type, provenance, uncertainty, scope, lifecycle, or authority posture.
+The Cognitive Mesh is the shared substrate through which persistent cognitive objects and typed relationships can participate in multiple bounded modules without losing their semantic type, provenance, uncertainty, scope, lifecycle, or authority posture.
 
 Candidate object classes include:
 
@@ -139,9 +139,9 @@ confidence != permission
 persistence != correctness
 ```
 
-### Proposed module responsibilities
+### Module responsibilities
 
-| Module | Candidate responsibility | Initial implementation / source | Must not silently own |
+| Module | Responsibility | Initial implementation / source | Must not silently own |
 |---|---|---|---|
 | Cognitive Mesh | Shared cognitive identity and typed relation substrate | Agent Memory core contract/reference substrate | universal truth, mutation authority |
 | Cognitive Metabolism | salience, decay, reinforcement, persistence pressure, consolidation candidacy, adaptive restructuring proposals | EvolveAI | truth, deletion authority, crystallization authority |
@@ -154,9 +154,9 @@ persistence != correctness
 | PAMA | mutation/consequence authority | Agent Memory native doctrine | factual truth |
 | Conformance / Evaluation | module and composition evidence | Agent Memory | product claims without evidence |
 
-## Current accepted system shape
+## Accepted system shape
 
-Until ADR-035 is accepted, the current canonical component decomposition remains:
+The canonical component decomposition remains:
 
 ```text
 Agent Memory System
@@ -176,7 +176,7 @@ Agent Memory System
 └── Product and Agent Integrations
 ```
 
-ADR-035 proposes a system-level composition of these responsibilities. It does not erase their distinct failure modes.
+ADR-035 establishes the system-level composition of these responsibilities. It does not erase their distinct failure modes.
 
 ## Component map
 
@@ -219,7 +219,7 @@ Corrections and disputes can re-enter the pipeline at Evidence, Lifecycle, Gover
 
 The pipeline describes responsibility and authority flow, not necessarily one synchronous execution order.
 
-The ADR-035 candidate architecture generalizes the same boundary into a cognitive loop:
+The accepted ADR-035 architecture generalizes the same boundary into a cognitive loop:
 
 ```text
 experience / observation
@@ -356,7 +356,7 @@ An adjacent product name is not itself an architectural role. Implementations sh
 ## Boundary rules
 
 1. Shared doctrine, segmented implementation.
-2. A shared Cognitive Mesh, if ADR-035 is accepted, does not erase component or capability boundaries.
+2. The shared Cognitive Mesh under ADR-035 does not erase component or capability boundaries.
 3. Components may depend on each other, but must not redefine each other.
 4. Every durable memory transition must cross identity, evidence, authority, and certification boundaries; scoring may propose but not authorize.
 5. Runtime memory may use uncertified memory only with scope and warning semantics.
@@ -406,7 +406,7 @@ ledger_ref
 timestamp
 ```
 
-For Cognitive Mesh participation, additional typed metadata may be required to preserve object class, relationship semantics, activation posture, canonical/derived posture, and currentness. ADR-035 acceptance requires that this be defined without forcing one implementation-specific universal ontology.
+For Cognitive Mesh participation, additional typed metadata may be required to preserve object class, relationship semantics, activation posture, canonical/derived posture, and currentness. ADR-035 requires that this be defined without forcing one implementation-specific universal ontology.
 
 Not all fields apply to every handoff. Omitted authority-critical fields must not be guessed downstream.
 
@@ -431,7 +431,7 @@ These architectural maturity descriptions do not replace ADR-033 capability matu
 
 This repo owns the overall architecture and native doctrine, including PAMA and the vendor-neutral Governance Context Projection profile.
 
-If ADR-035 is accepted, Agent Memory will additionally own the canonical Cognitive Mesh contract and the module-level topology of the governed cognitive framework. That ownership will define interfaces and boundaries, not grant Agent Memory core a monopoly on implementation mechanisms.
+Under accepted ADR-035, Agent Memory also owns the canonical Cognitive Mesh contract and the module-level topology of the governed cognitive framework. That ownership defines interfaces and boundaries, not a monopoly by Agent Memory core on implementation mechanisms.
 
 Individual repos may own implementation slices after they demonstrate a meaningful mapping. Consumer-specific governance adapters should normally be owned with the consumer integration, not by changing Agent Memory core to mirror the consumer's policy model.
 
