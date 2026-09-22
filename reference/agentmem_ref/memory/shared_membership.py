@@ -8,6 +8,12 @@ The embedding host remains responsible for authenticating ``principal_ref`` on
 recall. This module governs mutation of Agent Memory's recorded membership state;
 it does not introduce a local identity provider.
 
+A5 governance changes have a deliberately different shape from ordinary memory
+mutations. PAMA records the requirement for external verification; it does not
+turn that requirement into an ordinary ``allow`` outcome. A bound external
+verification may satisfy the authority requirement for this exact consequence,
+but the canonical PAMA decision remains ``require_external_verification``.
+
 ``bootstrap_shared_domain_members`` is deliberately named as a fixture/bootstrap
 seam. Production/reference runtime mutation belongs through
 ``commit_shared_domain_membership_change``.
@@ -24,6 +30,8 @@ from ..runtime.adapter import GovernedMemoryAdapter
 SLOT = "shared_domain_membership_authority"
 OPERATION = "authority_change"
 CHANGE_KINDS = frozenset({"add", "remove", "replace"})
+REQUEST_EXTERNAL = "request_external_verification"
+ENTER_PENDING = "enter_pending_verification"
 
 
 @dataclass(frozen=True)
@@ -62,11 +70,11 @@ class SharedDomainMembershipResult:
     after_members: tuple[str, ...]
     committed: bool
     refusal: str | None = None
+    external_authority_ref: str | None = None
 
 
 def _members(values) -> tuple[str, ...]:
-    normalized = tuple(sorted({str(value).strip() for value in values if str(value).strip()}))
-    return normalized
+    return tuple(sorted({str(value).strip() for value in values if str(value).strip()}))
 
 
 def current_shared_domain_members(memory: GovernedMemoryAdapter, domain_ref: str) -> tuple[str, ...]:
@@ -132,20 +140,23 @@ def _validate_binding(
         return (), "", "membership_change_requires_A5_governance_authority"
 
     current = current_shared_domain_members(memory, change.domain_ref)
-    expected = _members(change.before_members)
-    if current != expected:
-        return current, "", "stale_membership_binding"
-
     versions = dict(state["versions"])
     current_version = f"v{versions.get(change.domain_ref, 0)}"
-    if not proposal.state_snapshot:
-        return current, current_version, "membership_change_requires_state_snapshot"
-    if proposal.state_snapshot != current_version:
-        return current, current_version, "stale_authorization"
+
+    # Replay is a stronger diagnosis than the inevitable before-state mismatch
+    # after a successful prior mutation, so detect it first.
     if change.change_id in state["changes"]:
         return current, current_version, "membership_change_replay"
     if proposal.proposal_id in state["proposals"]:
         return current, current_version, "membership_proposal_replay"
+
+    expected = _members(change.before_members)
+    if current != expected:
+        return current, current_version, "stale_membership_binding"
+    if not proposal.state_snapshot:
+        return current, current_version, "membership_change_requires_state_snapshot"
+    if proposal.state_snapshot != current_version:
+        return current, current_version, "stale_authorization"
     return current, current_version, None
 
 
@@ -159,22 +170,35 @@ def _blocked_decision(proposal: policy.Proposal, reason: str) -> policy.Decision
     )
 
 
+def _selection_for(decision: policy.Decision) -> tuple[str, str | None]:
+    """Select only a remediation action from the canonical PAMA envelope."""
+    if REQUEST_EXTERNAL in decision.permitted_actions:
+        return REQUEST_EXTERNAL, "deterministic"
+    if ENTER_PENDING in decision.permitted_actions:
+        return ENTER_PENDING, "deterministic"
+    return receipts.NO_ACTION, None
+
+
 def _ledger(
     memory: GovernedMemoryAdapter,
     proposal: policy.Proposal,
     decision: policy.Decision,
     *,
     before_state: str,
-    after_state: str,
-    commit: bool,
 ) -> tuple[dict, dict, str]:
-    selected = OPERATION if commit else receipts.NO_ACTION
+    """Record the canonical PAMA requirement before any authority consequence.
+
+    For A5, a valid PAMA record never selects ``authority_change`` itself. It
+    selects the remediation route (normally ``request_external_verification``),
+    while the separately validated external authority binds the durable change.
+    """
+    selected, selection_mode = _selection_for(decision)
     receipt_id = memory.mint_id()
     pama_decision = receipts.build_pama_decision(
         proposal,
         decision,
         selected,
-        "deterministic" if commit else None,
+        selection_mode,
         receipt_id,
     )
     receipt = receipts.build_receipt(
@@ -182,12 +206,29 @@ def _ledger(
         proposal=proposal,
         decision=decision,
         selected_action=selected,
-        selection_mode="deterministic" if commit else "none",
+        selection_mode="none" if selected == receipts.NO_ACTION else "deterministic",
         timestamp=memory.now(),
         before_state=before_state,
-        after_state=after_state,
+        after_state=before_state,
     )
+    receipts.verify_receipt_decision_pair(receipt, pama_decision)
     return pama_decision, receipt, receipt_id
+
+
+def _authority_ref(proposal: policy.Proposal, attestation: policy.ExternalVerification) -> str:
+    return f"external-verification:{proposal.proposal_id}:{attestation.verifier_principal_id}"
+
+
+def _external_authority_refusal(
+    proposal: policy.Proposal,
+    decision: policy.Decision,
+    attestation: policy.ExternalVerification | None,
+) -> str | None:
+    if decision.outcome != policy.REQUIRE_EXTERNAL_VERIFICATION:
+        return f"membership_change_not_external_verification:{decision.outcome}"
+    if attestation is None:
+        return "external_verification_required"
+    return policy.attestation_refusal(proposal, attestation)
 
 
 def commit_shared_domain_membership_change(
@@ -201,9 +242,13 @@ def commit_shared_domain_membership_change(
     """Evaluate, ledger, and commit one exact shared-domain authority change.
 
     The durable consequence is bound to the exact domain, previous member set,
-    resulting member set, proposal id, state snapshot, PAMA decision, and receipt.
-    Review/verification outcomes do not mutate membership. Replayed or stale
-    bindings fail closed.
+    resulting member set, proposal id, state snapshot, canonical PAMA requirement,
+    and a separately validated external authority record.
+
+    The A5 boundary is intentional: PAMA remains
+    ``require_external_verification`` even when a valid attestation is present.
+    The attestation satisfies the external authority requirement for this exact
+    consequence; it does not rewrite PAMA's decision into ``allow``.
     """
     state = _load_state(memory)
     current, before_state, binding_refusal = _validate_binding(memory, change, proposal, state)
@@ -215,8 +260,6 @@ def commit_shared_domain_membership_change(
             proposal,
             decision,
             before_state=before_state or proposal.state_snapshot or "unknown",
-            after_state=before_state or proposal.state_snapshot or "unknown",
-            commit=False,
         )
         return SharedDomainMembershipResult(
             change=change,
@@ -229,19 +272,15 @@ def commit_shared_domain_membership_change(
             refusal=binding_refusal,
         )
 
-    decision = memory.evaluate_proposal(proposal, evidence=evidence, attestation=attestation)
-    commit = decision.outcome in (policy.ALLOW, policy.ALLOW_WITH_LEDGER) and OPERATION in decision.permitted_actions
-    next_version = f"v{state['versions'].get(change.domain_ref, 0) + 1}" if commit else before_state
-
-    # Build the canonical decision + receipt before changing authority state. A
-    # ledger construction failure therefore leaves membership unchanged.
+    # Evidence may qualify the proposition under review, but it cannot lower the
+    # A5 authority floor. Deliberately omit the attestation from PAMA evaluation:
+    # the canonical A5 decision remains the external-verification requirement.
+    decision = memory.evaluate_proposal(proposal, evidence=evidence)
     pama_decision, receipt, receipt_id = _ledger(
         memory,
         proposal,
         decision,
         before_state=before_state,
-        after_state=next_version,
-        commit=commit,
     )
 
     correlation = memory.mint_id()
@@ -255,11 +294,12 @@ def commit_shared_domain_membership_change(
         authority={
             "permitted_actions": list(decision.permitted_actions),
             "prohibited_actions": list(decision.prohibited_actions),
-            "selection_mode": "deterministic" if commit else "none",
+            "selection_mode": "deterministic" if _selection_for(decision)[0] != receipts.NO_ACTION else "none",
         },
     )
 
-    if not commit:
+    authority_refusal = _external_authority_refusal(proposal, decision, attestation)
+    if authority_refusal is not None:
         return SharedDomainMembershipResult(
             change=change,
             decision=decision,
@@ -268,13 +308,17 @@ def commit_shared_domain_membership_change(
             before_members=current,
             after_members=current,
             committed=False,
-            refusal=f"membership change not committed: {decision.outcome}",
+            refusal=authority_refusal,
         )
+
+    assert attestation is not None
+    external_authority_ref = _authority_ref(proposal, attestation)
 
     # This is the single governed production/reference mutation point. The
     # adapter-owned map remains part of #363's persistence-contract cleanup; the
     # current restart profile already snapshots/restores it and extension_state.
-    memory._shared_domain_members[change.domain_ref] = set(_members(change.after_members))
+    after_members = _members(change.after_members)
+    memory._shared_domain_members[change.domain_ref] = set(after_members)
     version = state["versions"].get(change.domain_ref, 0) + 1
     state["versions"][change.domain_ref] = version
     record = {
@@ -282,11 +326,19 @@ def commit_shared_domain_membership_change(
         "change_kind": change.change_kind,
         "domain_ref": change.domain_ref,
         "proposal_id": proposal.proposal_id,
-        "receipt_id": receipt_id,
-        "decision_ref": receipts.decision_ref_for(proposal.proposal_id),
+        "pama_receipt_id": receipt_id,
+        "pama_decision_ref": receipts.decision_ref_for(proposal.proposal_id),
+        "pama_outcome": decision.outcome,
         "policy_version": decision.policy_version,
+        "external_authority_ref": external_authority_ref,
+        "external_verification": {
+            "bound_proposal_id": attestation.bound_proposal_id,
+            "verifier_principal_id": attestation.verifier_principal_id,
+            "authority_kind": attestation.authority_kind,
+            "max_risk_class": attestation.max_risk_class,
+        },
         "before_members": list(current),
-        "after_members": list(_members(change.after_members)),
+        "after_members": list(after_members),
         "before_state": before_state,
         "after_state": f"v{version}",
     }
@@ -308,15 +360,17 @@ def commit_shared_domain_membership_change(
         pama_decision=pama_decision,
         receipt=receipt,
         before_members=current,
-        after_members=_members(change.after_members),
+        after_members=after_members,
         committed=True,
         refusal=None,
+        external_authority_ref=external_authority_ref,
     )
 
 
 __all__ = [
     "SLOT",
     "OPERATION",
+    "REQUEST_EXTERNAL",
     "SharedDomainMembershipChange",
     "SharedDomainMembershipResult",
     "bootstrap_shared_domain_members",
