@@ -17,10 +17,13 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
+from typing import Iterable, Mapping
 
 REJECTED = "rejected"
 READMITTED = "readmitted"
 PURGED = "purged"
+CHECKPOINT_SCHEMA_VERSION = "1.0.0"
+CHECKPOINT_OWNER = "rejected_value_registry"
 
 NO_SEMANTIC_SIGNAL = "no_semantic_reconciliation_signal"
 REQUIRE_RECONCILIATION = "require_reconciliation"
@@ -86,6 +89,37 @@ class RejectionRecord:
             "readmission_verifier_principal_id": self.readmission_verifier_principal_id,
             "readmission_authority_kind": self.readmission_authority_kind,
         }
+
+    @classmethod
+    def from_checkpoint_row(cls, raw: Mapping[str, object]) -> "RejectionRecord":
+        """Reconstruct one registry-owned checkpoint row fail-closed."""
+        try:
+            return cls(
+                memory_id=str(raw["memory_id"]),
+                value_fingerprint=str(raw["value_fingerprint"]),
+                superseded_fact_uuid=str(raw["superseded_fact_uuid"]),
+                correction_proposal_id=str(raw["correction_proposal_id"]),
+                evidence_refs=tuple(str(value) for value in raw.get("evidence_refs", ())),
+                authority_refs=tuple(str(value) for value in raw.get("authority_refs", ())),
+                scope=str(raw["scope"]),
+                rejected_at=str(raw["rejected_at"]),
+                active=bool(raw.get("active", True)),
+                lifecycle_state=str(raw.get("lifecycle_state", REJECTED)),
+                readmitted_at=(None if raw.get("readmitted_at") is None else str(raw["readmitted_at"])),
+                readmission_proposal_id=(
+                    None if raw.get("readmission_proposal_id") is None else str(raw["readmission_proposal_id"])
+                ),
+                readmission_verifier_principal_id=(
+                    None
+                    if raw.get("readmission_verifier_principal_id") is None
+                    else str(raw["readmission_verifier_principal_id"])
+                ),
+                readmission_authority_kind=(
+                    None if raw.get("readmission_authority_kind") is None else str(raw["readmission_authority_kind"])
+                ),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("rejected-value checkpoint row is malformed") from exc
 
 
 @dataclass(frozen=True)
@@ -158,6 +192,47 @@ class RejectedValueRegistry:
 
     def _key(self, memory_id: str, value: str) -> tuple[str, str]:
         return memory_id, value_fingerprint(value)
+
+    # -- declared checkpoint ownership ---------------------------------
+
+    def export_checkpoint_rows(self) -> list[dict]:
+        """Export deterministic rows owned by this registry.
+
+        The v1 restart wire format stores these rows directly under
+        ``rejected_values``. Keeping the row shape stable avoids inventing a
+        migration solely to move serialization responsibility to its owner.
+        """
+        rows: list[dict] = []
+        for (_memory_id, _fingerprint), records in sorted(self._records.items()):
+            rows.extend(record.as_dict() for record in records)
+        rows.sort(key=lambda row: row["rejection_id"])
+        return rows
+
+    @classmethod
+    def restore_checkpoint_rows(cls, rows: Iterable[Mapping[str, object]]) -> "RejectedValueRegistry":
+        """Reconstruct registry-owned state from the v1 checkpoint rows."""
+        registry = cls()
+        try:
+            for raw in rows:
+                if not isinstance(raw, Mapping):
+                    raise TypeError("rejected-value checkpoint row must be a mapping")
+                record = RejectionRecord.from_checkpoint_row(raw)
+                expected_id = raw.get("rejection_id")
+                if expected_id is not None and str(expected_id) != record.rejection_id:
+                    raise ValueError("rejected-value checkpoint identity mismatch")
+                key = (record.memory_id, record.value_fingerprint)
+                registry._records.setdefault(key, []).append(record)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("rejected-value state cannot be reconstructed") from exc
+        return registry
+
+    def checkpoint_descriptor(self) -> dict:
+        """Describe ownership/version without changing the existing wire rows."""
+        return {
+            "schema_version": CHECKPOINT_SCHEMA_VERSION,
+            "checkpoint_owner": CHECKPOINT_OWNER,
+            "record_count": sum(len(records) for records in self._records.values()),
+        }
 
     def active(self, memory_id: str, value: str) -> RejectionRecord | None:
         records = self._records.get(self._key(memory_id, value), ())
