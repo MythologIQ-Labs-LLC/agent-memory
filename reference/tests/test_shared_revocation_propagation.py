@@ -10,13 +10,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import policy  # noqa: E402
 from agentmem_ref.adapter import Clock, GovernedMemoryAdapter, RecallContext  # noqa: E402
-from agentmem_ref.memory.shared_membership import (  # noqa: E402
+from agentmem_ref.scope_governance import SourceScope, derive_scope  # noqa: E402
+from agentmem_ref.shared_revocation import (  # noqa: E402
     SharedDomainMembershipChange,
     bootstrap_shared_domain_members,
     commit_shared_domain_membership_change,
+    propagate_shared_membership_revocation,
 )
-from agentmem_ref.scope_governance import SourceScope, derive_scope  # noqa: E402
-from agentmem_ref.shared_revocation import propagate_shared_membership_revocation  # noqa: E402
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
 TENANT = "tenant-a"
@@ -115,6 +115,7 @@ class SharedRevocationPropagationTests(unittest.TestCase):
             attestation=membership_attestation(proposal_id),
         )
         self.assertTrue(result.committed)
+        self.assertEqual(result.decision.outcome, policy.REQUIRE_EXTERNAL_VERIFICATION)
 
     def test_revocation_blocks_future_shared_recall_and_invalidates_broader_derived_scope(self):
         before = self.adapter.governed_recall(
