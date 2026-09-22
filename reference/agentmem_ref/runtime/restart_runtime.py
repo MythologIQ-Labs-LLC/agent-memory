@@ -1,14 +1,20 @@
-"""Bounded restart-safe Agent Memory runtime for issue #282.
+"""Bounded restart-safe Agent Memory runtime for issue #282 / #363.
 
 This module is intentionally conservative. It persists the reference substrate
 and governance envelope as separate payloads, then binds both to a manifest by
 SHA-256 digest. Recovery refuses missing, corrupt, torn, or interpretation-
 ambiguous state.
 
-The file-backed store is the first executable durability profile, not canonical
-storage doctrine. A production implementation may use a database, WAL, object
-store, or another transactional substrate while preserving the same recovery
-obligations.
+Issue #363 tightens the ownership boundary without changing the base durability
+profile: the substrate exports/restores its own durable state, rejected-value
+history exports/restores itself, and the governed adapter durability
+specialization exports/restores governance state. This module orchestrates those
+contracts instead of scraping implementation-private dictionaries.
+
+The file-backed store remains the first executable durability profile, not
+canonical storage doctrine. A production implementation may use a database,
+WAL, object store, or another transactional substrate while preserving the same
+recovery obligations.
 """
 
 from __future__ import annotations
@@ -18,15 +24,19 @@ import hashlib
 import json
 import os
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Mapping
 
 from .adapter import Clock, GovernedMemoryAdapter
-from ..core.readmission import RejectedValueRegistry, RejectionRecord
-from ..state.substrate import Episode, Fact, InMemoryTemporalGraph
+from ..core.readmission import RejectedValueRegistry
+from ..state.substrate import (
+    CheckpointableTemporalGraphPort,
+    InMemoryTemporalGraph,
+)
 
 
 SCHEMA_VERSION = "1.0.0"
 DURABILITY_PROFILE = "reference_file_checkpoint_v1"
+ADAPTER_CHECKPOINT_OWNER = "governed_memory_adapter"
 
 
 class RuntimeRecoveryError(RuntimeError):
@@ -98,6 +108,148 @@ class RecoveryEvidence:
         return asdict(self)
 
 
+class CheckpointableGovernedMemoryAdapter(GovernedMemoryAdapter):
+    """Reference governed adapter with a declared durability state-provider seam.
+
+    ``GovernedMemoryAdapter`` remains usable without claiming persistence. This
+    specialization is what the restart-safe profile instantiates. Its methods
+    own access to adapter-private state; the checkpoint orchestrator never
+    reaches into those fields directly.
+
+    Keeping this as a specialization also avoids silently declaring every
+    external adapter implementation restart-safe merely because it satisfies the
+    ordinary governed runtime contract.
+    """
+
+    checkpoint_owner = ADAPTER_CHECKPOINT_OWNER
+
+    def checkpoint_substrate(self):
+        """Return the substrate collaborator for its own checkpoint contract."""
+        return self._substrate
+
+    def checkpoint_tenant(self) -> str:
+        return self._tenant
+
+    def export_checkpoint_state(self) -> dict:
+        """Export adapter-owned governance state in the existing v1 wire shape."""
+        selector_mode = getattr(self._selector, "mode", "unknown")
+        if selector_mode != "deterministic":
+            raise ValueError(
+                "reference durability profile currently supports only deterministic selector recovery"
+            )
+        identifier_checkpoint = getattr(self._substrate, "identifier_checkpoint", None)
+        if not callable(identifier_checkpoint):
+            raise ValueError("substrate does not declare identifier checkpoint capability")
+        return {
+            "checkpoint_owner": self.checkpoint_owner,
+            "selector_mode": selector_mode,
+            "clock_tick": self._clock._t,
+            # Legacy v1 location retained for compatibility. The value is read
+            # through the substrate-owned contract rather than from `_ids._n`.
+            "id_counter": int(identifier_checkpoint()),
+            "state_version": dict(sorted(self._state_version.items())),
+            "disputed": sorted(self._disputed),
+            "tombstones": self._tombstones,
+            "fact_scope": self._fact_scope,
+            "fact_memory": dict(sorted(self._fact_memory.items())),
+            "shared_domain_members": {
+                key: sorted(value) for key, value in sorted(self._shared_domain_members.items())
+            },
+            "current_fact_by_memory": dict(sorted(self._current_fact_by_memory.items())),
+            "rejected_values": self._rejected_values.export_checkpoint_rows(),
+            "rejected_values_descriptor": self._rejected_values.checkpoint_descriptor(),
+            "containment_violations": list(self.containment_violations),
+            "events": list(self.events),
+            "extension_state": {
+                key: self.extension_state[key] for key in sorted(self.extension_state)
+            },
+        }
+
+    def restore_checkpoint_state(self, raw: Mapping[str, object]) -> None:
+        """Restore adapter-owned governance state fail-closed.
+
+        The input accepts pre-#363 v1 snapshots that lack owner/descriptor
+        metadata, but does not infer missing correctness state. Identifier
+        progress is restored through the substrate-owned seam and is never
+        allowed to rewind.
+        """
+        owner = raw.get("checkpoint_owner")
+        if owner not in (None, self.checkpoint_owner):
+            raise ValueError("governance checkpoint owner mismatch")
+        if raw.get("selector_mode") != "deterministic":
+            raise ValueError("selector recovery is unsupported or ambiguous")
+
+        def mapping(name: str) -> Mapping:
+            value = raw.get(name, {})
+            if not isinstance(value, Mapping):
+                raise ValueError(f"governance checkpoint {name} is not a mapping")
+            return value
+
+        try:
+            self._clock = Clock(start=int(raw.get("clock_tick", 0)))
+
+            restore_identifier = getattr(self._substrate, "restore_identifier_checkpoint", None)
+            current_identifier = getattr(self._substrate, "identifier_checkpoint", None)
+            if not callable(restore_identifier) or not callable(current_identifier):
+                raise ValueError("substrate does not declare identifier checkpoint capability")
+            legacy_identifier = int(raw.get("id_counter", 0))
+            restore_identifier(max(int(current_identifier()), legacy_identifier))
+
+            self._state_version = {
+                str(key): int(value) for key, value in mapping("state_version").items()
+            }
+            disputed = raw.get("disputed", ())
+            if not isinstance(disputed, (list, tuple, set)):
+                raise ValueError("governance checkpoint disputed state is malformed")
+            self._disputed = {str(value) for value in disputed}
+            self._tombstones = {str(key): dict(value) for key, value in mapping("tombstones").items()}
+
+            fact_scope = {}
+            for key, value in mapping("fact_scope").items():
+                if not isinstance(value, Mapping):
+                    raise ValueError("governance fact scope is malformed")
+                restored = dict(value)
+                restored["domain_refs"] = tuple(restored.get("domain_refs", ()))
+                restored["required_domain_refs"] = tuple(restored.get("required_domain_refs", ()))
+                fact_scope[str(key)] = restored
+            self._fact_scope = fact_scope
+
+            self._fact_memory = {
+                str(key): str(value) for key, value in mapping("fact_memory").items()
+            }
+            self._shared_domain_members = {
+                str(key): {str(member) for member in value}
+                for key, value in mapping("shared_domain_members").items()
+            }
+            self._current_fact_by_memory = {
+                str(key): str(value)
+                for key, value in mapping("current_fact_by_memory").items()
+            }
+
+            rejected_rows = raw.get("rejected_values", ())
+            if not isinstance(rejected_rows, (list, tuple)):
+                raise ValueError("rejected-value checkpoint rows are malformed")
+            self._rejected_values = RejectedValueRegistry.restore_checkpoint_rows(rejected_rows)
+
+            containment = raw.get("containment_violations", ())
+            events = raw.get("events", ())
+            if not isinstance(containment, (list, tuple)) or not isinstance(events, (list, tuple)):
+                raise ValueError("governance audit state is malformed")
+            self.containment_violations = [str(value) for value in containment]
+            self.events = [dict(value) for value in events]
+
+            extension_state = raw.get("extension_state", {})
+            if not isinstance(extension_state, Mapping):
+                raise ValueError("extension state is not a mapping")
+            self.extension_state = {
+                str(key): dict(value) for key, value in extension_state.items()
+            }
+        except (TypeError, ValueError) as exc:
+            if isinstance(exc, ValueError):
+                raise
+            raise ValueError("governance adapter state cannot be reconstructed") from exc
+
+
 def _canonical_bytes(value: object) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
@@ -131,13 +283,19 @@ def _atomic_json_write(path: Path, value: dict) -> None:
     os.replace(tmp, path)
 
 
-def _snapshot_substrate(substrate: InMemoryTemporalGraph) -> dict:
-    return {
-        "schema_version": SCHEMA_VERSION,
-        "episodes": [asdict(value) for _, value in sorted(substrate._episodes.items())],
-        "facts": [asdict(value) for _, value in sorted(substrate._facts.items())],
-        "write_log": [list(item) for item in substrate.write_log],
-    }
+def _snapshot_substrate(substrate) -> dict:
+    """Snapshot only a provider that explicitly declares checkpoint capability."""
+    if not isinstance(substrate, CheckpointableTemporalGraphPort):
+        raise RuntimeRecoveryError("substrate does not declare checkpoint capability")
+    try:
+        snapshot = substrate.export_checkpoint_state()
+    except (TypeError, ValueError) as exc:
+        raise RuntimeRecoveryError("substrate checkpoint export failed") from exc
+    if not isinstance(snapshot, dict):
+        raise RuntimeRecoveryError("substrate checkpoint export must be a mapping")
+    if snapshot.get("schema_version") != SCHEMA_VERSION:
+        raise RuntimeRecoveryError("unsupported substrate state schema")
+    return snapshot
 
 
 def _restore_substrate(snapshot: dict) -> InMemoryTemporalGraph:
@@ -145,55 +303,23 @@ def _restore_substrate(snapshot: dict) -> InMemoryTemporalGraph:
         raise RuntimeRecoveryError("unsupported substrate state schema")
     substrate = InMemoryTemporalGraph()
     try:
-        substrate._episodes = {
-            raw["uuid"]: Episode(**raw)
-            for raw in snapshot.get("episodes", [])
-        }
-        facts: dict[str, Fact] = {}
-        for raw in snapshot.get("facts", []):
-            value = dict(raw)
-            value["episode_uuids"] = tuple(value.get("episode_uuids", ()))
-            facts[value["uuid"]] = Fact(**value)
-        substrate._facts = facts
-        substrate.write_log = [tuple(item) for item in snapshot.get("write_log", [])]
-    except (KeyError, TypeError, ValueError) as exc:
+        substrate.restore_checkpoint_state(snapshot)
+    except (TypeError, ValueError) as exc:
         raise RuntimeRecoveryError("substrate state cannot be reconstructed") from exc
     return substrate
 
 
 def _snapshot_rejections(registry: RejectedValueRegistry) -> list[dict]:
-    rows: list[dict] = []
-    for (_memory_id, _fingerprint), records in sorted(registry._records.items()):
-        rows.extend(record.as_dict() for record in records)
-    rows.sort(key=lambda row: row["rejection_id"])
-    return rows
+    """Compatibility helper delegated to the registry owner."""
+    return registry.export_checkpoint_rows()
 
 
-def _restore_rejections(rows: Iterable[dict]) -> RejectedValueRegistry:
-    registry = RejectedValueRegistry()
+def _restore_rejections(rows: Iterable[Mapping[str, object]]) -> RejectedValueRegistry:
+    """Compatibility helper delegated to the registry owner."""
     try:
-        for raw in rows:
-            record = RejectionRecord(
-                memory_id=raw["memory_id"],
-                value_fingerprint=raw["value_fingerprint"],
-                superseded_fact_uuid=raw["superseded_fact_uuid"],
-                correction_proposal_id=raw["correction_proposal_id"],
-                evidence_refs=tuple(raw.get("evidence_refs", ())),
-                authority_refs=tuple(raw.get("authority_refs", ())),
-                scope=raw["scope"],
-                rejected_at=raw["rejected_at"],
-                active=bool(raw.get("active", True)),
-                lifecycle_state=raw.get("lifecycle_state", "rejected"),
-                readmitted_at=raw.get("readmitted_at"),
-                readmission_proposal_id=raw.get("readmission_proposal_id"),
-                readmission_verifier_principal_id=raw.get("readmission_verifier_principal_id"),
-                readmission_authority_kind=raw.get("readmission_authority_kind"),
-            )
-            key = (record.memory_id, record.value_fingerprint)
-            registry._records.setdefault(key, []).append(record)
-    except (KeyError, TypeError, ValueError) as exc:
+        return RejectedValueRegistry.restore_checkpoint_rows(rows)
+    except (TypeError, ValueError) as exc:
         raise RuntimeRecoveryError("rejected-value state cannot be reconstructed") from exc
-    return registry
 
 
 def _snapshot_governance(
@@ -202,43 +328,35 @@ def _snapshot_governance(
     profile: RuntimeProfile,
     visibility_snapshots: dict[str, dict],
 ) -> dict:
-    selector_mode = getattr(adapter._selector, "mode", "unknown")
-    if selector_mode != "deterministic":
-        raise RuntimeRecoveryError(
-            "reference durability profile currently supports only deterministic selector recovery"
-        )
+    """Compose the runtime envelope from an adapter-owned checkpoint export."""
+    exporter = getattr(adapter, "export_checkpoint_state", None)
+    tenant_reader = getattr(adapter, "checkpoint_tenant", None)
+    if not callable(exporter) or not callable(tenant_reader):
+        raise RuntimeRecoveryError("governed adapter does not declare checkpoint capability")
+    try:
+        raw = exporter()
+        tenant = tenant_reader()
+    except (TypeError, ValueError) as exc:
+        raise RuntimeRecoveryError("governance checkpoint export failed") from exc
+    if not isinstance(raw, dict):
+        raise RuntimeRecoveryError("governance checkpoint export must be a mapping")
+    if not isinstance(tenant, str) or not tenant:
+        raise RuntimeRecoveryError("governance state has no tenant identity")
     return {
         "schema_version": SCHEMA_VERSION,
-        "tenant": adapter._tenant,
+        "tenant": tenant,
         "profile": profile.to_dict(),
         "interpretation_digest": profile.interpretation_digest,
-        "adapter": {
-            "selector_mode": selector_mode,
-            "clock_tick": adapter._clock._t,
-            "id_counter": adapter._ids._n,
-            "state_version": dict(sorted(adapter._state_version.items())),
-            "disputed": sorted(adapter._disputed),
-            "tombstones": adapter._tombstones,
-            "fact_scope": adapter._fact_scope,
-            # GAP-SEC-03 (LD2b): without this the binding map restores empty and
-            # every post-restart delete refuses target_binding_unknown.
-            "fact_memory": dict(sorted(adapter._fact_memory.items())),
-            "shared_domain_members": {
-                key: sorted(value) for key, value in sorted(adapter._shared_domain_members.items())
-            },
-            "current_fact_by_memory": dict(sorted(adapter._current_fact_by_memory.items())),
-            "rejected_values": _snapshot_rejections(adapter._rejected_values),
-            "containment_violations": list(adapter.containment_violations),
-            "events": list(adapter.events),
-            # Sprint 4c-2 (ADR-038): adapter-owned state of later layers (action-authority
-            # consumption records). Additive; a pre-1.2.0 snapshot restores an empty slot.
-            "extension_state": {key: adapter.extension_state[key] for key in sorted(adapter.extension_state)},
-        },
+        "adapter": raw,
         "visibility_snapshots": visibility_snapshots,
     }
 
 
-def _restore_adapter(substrate: InMemoryTemporalGraph, snapshot: dict, verifier_registry=None) -> tuple[GovernedMemoryAdapter, dict[str, dict]]:
+def _restore_adapter(
+    substrate: InMemoryTemporalGraph,
+    snapshot: dict,
+    verifier_registry=None,
+) -> tuple[GovernedMemoryAdapter, dict[str, dict]]:
     if snapshot.get("schema_version") != SCHEMA_VERSION:
         raise RuntimeRecoveryError("unsupported governance state schema")
     tenant = snapshot.get("tenant")
@@ -247,43 +365,14 @@ def _restore_adapter(substrate: InMemoryTemporalGraph, snapshot: dict, verifier_
     raw = snapshot.get("adapter")
     if not isinstance(raw, dict):
         raise RuntimeRecoveryError("governance adapter state is missing")
-    if raw.get("selector_mode") != "deterministic":
-        raise RuntimeRecoveryError("selector recovery is unsupported or ambiguous")
 
-    adapter = GovernedMemoryAdapter(substrate, tenant=tenant, verifier_registry=verifier_registry)
+    adapter = CheckpointableGovernedMemoryAdapter(
+        substrate, tenant=tenant, verifier_registry=verifier_registry
+    )
     try:
-        adapter._clock = Clock(start=int(raw.get("clock_tick", 0)))
-        # GAP-SEC-08 (LD6): do NOT rebind to a private counter -- that detaches
-        # the adapter from the substrate counter and silently reverts the
-        # collision fix on the first restart. Advance the shared counter
-        # instead. `max` because a multi-tenant restore runs this once per
-        # adapter against one substrate, and plain assignment would rewind the
-        # counter below another tenant's restored identifiers.
-        adapter._ids._n = max(adapter._ids._n, int(raw.get("id_counter", 0)))
-        adapter._state_version = {str(key): int(value) for key, value in raw.get("state_version", {}).items()}
-        adapter._disputed = set(raw.get("disputed", ()))
-        adapter._tombstones = dict(raw.get("tombstones", {}))
-        fact_scope = {}
-        for key, value in raw.get("fact_scope", {}).items():
-            restored = dict(value)
-            restored["domain_refs"] = tuple(restored.get("domain_refs", ()))
-            restored["required_domain_refs"] = tuple(restored.get("required_domain_refs", ()))
-            fact_scope[key] = restored
-        adapter._fact_scope = fact_scope
-        adapter._fact_memory = {str(k): str(v) for k, v in raw.get("fact_memory", {}).items()}
-        adapter._shared_domain_members = {
-            key: set(value) for key, value in raw.get("shared_domain_members", {}).items()
-        }
-        adapter._current_fact_by_memory = dict(raw.get("current_fact_by_memory", {}))
-        adapter._rejected_values = _restore_rejections(raw.get("rejected_values", ()))
-        adapter.containment_violations = list(raw.get("containment_violations", ()))
-        adapter.events = list(raw.get("events", ()))
+        adapter.restore_checkpoint_state(raw)
     except (TypeError, ValueError) as exc:
         raise RuntimeRecoveryError("governance adapter state cannot be reconstructed") from exc
-    extension_state = raw.get("extension_state", {})
-    if not isinstance(extension_state, dict):
-        raise RuntimeRecoveryError("extension state is not a mapping")
-    adapter.extension_state = dict(extension_state)
 
     visibility = snapshot.get("visibility_snapshots", {})
     if not isinstance(visibility, dict):
@@ -347,7 +436,10 @@ class JsonRuntimeStateStore:
             previous = _read_json(self.manifest_path)
             previous_generation = int(previous.get("generation", 0))
 
-        substrate = _snapshot_substrate(adapter._substrate)
+        substrate_reader = getattr(adapter, "checkpoint_substrate", None)
+        if not callable(substrate_reader):
+            raise RuntimeRecoveryError("governed adapter does not declare checkpoint capability")
+        substrate = _snapshot_substrate(substrate_reader())
         governance = _snapshot_governance(
             adapter,
             profile=profile,
@@ -410,7 +502,9 @@ class JsonRuntimeStateStore:
         _assert_profile_compatible(persisted_profile, expected_profile, available_bindings)
 
         substrate = _restore_substrate(substrate_raw)
-        adapter, visibility = _restore_adapter(substrate, governance_raw)
+        adapter, visibility = _restore_adapter(
+            substrate, governance_raw, verifier_registry=verifier_registry
+        )
         evidence = RecoveryEvidence(
             generation=int(manifest.get("generation", 0)),
             durability_profile=DURABILITY_PROFILE,
@@ -453,7 +547,9 @@ class RestartSafeRuntime:
         store = JsonRuntimeStateStore(root)
         if store.exists():
             raise RuntimeRecoveryError("runtime state already exists; use recover()")
-        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=tenant, verifier_registry=verifier_registry)
+        adapter = CheckpointableGovernedMemoryAdapter(
+            InMemoryTemporalGraph(), tenant=tenant, verifier_registry=verifier_registry
+        )
         runtime = cls(store=store, profile=profile, adapter=adapter)
         runtime.recovery_evidence = runtime.checkpoint()
         return runtime
@@ -469,7 +565,9 @@ class RestartSafeRuntime:
     ) -> "RestartSafeRuntime":
         """ADR-037 step 4b-2, DoD 20: a recovered runtime carries host-configured
         verifier trust too, so restart is not a way to lose the channel."""
-        available = tuple(available_bindings if available_bindings is not None else profile.bindings)
+        available = tuple(
+            available_bindings if available_bindings is not None else profile.bindings
+        )
         store = JsonRuntimeStateStore(root)
         adapter, visibility, evidence = store.recover(
             expected_profile=profile,
@@ -493,8 +591,15 @@ class RestartSafeRuntime:
         self.recovery_evidence = evidence
         return evidence
 
-    def commit_proposal(self, proposal, fact_text: str, episode=None, *,
-                        evidence=None, attestation=None):
+    def commit_proposal(
+        self,
+        proposal,
+        fact_text: str,
+        episode=None,
+        *,
+        evidence=None,
+        attestation=None,
+    ):
         """Forward the governed commit, including the qualified-evidence channel.
 
         ADR-037 step 4b-2, DoD 20: a wrapper that dropped `evidence` would leave
@@ -510,8 +615,14 @@ class RestartSafeRuntime:
         self.checkpoint()
         return result
 
-    def governed_delete(self, proposal, fact_uuid: str, derived_refs: tuple[str, ...] = (),
-                        external_verification=None, evidence=None):
+    def governed_delete(
+        self,
+        proposal,
+        fact_uuid: str,
+        derived_refs: tuple[str, ...] = (),
+        external_verification=None,
+        evidence=None,
+    ):
         """Forwards the deletion channels too (ADR-037 step 4b-2, DoD 20)."""
         result = self.adapter.governed_delete(
             proposal, fact_uuid, derived_refs, external_verification, evidence
@@ -519,7 +630,9 @@ class RestartSafeRuntime:
         self.checkpoint()
         return result
 
-    def persist_visibility_snapshot(self, operation_id: str, snapshot: dict) -> RecoveryEvidence:
+    def persist_visibility_snapshot(
+        self, operation_id: str, snapshot: dict
+    ) -> RecoveryEvidence:
         if not operation_id:
             raise ValueError("visibility operation id is required")
         if not isinstance(snapshot, dict):
