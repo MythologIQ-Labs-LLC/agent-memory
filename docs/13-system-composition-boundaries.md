@@ -29,7 +29,7 @@ Agent Memory
   + Conformance
 ```
 
-[ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) proposes composing those bounded responsibilities into an explicit persistent-cognition topology:
+[ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) establishes the accepted persistent-cognition topology that composes those bounded responsibilities:
 
 ```text
 Agent Memory
@@ -62,7 +62,7 @@ Agent Memory
 +    `-- Conformance / Calibration / Evaluation
 ```
 
-Until ADR-035 is accepted, this is a proposed composition model rather than a replacement for accepted component doctrine.
+This accepted composition does not replace the component doctrine below. It composes those responsibilities into one persistent-cognition architecture while preserving their distinct failure modes and authority boundaries.
 
 The planes are responsibility groupings. They are not repositories, exclusive component categories, deployment zones, or capability-maturity claims.
 
@@ -77,7 +77,7 @@ This is one concept at the architecture level and many components at the impleme
 
 ## Cognitive Mesh composition contract
 
-Under ADR-035, the Cognitive Mesh is the proposed shared representational and handoff substrate for persistent cognition.
+Under ADR-035, the Cognitive Mesh is the accepted shared representational and handoff substrate for persistent cognition.
 
 It is not a universal truth store, a replacement for the identity/evidence/lifecycle contracts below, or a mandate that every implementation share one physical graph.
 
@@ -119,9 +119,9 @@ The executable bounded reference evidence for this seam is documented in [`progr
 
 ## Initial first-party architectural mapping
 
-ADR-035 proposes the following primary responsibility mapping while ADR-033 preserves multi-capability composition:
+ADR-035 establishes the following primary responsibility mapping while ADR-033 preserves multi-capability composition:
 
-| First-party component | Primary proposed module role | Boundary |
+| First-party component | Primary module role | Boundary |
 |---|---|---|
 | EvolveAI | Cognitive Metabolism | lifecycle/decay/consolidation signals remain proposals; native verdicts do not become PAMA authority |
 | CodeGenome | Code Reality Graph | code-domain graph/evidence does not become universal Cognitive Mesh ontology or memory authority |
