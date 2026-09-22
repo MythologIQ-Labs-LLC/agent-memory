@@ -18,7 +18,14 @@ from agentmem_ref import procedural_memory as pm  # noqa: E402
 from agentmem_ref.adapter import GovernedMemoryAdapter  # noqa: E402
 from agentmem_ref.core.evidence_qualification import EvidenceItem  # noqa: E402
 from agentmem_ref.memory import action_authority as aa  # noqa: E402
-from agentmem_ref.restart_runtime import CapabilityBinding, RestartSafeRuntime, RuntimeProfile, _restore_adapter, _snapshot_governance  # noqa: E402
+from agentmem_ref.restart_runtime import (  # noqa: E402
+    CapabilityBinding,
+    CheckpointableGovernedMemoryAdapter,
+    RestartSafeRuntime,
+    RuntimeProfile,
+    _restore_adapter,
+    _snapshot_governance,
+)
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
 ORG = "org:example"
@@ -245,7 +252,7 @@ class Restart(unittest.TestCase):
                 aa.authorize_action(restored.adapter, _action("a2"), _proposal("p1"))
 
     def test_malformed_action_state_fails_closed(self):
-        adapter = GovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=ORG)
+        adapter = CheckpointableGovernedMemoryAdapter(InMemoryTemporalGraph(), tenant=ORG)
         aa.authorize_action(adapter, _action("a1"), _proposal("p1"))
         aa.witness_execution(adapter, "a1", _observation())
         snapshot = _snapshot_governance(adapter, profile=PROFILE, visibility_snapshots={})
