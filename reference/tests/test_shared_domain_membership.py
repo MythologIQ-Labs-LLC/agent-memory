@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import policy  # noqa: E402
 from agentmem_ref.adapter import Clock, GovernedMemoryAdapter, RecallContext  # noqa: E402
-from agentmem_ref.memory.shared_membership import bootstrap_shared_domain_members  # noqa: E402
+from agentmem_ref.shared_revocation import bootstrap_shared_domain_members  # noqa: E402
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
 TENANT = "tenant-a"
