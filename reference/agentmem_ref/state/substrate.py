@@ -16,15 +16,22 @@ Reproducing the permissiveness is the entire point. A stub that were already
 safe would prove nothing about the governance layer under test: the negative
 paths need something real to escape through.
 
+Checkpoint ownership is deliberately separate from ``TemporalGraphPort``. A
+provider may satisfy the runtime graph contract without claiming restart-safe
+state export/import. Durability is therefore an explicit optional capability,
+not something the runtime infers by scraping provider internals.
+
 Stdlib only.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
-from typing import Iterable, Protocol
+from dataclasses import asdict, dataclass, field, replace
+from typing import Iterable, Mapping, Protocol, runtime_checkable
 
 UNFILTERED = None
+CHECKPOINT_SCHEMA_VERSION = "1.0.0"
+CHECKPOINT_OWNER = "in_memory_temporal_graph"
 
 
 class DeterministicIds:
@@ -37,6 +44,17 @@ class DeterministicIds:
     def next(self) -> str:
         self._n += 1
         return f"{self._prefix}-{self._n:04d}"
+
+    def checkpoint_value(self) -> int:
+        """Return durable identifier progress without exposing private state."""
+        return self._n
+
+    def restore_checkpoint_value(self, value: int) -> None:
+        """Restore durable identifier progress, never allowing negative state."""
+        parsed = int(value)
+        if parsed < 0:
+            raise ValueError("identifier checkpoint cannot be negative")
+        self._n = parsed
 
 
 @dataclass(frozen=True)
@@ -89,6 +107,24 @@ class TemporalGraphPort(Protocol):
     def search(self, query: str, group_ids: list[str] | None = UNFILTERED) -> list[tuple[Fact, float]]: ...
 
 
+@runtime_checkable
+class CheckpointableTemporalGraphPort(Protocol):
+    """Optional durable-state capability for a temporal graph provider.
+
+    This protocol intentionally does not extend ``TemporalGraphPort``. External
+    providers that do not implement checkpointing remain valid graph providers;
+    a restart-safe runtime must simply refuse to claim durability for them.
+    """
+
+    def export_checkpoint_state(self) -> dict: ...
+
+    def restore_checkpoint_state(self, snapshot: Mapping[str, object]) -> None: ...
+
+    def identifier_checkpoint(self) -> int: ...
+
+    def restore_identifier_checkpoint(self, value: int) -> None: ...
+
+
 class InMemoryTemporalGraph:
     """Permissive substrate model. Executes whatever reaches it."""
 
@@ -111,6 +147,78 @@ class InMemoryTemporalGraph:
         and the declared contract is Sprint 4's to change.
         """
         return self._ids.next()
+
+    # -- declared checkpoint capability --------------------------------
+
+    def identifier_checkpoint(self) -> int:
+        """Return substrate-owned identifier progress for restart compatibility."""
+        return self._ids.checkpoint_value()
+
+    def restore_identifier_checkpoint(self, value: int) -> None:
+        """Restore substrate-owned identifier progress."""
+        self._ids.restore_checkpoint_value(value)
+
+    def export_checkpoint_state(self) -> dict:
+        """Export canonical substrate state through the provider-owned seam."""
+        return {
+            "schema_version": CHECKPOINT_SCHEMA_VERSION,
+            "checkpoint_owner": CHECKPOINT_OWNER,
+            "episodes": [asdict(value) for _, value in sorted(self._episodes.items())],
+            "facts": [asdict(value) for _, value in sorted(self._facts.items())],
+            "write_log": [list(item) for item in self.write_log],
+            "id_counter": self.identifier_checkpoint(),
+        }
+
+    def restore_checkpoint_state(self, snapshot: Mapping[str, object]) -> None:
+        """Restore canonical substrate state, failing closed on malformed input.
+
+        ``checkpoint_owner`` and ``id_counter`` are additive to the original v1
+        wire payload. Their absence is accepted only for legacy v1 recovery;
+        the runtime supplies legacy identifier progress through the separate
+        identifier checkpoint seam before this method returns.
+        """
+        if snapshot.get("schema_version") != CHECKPOINT_SCHEMA_VERSION:
+            raise ValueError("unsupported substrate state schema")
+        owner = snapshot.get("checkpoint_owner")
+        if owner not in (None, CHECKPOINT_OWNER):
+            raise ValueError("substrate checkpoint owner mismatch")
+
+        raw_episodes = snapshot.get("episodes", [])
+        raw_facts = snapshot.get("facts", [])
+        raw_log = snapshot.get("write_log", [])
+        if not isinstance(raw_episodes, list) or not isinstance(raw_facts, list) or not isinstance(raw_log, list):
+            raise ValueError("substrate checkpoint collections are malformed")
+
+        try:
+            episodes: dict[str, Episode] = {}
+            for raw in raw_episodes:
+                if not isinstance(raw, Mapping):
+                    raise TypeError("episode checkpoint row must be a mapping")
+                episode = Episode(**dict(raw))
+                episodes[episode.uuid] = episode
+
+            facts: dict[str, Fact] = {}
+            for raw in raw_facts:
+                if not isinstance(raw, Mapping):
+                    raise TypeError("fact checkpoint row must be a mapping")
+                value = dict(raw)
+                value["episode_uuids"] = tuple(value.get("episode_uuids", ()))
+                fact = Fact(**value)
+                facts[fact.uuid] = fact
+
+            write_log: list[tuple[str, str]] = []
+            for item in raw_log:
+                if not isinstance(item, (list, tuple)) or len(item) != 2:
+                    raise ValueError("substrate write-log entry must contain operation and reference")
+                write_log.append((str(item[0]), str(item[1])))
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("substrate state cannot be reconstructed") from exc
+
+        self._episodes = episodes
+        self._facts = facts
+        self.write_log = write_log
+        if "id_counter" in snapshot:
+            self.restore_identifier_checkpoint(int(snapshot["id_counter"]))
 
     # -- writes ---------------------------------------------------------
 
