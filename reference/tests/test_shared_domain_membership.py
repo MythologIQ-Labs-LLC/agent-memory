@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from agentmem_ref import policy  # noqa: E402
 from agentmem_ref.adapter import Clock, GovernedMemoryAdapter, RecallContext  # noqa: E402
+from agentmem_ref.memory.shared_membership import bootstrap_shared_domain_members  # noqa: E402
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
 TENANT = "tenant-a"
@@ -45,7 +46,7 @@ class SharedDomainMembershipTests(unittest.TestCase):
         committed = self.adapter.commit_proposal(shared_proposal(), "shared credential rotation guidance")
         self.assertTrue(committed.committed)
         self.fact_uuid = committed.fact_uuid
-        self.adapter.set_shared_domain_members(SHARED, (ALICE,))
+        bootstrap_shared_domain_members(self.adapter, SHARED, (ALICE,))
 
     def test_current_member_is_eligible_for_normal_admission_checks(self):
         recall = self.adapter.governed_recall(
@@ -76,14 +77,15 @@ class SharedDomainMembershipTests(unittest.TestCase):
         self.assertNotIn(self.fact_uuid, recall.admitted)
         self.assertEqual(recall.refusals[self.fact_uuid], "shared_space_membership_unresolved")
 
-    def test_revocation_changes_subsequent_admission_without_rewriting_memory(self):
+    def test_bootstrap_revocation_changes_subsequent_admission_without_rewriting_memory(self):
+        """Legacy recall fixture only; production revocation is governed in #364."""
         before = self.adapter.governed_recall(
             "shared credential rotation guidance",
             RecallContext(target_domain_refs=(SHARED,), principal_ref=ALICE, purpose="security-review"),
         )
         self.assertIn(self.fact_uuid, before.admitted)
 
-        self.adapter.set_shared_domain_members(SHARED, ())
+        bootstrap_shared_domain_members(self.adapter, SHARED, ())
 
         after = self.adapter.governed_recall(
             "shared credential rotation guidance",
