@@ -1,6 +1,6 @@
 # State checkpoint ownership contract
 
-Status: **implementation profile for issue #363, including auxiliary owner contracts**
+Status: **implementation profile for issue #363, including auxiliary owner contracts and composed auxiliary checkpoint custody**
 
 This document defines who owns durable Agent Memory runtime state and what the
 `reference_file_checkpoint_v1` profile may claim after the #363 persistence
@@ -50,9 +50,9 @@ dictionaries.
 | runtime profile and interpretation digest | restart runtime | canonical interpretation binding | runtime-owned envelope/manifest |
 | checkpoint generation and payload digests | state store/runtime | canonical recovery metadata | manifest-owned; publication governed by `reference_generation_cas_v1` |
 | visibility snapshots | restart runtime | correctness state for in-flight visibility obligations | runtime-owned governance envelope |
-| projection declarations and superseded versions | `ProjectionStore` | derived correctness/deletion-residue state | owner-defined export/restore; not yet composed into `RestartSafeRuntime` |
-| write-claim records and audit evidence | `SharedWriteCoordinator` | coordination/evidence state | owner-defined export/restore; pre-crash active claims invalidate rather than revive; not yet composed into `RestartSafeRuntime` |
-| retained minimized telemetry records | `TelemetryStore` | derived operational state that may participate in deletion-completeness evidence | owner-defined export/restore of records, expiry, and key-generation identity; not yet composed into `RestartSafeRuntime` |
+| projection declarations and superseded versions | `ProjectionStore` | derived correctness/deletion-residue state | owner-defined export/restore; optionally composed through `ComposedRestartSafeRuntime` |
+| write-claim records and audit evidence | `SharedWriteCoordinator` | coordination/evidence state | owner-defined export/restore; pre-crash active claims invalidate rather than revive; optionally composed through `ComposedRestartSafeRuntime` |
+| retained minimized telemetry records | `TelemetryStore` | derived operational state that may participate in deletion-completeness evidence | owner-defined export/restore of records, expiry, and key-generation identity; optionally composed through `ComposedRestartSafeRuntime` |
 
 ## Declared substrate durability
 
@@ -132,9 +132,8 @@ its next write. See `docs/47-transactional-checkpoint-generations.md`.
 
 ## Auxiliary correctness-state contracts
 
-Issue #422 defines owner-level restart contracts before these stores are admitted
-into the general restart runtime. They are intentionally not normalized into one
-"persist everything" rule.
+Issue #422 defines owner-level restart contracts. They are intentionally not
+normalized into one "persist everything" rule.
 
 ### ProjectionStore
 
@@ -169,7 +168,7 @@ expiry metadata. The projection already carries `key_id`, which is the retained
 key-generation identity needed for rotation-safe deletion checks. Raw memory ids
 and HMAC keys remain absent.
 
-Restore therefore preserves the distinction between:
+Restore preserves the distinction between:
 
 ```text
 matching key generation available -> targeted membership can be evaluated
@@ -179,42 +178,63 @@ matching key generation unavailable -> deletion completeness remains false
 Restart cannot turn an unavailable retired key into proof that no retained
 telemetry belongs to a deleted memory.
 
-## Not yet composed into RestartSafeRuntime
+## Atomic auxiliary composition
 
-The three auxiliary owner contracts above exist **before** runtime composition.
-That sequencing is deliberate. `RestartSafeRuntime` still does not own these
-objects, and the #414 generation manifest does not yet publish them atomically
-with substrate/governance state.
+Issue #424 adds `ComposedRestartSafeRuntime` as an opt-in composition profile.
+The runtime receives explicit component factories from the host. It does not
+search process globals and it does not import higher-layer component semantics.
 
-Therefore:
+Each composed owner exports its own checkpoint snapshot. The runtime places a
+versioned auxiliary custody envelope under the governed adapter's declared
+`extension_state` seam:
 
 ```text
-owner checkpoint contract proven
-    != atomically composed runtime durability proven
-
-not currently composed
-    != safely ignorable
+runtime_auxiliary_checkpoint_v1
+    -> component id
+        -> owner snapshot
+        -> snapshot digest
 ```
 
-The next integration slice may add auxiliary payload ownership to the generation
-checkpoint only where the runtime actually composes the corresponding feature.
-It must preserve #414 generation/CAS semantics and the owner-specific restart
-rules above.
+That custody envelope is part of the normal governance payload. Therefore the
+existing #414 transaction already provides the publication boundary:
+
+```text
+auxiliary owner snapshots
+    -> governed extension_state
+    -> governance payload digest
+    -> runtime manifest
+    -> generation journal
+```
+
+No parallel auxiliary commit exists. A stale writer that cannot publish the
+normal governance generation also cannot publish newer auxiliary state. A torn
+or mixed-generation governance payload fails the existing governance digest
+check before auxiliary recovery begins.
+
+The persisted component-id set must exactly match the host-declared recovery
+factories. Adding, removing, or renaming a composed auxiliary owner requires an
+explicit migration/profile transition; recovery does not fabricate empty state.
+A legacy checkpoint with no auxiliary custody envelope may still recover through
+plain `RestartSafeRuntime`, but it cannot be promoted into a composed runtime by
+supplying factories after the fact.
+
+The #417 migration contract already treats adapter `extension_state` as a
+protected governance checkpoint field. Auxiliary custody is therefore bound to
+migration rather than silently stripped by a representation transform.
 
 ## What remains open under #363
 
-The ownership, single-host generation-publication, governed migration, and
-owner-level auxiliary-state slices remove the most direct persistence defects.
-They do not satisfy the full #363 exit condition.
+The ownership, single-host generation-publication, governed migration, public
+transaction seam, auxiliary owner contracts, and atomic auxiliary composition
+remove the direct reference-profile persistence defects identified in the audit.
+They do not by themselves qualify a production storage provider.
 
 Still required:
 
-1. compose correctness-bearing auxiliary stores into the transactional generation
-   checkpoint as those features enter the RC runtime;
-2. qualify at least one non-toy durable provider against the contract;
-3. add an external monotonic anchor if protection against rollback of the entire
+1. qualify at least one non-toy durable provider against the contract;
+2. add an external monotonic anchor if protection against rollback of the entire
    state directory is a product requirement;
-4. select and qualify a production transaction mechanism when a production
+3. select and qualify a production transaction mechanism when a production
    durable substrate is chosen.
 
 No database should be selected as a substitute for those obligations.
@@ -240,10 +260,15 @@ The ownership/restart contracts are acceptable when tests prove:
 - terminal write-claim audit/receipt evidence survives owner-level recovery;
 - `TelemetryStore` round-trips retained projections and expiries while preserving
   missing-key deletion uncertainty;
+- composed auxiliary owners recover from the same committed generation as
+  substrate/governance/visibility state;
+- stale writers and mixed-generation payloads cannot partially publish auxiliary
+  state;
+- composition drift and implicit promotion from legacy checkpoints fail closed;
 - incompatible auxiliary checkpoint schemas/owners refuse rather than coerce;
 - existing retain/correct/recall/restart, deletion-after-restart, action-authority
-  restart, configured-restart, identifier-progress, and full reference regression
-  evidence remains green.
+  restart, configured-restart, identifier-progress, migration, and full reference
+  regression evidence remains green.
 
 Transactional generation acceptance evidence is defined separately in
 `docs/47-transactional-checkpoint-generations.md`.
