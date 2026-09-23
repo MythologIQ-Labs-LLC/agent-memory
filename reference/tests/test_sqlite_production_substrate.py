@@ -226,11 +226,51 @@ class SQLiteRestartRuntimeTests(unittest.TestCase):
 
         recovered = self._recover()
         try:
-            same = recovered.adapter.governed_recall("deploy window", _context())
+            same = recovered.governed_recall("deploy window", _context())
             self.assertEqual(same.admitted, [fact_uuid])
-            foreign = recovered.adapter.governed_recall("deploy window", _context("project-beta"))
+            foreign = recovered.governed_recall("deploy window", _context("project-beta"))
             self.assertNotIn(fact_uuid, foreign.admitted)
             self.assertEqual(foreign.refusals[fact_uuid], "required_isolation_domain_missing")
+        finally:
+            recovered.close()
+
+        recovered_again = self._recover()
+        try:
+            recall_events = [
+                event
+                for event in recovered_again.adapter.events
+                if event.get("event_type") == "memory.recall"
+            ]
+            self.assertEqual(len(recall_events), 2)
+        finally:
+            recovered_again.close()
+
+    def test_governed_recall_commits_audit_generation_and_id_progress(self) -> None:
+        runtime = self._create()
+        retained = runtime.commit_proposal(
+            _proposal("proposal:initial", operation="promotion"),
+            "deploy window is Thursday",
+        )
+        before_generation = runtime.recovery_evidence.generation
+        before_ids = runtime.substrate.identifier_checkpoint()
+        result = runtime.governed_recall("deploy window", _context())
+        self.assertEqual(result.admitted, [retained.fact_uuid])
+        self.assertEqual(runtime.recovery_evidence.generation, before_generation + 1)
+        self.assertGreater(runtime.substrate.identifier_checkpoint(), before_ids)
+        runtime.close()
+
+        recovered = self._recover()
+        try:
+            recall_events = [
+                event
+                for event in recovered.adapter.events
+                if event.get("event_type") == "memory.recall"
+            ]
+            self.assertEqual(len(recall_events), 1)
+            self.assertEqual(
+                recovered.recovery_evidence.generation,
+                before_generation + 1,
+            )
         finally:
             recovered.close()
 
@@ -256,7 +296,7 @@ class SQLiteRestartRuntimeTests(unittest.TestCase):
 
         recovered = self._recover()
         try:
-            current = recovered.adapter.governed_recall("deploy window", _context())
+            current = recovered.governed_recall("deploy window", _context())
             self.assertEqual(current.admitted, [correction.fact_uuid])
             self.assertEqual(current.refusals[initial.fact_uuid], "superseded_not_current")
             history = recovered.adapter.rejected_value_history(MEMORY, "deploy window is Thursday")
@@ -290,7 +330,7 @@ class SQLiteRestartRuntimeTests(unittest.TestCase):
 
         recovered = self._recover()
         try:
-            result = recovered.adapter.governed_recall("deploy window", _context())
+            result = recovered.governed_recall("deploy window", _context())
             self.assertNotIn(retained.fact_uuid, result.admitted)
             self.assertEqual(result.refusals[retained.fact_uuid], "tombstoned")
             self.assertIsNotNone(recovered.adapter.tombstone(retained.fact_uuid))
@@ -327,6 +367,25 @@ class SQLiteRestartRuntimeTests(unittest.TestCase):
         finally:
             recovered.close()
 
+    def test_extension_state_is_generation_bound_and_survives_restart(self) -> None:
+        runtime = self._create()
+        runtime.adapter.extension_state["qualification-owner"] = {
+            "schema_version": "1.0.0",
+            "state": {"cursor": 7, "status": "current"},
+        }
+        committed_generation = runtime.checkpoint().generation
+        runtime.close()
+
+        recovered = self._recover()
+        try:
+            self.assertEqual(
+                recovered.adapter.extension_state["qualification-owner"]["state"]["cursor"],
+                7,
+            )
+            self.assertEqual(recovered.recovery_evidence.generation, committed_generation)
+        finally:
+            recovered.close()
+
 
 class SQLiteConfiguredCompositionTests(unittest.TestCase):
     def test_active_rc_composition_recovers_over_sqlite_and_routes_remain_non_authoritative(self) -> None:
@@ -351,23 +410,45 @@ class SQLiteConfiguredCompositionTests(unittest.TestCase):
                 plan=_plan(),
                 verifier_registry=registry_for(_corpus()),
             )
+            self.assertGreaterEqual(
+                recovered.durable_runtime.base.recovery_evidence.generation,
+                first_generation,
+            )
+            before_recall = recovered.durable_runtime.base.recovery_evidence.generation
+            result = recovered.multi_route_recall(
+                "deploy window",
+                _context(),
+                logical_memory_refs=(MEMORY,),
+            )
+            self.assertIn(retained.fact_uuid, result.admitted)
+            self.assertEqual(result.authority_effect, "none")
+            self.assertTrue(
+                all(hit.authority_effect == "none" for hits in result.route_hits.values() for hit in hits)
+            )
+            self.assertEqual(
+                recovered.durable_runtime.base.recovery_evidence.generation,
+                before_recall + 1,
+            )
+            recovered.close()
+
+            recovered_again = SQLiteConfiguredCompositionRuntime.recover(
+                root,
+                plan=_plan(),
+                verifier_registry=registry_for(_corpus()),
+            )
             try:
-                self.assertGreaterEqual(
-                    recovered.durable_runtime.base.recovery_evidence.generation,
-                    first_generation,
-                )
-                result = recovered.multi_route_recall(
-                    "deploy window",
-                    _context(),
-                    logical_memory_refs=(MEMORY,),
-                )
-                self.assertIn(retained.fact_uuid, result.admitted)
-                self.assertEqual(result.authority_effect, "none")
                 self.assertTrue(
-                    all(hit.authority_effect == "none" for hits in result.route_hits.values() for hit in hits)
+                    any(
+                        event.get("event_type") == "memory.recall"
+                        for event in recovered_again.adapter.events
+                    )
+                )
+                self.assertEqual(
+                    recovered_again.durable_runtime.base.recovery_evidence.generation,
+                    before_recall + 1,
                 )
             finally:
-                recovered.close()
+                recovered_again.close()
 
 
 if __name__ == "__main__":
