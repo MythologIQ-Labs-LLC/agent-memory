@@ -4,52 +4,82 @@
 
 | Attribute | Value |
 |-----------|-------|
-| **Last Reconciled** | 2026-09-16 |
-| **Evidence Boundary** | `main` `7d7f86aeef8a80da6fab0e93c87153c33d8f3b78` |
-| **Phase** | SUBSTANTIATED THROUGH PUBLIC API 1.2.0 AND POST-1.2 AUTHORITY CLEANUP; production state and external proof remain open |
-| **Latest Ledger Entry** | Entry #59 (amendment to Sprint 4c-2 import/dependency behavior) |
-| **Latest Session Seal** | Entry #58 (Sprint 4c-2, contract 1.2.0, ADR-038) |
+| **Last Reconciled** | 2026-09-23 |
+| **Evidence Boundary** | `main` `0cb98c4d5262338886d82f3c1c6abf6e9c743d10` |
+| **Phase** | PRE-RC: usable-runtime composition, retrieval evidence, and production-substrate qualification |
 | **Reference Package** | `agent-memory-reference` 0.2.0 |
 | **Public API Contract** | 1.2.0 |
+| **Production-qualified canonical substrates** | 0 |
 
-This document is a current-state projection, not an additional authority source. Canonical decisions live in the ADRs and `docs/META_LEDGER.md`; unresolved work lives in `docs/BACKLOG.md` and the linked GitHub issues/PRs.
+This document is a current-state projection, not an additional authority source. Canonical architectural decisions live in the ADRs and `docs/META_LEDGER.md`. Current implementation work lives in `docs/BACKLOG.md` and live GitHub issues/PRs.
 
 ---
 
 ## Current Reality
 
-### Shipped / substantiated
+### Architecture and authority
 
-- ADR-037 fail-closed review is implemented in the Python reference runtime. Assertion alone no longer discharges `require_review`; parked proposals have an evidence/remediation path, evidence qualification and dependence grouping exist, and resumption remains evaluator-controlled.
-- Public API contracts `1.0.0`, `1.1.0`, and `1.2.0` landed through PRs #394, #397, and #398.
-- The Python public surface has schema-backed boundary forms for proposal, decision/approval, commit, retrieval candidate, recall admission, history, posture, action authority, and execution evidence.
-- ADR-038 is Accepted. `action_execution` is a PAMA operation distinct from `authority_change`; action authority and execution evidence are bound to governed decisions.
-- Package layout is layered (`core < state < contracts < runtime < memory < api < crg < harness`) with compatibility aliases for the prior flat import surface.
-- Schema resolution is wheel-safe through the packaged `_schemas/` copy; the legacy `data-files` resolver path is retired.
-- Ledger SESSION SEAL trees through the implemented seal-anchor work are represented under `refs/seals/` rather than left as unreachable `write-tree` objects.
+- ADR-035 is Accepted and the top-level architecture documents now describe Agent Memory as one governed cognitive framework rather than a collection of adjacent memory services.
+- Public API contract `1.2.0` remains the canonical versioned consumer contract.
+- Issue #364 is closed as completed. Shared-domain membership mutation and crossing consequences now use governed authority paths; the embedding host remains the declared authenticator for `RecallContext.principal_ref` unless a future ADR changes that trust boundary.
+- Candidate retrieval, ranking, graph/provenance relations, estimator confidence, and provider-native scores do not create recall or mutation authority.
 
-### Post-1.2.0 authority consistency sweep
+### Reference persistence
 
-Three inconsistencies discovered after the public API boundary were corrected and merged:
+The original persistence audit tracked by #363 has been materially remediated and #363 is closed. The reference durability profile now includes:
 
-- **#395 / PR #400**: approval, commit, and delete now use consistent attestation dispatch. An attestation that can discharge `require_external_verification` is no longer silently ignored by commit when qualified evidence is absent; ordinary `require_review` remains parked.
-- **#401 / PR #402**: `domain_schema_mutation` no longer carries a duplicate pre-ADR-037 assertion discharge. Its versioned base cells flow through shared PAMA floors, evidence qualification, and bound attestation authority.
-- **#403 / PR #406**: exact and semantic rejected-value reversal no longer depend on caller-set `review_satisfied` / `approval_refs`. Reversal now requires qualified correction evidence plus separate proposal-bound external authority. Re-admission authority metadata survives restart.
+- explicit state-owner checkpoint contracts rather than restart-runtime private-field scraping;
+- substrate-owned identifier progress;
+- compare-and-commit generation semantics;
+- process locking and a hash-chained commit journal;
+- fail-closed torn-write / stale-writer behavior;
+- governed checkpoint/profile migration and rollback evidence;
+- a public checkpoint-transaction support seam;
+- owner restart contracts for projection state, write claims, and telemetry;
+- atomic composition of auxiliary correctness state into the same checkpoint generation;
+- restart-safe composed epistemic state.
 
-The inconsistency sweep did not weaken the evidence ladder or make estimator similarity authoritative.
+This proves the **reference persistence semantics**. It does not establish a production storage choice. Issue #427 owns qualification of the first production-credible canonical substrate.
 
-### Latest recorded verification
+### Multi-memory composition
 
-PR #406 was validated against `main` immediately before merge:
+The RC composition work is no longer limited to isolated reference modules.
 
-- **1208 tests run, 0 failures, 19 skipped** in the full `Validate Doctrine Evidence` discovery;
-- Restart-Safe Runtime green, including preservation of readmission authority across recovery;
-- Runtime Configuration, Capability Behavior, Structural Mutation Governance, Write-to-Readable Visibility, and Authority Laundering Evidence green;
-- Operational and Long Horizon memory benchmarks green;
-- Cedar, OPA, Agent Manifest, TRACE/cMCP, and External Evidence Contract comparator workflows green;
-- the complete PR workflow matrix finished successfully before merge.
+- Canonical semantic memory and epistemic belief memory participate in one restart-safe composition path.
+- Shared source/evidence provenance can produce distinct semantic and epistemic consequences without collapsing their identity, lifecycle, or authority semantics.
+- Epistemic confidence cannot overwrite canonical semantic truth or bypass review.
+- Procedural, predictive, Cognitive Mesh, CRG/CodeGenome, and other bounded capabilities remain implemented/evidenced surfaces, but not every declared capability is required to be productionized for RC1.
 
-These are repository-level verification claims. They do **not** establish production-memory correctness, deployment durability, or field efficacy.
+### Retrieval
+
+The current RC runtime has three deterministic candidate routes behind one governed admission boundary:
+
+1. lexical candidate retrieval;
+2. exact logical-identity retrieval;
+3. shared-evidence/provenance-neighbor retrieval when the substrate exposes that optional capability.
+
+Per-route provenance is retained, candidates are deduplicated, and deterministic ranking occurs only among admitted candidates. A score of `1.0`, relational reachability, or multi-route agreement cannot repair a scope/currentness refusal.
+
+The internal versioned retrieval-quality fixture records a bounded baseline:
+
+```text
+lexical-only admitted recall: 3 / 7 = 0.428571
+composed admitted recall:     7 / 7 = 1.0
+admitted precision:           1.0 in both systems
+governance failures:          0 in the bounded fixture
+```
+
+This is internal synthetic evidence, not a LoCoMo or LongMemEval result.
+
+### Public benchmark work
+
+Issue #437 / PR #438 is the current retrieval-benchmark implementation front. It adds an opt-in query-driven relational baseline and a retrieval-only LoCoMo evidence harness so natural-language questions do not depend on caller-supplied memory IDs.
+
+PR #438 is **not yet merge-ready**. Its first exact-head matrix exposed failures in the new query-driven/benchmark slice and must be corrected and revalidated before merge. No LoCoMo answer-quality or Jev-Mem parity claim exists yet.
+
+### Repository/operator tooling
+
+PR #389 merged on 2026-09-23 as `0cb98c4d5262338886d82f3c1c6abf6e9c743d10`, adding the reusable GitHub governance + memory efficacy review skill and workbook template.
 
 ---
 
@@ -62,11 +92,11 @@ These are repository-level verification claims. They do **not** establish produc
 | `jsonschema` | `>=4.20,<5` | hard dependency |
 | `cryptography` | `>=50,<51` | hard dependency |
 | `rfc8785` | `>=0.1,<0.2` | hard dependency |
-| `agent-manifest` | `==0.11.2` | optional `comparators` extra; PR #405 proposes 0.12.0 |
-| `agentrust-trace` | `==0.9.0` | optional `comparators` extra; PR #404 proposes 0.10.0 |
-| Graphiti / Kuzu path | non-canonical optional substrate path | production persistence unresolved under #363 |
+| `agent-manifest` | `==0.11.2` | optional comparator dependency; 0.12.0 is queued for coordinated qualification under #440 |
+| `agentrust-trace` | `==0.9.0` | optional comparator dependency; 0.10.0 is queued for coordinated qualification under #440 |
+| Graphiti / Kuzu path | experimental / non-canonical production choice | current Kuzu-backed adapter is not production-qualified |
 
-Dependency PRs #404 and #405 are qualification work, not automatic maintenance merges. They change evidence/comparator dependencies and must preserve the repository's pinned interoperability claims.
+Issue #440 owns the next Agent Manifest + TRACE requalification as one version-exact interoperability change. Bare Dependabot PRs #404/#405 are closed and must not be merged independently; #375 established why a one-file bump can silently lose qualification coverage through skipped pin-identity tests.
 
 ---
 
@@ -74,43 +104,57 @@ Dependency PRs #404 and #405 are qualification work, not automatic maintenance m
 
 | Surface | State | Notes |
 |---------|-------|-------|
-| Python public API | **1.2.0 / active** | Nine classified surface functions; schema-backed envelopes; #362 closed as complete |
-| Python governed adapter | **active / authority sweep complete** | #395, #401, and #403 closed; remaining recall/scope authority work is #364 |
-| Recall / scope crossing | **incomplete** | embedding host authentication remains the declared principal boundary; shared-domain membership mutation and durable scope-widening consequence binding remain under #364 |
-| Restart/checkpoint runtime | **reference-only** | in-memory-specific/private-state coupling remains; #363 is the production-state blocker |
-| JS runtime adapter | **held** | separate contract, no PAMA parity; Sprint 4b vetoed because a direct port would make corrections non-committable without a discharge route |
-| DashClaw correction path | **parked by design** | #392 requires an evaluator-held transition rule corpus and a rule-authorship decision |
-| External proving | **incomplete** | #332 and #361 remain open |
-| Field efficacy | **designed, not measured** | #387/#388 define the profile/case-study path; PR #389 is supporting tooling, not efficacy evidence |
+| Python public API | **1.2.0 / active** | schema-backed stages for proposal, approval, commit, recall, history, posture, action authority, and execution evidence |
+| Python governed adapter | **active** | post-1.2 authority sweep and #364 work complete |
+| Host principal authentication | **external boundary by design** | embedding host authenticates; Agent Memory records/evaluates the supplied principal |
+| Restart/checkpoint runtime | **reference-qualified** | strong reference durability semantics; production canonical substrate still unqualified under #427 |
+| Multi-memory composition | **RC reference slice active** | semantic + epistemic composition is restart-safe and type-preserving |
+| Multi-route recall | **RC reference slice active** | lexical + exact identity + shared-evidence neighbors; one governed admission boundary |
+| Query-driven public-benchmark recall | **in development** | #437 / PR #438; not yet merge-ready |
+| Developer ergonomic facade | **missing RC gate** | canonical `AgentMemory.open()/remember()/recall()/...` facade has not landed |
+| JS runtime adapter | **held** | prior parity port remains intentionally held rather than creating an incomplete correction path |
+| DashClaw live conformance | **blocked external gate** | #361 waits on authorized live Cloudflare/DashClaw execution; repository-side implementation is already on `main` |
+| Field efficacy | **longitudinal / not RC blocker** | #388 waits on T1/T2/T3 field evidence; #389 tooling is merged |
 
 ---
 
 ## Current Open Work
 
-GitHub issue/PR state is authoritative. The active program currently consists of:
+GitHub issue/PR state is authoritative. The live work surfaces are now intentionally smaller:
 
-| Item | Role in current program |
-|------|-------------------------|
-| #364 | **Active development front**: govern shared-domain membership mutation and bind authorized scope expansion to the exact durable consequence |
-| #363 | **Next major runtime tranche**: explicit production state/persistence contract and non-toy durable implementation boundary |
-| #392 | DashClaw correction discharge route / transition-rule authority; held pending rule-authorship decision |
-| #361 | Live DashClaw conformance through a minimal Cloudflare provider |
-| #332 | QOR Agent / Cloudflare governed-memory proving ground |
-| #387 | Governed canonical knowledge artifact profile and Git/document adapter |
-| #388 | Longitudinal governed-memory field efficacy benchmark |
-| PR #389 | Governance-memory efficacy review skill; must be rebased/revalidated against current `main` |
-| PR #404 | Qualify `agentrust-trace` 0.10.0 against the current comparator/evidence contract |
-| PR #405 | Qualify `agent-manifest` 0.12.0 against the current comparator/evidence contract |
+| Item | Current role |
+|------|--------------|
+| #410 | **RC umbrella**: compose the accepted architecture into a usable release candidate |
+| #427 | **RC production-durability gate**: qualify one production-credible canonical substrate |
+| #437 / PR #438 | **Active retrieval front**: query-driven relational recall + LoCoMo evidence-retrieval diagnostic |
+| #440 | **Dependency qualification**: re-qualify `agent-manifest` 0.12.0 + `agentrust-trace` 0.10.0 together |
+| #408 | **Longitudinal case study**: semantic-recall / canonical-truth pressure case; not an RC core blocker |
+| #361 | **Blocked external**: live Cloudflare/DashClaw conformance run |
+| #388 | **Longitudinal external evidence**: field-efficacy measurements; not an RC blocker |
 
-The `RecallContext.principal_ref` caller field is **not** itself an unresolved local-auth bug under the current architecture. The embedding host is the declared authenticator and the adapter records/evaluates the supplied principal. Changing that trust boundary would require an explicit architecture decision rather than quietly growing an identity system inside the memory adapter.
+### Recently retired stale work
+
+- #364 closed completed after governed crossing/shared-domain authority work.
+- #363 closed completed for the original persistence audit defects; #427 is the production-substrate successor.
+- #332 closed `not_planned` in this repository because remaining work is live QOR proving-ground execution, not Agent Memory implementation.
+- #387 closed `not_planned` for the current cycle; reopen when the Git/document knowledge profile is actively resumed.
+- #392 closed `not_planned` until DashClaw establishes TransitionRuleCorpus authorship/ownership.
+- PR #389 merged after its long-standing full-green state was rechecked.
+- PRs #404/#405 closed as superseded by coordinated qualification issue #440.
 
 ---
 
-## Branch / Worktree Hygiene
+## Repository Hygiene
 
-Current work branches should be judged by divergence, not age. In particular, historical branches such as `feat/agent-memory-genesis`, `implementation/332-checkpoint-behavioral-assessment`, and `research/275-code-reality-runtime` must be compared against `main` for unique commits before deletion.
+Open work must represent one of three things:
 
-The current documentation reconciliation branch and open feature/dependency branches are work surfaces, not current-state authority. `main`, Tier 1 docs, ADRs, ledger, and live GitHub issue/PR state remain authoritative.
+1. active implementation with an executable next step;
+2. a live external/longitudinal gate whose blocker is explicit;
+3. a dependency qualification that cannot be treated as a routine version bump.
+
+Future work without a scheduled tranche should be closed/deferred and reopened when it becomes executable rather than accumulating indefinitely in the active queue.
+
+Historical branches must still be checked for unique commits before deletion. Branch age alone is not disposal evidence.
 
 ---
 
@@ -118,31 +162,33 @@ The current documentation reconciliation branch and open feature/dependency bran
 
 | Indicator | Status | Basis |
 |-----------|--------|-------|
-| Governance decision model | **STRONG** | ADR-037 implemented; evidence/authority separation explicit |
-| Python public contract | **STRONG** | Contract 1.2.0, schema-backed surface, #362 closed |
-| Post-1.2 semantic consistency | **STRONG AT CURRENT BOUNDARY** | #395, #401, #403 closed with full validation |
-| Reference test/evidence corpus | **STRONG AT RECORDED BOUNDARY** | 1208 run / 0 fail / 19 skip on PR #406 final head; full workflow matrix green |
-| Recall/scope authority | **INCOMPLETE** | #364 |
-| Production persistence | **BLOCKING PRODUCTION CLAIM** | #363 |
-| JS parity | **HELD INTENTIONALLY** | Sprint 4b audit veto |
-| External conformance | **INCOMPLETE** | #332, #361 |
-| Field efficacy | **UNPROVEN** | #387, #388 |
-| Dependency interoperability | **QUALIFICATION PENDING** | PRs #404, #405 |
-| Control-plane documentation | **RECONCILED ON BRANCH** | this documentation-only cleanup must still merge |
+| Canonical architecture | **STRONG** | ADR-035 Accepted and reconciled across top-level architecture docs |
+| Governance / PAMA boundary | **STRONG AT CURRENT RC BOUNDARY** | #364 complete; estimator/retrieval outputs remain non-authoritative |
+| Python public contract | **STRONG** | contract 1.2.0 and schema-backed surface |
+| Reference persistence | **STRONG REFERENCE EVIDENCE** | owner contracts, CAS/lock/journal, migration, rollback, auxiliary composition |
+| Production persistence | **OPEN RC GATE** | #427; zero production-qualified canonical substrates |
+| Multi-memory composition | **IMPLEMENTED RC SLICE** | semantic + epistemic restart-safe composition |
+| Retrieval composition | **IMPLEMENTED RC SLICE** | three deterministic routes, single governed admission boundary |
+| Retrieval measurement | **IMPROVING** | internal 3/7 -> 7/7 bounded baseline; LoCoMo evidence diagnostic in #438 |
+| Developer ergonomics | **INCOMPLETE** | canonical small facade remains missing |
+| Public benchmark parity | **INCOMPLETE** | no official LoCoMo QA / LongMemEval result yet |
+| External conformance | **BLOCKED OUTSIDE REPO** | #361 live Cloudflare/DashClaw run |
+| Field efficacy | **UNPROVEN LONGITUDINALLY** | #388 |
 
 ---
 
 ## Next Actions
 
-Sequence work in this order:
+Sequence the current implementation work as follows:
 
-1. **Close #364 scope-authority defects without changing the declared host-authentication boundary.** First bind a successful governed crossing decision to the exact durable scope mutation; then replace raw shared-domain membership mutation with a governed transition and auditable persistence.
-2. **Take #363 as the next major runtime tranche.** Define an explicit persistence/checkpoint/state-provider contract before selecting or wiring a production database. Eliminate private-attribute scraping as the runtime state interface, define transactional generation semantics, persist required auxiliary state, and make migration/version behavior explicit.
-3. **Qualify dependency PRs #404 and #405 separately.** Re-run the relevant external/comparator evidence rather than treating Dependabot green-ness as semantic compatibility.
-4. **Resume external proving after the state boundary is credible.** #332 and #361 provide the live host/provider proof; keep #392 parked until rule authorship is explicit.
-5. **Rebase/revalidate PR #389 and execute #387/#388** to move from conformance evidence toward field efficacy. Do not infer efficacy from repository tests alone.
-6. **Inspect historical branches for unique commits before cleanup/deletion.** Branch age is not evidence that work is disposable.
+1. **Repair and revalidate #438.** Preserve the default recall behavior while proving the opt-in query-driven relational path and LoCoMo evidence harness.
+2. **Advance #427.** Select and qualify one production-credible canonical substrate from evidence rather than preference.
+3. **Implement the RC developer facade.** Wrap the existing public contract; do not create a friendlier bypass around PAMA, scope, evidence, or recall admission.
+4. **Land one end-to-end RC cognitive-memory fixture** spanning retain/composition/retrieval/admission/correction/restart/forgetting/history.
+5. **Run external/public benchmark evidence** only after the benchmark adapter is stable; keep retrieval metrics, answer quality, performance, and governance measurements separate.
+6. **Execute #440 as one coordinated dependency qualification.** Re-enumerate every version/source binding and prove the version-identity checks execute rather than skip.
+7. Keep #361, #388, and #408 out of the active implementation critical path until their external/longitudinal evidence gates can actually move.
 
 ---
 
-*Last reconciled against `main` `7d7f86aeef8a80da6fab0e93c87153c33d8f3b78` on 2026-09-16.*
+*Last reconciled against `main` `0cb98c4d5262338886d82f3c1c6abf6e9c743d10` on 2026-09-23.*
