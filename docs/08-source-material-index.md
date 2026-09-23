@@ -66,14 +66,18 @@ External standards, research, and implementations may support, challenge, benchm
 The repository distinguishes:
 
 - **native doctrine**: contributor-authored doctrine owned and maintained by Agent Memory
+- **first-party implementation ancestry**: same-owner prior work that may be harvested into native Agent Memory modules under ADR-036
+- **domain evidence source**: a specialized system that can supply domain observations without owning generic memory machinery
 - **provenance**: where an external idea, implementation, proposal, or evidence claim came from
 - **accessibility**: whether contributors can inspect that source directly
-- **rights status**: what license, permission, authorship, or uncertainty governs reuse of its expression
-- **reuse mode**: citation, independent synthesis, author-originated reuse, licensed reuse, or permission-based reuse
+- **rights status**: what license, permission, authorship, ownership, or uncertainty governs reuse of its expression
+- **reuse mode**: citation, independent synthesis, same-owner adoption, author-originated reuse, licensed reuse, or permission-based reuse
 
 A related public artifact must not be substituted for a private canonical source merely to make the index look complete.
 
 Unknown external rights status defaults to **citation and independent synthesis only**.
+
+Same-owner components are governed by [`ADR-036`](adr/ADR-036-same-owner-components-are-first-party-modules.md): implementation ancestry may be adopted into Agent Memory without inventing an internal provider or attribution requirement. Lineage remains recorded because provenance is useful, not because the originating repository owns the adopted Agent Memory module.
 
 ## External and related provenance systems
 
@@ -81,10 +85,10 @@ Unknown external rights status defaults to **citation and independent synthesis 
 |---|---|---|---|
 | UOR Framework issue #2 | [Thermodynamic Memory Lifecycle via Fiber Saturation](https://github.com/UOR-Foundation/UOR-Framework/issues/2) | Public; issue opened by Kevin R. Knapp. Record contributor-originated provenance separately from the repository's MIT software license. | saturation-derived decay, crystallization, O(1) exact-address transition |
 | UOR issue comment by `maurathat` | [Decay Calibration Protocol comment](https://github.com/UOR-Foundation/UOR-Framework/issues/2#issuecomment-4765576921) | Public third-party comment; link and independently synthesize by default. Do not assume the repository MIT license governs the comment prose. | decay calibration protocol, saturation as routing, certification distinction |
-| EvolveAI | [Autopoietic Memory Theory](https://github.com/MythologIQ-Labs-LLC/EvolveAI/blob/main/docs/AUTOPOIETIC_MEMORY_THEORY.md) · [repository](https://github.com/MythologIQ-Labs-LLC/EvolveAI) | Same owner (MythologIQ-Labs-LLC). Adoptable wholesale without restriction or attribution obligation per [ADR-036](adr/ADR-036-same-owner-components-are-first-party-modules.md); listed here for lineage, not as a reuse constraint. | autopoietic memory, L1/L2/L3 tiers, CMHL, REM synthesis, Shadow Genome |
-| CodeGenome | [CodeGenome](https://github.com/MythologIQ-Labs-LLC/CodeGenome) | Same owner (MythologIQ-Labs-LLC). Adoptable wholesale without restriction or attribution obligation per [ADR-036](adr/ADR-036-same-owner-components-are-first-party-modules.md); listed here for lineage, not as a reuse constraint. | content-addressed code reality graph, overlays, confidence fusion, provenance |
-| COREFORGE | Canonical historical source is private. [GG-CORE](https://github.com/MythologIQ-Labs-LLC/GG-CORE) is a public successor/continuation, not the originating source. | Private historical provenance; do not expose private content or mislabel the successor as original provenance. GG-CORE is Apache-2.0. | local-first product runtime, Vault, Neurospace, governed agent modules |
-| FailSafe / Arbiter | [VerdictArbiter implementation](https://github.com/MythologIQ-Labs-LLC/FailSafe/blob/main/FailSafe/extension/src/sentinel/VerdictArbiter.ts) · [repository](https://github.com/MythologIQ-Labs-LLC/FailSafe) | Public; Apache-2.0 repository. Link implementation directly; copied/adapted material must satisfy applicable license obligations. | evidence capture, policy gates, approval boundaries, audit trails |
+| EvolveAI | [Autopoietic Memory Theory](https://github.com/MythologIQ-Labs-LLC/EvolveAI/blob/main/docs/AUTOPOIETIC_MEMORY_THEORY.md) · [repository](https://github.com/MythologIQ-Labs-LLC/EvolveAI) | Same owner (MythologIQ-Labs-LLC). First-party implementation ancestry and behavioral/test oracle; adoptable into Agent Memory under ADR-036. | vector/semantic retrieval, temporal memory, lifecycle/metabolism, tier routing, decay, consolidation, REM synthesis, Shadow Genome |
+| CodeGenome | [CodeGenome](https://github.com/MythologIQ-Labs-LLC/CodeGenome) | Same owner (MythologIQ-Labs-LLC). First-party implementation ancestry plus optional code-domain evidence source; adoptable into Agent Memory under ADR-036. | code reality observations, embeddings, graph traversal, provenance, impact propagation, continuous evaluation |
+| COREFORGE | Canonical historical source is private. GG-CORE is a separate compute project consumed by COREFORGE, **not** the originating source and not a Vault/Neurospace successor. | Same-owner private first-party product/runtime ancestry. Do not expose private source merely for public-link completeness. | memory domains, Vault/Neurospace, context assembly, graph recall, lineage, mutation boundaries, local-first product behavior |
+| FailSafe / Arbiter | [VerdictArbiter implementation](https://github.com/MythologIQ-Labs-LLC/FailSafe/blob/main/FailSafe/extension/src/sentinel/VerdictArbiter.ts) · [repository](https://github.com/MythologIQ-Labs-LLC/FailSafe) | Same owner. First-party governance implementation ancestry; adoption into Agent Memory remains subject to architectural fit, not an invented cross-repo attribution constraint. | evidence capture, policy gates, approval boundaries, audit trails |
 
 External or private projects should appear here only when they add specific provenance, implementation, challenge, or evidence value. Mere conceptual adjacency is not enough.
 
@@ -201,65 +205,89 @@ Doctrine placement:
 
 ## EvolveAI
 
+**Relationship:** first-party implementation ancestry + behavioral/test oracle. No EvolveAI runtime is required for native Agent Memory ownership.
+
 Primary provenance:
 
 - [Autopoietic Memory Theory](https://github.com/MythologIQ-Labs-LLC/EvolveAI/blob/main/docs/AUTOPOIETIC_MEMORY_THEORY.md)
 - [EvolveAI repository](https://github.com/MythologIQ-Labs-LLC/EvolveAI)
 
-Relevant ideas:
+Relevant mechanisms and ideas:
 
-- autopoietic memory system
-- 5-phase metabolic lifecycle
-- L1 transient cache, L2 temporal graph, L3 UOR vault
+- vector representations and semantic candidate retrieval
+- exact/content-addressed recall
+- temporal graph behavior
+- L1/L2/L3 tiering and routing
 - memory tier score
-- cryptographic memory half-life
-- Shadow Genome
+- cryptographic memory half-life / decay behavior
+- reinforcement, consolidation, pruning, and promotion pressure
+- REM-style synthesis
+- restart/continuity behavior
+- Shadow Genome / failure-memory concepts
 
-Doctrine placement:
+Doctrine and native-harvest placement:
 
-- [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md)
+- [`01-layer-model.md`](01-layer-model.md)
 - [`03-scoring-and-decay.md`](03-scoring-and-decay.md)
-- [`06-conformance-test-plan.md`](06-conformance-test-plan.md)
+- [`05-repo-implementation-map.md`](05-repo-implementation-map.md)
+- [`adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md`](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md)
+- [`adr/ADR-036-same-owner-components-are-first-party-modules.md`](adr/ADR-036-same-owner-components-are-first-party-modules.md)
+- #456 native semantic/vector retrieval program
 
 ## CodeGenome
+
+**Relationship:** first-party implementation ancestry + optional code-domain evidence source. It does not own Agent Memory's generic graph/vector/retrieval machinery.
 
 Primary provenance:
 
 - [CodeGenome repository](https://github.com/MythologIQ-Labs-LLC/CodeGenome)
 
-Relevant ideas:
+Relevant mechanisms and ideas:
 
-- canonical code reality graph
-- BLAKE3 graph node identity
+- content-addressed code reality representation
+- semantic overlays and multi-overlay traversal
+- embedding persistence and cosine/k-nearest search
+- entity relationships and impact propagation
 - observer separation
-- provenance
+- provenance and evidence bundles
 - confidence fusion
-- governance and evidence bundles
+- continuous experiment/evaluation machinery
 
-Doctrine placement:
+Doctrine and native-harvest placement:
 
 - [`01-layer-model.md`](01-layer-model.md)
 - [`05-repo-implementation-map.md`](05-repo-implementation-map.md)
 - [`adr/ADR-005-codegenome-is-code-reality-substrate.md`](adr/ADR-005-codegenome-is-code-reality-substrate.md)
+- [`adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md`](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md)
+- [`adr/ADR-036-same-owner-components-are-first-party-modules.md`](adr/ADR-036-same-owner-components-are-first-party-modules.md)
 
 ## COREFORGE Vault / Neurospace
 
-Canonical historical provenance is private. [GG-CORE](https://github.com/MythologIQ-Labs-LLC/GG-CORE) is a public successor/continuation and may be used for current public implementation context, but it must not be presented as the originating COREFORGE source.
+**Relationship:** first-party product/runtime ancestry + future downstream consumer of Agent Memory generic memory functionality.
 
-Relevant ideas:
+Canonical historical provenance is private. **GG-CORE is not a public successor to Vault/Neurospace.** Inspection established GG-CORE as a compute dependency whose architecture explicitly excludes Vault responsibilities.
 
-- local-first memory runtime
+Relevant mechanisms and product lessons:
+
+- local-first product runtime
 - encrypted Vault storage
-- knowledge graph and RAG recall
-- context window assembly
+- memory domains and source/reference objects
+- context broker / engine / packets
+- knowledge graph and graph recall
+- decay-ranked retrieval
+- lineage and mutation boundaries
 - governed autonomy
-- agent-facing runtime memory
+- agent-facing runtime memory UX
 
-Doctrine placement:
+Doctrine and native-harvest placement:
 
 - [`01-layer-model.md`](01-layer-model.md)
 - [`04-governance-and-pama.md`](04-governance-and-pama.md)
+- [`05-repo-implementation-map.md`](05-repo-implementation-map.md)
 - [`adr/ADR-006-neurospace-is-runtime-memory-space.md`](adr/ADR-006-neurospace-is-runtime-memory-space.md)
+- [`adr/ADR-036-same-owner-components-are-first-party-modules.md`](adr/ADR-036-same-owner-components-are-first-party-modules.md)
+
+The destination direction is `COREFORGE -> consumes Agent Memory`, not `Agent Memory -> permanently delegates generic memory to COREFORGE`.
 
 ## Native doctrine: PAMA
 
@@ -299,7 +327,7 @@ Relevant ideas:
 - verdict arbitration
 - audit trails
 
-Agent Memory independently expresses the governance doctrine. Directly copied or adapted Apache-2.0 material would require the applicable attribution, license, NOTICE, and modification obligations to be recorded and satisfied.
+FailSafe / Arbiter is same-owner first-party implementation ancestry under ADR-036. Mechanisms may be adopted where they fit Agent Memory contracts; their existence does not make them the source or owner of PAMA doctrine.
 
 ## Evidence-transfer rule
 
@@ -408,10 +436,10 @@ This prevents the bibliography from becoming a one-way machine for proving whate
 1. Should saturation be represented as one scalar or a vector of durability dimensions?
 2. Should PAMA authority be evaluated before or after saturation reaches candidate threshold?
 3. How should certification expire or be renewed?
-4. How should Neurospace expose disputed memory to agents without allowing canonical misuse?
+4. How should downstream products expose disputed memory to agents without allowing canonical misuse?
 5. Which memory types require human approval before crystallization?
 6. What is the minimum viable conformance fixture schema?
-7. How should CodeGenome graph confidence flow into general agent memory saturation?
+7. How should code-domain graph confidence flow into general agent memory saturation without creating authority or ontology leakage?
 8. How should episodic memory be consolidated into semantic or procedural memory without losing behavior-changing exceptions?
 9. Which forgetting mechanisms should be reversible, and which require irreversible deletion?
 10. How should prospective memory connect to schedulers and automation systems without conflating memory with execution?
@@ -430,6 +458,8 @@ When a new memory-system idea or material claim appears, first classify its prov
 
 ```text
 native Agent Memory doctrine
+first-party implementation ancestry
+domain evidence source
 maintainer or contributor proposal
 AI-assisted analysis
 practitioner/community input
@@ -464,12 +494,14 @@ conformance
 For external material, apply the source-rights gate:
 
 1. link the most specific lawful public source when one exists
-2. identify whether the source is public, private, a successor, or lacks a public locator
+2. identify whether the source is public, private, related, or lacks a public locator
 3. separate provenance from reuse rights
-4. default unknown rights to citation and independent synthesis
+4. default unknown external rights to citation and independent synthesis
 5. register any material quotation, adaptation, or copy before merge
 6. preserve applicable attribution, notice, and modification obligations
 7. never substitute an adjacent public artifact for private canonical provenance
+
+For same-owner ancestry, preserve implementation lineage while applying ADR-036 rather than inventing a third-party/provider reuse constraint.
 
 Native contributor-authored doctrine does not need to be manufactured into an external source merely to satisfy this index. Its authorship and canonical location should be recorded in the doctrine tree itself. That provenance does not exempt the claim from challenge or evidence requirements.
 
