@@ -9,6 +9,10 @@ authority and it cannot bypass the canonical admission boundary.
 The first implementation is deterministic and stdlib-only.  Learned/local or
 external System-One controllers can implement the same contract later without
 becoming Agent Memory's authority layer or changing retained-memory semantics.
+
+Issue #456 adds the Agent Memory-native semantic/vector route to this same
+budgeting contract.  Vector similarity is candidate evidence only; it does not
+change the authority semantics of controlled recall.
 """
 
 from __future__ import annotations
@@ -27,11 +31,12 @@ from .runtime_composition import (
     MultiRouteRecallResult,
     RetrievalRouteHit,
 )
+from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.substrate import EvidenceNeighborTemporalGraphPort
 
 
 DETERMINISTIC_CONTROLLER_REF = "agent-memory:deterministic-recall-controller"
-DETERMINISTIC_CONTROLLER_VERSION = "1.0.0"
+DETERMINISTIC_CONTROLLER_VERSION = "1.1.0"
 
 _WORD = re.compile(r"[a-z0-9]+")
 _STOPWORDS = frozenset(
@@ -157,6 +162,10 @@ class DeterministicRecallController:
         if EXACT_IDENTITY_ROUTE in available and unique_refs:
             exact_limit = min(16, len(unique_refs))
 
+        vector_limit = 0
+        if SEMANTIC_VECTOR_ROUTE in available and terms:
+            vector_limit = min(24, max(8, len(terms) * 4))
+
         shared_candidate_limit = 0
         shared_anchor_limit = 0
         if SHARED_EVIDENCE_ROUTE in available and (terms or unique_refs):
@@ -173,6 +182,8 @@ class DeterministicRecallController:
             reason_codes.append("no_content_terms")
         if unique_refs:
             reason_codes.append("explicit_identity_seed")
+        if vector_limit:
+            reason_codes.append("bounded_semantic_vector_search")
         if shared_candidate_limit:
             reason_codes.append("bounded_relational_expansion")
 
@@ -182,6 +193,7 @@ class DeterministicRecallController:
             for budget in (
                 RecallRouteBudget(LEXICAL_ROUTE, lexical_limit),
                 RecallRouteBudget(EXACT_IDENTITY_ROUTE, exact_limit),
+                RecallRouteBudget(SEMANTIC_VECTOR_ROUTE, vector_limit),
                 RecallRouteBudget(
                     SHARED_EVIDENCE_ROUTE,
                     shared_candidate_limit,
@@ -227,9 +239,16 @@ class ControlledRecallResult:
 class ControlledRecallPlanner:
     """Execute controller-selected route budgets, then one governed admission pass."""
 
-    def __init__(self, adapter, *, controller: RecallController | None = None) -> None:
+    def __init__(
+        self,
+        adapter,
+        *,
+        controller: RecallController | None = None,
+        vector_retriever: NativeVectorCandidateRetriever | None = None,
+    ) -> None:
         self.adapter = adapter
         self.controller = controller or DeterministicRecallController()
+        self.vector_retriever = vector_retriever
         substrate_reader = getattr(adapter, "checkpoint_substrate", None)
         tenant_reader = getattr(adapter, "checkpoint_tenant", None)
         if not callable(substrate_reader) or not callable(tenant_reader):
@@ -247,6 +266,8 @@ class ControlledRecallPlanner:
         substrate = self.adapter.checkpoint_substrate()
         tenant = self.adapter.checkpoint_tenant()
         available_routes = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
+        if self.vector_retriever is not None and self.vector_retriever.available_for(substrate):
+            available_routes.append(SEMANTIC_VECTOR_ROUTE)
         if isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             available_routes.append(SHARED_EVIDENCE_ROUTE)
 
@@ -295,6 +316,34 @@ class ControlledRecallPlanner:
                 )
                 explicit_seeds.append((logical_ref, current))
             route_counts[EXACT_IDENTITY_ROUTE] = len(explicit_seeds)
+
+        vector_budget = plan.budget_for(SEMANTIC_VECTOR_ROUTE)
+        if (
+            self.vector_retriever is not None
+            and vector_budget.candidate_limit
+            and self.vector_retriever.available_for(substrate)
+        ):
+            vector_results = self.vector_retriever.search(
+                substrate,
+                query,
+                group_id=tenant,
+                candidate_limit=vector_budget.candidate_limit,
+            )
+            for vector_hit in vector_results:
+                hits.append(
+                    RetrievalRouteHit(
+                        route_id=SEMANTIC_VECTOR_ROUTE,
+                        candidate_ref=vector_hit.candidate_ref,
+                        raw_score=vector_hit.similarity,
+                        representation_ref=vector_hit.representation_ref,
+                        representation_version=vector_hit.representation_version,
+                        representation_config_digest=vector_hit.representation_config_digest,
+                        vector_dimension=vector_hit.vector_dimension,
+                        similarity_metric=vector_hit.similarity_metric,
+                        currentness_basis=vector_hit.currentness_basis,
+                    )
+                )
+            route_counts[SEMANTIC_VECTOR_ROUTE] = len(vector_results)
 
         shared_budget = plan.budget_for(SHARED_EVIDENCE_ROUTE)
         if (
@@ -450,6 +499,10 @@ class ControlledRecallPlanner:
     def _rank_key(candidate_ref: str, hits) -> tuple[object, ...]:
         route_ids = {hit.route_id for hit in hits}
         exact = 1 if EXACT_IDENTITY_ROUTE in route_ids else 0
+        vector_score = max(
+            (hit.raw_score for hit in hits if hit.route_id == SEMANTIC_VECTOR_ROUTE),
+            default=0.0,
+        )
         lexical_score = max(
             (hit.raw_score for hit in hits if hit.route_id == LEXICAL_ROUTE),
             default=0.0,
@@ -461,6 +514,7 @@ class ControlledRecallPlanner:
         return (
             -len(route_ids),
             -exact,
+            -vector_score,
             -lexical_score,
             -relational_score,
             candidate_ref,
