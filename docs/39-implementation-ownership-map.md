@@ -2,53 +2,92 @@
 
 ## Purpose
 
-[`05-repo-implementation-map.md`](05-repo-implementation-map.md) maps named implementation systems into Agent Memory roles and control classes. This document adds the ownership dimension: for each component of [`11-component-architecture.md`](11-component-architecture.md), who owns the doctrine, who is a candidate implementation owner, who consumes it, and what its implementation status actually is.
+[`05-repo-implementation-map.md`](05-repo-implementation-map.md) records how related systems contribute implementation ancestry, domain evidence, optional interoperability, verification, or downstream consumption.
 
-This distinction matters especially for PAMA: **Agent Memory owns the PAMA doctrine. A runtime implementation owner is still open.** Those are different facts and should not be collapsed into “no standalone PAMA repository exists.” No standalone external repository is required for native doctrine.
+This document answers the ownership question directly:
 
-**Epistemic status for implementation ownership: declared, not verified unless stated otherwise.** This repository is the doctrine and conformance authority; it does not contain, build, or test most implementation systems named below. Every external ownership claim is a candidate assignment awaiting the implementation evidence defined in `05-repo-implementation-map.md`. Nothing here is a conformance claim unless it has the required evidence under [`35-interoperability-profiles.md`](35-interoperability-profiles.md).
+> **Who owns the generic memory capability after useful prior work is harvested?**
 
-## Status vocabulary
+The answer is Agent Memory.
 
 ```text
-doctrine-owned  canonical semantics are owned by Agent Memory
-open            no verified runtime implementation owner yet
-declared        implementation ownership asserted; no conformance evidence in this repo
-partial         some implementation exists per its own repo's claims; unverified here
-verified        implementation evidence linked and checked against doctrine
-contested       more than one implementation claims primary ownership; consolidation needed
+implementation ancestry
+    !=
+permanent runtime ownership
+
+proven mechanism in another first-party repo
+    -> inspect / validate / harvest
+    -> native Agent Memory implementation
 ```
 
-## Ownership map
+This corrects an older transition-state map that treated EvolveAI, CodeGenome, and COREFORGE Vault/Neurospace as candidate end-state implementation owners.
 
-| Component | Doctrine / primary owner | Secondary consumers or implementation candidates | Status |
-|---|---|---|---|
-| Identity Substrate | UOR Framework semantics as mapped by Agent Memory; CodeGenome for code-node identity | all components | declared |
-| Evidence and Provenance | Agent Memory contracts | CodeGenome, FailSafe receipts, COREFORGE ledgers | declared, **contested implementation** — three ledger-shaped systems overlap |
-| Reality Graphs | Agent Memory contract; CodeGenome candidate implementation | Runtime Memory | declared |
-| Lifecycle Engine | Agent Memory lifecycle doctrine | EvolveAI proposer, COREFORGE Vault committer candidates | declared, **contested implementation** — the proposer/committer seam exists as code (see inspection record) |
-| Saturation and Decay | Agent Memory scoring doctrine | EvolveAI implementation candidate | declared |
-| **PAMA** | **Agent Memory native doctrine, authored by Kevin R. Knapp** | every mutating component; runtime policy module/service TBD | **doctrine-owned; runtime implementation open** |
-| Certification | Agent Memory certification contract | FailSafe, Arbiter, approval workflows | declared, **contested implementation** |
-| Runtime Memory Space | Agent Memory runtime contract | COREFORGE Vault / Neurospace | **partial** — implementation confirmed present by inspection; conformance unverified |
-| Context Assembly | Agent Memory recall/context contract | COREFORGE and agent runtimes | **partial** — context broker/engine/packet confirmed present by inspection; conformance unverified |
-| Correction and Dispute | Agent Memory correction/dispute contract | Vault and FailSafe-style workflows | declared, **contested implementation** |
-| Durable Decision Memory | Agent Memory durable-decision profile | implementation candidates must map explicitly to profile | **doctrine-owned; runtime implementation open** |
-| Conformance | this repository | every implementation | **verified** — schemas, fixtures, validators, CI |
-| Failure / negative memory | Agent Memory negative-memory doctrine | Shadow Genome implementation candidate | declared |
+## Ownership vocabulary
+
+```text
+native-owned
+    Agent Memory owns the generic contract and implementation surface.
+
+ancestry
+    same-owner prior work contains useful implementation mechanisms or evidence.
+
+specialized-domain-source
+    a system may continue producing domain-specific observations/projections.
+
+optional-peer
+    a system may provide identity, verification, evidence, or enforcement without owning memory semantics.
+
+downstream-consumer
+    a product consumes Agent Memory while retaining product-specific concerns.
+
+implemented
+    native executable Agent Memory implementation exists.
+
+partial
+    part of the native capability exists; additional planned capability remains.
+
+declared
+    contract/role is defined but the native implementation is not yet complete.
+```
+
+Maturity and ownership are separate. Declaring Agent Memory the owner does not promote an incomplete capability.
+
+## Canonical ownership map
+
+| Component | Canonical owner | Implementation ancestry / peers | Continuing specialized consumers or sources | Current posture |
+|---|---|---|---|---|
+| Identity contract | **Agent Memory** | UOR intellectual lineage; CodeGenome code identity patterns | any runtime or domain module | native-owned; optional exact-identity mechanisms |
+| Evidence and provenance | **Agent Memory** | CodeGenome provenance; COREFORGE lineage; FailSafe/Arbiter receipt patterns | all memory types and downstream products | native-owned / implemented across current contracts |
+| Semantic / exact / relational retrieval | **Agent Memory** | EvolveAI exact/vector patterns; CodeGenome retrieval patterns | downstream products | native-owned; exact/lexical/relational implemented |
+| Semantic/vector retrieval | **Agent Memory** | EvolveAI vector retrieval; CodeGenome embeddings/cosine/kNN | domain sources may supply derived observations | native-owned; active implementation #456 |
+| Temporal / graph retrieval | **Agent Memory** | EvolveAI temporal graph; CodeGenome traversal/overlays; Graphiti as external comparator/adapter | CodeGenome may supply code-domain graph observations | native-owned; partial, further native depth planned |
+| Reality Graph framework | **Agent Memory** | CodeGenome implementation ancestry | CodeGenome as code-domain observation source | native-owned; CRG package exists, generic expansion ongoing |
+| Lifecycle / Cognitive Metabolism | **Agent Memory** | EvolveAI decay, tiering, REM, consolidation, pruning, crystallization; COREFORGE lifecycle mechanics | downstream products consume native lifecycle | native-owned; partial native lifecycle, further absorption planned |
+| Saturation / decay / reinforcement | **Agent Memory** | EvolveAI CMHL-style mechanisms and experiments | memory modules | native-owned doctrine; implementation depth varies |
+| **PAMA** | **Agent Memory** | FailSafe/Arbiter enforcement lessons may inform adapters | every mutating component | **native-owned and implemented** |
+| Certification / review evidence | **Agent Memory contract** | FailSafe/Arbiter/approval systems may act as evidence or enforcement peers | governance consumers | native-owned contract; peer implementations bounded |
+| Runtime memory space | **Agent Memory** | COREFORGE Vault/Neurospace product ancestry | COREFORGE, Cortera, TARA, agents | native-owned; canonical runtimes/substrates now exist |
+| Context assembly semantics | **Agent Memory** | COREFORGE broker/packet ancestry | downstream product-specific presentation/orchestration | native-owned; retrieval composition implemented, product facade still evolving |
+| Correction / dispute / supersession | **Agent Memory** | prior product workflows as ancestry | all consumers | native-owned / implemented in current governed runtime |
+| Durable decision memory | **Agent Memory** | product implementations may consume profile | decision-oriented products/agents | native-owned profile |
+| Negative / failure memory | **Agent Memory** | Shadow Genome concepts from EvolveAI ancestry | downstream risk/planning consumers | native-owned; further native implementation planned |
+| Continuous memory evaluation | **Agent Memory** | CodeGenome experiment-loop ancestry | CI/release/benchmark consumers | native-owned; initial retrieval benchmarks exist, broader loop planned |
+| Conformance | **Agent Memory** | optional verification peers such as PrismPM may strengthen evidence | every implementation | native-owned / implemented |
 
 ## PAMA ownership
 
-PAMA's canonical semantics live here:
+PAMA's canonical semantics and runtime implementation are Agent Memory responsibilities.
+
+Canonical sources include:
 
 - [`pama/README.md`](pama/README.md)
 - [`04-governance-and-pama.md`](04-governance-and-pama.md)
 - [`33-pama-decision-table.md`](33-pama-decision-table.md)
-- [`adr/ADR-004-pama-controls-mutation-authority.md`](adr/ADR-004-pama-controls-mutation-authority.md)
+- [`ADR-004`](adr/ADR-004-pama-controls-mutation-authority.md)
 
-The open implementation question is **where the authority evaluator and enforcement boundary run**, not who owns the framework.
+A downstream product or enforcement peer may host additional controls, but no external product becomes PAMA's semantic owner.
 
-A runtime implementation may live inside a larger repository or service if it preserves the semantic boundary. It must expose at least:
+A PAMA boundary must preserve at least:
 
 ```text
 M0-M5 target class
@@ -64,56 +103,213 @@ selected action
 committed consequence receipt
 ```
 
-PAMA must not be absorbed into a storage or estimator subsystem in a way that makes authority indistinguishable from relevance, confidence, saturation, or implementation convenience.
+PAMA must remain distinguishable from relevance, similarity, confidence, saturation, storage success, or implementation convenience.
 
-## Consolidation and segmentation calls
+## First-party absorption rule
 
-**Should consolidate** where implementations duplicate contracts:
+ADR-036 classifies same-owner components as first-party module candidates rather than attributed providers.
 
-- The three ledger-shaped implementation candidates (CodeGenome provenance, FailSafe receipts, COREFORGE ledgers) should converge on the decision-receipt and audit-event schemas ([`../schemas/decision-receipt.schema.json`](../schemas/decision-receipt.schema.json), [`../schemas/memory-audit-event.schema.json`](../schemas/memory-audit-event.schema.json)) rather than each defining a private evidence format.
-- Lifecycle ownership must resolve to one committer: EvolveAI proposing transitions that Vault commits is a legitimate split (proposal versus commit per [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md)); both committing is not.
+The runtime consequence is now explicit:
 
-**Should remain segmented** (per [`12-concept-segmentation-matrix.md`](12-concept-segmentation-matrix.md)):
+```text
+same-owner component has useful mechanism
+    -> Agent Memory may adopt it directly
+    -> native Agent Memory module owns the resulting generic capability
+    -> originating repo need not remain installed or invoked at runtime
+```
 
-- Certification must not collapse into the system that proposes candidates, whatever repo hosts both. Independence is the point.
-- PAMA's authority boundary remains a separate, auditable module/contract regardless of which runtime repository implements it. The PAMA adapter of [`34-adapter-contracts.md`](34-adapter-contracts.md) is the seam.
-- Identity stays out of every scoring system. No estimator gets to mint identity.
-- Durable decision memory is an Agent Memory profile; an adjacent product does not become its doctrine owner merely because it implements decisions.
+Lineage remains valuable. Cross-repository runtime dependency is not the destination by default.
 
-## External implementation inclusion rule
+## EvolveAI disposition
 
-A named external or private implementation should appear in this map only when it adds specific value:
+EvolveAI remains implementation ancestry and a behavioral/test oracle for capabilities including:
 
-1. a concrete implementation responsibility;
-2. evidence that can be mapped to an Agent Memory contract or profile;
-3. a meaningful conformance candidate; or
-4. a deliberate contested-ownership question that must be resolved.
+- vector representation and retrieval;
+- temporal graph behavior;
+- tier routing;
+- decay/weakening and reinforcement;
+- lifecycle orchestration;
+- consolidation and REM-style synthesis;
+- pruning pressure;
+- crystallization proposals;
+- exact recall;
+- negative/failure memory concepts;
+- restart behavior.
 
-Conceptual adjacency alone is insufficient.
+The end-state owner of those generic capabilities is Agent Memory.
 
-## Inspection record
+An EvolveAI estimator may still be useful in experiments or optional specialized deployments. Its score or proposal cannot become memory authority merely because the mechanism originated in first-party code.
 
-**2026-08-11.** Four candidate repositories were cloned and inspected directly, at pinned commits: EvolveAI `7c163f0`, CodeGenome `02565cc`, GG-CORE `f4ed6ca` (all public), and COREFORGE `48ee0ca` (private, default branch). Findings that bear on this map:
+## CodeGenome disposition
 
-- **No doctrine backlink exists in any of the four.** Case-insensitive searches for `agent-memory`/`agent_memory` return zero doctrine references; COREFORGE's matches are local identifier names. Every graduation path in this document therefore still begins at its first step.
-- **COREFORGE Vault/Neurospace exists as code**, not only as a claim: lifecycle store, mutation contract and gate with an approved/pending-review/vetoed envelope, Neurospace assembler/inspector/mutator, context broker/engine/packet, knowledge graph, UOR-style references, lineage, RAG engine. This moved Runtime Memory Space and Context Assembly to `partial`. Conformance remains unverified — existence of a mutation gate is not evidence that it enforces PAMA semantics.
-- **The lifecycle proposer/committer split is a live seam**: EvolveAI and CodeGenome are consumed inside COREFORGE's Vault through in-tree memory-provider interfaces. The contested Lifecycle Engine row now has a concrete surface to resolve against.
-- **GG-CORE holds no memory role and must not be recorded as the Vault successor.** Its architecture documents list `vault/` among forbidden modules, its `memory/` module is inference memory management (arenas, KV-cache, pools), and COREFORGE consumes it strictly as an optional compute dependency. Recorded here because the wrong successor narrative appeared once already and should not be re-derived.
+CodeGenome has two distinct relationships that must not be collapsed.
 
-Inspection verifies existence, never conformance. `partial` is the ceiling this kind of evidence can reach.
+### 1. Implementation ancestry
 
-## Resolution path
+Agent Memory may harvest generic mechanisms such as:
 
-Implementation claims graduate from `declared` only through the evidence items of `05-repo-implementation-map.md`: a doctrine backlink in the implementing repo, an implementation-alignment issue mapping its slice, and eventually fixture results claiming a profile from `35-interoperability-profiles.md`.
+- embedding persistence;
+- vector similarity / kNN;
+- graph traversal patterns;
+- semantic/multi-overlay relationships;
+- impact propagation;
+- provenance/evidence fusion;
+- experiment and performance evaluation loops.
 
-Contested rows are resolved by evidence and explicit cross-repo decision, recorded here with the decision reference, not by whichever implementation ships first.
+After absorption, those generic mechanisms are Agent Memory implementation.
 
-Native doctrine ownership does not require that process. PAMA is already canonical doctrine; its runtime implementation remains subject to conformance evidence.
+### 2. Specialized domain evidence source
+
+CodeGenome may continue to produce code-domain observations, structural relationships, impact evidence, or code-specific projections.
+
+```text
+CodeGenome observes code reality
+    -> Agent Memory ingests/evaluates domain evidence
+```
+
+This does not mean Agent Memory must call CodeGenome for generic graph memory, vector retrieval, causal traversal, or evaluation.
+
+## COREFORGE Vault / Neurospace disposition
+
+COREFORGE contains valuable product-level memory ancestry, including historical code for:
+
+- lifecycle storage;
+- memory domains;
+- source/reference objects;
+- context brokers and context packets;
+- graph recall;
+- RAG/context assembly;
+- mutation gating;
+- lineage;
+- provider composition.
+
+The older map interpreted that code as a candidate owner for Runtime Memory Space and Context Assembly. That was useful during transition, but it is not the desired final dependency direction.
+
+```text
+historical:
+COREFORGE contains/emulates generic memory machinery
+
+end state:
+Agent Memory owns generic memory machinery
+COREFORGE consumes Agent Memory
+```
+
+COREFORGE may continue to own product-specific concerns such as UI, inference adapters, local application orchestration, encrypted product packaging, or caches. Those concerns do not transfer generic memory ownership back out of Agent Memory.
+
+## UOR disposition
+
+UOR is optional exact-identity/interoperability lineage.
+
+Agent Memory owns the identity boundary and may use UOR-derived or UOR-compatible mechanisms where useful.
+
+```text
+UOR/exact reference
+    !=
+memory lifecycle
+    !=
+retrieval authority
+    !=
+PAMA
+```
+
+See [`ADR-001`](adr/ADR-001-uor-is-identity-not-memory.md).
+
+## PrismPM disposition
+
+PrismPM is a candidate verification/conformance peer where exact canonical models, replay, state-transition verification, or atomic promotion evidence add value.
+
+Potential uses include:
+
+- canonical memory-state verification;
+- replay/conformance checks;
+- checkpoint or transition evidence;
+- release/conformance integrity.
+
+It is not ordinary recall machinery and does not become a memory semantic owner merely because its verification model is useful.
+
+## Consolidation calls
+
+### Consolidate into Agent Memory
+
+Generic capabilities should converge into native Agent Memory implementations rather than remain fragmented by repository history:
+
+- semantic/vector retrieval;
+- temporal/graph traversal;
+- lifecycle/metabolism;
+- context assembly semantics;
+- provenance/currentness/correction/deletion mechanics;
+- negative/failure memory;
+- continuous memory evaluation.
+
+### Keep specialized boundaries
+
+Some boundaries should remain segmented:
+
+- CodeGenome remains free to specialize in code intelligence and provide code-domain evidence.
+- COREFORGE remains free to specialize in product UX, local orchestration, inference adapters, and application packaging.
+- Certification/review independence should not collapse into the estimator proposing a mutation.
+- UOR remains an optional identity mechanism rather than a memory owner.
+- verification peers remain evidence/conformance helpers rather than recall authorities.
+
+## Historical inspection record
+
+**2026-08-11.** EvolveAI, CodeGenome, GG-CORE, and COREFORGE were inspected at pinned revisions. That inspection established real implementation ancestry:
+
+- COREFORGE Vault/Neurospace existed as code with lifecycle storage, mutation gates, context assembly, graph/RAG behavior, references, lineage, and provider seams.
+- EvolveAI and CodeGenome were consumed inside COREFORGE through memory-provider interfaces.
+- GG-CORE was a compute dependency rather than a memory successor.
+
+Those findings remain valid evidence about the historical implementation state.
+
+They no longer establish end-state ownership.
+
+```text
+historical provider seam exists
+    !=
+Agent Memory should preserve that provider seam forever
+```
+
+The inspection now serves as a harvest inventory and migration reference.
+
+## Native implementation evidence rule
+
+Once a mechanism is absorbed, maturity is earned as ordinary Agent Memory implementation evidence rather than same-owner provider qualification.
+
+A native capability should be able to show, as applicable:
+
+1. the Agent Memory contract it implements;
+2. source ancestry when materially useful for reconstruction;
+3. focused positive and adversarial tests;
+4. currentness and correction behavior;
+5. deletion/residue behavior;
+6. scope/isolation behavior;
+7. restart/rebuild behavior;
+8. estimator/version bindings where probabilistic representation is involved;
+9. authority effect;
+10. benchmark/regression evidence appropriate to the capability.
+
+Ownership is not maturity. A native module can still be experimental, partial, or wrong.
+
+## Current execution direction
+
+Issue #455 owns this architecture correction.
+
+Issue #456 owns the first concrete harvest slice: native semantic/vector candidate retrieval using EvolveAI and CodeGenome as behavioral references, not runtime dependencies.
+
+The broader sequence is:
+
+```text
+native semantic/vector retrieval
+  -> native temporal/relational/graph retrieval
+  -> native metabolism and lifecycle depth
+  -> continuous native memory evaluation
+  -> downstream products delegate generic memory to Agent Memory
+```
 
 ## Doctrine
 
-Ownership is a governance fact, not merely a deployment fact.
+Ownership is a governance and architecture fact, not merely a deployment fact.
 
-A component's **doctrine owner** defines its obligations, contracts, conformance surface, and audit duties. An **implementation owner** must demonstrate that its code accepts those obligations.
+Agent Memory defines and increasingly implements its generic memory capabilities. A related repository can contribute excellent prior art, specialized observations, or optional peer functionality without remaining the canonical runtime owner.
 
-Code without those obligations is not an owner. It is an unverified volunteer.
+Code that proves a useful mechanism is valuable ancestry. The destination is a coherent Agent Memory system, not a permanent museum of internal service boundaries.
