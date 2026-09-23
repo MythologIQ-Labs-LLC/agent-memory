@@ -99,10 +99,13 @@ This is synthetic internal evidence, not an official public benchmark result.
 
 These are evidence/interoperability dependencies, not routine version bumps:
 
-- [ ] **PR #404**: qualify `agentrust-trace` 0.10.0 against current TRACE/cMCP/evidence contracts.
-- [ ] **PR #405**: qualify `agent-manifest` 0.12.0 against current Agent Manifest comparator and runtime/package expectations.
+- [ ] **#440**: re-qualify `agent-manifest` 0.12.0 and `agentrust-trace` 0.10.0 together as one version-exact interoperability change.
+- [ ] Re-enumerate all current package pins, source/tag/commit bindings, schemas/fixtures, comparator assertions, and qualification identities before editing.
+- [ ] Prove pin/version identity tests **execute** rather than silently skip under the new pair.
+- [ ] Validate the material fail-closed/security semantics from both releases at the Agent Memory boundary actually consumed.
+- [ ] Run the exact-head full reference/comparator matrix before merge.
 
-Do not merge either merely because generic CI is green. Their semantic interoperability surfaces changed upstream.
+PRs #404 and #405 are closed as structurally incomplete bare Dependabot bumps. PR #375 is the precedent: these dependencies cannot be qualified safely one file at a time.
 
 ## External / Longitudinal Gates
 
@@ -110,7 +113,7 @@ These remain open only where an external or time-based evidence gate is real. Th
 
 - **#361 — blocked external:** repository-side DashClaw provider work is merged; completion requires authorized live Cloudflare/DashClaw traversal and correlated evidence.
 - **#388 — longitudinal:** the efficacy procedure/tooling is merged via PR #389; completion requires T1/T2/T3 field evidence.
-- **#408 — longitudinal case study:** anonymized semantic-recall/canonical-truth pressure case for active-development evidence and generalizable findings.
+- **#408 — longitudinal case study:** next executable gate is the frozen T0/source-system baseline and measured failure taxonomy; do not spawn speculative implementation slices before evidence exists.
 
 ## Explicit Holds / Deferred Work
 
