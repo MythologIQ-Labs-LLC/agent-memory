@@ -129,6 +129,7 @@ The repository is deliberately strict about the difference between **architectur
 | Governed recall | Scope/tenant/project/currentness admission with decision evidence |
 | Deterministic multi-route recall | Lexical + exact logical-identity + shared-evidence-neighbor candidate routes; per-route provenance, deduplication, one governed admission boundary, admitted-only ranking |
 | Agent Memory-native relational recall | Direct neighbors sharing retained evidence/provenance; optional substrate capability, retrieval-only authority posture |
+| Internal RC retrieval-quality baseline | Fixed synthetic fixture: lexical-only admitted recall `3/7` (`0.428571`) versus composed recall `7/7` (`1.0`), with admitted precision `1.0` and zero forbidden-influence failures |
 | Correction / supersession | Executable and restart-safe in the reference profile |
 | Deletion / tombstones | Executable, evidence-bearing and restart-safe in the reference profile |
 | Shared-domain / crossing authority | Governed mutation paths; RC-relevant authority gaps from #364 are closed |
@@ -186,6 +187,8 @@ query / recall intent
 The shared-evidence route can follow a known memory's retained provenance to other memories derived from the same source evidence. This makes the architecture's shared evidence model useful for associative recall without claiming a universal semantic graph.
 
 A route score, exact-identity hit, provenance relationship, or future model/controller judgment cannot repair a scope, currentness, dispute, tombstone, or isolation refusal. Retrieval decides where to look; governance decides what may influence active cognition.
+
+The versioned internal RC retrieval fixture now gives this boundary an executable baseline. Across five fixed cases containing seven relevant-memory expectations, lexical-only recall admits 3/7 relevant memories while composed recall admits 7/7. On that same fixture, admitted precision remains 1.0 and the benchmark records zero forbidden admission, forbidden ranked-influence, or retrieval-authority violations. This is deliberately a synthetic internal benchmark, **not** a LoCoMo or LongMemEval result.
 
 Vector, temporal, external graph, and adaptive/System-One routes can plug into the same boundary later, but they must earn runtime qualification rather than becoming authoritative because they retrieve convincingly.
 

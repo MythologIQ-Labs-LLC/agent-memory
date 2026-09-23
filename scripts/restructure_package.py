@@ -84,10 +84,10 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "domain_schema_discovery_harness", "fixture_conformance", "forbidden_hits",
         "latent_predictive_state_harness", "logical_state_algebra_pressure",
         "long_horizon_benchmark", "long_horizon_dataset", "operational_memory_benchmark",
-        "precedent_candidate_harness", "reusable_grant_harness", "security_evidence_depth",
-        "security_finding_harness", "security_finding_depth", "sleeper_poisoning_harness",
-        "sleeper_poisoning_depth", "systems_characterization", "unsafe_composition_harness",
-        "unsafe_composition_depth", "visibility_characterization",
+        "precedent_candidate_harness", "retrieval_quality_benchmark", "reusable_grant_harness",
+        "security_evidence_depth", "security_finding_harness", "security_finding_depth",
+        "sleeper_poisoning_harness", "sleeper_poisoning_depth", "systems_characterization",
+        "unsafe_composition_harness", "unsafe_composition_depth", "visibility_characterization",
         "architecture_family_closeout", "architecture_family_evidence",
     ),
 }
@@ -244,7 +244,7 @@ def rewrite_paths(text: str) -> str:
         return text
     names = ", ".join(n for n in _PATHS_NAMES if n in used)
     lines = text.split("\n")
-    if any(re.match(r"^from \.\.?_paths import", l) for l in lines):
+    if any(re.match(r"^from \.\.?_paths import", line) for line in lines):
         return text
     return "\n".join(_insert_after_imports(lines, f"from .._paths import {names}"))
 
