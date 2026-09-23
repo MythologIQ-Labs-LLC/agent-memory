@@ -1,0 +1,71 @@
+[
+  {
+    "sample_id": "synthetic-conversation-001",
+    "qa": [
+      {
+        "question": "What object came out of the pottery class?",
+        "answer": "A blue bowl",
+        "evidence": ["D1:3"],
+        "category": 1
+      },
+      {
+        "question": "Where is Mira planning to camp?",
+        "answer": "Pine Ridge",
+        "evidence": ["D2:1"],
+        "category": 1
+      },
+      {
+        "question": "What two things did the friends plan for the weekend?",
+        "answer": "Camping and a picnic",
+        "evidence": ["D2:1; D2:3"],
+        "category": 3
+      },
+      {
+        "question": "Would Mira prefer a crowded arcade?",
+        "answer": "Probably not",
+        "evidence": [],
+        "category": 3
+      }
+    ],
+    "conversation": {
+      "speaker_a": "Mira",
+      "speaker_b": "Jonah",
+      "session_1_date_time": "4:10 pm on 3 April, 2026",
+      "session_1": [
+        {
+          "speaker": "Jonah",
+          "dia_id": "D1:1",
+          "text": "I started pottery classes last week."
+        },
+        {
+          "speaker": "Mira",
+          "dia_id": "D1:2",
+          "text": "That sounds like a relaxing new hobby."
+        },
+        {
+          "speaker": "Jonah",
+          "dia_id": "D1:3",
+          "text": "My first project was a blue bowl."
+        }
+      ],
+      "session_2_date_time": "9:15 am on 17 April, 2026",
+      "session_2": [
+        {
+          "speaker": "Mira",
+          "dia_id": "D2:1",
+          "text": "I booked a campsite at Pine Ridge for Saturday."
+        },
+        {
+          "speaker": "Jonah",
+          "dia_id": "D2:2",
+          "text": "The forest trails there should be quiet this time of year."
+        },
+        {
+          "speaker": "Mira",
+          "dia_id": "D2:3",
+          "text": "I also packed a picnic basket for the weekend."
+        }
+      ]
+    }
+  }
+]
