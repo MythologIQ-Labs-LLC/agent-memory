@@ -60,8 +60,11 @@ def _scope() -> EpistemicScope:
 
 
 def _context(*, project_ref: str = PROJECT) -> RecallContext:
+    # Keep the required isolation domain present while varying the declared
+    # project identity. This isolates the project-scope check rather than
+    # accidentally testing missing-domain refusal first.
     return RecallContext(
-        target_domain_refs=(TENANT, project_ref),
+        target_domain_refs=(TENANT, PROJECT),
         principal_ref="agent:multi-memory-test",
         project_ref=project_ref,
         purpose=PURPOSE,
@@ -137,12 +140,15 @@ def _belief_corpus():
     )
 
 
-def _belief_evidence(*, proposed_value: str = "disputed"):
+def _belief_evidence():
+    # Match the existing epistemic-memory adjudication fixture: the external
+    # evidence authorizes a belief revision; "disputed" remains epistemic state,
+    # not a separate authority mode.
     return _belief_corpus().evidence_for(
         target_reference=BELIEF_REF,
         criterion="belief-revision",
         pre_state="current",
-        proposed_value=proposed_value,
+        proposed_value="revised",
     )
 
 
@@ -239,7 +245,7 @@ class SemanticEpistemicCompositionTests(unittest.TestCase):
             actor_id="agent:multi-memory-test",
             review_satisfied=True,
             approval_refs=("approval:epistemic-review",),
-            evidence=_belief_evidence(proposed_value="disputed"),
+            evidence=_belief_evidence(),
         )
         self.assertTrue(result.commit.committed)
         self.assertEqual("disputed", result.lineage_state)
