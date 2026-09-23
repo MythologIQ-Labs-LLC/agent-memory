@@ -1,7 +1,7 @@
 # Governance Index
 
 **Last Reviewed**: 2026-09-23  
-**Evidence Boundary**: `main` `0cb98c4d5262338886d82f3c1c6abf6e9c743d10`
+**Evidence Boundary**: `main` `3dc11b4048e64aa7f6bf78103d664bc93d1cd1e7`
 
 This is the current map of Agent Memory's governance surfaces and their freshness obligations. It is intentionally **not** an exhaustive hand-maintained list of historical work. Historical plans and research briefs remain evidence; GitHub issue/PR state carries the live execution queue.
 
@@ -14,16 +14,17 @@ These surfaces MUST describe current repository reality. A wrong version, stale 
 | Artifact | Path | Current marker |
 |----------|------|----------------|
 | Meta Ledger | `docs/META_LEDGER.md` | append-only historical decision/session evidence; artifact content is authoritative for ledger state |
-| System State | `docs/SYSTEM_STATE.md` | reconciled 2026-09-23 against `main` `0cb98c4d`; PRE-RC composition/retrieval active, production substrate qualification open |
+| System State | `docs/SYSTEM_STATE.md` | reconciled 2026-09-23 against `main` `3dc11b40`; query-driven retrieval and LoCoMo evidence diagnostic merged; production substrate qualification open |
 | Concept | `docs/CONCEPT.md` | current objective must point to live Backlog/System State/issues rather than retired plans |
-| Backlog | `docs/BACKLOG.md` | active RC queue centered on #410, #427, and #437/#438; external/longitudinal work separated |
+| Backlog | `docs/BACKLOG.md` | active RC queue centered on #410 and #427 plus developer-facade/end-to-end/release-evidence gates; external/longitudinal work separated |
 | Feature Index | `docs/FEATURE_INDEX.md` | feature inventory; lifecycle state must be reconciled when implementation changes materially |
 | ADR index | `docs/adr/README.md` | ADR-001 through ADR-038; artifact status is authoritative |
 | Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; comparator pins remain `agent-manifest==0.11.2`, `agentrust-trace==0.9.0` pending coordinated qualification #440 |
-| README | `README.md` | current pre-RC product/runtime summary, multi-memory composition, retrieval routes, benchmark limitations |
+| README | `README.md` | current pre-RC product/runtime summary, query-driven retrieval, LoCoMo retrieval-diagnostic boundary, and benchmark limitations |
 | Substrate inventory | `docs/43-substrate-inventory-and-maturity.md` | reference persistence corrected; production-qualified canonical substrates remain 0 |
 | RC profile | `docs/45-agent-memory-rc1-implementation-profile.md` | bounded implementation/release candidate profile under #410 |
 | Checkpoint contract | `docs/46-state-checkpoint-contract.md` | reference persistence ownership/transaction/recovery contract |
+| Checkpoint behavior profile | `docs/profiles/checkpoint-behavioral-assessment-profile.md` | current evidence-only behavioral conformance profile; no authority effect |
 | Shadow Genome | `docs/SHADOW_GENOME.md` | append-only failure/lesson record |
 | Process Shadow Genome | `docs/PROCESS_SHADOW_GENOME.md` | append-only process-remediation history |
 
@@ -51,9 +52,8 @@ A Tier 3 row must represent active implementation, a live external/longitudinal 
 
 | Initiative | Tracking surface | Current state |
 |------------|------------------|---------------|
-| Agent Memory RC1 composition | issue #410 | **active umbrella**; architecture fixed, usable-product gates remain |
+| Agent Memory RC1 composition | issue #410 | **active umbrella**; architecture, persistence, multi-memory composition, multi-route/query-driven retrieval are implemented; product/release gates remain |
 | Production canonical substrate | issue #427 | **active RC gate**; reference durability is proven, production-qualified canonical substrates = 0 |
-| Query-driven retrieval + LoCoMo evidence diagnostic | issue #437 / PR #438 | **active implementation**; current PR is not yet merge-ready and must re-pass exact-head validation |
 | Comparator dependency requalification | issue #440 | **active qualification**; `agent-manifest` 0.12.0 + `agentrust-trace` 0.10.0 must be qualified together; bare PRs #404/#405 are closed |
 | Semantic recall/canonical-truth case study | issue #408 | **longitudinal case study**; next executable gate is T0/failure evidence, not speculative implementation |
 | Live DashClaw conformance | issue #361 | **blocked external** on authorized Cloudflare/DashClaw live traversal; repository-side implementation already merged |
@@ -61,6 +61,9 @@ A Tier 3 row must represent active implementation, a live external/longitudinal 
 
 ### Recently retired from the active queue
 
+- #437: closed completed through PR #449; query-driven relational recall and the LoCoMo-compatible retrieval-evidence diagnostic are now on `main`.
+- PR #438: closed unmerged only because GitHub auto-closed it during a temporary zero-diff reconciliation; PR #449 continued the same branch and landed the corrected implementation.
+- #441: closed completed through PR #448; unique checkpoint-behavior probes were harvested into the current harness layer and the historical branch is deletion-eligible.
 - #364: closed completed after recall/crossing/shared-domain authority remediation.
 - #363: closed completed for the original private-scraping/unlocked-generation persistence audit scope; #427 owns production substrate qualification.
 - #332: closed `not_planned` in Agent Memory because remaining work is live QOR proving-ground execution, not repository implementation.
@@ -120,13 +123,12 @@ Frozen/provenance-oriented artifacts preserve what was decided, measured, or pla
 
 Tier 1 surfaces should agree on this order:
 
-1. **#437 / PR #438:** repair query-driven relational recall and the LoCoMo evidence-retrieval harness until the exact final head is fully green.
-2. **#427:** qualify one production-credible canonical substrate without changing Agent Memory semantics to match a provider.
-3. **RC developer facade:** implement a small ergonomic surface over the existing 1.2.0 contract.
-4. **RC end-to-end fixture:** prove retain/composition/retrieval/admission/correction/restart/forgetting/history as one usable scenario.
-5. **Public benchmark evidence:** run licensed external datasets through stable benchmark adapters; keep retrieval, answer quality, performance, and governance metrics separate.
-6. **#440:** re-qualify Agent Manifest + TRACE as one exact-version interoperability change, proving version-identity checks execute rather than skip.
-7. Keep #361, #388, and #408 out of the active implementation critical path until their external/longitudinal evidence can move.
+1. **#427:** qualify one production-credible canonical substrate without changing Agent Memory semantics to match a provider.
+2. **RC developer facade:** implement a small ergonomic surface over the existing 1.2.0 contract.
+3. **RC end-to-end fixture:** prove retain/composition/query-driven retrieval/admission/correction/restart/forgetting/history as one usable scenario.
+4. **Public benchmark evidence:** execute the now-implemented LoCoMo retrieval diagnostic against an appropriately obtained external dataset, then add answer-generation/evaluation only under an explicit comparable protocol; LongMemEval remains future release evidence.
+5. **#440:** re-qualify Agent Manifest + TRACE as one exact-version interoperability change, proving version-identity checks execute rather than skip.
+6. Keep #361, #388, and #408 out of the active implementation critical path until their external/longitudinal evidence can move.
 
 ## Drift Contract
 

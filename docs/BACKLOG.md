@@ -6,15 +6,7 @@ The queue is intentionally small. Work that is blocked externally or merely inte
 
 ## RC1 Critical Path
 
-### 1. Query-driven recall and public-benchmark evidence
-
-- [ ] **#437 / PR #438**: add opt-in query-driven relational recall and a retrieval-only LoCoMo evidence harness.
-- [ ] Repair the current #438 failures and rerun the complete exact-head matrix before merge.
-- [ ] Preserve default application recall behavior unless query-driven expansion is explicitly selected.
-- [ ] Keep the LoCoMo dataset external; no upstream dataset redistribution in this repository.
-- [ ] Do not claim an official LoCoMo QA score or Jev-Mem parity from retrieval-only evidence.
-
-### 2. Production canonical substrate
+### 1. Production canonical substrate
 
 - [ ] **#427**: qualify one production-credible canonical substrate.
 - [ ] Preserve the existing `TemporalGraphPort` / governed-adapter semantics rather than reshaping Agent Memory around a provider.
@@ -22,7 +14,7 @@ The queue is intentionally small. Work that is blocked externally or merely inte
 
 The original persistence audit issue #363 is closed. Its reference-runtime defects were remediated; #427 is the remaining production-qualification gate.
 
-### 3. Developer facade
+### 2. Developer facade
 
 - [ ] Add the canonical small developer surface over public contract 1.2.0, conceptually:
 
@@ -39,7 +31,7 @@ memory.posture(...)
 - [ ] Ordinary low-risk local use must not require callers to construct internal PAMA dataclasses manually.
 - [ ] The facade must return governed results/receipts and may not bypass scope, evidence, PAMA, currentness, or recall admission.
 
-### 4. End-to-end RC scenario
+### 3. End-to-end RC scenario
 
 - [ ] Add one scenario that proves the usable product path as a whole:
 
@@ -58,12 +50,15 @@ experience
 
 - [ ] Include at least one highly relevant/confident but inadmissible candidate and prove it cannot influence active cognition.
 
-### 5. Release evidence package
+### 4. Release evidence package
 
-- [ ] Bind benchmark dataset/version/config/runtime revision.
+- [ ] Execute the merged LoCoMo-compatible retrieval-evidence harness against an appropriately obtained external dataset and preserve exact dataset/revision/config bindings.
 - [ ] Keep retrieval quality, answer/task quality, latency/resource measurements, and governance/safety measurements separate.
+- [ ] Add answer-generation/evaluation only under an explicit protocol that makes cross-system comparison honest.
+- [ ] Add LongMemEval evidence only after its adapter and licensing/use boundary are explicitly defined.
 - [ ] Publish known limitations with the RC.
-- [ ] Add public LoCoMo/LongMemEval evidence only after the adapters are stable and licensing/use conditions are respected.
+
+The current LoCoMo harness is **retrieval-only**. It does not produce the official LoCoMo QA score and must not be presented as Jev-Mem answer-quality parity.
 
 ## Implemented RC Foundations
 
@@ -81,7 +76,11 @@ These are no longer blockers and should not be reopened by stale backlog prose.
 - [x] Candidate/admission separation for multi-route recall.
 - [x] Lexical + exact logical-identity retrieval routes.
 - [x] Agent Memory-native shared-evidence/provenance-neighbor retrieval.
+- [x] Opt-in query-driven relational expansion from natural-language lexical anchors.
+- [x] Content-bearing anchor selection that prevents stopword-only relational fan-out.
 - [x] Internal deterministic retrieval-quality benchmark and CI evidence artifact.
+- [x] LoCoMo-compatible external-input evidence-retrieval diagnostic (#437 / PR #449).
+- [x] Checkpoint behavioral conformance probes harvested into the current harness layer (#441 / PR #448).
 - [x] PR #389 reusable GitHub governance/memory efficacy operator skill.
 
 Internal bounded benchmark evidence currently records:
@@ -94,6 +93,8 @@ governance failures          = 0
 ```
 
 This is synthetic internal evidence, not an official public benchmark result.
+
+The LoCoMo-compatible harness is now implemented and exact-head green, but no external LoCoMo dataset result is recorded in the repository yet. The dataset remains external and is not vendored.
 
 ## Dependency Qualification Queue
 
@@ -121,6 +122,15 @@ These remain open only where an external or time-based evidence gate is real. Th
 - **#392:** closed `not_planned` until DashClaw makes the TransitionRuleCorpus authorship/ownership decision.
 - **#387:** closed `not_planned` for this cycle. Reopen when the Git/document-backed governed knowledge profile becomes an active implementation tranche.
 - **#332:** closed in Agent Memory. Remaining QOR proving-ground acceptance is live host execution, not standalone Agent Memory repository work.
+- **Historical checkpoint branch:** `implementation/332-checkpoint-behavioral-assessment` is deletion-eligible after #448 harvested its useful probes into current architecture; do not merge/revive it.
+
+## Recently Completed Retrieval Work
+
+- #431 / PR #432: deterministic multi-route candidate generation and one governed admission boundary.
+- #433 / PR #434: shared-evidence/provenance-neighbor recall.
+- #435 / PR #436: deterministic retrieval-quality benchmark and CI artifact.
+- #437 / PR #449: query-driven relational recall plus LoCoMo-compatible retrieval-evidence diagnostic.
+- PR #438: closed unmerged only because a temporary zero-diff branch reconciliation caused GitHub to auto-close it; #449 continued the same implementation branch and landed the corrected work.
 
 ## Repository Hygiene Rule
 
@@ -136,4 +146,4 @@ Historical branches must be compared against `main` for unique commits before de
 
 ---
 
-_Last reconciled against `main` `0cb98c4d5262338886d82f3c1c6abf6e9c743d10` on 2026-09-23._
+_Last reconciled against `main` `3dc11b4048e64aa7f6bf78103d664bc93d1cd1e7` on 2026-09-23._
