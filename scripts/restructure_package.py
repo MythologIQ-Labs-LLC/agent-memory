@@ -78,6 +78,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
     "harness": (
         "authority_laundering_harness", "authority_laundering_depth",
         "autonomous_maintenance_harness", "benchmark_security", "cedar_policy_comparator",
+        "checkpoint_behavior_harness",
         "opa_policy_comparator", "mem0_comparator", "langgraph_lifecycle_comparator",
         "maf_lifecycle_comparator", "concurrency_evidence", "conditional_memory_harness",
         "derivation_currentness_harness", "derivation_currentness_depth",
@@ -193,7 +194,7 @@ def rewrite_imports(text: str, table: dict[str, str], from_layer: str | None) ->
                 continue
             target = _target(mod, table, from_layer)
             prefix = "." if target == "." else target + "."
-            if target.endswith(mod):  # top-level resident reached from a layer: `.._paths`
+            if target.endswith(mod):
                 prefix = target[: -len(mod)]
             out.append(f"{indent}from {prefix}{mod} import {names}")
             continue
@@ -277,7 +278,7 @@ def move(package: Path) -> None:
         src = package / f"{mod}.py"
         dst = package / layer / f"{mod}.py"
         if dst.is_file():
-            continue  # already moved
+            continue
         _git("mv", str(src), str(dst))
         text = dst.read_text(encoding="utf-8")
         text = rewrite_imports(text, table, layer)
