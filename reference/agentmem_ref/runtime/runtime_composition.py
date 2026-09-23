@@ -12,6 +12,10 @@ RC-3 adds a deterministic multi-route candidate planner over that same governed
 adapter. Retrieval routes remain discovery/ranking mechanisms only; a deduped
 candidate union crosses one canonical admission boundary before ranking.
 
+Issue #433 adds an Agent Memory-native relational route over shared retained
+evidence. The relation is deliberately narrow: direct provenance neighbors,
+not a claim of semantic graph search or GraphRAG.
+
 The purpose is not to invent a new projection engine. It proves that a
 configured derived component can be disabled, physically removed, and rebuilt
 from canonical state without changing canonical logical memory identity or
@@ -33,6 +37,7 @@ from ..state.projections import (
     REFERENCE_ONLY,
     REPRODUCIBLE,
 )
+from ..state.substrate import EvidenceNeighborTemporalGraphPort
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_config import RuntimeConfigurationPlan
 
@@ -42,6 +47,7 @@ RETRIEVAL_CAPABILITY = "exact_identity_retrieval"
 PROJECTION_CAPABILITY = "rebuild_projection"
 LEXICAL_ROUTE = "lexical"
 EXACT_IDENTITY_ROUTE = "exact_logical_identity"
+SHARED_EVIDENCE_ROUTE = "shared_evidence_neighbor"
 
 
 @dataclass(frozen=True)
@@ -50,6 +56,8 @@ class RetrievalRouteHit:
     candidate_ref: str
     raw_score: float
     logical_memory_ref: str = ""
+    seed_candidate_ref: str = ""
+    shared_evidence_refs: tuple[str, ...] = ()
     authority_effect: str = "none"
 
     def to_dict(self) -> dict[str, object]:
@@ -58,6 +66,8 @@ class RetrievalRouteHit:
             "candidate_ref": self.candidate_ref,
             "raw_score": self.raw_score,
             "logical_memory_ref": self.logical_memory_ref,
+            "seed_candidate_ref": self.seed_candidate_ref,
+            "shared_evidence_refs": list(self.shared_evidence_refs),
             "authority_effect": self.authority_effect,
         }
 
@@ -81,13 +91,13 @@ class MultiRouteRecallResult:
 
 
 class DeterministicMultiRouteRecallPlanner:
-    """RC-3 candidate planner: two routes, one canonical admission boundary.
+    """Candidate planner: lexical, exact identity, and optional provenance neighbors.
 
-    The reference planner intentionally starts small. Lexical search and exact
-    logical identity are both deterministic and already supported by the
-    restart-safe runtime. Future vector, graph, temporal, or System-One routes
-    can add candidate evidence behind this same result shape without inheriting
-    recall authority.
+    The planner remains deliberately provider-neutral and deterministic. Shared-
+    evidence traversal is enabled only when the configured substrate explicitly
+    implements ``EvidenceNeighborTemporalGraphPort``. Future vector, graph,
+    temporal, or System-One routes can add candidate evidence behind this same
+    result shape without inheriting recall authority.
     """
 
     def __init__(self, adapter) -> None:
@@ -110,6 +120,7 @@ class DeterministicMultiRouteRecallPlanner:
         tenant = self.adapter.checkpoint_tenant()
 
         hits: list[RetrievalRouteHit] = []
+        routes_executed = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
         for fact, score in substrate.search(query, group_ids=[tenant]):
             hits.append(
                 RetrievalRouteHit(
@@ -119,6 +130,7 @@ class DeterministicMultiRouteRecallPlanner:
                 )
             )
 
+        seed_pairs: list[tuple[str, str]] = []
         for logical_ref in dict.fromkeys(logical_memory_refs):
             current = self.adapter.current_fact_uuid(logical_ref)
             if current is None:
@@ -131,6 +143,28 @@ class DeterministicMultiRouteRecallPlanner:
                     logical_memory_ref=logical_ref,
                 )
             )
+            seed_pairs.append((logical_ref, current))
+
+        if seed_pairs and isinstance(substrate, EvidenceNeighborTemporalGraphPort):
+            routes_executed.append(SHARED_EVIDENCE_ROUTE)
+            for logical_ref, seed_ref in seed_pairs:
+                seed_fact = substrate.get_fact(seed_ref)
+                if seed_fact is None or seed_fact.is_event_invalid:
+                    continue
+                for fact, shared_refs, score in substrate.evidence_neighbors(
+                    seed_ref,
+                    group_ids=[tenant],
+                ):
+                    hits.append(
+                        RetrievalRouteHit(
+                            route_id=SHARED_EVIDENCE_ROUTE,
+                            candidate_ref=fact.uuid,
+                            raw_score=float(score),
+                            logical_memory_ref=logical_ref,
+                            seed_candidate_ref=seed_ref,
+                            shared_evidence_refs=tuple(shared_refs),
+                        )
+                    )
 
         by_candidate: dict[str, list[RetrievalRouteHit]] = {}
         ordered_candidates: list[str] = []
@@ -156,7 +190,7 @@ class DeterministicMultiRouteRecallPlanner:
         )
         return MultiRouteRecallResult(
             query=query,
-            routes_executed=(LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE),
+            routes_executed=tuple(routes_executed),
             candidates=list(admission.candidates),
             admitted=list(admission.admitted),
             refusals=dict(admission.refusals),
@@ -170,13 +204,19 @@ class DeterministicMultiRouteRecallPlanner:
     @staticmethod
     def _rank_key(candidate_ref: str, hits) -> tuple[object, ...]:
         route_ids = {hit.route_id for hit in hits}
+        exact = 1 if EXACT_IDENTITY_ROUTE in route_ids else 0
+        relational_score = max(
+            (hit.raw_score for hit in hits if hit.route_id == SHARED_EVIDENCE_ROUTE),
+            default=0.0,
+        )
         lexical_score = max(
             (hit.raw_score for hit in hits if hit.route_id == LEXICAL_ROUTE),
             default=0.0,
         )
         return (
             -len(route_ids),
-            -(1 if EXACT_IDENTITY_ROUTE in route_ids else 0),
+            -exact,
+            -relational_score,
             -lexical_score,
             candidate_ref,
         )
@@ -361,7 +401,7 @@ class ConfiguredCompositionRuntime:
         *,
         logical_memory_refs: tuple[str, ...] = (),
     ) -> MultiRouteRecallResult:
-        """RC-3 retrieval: multiple candidate routes, one admission boundary."""
+        """Multiple candidate routes, one canonical governed admission boundary."""
         self._route_for(RETRIEVAL_CAPABILITY)
         return self.recall_planner.recall(
             query,
