@@ -5,10 +5,16 @@ shared-evidence neighbor candidate routes. Its relational route is seeded by
 caller-supplied logical memory references, which is useful for known-memory
 workflows but is not sufficient for natural-language benchmark questions.
 
-This module adds a bounded baseline that may use the highest-ranked *current*
-lexical candidates as relation anchors. It remains candidate generation only:
-all candidates cross the same canonical governed admission boundary once, and
-route scores never create scope, currentness, privacy, or authority.
+This module adds a bounded baseline that may use the highest-value *current*
+lexical candidates as relation anchors. Raw substrate lexical scores are not
+trusted blindly for expansion because stop-word overlap can outrank the
+content-bearing clue needed to reach related memory. Anchor selection therefore
+re-ranks lexical candidates by deterministic content-term overlap before using
+the substrate score as a tie-breaker.
+
+It remains candidate generation only: all candidates cross the same canonical
+governed admission boundary once, and route scores never create scope,
+currentness, privacy, or authority.
 
 The planner is intentionally opt-in and separate from the default runtime path.
 That prevents benchmark experimentation from silently changing application
@@ -19,6 +25,7 @@ or System-One route planning.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import re
 
 from .adapter import RecallContext
 from .contextual_recall_adapter import admit_preselected_candidates
@@ -36,26 +43,57 @@ from ..state.substrate import EvidenceNeighborTemporalGraphPort
 QUERY_ANCHOR_SOURCE = "query_lexical_anchor"
 EXPLICIT_ANCHOR_SOURCE = "explicit_logical_identity"
 
+_WORD = re.compile(r"[a-z0-9]+")
+_STOPWORDS = frozenset(
+    {
+        "a", "an", "and", "are", "as", "at", "be", "been", "but", "by",
+        "did", "do", "does", "for", "from", "had", "has", "have", "he",
+        "her", "hers", "him", "his", "how", "i", "in", "into", "is", "it",
+        "its", "me", "my", "of", "on", "or", "our", "ours", "she", "that",
+        "the", "their", "theirs", "them", "they", "this", "to", "was", "we",
+        "were", "what", "when", "where", "which", "who", "why", "with", "you",
+        "your", "yours",
+    }
+)
+
+
+def _content_terms(text: str) -> set[str]:
+    """Return deterministic content-bearing terms for anchor selection only.
+
+    This is intentionally not a replacement for the substrate's lexical search
+    contract. It is a bounded route-planning heuristic used after lexical
+    candidate generation so common function-word overlap cannot choose an
+    unrelated relational expansion seed.
+    """
+    return {term for term in _WORD.findall(text.lower()) if term not in _STOPWORDS}
+
+
+def _content_overlap(query: str, fact_text: str) -> int:
+    return len(_content_terms(query).intersection(_content_terms(fact_text)))
+
 
 @dataclass(frozen=True)
 class QueryDrivenRecallConfig:
     """Bounded deterministic route-planning controls."""
 
     lexical_anchor_limit: int = 3
+    minimum_anchor_content_overlap: int = 1
 
     def __post_init__(self) -> None:
         if self.lexical_anchor_limit < 0:
             raise ValueError("lexical_anchor_limit must be non-negative")
+        if self.minimum_anchor_content_overlap < 1:
+            raise ValueError("minimum_anchor_content_overlap must be >= 1")
 
 
 class DeterministicQueryDrivenRecallPlanner:
-    """Lexical anchors + optional exact seeds + provenance neighbors.
+    """Lexical candidates + bounded query anchors + optional exact seeds.
 
-    Retrieval order and limits are deterministic. A lexical anchor must be
-    current at candidate-generation time before it can expand. Neighbor facts
-    themselves may still be stale or otherwise inadmissible so the canonical
-    admission layer can record the controlling refusal rather than silently
-    erasing discoverability evidence.
+    Retrieval order and limits are deterministic. A query-derived anchor must
+    be current and have content-bearing overlap before it can expand. Neighbor
+    facts themselves may still be stale or otherwise inadmissible so the
+    canonical admission layer can record the controlling refusal rather than
+    silently erasing discoverability evidence.
     """
 
     def __init__(self, adapter, *, config: QueryDrivenRecallConfig | None = None) -> None:
@@ -120,14 +158,19 @@ class DeterministicQueryDrivenRecallPlanner:
                     expanded_seeds=expanded_seeds,
                 )
 
-            remaining = self.config.lexical_anchor_limit
-            for fact, _score in lexical_results:
-                if remaining <= 0:
-                    break
+            ranked_anchors: list[tuple[int, float, object]] = []
+            for fact, raw_score in lexical_results:
                 if fact.uuid in expanded_seeds:
                     continue
                 if fact.is_event_invalid or fact.is_transaction_expired:
                     continue
+                overlap = _content_overlap(query, fact.fact_text)
+                if overlap < self.config.minimum_anchor_content_overlap:
+                    continue
+                ranked_anchors.append((overlap, float(raw_score), fact))
+
+            ranked_anchors.sort(key=lambda item: (-item[0], -item[1], item[2].uuid))
+            for _overlap, _raw_score, fact in ranked_anchors[: self.config.lexical_anchor_limit]:
                 self._expand_seed(
                     substrate,
                     tenant,
@@ -136,7 +179,6 @@ class DeterministicQueryDrivenRecallPlanner:
                     logical_memory_ref="",
                     expanded_seeds=expanded_seeds,
                 )
-                remaining -= 1
 
         by_candidate: dict[str, list[RetrievalRouteHit]] = {}
         ordered_candidates: list[str] = []
