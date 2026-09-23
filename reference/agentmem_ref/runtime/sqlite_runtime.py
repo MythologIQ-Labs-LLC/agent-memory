@@ -2,11 +2,11 @@
 
 Unlike the reference file-checkpoint profile, this runtime keeps canonical
 substrate state and the governed runtime envelope in one SQLite database and
-publishes them through one SQLite transaction.  The database is therefore the
+publishes them through one SQLite transaction. The database is therefore the
 durable source of truth for this profile rather than a serialized substrate
 snapshot.
 
-The profile is deliberately single-host.  SQLite provides transactional local
+The profile is deliberately single-host. SQLite provides transactional local
 durability; it does not provide distributed consensus or network-partition
 semantics.
 """
@@ -103,15 +103,18 @@ def _validate_journal(rows: Iterable[dict]) -> dict | None:
         previous_digest = "" if previous is None else str(previous["record_digest"])
         if raw.get("previous_record_digest") != previous_digest:
             raise RuntimeRecoveryError("SQLite runtime journal chain is broken")
-        material = {key: raw[key] for key in (
-            "schema_version",
-            "transaction_protocol",
-            "generation",
-            "substrate_digest",
-            "governance_digest",
-            "interpretation_digest",
-            "previous_record_digest",
-        )}
+        material = {
+            key: raw[key]
+            for key in (
+                "schema_version",
+                "transaction_protocol",
+                "generation",
+                "substrate_digest",
+                "governance_digest",
+                "interpretation_digest",
+                "previous_record_digest",
+            )
+        }
         if raw.get("record_digest") != _digest(material):
             raise RuntimeRecoveryError("SQLite runtime journal record digest mismatch")
         previous = dict(raw)
@@ -367,7 +370,16 @@ class SQLiteRestartSafeRuntime:
         self.adapter.restore_checkpoint_state(adapter_raw)
         self.visibility_snapshots = dict(visibility)
 
-    def _transactional_mutation(self, operation):
+    def _transactional_operation(self, operation):
+        """Publish canonical or governance side effects as one SQLite generation.
+
+        Governed recall is memory-content read-only, but it allocates decision,
+        event, and correlation identifiers and appends audit evidence. Those
+        effects are governance state and must commit atomically just like a
+        canonical mutation. Keeping them inside this seam prevents a read from
+        advancing durable identifier state without advancing the bound runtime
+        generation.
+        """
         try:
             with self.substrate.transaction():
                 current = self.substrate.read_runtime_state()
@@ -386,6 +398,14 @@ class SQLiteRestartSafeRuntime:
         self.recovery_evidence = evidence
         return result
 
+    def run_governed_read(self, operation):
+        return self._transactional_operation(operation)
+
+    def governed_recall(self, query, context=None):
+        return self.run_governed_read(
+            lambda: self.adapter.governed_recall(query, context)
+        )
+
     def commit_proposal(
         self,
         proposal,
@@ -395,7 +415,7 @@ class SQLiteRestartSafeRuntime:
         evidence=None,
         attestation=None,
     ):
-        return self._transactional_mutation(
+        return self._transactional_operation(
             lambda: self.adapter.commit_proposal(
                 proposal,
                 fact_text,
@@ -413,7 +433,7 @@ class SQLiteRestartSafeRuntime:
         external_verification=None,
         evidence=None,
     ):
-        return self._transactional_mutation(
+        return self._transactional_operation(
             lambda: self.adapter.governed_delete(
                 proposal,
                 fact_uuid,
@@ -501,6 +521,16 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
     def checkpoint(self) -> ConfigBoundRecoveryEvidence:
         self.base.checkpoint()
         return self._bind_current_base()
+
+    def run_governed_read(self, operation):
+        result = self.base.run_governed_read(operation)
+        self._bind_current_base()
+        return result
+
+    def governed_recall(self, query, context=None):
+        return self.run_governed_read(
+            lambda: self.adapter.governed_recall(query, context)
+        )
 
     def commit_proposal(self, proposal, fact_text: str, episode=None, *, evidence=None, attestation=None):
         result = self.base.commit_proposal(
