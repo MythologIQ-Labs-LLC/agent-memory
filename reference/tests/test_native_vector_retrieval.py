@@ -341,8 +341,10 @@ class NativeVectorRetrievalTests(unittest.TestCase):
             vector_hits[0].representation_config_digest,
             self.representation.spec.config_digest,
         )
+        # Rebuild posture belongs to the representation profile rather than the
+        # per-candidate normalized hit. The benchmark binds the same profile.
         self.assertEqual(
-            vector_hits[0].rebuild_posture,
+            self.vector.spec.rebuild_posture,
             DETERMINISTIC_REBUILD_POSTURE,
         )
 
