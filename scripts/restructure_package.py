@@ -54,7 +54,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
     ),
     "memory": (
         "a2a_collaboration", "agent_manifest_correlation", "agent_manifest_external_evidence",
-        "approval_evidence", "cmcp_external_evidence", "cognitive_mesh",
+        "approval_evidence", "checkpoint_migration", "cmcp_external_evidence", "cognitive_mesh",
         "conditional_memory_influence", "crossing", "dashclaw_authority",
         "dashclaw_external_verdict", "dashclaw_governed_commit", "decision_overwrite",
         "deletion_completeness", "derivation_currentness", "derivation_evidence",
