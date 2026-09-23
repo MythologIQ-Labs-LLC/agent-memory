@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "reference_file_checkpoint_v1",
+  "issue": 363,
+  "tranche": 413,
+  "owners": [
+    {
+      "owner": "in_memory_temporal_graph",
+      "state": ["episodes", "facts", "write_log", "identifier_progress"],
+      "classification": "canonical_or_correctness",
+      "checkpoint": "declared"
+    },
+    {
+      "owner": "governed_memory_adapter",
+      "state": [
+        "state_version",
+        "disputed",
+        "tombstones",
+        "fact_scope",
+        "fact_memory",
+        "shared_domain_members",
+        "current_fact_by_memory",
+        "containment_violations",
+        "events",
+        "extension_state"
+      ],
+      "classification": "canonical_governance_or_retained_evidence",
+      "checkpoint": "declared"
+    },
+    {
+      "owner": "rejected_value_registry",
+      "state": ["rejection_history", "readmission_history", "readmission_authority_metadata"],
+      "classification": "canonical_correction_state",
+      "checkpoint": "declared"
+    },
+    {
+      "owner": "restart_runtime",
+      "state": ["runtime_profile", "interpretation_digest", "visibility_snapshots"],
+      "classification": "runtime_interpretation_or_correctness",
+      "checkpoint": "declared"
+    },
+    {
+      "owner": "json_runtime_state_store",
+      "state": ["generation", "substrate_digest", "governance_digest"],
+      "classification": "recovery_metadata",
+      "checkpoint": "declared"
+    }
+  ],
+  "not_yet_composed": [
+    {
+      "owner": "projection_store",
+      "state": "projection_declarations_supersession_purge_residue",
+      "required_before_rc_composition": true
+    },
+    {
+      "owner": "shared_write_coordinator",
+      "state": "write_claims",
+      "required_before_rc_composition": true
+    },
+    {
+      "owner": "telemetry_store",
+      "state": "correctness_bearing_telemetry_only",
+      "required_before_rc_composition": true
+    }
+  ]
+}

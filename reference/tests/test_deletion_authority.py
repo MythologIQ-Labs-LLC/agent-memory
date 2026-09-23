@@ -7,7 +7,11 @@ import unittest
 
 from agentmem_ref import policy, restart_runtime
 from agentmem_ref.adapter import GovernedMemoryAdapter
-from agentmem_ref.restart_runtime import CapabilityBinding, RuntimeProfile
+from agentmem_ref.restart_runtime import (
+    CapabilityBinding,
+    CheckpointableGovernedMemoryAdapter,
+    RuntimeProfile,
+)
 from agentmem_ref.substrate import InMemoryTemporalGraph
 
 TENANT = "tenant-A"
@@ -166,15 +170,15 @@ class BindingSurvivesRestartTest(unittest.TestCase):
 
     def test_delete_still_commits_after_a_restart(self):
         substrate = InMemoryTemporalGraph()
-        adapter = GovernedMemoryAdapter(substrate, tenant=TENANT)
+        adapter = CheckpointableGovernedMemoryAdapter(substrate, tenant=TENANT)
         committed = adapter.commit_proposal(_proposal("p1", "mem:A"), "value")
 
-        snapshot = restart_runtime._snapshot_governance(
+        governance = restart_runtime._snapshot_governance(
             adapter, profile=_PROFILE, visibility_snapshots={}
         )
-        restored_substrate = InMemoryTemporalGraph()
-        restored_substrate._facts = dict(substrate._facts)
-        restored, _ = restart_runtime._restore_adapter(restored_substrate, snapshot)
+        substrate_snapshot = restart_runtime._snapshot_substrate(substrate)
+        restored_substrate = restart_runtime._restore_substrate(substrate_snapshot)
+        restored, _ = restart_runtime._restore_adapter(restored_substrate, governance)
 
         self.assertEqual("mem:A", restored._fact_memory.get(committed.fact_uuid))
         result = restored.governed_delete(

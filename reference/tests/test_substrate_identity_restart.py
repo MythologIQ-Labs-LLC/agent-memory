@@ -1,14 +1,17 @@
-"""GAP-SEC-08 / LD6: the substrate counter must survive a restart.
+"""GAP-SEC-08 / #363: substrate identity state survives restart by contract.
 
-Audit ground V1: restart_runtime previously rebound `adapter._ids` to a fresh
-private DeterministicIds, which detached the adapter from the substrate counter
-and silently reverted the collision fix on the first restart.
+The durability profile must preserve the substrate-scoped counter without
+reaching into ``_ids``, ``_facts``, or other provider-private state.
 """
 import unittest
 
 from agentmem_ref import policy, restart_runtime
 from agentmem_ref.adapter import GovernedMemoryAdapter
-from agentmem_ref.restart_runtime import CapabilityBinding, RuntimeProfile
+from agentmem_ref.restart_runtime import (
+    CapabilityBinding,
+    CheckpointableGovernedMemoryAdapter,
+    RuntimeProfile,
+)
 from agentmem_ref.substrate import Fact, InMemoryTemporalGraph
 
 _PROFILE = RuntimeProfile(
@@ -62,12 +65,13 @@ def _proposal(proposal_id, tenant, target_reference):
 class RestartCounterTest(unittest.TestCase):
     def test_restored_adapter_stays_bound_to_the_substrate_counter(self):
         substrate = InMemoryTemporalGraph()
-        adapter = GovernedMemoryAdapter(substrate, tenant="tenant-A")
+        adapter = CheckpointableGovernedMemoryAdapter(substrate, tenant="tenant-A")
         adapter.commit_proposal(_proposal("p-1", "tenant-A", "mem:A"), "value")
 
-        snapshot = _snapshot(adapter)
-        restored_substrate = InMemoryTemporalGraph()
-        restored = _restore(snapshot, restored_substrate)
+        governance = _snapshot(adapter)
+        substrate_snapshot = restart_runtime._snapshot_substrate(substrate)
+        restored_substrate = restart_runtime._restore_substrate(substrate_snapshot)
+        restored = _restore(governance, restored_substrate)
         self.assertIs(
             restored._ids,
             restored_substrate._ids,
@@ -76,13 +80,13 @@ class RestartCounterTest(unittest.TestCase):
 
     def test_counter_advances_past_restored_identifiers(self):
         substrate = InMemoryTemporalGraph()
-        adapter = GovernedMemoryAdapter(substrate, tenant="tenant-A")
+        adapter = CheckpointableGovernedMemoryAdapter(substrate, tenant="tenant-A")
         first = adapter.commit_proposal(_proposal("p-1", "tenant-A", "mem:A"), "value")
 
-        snapshot = _snapshot(adapter)
-        restored_substrate = InMemoryTemporalGraph()
-        restored_substrate._facts = dict(substrate._facts)
-        restored = _restore(snapshot, restored_substrate)
+        governance = _snapshot(adapter)
+        substrate_snapshot = restart_runtime._snapshot_substrate(substrate)
+        restored_substrate = restart_runtime._restore_substrate(substrate_snapshot)
+        restored = _restore(governance, restored_substrate)
 
         after = restored.commit_proposal(
             _proposal("p-2", "tenant-A", "mem:B"), "second value"
@@ -90,6 +94,15 @@ class RestartCounterTest(unittest.TestCase):
         self.assertNotEqual(first.fact_uuid, after.fact_uuid)
         self.assertGreater(after.fact_uuid, first.fact_uuid)
         self.assertEqual(2, len(list(restored_substrate.all_facts())))
+
+    def test_noncheckpointable_adapter_is_not_silently_durable(self):
+        substrate = InMemoryTemporalGraph()
+        adapter = GovernedMemoryAdapter(substrate, tenant="tenant-A")
+        with self.assertRaisesRegex(
+            restart_runtime.RuntimeRecoveryError,
+            "governed adapter does not declare checkpoint capability",
+        ):
+            _snapshot(adapter)
 
     def test_missing_counter_raises_rather_than_destroying_a_restored_fact(self):
         """DoD 11: the disclosed residual is loud, not silent."""
