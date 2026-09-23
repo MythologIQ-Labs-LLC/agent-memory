@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "benchmark_id": "agent-memory-rc-retrieval-quality",
+  "benchmark_version": "1.0.0",
+  "tenant_ref": "tenant-benchmark",
+  "default_project_ref": "project-alpha",
+  "purpose": "retrieval-quality-evaluation",
+  "memories": [
+    {
+      "memory_ref": "memory:deploy-window",
+      "fact_text": "deploy window is Thursday",
+      "project_ref": "project-alpha",
+      "evidence_refs": ["experience:deploy-001"]
+    },
+    {
+      "memory_ref": "memory:deploy-belief",
+      "fact_text": "staged rollout remains preferred",
+      "project_ref": "project-alpha",
+      "evidence_refs": ["experience:deploy-001"]
+    },
+    {
+      "memory_ref": "memory:backup-policy",
+      "fact_text": "database backups run nightly",
+      "project_ref": "project-alpha",
+      "evidence_refs": ["experience:backup-001"]
+    },
+    {
+      "memory_ref": "memory:foreign-related",
+      "fact_text": "foreign deployment evidence belongs to beta",
+      "project_ref": "project-beta",
+      "evidence_refs": ["experience:deploy-001"]
+    },
+    {
+      "memory_ref": "memory:stale-related",
+      "fact_text": "deprecated rollout procedure used canary zero",
+      "project_ref": "project-alpha",
+      "evidence_refs": ["experience:deploy-001"],
+      "invalidate_after_retain": true
+    },
+    {
+      "memory_ref": "memory:team-lunch",
+      "fact_text": "team lunch is Tuesday",
+      "project_ref": "project-alpha",
+      "evidence_refs": ["experience:lunch-001"]
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "direct-lexical-hit",
+      "query": "deploy window",
+      "logical_memory_refs": [],
+      "project_ref": "project-alpha",
+      "relevant_memory_refs": ["memory:deploy-window"],
+      "forbidden_memory_refs": ["memory:foreign-related", "memory:stale-related"]
+    },
+    {
+      "case_id": "exact-identity-rescue",
+      "query": "weather forecast",
+      "logical_memory_refs": ["memory:backup-policy"],
+      "project_ref": "project-alpha",
+      "relevant_memory_refs": ["memory:backup-policy"],
+      "forbidden_memory_refs": []
+    },
+    {
+      "case_id": "shared-evidence-neighbor-rescue",
+      "query": "weather forecast",
+      "logical_memory_refs": ["memory:deploy-window"],
+      "project_ref": "project-alpha",
+      "relevant_memory_refs": ["memory:deploy-window", "memory:deploy-belief"],
+      "forbidden_memory_refs": ["memory:foreign-related", "memory:stale-related"]
+    },
+    {
+      "case_id": "multi-route-deduplication",
+      "query": "deploy window",
+      "logical_memory_refs": ["memory:deploy-window"],
+      "project_ref": "project-alpha",
+      "relevant_memory_refs": ["memory:deploy-window", "memory:deploy-belief"],
+      "forbidden_memory_refs": ["memory:foreign-related", "memory:stale-related"]
+    },
+    {
+      "case_id": "unrelated-noise-control",
+      "query": "team lunch",
+      "logical_memory_refs": [],
+      "project_ref": "project-alpha",
+      "relevant_memory_refs": ["memory:team-lunch"],
+      "forbidden_memory_refs": []
+    }
+  ],
+  "limitations": [
+    "synthetic deterministic fixture; not a public conversational-memory benchmark",
+    "no answer-generation model or LLM judge",
+    "exact logical identity is caller-supplied retrieval context",
+    "shared-evidence route measures one bounded provenance relation, not general graph reasoning",
+    "latency and memory-footprint performance are outside this fixture"
+  ]
+}
