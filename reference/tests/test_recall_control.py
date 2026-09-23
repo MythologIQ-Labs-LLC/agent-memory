@@ -13,6 +13,7 @@ from agentmem_ref.recall_control import (
     RecallControlPlan,
     RecallRouteBudget,
 )
+from agentmem_ref.restart_runtime import RuntimeRecoveryError
 from agentmem_ref.runtime_composition import (
     EXACT_IDENTITY_ROUTE,
     LEXICAL_ROUTE,
@@ -280,7 +281,7 @@ class RecallControlTests(unittest.TestCase):
             )
         )
         planner = ControlledRecallPlanner(self.runtime.adapter, controller=fixed)
-        with self.assertRaisesRegex(ValueError, "unavailable routes"):
+        with self.assertRaisesRegex(RuntimeRecoveryError, "unavailable routes"):
             planner.recall("anything", _context())
 
     def test_plan_cannot_claim_authority(self) -> None:
