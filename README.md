@@ -27,7 +27,7 @@ Multiple memory forms. Shared identity and evidence. Explicit lifecycle and reca
 > [!IMPORTANT]
 > **Current status: strong executable reference runtime, pre-RC.**
 >
-> Agent Memory is no longer only an architecture-and-documentation project. The repository contains governed semantic, epistemic, procedural, predictive, cognitive-mesh, persistence, correction, deletion, recall, provider-qualification, and Code Reality Graph execution paths. The reference runtime is restart-safe at its declared boundary and is protected by a large conformance/evidence suite.
+> Agent Memory is no longer only an architecture-and-documentation project. The repository contains governed semantic, epistemic, procedural, predictive, cognitive-mesh, persistence, correction, deletion, multi-route recall, provider-qualification, and Code Reality Graph execution paths. The reference runtime is restart-safe at its declared boundary and is protected by a large conformance/evidence suite.
 >
 > It is **not** yet a production 1.0 system and **not** yet RC1. There are currently **zero production-qualified canonical substrates**. Production substrate qualification is tracked by #427; RC composition and release gates are tracked by #410.
 
@@ -127,6 +127,7 @@ The repository is deliberately strict about the difference between **architectur
 | Semantic + epistemic composition | Restart-safe RC1 reference slice; shared provenance with distinct memory identities and type-preserving recall |
 | Derived projections | Executable freshness, staleness, residue and rebuild governance |
 | Governed recall | Scope/tenant/project/currentness admission with decision evidence |
+| Deterministic multi-route recall | Lexical + exact logical-identity candidate routes; per-route provenance, deduplication, one governed admission boundary, admitted-only ranking |
 | Correction / supersession | Executable and restart-safe in the reference profile |
 | Deletion / tombstones | Executable, evidence-bearing and restart-safe in the reference profile |
 | Shared-domain / crossing authority | Governed mutation paths; RC-relevant authority gaps from #364 are closed |
@@ -134,7 +135,7 @@ The repository is deliberately strict about the difference between **architectur
 | Capability qualification | Executable provider qualification/substitution framework |
 | Hindsight / MemOS | Evidence-proven for bounded `resource_artifact_memory`; **not canonical substrates** |
 | Production canonical substrate | **None qualified yet**; tracked by #427 |
-| Multi-route recall planner | Architecture defined; RC implementation still open |
+| Vector / graph / adaptive recall routes | Not yet promoted into the RC runtime; provider evidence must earn each route |
 | Developer `AgentMemory.open()/remember()/...` facade | RC implementation still open |
 | LoCoMo / LongMemEval RC baseline | Planned RC evidence work; not yet the release benchmark package |
 
@@ -157,6 +158,31 @@ experience:deploy-observation-001
 Those are **not duplicate copies of one string**. They have different identity, semantics, lifecycle and recall behavior. A high-confidence epistemic revision cannot overwrite semantic truth or bypass review. A refused epistemic revision does not roll back an independently committed semantic fact.
 
 This is the architectural point of Agent Memory made executable: multiple memory responsibilities participate in one governed system without pretending they are the same thing.
+
+### Deterministic multi-route recall
+
+RC retrieval now separates **candidate discovery** from **recall admission**.
+
+```text
+query / recall intent
+        |
+        +--> lexical candidate route
+        |
+        +--> exact logical-identity route
+                  |
+                  v
+        dedupe + route provenance
+                  |
+                  v
+        one governed admission boundary
+                  |
+                  v
+        deterministic ranking of admitted candidates only
+```
+
+A route score, exact-identity hit, or future model/controller judgment cannot repair a scope, currentness, dispute, tombstone, or isolation refusal. Retrieval decides where to look; governance decides what may influence active cognition.
+
+The current RC route set is intentionally conservative. Vector, temporal, graph, and adaptive/System-One routes can plug into the same boundary later, but they must earn runtime qualification rather than becoming authoritative because they retrieve convincingly.
 
 ---
 
@@ -257,212 +283,3 @@ memory.posture(...)
 ```
 
 That facade must wrap the canonical contract. It may not become a friendlier bypass around PAMA, recall admission, scope, evidence, or lifecycle rules.
-
----
-
-## RC1 status
-
-RC1 is tracked by **#410** and **[docs/45-agent-memory-rc1-implementation-profile.md](docs/45-agent-memory-rc1-implementation-profile.md)**.
-
-| RC slice | Status |
-|---|---|
-| RC-0 Canonical ADR-035 architecture reconciliation | **Complete** |
-| RC-1 Restart-safe reference semantics | **Complete at the reference boundary** |
-| RC-1 Production canonical substrate qualification | **Open: #427** |
-| RC-2 Multi-memory composition | **First restart-safe semantic + epistemic slice implemented** |
-| RC-3 Multi-route candidate retrieval + governed recall | **Open** |
-| RC-4 Ergonomic developer facade | **Open** |
-| RC-5 Recall/crossing authority seams | **Complete** |
-| RC-6 End-to-end cognitive-memory release scenario | **Open** |
-| RC-7 Release benchmark/evidence package | **Partial** |
-
-**Do not cut RC1 yet.**
-
-The remaining work is now primarily product composition and release evidence rather than architecture invention:
-
-```text
-production substrate qualification (#427)
-        -> multi-route recall
-        -> developer facade
-        -> end-to-end RC scenario
-        -> reproducible quality/performance/governance benchmark package
-        -> RC1
-```
-
-Jev-Mem and other external memory systems are useful comparative pressure and benchmark targets. They do not define Agent Memory's architecture, and Jev is not an RC dependency.
-
-A Rust rewrite is also **not** an RC prerequisite. Profile the coherent runtime first; move only evidenced hot/system-critical kernels behind existing contracts if the measurements justify it.
-
----
-
-## Recall is governed separately from retrieval
-
-Agent Memory treats candidate generation and context admission as different decisions:
-
-```text
-query / task
-  -> requester + purpose + scope
-  -> candidate generation
-  -> normalization
-  -> governed recall admission
-  -> ranking among admitted candidates
-  -> composition-risk checks
-  -> context assembly
-  -> receipt / explanation
-```
-
-The rule is:
-
-> **High relevance does not imply authorized recall.**
-
-Candidate generation may be lexical, exact, vector, graph, temporal, procedural, predictive, source-aware, or eventually controlled by a cheap adaptive/System-One planner. None of those mechanisms gains scope, privacy, tenancy or durable-mutation authority by being good at ranking.
-
-See **[Governed Recall Planner](docs/26-governed-recall-planner.md)**.
-
----
-
-## Lifecycle
-
-The architecture distinguishes proposal from durable consequence and current truth from retained history.
-
-Representative lifecycle states include:
-
-```text
-Transient
-  -> Observed
-  -> Linked
-  -> Reinforced
-  -> Candidate
-  -> Pending Verification
-  -> Crystallized
-  -> Operationally Reused
-  -> Stale
-  -> Disputed
-  -> Corrected
-  -> Reconciled
-  -> Pruned
-```
-
-A repeated or high-confidence proposal cannot authorize its own transition. Correction preserves history. Deletion/forgetting must account for derived residue rather than merely removing one primary row.
-
-See **[Lifecycle State Machine](docs/02-lifecycle-state-machine.md)** and **[Retention, deletion and tombstones](docs/28-retention-deletion-and-tombstones.md)**.
-
----
-
-## Security and privacy posture
-
-Agent Memory treats memory as a security boundary because retained state changes future behavior.
-
-The repository has explicit doctrine and executable pressure tests for:
-
-- tenant / project / isolation boundaries
-- source and evidence provenance
-- unsafe composition
-- authority laundering
-- stale authorization and replay
-- rejected-value readmission
-- disputed/superseded currentness
-- deletion completeness and derived residue
-- shared-domain membership and governed crossing
-- sensitivity / destination handling
-- provider-native confidence or graph output attempting to become authority
-
-Start with **[Memory Threat Model](docs/15-memory-threat-model.md)**, **[Privacy and Sensitivity](docs/19-privacy-and-sensitivity-classifier.md)**, and **[Isolation Domains and Governed Crossing](docs/41-memory-isolation-domains-and-governed-crossing.md)**.
-
----
-
-## Run the reference evidence locally
-
-The repository is installable as a Python package and exposes the current CLI/doctor surface:
-
-```bash
-python -m pip install .
-agent-memory --help
-```
-
-For the pinned reference validation environment:
-
-```bash
-python -m pip install -r reference/requirements.txt
-python scripts/validate_fixtures.py fixtures
-python scripts/validate_schemas.py
-python scripts/validate_doctrine_boundaries.py
-python -m unittest discover -s reference/tests -t reference
-```
-
-Passing these checks proves the boundaries the fixtures and tests actually exercise. It does not magically confer production maturity on every declared component. The repository is quite intentionally rude about that distinction.
-
-See **[Configuration](docs/CONFIGURATION.md)** and **[reference/README.md](reference/README.md)** for the executable evidence environment.
-
----
-
-## Start here
-
-| Goal | Read first |
-|---|---|
-| Understand the architecture | [Layer model](docs/01-layer-model.md), [Component architecture](docs/11-component-architecture.md), [ADR-035](docs/adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md) |
-| Understand authority | [PAMA](docs/pama/README.md), [Governance and PAMA](docs/04-governance-and-pama.md) |
-| Understand recall | [Governed Recall Planner](docs/26-governed-recall-planner.md), [Adapter contracts](docs/34-adapter-contracts.md) |
-| Understand persistence | [State checkpoint contract](docs/46-state-checkpoint-contract.md), [Substrate inventory](docs/43-substrate-inventory-and-maturity.md) |
-| Understand RC1 | [RC1 implementation profile](docs/45-agent-memory-rc1-implementation-profile.md), issue #410 |
-| Review security/privacy | [Threat model](docs/15-memory-threat-model.md), [Privacy](docs/19-privacy-and-sensitivity-classifier.md), [Isolation](docs/41-memory-isolation-domains-and-governed-crossing.md) |
-| Evaluate conformance | [Conformance plan](docs/06-conformance-test-plan.md), [Calibration](docs/09-calibration-protocol.md), [Fixtures](fixtures/) |
-| Research the field | [Research bibliography](docs/23-research-bibliography.md), [Aligned projects](docs/40-aligned-projects-and-intellectual-lineage.md) |
-
-The full documentation map lives in **[docs/README.md](docs/README.md)**.
-
----
-
-## Ownership and external components
-
-Agent Memory owns its architectural contracts. Same-owner projects such as CodeGenome and EvolveAI can contribute first-party implementation material without turning their original ontology into Agent Memory doctrine. See **[ADR-036](docs/adr/ADR-036-same-owner-components-are-first-party-modules.md)** and the **[implementation ownership map](docs/39-implementation-ownership-map.md)**.
-
-Third-party systems remain third-party systems. Qualification records what exact capability, version, source-rights posture, state behavior and authority effect was actually proven.
-
-In particular:
-
-- CodeGenome material participates in the Agent Memory-owned **Code Reality Graph** module.
-- EvolveAI material informs/implements bounded **Cognitive Metabolism** capabilities where adopted and evidenced.
-- Hindsight and MemOS have bounded external capability qualifications with `authority_effect: none`.
-- Graphiti remains an external substrate technology; the current Kuzu-backed driver is experimental evidence, not production qualification.
-
-Provider popularity, benchmark quality, or storage durability does not create Agent Memory authority.
-
----
-
-## What Agent Memory is not claiming
-
-This repository does **not** currently claim:
-
-- production 1.0 readiness
-- RC1 readiness
-- a production-qualified canonical substrate
-- that every architecture module is equally mature
-- that one benchmark proves overall memory quality
-- that a graph, vector store, RAG pipeline, Markdown corpus, or LLM context window is sufficient memory by itself
-- that estimator confidence is authorization
-- that a provider's internal ontology becomes Agent Memory's ontology
-- that Jev-Mem, Graphiti, Hindsight, MemOS, CodeGenome, EvolveAI, or any other component defines the architecture
-- that Rust would automatically make the system better without profiling evidence
-
-The goal is narrower and harder: **make persistent cognition useful without allowing retained state, retrieval scores, learned procedures, or adaptive controllers to quietly manufacture authority.**
-
----
-
-## Contributing
-
-Contributions are welcome when they preserve the architecture's evidence discipline.
-
-Before adding a memory type, provider, substrate, benchmark, policy engine, or adaptive controller, read:
-
-- **[CONTRIBUTING.md](CONTRIBUTING.md)**
-- **[GOVERNANCE.md](GOVERNANCE.md)**
-- **[SECURITY.md](SECURITY.md)**
-- **[Evidence Promotion Policy](docs/policies/EVIDENCE_PROMOTION.md)**
-- **[Source Rights Policy](docs/SOURCE_RIGHTS_POLICY.md)**
-
-Do not promote a component because it is fashionable. Do not promote a benchmark because it is flattering. Do not promote an estimator because it sounds certain. Computers already have enough confidence problems inherited from humans.
-
-## License
-
-Apache License 2.0. See **[LICENSE](LICENSE)**.

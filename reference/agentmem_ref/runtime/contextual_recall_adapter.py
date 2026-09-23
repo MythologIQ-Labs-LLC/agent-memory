@@ -4,16 +4,94 @@ The wrapped GovernedMemoryAdapter executes canonical lifecycle/scope admission
 first. This adapter only evaluates candidates that survived that gate and may
 further restrict them. It has no path that can widen or repair a built-in
 refusal.
+
+RC-3 also needs candidate generation to be separable from canonical admission.
+``admit_preselected_candidates`` is the narrow reference seam for that purpose:
+retrieval routes may discover candidate identifiers, but this module sends the
+union through the same built-in lifecycle/scope/currentness rules exactly once.
+It is intentionally runtime-internal rather than a public product API.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Iterable
 
-from ..core import receipts
-from .adapter import Clock, GovernedMemoryAdapter, RecallContext
+from ..core import policy, receipts
+from .adapter import AdmissionResult, Clock, GovernedMemoryAdapter, RecallContext
 from ..core.contextual_recall import ADMITTING_OUTCOMES, fail_closed_decision
+
+
+def admit_preselected_candidates(
+    base: GovernedMemoryAdapter,
+    candidate_refs: Iterable[str],
+    context: RecallContext,
+    *,
+    query_label: str = "preselected-candidates",
+) -> AdmissionResult:
+    """Apply canonical built-in admission to a preselected candidate set once.
+
+    Candidate generation is deliberately outside this function. The caller may
+    use lexical, identity, graph, vector, or future controller-backed routes,
+    but route output is only evidence of discoverability. Every distinct
+    candidate is re-bound to the adapter's current substrate object and passed
+    through the adapter's canonical admission rules before it can enter active
+    cognition.
+
+    The current reference adapter predates an explicit public candidate-
+    admission port, so this same-runtime helper delegates to its internal
+    admission/decision/event builders. That dependency is intentionally
+    concentrated here instead of duplicated by every retrieval route. No raw
+    substrate object is returned to the caller and no refusal can be widened.
+    """
+    substrate_reader = getattr(base, "checkpoint_substrate", None)
+    if not callable(substrate_reader):
+        raise ValueError(
+            "preselected candidate admission requires a runtime adapter with a declared substrate collaborator"
+        )
+    substrate = substrate_reader()
+
+    evaluated_at = base._clock.now()
+    result = AdmissionResult(
+        policy_version=policy.POLICY_VERSION,
+        evaluated_at=evaluated_at,
+    )
+    correlation = base._ids.next()
+    seen: set[str] = set()
+
+    for candidate_ref in candidate_refs:
+        if not candidate_ref or candidate_ref in seen:
+            continue
+        seen.add(candidate_ref)
+        result.candidates.append(candidate_ref)
+
+        fact = substrate.get_fact(candidate_ref)
+        refusal = (
+            "candidate_not_found"
+            if fact is None
+            else base._admission_refusal(fact, context)
+        )
+        if refusal:
+            result.refusals[candidate_ref] = refusal
+        else:
+            result.admitted.append(candidate_ref)
+        result.decisions[candidate_ref] = base._recall_decision(
+            candidate_ref,
+            context,
+            refusal,
+            evaluated_at,
+        )
+
+    base.events.append(
+        base._recall_event(
+            query_label,
+            context,
+            result,
+            correlation,
+            evaluated_at,
+        )
+    )
+    return result
 
 
 @dataclass
