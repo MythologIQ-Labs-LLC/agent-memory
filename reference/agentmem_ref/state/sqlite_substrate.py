@@ -167,16 +167,11 @@ class SQLiteTemporalGraph:
     def sqlite_version(self) -> str:
         return sqlite3.sqlite_version
 
-    @property
-    def python_sqlite_module_version(self) -> str:
-        return sqlite3.version
-
     def operational_identity(self) -> dict[str, str]:
         return {
             "substrate_profile": SQLITE_SUBSTRATE_PROFILE,
             "substrate_schema_version": SQLITE_SUBSTRATE_SCHEMA_VERSION,
             "sqlite_version": self.sqlite_version,
-            "python_sqlite_module_version": self.python_sqlite_module_version,
             "source_rights": SQLITE_SOURCE_RIGHTS,
             "journal_mode": str(self._connection.execute("PRAGMA journal_mode").fetchone()[0]).lower(),
             "synchronous": str(self._connection.execute("PRAGMA synchronous").fetchone()[0]),
