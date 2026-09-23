@@ -1,0 +1,3 @@
+{"type":"summary","summary":"Migration serializer preserves field defaults during schema generation"}
+{"type":"user","message":{"role":"user","content":"Fix this bug to solve the issue based on manual.yaml:\n  instance_id: acme__web-200\n  repo: acme/web\n  base_commit: def456\n  problem_statement: Database migration serializer drops callable field defaults when generating migrations."}}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Updated the migration serializer to preserve callable defaults while deconstructing fields."}]}}
