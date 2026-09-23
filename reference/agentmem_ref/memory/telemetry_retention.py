@@ -11,11 +11,16 @@ unsearchable pseudonymous state into proof of deletion.
 
 from __future__ import annotations
 
+import copy
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from typing import Mapping
 
 from ..core import receipts
 from .telemetry import TelemetryProjector
+
+TELEMETRY_CHECKPOINT_SCHEMA_VERSION = "1.0.0"
+TELEMETRY_CHECKPOINT_OWNER = "telemetry_store"
 
 
 @dataclass(frozen=True)
@@ -36,6 +41,57 @@ class TelemetryStore:
 
     def __init__(self) -> None:
         self._records: list[TelemetryRecord] = []
+
+    # -- declared checkpoint capability --------------------------------
+
+    def export_checkpoint_state(self) -> dict:
+        """Export retained telemetry evidence without raw memory ids or keys."""
+        return {
+            "schema_version": TELEMETRY_CHECKPOINT_SCHEMA_VERSION,
+            "checkpoint_owner": TELEMETRY_CHECKPOINT_OWNER,
+            "records": [
+                {
+                    "projection": copy.deepcopy(record.projection),
+                    "expires_at": record.expires_at,
+                }
+                for record in self._records
+            ],
+        }
+
+    def restore_checkpoint_state(self, snapshot: Mapping[str, object]) -> None:
+        """Restore retained telemetry while preserving deletion uncertainty."""
+        if snapshot.get("schema_version") != TELEMETRY_CHECKPOINT_SCHEMA_VERSION:
+            raise ValueError("unsupported telemetry checkpoint schema")
+        if snapshot.get("checkpoint_owner") != TELEMETRY_CHECKPOINT_OWNER:
+            raise ValueError("telemetry checkpoint owner mismatch")
+        raw_records = snapshot.get("records")
+        if not isinstance(raw_records, list):
+            raise ValueError("telemetry checkpoint records are malformed")
+
+        restored: list[TelemetryRecord] = []
+        try:
+            for raw in raw_records:
+                if not isinstance(raw, Mapping):
+                    raise TypeError("telemetry checkpoint row must be a mapping")
+                projection = raw.get("projection")
+                expires_at = raw.get("expires_at")
+                if not isinstance(projection, Mapping):
+                    raise TypeError("telemetry checkpoint projection must be a mapping")
+                if not isinstance(expires_at, str) or not expires_at:
+                    raise ValueError("telemetry checkpoint expires_at must be non-empty")
+                projection_copy = copy.deepcopy(dict(projection))
+                receipts.validate("telemetry-projection.schema.json", projection_copy)
+                _parse_time(expires_at)
+                restored.append(
+                    TelemetryRecord(
+                        projection=projection_copy,
+                        expires_at=expires_at,
+                    )
+                )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("telemetry checkpoint cannot be reconstructed") from exc
+
+        self._records = restored
 
     def append(self, projection: dict, *, expires_at: str) -> None:
         receipts.validate("telemetry-projection.schema.json", projection)
