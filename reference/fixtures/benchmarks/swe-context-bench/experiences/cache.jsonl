@@ -1,0 +1,4 @@
+{"type":"summary","summary":"Template loader cache invalidation after source file changes"}
+{"type":"file-history-snapshot","snapshot":{"trackedFileBackups":{}}}
+{"type":"user","message":{"role":"user","content":"Fix this bug to solve the issue based on manual.yaml:\n  instance_id: acme__web-100\n  repo: acme/web\n  base_commit: abc123\n  problem_statement: Template renderer returns stale content after the source file changes. The template loader cache is not invalidated."}}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Implemented timestamp-aware cache invalidation in the template loader so edited templates are reloaded instead of serving stale content."}]}}

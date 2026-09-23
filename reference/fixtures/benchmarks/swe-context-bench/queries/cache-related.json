@@ -1,0 +1,6 @@
+{
+  "repo": "acme/web",
+  "instance_id": "acme__web-300",
+  "base_commit": "ghi789",
+  "problem_statement": "The renderer still serves a stale template after editing the source file. Ensure the loader invalidates cached template content when files change."
+}

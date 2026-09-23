@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "upstream_repository": "jiayuanz3/SWEContextBench",
+  "upstream_revision": "synthetic-fixture",
+  "fixture": "original schema-compatible synthetic pilot",
+  "experiences": [
+    {
+      "instance_id": "acme__web-100",
+      "repo": "acme/web",
+      "path": "experiences/cache.jsonl"
+    },
+    {
+      "instance_id": "acme__web-200",
+      "repo": "acme/web",
+      "path": "experiences/migration.jsonl"
+    }
+  ],
+  "queries": [
+    {
+      "related_instance_id": "acme__web-300",
+      "repo": "acme/web",
+      "path": "queries/cache-related.json",
+      "gold_experience_instance_id": "acme__web-100"
+    }
+  ]
+}
