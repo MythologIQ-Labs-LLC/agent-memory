@@ -4,9 +4,11 @@
 
 This document defines Agent Memory as a larger system composed of bounded components.
 
-The doctrine should not collapse every concept into one mega-concept. That would make the architecture sound unified while making implementation worse. A real system needs a shared spine and segmented responsibilities.
+The doctrine should not collapse every concept into one mega-concept. A real system needs a shared spine and segmented responsibilities.
 
-Component boundaries must also preserve the difference between uncertain inference and governed consequence. A probabilistic output crossing a component boundary must not quietly become authority because the receiving component forgot what kind of signal it was.
+Component boundaries must preserve the difference between uncertain inference and governed consequence. A probabilistic output crossing a component boundary must not quietly become authority because the receiving component forgot what kind of signal it was.
+
+They must also preserve the difference between **implementation ancestry** and **runtime ownership**.
 
 ## Core decision
 
@@ -16,11 +18,13 @@ It is not one monolithic product, library, database, score, graph, vault, protoc
 
 PAMA is a native governance component of this architecture, not an external product dependency.
 
+Agent Memory also owns its generic memory machinery. Same-owner prior systems may donate proven mechanisms or continue as specialized domain producers, but they are not the intended permanent owners of generic Agent Memory retrieval, lifecycle, graph, context, or evaluation capabilities.
+
+See [`05-repo-implementation-map.md`](05-repo-implementation-map.md), [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md), and [ADR-036](adr/ADR-036-same-owner-components-are-first-party-modules.md).
+
 ## Accepted cognitive-framework architecture
 
 > **Status:** Accepted by [ADR-035](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md). This section describes the canonical system topology. Existing Accepted ADR boundaries remain controlling within that composition.
-
-ADR-035 makes explicit what the existing component architecture already implied: the bounded components participate in one persistent cognitive system rather than merely surrounding a collection of memory providers.
 
 The accepted top-level architecture is:
 
@@ -68,20 +72,33 @@ module identity != component identity
 component identity != capability identity
 
 one component -> many capabilities
-one capability -> many candidate implementations
+one capability -> many implementation strategies over time
 ```
 
-Under the accepted mapping:
+## First-party ancestry within the accepted architecture
 
-- **EvolveAI** is the initial first-party reference/research implementation for **Cognitive Metabolism**, while its retrieval, graph, persistence, provenance, and other capabilities continue to mature independently;
-- **CodeGenome** is the initial first-party implementation of the **Code Reality Graph**, while its graph, retrieval, structural-reasoning, provenance, freshness, and evaluation capabilities continue to mature independently;
-- **Agent Memory core** owns the Cognitive Mesh contract, cross-module semantics, governance boundaries, and conformance requirements rather than adopting either implementation's internal ontology as canonical doctrine.
+EvolveAI, CodeGenome, and COREFORGE contain substantial prior implementation work that materially informs the accepted architecture. Under ADR-036 they are first-party implementation ancestry, not attributed external providers.
 
-This mapping is architectural responsibility, not capability promotion. First-party ownership does not confer `reference_qualified` maturity.
+The intended migration rule is:
 
-### Cognitive Mesh
+```text
+first-party mechanism
+    -> inspect / validate / harvest
+    -> native Agent Memory capability
+```
 
-The Cognitive Mesh is the shared substrate through which persistent cognitive objects and typed relationships can participate in multiple bounded modules without losing their semantic type, provenance, uncertainty, scope, lifecycle, or authority posture.
+Specifically:
+
+- **EvolveAI** is implementation ancestry and a behavioral test oracle for Cognitive Metabolism, vector retrieval, temporal graph behavior, tier routing, decay, consolidation, pruning, crystallization, restart, and failure-memory mechanisms.
+- **CodeGenome** is implementation ancestry for generic graph/vector/provenance/evaluation mechanisms and may continue as a **specialized code-domain observation source**.
+- **COREFORGE Vault / Neurospace** is product/runtime ancestry for context brokerage, memory domains, references, graph recall, mutation boundaries, and lineage. The desired end-state direction is for COREFORGE to consume Agent Memory for generic memory capabilities.
+- **Agent Memory core/runtime** owns the Cognitive Mesh contract, generic memory machinery, cross-module semantics, governance boundaries, and conformance requirements.
+
+This mapping is architecture and ownership, not capability promotion. First-party ancestry does not confer production maturity.
+
+## Cognitive Mesh
+
+The Cognitive Mesh is the shared substrate through which persistent cognitive objects and typed relationships can participate in multiple bounded modules without losing semantic type, provenance, uncertainty, scope, lifecycle, currentness, or authority posture.
 
 Candidate object classes include:
 
@@ -139,30 +156,31 @@ confidence != permission
 persistence != correctness
 ```
 
-### Module responsibilities
+## Module responsibilities
 
-| Module | Responsibility | Initial implementation / source | Must not silently own |
+| Module | Responsibility | Native owner / ancestry | Must not silently own |
 |---|---|---|---|
-| Cognitive Mesh | Shared cognitive identity and typed relation substrate | Agent Memory core contract/reference substrate | universal truth, mutation authority |
-| Cognitive Metabolism | salience, decay, reinforcement, persistence pressure, consolidation candidacy, adaptive restructuring proposals | EvolveAI | truth, deletion authority, crystallization authority |
-| Working Memory & Attention | active admitted cognitive state | Agent Memory reference implementation | bypass of recall admission |
-| Consolidation & Abstraction | candidate semantic/procedural/generalized structures | Agent Memory contract + qualified provider mechanisms | canonicality from repetition alone |
-| Predictive / World Modeling | expectations about future or latent state | pluggable; no canonical implementation yet | factual truth or action authority |
-| Procedural Memory & Skills | retained reusable procedures | Agent Memory procedural-memory profile | execution permission |
-| Reality Graphs | domain-specific external/operational reality | pluggable domain implementations | memory permanence or downstream authority |
-| Code Reality Graph | code-domain identity, structure, evidence, freshness, impact | CodeGenome | universal Cognitive Mesh ontology |
-| PAMA | mutation/consequence authority | Agent Memory native doctrine | factual truth |
-| Conformance / Evaluation | module and composition evidence | Agent Memory | product claims without evidence |
+| Cognitive Mesh | shared cognitive identity and typed relation substrate | **Agent Memory** | universal truth, mutation authority |
+| Cognitive Metabolism | salience, decay, reinforcement, persistence pressure, consolidation candidacy, adaptive restructuring proposals | **Agent Memory**; EvolveAI ancestry | truth, deletion authority, crystallization authority |
+| Working Memory & Attention | active admitted cognitive state | **Agent Memory** | bypass of recall admission |
+| Consolidation & Abstraction | candidate semantic/procedural/generalized structures | **Agent Memory**; EvolveAI and other mechanisms may inform implementation | canonicality from repetition alone |
+| Predictive / World Modeling | expectations about future or latent state | **Agent Memory contract**, pluggable estimators | factual truth or action authority |
+| Procedural Memory & Skills | retained reusable procedures | **Agent Memory** procedural-memory profile | execution permission |
+| Reality Graphs | domain-specific external/operational reality | **Agent Memory framework** with specialized domain sources | memory permanence or downstream authority |
+| Code Reality Graph | code-domain identity, structure, evidence, freshness, impact | **Agent Memory CRG boundary**; CodeGenome may supply code-domain observations and ancestry | universal Cognitive Mesh ontology |
+| Retrieval | exact, lexical, relational, vector, temporal, graph candidate discovery | **Agent Memory**; EvolveAI/CodeGenome ancestry where useful | recall permission or truth |
+| Runtime Memory / Context Assembly | operational recall and governed context | **Agent Memory**; COREFORGE ancestry, downstream consumers | canonical truth from utility |
+| PAMA | mutation/consequence authority | **Agent Memory native** | factual truth |
+| Conformance / Evaluation | module and composition evidence | **Agent Memory**; CodeGenome experiment-loop ancestry; optional verification peers | product claims without evidence |
 
 ## Accepted system shape
-
-The canonical component decomposition remains:
 
 ```text
 Agent Memory System
 ├── Identity Substrate
 ├── Evidence and Provenance Substrate
 ├── Reality Graphs
+├── Retrieval Machinery
 ├── Lifecycle Engine
 ├── Saturation and Decay Engine
 ├── Governance and Mutation Authority (PAMA)
@@ -182,20 +200,21 @@ ADR-035 establishes the system-level composition of these responsibilities. It d
 
 | Component | Canonical role | Owns | Must not own | Typical control character |
 |---|---|---|---|---|
-| Identity Substrate | Stable object identity | UOR address, deterministic resolution, exact lookup identity | lifecycle policy, truth, promotion | deterministic substrate |
-| Evidence and Provenance Substrate | Why something is believed | source records, observations, witnesses, evidence bundles, estimator provenance | permanence decisions by itself | deterministic records + uncertain evidence |
-| Reality Graphs | Domain-specific structured reality | code graph, decision graph, task graph, relation graph | runtime memory authority | deterministic identity + probabilistic relations |
-| Lifecycle Engine | Memory state transitions | transient, observed, linked, candidate, disputed, pruned, crystallized | identity semantics | governed state machine |
-| Saturation and Decay Engine | Persistence pressure | calibrated sigma, decay, pressure, routing candidacy | correctness, certification | probabilistic / heuristic / learned estimates |
-| Governance and Mutation Authority | Permission to change memory or downstream authority | native PAMA outcomes, M0-M5 target classes, A0-A5 authority ceilings, risk, reversibility | raw scoring, factual truth | deterministic or formally bounded governance envelope |
-| Certification and Crystallization Gate | Durable transition approval | verification, approval, certificate, scope | ongoing truth forever | governed consequence |
-| Runtime Memory Space | Operational use | Vault, Neurospace, context recall, graph traversal | canonical doctrine ownership | hybrid retrieval + enforced scope |
-| Context Assembly Surface | What the agent sees now | prompt context, retrieved memories, active constraints | memory mutation without authority | probabilistic ranking inside governed admission |
-| Correction and Dispute Surface | How memory changes safely | user correction, contradiction, reconciliation | silent overwrite | mixed inference + governed commit |
-| Durable Decision Memory | Decision continuity and rationale | durable decisions, supersession, drift evidence, rationale preservation | product-specific ownership | governed memory profile |
-| Governance Context Projection | Vendor-neutral governance-facing view | derived precedent/context, material conditions, polarity, validity, derivation metadata | canonical memory truth, standing permission, consumer verdicts | deterministic projection first; estimator-mediated retrieval only as typed evidence |
-| Conformance and Calibration Harness | System validation | fixtures, reports, trap classes, threshold calibration | product UX | measurement and falsification |
-| Product and Agent Integrations | Adoption surfaces | implementations with explicit mapping evidence, consumer-specific adapters | redefining canonical terms locally | implementation-specific within doctrine |
+| Identity Substrate | stable object identity | Agent Memory identity contract; exact-address mechanism | lifecycle policy, truth, promotion | deterministic substrate |
+| Evidence and Provenance Substrate | why something is believed | source records, observations, witnesses, evidence bundles, estimator provenance | permanence decisions by itself | deterministic records + uncertain evidence |
+| Reality Graphs | domain-specific structured reality | Agent Memory graph contracts/projections | runtime memory authority | deterministic identity + probabilistic relations |
+| Retrieval Machinery | candidate discovery | exact, lexical, relational, semantic/vector, temporal, graph routes as implemented | recall admission, truth, mutation authority | deterministic / probabilistic / hybrid by route |
+| Lifecycle Engine | memory state transitions | transient, observed, linked, candidate, disputed, pruned, crystallized | identity semantics | governed state machine |
+| Saturation and Decay Engine | persistence pressure | calibrated saturation, decay, reinforcement, routing candidacy | correctness, certification | probabilistic / heuristic / learned estimates |
+| Governance and Mutation Authority | permission to change memory or downstream authority | native PAMA outcomes, M0-M5 target classes, A0-A5 authority ceilings, risk, reversibility | raw scoring, factual truth | deterministic or formally bounded governance envelope |
+| Certification and Crystallization Gate | durable transition approval | verification, approval, certificate, scope | ongoing truth forever | governed consequence |
+| Runtime Memory Space | operational memory use | governed recall, currentness, history, persistence/restart posture | canonical doctrine ownership by downstream product | hybrid retrieval + enforced scope |
+| Context Assembly Surface | what the agent sees now | admitted memory/context, active constraints, representation | memory mutation without authority | ranking/assembly after governed admission |
+| Correction and Dispute Surface | how memory changes safely | user correction, contradiction, reconciliation | silent overwrite | mixed inference + governed commit |
+| Durable Decision Memory | decision continuity and rationale | durable decisions, supersession, drift evidence, rationale preservation | product-specific ownership | governed memory profile |
+| Governance Context Projection | vendor-neutral governance-facing view | derived precedent/context, material conditions, polarity, validity, derivation metadata | canonical memory truth, standing permission, consumer verdicts | deterministic projection first; estimator-mediated retrieval only as typed evidence |
+| Conformance and Calibration Harness | system validation | fixtures, reports, trap classes, threshold calibration, benchmark manifests | product UX | measurement and falsification |
+| Product and Agent Integrations | adoption surfaces | consumer-specific adapters and product behavior | redefining canonical Agent Memory terms locally | implementation-specific within doctrine |
 
 ## Component interaction pipeline
 
@@ -203,23 +222,24 @@ ADR-035 establishes the system-level composition of these responsibilities. It d
 Artifact or experience
   -> Identity Substrate
   -> Evidence and Provenance Substrate
-  -> Reality Graph or Memory Unit
-  -> probabilistic / heuristic interpretation
+  -> Reality Graph and/or Memory Unit
+  -> deterministic / probabilistic candidate processing
   -> Lifecycle and Saturation proposal
   -> Governance and Mutation Authority (PAMA)
   -> permitted action set
   -> Certification and Crystallization Gate when required
   -> committed state transition
-  -> Runtime Memory Space
-  -> recall-time governance
+  -> native Runtime Memory Space
+  -> candidate retrieval
+  -> governed recall admission
   -> Context Assembly Surface
 ```
 
-Corrections and disputes can re-enter the pipeline at Evidence, Lifecycle, Governance, or Certification depending on severity.
+Corrections and disputes can re-enter at Evidence, Lifecycle, Governance, or Certification depending on severity.
 
 The pipeline describes responsibility and authority flow, not necessarily one synchronous execution order.
 
-The accepted ADR-035 architecture generalizes the same boundary into a cognitive loop:
+ADR-035 generalizes the same boundary into a cognitive loop:
 
 ```text
 experience / observation
@@ -229,12 +249,13 @@ experience / observation
   -> candidate cognitive change
   -> PAMA authority evaluation
   -> governed durable commit or refusal
+  -> candidate retrieval
   -> governed recall
   -> Working Memory & Attention
   -> active cognition
 ```
 
-A learned signal, graph score, prediction, or provider-native verdict remains a proposal unless existing authority doctrine says otherwise.
+A learned signal, graph score, vector similarity, prediction, or domain-native verdict remains a proposal/evidence signal unless existing authority doctrine says otherwise.
 
 Governance Context Projection is an optional derived branch from canonical memory and governed recall, not a replacement stage in the canonical write/read path:
 
@@ -246,11 +267,11 @@ canonical memory + evidence + scope + outcome
   -> external governance / approval / enforcement decision
 ```
 
-The consumer may return approval or execution evidence through a separate interoperability/evidence seam. That returned evidence may become new Agent Memory input only through the normal identity, evidence, lifecycle, and authority boundaries.
+Returned approval or execution evidence may become new Agent Memory input only through normal identity, evidence, lifecycle, and authority boundaries.
 
 ## Uncertainty must survive handoff
 
-When a component produces an estimate, the receiving component must be able to distinguish:
+When a component produces an estimate, the receiver must be able to distinguish:
 
 ```text
 value
@@ -269,11 +290,13 @@ Likewise, a sensitivity classifier that reports uncertainty must not be converte
 
 A Cognitive Metabolism signal such as high reinforcement, low predicted utility, or crystallization candidacy must remain typed as a metabolic/lifecycle proposal. It must not arrive downstream disguised as truth, deletion authority, or permission to become canonical.
 
-A Governance Context Projection selected through semantic similarity must likewise preserve the estimator and uncertainty that selected the precedent. The consumer may receive candidate relevance; it must not receive probabilistic similarity disguised as permission.
+A vector similarity score must remain candidate relevance evidence. It cannot become recall permission or currentness.
+
+A Governance Context Projection selected through semantic similarity must preserve the estimator and uncertainty that selected the precedent. The consumer may receive candidate relevance; it must not receive probabilistic similarity disguised as permission.
 
 ## Proposal, authority, selection, commit
 
-Composition should preserve four different logical stages:
+Composition preserves four logical stages:
 
 ```text
 PROPOSAL
@@ -299,20 +322,20 @@ A concept belongs in a separate component when it has a distinct failure mode.
 
 Examples:
 
-- cognitive-mesh failure means identity, type, or relationship semantics are corrupted across modules
-- identity failure means the wrong object is addressed
-- evidence failure means the object lacks support
-- estimator failure means a confidence, relevance, sensitivity, persistence, or prediction estimate is miscalibrated or out of scope
-- metabolic failure means the system reinforces, consolidates, retains, or forgets poorly
-- reality-graph failure means domain state or relationships are wrong, stale, or insufficiently evidenced
-- saturation failure means the system remembers or forgets poorly
-- governance failure means the system changes memory or authority without permission
-- certification failure means an unverified memory becomes durable
-- runtime failure means the agent uses memory incorrectly
-- durable-decision failure means rationale, supersession, or current decision state is lost or silently rewritten
-- governance-projection failure means derived context loses provenance/scope, erases negative precedent, or becomes consumer authority
-- composition failure means individually valid components combine into unsafe behavior
-- conformance failure means the implementation cannot prove its behavior
+- cognitive-mesh failure means identity, type, or relationship semantics are corrupted across modules;
+- identity failure means the wrong object is addressed;
+- evidence failure means the object lacks support;
+- estimator failure means confidence, relevance, sensitivity, persistence, or prediction is miscalibrated or out of scope;
+- metabolic failure means the system reinforces, consolidates, retains, or forgets poorly;
+- retrieval failure means useful evidence is not discovered, stale evidence is over-ranked, or route provenance is lost;
+- reality-graph failure means domain state or relationships are wrong, stale, or insufficiently evidenced;
+- governance failure means the system changes memory or authority without permission;
+- certification failure means an unverified memory becomes durable;
+- runtime failure means the agent uses memory incorrectly;
+- durable-decision failure means rationale, supersession, or current decision state is lost or silently rewritten;
+- governance-projection failure means derived context loses provenance/scope, erases negative precedent, or becomes consumer authority;
+- composition failure means individually valid components combine into unsafe behavior;
+- conformance failure means the implementation cannot prove its behavior.
 
 If two concepts fail differently, segment them or expose the internal boundary clearly.
 
@@ -328,6 +351,7 @@ accurate sensitivity classifier + stale policy -> unsafe sharing
 calibrated utility estimator + overbroad deletion authority -> irreversible loss
 high reinforcement + bad evidence -> durable false belief candidate
 accurate reality graph + stale currentness -> incorrect active cognition
+high vector similarity + superseded memory -> stale active context
 useful prediction + authority collapse -> unauthorized action
 valid individual memories + unsafe composition -> poisoned context
 valid PAMA outcome + stale state snapshot -> incorrect commit
@@ -338,43 +362,44 @@ Therefore conformance must test handoffs and composition, not only isolated comp
 
 ## Unification principle
 
-A concept belongs under the same overall architecture when it participates in governed memory state transition, persistent cognition, or a governed projection of remembered state whose semantics must remain reconstructable.
+A concept belongs under Agent Memory when it participates in governed memory state transition, persistent cognition, native retrieval/context assembly, or a governed projection of remembered state whose semantics must remain reconstructable.
 
 Examples:
 
-- UOR participates by providing stable identity
-- CodeGenome participates as the initial Code Reality Graph implementation and provider of domain evidence and graph relations
-- EvolveAI participates as the initial Cognitive Metabolism implementation and provider of lifecycle/decay/consolidation mechanisms
-- PAMA participates as native doctrine controlling mutation and downstream authority
-- COREFORGE Vault and Neurospace may participate by operationalizing memory
-- FailSafe and Arbiter may participate as enforcement implementations
-- durable decision memory participates through the repository's own decision-memory profile
-- Governance Context Projection participates by exposing bounded, consumer-neutral context without owning the downstream governance decision
+- UOR may participate through optional exact identity;
+- CodeGenome may participate as a code-domain evidence producer and as implementation ancestry for generic mechanisms now owned by Agent Memory;
+- EvolveAI participates as implementation ancestry/test oracle for Cognitive Metabolism and retrieval mechanisms now owned by Agent Memory;
+- PAMA participates as native authority machinery;
+- COREFORGE Vault/Neurospace contributes product/runtime ancestry and should increasingly consume Agent Memory downstream;
+- FailSafe and Arbiter may participate as enforcement/evidence peers;
+- durable decision memory participates through Agent Memory's own decision-memory profile;
+- Governance Context Projection participates by exposing bounded, consumer-neutral context without owning the downstream governance decision.
 
-An adjacent product name is not itself an architectural role. Implementations should be named only when the mapping adds concrete evidence or responsibility.
+An adjacent product name is not itself an architectural role.
 
 ## Boundary rules
 
-1. Shared doctrine, segmented implementation.
+1. Shared doctrine, segmented native implementation.
 2. The shared Cognitive Mesh under ADR-035 does not erase component or capability boundaries.
 3. Components may depend on each other, but must not redefine each other.
-4. Every durable memory transition must cross identity, evidence, authority, and certification boundaries; scoring may propose but not authorize.
+4. Every durable memory transition crosses identity, evidence, authority, and certification boundaries; scoring may propose but not authorize.
 5. Runtime memory may use uncertified memory only with scope and warning semantics.
-6. Domain reality graphs may provide evidence, but do not own permanence.
+6. Domain reality graphs may provide evidence, but do not own permanence or generic memory machinery.
 7. Cognitive Metabolism may propose reinforcement, decay, consolidation, or restructuring, but does not own truth or consequence authority.
 8. PAMA may authorize mutation, but does not determine factual truth.
 9. Certification may confirm durability, but does not block later correction.
 10. Probabilistic outputs must preserve semantic type, provenance, and uncertainty across handoffs.
-11. A blocked action must remain blocked even when another component assigns it high confidence, utility, reinforcement, or predicted value.
+11. A blocked action remains blocked even when another component assigns high confidence, utility, reinforcement, similarity, or predicted value.
 12. Stochastic selection may occur only inside a policy-permitted action set.
-13. Commit boundaries must bind to the state and policy snapshot under which authority was granted.
+13. Commit boundaries bind to the state and policy snapshot under which authority was granted.
 14. Composition-specific failure modes require composition-specific tests.
 15. PAMA target class, lifecycle strength, requested operation, and downstream authority remain separate dimensions.
 16. Module identity, component identity, and capability identity remain distinct.
-17. External implementation names require an evidence-backed mapping role, not mere conceptual proximity.
-18. Derived Governance Context Projection is reconstructable context, never an alternate canonical memory store or final policy authority.
-19. Consumer-specific fields belong in consumer adapters unless they expose a genuinely general missing Agent Memory primitive.
-20. Returned external approval or execution evidence re-enters Agent Memory through normal evidence/governance boundaries; an integration callback is not a privileged write path.
+17. Implementation ancestry does not imply permanent cross-repository runtime ownership.
+18. A specialized domain producer does not become the owner of Agent Memory's generic graph/vector/retrieval machinery.
+19. Derived Governance Context Projection is reconstructable context, never an alternate canonical memory store or final policy authority.
+20. Consumer-specific fields belong in consumer adapters unless they expose a genuinely general missing Agent Memory primitive.
+21. Returned external approval or execution evidence re-enters through normal evidence/governance boundaries; an integration callback is not a privileged write path.
 
 ## Cross-component handoff contract
 
@@ -410,29 +435,29 @@ For Cognitive Mesh participation, additional typed metadata may be required to p
 
 Not all fields apply to every handoff. Omitted authority-critical fields must not be guessed downstream.
 
-Governance Context Projection has a separate minimized schema because it is a consumer-facing derived view rather than a canonical component mutation handoff. It must still preserve source-memory references, scope, derivation, validity, and uncertainty sufficient for reconstruction.
+Governance Context Projection has a separate minimized schema because it is a consumer-facing derived view rather than a canonical component mutation handoff. It still preserves source-memory references, scope, derivation, validity, and uncertainty sufficient for reconstruction.
 
 ## Component maturity levels
 
 | Level | Meaning |
 |---|---|
-| Conceptual | The component is defined in doctrine only |
-| Documented | Interfaces and failure modes are documented |
-| Handoff-documented | Input/output semantics and uncertainty/authority boundaries are documented |
-| Fixture-tested | Component behavior appears in conformance fixtures |
-| Composition-tested | Handoffs and multi-component failure modes are tested |
-| Implemented | One repo implements the component |
-| Enforced | The component blocks unsafe behavior at runtime |
-| Cross-repo adopted | Multiple repos conform to the same boundary |
+| Conceptual | the component is defined in doctrine only |
+| Documented | interfaces and failure modes are documented |
+| Handoff-documented | input/output semantics and uncertainty/authority boundaries are documented |
+| Fixture-tested | component behavior appears in conformance fixtures |
+| Composition-tested | handoffs and multi-component failure modes are tested |
+| Implemented | Agent Memory has a native implementation of the bounded component/capability |
+| Enforced | the component blocks unsafe behavior at runtime |
+| Consumer-adopted | downstream products consume the Agent Memory boundary rather than independently redefining it |
 
 These architectural maturity descriptions do not replace ADR-033 capability maturity (`declared`, `implemented`, `runtime_wired`, `evidence_proven`, `reference_qualified`). Capability qualification remains independently version- and evidence-scoped.
 
 ## Architecture decision
 
-This repo owns the overall architecture and native doctrine, including PAMA and the vendor-neutral Governance Context Projection profile.
+This repository owns the overall Agent Memory architecture, generic memory capability contracts, native governance including PAMA, and the vendor-neutral Governance Context Projection profile.
 
-Under accepted ADR-035, Agent Memory also owns the canonical Cognitive Mesh contract and the module-level topology of the governed cognitive framework. That ownership defines interfaces and boundaries, not a monopoly by Agent Memory core on implementation mechanisms.
+Under ADR-035, Agent Memory owns the canonical Cognitive Mesh contract and module-level topology of the governed cognitive framework. Under ADR-036 and #455, useful same-owner mechanisms may be absorbed into this runtime rather than preserved as mandatory cross-repository provider boundaries.
 
-Individual repos may own implementation slices after they demonstrate a meaningful mapping. Consumer-specific governance adapters should normally be owned with the consumer integration, not by changing Agent Memory core to mirror the consumer's policy model.
+Specialized systems may remain independent where specialization is real. CodeGenome may continue to observe code reality. COREFORGE may continue to own product UX and orchestration. Optional identity, verification, and enforcement peers may remain separate.
 
-The shared architecture should stabilize concepts, boundaries, handoff semantics, and conformance expectations. It should not force every implementation into one repository or one runtime, and it should not grant doctrine ownership or capability maturity to whichever product happens to implement a feature first.
+The shared architecture should stabilize concepts, boundaries, handoff semantics, implementation ownership, and conformance expectations. It should not force every product into one repository, but it also should not recreate generic Agent Memory functionality as a permanent federation of historical internal services.
