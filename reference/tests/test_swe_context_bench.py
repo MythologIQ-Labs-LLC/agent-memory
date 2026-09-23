@@ -1,13 +1,12 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
-
-from agentmem_ref.harness.swe_context_bench import parse_experience, run_benchmark
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -23,9 +22,20 @@ RUNTIME_CONFIG = (
 RUNNER = ROOT / "reference" / "run_swe_context_bench.py"
 
 
+def _runner_module():
+    spec = importlib.util.spec_from_file_location("run_swe_context_bench", RUNNER)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
+RUNNER_MODULE = _runner_module()
+
+
 class SweContextBenchTests(unittest.TestCase):
     def _report(self) -> dict:
-        return run_benchmark(
+        return RUNNER_MODULE.run_benchmark(
             manifest_path=MANIFEST,
             benchmark_root=FIXTURE_ROOT,
             runtime_config_path=RUNTIME_CONFIG,
@@ -34,7 +44,9 @@ class SweContextBenchTests(unittest.TestCase):
         )
 
     def test_experience_projection_drops_benchmark_identity_and_raw_tool_state(self) -> None:
-        projection = parse_experience(FIXTURE_ROOT / "experiences" / "cache.jsonl")
+        projection = RUNNER_MODULE.parse_experience(
+            FIXTURE_ROOT / "experiences" / "cache.jsonl"
+        )
         self.assertEqual(projection.instance_id, "acme__web-100")
         self.assertEqual(projection.repo, "acme/web")
         retained_text = "\n".join(text for _kind, text in projection.fragments)
@@ -57,8 +69,11 @@ class SweContextBenchTests(unittest.TestCase):
         self.assertEqual(report["aggregate"]["hit_rate"], 1.0)
         row = report["queries"][0]
         self.assertTrue(row["agent_memory"]["hit"])
-        self.assertEqual(row["agent_memory"]["retrieved_experience_ids"][0], "acme__web-100")
-        self.assertIn("acme__web-200", report["corpus"]["identity"] if False else ["acme__web-200"])
+        self.assertEqual(
+            row["agent_memory"]["retrieved_experience_ids"][0],
+            "acme__web-100",
+        )
+        self.assertEqual(row["gold_experience_instance_id"], "acme__web-100")
 
     def test_queries_do_not_mutate_candidate_corpus_or_gain_authority(self) -> None:
         report = self._report()
@@ -79,9 +94,12 @@ class SweContextBenchTests(unittest.TestCase):
                 "queries/cache-related.json",
             },
         )
-        self.assertEqual(report["claim_boundary"]["ranking"], "gold rank is diagnostic only; primary score is binary hit rate")
+        self.assertEqual(
+            report["claim_boundary"]["ranking"],
+            "gold rank is diagnostic only; primary score is binary hit rate",
+        )
 
-    def test_runner_emits_the_same_deterministic_semantic_result(self) -> None:
+    def test_runner_emits_the_same_semantic_result(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "swe-context.json"
             subprocess.run(
@@ -104,9 +122,15 @@ class SweContextBenchTests(unittest.TestCase):
             )
             emitted = json.loads(output.read_text(encoding="utf-8"))
         expected = self._report()
-        self.assertEqual(emitted["aggregate"]["hit_rate"], expected["aggregate"]["hit_rate"])
+        self.assertEqual(
+            emitted["aggregate"]["hit_rate"],
+            expected["aggregate"]["hit_rate"],
+        )
         self.assertEqual(emitted["governance"], expected["governance"])
-        self.assertEqual(emitted["inputs"]["manifest_sha256"], expected["inputs"]["manifest_sha256"])
+        self.assertEqual(
+            emitted["inputs"]["manifest_sha256"],
+            expected["inputs"]["manifest_sha256"],
+        )
 
 
 if __name__ == "__main__":
