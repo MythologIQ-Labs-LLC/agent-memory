@@ -27,7 +27,7 @@ Multiple memory forms. Shared identity and evidence. Explicit lifecycle and reca
 > [!IMPORTANT]
 > **Current status: strong executable reference runtime, pre-RC.**
 >
-> Agent Memory is no longer only an architecture-and-documentation project. The repository contains governed semantic, epistemic, procedural, predictive, cognitive-mesh, persistence, correction, deletion, multi-route and relational recall, provider-qualification, and Code Reality Graph execution paths. The reference runtime is restart-safe at its declared boundary and is protected by a large conformance/evidence suite.
+> Agent Memory is no longer only an architecture-and-documentation project. The repository contains governed semantic, epistemic, procedural, predictive, cognitive-mesh, persistence, correction, deletion, multi-route, relational, and query-driven recall, provider-qualification, benchmark, and Code Reality Graph execution paths. The reference runtime is restart-safe at its declared boundary and is protected by a large conformance/evidence suite.
 >
 > It is **not** yet a production 1.0 system and **not** yet RC1. There are currently **zero production-qualified canonical substrates**. Production substrate qualification is tracked by #427; RC composition and release gates are tracked by #410.
 
@@ -129,7 +129,10 @@ The repository is deliberately strict about the difference between **architectur
 | Governed recall | Scope/tenant/project/currentness admission with decision evidence |
 | Deterministic multi-route recall | Lexical + exact logical-identity + shared-evidence-neighbor candidate routes; per-route provenance, deduplication, one governed admission boundary, admitted-only ranking |
 | Agent Memory-native relational recall | Direct neighbors sharing retained evidence/provenance; optional substrate capability, retrieval-only authority posture |
+| Query-driven relational recall | Opt-in natural-language path that re-ranks lexical expansion anchors by content-bearing overlap before bounded provenance-neighbor expansion; default application recall remains unchanged |
 | Internal RC retrieval-quality baseline | Fixed synthetic fixture: lexical-only admitted recall `3/7` (`0.428571`) versus composed recall `7/7` (`1.0`), with admitted precision `1.0` and zero forbidden-influence failures |
+| LoCoMo-compatible retrieval diagnostic | External-dataset harness for evidence Recall@K / Precision@K / MRR and route contribution; LoCoMo data is not vendored and no official QA score is claimed |
+| Checkpoint behavioral conformance | Evidence-only probes for correction precedence, anchor preservation, recall-stage scope isolation, and state-conditioned differentiation; `authority_effect = none` |
 | Correction / supersession | Executable and restart-safe in the reference profile |
 | Deletion / tombstones | Executable, evidence-bearing and restart-safe in the reference profile |
 | Shared-domain / crossing authority | Governed mutation paths; RC-relevant authority gaps from #364 are closed |
@@ -139,7 +142,7 @@ The repository is deliberately strict about the difference between **architectur
 | Production canonical substrate | **None qualified yet**; tracked by #427 |
 | Vector / external graph / adaptive recall routes | Not yet promoted into the RC runtime; provider evidence must earn each route |
 | Developer `AgentMemory.open()/remember()/...` facade | RC implementation still open |
-| LoCoMo / LongMemEval RC baseline | Planned RC evidence work; not yet the release benchmark package |
+| Public answer-quality benchmark | Official LoCoMo QA / LongMemEval release evidence still open; retrieval evidence must not be presented as answer-quality parity |
 
 ### The first composed multi-memory slice
 
@@ -161,7 +164,7 @@ Those are **not duplicate copies of one string**. They have different identity, 
 
 This is the architectural point of Agent Memory made executable: multiple memory responsibilities participate in one governed system without pretending they are the same thing.
 
-### Deterministic multi-route recall
+### Deterministic multi-route and query-driven recall
 
 RC retrieval separates **candidate discovery** from **recall admission**.
 
@@ -186,9 +189,13 @@ query / recall intent
 
 The shared-evidence route can follow a known memory's retained provenance to other memories derived from the same source evidence. This makes the architecture's shared evidence model useful for associative recall without claiming a universal semantic graph.
 
-A route score, exact-identity hit, provenance relationship, or future model/controller judgment cannot repair a scope, currentness, dispute, tombstone, or isolation refusal. Retrieval decides where to look; governance decides what may influence active cognition.
+For natural-language retrieval where no logical memory ID is supplied, the opt-in query-driven planner may use current lexical candidates as bounded relational anchors. Expansion anchors are re-ranked by deterministic **content-bearing term overlap** before the raw lexical score is used as a tie-breaker. This prevents common function-word overlap from selecting an unrelated relational seed while leaving ordinary lexical candidate generation unchanged.
 
-The versioned internal RC retrieval fixture now gives this boundary an executable baseline. Across five fixed cases containing seven relevant-memory expectations, lexical-only recall admits 3/7 relevant memories while composed recall admits 7/7. On that same fixture, admitted precision remains 1.0 and the benchmark records zero forbidden admission, forbidden ranked-influence, or retrieval-authority violations. This is deliberately a synthetic internal benchmark, **not** a LoCoMo or LongMemEval result.
+A route score, exact-identity hit, provenance relationship, anchor heuristic, or future model/controller judgment cannot repair a scope, currentness, dispute, tombstone, or isolation refusal. Retrieval decides where to look; governance decides what may influence active cognition.
+
+The versioned internal RC retrieval fixture gives this boundary an executable baseline. Across five fixed cases containing seven relevant-memory expectations, lexical-only recall admits 3/7 relevant memories while composed recall admits 7/7. On that same fixture, admitted precision remains 1.0 and the benchmark records zero forbidden admission, forbidden ranked-influence, or retrieval-authority violations. This is deliberately a synthetic internal benchmark.
+
+The repository also includes a **LoCoMo-compatible retrieval-evidence diagnostic**. It consumes an externally supplied LoCoMo dataset path, binds the dataset hash/upstream revision/runtime configuration, and reports evidence Recall@K, Precision@K, MRR, category aggregates, route contribution, and diagnostic timing. The upstream dataset is not redistributed. This is **not** the official LoCoMo answer-quality score and is not directly comparable to Jev-Mem's reported answer score until an equivalent answer-generation/evaluation protocol is implemented and run.
 
 Vector, temporal, external graph, and adaptive/System-One routes can plug into the same boundary later, but they must earn runtime qualification rather than becoming authoritative because they retrieve convincingly.
 
@@ -262,11 +269,11 @@ reference/agentmem_ref/
 ├── core/       PAMA, receipts, evidence, verification, contextual recall
 ├── state/      canonical substrate, graph driver, projections, residue
 ├── contracts/  capability declarations, qualification, substitution
-├── runtime/    governed adapter, restart, transactions, composition, CLI
+├── runtime/    governed adapter, restart, transactions, composition, query-driven recall, CLI
 ├── memory/     epistemic, procedural, predictive, crossing, temporal, etc.
 ├── api/        versioned public contract and stage surface
 ├── crg/        Agent Memory Code Reality Graph / CodeGenome profile
-└── harness/    conformance, adversarial evidence, comparators, benchmarks
+└── harness/    conformance, checkpoint behavior, adversarial evidence, comparators, benchmarks
 ```
 
 Compatibility aliases preserve the historical `agentmem_ref.<module>` import paths while the real modules live in their architecture layers.
