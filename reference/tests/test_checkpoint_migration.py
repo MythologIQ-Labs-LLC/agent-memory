@@ -303,8 +303,11 @@ class CheckpointMigrationTests(unittest.TestCase):
 
         def erase_visibility(state: MigrationState) -> MigrationState:
             target = state.detached_copy()
-            target.visibility_snapshots = {}
-            return target
+            return MigrationState(
+                substrate=target.substrate,
+                adapter=target.adapter,
+                visibility_snapshots={},
+            )
 
         with self.assertRaisesRegex(CheckpointMigrationError, "visibility"):
             execute_migration(
