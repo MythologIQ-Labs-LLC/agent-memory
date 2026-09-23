@@ -18,9 +18,10 @@ attempt the durable mutation. Every outcome remains audit evidence.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import copy
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
-from typing import Callable
+from typing import Callable, Mapping
 
 from ..core import policy, receipts
 from .adapter import CommitResult, GovernedMemoryAdapter
@@ -29,6 +30,11 @@ ACQUIRED = "acquired"
 REJECTED = "rejected"
 EXPIRED = "expired"
 COMMITTED = "committed"
+INVALIDATED = "invalidated"
+
+WRITE_CLAIM_CHECKPOINT_SCHEMA_VERSION = "1.0.0"
+WRITE_CLAIM_CHECKPOINT_OWNER = "shared_write_coordinator"
+RESTART_INVALIDATION_REASON = "process_restart_invalidated_active_claim"
 
 
 @dataclass(frozen=True)
@@ -52,6 +58,7 @@ class ClaimRecord:
     reason: str | None = None
     events: list[dict] = field(default_factory=list)
     commit_result: CommitResult | None = None
+    commit_receipt_ref: str | None = None
 
 
 class SharedWriteCoordinator:
@@ -76,6 +83,125 @@ class SharedWriteCoordinator:
         self._active_by_key: dict[tuple[str, str], str] = {}
         self._event_counter = 0
         self.events: list[dict] = []
+
+    # -- declared checkpoint capability --------------------------------
+
+    def export_checkpoint_state(self) -> dict:
+        """Export claim/audit evidence without treating a lease as durable authority."""
+        return {
+            "schema_version": WRITE_CLAIM_CHECKPOINT_SCHEMA_VERSION,
+            "checkpoint_owner": WRITE_CLAIM_CHECKPOINT_OWNER,
+            "event_counter": self._event_counter,
+            "records": [
+                {
+                    "claim": asdict(record.claim),
+                    "status": record.status,
+                    "reason": record.reason,
+                    "events": copy.deepcopy(record.events),
+                    "commit_receipt_ref": record.commit_receipt_ref,
+                }
+                for _, record in sorted(self._records.items())
+            ],
+            "events": copy.deepcopy(self.events),
+        }
+
+    def restore_checkpoint_state(self, snapshot: Mapping[str, object]) -> None:
+        """Restore claim evidence while invalidating every pre-crash active lease.
+
+        An in-process coordination lease is not durable authority. Any claim that
+        was ``ACQUIRED`` at the checkpoint boundary is restored as ``INVALIDATED``
+        with a new audit event and is deliberately omitted from the active-key
+        index. A fresh claim is required before another shared mutation attempt.
+        """
+        if snapshot.get("schema_version") != WRITE_CLAIM_CHECKPOINT_SCHEMA_VERSION:
+            raise ValueError("unsupported write-claim checkpoint schema")
+        if snapshot.get("checkpoint_owner") != WRITE_CLAIM_CHECKPOINT_OWNER:
+            raise ValueError("write-claim checkpoint owner mismatch")
+        raw_records = snapshot.get("records")
+        raw_events = snapshot.get("events")
+        raw_counter = snapshot.get("event_counter")
+        if not isinstance(raw_records, list) or not isinstance(raw_events, list):
+            raise ValueError("write-claim checkpoint collections are malformed")
+        try:
+            event_counter = int(raw_counter)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("write-claim checkpoint event counter is malformed") from exc
+        if event_counter < 0:
+            raise ValueError("write-claim checkpoint event counter cannot be negative")
+
+        records: dict[str, ClaimRecord] = {}
+        events: list[dict] = []
+        allowed_statuses = {ACQUIRED, REJECTED, EXPIRED, COMMITTED, INVALIDATED}
+        try:
+            for raw_event in raw_events:
+                event = _validated_event_copy(raw_event)
+                events.append(event)
+
+            max_event_sequence = max((_event_sequence(event) for event in events), default=0)
+            if event_counter < max_event_sequence:
+                raise ValueError("write-claim checkpoint event counter rewinds audit identity")
+
+            for raw in raw_records:
+                if not isinstance(raw, Mapping):
+                    raise TypeError("write-claim checkpoint row must be a mapping")
+                raw_claim = raw.get("claim")
+                if not isinstance(raw_claim, Mapping):
+                    raise TypeError("write-claim checkpoint claim must be a mapping")
+                claim = WriteClaim(**dict(raw_claim))
+                self._validate_shape(claim)
+                if claim.claim_id in records:
+                    raise ValueError("duplicate write-claim identity")
+
+                status = raw.get("status")
+                if status not in allowed_statuses:
+                    raise ValueError("write-claim checkpoint has unknown status")
+                reason = raw.get("reason")
+                if reason is not None and not isinstance(reason, str):
+                    raise ValueError("write-claim checkpoint reason must be string or null")
+                raw_record_events = raw.get("events", [])
+                if not isinstance(raw_record_events, list):
+                    raise ValueError("write-claim record events must be a list")
+                record_events = [
+                    _validated_event_copy(event) for event in raw_record_events
+                ]
+                receipt_ref = raw.get("commit_receipt_ref")
+                if receipt_ref is not None and not isinstance(receipt_ref, str):
+                    raise ValueError("write-claim commit receipt ref must be string or null")
+                if status == COMMITTED and not receipt_ref:
+                    raise ValueError("committed write-claim checkpoint requires receipt reference")
+
+                records[claim.claim_id] = ClaimRecord(
+                    claim=claim,
+                    status=str(status),
+                    reason=reason,
+                    events=record_events,
+                    commit_result=None,
+                    commit_receipt_ref=receipt_ref,
+                )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("write-claim checkpoint cannot be reconstructed") from exc
+
+        self._records = records
+        self._active_by_key = {}
+        self._event_counter = event_counter
+        self.events = events
+
+        for claim_id in sorted(self._records):
+            record = self._records[claim_id]
+            if record.status != ACQUIRED:
+                continue
+            timestamp = self._now()
+            record.status = INVALIDATED
+            record.reason = RESTART_INVALIDATION_REASON
+            event = self._event(
+                "memory.write_claim_invalidated",
+                record.claim,
+                timestamp,
+                status=INVALIDATED,
+                reason=RESTART_INVALIDATION_REASON,
+            )
+            record.events.append(event)
+            self.events.append(event)
 
     def acquire(self, claim: WriteClaim) -> ClaimRecord:
         if claim.claim_id in self._records:
@@ -127,6 +253,7 @@ class SharedWriteCoordinator:
 
         result = self._adapter.commit_proposal(proposal, fact_text)
         record.commit_result = result
+        record.commit_receipt_ref = result.receipt["receipt_id"]
         if result.committed:
             record.status = COMMITTED
             record.reason = None
@@ -311,3 +438,21 @@ class SharedWriteCoordinator:
             document["receipt_ref"] = receipt_ref
         receipts.validate("memory-audit-event.schema.json", document)
         return document
+
+
+def _validated_event_copy(raw: object) -> dict:
+    if not isinstance(raw, Mapping):
+        raise TypeError("write-claim audit event must be a mapping")
+    event = copy.deepcopy(dict(raw))
+    receipts.validate("memory-audit-event.schema.json", event)
+    return event
+
+
+def _event_sequence(event: Mapping[str, object]) -> int:
+    event_id = event.get("event_id")
+    if not isinstance(event_id, str) or not event_id.startswith("write-claim-event:"):
+        return 0
+    try:
+        return int(event_id.rsplit(":", 1)[1])
+    except ValueError as exc:
+        raise ValueError("write-claim event id sequence is malformed") from exc
