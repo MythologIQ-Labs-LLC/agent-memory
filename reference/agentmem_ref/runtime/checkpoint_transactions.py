@@ -42,13 +42,80 @@ class CommittedCheckpointBundle:
         return int(self.manifest["generation"])
 
 
+class CheckpointTransactionSession:
+    """Operations valid only while the checkpoint store lock is held."""
+
+    def __init__(self, support: "CheckpointTransactionSupport") -> None:
+        self._support = support
+
+    @property
+    def root(self):
+        return self._support.root
+
+    def read_manifest(self) -> dict | None:
+        path = self._support._store.manifest_path
+        return _rr._read_json(path) if path.exists() else None
+
+    def current_bundle(self) -> CommittedCheckpointBundle:
+        return self._support._bundle_unlocked()
+
+    def try_current_bundle(self) -> CommittedCheckpointBundle | None:
+        try:
+            return self.current_bundle()
+        except _rr.RuntimeRecoveryError:
+            return None
+
+    def require_current(
+        self,
+        *,
+        expected_generation: int | None = None,
+        expected_manifest_digest: str | None = None,
+        require_store_observation: bool = False,
+    ) -> CommittedCheckpointBundle:
+        bundle = self.current_bundle()
+        current_digest = _rr._digest(bundle.manifest)
+        if expected_generation is not None and bundle.generation != expected_generation:
+            raise _rr.RuntimeCheckpointConflict(
+                "checkpoint generation conflict: "
+                f"expected {expected_generation}, current {bundle.generation}"
+            )
+        if (
+            expected_manifest_digest is not None
+            and current_digest != expected_manifest_digest
+        ):
+            raise _rr.RuntimeCheckpointConflict(
+                "checkpoint manifest changed without the expected generation view"
+            )
+        if require_store_observation:
+            store = self._support._store
+            if store._observed_generation != bundle.generation:
+                raise _rr.RuntimeCheckpointConflict(
+                    "checkpoint store has not observed the current generation"
+                )
+            if store._observed_manifest_digest != current_digest:
+                raise _rr.RuntimeCheckpointConflict(
+                    "checkpoint store observed manifest no longer matches current commit"
+                )
+        return bundle
+
+    def is_fully_committed(self, manifest: Mapping[str, object]) -> bool:
+        bundle = self.try_current_bundle()
+        return (
+            bundle is not None
+            and _rr._digest(bundle.manifest) == _rr._digest(dict(manifest))
+        )
+
+    def restore_bundle(self, bundle: CommittedCheckpointBundle) -> None:
+        self._support._restore_bundle_unlocked(bundle)
+
+
 class CheckpointTransactionSupport:
     """Narrow public coordination surface around ``JsonRuntimeStateStore``.
 
     Callers may inspect or restore complete validated bundles and may reserve a
-    serialized inspection window. They cannot mint authority, bypass generation
-    CAS, or publish a new canonical generation except through the store's normal
-    ``checkpoint`` method.
+    serialized inspection/recovery window. They cannot mint authority, bypass
+    generation CAS, or publish a new canonical generation except through the
+    store's normal ``checkpoint`` method.
     """
 
     def __init__(self, store: _rr.JsonRuntimeStateStore) -> None:
@@ -117,7 +184,7 @@ class CheckpointTransactionSupport:
         )
 
     def _bundle_unlocked(self) -> CommittedCheckpointBundle:
-        manifest, latest = self._store._current_manifest_and_journal()
+        manifest, _latest = self._store._current_manifest_and_journal()
         if manifest is None:
             raise _rr.RuntimeRecoveryError(
                 "required runtime state missing: runtime-manifest.json"
@@ -151,6 +218,12 @@ class CheckpointTransactionSupport:
         )
 
     @contextmanager
+    def serialized(self) -> Iterator[CheckpointTransactionSession]:
+        """Hold the checkpoint lock even when the current bundle may be torn."""
+        with _rr._exclusive_checkpoint_lock(self._store.lock_path):
+            yield CheckpointTransactionSession(self)
+
+    @contextmanager
     def serialized_current(
         self,
         *,
@@ -158,82 +231,48 @@ class CheckpointTransactionSupport:
         expected_manifest_digest: str | None = None,
         require_store_observation: bool = False,
     ) -> Iterator[CommittedCheckpointBundle]:
-        """Yield one validated current bundle while holding the checkpoint lock.
-
-        Optional expectations are compare-and-observe guards. When
-        ``require_store_observation`` is true, the store must have recovered or
-        published the same generation/manifest already; callers never read the
-        private observation fields themselves.
-        """
-        with _rr._exclusive_checkpoint_lock(self._store.lock_path):
-            bundle = self._bundle_unlocked()
-            current_digest = _rr._digest(bundle.manifest)
-            if expected_generation is not None and bundle.generation != expected_generation:
-                raise _rr.RuntimeCheckpointConflict(
-                    "checkpoint generation conflict: "
-                    f"expected {expected_generation}, current {bundle.generation}"
-                )
-            if (
-                expected_manifest_digest is not None
-                and current_digest != expected_manifest_digest
-            ):
-                raise _rr.RuntimeCheckpointConflict(
-                    "checkpoint manifest changed without the expected generation view"
-                )
-            if require_store_observation:
-                if self._store._observed_generation != bundle.generation:
-                    raise _rr.RuntimeCheckpointConflict(
-                        "checkpoint store has not observed the current generation"
-                    )
-                if self._store._observed_manifest_digest != current_digest:
-                    raise _rr.RuntimeCheckpointConflict(
-                        "checkpoint store observed manifest no longer matches current commit"
-                    )
-            yield bundle
+        """Yield one validated current bundle while holding the checkpoint lock."""
+        with self.serialized() as session:
+            yield session.require_current(
+                expected_generation=expected_generation,
+                expected_manifest_digest=expected_manifest_digest,
+                require_store_observation=require_store_observation,
+            )
 
     def current_bundle(self) -> CommittedCheckpointBundle:
-        with self.serialized_current() as bundle:
-            return bundle
+        with self.serialized() as session:
+            return session.current_bundle()
 
     def try_current_bundle(self) -> CommittedCheckpointBundle | None:
-        try:
-            return self.current_bundle()
-        except _rr.RuntimeRecoveryError:
-            return None
+        with self.serialized() as session:
+            return session.try_current_bundle()
 
     def is_fully_committed(self, manifest: Mapping[str, object]) -> bool:
-        try:
-            bundle = self.current_bundle()
-        except _rr.RuntimeRecoveryError:
-            return False
-        return _rr._digest(bundle.manifest) == _rr._digest(dict(manifest))
+        with self.serialized() as session:
+            return session.is_fully_committed(manifest)
 
     def restore_bundle(self, bundle: CommittedCheckpointBundle) -> None:
-        """Restore one previously validated bundle for crash recovery only.
+        with self.serialized() as session:
+            session.restore_bundle(bundle)
 
-        This does not publish a new generation. It restores the exact source
-        bundle captured before an interrupted higher-level transaction. Normal
-        rollback must still publish through ``checkpoint`` as a new generation.
-        """
+    def _restore_bundle_unlocked(self, bundle: CommittedCheckpointBundle) -> None:
+        """Internal implementation for exact crash-recovery restoration."""
         if not isinstance(bundle, CommittedCheckpointBundle):
             raise TypeError("restore_bundle requires CommittedCheckpointBundle")
-        with _rr._exclusive_checkpoint_lock(self._store.lock_path):
-            _rr._atomic_json_write(self._store.substrate_path, bundle.substrate)
-            _rr._atomic_json_write(self._store.governance_path, bundle.governance)
-            _rr._atomic_json_write(self._store.manifest_path, bundle.manifest)
-            if bundle.journal_present:
-                self._atomic_journal_write(bundle.journal_records)
-            elif self._store.journal_path.exists():
-                self._store.journal_path.unlink()
-                _rr._fsync_directory(self._store.root)
+        _rr._atomic_json_write(self._store.substrate_path, bundle.substrate)
+        _rr._atomic_json_write(self._store.governance_path, bundle.governance)
+        _rr._atomic_json_write(self._store.manifest_path, bundle.manifest)
+        if bundle.journal_present:
+            self._atomic_journal_write(bundle.journal_records)
+        elif self._store.journal_path.exists():
+            self._store.journal_path.unlink()
+            _rr._fsync_directory(self._store.root)
 
-            restored = self._bundle_unlocked()
-            if _rr._digest(restored.manifest) != _rr._digest(bundle.manifest):
-                raise _rr.RuntimeRecoveryError(
-                    "checkpoint bundle restore verification failed"
-                )
-            self._store._observed_generation = restored.generation
-            self._store._observed_manifest_digest = _rr._digest(restored.manifest)
+        restored = self._bundle_unlocked()
+        if _rr._digest(restored.manifest) != _rr._digest(bundle.manifest):
+            raise _rr.RuntimeRecoveryError("checkpoint bundle restore verification failed")
+        self._store._observed_generation = restored.generation
+        self._store._observed_manifest_digest = _rr._digest(restored.manifest)
 
     def _atomic_journal_write(self, records: tuple[dict, ...]) -> None:
         path = self._store.journal_path
