@@ -21,6 +21,11 @@ provider may satisfy the runtime graph contract without claiming restart-safe
 state export/import. Durability is therefore an explicit optional capability,
 not something the runtime infers by scraping provider internals.
 
+Shared-evidence neighbor lookup follows the same rule. It is an optional
+retrieval capability rather than a new mandatory member of ``TemporalGraphPort``.
+Providers that cannot traverse provenance relationships remain valid canonical
+substrates; the planner simply cannot claim that route for them.
+
 Stdlib only.
 """
 
@@ -123,6 +128,22 @@ class CheckpointableTemporalGraphPort(Protocol):
     def identifier_checkpoint(self) -> int: ...
 
     def restore_identifier_checkpoint(self, value: int) -> None: ...
+
+
+@runtime_checkable
+class EvidenceNeighborTemporalGraphPort(Protocol):
+    """Optional provenance-neighbor retrieval capability.
+
+    Results are retrieval evidence only. Implementations may surface stale or
+    otherwise inadmissible facts; the governed recall layer remains responsible
+    for currentness, scope, dispute, tombstone, and isolation admission.
+    """
+
+    def evidence_neighbors(
+        self,
+        seed_uuid: str,
+        group_ids: list[str] | None = UNFILTERED,
+    ) -> list[tuple[Fact, tuple[str, ...], float]]: ...
 
 
 class InMemoryTemporalGraph:
@@ -270,6 +291,42 @@ class InMemoryTemporalGraph:
 
     def all_facts(self) -> Iterable[Fact]:
         return tuple(self._facts.values())
+
+    def evidence_neighbors(
+        self,
+        seed_uuid: str,
+        group_ids: list[str] | None = UNFILTERED,
+    ) -> list[tuple[Fact, tuple[str, ...], float]]:
+        """Return direct neighbors that share retained evidence with one seed.
+
+        The score is deterministic Jaccard overlap over evidence references. It
+        expresses relationship strength for retrieval only. Invalid/stale facts
+        are deliberately not filtered here so the governed admission boundary
+        remains the single authority for current influence.
+        """
+        seed = self._facts.get(seed_uuid)
+        if seed is None:
+            return []
+        seed_evidence = set(seed.episode_uuids)
+        if not seed_evidence:
+            return []
+
+        neighbors: list[tuple[Fact, tuple[str, ...], float]] = []
+        for fact in self._facts.values():
+            if fact.uuid == seed_uuid:
+                continue
+            if group_ids is not UNFILTERED and fact.group_id not in group_ids:
+                continue
+            candidate_evidence = set(fact.episode_uuids)
+            shared = tuple(sorted(seed_evidence.intersection(candidate_evidence)))
+            if not shared:
+                continue
+            union = seed_evidence.union(candidate_evidence)
+            score = len(shared) / len(union) if union else 0.0
+            neighbors.append((fact, shared, score))
+
+        neighbors.sort(key=lambda item: (-item[2], item[0].uuid))
+        return neighbors
 
     def search(self, query: str, group_ids: list[str] | None = UNFILTERED) -> list[tuple[Fact, float]]:
         """Candidate generation by lexical overlap.

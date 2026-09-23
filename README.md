@@ -27,7 +27,7 @@ Multiple memory forms. Shared identity and evidence. Explicit lifecycle and reca
 > [!IMPORTANT]
 > **Current status: strong executable reference runtime, pre-RC.**
 >
-> Agent Memory is no longer only an architecture-and-documentation project. The repository contains governed semantic, epistemic, procedural, predictive, cognitive-mesh, persistence, correction, deletion, multi-route recall, provider-qualification, and Code Reality Graph execution paths. The reference runtime is restart-safe at its declared boundary and is protected by a large conformance/evidence suite.
+> Agent Memory is no longer only an architecture-and-documentation project. The repository contains governed semantic, epistemic, procedural, predictive, cognitive-mesh, persistence, correction, deletion, multi-route and relational recall, provider-qualification, and Code Reality Graph execution paths. The reference runtime is restart-safe at its declared boundary and is protected by a large conformance/evidence suite.
 >
 > It is **not** yet a production 1.0 system and **not** yet RC1. There are currently **zero production-qualified canonical substrates**. Production substrate qualification is tracked by #427; RC composition and release gates are tracked by #410.
 
@@ -127,7 +127,8 @@ The repository is deliberately strict about the difference between **architectur
 | Semantic + epistemic composition | Restart-safe RC1 reference slice; shared provenance with distinct memory identities and type-preserving recall |
 | Derived projections | Executable freshness, staleness, residue and rebuild governance |
 | Governed recall | Scope/tenant/project/currentness admission with decision evidence |
-| Deterministic multi-route recall | Lexical + exact logical-identity candidate routes; per-route provenance, deduplication, one governed admission boundary, admitted-only ranking |
+| Deterministic multi-route recall | Lexical + exact logical-identity + shared-evidence-neighbor candidate routes; per-route provenance, deduplication, one governed admission boundary, admitted-only ranking |
+| Agent Memory-native relational recall | Direct neighbors sharing retained evidence/provenance; optional substrate capability, retrieval-only authority posture |
 | Correction / supersession | Executable and restart-safe in the reference profile |
 | Deletion / tombstones | Executable, evidence-bearing and restart-safe in the reference profile |
 | Shared-domain / crossing authority | Governed mutation paths; RC-relevant authority gaps from #364 are closed |
@@ -135,7 +136,7 @@ The repository is deliberately strict about the difference between **architectur
 | Capability qualification | Executable provider qualification/substitution framework |
 | Hindsight / MemOS | Evidence-proven for bounded `resource_artifact_memory`; **not canonical substrates** |
 | Production canonical substrate | **None qualified yet**; tracked by #427 |
-| Vector / graph / adaptive recall routes | Not yet promoted into the RC runtime; provider evidence must earn each route |
+| Vector / external graph / adaptive recall routes | Not yet promoted into the RC runtime; provider evidence must earn each route |
 | Developer `AgentMemory.open()/remember()/...` facade | RC implementation still open |
 | LoCoMo / LongMemEval RC baseline | Planned RC evidence work; not yet the release benchmark package |
 
@@ -161,7 +162,7 @@ This is the architectural point of Agent Memory made executable: multiple memory
 
 ### Deterministic multi-route recall
 
-RC retrieval now separates **candidate discovery** from **recall admission**.
+RC retrieval separates **candidate discovery** from **recall admission**.
 
 ```text
 query / recall intent
@@ -169,6 +170,8 @@ query / recall intent
         +--> lexical candidate route
         |
         +--> exact logical-identity route
+        |
+        +--> shared-evidence neighbor route
                   |
                   v
         dedupe + route provenance
@@ -180,9 +183,11 @@ query / recall intent
         deterministic ranking of admitted candidates only
 ```
 
-A route score, exact-identity hit, or future model/controller judgment cannot repair a scope, currentness, dispute, tombstone, or isolation refusal. Retrieval decides where to look; governance decides what may influence active cognition.
+The shared-evidence route can follow a known memory's retained provenance to other memories derived from the same source evidence. This makes the architecture's shared evidence model useful for associative recall without claiming a universal semantic graph.
 
-The current RC route set is intentionally conservative. Vector, temporal, graph, and adaptive/System-One routes can plug into the same boundary later, but they must earn runtime qualification rather than becoming authoritative because they retrieve convincingly.
+A route score, exact-identity hit, provenance relationship, or future model/controller judgment cannot repair a scope, currentness, dispute, tombstone, or isolation refusal. Retrieval decides where to look; governance decides what may influence active cognition.
+
+Vector, temporal, external graph, and adaptive/System-One routes can plug into the same boundary later, but they must earn runtime qualification rather than becoming authoritative because they retrieve convincingly.
 
 ---
 

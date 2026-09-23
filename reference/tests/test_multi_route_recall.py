@@ -10,6 +10,7 @@ from agentmem_ref.adapter import RecallContext
 from agentmem_ref.runtime_composition import (
     EXACT_IDENTITY_ROUTE,
     LEXICAL_ROUTE,
+    SHARED_EVIDENCE_ROUTE,
     ConfiguredCompositionRuntime,
 )
 from agentmem_ref.runtime_config import validate_runtime_configuration
@@ -90,7 +91,10 @@ class MultiRouteRecallTests(unittest.TestCase):
             logical_memory_refs=(MEMORY_BACKUP,),
         )
 
-        self.assertEqual(result.routes_executed, (LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE))
+        self.assertEqual(
+            result.routes_executed,
+            (LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE, SHARED_EVIDENCE_ROUTE),
+        )
         self.assertEqual(set(result.candidates), {deploy.fact_uuid, backup.fact_uuid})
         self.assertEqual(set(result.admitted), {deploy.fact_uuid, backup.fact_uuid})
         self.assertEqual(
