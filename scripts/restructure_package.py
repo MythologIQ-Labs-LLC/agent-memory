@@ -47,7 +47,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "resource_exchange", "evolveai_profile",
     ),
     "runtime": (
-        "adapter", "restart_runtime", "configured_restart", "runtime_composition",
+        "adapter", "restart_runtime", "checkpoint_transactions", "configured_restart", "runtime_composition",
         "runtime_config", "runtime_behavior", "doctor", "cli", "discovery", "composition",
         "contextual_recall_adapter", "projection_governance", "semantic_readmission_adapter",
         "write_claims", "scope_governance", "shared_revocation",
