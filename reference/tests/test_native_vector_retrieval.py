@@ -7,6 +7,7 @@ from pathlib import Path
 
 from agentmem_ref import policy
 from agentmem_ref.adapter import RecallContext
+from agentmem_ref.configured_restart import ConfigBoundRestartRuntime
 from agentmem_ref.recall_control import (
     ControlledRecallPlanner,
     RecallControlPlan,
@@ -21,6 +22,7 @@ from agentmem_ref.runtime_composition import (
 )
 from agentmem_ref.runtime_config import validate_runtime_configuration
 from agentmem_ref.vector_retrieval import (
+    DETERMINISTIC_REBUILD_POSTURE,
     SEMANTIC_VECTOR_ROUTE,
     NativeVectorCandidateRetriever,
     VectorRepresentationSpec,
@@ -62,6 +64,31 @@ def _proposal(
         required_isolation_domain_refs=(project_ref,),
         project_ref=project_ref,
         purpose="native-vector-test",
+    )
+
+
+def _prune_proposal(target: str) -> policy.Proposal:
+    return policy.Proposal(
+        proposal_id=f"prune:{target}",
+        actor_id="agent:native-vector-test",
+        charter_version="charter-v1",
+        target_reference=target,
+        target_class=policy.M1,
+        scope=TENANT,
+        operation="pruning",
+        current_strength="observed",
+        proposed_strength="tentative",
+        downstream_authority=policy.A1,
+        reversibility="reversible",
+        risk_class="low",
+        evidence_refs=("evidence:forget",),
+        tenant_ref=TENANT,
+        isolation_domain_refs=(TENANT, PROJECT),
+        required_isolation_domain_refs=(PROJECT,),
+        project_ref=PROJECT,
+        purpose="native-vector-test",
+        review_satisfied=True,
+        approval_refs=("approver:fixture",),
     )
 
 
@@ -241,6 +268,83 @@ class NativeVectorRetrievalTests(unittest.TestCase):
         self.assertIn(stale.fact_uuid, result.candidates)
         self.assertNotIn(stale.fact_uuid, result.admitted)
         self.assertEqual(result.refusals[stale.fact_uuid], "superseded_not_current")
+
+    def test_tombstoned_high_similarity_vector_residue_cannot_influence(self) -> None:
+        forgotten = self._retain(
+            "memory:forgotten",
+            "the mechanic repaired the sedan",
+            evidence_refs=("experience:forgotten",),
+        )
+        deleted = self.runtime.delete_current(_prune_proposal("memory:forgotten"))
+        self.assertTrue(deleted.committed, f"refused: {deleted.refusal}")
+        self.assertIsNotNone(self.runtime.adapter.tombstone(forgotten.fact_uuid))
+
+        result = self.runtime.multi_route_recall(
+            "vehicle maintenance question",
+            _context(),
+        )
+
+        # Pruning intentionally leaves reconstructable canonical content. The
+        # vector route may therefore rediscover physical residue, but governed
+        # recall must keep that residue non-influential.
+        self.assertIn(forgotten.fact_uuid, result.candidates)
+        self.assertNotIn(forgotten.fact_uuid, result.admitted)
+        self.assertNotIn(forgotten.fact_uuid, result.ranked_admitted)
+        self.assertTrue(result.refusals[forgotten.fact_uuid])
+
+    def test_deterministic_vector_rebuild_survives_restart_without_new_memory_identity(self) -> None:
+        retained = self._retain(
+            "memory:mechanic",
+            "the mechanic repaired the sedan",
+            evidence_refs=("experience:restart",),
+        )
+        before = self.runtime.multi_route_recall(
+            "vehicle maintenance question",
+            _context(),
+        )
+        self.assertIn(retained.fact_uuid, before.admitted)
+
+        recovered_durable = ConfigBoundRestartRuntime.recover(
+            Path(self.temp.name),
+            plan=_plan(),
+        )
+        recovered = ConfiguredCompositionRuntime(
+            durable_runtime=recovered_durable,
+            plan=_plan(),
+            vector_retriever=self.vector,
+        )
+        after = recovered.multi_route_recall(
+            "vehicle maintenance question",
+            _context(),
+        )
+
+        self.assertEqual(
+            recovered.adapter.current_fact_uuid("memory:mechanic"),
+            retained.fact_uuid,
+        )
+        self.assertIn(retained.fact_uuid, after.admitted)
+        vector_hits = [
+            hit
+            for hit in after.provenance_for(retained.fact_uuid)
+            if hit.route_id == SEMANTIC_VECTOR_ROUTE
+        ]
+        self.assertEqual(len(vector_hits), 1)
+        self.assertEqual(
+            vector_hits[0].representation_ref,
+            self.representation.spec.representation_ref,
+        )
+        self.assertEqual(
+            vector_hits[0].representation_version,
+            self.representation.spec.representation_version,
+        )
+        self.assertEqual(
+            vector_hits[0].representation_config_digest,
+            self.representation.spec.config_digest,
+        )
+        self.assertEqual(
+            vector_hits[0].rebuild_posture,
+            DETERMINISTIC_REBUILD_POSTURE,
+        )
 
     def test_same_candidate_from_lexical_and_vector_routes_is_deduped_with_both_provenances(self) -> None:
         candidate = self._retain(
