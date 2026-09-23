@@ -17,6 +17,13 @@ from typing import Iterator, Mapping
 
 from . import restart_runtime as _rr
 
+# Recovery must remain able to restore the pre-transaction bundle when a test or
+# injected failure replaces the normal publication writer. Capture the proven
+# primitive at module import rather than consulting a possibly fault-injected
+# publication symbol during recovery.
+_RECOVERY_ATOMIC_JSON_WRITE = _rr._atomic_json_write
+_RECOVERY_FSYNC_DIRECTORY = _rr._fsync_directory
+
 
 @dataclass(frozen=True)
 class CheckpointPreview:
@@ -259,14 +266,14 @@ class CheckpointTransactionSupport:
         """Internal implementation for exact crash-recovery restoration."""
         if not isinstance(bundle, CommittedCheckpointBundle):
             raise TypeError("restore_bundle requires CommittedCheckpointBundle")
-        _rr._atomic_json_write(self._store.substrate_path, bundle.substrate)
-        _rr._atomic_json_write(self._store.governance_path, bundle.governance)
-        _rr._atomic_json_write(self._store.manifest_path, bundle.manifest)
+        _RECOVERY_ATOMIC_JSON_WRITE(self._store.substrate_path, bundle.substrate)
+        _RECOVERY_ATOMIC_JSON_WRITE(self._store.governance_path, bundle.governance)
+        _RECOVERY_ATOMIC_JSON_WRITE(self._store.manifest_path, bundle.manifest)
         if bundle.journal_present:
             self._atomic_journal_write(bundle.journal_records)
         elif self._store.journal_path.exists():
             self._store.journal_path.unlink()
-            _rr._fsync_directory(self._store.root)
+            _RECOVERY_FSYNC_DIRECTORY(self._store.root)
 
         restored = self._bundle_unlocked()
         if _rr._digest(restored.manifest) != _rr._digest(bundle.manifest):
@@ -286,4 +293,4 @@ class CheckpointTransactionSupport:
             handle.flush()
             _rr.os.fsync(handle.fileno())
         _rr.os.replace(tmp, path)
-        _rr._fsync_directory(path.parent)
+        _RECOVERY_FSYNC_DIRECTORY(path.parent)
