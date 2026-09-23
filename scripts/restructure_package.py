@@ -78,6 +78,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
     "harness": (
         "authority_laundering_harness", "authority_laundering_depth",
         "autonomous_maintenance_harness", "benchmark_security", "cedar_policy_comparator",
+        "checkpoint_behavior_harness",
         "opa_policy_comparator", "mem0_comparator", "langgraph_lifecycle_comparator",
         "maf_lifecycle_comparator", "concurrency_evidence", "conditional_memory_harness",
         "derivation_currentness_harness", "derivation_currentness_depth",
