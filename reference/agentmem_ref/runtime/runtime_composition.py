@@ -8,6 +8,10 @@ and composes three already-existing Agent Memory surfaces:
 * deterministic/reproducible derived-state lifecycle through
   ``ProjectionGovernor``.
 
+RC-3 adds a deterministic multi-route candidate planner over that same governed
+adapter. Retrieval routes remain discovery/ranking mechanisms only; a deduped
+candidate union crosses one canonical admission boundary before ranking.
+
 The purpose is not to invent a new projection engine. It proves that a
 configured derived component can be disabled, physically removed, and rebuilt
 from canonical state without changing canonical logical memory identity or
@@ -16,11 +20,12 @@ letting stale/residual derived state influence the active path.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from .adapter import RecallContext
 from .configured_restart import ConfigBoundRestartRuntime
+from .contextual_recall_adapter import admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
 from ..state.projections import (
     CURRENT,
@@ -35,6 +40,146 @@ from .runtime_config import RuntimeConfigurationPlan
 CANONICAL_CAPABILITY = "semantic_fact_memory"
 RETRIEVAL_CAPABILITY = "exact_identity_retrieval"
 PROJECTION_CAPABILITY = "rebuild_projection"
+LEXICAL_ROUTE = "lexical"
+EXACT_IDENTITY_ROUTE = "exact_logical_identity"
+
+
+@dataclass(frozen=True)
+class RetrievalRouteHit:
+    route_id: str
+    candidate_ref: str
+    raw_score: float
+    logical_memory_ref: str = ""
+    authority_effect: str = "none"
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "route_id": self.route_id,
+            "candidate_ref": self.candidate_ref,
+            "raw_score": self.raw_score,
+            "logical_memory_ref": self.logical_memory_ref,
+            "authority_effect": self.authority_effect,
+        }
+
+
+@dataclass
+class MultiRouteRecallResult:
+    query: str
+    routes_executed: tuple[str, ...]
+    candidates: list[str] = field(default_factory=list)
+    admitted: list[str] = field(default_factory=list)
+    refusals: dict[str, str] = field(default_factory=dict)
+    decisions: dict[str, dict] = field(default_factory=dict)
+    route_hits: dict[str, list[RetrievalRouteHit]] = field(default_factory=dict)
+    ranked_admitted: list[str] = field(default_factory=list)
+    policy_version: str = ""
+    evaluated_at: str = ""
+    authority_effect: str = "none"
+
+    def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
+        return tuple(self.route_hits.get(candidate_ref, ()))
+
+
+class DeterministicMultiRouteRecallPlanner:
+    """RC-3 candidate planner: two routes, one canonical admission boundary.
+
+    The reference planner intentionally starts small. Lexical search and exact
+    logical identity are both deterministic and already supported by the
+    restart-safe runtime. Future vector, graph, temporal, or System-One routes
+    can add candidate evidence behind this same result shape without inheriting
+    recall authority.
+    """
+
+    def __init__(self, adapter) -> None:
+        self.adapter = adapter
+        substrate_reader = getattr(adapter, "checkpoint_substrate", None)
+        tenant_reader = getattr(adapter, "checkpoint_tenant", None)
+        if not callable(substrate_reader) or not callable(tenant_reader):
+            raise RuntimeRecoveryError(
+                "RC multi-route recall requires the restart-safe adapter substrate/tenant contract"
+            )
+
+    def recall(
+        self,
+        query: str,
+        context: RecallContext,
+        *,
+        logical_memory_refs: tuple[str, ...] = (),
+    ) -> MultiRouteRecallResult:
+        substrate = self.adapter.checkpoint_substrate()
+        tenant = self.adapter.checkpoint_tenant()
+
+        hits: list[RetrievalRouteHit] = []
+        for fact, score in substrate.search(query, group_ids=[tenant]):
+            hits.append(
+                RetrievalRouteHit(
+                    route_id=LEXICAL_ROUTE,
+                    candidate_ref=fact.uuid,
+                    raw_score=float(score),
+                )
+            )
+
+        for logical_ref in dict.fromkeys(logical_memory_refs):
+            current = self.adapter.current_fact_uuid(logical_ref)
+            if current is None:
+                continue
+            hits.append(
+                RetrievalRouteHit(
+                    route_id=EXACT_IDENTITY_ROUTE,
+                    candidate_ref=current,
+                    raw_score=1.0,
+                    logical_memory_ref=logical_ref,
+                )
+            )
+
+        by_candidate: dict[str, list[RetrievalRouteHit]] = {}
+        ordered_candidates: list[str] = []
+        for hit in hits:
+            if hit.candidate_ref not in by_candidate:
+                by_candidate[hit.candidate_ref] = []
+                ordered_candidates.append(hit.candidate_ref)
+            by_candidate[hit.candidate_ref].append(hit)
+
+        admission = admit_preselected_candidates(
+            self.adapter,
+            ordered_candidates,
+            context,
+            query_label=query,
+        )
+
+        ranked = sorted(
+            admission.admitted,
+            key=lambda candidate_ref: self._rank_key(
+                candidate_ref,
+                by_candidate.get(candidate_ref, ()),
+            ),
+        )
+        return MultiRouteRecallResult(
+            query=query,
+            routes_executed=(LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE),
+            candidates=list(admission.candidates),
+            admitted=list(admission.admitted),
+            refusals=dict(admission.refusals),
+            decisions=dict(admission.decisions),
+            route_hits=by_candidate,
+            ranked_admitted=ranked,
+            policy_version=admission.policy_version,
+            evaluated_at=admission.evaluated_at,
+        )
+
+    @staticmethod
+    def _rank_key(candidate_ref: str, hits) -> tuple[object, ...]:
+        route_ids = {hit.route_id for hit in hits}
+        lexical_score = max(
+            (hit.raw_score for hit in hits if hit.route_id == LEXICAL_ROUTE),
+            default=0.0,
+        )
+        return (
+            -len(route_ids),
+            -(1 if EXACT_IDENTITY_ROUTE in route_ids else 0),
+            -lexical_score,
+            candidate_ref,
+        )
 
 
 @dataclass(frozen=True)
@@ -106,6 +251,7 @@ class ConfiguredCompositionRuntime:
         self.plan = plan
         self.adapter = durable_runtime.adapter
         self.projections = ProjectionGovernor(self.adapter)
+        self.recall_planner = DeterministicMultiRouteRecallPlanner(self.adapter)
         self._projection_component_enabled = True
         self._projection_component_id = self._component_for(PROJECTION_CAPABILITY)
         self._canonical_component_id = self._component_for(CANONICAL_CAPABILITY)
@@ -204,9 +350,24 @@ class ConfiguredCompositionRuntime:
         )
 
     def recall(self, query: str, context: RecallContext):
-        """Route retrieval through the configured governed canonical component."""
+        """Compatibility path: lexical retrieval through the governed adapter."""
         self._route_for(RETRIEVAL_CAPABILITY)
         return self.adapter.governed_recall(query, context)
+
+    def multi_route_recall(
+        self,
+        query: str,
+        context: RecallContext,
+        *,
+        logical_memory_refs: tuple[str, ...] = (),
+    ) -> MultiRouteRecallResult:
+        """RC-3 retrieval: multiple candidate routes, one admission boundary."""
+        self._route_for(RETRIEVAL_CAPABILITY)
+        return self.recall_planner.recall(
+            query,
+            context,
+            logical_memory_refs=logical_memory_refs,
+        )
 
     def projection_admission(self) -> ProjectionAdmission:
         projection = self.projections.store.get(self._projection_id)
