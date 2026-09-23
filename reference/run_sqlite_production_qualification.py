@@ -10,11 +10,10 @@ SQLite environment must earn its own evidence.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
-import os
 from pathlib import Path
 import platform
-import sys
 import tempfile
 import time
 
@@ -170,14 +169,35 @@ def _configured_authority_probe(root: Path, runtime_config_path: Path) -> dict:
         route_effects = sorted(
             {hit.authority_effect for hits in result.route_hits.values() for hit in hits}
         )
+        generation_after_recall = runtime.durable_runtime.base.recovery_evidence.generation
+        runtime.close()
+        recovered = SQLiteConfiguredCompositionRuntime.recover(root, plan=plan)
+        try:
+            recovered_recall_events = sum(
+                1
+                for event in recovered.adapter.events
+                if event.get("event_type") == "memory.recall"
+            )
+        finally:
+            recovered.close()
         return {
             "runtime_authority_effect": result.authority_effect,
             "route_authority_effects": route_effects,
             "admitted": retained.fact_uuid in result.admitted,
-            "passes": result.authority_effect == "none" and route_effects in ([], ["none"]),
+            "generation_after_recall": generation_after_recall,
+            "recovered_recall_events": recovered_recall_events,
+            "passes": (
+                result.authority_effect == "none"
+                and route_effects in ([], ["none"])
+                and recovered_recall_events >= 1
+            ),
         }
-    finally:
-        runtime.close()
+    except Exception:
+        try:
+            runtime.close()
+        except Exception:
+            pass
+        raise
 
 
 def run_qualification(
@@ -226,12 +246,15 @@ def run_qualification(
     recovered = SQLiteRestartSafeRuntime.recover(runtime_root, profile=profile)
     recovery_end = time.perf_counter_ns()
     recovered.substrate.integrity_check()
+    substrate_digest_after_restart = recovered.substrate.state_digest()
+    generation_at_recovery = recovered.recovery_evidence.generation
+
     read_latencies: list[float] = []
     read_hits = 0
     for index in range(read_count):
         target = index % write_count
         started = time.perf_counter_ns()
-        result = recovered.adapter.governed_recall(
+        result = recovered.governed_recall(
             f"qualification durable value {target}",
             _context(),
         )
@@ -240,7 +263,20 @@ def run_qualification(
         if retained_ids[target] in result.admitted:
             read_hits += 1
 
-    substrate_digest_after_restart = recovered.substrate.state_digest()
+    generation_after_reads = recovered.recovery_evidence.generation
+
+    # Recovery after governed reads proves that audit/identifier side effects
+    # were published in the same durable generation rather than drifting the
+    # canonical digest outside the runtime envelope.
+    read_recovery = SQLiteRestartSafeRuntime.recover(runtime_root, profile=profile)
+    try:
+        recovered_recall_events = sum(
+            1
+            for event in read_recovery.adapter.events
+            if event.get("event_type") == "memory.recall"
+        )
+    finally:
+        read_recovery.close()
 
     # Two recovered writers start from one generation. The second must fail
     # after the first commits a newer generation.
@@ -284,8 +320,10 @@ def run_qualification(
         "journal_mode_wal": identity["journal_mode"] == "wal",
         "synchronous_full": identity["synchronous"] == "2",
         "restart_digest_stable": substrate_digest_before_restart == substrate_digest_after_restart,
-        "restart_generation_preserved": generation_before_restart >= 1,
+        "restart_generation_preserved": generation_at_recovery == generation_before_restart,
         "governed_read_hit_rate_complete": read_hits == read_count,
+        "governed_reads_advance_generation": generation_after_reads == generation_at_recovery + read_count,
+        "governed_read_audit_recovered": recovered_recall_events >= read_count,
         "stale_writer_refused": stale_writer_refused,
         "interrupted_transaction_rolled_back": rollback_ok,
         "backup_restored": backup_restore_ok,
@@ -322,9 +360,7 @@ def run_qualification(
         "configuration": {
             "write_count": write_count,
             "read_count": read_count,
-            "runtime_config_sha256": __import__("hashlib").sha256(
-                runtime_config_path.read_bytes()
-            ).hexdigest(),
+            "runtime_config_sha256": hashlib.sha256(runtime_config_path.read_bytes()).hexdigest(),
         },
         "operational_characterization": {
             "initialization_ms": _ms(init_start, init_end),
@@ -337,6 +373,9 @@ def run_qualification(
             "storage_growth_bytes": storage_after_writes - initial_storage,
             "backup_database_bytes": backup_path.stat().st_size,
             "backup_fact_count": backup_fact_count,
+            "generation_before_restart": generation_before_restart,
+            "generation_after_reads": generation_after_reads,
+            "recovered_recall_events": recovered_recall_events,
         },
         "authority_probe": authority_probe,
         "structural_invariants": invariants,
