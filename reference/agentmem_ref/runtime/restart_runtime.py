@@ -11,6 +11,13 @@ history exports/restores itself, and the governed adapter durability
 specialization exports/restores governance state. This module orchestrates those
 contracts instead of scraping implementation-private dictionaries.
 
+Issue #414 adds a transaction protocol around the same v1 serialization shape:
+checkpoint writers serialize through an OS advisory lock, compare the generation
+they observed with the generation currently published, and append a hash-chained
+commit journal after publishing the manifest. Recovery verifies that journal when
+present. A torn commit or stale replay fails closed rather than being interpreted
+as a new canonical state.
+
 The file-backed store remains the first executable durability profile, not
 canonical storage doctrine. A production implementation may use a database,
 WAL, object store, or another transactional substrate while preserving the same
@@ -19,12 +26,18 @@ recovery obligations.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 import hashlib
 import json
 import os
 from pathlib import Path
 from typing import Iterable, Mapping
+
+try:  # POSIX reference profile: flock releases automatically if a process dies.
+    import fcntl
+except ImportError:  # pragma: no cover - exercised only on non-POSIX hosts.
+    fcntl = None
 
 from .adapter import Clock, GovernedMemoryAdapter
 from ..core.readmission import RejectedValueRegistry
@@ -36,11 +49,17 @@ from ..state.substrate import (
 
 SCHEMA_VERSION = "1.0.0"
 DURABILITY_PROFILE = "reference_file_checkpoint_v1"
+TRANSACTION_PROTOCOL = "reference_generation_cas_v1"
+JOURNAL_SCHEMA_VERSION = "1.0.0"
 ADAPTER_CHECKPOINT_OWNER = "governed_memory_adapter"
 
 
 class RuntimeRecoveryError(RuntimeError):
     """Durable runtime state cannot be reconstructed safely."""
+
+
+class RuntimeCheckpointConflict(RuntimeRecoveryError):
+    """A writer attempted to publish from a stale or unobserved generation."""
 
 
 @dataclass(frozen=True)
@@ -272,6 +291,20 @@ def _read_json(path: Path) -> dict:
     return value
 
 
+def _fsync_directory(path: Path) -> None:
+    """Durably record directory-entry changes for the POSIX file profile."""
+    try:
+        descriptor = os.open(path, os.O_RDONLY)
+    except OSError as exc:
+        raise RuntimeRecoveryError(f"cannot open checkpoint directory for fsync: {path}") from exc
+    try:
+        os.fsync(descriptor)
+    except OSError as exc:
+        raise RuntimeRecoveryError(f"cannot fsync checkpoint directory: {path}") from exc
+    finally:
+        os.close(descriptor)
+
+
 def _atomic_json_write(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(f".{path.name}.tmp")
@@ -281,6 +314,139 @@ def _atomic_json_write(path: Path, value: dict) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(tmp, path)
+    _fsync_directory(path.parent)
+
+
+def _append_json_line(path: Path, value: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = _canonical_bytes(value) + b"\n"
+    with path.open("ab") as handle:
+        handle.write(payload)
+        handle.flush()
+        os.fsync(handle.fileno())
+    _fsync_directory(path.parent)
+
+
+@contextmanager
+def _exclusive_checkpoint_lock(path: Path):
+    """Serialize writers with a crash-releasing POSIX advisory file lock."""
+    if fcntl is None:
+        raise RuntimeRecoveryError(
+            "transactional reference checkpointing requires POSIX advisory file locking"
+        )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a+b") as handle:
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        except OSError as exc:
+            raise RuntimeRecoveryError("cannot acquire checkpoint transaction lock") from exc
+        try:
+            yield
+        finally:
+            try:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+            except OSError as exc:
+                raise RuntimeRecoveryError("cannot release checkpoint transaction lock") from exc
+
+
+def _journal_record(manifest: Mapping[str, object], previous_record_digest: str = "") -> dict:
+    try:
+        generation = int(manifest["generation"])
+        if generation < 1:
+            raise ValueError("checkpoint generation must be positive")
+        material = {
+            "schema_version": JOURNAL_SCHEMA_VERSION,
+            "transaction_protocol": TRANSACTION_PROTOCOL,
+            "generation": generation,
+            "manifest_digest": _digest(dict(manifest)),
+            "substrate_digest": str(manifest["substrate_digest"]),
+            "governance_digest": str(manifest["governance_digest"]),
+            "interpretation_digest": str(manifest["interpretation_digest"]),
+            "previous_record_digest": previous_record_digest,
+        }
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeRecoveryError("runtime manifest cannot be journaled") from exc
+    return {**material, "record_digest": _digest(material)}
+
+
+def _read_generation_journal(path: Path) -> list[dict]:
+    if not path.exists():
+        return []
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeDecodeError) as exc:
+        raise RuntimeRecoveryError("checkpoint generation journal cannot be read") from exc
+    records: list[dict] = []
+    for index, line in enumerate(lines, start=1):
+        if not line.strip():
+            continue
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise RuntimeRecoveryError(
+                f"checkpoint generation journal is corrupt at record {index}"
+            ) from exc
+        if not isinstance(value, dict):
+            raise RuntimeRecoveryError(
+                f"checkpoint generation journal record {index} is not an object"
+            )
+        records.append(value)
+    return records
+
+
+def _validate_generation_journal(records: Iterable[Mapping[str, object]]) -> dict | None:
+    previous: dict | None = None
+    for index, raw in enumerate(records, start=1):
+        if raw.get("schema_version") != JOURNAL_SCHEMA_VERSION:
+            raise RuntimeRecoveryError("unsupported checkpoint generation journal schema")
+        if raw.get("transaction_protocol") != TRANSACTION_PROTOCOL:
+            raise RuntimeRecoveryError("checkpoint transaction protocol changed")
+        try:
+            generation = int(raw["generation"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise RuntimeRecoveryError("checkpoint generation journal has invalid generation") from exc
+        if generation < 1:
+            raise RuntimeRecoveryError("checkpoint generation journal has invalid generation")
+        if previous is not None:
+            if generation != int(previous["generation"]) + 1:
+                raise RuntimeRecoveryError("checkpoint generation journal is not contiguous")
+            if raw.get("previous_record_digest") != previous.get("record_digest"):
+                raise RuntimeRecoveryError("checkpoint generation journal chain is broken")
+        elif raw.get("previous_record_digest") not in ("", None):
+            raise RuntimeRecoveryError("checkpoint generation journal has an invalid first link")
+
+        material = {
+            "schema_version": raw.get("schema_version"),
+            "transaction_protocol": raw.get("transaction_protocol"),
+            "generation": generation,
+            "manifest_digest": raw.get("manifest_digest"),
+            "substrate_digest": raw.get("substrate_digest"),
+            "governance_digest": raw.get("governance_digest"),
+            "interpretation_digest": raw.get("interpretation_digest"),
+            "previous_record_digest": raw.get("previous_record_digest", ""),
+        }
+        if raw.get("record_digest") != _digest(material):
+            raise RuntimeRecoveryError(
+                f"checkpoint generation journal record {index} digest mismatch"
+            )
+        previous = dict(raw)
+    return previous
+
+
+def _assert_manifest_matches_journal(manifest: Mapping[str, object], latest: Mapping[str, object]) -> None:
+    try:
+        generation_matches = int(manifest["generation"]) == int(latest["generation"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeRecoveryError("runtime manifest generation is malformed") from exc
+    if not generation_matches or latest.get("manifest_digest") != _digest(dict(manifest)):
+        raise RuntimeRecoveryError(
+            "checkpoint generation journal mismatch; rollback or torn commit detected"
+        )
+    for field in ("substrate_digest", "governance_digest", "interpretation_digest"):
+        if latest.get(field) != manifest.get(field):
+            raise RuntimeRecoveryError(
+                "checkpoint generation journal mismatch; rollback or torn commit detected"
+            )
 
 
 def _snapshot_substrate(substrate) -> dict:
@@ -413,16 +579,47 @@ def _assert_profile_compatible(
 
 
 class JsonRuntimeStateStore:
-    """Atomic-manifest checkpoint store with separate substrate/governance payloads."""
+    """Manifest-published store with serialized compare-and-commit generations."""
 
     def __init__(self, root: str | Path) -> None:
         self.root = Path(root)
         self.substrate_path = self.root / "substrate.json"
         self.governance_path = self.root / "governance.json"
         self.manifest_path = self.root / "runtime-manifest.json"
+        self.journal_path = self.root / "runtime-generation-journal.jsonl"
+        self.lock_path = self.root / ".runtime-checkpoint.lock"
+        self._observed_generation: int | None = None
+        self._observed_manifest_digest: str | None = None
 
     def exists(self) -> bool:
-        return self.manifest_path.exists()
+        # A journal without a manifest is evidence of an incomplete/corrupt
+        # runtime, not permission to initialize a new runtime over the top.
+        return self.manifest_path.exists() or self.journal_path.exists()
+
+    def _current_manifest_and_journal(self) -> tuple[dict | None, dict | None]:
+        manifest = _read_json(self.manifest_path) if self.manifest_path.exists() else None
+        latest = _validate_generation_journal(_read_generation_journal(self.journal_path))
+        if manifest is None:
+            if latest is not None:
+                raise RuntimeRecoveryError(
+                    "checkpoint generation journal exists without a runtime manifest"
+                )
+            return None, None
+        if latest is not None:
+            _assert_manifest_matches_journal(manifest, latest)
+        elif manifest.get("transaction_protocol") == TRANSACTION_PROTOCOL:
+            raise RuntimeRecoveryError(
+                "transactional runtime manifest is missing its generation journal"
+            )
+        return manifest, latest
+
+    def _append_journal_record(
+        self, manifest: dict, previous: Mapping[str, object] | None
+    ) -> dict:
+        previous_digest = "" if previous is None else str(previous["record_digest"])
+        record = _journal_record(manifest, previous_digest)
+        _append_json_line(self.journal_path, record)
+        return record
 
     def checkpoint(
         self,
@@ -431,45 +628,85 @@ class JsonRuntimeStateStore:
         profile: RuntimeProfile,
         visibility_snapshots: dict[str, dict],
     ) -> RecoveryEvidence:
-        previous_generation = 0
-        if self.manifest_path.exists():
-            previous = _read_json(self.manifest_path)
-            previous_generation = int(previous.get("generation", 0))
+        with _exclusive_checkpoint_lock(self.lock_path):
+            current_manifest, latest = self._current_manifest_and_journal()
+            current_generation = (
+                0 if current_manifest is None else int(current_manifest.get("generation", 0))
+            )
 
-        substrate_reader = getattr(adapter, "checkpoint_substrate", None)
-        if not callable(substrate_reader):
-            raise RuntimeRecoveryError("governed adapter does not declare checkpoint capability")
-        substrate = _snapshot_substrate(substrate_reader())
-        governance = _snapshot_governance(
-            adapter,
-            profile=profile,
-            visibility_snapshots=visibility_snapshots,
-        )
-        substrate_digest = _digest(substrate)
-        governance_digest = _digest(governance)
-        generation = previous_generation + 1
+            if self._observed_generation is None:
+                if current_manifest is not None:
+                    raise RuntimeCheckpointConflict(
+                        "checkpoint store has not observed the current generation; recover before writing"
+                    )
+                expected_generation = 0
+            else:
+                expected_generation = self._observed_generation
 
-        _atomic_json_write(self.substrate_path, substrate)
-        _atomic_json_write(self.governance_path, governance)
-        manifest = {
-            "schema_version": SCHEMA_VERSION,
-            "durability_profile": DURABILITY_PROFILE,
-            "generation": generation,
-            "substrate_digest": substrate_digest,
-            "governance_digest": governance_digest,
-            "interpretation_digest": profile.interpretation_digest,
-        }
-        # The manifest is replaced last. A crash before this point leaves a
-        # digest mismatch that recovery treats as a torn checkpoint.
-        _atomic_json_write(self.manifest_path, manifest)
-        return RecoveryEvidence(
-            generation=generation,
-            durability_profile=DURABILITY_PROFILE,
-            substrate_digest=substrate_digest,
-            governance_digest=governance_digest,
-            interpretation_digest=profile.interpretation_digest,
-            recovered_visibility_operations=tuple(sorted(visibility_snapshots)),
-        )
+            if current_generation != expected_generation:
+                raise RuntimeCheckpointConflict(
+                    "checkpoint generation conflict: "
+                    f"observed {expected_generation}, current {current_generation}"
+                )
+            if (
+                current_manifest is not None
+                and self._observed_manifest_digest is not None
+                and _digest(current_manifest) != self._observed_manifest_digest
+            ):
+                raise RuntimeCheckpointConflict(
+                    "checkpoint manifest changed without advancing the observed generation"
+                )
+
+            # Upgrade a fully validated pre-#414 v1 checkpoint into the journal
+            # chain before publishing a later generation. This does not modify
+            # the legacy manifest or claim rollback protection for history that
+            # predates the journal.
+            if current_manifest is not None and latest is None:
+                latest = self._append_journal_record(current_manifest, None)
+
+            substrate_reader = getattr(adapter, "checkpoint_substrate", None)
+            if not callable(substrate_reader):
+                raise RuntimeRecoveryError(
+                    "governed adapter does not declare checkpoint capability"
+                )
+            substrate = _snapshot_substrate(substrate_reader())
+            governance = _snapshot_governance(
+                adapter,
+                profile=profile,
+                visibility_snapshots=visibility_snapshots,
+            )
+            substrate_digest = _digest(substrate)
+            governance_digest = _digest(governance)
+            generation = current_generation + 1
+
+            _atomic_json_write(self.substrate_path, substrate)
+            _atomic_json_write(self.governance_path, governance)
+            manifest = {
+                "schema_version": SCHEMA_VERSION,
+                "durability_profile": DURABILITY_PROFILE,
+                "transaction_protocol": TRANSACTION_PROTOCOL,
+                "generation": generation,
+                "substrate_digest": substrate_digest,
+                "governance_digest": governance_digest,
+                "interpretation_digest": profile.interpretation_digest,
+            }
+            # Publication point. A crash before this leaves the old manifest and
+            # new partial payloads, which recovery refuses on digest mismatch.
+            _atomic_json_write(self.manifest_path, manifest)
+            # Commit witness. A crash after manifest publication but before this
+            # append leaves a journal/manifest mismatch, which also fails closed.
+            latest = self._append_journal_record(manifest, latest)
+
+            self._observed_generation = generation
+            self._observed_manifest_digest = _digest(manifest)
+            return RecoveryEvidence(
+                generation=generation,
+                durability_profile=DURABILITY_PROFILE,
+                substrate_digest=substrate_digest,
+                governance_digest=governance_digest,
+                interpretation_digest=profile.interpretation_digest,
+                recovered_visibility_operations=tuple(sorted(visibility_snapshots)),
+            )
 
     def recover(
         self,
@@ -478,42 +715,59 @@ class JsonRuntimeStateStore:
         available_bindings: Iterable[CapabilityBinding],
         verifier_registry=None,
     ) -> tuple[GovernedMemoryAdapter, dict[str, dict], RecoveryEvidence]:
-        manifest = _read_json(self.manifest_path)
-        if manifest.get("schema_version") != SCHEMA_VERSION:
-            raise RuntimeRecoveryError("unsupported runtime manifest schema")
-        if manifest.get("durability_profile") != DURABILITY_PROFILE:
-            raise RuntimeRecoveryError("runtime durability profile changed")
+        # Lock recovery against an in-flight writer. Otherwise a reader could
+        # observe the intentional payload-before-manifest window and mistake a
+        # healthy commit in progress for corruption.
+        with _exclusive_checkpoint_lock(self.lock_path):
+            manifest, latest = self._current_manifest_and_journal()
+            if manifest is None:
+                raise RuntimeRecoveryError("required runtime state missing: runtime-manifest.json")
+            if manifest.get("schema_version") != SCHEMA_VERSION:
+                raise RuntimeRecoveryError("unsupported runtime manifest schema")
+            if manifest.get("durability_profile") != DURABILITY_PROFILE:
+                raise RuntimeRecoveryError("runtime durability profile changed")
 
-        substrate_raw = _read_json(self.substrate_path)
-        governance_raw = _read_json(self.governance_path)
-        substrate_digest = _digest(substrate_raw)
-        governance_digest = _digest(governance_raw)
-        if substrate_digest != manifest.get("substrate_digest"):
-            raise RuntimeRecoveryError("substrate checkpoint digest mismatch; recovery fails closed")
-        if governance_digest != manifest.get("governance_digest"):
-            raise RuntimeRecoveryError("governance checkpoint digest mismatch; recovery fails closed")
+            substrate_raw = _read_json(self.substrate_path)
+            governance_raw = _read_json(self.governance_path)
+            substrate_digest = _digest(substrate_raw)
+            governance_digest = _digest(governance_raw)
+            if substrate_digest != manifest.get("substrate_digest"):
+                raise RuntimeRecoveryError(
+                    "substrate checkpoint digest mismatch; recovery fails closed"
+                )
+            if governance_digest != manifest.get("governance_digest"):
+                raise RuntimeRecoveryError(
+                    "governance checkpoint digest mismatch; recovery fails closed"
+                )
 
-        persisted_profile_raw = governance_raw.get("profile")
-        if not isinstance(persisted_profile_raw, dict):
-            raise RuntimeRecoveryError("persisted runtime profile is missing")
-        persisted_profile = _profile_from_dict(persisted_profile_raw)
-        if persisted_profile.interpretation_digest != manifest.get("interpretation_digest"):
-            raise RuntimeRecoveryError("runtime interpretation digest mismatch")
-        _assert_profile_compatible(persisted_profile, expected_profile, available_bindings)
+            persisted_profile_raw = governance_raw.get("profile")
+            if not isinstance(persisted_profile_raw, dict):
+                raise RuntimeRecoveryError("persisted runtime profile is missing")
+            persisted_profile = _profile_from_dict(persisted_profile_raw)
+            if persisted_profile.interpretation_digest != manifest.get("interpretation_digest"):
+                raise RuntimeRecoveryError("runtime interpretation digest mismatch")
+            _assert_profile_compatible(
+                persisted_profile, expected_profile, available_bindings
+            )
 
-        substrate = _restore_substrate(substrate_raw)
-        adapter, visibility = _restore_adapter(
-            substrate, governance_raw, verifier_registry=verifier_registry
-        )
-        evidence = RecoveryEvidence(
-            generation=int(manifest.get("generation", 0)),
-            durability_profile=DURABILITY_PROFILE,
-            substrate_digest=substrate_digest,
-            governance_digest=governance_digest,
-            interpretation_digest=persisted_profile.interpretation_digest,
-            recovered_visibility_operations=tuple(sorted(visibility)),
-        )
-        return adapter, visibility, evidence
+            substrate = _restore_substrate(substrate_raw)
+            adapter, visibility = _restore_adapter(
+                substrate, governance_raw, verifier_registry=verifier_registry
+            )
+            generation = int(manifest.get("generation", 0))
+            if generation < 1:
+                raise RuntimeRecoveryError("runtime manifest generation is malformed")
+            self._observed_generation = generation
+            self._observed_manifest_digest = _digest(manifest)
+            evidence = RecoveryEvidence(
+                generation=generation,
+                durability_profile=DURABILITY_PROFILE,
+                substrate_digest=substrate_digest,
+                governance_digest=governance_digest,
+                interpretation_digest=persisted_profile.interpretation_digest,
+                recovered_visibility_operations=tuple(sorted(visibility)),
+            )
+            return adapter, visibility, evidence
 
 
 class RestartSafeRuntime:
