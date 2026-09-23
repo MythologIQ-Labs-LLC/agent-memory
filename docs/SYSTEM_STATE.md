@@ -92,11 +92,11 @@ PR #389 merged on 2026-09-23 as `0cb98c4d5262338886d82f3c1c6abf6e9c743d10`, addi
 | `jsonschema` | `>=4.20,<5` | hard dependency |
 | `cryptography` | `>=50,<51` | hard dependency |
 | `rfc8785` | `>=0.1,<0.2` | hard dependency |
-| `agent-manifest` | `==0.11.2` | optional comparator dependency; PR #405 proposes 0.12.0 and remains unmerged |
-| `agentrust-trace` | `==0.9.0` | optional comparator dependency; PR #404 proposes 0.10.0 and remains unmerged |
+| `agent-manifest` | `==0.11.2` | optional comparator dependency; 0.12.0 is queued for coordinated qualification under #440 |
+| `agentrust-trace` | `==0.9.0` | optional comparator dependency; 0.10.0 is queued for coordinated qualification under #440 |
 | Graphiti / Kuzu path | experimental / non-canonical production choice | current Kuzu-backed adapter is not production-qualified |
 
-Dependency PRs #404 and #405 are semantic/interoperability qualification work, not routine green-button upgrades.
+Issue #440 owns the next Agent Manifest + TRACE requalification as one version-exact interoperability change. Bare Dependabot PRs #404/#405 are closed and must not be merged independently; #375 established why a one-file bump can silently lose qualification coverage through skipped pin-identity tests.
 
 ---
 
@@ -127,11 +127,10 @@ GitHub issue/PR state is authoritative. The live work surfaces are now intention
 | #410 | **RC umbrella**: compose the accepted architecture into a usable release candidate |
 | #427 | **RC production-durability gate**: qualify one production-credible canonical substrate |
 | #437 / PR #438 | **Active retrieval front**: query-driven relational recall + LoCoMo evidence-retrieval diagnostic |
-| #408 | Longitudinal anonymized semantic-recall / canonical-truth case study; research pressure case, not an RC core blocker |
+| #440 | **Dependency qualification**: re-qualify `agent-manifest` 0.12.0 + `agentrust-trace` 0.10.0 together |
+| #408 | **Longitudinal case study**: semantic-recall / canonical-truth pressure case; not an RC core blocker |
 | #361 | **Blocked external**: live Cloudflare/DashClaw conformance run |
 | #388 | **Longitudinal external evidence**: field-efficacy measurements; not an RC blocker |
-| PR #404 | Dependency qualification: `agentrust-trace` 0.10.0 |
-| PR #405 | Dependency qualification: `agent-manifest` 0.12.0 |
 
 ### Recently retired stale work
 
@@ -141,6 +140,7 @@ GitHub issue/PR state is authoritative. The live work surfaces are now intention
 - #387 closed `not_planned` for the current cycle; reopen when the Git/document knowledge profile is actively resumed.
 - #392 closed `not_planned` until DashClaw establishes TransitionRuleCorpus authorship/ownership.
 - PR #389 merged after its long-standing full-green state was rechecked.
+- PRs #404/#405 closed as superseded by coordinated qualification issue #440.
 
 ---
 
@@ -186,8 +186,8 @@ Sequence the current implementation work as follows:
 3. **Implement the RC developer facade.** Wrap the existing public contract; do not create a friendlier bypass around PAMA, scope, evidence, or recall admission.
 4. **Land one end-to-end RC cognitive-memory fixture** spanning retain/composition/retrieval/admission/correction/restart/forgetting/history.
 5. **Run external/public benchmark evidence** only after the benchmark adapter is stable; keep retrieval metrics, answer quality, performance, and governance measurements separate.
-6. **Handle #404/#405 independently** as comparator/evidence dependency qualifications.
-7. Keep #361 and #388 out of the active implementation critical path until their external evidence gates can actually move.
+6. **Execute #440 as one coordinated dependency qualification.** Re-enumerate every version/source binding and prove the version-identity checks execute rather than skip.
+7. Keep #361, #388, and #408 out of the active implementation critical path until their external/longitudinal evidence gates can actually move.
 
 ---
 
