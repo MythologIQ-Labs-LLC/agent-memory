@@ -26,6 +26,8 @@ Use the narrowest relationship label that accurately describes the evidence.
 
 | Relationship | Meaning | Does not imply |
 |---|---|---|
+| **First-party implementation ancestry** | Same-owner prior work contains mechanisms, code, tests, schemas, or product lessons that Agent Memory may harvest into native modules under ADR-036. | permanent cross-repository runtime dependency or ownership of Agent Memory's generic memory machinery |
+| **Domain evidence source** | A specialized system supplies observations or structures from its own domain into Agent Memory. | ownership of generic retrieval, graph, lifecycle, or governance machinery |
 | **Intellectual lineage / informed by** | External work materially shaped a question, distinction, mechanism, or design direction. | dependency, implementation, endorsement, joint authorship |
 | **Conceptually aligned** | Projects independently share a useful architectural or philosophical principle. | common ownership, compatible APIs, conformance |
 | **Reference substrate** | Agent Memory has executed or mapped doctrine against the system as a concrete runtime/storage substrate. | that the substrate owns Agent Memory doctrine |
@@ -63,6 +65,43 @@ project owns the resulting Agent Memory doctrine
 
 When a specific implementation is required for a test, adapter, or profile, pin that dependency locally to the evidence and do not generalize it into repository-wide doctrine.
 
+## First-party ancestry is not end-state runtime ownership
+
+Same-owner repositories require an additional distinction because they may contain real implementations that predate Agent Memory's current architecture.
+
+Under [`ADR-036`](adr/ADR-036-same-owner-components-are-first-party-modules.md), useful mechanisms from those repositories may be adopted directly into Agent Memory. Once adopted, the resulting capability is owned and named by Agent Memory rather than by the originating repository.
+
+The intended flow is:
+
+```text
+EvolveAI
+CodeGenome
+COREFORGE Vault / Neurospace
+other same-owner prior work
+        |
+        v
+inspect / validate / harvest proven mechanisms
+        |
+        v
+native Agent Memory modules
+        |
+        v
+Agent Memory canonical memory subsystem
+        |
+        +--> COREFORGE
+        +--> Cortera
+        +--> TARA
+        +--> agents / products
+```
+
+This means:
+
+- **EvolveAI** is first-party implementation ancestry and a behavioral/test oracle for mechanisms such as vector retrieval, temporal behavior, decay, consolidation, pruning, tier pressure, REM-style synthesis, and crystallization proposals. It does not remain the permanent runtime owner of Agent Memory metabolism or retrieval.
+- **CodeGenome** is first-party implementation ancestry and may remain a specialized **code-domain evidence source**. Its embedding, graph, traversal, provenance, impact, and experiment-loop mechanisms may inform native Agent Memory implementation. CodeGenome does not own Agent Memory's generic vector, graph, causal, or retrieval machinery.
+- **COREFORGE Vault / Neurospace** is first-party product/runtime ancestry. Its context broker, memory domains, source references, lineage, graph recall, decay-ranked retrieval, and product lessons may be harvested. The intended direction is for COREFORGE to consume Agent Memory for generic memory semantics rather than remain their canonical owner.
+
+Historical inspection records of those systems remain valuable evidence. They should be read as evidence of implemented ancestry and migration surfaces, not as a destination architecture requiring Agent Memory to stitch those repositories together forever.
+
 ## Recognition is not relicensing
 
 A link, citation, acknowledgement, implementation map, or aligned-project callout does not import the external project's license into Agent Memory and does not apply Agent Memory's Apache-2.0 license to the external work.
@@ -80,6 +119,8 @@ rather than copied expression.
 If code, prose, diagrams, tables, schemas, fixtures, or other expressive material are copied or adapted, the reuse must follow [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) and, where material, be recorded in [`sources/source-registry.json`](../sources/source-registry.json) with the applicable license/permission obligations.
 
 Repository licenses also do not automatically govern third-party issue comments, discussion posts, uploaded attachments, logos, screenshots, linked papers, or other nearby material.
+
+For same-owner repositories covered by ADR-036, the source-rights question is different: common ownership permits direct adoption without inventing an internal attribution restriction. Lineage should still be recorded because architectural provenance is useful, not because Agent Memory must preserve an originating provider identity.
 
 ## Names, marks, and logos
 

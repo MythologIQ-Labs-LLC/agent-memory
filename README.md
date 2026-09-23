@@ -29,7 +29,7 @@ Multiple memory forms. Shared identity and evidence. Explicit lifecycle and reca
 >
 > Agent Memory is no longer only an architecture-and-documentation project. The repository contains governed semantic, epistemic, procedural, predictive, cognitive-mesh, persistence, correction, deletion, multi-route, relational, and query-driven recall, provider-qualification, benchmark, and Code Reality Graph execution paths. The reference runtime is restart-safe at its declared boundary and is protected by a large conformance/evidence suite.
 >
-> It is **not** yet a production 1.0 system and **not** yet RC1. There are currently **zero production-qualified canonical substrates**. Production substrate qualification is tracked by #427; RC composition and release gates are tracked by #410.
+> It is **not** yet a production 1.0 system and **not** yet RC1. The native `SQLiteTemporalGraph` / `sqlite_single_host_v1` profile has earned bounded production-credible single-host canonical-substrate qualification through #427 / PR #452. That qualification does not imply distributed or multi-host production readiness. RC composition and release gates are tracked by #410.
 
 ## What Agent Memory is
 
@@ -70,6 +70,12 @@ Cross-cutting: identity, evidence, provenance, calibration, conformance
 The canonical architecture is established by **[ADR-035](docs/adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md)**. The important consequence is simple:
 
 > A substrate is not the memory system. A retrieval strategy is not the memory system. A graph is not the memory system. They are bounded participants in Agent Memory.
+
+A second ownership rule is equally important:
+
+> **Agent Memory is the canonical owner of generic memory machinery.** EvolveAI, CodeGenome, COREFORGE Vault/Neurospace, and other prior work are implementation ancestry, evidence sources, domain-specialized producers, interoperability mechanisms, or downstream consumers. Proven mechanisms may be harvested into native Agent Memory modules, but their historical existence does not create a permanent cross-repository runtime dependency.
+
+In particular, CodeGenome may continue to provide code-domain observations while Agent Memory owns generic graph/retrieval machinery, and COREFORGE's intended direction is to consume Agent Memory rather than remain the canonical owner of generic runtime memory semantics. See **[ADR-036](docs/adr/ADR-036-same-owner-components-are-first-party-modules.md)** and the **[implementation map](docs/05-repo-implementation-map.md)**.
 
 ---
 
@@ -139,8 +145,8 @@ The repository is deliberately strict about the difference between **architectur
 | Code Reality Graph | Agent Memory-owned `crg/` package with CodeGenome profile/integration modules; not a universal graph ontology |
 | Capability qualification | Executable provider qualification/substitution framework |
 | Hindsight / MemOS | Evidence-proven for bounded `resource_artifact_memory`; **not canonical substrates** |
-| Production canonical substrate | **None qualified yet**; tracked by #427 |
-| Vector / external graph / adaptive recall routes | Not yet promoted into the RC runtime; provider evidence must earn each route |
+| Production canonical substrate | Native `SQLiteTemporalGraph` / `sqlite_single_host_v1` is qualified for the bounded single-host RC profile via #427 / PR #452; broader deployment claims remain unearned |
+| Vector / external graph / adaptive recall routes | Native semantic/vector retrieval is active follow-on work under #456; external graph and adaptive routes remain separately bounded |
 | Developer `AgentMemory.open()/remember()/...` facade | RC implementation still open |
 | Public answer-quality benchmark | Official LoCoMo QA / LongMemEval release evidence still open; retrieval evidence must not be presented as answer-quality parity |
 
@@ -197,7 +203,7 @@ The versioned internal RC retrieval fixture gives this boundary an executable ba
 
 The repository also includes a **LoCoMo-compatible retrieval-evidence diagnostic**. It consumes an externally supplied LoCoMo dataset path, binds the dataset hash/upstream revision/runtime configuration, and reports evidence Recall@K, Precision@K, MRR, category aggregates, route contribution, and diagnostic timing. The upstream dataset is not redistributed. This is **not** the official LoCoMo answer-quality score and is not directly comparable to Jev-Mem's reported answer score until an equivalent answer-generation/evaluation protocol is implemented and run.
 
-Vector, temporal, external graph, and adaptive/System-One routes can plug into the same boundary later, but they must earn runtime qualification rather than becoming authoritative because they retrieve convincingly.
+Vector, temporal, external graph, and adaptive/System-One routes plug into the same candidate-to-admission boundary as they are implemented. They do not become authoritative because they retrieve convincingly.
 
 ---
 
@@ -226,9 +232,11 @@ See **[State checkpoint contract](docs/46-state-checkpoint-contract.md)**.
 
 ### What this does not mean
 
-`reference_file_checkpoint_v1` is a **reference durability profile**, not a production database qualification.
+`reference_file_checkpoint_v1` is a **reference durability profile**, not itself a production database qualification.
 
 The in-memory canonical substrate can be checkpointed and recovered correctly under that profile. That proves Agent Memory's persistence semantics. It does not prove that the in-memory substrate is an appropriate production deployment choice.
+
+Agent Memory now also has a separate bounded production-credible qualification for its **native** SQLite canonical substrate. `SQLiteTemporalGraph` / `sqlite_single_host_v1` earned that profile through #427 / PR #452 with single-host transaction, restart, currentness, correction, deletion, history/provenance, isolation, integrity, backup/restore, and recovery evidence. The qualification remains deliberately narrower than distributed-database readiness.
 
 Likewise:
 
@@ -238,7 +246,7 @@ SQLite underneath a plugin      != Agent Memory SQLite substrate
 Graph database                   != automatically qualified canonical graph memory
 ```
 
-Production canonical-substrate qualification is intentionally separate and is tracked by **#427**.
+A persistence technology becomes an Agent Memory canonical substrate only when Agent Memory implements the contract directly and earns the relevant evidence on that exact profile.
 
 ---
 
@@ -248,10 +256,10 @@ This distinction prevents capability maturity from spreading by association, one
 
 | Kind | Meaning | Current examples |
 |---|---|---|
-| **Canonical substrate** | Implements the retained fact/episode `TemporalGraphPort` contract | `InMemoryTemporalGraph`, experimental `GraphitiSubstrate` |
+| **Canonical substrate** | Implements the retained fact/episode `TemporalGraphPort` contract | `InMemoryTemporalGraph`; qualified single-host `SQLiteTemporalGraph`; experimental `GraphitiSubstrate` |
 | **Memory implementation** | Governed semantic behavior above the substrate | epistemic, procedural, predictive, semantic memory |
 | **Capability provider** | Supplies one versioned capability under a qualification contract | Hindsight, MemOS |
-| **Reality module** | Supplies bounded reality evidence/relations | Code Reality Graph / CodeGenome profile |
+| **Reality module / domain evidence source** | Supplies bounded reality evidence/relations without owning generic memory machinery | Agent Memory Code Reality Graph; CodeGenome code-domain observations/profile |
 | **Persistence mechanism** | Storage technology used underneath something else | files, SQLite, Postgres, graph databases, object stores |
 
 Current substrate maturity is maintained in **[docs/43-substrate-inventory-and-maturity.md](docs/43-substrate-inventory-and-maturity.md)**.

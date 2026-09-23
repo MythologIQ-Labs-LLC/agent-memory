@@ -2,19 +2,79 @@
 
 ## Purpose
 
-This map assigns related repositories or systems to implementation roles in the Agent Memory architecture while keeping **native doctrine**, **aligned foundations**, and external/product-specific implementations separate.
+This map records how related repositories and systems contribute to Agent Memory without confusing **implementation ancestry**, **domain evidence**, **optional interoperability**, and **canonical runtime ownership**.
 
-The goal is to prevent repo-specific terminology from fragmenting the doctrine and to prevent implementations from collapsing probabilistic estimation, governance, and committed state mutation into one opaque subsystem.
+The controlling rule is:
 
-**Agent Memory owns the doctrine. PAMA is part of that doctrine.** PAMA is not listed as an external repository dependency simply because implementations must consume its authority contract.
+> **Agent Memory is the memory system. Related projects may donate proven mechanisms, provide domain observations, supply optional interoperability primitives, or act as evidence/test peers. They do not permanently own Agent Memory's generic memory machinery.**
 
-Named implementation systems appear only when they add specific architecture or conformance value.
+The intended direction is:
 
-An external project may materially inform Agent Memory without owning an implementation role. See [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md).
+```text
+EvolveAI
+CodeGenome
+COREFORGE Vault / Neurospace
+UOR-derived mechanisms
+other useful prior work
+        |
+        v
+inspect / validate / harvest proven mechanisms
+        |
+        v
+native Agent Memory implementations
+        |
+        v
+Agent Memory canonical memory subsystem
+        |
+        +--> COREFORGE
+        +--> Cortera
+        +--> TARA
+        +--> agents
+        +--> other products
+```
 
-## Native doctrine components
+This replaces an older transition-state interpretation in which EvolveAI, CodeGenome, or COREFORGE could be read as permanent runtime owners of Agent Memory capabilities.
 
-### PAMA
+**Agent Memory owns the architecture, memory semantics, and generic runtime capability contracts. PAMA is native Agent Memory doctrine and runtime authority machinery.**
+
+See also:
+
+- [`ADR-035`](adr/ADR-035-agent-memory-is-a-governed-cognitive-framework.md)
+- [`ADR-036`](adr/ADR-036-same-owner-components-are-first-party-modules.md)
+- [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md)
+- [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md)
+
+## Relationship vocabulary
+
+| Relationship | Meaning | Runtime consequence |
+|---|---|---|
+| **Native Agent Memory capability** | Agent Memory owns the contract and implementation surface | ordinary Agent Memory operation does not require an ancestor repository |
+| **First-party implementation ancestry** | same-owner prior work contains useful mechanisms, tests, algorithms, or implementation lessons | inspect, validate, harvest, and absorb useful behavior into native Agent Memory modules |
+| **Domain evidence source** | a specialized system produces observations or projections in its own domain | Agent Memory may ingest the observations without outsourcing generic memory machinery |
+| **Optional interoperability mechanism** | a separate system supplies a bounded identity, evidence, or exchange primitive | optional profile, never implicit ownership of memory semantics |
+| **Verification / conformance peer** | a system can strengthen exact-state, replay, or evidence verification | optional verification path, not ordinary recall or lifecycle ownership |
+| **Downstream consumer** | a product or agent uses Agent Memory | product-specific UX/orchestration may remain local while generic memory delegates to Agent Memory |
+
+The categories may overlap. CodeGenome, for example, is both first-party implementation ancestry and a valid code-domain evidence source.
+
+## Canonical native ownership
+
+Agent Memory owns generic memory capabilities including:
+
+- memory identity and reference contracts;
+- semantic, lexical, exact, relational, temporal, graph, and vector retrieval machinery;
+- memory lifecycle and metabolism machinery;
+- decay, reinforcement, consolidation, pruning, and crystallization semantics;
+- provenance, currentness, correction, supersession, dispute, and forgetting semantics;
+- context assembly semantics;
+- memory-type composition;
+- PAMA mutation authority and governed recall admission;
+- restart/durability contracts;
+- continuous memory-quality, regression, and conformance evaluation.
+
+A specialized implementation may be better at one domain or mechanism. That does not transfer canonical ownership of the generic capability.
+
+## Native doctrine component: PAMA
 
 **Proportional Adaptive Mutation Authority (PAMA)** is native Agent Memory governance doctrine authored by Kevin R. Knapp.
 
@@ -23,33 +83,29 @@ Canonical doctrine:
 - [`pama/README.md`](pama/README.md)
 - [`04-governance-and-pama.md`](04-governance-and-pama.md)
 - [`33-pama-decision-table.md`](33-pama-decision-table.md)
-- [`adr/ADR-004-pama-controls-mutation-authority.md`](adr/ADR-004-pama-controls-mutation-authority.md)
+- [`ADR-004`](adr/ADR-004-pama-controls-mutation-authority.md)
 
-PAMA owns the **authority semantics**, not a particular repository or deployment location. A runtime may implement PAMA as a dedicated service, policy module, library, or enforcement boundary, provided the separation remains explicit and auditable.
-
-### PAMA implementation contract
-
-A PAMA implementation must preserve:
+PAMA owns authority semantics, not a separate external repository role. An implementation must preserve at least:
 
 - M0-M5 mutation target classes;
-- lifecycle strength as separate from authority;
+- lifecycle strength separately from authority;
 - A0-A5 downstream authority ceilings;
 - explicit operation classification;
 - consequence-proportional handling;
 - no self-approved privilege expansion;
 - evidence and charter binding;
-- deterministic or formally bounded authority envelopes for committed inputs;
+- bounded authority envelopes;
 - receipts reconstructing permitted, prohibited, selected, and committed consequences.
 
-## Aligned foundations
+Probabilistic estimators may propose consequences. They do not mint authority.
 
-### UOR Foundation / UOR Framework
+## Aligned foundation: UOR
 
-**Relationship:** intellectual lineage / conceptually aligned foundation / optional exact-identity mechanism.
+**Relationship:** intellectual lineage + optional exact-identity/interoperability mechanism.
 
 Work from the [UOR Foundation](https://github.com/UOR-Foundation/UOR-Framework) materially informed Agent Memory's separation between deterministic object identity and memory lifecycle/governance.
 
-Agent Memory adopts the architectural boundary, not a compulsory implementation dependency:
+Agent Memory adopts the boundary, not a compulsory runtime dependency:
 
 ```text
 exact identity
@@ -61,176 +117,176 @@ relevance
 authority
 ```
 
-When UOR is used, it is a strong candidate for deterministic addressability, exact object resolution, and content identity. A conforming implementation may use another exact identity mechanism if it preserves the same boundary.
+When UOR is used, it may provide deterministic addressability, exact object resolution, and content identity. A conforming Agent Memory implementation may use another exact identity mechanism if it preserves the same boundary.
 
-UOR does **not** become the owner of Agent Memory lifecycle policy, saturation policy, mutation authority, recall governance, deletion semantics, or certification by virtue of that influence.
+UOR does not own Agent Memory lifecycle, retrieval, metabolism, governance, persistence, deletion, or certification.
 
-See [`ADR-001`](adr/ADR-001-uor-is-identity-not-memory.md) and [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md).
+See [`ADR-001`](adr/ADR-001-uor-is-identity-not-memory.md).
 
-## Related implementation map
+## First-party implementation ancestry map
 
-| System | Canonical implementation role | Primary responsibility | Governed-uncertainty posture |
+| System | Relationship to Agent Memory | Mechanisms / evidence worth harvesting | End-state boundary |
 |---|---|---|---|
-| EvolveAI | Memory metabolism prototype | lifecycle orchestration, decay, tier routing, crystallization prototype | probabilistic/heuristic proposals allowed; lifecycle commit remains governed |
-| CodeGenome | Code reality graph | code artifact graph, overlays, confidence fusion, provenance, impact traversal | inferred relations preserve confidence, estimator provenance, and disagreement |
-| COREFORGE Vault | Runtime memory container | encrypted local memory, graph recall, context windows, governed storage | probabilistic retrieval may generate candidates; scope and mutation boundaries remain enforced |
-| Neurospace | Operational memory space | agent-facing memory traversal and use within COREFORGE | learned ranking may operate only inside recall-time policy |
-| GG-CORE | Local inference compute substrate — **not a memory role** | contained offline model execution, consumed by COREFORGE behind a feature gate | performs model compute only; holds no memory, policy, or authority responsibility |
-| FailSafe | Governance enforcement implementation candidate | evidence capture, approval gates, policy checks, release/session audit | can enforce policy version, estimator context, action set, and consequence receipt |
-| Arbiter | Product policy enforcement candidate | authorization, rate limits, audit logging, action boundaries | can enforce prohibited and permitted actions independently of model confidence |
-| Shadow Genome | Negative memory substrate | failure patterns, blocked behaviors, prior harm avoidance | failure inference may be probabilistic; guardrail promotion preserves evidence and authority |
+| **EvolveAI** | first-party implementation ancestry + behavioral/test oracle | vector representation, vector retrieval, decay-aware scoring, temporal graph behavior, tier routing, CMHL-style decay, REM-style synthesis, consolidation, pruning pressure, crystallization proposals, exact recall, restart behavior, Shadow Genome concepts | useful behavior becomes native Agent Memory retrieval/metabolism/lifecycle; no required EvolveAI runtime client |
+| **CodeGenome** | first-party implementation ancestry + code-domain evidence source | embedding persistence, cosine/k-nearest retrieval, semantic/multi-overlay traversal, typed relationships, impact propagation, provenance, experiment/evaluation loops | may continue to provide code observations; generic graph/vector/retrieval/evaluation machinery belongs to Agent Memory |
+| **COREFORGE Vault / Neurospace** | first-party product/runtime ancestry + downstream consumer target | memory domains, references, context broker/packets, graph recall, decay-ranked retrieval, mutation boundaries, lineage, local-first product lessons | COREFORGE should consume Agent Memory for generic memory; product-specific UX, encryption, caching, and orchestration may remain local |
+| **FailSafe / Arbiter** | first-party governance/evidence ancestry or peer depending on the bounded surface | approval gates, evidence capture, action governance, audit patterns | may constrain or evidence consequences; cannot redefine Agent Memory memory semantics or PAMA authority |
+| **GG-CORE** | compute substrate only, not a memory owner | local model execution / inference runtime lessons | may provide compute used by a product; owns no Agent Memory memory capability |
 
-This table is an implementation map, not a source-of-doctrine or acknowledgement table. Absence from the table does not mean a project is unimportant; it means it has not earned a distinct implementation role in this architecture map.
+Same-owner adoption is governed by [`ADR-036`](adr/ADR-036-same-owner-components-are-first-party-modules.md). Adoption does not imply that the originating repository remains an installed runtime component.
 
-## Identity mechanism contract
+## EvolveAI ancestry
 
-Agent Memory requires exact identity semantics where identity is consequential. It does not require one repository to supply them.
+### Useful mechanisms
 
-An identity mechanism should provide stable references that probabilistic layers can reason about without changing the identity of the underlying object. Exact reference resolution is a deterministic substrate concern, not a confidence-weighted guess.
+EvolveAI contains or has contained useful implementation evidence around:
 
-If UOR is selected, UOR-specific adapters may expose its addressability and resolution semantics. If another mechanism is selected, the implementation must preserve the same doctrine boundary.
+- vector representations and candidate retrieval;
+- exact/content-addressed recall;
+- temporal graph behavior;
+- multi-tier memory routing;
+- decay/weakening and reinforcement;
+- lifecycle orchestration;
+- consolidation and REM-style synthesis;
+- pruning pressure;
+- crystallization proposals;
+- negative/failure memory through Shadow Genome concepts;
+- restart and persistence behavior.
 
-## EvolveAI
+### Agent Memory-owned destination
 
-### Canonical owner of
+Those generic mechanisms should be evaluated and, where they survive falsification, implemented natively under Agent Memory contracts.
 
-- autopoietic memory theory prototype
-- memory metabolism
-- L1 / L2 / L3 tier model
-- REM synthesis
-- CMHL decay engine
-- lifecycle orchestration
+```text
+EvolveAI behavior
+  -> test oracle / ancestry
+  -> Agent Memory native retrieval + metabolism + lifecycle
+```
 
-### Should import from this doctrine
+EvolveAI tier names or internal ontology do not become Agent Memory doctrine merely because useful code originated there.
 
-- PAMA authority for promotion and mutation
-- calibration protocol for saturation thresholds
-- trap-class conformance tests
-- certification gate before durable crystallization
-- transition proposal must remain separate from transition commit
-- estimator uncertainty, version, and calibration scope must remain inspectable
-- threshold jitter and estimator disagreement require explicit handling
+### Governance boundary
 
-### Governed-uncertainty contract
+Decay, retention, consolidation, ranking, or promotion signals remain estimators/proposals. They cannot self-authorize canonical, irreversible, scope-widening, or otherwise governed mutation.
 
-EvolveAI may use learned or heuristic signals to propose decay, retention, consolidation, or promotion. Those signals must not self-authorize irreversible or canonical state changes.
+## CodeGenome ancestry and domain boundary
 
-## CodeGenome
+### Useful mechanisms
 
-### Canonical owner of
+CodeGenome contains or has contained useful implementation evidence around:
 
-- code artifact graph
-- BLAKE3 node identity for code objects
-- observer separation
-- confidence fusion
-- provenance and evidence bundles
-- governed code reality queries
+- content-addressed code identity;
+- graph/overlay construction;
+- semantic overlays and multi-overlay traversal;
+- embedding persistence;
+- cosine and k-nearest retrieval;
+- entity relationships;
+- impact/blast-radius propagation;
+- provenance and evidence fusion;
+- continuous experiment and performance measurement.
 
-### Should import from this doctrine
+### Agent Memory-owned destination
 
-- confidence is evidence support, not lifecycle permanence
-- code graph nodes can become memory units when consumed by agents
-- memory lifecycle state should preserve graph provenance
-- inferred edges should identify estimator/method version when material to downstream decisions
-- confidence fusion should preserve material estimator disagreement rather than averaging it into invisibility
+Generic graph, vector, relational, causal, provenance, and retrieval machinery should be implemented natively in Agent Memory where the behavior is broadly useful.
 
-### Governed-uncertainty contract
+### Valid continuing CodeGenome role
 
-Exact syntax or content-addressed facts may be deterministic while semantic overlays, entity resolution, impact estimates, and relation confidence remain probabilistic. Consumers must be able to tell which is which.
+CodeGenome may remain an excellent **code-domain observation producer**.
 
-## COREFORGE Vault / Neurospace
+```text
+CodeGenome code-domain observations
+  -> Agent Memory evidence / reality projection
+```
 
-### Canonical owner of
+That is different from:
 
-- local-first memory storage
-- encrypted Vault memory
-- runtime graph recall
-- RAG and context windows
-- product-level memory UX
+```text
+Agent Memory generic graph/vector memory
+  -> call CodeGenome to function
+```
 
-### Should import from this doctrine
+The first is valid specialization. The second is not the intended end state.
 
-- memory write boundary must enforce PAMA
-- crystallization should be ledgered
-- runtime usefulness must not imply permanence
-- user-visible correction and dispute flows are required for durable memory
-- retrieval ranking occurs before recall-time scope, tenancy, sensitivity, and certification filters
-- stochastic strategy selection may occur only among policy-permitted recall or write actions
+Exact syntax facts may be deterministic while semantic overlays, entity resolution, impact estimates, and inferred relationships remain evidential/probabilistic. Agent Memory preserves that distinction.
 
-### Governed-uncertainty contract
+## COREFORGE Vault / Neurospace ancestry and reversal
 
-High semantic relevance must not override privacy, tenancy, scope, dispute state, or policy. Candidate generation may be probabilistic; admission into active context remains governed.
+Direct inspection of historical COREFORGE code showed real memory mechanics including a lifecycle store, mutation gate, Neurospace assembler/inspector/mutator, context broker/engine/packet, knowledge graph, UOR-style references, memory domains, lineage, RAG behavior, and provider composition.
 
-### Inspection evidence
+That historical evidence remains useful. Its architectural interpretation changes.
 
-Direct inspection of the private COREFORGE repository on 2026-08-11 (default branch, commit `48ee0ca`) confirmed this role is implemented as code, not only claimed: a `vault/` module carrying a lifecycle store, a mutation contract and mutation gate producing an approved/pending-review/vetoed envelope, Neurospace assembler/inspector/mutator, context broker/engine/packet, a knowledge graph, UOR-style references with memory domains, lineage records, and a RAG engine. The Vault also consumes EvolveAI and CodeGenome through in-tree memory-provider seams, which makes the proposer-versus-committer split described in [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md) a live integration rather than a diagram.
+### Historical transition state
 
-Two boundaries from the same inspection. No Agent Memory doctrine backlink exists in COREFORGE — occurrences of `agent_memory` there are local identifier names, not references to this architecture. And GG-CORE is COREFORGE's *compute* dependency, not its memory successor: GG-CORE's own architecture documents list `vault/` among forbidden modules, and its runtime promise is model execution only. The role above stays with COREFORGE Vault.
+```text
+COREFORGE contains/emulates generic memory machinery
+COREFORGE composes EvolveAI / CodeGenome-derived providers
+```
 
-This inspection verifies **existence**, not conformance. Status remains governed by the resolution path in `39-implementation-ownership-map.md`.
+### Desired direction
 
-## PAMA enforcement boundary
+```text
+Agent Memory owns generic memory machinery
+COREFORGE consumes Agent Memory
+```
 
-PAMA is not another external system in this map. It is the native authority contract every mutating implementation must satisfy.
+COREFORGE may still own product-specific concerns such as:
 
-A compliant runtime should expose where:
+- local-first application UX;
+- encrypted-at-rest product packaging;
+- product-specific caches;
+- offline orchestration;
+- UI-level context presentation;
+- inference adapter selection.
 
-1. a mutation target is classified M0-M5;
-2. lifecycle strength is read or proposed;
-3. the requested operation is classified;
-4. requested downstream authority A0-A5 is declared;
-5. evidence, actor charter, scope, and reversibility are bound;
-6. policy produces the permitted/prohibited/review-required envelope;
-7. optional deterministic or stochastic selection occurs only inside the permitted set; and
-8. the committed consequence is receipted.
+It should not remain the canonical owner of generic memory lifecycle, graph recall, semantic/vector retrieval, context-assembly semantics, or memory governance once Agent Memory provides those capabilities.
 
-A runtime may host the PAMA implementation. It may not absorb the semantic boundary so thoroughly that authority becomes indistinguishable from its estimator or storage layer.
+Historical inspections prove implementation ancestry and existence, not end-state ownership or current conformance.
 
-## FailSafe / Arbiter
+## Verification peer: PrismPM
 
-### Candidate implementation value
+PrismPM may be valuable where its exact-state and replay mechanics can strengthen:
 
-- policy enforcement
-- evidence capture
-- human approval gates
-- audit trails
-- action governance
+- canonical memory-state verification;
+- deterministic replay;
+- transition verification;
+- atomic promotion/conformance evidence;
+- release or checkpoint integrity.
 
-### Should import from this doctrine
+That is a verification role. It is not a reason to put PrismPM in the ordinary recall path or make it an owner of memory semantics.
 
-- memory mutation must be treated as a governed action
-- durable memory changes require evidence and rollback paths
-- approval workflows should bind to lifecycle transitions
-- receipts should bind estimator versions, policy version, permitted action set, selected action, and before/after state when relevant
-- high-consequence actions should fail closed or escalate when required governance state cannot be reconstructed
+## FailSafe / Arbiter boundary
 
-FailSafe or Arbiter may be useful implementation mappings for parts of PAMA. They are not the origin or owner of PAMA doctrine.
+FailSafe or Arbiter may provide useful enforcement/evidence mechanics such as:
 
-## Shadow Genome
+- policy enforcement;
+- evidence capture;
+- human approval gates;
+- audit trails;
+- action governance.
 
-### Canonical owner of
+They may further constrain a consequence or attest to enforcement. They do not become the origin of PAMA or the owner of memory lifecycle, recall, correction, or forgetting.
 
-- negative memory and failure patterns
-- recurrence avoidance
-- blocked behaviors and learned caution
+## Negative / failure memory
 
-### Should import from this doctrine
+Shadow Genome concepts are treated as implementation ancestry for Agent Memory negative/failure memory rather than a permanent standalone owner.
 
-- failure inference must preserve causal evidence and applicability scope
-- a high-confidence negative pattern must not become a global prohibition without governed promotion
-- guardrails derived from failure memory should retain provenance to the failures that justified them
+Useful principles include:
+
+- preserve causal evidence and applicability scope;
+- do not convert a high-confidence failure pattern into a global prohibition automatically;
+- retain provenance from promoted guardrails to the failures/evidence that justified them.
 
 ## Durable decision memory
 
-Decision continuity, drift, rationale preservation, supersession, and durable decision recall are defined as **Agent Memory capabilities** rather than attributed to an adjacent product.
+Decision continuity, drift, rationale preservation, supersession, and durable decision recall are **Agent Memory capabilities**.
 
 See [`profiles/durable-decision-memory-profile.md`](profiles/durable-decision-memory-profile.md).
 
-A product or implementation should be named here only if it provides specific implementation evidence against that profile.
+A product may implement or consume the profile without becoming its doctrine owner.
 
-## Cross-repo control contract
+## Cross-component control contract
 
-Implementations should identify which responsibilities they own using these control classes:
+Native modules, domain sources, and optional peers should preserve these control classes:
 
 ```text
 DETERMINISTIC_SUBSTRATE
@@ -249,54 +305,49 @@ COMMITTED_CONSEQUENCE
 state mutation, ledger record, scope change, certification, deletion, or other durable effect
 ```
 
-A repo may own more than one implementation class, but it must expose the boundary between them.
+A module may participate in more than one class, but it must expose the boundary between them.
 
-## Required implementation evidence
+## Harvest evidence rule
 
-A repo claiming governed-uncertainty alignment should be able to point to:
+A same-owner ancestor should be harvested only when the mechanism has enough evidence to justify adoption.
 
-1. where probabilistic or learned estimates are produced;
-2. how those estimates identify their method/version and calibration scope;
-3. where PAMA policy converts estimates into authority outcomes;
-4. where prohibited actions are enforced;
-5. where the permitted action set is represented, if more than one action can follow;
-6. where committed state changes are ledgered;
-7. how estimator drift differs from policy change;
-8. how the implementation behaves when required authority inputs are missing; and
-9. how M0-M5 target class and A0-A5 authority ceilings are represented or equivalently enforced.
+For each mechanism record, as applicable:
+
+1. exact source revision or historical implementation boundary;
+2. behavior being harvested;
+3. tests or fixtures proving the useful behavior;
+4. failure modes and limitations;
+5. which Agent Memory contract it implements;
+6. how currentness/correction/deletion/scope behave;
+7. whether any estimator output is involved;
+8. authority effect, which must remain explicit;
+9. native Agent Memory regression evidence after absorption.
+
+The objective is not to preserve repository topology. It is to preserve useful behavior and evidence while simplifying the runtime boundary.
 
 ## Source of truth policy
 
-This repo owns the doctrine, including PAMA.
+Agent Memory owns its generic memory architecture and runtime contracts.
 
-Other repos may own implementations, experiments, and product behavior, but should reference this doctrine for shared terms and boundaries.
+Related repositories may:
 
-No external repository is required to make Agent Memory doctrine legitimate or canonical.
+- contribute implementation ancestry;
+- supply specialized domain evidence;
+- expose optional interoperability or verification primitives;
+- consume Agent Memory downstream.
 
-## Implementation labels
+They do not need to remain runtime dependencies for Agent Memory doctrine or generic memory capabilities to be legitimate or functional.
 
-Suggested labels for cross-repo issues:
+## Current implementation priority
 
-```text
-agent-memory
-memory-doctrine
-pama
-governed-memory
-governed-uncertainty
-crystallization
-saturation-calibration
-neurospace
-uor-identity
-code-reality-graph
-conformance
-```
+Issue #455 tracks the ownership reconciliation.
 
-## Required cross-repo backlinks
-
-Each implementation repo should eventually include a short doctrine pointer:
+Issue #456 begins the first native-harvest implementation slice:
 
 ```text
-This implementation follows the Agent Memory doctrine in MythologIQ-Labs-LLC/agent-memory.
+EvolveAI / CodeGenome vector behavior
+  -> Agent Memory native semantic/vector candidate retrieval
+  -> existing governed recall admission
 ```
 
-And should link to the specific docs it conforms to.
+The planned direction after that is native temporal/graph retrieval, native metabolism, and a continuous memory-evaluation loop, all without recreating permanent cross-repository runtime ownership.

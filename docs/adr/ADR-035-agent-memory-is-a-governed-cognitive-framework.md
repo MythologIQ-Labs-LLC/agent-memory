@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted; ownership mapping refined by [ADR-036](ADR-036-same-owner-components-are-first-party-modules.md)
 
 ## Context
 
@@ -21,15 +21,17 @@ The missing architectural decision is the composition of those responsibilities 
 
 An agent's durable memory should participate in one cohesive cognitive substrate rather than exist as a collection of adjacent storage, retrieval, lifecycle, graph, and governance services. The current decomposition correctly identifies distinct failure modes, but it can make Agent Memory appear to be governance infrastructure around memory implementations rather than the persistent cognition layer itself.
 
-First-party systems expose this gap clearly.
+First-party systems exposed this gap clearly and remain valuable implementation ancestry.
 
-EvolveAI implements and experiments with adaptive memory metabolism, including lifecycle progression, salience, reinforcement, decay, temporal graph memory, consolidation, REM-style synthesis, crystallization proposals, negative/failure memory, and persistent continuity.
+EvolveAI implements and experiments with adaptive memory metabolism, including lifecycle progression, salience, reinforcement, decay, temporal graph memory, consolidation, REM-style synthesis, crystallization proposals, negative/failure memory, persistent continuity, semantic/vector retrieval, and tier behavior.
 
-CodeGenome implements and experiments with structured reality representation, including content-addressed identity, graph-based code reality, structural and semantic relationships, provenance, independent observers, confidence fusion, freshness, and propagation/impact reasoning.
+CodeGenome implements and experiments with structured reality representation, including content-addressed identity, graph-based code reality, structural and semantic relationships, embeddings, traversal, provenance, independent observers, confidence fusion, freshness, propagation/impact reasoning, and continuous evaluation.
 
-Agent Memory supplies the doctrine required to govern those mechanisms: identity and continuity, evidence and provenance, lifecycle, recall admission, correction and supersession, scope and isolation, procedural memory, PAMA mutation authority, certification, deletion, inheritance, conformance, and audit.
+COREFORGE Vault / Neurospace implemented product/runtime memory mechanisms including context assembly, graph recall, memory domains, lineage, provider normalization, mutation boundaries, and local-first runtime behavior.
 
-Treating these systems only as neighboring providers understates their architectural relationship. They are bounded subsystems participating in a common cognitive architecture.
+Agent Memory supplies the canonical architecture and increasingly the native implementation of the generic memory mechanisms those systems helped prove: identity and continuity, evidence and provenance, lifecycle, retrieval, graph/relational memory, recall admission, correction and supersession, scope and isolation, procedural memory, PAMA mutation authority, certification, deletion, inheritance, conformance, evaluation, and audit.
+
+Treating same-owner prior work only as neighboring providers understates its historical contribution. Treating it as permanent runtime ownership makes the opposite mistake. Under ADR-036, same-owner systems are implementation ancestry and mechanism donors: Agent Memory may adopt their proven work into native modules without retaining a cross-repository provider identity.
 
 The architecture therefore needs a shared **Cognitive Mesh** through which memory, learned structure, external reality, evidence, activation, uncertainty, lifecycle, scope, and authority can interoperate without collapsing their semantics.
 
@@ -43,19 +45,23 @@ Agent Memory owns:
 
 ```text
 canonical cognitive contracts
+native generic memory machinery
 shared object and relationship semantics
 cross-module boundaries
 governance doctrine
 authority constraints
 conformance requirements
 composition rules
+evaluation and regression semantics
 ```
 
-Individual modules own mechanisms.
+Implementations, ancestors, and domain systems may supply mechanisms, observations, or specialized behavior, but generic memory ownership remains with Agent Memory.
 
 ```text
 Agent Memory defines the contract.
-Modules implement the mechanism.
+Agent Memory owns the generic memory implementation boundary.
+First-party ancestry may donate proven mechanisms.
+Domain systems may supply specialized observations.
 PAMA governs consequential change.
 Conformance establishes what has actually been proven.
 ```
@@ -207,9 +213,9 @@ Observed, inferred, learned, and synthesized relationships must preserve their e
 
 ## Cognitive Metabolism
 
-Agent Memory defines **Cognitive Metabolism** as the module responsible for changes in persistence pressure, activation pressure, reinforcement, decay, interference, consolidation candidacy, and adaptive restructuring over time.
+Agent Memory defines and owns **Cognitive Metabolism** as the module responsible for changes in persistence pressure, activation pressure, reinforcement, decay, interference, consolidation candidacy, and adaptive restructuring over time.
 
-EvolveAI is the initial first-party reference and research implementation for this responsibility. This mapping does not promote all EvolveAI capabilities or make its internal ontology canonical.
+EvolveAI is first-party implementation ancestry and a behavioral/test oracle for this responsibility. Proven EvolveAI mechanisms may be harvested into native Agent Memory metabolism modules under ADR-036. EvolveAI's internal ontology is not canonical and an EvolveAI runtime is not required for Agent Memory to possess metabolism functionality.
 
 Cognitive Metabolism may include:
 
@@ -269,9 +275,11 @@ Reality Graphs do not own memory permanence or downstream authority.
 
 ### Code Reality Graph
 
-CodeGenome is the initial first-party implementation of the **Code Reality Graph**.
+Agent Memory owns the **Code Reality Graph** contract and native generic graph/retrieval machinery.
 
-Its role includes representations such as:
+CodeGenome is first-party implementation ancestry for this responsibility and may remain an optional specialized code-domain observation source. It can provide code-specific structure, evidence, freshness, relations, and impact information without becoming the runtime owner of Agent Memory's generic graph, vector, causal, provenance, or retrieval machinery.
+
+The Code Reality Graph may include representations such as:
 
 ```text
 code artifacts
@@ -288,7 +296,7 @@ structural provenance
 freshness
 ```
 
-CodeGenome's code-specific ontology does not become the universal ontology of the Cognitive Mesh. It implements the Reality Graph contract for the code domain.
+CodeGenome's code-specific ontology does not become the universal ontology of the Cognitive Mesh. When CodeGenome mechanisms are adopted into this repository, they are named for and implemented against the Agent Memory contracts they satisfy under ADR-036.
 
 ### Additional Reality Graphs
 
@@ -367,7 +375,7 @@ skill retention != execution authority
 
 Identity and Continuity provides stable addressing across sessions, process restarts, representation changes, derived structures, module boundaries, agent versions, migrations, and successor agents.
 
-Changing storage provider, graph representation, embedding model, or module implementation must not silently create a new logical identity for existing canonical memory.
+Changing storage substrate, graph representation, embedding model, or module implementation must not silently create a new logical identity for existing canonical memory.
 
 Evidence and Provenance preserves the reconstructable basis for cognitive state and distinguishes observation, assertion, inference, synthesis, inheritance, external evidence, execution evidence, correction, and derived evidence.
 
@@ -377,7 +385,7 @@ No module may treat its own output as authoritative evidence merely because it g
 
 Governed Recall remains responsible for deciding which portions of the Cognitive Mesh may influence active cognition.
 
-Candidate generation may use exact lookup, graph traversal, semantic retrieval, temporal retrieval, associative activation, procedural retrieval, prediction, reality-graph query, or learned routing.
+Candidate generation may use exact lookup, graph traversal, semantic/vector retrieval, temporal retrieval, associative activation, procedural retrieval, prediction, reality-graph query, or learned routing.
 
 Candidate discovery remains separate from admission:
 
@@ -439,7 +447,7 @@ Certification owns required verification before high-consequence state becomes c
 
 Durable commit binds consequential changes to the evidence, authority, state, policy, and implementation context under which the change was permitted.
 
-Successful provider execution is not sufficient evidence of justified durable mutation.
+Successful implementation execution is not sufficient evidence of justified durable mutation.
 
 ## Scope, Privacy, Isolation, and Inheritance
 
@@ -506,54 +514,57 @@ module identity != component identity
 component identity != capability identity
 ```
 
-EvolveAI may primarily implement Cognitive Metabolism while also exposing retrieval, graph, persistence, provenance, or other capabilities.
+EvolveAI may demonstrate mechanisms relevant to Cognitive Metabolism while also providing historical evidence for retrieval, graph, persistence, provenance, or other capabilities.
 
-CodeGenome may primarily implement a Code Reality Graph while also exposing retrieval, structural reasoning, provenance, freshness, evaluation, or other capabilities.
+CodeGenome may provide code-domain observations and demonstrate mechanisms relevant to Code Reality Graph, retrieval, structural reasoning, provenance, freshness, evaluation, or other capabilities.
 
-Those capabilities continue to mature and qualify independently.
+Those mechanisms do not become permanent provider ownership. When harvested, their native Agent Memory implementations mature and qualify against Agent Memory's own runtime evidence surface.
 
-This ADR adds coherent system topology. It does not restore exclusive product categories.
+This ADR adds coherent system topology. It does not restore exclusive product categories or permanent cross-repository runtime ownership.
 
-## Initial first-party mapping
+## First-party ancestry and native ownership mapping
 
-| Architectural responsibility | Initial implementation / source |
-|---|---|
-| Cognitive Mesh | Agent Memory core contract and reference substrate |
-| Cognitive Metabolism | EvolveAI |
-| Code Reality Graph | CodeGenome |
-| Identity & Continuity | Agent Memory core plus qualified providers |
-| Evidence & Provenance | Agent Memory core contract |
-| Working Memory & Attention | Agent Memory reference implementation |
-| Consolidation & Abstraction | Agent Memory contract with qualified provider mechanisms |
-| Recall & Context Assembly | Agent Memory governed recall |
-| Conflict / Correction / Supersession | Agent Memory |
-| Predictive / World Modeling | Pluggable; no canonical implementation yet |
-| Procedural Memory & Skills | Agent Memory procedural-memory profile |
-| PAMA Authority | Agent Memory native doctrine |
-| Certification & Durable Commit | Agent Memory |
-| Scope / Privacy / Isolation | Agent Memory |
-| Inheritance / Multi-Agent Memory | Agent Memory |
-| Conformance / Calibration / Evaluation | Agent Memory |
+| Architectural responsibility | Canonical Agent Memory ownership | First-party ancestry / specialized source |
+|---|---|---|
+| Cognitive Mesh | Agent Memory core contract and reference substrate | prior EvolveAI/CodeGenome/COREFORGE mechanisms may inform bounded implementations |
+| Cognitive Metabolism | Agent Memory native module contract and implementation program | EvolveAI implementation ancestry / behavioral oracle |
+| Code Reality Graph | Agent Memory native CRG module and generic graph/retrieval machinery | CodeGenome ancestry + optional code-domain observation source |
+| Runtime Memory & Context Assembly | Agent Memory governed runtime and recall/context contracts | COREFORGE Vault / Neurospace ancestry; future downstream consumer |
+| Identity & Continuity | Agent Memory contract; optional exact identity profiles | UOR-derived mechanisms may supply optional exact-address interoperability |
+| Evidence & Provenance | Agent Memory core contract | domain/product systems may supply evidence |
+| Working Memory & Attention | Agent Memory reference implementation | external mechanisms may be evaluated separately |
+| Consolidation & Abstraction | Agent Memory contract and native implementation program | EvolveAI and other mechanisms may be harvested where proven |
+| Recall & Context Assembly | Agent Memory governed recall | specialized routes/sources may supply candidate evidence only |
+| Conflict / Correction / Supersession | Agent Memory | none owns it externally |
+| Predictive / World Modeling | Agent Memory contract; implementation maturity remains bounded | pluggable mechanisms may be evaluated |
+| Procedural Memory & Skills | Agent Memory procedural-memory profile | specialized tools may supply evidence, not permission |
+| PAMA Authority | Agent Memory native doctrine and enforcement contract | no external owner |
+| Certification & Durable Commit | Agent Memory | enforcement peers may further constrain consequences |
+| Scope / Privacy / Isolation | Agent Memory | product runtimes may add narrower boundaries |
+| Inheritance / Multi-Agent Memory | Agent Memory | interoperability peers may exchange governed state |
+| Conformance / Calibration / Evaluation | Agent Memory | CodeGenome experiment-loop ancestry may inform native continuous evaluation |
 
-This table identifies primary architectural responsibility only. It is not a claim of implementation completeness or capability qualification.
+This table identifies ownership and ancestry separately. It is not a claim of implementation completeness or capability maturity.
 
 ## Repository and packaging implications
 
 This ADR defines architectural modules, not Git repository mechanics.
 
-It does not require EvolveAI or CodeGenome to immediately become Git submodules, directories, packages, or vendored source inside the Agent Memory repository.
+It does not require EvolveAI, CodeGenome, or COREFORGE to become runtime dependencies, Git submodules, sidecar services, or packages required for ordinary Agent Memory operation.
 
-Physical composition may use workspace packages, versioned dependencies, Git submodules, service boundaries, adapters, embedded libraries, or other reproducible packaging.
+Same-owner code and design may be adopted directly into Agent Memory under ADR-036. External or specialized systems may still participate through explicit adapters or evidence boundaries where that relationship has product value.
+
+Physical composition may use native packages, versioned optional dependencies, service boundaries, adapters, embedded libraries, or other reproducible packaging, but the end state for **generic memory machinery** is an Agent Memory-owned implementation boundary.
 
 Whatever packaging is selected must preserve:
 
 ```text
 version identity
-capability qualification
+capability maturity
 dependency boundaries
 reproducibility
 replaceability
-licensing
+licensing/source rights
 failure isolation
 authority boundaries
 ```
@@ -562,65 +573,74 @@ The long-term product surface should present these capabilities as one Agent Mem
 
 ## Framework ownership rule
 
-Agent Memory owns interfaces and doctrine. Submodules own mechanisms.
+Agent Memory owns interfaces, doctrine, and generic memory machinery. First-party ancestry may donate mechanisms; specialized domain systems may provide observations.
 
 ```text
 Agent Memory:
-  defines Cognitive Metabolism requirements
+  defines and owns Cognitive Metabolism semantics and native runtime boundary
 
 EvolveAI:
-  implements one Cognitive Metabolism strategy
+  supplies implementation ancestry, tests, and proven mechanisms worth harvesting
 
 Agent Memory:
-  defines Reality Graph requirements
+  defines and owns Reality Graph and generic graph/retrieval semantics
 
 CodeGenome:
-  implements the Code Reality Graph
+  supplies code-domain observations and first-party implementation ancestry
+
+Agent Memory:
+  defines and owns runtime memory and context-assembly semantics
+
+COREFORGE Vault / Neurospace:
+  supplies product/runtime ancestry and consumes Agent Memory as native coverage matures
 
 Agent Memory:
   defines cognitive-object, evidence, lifecycle,
-  recall, authority, and conformance semantics
-
-implementations:
-  satisfy those contracts at independently proven maturity
+  recall, authority, evaluation, and conformance semantics
 ```
 
-First-party ownership does not confer conformance. A first-party module may be experimental, incomplete, replaceable, or rejected without changing the canonical Agent Memory contract.
+First-party ownership does not confer maturity. A native Agent Memory module may be experimental, incomplete, replaceable, or rejected without changing the canonical contract.
 
 ## Consequences
 
 ### Positive
 
 - gives Agent Memory an explicit cognitive substrate rather than implying one through scattered components;
-- makes EvolveAI and CodeGenome coherent parts of one architecture;
-- preserves modularity without presenting the system as disconnected projects;
+- turns proven first-party work into usable ancestry without locking Agent Memory to a permanent federation of repositories;
+- establishes Agent Memory as the canonical generic memory subsystem consumed by products such as COREFORGE, Cortera, TARA, and agents;
+- preserves CodeGenome as a strong code-domain source without turning code ontology into universal memory ontology;
+- preserves EvolveAI's proven metabolism/retrieval ideas while allowing native Agent Memory implementations to own them;
 - creates a shared substrate for episodic, semantic, procedural, predictive, and reality-linked cognition;
 - creates explicit homes for attention, consolidation, prediction, and metacognitive signals;
 - preserves PAMA as the consequence boundary across the cognitive system;
-- keeps external cognitive technologies replaceable implementations rather than architectural definitions;
 - allows future reality domains beyond code;
 - gives Agent Memory a clearer identity as persistent governed cognition rather than advanced RAG infrastructure.
 
 ### Negative
 
 - expands Agent Memory's declared scope from governed memory architecture toward governed cognition;
+- requires native consolidation/productization of mechanisms previously scattered across first-party systems;
 - requires careful vocabulary work to keep the Cognitive Mesh from becoming an unbounded universal ontology;
 - increases cross-module conformance requirements;
 - creates implementation pressure for currently conceptual responsibilities such as predictive modeling;
 - requires documentation and diagram updates across the repository;
-- may eventually require repository/package restructuring after architectural boundaries stabilize.
+- creates migration work in downstream products that currently implement overlapping generic memory mechanics.
 
-These costs are preferable to leaving the already-existing cognitive composition implicit.
+These costs are preferable to leaving the already-existing cognitive composition implicit or permanently fragmented across repositories.
 
 ## Alternatives considered
 
 ### Continue treating EvolveAI and CodeGenome only as adjacent providers
 
-Rejected. This preserves implementation flexibility but fails to express that memory metabolism, structured reality, recall, continuity, and governance participate in one cognitive system.
+Rejected. That framing loses valuable implementation ancestry and encourages an artificial third-party/provider model for same-owner work.
+
+### Keep EvolveAI, CodeGenome, and COREFORGE as permanent runtime owners behind Agent Memory adapters
+
+Rejected. That would make Agent Memory a stitching/governance layer rather than the canonical memory subsystem and would make generic memory capability depend on historical repository boundaries.
 
 ### Adopt EvolveAI as the complete cognitive substrate
 
-Rejected. EvolveAI provides useful first-party mechanisms but remains replaceable and independently qualified. Implementation identity must not become canonical architecture.
+Rejected. EvolveAI provides useful first-party mechanisms and evidence, but its implementation identity and ontology must not become canonical architecture.
 
 ### Adopt CodeGenome's graph as the universal Cognitive Mesh
 
@@ -649,18 +669,20 @@ This ADR extends rather than supersedes:
 - ADR-033, capability-oriented composition;
 - ADR-034, procedural memory is not execution authority.
 
+ADR-036 subsequently refines the implementation-ownership interpretation for same-owner prior work: first-party module ancestry does not create a permanent cross-repository runtime dependency.
+
 The shared Cognitive Mesh does not weaken any authority, isolation, deletion, correction, currentness, or capability-maturity boundary established by those decisions.
 
 ## Acceptance requirements
 
-ADR-035 may move from Proposed to Accepted when:
+ADR-035 moved to Accepted when:
 
-1. the Cognitive Mesh boundary is documented without creating a universal implementation-specific ontology;
-2. the three-plane architecture is integrated consistently into canonical documentation;
-3. EvolveAI is mapped to Cognitive Metabolism without falsely promoting unqualified capabilities;
-4. CodeGenome is mapped to Code Reality Graph without promoting its domain ontology to universal memory semantics;
-5. module identity, component identity, and capability identity remain distinct and consistent with ADR-033;
-6. at least one end-to-end reference path demonstrates:
+1. the Cognitive Mesh boundary was documented without creating a universal implementation-specific ontology;
+2. the three-plane architecture was integrated consistently into canonical documentation;
+3. EvolveAI was mapped as first-party evidence for Cognitive Metabolism without falsely promoting unqualified capabilities;
+4. CodeGenome was mapped to the code-domain Reality Graph role without promoting its ontology to universal memory semantics;
+5. module identity, component identity, and capability identity remained distinct and consistent with ADR-033;
+6. at least one end-to-end reference path demonstrated:
 
 ```text
 experience / observation
@@ -674,21 +696,25 @@ experience / observation
   -> active cognition
 ```
 
-7. an adversarial path proves that learned reinforcement, graph confidence, prediction confidence, or a provider-native verdict cannot independently grant durable or action authority;
-8. module replacement or absence fails explicitly without corrupting canonical cognitive identity;
-9. conformance documentation distinguishes architectural acceptance from implementation maturity.
+7. an adversarial path proved that learned reinforcement, graph confidence, prediction confidence, or an implementation-native verdict cannot independently grant durable or action authority;
+8. module replacement or absence failed explicitly without corrupting canonical cognitive identity;
+9. conformance documentation distinguished architectural acceptance from implementation maturity.
 
-The bounded evidence satisfying these requirements is recorded in [`../programs/runtime-evidence/adr-035-acceptance-matrix.md`](../programs/runtime-evidence/adr-035-acceptance-matrix.md). Acceptance does not promote unrelated provider capability maturity or claim universal production conformance.
+The bounded evidence satisfying those requirements is recorded in [`../programs/runtime-evidence/adr-035-acceptance-matrix.md`](../programs/runtime-evidence/adr-035-acceptance-matrix.md). Acceptance does not promote unrelated capability maturity or claim universal production conformance.
+
+The ownership refinement in ADR-036 and #455 does not revoke that acceptance evidence. It changes the destination interpretation: EvolveAI, CodeGenome, and COREFORGE are ancestry/specialized sources, while Agent Memory owns the absorbed generic implementations.
 
 ## Decision summary
 
-Agent Memory is the canonical framework for persistent governed agent cognition.
+Agent Memory is the canonical framework and generic memory subsystem for persistent governed agent cognition.
 
 Its shared substrate is the Cognitive Mesh.
 
-EvolveAI becomes the initial first-party Cognitive Metabolism implementation.
+EvolveAI is first-party implementation ancestry for Cognitive Metabolism, retrieval, and related mechanisms that Agent Memory may absorb natively.
 
-CodeGenome becomes the initial first-party Code Reality Graph implementation.
+CodeGenome is first-party implementation ancestry and an optional code-domain evidence source for the Agent Memory-owned Code Reality Graph.
+
+COREFORGE Vault / Neurospace is first-party product/runtime ancestry and a downstream consumer direction for Agent Memory-native memory functionality.
 
 Additional bounded modules provide working cognition, consolidation, prediction, procedural memory, evidence, correction, scope, inheritance, recall, certification, and conformance.
 
@@ -699,7 +725,9 @@ None may convert those signals into consequential authority on its own.
 ```text
 shared cognition
       +
-bounded modules
+native Agent Memory machinery
+      +
+bounded domain/product integrations
       +
 explicit evidence
       +
