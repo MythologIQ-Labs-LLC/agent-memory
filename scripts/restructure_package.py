@@ -40,14 +40,17 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "pending_verification", "resumption", "readmission", "contextual_recall",
         "governance_projection", "portable_evidence",
     ),
-    "state": ("substrate", "graphiti_driver", "projections", "residue", "visibility"),
+    "state": (
+        "substrate", "sqlite_substrate", "graphiti_driver", "projections", "residue", "visibility",
+    ),
     "contracts": (
         "capabilities", "qualification", "component_fallback", "component_failure_probe",
         "hindsight_qualification", "memos_qualification", "resource_provider_substitution",
         "resource_exchange", "evolveai_profile",
     ),
     "runtime": (
-        "adapter", "restart_runtime", "checkpoint_transactions", "auxiliary_checkpoint",
+        "adapter", "restart_runtime", "sqlite_runtime", "sqlite_composition",
+        "checkpoint_transactions", "auxiliary_checkpoint",
         "configured_restart", "runtime_composition", "runtime_config", "runtime_behavior",
         "doctor", "cli", "discovery", "composition", "contextual_recall_adapter",
         "projection_governance", "query_driven_recall", "semantic_readmission_adapter",
