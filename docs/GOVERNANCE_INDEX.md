@@ -19,7 +19,7 @@ These surfaces MUST describe current repository reality. A wrong version, stale 
 | Backlog | `docs/BACKLOG.md` | active RC queue centered on #410, #427, and #437/#438; external/longitudinal work separated |
 | Feature Index | `docs/FEATURE_INDEX.md` | feature inventory; lifecycle state must be reconciled when implementation changes materially |
 | ADR index | `docs/adr/README.md` | ADR-001 through ADR-038; artifact status is authoritative |
-| Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; comparator pins remain `agent-manifest==0.11.2`, `agentrust-trace==0.9.0` pending qualification PRs #405/#404 |
+| Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; comparator pins remain `agent-manifest==0.11.2`, `agentrust-trace==0.9.0` pending coordinated qualification #440 |
 | README | `README.md` | current pre-RC product/runtime summary, multi-memory composition, retrieval routes, benchmark limitations |
 | Substrate inventory | `docs/43-substrate-inventory-and-maturity.md` | reference persistence corrected; production-qualified canonical substrates remain 0 |
 | RC profile | `docs/45-agent-memory-rc1-implementation-profile.md` | bounded implementation/release candidate profile under #410 |
@@ -54,11 +54,10 @@ A Tier 3 row must represent active implementation, a live external/longitudinal 
 | Agent Memory RC1 composition | issue #410 | **active umbrella**; architecture fixed, usable-product gates remain |
 | Production canonical substrate | issue #427 | **active RC gate**; reference durability is proven, production-qualified canonical substrates = 0 |
 | Query-driven retrieval + LoCoMo evidence diagnostic | issue #437 / PR #438 | **active implementation**; current PR is not yet merge-ready and must re-pass exact-head validation |
-| Semantic recall/canonical-truth case study | issue #408 | active longitudinal research pressure case; not a core RC blocker |
+| Comparator dependency requalification | issue #440 | **active qualification**; `agent-manifest` 0.12.0 + `agentrust-trace` 0.10.0 must be qualified together; bare PRs #404/#405 are closed |
+| Semantic recall/canonical-truth case study | issue #408 | **longitudinal case study**; next executable gate is T0/failure evidence, not speculative implementation |
 | Live DashClaw conformance | issue #361 | **blocked external** on authorized Cloudflare/DashClaw live traversal; repository-side implementation already merged |
 | Field efficacy benchmark | issue #388 | **longitudinal external evidence**; operator skill merged via PR #389; waits on T1/T2/T3 data |
-| TRACE dependency qualification | PR #404 | open; `agentrust-trace` 0.10.0 requires semantic comparator/evidence qualification |
-| Agent Manifest dependency qualification | PR #405 | open; `agent-manifest` 0.12.0 requires semantic comparator/evidence qualification |
 
 ### Recently retired from the active queue
 
@@ -68,6 +67,7 @@ A Tier 3 row must represent active implementation, a live external/longitudinal 
 - #387: closed `not_planned` for the current cycle; reopen when the Git/document knowledge-profile work becomes executable.
 - #392: closed `not_planned` until DashClaw establishes TransitionRuleCorpus authorship/ownership.
 - PR #389: merged after rechecking its long-standing full-green evidence.
+- PRs #404/#405: closed as structurally incomplete one-file dependency bumps; #440 owns the coordinated exact-version requalification.
 
 ## Tier 4: Active or Held Plan Artifacts
 
@@ -125,8 +125,8 @@ Tier 1 surfaces should agree on this order:
 3. **RC developer facade:** implement a small ergonomic surface over the existing 1.2.0 contract.
 4. **RC end-to-end fixture:** prove retain/composition/retrieval/admission/correction/restart/forgetting/history as one usable scenario.
 5. **Public benchmark evidence:** run licensed external datasets through stable benchmark adapters; keep retrieval, answer quality, performance, and governance metrics separate.
-6. **#404 / #405:** qualify comparator dependency updates independently.
-7. Keep #361 and #388 out of the active implementation critical path until their external evidence can move.
+6. **#440:** re-qualify Agent Manifest + TRACE as one exact-version interoperability change, proving version-identity checks execute rather than skip.
+7. Keep #361, #388, and #408 out of the active implementation critical path until their external/longitudinal evidence can move.
 
 ## Drift Contract
 
