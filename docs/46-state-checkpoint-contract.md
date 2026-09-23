@@ -6,9 +6,11 @@ This document defines who owns durable Agent Memory runtime state and what the
 `reference_file_checkpoint_v1` profile may claim after the first #363
 persistence refactor.
 
-It does **not** choose a production database, promote Graphiti, define migration
-policy for incompatible future schemas, or claim multi-process transactional
-checkpointing.
+It does **not** choose a production database, promote Graphiti, or define
+migration policy for incompatible future schemas. Transactional publication and
+compare-and-commit generation semantics are defined separately in
+`docs/47-transactional-checkpoint-generations.md`; keeping that contract separate
+avoids conflating state ownership with publication mechanics.
 
 ## Core rule
 
@@ -45,7 +47,7 @@ dictionaries.
 | audit/containment state | governed adapter | retained audit/governance evidence | adapter-owned export/restore |
 | extension state | governed adapter as custody seam for later layers | correctness/evidence state where the owning feature declares it durable | adapter-owned envelope export/restore |
 | runtime profile and interpretation digest | restart runtime | canonical interpretation binding | runtime-owned envelope/manifest |
-| checkpoint generation and payload digests | state store/runtime | canonical recovery metadata | manifest-owned |
+| checkpoint generation and payload digests | state store/runtime | canonical recovery metadata | manifest-owned; publication governed by `reference_generation_cas_v1` |
 | visibility snapshots | restart runtime | correctness state for in-flight visibility obligations | runtime-owned governance envelope |
 
 ## Declared substrate durability
@@ -119,6 +121,11 @@ The duplicate identifier location is temporary compatibility debt. The substrate
 is the semantic owner. A later explicit migration/profile version may remove the
 legacy governance copy after compatibility evidence exists.
 
+Issue #414 adds a transaction journal without changing these component state
+representations. A pre-transaction v1 checkpoint can still recover after the
+original v1 checks succeed and is baselined into the generation journal only on
+its next write. See `docs/47-transactional-checkpoint-generations.md`.
+
 ## Auxiliary correctness state not yet composed into `RestartSafeRuntime`
 
 The state audit identified additional stores that matter once their owning
@@ -129,9 +136,10 @@ runtimes are composed into the general Agent Memory runtime:
 - telemetry state when a telemetry record participates in correctness rather
   than observability only.
 
-This PR does not silently serialize those objects because `RestartSafeRuntime`
-does not currently own or compose them. Treating unrelated global instances as
-part of a checkpoint would create a different form of hidden coupling.
+This contract does not silently serialize those objects because
+`RestartSafeRuntime` does not currently own or compose them. Treating unrelated
+global instances as part of a checkpoint would create a different form of hidden
+coupling.
 
 The required next step is to give each correctness-bearing store an explicit
 checkpoint contract **before** it is admitted into the RC runtime composition.
@@ -150,24 +158,26 @@ rebuildable
 
 ## What remains open under #363
 
-This phase removes the most direct implementation-private persistence coupling.
-It does not satisfy the full #363 exit condition.
+The ownership and single-host generation-publication slices remove the most
+direct implementation-private persistence coupling and the flat-file concurrent
+writer race. They do not satisfy the full #363 exit condition.
 
 Still required:
 
 1. account for auxiliary correctness-bearing stores as they enter the composed
    runtime;
-2. define compare-and-commit / CAS semantics so concurrent writers cannot both
-   publish the next generation;
-3. prevent a crash between component writes from publishing mixed generations;
-4. define schema/profile migration behavior and rollback/refusal semantics;
-5. qualify at least one non-toy durable provider against the contract.
+2. define schema/profile migration behavior and rollback/refusal semantics;
+3. qualify at least one non-toy durable provider against the contract;
+4. add an external monotonic anchor if protection against rollback of the entire
+   state directory is a product requirement;
+5. select and qualify a production transaction mechanism when a production
+   durable substrate is chosen.
 
 No database should be selected as a substitute for those obligations.
 
-## Acceptance evidence for this slice
+## Acceptance evidence for the ownership slice
 
-This slice is acceptable when tests prove:
+The ownership slice is acceptable when tests prove:
 
 - a checkpoint-capable substrate round-trips its own state and identifier
   progress;
@@ -181,3 +191,6 @@ This slice is acceptable when tests prove:
   their original correctness state is complete;
 - existing retain/correct/recall/restart, deletion-after-restart, action-authority
   restart, configured-restart, and identifier-progress evidence remains green.
+
+Transactional generation acceptance evidence is defined separately in
+`docs/47-transactional-checkpoint-generations.md`.
