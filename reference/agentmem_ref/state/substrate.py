@@ -26,17 +26,25 @@ retrieval capability rather than a new mandatory member of ``TemporalGraphPort``
 Providers that cannot traverse provenance relationships remain valid canonical
 substrates; the planner simply cannot claim that route for them.
 
+Issue #461 adds a second optional capability: durable typed relations. Relations
+are canonical graph state, but relation traversal remains retrieval evidence
+only. A substrate may implement ordinary temporal facts without implementing
+this relation surface, and callers must not infer graph capability from the
+base ``TemporalGraphPort`` alone.
+
 Stdlib only.
 """
 
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field, replace
+import math
 from typing import Iterable, Mapping, Protocol, runtime_checkable
 
 UNFILTERED = None
 CHECKPOINT_SCHEMA_VERSION = "1.0.0"
 CHECKPOINT_OWNER = "in_memory_temporal_graph"
+TYPED_RELATION_SCHEMA_VERSION = "1.0.0"
 
 
 class DeterministicIds:
@@ -86,6 +94,52 @@ class Fact:
     created_at: str | None = None
     expired_at: str | None = None
     attributes: dict = field(default_factory=dict)
+
+    @property
+    def is_event_invalid(self) -> bool:
+        return self.invalid_at is not None
+
+    @property
+    def is_transaction_expired(self) -> bool:
+        return self.expired_at is not None
+
+
+@dataclass(frozen=True)
+class TypedRelation:
+    """A typed, provenance-bearing relation between canonical fact identities.
+
+    ``retrieval_weight`` is deliberately named for what it is: route evidence.
+    It is not truth confidence, currentness, scope permission, or PAMA authority.
+    Relation validity has the same explicit event-time / transaction-time split
+    as facts so graph lifecycle does not collapse into one ambiguous timestamp.
+    """
+
+    relation_id: str
+    source_uuid: str
+    target_uuid: str
+    relation_type: str
+    group_id: str
+    evidence_refs: tuple[str, ...] = ()
+    retrieval_weight: float = 1.0
+    valid_at: str | None = None
+    invalid_at: str | None = None
+    created_at: str | None = None
+    expired_at: str | None = None
+    attributes: dict = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if not self.relation_id:
+            raise ValueError("typed relation id is required")
+        if not self.source_uuid or not self.target_uuid:
+            raise ValueError("typed relation source and target are required")
+        if not self.relation_type:
+            raise ValueError("typed relation type is required")
+        if not self.group_id:
+            raise ValueError("typed relation group_id is required")
+        if not math.isfinite(self.retrieval_weight):
+            raise ValueError("typed relation retrieval_weight must be finite")
+        if self.retrieval_weight < 0.0 or self.retrieval_weight > 1.0:
+            raise ValueError("typed relation retrieval_weight must be between 0 and 1")
 
     @property
     def is_event_invalid(self) -> bool:
@@ -146,12 +200,51 @@ class EvidenceNeighborTemporalGraphPort(Protocol):
     ) -> list[tuple[Fact, tuple[str, ...], float]]: ...
 
 
+@runtime_checkable
+class TypedRelationTemporalGraphPort(Protocol):
+    """Optional native typed-relation capability for canonical graph state.
+
+    Implementations own relation persistence and lifecycle. Traversal scores and
+    paths built from this surface remain derived retrieval evidence and confer no
+    authority. Relation-type vocabulary is intentionally open and domain-
+    extensible; Agent Memory does not impose a universal ontology here.
+    """
+
+    def write_relation(self, relation: TypedRelation) -> None: ...
+
+    def get_relation(self, relation_id: str) -> TypedRelation | None: ...
+
+    def invalidate_relation(
+        self,
+        relation_id: str,
+        invalid_at: str,
+        expired_at: str,
+    ) -> None: ...
+
+    def delete_relation(self, relation_id: str) -> None: ...
+
+    def relations_from(
+        self,
+        source_uuid: str,
+        group_ids: list[str] | None = UNFILTERED,
+        relation_types: tuple[str, ...] | None = None,
+    ) -> list[TypedRelation]: ...
+
+    def relations_to(
+        self,
+        target_uuid: str,
+        group_ids: list[str] | None = UNFILTERED,
+        relation_types: tuple[str, ...] | None = None,
+    ) -> list[TypedRelation]: ...
+
+
 class InMemoryTemporalGraph:
     """Permissive substrate model. Executes whatever reaches it."""
 
     def __init__(self) -> None:
         self._episodes: dict[str, Episode] = {}
         self._facts: dict[str, Fact] = {}
+        self._relations: dict[str, TypedRelation] = {}
         self.write_log: list[tuple[str, str]] = []
         # GAP-SEC-08: identifiers are minted per substrate, not per adapter.
         # Two adapters sharing one substrate previously ran independent
@@ -184,8 +277,10 @@ class InMemoryTemporalGraph:
         return {
             "schema_version": CHECKPOINT_SCHEMA_VERSION,
             "checkpoint_owner": CHECKPOINT_OWNER,
+            "relation_schema_version": TYPED_RELATION_SCHEMA_VERSION,
             "episodes": [asdict(value) for _, value in sorted(self._episodes.items())],
             "facts": [asdict(value) for _, value in sorted(self._facts.items())],
+            "relations": [asdict(value) for _, value in sorted(self._relations.items())],
             "write_log": [list(item) for item in self.write_log],
             "id_counter": self.identifier_checkpoint(),
         }
@@ -193,21 +288,30 @@ class InMemoryTemporalGraph:
     def restore_checkpoint_state(self, snapshot: Mapping[str, object]) -> None:
         """Restore canonical substrate state, failing closed on malformed input.
 
-        ``checkpoint_owner`` and ``id_counter`` are additive to the original v1
-        wire payload. Their absence is accepted only for legacy v1 recovery;
-        the runtime supplies legacy identifier progress through the separate
-        identifier checkpoint seam before this method returns.
+        ``checkpoint_owner``, ``id_counter``, and typed relations are additive to
+        the original v1 payload. Their absence is accepted for legacy v1
+        recovery. If a relation schema is declared, it must match the supported
+        typed-relation contract exactly.
         """
         if snapshot.get("schema_version") != CHECKPOINT_SCHEMA_VERSION:
             raise ValueError("unsupported substrate state schema")
         owner = snapshot.get("checkpoint_owner")
         if owner not in (None, CHECKPOINT_OWNER):
             raise ValueError("substrate checkpoint owner mismatch")
+        relation_schema = snapshot.get("relation_schema_version")
+        if relation_schema not in (None, TYPED_RELATION_SCHEMA_VERSION):
+            raise ValueError("unsupported typed relation state schema")
 
         raw_episodes = snapshot.get("episodes", [])
         raw_facts = snapshot.get("facts", [])
+        raw_relations = snapshot.get("relations", [])
         raw_log = snapshot.get("write_log", [])
-        if not isinstance(raw_episodes, list) or not isinstance(raw_facts, list) or not isinstance(raw_log, list):
+        if (
+            not isinstance(raw_episodes, list)
+            or not isinstance(raw_facts, list)
+            or not isinstance(raw_relations, list)
+            or not isinstance(raw_log, list)
+        ):
             raise ValueError("substrate checkpoint collections are malformed")
 
         try:
@@ -227,6 +331,15 @@ class InMemoryTemporalGraph:
                 fact = Fact(**value)
                 facts[fact.uuid] = fact
 
+            relations: dict[str, TypedRelation] = {}
+            for raw in raw_relations:
+                if not isinstance(raw, Mapping):
+                    raise TypeError("typed relation checkpoint row must be a mapping")
+                value = dict(raw)
+                value["evidence_refs"] = tuple(value.get("evidence_refs", ()))
+                relation = TypedRelation(**value)
+                relations[relation.relation_id] = relation
+
             write_log: list[tuple[str, str]] = []
             for item in raw_log:
                 if not isinstance(item, (list, tuple)) or len(item) != 2:
@@ -237,6 +350,7 @@ class InMemoryTemporalGraph:
 
         self._episodes = episodes
         self._facts = facts
+        self._relations = relations
         self.write_log = write_log
         if "id_counter" in snapshot:
             self.restore_identifier_checkpoint(int(snapshot["id_counter"]))
@@ -281,6 +395,39 @@ class InMemoryTemporalGraph:
         self._facts.pop(uuid, None)
         self.write_log.append(("delete_fact", uuid))
 
+    def write_relation(self, relation: TypedRelation) -> None:
+        """Persist one typed relation without granting it governance authority."""
+        if relation.source_uuid not in self._facts or relation.target_uuid not in self._facts:
+            raise ValueError("typed relation endpoints must exist when the relation is written")
+        existing = self._relations.get(relation.relation_id)
+        if existing is not None and existing != relation:
+            raise ValueError(
+                f"refusing to overwrite relation {relation.relation_id!r}: "
+                "identifier collision would destroy canonical graph state"
+            )
+        self._relations[relation.relation_id] = relation
+        self.write_log.append(("write_relation", relation.relation_id))
+
+    def invalidate_relation(
+        self,
+        relation_id: str,
+        invalid_at: str,
+        expired_at: str,
+    ) -> None:
+        current = self._relations.get(relation_id)
+        if current is None:
+            return
+        self._relations[relation_id] = replace(
+            current,
+            invalid_at=invalid_at,
+            expired_at=expired_at,
+        )
+        self.write_log.append(("invalidate_relation", relation_id))
+
+    def delete_relation(self, relation_id: str) -> None:
+        self._relations.pop(relation_id, None)
+        self.write_log.append(("delete_relation", relation_id))
+
     # -- reads ----------------------------------------------------------
 
     def get_fact(self, uuid: str) -> Fact | None:
@@ -289,8 +436,69 @@ class InMemoryTemporalGraph:
     def get_episode(self, uuid: str) -> Episode | None:
         return self._episodes.get(uuid)
 
+    def get_relation(self, relation_id: str) -> TypedRelation | None:
+        return self._relations.get(relation_id)
+
     def all_facts(self) -> Iterable[Fact]:
         return tuple(self._facts.values())
+
+    def all_relations(self) -> Iterable[TypedRelation]:
+        return tuple(self._relations[key] for key in sorted(self._relations))
+
+    def relations_from(
+        self,
+        source_uuid: str,
+        group_ids: list[str] | None = UNFILTERED,
+        relation_types: tuple[str, ...] | None = None,
+    ) -> list[TypedRelation]:
+        return self._relations_matching(
+            endpoint="source_uuid",
+            endpoint_ref=source_uuid,
+            group_ids=group_ids,
+            relation_types=relation_types,
+        )
+
+    def relations_to(
+        self,
+        target_uuid: str,
+        group_ids: list[str] | None = UNFILTERED,
+        relation_types: tuple[str, ...] | None = None,
+    ) -> list[TypedRelation]:
+        return self._relations_matching(
+            endpoint="target_uuid",
+            endpoint_ref=target_uuid,
+            group_ids=group_ids,
+            relation_types=relation_types,
+        )
+
+    def _relations_matching(
+        self,
+        *,
+        endpoint: str,
+        endpoint_ref: str,
+        group_ids: list[str] | None,
+        relation_types: tuple[str, ...] | None,
+    ) -> list[TypedRelation]:
+        allowed_types = None if relation_types is None else set(relation_types)
+        values: list[TypedRelation] = []
+        for relation in self._relations.values():
+            if getattr(relation, endpoint) != endpoint_ref:
+                continue
+            if group_ids is not UNFILTERED and relation.group_id not in group_ids:
+                continue
+            if allowed_types is not None and relation.relation_type not in allowed_types:
+                continue
+            values.append(relation)
+        values.sort(
+            key=lambda item: (
+                -item.retrieval_weight,
+                item.relation_type,
+                item.source_uuid,
+                item.target_uuid,
+                item.relation_id,
+            )
+        )
+        return values
 
     def evidence_neighbors(
         self,
