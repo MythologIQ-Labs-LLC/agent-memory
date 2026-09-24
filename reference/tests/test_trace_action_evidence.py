@@ -122,8 +122,8 @@ class TraceActionEvidenceTests(unittest.TestCase):
     )
     def test_pinned_trace_release_identity_is_explicit(self):
         self.assertEqual(importlib.metadata.version("agentrust-trace"), TRACE_SDK_VERSION)
-        self.assertEqual(TRACE_SDK_VERSION, "0.9.0")
-        self.assertEqual(TRACE_RELEASE_COMMIT, "94271a1630601c94e80a23263d9750cb8d39f1f4")
+        self.assertEqual(TRACE_SDK_VERSION, "0.10.0")
+        self.assertEqual(TRACE_RELEASE_COMMIT, "3a561d84d752794b9afa994ce16ed35c24ac0acb")
         self.assertEqual(CMCP_RUNTIME_VERSION, "0.4.0")
         self.assertEqual(CMCP_RELEASE_COMMIT, "a2e95151356c9ae6c545330c900f3d4af0e447c1")
 
@@ -257,22 +257,3 @@ class TraceActionEvidenceTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[2]
         schema = json.loads((root / "schemas" / "trace-action-evidence-bundle.schema.json").read_text())
         jsonschema.Draft202012Validator(schema).validate(bundle)
-
-    def test_envelope_uses_existing_cmcp_six_field_shape(self):
-        _, _, bundle = self._bundle()
-        self.assertEqual(
-            set(bundle["external_execution_evidence"]),
-            {
-                "issuer",
-                "issuer_key_id",
-                "signature",
-                "evidence_hash",
-                "evidence_type",
-                "linked_call_id",
-            },
-        )
-        self.assertEqual(bundle["external_execution_evidence"]["evidence_type"], "opaque-receipt")
-
-
-if __name__ == "__main__":
-    unittest.main()

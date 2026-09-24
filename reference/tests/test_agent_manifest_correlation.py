@@ -88,7 +88,7 @@ class AgentManifestCorrelationTests(unittest.TestCase):
         self.verdict = verify_delta(
             self.previous,
             self.new,
-            self.after_ops,
+            [self.after_ops[-1]],
             self.proof,
             now=APPROVED_AT + timedelta(seconds=5),
         )
@@ -155,8 +155,8 @@ class AgentManifestCorrelationTests(unittest.TestCase):
     )
     def test_pinned_release_and_repository_identity_are_explicit(self):
         self.assertEqual(importlib.metadata.version("agent-manifest"), AGENT_MANIFEST_SDK_VERSION)
-        self.assertEqual(AGENT_MANIFEST_SDK_VERSION, "0.11.2")
-        self.assertEqual(AGENT_MANIFEST_UPSTREAM_COMMIT, "9d26ac84461e829dba8ff97ca35748eeb874debe")
+        self.assertEqual(AGENT_MANIFEST_SDK_VERSION, "0.12.0")
+        self.assertEqual(AGENT_MANIFEST_UPSTREAM_COMMIT, "9478b56cc349bef01441db4e17e61849c8d69d6f")
 
     def test_upstream_v02_normative_kv_root_vector_matches(self):
         root = build_memory_tree(
@@ -178,6 +178,24 @@ class AgentManifestCorrelationTests(unittest.TestCase):
         self.assertEqual(self.new.tree_size, self.previous.tree_size + 1)
         self.assertGreater(self.new.seq, self.previous.seq)
 
+    def test_012_delta_acceptance_does_not_bind_supplied_operation_argument(self):
+        mismatched = verify_delta(
+            self.previous,
+            self.new,
+            [{"op": "PUT", "key": "memory:key:different", "value": "different"}],
+            self.proof,
+            now=APPROVED_AT + timedelta(seconds=5),
+        )
+        self.assertTrue(mismatched.accepted)
+        self.assertEqual(mismatched.reason, "accepted")
+        correlation = self._correlate("residual", verdict=mismatched)
+        self.assertEqual(correlation["correlation_integrity"], "valid")
+        self.assertNotIn("operation_kind", correlation["agent_manifest"])
+        self.assertEqual(
+            correlation["agent_memory"]["memory_action"],
+            "permanent_deletion",
+        )
+
     def test_valid_del_checkpoint_does_not_imply_forgetting(self):
         correlation = self._correlate("residual")
         self.assertEqual(correlation["correlation_integrity"], "valid")
@@ -198,7 +216,7 @@ class AgentManifestCorrelationTests(unittest.TestCase):
         bad_verdict = verify_delta(
             self.previous,
             self.new,
-            self.after_ops,
+            [self.after_ops[-1]],
             [],
             now=APPROVED_AT + timedelta(seconds=5),
         )

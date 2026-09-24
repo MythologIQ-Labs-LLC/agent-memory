@@ -195,7 +195,8 @@ def run(agent_memory_commit: str) -> dict:
             "release": CMCP_RELEASE,
             "source_commit": CMCP_SOURCE_COMMIT,
             "runtime_package": "cmcp-runtime==0.4.0",
-            "trace_package": "agentrust-trace==0.9.0",
+            "trace_package": "agentrust-trace==0.10.0",
+            "agent_manifest_package": "agent-manifest==0.12.0",
         },
         "mode_cases": mode_cases,
         "stale_case": {

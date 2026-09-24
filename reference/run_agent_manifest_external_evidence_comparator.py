@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Run the real pinned Agent Manifest inbound evidence comparator for #223.
+"""Run the real pinned Agent Manifest inbound evidence comparator for #223/#440.
 
 The pinned version is AGENT_MANIFEST_SDK_VERSION; it is not duplicated here.
 """
@@ -76,7 +76,13 @@ def _manifest(now: datetime, *, expired: bool = False, version: str = "0.2") -> 
     }
 
 
-def _context(keypair, *, memory_hash: str = MEMORY_BASELINE_HASH, trusted: bool = True) -> VerificationContext:
+def _context(
+    keypair,
+    *,
+    memory_hash: str = MEMORY_BASELINE_HASH,
+    trusted: bool = True,
+    enforce_attestation: bool = False,
+) -> VerificationContext:
     return VerificationContext(
         system_prompt_hash=SYSTEM_PROMPT_HASH,
         policy_bundle_hash=POLICY_BUNDLE_HASH,
@@ -85,6 +91,7 @@ def _context(keypair, *, memory_hash: str = MEMORY_BASELINE_HASH, trusted: bool 
         memory_snapshot_hash=memory_hash,
         trusted_keys={keypair.key_id: keypair.public_b64url()} if trusted else {},
         strict_artifact_verification=True,
+        enforce_attestation=enforce_attestation,
     )
 
 
@@ -172,6 +179,13 @@ def run(agent_memory_commit: str) -> dict:
     )
     identity, configuration, attestation = normalized
 
+    enforced_attestation_result = verify_manifest(
+        envelope,
+        _context(keypair, enforce_attestation=True),
+        RevocationStore(),
+    )
+    enforced_attestation_dict = _result_dict(enforced_attestation_result)
+
     mismatch_result = verify_manifest(
         envelope,
         _context(keypair, memory_hash="sha256:" + "0" * 64),
@@ -235,7 +249,7 @@ def run(agent_memory_commit: str) -> dict:
     raw_render = json.dumps(normalized, sort_keys=True)
     checks = {
         "exact_agent_manifest_package": package_version == AGENT_MANIFEST_SDK_VERSION,
-        "exact_source_release_pin_recorded": AGENT_MANIFEST_RELEASE == "9d26ac84461e829dba8ff97ca35748eeb874debe",
+        "exact_source_release_pin_recorded": AGENT_MANIFEST_RELEASE == "9478b56cc349bef01441db4e17e61849c8d69d6f",
         "cose_manifest_valid": valid_dict["result"] == "VALID" and valid_dict["signature_verified"] is True,
         "identity_evidence_applicable": identity["applicability"]["status"] == "applicable",
         "configuration_evidence_applicable": configuration["applicability"]["status"] == "applicable",
@@ -243,6 +257,10 @@ def run(agent_memory_commit: str) -> dict:
             valid_dict["attestation_verified"] is False
             and attestation["applicability"]["status"] == "insufficient_evidence"
             and attestation["claim"]["attestation_mode"] == "not_established"
+        ),
+        "enforced_attestation_requires_independent_appraisal": (
+            enforced_attestation_dict["result"] == "ATTESTATION_UNAVAILABLE"
+            and enforced_attestation_dict["attestation_verified"] is False
         ),
         "memory_baseline_mismatch_invalidates_configuration_not_identity": (
             mismatch_normalized[0]["applicability"]["status"] == "applicable"
@@ -276,7 +294,7 @@ def run(agent_memory_commit: str) -> dict:
     }
 
     return {
-        "case_id": "agent-manifest-v0.11.0-external-evidence",
+        "case_id": "agent-manifest-v0.12.0-external-evidence",
         "passed": all(checks.values()),
         "agent_memory_commit": agent_memory_commit,
         "peer": {
@@ -288,6 +306,7 @@ def run(agent_memory_commit: str) -> dict:
         "checks": checks,
         "observed": {
             "valid_result": valid_dict,
+            "enforced_attestation_result": enforced_attestation_dict,
             "mismatch_result": _result_dict(mismatch_result),
             "untrusted_result": _result_dict(untrusted_result),
             "tampered_result": _result_dict(tampered_result),
@@ -305,8 +324,9 @@ def run(agent_memory_commit: str) -> dict:
             "agent_manifest_valid_means": "signed identity/configuration evidence within verified bindings",
             "action_authority": "not_established",
             "execution_evidence": "not_established",
-            "hardware_attestation": "not_established_without_verified_attestation",
+            "hardware_attestation": "not_established_without_independent_verified_attestation",
             "memory_baseline": "bound_snapshot_evidence_not_canonical_or_current_agent_memory",
+            "memory_delta_0_12_limit": "accepted_checkpoint_does_not_bind_supplied_appended_operation_argument",
             "hitl_record": "not_agent_memory_approval_without_separate_binding",
             "delegation_chain": "not_reusable_agent_memory_authority_without_separate_governed_transition",
         },
