@@ -2,7 +2,7 @@
 
 ## Status
 
-Reference V0.1 implementation profile for issue #180, now exercised against two materially different real peer families: TRACE and cMCP.
+Reference V0.1 implementation profile for issue #180, now exercised against materially different real peer families including TRACE, cMCP, and Agent Manifest evidence adapters.
 
 ## Purpose
 
@@ -54,16 +54,16 @@ That split is intentional. A peer adapter may understand peer vocabulary and wir
 
 ### TRACE
 
-TRACE is the first reference comparator because the repository already has executable TRACE/cMCP evidence work and an exact release pin.
+TRACE is a reference comparator because the repository already has executable TRACE/cMCP evidence work and an exact release pin.
 
 ```text
 peer:                TRACE
-TRACE SDK:           agentrust-trace==0.9.0
-TRACE release ref:   94271a1630601c94e80a23263d9750cb8d39f1f4
+TRACE SDK:           agentrust-trace==0.10.0
+TRACE release ref:   3a561d84d752794b9afa994ce16ed35c24ac0acb
 reference contract:  TRACE action-receipt verification / external action-evidence surface
 ```
 
-This reuses the existing P4.5c pin documented in `docs/programs/runtime-evidence/trace-action-evidence.md`.
+This reuses the exact #440/P4.5c pin documented in `docs/programs/runtime-evidence/trace-action-evidence.md`.
 
 TRACE remains a comparator. It is not a required Agent Memory runtime dependency and does not define Agent Memory vocabulary.
 
@@ -75,6 +75,8 @@ The second materially different peer is cMCP `v0.4.0`:
 peer:                cMCP
 runtime package:     cmcp-runtime==0.4.0
 cMCP release commit: a2e95151356c9ae6c545330c900f3d4af0e447c1
+qualified TRACE:     agentrust-trace==0.10.0
+qualified manifest:  agent-manifest==0.12.0
 verifier:            cmcp_verify.verify_trace_claim
 reference contract:  GatewayClaim enforcement/configuration + runtime-attestation evidence
 ```
@@ -430,7 +432,7 @@ reference/run_cmcp_external_evidence_comparator.py
 .github/workflows/cmcp-external-evidence.yml
 ```
 
-## What the two-peer V0.1 evidence proves
+## What the V0.1 evidence proves
 
 Within the bounded reference implementation, fixtures, and real peer comparators, V0.1 demonstrates that:
 
@@ -450,13 +452,13 @@ Within the bounded reference implementation, fixtures, and real peer comparators
 - unknown peer fields cannot widen PAMA or mutate canonical lifecycle state;
 - removing the peer adapter leaves the normalized evidence contract understandable as generic evidence metadata.
 
-The released cMCP comparator is runtime evidence for this adapter/verifier path. It is not production deployment evidence and does not prove universal cMCP assurance.
+The released comparators are runtime evidence for bounded adapter/verifier paths. They are not production deployment evidence and do not prove universal peer assurance.
 
 ## What V0.1 does not prove
 
 V0.1 does not prove:
 
-- that TRACE, cMCP, or another peer is universally trustworthy;
+- that TRACE, cMCP, Agent Manifest, or another peer is universally trustworthy;
 - production key discovery, rotation, revocation, or trust-anchor policy;
 - semantic correctness of an attested claim;
 - Agent Memory mutation authorization;
@@ -464,8 +466,8 @@ V0.1 does not prove:
 - physical execution merely because an attestation exists;
 - correction, deletion, forgetting, or other lifecycle obligation satisfaction;
 - cross-organization delegation authority;
-- compatibility with future TRACE/cMCP versions or unrelated peers;
-- real TPM/SNP/TDX hardware assurance merely because the software-only comparator passed;
+- compatibility with future peer versions;
+- real TPM/SNP/TDX hardware assurance merely because a software-only comparator passed;
 - production cMCP deployment;
 - a need for a TRACE or cMCP core-schema change.
 
@@ -473,15 +475,13 @@ V0.1 does not prove:
 
 The normalizer and all peer adapters are optional evidence surfaces.
 
-Disabling or removing a TRACE or cMCP adapter does not invalidate canonical Agent Memory records. Existing normalized records remain understandable through the vendor-neutral schema and retain their source/version/reference metadata.
+Disabling or removing a TRACE, cMCP, or Agent Manifest adapter does not invalidate canonical Agent Memory records. Existing normalized records remain understandable through the vendor-neutral schema and retain their source/version/reference metadata.
 
-No canonical memory object requires TRACE- or cMCP-only vocabulary to remain interpretable.
+No canonical memory object requires peer-only vocabulary to remain interpretable.
 
 ## Follow-on gate
 
-The two-peer generic evidence gate is now satisfied by TRACE plus released cMCP v0.4.0.
-
-A third peer should be added only when it tests a materially different evidence responsibility, not merely another signed identity document. Agent Manifest remains a reasonable future candidate for identity/configuration binding, but it should not be introduced simply to accumulate protocol coverage.
+Additional peers should be added only when they test a materially different evidence responsibility, not merely to accumulate protocol logos. Agent Manifest already has a separate exact-version identity/configuration/attestation profile and #440 re-qualifies it with TRACE as one coordinated pair.
 
 Cedarling research is separately evaluating whether its JWT/multi-issuer verification can become a useful identity-evidence source while its policy decision continues to use the already-proven external-policy seam. That work must preserve the same rule: verified identity is evidence, not Agent Memory authority.
 
