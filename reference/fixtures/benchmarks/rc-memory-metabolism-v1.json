@@ -214,6 +214,7 @@
       ],
       "expected_eligible": false,
       "expected_reasons": ["scope_mismatch"],
+      "expected_exception_refs": [],
       "scope_trap": true
     },
     {
@@ -242,6 +243,7 @@
       ],
       "expected_eligible": false,
       "expected_reasons": ["non_current_source", "disputed_source"],
+      "expected_exception_refs": ["exception:f"],
       "currentness_trap": true
     }
   ],
