@@ -22,6 +22,7 @@ jobs:
           PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_retrieval_quality_benchmark.py'
           PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_continuous_retrieval_regression.py'
           PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_swe_context_bench.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_swe_context_bench_real_100.py'
       - name: Execute continuous retrieval regression
         env:
           AGENT_MEMORY_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
