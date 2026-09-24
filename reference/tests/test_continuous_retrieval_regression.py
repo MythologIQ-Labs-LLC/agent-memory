@@ -16,6 +16,7 @@ from retrieval_regression import (
     enrich_admitted_f1,
     load_json,
     run_continuous_regression,
+    run_sqlite_persisted_restart_probe,
 )
 
 FIXTURE = ROOT / "reference" / "fixtures" / "benchmarks" / "rc-retrieval-quality-v1.json"
@@ -73,6 +74,24 @@ class ContinuousRetrievalRegressionTests(unittest.TestCase):
         self.assertEqual(comparison["reason"], "benchmark_contract_mismatch")
         self.assertIn("fixture_sha256", comparison["mismatched_fields"])
 
+    def test_sqlite_persisted_restart_preserves_bounded_recall_results(self) -> None:
+        probe = run_sqlite_persisted_restart_probe(
+            fixture_path=FIXTURE,
+            runtime_config_path=RUNTIME_CONFIG,
+        )
+        self.assertEqual(probe["profile"], "sqlite_lexical_exact_shared_evidence_v1")
+        self.assertEqual(
+            probe["route_scope"],
+            ["lexical", "exact_logical_identity", "shared_evidence_neighbor"],
+        )
+        self.assertTrue(probe["persisted_restart_exercised"])
+        self.assertTrue(probe["canonical_state_digest_consistent"])
+        self.assertTrue(probe["recall_result_consistent"])
+        self.assertEqual(probe["case_count"], 5)
+        self.assertFalse(probe["vector_persistence_claimed"])
+        self.assertFalse(probe["typed_graph_persistence_claimed"])
+        self.assertEqual(probe["authority_effect"], "none")
+
     def test_continuous_regression_proves_replay_and_preserves_historical_baseline(self) -> None:
         report = run_continuous_regression(
             fixture_path=FIXTURE,
@@ -84,7 +103,11 @@ class ContinuousRetrievalRegressionTests(unittest.TestCase):
         regression = report["continuous_regression"]
         self.assertTrue(regression["same_process_repeat_consistent"])
         self.assertTrue(regression["fresh_runtime_reconstruction_consistent"])
-        self.assertFalse(regression["persisted_restart_exercised_by_this_runner"])
+        self.assertTrue(regression["persisted_restart_exercised_by_this_runner"])
+        self.assertTrue(regression["persisted_restart"]["canonical_state_digest_consistent"])
+        self.assertTrue(regression["persisted_restart"]["recall_result_consistent"])
+        self.assertFalse(regression["persisted_restart"]["vector_persistence_claimed"])
+        self.assertFalse(regression["persisted_restart"]["typed_graph_persistence_claimed"])
         self.assertEqual(
             regression["reconstruction_posture"],
             "fresh_fixture_rebuild_from_canonical_inputs",
@@ -126,6 +149,9 @@ class ContinuousRetrievalRegressionTests(unittest.TestCase):
         self.assertEqual(emitted["agent_memory_revision"], "runner-regression-revision")
         self.assertEqual(emitted["systems"]["multi_route"]["aggregate"]["admitted_f1"], 1.0)
         self.assertTrue(emitted["continuous_regression"]["targets"]["all_expectations_met"])
+        self.assertTrue(
+            emitted["continuous_regression"]["persisted_restart_exercised_by_this_runner"]
+        )
         self.assertNotIn("health_score", emitted)
         self.assertNotIn("memory_health_score", emitted)
 

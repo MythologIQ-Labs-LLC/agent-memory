@@ -93,6 +93,13 @@ def main() -> None:
             raise SystemExit("retrieval regression same-process replay diverged")
         if not regression["fresh_runtime_reconstruction_consistent"]:
             raise SystemExit("retrieval regression fresh reconstruction diverged")
+        persisted = regression["persisted_restart"]
+        if not regression["persisted_restart_exercised_by_this_runner"]:
+            raise SystemExit("retrieval regression did not exercise persisted restart")
+        if not persisted["canonical_state_digest_consistent"]:
+            raise SystemExit("retrieval regression SQLite state digest changed across restart")
+        if not persisted["recall_result_consistent"]:
+            raise SystemExit("retrieval regression recall changed across persisted restart")
         if not regression["targets"]["all_expectations_met"]:
             raise SystemExit("retrieval regression target profile failed")
     else:

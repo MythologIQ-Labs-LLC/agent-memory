@@ -53,7 +53,14 @@ jobs:
           regression = r['continuous_regression']
           assert regression['same_process_repeat_consistent'] is True
           assert regression['fresh_runtime_reconstruction_consistent'] is True
-          assert regression['persisted_restart_exercised_by_this_runner'] is False
+          assert regression['persisted_restart_exercised_by_this_runner'] is True
+          persisted = regression['persisted_restart']
+          assert persisted['profile'] == 'sqlite_lexical_exact_shared_evidence_v1'
+          assert persisted['canonical_state_digest_consistent'] is True
+          assert persisted['recall_result_consistent'] is True
+          assert persisted['vector_persistence_claimed'] is False
+          assert persisted['typed_graph_persistence_claimed'] is False
+          assert persisted['authority_effect'] == 'none'
           assert regression['targets']['all_expectations_met'] is True
           checks = regression['targets']['checks']
           assert checks['candidate_recall']['passed'] is True
@@ -77,6 +84,7 @@ jobs:
               'final_precision': multi['admitted_precision'],
               'final_f1': multi['admitted_f1'],
               'candidate_amplification': r['comparison']['candidate_amplification'],
+              'persisted_restart_profile': persisted['profile'],
           })
           PY
       - uses: actions/upload-artifact@v7

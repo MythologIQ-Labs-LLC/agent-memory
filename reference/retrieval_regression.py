@@ -2,8 +2,10 @@
 
 This module does not execute a second retrieval implementation. It repeatedly
 invokes the canonical deterministic benchmark, enriches its admitted metrics
-with F1, binds directional evaluation targets, and compares compatible reports.
-Candidate generation remains distinct from governed final admission.
+with F1, binds directional evaluation targets, compares compatible reports, and
+probes an actual SQLite close/recover cycle for the canonical lexical/exact/
+shared-evidence profile. Candidate generation remains distinct from governed
+final admission.
 """
 
 from __future__ import annotations
@@ -11,13 +13,19 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
+import tempfile
 from typing import Any, Callable, Mapping
 
+from agentmem_ref import policy
+from agentmem_ref.adapter import RecallContext
 from agentmem_ref.harness.retrieval_quality_benchmark import run_benchmark
+from agentmem_ref.runtime_config import validate_runtime_configuration
+from agentmem_ref.sqlite_composition import SQLiteConfiguredCompositionRuntime
 
 
 REGRESSION_SCHEMA_VERSION = "1.0.0"
 REGRESSION_ENGINE_ID = "agent-memory-continuous-retrieval-regression"
+PERSISTED_RESTART_PROFILE = "sqlite_lexical_exact_shared_evidence_v1"
 
 
 def _f1(precision: float, recall: float) -> float:
@@ -221,6 +229,188 @@ def load_json(path: Path | None) -> dict[str, Any] | None:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _persisted_proposal(
+    *,
+    proposal_id: str,
+    memory_ref: str,
+    tenant_ref: str,
+    project_ref: str,
+    purpose: str,
+    evidence_refs: tuple[str, ...],
+) -> policy.Proposal:
+    return policy.Proposal(
+        proposal_id=proposal_id,
+        actor_id="agent:retrieval-regression-restart",
+        charter_version="charter-v1",
+        target_reference=memory_ref,
+        target_class=policy.M2,
+        scope=tenant_ref,
+        operation="promotion",
+        current_strength="observed",
+        proposed_strength="promoted",
+        downstream_authority=policy.A1,
+        reversibility="reversible",
+        risk_class="low",
+        evidence_refs=evidence_refs,
+        tenant_ref=tenant_ref,
+        isolation_domain_refs=(tenant_ref, project_ref),
+        required_isolation_domain_refs=(project_ref,),
+        project_ref=project_ref,
+        purpose=purpose,
+    )
+
+
+def _logical_refs(values: list[str], fact_to_memory: Mapping[str, str]) -> list[str]:
+    return [fact_to_memory.get(value, f"unknown-fact:{value}") for value in values]
+
+
+def _persisted_recall_rows(
+    runtime: SQLiteConfiguredCompositionRuntime,
+    fixture: Mapping[str, Any],
+    fact_to_memory: Mapping[str, str],
+) -> list[dict[str, Any]]:
+    tenant_ref = str(fixture["tenant_ref"])
+    default_project_ref = str(fixture["default_project_ref"])
+    purpose = str(fixture.get("purpose", "retrieval-quality-evaluation"))
+    rows: list[dict[str, Any]] = []
+    for case in fixture["cases"]:
+        project_ref = str(case.get("project_ref", default_project_ref))
+        context = RecallContext(
+            target_domain_refs=(tenant_ref, project_ref),
+            principal_ref="agent:retrieval-regression-restart",
+            project_ref=project_ref,
+            purpose=purpose,
+        )
+        query = str(case["query"])
+        logical_refs = tuple(str(value) for value in case.get("logical_memory_refs", []))
+        lexical = runtime.recall(query, context)
+        multi = runtime.multi_route_recall(
+            query,
+            context,
+            logical_memory_refs=logical_refs,
+        )
+        rows.append(
+            {
+                "case_id": str(case["case_id"]),
+                "lexical": {
+                    "candidates": _logical_refs(list(lexical.candidates), fact_to_memory),
+                    "admitted": _logical_refs(list(lexical.admitted), fact_to_memory),
+                    "refusals": {
+                        fact_to_memory.get(ref, f"unknown-fact:{ref}"): reason
+                        for ref, reason in sorted(lexical.refusals.items())
+                    },
+                },
+                "multi_route": {
+                    "candidates": _logical_refs(list(multi.candidates), fact_to_memory),
+                    "admitted": _logical_refs(list(multi.admitted), fact_to_memory),
+                    "ranked_admitted": _logical_refs(
+                        list(multi.ranked_admitted), fact_to_memory
+                    ),
+                    "refusals": {
+                        fact_to_memory.get(ref, f"unknown-fact:{ref}"): reason
+                        for ref, reason in sorted(multi.refusals.items())
+                    },
+                    "routes_executed": list(multi.routes_executed),
+                    "authority_effect": multi.authority_effect,
+                },
+            }
+        )
+    return rows
+
+
+def run_sqlite_persisted_restart_probe(
+    *,
+    fixture_path: Path,
+    runtime_config_path: Path,
+) -> dict[str, Any]:
+    """Prove close/recover replay for the canonical non-vector retrieval profile.
+
+    This deliberately does not claim persisted vector or typed-graph replay.
+    Those route families retain their own rebuild/profile evidence until a later
+    regression slice composes them explicitly with SQLite recovery.
+    """
+    fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+    config_value = json.loads(runtime_config_path.read_text(encoding="utf-8"))
+    plan = validate_runtime_configuration(config_value)
+    tenant_ref = str(fixture["tenant_ref"])
+    purpose = str(fixture.get("purpose", "retrieval-quality-evaluation"))
+
+    with tempfile.TemporaryDirectory(prefix="agent-memory-retrieval-restart-") as temp:
+        root = Path(temp)
+        runtime = SQLiteConfiguredCompositionRuntime.create(
+            root,
+            tenant=tenant_ref,
+            plan=plan,
+        )
+        fact_to_memory: dict[str, str] = {}
+        try:
+            for index, item in enumerate(fixture["memories"], start=1):
+                memory_ref = str(item["memory_ref"])
+                result = runtime.retain(
+                    _persisted_proposal(
+                        proposal_id=f"restart-proposal-{index:03d}",
+                        memory_ref=memory_ref,
+                        tenant_ref=tenant_ref,
+                        project_ref=str(item["project_ref"]),
+                        purpose=purpose,
+                        evidence_refs=tuple(str(value) for value in item["evidence_refs"]),
+                    ),
+                    str(item["fact_text"]),
+                )
+                if not result.committed or not result.fact_uuid:
+                    raise RuntimeError(
+                        f"persisted restart fixture memory did not commit: {memory_ref}"
+                    )
+                fact_to_memory[result.fact_uuid] = memory_ref
+
+            substrate = runtime.adapter.checkpoint_substrate()
+            for item in fixture["memories"]:
+                if not item.get("invalidate_after_retain", False):
+                    continue
+                fact_ref = next(
+                    ref
+                    for ref, memory_ref in fact_to_memory.items()
+                    if memory_ref == str(item["memory_ref"])
+                )
+                substrate.invalidate_fact(
+                    fact_ref,
+                    invalid_at="2026-09-23T13:00:00Z",
+                    expired_at="2026-09-23T13:00:01Z",
+                )
+
+            before = _persisted_recall_rows(runtime, fixture, fact_to_memory)
+            digest_before = substrate.state_digest()
+        finally:
+            runtime.close()
+
+        recovered = SQLiteConfiguredCompositionRuntime.recover(root, plan=plan)
+        try:
+            after = _persisted_recall_rows(recovered, fixture, fact_to_memory)
+            recovered_substrate = recovered.adapter.checkpoint_substrate()
+            digest_after = recovered_substrate.state_digest()
+            recovered_substrate.integrity_check()
+            identity = recovered_substrate.operational_identity()
+        finally:
+            recovered.close()
+
+    return {
+        "profile": PERSISTED_RESTART_PROFILE,
+        "route_scope": [
+            "lexical",
+            "exact_logical_identity",
+            "shared_evidence_neighbor",
+        ],
+        "sqlite_substrate_profile": identity.get("substrate_profile"),
+        "canonical_state_digest_consistent": digest_before == digest_after,
+        "recall_result_consistent": before == after,
+        "case_count": len(before),
+        "persisted_restart_exercised": True,
+        "vector_persistence_claimed": False,
+        "typed_graph_persistence_claimed": False,
+        "authority_effect": "none",
+    }
+
+
 def run_continuous_regression(
     *,
     fixture_path: Path,
@@ -230,8 +420,9 @@ def run_continuous_regression(
     historical_baseline: Mapping[str, Any] | None = None,
     baseline_report: Mapping[str, Any] | None = None,
     benchmark_runner: Callable[..., dict[str, Any]] = run_benchmark,
+    restart_probe: Callable[..., dict[str, Any]] = run_sqlite_persisted_restart_probe,
 ) -> dict[str, Any]:
-    """Run deterministic repeated reconstruction around the canonical benchmark."""
+    """Run deterministic replay, reconstruction, and bounded persisted restart."""
     first = enrich_admitted_f1(
         benchmark_runner(
             fixture_path=fixture_path,
@@ -253,6 +444,10 @@ def run_continuous_regression(
             agent_memory_revision=agent_memory_revision,
         )
     )
+    persisted_restart = restart_probe(
+        fixture_path=fixture_path,
+        runtime_config_path=runtime_config_path,
+    )
 
     result = first
     result["continuous_regression"] = {
@@ -261,7 +456,10 @@ def run_continuous_regression(
         "same_process_repeat_consistent": first == repeat,
         "fresh_runtime_reconstruction_consistent": first == reconstruction,
         "reconstruction_posture": "fresh_fixture_rebuild_from_canonical_inputs",
-        "persisted_restart_exercised_by_this_runner": False,
+        "persisted_restart_exercised_by_this_runner": bool(
+            persisted_restart.get("persisted_restart_exercised")
+        ),
+        "persisted_restart": persisted_restart,
         "targets": evaluate_targets(first, targets),
         "baseline_comparison": (
             compare_reports(first, enrich_admitted_f1(baseline_report))
