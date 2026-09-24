@@ -3,6 +3,7 @@
   "upstream_repository": "jiayuanz3/SWEContextBench",
   "upstream_revision": "synthetic-fixture",
   "fixture": "original schema-compatible synthetic pilot",
+  "corpus_class": "synthetic",
   "experiences": [
     {
       "instance_id": "acme__web-100",
