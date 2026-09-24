@@ -6,6 +6,7 @@ The module adds no retrieval or mutation authority.
 
 from __future__ import annotations
 
+from collections import Counter
 from copy import deepcopy
 import json
 from pathlib import Path
@@ -29,20 +30,46 @@ def _f1(precision: float, recall: float) -> float:
 
 
 def enrich_admitted_f1(report: Mapping[str, Any]) -> dict[str, Any]:
+    """Add explicit final-admission quality and refusal evidence without authority."""
     result = deepcopy(dict(report))
     systems = result.get("systems", {})
-    for system in systems.values():
+    governance_evidence: dict[str, Any] = {}
+    for system_name, system in systems.items():
+        refusal_reasons: Counter[str] = Counter()
+        false_admissions = 0
+        false_refusals = 0
         for row in system.get("cases", []):
             metrics = row.get("metrics", {})
             metrics["admitted_f1"] = _f1(
                 float(metrics.get("admitted_precision", 0.0)),
                 float(metrics.get("admitted_recall", 0.0)),
             )
+            metrics["false_admission_count"] = max(
+                0,
+                int(metrics.get("admitted_total", 0))
+                - int(metrics.get("admitted_relevant_found", 0)),
+            )
+            metrics["false_refusal_count"] = max(
+                0,
+                int(metrics.get("relevant_total", 0))
+                - int(metrics.get("admitted_relevant_found", 0)),
+            )
+            false_admissions += int(metrics["false_admission_count"])
+            false_refusals += int(metrics["false_refusal_count"])
+            for reason in row.get("result", {}).get("refusals", {}).values():
+                refusal_reasons[str(reason)] += 1
+
         aggregate = system.get("aggregate", {})
         aggregate["admitted_f1"] = _f1(
             float(aggregate.get("admitted_precision", 0.0)),
             float(aggregate.get("admitted_recall", 0.0)),
         )
+        aggregate["false_admission_count"] = false_admissions
+        aggregate["false_refusal_count"] = false_refusals
+        governance_evidence[system_name] = {
+            "refusal_reason_counts": dict(sorted(refusal_reasons.items())),
+            "authority_effect": "none",
+        }
 
     lexical = systems.get("lexical_only", {}).get("aggregate", {})
     multi = systems.get("multi_route", {}).get("aggregate", {})
@@ -70,10 +97,13 @@ def enrich_admitted_f1(report: Mapping[str, Any]) -> dict[str, Any]:
             "admitted_precision",
             "admitted_f1",
             "mean_reciprocal_rank",
+            "false_admission_count",
+            "false_refusal_count",
         ],
         "governance": "reported_separately",
         "aggregate_health_score": "not_defined",
     }
+    result["governance_evidence"] = governance_evidence
     return result
 
 
@@ -317,7 +347,6 @@ def run_sqlite_persisted_restart_probe(
                         expired_at="2026-09-23T13:00:01Z",
                     )
 
-            # These governed reads also checkpoint the direct fixture invalidation.
             before = _persisted_recall_rows(runtime, fixture, fact_to_memory)
             digest_before_close = substrate.state_digest()
         finally:
@@ -326,7 +355,6 @@ def run_sqlite_persisted_restart_probe(
         recovered = SQLiteConfiguredCompositionRuntime.recover(root, plan=plan)
         try:
             recovered_substrate = recovered.adapter.checkpoint_substrate()
-            # Measure the recovery invariant before issuing new governed reads.
             digest_immediately_after_recovery = recovered_substrate.state_digest()
             recovered_substrate.integrity_check()
             identity = recovered_substrate.operational_identity()

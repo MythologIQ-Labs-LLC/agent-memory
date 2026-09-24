@@ -42,14 +42,32 @@ class ContinuousRetrievalRegressionTests(unittest.TestCase):
 
     def test_enrichment_keeps_candidate_and_final_metrics_distinct(self) -> None:
         report = enrich_admitted_f1(self._base_report())
+        lexical = report["systems"]["lexical_only"]["aggregate"]
         multi = report["systems"]["multi_route"]["aggregate"]
         self.assertEqual(multi["candidate_recall"], 1.0)
         self.assertEqual(multi["admitted_recall"], 1.0)
         self.assertEqual(multi["admitted_precision"], 1.0)
         self.assertEqual(multi["admitted_f1"], 1.0)
+        self.assertEqual(multi["false_admission_count"], 0)
+        self.assertEqual(multi["false_refusal_count"], 0)
+        self.assertEqual(lexical["false_admission_count"], 0)
+        self.assertEqual(lexical["false_refusal_count"], 4)
         self.assertIn("candidate_recall", report["metric_contract"]["candidate_generation"])
         self.assertIn("admitted_f1", report["metric_contract"]["final_governed_admission"])
+        self.assertIn("false_admission_count", report["metric_contract"]["final_governed_admission"])
+        self.assertIn("false_refusal_count", report["metric_contract"]["final_governed_admission"])
         self.assertEqual(report["metric_contract"]["aggregate_health_score"], "not_defined")
+
+        refusal_counts = report["governance_evidence"]["multi_route"]["refusal_reason_counts"]
+        self.assertGreater(refusal_counts.get("required_isolation_domain_missing", 0), 0)
+        self.assertGreater(refusal_counts.get("superseded_not_current", 0), 0)
+        self.assertEqual(report["governance_evidence"]["multi_route"]["authority_effect"], "none")
+
+    def test_correct_refusals_are_evidence_not_governance_failures(self) -> None:
+        report = enrich_admitted_f1(self._base_report())
+        refusal_counts = report["governance_evidence"]["multi_route"]["refusal_reason_counts"]
+        self.assertGreater(sum(refusal_counts.values()), 0)
+        self.assertTrue(all(value == 0 for value in report["governance"].values()))
 
     def test_compatible_revision_comparison_classifies_each_metric(self) -> None:
         baseline = enrich_admitted_f1(self._base_report("older-revision"))
@@ -148,6 +166,8 @@ class ContinuousRetrievalRegressionTests(unittest.TestCase):
             emitted = json.loads(output.read_text(encoding="utf-8"))
         self.assertEqual(emitted["agent_memory_revision"], "runner-regression-revision")
         self.assertEqual(emitted["systems"]["multi_route"]["aggregate"]["admitted_f1"], 1.0)
+        self.assertEqual(emitted["systems"]["multi_route"]["aggregate"]["false_admission_count"], 0)
+        self.assertEqual(emitted["systems"]["multi_route"]["aggregate"]["false_refusal_count"], 0)
         self.assertTrue(emitted["continuous_regression"]["targets"]["all_expectations_met"])
         self.assertTrue(
             emitted["continuous_regression"]["persisted_restart_exercised_by_this_runner"]

@@ -40,12 +40,22 @@ jobs:
           multi = r['systems']['multi_route']['aggregate']
           assert lexical['relevant_total'] == 7
           assert lexical['admitted_recall'] == 0.428571
+          assert lexical['false_admission_count'] == 0
+          assert lexical['false_refusal_count'] == 4
           assert multi['candidate_recall'] == 1.0
           assert multi['admitted_recall'] == 1.0
           assert lexical['admitted_precision'] == 1.0
           assert multi['admitted_precision'] == 1.0
           assert multi['admitted_f1'] == 1.0
+          assert multi['false_admission_count'] == 0
+          assert multi['false_refusal_count'] == 0
           assert r['metric_contract']['aggregate_health_score'] == 'not_defined'
+          assert 'false_admission_count' in r['metric_contract']['final_governed_admission']
+          assert 'false_refusal_count' in r['metric_contract']['final_governed_admission']
+          refusal_counts = r['governance_evidence']['multi_route']['refusal_reason_counts']
+          assert refusal_counts.get('required_isolation_domain_missing', 0) > 0
+          assert refusal_counts.get('superseded_not_current', 0) > 0
+          assert r['governance_evidence']['multi_route']['authority_effect'] == 'none'
           assert r['governance']['lexical_forbidden_admission_failures'] == 0
           assert r['governance']['multi_route_forbidden_admission_failures'] == 0
           assert r['governance']['multi_route_forbidden_ranked_failures'] == 0
@@ -83,6 +93,8 @@ jobs:
               'final_recall': multi['admitted_recall'],
               'final_precision': multi['admitted_precision'],
               'final_f1': multi['admitted_f1'],
+              'false_admissions': multi['false_admission_count'],
+              'false_refusals': multi['false_refusal_count'],
               'candidate_amplification': r['comparison']['candidate_amplification'],
               'persisted_restart_profile': persisted['profile'],
           })
