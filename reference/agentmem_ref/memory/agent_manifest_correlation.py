@@ -7,8 +7,11 @@ Agent Memory receipt references that checkpoint, and preserves the external
 checkpoint verdict beside Agent Memory governance and lifecycle outcomes.
 
 A checkpoint root proves the bound log state; it does not, by itself, disclose
-or independently prove the semantic class of a newly appended operation. Agent
-Memory action semantics therefore remain in the signed Agent Memory evidence.
+or independently prove the semantic class of a newly appended operation. Exact
+Agent Manifest 0.12.0 also does not bind the supplied ``ops`` argument to the
+new checkpoint root. Agent Memory action semantics therefore remain in the
+signed Agent Memory evidence rather than being inferred from checkpoint
+acceptance.
 """
 
 from __future__ import annotations
@@ -21,8 +24,8 @@ from ..core.portable_evidence import TrustKey, sha256_ref, verify_evidence
 CORRELATION_TYPE = "agent-memory-agent-manifest-correlation"
 CORRELATION_VERSION = "1.0.0"
 AGENT_MANIFEST_SPEC_VERSION = "0.2"
-AGENT_MANIFEST_SDK_VERSION = "0.11.2"
-AGENT_MANIFEST_UPSTREAM_COMMIT = "9d26ac84461e829dba8ff97ca35748eeb874debe"
+AGENT_MANIFEST_SDK_VERSION = "0.12.0"
+AGENT_MANIFEST_UPSTREAM_COMMIT = "9478b56cc349bef01441db4e17e61849c8d69d6f"
 
 DELTA_REASONS = {"accepted", "drift", "rollback", "expired", "budget"}
 REPRESENTATIONS = {"kv", "vector", "graph"}
