@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from agentmem_ref import policy, receipts
+from agentmem_ref.adapter import Clock, GovernedMemoryAdapter, RecallContext
 from agentmem_ref.maintenance_run import (
     MetabolismMaintenanceContext,
     bind_metabolism_plan,
@@ -18,6 +19,7 @@ from agentmem_ref.metabolism import (
     RetentionConstraints,
     propose_consolidation,
 )
+from agentmem_ref.substrate import InMemoryTemporalGraph
 from tests._maintenance_run_cases import run_record
 
 
@@ -93,6 +95,36 @@ class MetabolismMaintenanceIntegrationTests(unittest.TestCase):
                 }
             )
         return documents, tuple(items)
+
+    @staticmethod
+    def _seed_proposal(
+        *,
+        proposal_id: str,
+        memory_ref: str,
+        evidence_refs: tuple[str, ...],
+    ) -> policy.Proposal:
+        return policy.Proposal(
+            proposal_id=proposal_id,
+            actor_id="agent:maintenance",
+            charter_version="charter:maintenance:1",
+            target_reference=memory_ref,
+            target_class=policy.M2,
+            scope="tenant-a/project-a",
+            operation="promotion",
+            current_strength="reinforced",
+            proposed_strength="promoted",
+            downstream_authority=policy.A1,
+            reversibility="reversible",
+            risk_class="low",
+            evidence_refs=evidence_refs,
+            estimator_refs=("estimator:seed",),
+            estimator_versions=("1",),
+            tenant_ref="tenant-a",
+            purpose="memory maintenance",
+            isolation_domain_refs=("tenant-a/project-a",),
+            required_isolation_domain_refs=("tenant-a/project-a",),
+            project_ref="project-a",
+        )
 
     def test_plan_keeps_decay_reinforcement_consolidation_and_pruning_distinct(self) -> None:
         old = self._evaluate("memory:old")
@@ -269,6 +301,64 @@ class MetabolismMaintenanceIntegrationTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "tenant/purpose"):
             bind_metabolism_plan(record, plan)
+
+    def test_metabolism_pruning_uses_governed_delete_and_invalidates_derived_recall(self) -> None:
+        adapter = GovernedMemoryAdapter(
+            InMemoryTemporalGraph(),
+            tenant="tenant-a",
+            clock=Clock(),
+        )
+        source = adapter.commit_proposal(
+            self._seed_proposal(
+                proposal_id="proposal:source",
+                memory_ref="memory:old",
+                evidence_refs=("evidence:source",),
+            ),
+            "source memory for derived rule",
+        )
+        self.assertTrue(source.committed)
+        derived = adapter.commit_proposal(
+            self._seed_proposal(
+                proposal_id="proposal:derived",
+                memory_ref="memory:derived",
+                evidence_refs=(source.fact_uuid,),
+            ),
+            "derived rule from source memory",
+        )
+        self.assertTrue(derived.committed)
+
+        evaluation = self._evaluate("memory:old")
+        plan = plan_metabolism_maintenance((evaluation,), context=self.context)
+        pruning = next(
+            item.proposal
+            for item in plan.proposals
+            if item.proposal.operation == "pruning"
+        )
+        consequence = adapter.governed_delete(
+            pruning,
+            source.fact_uuid,
+            derived_refs=(derived.fact_uuid,),
+        )
+
+        self.assertTrue(consequence.committed)
+        self.assertIsNotNone(adapter.tombstone(source.fact_uuid))
+        self.assertIsNotNone(adapter._substrate.get_fact(source.fact_uuid))
+        recall = adapter.governed_recall(
+            "derived rule",
+            RecallContext(
+                target_domain_refs=("tenant-a/project-a",),
+                principal_ref="agent:maintenance",
+                project_ref="project-a",
+                purpose="memory maintenance",
+            ),
+        )
+        self.assertIn(derived.fact_uuid, recall.candidates)
+        self.assertNotIn(derived.fact_uuid, recall.admitted)
+        self.assertEqual(
+            recall.refusals[derived.fact_uuid],
+            "derived_from_tombstoned_source",
+        )
+        self.assertEqual(adapter.undeclared_residue(source.fact_uuid), [])
 
 
 if __name__ == "__main__":
