@@ -388,6 +388,22 @@ def run_benchmark(
     }
 
 
+def _quality_failed(report: Mapping[str, Any]) -> bool:
+    quality = report["metabolism_quality"]
+    return any(
+        int(value) != 0
+        for value in (
+            quality["fixture_expectation_failures"],
+            quality["valuable_retention_behavior"]["failures"],
+            quality["ephemeral_prune_candidacy_behavior"]["failures"],
+            quality["false_permanence_pressure"]["failures"],
+            quality["stale_disputed_demotion_pressure"]["failures"],
+            quality["consolidation_source_exception_preservation"]["failures"],
+            quality["access_spam_trap_failures"],
+        )
+    )
+
+
 def _governance_failed(report: Mapping[str, Any]) -> bool:
     return any(int(value) != 0 for value in report["governance_failures"].values())
 
@@ -409,8 +425,8 @@ def main() -> None:
         agent_memory_revision=args.agent_memory_revision,
         measure_latency=args.measure_latency,
     )
-    if report["metabolism_quality"]["fixture_expectation_failures"] != 0:
-        raise SystemExit("metabolism benchmark fixture expectations failed")
+    if _quality_failed(report):
+        raise SystemExit("metabolism benchmark quality contract failed")
     if not report["operational_behavior"]["same_instance_replay_consistent"]:
         raise SystemExit("metabolism benchmark replay consistency failed")
     if not report["operational_behavior"]["fresh_instance_restart_consistent"]:
