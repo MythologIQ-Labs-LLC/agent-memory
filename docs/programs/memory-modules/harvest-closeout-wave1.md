@@ -2,7 +2,7 @@
 
 Issue: #470  
 RC umbrella: #410  
-Agent Memory audit baseline: `63d78d27df7017bcbe2687675150342771262c0f`  
+Agent Memory audit baseline: `c2d23c18d8041dea572c070d81b79e5a348556c5`  
 Status: **incomplete inventory, evidence-bound first wave**
 
 ## Purpose
@@ -11,7 +11,7 @@ This document starts the exhaustive harvest closeout required by #470.
 
 The earlier native-harvest sequence completed important planned slices. It did not prove that every materially useful mechanism from Agent Memory ancestry and external peers had been absorbed, deliberately excluded, or bounded behind interoperability.
 
-This wave records exact source revisions for the surfaces actually inspected, maps them to current Agent Memory capability, identifies one confirmed native implementation gap, and records several areas that require further disposition.
+This wave records exact source revisions for the surfaces actually inspected, maps them to current Agent Memory capability, records the now-resolved native failure-memory gap, and identifies several areas that still require further disposition.
 
 This is not a closeout certificate.
 
@@ -46,7 +46,7 @@ A source remains a runtime dependency only when interoperability itself is the i
 | Source | Exact inspected revision | Rights posture | Mechanism or lesson | Current Agent Memory posture | Required action |
 |---|---|---|---|---|---|
 | EvolveAI | `21161ce7b88dbffeb7ed59757b4d02d24a9c2acd` | same-owner first-party; public Apache-2.0 remains relevant to redistribution | decay, reinforcement, consolidation, prune/archive pressure, restart, vector and temporal behavior | **absorbed** for the native metabolism slice and major retrieval mechanisms | retain as ancestry and test oracle, not generic runtime dependency |
-| EvolveAI Shadow Genome | `21161ce7b88dbffeb7ed59757b4d02d24a9c2acd` | same-owner first-party | typed failures, stable identity, recurrence counting, persistence, bounded capacity, similarity-based recurrence evidence | **partially_absorbed**; doctrine exists but native generic failure-memory runtime was not found | implement #471; explicitly reject direct `similarity -> Block` authority |
+| EvolveAI Shadow Genome | `21161ce7b88dbffeb7ed59757b4d02d24a9c2acd` | same-owner first-party | typed failures, stable identity, recurrence counting, persistence, bounded capacity, similarity-based recurrence evidence | **absorbed** into native governed failure memory through #473 | retain as ancestry and test pressure only; direct `similarity -> Block` authority remains rejected |
 | CodeGenome | `6dac705e137a3aea795163a766c263a38285416d` | same-owner first-party; public MIT remains relevant to redistribution | vector persistence/kNN, graph traversal, overlays, impact propagation, evidence fusion, experiment loop | **partially_absorbed** | vector and generic typed graph basics are native; audit impact propagation and evidence-fusion semantics next |
 | COREFORGE | `43b423dbaf8ec1f4323f0556ed462cfa02405a22` | private same-owner first-party | runtime memory space, lineage, context broker/packet patterns, local product integration | **partially_absorbed** | generic memory ownership remains Agent Memory; separately inventory product-specific context packaging before declaring ancestry exhausted |
 | UOR Framework | `51c01382200b0179d6640b07e9c8119364ab69a1` | MIT at inspected main | deterministic identity and conformance lineage | **optional_interoperability** | keep identity lineage bounded; do not import lifecycle or PAMA semantics |
@@ -59,23 +59,26 @@ A source remains a runtime dependency only when interoperability itself is the i
 | AgentTrust TRACE | `e3111c77b89cc9870ac7218936ab956ad77de6c9` | mixed license: normative specification under Community Specification License 1.0, source/SDK/tests/examples under Apache-2.0, non-spec docs under CC BY 4.0 | portable trust/attestation/action evidence | **optional_interoperability** | correct stale source-registry wording and execute version-exact qualification under #440 |
 | Agent Manifest | `d66b6f0b18f3ca83cb93071257d8f5edce5ae850` | Apache-2.0 | deployment identity, checkpoint/delta evidence, appended-operation binding | **optional_interoperability** | #440 must qualify the intended package pair; explicitly test that memory delta evidence binds appended operations rather than only consistency/root state |
 
-## Confirmed implementation gap: negative/failure memory
+## Resolved native gap: negative/failure memory
 
-Wave 1 found one gap that is concrete enough to implement immediately.
+Wave 1 originally identified one concrete generic gap: Agent Memory doctrine defined failure memory, but no native generic runtime equivalent to the EvolveAI Shadow Genome path was present.
 
-Agent Memory doctrine already defines failure memory with attempt, context, expected and actual outcome, causal status, root-cause candidates, correction, verification, applicability, and recheck/expiry semantics. The canonical ownership map nevertheless still records negative/failure memory as requiring further native implementation.
+PR #473 closed that implementation gap without copying Shadow Genome's authority shortcut. Native Agent Memory now owns:
 
-EvolveAI Shadow Genome supplies useful ancestry:
+- stable logical failure identity;
+- typed failure revisions with observed, inferred, or hypothesis causal status;
+- recurrence evidence that repeated recall cannot manufacture;
+- correction, dispute, supersession, retraction, and tombstone behavior;
+- scope-aware typed recall isolation;
+- restart-safe owner state through `CheckpointedFailureMemory` composed with the existing restart runtime;
+- adversarial evidence that similarity, severity, impact, and recurrence do not create action or mutation authority;
+- bounded quality, performance, and governance reporting without an aggregate health score.
 
-- typed failure categories and severity;
-- deterministic failure identity;
-- recurrence counting;
-- persistence/import/export;
-- active/inactive state;
-- bounded capacity;
-- semantic similarity for recurrence detection.
+Exact evaluated PR head: `b0c9a3edd88c87070c949bd69359a042f6c30a80`.
 
-Its authority shape is not acceptable as Agent Memory doctrine. The EvolveAI interceptor may return `Block` directly from similarity/threshold logic. Agent Memory must instead preserve:
+The remaining claim boundary is intentional: the bounded benchmark does not claim that retrieving a failure memory automatically prevents a downstream action failure. Agent Memory supplies governed evidence; downstream execution remains separately governed.
+
+The harvested shape is therefore:
 
 ```text
 similarity / recurrence / severity
@@ -84,7 +87,11 @@ similarity / recurrence / severity
   -> existing action / mutation authority
 ```
 
-Issue #471 owns the native implementation slice.
+not:
+
+```text
+similarity -> Block
+```
 
 ## CodeGenome gap pressure
 
@@ -170,7 +177,6 @@ Still required under #470:
 - cMCP current-upstream disposition beyond the existing qualified pin;
 - UOR final/publication follow-up where provisional sources change;
 - source-registry and NOTICE reconciliation;
-- implementation evidence for #471;
 - any additional bounded implementation issue exposed by later waves.
 
 ## Current conclusion
@@ -180,7 +186,7 @@ The accurate state is:
 ```text
 planned native-harvest sequence: complete
 exhaustive ancestry/peer harvest: not complete
-one confirmed native gap: negative/failure memory (#471)
+negative/failure memory gap: resolved natively in #473
 several bounded disposition audits: still active
 Jin benchmark dependency: unrelated to this workstream
 ```
