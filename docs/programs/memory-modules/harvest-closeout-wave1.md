@@ -1,19 +1,19 @@
-# Harvest Closeout Wave 1
+# Harvest Closeout Matrix
 
 Issue: #470  
 RC umbrella: #410  
-Agent Memory audit baseline: `c2d23c18d8041dea572c070d81b79e5a348556c5`  
-Status: **incomplete inventory, evidence-bound first wave**
+Agent Memory audit baseline: `92883979d990b9d92fe32c13f4c3b28978cd09ac`  
+Status: **incomplete exhaustive closeout, evidence-bound dispositions recorded through CodeGenome and COREFORGE**
 
 ## Purpose
 
-This document starts the exhaustive harvest closeout required by #470.
+This document is the living harvest closeout required by #470.
 
 The earlier native-harvest sequence completed important planned slices. It did not prove that every materially useful mechanism from Agent Memory ancestry and external peers had been absorbed, deliberately excluded, or bounded behind interoperability.
 
-This wave records exact source revisions for the surfaces actually inspected, maps them to current Agent Memory capability, records the now-resolved native failure-memory gap, and identifies several areas that still require further disposition.
+This matrix records exact source revisions for the surfaces actually inspected, maps them to current Agent Memory capability, and requires an explicit disposition for mechanisms that should not become native Agent Memory behavior.
 
-This is not a closeout certificate.
+This is not yet a closeout certificate.
 
 ## Decision rule
 
@@ -41,14 +41,14 @@ inspect / validate ancestry
 
 A source remains a runtime dependency only when interoperability itself is the intended boundary.
 
-## Wave 1 source matrix
+## Current source matrix
 
 | Source | Exact inspected revision | Rights posture | Mechanism or lesson | Current Agent Memory posture | Required action |
 |---|---|---|---|---|---|
 | EvolveAI | `21161ce7b88dbffeb7ed59757b4d02d24a9c2acd` | same-owner first-party; public Apache-2.0 remains relevant to redistribution | decay, reinforcement, consolidation, prune/archive pressure, restart, vector and temporal behavior | **absorbed** for the native metabolism slice and major retrieval mechanisms | retain as ancestry and test oracle, not generic runtime dependency |
 | EvolveAI Shadow Genome | `21161ce7b88dbffeb7ed59757b4d02d24a9c2acd` | same-owner first-party | typed failures, stable identity, recurrence counting, persistence, bounded capacity, similarity-based recurrence evidence | **absorbed** into native governed failure memory through #473 | retain as ancestry and test pressure only; direct `similarity -> Block` authority remains rejected |
-| CodeGenome | `6dac705e137a3aea795163a766c263a38285416d` | same-owner first-party; public MIT remains relevant to redistribution | vector persistence/kNN, graph traversal, overlays, impact propagation, evidence fusion, experiment loop | **partially_absorbed** | vector and generic typed graph basics are native; audit impact propagation and evidence-fusion semantics next |
-| COREFORGE | `43b423dbaf8ec1f4323f0556ed462cfa02405a22` | private same-owner first-party | runtime memory space, lineage, context broker/packet patterns, local product integration | **partially_absorbed** | generic memory ownership remains Agent Memory; separately inventory product-specific context packaging before declaring ancestry exhausted |
+| CodeGenome | `6dac705e137a3aea795163a766c263a38285416d` | same-owner first-party; public MIT remains relevant to redistribution | vector persistence/kNN, typed graph traversal, impact propagation, confidence fusion, experiment loop | **mixed final disposition**: generic retrieval/impact mechanics and evaluation loop absorbed; code blast radius specialized; noisy-OR evidence fusion intentionally not adopted as generic evidence qualification | retain CodeGenome as code-domain observation source and ancestry, not generic runtime dependency |
+| COREFORGE | `43b423dbaf8ec1f4323f0556ed462cfa02405a22` | private same-owner first-party | Vault/NeuroSpace runtime memory, lineage, provider abstraction, context broker/packet, bundle assembly, product integration | **mixed final disposition**: generic memory/runtime/governance lessons absorbed or superseded; packet/bundle/cache/persona packaging remains downstream product behavior | migrate downstream toward Agent Memory canonical memory APIs; do not preserve EvolveAI/CodeGenome as generic memory owners |
 | UOR Framework | `51c01382200b0179d6640b07e9c8119364ab69a1` | MIT at inspected main | deterministic identity and conformance lineage | **optional_interoperability** | keep identity lineage bounded; do not import lifecycle or PAMA semantics |
 | uor-addr | `165b51e3e2113ee5d032730cde709335d4fe9b60` | external open-source profile already qualified separately | exact content references | **optional_interoperability** | existing optional profile remains appropriate; no ordinary runtime dependency |
 | uor-r4 | `552d847d49fb263966165004b835f2f53cccaae1` | MIT | exact addressed/versioned memory experiments, keyed rebinding/overwrite pressure, unusually explicit matched controls and negative-result discipline | **intentionally_not_adopted** as a geometric model; research pressure remains useful | evaluate its long-horizon keyed rebinding/overwrite fixture shape as benchmark pressure without adopting geometric predictive claims |
@@ -93,25 +93,182 @@ not:
 similarity -> Block
 ```
 
-## CodeGenome gap pressure
+## CodeGenome final disposition
 
-The existing Agent Memory CodeGenome qualification proves provider/domain capabilities, but provider qualification is not the same thing as native generic absorption.
+CodeGenome current main was inspected at `6dac705e137a3aea795163a766c263a38285416d`.
 
-The next CodeGenome pass must separately answer:
+### Generic impact propagation: absorbed
 
-1. Does native Agent Memory already implement a generic equivalent of impact/blast-radius propagation over typed relations?
-2. If yes, where is the bounded evidence and authority model?
-3. If no, is generic impact propagation useful enough to implement, or should it remain a specialized code-domain source signal?
-4. Which evidence-fusion mechanisms are genuinely useful without allowing combined confidence to become truth, recall admission, or mutation authority?
-5. Which experiment/performance-loop lessons are already covered by #465, and which remain unabsorbed?
+CodeGenome's generic propagation mechanism starts from changed graph nodes, traverses in a declared direction, multiplies edge confidence along paths, and keeps the strongest propagated score. Its change detector composes this with code-specific changed-symbol discovery and process/blast-radius presentation.
 
-No implementation issue should be opened merely because CodeGenome contains a feature. The feature must earn a generic Agent Memory role.
+Agent Memory #461 already harvested the generic mechanism into native typed graph retrieval:
+
+```text
+seed fact
+  -> typed relation traversal
+  -> outgoing / incoming / both direction
+  -> path score = product of relation retrieval weights
+  -> deterministic best path
+  -> bounded depth / fan-out / candidate work
+  -> candidate evidence
+  -> governed final admission
+```
+
+That is the generic memory capability we actually need. It is intentionally named retrieval/path evidence rather than universal impact truth.
+
+CodeGenome's higher-level blast-radius meaning remains code-domain semantics. `changed symbol -> affected process` is useful evidence that CodeGenome may continue to produce, but Agent Memory does not need to copy the code ontology to own generic relation propagation.
+
+Disposition:
+
+```text
+generic weighted directional propagation -> absorbed in Agent Memory #461
+code/process blast radius               -> specialized_source_only
+confidence/criticality impact score     -> specialized_source_only
+```
+
+No new generic implementation issue is warranted for CodeGenome impact propagation.
+
+### Noisy-OR confidence fusion: intentionally not adopted as generic evidence qualification
+
+CodeGenome merges duplicate relation edges and combines path confidence using noisy-OR. That is useful inside its code-graph estimator, where confidence is a retrieval/graph signal.
+
+Agent Memory has a stronger requirement at the governance/evidence boundary: repeated or correlated assertions must not become independent verification merely because several paths report them. The native evidence-qualification layer groups evidence by:
+
+- derivation lineage;
+- declared shared failure domain;
+- identical deterministic procedure/input/version.
+
+It also keeps evidence class and verification status separate.
+
+A generic noisy-OR merge would therefore be actively dangerous if reused as evidence strength or authority without dependence proof. It can inflate correlated observations and make repetition resemble corroboration.
+
+Disposition:
+
+```text
+CodeGenome noisy-OR in code-graph estimator -> valid specialized implementation
+Agent Memory generic evidence fusion       -> intentionally_not_adopted
+Agent Memory evidence dependence grouping  -> native stronger boundary
+```
+
+This does not prohibit a future retrieval-only estimator from using an explicitly qualified numerical fusion model. Such an estimator would still have `authority_effect = none` and would need dependence/calibration evidence of its own. No present gap requires one.
+
+### Experiment/evaluation loop: absorbed at the generic memory level
+
+CodeGenome's experiment loop was useful ancestry for continuous evaluation pressure. #465 now gives Agent Memory its own continuous retrieval/memory regression layer with fixture, runtime-configuration, route-profile, revision, and comparability binding.
+
+Agent Memory does not need CodeGenome's code-specific experiment machinery as a runtime dependency.
+
+Disposition: **absorbed** for the generic continuous memory-evaluation lesson.
+
+## COREFORGE Vault / NeuroSpace final disposition
+
+COREFORGE current main was inspected at `43b423dbaf8ec1f4323f0556ed462cfa02405a22`.
+
+The current code confirms that Vault/NeuroSpace is not merely old documentation. It has executable provider, context-packet, broker, lineage, mutation-contract, bundle, assembler, cache, inspection, graph-overlay, and evaluation surfaces.
+
+That makes it valuable ancestry. It does not make those surfaces the end-state generic memory owner.
+
+### VaultMemoryProvider: obsolete as the generic ownership boundary
+
+The current trait combines:
+
+```text
+domain
+retrieve -> ContextPacket
+propose_mutation -> MutationPlan
+apply_approved_mutation -> LineageRef
+```
+
+This was a useful transition seam when EvolveAI and CodeGenome were treated as providers behind COREFORGE.
+
+Agent Memory now owns the generic runtime, retrieval, mutation-governance, currentness, correction, deletion, restart, and provenance contracts directly. Keeping the provider abstraction as the canonical generic-memory architecture would reintroduce the fragmentation #455 corrected.
+
+Disposition:
+
+```text
+VaultMemoryProvider as generic owner -> obsolete_or_superseded
+COREFORGE adapter to Agent Memory     -> downstream product integration
+```
+
+COREFORGE may still use provider/plugin patterns for product-specific sources and inference adapters. It should not require EvolveAI or CodeGenome to own generic memory behavior.
+
+### MutationContract and LineageRef: absorbed/superseded by stronger Agent Memory semantics
+
+COREFORGE's `MutationContract` records actor, target, operation, justification, and validation metric, with `Approved`, `Vetoed`, or `PendingReview` planning outcomes. `LineageRef` records a source and a small active/archive/veto/promote state vocabulary.
+
+Those are useful ancestry patterns, but Agent Memory PAMA, receipts, lifecycle/currentness, provenance, deletion/residue, correction, and restart contracts now carry a materially stronger generic boundary.
+
+Disposition: **obsolete_or_superseded** for generic memory governance. Do not create a second authority layer by importing these structures beside PAMA.
+
+### ContextBroker and ContextPacket: generic selection absorbed, product envelope stays downstream
+
+The current broker aggregates provider retrieval results into a packet containing request/user/agent identity, memory domains, references, excerpts, and a governance view.
+
+Agent Memory now owns generic candidate generation, multi-route retrieval, typed graph traversal, scope/isolation/currentness checks, and governed final admission. Those are the memory-selection semantics that must remain canonical.
+
+COREFORGE's final packet, however, is a product concern. Persona, intent, bundle shape, UI-facing inspection, local cache state, and application-specific presentation do not need to move into Agent Memory merely because they sit next to retrieved memories.
+
+Disposition:
+
+```text
+generic memory selection/admission -> absorbed in Agent Memory
+ContextPacket presentation envelope -> specialized_source_only / downstream product
+persona + intent bundle assembly    -> specialized_source_only / downstream product
+cache and UI inspection views       -> specialized_source_only / downstream product
+```
+
+### Confidence-threshold redaction: intentionally not adopted
+
+The current broker's `redact_sensitive` helper removes excerpts below a numeric confidence threshold and records that low-confidence excerpts were redacted.
+
+Agent Memory must not generalize this into a privacy or authorization mechanism.
+
+```text
+confidence
+  != sensitivity
+  != access permission
+  != scope
+  != privacy authority
+```
+
+A low-confidence value may be perfectly authorized to disclose. A high-confidence value may be highly sensitive and forbidden. Scope, policy, identity, and isolation must remain the load-bearing admission controls.
+
+Disposition: **intentionally_not_adopted** as generic governance behavior.
+
+### BundleContract: useful downstream completeness contract, not a memory authority primitive
+
+COREFORGE's bundle contract distinguishes required and optional output fields and reports missing required fields. That fail-closed completeness pattern is useful for product context assembly.
+
+It does not determine whether an underlying memory was true, current, authorized, or admissible. Agent Memory should therefore expose enough metadata for consumers to build required-field contracts without moving application-specific bundle schemas into the memory subsystem.
+
+Disposition: **specialized_source_only** for COREFORGE/product orchestration.
+
+### COREFORGE conclusion
+
+No remaining COREFORGE Vault/NeuroSpace mechanism inspected in this pass establishes a new generic Agent Memory implementation gap.
+
+The architecture direction is now clearer:
+
+```text
+Agent Memory
+  -> canonical generic memory contract/runtime
+  -> governed retrieval + lifecycle + provenance + restart
+  -> stable consumer-facing facade
+        |
+        v
+COREFORGE
+  -> persona / intent / local application orchestration
+  -> packet and bundle presentation
+  -> UI / cache / inference-plugin integration
+```
+
+The remaining work between these repositories is migration/integration, not harvesting a second generic memory subsystem into Agent Memory.
 
 ## UOR disposition
 
 The current UOR ecosystem is broader than the older Agent Memory `uor-addr` review.
 
-Wave 1 does not justify importing UOR as a runtime foundation.
+The current review does not justify importing UOR as a runtime foundation.
 
 Useful lessons identified so far are narrower:
 
@@ -126,7 +283,7 @@ Useful lessons identified so far are narrower:
 
 These lessons do not make UOR identity into lifecycle, retrieval authority, PAMA, or a universal ontology.
 
-`uor-r4` in particular is research pressure, not an architecture target. Its own current documentation is explicit that the project is pre-alpha and that its broader geometric predictive claims are not established. Agent Memory should copy that evidentiary honesty before it copies any mechanism.
+`uor-r4` in particular is research pressure, not an architecture target. Its own current documentation is explicit that the project is pre-alpha and that its broader geometric predictive claims are not established. Agent Memory should preserve that evidentiary discipline before adopting any mechanism.
 
 ## Governance and trust peers
 
@@ -167,17 +324,16 @@ consistent root / checkpoint relation
 
 #440 should exercise this boundary rather than treating a dependency bump as qualification.
 
-## What this wave does not close
+## What remains open under #470
 
-Still required under #470:
+The CodeGenome impact/evidence-fusion audit and COREFORGE Vault/NeuroSpace inventory are now dispositioned. Remaining closeout work includes:
 
-- current detailed CodeGenome impact/evidence-fusion disposition;
-- current detailed COREFORGE Vault/Neurospace inventory against native Agent Memory;
 - PrismPM verification/conformance review where concrete;
 - cMCP current-upstream disposition beyond the existing qualified pin;
 - UOR final/publication follow-up where provisional sources change;
-- source-registry and NOTICE reconciliation;
-- any additional bounded implementation issue exposed by later waves.
+- TRACE source-registry and NOTICE reconciliation;
+- version-exact TRACE + Agent Manifest qualification under #440;
+- any additional bounded implementation issue exposed by those passes.
 
 ## Current conclusion
 
@@ -187,7 +343,9 @@ The accurate state is:
 planned native-harvest sequence: complete
 exhaustive ancestry/peer harvest: not complete
 negative/failure memory gap: resolved natively in #473
-several bounded disposition audits: still active
+CodeGenome impact/evidence-fusion disposition: complete
+COREFORGE Vault/NeuroSpace inventory: complete for generic-memory harvest
+remaining external peer / rights closeout: active
 Jin benchmark dependency: unrelated to this workstream
 ```
 

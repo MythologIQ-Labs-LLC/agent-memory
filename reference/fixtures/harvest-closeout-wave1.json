@@ -1,14 +1,14 @@
 {
-  "schema_version": "1.0.0",
-  "artifact_id": "agent-memory-harvest-closeout-wave1",
+  "schema_version": "1.1.0",
+  "artifact_id": "agent-memory-harvest-closeout-matrix",
   "issue": 470,
-  "agent_memory_revision": "c2d23c18d8041dea572c070d81b79e5a348556c5",
-  "status": "incomplete_wave",
+  "agent_memory_revision": "92883979d990b9d92fe32c13f4c3b28978cd09ac",
+  "status": "incomplete_exhaustive_closeout",
   "claim_boundary": {
     "planned_native_harvest_sequence_complete": true,
     "exhaustive_harvest_complete": false,
     "adapter_or_comparator_counts_as_native_absorption": false,
-    "external_benchmark_required_for_this_wave": false
+    "external_benchmark_required_for_this_workstream": false
   },
   "allowed_postures": [
     "absorbed",
@@ -51,30 +51,114 @@
     {
       "source": "MythologIQ-Labs-LLC/CodeGenome",
       "revision": "6dac705e137a3aea795163a766c263a38285416d",
-      "source_class": "same_owner_first_party_ancestry_and_specialized_code_domain_source",
+      "source_class": "same_owner_first_party_ancestry",
       "rights_basis": "same_owner_adoption; public MIT remains relevant to redistribution",
-      "mechanism": "vector persistence/kNN, graph traversal, overlays, impact propagation, evidence fusion, experiment/evaluation loop",
-      "agent_memory_equivalent": "native vector retrieval, typed graph traversal and continuous retrieval regression cover major generic slices",
-      "posture": "partially_absorbed",
-      "required_action": "audit impact propagation and evidence fusion for a generic role before opening further implementation work",
-      "native_owner": "Agent Memory for generic memory; CodeGenome for code-domain observations",
+      "mechanism": "generic weighted directional relation propagation: path confidence multiplied across edges and strongest reachable score retained",
+      "agent_memory_equivalent": "NativeTypedGraphCandidateRetriever with outgoing/incoming/both traversal, multiplicative relation path score, deterministic best-path selection, bounded depth/fan-out/work and governed final admission",
+      "posture": "absorbed",
+      "required_action": "retain CodeGenome implementation as ancestry and code-domain oracle; no additional generic impact-propagation issue required",
+      "native_owner": "Agent Memory",
       "runtime_dependency_required": false,
-      "qualification_evidence": ["#456", "#461", "#465"],
-      "known_limitations": "Provider/domain capability qualification is not proof of native generic impact propagation."
+      "qualification_evidence": ["#461", "#462", "reference/agentmem_ref/runtime/recall_control.py"],
+      "known_limitations": "Agent Memory deliberately treats propagated path score as retrieval evidence, not universal impact truth or authority."
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/CodeGenome",
+      "revision": "6dac705e137a3aea795163a766c263a38285416d",
+      "source_class": "same_owner_specialized_code_domain_source",
+      "rights_basis": "same-owner first-party; public MIT remains relevant to redistribution",
+      "mechanism": "changed-symbol to affected-process blast radius and confidence times domain-criticality impact score",
+      "agent_memory_equivalent": "generic graph propagation is native; code/process ontology and criticality semantics remain outside generic memory",
+      "posture": "specialized_source_only",
+      "required_action": "allow CodeGenome to emit code-domain blast-radius observations/evidence through bounded ingestion when useful",
+      "native_owner": "CodeGenome for code-domain interpretation; Agent Memory for generic relation memory",
+      "runtime_dependency_required": false,
+      "qualification_evidence": ["#461", "#462"],
+      "known_limitations": "Copying the code ontology into Agent Memory would turn a generic memory substrate into a code-analysis product."
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/CodeGenome",
+      "revision": "6dac705e137a3aea795163a766c263a38285416d",
+      "source_class": "same_owner_first_party_ancestry",
+      "rights_basis": "same_owner_adoption; public MIT remains relevant to redistribution",
+      "mechanism": "FusedOverlay duplicate-edge and multi-path confidence fusion using noisy-OR",
+      "agent_memory_equivalent": "native evidence qualification groups correlated claims by derivation lineage, shared failure domain and identical deterministic procedure before evidence sufficiency is evaluated",
+      "posture": "intentionally_not_adopted",
+      "required_action": "do not use noisy-OR as generic evidence qualification, truth, recall admission or authority; any future retrieval-only numerical fusion must separately prove dependence/calibration bounds",
+      "native_owner": "Agent Memory evidence qualification",
+      "runtime_dependency_required": false,
+      "qualification_evidence": ["reference/agentmem_ref/core/evidence_qualification.py", "ADR-037"],
+      "known_limitations": "Noisy-OR assumes independent paths. Generic fusion without explicit dependence proof can make correlated repetition resemble corroboration."
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/CodeGenome",
+      "revision": "6dac705e137a3aea795163a766c263a38285416d",
+      "source_class": "same_owner_first_party_ancestry",
+      "rights_basis": "same_owner_adoption; public MIT remains relevant to redistribution",
+      "mechanism": "experiment/performance loop for graph and retrieval changes",
+      "agent_memory_equivalent": "continuous retrieval and memory regression with fixture/config/route/revision comparability binding",
+      "posture": "absorbed",
+      "required_action": "continue Agent Memory-native regression rather than depend on CodeGenome experiment runtime",
+      "native_owner": "Agent Memory",
+      "runtime_dependency_required": false,
+      "qualification_evidence": ["#465", "#466"],
+      "known_limitations": "CodeGenome may retain code-domain experiments independently."
     },
     {
       "source": "MythologIQ-Labs-LLC/COREFORGE",
       "revision": "43b423dbaf8ec1f4323f0556ed462cfa02405a22",
       "source_class": "same_owner_first_party_ancestry_and_downstream_product",
       "rights_basis": "private same-owner first-party",
-      "mechanism": "runtime memory space, lineage, context broker/packet patterns and product integration",
-      "agent_memory_equivalent": "canonical memory runtime/substrate and retrieval composition exist; developer facade remains an RC gate",
-      "posture": "partially_absorbed",
-      "required_action": "inventory current Vault/Neurospace and context packaging against Agent Memory before exhaustive closeout",
-      "native_owner": "Agent Memory for generic memory; COREFORGE for product concerns",
+      "mechanism": "VaultMemoryProvider as canonical generic memory-provider boundary over EvolveAI, CodeGenome or other provider implementations",
+      "agent_memory_equivalent": "Agent Memory owns canonical generic runtime, retrieval, mutation governance, currentness, correction, deletion, restart and provenance",
+      "posture": "obsolete_or_superseded",
+      "required_action": "migrate downstream COREFORGE integration toward Agent Memory canonical APIs; provider/plugin patterns may remain for product-specific sources and inference",
+      "native_owner": "Agent Memory for generic memory; COREFORGE for product integration",
       "runtime_dependency_required": false,
-      "qualification_evidence": ["#410", "#427"],
-      "known_limitations": "Current COREFORGE product-specific packaging was not exhaustively inspected in wave 1."
+      "qualification_evidence": ["#410", "#427", "#455", "#456", "#461", "#463"],
+      "known_limitations": "Preserving the old provider boundary as the end-state architecture would recreate cross-repository generic-memory ownership."
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/COREFORGE",
+      "revision": "43b423dbaf8ec1f4323f0556ed462cfa02405a22",
+      "source_class": "same_owner_first_party_ancestry",
+      "rights_basis": "private same-owner first-party",
+      "mechanism": "MutationContract, MutationPlan and LineageRef generic memory-governance/lifecycle patterns",
+      "agent_memory_equivalent": "PAMA decisions/receipts plus native currentness, correction, deletion/residue, lifecycle, provenance and restart contracts",
+      "posture": "obsolete_or_superseded",
+      "required_action": "do not create a second generic memory authority layer beside PAMA",
+      "native_owner": "Agent Memory",
+      "runtime_dependency_required": false,
+      "qualification_evidence": ["ADR-004", "docs/04-governance-and-pama.md", "#410"],
+      "known_limitations": "COREFORGE may keep application-local orchestration state, but it must not redefine generic memory authority."
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/COREFORGE",
+      "revision": "43b423dbaf8ec1f4323f0556ed462cfa02405a22",
+      "source_class": "downstream_product",
+      "rights_basis": "private same-owner first-party",
+      "mechanism": "ContextPacket, persona/intent bundle assembly, required/optional bundle fields, cache, inspection and UI-facing context presentation",
+      "agent_memory_equivalent": "Agent Memory owns generic governed retrieval/admission; final packet/bundle presentation remains downstream",
+      "posture": "specialized_source_only",
+      "required_action": "expose sufficient governed metadata through Agent Memory's developer facade so COREFORGE can build product packets without owning memory semantics",
+      "native_owner": "COREFORGE for product packaging; Agent Memory for underlying memory semantics",
+      "runtime_dependency_required": true,
+      "qualification_evidence": ["#410"],
+      "known_limitations": "Product completeness/freshness contracts do not establish truth, currentness, permission or memory authority."
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/COREFORGE",
+      "revision": "43b423dbaf8ec1f4323f0556ed462cfa02405a22",
+      "source_class": "same_owner_first_party_ancestry",
+      "rights_basis": "private same-owner first-party",
+      "mechanism": "ContextBroker redact_sensitive removes excerpts below a numeric confidence threshold",
+      "agent_memory_equivalent": "scope, identity, isolation, currentness and policy are explicit governed recall-admission controls",
+      "posture": "intentionally_not_adopted",
+      "required_action": "never generalize confidence thresholding into privacy, sensitivity or authorization semantics",
+      "native_owner": "Agent Memory governance boundary",
+      "runtime_dependency_required": false,
+      "qualification_evidence": ["#461", "reference/agentmem_ref/runtime/adapter.py"],
+      "known_limitations": "Confidence is orthogonal to sensitivity and access permission. A high-confidence value can still be forbidden."
     },
     {
       "source": "UOR-Foundation/UOR-Framework",
@@ -204,13 +288,20 @@
     }
   ],
   "confirmed_gaps": [],
+  "completed_disposition_audits": [
+    "CodeGenome generic impact propagation",
+    "CodeGenome evidence fusion",
+    "CodeGenome continuous evaluation ancestry",
+    "COREFORGE VaultMemoryProvider generic ownership",
+    "COREFORGE mutation and lineage ancestry",
+    "COREFORGE ContextPacket and bundle packaging",
+    "COREFORGE confidence-threshold redaction"
+  ],
   "next_wave": [
-    "CodeGenome generic impact propagation disposition",
-    "CodeGenome evidence-fusion disposition",
-    "COREFORGE Vault/Neurospace and context packaging inventory",
     "PrismPM concrete verification/conformance review",
     "cMCP current-upstream review beyond existing qualified pin",
     "TRACE source-registry and NOTICE reconciliation",
+    "Agent Manifest plus TRACE version-exact qualification under issue 440",
     "UOR provisional/final publication follow-up"
   ]
 }
