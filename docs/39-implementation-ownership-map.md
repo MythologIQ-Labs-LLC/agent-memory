@@ -70,7 +70,7 @@ Maturity and ownership are separate. Declaring Agent Memory the owner does not p
 | Context assembly semantics | **Agent Memory** | COREFORGE broker/packet ancestry | downstream product-specific presentation/orchestration | native-owned; retrieval composition implemented, product facade still evolving |
 | Correction / dispute / supersession | **Agent Memory** | prior product workflows as ancestry | all consumers | native-owned / implemented in current governed runtime |
 | Durable decision memory | **Agent Memory** | product implementations may consume profile | decision-oriented products/agents | native-owned profile |
-| Negative / failure memory | **Agent Memory** | Shadow Genome concepts from EvolveAI ancestry | downstream risk/planning consumers | native-owned; further native implementation planned |
+| Negative / failure memory | **Agent Memory** | Shadow Genome concepts from EvolveAI ancestry | downstream risk/planning consumers | native-owned / implemented through #471 / PR #473; generic standalone owner remains process-local, bounded checkpoint/recovery composition proven |
 | Continuous memory evaluation | **Agent Memory** | CodeGenome experiment-loop ancestry | CI/release/benchmark consumers | native-owned; initial retrieval benchmarks exist, broader loop planned |
 | Conformance | **Agent Memory** | optional verification peers such as PrismPM may strengthen evidence | every implementation | native-owned / implemented |
 
@@ -137,6 +137,8 @@ EvolveAI remains implementation ancestry and a behavioral/test oracle for capabi
 - restart behavior.
 
 The end-state owner of those generic capabilities is Agent Memory.
+
+Negative/failure memory is now a concrete example of that ownership rule. #471 / PR #473 harvested stable failure identity, typed revision/history, recurrence evidence, currentness, typed recall isolation, and bounded checkpoint/recovery behavior into native Agent Memory code while explicitly rejecting Shadow Genome's direct similarity-to-block authority shape.
 
 An EvolveAI estimator may still be useful in experiments or optional specialized deployments. Its score or proposal cannot become memory authority merely because the mechanism originated in first-party code.
 
@@ -292,19 +294,20 @@ Ownership is not maturity. A native module can still be experimental, partial, o
 
 ## Current execution direction
 
-Issue #455 owns this architecture correction.
+Issue #470 now owns the exhaustive ancestry/peer harvest closeout. The planned native sequence through semantic/vector retrieval, typed temporal/relational graph retrieval, metabolism, and continuous evaluation has landed, and #471 / PR #473 closed the negative/failure-memory implementation gap exposed by the first harvest-closeout wave.
 
-Issue #456 owns the first concrete harvest slice: native semantic/vector candidate retrieval using EvolveAI and CodeGenome as behavioral references, not runtime dependencies.
-
-The broader sequence is:
+The current direction is therefore:
 
 ```text
-native semantic/vector retrieval
-  -> native temporal/relational/graph retrieval
-  -> native metabolism and lifecycle depth
-  -> continuous native memory evaluation
+completed native slices
+  -> evidence-bound harvest matrix
+  -> classify remaining ancestry/peer mechanisms
+  -> implement only material generic gaps
+  -> preserve specialized/interoperability boundaries where appropriate
   -> downstream products delegate generic memory to Agent Memory
 ```
+
+Remaining #470 work includes the bounded CodeGenome impact/evidence-fusion disposition, COREFORGE Vault/Neurospace and context-packaging inventory, source-rights/NOTICE reconciliation, and other peer reviews already recorded in the harvest matrix. Those audits must not be converted into implementation merely because a source contains a feature.
 
 ## Doctrine
 
