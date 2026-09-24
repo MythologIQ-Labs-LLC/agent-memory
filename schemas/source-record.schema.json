@@ -31,6 +31,7 @@
       "type": "string",
       "enum": [
         "verified_open_license",
+        "same_owner_first_party",
         "author_originated",
         "permission_verified",
         "private_internal",
@@ -43,6 +44,7 @@
       "enum": [
         "citation_only",
         "independent_synthesis",
+        "same_owner_adoption",
         "author_originated",
         "licensed_reuse",
         "permission_granted"
@@ -61,7 +63,7 @@
     {
       "if": {
         "properties": {
-          "reuse_mode": {"enum": ["licensed_reuse", "permission_granted"]}
+          "reuse_mode": {"enum": ["licensed_reuse", "permission_granted", "same_owner_adoption"]}
         },
         "required": ["reuse_mode"]
       },
@@ -69,6 +71,24 @@
         "properties": {
           "reuse_basis": {"type": "string", "minLength": 1}
         }
+      }
+    },
+    {
+      "if": {
+        "properties": {"rights_status": {"const": "same_owner_first_party"}},
+        "required": ["rights_status"]
+      },
+      "then": {
+        "properties": {"reuse_mode": {"const": "same_owner_adoption"}}
+      }
+    },
+    {
+      "if": {
+        "properties": {"reuse_mode": {"const": "same_owner_adoption"}},
+        "required": ["reuse_mode"]
+      },
+      "then": {
+        "properties": {"rights_status": {"const": "same_owner_first_party"}}
       }
     },
     {

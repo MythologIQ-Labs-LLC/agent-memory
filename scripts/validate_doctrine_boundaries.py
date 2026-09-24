@@ -73,15 +73,28 @@ def main() -> int:
     for index, record in enumerate(registry.get("sources", []) if isinstance(registry, dict) else []):
         if not isinstance(record, dict):
             continue
-        searchable = " ".join(
+        # Source identity fields determine whether PAMA itself has been
+        # registered as an external source. Provenance notes are deliberately
+        # excluded so a record may state a negative boundary such as
+        # "this implementation does not own PAMA" without being mistaken for
+        # the source of native doctrine.
+        source_identity = " ".join(
             str(record.get(field, ""))
-            for field in ("source_id", "title", "source_type", "repository", "provenance_note")
+            for field in ("source_id", "title", "source_type", "repository")
         ).lower()
-        if "pama" in searchable:
+        if "pama" in source_identity:
             errors.append(
                 f"sources/source-registry.json sources[{index}]: native PAMA doctrine must not be registered as an external source"
             )
-        if DISALLOWED_ADJACENT_PRODUCT in searchable:
+
+        # Adjacent-product drift remains stricter and includes provenance notes,
+        # because retaining that product anywhere in active source provenance is
+        # itself the boundary this validator is meant to catch.
+        adjacent_product_searchable = " ".join(
+            str(record.get(field, ""))
+            for field in ("source_id", "title", "source_type", "repository", "provenance_note")
+        ).lower()
+        if DISALLOWED_ADJACENT_PRODUCT in adjacent_product_searchable:
             errors.append(
                 f"sources/source-registry.json sources[{index}]: adjacent private product must not be retained as source provenance without a new explicit value decision"
             )
