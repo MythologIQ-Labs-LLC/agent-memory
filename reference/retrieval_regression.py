@@ -1,11 +1,7 @@
-"""Continuous regression layer over the existing retrieval-quality benchmark.
+"""Continuous regression evidence over the canonical retrieval benchmark.
 
-This module does not execute a second retrieval implementation. It repeatedly
-invokes the canonical deterministic benchmark, enriches its admitted metrics
-with F1, binds directional evaluation targets, compares compatible reports, and
-probes an actual SQLite close/recover cycle for the canonical lexical/exact/
-shared-evidence profile. Candidate generation remains distinct from governed
-final admission.
+Candidate generation, governed final admission, and governance remain separate.
+The module adds no retrieval or mutation authority.
 """
 
 from __future__ import annotations
@@ -22,21 +18,17 @@ from agentmem_ref.harness.retrieval_quality_benchmark import run_benchmark
 from agentmem_ref.runtime_config import validate_runtime_configuration
 from agentmem_ref.sqlite_composition import SQLiteConfiguredCompositionRuntime
 
-
 REGRESSION_SCHEMA_VERSION = "1.0.0"
 REGRESSION_ENGINE_ID = "agent-memory-continuous-retrieval-regression"
 PERSISTED_RESTART_PROFILE = "sqlite_lexical_exact_shared_evidence_v1"
 
 
 def _f1(precision: float, recall: float) -> float:
-    denominator = precision + recall
-    if denominator <= 0.0:
-        return 0.0
-    return round(2.0 * precision * recall / denominator, 6)
+    total = precision + recall
+    return 0.0 if total <= 0.0 else round(2.0 * precision * recall / total, 6)
 
 
 def enrich_admitted_f1(report: Mapping[str, Any]) -> dict[str, Any]:
-    """Add final-admission F1 without changing candidate or governance semantics."""
     result = deepcopy(dict(report))
     systems = result.get("systems", {})
     for system in systems.values():
@@ -57,16 +49,12 @@ def enrich_admitted_f1(report: Mapping[str, Any]) -> dict[str, Any]:
     comparison = result.setdefault("comparison", {})
     if lexical and multi:
         comparison["admitted_f1_delta"] = round(
-            float(multi.get("admitted_f1", 0.0))
-            - float(lexical.get("admitted_f1", 0.0)),
-            6,
+            float(multi["admitted_f1"]) - float(lexical["admitted_f1"]), 6
         )
-    controlled = systems.get("controlled_typed_graph", {}).get("aggregate", {})
-    if controlled and multi:
+    graph = systems.get("controlled_typed_graph", {}).get("aggregate", {})
+    if graph and multi:
         comparison["typed_graph_admitted_f1_delta_over_multi_route"] = round(
-            float(controlled.get("admitted_f1", 0.0))
-            - float(multi.get("admitted_f1", 0.0)),
-            6,
+            float(graph["admitted_f1"]) - float(multi["admitted_f1"]), 6
         )
 
     result["metric_contract"] = {
@@ -99,7 +87,6 @@ def _selected_system(report: Mapping[str, Any]) -> str:
 
 
 def _comparison_signature(report: Mapping[str, Any]) -> dict[str, Any]:
-    system = _selected_system(report)
     return {
         "benchmark_id": report.get("benchmark_id"),
         "benchmark_version": report.get("benchmark_version"),
@@ -107,26 +94,20 @@ def _comparison_signature(report: Mapping[str, Any]) -> dict[str, Any]:
         "runtime_configuration_sha256": report.get("runtime_configuration", {}).get("sha256"),
         "vector_route": report.get("vector_route"),
         "typed_graph_route": report.get("typed_graph_route"),
-        "selected_system": system,
+        "selected_system": _selected_system(report),
     }
 
 
-def compare_reports(
-    current: Mapping[str, Any], baseline: Mapping[str, Any]
-) -> dict[str, Any]:
-    """Compare only reports whose fixture/config/profile denominators match."""
+def compare_reports(current: Mapping[str, Any], baseline: Mapping[str, Any]) -> dict[str, Any]:
+    """Compare only reports with identical fixture/config/profile denominators."""
     try:
         current_signature = _comparison_signature(current)
         baseline_signature = _comparison_signature(baseline)
     except (AttributeError, TypeError, ValueError):
-        return {
-            "status": "not-comparable",
-            "reason": "missing_reproducible_benchmark_contract",
-        }
+        return {"status": "not-comparable", "reason": "missing_reproducible_benchmark_contract"}
 
     mismatches = [
-        key
-        for key in current_signature
+        key for key in current_signature
         if current_signature.get(key) != baseline_signature.get(key)
     ]
     if mismatches:
@@ -142,23 +123,17 @@ def compare_reports(
     current_metrics = current["systems"][system]["aggregate"]
     baseline_metrics = baseline["systems"][system]["aggregate"]
     rows: dict[str, Any] = {}
-    for metric in (
-        "candidate_recall",
-        "admitted_recall",
-        "admitted_precision",
-        "admitted_f1",
-    ):
+    for metric in ("candidate_recall", "admitted_recall", "admitted_precision", "admitted_f1"):
         current_value = float(current_metrics[metric])
         baseline_value = float(baseline_metrics[metric])
         delta = round(current_value - baseline_value, 6)
-        classification = (
-            "improved" if delta > 0.0 else "regressed" if delta < 0.0 else "unchanged"
-        )
         rows[metric] = {
             "baseline": baseline_value,
             "current": current_value,
             "delta": delta,
-            "classification": classification,
+            "classification": (
+                "improved" if delta > 0.0 else "regressed" if delta < 0.0 else "unchanged"
+            ),
         }
     return {
         "status": "comparable",
@@ -169,10 +144,8 @@ def compare_reports(
     }
 
 
-def evaluate_targets(
-    report: Mapping[str, Any], targets: Mapping[str, Any]
-) -> dict[str, Any]:
-    """Evaluate directional expectations as evidence gates, never authority rules."""
+def evaluate_targets(report: Mapping[str, Any], targets: Mapping[str, Any]) -> dict[str, Any]:
+    """Evaluate evidence expectations. These checks never create recall/PAMA authority."""
     system = _selected_system(report)
     metrics = report["systems"][system]["aggregate"]
     candidate_target = float(targets["candidate_recall_target"])
@@ -187,32 +160,27 @@ def evaluate_targets(
         "final_admitted_recall": {
             "value": float(metrics["admitted_recall"]),
             "minimum": float(targets["final_admitted_recall_min"]),
-            "passed": float(metrics["admitted_recall"])
-            >= float(targets["final_admitted_recall_min"]),
+            "passed": float(metrics["admitted_recall"]) >= float(targets["final_admitted_recall_min"]),
         },
         "final_admitted_precision": {
             "value": float(metrics["admitted_precision"]),
             "minimum": float(targets["final_admitted_precision_min"]),
-            "passed": float(metrics["admitted_precision"])
-            >= float(targets["final_admitted_precision_min"]),
+            "passed": float(metrics["admitted_precision"]) >= float(targets["final_admitted_precision_min"]),
         },
         "final_admitted_f1": {
             "value": float(metrics["admitted_f1"]),
             "minimum": float(targets["final_admitted_f1_min"]),
-            "passed": float(metrics["admitted_f1"])
-            >= float(targets["final_admitted_f1_min"]),
+            "passed": float(metrics["admitted_f1"]) >= float(targets["final_admitted_f1_min"]),
         },
     }
-    governance_values = [
-        value
-        for value in report.get("governance", {}).values()
+    governance = [
+        value for value in report.get("governance", {}).values()
         if isinstance(value, (int, float))
     ]
-    governance_passed = all(value == 0 for value in governance_values)
     checks["governance_zero_violations"] = {
-        "value": sum(int(value) for value in governance_values),
+        "value": sum(int(value) for value in governance),
         "target": 0,
-        "passed": governance_passed,
+        "passed": all(value == 0 for value in governance),
     }
     return {
         "profile_version": targets.get("profile_version", "unknown"),
@@ -224,19 +192,12 @@ def evaluate_targets(
 
 
 def load_json(path: Path | None) -> dict[str, Any] | None:
-    if path is None:
-        return None
-    return json.loads(path.read_text(encoding="utf-8"))
+    return None if path is None else json.loads(path.read_text(encoding="utf-8"))
 
 
 def _persisted_proposal(
-    *,
-    proposal_id: str,
-    memory_ref: str,
-    tenant_ref: str,
-    project_ref: str,
-    purpose: str,
-    evidence_refs: tuple[str, ...],
+    *, proposal_id: str, memory_ref: str, tenant_ref: str, project_ref: str,
+    purpose: str, evidence_refs: tuple[str, ...],
 ) -> policy.Proposal:
     return policy.Proposal(
         proposal_id=proposal_id,
@@ -282,66 +243,48 @@ def _persisted_recall_rows(
             purpose=purpose,
         )
         query = str(case["query"])
-        logical_refs = tuple(str(value) for value in case.get("logical_memory_refs", []))
+        logical = tuple(str(value) for value in case.get("logical_memory_refs", []))
         lexical = runtime.recall(query, context)
-        multi = runtime.multi_route_recall(
-            query,
-            context,
-            logical_memory_refs=logical_refs,
-        )
-        rows.append(
-            {
-                "case_id": str(case["case_id"]),
-                "lexical": {
-                    "candidates": _logical_refs(list(lexical.candidates), fact_to_memory),
-                    "admitted": _logical_refs(list(lexical.admitted), fact_to_memory),
-                    "refusals": {
-                        fact_to_memory.get(ref, f"unknown-fact:{ref}"): reason
-                        for ref, reason in sorted(lexical.refusals.items())
-                    },
+        multi = runtime.multi_route_recall(query, context, logical_memory_refs=logical)
+        rows.append({
+            "case_id": str(case["case_id"]),
+            "lexical": {
+                "candidates": _logical_refs(list(lexical.candidates), fact_to_memory),
+                "admitted": _logical_refs(list(lexical.admitted), fact_to_memory),
+                "refusals": {
+                    fact_to_memory.get(ref, f"unknown-fact:{ref}"): reason
+                    for ref, reason in sorted(lexical.refusals.items())
                 },
-                "multi_route": {
-                    "candidates": _logical_refs(list(multi.candidates), fact_to_memory),
-                    "admitted": _logical_refs(list(multi.admitted), fact_to_memory),
-                    "ranked_admitted": _logical_refs(
-                        list(multi.ranked_admitted), fact_to_memory
-                    ),
-                    "refusals": {
-                        fact_to_memory.get(ref, f"unknown-fact:{ref}"): reason
-                        for ref, reason in sorted(multi.refusals.items())
-                    },
-                    "routes_executed": list(multi.routes_executed),
-                    "authority_effect": multi.authority_effect,
+            },
+            "multi_route": {
+                "candidates": _logical_refs(list(multi.candidates), fact_to_memory),
+                "admitted": _logical_refs(list(multi.admitted), fact_to_memory),
+                "ranked_admitted": _logical_refs(list(multi.ranked_admitted), fact_to_memory),
+                "refusals": {
+                    fact_to_memory.get(ref, f"unknown-fact:{ref}"): reason
+                    for ref, reason in sorted(multi.refusals.items())
                 },
-            }
-        )
+                "routes_executed": list(multi.routes_executed),
+                "authority_effect": multi.authority_effect,
+            },
+        })
     return rows
 
 
 def run_sqlite_persisted_restart_probe(
-    *,
-    fixture_path: Path,
-    runtime_config_path: Path,
+    *, fixture_path: Path, runtime_config_path: Path,
 ) -> dict[str, Any]:
-    """Prove close/recover replay for the canonical non-vector retrieval profile.
-
-    This deliberately does not claim persisted vector or typed-graph replay.
-    Those route families retain their own rebuild/profile evidence until a later
-    regression slice composes them explicitly with SQLite recovery.
-    """
+    """Prove close/recover replay for lexical/exact/shared-evidence retrieval only."""
     fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
-    config_value = json.loads(runtime_config_path.read_text(encoding="utf-8"))
-    plan = validate_runtime_configuration(config_value)
+    plan = validate_runtime_configuration(
+        json.loads(runtime_config_path.read_text(encoding="utf-8"))
+    )
     tenant_ref = str(fixture["tenant_ref"])
     purpose = str(fixture.get("purpose", "retrieval-quality-evaluation"))
 
     with tempfile.TemporaryDirectory(prefix="agent-memory-retrieval-restart-") as temp:
         root = Path(temp)
-        runtime = SQLiteConfiguredCompositionRuntime.create(
-            root,
-            tenant=tenant_ref,
-            plan=plan,
-        )
+        runtime = SQLiteConfiguredCompositionRuntime.create(root, tenant=tenant_ref, plan=plan)
         fact_to_memory: dict[str, str] = {}
         try:
             for index, item in enumerate(fixture["memories"], start=1):
@@ -358,51 +301,51 @@ def run_sqlite_persisted_restart_probe(
                     str(item["fact_text"]),
                 )
                 if not result.committed or not result.fact_uuid:
-                    raise RuntimeError(
-                        f"persisted restart fixture memory did not commit: {memory_ref}"
-                    )
+                    raise RuntimeError(f"persisted restart fixture memory did not commit: {memory_ref}")
                 fact_to_memory[result.fact_uuid] = memory_ref
 
             substrate = runtime.adapter.checkpoint_substrate()
             for item in fixture["memories"]:
-                if not item.get("invalidate_after_retain", False):
-                    continue
-                fact_ref = next(
-                    ref
-                    for ref, memory_ref in fact_to_memory.items()
-                    if memory_ref == str(item["memory_ref"])
-                )
-                substrate.invalidate_fact(
-                    fact_ref,
-                    invalid_at="2026-09-23T13:00:00Z",
-                    expired_at="2026-09-23T13:00:01Z",
-                )
+                if item.get("invalidate_after_retain", False):
+                    fact_ref = next(
+                        ref for ref, memory_ref in fact_to_memory.items()
+                        if memory_ref == str(item["memory_ref"])
+                    )
+                    substrate.invalidate_fact(
+                        fact_ref,
+                        invalid_at="2026-09-23T13:00:00Z",
+                        expired_at="2026-09-23T13:00:01Z",
+                    )
 
+            # These governed reads also checkpoint the direct fixture invalidation.
             before = _persisted_recall_rows(runtime, fixture, fact_to_memory)
-            digest_before = substrate.state_digest()
+            digest_before_close = substrate.state_digest()
         finally:
             runtime.close()
 
         recovered = SQLiteConfiguredCompositionRuntime.recover(root, plan=plan)
         try:
-            after = _persisted_recall_rows(recovered, fixture, fact_to_memory)
             recovered_substrate = recovered.adapter.checkpoint_substrate()
-            digest_after = recovered_substrate.state_digest()
+            # Measure the recovery invariant before issuing new governed reads.
+            digest_immediately_after_recovery = recovered_substrate.state_digest()
             recovered_substrate.integrity_check()
             identity = recovered_substrate.operational_identity()
+            after = _persisted_recall_rows(recovered, fixture, fact_to_memory)
+            digest_after_replayed_reads = recovered_substrate.state_digest()
         finally:
             recovered.close()
 
     return {
         "profile": PERSISTED_RESTART_PROFILE,
-        "route_scope": [
-            "lexical",
-            "exact_logical_identity",
-            "shared_evidence_neighbor",
-        ],
+        "route_scope": ["lexical", "exact_logical_identity", "shared_evidence_neighbor"],
         "sqlite_substrate_profile": identity.get("substrate_profile"),
-        "canonical_state_digest_consistent": digest_before == digest_after,
+        "canonical_state_digest_consistent": (
+            digest_before_close == digest_immediately_after_recovery
+        ),
         "recall_result_consistent": before == after,
+        "post_recovery_reads_changed_durable_digest": (
+            digest_immediately_after_recovery != digest_after_replayed_reads
+        ),
         "case_count": len(before),
         "persisted_restart_exercised": True,
         "vector_persistence_claimed": False,
@@ -422,28 +365,17 @@ def run_continuous_regression(
     benchmark_runner: Callable[..., dict[str, Any]] = run_benchmark,
     restart_probe: Callable[..., dict[str, Any]] = run_sqlite_persisted_restart_probe,
 ) -> dict[str, Any]:
-    """Run deterministic replay, reconstruction, and bounded persisted restart."""
-    first = enrich_admitted_f1(
-        benchmark_runner(
+    """Run deterministic replay, fresh reconstruction, and bounded persisted restart."""
+    def execute() -> dict[str, Any]:
+        return enrich_admitted_f1(benchmark_runner(
             fixture_path=fixture_path,
             runtime_config_path=runtime_config_path,
             agent_memory_revision=agent_memory_revision,
-        )
-    )
-    repeat = enrich_admitted_f1(
-        benchmark_runner(
-            fixture_path=fixture_path,
-            runtime_config_path=runtime_config_path,
-            agent_memory_revision=agent_memory_revision,
-        )
-    )
-    reconstruction = enrich_admitted_f1(
-        benchmark_runner(
-            fixture_path=fixture_path,
-            runtime_config_path=runtime_config_path,
-            agent_memory_revision=agent_memory_revision,
-        )
-    )
+        ))
+
+    first = execute()
+    repeat = execute()
+    reconstruction = execute()
     persisted_restart = restart_probe(
         fixture_path=fixture_path,
         runtime_config_path=runtime_config_path,
@@ -463,13 +395,10 @@ def run_continuous_regression(
         "targets": evaluate_targets(first, targets),
         "baseline_comparison": (
             compare_reports(first, enrich_admitted_f1(baseline_report))
-            if baseline_report is not None
-            else {"status": "not-requested"}
+            if baseline_report is not None else {"status": "not-requested"}
         ),
         "historical_baselines": (
-            [deepcopy(dict(historical_baseline))]
-            if historical_baseline is not None
-            else []
+            [deepcopy(dict(historical_baseline))] if historical_baseline is not None else []
         ),
         "authority_effect": "none",
     }
