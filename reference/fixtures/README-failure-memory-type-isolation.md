@@ -1,0 +1,1 @@
+This fixture is consumed by the #471 closeout remediation that makes native failure-memory recall fail closed on admitted facts not owned by failure memory. It carries no authority semantics and does not alter candidate generation.
