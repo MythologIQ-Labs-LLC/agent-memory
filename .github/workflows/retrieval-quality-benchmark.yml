@@ -17,14 +17,19 @@ jobs:
           python-version: '3.12'
       - name: Install reference dependencies
         run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
-      - name: Execute deterministic retrieval-quality benchmark
+      - name: Run retrieval benchmark and regression tests
+        run: |
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_retrieval_quality_benchmark.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_continuous_retrieval_regression.py'
+      - name: Execute continuous retrieval regression
         env:
           AGENT_MEMORY_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
         run: >-
           PYTHONPATH=reference python reference/run_retrieval_quality_benchmark.py
           --agent-memory-revision "$AGENT_MEMORY_REVISION"
+          --continuous-regression
           --output retrieval-quality.json
-      - name: Validate bounded benchmark evidence
+      - name: Validate bounded benchmark and regression evidence
         run: |
           python - <<'PY'
           import json
@@ -35,17 +40,42 @@ jobs:
           multi = r['systems']['multi_route']['aggregate']
           assert lexical['relevant_total'] == 7
           assert lexical['admitted_recall'] == 0.428571
+          assert multi['candidate_recall'] == 1.0
           assert multi['admitted_recall'] == 1.0
           assert lexical['admitted_precision'] == 1.0
           assert multi['admitted_precision'] == 1.0
+          assert multi['admitted_f1'] == 1.0
+          assert r['metric_contract']['aggregate_health_score'] == 'not_defined'
           assert r['governance']['lexical_forbidden_admission_failures'] == 0
           assert r['governance']['multi_route_forbidden_admission_failures'] == 0
           assert r['governance']['multi_route_forbidden_ranked_failures'] == 0
           assert r['governance']['route_authority_effect_violations'] == 0
+          regression = r['continuous_regression']
+          assert regression['same_process_repeat_consistent'] is True
+          assert regression['fresh_runtime_reconstruction_consistent'] is True
+          assert regression['persisted_restart_exercised_by_this_runner'] is False
+          assert regression['targets']['all_expectations_met'] is True
+          checks = regression['targets']['checks']
+          assert checks['candidate_recall']['passed'] is True
+          assert checks['final_admitted_recall']['passed'] is True
+          assert checks['final_admitted_precision']['passed'] is True
+          assert checks['final_admitted_f1']['passed'] is True
+          assert checks['governance_zero_violations']['passed'] is True
+          historical = regression['historical_baselines'][0]
+          assert historical['provenance_status'] == 'historical_metadata_only'
+          assert historical['reported_metrics'] == {
+              'recall': 1.0,
+              'precision': 0.06,
+              'f1': 0.1,
+              'metric_layer': 'not_bound_in_source_context',
+          }
+          assert 'health_score' not in r
+          assert 'memory_health_score' not in r
           print({
-              'lexical_admitted_recall': lexical['admitted_recall'],
-              'multi_route_admitted_recall': multi['admitted_recall'],
-              'multi_route_precision': multi['admitted_precision'],
+              'candidate_recall': multi['candidate_recall'],
+              'final_recall': multi['admitted_recall'],
+              'final_precision': multi['admitted_precision'],
+              'final_f1': multi['admitted_f1'],
               'candidate_amplification': r['comparison']['candidate_amplification'],
           })
           PY

@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "baseline_id": "historical-jin-100-gold-edges-v1",
+  "recorded_at": "2026-09-24",
+  "source": "Jin reported earlier Agent Memory benchmark result",
+  "provenance_status": "historical_metadata_only",
+  "reproducibility_status": "incomplete",
+  "dataset": {
+    "description": "100 gold edges",
+    "gold_edge_count": 100,
+    "fixture_ref": null,
+    "fixture_digest": null
+  },
+  "runtime": {
+    "agent_memory_revision": null,
+    "runtime_configuration_ref": null,
+    "runtime_configuration_digest": null,
+    "retrieval_profile": "predates completion/integration of current native retrieval mechanisms"
+  },
+  "reported_metrics": {
+    "recall": 1.0,
+    "precision": 0.06,
+    "f1": 0.1,
+    "metric_layer": "not_bound_in_source_context"
+  },
+  "interpretation": [
+    "Historical baseline only; these values must not be attributed to current main.",
+    "The source context does not establish whether reported recall was candidate recall or final admitted recall.",
+    "The result supports preserving candidate-generation metrics separately from governed final-admission precision, recall, and F1.",
+    "Recover the original fixture, revision, configuration, and protocol before treating this baseline as reproducible or directly comparable."
+  ]
+}
