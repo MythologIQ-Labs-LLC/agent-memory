@@ -64,7 +64,8 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "deletion_completeness", "derivation_currentness", "derivation_evidence",
         "domain_schema_mutation", "enforcement_composition", "enforcement_evidence",
         "epistemic_memory", "evolveai_cognitive_mesh", "external_evidence",
-        "framework_lifecycle", "interchange", "interchange_propagation", "maintenance_run",
+        "failure_checkpoint", "failure_memory", "framework_lifecycle", "interchange",
+        "interchange_propagation", "maintenance_run",
         "maintenance_run_bindings", "maintenance_run_rules", "maintenance_run_state", "metabolism",
         "mcp_interaction", "policy_projection_compatibility", "precedent_applicability",
         "precedent_candidate_retrieval", "predictive_memory", "procedural_memory",
@@ -110,7 +111,7 @@ LAYER_DOCS = {
     "runtime": "The governed adapter, restart-safe and configured runtimes, composition, "
                "discovery, doctor and CLI. Depends on ``core``, ``state``, ``contracts``.",
     "memory": "The governed memory kinds and the evidence they consume: cognitive, "
-              "epistemic, predictive, procedural, decision overwrite, structural mutation, "
+              "epistemic, failure, predictive, procedural, decision overwrite, structural mutation, "
               "crossing, interchange, temporal, precedent, maintenance. Depends on "
               "``runtime`` and below.",
     "api": "The public consumer contract (Sprint 4a): versioned proposal, recall-context and "
