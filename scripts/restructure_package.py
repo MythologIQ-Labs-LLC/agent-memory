@@ -65,7 +65,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "domain_schema_mutation", "enforcement_composition", "enforcement_evidence",
         "epistemic_memory", "evolveai_cognitive_mesh", "external_evidence",
         "framework_lifecycle", "interchange", "interchange_propagation", "maintenance_run",
-        "maintenance_run_bindings", "maintenance_run_rules", "maintenance_run_state",
+        "maintenance_run_bindings", "maintenance_run_rules", "maintenance_run_state", "metabolism",
         "mcp_interaction", "policy_projection_compatibility", "precedent_applicability",
         "precedent_candidate_retrieval", "predictive_memory", "procedural_memory",
         "reusable_grants", "runtime_trace_correlation", "security_finding",
