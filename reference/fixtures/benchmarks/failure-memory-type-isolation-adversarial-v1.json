@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "failure-memory-type-isolation-adversarial-v1",
+  "scenarios": [
+    {
+      "scenario_id": "unrelated-admitted-fact",
+      "query": "deployment readiness timeout",
+      "expected_failure_memory_outcome": "memory_type_mismatch"
+    },
+    {
+      "scenario_id": "superseded-failure-revision",
+      "query": "deployment readiness timeout",
+      "expected_failure_memory_outcome": "failure_not_current_revision"
+    }
+  ],
+  "authority_effect": "none"
+}
