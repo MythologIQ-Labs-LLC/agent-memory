@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "artifact_id": "agent-memory-harvest-closeout-wave1",
   "issue": 470,
-  "agent_memory_revision": "63d78d27df7017bcbe2687675150342771262c0f",
+  "agent_memory_revision": "c2d23c18d8041dea572c070d81b79e5a348556c5",
   "status": "incomplete_wave",
   "claim_boundary": {
     "planned_native_harvest_sequence_complete": true,
@@ -32,7 +32,7 @@
       "native_owner": "Agent Memory",
       "runtime_dependency_required": false,
       "qualification_evidence": ["#456", "#461", "#463"],
-      "known_limitations": "This row does not close Shadow Genome negative/failure memory."
+      "known_limitations": "Shadow Genome negative/failure memory is classified separately and was absorbed through #471 / PR #473 rather than through this general EvolveAI row."
     },
     {
       "source": "MythologIQ-Labs-LLC/EvolveAI:ShadowGenome",
@@ -40,13 +40,24 @@
       "source_class": "same_owner_first_party_ancestry",
       "rights_basis": "same_owner_adoption; public Apache-2.0 remains relevant to redistribution",
       "mechanism": "typed failure memory, stable identity, recurrence counting, persistence, bounded capacity, semantic recurrence evidence",
-      "agent_memory_equivalent": "failure-memory doctrine exists; no native generic runtime equivalent identified in wave 1",
-      "posture": "partially_absorbed",
-      "required_action": "implement #471 and reject direct similarity-to-Block authority",
+      "agent_memory_equivalent": "native governed failure memory with stable identity, typed revisions, recurrence evidence, typed recall isolation, bounded checkpoint/recovery, tombstone/currentness behavior, and revision-bound evaluation",
+      "posture": "absorbed",
+      "required_action": "retain Shadow Genome as ancestry/test pressure only; preserve Agent Memory's stricter evidence-not-authority boundary and no EvolveAI runtime dependency",
       "native_owner": "Agent Memory",
       "runtime_dependency_required": false,
-      "qualification_evidence": ["#471"],
-      "known_limitations": "Similarity, severity and recurrence must remain evidence, not action or mutation authority."
+      "qualification_evidence": [
+        "#471",
+        "PR #473",
+        "c2d23c18d8041dea572c070d81b79e5a348556c5",
+        "reference/tests/test_failure_memory.py",
+        "reference/tests/test_failure_memory_restart.py",
+        "reference/tests/test_failure_memory_type_isolation.py",
+        "reference/run_failure_memory_benchmark.py",
+        "workflow:36045411869",
+        "artifact:10827654755",
+        "sha256:95b45bfc1b50fbf3965aa587c249a13bdd8ab05d42d868d305d736ceb09fbd20"
+      ],
+      "known_limitations": "The generic standalone FailureMemory owner remains process-local; checkpoint/replay evidence is bounded to CheckpointedFailureMemory composition. Similarity, severity, impact and recurrence remain evidence only. The benchmark does not claim downstream action execution or avoided-failure outcomes."
     },
     {
       "source": "MythologIQ-Labs-LLC/CodeGenome",
@@ -207,8 +218,10 @@
     {
       "capability": "negative_failure_memory",
       "issue": 471,
-      "status": "implementation_required",
-      "authority_boundary": "similarity, severity and recurrence are evidence only"
+      "status": "implemented_and_qualified",
+      "implementation_merge": "c2d23c18d8041dea572c070d81b79e5a348556c5",
+      "authority_boundary": "similarity, severity, impact and recurrence are evidence only",
+      "remaining_action": "canonical harvest/ownership reconciliation only; no implementation gap remains"
     }
   ],
   "next_wave": [
@@ -218,7 +231,6 @@
     "PrismPM concrete verification/conformance review",
     "cMCP current-upstream review beyond existing qualified pin",
     "TRACE source-registry and NOTICE reconciliation",
-    "UOR provisional/final publication follow-up",
-    "implementation evidence for issue 471"
+    "UOR provisional/final publication follow-up"
   ]
 }
