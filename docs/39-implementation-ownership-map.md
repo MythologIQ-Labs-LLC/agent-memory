@@ -70,7 +70,7 @@ Maturity and ownership are separate. Declaring Agent Memory the owner does not p
 | Context assembly semantics | **Agent Memory** | COREFORGE broker/packet ancestry | downstream product-specific presentation/orchestration | native-owned; retrieval composition implemented, product facade still evolving |
 | Correction / dispute / supersession | **Agent Memory** | prior product workflows as ancestry | all consumers | native-owned / implemented in current governed runtime |
 | Durable decision memory | **Agent Memory** | product implementations may consume profile | decision-oriented products/agents | native-owned profile |
-| Negative / failure memory | **Agent Memory** | Shadow Genome concepts from EvolveAI ancestry | downstream risk/planning consumers | native-owned; further native implementation planned |
+| Negative / failure memory | **Agent Memory** | Shadow Genome concepts from EvolveAI ancestry | downstream risk/planning consumers | **native-owned and implemented**; #473 adds governed recurrence, correction/dispute/retraction, restart recovery, typed recall isolation, and bounded quality/performance/governance evidence |
 | Continuous memory evaluation | **Agent Memory** | CodeGenome experiment-loop ancestry | CI/release/benchmark consumers | native-owned; initial retrieval benchmarks exist, broader loop planned |
 | Conformance | **Agent Memory** | optional verification peers such as PrismPM may strengthen evidence | every implementation | native-owned / implemented |
 
