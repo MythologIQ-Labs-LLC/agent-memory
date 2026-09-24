@@ -1,0 +1,62 @@
+{
+  "component_id": "agent-memory-failure-memory-reference",
+  "component_version": "0.1.0",
+  "profile_version": "component-capability-v3",
+  "enabled": true,
+  "runtime_ref": "reference/agentmem_ref/failure_memory.py",
+  "failure_posture": "fail_closed",
+  "provenance_refs": [
+    "https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/470",
+    "https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/471",
+    "repo://MythologIQ-Labs-LLC/EvolveAI@21161ce7b88dbffeb7ed59757b4d02d24a9c2acd"
+  ],
+  "capabilities": [
+    {
+      "capability_id": "negative_failure_memory",
+      "capability_version": "1.0",
+      "maturity": "runtime_wired",
+      "state_posture": "derived",
+      "scope_posture": "enforces_agent_memory_scope",
+      "failure_posture": "fail_closed",
+      "authority_effect": "none",
+      "enabled": true,
+      "evidence_refs": [
+        "reference/agentmem_ref/failure_memory.py",
+        "reference/agentmem_ref/failure_checkpoint.py",
+        "reference/tests/test_failure_memory.py",
+        "reference/tests/test_failure_memory_restart.py",
+        "reference/tests/test_failure_memory_type_isolation.py",
+        "reference/run_failure_memory_benchmark.py",
+        "docs/programs/memory-modules/native-failure-memory.md"
+      ],
+      "limitations": [
+        "The generic standalone FailureMemory owner is process-local. Bounded checkpoint/replay is provided only by the explicit CheckpointedFailureMemory composition and must not be generalized to every substrate or deployment profile.",
+        "Similarity, severity, impact, and recurrence are evidence only and cannot create recall admission, action authority, mutation authority, truth, permanence, or certification.",
+        "Failure categories and severity labels remain caller/domain vocabulary rather than a universal Agent Memory ontology.",
+        "No automatic promotion from failure memory into a procedural rule, guardrail, or certified fact is implemented.",
+        "The bounded benchmark does not evaluate downstream action execution or claim that retrieval alone prevents repeated failures."
+      ],
+      "behavior_contract": {
+        "operation_support": {
+          "write": true,
+          "read": true,
+          "recall_candidate": true
+        },
+        "currentness_model": "basis_versioned",
+        "invalidation_model": "version_relation",
+        "correction_model": "invalidate_derived",
+        "deletion_model": "derived_residue_then_purge",
+        "residue_model": "scan_required",
+        "migration_rebuild_model": "unsupported",
+        "structural_mutation_requirement": "none"
+      },
+      "operational_contract": {
+        "write_atomicity": "process_local",
+        "concurrency_control": "process_local",
+        "idempotency": "process_local",
+        "restart_recovery": "process_local_only",
+        "reconciliation": "process_local_only"
+      }
+    }
+  ]
+}

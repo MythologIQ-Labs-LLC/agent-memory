@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "benchmark_id": "agent-memory-native-failure-memory",
+  "benchmark_version": "1.0.0",
+  "tenant": "tenant:failure-benchmark",
+  "project_ref": "project:failure-benchmark",
+  "source_component": "FailureReference",
+  "repeat_recall_count": 5,
+  "identity_cases": [
+    {
+      "case_id": "readiness-a",
+      "equivalence_group": "readiness-timeout",
+      "scope": "tenant:failure-benchmark",
+      "action_class": "deploy_service",
+      "category": "readiness_timeout",
+      "identity_basis": "service-readiness-dependency"
+    },
+    {
+      "case_id": "readiness-b",
+      "equivalence_group": "readiness-timeout",
+      "scope": "tenant:failure-benchmark",
+      "action_class": "deploy_service",
+      "category": "readiness_timeout",
+      "identity_basis": "service-readiness-dependency"
+    },
+    {
+      "case_id": "migration-lock",
+      "equivalence_group": "migration-lock",
+      "scope": "tenant:failure-benchmark",
+      "action_class": "deploy_service",
+      "category": "readiness_timeout",
+      "identity_basis": "database-migration-lock"
+    }
+  ],
+  "scenario": {
+    "action_class": "deploy_service",
+    "category": "readiness_timeout",
+    "identity_basis": "service-readiness-dependency",
+    "summary": "Deployment timed out while waiting for service readiness",
+    "query": "deployment readiness timeout",
+    "expected_outcome": "service becomes ready",
+    "actual_outcome": "readiness deadline exceeded",
+    "severity_label": "critical",
+    "impact_score": 0.95,
+    "root_cause_candidates": [
+      "dependency unavailable",
+      "readiness probe mismatch"
+    ],
+    "mitigation": "Check readiness dependency before deployment",
+    "applicability_conditions": [
+      "same deployment path"
+    ],
+    "recurrence_similarity_score": 0.99
+  }
+}

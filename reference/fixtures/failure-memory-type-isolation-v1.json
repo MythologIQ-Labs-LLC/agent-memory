@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "failure-memory-type-isolation-v1",
+  "issue": 471,
+  "purpose": "Fail closed when the shared governed recall adapter admits a fact that is not owned by native failure memory.",
+  "invariants": [
+    "candidate_retrieval_does_not_imply_memory_type_membership",
+    "adapter_admission_does_not_imply_failure_memory_activation",
+    "only_current_failure_revision_may_become_active_failure_guidance",
+    "disputed_or_retracted_failure_memory_is_not_active_guidance",
+    "memory_type_filter_has_no_authority_effect"
+  ]
+}
