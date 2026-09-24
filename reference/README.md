@@ -28,9 +28,9 @@ Several things, at different evidential weight.
 
 **Against the P4.5a portable-evidence contract.** A content-free projection of a canonical decision receipt is signed with Ed25519 and verified using only the configured public trust key. The verifier independently checks receipt, runtime-action, policy, authority-state, temporal, and isolation-domain bindings while preserving governance disposition, runtime execution, and lifecycle satisfaction as separate outcomes. Adversarial vectors exercise tampering, replay, stale authority, wrong domains, key rotation, revocation timing, detached receipt verification, and valid deletion with residual lifecycle state.
 
-**Against the P4.5b Agent Manifest comparator.** CI installs `agent-manifest==0.11.2`, pinned to release commit `9d26ac84461e829dba8ff97ca35748eeb874debe`, and executes its own v0.2 memory checkpoint/delta implementation. Agent Memory content-addresses the checkpoint tuple and binds it through the canonical receipt and P4.5a state references. The executed upstream log appends a real `DEL`; the resulting accepted checkpoint is exercised once with lifecycle `residual` and once with lifecycle `satisfied`, proving checkpoint integrity does not manufacture forgetting. Because a checkpoint root alone does not disclose the appended operation class, the portable correlation artifact deliberately carries signed Agent Memory `memory_action` rather than an unproven Agent Manifest `operation_kind` claim.
+**Against the P4.5b Agent Manifest comparator.** CI installs `agent-manifest==0.12.0`, pinned to source commit `9478b56cc349bef01441db4e17e61849c8d69d6f`, and executes its v0.2 memory checkpoint/delta implementation. Agent Memory content-addresses the checkpoint tuple and binds it through the canonical receipt and P4.5a state references. The executed upstream log appends a real `DEL`; the resulting accepted checkpoint is exercised once with lifecycle `residual` and once with lifecycle `satisfied`, proving checkpoint integrity does not manufacture forgetting. The #440 qualification also executes an exact 0.12.0 limitation: a materially different supplied `ops` argument does not invalidate the same checkpoint advance, so Agent Memory never treats checkpoint acceptance as proof of appended-operation identity. Signed Agent Memory `memory_action` remains the operation-semantic source.
 
-**Against the P4.5c TRACE/cMCP action-evidence surface.** The reference adapter wraps P4.5a evidence in the existing six-field cMCP `external_execution_evidence` envelope, hashes the detached payload with RFC 8785/JCS, and preserves `linked_call_id` as a separate audit identity from Agent Memory `action_ref`. Local vectors exercise TRACE-style receipt outcomes, wrong-call and wrong-action replay, payload/signature tampering, missing trust, domain mismatch, and lifecycle separation. A second CI path creates an isolated environment with `cmcp-runtime==0.4.0` and calls the released `cmcp_verify.verify_audit_bundle()` verifier against the emitted envelope.
+**Against the P4.5c TRACE/cMCP action-evidence surface.** The reference adapter wraps P4.5a evidence in the existing six-field cMCP `external_execution_evidence` envelope, hashes the detached payload with RFC 8785/JCS, and preserves `linked_call_id` as a separate audit identity from Agent Memory `action_ref`. Local vectors exercise TRACE-style receipt outcomes, wrong-call and wrong-action replay, payload/signature tampering, missing trust, domain mismatch, and lifecycle separation. CI re-qualifies this path with `agentrust-trace==0.10.0` and `agent-manifest==0.12.0`; a second isolated path keeps `cmcp-runtime==0.4.0` and calls the released `cmcp_verify.verify_audit_bundle()` verifier against the emitted envelope.
 
 **Against the proposed ADR-029 Governance Context Projection boundary.** A deterministic reference builder converts explicit precedent inputs into a vendor-neutral projection containing source-memory references, material conditions, polarity, validity, provenance, outcomes, scope, and derivation metadata. The builder does not emit consumer verdicts, standing permission, or risk scores. Tests exercise material matches, misleading near-matches, negative precedent, unknown conditions, deterministic rebuild, and provenance laundering where a policy-generated outcome tries to impersonate independent human adjudication.
 
@@ -92,12 +92,17 @@ The low-cost repository validators intentionally keep a different dependency pos
 python -m pip install -r reference/requirements.txt
 python -m unittest discover -s reference/tests -t reference
 
+# exact Agent Manifest + TRACE pair qualification
+PYTHONPATH=reference python reference/run_dependency_pair_qualification.py \
+  --agent-memory-commit <exact-40-hex-commit> \
+  --output dependency-pair-qualification.json
+
 # TRACE/cMCP comparator in a dependency-isolated environment
 python -m venv /tmp/agent-memory-p45c-cmcp
 /tmp/agent-memory-p45c-cmcp/bin/python -m pip install \
   cmcp-runtime==0.4.0 \
-  agentrust-trace==0.9.0 \
-  agent-manifest==0.11.2 \
+  agentrust-trace==0.10.0 \
+  agent-manifest==0.12.0 \
   rfc8785==0.1.4
 PYTHONPATH=reference \
   /tmp/agent-memory-p45c-cmcp/bin/python reference/run_trace_cmcp_comparator.py
@@ -199,9 +204,10 @@ The reference module currently implements only the deterministic projection buil
 | portable replay and trust failures | wrong action/domain/state, signature tampering, unknown issuer, rotation, and revocation timing are exercised |
 | Agent Manifest normative root | the pinned upstream implementation reproduces the v0.2 KV memory-root vector |
 | Agent Manifest deletion-vector correlation | the upstream verifier accepts an RFC 9162 checkpoint built from a log whose appended test operation is `DEL`; canonical receipt and portable state refs bind the checkpoint |
+| Agent Manifest 0.12 operation-binding negative | materially different supplied `ops` still yields the same accepted checkpoint verdict, so appended-operation identity is not inferred from that verdict |
 | DEL versus forgetting | that accepted checkpoint remains compatible with either residual or satisfied Agent Memory lifecycle evidence |
 | external negative checkpoint outcome | invalid consistency proof yields upstream `drift` while the correlation remains a valid record of a rejected delta |
-| TRACE/cMCP envelope compatibility | emitted evidence uses the existing six-field external-execution envelope and the released cMCP verifier accepts it |
+| TRACE/cMCP envelope compatibility | emitted evidence uses the existing six-field external-execution envelope and the released cMCP verifier accepts it under the qualified 0.10.0/0.12.0 pair |
 | TRACE call replay | released cMCP verifier rejects a receipt whose `linked_call_id` does not match the audit call |
 | Agent Memory action replay | local verifier separately rejects a detached action reference that does not match the P4.5a signed `action_ref` |
 | TRACE negative action outcome | a correctly bound external `rejected` receipt remains valid negative evidence rather than malformed evidence |
@@ -226,7 +232,7 @@ Stated rather than left to be discovered:
 7. Residue is measured over declared projections. State that was never declared is outside the sweep's reach by construction, which is why the declaration surface is the load-bearing part rather than the traversal.
 8. The P4.5a trust profile assumes configured Ed25519 public trust keys. Production key custody, trust discovery, certificates, and external revocation infrastructure remain outside this slice.
 9. P4.5b intentionally imports Agent Manifest private checkpoint modules only in its pinned comparator tests because the upstream implementation issue and specification surface those exact functions. This is not a stable production API commitment and is isolated from Agent Memory runtime code.
-10. An Agent Manifest checkpoint root proves the bound log state but does not independently reveal the semantic class of a new operation. P4.5b demonstrates a real upstream `DEL` through executed test input; a compact content-free third-party proof of operation class would require additional upstream operation/inclusion evidence and is not invented here.
+10. `agent-manifest==0.12.0` checkpoint acceptance does not bind the supplied appended `ops` argument to the checkpoint advance. The bounded tests execute that limitation directly. Agent Memory therefore keeps operation semantics in separately signed governance evidence rather than inferring them from the checkpoint verdict.
 11. P4.5c binds Agent Memory action evidence into TRACE/cMCP receipt infrastructure; it does not prove a physical or business outcome occurred and does not make TRACE a PAMA interpreter.
 12. The released cMCP 0.4.0 dependency graph is intentionally isolated from the main evidence environment because its AGT dependency line resolves a lower cryptography range. This is comparator containment, not a production dependency recommendation.
 13. P4.5c does not demonstrate hardware attestation of the Agent Memory process, production trust-anchor discovery, or upstream Community/Verified integration acceptance.
