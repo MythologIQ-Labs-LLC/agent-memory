@@ -25,6 +25,17 @@ jobs:
         run: >-
           PYTHONPATH=reference python -m unittest discover
           -s reference/tests -t reference -p 'test_memory_metabolism_benchmark.py'
+      - name: Run metabolism maintenance integration tests
+        run: >-
+          PYTHONPATH=reference python -m unittest discover
+          -s reference/tests -t reference -p 'test_metabolism_maintenance_integration.py'
+      - name: Run maintenance and lifecycle regression tests
+        run: |
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_maintenance_run_state.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_maintenance_run_binding_positive.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_autonomous_maintenance.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_framework_lifecycle.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_package_layout.py'
       - name: Emit revision-bound metabolism evidence
         env:
           AGENT_MEMORY_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
