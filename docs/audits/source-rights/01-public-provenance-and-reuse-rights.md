@@ -2,6 +2,8 @@
 
 Date: 2026-08-10
 
+> **Historical audit notice, updated 2026-09-24:** This document preserves the source-rights posture established by the original August 10 audit. Its treatment of EvolveAI, CodeGenome, COREFORGE/GG-CORE, and FailSafe as license-bound or independent-synthesis sources was later superseded for owner-controlled material by accepted [`ADR-036`](../../adr/ADR-036-same-owner-components-are-first-party-modules.md) and issue #459. The current machine-readable posture is `same_owner_first_party` / `same_owner_adoption`. Public repository licenses remain relevant distribution metadata for external licensees, and third-party material inside those repositories retains its own rights. GG-CORE is now recorded as a separate compute project, not a COREFORGE Vault/Neurospace successor. The original findings below are retained as historical evidence rather than rewritten as though the earlier policy never existed.
+
 ## Trigger
 
 The source-material index identified several primary systems by name without linking publicly inspectable sources, while the repository did not yet make a hard distinction between public accessibility, provenance, and permission to reuse source expression.
