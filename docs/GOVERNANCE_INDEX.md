@@ -1,7 +1,7 @@
 # Governance Index
 
-**Last Reviewed**: 2026-09-23  
-**Evidence Boundary**: `main` `3dc11b4048e64aa7f6bf78103d664bc93d1cd1e7`
+**Last Reviewed**: 2026-09-24  
+**Evidence Boundary**: #440 candidate based on `main` `76e929f1e2e0808b73041f05a3618ae856f754b4`
 
 This is the current map of Agent Memory's governance surfaces and their freshness obligations. It is intentionally **not** an exhaustive hand-maintained list of historical work. Historical plans and research briefs remain evidence; GitHub issue/PR state carries the live execution queue.
 
@@ -14,12 +14,12 @@ These surfaces MUST describe current repository reality. A wrong version, stale 
 | Artifact | Path | Current marker |
 |----------|------|----------------|
 | Meta Ledger | `docs/META_LEDGER.md` | append-only historical decision/session evidence; artifact content is authoritative for ledger state |
-| System State | `docs/SYSTEM_STATE.md` | reconciled 2026-09-23 against `main` `3dc11b40`; query-driven retrieval and LoCoMo evidence diagnostic merged; production substrate qualification open |
+| System State | `docs/SYSTEM_STATE.md` | current state is carried by `main` plus live issue/PR evidence; production substrate qualification remains open |
 | Concept | `docs/CONCEPT.md` | current objective must point to live Backlog/System State/issues rather than retired plans |
 | Backlog | `docs/BACKLOG.md` | active RC queue centered on #410 and #427 plus developer-facade/end-to-end/release-evidence gates; external/longitudinal work separated |
 | Feature Index | `docs/FEATURE_INDEX.md` | feature inventory; lifecycle state must be reconciled when implementation changes materially |
 | ADR index | `docs/adr/README.md` | ADR-001 through ADR-038; artifact status is authoritative |
-| Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; comparator pins remain `agent-manifest==0.11.2`, `agentrust-trace==0.9.0` pending coordinated qualification #440 |
+| Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; #440 candidate pair is `agent-manifest==0.12.0` + `agentrust-trace==0.10.0`, subject to exact-head qualification before merge |
 | README | `README.md` | current pre-RC product/runtime summary, query-driven retrieval, LoCoMo retrieval-diagnostic boundary, and benchmark limitations |
 | Substrate inventory | `docs/43-substrate-inventory-and-maturity.md` | reference persistence corrected; production-qualified canonical substrates remain 0 |
 | RC profile | `docs/45-agent-memory-rc1-implementation-profile.md` | bounded implementation/release candidate profile under #410 |
@@ -54,7 +54,7 @@ A Tier 3 row must represent active implementation, a live external/longitudinal 
 |------------|------------------|---------------|
 | Agent Memory RC1 composition | issue #410 | **active umbrella**; architecture, persistence, multi-memory composition, multi-route/query-driven retrieval are implemented; product/release gates remain |
 | Production canonical substrate | issue #427 | **active RC gate**; reference durability is proven, production-qualified canonical substrates = 0 |
-| Comparator dependency requalification | issue #440 | **active qualification**; `agent-manifest` 0.12.0 + `agentrust-trace` 0.10.0 must be qualified together; bare PRs #404/#405 are closed |
+| Comparator dependency requalification | issue #440 / PR #476 | **active exact-version qualification**; `agent-manifest` 0.12.0 + `agentrust-trace` 0.10.0 are one coordinated candidate pair; non-skippable target-version checks and exact-head workflows must pass before merge |
 | Semantic recall/canonical-truth case study | issue #408 | **longitudinal case study**; next executable gate is T0/failure evidence, not speculative implementation |
 | Live DashClaw conformance | issue #361 | **blocked external** on authorized Cloudflare/DashClaw live traversal; repository-side implementation already merged |
 | Field efficacy benchmark | issue #388 | **longitudinal external evidence**; operator skill merged via PR #389; waits on T1/T2/T3 data |
@@ -127,7 +127,7 @@ Tier 1 surfaces should agree on this order:
 2. **RC developer facade:** implement a small ergonomic surface over the existing 1.2.0 contract.
 3. **RC end-to-end fixture:** prove retain/composition/query-driven retrieval/admission/correction/restart/forgetting/history as one usable scenario.
 4. **Public benchmark evidence:** execute the now-implemented LoCoMo retrieval diagnostic against an appropriately obtained external dataset, then add answer-generation/evaluation only under an explicit comparable protocol; LongMemEval remains future release evidence.
-5. **#440:** re-qualify Agent Manifest + TRACE as one exact-version interoperability change, proving version-identity checks execute rather than skip.
+5. **#440:** complete the Agent Manifest + TRACE exact-version qualification with zero skipped qualification checks and exact-head comparator/repository evidence.
 6. Keep #361, #388, and #408 out of the active implementation critical path until their external/longitudinal evidence can move.
 
 ## Drift Contract
