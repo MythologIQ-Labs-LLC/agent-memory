@@ -1,14 +1,14 @@
 """Execute P4.5c evidence through the released cMCP audit-bundle verifier.
 
-Run this in an isolated environment containing the pinned external packages:
+Run this in an isolated environment containing the qualified external packages:
 
     cmcp-runtime==0.4.0
-    agentrust-trace==0.9.0
-    agent-manifest==0.11.2
+    agentrust-trace==0.10.0
+    agent-manifest==0.12.0
     rfc8785==0.1.4
 
 The isolation is intentional: cmcp-runtime 0.4.0's AGT dependency line resolves a
-cryptography version below the P4.5a validation profile's cryptography==50.0.0.
+cryptography version below the main Agent Memory validation profile.
 """
 
 from __future__ import annotations
@@ -47,8 +47,8 @@ def _audit_entry(call_id: str, external_execution_evidence: dict) -> dict:
 def main() -> None:
     expected_versions = {
         "cmcp-runtime": "0.4.0",
-        "agentrust-trace": "0.9.0",
-        "agent-manifest": "0.11.2",
+        "agentrust-trace": "0.10.0",
+        "agent-manifest": "0.12.0",
         "rfc8785": "0.1.4",
     }
     actual_versions = {name: importlib.metadata.version(name) for name in expected_versions}
