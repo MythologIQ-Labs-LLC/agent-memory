@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "profile_id": "agent-memory-retrieval-regression-targets",
+  "profile_version": "1.0.0",
+  "candidate_recall_target": 1.0,
+  "candidate_recall_tolerance": 0.01,
+  "final_admitted_recall_min": 0.95,
+  "final_admitted_precision_min": 0.9,
+  "final_admitted_f1_min": 0.92,
+  "governance_violation_target": 0,
+  "authority_effect": "none",
+  "notes": [
+    "Directional evaluation targets are regression expectations, not PAMA or recall authority rules.",
+    "Candidate recall and final governed admission metrics are intentionally separate."
+  ]
+}
