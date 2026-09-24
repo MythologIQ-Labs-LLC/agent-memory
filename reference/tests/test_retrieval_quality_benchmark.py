@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref.harness.retrieval_quality_benchmark import run_benchmark
+from agentmem_ref.recall_control import TYPED_GRAPH_ROUTE
 from agentmem_ref.vector_retrieval import (
     DETERMINISTIC_REBUILD_POSTURE,
     SEMANTIC_VECTOR_ROUTE,
@@ -18,6 +19,13 @@ from agentmem_ref.vector_retrieval import (
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "reference" / "fixtures" / "benchmarks" / "rc-retrieval-quality-v1.json"
+GRAPH_FIXTURE = (
+    ROOT
+    / "reference"
+    / "fixtures"
+    / "benchmarks"
+    / "rc-typed-graph-retrieval-v1.json"
+)
 RUNTIME_CONFIG = (
     ROOT
     / "reference"
@@ -71,6 +79,13 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
             vector_retriever=NativeVectorCandidateRetriever(
                 _BenchmarkVectorRepresentation(),
             ),
+        )
+
+    def _graph_report(self) -> dict:
+        return run_benchmark(
+            fixture_path=GRAPH_FIXTURE,
+            runtime_config_path=RUNTIME_CONFIG,
+            agent_memory_revision="typed-graph-test-revision",
         )
 
     def test_composed_retrieval_improves_recall_without_precision_loss(self) -> None:
@@ -170,8 +185,10 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
         self.assertTrue(first["fixture"]["sha256"].startswith("sha256:"))
         self.assertTrue(first["runtime_configuration"]["sha256"].startswith("sha256:"))
         self.assertEqual(first["fixture"]["memory_count"], 6)
+        self.assertEqual(first["fixture"]["relation_count"], 0)
         self.assertEqual(first["fixture"]["case_count"], 5)
         self.assertIsNone(first["vector_route"])
+        self.assertIsNone(first["typed_graph_route"])
 
     def test_vector_profile_and_route_contribution_are_revision_bound(self) -> None:
         first = self._vector_report()
@@ -219,6 +236,65 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
             )
         )
 
+    def test_typed_graph_lane_reports_unique_gain_and_governance_separately(self) -> None:
+        first = self._graph_report()
+        second = self._graph_report()
+        self.assertEqual(first, second)
+        self.assertEqual(first["agent_memory_revision"], "typed-graph-test-revision")
+        self.assertEqual(first["benchmark_version"], "1.1.0-typed-graph")
+        self.assertEqual(first["fixture"]["relation_count"], 4)
+
+        profile = first["typed_graph_route"]
+        self.assertEqual(profile["route_id"], TYPED_GRAPH_ROUTE)
+        self.assertEqual(profile["max_depth"], 2)
+        self.assertEqual(profile["max_fanout"], 4)
+        self.assertEqual(profile["relation_types"], ["supports", "references"])
+        self.assertEqual(profile["authority_effect"], "none")
+
+        graph = first["systems"]["controlled_typed_graph"]
+        contributions = graph["route_contribution_counts"]
+        self.assertGreater(contributions.get(TYPED_GRAPH_ROUTE, 0), 0)
+        unique = graph["unique_recall_gain_over_multi_route_by_route"]
+        self.assertGreater(unique.get(TYPED_GRAPH_ROUTE, 0), 0)
+        self.assertGreater(
+            first["comparison"]["typed_graph_admitted_recall_delta_over_multi_route"],
+            0.0,
+        )
+        self.assertGreater(
+            first["comparison"]["typed_graph_candidate_amplification_over_multi_route"],
+            0,
+        )
+
+        governance = first["governance"]
+        self.assertEqual(governance["controlled_typed_graph_forbidden_admission_failures"], 0)
+        self.assertEqual(governance["controlled_typed_graph_forbidden_ranked_failures"], 0)
+        self.assertEqual(governance["controlled_typed_graph_authority_effect_violations"], 0)
+
+        rows = {
+            row["case_id"]: row
+            for row in graph["cases"]
+        }
+        rescue = rows["typed-graph-two-hop-rescue"]
+        self.assertIn("memory:deploy-owner", rescue["result"]["admitted"])
+        self.assertIn("memory:backup-policy", rescue["result"]["admitted"])
+        self.assertEqual(
+            rescue["result"]["refusals"]["memory:foreign-graph-only"],
+            "required_isolation_domain_missing",
+        )
+        self.assertEqual(
+            rescue["result"]["refusals"]["memory:stale-graph-only"],
+            "superseded_not_current",
+        )
+        owner_path = rescue["typed_graph_paths"]["memory:deploy-owner"]
+        backup_path = rescue["typed_graph_paths"]["memory:backup-policy"]
+        self.assertEqual(owner_path["relation_ids"], ["relation:window-owner"])
+        self.assertEqual(
+            backup_path["relation_ids"],
+            ["relation:window-owner", "relation:owner-backup"],
+        )
+        self.assertEqual(owner_path["authority_effect"], "none")
+        self.assertEqual(backup_path["authority_effect"], "none")
+
     def test_runner_emits_same_report_and_enforces_governance_gate(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / "retrieval-quality.json"
@@ -240,6 +316,28 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
             )
             emitted = json.loads(output.read_text(encoding="utf-8"))
         self.assertEqual(emitted, self._report())
+
+    def test_runner_enforces_graph_governance_gate_and_emits_graph_report(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "typed-graph-retrieval.json"
+            subprocess.run(
+                [
+                    sys.executable,
+                    str(RUNNER),
+                    "--agent-memory-revision",
+                    "typed-graph-test-revision",
+                    "--fixture",
+                    str(GRAPH_FIXTURE),
+                    "--runtime-config",
+                    str(RUNTIME_CONFIG),
+                    "--output",
+                    str(output),
+                ],
+                cwd=ROOT / "reference",
+                check=True,
+            )
+            emitted = json.loads(output.read_text(encoding="utf-8"))
+        self.assertEqual(emitted, self._graph_report())
 
 
 if __name__ == "__main__":

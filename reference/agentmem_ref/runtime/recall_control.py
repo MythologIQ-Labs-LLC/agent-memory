@@ -1,23 +1,19 @@
 """Provider-neutral recall control for the Agent Memory RC runtime.
 
-This module adds an executable fast-control seam above candidate generation and
-below governed recall admission.  A controller may choose which retrieval
-routes to use and how much work each route may perform, but its output is
-strictly retrieval evidence.  It cannot create scope, currentness, privacy, or
-authority and it cannot bypass the canonical admission boundary.
+A controller may choose candidate-generation routes and bounded work, but its
+output is retrieval evidence only. It cannot create scope, currentness, privacy,
+or authority and cannot bypass governed recall admission.
 
-The first implementation is deterministic and stdlib-only.  Learned/local or
-external System-One controllers can implement the same contract later without
-becoming Agent Memory's authority layer or changing retained-memory semantics.
-
-Issue #456 adds the Agent Memory-native semantic/vector route to this same
-budgeting contract.  Vector similarity is candidate evidence only; it does not
-change the authority semantics of controlled recall.
+Issue #456 adds native semantic/vector retrieval. Issue #461 adds native typed
+graph traversal over canonical relations. Similarity, graph proximity, path
+weights, and relation density remain non-authoritative candidate evidence.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from collections import deque
+from dataclasses import dataclass, field
+import math
 import re
 from typing import Protocol
 
@@ -32,11 +28,20 @@ from .runtime_composition import (
     RetrievalRouteHit,
 )
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
-from ..state.substrate import EvidenceNeighborTemporalGraphPort
+from ..state.substrate import (
+    EvidenceNeighborTemporalGraphPort,
+    TypedRelation,
+    TypedRelationTemporalGraphPort,
+)
 
 
 DETERMINISTIC_CONTROLLER_REF = "agent-memory:deterministic-recall-controller"
-DETERMINISTIC_CONTROLLER_VERSION = "1.1.0"
+DETERMINISTIC_CONTROLLER_VERSION = "1.2.0"
+TYPED_GRAPH_ROUTE = "typed_graph"
+GRAPH_OUTGOING = "outgoing"
+GRAPH_INCOMING = "incoming"
+GRAPH_BOTH = "both"
+MAX_GRAPH_SEED_REFS = 16
 
 _WORD = re.compile(r"[a-z0-9]+")
 _STOPWORDS = frozenset(
@@ -58,6 +63,260 @@ def _content_terms(text: str) -> set[str]:
 
 def _content_overlap(query: str, fact_text: str) -> int:
     return len(_content_terms(query).intersection(_content_terms(fact_text)))
+
+
+@dataclass(frozen=True)
+class GraphTraversalSpec:
+    """Deterministic work and semantics contract for one typed-graph route."""
+
+    max_depth: int = 2
+    max_fanout: int = 8
+    relation_types: tuple[str, ...] = ()
+    direction: str = GRAPH_OUTGOING
+    min_path_score: float = 0.0
+    authority_effect: str = "none"
+
+    def __post_init__(self) -> None:
+        if self.max_depth < 1:
+            raise ValueError("graph traversal max_depth must be >= 1")
+        if self.max_fanout < 1:
+            raise ValueError("graph traversal max_fanout must be >= 1")
+        if self.direction not in (GRAPH_OUTGOING, GRAPH_INCOMING, GRAPH_BOTH):
+            raise ValueError("unsupported graph traversal direction")
+        if not math.isfinite(self.min_path_score):
+            raise ValueError("graph traversal min_path_score must be finite")
+        if self.min_path_score < 0.0 or self.min_path_score > 1.0:
+            raise ValueError("graph traversal min_path_score must be between 0 and 1")
+        if any(not relation_type for relation_type in self.relation_types):
+            raise ValueError("graph traversal relation types must be non-empty strings")
+        if len(self.relation_types) != len(set(self.relation_types)):
+            raise ValueError("graph traversal relation types must be unique")
+        if self.authority_effect != "none":
+            raise ValueError("graph traversal cannot have authority effect")
+
+
+@dataclass(frozen=True)
+class GraphCandidateHit:
+    """One deterministic best path from a seed to a candidate fact."""
+
+    candidate_ref: str
+    seed_candidate_ref: str
+    path_score: float
+    path_refs: tuple[str, ...]
+    relation_ids: tuple[str, ...]
+    relation_types: tuple[str, ...]
+    relation_evidence_refs: tuple[str, ...]
+    relation_weights: tuple[float, ...]
+    hop_count: int
+    currentness_basis: str = "governed_recall_admission"
+    authority_effect: str = "none"
+
+    def __post_init__(self) -> None:
+        if not self.candidate_ref or not self.seed_candidate_ref:
+            raise ValueError("graph candidate and seed references are required")
+        if not math.isfinite(self.path_score):
+            raise ValueError("graph path score must be finite")
+        if self.path_score < 0.0 or self.path_score > 1.0:
+            raise ValueError("graph path score must be between 0 and 1")
+        if self.hop_count < 1:
+            raise ValueError("graph candidate hop_count must be >= 1")
+        if len(self.path_refs) != self.hop_count + 1:
+            raise ValueError("graph candidate path length does not match hop_count")
+        if len(self.relation_ids) != self.hop_count:
+            raise ValueError("graph candidate relation path does not match hop_count")
+        if len(self.relation_types) != self.hop_count:
+            raise ValueError("graph candidate relation types do not match hop_count")
+        if len(self.relation_weights) != self.hop_count:
+            raise ValueError("graph candidate relation weights do not match hop_count")
+        if self.path_refs[0] != self.seed_candidate_ref:
+            raise ValueError("graph candidate path must start at the seed")
+        if self.path_refs[-1] != self.candidate_ref:
+            raise ValueError("graph candidate path must end at the candidate")
+        if self.authority_effect != "none":
+            raise ValueError("graph candidate hits cannot have authority effect")
+
+
+class NativeTypedGraphCandidateRetriever:
+    """Bounded deterministic traversal over Agent Memory canonical relations.
+
+    Relation group filtering is applied during expansion as containment and work
+    control. Fact-level scope, isolation, currentness, dispute, and tombstone
+    checks remain at governed recall admission.
+    """
+
+    def __init__(self, spec: GraphTraversalSpec | None = None) -> None:
+        self.spec = spec or GraphTraversalSpec()
+
+    def available_for(self, substrate: object) -> bool:
+        return isinstance(substrate, TypedRelationTemporalGraphPort)
+
+    def search(
+        self,
+        substrate: TypedRelationTemporalGraphPort,
+        seed_refs: tuple[str, ...],
+        *,
+        group_id: str,
+        candidate_limit: int,
+    ) -> list[GraphCandidateHit]:
+        if candidate_limit < 0:
+            raise ValueError("graph candidate_limit must be non-negative")
+        if candidate_limit == 0 or not seed_refs:
+            return []
+        if not self.available_for(substrate):
+            raise ValueError("substrate does not support native typed relations")
+
+        best_by_candidate: dict[str, GraphCandidateHit] = {}
+        for seed_ref in tuple(dict.fromkeys(seed_refs)):
+            if substrate.get_fact(seed_ref) is None:
+                continue
+            for hit in self._traverse_seed(substrate, seed_ref, group_id=group_id):
+                existing = best_by_candidate.get(hit.candidate_ref)
+                if existing is None or self._hit_key(hit) < self._hit_key(existing):
+                    best_by_candidate[hit.candidate_ref] = hit
+
+        ordered = sorted(best_by_candidate.values(), key=self._hit_key)
+        return ordered[:candidate_limit]
+
+    def _traverse_seed(
+        self,
+        substrate: TypedRelationTemporalGraphPort,
+        seed_ref: str,
+        *,
+        group_id: str,
+    ) -> list[GraphCandidateHit]:
+        queue = deque(
+            [
+                (
+                    seed_ref,
+                    (seed_ref,),
+                    tuple(),
+                    tuple(),
+                    tuple(),
+                    tuple(),
+                    1.0,
+                )
+            ]
+        )
+        best_score_by_node = {seed_ref: 1.0}
+        hits: list[GraphCandidateHit] = []
+        relation_filter = self.spec.relation_types or None
+
+        while queue:
+            (
+                node_ref,
+                path_refs,
+                relation_ids,
+                relation_types,
+                relation_evidence,
+                relation_weights,
+                path_score,
+            ) = queue.popleft()
+            depth = len(relation_ids)
+            if depth >= self.spec.max_depth:
+                continue
+
+            neighbors = self._neighbors(
+                substrate,
+                node_ref,
+                group_id=group_id,
+                relation_types=relation_filter,
+            )
+            for next_ref, relation in neighbors[: self.spec.max_fanout]:
+                if next_ref in path_refs:
+                    continue
+                if relation.is_event_invalid or relation.is_transaction_expired:
+                    continue
+                next_score = path_score * relation.retrieval_weight
+                if next_score < self.spec.min_path_score:
+                    continue
+                if substrate.get_fact(next_ref) is None:
+                    continue
+                prior_score = best_score_by_node.get(next_ref)
+                if prior_score is not None and next_score <= prior_score:
+                    continue
+                best_score_by_node[next_ref] = next_score
+
+                next_path = path_refs + (next_ref,)
+                next_relation_ids = relation_ids + (relation.relation_id,)
+                next_relation_types = relation_types + (relation.relation_type,)
+                next_evidence = tuple(
+                    dict.fromkeys(relation_evidence + tuple(relation.evidence_refs))
+                )
+                next_weights = relation_weights + (relation.retrieval_weight,)
+                hit = GraphCandidateHit(
+                    candidate_ref=next_ref,
+                    seed_candidate_ref=seed_ref,
+                    path_score=next_score,
+                    path_refs=next_path,
+                    relation_ids=next_relation_ids,
+                    relation_types=next_relation_types,
+                    relation_evidence_refs=next_evidence,
+                    relation_weights=next_weights,
+                    hop_count=len(next_relation_ids),
+                )
+                hits.append(hit)
+                queue.append(
+                    (
+                        next_ref,
+                        next_path,
+                        next_relation_ids,
+                        next_relation_types,
+                        next_evidence,
+                        next_weights,
+                        next_score,
+                    )
+                )
+
+        return hits
+
+    def _neighbors(
+        self,
+        substrate: TypedRelationTemporalGraphPort,
+        node_ref: str,
+        *,
+        group_id: str,
+        relation_types: tuple[str, ...] | None,
+    ) -> list[tuple[str, TypedRelation]]:
+        values: dict[tuple[str, str], tuple[str, TypedRelation]] = {}
+        if self.spec.direction in (GRAPH_OUTGOING, GRAPH_BOTH):
+            for relation in substrate.relations_from(
+                node_ref,
+                group_ids=[group_id],
+                relation_types=relation_types,
+            ):
+                values[(relation.relation_id, relation.target_uuid)] = (
+                    relation.target_uuid,
+                    relation,
+                )
+        if self.spec.direction in (GRAPH_INCOMING, GRAPH_BOTH):
+            for relation in substrate.relations_to(
+                node_ref,
+                group_ids=[group_id],
+                relation_types=relation_types,
+            ):
+                values[(relation.relation_id, relation.source_uuid)] = (
+                    relation.source_uuid,
+                    relation,
+                )
+        return sorted(
+            values.values(),
+            key=lambda item: (
+                -item[1].retrieval_weight,
+                item[1].relation_type,
+                item[0],
+                item[1].relation_id,
+            ),
+        )
+
+    @staticmethod
+    def _hit_key(hit: GraphCandidateHit) -> tuple[object, ...]:
+        return (
+            -hit.path_score,
+            hit.hop_count,
+            hit.candidate_ref,
+            hit.seed_candidate_ref,
+            hit.relation_ids,
+        )
 
 
 @dataclass(frozen=True)
@@ -124,7 +383,7 @@ class RecallControlPlan:
 
 
 class RecallController(Protocol):
-    """Estimator/controller contract.  Implementations own no recall authority."""
+    """Estimator/controller contract. Implementations own no recall authority."""
 
     def plan(
         self,
@@ -136,12 +395,7 @@ class RecallController(Protocol):
 
 
 class DeterministicRecallController:
-    """Small deterministic System-One control baseline for RC evaluation.
-
-    The controller uses query shape and explicit seed availability to select
-    bounded work.  It deliberately does not inspect governance decisions and
-    therefore cannot learn how to route around a refusal.
-    """
+    """Small deterministic System-One control baseline for RC evaluation."""
 
     def plan(
         self,
@@ -166,6 +420,10 @@ class DeterministicRecallController:
         if SEMANTIC_VECTOR_ROUTE in available and terms:
             vector_limit = min(24, max(8, len(terms) * 4))
 
+        graph_limit = 0
+        if TYPED_GRAPH_ROUTE in available and unique_refs:
+            graph_limit = min(24, max(4, len(unique_refs) * 8))
+
         shared_candidate_limit = 0
         shared_anchor_limit = 0
         if SHARED_EVIDENCE_ROUTE in available and (terms or unique_refs):
@@ -184,6 +442,8 @@ class DeterministicRecallController:
             reason_codes.append("explicit_identity_seed")
         if vector_limit:
             reason_codes.append("bounded_semantic_vector_search")
+        if graph_limit:
+            reason_codes.append("bounded_typed_graph_traversal")
         if shared_candidate_limit:
             reason_codes.append("bounded_relational_expansion")
 
@@ -194,6 +454,7 @@ class DeterministicRecallController:
                 RecallRouteBudget(LEXICAL_ROUTE, lexical_limit),
                 RecallRouteBudget(EXACT_IDENTITY_ROUTE, exact_limit),
                 RecallRouteBudget(SEMANTIC_VECTOR_ROUTE, vector_limit),
+                RecallRouteBudget(TYPED_GRAPH_ROUTE, graph_limit),
                 RecallRouteBudget(
                     SHARED_EVIDENCE_ROUTE,
                     shared_candidate_limit,
@@ -220,6 +481,7 @@ class ControlledRecallResult:
     route_candidate_counts: dict[str, int]
     evidence_sufficiency_met: bool
     stop_reason: str
+    graph_candidate_hits: dict[str, GraphCandidateHit] = field(default_factory=dict)
     controller_calls: int = 1
     authority_effect: str = "none"
 
@@ -245,10 +507,12 @@ class ControlledRecallPlanner:
         *,
         controller: RecallController | None = None,
         vector_retriever: NativeVectorCandidateRetriever | None = None,
+        graph_retriever: NativeTypedGraphCandidateRetriever | None = None,
     ) -> None:
         self.adapter = adapter
         self.controller = controller or DeterministicRecallController()
         self.vector_retriever = vector_retriever
+        self.graph_retriever = graph_retriever
         substrate_reader = getattr(adapter, "checkpoint_substrate", None)
         tenant_reader = getattr(adapter, "checkpoint_tenant", None)
         if not callable(substrate_reader) or not callable(tenant_reader):
@@ -265,9 +529,12 @@ class ControlledRecallPlanner:
     ) -> ControlledRecallResult:
         substrate = self.adapter.checkpoint_substrate()
         tenant = self.adapter.checkpoint_tenant()
+        unique_logical_refs = tuple(dict.fromkeys(logical_memory_refs))
         available_routes = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
         if self.vector_retriever is not None and self.vector_retriever.available_for(substrate):
             available_routes.append(SEMANTIC_VECTOR_ROUTE)
+        if self.graph_retriever is not None and self.graph_retriever.available_for(substrate):
+            available_routes.append(TYPED_GRAPH_ROUTE)
         if isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             available_routes.append(SHARED_EVIDENCE_ROUTE)
 
@@ -280,6 +547,7 @@ class ControlledRecallPlanner:
 
         hits: list[RetrievalRouteHit] = []
         route_counts = {route_id: 0 for route_id in available_routes}
+        graph_candidate_hits: dict[str, GraphCandidateHit] = {}
 
         lexical_budget = plan.budget_for(LEXICAL_ROUTE)
         lexical_results = list(substrate.search(query, group_ids=[tenant]))
@@ -300,9 +568,7 @@ class ControlledRecallPlanner:
         exact_budget = plan.budget_for(EXACT_IDENTITY_ROUTE)
         explicit_seeds: list[tuple[str, str]] = []
         if exact_budget.candidate_limit:
-            for logical_ref in tuple(dict.fromkeys(logical_memory_refs))[
-                : exact_budget.candidate_limit
-            ]:
+            for logical_ref in unique_logical_refs[: exact_budget.candidate_limit]:
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is None:
                     continue
@@ -344,6 +610,38 @@ class ControlledRecallPlanner:
                     )
                 )
             route_counts[SEMANTIC_VECTOR_ROUTE] = len(vector_results)
+
+        graph_budget = plan.budget_for(TYPED_GRAPH_ROUTE)
+        if (
+            self.graph_retriever is not None
+            and graph_budget.candidate_limit
+            and self.graph_retriever.available_for(substrate)
+        ):
+            graph_seed_refs: list[str] = []
+            graph_seed_limit = min(MAX_GRAPH_SEED_REFS, graph_budget.candidate_limit)
+            for logical_ref in unique_logical_refs[:graph_seed_limit]:
+                current = self.adapter.current_fact_uuid(logical_ref)
+                if current is not None:
+                    graph_seed_refs.append(current)
+            graph_results = self.graph_retriever.search(
+                substrate,
+                tuple(graph_seed_refs),
+                group_id=tenant,
+                candidate_limit=graph_budget.candidate_limit,
+            )
+            for graph_hit in graph_results:
+                graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
+                hits.append(
+                    RetrievalRouteHit(
+                        route_id=TYPED_GRAPH_ROUTE,
+                        candidate_ref=graph_hit.candidate_ref,
+                        raw_score=graph_hit.path_score,
+                        seed_candidate_ref=graph_hit.seed_candidate_ref,
+                        shared_evidence_refs=graph_hit.relation_evidence_refs,
+                        currentness_basis=graph_hit.currentness_basis,
+                    )
+                )
+            route_counts[TYPED_GRAPH_ROUTE] = len(graph_results)
 
         shared_budget = plan.budget_for(SHARED_EVIDENCE_ROUTE)
         if (
@@ -441,6 +739,7 @@ class ControlledRecallPlanner:
             stop_reason=(
                 "evidence_target_met" if sufficient else "planned_routes_exhausted"
             ),
+            graph_candidate_hits=graph_candidate_hits,
         )
 
     @staticmethod
@@ -503,6 +802,10 @@ class ControlledRecallPlanner:
             (hit.raw_score for hit in hits if hit.route_id == SEMANTIC_VECTOR_ROUTE),
             default=0.0,
         )
+        graph_score = max(
+            (hit.raw_score for hit in hits if hit.route_id == TYPED_GRAPH_ROUTE),
+            default=0.0,
+        )
         lexical_score = max(
             (hit.raw_score for hit in hits if hit.route_id == LEXICAL_ROUTE),
             default=0.0,
@@ -515,6 +818,7 @@ class ControlledRecallPlanner:
             -len(route_ids),
             -exact,
             -vector_score,
+            -graph_score,
             -lexical_score,
             -relational_score,
             candidate_ref,

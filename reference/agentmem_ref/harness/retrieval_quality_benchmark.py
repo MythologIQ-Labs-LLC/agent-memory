@@ -6,9 +6,10 @@ and governance safety are reported separately. The benchmark is intentionally
 synthetic and does not claim LoCoMo, LongMemEval, or answer-quality parity.
 
 Issue #456 optionally injects Agent Memory's native semantic/vector candidate
-route into the same benchmark. Representation identity, config, dimensions,
-rebuild posture and route budget are bound in the report so vector evidence is
-reproducible rather than a floating "embeddings helped" claim.
+route into the same benchmark. Issue #461 optionally adds a relation-bearing
+fixture and a controlled typed-graph lane over the same retained corpus. The
+graph lane is reported separately from the older multi-route baseline so new
+retrieval depth does not rewrite historical evidence.
 """
 
 from __future__ import annotations
@@ -22,9 +23,16 @@ from typing import Any, Mapping
 
 from ..core import policy
 from ..runtime.adapter import RecallContext
+from ..runtime.recall_control import (
+    ControlledRecallPlanner,
+    GraphTraversalSpec,
+    NativeTypedGraphCandidateRetriever,
+    TYPED_GRAPH_ROUTE,
+)
 from ..runtime.runtime_composition import ConfiguredCompositionRuntime
 from ..runtime.runtime_config import validate_runtime_configuration
 from ..runtime.vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
+from ..state.substrate import TypedRelation
 
 SCHEMA_VERSION = "1.0.0"
 BENCHMARK_ID = "agent-memory-rc-retrieval-quality"
@@ -69,6 +77,35 @@ def _validate_fixture(fixture: Mapping[str, Any]) -> None:
         evidence_refs = item.get("evidence_refs")
         if not isinstance(evidence_refs, list) or not evidence_refs:
             raise ValueError(f"benchmark memory {memory_ref} requires evidence_refs")
+
+    relations = fixture.get("relations", [])
+    if not isinstance(relations, list):
+        raise ValueError("benchmark relations must be a list")
+    relation_ids: set[str] = set()
+    for relation in relations:
+        if not isinstance(relation, Mapping):
+            raise ValueError("benchmark relation must be a mapping")
+        relation_id = str(relation.get("relation_id", ""))
+        source = str(relation.get("source_memory_ref", ""))
+        target = str(relation.get("target_memory_ref", ""))
+        relation_type = str(relation.get("relation_type", ""))
+        if not relation_id or relation_id in relation_ids:
+            raise ValueError("benchmark relation ids must be non-empty and unique")
+        relation_ids.add(relation_id)
+        if source not in refs or target not in refs:
+            raise ValueError(f"benchmark relation {relation_id} references unknown memory")
+        if not relation_type:
+            raise ValueError(f"benchmark relation {relation_id} requires relation_type")
+        evidence_refs = relation.get("evidence_refs", [])
+        if not isinstance(evidence_refs, list):
+            raise ValueError(f"benchmark relation {relation_id} evidence_refs must be a list")
+        weight = float(relation.get("retrieval_weight", 1.0))
+        if weight < 0.0 or weight > 1.0:
+            raise ValueError(f"benchmark relation {relation_id} retrieval_weight is out of range")
+
+    graph_profile = fixture.get("graph_profile", {})
+    if graph_profile and not isinstance(graph_profile, Mapping):
+        raise ValueError("benchmark graph_profile must be a mapping")
 
     case_ids: set[str] = set()
     for case in cases:
@@ -220,6 +257,32 @@ def _vector_profile(
     }
 
 
+def _graph_spec(fixture: Mapping[str, Any]) -> GraphTraversalSpec:
+    value = fixture.get("graph_profile", {})
+    if not isinstance(value, Mapping):
+        raise ValueError("benchmark graph_profile must be a mapping")
+    return GraphTraversalSpec(
+        max_depth=int(value.get("max_depth", 2)),
+        max_fanout=int(value.get("max_fanout", 8)),
+        relation_types=tuple(str(item) for item in value.get("relation_types", [])),
+        direction=str(value.get("direction", "outgoing")),
+        min_path_score=float(value.get("min_path_score", 0.0)),
+    )
+
+
+def _graph_profile(spec: GraphTraversalSpec) -> dict[str, Any]:
+    return {
+        "route_id": TYPED_GRAPH_ROUTE,
+        "max_depth": spec.max_depth,
+        "max_fanout": spec.max_fanout,
+        "relation_types": list(spec.relation_types),
+        "direction": spec.direction,
+        "minimum_path_score": spec.min_path_score,
+        "candidate_limit_policy": "deterministic_controller_bounded_max_24",
+        "authority_effect": "none",
+    }
+
+
 def run_benchmark(
     *,
     fixture_path: Path,
@@ -235,6 +298,7 @@ def run_benchmark(
     tenant_ref = str(fixture["tenant_ref"])
     default_project_ref = str(fixture["default_project_ref"])
     purpose = str(fixture.get("purpose", "retrieval-quality-evaluation"))
+    relation_values = list(fixture.get("relations", []))
 
     with tempfile.TemporaryDirectory(prefix="agent-memory-retrieval-benchmark-") as root:
         runtime = ConfiguredCompositionRuntime.create(
@@ -279,11 +343,46 @@ def run_benchmark(
                 expired_at="2026-09-23T13:00:01Z",
             )
 
+        graph_retriever: NativeTypedGraphCandidateRetriever | None = None
+        graph_profile: dict[str, Any] | None = None
+        if relation_values:
+            for relation in relation_values:
+                substrate.write_relation(
+                    TypedRelation(
+                        relation_id=str(relation["relation_id"]),
+                        source_uuid=memory_to_fact[str(relation["source_memory_ref"])],
+                        target_uuid=memory_to_fact[str(relation["target_memory_ref"])],
+                        relation_type=str(relation["relation_type"]),
+                        group_id=tenant_ref,
+                        evidence_refs=tuple(str(item) for item in relation.get("evidence_refs", [])),
+                        retrieval_weight=float(relation.get("retrieval_weight", 1.0)),
+                        valid_at=str(relation.get("valid_at", "2026-09-23T12:00:00Z")),
+                        created_at=str(relation.get("created_at", "2026-09-23T12:00:00Z")),
+                    )
+                )
+            spec = _graph_spec(fixture)
+            graph_retriever = NativeTypedGraphCandidateRetriever(spec)
+            graph_profile = _graph_profile(spec)
+
+        controlled_planner = (
+            ControlledRecallPlanner(
+                runtime.adapter,
+                vector_retriever=vector_retriever,
+                graph_retriever=graph_retriever,
+            )
+            if graph_retriever is not None
+            else None
+        )
+
         lexical_rows: list[dict[str, Any]] = []
         multi_rows: list[dict[str, Any]] = []
+        controlled_rows: list[dict[str, Any]] = []
         route_contributions: Counter[str] = Counter()
         unique_gain_by_route: Counter[str] = Counter()
+        controlled_route_contributions: Counter[str] = Counter()
+        controlled_unique_gain_over_multi: Counter[str] = Counter()
         authority_effect_violations = 0
+        controlled_authority_effect_violations = 0
 
         for case in fixture["cases"]:
             project_ref = str(case.get("project_ref", default_project_ref))
@@ -354,8 +453,138 @@ def run_benchmark(
                 }
             )
 
+            if controlled_planner is not None:
+                controlled = controlled_planner.recall(
+                    query,
+                    context,
+                    logical_memory_refs=logical_refs,
+                )
+                controlled_result = _logical_result(
+                    candidates=list(controlled.candidates),
+                    admitted=list(controlled.admitted),
+                    refusals=controlled.recall.refusals,
+                    ranked=list(controlled.ranked_admitted),
+                    fact_to_memory=fact_to_memory,
+                )
+                controlled_metrics = _case_metrics(controlled_result, case)
+                controlled_provenance: dict[str, list[dict[str, Any]]] = {}
+                for candidate_ref, hits in sorted(controlled.recall.route_hits.items()):
+                    logical_ref = fact_to_memory.get(candidate_ref, f"unknown-fact:{candidate_ref}")
+                    controlled_provenance[logical_ref] = [hit.to_dict() for hit in hits]
+                    for hit in hits:
+                        controlled_route_contributions[hit.route_id] += 1
+                        if hit.authority_effect != "none":
+                            controlled_authority_effect_violations += 1
+                if controlled.authority_effect != "none":
+                    controlled_authority_effect_violations += 1
+
+                graph_paths: dict[str, dict[str, Any]] = {}
+                for candidate_ref, hit in sorted(controlled.graph_candidate_hits.items()):
+                    logical_ref = fact_to_memory.get(candidate_ref, f"unknown-fact:{candidate_ref}")
+                    graph_paths[logical_ref] = {
+                        "seed_memory_ref": fact_to_memory.get(
+                            hit.seed_candidate_ref,
+                            f"unknown-fact:{hit.seed_candidate_ref}",
+                        ),
+                        "path_memory_refs": [
+                            fact_to_memory.get(value, f"unknown-fact:{value}")
+                            for value in hit.path_refs
+                        ],
+                        "relation_ids": list(hit.relation_ids),
+                        "relation_types": list(hit.relation_types),
+                        "relation_evidence_refs": list(hit.relation_evidence_refs),
+                        "relation_weights": list(hit.relation_weights),
+                        "path_score": hit.path_score,
+                        "hop_count": hit.hop_count,
+                        "authority_effect": hit.authority_effect,
+                    }
+                    if hit.authority_effect != "none":
+                        controlled_authority_effect_violations += 1
+
+                controlled_relevant = set(case["relevant_memory_refs"]).intersection(
+                    controlled_result["admitted"]
+                )
+                for gained_ref in sorted(controlled_relevant - multi_relevant):
+                    for hit in controlled_provenance.get(gained_ref, []):
+                        controlled_unique_gain_over_multi[str(hit["route_id"])] += 1
+
+                controlled_rows.append(
+                    {
+                        "case_id": case["case_id"],
+                        "result": controlled_result,
+                        "metrics": controlled_metrics,
+                        "routes_executed": list(controlled.recall.routes_executed),
+                        "route_candidate_counts": dict(sorted(controlled.route_candidate_counts.items())),
+                        "route_provenance": controlled_provenance,
+                        "typed_graph_paths": graph_paths,
+                    }
+                )
+
     lexical_aggregate = _aggregate(lexical_rows)
     multi_aggregate = _aggregate(multi_rows)
+    systems: dict[str, Any] = {
+        "lexical_only": {
+            "cases": lexical_rows,
+            "aggregate": lexical_aggregate,
+        },
+        "multi_route": {
+            "cases": multi_rows,
+            "aggregate": multi_aggregate,
+            "route_contribution_counts": dict(sorted(route_contributions.items())),
+            "unique_recall_gain_by_route": dict(sorted(unique_gain_by_route.items())),
+        },
+    }
+    comparison: dict[str, Any] = {
+        "candidate_recall_delta": round(
+            multi_aggregate["candidate_recall"] - lexical_aggregate["candidate_recall"], 6
+        ),
+        "admitted_recall_delta": round(
+            multi_aggregate["admitted_recall"] - lexical_aggregate["admitted_recall"], 6
+        ),
+        "admitted_precision_delta": round(
+            multi_aggregate["admitted_precision"] - lexical_aggregate["admitted_precision"], 6
+        ),
+        "mean_reciprocal_rank_delta": round(
+            multi_aggregate["mean_reciprocal_rank"] - lexical_aggregate["mean_reciprocal_rank"], 6
+        ),
+        "candidate_amplification": multi_aggregate["candidate_total"] - lexical_aggregate["candidate_total"],
+    }
+    governance: dict[str, Any] = {
+        "lexical_forbidden_admission_failures": lexical_aggregate["forbidden_admission_failures"],
+        "multi_route_forbidden_admission_failures": multi_aggregate["forbidden_admission_failures"],
+        "multi_route_forbidden_ranked_failures": multi_aggregate["forbidden_ranked_failures"],
+        "route_authority_effect_violations": authority_effect_violations,
+    }
+
+    if controlled_rows:
+        controlled_aggregate = _aggregate(controlled_rows)
+        systems["controlled_typed_graph"] = {
+            "cases": controlled_rows,
+            "aggregate": controlled_aggregate,
+            "route_contribution_counts": dict(sorted(controlled_route_contributions.items())),
+            "unique_recall_gain_over_multi_route_by_route": dict(
+                sorted(controlled_unique_gain_over_multi.items())
+            ),
+        }
+        comparison["typed_graph_candidate_recall_delta_over_multi_route"] = round(
+            controlled_aggregate["candidate_recall"] - multi_aggregate["candidate_recall"], 6
+        )
+        comparison["typed_graph_admitted_recall_delta_over_multi_route"] = round(
+            controlled_aggregate["admitted_recall"] - multi_aggregate["admitted_recall"], 6
+        )
+        comparison["typed_graph_candidate_amplification_over_multi_route"] = (
+            controlled_aggregate["candidate_total"] - multi_aggregate["candidate_total"]
+        )
+        governance["controlled_typed_graph_forbidden_admission_failures"] = controlled_aggregate[
+            "forbidden_admission_failures"
+        ]
+        governance["controlled_typed_graph_forbidden_ranked_failures"] = controlled_aggregate[
+            "forbidden_ranked_failures"
+        ]
+        governance["controlled_typed_graph_authority_effect_violations"] = (
+            controlled_authority_effect_violations
+        )
+
     report = {
         "schema_version": SCHEMA_VERSION,
         "benchmark_id": BENCHMARK_ID,
@@ -365,6 +594,7 @@ def run_benchmark(
             "path": str(fixture_path),
             "sha256": sha256_file(fixture_path),
             "memory_count": len(fixture["memories"]),
+            "relation_count": len(relation_values),
             "case_count": len(fixture["cases"]),
         },
         "runtime_configuration": {
@@ -372,39 +602,10 @@ def run_benchmark(
             "sha256": sha256_file(runtime_config_path),
         },
         "vector_route": vector_profile,
-        "systems": {
-            "lexical_only": {
-                "cases": lexical_rows,
-                "aggregate": lexical_aggregate,
-            },
-            "multi_route": {
-                "cases": multi_rows,
-                "aggregate": multi_aggregate,
-                "route_contribution_counts": dict(sorted(route_contributions.items())),
-                "unique_recall_gain_by_route": dict(sorted(unique_gain_by_route.items())),
-            },
-        },
-        "comparison": {
-            "candidate_recall_delta": round(
-                multi_aggregate["candidate_recall"] - lexical_aggregate["candidate_recall"], 6
-            ),
-            "admitted_recall_delta": round(
-                multi_aggregate["admitted_recall"] - lexical_aggregate["admitted_recall"], 6
-            ),
-            "admitted_precision_delta": round(
-                multi_aggregate["admitted_precision"] - lexical_aggregate["admitted_precision"], 6
-            ),
-            "mean_reciprocal_rank_delta": round(
-                multi_aggregate["mean_reciprocal_rank"] - lexical_aggregate["mean_reciprocal_rank"], 6
-            ),
-            "candidate_amplification": multi_aggregate["candidate_total"] - lexical_aggregate["candidate_total"],
-        },
-        "governance": {
-            "lexical_forbidden_admission_failures": lexical_aggregate["forbidden_admission_failures"],
-            "multi_route_forbidden_admission_failures": multi_aggregate["forbidden_admission_failures"],
-            "multi_route_forbidden_ranked_failures": multi_aggregate["forbidden_ranked_failures"],
-            "route_authority_effect_violations": authority_effect_violations,
-        },
+        "typed_graph_route": graph_profile,
+        "systems": systems,
+        "comparison": comparison,
+        "governance": governance,
         "limitations": list(fixture.get("limitations", [])),
     }
     return report
