@@ -283,14 +283,14 @@ class TypedGraphGovernedRecallTests(unittest.TestCase):
         return outcome
 
     @staticmethod
-    def _graph_only_controller() -> _FixedController:
+    def _graph_only_controller(*, exact_limit: int = 1) -> _FixedController:
         return _FixedController(
             RecallControlPlan(
                 controller_ref="test:typed-graph",
                 controller_version="1",
                 route_budgets=(
                     RecallRouteBudget(LEXICAL_ROUTE, 0),
-                    RecallRouteBudget(EXACT_IDENTITY_ROUTE, 1),
+                    RecallRouteBudget(EXACT_IDENTITY_ROUTE, exact_limit),
                     RecallRouteBudget(TYPED_GRAPH_ROUTE, 8),
                     RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
                 ),
@@ -331,6 +331,40 @@ class TypedGraphGovernedRecallTests(unittest.TestCase):
         self.assertEqual(graph_hit.relation_types, ("supports",))
         self.assertEqual(graph_hit.relation_evidence_refs, ("evidence:relation",))
         self.assertEqual(graph_hit.authority_effect, "none")
+
+    def test_graph_route_resolves_seeds_even_when_exact_route_budget_is_zero(self) -> None:
+        seed = self._retain("memory:seed", "seed memory")
+        neighbor = self._retain("memory:neighbor", "related memory")
+        substrate = self.runtime.adapter.checkpoint_substrate()
+        substrate.write_relation(
+            _relation(
+                "relation:independent-seed",
+                seed.fact_uuid,
+                neighbor.fact_uuid,
+                relation_type="references",
+                weight=1.0,
+            )
+        )
+
+        result = ControlledRecallPlanner(
+            self.runtime.adapter,
+            controller=self._graph_only_controller(exact_limit=0),
+            graph_retriever=NativeTypedGraphCandidateRetriever(),
+        ).recall(
+            "",
+            _context(),
+            logical_memory_refs=("memory:seed",),
+        )
+
+        self.assertEqual(result.route_candidate_counts[EXACT_IDENTITY_ROUTE], 0)
+        self.assertEqual(result.route_candidate_counts[TYPED_GRAPH_ROUTE], 1)
+        self.assertNotIn(seed.fact_uuid, result.candidates)
+        self.assertIn(neighbor.fact_uuid, result.candidates)
+        self.assertIn(neighbor.fact_uuid, result.admitted)
+        self.assertEqual(
+            result.graph_candidate_hits[neighbor.fact_uuid].seed_candidate_ref,
+            seed.fact_uuid,
+        )
 
     def test_graph_reachable_cross_project_fact_is_discovered_then_refused(self) -> None:
         seed = self._retain("memory:seed", "seed memory")
