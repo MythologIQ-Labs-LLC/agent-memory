@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
-  "profile_id": "swe-context-bench-lite-bicameral-retrieval-v1",
+  "profile_id": "swe-context-bench-lite-external-retrieval-v1",
   "purpose": "External retrieval-quality, consistency, performance, and governance evidence for Agent Memory RC1.",
   "source": {
-    "research_note": "Bicameral SWE-ContextBench Lite research note, issue 1307",
+    "research_note": "SWE-ContextBench Lite retrieval research note, external issue 1307",
     "paper": "Zhu et al., SWE Context Bench: A Benchmark for Context Learning in Coding",
     "arxiv": "2602.08316",
     "upstream_repository": "jiayuanz3/SWEContextBench",
@@ -15,7 +15,7 @@
     "new_issue_count": 99,
     "gold_edge_count": 100,
     "gold_edge_construction": "GitHub issue and pull-request dependency/reference links",
-    "query_input": "new issue text only",
+    "query_input": "new issue problem statement only",
     "past_task_projection": "issue/problem statement + summary lines + final assistant message",
     "index_policy": "batch gold boards plus up to two same-repository boards that are not gold for that batch",
     "consistency_batch": {
@@ -27,7 +27,7 @@
       "gold_edge_count": 100,
       "passes": 1
     },
-    "timing": "failed conversions count in fail rate and are excluded from medians in the Bicameral note"
+    "timing": "failed conversions count in fail rate and are excluded from medians in the external research note"
   },
   "external_reference_results": {
     "gpt_4_1_mini": {
