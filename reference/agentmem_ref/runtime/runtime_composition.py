@@ -16,6 +16,11 @@ Issue #433 adds an Agent Memory-native relational route over shared retained
 evidence. The relation is deliberately narrow: direct provenance neighbors,
 not a claim of semantic graph search or GraphRAG.
 
+Issue #456 adds an optional Agent Memory-native semantic/vector candidate route.
+The representation is derived state rebuilt from canonical facts. Vector
+similarity remains retrieval evidence only and crosses the same governed recall
+admission boundary as every other candidate route.
+
 The purpose is not to invent a new projection engine. It proves that a
 configured derived component can be disabled, physically removed, and rebuilt
 from canonical state without changing canonical logical memory identity or
@@ -31,6 +36,7 @@ from .adapter import RecallContext
 from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
+from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.projections import (
     CURRENT,
     DETERMINISTIC,
@@ -58,6 +64,12 @@ class RetrievalRouteHit:
     logical_memory_ref: str = ""
     seed_candidate_ref: str = ""
     shared_evidence_refs: tuple[str, ...] = ()
+    representation_ref: str = ""
+    representation_version: str = ""
+    representation_config_digest: str = ""
+    vector_dimension: int = 0
+    similarity_metric: str = ""
+    currentness_basis: str = ""
     authority_effect: str = "none"
 
     def to_dict(self) -> dict[str, object]:
@@ -68,6 +80,12 @@ class RetrievalRouteHit:
             "logical_memory_ref": self.logical_memory_ref,
             "seed_candidate_ref": self.seed_candidate_ref,
             "shared_evidence_refs": list(self.shared_evidence_refs),
+            "representation_ref": self.representation_ref,
+            "representation_version": self.representation_version,
+            "representation_config_digest": self.representation_config_digest,
+            "vector_dimension": self.vector_dimension,
+            "similarity_metric": self.similarity_metric,
+            "currentness_basis": self.currentness_basis,
             "authority_effect": self.authority_effect,
         }
 
@@ -91,17 +109,30 @@ class MultiRouteRecallResult:
 
 
 class DeterministicMultiRouteRecallPlanner:
-    """Candidate planner: lexical, exact identity, and optional provenance neighbors.
+    """Candidate planner over native lexical, identity, relational and vector routes.
 
-    The planner remains deliberately provider-neutral and deterministic. Shared-
-    evidence traversal is enabled only when the configured substrate explicitly
-    implements ``EvidenceNeighborTemporalGraphPort``. Future vector, graph,
-    temporal, or System-One routes can add candidate evidence behind this same
-    result shape without inheriting recall authority.
+    The planner remains provider-neutral. Shared-evidence traversal is enabled
+    only when the configured substrate implements
+    ``EvidenceNeighborTemporalGraphPort``. Vector retrieval is enabled only when
+    a native ``NativeVectorCandidateRetriever`` is supplied and the substrate can
+    enumerate canonical facts for deterministic derived-state rebuild.
+
+    Every route remains candidate evidence only. The deduped union crosses one
+    canonical governed admission boundary before ranking.
     """
 
-    def __init__(self, adapter) -> None:
+    def __init__(
+        self,
+        adapter,
+        *,
+        vector_retriever: NativeVectorCandidateRetriever | None = None,
+        vector_candidate_limit: int = 16,
+    ) -> None:
         self.adapter = adapter
+        self.vector_retriever = vector_retriever
+        if vector_candidate_limit < 0:
+            raise ValueError("vector_candidate_limit must be non-negative")
+        self.vector_candidate_limit = vector_candidate_limit
         substrate_reader = getattr(adapter, "checkpoint_substrate", None)
         tenant_reader = getattr(adapter, "checkpoint_tenant", None)
         if not callable(substrate_reader) or not callable(tenant_reader):
@@ -144,6 +175,32 @@ class DeterministicMultiRouteRecallPlanner:
                 )
             )
             seed_pairs.append((logical_ref, current))
+
+        if (
+            self.vector_retriever is not None
+            and self.vector_candidate_limit > 0
+            and self.vector_retriever.available_for(substrate)
+        ):
+            routes_executed.append(SEMANTIC_VECTOR_ROUTE)
+            for vector_hit in self.vector_retriever.search(
+                substrate,
+                query,
+                group_id=tenant,
+                candidate_limit=self.vector_candidate_limit,
+            ):
+                hits.append(
+                    RetrievalRouteHit(
+                        route_id=SEMANTIC_VECTOR_ROUTE,
+                        candidate_ref=vector_hit.candidate_ref,
+                        raw_score=vector_hit.similarity,
+                        representation_ref=vector_hit.representation_ref,
+                        representation_version=vector_hit.representation_version,
+                        representation_config_digest=vector_hit.representation_config_digest,
+                        vector_dimension=vector_hit.vector_dimension,
+                        similarity_metric=vector_hit.similarity_metric,
+                        currentness_basis=vector_hit.currentness_basis,
+                    )
+                )
 
         if seed_pairs and isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             routes_executed.append(SHARED_EVIDENCE_ROUTE)
@@ -205,6 +262,10 @@ class DeterministicMultiRouteRecallPlanner:
     def _rank_key(candidate_ref: str, hits) -> tuple[object, ...]:
         route_ids = {hit.route_id for hit in hits}
         exact = 1 if EXACT_IDENTITY_ROUTE in route_ids else 0
+        vector_score = max(
+            (hit.raw_score for hit in hits if hit.route_id == SEMANTIC_VECTOR_ROUTE),
+            default=0.0,
+        )
         relational_score = max(
             (hit.raw_score for hit in hits if hit.route_id == SHARED_EVIDENCE_ROUTE),
             default=0.0,
@@ -216,6 +277,7 @@ class DeterministicMultiRouteRecallPlanner:
         return (
             -len(route_ids),
             -exact,
+            -vector_score,
             -relational_score,
             -lexical_score,
             candidate_ref,
@@ -286,12 +348,16 @@ class ConfiguredCompositionRuntime:
         *,
         durable_runtime: ConfigBoundRestartRuntime,
         plan: RuntimeConfigurationPlan,
+        vector_retriever: NativeVectorCandidateRetriever | None = None,
     ) -> None:
         self.durable_runtime = durable_runtime
         self.plan = plan
         self.adapter = durable_runtime.adapter
         self.projections = ProjectionGovernor(self.adapter)
-        self.recall_planner = DeterministicMultiRouteRecallPlanner(self.adapter)
+        self.recall_planner = DeterministicMultiRouteRecallPlanner(
+            self.adapter,
+            vector_retriever=vector_retriever,
+        )
         self._projection_component_enabled = True
         self._projection_component_id = self._component_for(PROJECTION_CAPABILITY)
         self._canonical_component_id = self._component_for(CANONICAL_CAPABILITY)
@@ -307,12 +373,17 @@ class ConfiguredCompositionRuntime:
         tenant: str,
         plan: RuntimeConfigurationPlan,
         verifier_registry=None,
+        vector_retriever: NativeVectorCandidateRetriever | None = None,
     ) -> "ConfiguredCompositionRuntime":
         """ADR-037 step 4b-2, DoD 20: forwards host-configured verifier trust."""
         durable = ConfigBoundRestartRuntime.create(
             root, tenant=tenant, plan=plan, verifier_registry=verifier_registry
         )
-        return cls(durable_runtime=durable, plan=plan)
+        return cls(
+            durable_runtime=durable,
+            plan=plan,
+            vector_retriever=vector_retriever,
+        )
 
     def _route_for(self, capability_id: str):
         matches = [

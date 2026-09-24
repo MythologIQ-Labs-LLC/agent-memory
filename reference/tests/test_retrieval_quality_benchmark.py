@@ -8,6 +8,12 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref.harness.retrieval_quality_benchmark import run_benchmark
+from agentmem_ref.vector_retrieval import (
+    DETERMINISTIC_REBUILD_POSTURE,
+    SEMANTIC_VECTOR_ROUTE,
+    NativeVectorCandidateRetriever,
+    VectorRepresentationSpec,
+)
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -22,12 +28,49 @@ RUNTIME_CONFIG = (
 RUNNER = ROOT / "reference" / "run_retrieval_quality_benchmark.py"
 
 
+class _BenchmarkVectorRepresentation:
+    """Deterministic fixture representation used only for benchmark conformance."""
+
+    spec = VectorRepresentationSpec(
+        representation_ref="agent-memory:benchmark-vector-fixture",
+        representation_version="1.0.0",
+        config_digest="sha256:benchmark-vector-fixture-v1",
+        dimensions=3,
+        deterministic_rebuild=True,
+    )
+
+    _vectors = {
+        "weather forecast": (1.0, 0.0, 0.0),
+        "database backups run nightly": (1.0, 0.0, 0.0),
+        "staged rollout remains preferred": (0.9, 0.1, 0.0),
+        "deploy window": (0.0, 1.0, 0.0),
+        "deploy window is Thursday": (0.0, 1.0, 0.0),
+        "foreign deployment evidence belongs to beta": (0.0, 0.95, 0.05),
+        "deprecated rollout procedure used canary zero": (0.0, 0.9, 0.1),
+        "team lunch": (0.0, 0.0, 1.0),
+        "team lunch is Tuesday": (0.0, 0.0, 1.0),
+    }
+
+    def embed(self, text: str) -> tuple[float, ...]:
+        return self._vectors.get(text, (0.0, 0.0, 0.0))
+
+
 class RetrievalQualityBenchmarkTests(unittest.TestCase):
     def _report(self) -> dict:
         return run_benchmark(
             fixture_path=FIXTURE,
             runtime_config_path=RUNTIME_CONFIG,
             agent_memory_revision="test-revision",
+        )
+
+    def _vector_report(self) -> dict:
+        return run_benchmark(
+            fixture_path=FIXTURE,
+            runtime_config_path=RUNTIME_CONFIG,
+            agent_memory_revision="vector-test-revision",
+            vector_retriever=NativeVectorCandidateRetriever(
+                _BenchmarkVectorRepresentation(),
+            ),
         )
 
     def test_composed_retrieval_improves_recall_without_precision_loss(self) -> None:
@@ -128,6 +171,53 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
         self.assertTrue(first["runtime_configuration"]["sha256"].startswith("sha256:"))
         self.assertEqual(first["fixture"]["memory_count"], 6)
         self.assertEqual(first["fixture"]["case_count"], 5)
+        self.assertIsNone(first["vector_route"])
+
+    def test_vector_profile_and_route_contribution_are_revision_bound(self) -> None:
+        first = self._vector_report()
+        second = self._vector_report()
+        self.assertEqual(first, second)
+        self.assertEqual(first["agent_memory_revision"], "vector-test-revision")
+
+        profile = first["vector_route"]
+        self.assertEqual(profile["route_id"], SEMANTIC_VECTOR_ROUTE)
+        self.assertEqual(
+            profile["representation_ref"],
+            _BenchmarkVectorRepresentation.spec.representation_ref,
+        )
+        self.assertEqual(profile["representation_version"], "1.0.0")
+        self.assertEqual(
+            profile["representation_config_digest"],
+            "sha256:benchmark-vector-fixture-v1",
+        )
+        self.assertEqual(profile["vector_dimension"], 3)
+        self.assertEqual(profile["similarity_metric"], "cosine")
+        self.assertEqual(profile["candidate_limit"], 16)
+        self.assertEqual(profile["rebuild_posture"], DETERMINISTIC_REBUILD_POSTURE)
+        self.assertTrue(profile["deterministic_rebuild"])
+        self.assertEqual(profile["authority_effect"], "none")
+
+        contributions = first["systems"]["multi_route"]["route_contribution_counts"]
+        self.assertGreater(contributions.get(SEMANTIC_VECTOR_ROUTE, 0), 0)
+        self.assertEqual(first["governance"]["route_authority_effect_violations"], 0)
+        self.assertEqual(first["governance"]["multi_route_forbidden_admission_failures"], 0)
+        self.assertEqual(first["governance"]["multi_route_forbidden_ranked_failures"], 0)
+
+        vector_hits = [
+            hit
+            for row in first["systems"]["multi_route"]["cases"]
+            for hits in row["route_provenance"].values()
+            for hit in hits
+            if hit["route_id"] == SEMANTIC_VECTOR_ROUTE
+        ]
+        self.assertTrue(vector_hits)
+        self.assertTrue(
+            all(
+                hit["representation_config_digest"]
+                == "sha256:benchmark-vector-fixture-v1"
+                for hit in vector_hits
+            )
+        )
 
     def test_runner_emits_same_report_and_enforces_governance_gate(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

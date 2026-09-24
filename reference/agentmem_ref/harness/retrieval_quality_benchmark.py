@@ -4,6 +4,11 @@ This harness compares the lexical compatibility path with Agent Memory's
 composed multi-route recall over identical retained state. Retrieval usefulness
 and governance safety are reported separately. The benchmark is intentionally
 synthetic and does not claim LoCoMo, LongMemEval, or answer-quality parity.
+
+Issue #456 optionally injects Agent Memory's native semantic/vector candidate
+route into the same benchmark. Representation identity, config, dimensions,
+rebuild posture and route budget are bound in the report so vector evidence is
+reproducible rather than a floating "embeddings helped" claim.
 """
 
 from __future__ import annotations
@@ -19,6 +24,7 @@ from ..core import policy
 from ..runtime.adapter import RecallContext
 from ..runtime.runtime_composition import ConfiguredCompositionRuntime
 from ..runtime.runtime_config import validate_runtime_configuration
+from ..runtime.vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 
 SCHEMA_VERSION = "1.0.0"
 BENCHMARK_ID = "agent-memory-rc-retrieval-quality"
@@ -191,11 +197,35 @@ def _aggregate(case_rows: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _vector_profile(
+    vector_retriever: NativeVectorCandidateRetriever | None,
+    *,
+    candidate_limit: int,
+) -> dict[str, Any] | None:
+    if vector_retriever is None:
+        return None
+    spec = vector_retriever.spec
+    return {
+        "route_id": SEMANTIC_VECTOR_ROUTE,
+        "representation_ref": spec.representation_ref,
+        "representation_version": spec.representation_version,
+        "representation_config_digest": spec.config_digest,
+        "vector_dimension": spec.dimensions,
+        "similarity_metric": "cosine",
+        "minimum_similarity": vector_retriever.minimum_similarity,
+        "candidate_limit": candidate_limit,
+        "rebuild_posture": spec.rebuild_posture,
+        "deterministic_rebuild": spec.deterministic_rebuild,
+        "authority_effect": "none",
+    }
+
+
 def run_benchmark(
     *,
     fixture_path: Path,
     runtime_config_path: Path,
     agent_memory_revision: str,
+    vector_retriever: NativeVectorCandidateRetriever | None = None,
 ) -> dict[str, Any]:
     fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
     _validate_fixture(fixture)
@@ -211,6 +241,11 @@ def run_benchmark(
             Path(root),
             tenant=tenant_ref,
             plan=plan,
+            vector_retriever=vector_retriever,
+        )
+        vector_profile = _vector_profile(
+            vector_retriever,
+            candidate_limit=runtime.recall_planner.vector_candidate_limit,
         )
         memory_to_fact: dict[str, str] = {}
         fact_to_memory: dict[str, str] = {}
@@ -336,6 +371,7 @@ def run_benchmark(
             "path": str(runtime_config_path),
             "sha256": sha256_file(runtime_config_path),
         },
+        "vector_route": vector_profile,
         "systems": {
             "lexical_only": {
                 "cases": lexical_rows,
