@@ -35,15 +35,22 @@ def main() -> None:
     )
 
     governance = report["governance"]
-    if any(
-        governance[key] != 0
+    required_zero_keys = [
+        "lexical_forbidden_admission_failures",
+        "multi_route_forbidden_admission_failures",
+        "multi_route_forbidden_ranked_failures",
+        "route_authority_effect_violations",
+    ]
+    required_zero_keys.extend(
+        key
         for key in (
-            "lexical_forbidden_admission_failures",
-            "multi_route_forbidden_admission_failures",
-            "multi_route_forbidden_ranked_failures",
-            "route_authority_effect_violations",
+            "controlled_typed_graph_forbidden_admission_failures",
+            "controlled_typed_graph_forbidden_ranked_failures",
+            "controlled_typed_graph_authority_effect_violations",
         )
-    ):
+        if key in governance
+    )
+    if any(governance[key] != 0 for key in required_zero_keys):
         raise SystemExit("retrieval benchmark detected a governance failure")
 
     output = Path(args.output)
