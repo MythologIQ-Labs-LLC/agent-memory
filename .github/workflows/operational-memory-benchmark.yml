@@ -50,6 +50,53 @@ jobs:
           path: operational-memory-benchmark.json
           if-no-files-found: error
 
+      - name: Test native failure-memory benchmark contract
+        run: >-
+          PYTHONPATH=reference python -m unittest discover
+          -s reference/tests -t reference
+          -p 'test_failure_memory_benchmark.py'
+
+      - name: Run native failure-memory benchmark
+        env:
+          AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          PYTHONPATH=reference python reference/run_failure_memory_benchmark.py
+          --agent-memory-commit "$AGENT_MEMORY_COMMIT"
+          --output failure-memory-benchmark.json
+
+      - name: Validate failure-memory evidence boundaries
+        run: |
+          python - <<'PY'
+          import json
+
+          report = json.load(open("failure-memory-benchmark.json", encoding="utf-8"))
+          quality = report["quality"]
+          governance = report["governance"]
+          if quality["identity_equivalence_failures"] != 0:
+              raise SystemExit("failure identity equivalence regression")
+          if quality["identity_separation_failures"] != 0:
+              raise SystemExit("distinct failure identities collapsed")
+          if quality["repeated_failure_retrieval"]["recall"] != 1.0:
+              raise SystemExit("bounded repeated-failure retrieval regression")
+          for key, value in governance.items():
+              if key.endswith("_violations") and value != 0:
+                  raise SystemExit(f"governance violation: {key}={value}")
+          if governance["failure_memory_authority_effect"] != "none":
+              raise SystemExit("failure memory must not acquire authority")
+          if governance["action_authority_claimed"]:
+              raise SystemExit("benchmark must not claim downstream action authority")
+          if not report["claim_boundary"]["no_aggregate_health_score"]:
+              raise SystemExit("aggregate health score boundary missing")
+          print("validated native failure-memory quality/performance/governance separation")
+          PY
+
+      - name: Upload native failure-memory evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: native-failure-memory-benchmark
+          path: failure-memory-benchmark.json
+          if-no-files-found: error
+
   vjepa2-1-frozen-representation:
     runs-on: ubuntu-latest
     steps:
