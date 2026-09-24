@@ -251,7 +251,7 @@
     "deterministic first profile; no learned lifecycle estimator",
     "no autonomous scheduler or direct semantic mutation",
     "consolidation emits derived proposals but does not synthesize free-form text",
-    "latency measurements in this fixture are operation counts rather than wall-clock performance",
+    "wall-clock latency is informational and excluded from deterministic metabolism evidence",
     "decay calibration is a bounded reference operating point, not a universal human-memory model"
   ]
 }
