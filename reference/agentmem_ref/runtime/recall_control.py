@@ -1,28 +1,35 @@
 """Provider-neutral recall control for the Agent Memory RC runtime.
 
 This module adds an executable fast-control seam above candidate generation and
-below governed recall admission.  A controller may choose which retrieval
+below governed recall admission. A controller may choose which retrieval
 routes to use and how much work each route may perform, but its output is
-strictly retrieval evidence.  It cannot create scope, currentness, privacy, or
+strictly retrieval evidence. It cannot create scope, currentness, privacy, or
 authority and it cannot bypass the canonical admission boundary.
 
-The first implementation is deterministic and stdlib-only.  Learned/local or
+The first implementation is deterministic and stdlib-only. Learned/local or
 external System-One controllers can implement the same contract later without
 becoming Agent Memory's authority layer or changing retained-memory semantics.
 
 Issue #456 adds the Agent Memory-native semantic/vector route to this same
-budgeting contract.  Vector similarity is candidate evidence only; it does not
-change the authority semantics of controlled recall.
+budgeting contract. Issue #461 adds an optional Agent Memory-native typed graph
+route over canonical relations. Vector similarity, graph proximity, path
+weights, and relation density are candidate evidence only; none of them changes
+the authority semantics of controlled recall.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import re
 from typing import Protocol
 
 from .adapter import RecallContext
 from .contextual_recall_adapter import admit_preselected_candidates
+from .graph_retrieval import (
+    GraphCandidateHit,
+    NativeTypedGraphCandidateRetriever,
+    TYPED_GRAPH_ROUTE,
+)
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
     EXACT_IDENTITY_ROUTE,
@@ -36,7 +43,7 @@ from ..state.substrate import EvidenceNeighborTemporalGraphPort
 
 
 DETERMINISTIC_CONTROLLER_REF = "agent-memory:deterministic-recall-controller"
-DETERMINISTIC_CONTROLLER_VERSION = "1.1.0"
+DETERMINISTIC_CONTROLLER_VERSION = "1.2.0"
 
 _WORD = re.compile(r"[a-z0-9]+")
 _STOPWORDS = frozenset(
@@ -124,7 +131,7 @@ class RecallControlPlan:
 
 
 class RecallController(Protocol):
-    """Estimator/controller contract.  Implementations own no recall authority."""
+    """Estimator/controller contract. Implementations own no recall authority."""
 
     def plan(
         self,
@@ -139,7 +146,7 @@ class DeterministicRecallController:
     """Small deterministic System-One control baseline for RC evaluation.
 
     The controller uses query shape and explicit seed availability to select
-    bounded work.  It deliberately does not inspect governance decisions and
+    bounded work. It deliberately does not inspect governance decisions and
     therefore cannot learn how to route around a refusal.
     """
 
@@ -166,6 +173,10 @@ class DeterministicRecallController:
         if SEMANTIC_VECTOR_ROUTE in available and terms:
             vector_limit = min(24, max(8, len(terms) * 4))
 
+        graph_limit = 0
+        if TYPED_GRAPH_ROUTE in available and unique_refs:
+            graph_limit = min(24, max(4, len(unique_refs) * 8))
+
         shared_candidate_limit = 0
         shared_anchor_limit = 0
         if SHARED_EVIDENCE_ROUTE in available and (terms or unique_refs):
@@ -184,6 +195,8 @@ class DeterministicRecallController:
             reason_codes.append("explicit_identity_seed")
         if vector_limit:
             reason_codes.append("bounded_semantic_vector_search")
+        if graph_limit:
+            reason_codes.append("bounded_typed_graph_traversal")
         if shared_candidate_limit:
             reason_codes.append("bounded_relational_expansion")
 
@@ -194,6 +207,7 @@ class DeterministicRecallController:
                 RecallRouteBudget(LEXICAL_ROUTE, lexical_limit),
                 RecallRouteBudget(EXACT_IDENTITY_ROUTE, exact_limit),
                 RecallRouteBudget(SEMANTIC_VECTOR_ROUTE, vector_limit),
+                RecallRouteBudget(TYPED_GRAPH_ROUTE, graph_limit),
                 RecallRouteBudget(
                     SHARED_EVIDENCE_ROUTE,
                     shared_candidate_limit,
@@ -220,6 +234,7 @@ class ControlledRecallResult:
     route_candidate_counts: dict[str, int]
     evidence_sufficiency_met: bool
     stop_reason: str
+    graph_candidate_hits: dict[str, GraphCandidateHit] = field(default_factory=dict)
     controller_calls: int = 1
     authority_effect: str = "none"
 
@@ -245,10 +260,12 @@ class ControlledRecallPlanner:
         *,
         controller: RecallController | None = None,
         vector_retriever: NativeVectorCandidateRetriever | None = None,
+        graph_retriever: NativeTypedGraphCandidateRetriever | None = None,
     ) -> None:
         self.adapter = adapter
         self.controller = controller or DeterministicRecallController()
         self.vector_retriever = vector_retriever
+        self.graph_retriever = graph_retriever
         substrate_reader = getattr(adapter, "checkpoint_substrate", None)
         tenant_reader = getattr(adapter, "checkpoint_tenant", None)
         if not callable(substrate_reader) or not callable(tenant_reader):
@@ -268,6 +285,8 @@ class ControlledRecallPlanner:
         available_routes = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
         if self.vector_retriever is not None and self.vector_retriever.available_for(substrate):
             available_routes.append(SEMANTIC_VECTOR_ROUTE)
+        if self.graph_retriever is not None and self.graph_retriever.available_for(substrate):
+            available_routes.append(TYPED_GRAPH_ROUTE)
         if isinstance(substrate, EvidenceNeighborTemporalGraphPort):
             available_routes.append(SHARED_EVIDENCE_ROUTE)
 
@@ -280,6 +299,7 @@ class ControlledRecallPlanner:
 
         hits: list[RetrievalRouteHit] = []
         route_counts = {route_id: 0 for route_id in available_routes}
+        graph_candidate_hits: dict[str, GraphCandidateHit] = {}
 
         lexical_budget = plan.budget_for(LEXICAL_ROUTE)
         lexical_results = list(substrate.search(query, group_ids=[tenant]))
@@ -344,6 +364,32 @@ class ControlledRecallPlanner:
                     )
                 )
             route_counts[SEMANTIC_VECTOR_ROUTE] = len(vector_results)
+
+        graph_budget = plan.budget_for(TYPED_GRAPH_ROUTE)
+        if (
+            self.graph_retriever is not None
+            and graph_budget.candidate_limit
+            and self.graph_retriever.available_for(substrate)
+        ):
+            graph_results = self.graph_retriever.search(
+                substrate,
+                tuple(seed_ref for _logical_ref, seed_ref in explicit_seeds),
+                group_id=tenant,
+                candidate_limit=graph_budget.candidate_limit,
+            )
+            for graph_hit in graph_results:
+                graph_candidate_hits[graph_hit.candidate_ref] = graph_hit
+                hits.append(
+                    RetrievalRouteHit(
+                        route_id=TYPED_GRAPH_ROUTE,
+                        candidate_ref=graph_hit.candidate_ref,
+                        raw_score=graph_hit.path_score,
+                        seed_candidate_ref=graph_hit.seed_candidate_ref,
+                        shared_evidence_refs=graph_hit.relation_evidence_refs,
+                        currentness_basis=graph_hit.currentness_basis,
+                    )
+                )
+            route_counts[TYPED_GRAPH_ROUTE] = len(graph_results)
 
         shared_budget = plan.budget_for(SHARED_EVIDENCE_ROUTE)
         if (
@@ -441,6 +487,7 @@ class ControlledRecallPlanner:
             stop_reason=(
                 "evidence_target_met" if sufficient else "planned_routes_exhausted"
             ),
+            graph_candidate_hits=graph_candidate_hits,
         )
 
     @staticmethod
@@ -503,6 +550,10 @@ class ControlledRecallPlanner:
             (hit.raw_score for hit in hits if hit.route_id == SEMANTIC_VECTOR_ROUTE),
             default=0.0,
         )
+        graph_score = max(
+            (hit.raw_score for hit in hits if hit.route_id == TYPED_GRAPH_ROUTE),
+            default=0.0,
+        )
         lexical_score = max(
             (hit.raw_score for hit in hits if hit.route_id == LEXICAL_ROUTE),
             default=0.0,
@@ -515,6 +566,7 @@ class ControlledRecallPlanner:
             -len(route_ids),
             -exact,
             -vector_score,
+            -graph_score,
             -lexical_score,
             -relational_score,
             candidate_ref,
