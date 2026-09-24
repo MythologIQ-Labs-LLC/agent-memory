@@ -1,20 +1,12 @@
 """Provider-neutral recall control for the Agent Memory RC runtime.
 
-This module adds an executable fast-control seam above candidate generation and
-below governed recall admission. A controller may choose which retrieval
-routes to use and how much work each route may perform, but its output is
-strictly retrieval evidence. It cannot create scope, currentness, privacy, or
-authority and it cannot bypass the canonical admission boundary.
+A controller may choose candidate-generation routes and bounded work, but its
+output is retrieval evidence only. It cannot create scope, currentness, privacy,
+or authority and cannot bypass governed recall admission.
 
-The first implementation is deterministic and stdlib-only. Learned/local or
-external System-One controllers can implement the same contract later without
-becoming Agent Memory's authority layer or changing retained-memory semantics.
-
-Issue #456 adds the Agent Memory-native semantic/vector route to this same
-budgeting contract. Issue #461 adds an optional Agent Memory-native typed graph
-route over canonical relations. Vector similarity, graph proximity, path
-weights, and relation density are candidate evidence only; none of them changes
-the authority semantics of controlled recall.
+Issue #456 adds native semantic/vector retrieval. Issue #461 adds native typed
+graph traversal over canonical relations. Similarity, graph proximity, path
+weights, and relation density remain non-authoritative candidate evidence.
 """
 
 from __future__ import annotations
@@ -49,6 +41,7 @@ TYPED_GRAPH_ROUTE = "typed_graph"
 GRAPH_OUTGOING = "outgoing"
 GRAPH_INCOMING = "incoming"
 GRAPH_BOTH = "both"
+MAX_GRAPH_SEED_REFS = 16
 
 _WORD = re.compile(r"[a-z0-9]+")
 _STOPWORDS = frozenset(
@@ -146,10 +139,9 @@ class GraphCandidateHit:
 class NativeTypedGraphCandidateRetriever:
     """Bounded deterministic traversal over Agent Memory canonical relations.
 
-    Relation group filtering occurs during expansion as a containment/performance
-    boundary. Fact-level scope, isolation, currentness, dispute, and tombstone
-    checks remain at governed recall admission. A relation can therefore expose
-    a candidate that governance later refuses, which is deliberate and tested.
+    Relation group filtering is applied during expansion as containment and work
+    control. Fact-level scope, isolation, currentness, dispute, and tombstone
+    checks remain at governed recall admission.
     """
 
     def __init__(self, spec: GraphTraversalSpec | None = None) -> None:
@@ -237,9 +229,6 @@ class NativeTypedGraphCandidateRetriever:
                 next_score = path_score * relation.retrieval_weight
                 if next_score < self.spec.min_path_score:
                     continue
-                # Relations intentionally survive fact deletion as residue. A
-                # deleted target has no canonical fact to admit, so it cannot be
-                # emitted as an active candidate or expansion point.
                 if substrate.get_fact(next_ref) is None:
                     continue
                 prior_score = best_score_by_node.get(next_ref)
@@ -540,6 +529,7 @@ class ControlledRecallPlanner:
     ) -> ControlledRecallResult:
         substrate = self.adapter.checkpoint_substrate()
         tenant = self.adapter.checkpoint_tenant()
+        unique_logical_refs = tuple(dict.fromkeys(logical_memory_refs))
         available_routes = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
         if self.vector_retriever is not None and self.vector_retriever.available_for(substrate):
             available_routes.append(SEMANTIC_VECTOR_ROUTE)
@@ -578,9 +568,7 @@ class ControlledRecallPlanner:
         exact_budget = plan.budget_for(EXACT_IDENTITY_ROUTE)
         explicit_seeds: list[tuple[str, str]] = []
         if exact_budget.candidate_limit:
-            for logical_ref in tuple(dict.fromkeys(logical_memory_refs))[
-                : exact_budget.candidate_limit
-            ]:
+            for logical_ref in unique_logical_refs[: exact_budget.candidate_limit]:
                 current = self.adapter.current_fact_uuid(logical_ref)
                 if current is None:
                     continue
@@ -629,9 +617,15 @@ class ControlledRecallPlanner:
             and graph_budget.candidate_limit
             and self.graph_retriever.available_for(substrate)
         ):
+            graph_seed_refs: list[str] = []
+            graph_seed_limit = min(MAX_GRAPH_SEED_REFS, graph_budget.candidate_limit)
+            for logical_ref in unique_logical_refs[:graph_seed_limit]:
+                current = self.adapter.current_fact_uuid(logical_ref)
+                if current is not None:
+                    graph_seed_refs.append(current)
             graph_results = self.graph_retriever.search(
                 substrate,
-                tuple(seed_ref for _logical_ref, seed_ref in explicit_seeds),
+                tuple(graph_seed_refs),
                 group_id=tenant,
                 candidate_limit=graph_budget.candidate_limit,
             )
