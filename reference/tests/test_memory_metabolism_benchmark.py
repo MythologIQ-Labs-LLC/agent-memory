@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import importlib.util
 import json
 import subprocess
@@ -68,6 +69,16 @@ class MemoryMetabolismBenchmarkTests(unittest.TestCase):
             reinforcement["saturation_after_reinforcement"],
         )
         self.assertEqual(disputed["result"]["authority_effect"], "none")
+
+    def test_quality_gate_fails_closed_on_non_fixture_quality_regression(self) -> None:
+        clean = self._report()
+        self.assertFalse(RUNNER_MODULE._quality_failed(clean))
+
+        regressed = copy.deepcopy(clean)
+        regressed["metabolism_quality"]["consolidation_source_exception_preservation"][
+            "failures"
+        ] = 1
+        self.assertTrue(RUNNER_MODULE._quality_failed(regressed))
 
     def test_operational_evidence_proves_stateless_replay_and_proposal_counts(self) -> None:
         operational = self._report()["operational_behavior"]
@@ -154,6 +165,7 @@ class MemoryMetabolismBenchmarkTests(unittest.TestCase):
         self.assertEqual(report["metabolism_quality"]["fixture_expectation_failures"], 0)
         self.assertTrue(report["operational_behavior"]["same_instance_replay_consistent"])
         self.assertTrue(report["operational_behavior"]["fresh_instance_restart_consistent"])
+        self.assertFalse(RUNNER_MODULE._quality_failed(report))
         self.assertFalse(RUNNER_MODULE._governance_failed(report))
 
 
