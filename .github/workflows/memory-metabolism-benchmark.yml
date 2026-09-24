@@ -1,0 +1,77 @@
+name: Memory Metabolism Benchmark
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  native-memory-metabolism:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+      - name: Run metabolism estimator tests
+        run: >-
+          PYTHONPATH=reference python -m unittest discover
+          -s reference/tests -t reference -p 'test_memory_metabolism.py'
+      - name: Run metabolism benchmark tests
+        run: >-
+          PYTHONPATH=reference python -m unittest discover
+          -s reference/tests -t reference -p 'test_memory_metabolism_benchmark.py'
+      - name: Run metabolism maintenance integration tests
+        run: >-
+          PYTHONPATH=reference python -m unittest discover
+          -s reference/tests -t reference -p 'test_metabolism_maintenance_integration.py'
+      - name: Run maintenance and lifecycle regression tests
+        run: |
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_maintenance_run_state.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_maintenance_run_binding_positive.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_autonomous_maintenance.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_framework_lifecycle.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_package_layout.py'
+      - name: Emit revision-bound metabolism evidence
+        env:
+          AGENT_MEMORY_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          PYTHONPATH=reference python reference/run_memory_metabolism_benchmark.py
+          --agent-memory-revision "$AGENT_MEMORY_REVISION"
+          --measure-latency
+          --output memory-metabolism.json
+      - name: Validate separated metabolism evidence
+        run: |
+          python - <<'PY'
+          import json
+          r = json.load(open('memory-metabolism.json'))
+          assert r['schema_version'] == '1.0.0'
+          assert r['benchmark_id'] == 'agent-memory-native-metabolism'
+          quality = r['metabolism_quality']
+          operational = r['operational_behavior']
+          governance = r['governance_failures']
+          assert quality['fixture_expectation_failures'] == 0
+          assert quality['access_spam_trap_failures'] == 0
+          assert quality['consolidation_source_exception_preservation']['failures'] == 0
+          assert operational['same_instance_replay_consistent'] is True
+          assert operational['fresh_instance_restart_consistent'] is True
+          assert operational['persisted_state_growth_bytes'] == 0
+          assert operational['latency']['measurement'] == 'wall_clock'
+          assert all(value == 0 for value in governance.values())
+          assert 'health_score' not in r
+          assert 'memory_health_score' not in r
+          print({
+              'proposal_counts': operational['proposal_counts_by_disposition'],
+              'batch_evidence_ref': operational['batch_evidence_ref'],
+              'latency': operational['latency'],
+          })
+          PY
+      - uses: actions/upload-artifact@v7
+        with:
+          name: native-memory-metabolism
+          path: memory-metabolism.json
+          if-no-files-found: error

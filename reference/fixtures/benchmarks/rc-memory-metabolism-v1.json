@@ -1,0 +1,257 @@
+{
+  "schema_version": "1.0.0",
+  "benchmark_id": "agent-memory-native-metabolism",
+  "benchmark_version": "1.0.0",
+  "config": {
+    "half_life_ms": 604800000,
+    "prune_enter_weight": 0.2,
+    "prune_exit_weight": 0.3,
+    "archive_weight": 0.45,
+    "access_event_weight": 0.001,
+    "max_access_contribution": 0.05,
+    "cross_reference_weight": 0.04,
+    "corroboration_weight": 0.08,
+    "verification_weight": 0.15,
+    "task_success_weight": 0.06,
+    "user_retention_signal_weight": 0.2,
+    "crystallization_candidate_saturation": 0.8
+  },
+  "cases": [
+    {
+      "case_id": "recent-verified-value",
+      "memory_ref": "memory:valuable",
+      "lifecycle_state": "Observed",
+      "evaluated_at_ms": 86400000,
+      "last_meaningful_use_ms": 86390000,
+      "baseline_saturation": 0.35,
+      "contradiction_pressure": 0.0,
+      "scope_refs": ["tenant:test", "project:test"],
+      "evidence_refs": ["evidence:valuable"],
+      "reinforcement_observations": [
+        {
+          "kind": "corroboration",
+          "count": 2,
+          "evidence_refs": ["source:a", "source:b"]
+        },
+        {
+          "kind": "verification",
+          "count": 1,
+          "evidence_refs": ["verification:valuable"]
+        }
+      ],
+      "constraints": {},
+      "prior_prune_candidate": false,
+      "expected_disposition": "keep_active",
+      "expected_crystallization_candidate": false
+    },
+    {
+      "case_id": "access-spam-junk",
+      "memory_ref": "memory:access-spam",
+      "lifecycle_state": "Observed",
+      "evaluated_at_ms": 31536000000,
+      "last_meaningful_use_ms": 0,
+      "baseline_saturation": 0.0,
+      "contradiction_pressure": 0.0,
+      "scope_refs": ["tenant:test", "project:test"],
+      "evidence_refs": ["evidence:spam"],
+      "reinforcement_observations": [
+        {
+          "kind": "access",
+          "count": 100000,
+          "evidence_refs": []
+        }
+      ],
+      "constraints": {},
+      "prior_prune_candidate": false,
+      "expected_disposition": "prune_candidate",
+      "expected_crystallization_candidate": false,
+      "trap_class": "access_spam"
+    },
+    {
+      "case_id": "legal-hold-old-memory",
+      "memory_ref": "memory:legal-hold",
+      "lifecycle_state": "Observed",
+      "evaluated_at_ms": 31536000000,
+      "last_meaningful_use_ms": 0,
+      "baseline_saturation": 0.0,
+      "contradiction_pressure": 0.0,
+      "scope_refs": ["tenant:test", "project:test"],
+      "evidence_refs": ["evidence:legal-hold"],
+      "reinforcement_observations": [],
+      "constraints": {
+        "legal_or_compliance_hold": true
+      },
+      "prior_prune_candidate": false,
+      "expected_disposition": "retention_hold",
+      "expected_crystallization_candidate": false,
+      "hard_retention": true
+    },
+    {
+      "case_id": "important-but-mandatory-delete",
+      "memory_ref": "memory:mandatory-delete",
+      "lifecycle_state": "Crystallized",
+      "evaluated_at_ms": 86400000,
+      "last_meaningful_use_ms": 86390000,
+      "baseline_saturation": 0.95,
+      "contradiction_pressure": 0.0,
+      "scope_refs": ["tenant:test", "project:test"],
+      "evidence_refs": ["evidence:important"],
+      "reinforcement_observations": [
+        {
+          "kind": "verification",
+          "count": 5,
+          "evidence_refs": ["verification:important"]
+        },
+        {
+          "kind": "user_retention_signal",
+          "count": 2,
+          "evidence_refs": ["user:pin-request"]
+        }
+      ],
+      "constraints": {
+        "user_pin": true,
+        "mandatory_deletion": true
+      },
+      "prior_prune_candidate": false,
+      "expected_disposition": "mandatory_deletion_review",
+      "expected_crystallization_candidate": true,
+      "mandatory_deletion": true
+    },
+    {
+      "case_id": "confidently-wrong-disputed",
+      "memory_ref": "memory:disputed",
+      "lifecycle_state": "Disputed",
+      "evaluated_at_ms": 172800000,
+      "last_meaningful_use_ms": 172790000,
+      "baseline_saturation": 0.7,
+      "contradiction_pressure": 0.9,
+      "scope_refs": ["tenant:test", "project:test"],
+      "evidence_refs": ["evidence:disputed"],
+      "reinforcement_observations": [
+        {
+          "kind": "verification",
+          "count": 5,
+          "evidence_refs": ["verification:historical"]
+        }
+      ],
+      "constraints": {
+        "unresolved_dispute": true
+      },
+      "prior_prune_candidate": false,
+      "expected_disposition": "retention_hold",
+      "expected_crystallization_candidate": false,
+      "trap_class": "confidently_wrong"
+    },
+    {
+      "case_id": "old-unheld-ephemeral",
+      "memory_ref": "memory:ephemeral",
+      "lifecycle_state": "Observed",
+      "evaluated_at_ms": 31536000000,
+      "last_meaningful_use_ms": 0,
+      "baseline_saturation": 0.0,
+      "contradiction_pressure": 0.0,
+      "scope_refs": ["tenant:test", "project:test"],
+      "evidence_refs": ["evidence:ephemeral"],
+      "reinforcement_observations": [],
+      "constraints": {},
+      "prior_prune_candidate": false,
+      "expected_disposition": "prune_candidate",
+      "expected_crystallization_candidate": false
+    }
+  ],
+  "consolidation_cases": [
+    {
+      "case_id": "same-scope-current-with-exceptions",
+      "method_ref": "agent-memory:deterministic-consolidation-fixture",
+      "method_version": "1.0.0",
+      "sources": [
+        {
+          "memory_ref": "memory:a",
+          "fact_ref": "fact:a",
+          "currentness": "current",
+          "scope_refs": ["tenant:test", "project:test"],
+          "evidence_refs": ["evidence:a"],
+          "exception_refs": ["exception:a"],
+          "disputed": false
+        },
+        {
+          "memory_ref": "memory:b",
+          "fact_ref": "fact:b",
+          "currentness": "current",
+          "scope_refs": ["tenant:test", "project:test"],
+          "evidence_refs": ["evidence:b"],
+          "exception_refs": ["exception:b"],
+          "disputed": false
+        }
+      ],
+      "expected_eligible": true,
+      "expected_reasons": [],
+      "expected_exception_refs": ["exception:a", "exception:b"]
+    },
+    {
+      "case_id": "mixed-project-scope",
+      "method_ref": "agent-memory:deterministic-consolidation-fixture",
+      "method_version": "1.0.0",
+      "sources": [
+        {
+          "memory_ref": "memory:c",
+          "fact_ref": "fact:c",
+          "currentness": "current",
+          "scope_refs": ["tenant:test", "project:test"],
+          "evidence_refs": ["evidence:c"],
+          "exception_refs": [],
+          "disputed": false
+        },
+        {
+          "memory_ref": "memory:d",
+          "fact_ref": "fact:d",
+          "currentness": "current",
+          "scope_refs": ["tenant:test", "project:other"],
+          "evidence_refs": ["evidence:d"],
+          "exception_refs": [],
+          "disputed": false
+        }
+      ],
+      "expected_eligible": false,
+      "expected_reasons": ["scope_mismatch"],
+      "expected_exception_refs": [],
+      "scope_trap": true
+    },
+    {
+      "case_id": "stale-and-disputed-input",
+      "method_ref": "agent-memory:deterministic-consolidation-fixture",
+      "method_version": "1.0.0",
+      "sources": [
+        {
+          "memory_ref": "memory:e",
+          "fact_ref": "fact:e",
+          "currentness": "superseded",
+          "scope_refs": ["tenant:test", "project:test"],
+          "evidence_refs": ["evidence:e"],
+          "exception_refs": [],
+          "disputed": false
+        },
+        {
+          "memory_ref": "memory:f",
+          "fact_ref": "fact:f",
+          "currentness": "current",
+          "scope_refs": ["tenant:test", "project:test"],
+          "evidence_refs": ["evidence:f"],
+          "exception_refs": ["exception:f"],
+          "disputed": true
+        }
+      ],
+      "expected_eligible": false,
+      "expected_reasons": ["non_current_source", "disputed_source"],
+      "expected_exception_refs": ["exception:f"],
+      "currentness_trap": true
+    }
+  ],
+  "limitations": [
+    "deterministic first profile; no learned lifecycle estimator",
+    "no autonomous scheduler or direct semantic mutation",
+    "consolidation emits derived proposals but does not synthesize free-form text",
+    "wall-clock latency is informational and excluded from deterministic metabolism evidence",
+    "decay calibration is a bounded reference operating point, not a universal human-memory model"
+  ]
+}
