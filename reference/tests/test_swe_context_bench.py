@@ -172,7 +172,7 @@ class SweContextBenchTests(unittest.TestCase):
         )
         self.assertEqual(
             report["benchmark_profile"]["profile_id"],
-            "swe-context-bench-lite-bicameral-retrieval-v1",
+            "swe-context-bench-lite-external-retrieval-v1",
         )
         self.assertEqual(
             report["benchmark_profile"]["historical_agent_memory"]["provenance_status"],
