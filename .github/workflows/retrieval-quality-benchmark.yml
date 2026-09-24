@@ -21,6 +21,7 @@ jobs:
         run: |
           PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_retrieval_quality_benchmark.py'
           PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_continuous_retrieval_regression.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_swe_context_bench.py'
       - name: Execute continuous retrieval regression
         env:
           AGENT_MEMORY_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -29,6 +30,17 @@ jobs:
           --agent-memory-revision "$AGENT_MEMORY_REVISION"
           --continuous-regression
           --output retrieval-quality.json
+      - name: Execute SWE ContextBench RC evidence fixture
+        env:
+          AGENT_MEMORY_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          PYTHONPATH=reference python reference/run_swe_context_bench.py
+          --manifest reference/fixtures/benchmarks/swe-context-bench/manifest.json
+          --benchmark-root reference/fixtures/benchmarks/swe-context-bench
+          --evidence-profile reference/fixtures/benchmarks/swe-context-bench-rc-profile-v1.json
+          --agent-memory-revision "$AGENT_MEMORY_REVISION"
+          --consistency-repeat-count 5
+          --output swe-contextbench-rc-evidence.json
       - name: Validate bounded benchmark and regression evidence
         run: |
           python - <<'PY'
@@ -99,8 +111,55 @@ jobs:
               'persisted_restart_profile': persisted['profile'],
           })
           PY
+      - name: Validate SWE ContextBench RC evidence contract
+        run: |
+          python - <<'PY'
+          import json
+          r = json.load(open('swe-contextbench-rc-evidence.json'))
+          assert r['schema_version'] == '1.1.0'
+          assert r['benchmark_id'] == 'agent-memory-swe-context-bench-lite-retrieval'
+          assert r['score_protocol'] == 'swe_context_bench_lite_gold_edge_retrieval_v1'
+          assert r['corpus']['synthetic_fixture'] is True
+          assert r['comparability']['external_reference_status'] == 'not-comparable-synthetic-fixture'
+          assert r['claim_boundary']['synthetic_fixture_cannot_substitute_for_public_corpus'] is True
+          quality = r['quality']
+          assert quality['candidate_recall'] == 1.0
+          assert quality['final_admitted_recall'] == 1.0
+          assert 'final_admitted_precision' in quality
+          assert 'final_admitted_f1' in quality
+          assert 'false_admission_count' in quality
+          assert 'false_refusal_count' in quality
+          assert 'ndcg_at_1' in quality
+          assert 'ndcg_at_3' in quality
+          assert r['consistency']['repeat_count'] == 5
+          assert r['consistency']['mean_pairwise_jaccard'] == 1.0
+          assert r['consistency']['persisted_restart_claimed'] is False
+          assert r['governance']['corpus_mutation_failures'] == 0
+          assert r['governance']['route_authority_effect_violations'] == 0
+          assert r['governance']['authority_effect'] == 'none'
+          refs = r['benchmark_profile']['external_reference_results']
+          assert refs['gpt_4_1_mini']['f1'] == 0.41
+          assert refs['jev_bm25_k32']['precision'] == 0.89
+          assert refs['jev_bm25_k32']['new_issue_cited_atom_jaccard'] == 0.98
+          historical = r['benchmark_profile']['historical_agent_memory']
+          assert historical['provenance_status'] == 'historical_metadata_only'
+          assert historical['directly_comparable'] is False
+          assert r['metric_contract']['aggregate_health_score'] == 'not_defined'
+          assert 'health_score' not in r
+          assert r['performance']['token_or_model_call_counts'] == 'not_exposed_by_this_runner'
+          print({
+              'candidate_recall': quality['candidate_recall'],
+              'final_recall': quality['final_admitted_recall'],
+              'final_precision': quality['final_admitted_precision'],
+              'final_f1': quality['final_admitted_f1'],
+              'consistency_jaccard': r['consistency']['mean_pairwise_jaccard'],
+              'external_reference_status': r['comparability']['external_reference_status'],
+          })
+          PY
       - uses: actions/upload-artifact@v7
         with:
           name: rc-retrieval-quality
-          path: retrieval-quality.json
+          path: |
+            retrieval-quality.json
+            swe-contextbench-rc-evidence.json
           if-no-files-found: error
