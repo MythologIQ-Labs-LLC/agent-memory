@@ -35,7 +35,7 @@ jobs:
           /tmp/agent-memory-agent-manifest/bin/python - <<'PY'
           import importlib.metadata
           actual = importlib.metadata.version("agent-manifest")
-          assert actual == "0.11.2", actual
+          assert actual == "0.12.0", actual
           print(f"agent-manifest=={actual}")
           PY
 
@@ -49,9 +49,21 @@ jobs:
           --agent-memory-commit "$AGENT_MEMORY_COMMIT"
           --output agent-manifest-external-evidence.json
 
+      - name: Execute exact dependency-pair qualification
+        env:
+          AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          PYTHONPATH=reference
+          /tmp/agent-memory-agent-manifest/bin/python
+          reference/run_dependency_pair_qualification.py
+          --agent-memory-commit "$AGENT_MEMORY_COMMIT"
+          --output dependency-pair-qualification.json
+
       - name: Upload Agent Manifest comparator evidence
         uses: actions/upload-artifact@v7
         with:
           name: agent-manifest-external-evidence-comparator
-          path: agent-manifest-external-evidence.json
+          path: |
+            agent-manifest-external-evidence.json
+            dependency-pair-qualification.json
           if-no-files-found: error
