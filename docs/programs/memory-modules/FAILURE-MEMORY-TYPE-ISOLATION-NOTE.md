@@ -1,1 +1,0 @@
-Temporary implementation note for #471: native failure-memory recall closeout requires fail-closed memory-type isolation after shared governed admission. This note is superseded by the final implementation evidence once the remediation lands.
