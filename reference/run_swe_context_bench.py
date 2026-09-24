@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 """Run Agent Memory against the SWE Context Bench Lite retrieval protocol.
 
-This is a standalone research adapter, not an Agent Memory package API. It
-measures binary recovery of the gold prior experience from a natural-language
-related task. Benchmark instance IDs remain sidecar-only and never enter the
-retained memory text or identity.
+This remains a standalone research adapter, not an Agent Memory package API.
+Issue #467 extends the original #453 binary gold-edge adapter into an RC evidence
+surface that keeps candidate generation, governed final admission, ranking,
+consistency, performance, and governance evidence separate.
+
+Benchmark instance IDs remain sidecar-only and never enter retained memory text
+or logical identity.
 """
 
 from __future__ import annotations
@@ -12,11 +15,14 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
+import statistics
 import tempfile
 import time
 from collections import defaultdict
 from dataclasses import dataclass
+from itertools import combinations
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -29,7 +35,8 @@ from agentmem_ref.runtime.query_driven_recall import (
 from agentmem_ref.runtime.runtime_composition import ConfiguredCompositionRuntime
 from agentmem_ref.runtime.runtime_config import validate_runtime_configuration
 
-SCHEMA_VERSION = "1.0.0"
+MANIFEST_SCHEMA_VERSION = "1.0.0"
+REPORT_SCHEMA_VERSION = "1.1.0"
 BENCHMARK_ID = "agent-memory-swe-context-bench-lite-retrieval"
 UPSTREAM_REPOSITORY = "jiayuanz3/SWEContextBench"
 
@@ -39,6 +46,12 @@ DEFAULT_RUNTIME_CONFIG = (
     / "fixtures"
     / "runtime-configuration"
     / "reference-composed-runtime.json"
+)
+DEFAULT_EVIDENCE_PROFILE = (
+    REFERENCE_ROOT
+    / "fixtures"
+    / "benchmarks"
+    / "swe-context-bench-rc-profile-v1.json"
 )
 
 _INSTANCE_RE = re.compile(r"(?m)^\s*instance_id:\s*([^\s]+)\s*$")
@@ -161,12 +174,20 @@ def _load_related(path: Path) -> tuple[str, str, str]:
 
 
 def _manifest(value: object) -> Mapping[str, Any]:
-    if not isinstance(value, Mapping) or value.get("schema_version") != SCHEMA_VERSION:
+    if not isinstance(value, Mapping) or value.get("schema_version") != MANIFEST_SCHEMA_VERSION:
         raise ValueError("unsupported SWE Context Bench manifest")
     if not isinstance(value.get("experiences"), list) or not value["experiences"]:
         raise ValueError("manifest requires experiences")
     if not isinstance(value.get("queries"), list) or not value["queries"]:
         raise ValueError("manifest requires queries")
+    return value
+
+
+def _evidence_profile(value: object) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping) or value.get("schema_version") != "1.0.0":
+        raise ValueError("unsupported SWE Context Bench RC evidence profile")
+    if not str(value.get("profile_id", "")).strip():
+        raise ValueError("SWE Context Bench RC evidence profile requires profile_id")
     return value
 
 
@@ -223,6 +244,115 @@ def _mean(values: Sequence[float]) -> float:
     return 0.0 if not values else round(sum(values) / len(values), 6)
 
 
+def _median(values: Sequence[float]) -> float:
+    return 0.0 if not values else round(float(statistics.median(values)), 6)
+
+
+def _f1(precision: float, recall: float) -> float:
+    if precision + recall == 0:
+        return 0.0
+    return round((2.0 * precision * recall) / (precision + recall), 6)
+
+
+def _ndcg_at(rank: int | None, k: int) -> float:
+    if rank is None or rank < 1 or rank > k:
+        return 0.0
+    return 1.0 / math.log2(rank + 1)
+
+
+def _jaccard(left: Sequence[str], right: Sequence[str]) -> float:
+    left_set = set(left)
+    right_set = set(right)
+    union = left_set | right_set
+    if not union:
+        return 1.0
+    return len(left_set & right_set) / len(union)
+
+
+def _mean_pairwise_jaccard(runs: Sequence[Sequence[str]]) -> float | None:
+    if len(runs) < 2:
+        return None
+    scores = [_jaccard(left, right) for left, right in combinations(runs, 2)]
+    return round(sum(scores) / len(scores), 6)
+
+
+def _consistency_related_ids(
+    manifest: Mapping[str, Any],
+    *,
+    limit: int,
+) -> tuple[str, ...]:
+    explicit = manifest.get("consistency_related_instance_ids")
+    if explicit is not None:
+        if not isinstance(explicit, list) or any(not str(value).strip() for value in explicit):
+            raise ValueError("consistency_related_instance_ids must be a list of non-empty values")
+        return tuple(dict.fromkeys(str(value).strip() for value in explicit))
+
+    result: list[str] = []
+    for row in manifest["queries"]:
+        if not isinstance(row, Mapping):
+            continue
+        related = str(row.get("related_instance_id", "")).strip()
+        if related and related not in result:
+            result.append(related)
+        if len(result) >= limit:
+            break
+    return tuple(result)
+
+
+def _retrieval_metrics(query_rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    query_count = len(query_rows)
+    candidate_hits = 0
+    final_hits = 0
+    candidate_total = 0
+    candidate_noise = 0
+    admitted_total = 0
+    false_admissions = 0
+    false_refusals = 0
+    ndcg_1: list[float] = []
+    ndcg_3: list[float] = []
+
+    for row in query_rows:
+        gold = str(row["gold_experience_instance_id"])
+        result = row["agent_memory"]
+        candidates = list(result["candidate_experience_ids"])
+        admitted = list(result["retrieved_experience_ids"])
+        rank = result["gold_rank_diagnostic"]
+
+        candidate_hit = gold in candidates
+        final_hit = gold in admitted
+        candidate_hits += int(candidate_hit)
+        final_hits += int(final_hit)
+        candidate_total += len(candidates)
+        candidate_noise += sum(instance != gold for instance in candidates)
+        admitted_total += len(admitted)
+        false_admissions += sum(instance != gold for instance in admitted)
+        false_refusals += int(not final_hit)
+        ndcg_1.append(_ndcg_at(rank, 1))
+        ndcg_3.append(_ndcg_at(rank, 3))
+
+    candidate_recall = 0.0 if not query_count else round(candidate_hits / query_count, 6)
+    final_recall = 0.0 if not query_count else round(final_hits / query_count, 6)
+    final_precision = 0.0 if not admitted_total else round(final_hits / admitted_total, 6)
+
+    return {
+        "query_count": query_count,
+        "candidate_gold_hit_count": candidate_hits,
+        "candidate_recall": candidate_recall,
+        "candidate_experience_total": candidate_total,
+        "candidate_noise_count": candidate_noise,
+        "final_gold_hit_count": final_hits,
+        "final_admitted_recall": final_recall,
+        "final_admitted_precision": final_precision,
+        "final_admitted_f1": _f1(final_precision, final_recall),
+        "final_admitted_experience_total": admitted_total,
+        "false_admission_count": false_admissions,
+        "false_refusal_count": false_refusals,
+        "ndcg_at_1": _mean(ndcg_1),
+        "ndcg_at_3": _mean(ndcg_3),
+        "published_compatible_gold_board_named_recall": final_recall,
+    }
+
+
 def run_benchmark(
     *,
     manifest_path: Path,
@@ -230,11 +360,21 @@ def run_benchmark(
     runtime_config_path: Path,
     agent_memory_revision: str,
     lexical_anchor_limit: int = 3,
+    evidence_profile_path: Path = DEFAULT_EVIDENCE_PROFILE,
+    consistency_repeat_count: int = 5,
+    consistency_query_limit: int = 10,
 ) -> dict[str, Any]:
     if not agent_memory_revision:
         raise ValueError("agent_memory_revision is required")
+    if consistency_repeat_count < 1:
+        raise ValueError("consistency_repeat_count must be >= 1")
+    if consistency_query_limit < 0:
+        raise ValueError("consistency_query_limit must be non-negative")
+
     manifest = _manifest(json.loads(manifest_path.read_text(encoding="utf-8")))
+    profile = _evidence_profile(json.loads(evidence_profile_path.read_text(encoding="utf-8")))
     plan = validate_runtime_configuration(json.loads(runtime_config_path.read_text(encoding="utf-8")))
+    consistency_ids = _consistency_related_ids(manifest, limit=consistency_query_limit)
 
     declared: dict[str, Mapping[str, Any]] = {}
     by_repo: dict[str, list[ExperienceProjection]] = defaultdict(list)
@@ -347,11 +487,37 @@ def run_benchmark(
                 corpus_mutations += 1
 
             lexical_instances = _dedupe_experiences(lexical.admitted, sidecars[repo])
+            candidate_instances = _dedupe_experiences(multi.candidates, sidecars[repo])
             multi_instances = _dedupe_experiences(multi.ranked_admitted, sidecars[repo])
             hit = gold in multi_instances
             for hits in multi.route_hits.values():
                 authority_violations += sum(hit_row.authority_effect != "none" for hit_row in hits)
             authority_violations += int(multi.authority_effect != "none")
+
+            consistency_runs: list[list[str]] = [multi_instances]
+            consistency_query_seconds: list[float] = [multi_seconds]
+            if related in consistency_ids:
+                for _repeat_index in range(1, consistency_repeat_count):
+                    repeat_before = _corpus_digest(runtime)
+                    repeat_start = time.perf_counter()
+                    repeated = planners[repo].recall(problem, context)
+                    repeat_seconds = time.perf_counter() - repeat_start
+                    repeat_after = _corpus_digest(runtime)
+                    if repeat_before != repeat_after:
+                        corpus_mutations += 1
+                        immutable = False
+
+                    repeated_instances = _dedupe_experiences(
+                        repeated.ranked_admitted,
+                        sidecars[repo],
+                    )
+                    consistency_runs.append(repeated_instances)
+                    consistency_query_seconds.append(repeat_seconds)
+                    for hits in repeated.route_hits.values():
+                        authority_violations += sum(
+                            hit_row.authority_effect != "none" for hit_row in hits
+                        )
+                    authority_violations += int(repeated.authority_effect != "none")
 
             query_rows.append(
                 {
@@ -368,6 +534,8 @@ def run_benchmark(
                         "query_seconds": round(lexical_seconds, 6),
                     },
                     "agent_memory": {
+                        "candidate_hit": gold in candidate_instances,
+                        "candidate_experience_ids": candidate_instances,
                         "hit": hit,
                         "gold_rank_diagnostic": multi_instances.index(gold) + 1 if hit else None,
                         "retrieved_experience_ids": multi_instances,
@@ -376,27 +544,116 @@ def run_benchmark(
                         "routes_executed": list(multi.routes_executed),
                         "query_seconds": round(multi_seconds, 6),
                     },
+                    "consistency": {
+                        "included": related in consistency_ids,
+                        "repeat_count": len(consistency_runs) if related in consistency_ids else 1,
+                        "admitted_experience_id_sets": (
+                            consistency_runs if related in consistency_ids else [multi_instances]
+                        ),
+                        "mean_pairwise_jaccard": (
+                            _mean_pairwise_jaccard(consistency_runs)
+                            if related in consistency_ids
+                            else None
+                        ),
+                        "repeat_query_seconds": (
+                            [round(value, 6) for value in consistency_query_seconds]
+                            if related in consistency_ids
+                            else [round(multi_seconds, 6)]
+                        ),
+                    },
                 }
             )
 
     hits = sum(1 for row in query_rows if row["agent_memory"]["hit"])
     lexical_hits = sum(1 for row in query_rows if row["lexical_only"]["hit"])
     count = len(query_rows)
+    quality = _retrieval_metrics(query_rows)
+    consistency_rows = [
+        row for row in query_rows
+        if row["consistency"]["included"]
+    ]
+    consistency_scores = [
+        float(row["consistency"]["mean_pairwise_jaccard"])
+        for row in consistency_rows
+        if row["consistency"]["mean_pairwise_jaccard"] is not None
+    ]
+    query_seconds = [float(row["agent_memory"]["query_seconds"]) for row in query_rows]
+    corpus_class = str(manifest.get("corpus_class", "unclassified")).strip() or "unclassified"
+    synthetic_fixture = corpus_class == "synthetic"
+    external_comparison_status = (
+        "not-comparable-synthetic-fixture"
+        if synthetic_fixture
+        else "protocol-compatibility-not-yet-certified"
+    )
+
+    route_profile = {
+        "planner": "deterministic_query_driven_recall",
+        "lexical_anchor_limit": lexical_anchor_limit,
+        "candidate_routes": "runtime-reported-per-query",
+        "final_admission": "canonical governed recall admission",
+        "authority_effect": "none",
+    }
+    scoring_semantics = {
+        "gold_unit": "prior experience / board",
+        "candidate_recall": "fraction of gold edges whose gold experience is present before final admission",
+        "final_admitted_recall": "fraction of gold edges whose gold experience is named after final admission",
+        "final_admitted_precision": "gold experiences named divided by all final admitted experience names",
+        "false_admission": "final admitted experience name that is not the query gold; IR error, not a governance authority violation",
+        "false_refusal": "gold experience not named after final admission",
+        "ndcg": "single-relevant-item nDCG over final admitted experience ranking",
+    }
+    consistency_semantics = {
+        "selection": (
+            "manifest consistency_related_instance_ids when supplied; otherwise first "
+            f"{consistency_query_limit} unique related_instance_id values in manifest order"
+        ),
+        "repeat_count": consistency_repeat_count,
+        "unit": "deduplicated final admitted experience-id set",
+        "metric": "mean pairwise Jaccard",
+        "same_runtime": True,
+        "persisted_restart_claimed": False,
+    }
+
+    comparability_payload = {
+        "benchmark_profile_id": str(profile["profile_id"]),
+        "corpus_class": corpus_class,
+        "fixture_identity": str(manifest.get("fixture", "SWEContextBench Lite")),
+        "manifest_sha256": sha256_file(manifest_path),
+        "runtime_config_sha256": sha256_file(runtime_config_path),
+        "route_profile": route_profile,
+        "scoring_semantics": scoring_semantics,
+        "consistency_semantics": consistency_semantics,
+    }
+
     return {
-        "schema_version": SCHEMA_VERSION,
+        "schema_version": REPORT_SCHEMA_VERSION,
         "benchmark_id": BENCHMARK_ID,
-        "score_protocol": "binary_gold_edge_recovery",
+        "score_protocol": "swe_context_bench_lite_gold_edge_retrieval_v1",
         "agent_memory_revision": agent_memory_revision,
+        "benchmark_profile": {
+            "profile_id": profile["profile_id"],
+            "sha256": sha256_file(evidence_profile_path),
+            "source": profile.get("source", {}),
+            "public_protocol": profile.get("public_protocol", {}),
+            "external_reference_results": profile.get("external_reference_results", {}),
+            "agent_memory_directional_goals": profile.get("agent_memory_directional_goals", {}),
+            "historical_agent_memory": profile.get("historical_agent_memory", {}),
+            "aggregate_health_score": profile.get("aggregate_health_score", "not_defined"),
+        },
         "upstream": {
             "repository": str(manifest.get("upstream_repository", UPSTREAM_REPOSITORY)),
             "revision": str(manifest.get("upstream_revision", "unbound")),
             "fixture": str(manifest.get("fixture", "SWEContextBench Lite")),
+            "corpus_class": corpus_class,
         },
         "inputs": {
             "manifest_sha256": sha256_file(manifest_path),
             "runtime_config_sha256": sha256_file(runtime_config_path),
+            "evidence_profile_sha256": sha256_file(evidence_profile_path),
             "file_sha256": dict(sorted(input_hashes.items())),
             "lexical_anchor_limit": lexical_anchor_limit,
+            "consistency_repeat_count": consistency_repeat_count,
+            "consistency_related_instance_ids": list(consistency_ids),
         },
         "corpus": {
             "experience_count": len(declared),
@@ -405,32 +662,102 @@ def run_benchmark(
             "identity": "content-derived analysis_key; benchmark instance_id held in sidecar only",
             "experience_projection": "problem_statement + every summary row + final assistant text",
             "build_seconds_by_repo": build_seconds,
+            "build_seconds_total": round(sum(build_seconds.values()), 6),
+            "synthetic_fixture": synthetic_fixture,
+        },
+        "metric_contract": {
+            "candidate_generation": [
+                "candidate_recall",
+                "candidate_experience_total",
+                "candidate_noise_count",
+            ],
+            "final_governed_admission": [
+                "final_admitted_recall",
+                "final_admitted_precision",
+                "final_admitted_f1",
+                "false_admission_count",
+                "false_refusal_count",
+                "ndcg_at_1",
+                "ndcg_at_3",
+            ],
+            "governance_failures_are_ir_errors": False,
+            "aggregate_health_score": "not_defined",
         },
         "queries": query_rows,
+        "quality": quality,
         "aggregate": {
             "query_count": count,
             "hit_count": hits,
             "hit_rate": 0.0 if not count else round(hits / count, 6),
             "lexical_only_hit_count": lexical_hits,
             "lexical_only_hit_rate": 0.0 if not count else round(lexical_hits / count, 6),
-            "mean_query_seconds": _mean([float(row["agent_memory"]["query_seconds"]) for row in query_rows]),
-            "mean_candidate_count": _mean([float(row["agent_memory"]["candidate_count"]) for row in query_rows]),
-            "mean_admitted_count": _mean([float(row["agent_memory"]["admitted_count"]) for row in query_rows]),
+            "mean_query_seconds": _mean(query_seconds),
+            "median_query_seconds": _median(query_seconds),
+            "median_query_ms": round(_median(query_seconds) * 1000.0, 3),
+            "mean_candidate_count": _mean(
+                [float(row["agent_memory"]["candidate_count"]) for row in query_rows]
+            ),
+            "mean_admitted_count": _mean(
+                [float(row["agent_memory"]["admitted_count"]) for row in query_rows]
+            ),
+        },
+        "consistency": {
+            "query_count": len(consistency_rows),
+            "repeat_count": consistency_repeat_count,
+            "mean_pairwise_jaccard": _mean(consistency_scores) if consistency_scores else None,
+            "metric": "mean pairwise Jaccard over final admitted experience-id sets",
+            "persisted_restart_claimed": False,
+        },
+        "performance": {
+            "corpus_build_seconds_total": round(sum(build_seconds.values()), 6),
+            "corpus_build_seconds_by_repo": build_seconds,
+            "successful_scored_query_count": count,
+            "median_successful_scored_query_seconds": _median(query_seconds),
+            "median_successful_scored_query_ms": round(_median(query_seconds) * 1000.0, 3),
+            "timing_semantics": (
+                "wall-clock perf_counter for local corpus construction and first scored "
+                "Agent Memory query pass; consistency repeats are reported per query but "
+                "excluded from the scored-query median"
+            ),
+            "token_or_model_call_counts": "not_exposed_by_this_runner",
         },
         "governance": {
             "corpus_mutation_failures": corpus_mutations,
             "route_authority_effect_violations": authority_violations,
+            "ir_false_admission_count": quality["false_admission_count"],
+            "ir_false_refusal_count": quality["false_refusal_count"],
+            "authority_effect": "none" if authority_violations == 0 else "violation-detected",
+        },
+        "comparability": {
+            "signature": _stable_digest(comparability_payload),
+            "bound_fields": comparability_payload,
+            "external_reference_status": external_comparison_status,
+            "rule": (
+                "reports are comparable only when profile/corpus/fixture/manifest/config/"
+                "route/scoring/consistency denominator fields are compatible; otherwise "
+                "classify not-comparable"
+            ),
         },
         "claim_boundary": {
-            "measures": "retrieval of the gold prior experience from a natural-language related task",
+            "measures": [
+                "retrieval of the gold prior experience from a natural-language related task",
+                "candidate versus governed final-admission retrieval quality",
+                "final admitted ranking quality",
+                "same-runtime repeated retrieval-set consistency",
+                "bounded local corpus-build/query timing",
+                "retrieval governance evidence",
+            ],
             "does_not_measure": [
                 "Jev-style typed atom extraction quality",
-                "downstream SWE-bench task resolution",
+                "downstream SWE-bench task resolution or patch correctness",
                 "answer generation quality",
                 "conflict-detector precision/recall",
+                "production distributed storage",
+                "persisted-restart consistency in this runner",
             ],
             "conflict_arm": "not implemented; all benchmark experiences are retained as the external reviewed corpus",
-            "ranking": "gold rank is diagnostic only; primary score is binary hit rate",
+            "ranking": "gold rank remains diagnostic and now also feeds single-relevant-item nDCG@1/@3",
+            "synthetic_fixture_cannot_substitute_for_public_corpus": synthetic_fixture,
         },
     }
 
@@ -440,8 +767,11 @@ def main() -> None:
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--benchmark-root", required=True)
     parser.add_argument("--runtime-config", default=str(DEFAULT_RUNTIME_CONFIG))
+    parser.add_argument("--evidence-profile", default=str(DEFAULT_EVIDENCE_PROFILE))
     parser.add_argument("--agent-memory-revision", required=True)
     parser.add_argument("--lexical-anchor-limit", type=int, default=3)
+    parser.add_argument("--consistency-repeat-count", type=int, default=5)
+    parser.add_argument("--consistency-query-limit", type=int, default=10)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
@@ -449,8 +779,11 @@ def main() -> None:
         manifest_path=Path(args.manifest).resolve(),
         benchmark_root=Path(args.benchmark_root).resolve(),
         runtime_config_path=Path(args.runtime_config).resolve(),
+        evidence_profile_path=Path(args.evidence_profile).resolve(),
         agent_memory_revision=args.agent_memory_revision,
         lexical_anchor_limit=args.lexical_anchor_limit,
+        consistency_repeat_count=args.consistency_repeat_count,
+        consistency_query_limit=args.consistency_query_limit,
     )
     governance = report["governance"]
     if governance["corpus_mutation_failures"] != 0:

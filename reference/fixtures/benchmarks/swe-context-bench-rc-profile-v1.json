@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "profile_id": "swe-context-bench-lite-external-retrieval-v1",
+  "purpose": "External retrieval-quality, consistency, performance, and governance evidence for Agent Memory RC1.",
+  "source": {
+    "research_note": "SWE-ContextBench Lite retrieval research note, external issue 1307",
+    "paper": "Zhu et al., SWE Context Bench: A Benchmark for Context Learning in Coding",
+    "arxiv": "2602.08316",
+    "upstream_repository": "jiayuanz3/SWEContextBench",
+    "upstream_code_revision_observed_2026_09_24": "12ad6ab14e18e9378e1e293c9edbc3f7ce43d27b",
+    "dataset_revision": "unbound"
+  },
+  "public_protocol": {
+    "past_task_count": 300,
+    "new_issue_count": 99,
+    "gold_edge_count": 100,
+    "gold_edge_construction": "GitHub issue and pull-request dependency/reference links",
+    "query_input": "new issue problem statement only",
+    "past_task_projection": "issue/problem statement + summary lines + final assistant message",
+    "index_policy": "batch gold boards plus up to two same-repository boards that are not gold for that batch",
+    "consistency_batch": {
+      "new_issue_count": 10,
+      "repeat_count": 5,
+      "metric": "mean pairwise Jaccard"
+    },
+    "retrieval_batch": {
+      "gold_edge_count": 100,
+      "passes": 1
+    },
+    "timing": "failed conversions count in fail rate and are excluded from medians in the external research note"
+  },
+  "external_reference_results": {
+    "gpt_4_1_mini": {
+      "recall": 0.37,
+      "precision": 0.45,
+      "f1": 0.41,
+      "ndcg_at_1": 0.31,
+      "ndcg_at_3": 0.34,
+      "new_issue_cited_atom_jaccard": 0.13
+    },
+    "jev_bm25_k32": {
+      "recall": 0.31,
+      "precision": 0.89,
+      "f1": 0.46,
+      "ndcg_at_1": 0.31,
+      "ndcg_at_3": 0.31,
+      "new_issue_cited_atom_jaccard": 0.98
+    }
+  },
+  "agent_memory_directional_goals": {
+    "authority_effect": "none",
+    "candidate_recall": {
+      "target": 1.0,
+      "tolerance": 0.01
+    },
+    "final_admitted_recall_minimum": 0.95,
+    "final_admitted_precision_minimum": 0.9,
+    "final_admitted_f1_minimum": 0.92,
+    "scope_authority_violation_count": 0,
+    "role": "evaluation expectations only; never memory authority or external-benchmark hard gate"
+  },
+  "historical_agent_memory": {
+    "name": "jin-100-gold-edges",
+    "reported_metrics": {
+      "recall": 1.0,
+      "precision": 0.06,
+      "f1": 0.1,
+      "metric_layer": "not_bound_in_source_context"
+    },
+    "provenance_status": "historical_metadata_only",
+    "directly_comparable": false,
+    "missing_bindings": [
+      "agent_memory_revision",
+      "retrieval_configuration",
+      "result_cardinality_semantics",
+      "fixture_and_index_construction",
+      "candidate_vs_final_admission_layer"
+    ]
+  },
+  "comparability_keys": [
+    "benchmark_profile_id",
+    "corpus_class",
+    "fixture_identity",
+    "manifest_sha256",
+    "runtime_config_sha256",
+    "route_profile",
+    "scoring_semantics",
+    "consistency_semantics"
+  ],
+  "aggregate_health_score": "not_defined",
+  "claim_boundary": {
+    "measures": [
+      "retrieval of human-linked prior tasks",
+      "candidate versus governed final-admission quality",
+      "rank quality when ranking semantics permit",
+      "repeat-set consistency",
+      "bounded runtime timing",
+      "retrieval governance evidence"
+    ],
+    "does_not_measure": [
+      "downstream SWE patch correctness",
+      "answer generation quality",
+      "universal memory-system quality",
+      "production distributed storage",
+      "token or model call counts when the runner does not expose them"
+    ]
+  }
+}
