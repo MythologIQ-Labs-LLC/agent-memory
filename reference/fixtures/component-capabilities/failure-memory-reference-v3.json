@@ -22,14 +22,19 @@
       "enabled": true,
       "evidence_refs": [
         "reference/agentmem_ref/failure_memory.py",
+        "reference/agentmem_ref/failure_checkpoint.py",
         "reference/tests/test_failure_memory.py",
+        "reference/tests/test_failure_memory_restart.py",
+        "reference/tests/test_failure_memory_type_isolation.py",
+        "reference/run_failure_memory_benchmark.py",
         "docs/programs/memory-modules/native-failure-memory.md"
       ],
       "limitations": [
-        "Revision and recurrence indexes are process-local in this first implementation slice; restart-safe owner checkpoint/recovery remains required before #471 closeout.",
+        "The generic standalone FailureMemory owner is process-local. Bounded checkpoint/replay is provided only by the explicit CheckpointedFailureMemory composition and must not be generalized to every substrate or deployment profile.",
         "Similarity, severity, impact, and recurrence are evidence only and cannot create recall admission, action authority, mutation authority, truth, permanence, or certification.",
         "Failure categories and severity labels remain caller/domain vocabulary rather than a universal Agent Memory ontology.",
-        "No automatic promotion from failure memory into a procedural rule, guardrail, or certified fact is implemented."
+        "No automatic promotion from failure memory into a procedural rule, guardrail, or certified fact is implemented.",
+        "The bounded benchmark does not evaluate downstream action execution or claim that retrieval alone prevents repeated failures."
       ],
       "behavior_contract": {
         "operation_support": {

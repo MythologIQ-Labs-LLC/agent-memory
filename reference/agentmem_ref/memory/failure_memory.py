@@ -17,9 +17,10 @@ The runtime keeps three boundaries explicit:
 
     evidence != authority
 
-This first slice is intentionally process-local for its revision index. The
-underlying governed facts use the configured Agent Memory substrate, but #471
-must remain open until restart-safe owner checkpoint/recovery evidence is added.
+The generic ``FailureMemory`` revision owner is process-local. Bounded restart
+support is provided by ``CheckpointedFailureMemory`` in ``failure_checkpoint``
+when an explicit restart-safe host composes that owner state with the durable
+Agent Memory substrate. Neither form gives failure evidence authority.
 """
 
 from __future__ import annotations
@@ -30,7 +31,10 @@ import json
 
 from ..core import policy
 from ..runtime.adapter import CommitResult, GovernedMemoryAdapter, RecallContext
-from ..core.contextual_recall import DeterministicContextualRecallPolicy
+from ..core.contextual_recall import (
+    ADMITTING_OUTCOMES,
+    DeterministicContextualRecallPolicy,
+)
 from .cognitive_mesh import (
     ActiveCognition,
     CognitiveExperience,
@@ -577,20 +581,56 @@ class FailureMemory:
         *,
         context: RecallContext,
     ) -> ActiveCognition:
-        """Recall through normal admission, then refuse disputed failure state."""
-        result = self._mesh.recall_active(query, context=context)
-        for fact_uuid in tuple(result.admitted_fact_uuids):
+        """Recall only current failure-owned facts after normal governed admission.
+
+        Candidate generation and adapter admission remain shared. This specialized
+        surface may only narrow that admitted set. A fact that the failure-memory
+        owner does not recognize fails closed as a type mismatch rather than
+        inheriting the generic Cognitive Mesh fact-UUID fallback.
+        """
+        admission = self.adapter.governed_recall(query, context=context)
+        result = ActiveCognition(
+            candidate_fact_uuids=list(admission.candidates),
+            admitted_fact_uuids=list(admission.admitted),
+            refusals=dict(admission.refusals),
+        )
+        recall_policy = self.recall_policy or DeterministicContextualRecallPolicy(
+            policy_ref="policy:cognitive-mesh-recall",
+            policy_version="1.0.0",
+        )
+        for fact_uuid in admission.admitted:
             failure_ref = self._failure_ref_for_fact(fact_uuid)
             if failure_ref is None:
+                result.refusals.setdefault(
+                    fact_uuid,
+                    "memory_type_mismatch:negative_failure_memory",
+                )
                 continue
+
+            decision = recall_policy.evaluate(
+                failure_ref,
+                context,
+                evaluated_at="2026-01-01T00:10:00Z",
+            )
+            result.contextual_decisions[failure_ref] = decision
+            if decision["outcome"] not in ADMITTING_OUTCOMES:
+                result.refusals[fact_uuid] = f"contextual_{decision['outcome']}"
+                continue
+
             current = self.current(failure_ref)
             if current is None:
+                result.refusals[fact_uuid] = "failure_state_missing"
                 continue
             if current.memory_status == "disputed":
-                result.active_object_refs = [
-                    item for item in result.active_object_refs if item != failure_ref
-                ]
                 result.refusals[fact_uuid] = "failure_disputed"
+                continue
+            if current.memory_status == "retracted":
+                result.refusals[fact_uuid] = "failure_retracted"
+                continue
+            if self._fact_by_revision.get(current.revision_ref) != fact_uuid:
+                result.refusals[fact_uuid] = "failure_not_current_revision"
+                continue
+            result.active_object_refs.append(failure_ref)
         return result
 
     def replace_component(self, *, old_component: str, new_component: str) -> None:

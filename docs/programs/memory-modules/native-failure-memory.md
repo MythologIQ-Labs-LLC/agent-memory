@@ -18,6 +18,7 @@ failure observation
   -> Cognitive Mesh proposal
   -> existing PAMA-governed commit / review / refusal
   -> ordinary governed recall
+  -> failure-memory ownership/currentness narrowing
   -> non-authoritative failure evidence
   -> downstream action or mutation remains separately governed
 ```
@@ -110,13 +111,27 @@ same memory recalled five times
 
 Duplicate recurrence evidence is rejected before substrate mutation.
 
-## Correction, dispute, and retraction
+## Correction, dispute, retraction, and typed recall
 
 A correction extends the current revision. It cannot silently change governed scope or action-class identity.
 
-A disputed failure memory stays retained and historically visible, but the reference runtime removes it from active failure guidance after ordinary recall admission.
+A disputed failure memory stays retained and historically visible, but the runtime removes it from active failure guidance after ordinary recall admission.
 
 Retraction uses the existing governed delete/tombstone path. History remains reconstructable in the revision owner while current recall influence is removed.
+
+Specialized failure-memory recall is deliberately narrower than the generic Cognitive Mesh recall helper:
+
+```text
+shared candidate generation
+  -> governed adapter admission
+  -> failure-memory ownership/type filter
+  -> current failure revision check
+  -> disputed/retracted check
+  -> contextual policy
+  -> active failure refs only
+```
+
+An unrelated semantic or epistemic fact may be a valid adapter-level admitted fact for the same text query. That does not make it failure memory. The failure-memory surface fails closed with a type mismatch and never broadens the adapter's admitted set.
 
 ## Similarity evidence
 
@@ -131,28 +146,44 @@ memory_status
 authority_effect = none
 ```
 
-There is no `allow`, `deny`, or `block` field.
+There is no `allow`, `deny`, or `block` field. That omission is load-bearing.
 
-That omission is load-bearing.
+## Restart posture
 
-## Current implementation posture
+The generic standalone `FailureMemory` revision owner remains process-local.
 
-The first implementation slice is runtime-wired but its revision and recurrence indexes are process-local.
+`CheckpointedFailureMemory` provides a bounded restart-safe specialization when explicitly composed through `ComposedRestartSafeRuntime`. Its owner checkpoint preserves append-only failure lineage, revision-to-fact ownership, and the Cognitive Mesh object map. Restore validates those mappings against the durable substrate and fails closed when an owner record points to a fact that is absent.
 
-The underlying facts are written through the configured governed Agent Memory substrate, but #471 must remain open until restart-safe owner checkpoint/recovery evidence proves that the failure-memory lineage itself survives restart without resurrection of retracted state or loss of recurrence/currentness semantics.
+Restart tests prove, for that bounded composition:
 
-Therefore the current capability profile truthfully declares:
+- recurrence count/currentness survives recovery;
+- retracted/tombstoned state does not regain current influence;
+- corrupt missing-fact owner mappings fail recovery.
 
-```text
-maturity: runtime_wired
-restart_recovery: process_local_only
-reconciliation: process_local_only
-authority_effect: none
-```
+This does not promote the generic capability profile to a universal checkpoint/replay claim. The profile continues to report the standalone owner as process-local and cites the checkpointed specialization as bounded evidence.
 
-## Acceptance evidence in this slice
+## Evaluation evidence
 
-`reference/tests/test_failure_memory.py` pressures:
+`reference/run_failure_memory_benchmark.py` is revision-bound to an exact Agent Memory commit and fixture SHA. It reports quality, performance, and governance separately.
+
+The benchmark measures:
+
+- deterministic identity equivalence/separation;
+- false recurrence matches;
+- repeated-failure retrieval;
+- recurrence identification;
+- correction/retraction currentness;
+- wrong-scope admission violations;
+- repeated-recall recurrence mutation;
+- similarity authority/bypass violations;
+- retracted resurfacing;
+- owner checkpoint size.
+
+It deliberately reports downstream avoided-failure action outcomes as `not_measured`: remembering a failure produces governed evidence, not automatic action authority.
+
+## Acceptance evidence
+
+Focused tests cover:
 
 - deterministic stable identity;
 - initial governed commit and recall;
@@ -163,16 +194,15 @@ authority_effect: none
 - high-severity perfect-similarity match evidence still has no authority effect;
 - disputed causal memory is retained but not active guidance;
 - retraction tombstones current influence while preserving revision history;
-- stale lineage and silent scope movement fail before mutation.
+- stale lineage and silent scope movement fail before mutation;
+- restart preserves current admissible failure state and recurrence;
+- retracted state does not resurrect on restart;
+- corrupted owner checkpoint mappings fail closed;
+- unrelated admitted memory forms cannot become active failure guidance;
+- current failure revision remains active after supersession/correction.
 
-## Remaining #471 work
-
-Before closeout:
-
-1. add restart-safe owner checkpoint/recovery for failure revision and fact mappings;
-2. prove tombstoned/retracted failure state does not regain influence after restart;
-3. prove restart preserves recurrence count and current/disputed state;
-4. add bounded evaluation evidence for failure retrieval quality, false recurrence matches, performance, and governance separately;
-5. update #470 harvest disposition from partial to absorbed only after that evidence exists.
+## Closeout boundary
 
 No EvolveAI runtime dependency is required or desired.
+
+#471 may close only after the exact final PR head is green and #470's harvest matrix/canonical ownership language is reconciled from `partially_absorbed` / `further native implementation planned` to the evidence-supported native disposition. #470 itself remains open for the other ancestry/peer rows.
