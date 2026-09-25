@@ -143,15 +143,38 @@
     {
       "source": "UOR-Foundation/uor-foundry",
       "revision": "5b4711aed4fbb7da9d8b0aa04048a2b04713de4a",
-      "rights_basis": "Cargo.toml declares MIT OR Apache-2.0; root license distribution not verified in Wave 1",
+      "rights_basis": "verified dual-license MIT OR Apache-2.0 at exact inspected revision; root LICENSE-MIT and LICENSE-APACHE present; no root NOTICE present",
+      "rights_status": "verified_open_license",
       "mechanisms": [
         {
-          "mechanism": "scoped authority, replayable acceptance, producer/artifact identity",
-          "posture": "blocked_by_rights",
-          "qualification_evidence": [],
-          "required_action": "verify repository-level license distribution before direct code reuse"
+          "mechanism": "scoped multi-administrator authority and quorum discipline",
+          "posture": "already_native_no_action",
+          "qualification_evidence": ["docs/04-governance-and-pama.md", "ADR-004", "#489"],
+          "reason": "Agent Memory already owns generic memory mutation authority, scope, evidence and consequence through PAMA; Foundry organization/quorum semantics are specialized peer evidence"
+        },
+        {
+          "mechanism": "replayable acceptance and conformance-ID discipline",
+          "posture": "already_native_no_action",
+          "qualification_evidence": ["docs/programs/runtime-evidence/security-evidence-depth.md", "docs/42-governed-mutable-memory-fabric.md", "#489"],
+          "reason": "Agent Memory already separates doctrine, fixture, behavioral harness, exact-head runtime and production evidence and binds capability maturity independently"
+        },
+        {
+          "mechanism": "producer/artifact identity and source-integration versus consumer-acceptance boundary",
+          "posture": "specialized_external_lesson",
+          "qualification_evidence": ["docs/49-rc1-evidence-closeout.md", "#489"],
+          "reason": "Agent Memory already binds memory/runtime evidence to exact revisions, configuration and runtime identities; broader release-supply-chain machinery is not generic memory functionality"
+        },
+        {
+          "mechanism": "some-true/build/open honesty levels",
+          "posture": "already_native_no_parallel_taxonomy",
+          "qualification_evidence": ["docs/programs/runtime-evidence/security-evidence-depth.md", "docs/42-governed-mutable-memory-fabric.md", "#489"],
+          "reason": "underlying lesson is already covered by capability maturity plus D/F/H/R/P evidence depth; importing a second taxonomy would add vocabulary rather than evidence"
         }
-      ]
+      ],
+      "runtime_dependency_required": false,
+      "direct_material_reuse_registered": false,
+      "authority_effect": "none",
+      "final_disposition": "external_verification_evidence_peer_generic_lessons_already_native"
     },
     {
       "source": "UOR-Foundation/uor-jcs-nfc",
@@ -258,7 +281,6 @@
     }
   ],
   "open_closeout_items": [
-    "uor-foundry repository-level rights verification",
     "uor-jcs-nfc final publication follow-up if provisional source changes",
     "PrismPM review only if a concrete memory or verification lesson is identified"
   ]
