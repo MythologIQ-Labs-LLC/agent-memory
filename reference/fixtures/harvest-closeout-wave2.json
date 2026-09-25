@@ -196,14 +196,15 @@
       "source": "AgentTrust TRACE",
       "revision": "3a561d84d752794b9afa994ce16ed35c24ac0acb",
       "release": "agentrust-trace==0.10.0",
-      "rights_basis": "normative specification CSL-1.0; source/SDK/tests/examples Apache-2.0; non-spec docs CC-BY-4.0",
+      "rights_basis": "normative specification CSL-1.0; source/SDK/tests/examples/workflows/reference code Apache-2.0; non-spec docs CC-BY-4.0; historical trace-v0.1 CC-BY-4.0 grant retained",
       "mechanisms": [
         {
           "mechanism": "portable action/trust evidence and revocation/security semantics",
           "posture": "optional_interoperability",
-          "qualification_evidence": ["#440", "#476"],
-          "authority_effect": "none",
-          "required_action": "reconcile stale source-registry wording to exact file-class rights"
+          "qualification_evidence": ["#440", "#476", "#487", "reference/fixtures/trace-source-rights-v1.json"],
+          "rights_reconciled": true,
+          "runtime_dependency_required": false,
+          "authority_effect": "none"
         }
       ]
     },
@@ -247,7 +248,7 @@
         {
           "mechanism": "field-level external evidence with regulated-domain crossing, RFC8785 policy hashing, cert-pinned rotation and extensible compliance domains",
           "posture": "optional_interoperability",
-          "qualification_evidence": ["#485", "#486", "cMCP External Evidence Comparator run 36095380166"],
+          "qualification_evidence": ["#485", "#486", "cMCP External Evidence Comparator run 36095747420", "main 0a76e410eaf53252d516f6caff42cec81d78ff5a"],
           "qualification_status": "qualified_exact_release",
           "runtime_dependency_required": false,
           "historical_040_evidence_rewritten": false,
@@ -257,7 +258,6 @@
     }
   ],
   "open_closeout_items": [
-    "TRACE source-registry file-class license reconciliation",
     "uor-foundry repository-level rights verification",
     "uor-jcs-nfc final publication follow-up if provisional source changes",
     "PrismPM review only if a concrete memory or verification lesson is identified"
