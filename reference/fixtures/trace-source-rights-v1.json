@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "source": "agentrust-io/trace-spec",
+  "qualified_source_revision": "3a561d84d752794b9afa994ce16ed35c24ac0acb",
+  "qualified_package": "agentrust-trace==0.10.0",
+  "repository_license_spdx": null,
+  "rights_model": "mixed_file_class",
+  "file_classes": [
+    {
+      "class": "normative_specification",
+      "paths_or_examples": [
+        "spec/",
+        "schema/trace-claim.json",
+        "materials expressly identified as Draft Specification or Approved Specification"
+      ],
+      "license": "Community Specification License 1.0"
+    },
+    {
+      "class": "source_sdk_tests_examples_workflows_reference_code",
+      "paths_or_examples": [
+        "src/",
+        "tests/",
+        "examples/",
+        ".github/"
+      ],
+      "license": "Apache-2.0",
+      "qualification": "unless a file states otherwise"
+    },
+    {
+      "class": "non_specification_documentation",
+      "paths_or_examples": [
+        "README.md",
+        "CHANGELOG.md",
+        "docs/",
+        "project-process Markdown"
+      ],
+      "license": "CC-BY-4.0",
+      "qualification": "unless a file states otherwise"
+    },
+    {
+      "class": "historical_trace_v0_1_specification",
+      "paths_or_examples": [
+        "spec/trace-v0.1.md"
+      ],
+      "license": "CC-BY-4.0 historical grant retained"
+    }
+  ],
+  "agent_memory_reuse_posture": "independent_synthesis_and_optional_interoperability",
+  "material_reused_by_this_reconciliation": "none",
+  "authority_effect": "none",
+  "runtime_dependency_required": false,
+  "verified_at": "2026-09-25"
+}
