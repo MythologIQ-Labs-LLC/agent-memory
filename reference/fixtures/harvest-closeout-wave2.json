@@ -148,33 +148,33 @@
       "mechanisms": [
         {
           "mechanism": "scoped multi-administrator authority and quorum discipline",
-          "posture": "already_native_no_action",
+          "posture": "absorbed",
           "qualification_evidence": ["docs/04-governance-and-pama.md", "ADR-004", "#489"],
-          "reason": "Agent Memory already owns generic memory mutation authority, scope, evidence and consequence through PAMA; Foundry organization/quorum semantics are specialized peer evidence"
+          "reason": "generic memory authority/scope lesson is already native through PAMA; Foundry organization/quorum semantics remain specialized peer evidence"
         },
         {
           "mechanism": "replayable acceptance and conformance-ID discipline",
-          "posture": "already_native_no_action",
+          "posture": "absorbed",
           "qualification_evidence": ["docs/programs/runtime-evidence/security-evidence-depth.md", "docs/42-governed-mutable-memory-fabric.md", "#489"],
           "reason": "Agent Memory already separates doctrine, fixture, behavioral harness, exact-head runtime and production evidence and binds capability maturity independently"
         },
         {
           "mechanism": "producer/artifact identity and source-integration versus consumer-acceptance boundary",
-          "posture": "specialized_external_lesson",
+          "posture": "specialized_source_only",
           "qualification_evidence": ["docs/49-rc1-evidence-closeout.md", "#489"],
-          "reason": "Agent Memory already binds memory/runtime evidence to exact revisions, configuration and runtime identities; broader release-supply-chain machinery is not generic memory functionality"
+          "reason": "bounded revision/config/runtime identity is already native; broader product-release and supply-chain closure remains specialized external release-engineering machinery"
         },
         {
-          "mechanism": "some-true/build/open honesty levels",
-          "posture": "already_native_no_parallel_taxonomy",
+          "mechanism": "some-true/build/open honesty-level discipline",
+          "posture": "absorbed",
           "qualification_evidence": ["docs/programs/runtime-evidence/security-evidence-depth.md", "docs/42-governed-mutable-memory-fabric.md", "#489"],
-          "reason": "underlying lesson is already covered by capability maturity plus D/F/H/R/P evidence depth; importing a second taxonomy would add vocabulary rather than evidence"
+          "reason": "underlying evidence-honesty lesson is already native through capability maturity plus D/F/H/R/P evidence depth; Foundry terminology is intentionally not imported as a parallel taxonomy"
         }
       ],
       "runtime_dependency_required": false,
       "direct_material_reuse_registered": false,
       "authority_effect": "none",
-      "final_disposition": "external_verification_evidence_peer_generic_lessons_already_native"
+      "final_disposition": "mixed_final_disposition_generic_lessons_absorbed_release_engineering_specialized"
     },
     {
       "source": "UOR-Foundation/uor-jcs-nfc",
