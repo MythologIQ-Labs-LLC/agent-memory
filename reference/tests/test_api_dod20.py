@@ -1,7 +1,11 @@
 """Sprint 4a (LD6): DoD 20 at the public surface -- every entry point that can reach a governed
 mutation forwards the caller's evidence and attestation unchanged, or parks; the read-only stages
 call neither seam. Asserted by driving each function through a recording adapter, not by reading
-source."""
+source.
+
+RC-4 adds the ``AgentMemory`` class as an ergonomic facade over these already-classified stage
+functions. It is public, but it is not itself another stage function, so it is classified separately.
+"""
 
 from __future__ import annotations
 
@@ -28,6 +32,7 @@ READERS = {"propose": surface.propose, "approve": surface.approve, "recall": sur
 # `apply_action_governance`; `witness` consumes an authorization at `record_runtime_execution`. Neither is a
 # reader (both retain state) and neither reaches a mutation seam.
 AUTHORITY = {"authorize": surface.authorize, "witness": surface.witness}
+FACADES = {"AgentMemory": surface.AgentMemory}
 ACTION = json.loads((REPO / "reference/fixtures/api/action-envelope.example.json").read_text(encoding="utf-8"))
 OBSERVATION = json.loads((REPO / "reference/fixtures/api/execution-observation.example.json").read_text(encoding="utf-8"))
 
@@ -63,8 +68,12 @@ class PublicSurfaceForwardsOrParks(unittest.TestCase):
         self.memory.calls.clear()
         self.target = EXAMPLE["target_reference"]
 
-    def test_every_public_function_is_classified(self):
-        self.assertEqual(set(surface.__all__), set(WRITERS) | set(READERS) | set(AUTHORITY))
+    def test_every_public_entry_is_classified(self):
+        self.assertEqual(
+            set(surface.__all__),
+            set(WRITERS) | set(READERS) | set(AUTHORITY) | set(FACADES),
+        )
+        self.assertTrue(inspect.isclass(surface.AgentMemory))
 
     def test_writers_forward_evidence_and_attestation_unchanged(self):
         corpus = corpus_for(rule(rule_id="rule:api-dod20", target=self.target, criterion="value-correction",
