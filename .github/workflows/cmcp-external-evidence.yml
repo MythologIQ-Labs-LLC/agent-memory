@@ -27,7 +27,7 @@ jobs:
           PYTHONPATH: reference
         run: python -m unittest tests.test_cmcp_external_evidence
 
-      - name: Install exact released cMCP verifier environment
+      - name: Install exact released cMCP 0.4 historical verifier environment
         run: |
           python -m venv /tmp/agent-memory-cmcp-inbound
           /tmp/agent-memory-cmcp-inbound/bin/python -m pip install --disable-pip-version-check \
@@ -49,7 +49,7 @@ jobs:
               print(f"{package}=={actual}")
           PY
 
-      - name: Execute real released cMCP inbound comparator
+      - name: Execute real released cMCP 0.4 historical inbound comparator
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: >-
@@ -59,9 +59,61 @@ jobs:
           --agent-memory-commit "$AGENT_MEMORY_COMMIT"
           --output cmcp-external-evidence.json
 
-      - name: Upload cMCP inbound evidence artifact
+      - name: Install exact released cMCP 0.5 qualification environment
+        run: |
+          python -m venv /tmp/agent-memory-cmcp-050
+          /tmp/agent-memory-cmcp-050/bin/python -m pip install --disable-pip-version-check \
+            cmcp-runtime==0.5.0 \
+            agentrust-trace==0.10.0 \
+            agent-manifest==0.12.0 \
+            rfc8785==0.1.4 \
+            jsonschema==4.26.0
+          /tmp/agent-memory-cmcp-050/bin/python - <<'PY'
+          import importlib.metadata
+          expected = {
+              "cmcp-runtime": "0.5.0",
+              "agentrust-trace": "0.10.0",
+              "agent-manifest": "0.12.0",
+          }
+          for package, version in expected.items():
+              actual = importlib.metadata.version(package)
+              assert actual == version, (package, actual, version)
+              print(f"{package}=={actual}")
+          PY
+
+      - name: Execute exact cMCP 0.5 security-semantic qualification
+        env:
+          AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          PYTHONPATH=reference
+          /tmp/agent-memory-cmcp-050/bin/python
+          reference/run_cmcp_050_qualification.py
+          --agent-memory-commit "$AGENT_MEMORY_COMMIT"
+          --output cmcp-050-qualification.json
+
+      - name: Validate cMCP 0.5 qualification artifact
+        run: |
+          python - <<'PY'
+          import json
+          report = json.load(open('cmcp-050-qualification.json'))
+          assert report['passed'] is True
+          assert report['peer']['runtime_package'] == 'cmcp-runtime==0.5.0'
+          assert report['peer']['source_commit'] == 'd03b9af504535d3d43f192bc6d9eff89b8afd12f'
+          assert report['peer']['trace_package'] == 'agentrust-trace==0.10.0'
+          assert report['peer']['agent_manifest_package'] == 'agent-manifest==0.12.0'
+          assert report['checks']['external_verifier_has_no_authority_effect'] is True
+          assert report['checks']['regulated_domain_detail_not_silently_promoted_into_agent_memory_record'] is True
+          assert report['checks']['cert_pinned_rotation_reachable'] is True
+          assert report['checks']['rfc8785_policy_hash_matches_independent_projection'] is True
+          assert 'health_score' not in report and 'score' not in report
+          print(report['checks'])
+          PY
+
+      - name: Upload cMCP inbound evidence artifacts
         uses: actions/upload-artifact@v7
         with:
           name: cmcp-external-evidence-comparator
-          path: cmcp-external-evidence.json
+          path: |
+            cmcp-external-evidence.json
+            cmcp-050-qualification.json
           if-no-files-found: error
