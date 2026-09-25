@@ -131,6 +131,8 @@ class CmcpExternalEvidenceTests(unittest.TestCase):
             source_release_ref=source_release,
             verifier_id=verifier_id,
         )
+        self.assertEqual(normalized[0]["applicability"]["status"], "applicable")
+        self.assertEqual(normalized[1]["applicability"]["status"], "insufficient_evidence")
         for record in normalized:
             self.assertEqual(record["source"]["version"], source_version)
             self.assertEqual(record["source"]["release_ref"], source_release)
