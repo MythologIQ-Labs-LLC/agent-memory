@@ -198,6 +198,25 @@ class LongMemEvalProfileTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "haystack arrays"):
                 M.run(path, corpus_class="synthetic", include_agent_memory=False)
 
+    def test_repeated_identical_sessions_are_indexed_like_upstream(self) -> None:
+        value = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        row = value[0]
+        row["haystack_session_ids"].append(row["haystack_session_ids"][1])
+        row["haystack_dates"].append("2026/08/20 (Thu) 09:00")
+        row["haystack_sessions"].append(row["haystack_sessions"][1])
+        items, gold = M.corpus(row, "session")
+        self.assertEqual([item["id"] for item in items].count("syn_filler_lunch"), 2)
+        self.assertEqual(gold, ["answer_syn_editor_1"])
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "repeat.json"
+            path.write_text(json.dumps(value), encoding="utf-8")
+            report = M.run(path, corpus_class="synthetic", include_agent_memory=False)
+            self.assertEqual(report["input"]["duplicate_session_id_question_count"], 1)
+            row["haystack_sessions"][-1] = [{"role": "user", "content": "different content"}]
+            path.write_text(json.dumps(value), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "different content"):
+                M.run(path, corpus_class="synthetic", include_agent_memory=False)
+
     def test_duplicate_question_ids_fail_closed(self) -> None:
         value = json.loads(FIXTURE.read_text(encoding="utf-8"))
         value.append(value[0])

@@ -96,8 +96,11 @@ def _load(path: Path) -> list[dict[str, Any]]:
         session_ids = [str(item) for item in raw["haystack_session_ids"]]
         if not (len(session_ids) == len(raw["haystack_dates"]) == len(raw["haystack_sessions"])):
             raise ValueError(f"row {index} haystack arrays must have equal length")
-        if len(set(session_ids)) != len(session_ids):
-            raise ValueError(f"row {index} session ids must be unique")
+        seen_sessions: dict[str, str] = {}
+        for session_id, session in zip(session_ids, raw["haystack_sessions"]):
+            content = json.dumps(session, sort_keys=True)
+            if seen_sessions.setdefault(session_id, content) != content:
+                raise ValueError(f"row {index} reuses session id {session_id!r} for different content")
         if not set(str(item) for item in raw["answer_session_ids"]).issubset(session_ids):
             raise ValueError(f"row {index} answer_session_ids must be present in haystack_session_ids")
         rows.append(dict(raw))
@@ -552,6 +555,11 @@ def run(
             "no_user_target_question_count": sum(
                 1 for row in dataset if not is_abstention(row) and not has_user_target(row)
             ),
+            "duplicate_session_id_question_count": sum(
+                1 for row in dataset if len(set(map(str, row["haystack_session_ids"]))) != len(row["haystack_session_ids"])
+            ),
+            "duplicate_session_id_note": "upstream indexes each repeated haystack session as its own corpus item under "
+            "the same id; this profile does the same (repeats must carry identical content)",
             "selection": selection,
         },
         "execution": {
