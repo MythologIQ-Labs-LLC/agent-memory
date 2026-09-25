@@ -17,10 +17,10 @@ class BenchmarkIntegrityMutantTests(unittest.TestCase):
     def test_all_controlled_mutations_are_detected(self) -> None:
         report = mutants.run_mutation_probes()
         self.assertTrue(report["all_detected"])
-        self.assertTrue(all(probe["detected"] for probe in report["probes"]))
+        self.assertTrue(all(probe["detected"] for probe in report["profiles"]["swe_contextbench"]["probes"]))
 
     def test_baseline_is_clean_and_multi_gold_denominator_is_preserved(self) -> None:
-        report = mutants.run_mutation_probes()
+        report = mutants.run_mutation_probes()["profiles"]["swe_contextbench"]
         baseline = report["baseline"]
         self.assertEqual(baseline["gold_edge_count"], 3)
         self.assertEqual(baseline["final_admitted_recall"], 1.0)
@@ -35,7 +35,7 @@ class BenchmarkIntegrityMutantTests(unittest.TestCase):
         self.assertEqual(missing_gold["metrics"]["false_refusal_count"], 1)
 
     def test_candidate_and_final_admission_metrics_do_not_collapse(self) -> None:
-        report = mutants.run_mutation_probes()
+        report = mutants.run_mutation_probes()["profiles"]["swe_contextbench"]
         refusal = next(
             probe for probe in report["probes"] if probe["name"] == "admission_refusal"
         )
@@ -55,6 +55,51 @@ class BenchmarkIntegrityMutantTests(unittest.TestCase):
         self.assertFalse(boundary["external_comparability"])
         self.assertEqual(boundary["memory_authority_effect"], "none")
         self.assertFalse(boundary["mutant_detection_proves_real_world_quality"])
+
+
+class LongMemEvalIntegrityProbeTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.profile = mutants.run_mutation_probes()["profiles"]["longmemeval"]
+        self.probes = {probe["name"]: probe for probe in self.profile["probes"]}
+
+    def test_profile_uses_the_real_longmemeval_evaluator_and_clean_baseline(self) -> None:
+        self.assertIn("run_longmemeval.score_record", self.profile["evaluator"])
+        baseline = self.profile["baseline"]
+        self.assertEqual(set(baseline["headline"].values()), {1.0})
+        self.assertEqual(baseline["evaluated_question_count"], 3)
+        self.assertEqual(baseline["latest_gold_ranked_first_rate"], 1.0)
+        self.assertEqual(baseline["out_of_corpus_returned_count"], 0)
+
+    def test_every_semantic_mutation_is_detected(self) -> None:
+        expected = {
+            "missing_gold",
+            "irrelevant_ahead",
+            "rank_below_cutoff",
+            "stale_over_current",
+            "suppressed_abstention",
+            "identity_mapping_corruption",
+            "cross_scope_injection",
+        }
+        detected = {name for name, probe in self.probes.items() if probe["expected_detection"] and probe["detected"]}
+        self.assertEqual(detected, expected)
+        self.assertTrue(self.profile["all_detected"])
+
+    def test_currentness_damage_is_separate_from_recall(self) -> None:
+        stale = self.probes["stale_over_current"]["metrics"]
+        self.assertLess(stale["latest_gold_ranked_first_rate"], 1.0)
+        self.assertEqual(stale["headline"]["recall_all@5"], 1.0)
+
+    def test_upstream_rank_one_ndcg_insensitivity_is_recorded_not_hidden(self) -> None:
+        probe = self.probes["irrelevant_at_rank_one"]
+        self.assertFalse(probe["expected_detection"])
+        self.assertFalse(probe["detected"])
+        self.assertEqual(self.profile["known_insensitivities"], ["irrelevant_at_rank_one"])
+        self.assertTrue(self.profile["known_insensitivities_confirmed"])
+
+    def test_unavailable_profiles_are_explicit(self) -> None:
+        profile = mutants.run_mutation_probes()["profiles"]["agentmembench_memdialogue"]
+        self.assertEqual(profile["status"], "profile_not_available")
+        self.assertIsNone(profile["all_detected"])
 
 
 if __name__ == "__main__":

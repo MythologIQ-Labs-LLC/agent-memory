@@ -370,56 +370,77 @@ def _currentness(rows: Sequence[Mapping[str, Any]], granularity: str) -> dict[st
     }
 
 
+def score_record(
+    row: Mapping[str, Any],
+    granularity: str,
+    ranked: Sequence[str],
+    *,
+    runtime_error: str | None = None,
+    extra: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Score one question's returned ranking with the replicated upstream evaluator."""
+    items, gold = corpus(row, granularity)
+    corpus_ids = [item["id"] for item in items]
+    corpus_set = set(corpus_ids)
+    dates = {item["id"]: item["date"] for item in items}
+    ranked = list(ranked)
+    if is_abstention(row):
+        status = "excluded_abstention"
+    elif not has_user_target(row):
+        status = "excluded_no_user_target"
+    else:
+        status = "scored"
+    record: dict[str, Any] = {
+        "question_id": row["question_id"],
+        "question_type": row["question_type"],
+        "status": status,
+        "corpus_size": len(items),
+        "gold": gold,
+        "returned_count": len(ranked),
+        "out_of_corpus_returned_count": sum(1 for doc in ranked if doc not in corpus_set),
+        "ranked_top": ranked[:REPORTED_RANK_DEPTH],
+        "metrics": _score_row(ranked, gold, corpus_ids, granularity),
+        "latest_gold_first": _latest_gold_first(ranked, gold, dates),
+        "runtime_error": runtime_error,
+    }
+    record.update(extra or {})
+    return record
+
+
+def summarize(records: Sequence[Mapping[str, Any]], granularity: str) -> dict[str, Any]:
+    by_type: dict[str, list[Mapping[str, Any]]] = {}
+    for record in records:
+        by_type.setdefault(str(record["question_type"]), []).append(record)
+    return {
+        "aggregate": _aggregate(records, granularity),
+        "by_question_type": {key: _aggregate(value, granularity) for key, value in sorted(by_type.items())},
+        "currentness": _currentness(records, granularity),
+        "failures": {
+            "runtime_failure_count": sum(1 for record in records if record.get("runtime_error")),
+            "ingestion_failure_count": sum(len(record.get("ingestion_failures", ())) for record in records),
+            "out_of_corpus_returned_count": sum(record["out_of_corpus_returned_count"] for record in records),
+        },
+    }
+
+
 def _evaluate_backend(dataset: Sequence[Mapping[str, Any]], granularity: str, backend: str) -> dict[str, Any]:
     retriever = RETRIEVERS[backend]
     rows: list[dict[str, Any]] = []
-    runtime_failures = 0
     started = time.perf_counter()
     for row_index, row in enumerate(dataset):
-        items, gold = corpus(row, granularity)
-        corpus_ids = [item["id"] for item in items]
-        dates = {item["id"]: item["date"] for item in items}
+        items, _ = corpus(row, granularity)
         try:
             outcome = retriever(str(row["question"]), items, row_index)
             error = None
         except Exception as exc:  # recorded, never hidden; the question scores as a miss
             outcome = {"ranked": []}
             error = f"{type(exc).__name__}: {exc}"
-            runtime_failures += 1
         ranked = list(outcome.pop("ranked"))
-        if is_abstention(row):
-            status = "excluded_abstention"
-        elif not has_user_target(row):
-            status = "excluded_no_user_target"
-        else:
-            status = "scored"
-        record: dict[str, Any] = {
-            "question_id": row["question_id"],
-            "question_type": row["question_type"],
-            "status": status,
-            "corpus_size": len(items),
-            "gold": gold,
-            "returned_count": len(ranked),
-            "ranked_top": ranked[:REPORTED_RANK_DEPTH],
-            "metrics": _score_row(ranked, gold, corpus_ids, granularity),
-            "latest_gold_first": _latest_gold_first(ranked, gold, dates),
-            "runtime_error": error,
-        }
-        record.update(outcome)
-        rows.append(record)
+        rows.append(score_record(row, granularity, ranked, runtime_error=error, extra=outcome))
     elapsed = time.perf_counter() - started
 
-    by_type: dict[str, list[dict[str, Any]]] = {}
-    for record in rows:
-        by_type.setdefault(str(record["question_type"]), []).append(record)
     result: dict[str, Any] = {
-        "aggregate": _aggregate(rows, granularity),
-        "by_question_type": {key: _aggregate(value, granularity) for key, value in sorted(by_type.items())},
-        "currentness": _currentness(rows, granularity),
-        "failures": {
-            "runtime_failure_count": runtime_failures,
-            "ingestion_failure_count": sum(len(row.get("ingestion_failures", ())) for row in rows),
-        },
+        **summarize(rows, granularity),
         "timing": {"wall_seconds": round(elapsed, 3)},
         "authority_effect": "none",
         "rows": rows,

@@ -40,7 +40,9 @@ Agent Memory independently re-expresses that verification lesson. No PrismPM or 
 
 ## Current probes
 
-The harness starts from a clean synthetic retrieval-evaluation baseline and applies controlled mutations:
+Probes are organized per accepted external benchmark profile (#518). Each profile's mutations respect that benchmark's own semantics and are scored by that profile's existing evaluator, never by a re-implementation.
+
+### SWE-ContextBench (`run_swe_context_bench_harness._quality`)
 
 | Probe | Required detection |
 |---|---|
@@ -50,7 +52,27 @@ The harness starts from a clean synthetic retrieval-evaluation baseline and appl
 | rank inversion | nDCG@1 falls even when final recall remains preserved |
 | admission refusal | candidate recall and final admitted recall remain independently measurable |
 
-The process exits non-zero if any expected mutation is not detected.
+### LongMemEval (`run_longmemeval.score_record` / `summarize`)
+
+The baseline applies an ideal gold-only ranking (most recent gold first, nothing for abstention) to the upstream-shaped synthetic fixture, at session granularity, through the replicated upstream retrieval evaluator.
+
+| Probe | Required detection |
+|---|---|
+| missing gold | `recall_all@5` falls; scored denominator unchanged |
+| irrelevant ahead | an irrelevant session ahead of a gold session lowers `ndcg_any@5`; `recall_all@5` unchanged |
+| rank below cutoff | gold pushed below k=1 lowers `recall_all@1` only; `recall_all@5` unchanged |
+| stale over current | superseded knowledge-update session ranked first lowers `latest_gold_ranked_first`; recall unchanged |
+| suppressed abstention | losing the `_abs` identity changes the scored denominator |
+| identity mapping corruption | returned memories mapped to the wrong benchmark ids lower recall |
+| cross-scope injection | an item from another question's haystack is counted out-of-corpus and earns no recall |
+
+Known upstream evaluator insensitivity, recorded rather than hidden: upstream `eval_utils.dcg` weights ranks 1 and 2 equally (`rel₁ + rel₂/log₂2 + …`). Displacing a single gold item from rank 1 to rank 2 therefore leaves `ndcg_any` unchanged. The `irrelevant_at_rank_one` probe asserts that this non-detection still holds (`known_insensitivities_confirmed`). For that damage, `recall_all@1` is the sensitive signal. The profile keeps upstream parity and does not silently "fix" upstream arithmetic.
+
+### AgentMemBench / MemDialogue
+
+`profile_not_available` until the #517 profile exists. The report records this explicitly rather than omitting the profile.
+
+The process exits non-zero if any expected detection fails in any exercised profile.
 
 ## Governance boundary
 
