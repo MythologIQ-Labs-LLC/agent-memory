@@ -1,0 +1,530 @@
+{
+ "haystacks_in_chronological_order": "289/500",
+ "session_by_type": {
+  "knowledge-update": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.923,
+    "recall_all@10": 0.944,
+    "recall_all@5": 0.917,
+    "n": 72
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.916,
+    "recall_all@10": 0.944,
+    "recall_all@5": 0.931,
+    "n": 72
+   }
+  },
+  "multi-session": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.722,
+    "recall_all@10": 0.694,
+    "recall_all@5": 0.521,
+    "n": 121
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.695,
+    "recall_all@10": 0.653,
+    "recall_all@5": 0.488,
+    "n": 121
+   }
+  },
+  "single-session-assistant": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.777,
+    "recall_all@10": 1.0,
+    "recall_all@5": 0.8,
+    "n": 5
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.771,
+    "recall_all@10": 1.0,
+    "recall_all@5": 0.8,
+    "n": 5
+   }
+  },
+  "single-session-preference": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.485,
+    "recall_all@10": 0.7,
+    "recall_all@5": 0.5,
+    "n": 30
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.351,
+    "recall_all@10": 0.6,
+    "recall_all@5": 0.333,
+    "n": 30
+   }
+  },
+  "single-session-user": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.935,
+    "recall_all@10": 0.969,
+    "recall_all@5": 0.969,
+    "n": 64
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.926,
+    "recall_all@10": 0.953,
+    "recall_all@5": 0.938,
+    "n": 64
+   }
+  },
+  "temporal-reasoning": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.788,
+    "recall_all@10": 0.835,
+    "recall_all@5": 0.756,
+    "n": 127
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.732,
+    "recall_all@10": 0.811,
+    "recall_all@5": 0.654,
+    "n": 127
+   }
+  }
+ },
+ "session_paired_recall_all@5": {
+  "mean_diff_am_minus_lex": -0.0549,
+  "ci95": [
+   -0.0835,
+   -0.0286
+  ],
+  "am_better": 7,
+  "lex_better": 30,
+  "equal": 382
+ },
+ "session_paired_recall_all@10": {
+  "mean_diff_am_minus_lex": -0.0286,
+  "ci95": [
+   -0.0525,
+   -0.0024
+  ],
+  "am_better": 8,
+  "lex_better": 20,
+  "equal": 391
+ },
+ "session_paired_ndcg_any@10": {
+  "mean_diff_am_minus_lex": -0.0371,
+  "ci95": [
+   -0.0503,
+   -0.0231
+  ],
+  "am_better": 44,
+  "lex_better": 109,
+  "equal": 266
+ },
+ "session_omission@10": {
+  "agent_memory": {
+   "no_gold_in_top10": 31,
+   "partial_gold_in_top10": 54,
+   "n": 419
+  },
+  "lexical_overlap": {
+   "no_gold_in_top10": 25,
+   "partial_gold_in_top10": 48,
+   "n": 419
+  }
+ },
+ "session_currentness_failures_agent_memory": {
+  "classification": {
+   "tie_broken_by_insertion_order_older_first": 20,
+   "older_scores_higher_lexically": 26
+  },
+  "examples": [
+   {
+    "question_id": "6a1eabeb",
+    "question": "What was my personal best time in the charity 5K run?",
+    "older": "answer_a25d4a91_1",
+    "latest": "answer_a25d4a91_2",
+    "score_older": 0.909,
+    "score_latest": 0.909
+   },
+   {
+    "question_id": "6aeb4375",
+    "question": "How many Korean restaurants have I tried in my city?",
+    "older": "answer_3f9693b7_1",
+    "latest": "answer_3f9693b7_2",
+    "score_older": 0.8,
+    "score_latest": 0.8
+   },
+   {
+    "question_id": "830ce83f",
+    "question": "Where did Rachel move to after her recent relocation?",
+    "older": "answer_0b1a0942_1",
+    "latest": "answer_0b1a0942_2",
+    "score_older": 0.333,
+    "score_latest": 0.222
+   }
+  ],
+  "applicable": 70
+ },
+ "session_ingest_scaling": [
+  {
+   "corpus_size_range": [
+    38,
+    45
+   ],
+   "mean_ms_per_commit": 5.94,
+   "mean_recall_ms": 20.16
+  },
+  {
+   "corpus_size_range": [
+    45,
+    48
+   ],
+   "mean_ms_per_commit": 6.24,
+   "mean_recall_ms": 21.27
+  },
+  {
+   "corpus_size_range": [
+    48,
+    50
+   ],
+   "mean_ms_per_commit": 6.2,
+   "mean_recall_ms": 21.27
+  },
+  {
+   "corpus_size_range": [
+    50,
+    62
+   ],
+   "mean_ms_per_commit": 6.6,
+   "mean_recall_ms": 22.81
+  }
+ ],
+ "session_slowest_ingest": [
+  [
+   0.5,
+   61,
+   "gpt4_7a0daae1"
+  ],
+  [
+   0.48,
+   62,
+   "7e00a6cb"
+  ],
+  [
+   0.43,
+   55,
+   "4fd1909e"
+  ]
+ ],
+ "session_slowest_recall_ms": [
+  [
+   89.1,
+   43,
+   "caf9ead2"
+  ],
+  [
+   65.6,
+   50,
+   "778164c6"
+  ],
+  [
+   58.3,
+   46,
+   "f8c5f88b"
+  ]
+ ],
+ "session_abstention": {
+  "lexical_overlap": {
+   "mean_returned_count": 43.8,
+   "question_count": 30,
+   "returned_any_rate": 1.0,
+   "upstream_metric": false
+  },
+  "agent_memory": {
+   "mean_returned_count": 45.3,
+   "question_count": 30,
+   "returned_any_rate": 1.0,
+   "upstream_metric": false
+  }
+ },
+ "session_largest_am_deficits": [
+  [
+   "19b5f2b3",
+   "single-session-user",
+   0.0,
+   1.0
+  ],
+  [
+   "afdc33df",
+   "single-session-preference",
+   0.387,
+   1.0
+  ],
+  [
+   "bbf86515",
+   "temporal-reasoning",
+   0.409,
+   1.0
+  ]
+ ],
+ "turn_by_type": {
+  "knowledge-update": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.704,
+    "recall_all@10": 0.806,
+    "recall_all@5": 0.681,
+    "n": 72
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.691,
+    "recall_all@10": 0.736,
+    "recall_all@5": 0.639,
+    "n": 72
+   }
+  },
+  "multi-session": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.41,
+    "recall_all@10": 0.355,
+    "recall_all@5": 0.264,
+    "n": 121
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.391,
+    "recall_all@10": 0.322,
+    "recall_all@5": 0.198,
+    "n": 121
+   }
+  },
+  "single-session-assistant": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.6,
+    "recall_all@10": 0.6,
+    "recall_all@5": 0.6,
+    "n": 5
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.6,
+    "recall_all@10": 0.6,
+    "recall_all@5": 0.6,
+    "n": 5
+   }
+  },
+  "single-session-preference": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.208,
+    "recall_all@10": 0.233,
+    "recall_all@5": 0.1,
+    "n": 30
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.1,
+    "recall_all@10": 0.1,
+    "recall_all@5": 0.033,
+    "n": 30
+   }
+  },
+  "single-session-user": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.814,
+    "recall_all@10": 0.859,
+    "recall_all@5": 0.844,
+    "n": 64
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.802,
+    "recall_all@10": 0.828,
+    "recall_all@5": 0.812,
+    "n": 64
+   }
+  },
+  "temporal-reasoning": {
+   "lexical_overlap": {
+    "ndcg_any@10": 0.574,
+    "recall_all@10": 0.63,
+    "recall_all@5": 0.496,
+    "n": 127
+   },
+   "agent_memory": {
+    "ndcg_any@10": 0.527,
+    "recall_all@10": 0.543,
+    "recall_all@5": 0.457,
+    "n": 127
+   }
+  }
+ },
+ "turn_paired_recall_all@5": {
+  "mean_diff_am_minus_lex": -0.0477,
+  "ci95": [
+   -0.074,
+   -0.0215
+  ],
+  "am_better": 8,
+  "lex_better": 28,
+  "equal": 383
+ },
+ "turn_paired_recall_all@10": {
+  "mean_diff_am_minus_lex": -0.0621,
+  "ci95": [
+   -0.0931,
+   -0.031
+  ],
+  "am_better": 10,
+  "lex_better": 36,
+  "equal": 373
+ },
+ "turn_paired_ndcg_any@10": {
+  "mean_diff_am_minus_lex": -0.0315,
+  "ci95": [
+   -0.0471,
+   -0.0154
+  ],
+  "am_better": 83,
+  "lex_better": 106,
+  "equal": 230
+ },
+ "turn_omission@10": {
+  "agent_memory": {
+   "no_gold_in_top10": 95,
+   "partial_gold_in_top10": 104,
+   "n": 419
+  },
+  "lexical_overlap": {
+   "no_gold_in_top10": 81,
+   "partial_gold_in_top10": 92,
+   "n": 419
+  }
+ },
+ "turn_currentness_failures_agent_memory": {
+  "classification": {
+   "tie_broken_by_insertion_order_older_first": 17,
+   "older_scores_higher_lexically": 15,
+   "latest_gold_not_returned_in_top50": 4
+  },
+  "examples": [
+   {
+    "question_id": "6a1eabeb",
+    "question": "What was my personal best time in the charity 5K run?",
+    "older": "answer_a25d4a91_1_5",
+    "latest": "answer_a25d4a91_2_1",
+    "score_older": 0.818,
+    "score_latest": 0.818
+   },
+   {
+    "question_id": "830ce83f",
+    "question": "Where did Rachel move to after her recent relocation?",
+    "older": "answer_0b1a0942_1_3",
+    "latest": "answer_0b1a0942_2_3",
+    "score_older": 0.222,
+    "score_latest": 0.222
+   },
+   {
+    "question_id": "852ce960",
+    "question": "What was the amount I was pre-approved for when I got my mortgage from Wells Fargo?",
+    "older": "answer_3a6f1e82_1_3",
+    "latest": "answer_3a6f1e82_2_1",
+    "score_older": 0.714,
+    "score_latest": 0.714
+   }
+  ],
+  "applicable": 70
+ },
+ "turn_ingest_scaling": [
+  {
+   "corpus_size_range": [
+    197,
+    235
+   ],
+   "mean_ms_per_commit": 16.51,
+   "mean_recall_ms": 78.86
+  },
+  {
+   "corpus_size_range": [
+    235,
+    243
+   ],
+   "mean_ms_per_commit": 17.25,
+   "mean_recall_ms": 82.95
+  },
+  {
+   "corpus_size_range": [
+    243,
+    254
+   ],
+   "mean_ms_per_commit": 17.82,
+   "mean_recall_ms": 86.63
+  },
+  {
+   "corpus_size_range": [
+    254,
+    305
+   ],
+   "mean_ms_per_commit": 18.85,
+   "mean_recall_ms": 87.79
+  }
+ ],
+ "turn_slowest_ingest": [
+  [
+   6.93,
+   305,
+   "71017276"
+  ],
+  [
+   6.49,
+   300,
+   "5809eb10"
+  ],
+  [
+   6.38,
+   305,
+   "58bf7951"
+  ]
+ ],
+ "turn_slowest_recall_ms": [
+  [
+   172.2,
+   237,
+   "eac54add"
+  ],
+  [
+   151.2,
+   240,
+   "e8a79c70"
+  ],
+  [
+   148.9,
+   246,
+   "8752c811"
+  ]
+ ],
+ "turn_abstention": {
+  "lexical_overlap": {
+   "mean_returned_count": 181.2,
+   "question_count": 30,
+   "returned_any_rate": 1.0,
+   "upstream_metric": false
+  },
+  "agent_memory": {
+   "mean_returned_count": 201.833333,
+   "question_count": 30,
+   "returned_any_rate": 1.0,
+   "upstream_metric": false
+  }
+ },
+ "turn_largest_am_deficits": [
+  [
+   "b0479f84",
+   "single-session-preference",
+   0.0,
+   1.0
+  ],
+  [
+   "2ebe6c90",
+   "temporal-reasoning",
+   0.0,
+   0.815
+  ],
+  [
+   "b46e15ee",
+   "temporal-reasoning",
+   0.301,
+   1.0
+  ]
+ ]
+}
