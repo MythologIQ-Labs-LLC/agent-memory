@@ -16,7 +16,6 @@ from .discovery import DiscoveryInputError, discover_configuration
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_behavior import validate_runtime_behavior_contract
 from .runtime_config import QualificationBinding
-from .sqlite_runtime import SQLiteConfigBoundRestartRuntime
 from ..state.visibility import VisibilityTracker
 
 
@@ -328,6 +327,8 @@ def diagnose(
         return report
 
     if sqlite_database.exists():
+        from .sqlite_runtime import SQLiteConfigBoundRestartRuntime
+
         report["durable_state"] = {
             "status": "sqlite_checkpoint_present",
             "state_dir": str(root),

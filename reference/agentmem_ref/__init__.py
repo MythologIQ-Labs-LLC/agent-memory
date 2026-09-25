@@ -10,7 +10,8 @@ from .runtime import adapter
 from .core import governance_projection, policy, receipts
 from .state import substrate
 from .api import surface
-from .facade import AgentMemory
+
+AgentMemory = surface.AgentMemory
 
 __all__ = [
     "AgentMemory",
