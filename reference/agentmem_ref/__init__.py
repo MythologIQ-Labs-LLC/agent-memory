@@ -1,14 +1,23 @@
-"""Minimal governed reference adapter for Agent Memory.
+"""Governed Agent Memory reference runtime and developer facade.
 
-This package demonstrates governed paths over permissive substrates and typed
-interoperability seams. It is a reference, not a product, and it claims no
-conformance level on its own. See `reference/README.md` for what it does and
-does not constitute as evidence.
+This package demonstrates governed paths over qualified substrates and typed
+interoperability seams. It is a bounded reference/RC surface, not a production
+1.0 or universal conformance claim. See `reference/README.md` for the exact
+evidence and limitations.
 """
 
 from .runtime import adapter
 from .core import governance_projection, policy, receipts
 from .state import substrate
 from .api import surface
+from .facade import AgentMemory
 
-__all__ = ["adapter", "governance_projection", "policy", "receipts", "substrate", "surface"]
+__all__ = [
+    "AgentMemory",
+    "adapter",
+    "governance_projection",
+    "policy",
+    "receipts",
+    "substrate",
+    "surface",
+]
