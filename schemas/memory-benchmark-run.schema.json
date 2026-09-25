@@ -42,7 +42,7 @@
         "dataset_id": {"type": "string", "minLength": 1},
         "dataset_revision": {"type": "string", "minLength": 1},
         "input_sha256": {
-          "type": "string",
+          "type": ["string", "null"],
           "pattern": "^[a-f0-9]{64}$"
         },
         "task_profile": {"type": "string", "minLength": 1}
