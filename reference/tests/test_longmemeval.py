@@ -178,7 +178,10 @@ class LongMemEvalProfileTests(unittest.TestCase):
             backend = report["planes"][granularity]["backends"]["agent_memory"]
             self.assertEqual(backend["authority_effect"], "none")
             self.assertIn("governed admission", backend["boundary"])
-            self.assertEqual(backend["failures"], {"runtime_failure_count": 0, "ingestion_failure_count": 0})
+            self.assertEqual(
+                backend["failures"],
+                {"runtime_failure_count": 0, "ingestion_failure_count": 0, "out_of_corpus_returned_count": 0},
+            )
             governance = backend["governance"]
             self.assertGreaterEqual(governance["candidate_count_total"], governance["admitted_count_total"])
             self.assertEqual(governance["unmapped_admitted_count_total"], 0)
