@@ -12,7 +12,7 @@ import argparse
 import json
 from pathlib import Path
 
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.0.1"
 ARTIFACT_ID = "agent-memory-rc1-evidence-closeout"
 CONTRACT_VERSION = "1.2.0"
 RUNTIME_PROFILE = "sqlite_single_host_v1"
@@ -32,7 +32,7 @@ def build_manifest(agent_memory_revision: str) -> dict:
         "agent_memory_revision": revision,
         "contract_version": CONTRACT_VERSION,
         "runtime_profile": RUNTIME_PROFILE,
-        "status_model": ["complete", "bounded", "external_blocked", "not_claimed"],
+        "status_model": ["complete", "bounded", "active_open", "external_blocked", "not_claimed"],
         "product_usability": {
             "status": "bounded",
             "evidence": [
@@ -101,15 +101,16 @@ def build_manifest(agent_memory_revision: str) -> dict:
             "claim": "runner readiness is complete; measurement is not",
         },
         "harvest_closeout": {
-            "status": "external_blocked",
+            "status": "active_open",
             "issue": 470,
-            "claim": "planned native-harvest sequence is complete, exhaustive ancestry and source-rights closeout is not yet complete",
+            "claim": "planned native-harvest sequence is complete, exhaustive ancestry and source-rights closeout is actively continuing",
             "dependency_effect": "does_not_block_repository_owned_rc_evidence_packaging",
+            "external_dependency_required": False,
         },
         "known_limitations": [
             "RC evidence is bounded to the current qualified single-host profile",
             "no external SWE-ContextBench comparison is claimed until exact frozen inputs and provenance are available",
-            "exhaustive ancestry harvesting remains open under issue 470",
+            "exhaustive ancestry harvesting remains open and active under issue 470",
             "physical permanent-deletion completion is not established by the reversible pruning path used in the RC product scenario",
             "answer-generation quality is not inferred from retrieval-only evidence",
             "no learned retrieval controller owns governance, durable commit, deletion, tenancy, or recall admission",
