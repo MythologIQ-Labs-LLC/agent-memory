@@ -37,6 +37,8 @@ DIMENSIONS = (
 METRIC_STATES = {"measured", "not_measured", "not_applicable", "blocked"}
 DIMENSION_STATUSES = {"measured", "partial", "not_measured", "not_applicable", "blocked"}
 DIRECTIONS = {"higher_better", "lower_better", "zero_target", "descriptive"}
+EXECUTED_RUN_STATUSES = {"complete", "partial"}
+NON_EXECUTED_RUN_STATUSES = {"blocked", "not_run"}
 
 
 class BenchmarkContractError(ValueError):
@@ -69,6 +71,15 @@ def _path(error: ValidationError) -> str:
 
 
 def _semantic_validate(document: Mapping[str, Any]) -> None:
+    run_status = document["status"]
+    input_sha256 = document["benchmark"]["input_sha256"]
+    if run_status in EXECUTED_RUN_STATUSES and input_sha256 is None:
+        raise BenchmarkContractError(
+            f"{run_status} run requires exact benchmark.input_sha256"
+        )
+    if run_status not in EXECUTED_RUN_STATUSES | NON_EXECUTED_RUN_STATUSES:
+        raise BenchmarkContractError(f"unsupported run status: {run_status}")
+
     seen_dimensions = set(document["dimensions"])
     if seen_dimensions != set(DIMENSIONS):
         missing = sorted(set(DIMENSIONS) - seen_dimensions)
@@ -111,8 +122,8 @@ def _semantic_validate(document: Mapping[str, Any]) -> None:
 def validate_run(document: Mapping[str, Any]) -> dict[str, Any]:
     """Validate and return a detached benchmark-run document.
 
-    Validation is structural plus a small set of semantic consistency checks. It does
-    not judge benchmark quality or grant authority.
+    Validation is structural plus semantic consistency checks. It does not judge
+    benchmark quality or grant authority.
     """
 
     detached = json.loads(json.dumps(document))
@@ -324,17 +335,28 @@ def compare_runs(
     baseline_document: Mapping[str, Any],
     candidate_document: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Compare compatible runs without synthesizing an aggregate memory score.
+    """Compare compatible executed runs without synthesizing an aggregate score.
 
-    Run-level compatibility is fail-closed. Metric-level deltas are emitted only when
-    both observations are measured and their direction, unit, denominator, and
-    population semantics match.
+    Run-level compatibility is fail-closed. Blocked and not-run evidence is useful for
+    explaining missing results, but it is never comparison evidence. Metric-level
+    deltas are emitted only when both observations are measured and their direction,
+    unit, denominator, and population semantics match.
     """
 
     baseline = validate_run(baseline_document)
     candidate = validate_run(candidate_document)
+    if baseline["status"] not in EXECUTED_RUN_STATUSES or candidate["status"] not in EXECUTED_RUN_STATUSES:
+        raise ComparisonCompatibilityError(
+            "benchmark runs are not comparable: both runs must be complete or partial"
+        )
+
     baseline_identity = comparison_identity(baseline)
     candidate_identity = comparison_identity(candidate)
+    if baseline_identity["input_sha256"] is None or candidate_identity["input_sha256"] is None:
+        raise ComparisonCompatibilityError(
+            "benchmark runs are not comparable: frozen input_sha256 is unavailable"
+        )
+
     mismatches = {
         key: {"baseline": baseline_identity[key], "candidate": candidate_identity[key]}
         for key in baseline_identity
