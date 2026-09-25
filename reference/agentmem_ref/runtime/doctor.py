@@ -16,6 +16,7 @@ from .discovery import DiscoveryInputError, discover_configuration
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_behavior import validate_runtime_behavior_contract
 from .runtime_config import QualificationBinding
+from .sqlite_runtime import SQLiteConfigBoundRestartRuntime
 from ..state.visibility import VisibilityTracker
 
 
@@ -203,6 +204,27 @@ def _provider_availability(discovery: Mapping[str, object]) -> dict[str, object]
     }
 
 
+def _mark_recovery_failure(report: dict, detail: str) -> dict:
+    report["recovery"] = {"status": "failed_closed", "detail": detail}
+    report["currentness"] = {"status": "not_proven"}
+    report["configuration_startable"] = False
+    report["operational_readiness"] = "blocked_by_recovery_failure"
+    return report
+
+
+def _finish_readiness(report: dict, *, provider_blocked: bool, provider_observed: bool) -> None:
+    if report["currentness"]["status"] == "degraded":
+        report["operational_readiness"] = "degraded_currentness"
+    elif report["currentness"]["status"] == "pending":
+        report["operational_readiness"] = "pending_currentness"
+    elif provider_blocked:
+        report["operational_readiness"] = "blocked_by_required_provider_probe"
+    elif provider_observed:
+        report["operational_readiness"] = "declared_provider_probes_satisfied_current_state_recovered"
+    else:
+        report["operational_readiness"] = "provider_availability_not_probed"
+
+
 def diagnose(
     config_path: str | Path,
     *,
@@ -267,8 +289,33 @@ def diagnose(
 
     root = Path(state_dir)
     manifest = root / "runtime-manifest.json"
+    sqlite_database = root / "agent-memory.sqlite3"
     config_binding = root / "configuration-binding.json"
-    if not root.exists() or not manifest.exists():
+
+    if manifest.exists() and sqlite_database.exists():
+        report["durable_state"] = {
+            "status": "ambiguous",
+            "state_dir": str(root),
+            "file_checkpoint_present": True,
+            "sqlite_checkpoint_present": True,
+        }
+        return _mark_recovery_failure(
+            report,
+            "both file-checkpoint and SQLite durable runtime state are present; choose/migrate one profile explicitly",
+        )
+
+    if config_binding.exists() and not manifest.exists() and not sqlite_database.exists():
+        report["durable_state"] = {
+            "status": "incomplete",
+            "state_dir": str(root),
+            "configuration_binding_present": True,
+        }
+        return _mark_recovery_failure(
+            report,
+            "configuration binding exists without a supported durable runtime state",
+        )
+
+    if not root.exists() or (not manifest.exists() and not sqlite_database.exists()):
         report["durable_state"] = {
             "status": "not_initialized",
             "state_dir": str(root),
@@ -280,6 +327,46 @@ def diagnose(
             report["operational_readiness"] = "configuration_valid_state_not_initialized"
         return report
 
+    if sqlite_database.exists():
+        report["durable_state"] = {
+            "status": "sqlite_checkpoint_present",
+            "state_dir": str(root),
+            "database": str(sqlite_database),
+            "configuration_binding_present": config_binding.exists(),
+        }
+        runtime = None
+        try:
+            runtime = SQLiteConfigBoundRestartRuntime.recover(root, plan=plan)
+            evidence = runtime.recovery_evidence
+            base_evidence = runtime.base.recovery_evidence
+            snapshots = dict(runtime.visibility_snapshots)
+            report["recovery"] = {
+                "status": "recovered",
+                "durability_profile": evidence.durability_profile,
+                "base_durability_profile": base_evidence.durability_profile,
+                "recovery_posture": evidence.recovery_posture,
+                "base_generation": evidence.base_generation,
+                "configuration_digest": evidence.configuration_digest,
+                "plan_digest": evidence.plan_digest,
+                "route_activations": [item.to_dict() for item in evidence.route_activations],
+                "sqlite_version": base_evidence.sqlite_version,
+                "substrate_profile": base_evidence.substrate_profile,
+            }
+        except RuntimeRecoveryError as exc:
+            return _mark_recovery_failure(report, str(exc))
+        finally:
+            if runtime is not None:
+                runtime.base.close()
+        report["durable_state"]["status"] = "recovered"
+        report["durable_state"]["profile"] = "sqlite_single_host_v1"
+        report["currentness"] = _currentness_summary(snapshots)
+        _finish_readiness(
+            report,
+            provider_blocked=provider_blocked,
+            provider_observed=provider_observed,
+        )
+        return report
+
     report["durable_state"] = {
         "status": "checkpoint_present",
         "state_dir": str(root),
@@ -288,14 +375,7 @@ def diagnose(
     try:
         runtime = ConfigBoundRestartRuntime.recover(root, plan=plan)
     except RuntimeRecoveryError as exc:
-        report["recovery"] = {
-            "status": "failed_closed",
-            "detail": str(exc),
-        }
-        report["currentness"] = {"status": "not_proven"}
-        report["configuration_startable"] = False
-        report["operational_readiness"] = "blocked_by_recovery_failure"
-        return report
+        return _mark_recovery_failure(report, str(exc))
 
     evidence = runtime.recovery_evidence
     report["recovery"] = {
@@ -309,14 +389,9 @@ def diagnose(
     }
     report["durable_state"]["status"] = "recovered"
     report["currentness"] = _currentness_summary(runtime.visibility_snapshots)
-    if report["currentness"]["status"] == "degraded":
-        report["operational_readiness"] = "degraded_currentness"
-    elif report["currentness"]["status"] == "pending":
-        report["operational_readiness"] = "pending_currentness"
-    elif provider_blocked:
-        report["operational_readiness"] = "blocked_by_required_provider_probe"
-    elif provider_observed:
-        report["operational_readiness"] = "declared_provider_probes_satisfied_current_state_recovered"
-    else:
-        report["operational_readiness"] = "provider_availability_not_probed"
+    _finish_readiness(
+        report,
+        provider_blocked=provider_blocked,
+        provider_observed=provider_observed,
+    )
     return report
