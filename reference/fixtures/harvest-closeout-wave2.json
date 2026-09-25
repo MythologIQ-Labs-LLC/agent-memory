@@ -226,7 +226,7 @@
       "source": "agentrust-io/cmcp",
       "revision": "a2e95151356c9ae6c545330c900f3d4af0e447c1",
       "release": "v0.4.0",
-      "rights_basis": "external open-source peer under inspected release rights",
+      "rights_basis": "MIT at the inspected historical release",
       "mechanisms": [
         {
           "mechanism": "gateway claim and field-level external evidence normalization",
@@ -242,20 +242,21 @@
       "revision": "d03b9af504535d3d43f192bc6d9eff89b8afd12f",
       "release": "v0.5.0",
       "observed_main": "ac40f28bc193730473130d38ef9c028fcda6cea9",
-      "rights_basis": "exact reuse rights to be rechecked during qualification",
+      "rights_basis": "MIT at the exact qualified v0.5.0 release commit",
       "mechanisms": [
         {
-          "mechanism": "security-semantic changes to compliance crossing, RFC8785 policy hashing, certificate rotation and redaction",
+          "mechanism": "field-level external evidence with regulated-domain crossing, RFC8785 policy hashing, cert-pinned rotation and extensible compliance domains",
           "posture": "optional_interoperability",
-          "qualification_evidence": ["#485"],
-          "qualification_status": "open",
+          "qualification_evidence": ["#485", "#486", "cMCP External Evidence Comparator run 36095380166"],
+          "qualification_status": "qualified_exact_release",
+          "runtime_dependency_required": false,
+          "historical_040_evidence_rewritten": false,
           "authority_effect": "none"
         }
       ]
     }
   ],
   "open_closeout_items": [
-    "#485 cMCP 0.5.0 executable requalification",
     "TRACE source-registry file-class license reconciliation",
     "uor-foundry repository-level rights verification",
     "uor-jcs-nfc final publication follow-up if provisional source changes",
