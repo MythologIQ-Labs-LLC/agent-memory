@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/memory-benchmark-run.schema.json",
+  "title": "Agent Memory Evaluation: Benchmark Run Evidence",
+  "description": "Benchmark-neutral, system-neutral evidence for one memory evaluation run. Dimensions remain separate and authority_effect is always none.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "status",
+    "benchmark",
+    "system",
+    "execution",
+    "dimensions",
+    "native_results",
+    "limitations",
+    "artifacts",
+    "authority_effect"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["complete", "partial", "blocked", "not_run"]
+    },
+    "benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_revision", "input_sha256"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "source_url": {"type": "string", "minLength": 1},
+        "source_revision": {"type": "string", "minLength": 1},
+        "dataset_id": {"type": "string", "minLength": 1},
+        "dataset_revision": {"type": "string", "minLength": 1},
+        "input_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "task_profile": {"type": "string", "minLength": 1}
+      }
+    },
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "revision"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {
+          "type": "string",
+          "enum": ["no_memory", "lexical", "vector", "agent_memory", "external_memory", "other"]
+        },
+        "revision": {"type": "string", "minLength": 1},
+        "configuration_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "adapter_id": {"type": "string", "minLength": 1},
+        "adapter_revision": {"type": "string", "minLength": 1}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selection_id", "selection_method", "sample_count"],
+      "properties": {
+        "selection_id": {"type": "string", "minLength": 1},
+        "selection_method": {"type": "string", "minLength": 1},
+        "sample_count": {"type": "integer", "minimum": 0},
+        "started_at": {"type": "string", "format": "date-time"},
+        "elapsed_ms": {"type": "number", "minimum": 0},
+        "environment": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "seed": {
+          "type": ["integer", "string"]
+        }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "retrieval",
+        "currentness",
+        "reasoning",
+        "governance",
+        "efficiency",
+        "evaluator_integrity",
+        "reproducibility"
+      ],
+      "properties": {
+        "retrieval": {"$ref": "#/$defs/dimensionReport"},
+        "currentness": {"$ref": "#/$defs/dimensionReport"},
+        "reasoning": {"$ref": "#/$defs/dimensionReport"},
+        "governance": {"$ref": "#/$defs/dimensionReport"},
+        "efficiency": {"$ref": "#/$defs/dimensionReport"},
+        "evaluator_integrity": {"$ref": "#/$defs/dimensionReport"},
+        "reproducibility": {"$ref": "#/$defs/dimensionReport"}
+      }
+    },
+    "native_results": {
+      "type": "object",
+      "description": "Opaque benchmark-native outputs. Presence here does not make unlike benchmark metrics semantically comparable.",
+      "additionalProperties": true
+    },
+    "limitations": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "authority_effect": {
+      "type": "string",
+      "const": "none"
+    }
+  },
+  "$defs": {
+    "dimensionReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "metrics", "notes"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["measured", "partial", "not_measured", "not_applicable", "blocked"]
+        },
+        "metrics": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/metricObservation"}
+        },
+        "notes": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "metricObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric_id", "state", "direction"],
+      "properties": {
+        "metric_id": {"type": "string", "minLength": 1},
+        "state": {
+          "type": "string",
+          "enum": ["measured", "not_measured", "not_applicable", "blocked"]
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["higher_better", "lower_better", "zero_target", "descriptive"]
+        },
+        "value": {
+          "type": ["number", "string", "boolean"]
+        },
+        "denominator": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unit": {"type": "string"},
+        "population": {"type": "string"},
+        "note": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"state": {"const": "measured"}},
+            "required": ["state"]
+          },
+          "then": {"required": ["value"]},
+          "else": {"not": {"required": ["value"]}}
+        }
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "kind"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "minLength": 1},
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}
