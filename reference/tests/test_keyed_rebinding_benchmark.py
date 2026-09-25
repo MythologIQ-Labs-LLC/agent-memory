@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import unittest
+from pathlib import Path
 
 from run_keyed_rebinding_benchmark import UOR_R4_REVISION, _fixture, _digest, run_benchmark
 
@@ -45,6 +47,26 @@ class KeyedRebindingBenchmarkTests(unittest.TestCase):
         self.assertFalse(report["performance"]["timing_is_conformance_gate"])
         self.assertNotIn("score", report)
         self.assertNotIn("health_score", report)
+
+    def test_wave2_harvest_matrix_records_uor_r4_disposition(self) -> None:
+        matrix = json.loads(
+            Path("reference/fixtures/harvest-closeout-wave2.json").read_text(encoding="utf-8")
+        )
+        self.assertFalse(matrix["claim_boundary"]["exhaustive_harvest_complete"])
+        rows = [row for row in matrix["sources"] if row["source"] == "UOR-Foundation/uor-r4"]
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["revision"], UOR_R4_REVISION)
+        postures = {item["mechanism"]: item["posture"] for item in rows[0]["mechanisms"]}
+        self.assertEqual(postures["geometric predictive memory model"], "intentionally_not_adopted")
+        self.assertEqual(
+            postures[
+                "repeated exact-key rebinding, matched controls, stale-value measurement and negative-result discipline"
+            ],
+            "absorbed",
+        )
+        evidence = rows[0]["mechanisms"][1]["qualification_evidence"]
+        self.assertIn("#483", evidence)
+        self.assertIn("#484", evidence)
 
     def test_fixture_digest_is_deterministic(self) -> None:
         first = _fixture(3, 3)
