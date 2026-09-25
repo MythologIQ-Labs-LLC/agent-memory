@@ -1,6 +1,6 @@
 # Memory Evaluation Subsystem
 
-Status: first common-contract implementation under #524 / #525.
+Status: common-contract implementation under #524 / #525, with blocked-input honesty clarified by #529.
 
 ## Purpose
 
@@ -55,7 +55,17 @@ benchmark.source_revision
 benchmark.input_sha256
 ```
 
-Where available it also records dataset identity/revision and a task profile. An adapter must not invent a dataset revision when the upstream source does not expose one.
+For an executed `complete` or `partial` run, `benchmark.input_sha256` must be the exact 64-hex digest of the frozen input.
+
+For a `blocked` or `not_run` record, `benchmark.input_sha256` may be `null` when the blocker is precisely that the input has not been obtained or materialized. A null value means **input identity unavailable**. It is not a wildcard, a placeholder digest, or evidence of comparability.
+
+```text
+complete / partial -> exact input SHA-256 required
+blocked / not_run  -> input SHA-256 may be null
+null input digest  -> comparison forbidden
+```
+
+Where available the benchmark identity also records dataset identity/revision and a task profile. An adapter must not invent a dataset revision or digest when the upstream source does not expose one.
 
 ### System identity
 
@@ -137,9 +147,9 @@ For example, an upstream model-judged QA score can remain a native result even i
 
 ## Fail-closed comparison
 
-`compare_runs()` refuses run-level comparison unless the frozen comparison identity matches.
+`compare_runs()` accepts only executed `complete` or `partial` runs with exact frozen input identity. `blocked` and `not_run` records are valuable evidence about why a result does not exist, but they are never comparison evidence.
 
-The initial identity includes:
+For executed runs, the frozen comparison identity includes:
 
 ```text
 benchmark id
