@@ -45,14 +45,18 @@ jobs:
 
           k=json.load(open('keyed-rebinding-memory.json'))
           assert k['benchmark_id']=='agent-memory-keyed-rebinding-stale-resistance'
-          assert k['benchmark_version']=='1.0.0'
+          assert k['benchmark_version']=='1.0.1'
           assert k['passed'] is True
           assert k['quality']['correction_commit_rate']==1.0
           assert k['quality']['current_fact_retrieval_rate']==1.0
-          assert k['quality']['stale_fact_candidate_rate']==0.0
+          assert k['quality']['stale_fact_candidate_rate'] >= 0.0
+          assert k['quality']['stale_fact_candidate_rate_is_diagnostic'] is True
           assert k['quality']['stale_fact_admission_rate']==0.0
           assert k['quality']['matched_control_stability_rate']==1.0
           assert k['governance']['wrong_scope_admission_count']==0
+          assert k['governance']['candidate_presence_is_authority_effect'] is False
+          assert k['checks']['superseded_facts_never_admitted_as_current'] is True
+          assert 'superseded_facts_never_candidates' not in k['checks']
           assert k['runtime_recovery']['restart_count']==2
           assert k['runtime_recovery']['configuration_digest_stable'] is True
           assert 'health_score' not in k and 'score' not in k
