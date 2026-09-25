@@ -10,6 +10,7 @@ class KeyedRebindingBenchmarkTests(unittest.TestCase):
         report = run_benchmark("0" * 40, key_count=2, rounds=2)
 
         self.assertTrue(report["passed"])
+        self.assertEqual(report["benchmark_version"], "1.0.1")
         self.assertEqual(report["source_pressure"]["revision"], UOR_R4_REVISION)
         self.assertFalse(report["source_pressure"]["code_or_schema_reused"])
         self.assertFalse(report["source_pressure"]["geometric_model_adopted"])
@@ -18,7 +19,8 @@ class KeyedRebindingBenchmarkTests(unittest.TestCase):
         quality = report["quality"]
         self.assertEqual(quality["correction_commit_rate"], 1.0)
         self.assertEqual(quality["current_fact_retrieval_rate"], 1.0)
-        self.assertEqual(quality["stale_fact_candidate_rate"], 0.0)
+        self.assertGreaterEqual(quality["stale_fact_candidate_rate"], 0.0)
+        self.assertTrue(quality["stale_fact_candidate_rate_is_diagnostic"])
         self.assertEqual(quality["stale_fact_admission_rate"], 0.0)
         self.assertEqual(quality["matched_control_stability_rate"], 1.0)
         self.assertEqual(quality["history_preservation_rate"], 1.0)
@@ -28,6 +30,12 @@ class KeyedRebindingBenchmarkTests(unittest.TestCase):
         self.assertEqual(governance["wrong_scope_admission_count"], 0)
         self.assertEqual(governance["stale_currentness_violation_count"], 0)
         self.assertEqual(governance["retrieval_evidence_authority_effect"], "none")
+        self.assertFalse(governance["candidate_presence_is_authority_effect"])
+
+        self.assertNotIn("superseded_facts_never_candidates", report["checks"])
+        self.assertTrue(report["checks"]["superseded_facts_never_admitted_as_current"])
+        self.assertTrue(report["claim_boundary"]["candidate_generation_may_surface_historical_evidence"])
+        self.assertTrue(report["claim_boundary"]["governed_admission_is_currentness_boundary"])
 
         recovery = report["runtime_recovery"]
         self.assertEqual(recovery["restart_count"], 2)
