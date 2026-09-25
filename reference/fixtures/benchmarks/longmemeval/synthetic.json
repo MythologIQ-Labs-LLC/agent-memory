@@ -1,0 +1,269 @@
+[
+  {
+    "question_id": "syn_single_editor",
+    "question_type": "single-session-user",
+    "question": "Which editor does the user prefer for Python work?",
+    "answer": "VS Code",
+    "question_date": "2026/09/01 (Tue) 10:00",
+    "haystack_session_ids": [
+      "answer_syn_editor_1",
+      "syn_filler_lunch",
+      "syn_filler_music"
+    ],
+    "haystack_dates": [
+      "2026/08/01 (Sat) 09:00",
+      "2026/08/02 (Sun) 12:00",
+      "2026/08/03 (Mon) 08:30"
+    ],
+    "haystack_sessions": [
+      [
+        {
+          "role": "user",
+          "content": "For Python work I prefer VS Code because the debugger is familiar.",
+          "has_answer": true
+        },
+        {
+          "role": "assistant",
+          "content": "I will keep the VS Code preference in mind.",
+          "has_answer": false
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Lunch today was tomato soup."
+        },
+        {
+          "role": "assistant",
+          "content": "Tomato soup sounds simple."
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "I listened to a jazz record this morning."
+        },
+        {
+          "role": "assistant",
+          "content": "Noted."
+        }
+      ]
+    ],
+    "answer_session_ids": [
+      "answer_syn_editor_1"
+    ]
+  },
+  {
+    "question_id": "syn_update_branch",
+    "question_type": "knowledge-update",
+    "question": "What is the current release branch?",
+    "answer": "main",
+    "question_date": "2026/09/10 (Thu) 10:00",
+    "haystack_session_ids": [
+      "answer_syn_branch_1",
+      "syn_filler_weather",
+      "answer_syn_branch_2"
+    ],
+    "haystack_dates": [
+      "2026/08/10 (Mon) 09:00",
+      "2026/08/11 (Tue) 09:00",
+      "2026/09/09 (Wed) 09:00"
+    ],
+    "haystack_sessions": [
+      [
+        {
+          "role": "user",
+          "content": "Our release branch is called release for now.",
+          "has_answer": true
+        },
+        {
+          "role": "assistant",
+          "content": "Noted: release branch is release.",
+          "has_answer": false
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "The weather was rainy yesterday."
+        },
+        {
+          "role": "assistant",
+          "content": "I noted the rain."
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Update: the current release branch is now main.",
+          "has_answer": true
+        },
+        {
+          "role": "assistant",
+          "content": "The current release branch is main.",
+          "has_answer": false
+        }
+      ]
+    ],
+    "answer_session_ids": [
+      "answer_syn_branch_1",
+      "answer_syn_branch_2"
+    ]
+  },
+  {
+    "question_id": "syn_multi_pets",
+    "question_type": "multi-session",
+    "question": "How many pets does the user have in total?",
+    "answer": "3",
+    "question_date": "2026/09/12 (Sat) 10:00",
+    "haystack_session_ids": [
+      "answer_syn_pets_1",
+      "syn_filler_garden",
+      "answer_syn_pets_2",
+      "answer_syn_pets_3"
+    ],
+    "haystack_dates": [
+      "2026/08/01 (Sat) 09:00",
+      "2026/08/05 (Wed) 09:00",
+      "2026/08/20 (Thu) 09:00",
+      "2026/08/25 (Tue) 09:00"
+    ],
+    "haystack_sessions": [
+      [
+        {
+          "role": "user",
+          "content": "My dog Rex needs a new pet bed.",
+          "has_answer": true
+        },
+        {
+          "role": "assistant",
+          "content": "Rex will enjoy it.",
+          "has_answer": false
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "I planted basil in the garden."
+        },
+        {
+          "role": "assistant",
+          "content": "Basil is useful."
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "We adopted two cats, so now there are more pets at home.",
+          "has_answer": true
+        },
+        {
+          "role": "assistant",
+          "content": "Congratulations on the cats.",
+          "has_answer": false
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Can you recommend a podcast about cooking?",
+          "has_answer": false
+        },
+        {
+          "role": "assistant",
+          "content": "Try a cooking podcast.",
+          "has_answer": false
+        }
+      ]
+    ],
+    "answer_session_ids": [
+      "answer_syn_pets_1",
+      "answer_syn_pets_2",
+      "answer_syn_pets_3"
+    ]
+  },
+  {
+    "question_id": "syn_assistant_recipe",
+    "question_type": "single-session-assistant",
+    "question": "What oven temperature did you suggest for the bread recipe?",
+    "answer": "220C",
+    "question_date": "2026/09/14 (Mon) 10:00",
+    "haystack_session_ids": [
+      "answer_syn_recipe_1",
+      "syn_filler_book"
+    ],
+    "haystack_dates": [
+      "2026/09/01 (Tue) 09:00",
+      "2026/09/02 (Wed) 09:00"
+    ],
+    "haystack_sessions": [
+      [
+        {
+          "role": "user",
+          "content": "Give me a bread recipe.",
+          "has_answer": false
+        },
+        {
+          "role": "assistant",
+          "content": "Bake the bread at 220C oven temperature.",
+          "has_answer": true
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "I finished reading a history book."
+        },
+        {
+          "role": "assistant",
+          "content": "Noted."
+        }
+      ]
+    ],
+    "answer_session_ids": [
+      "answer_syn_recipe_1"
+    ]
+  },
+  {
+    "question_id": "syn_bicycle_abs",
+    "question_type": "single-session-user",
+    "question": "What color bicycle did the user buy?",
+    "answer": "The information provided is not enough.",
+    "question_date": "2026/09/15 (Tue) 10:00",
+    "haystack_session_ids": [
+      "answer_syn_bike_1",
+      "syn_filler_book2"
+    ],
+    "haystack_dates": [
+      "2026/09/01 (Tue) 09:00",
+      "2026/09/02 (Wed) 09:00"
+    ],
+    "haystack_sessions": [
+      [
+        {
+          "role": "user",
+          "content": "I bought a new bicycle helmet yesterday.",
+          "has_answer": true
+        },
+        {
+          "role": "assistant",
+          "content": "Stay safe.",
+          "has_answer": false
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "I finished reading a history book."
+        },
+        {
+          "role": "assistant",
+          "content": "Noted."
+        }
+      ]
+    ],
+    "answer_session_ids": [
+      "answer_syn_bike_1"
+    ]
+  }
+]
