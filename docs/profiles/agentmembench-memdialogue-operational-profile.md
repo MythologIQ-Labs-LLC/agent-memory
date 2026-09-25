@@ -93,6 +93,19 @@ runtime:   CPython 3.11.15, numpy 2.4.6, Linux x86_64, 4 vCPU; one process per b
 reports:   reports/benchmarks/agentmembench/memdialogue-v2-<backend>-03197cd.json
 ```
 
+Revision binding: the run executed at local commit `03197cd`. That commit was later rebased onto `main` before merge, and the push policy of the executing environment did not permit a preserving tag. The code the result depends on is content-identical in the merged tree, as git object ids show:
+
+```text
+reference/run_agentmembench.py   blob 72f63481090f42d44033d80f0d672a0489493fad
+reference/agentmem_ref/api       tree 70aaf6f6b20cdb9e23a08d898eb4d360912e5c05
+reference/agentmem_ref/runtime   tree 935b9fed93fa16f20d7bab6c86adce4dff3e2d4a
+reference/agentmem_ref/state     tree 0dff08852d51b03ebb66f5ed0825517e1f33b681
+reference/agentmem_ref/core      tree 4063559d733a2c3fc6da911236dfbc604db8555c
+reference/agentmem_ref/_profiles tree 9383d38de9e886dc0f615a6255fbc59fdada8f69
+```
+
+The only runtime-package difference between `03197cd` and the merged tree is the addition of `reference/agentmem_ref/evaluation/` (#526), which this runner does not import. Verify with `git rev-parse <merge>:<path>`.
+
 Each dimension is reported separately. The 95% intervals are upstream-style bootstrap intervals.
 
 | Dimension | no_memory | lexical_overlap | agent_memory |
