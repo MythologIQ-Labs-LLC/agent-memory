@@ -7,7 +7,7 @@ Status: **active, incomplete exhaustive closeout**
 
 ## Purpose
 
-Wave 2 is the current harvest summary after the native failure-memory slice, the CodeGenome and COREFORGE dispositions, the Agent Manifest plus TRACE exact-version qualification, the first UOR-R4-derived evaluation improvement, and the cMCP 0.5.0 requalification.
+Wave 2 is the current harvest summary after the native failure-memory slice, the CodeGenome and COREFORGE dispositions, the Agent Manifest plus TRACE exact-version qualification, the first UOR-R4-derived evaluation improvement, the cMCP 0.5.0 requalification, and the TRACE mixed-license source-rights reconciliation.
 
 This document does not rewrite Wave 1 as if later evidence had existed earlier. Wave 1 remains historical audit evidence. Wave 2 carries the current disposition summary.
 
@@ -40,10 +40,10 @@ An adapter or comparator is not proof of native absorption. A benchmark result i
 | uor-jcs-nfc | `303591128094362857791930fdc12b73875d1ff6` | Apache-2.0 with NOTICE at inspected provisional revision | pinned canonicalization context, Unicode version binding, refusal/conformance vectors | **intentionally_not_adopted at provisional revision** | re-check final publication before direct adoption; retain methodological pressure |
 | uor-matmul | `3cc5882f210667f9ac00fd8c02c5b5957b493f5d` | MIT | exact arithmetic/conformance methodology | **intentionally_not_adopted as memory machinery** | no generic Agent Memory mechanism gap identified |
 | Microsoft Agent Governance Toolkit | `e0574c1eb44a9b02f106e2b4c63fc60ec3c017ce` | MIT | external identity/policy/enforcement/audit boundary | **optional_interoperability** | useful peer/comparator only; AGT never owns PAMA or memory authority |
-| AgentTrust TRACE | qualified package `agentrust-trace==0.10.0`, source `3a561d84d752794b9afa994ce16ed35c24ac0acb` | mixed file-class rights: normative spec CSL 1.0; source/SDK/tests/examples Apache-2.0; non-spec docs CC BY 4.0 | portable trust/action evidence, revocation/security semantics | **optional_interoperability, exact pair qualified** | #440 / PR #476 complete executable qualification; source-registry wording still needs exact file-class reconciliation |
+| AgentTrust TRACE | qualified package `agentrust-trace==0.10.0`, source `3a561d84d752794b9afa994ce16ed35c24ac0acb` | mixed file-class rights: normative spec CSL 1.0; source/SDK/tests/examples/workflows/reference code Apache-2.0; non-spec docs CC BY 4.0; historical v0.1 CC BY 4.0 grant retained | portable trust/action evidence, revocation/security semantics | **optional_interoperability, exact pair qualified, rights reconciled** | #440 / PR #476 executable qualification; #487 exact file-class rights reconciliation; no direct TRACE material reuse registered |
 | Agent Manifest | qualified package `agent-manifest==0.12.0`, source `9478b56cc349bef01441db4e17e61849c8d69d6f` | Apache-2.0 | deployment identity, checkpoint/delta evidence | **optional_interoperability, exact pair qualified** | #440 / PR #476; bounded negative result preserved: accepted checkpoint advancement does not bind supplied appended `ops` to the checkpoint root |
 | cMCP historical boundary | `v0.4.0`, source `a2e95151356c9ae6c545330c900f3d4af0e447c1` | MIT at inspected release | gateway claim, field-level verification, policy/audit/attestation evidence | **optional_interoperability, historical qualified pin** | preserve historical evidence and default adapter binding; do not relabel old evidence as 0.5 |
-| cMCP current boundary | `v0.5.0`, source `d03b9af504535d3d43f192bc6d9eff89b8afd12f` | MIT at exact qualified release | regulated-domain crossing evidence, RFC 8785 policy hashing, cert-pinned rotation, extensible compliance domains, field-level verification | **optional_interoperability, exact release qualified** | #485 / PR #486; cMCP comparator run `36095380166` passed exact 0.4 historical and 0.5 qualification lanes |
+| cMCP current boundary | `v0.5.0`, source `d03b9af504535d3d43f192bc6d9eff89b8afd12f` | MIT at exact qualified release | regulated-domain crossing evidence, RFC 8785 policy hashing, cert-pinned rotation, extensible compliance domains, field-level verification | **optional_interoperability, exact release qualified** | #485 / PR #486; exact final-head cMCP comparator run `36095747420`; merged on main `0a76e410eaf53252d516f6caff42cec81d78ff5a` |
 
 ## UOR-R4 benchmark harvest result
 
@@ -103,7 +103,34 @@ accepted checkpoint advancement
 
 Agent Memory therefore continues to bind operation semantics in its own evidence rather than laundering them through an external checkpoint verdict.
 
-TRACE source rights are also more precise than older source-registry prose currently states. Current upstream `LICENSE` assigns normative specification material to Community Specification License 1.0, source/SDK/test/example/workflow code to Apache-2.0, and non-spec documentation to CC BY 4.0. Updating the registry record remains an explicit #470 cleanup item.
+### TRACE source-rights reconciliation
+
+Issue #487 reconciles the exact qualified TRACE source at file-class granularity instead of flattening the repository to one license.
+
+At source `3a561d84d752794b9afa994ce16ed35c24ac0acb`:
+
+```text
+normative specification material
+  -> Community Specification License 1.0
+
+source / SDK / tests / examples / workflows / reference code
+  -> Apache-2.0 unless a file states otherwise
+
+non-specification documentation
+  -> CC BY 4.0 unless a file states otherwise
+
+historical spec/trace-v0.1.md
+  -> prior CC BY 4.0 grant remains available
+```
+
+The source registry intentionally retains `license_spdx: null` because a single repository-wide SPDX value would misrepresent those file classes. The current Agent Memory posture remains independent synthesis and optional interoperability. No direct TRACE material reuse is newly registered by the reconciliation.
+
+```text
+license permission
+  != evidence verification
+  != semantic correctness
+  != Agent Memory authority
+```
 
 ## cMCP v0.5 qualification result
 
@@ -155,7 +182,6 @@ stronger external verifier
 
 Exhaustive harvest is still not complete. Current bounded work includes:
 
-- TRACE source-registry file-class license reconciliation;
 - uor-foundry repository-level rights verification;
 - uor-jcs-nfc final/publication follow-up if the provisional source changes;
 - PrismPM review only where it produces a concrete generic memory or verification lesson;
