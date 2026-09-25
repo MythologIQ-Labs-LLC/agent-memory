@@ -5,6 +5,11 @@ The workload is independently synthesized from a bounded lesson identified while
 reviewing UOR-R4: repeated updates to stable logical keys should be tested against
 matched controls, stale-value resurfacing, and restart recovery. No UOR-R4 code,
 schema, geometry, or runtime is used here.
+
+Candidate generation and governed final admission are measured separately. A
+superseded fact may legitimately remain discoverable as historical evidence; the
+load-bearing currentness invariant is that it must not be admitted as current
+context merely because a retrieval route can still find it.
 """
 
 from __future__ import annotations
@@ -22,7 +27,7 @@ from agentmem_ref import AgentMemory
 from agentmem_ref.memory import procedural_memory as pm
 
 BENCHMARK_ID = "agent-memory-keyed-rebinding-stale-resistance"
-BENCHMARK_VERSION = "1.0.0"
+BENCHMARK_VERSION = "1.0.1"
 UOR_R4_REVISION = "552d847d49fb263966165004b835f2f53cccaae1"
 TENANT = "tenant:keyed-rebinding"
 SCOPE = "project:keyed-rebinding"
@@ -311,6 +316,7 @@ def run_benchmark(agent_memory_revision: str, *, key_count: int = 6, rounds: int
         "stale_fact_observations": stale_observations,
         "stale_fact_candidate_hits": stale_candidate_hits,
         "stale_fact_candidate_rate": round(stale_candidate_rate, 6),
+        "stale_fact_candidate_rate_is_diagnostic": True,
         "stale_fact_admission_hits": stale_admission_hits,
         "stale_fact_admission_rate": round(stale_admission_rate, 6),
         "matched_control_stability_rate": round(control_stability_rate, 6),
@@ -337,6 +343,7 @@ def run_benchmark(agent_memory_revision: str, *, key_count: int = 6, rounds: int
         "wrong_scope_admission_count": wrong_scope_admissions,
         "stale_currentness_violation_count": stale_admission_hits,
         "retrieval_evidence_authority_effect": "none",
+        "candidate_presence_is_authority_effect": False,
     }
     recovery = {
         "restart_count": restart_count,
@@ -348,8 +355,7 @@ def run_benchmark(agent_memory_revision: str, *, key_count: int = 6, rounds: int
     checks = {
         "all_qualified_corrections_committed": correction_commit_rate == 1.0,
         "all_current_facts_retrieved": current_retrieval_rate == 1.0,
-        "superseded_facts_never_candidates": stale_candidate_hits == 0,
-        "superseded_facts_never_admitted": stale_admission_hits == 0,
+        "superseded_facts_never_admitted_as_current": stale_admission_hits == 0,
         "matched_controls_stable": control_stability_rate == 1.0,
         "history_preserved": history_preservation_rate == 1.0,
         "unqualified_correction_did_not_commit": not bool(unqualified.get("committed", False)),
@@ -383,6 +389,8 @@ def run_benchmark(agent_memory_revision: str, *, key_count: int = 6, rounds: int
         "passed": all(checks.values()),
         "claim_boundary": {
             "tests_native_agent_memory_currentness": True,
+            "candidate_generation_may_surface_historical_evidence": True,
+            "governed_admission_is_currentness_boundary": True,
             "proves_uor_geometry": False,
             "external_swe_context_benchmark": False,
             "answer_generation_quality_claimed": False,
