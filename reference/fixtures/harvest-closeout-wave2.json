@@ -1,0 +1,264 @@
+{
+  "schema_version": "2.0.0",
+  "artifact_id": "agent-memory-harvest-closeout-matrix",
+  "issue": 470,
+  "status": "active_incomplete_exhaustive_closeout",
+  "supersedes_current_summary": "reference/fixtures/harvest-closeout-wave1.json",
+  "claim_boundary": {
+    "planned_native_harvest_sequence_complete": true,
+    "exhaustive_harvest_complete": false,
+    "external_swe_benchmark_required_for_harvest": false,
+    "adapter_or_comparator_counts_as_native_absorption": false
+  },
+  "sources": [
+    {
+      "source": "MythologIQ-Labs-LLC/EvolveAI",
+      "revision": "21161ce7b88dbffeb7ed59757b4d02d24a9c2acd",
+      "rights_basis": "same_owner_first_party; public Apache-2.0 remains redistribution metadata",
+      "mechanisms": [
+        {
+          "mechanism": "semantic/vector retrieval, temporal behavior, lifecycle/metabolism, consolidation and prune pressure",
+          "posture": "absorbed",
+          "agent_memory_owner": true,
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#456", "#461", "#463"]
+        }
+      ]
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/EvolveAI:ShadowGenome",
+      "revision": "21161ce7b88dbffeb7ed59757b4d02d24a9c2acd",
+      "rights_basis": "same_owner_first_party",
+      "mechanisms": [
+        {
+          "mechanism": "typed failure identity, recurrence evidence, bounded persistence",
+          "posture": "absorbed",
+          "agent_memory_owner": true,
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#473"],
+          "non_claim": "similarity_or_recurrence_does_not_create_block_authority"
+        }
+      ]
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/CodeGenome",
+      "revision": "6dac705e137a3aea795163a766c263a38285416d",
+      "rights_basis": "same_owner_first_party; public MIT remains redistribution metadata",
+      "mechanisms": [
+        {
+          "mechanism": "generic weighted directional relation propagation",
+          "posture": "absorbed",
+          "qualification_evidence": ["#461", "#462"]
+        },
+        {
+          "mechanism": "code/process blast radius and criticality semantics",
+          "posture": "specialized_source_only",
+          "qualification_evidence": ["#461"]
+        },
+        {
+          "mechanism": "noisy-OR numerical confidence fusion as generic evidence qualification",
+          "posture": "intentionally_not_adopted",
+          "qualification_evidence": ["ADR-037"]
+        },
+        {
+          "mechanism": "continuous experiment/regression pressure",
+          "posture": "absorbed",
+          "qualification_evidence": ["#465", "#466"]
+        }
+      ],
+      "runtime_dependency_required": false
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/COREFORGE",
+      "revision": "43b423dbaf8ec1f4323f0556ed462cfa02405a22",
+      "rights_basis": "private same_owner_first_party",
+      "mechanisms": [
+        {
+          "mechanism": "generic Vault provider ownership boundary",
+          "posture": "obsolete_or_superseded",
+          "qualification_evidence": ["#410", "#455"]
+        },
+        {
+          "mechanism": "generic mutation and lineage authority layer beside PAMA",
+          "posture": "obsolete_or_superseded",
+          "qualification_evidence": ["ADR-004", "#410"]
+        },
+        {
+          "mechanism": "context packet, persona, intent, cache and UI-facing bundle presentation",
+          "posture": "specialized_source_only",
+          "qualification_evidence": ["#478"]
+        },
+        {
+          "mechanism": "confidence threshold as privacy or authorization redaction",
+          "posture": "intentionally_not_adopted",
+          "qualification_evidence": ["#461"]
+        }
+      ],
+      "runtime_dependency_required": false
+    },
+    {
+      "source": "UOR-Foundation/UOR-Framework",
+      "revision": "51c01382200b0179d6640b07e9c8119364ab69a1",
+      "rights_basis": "MIT at inspected revision",
+      "mechanisms": [
+        {
+          "mechanism": "deterministic identity and conformance lineage",
+          "posture": "optional_interoperability",
+          "qualification_evidence": ["ADR-001"]
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-addr",
+      "revision": "165b51e3e2113ee5d032730cde709335d4fe9b60",
+      "rights_basis": "existing open-source optional profile",
+      "mechanisms": [
+        {
+          "mechanism": "exact content references",
+          "posture": "optional_interoperability",
+          "qualification_evidence": ["docs/profiles/uor-addr-content-reference-profile.md"]
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-r4",
+      "revision": "552d847d49fb263966165004b835f2f53cccaae1",
+      "rights_basis": "MIT",
+      "mechanisms": [
+        {
+          "mechanism": "geometric predictive memory model",
+          "posture": "intentionally_not_adopted",
+          "qualification_evidence": [],
+          "reason": "current source is research pressure, not evidence for replacing Agent Memory architecture"
+        },
+        {
+          "mechanism": "repeated exact-key rebinding, matched controls, stale-value measurement and negative-result discipline",
+          "posture": "absorbed",
+          "qualification_evidence": ["#483", "#484", "reference/run_keyed_rebinding_benchmark.py"],
+          "implementation_note": "stale candidate presence is diagnostic; zero stale final admission is the currentness gate",
+          "runtime_dependency_required": false
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-foundry",
+      "revision": "5b4711aed4fbb7da9d8b0aa04048a2b04713de4a",
+      "rights_basis": "Cargo.toml declares MIT OR Apache-2.0; root license distribution not verified in Wave 1",
+      "mechanisms": [
+        {
+          "mechanism": "scoped authority, replayable acceptance, producer/artifact identity",
+          "posture": "blocked_by_rights",
+          "qualification_evidence": [],
+          "required_action": "verify repository-level license distribution before direct code reuse"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-jcs-nfc",
+      "revision": "303591128094362857791930fdc12b73875d1ff6",
+      "rights_basis": "Apache-2.0 with NOTICE at inspected provisional revision",
+      "mechanisms": [
+        {
+          "mechanism": "pinned canonicalization context, Unicode version binding, refusal semantics and conformance vectors",
+          "posture": "intentionally_not_adopted",
+          "qualification_evidence": [],
+          "required_action": "re-check final publication before direct adoption"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-matmul",
+      "revision": "3cc5882f210667f9ac00fd8c02c5b5957b493f5d",
+      "rights_basis": "MIT",
+      "mechanisms": [
+        {
+          "mechanism": "exact arithmetic and conformance methodology",
+          "posture": "intentionally_not_adopted",
+          "qualification_evidence": [],
+          "reason": "no generic memory machinery gap identified"
+        }
+      ]
+    },
+    {
+      "source": "microsoft/agent-governance-toolkit",
+      "revision": "e0574c1eb44a9b02f106e2b4c63fc60ec3c017ce",
+      "rights_basis": "MIT",
+      "mechanisms": [
+        {
+          "mechanism": "identity, external policy/enforcement and audit boundary",
+          "posture": "optional_interoperability",
+          "qualification_evidence": [],
+          "authority_effect": "none"
+        }
+      ]
+    },
+    {
+      "source": "AgentTrust TRACE",
+      "revision": "3a561d84d752794b9afa994ce16ed35c24ac0acb",
+      "release": "agentrust-trace==0.10.0",
+      "rights_basis": "normative specification CSL-1.0; source/SDK/tests/examples Apache-2.0; non-spec docs CC-BY-4.0",
+      "mechanisms": [
+        {
+          "mechanism": "portable action/trust evidence and revocation/security semantics",
+          "posture": "optional_interoperability",
+          "qualification_evidence": ["#440", "#476"],
+          "authority_effect": "none",
+          "required_action": "reconcile stale source-registry wording to exact file-class rights"
+        }
+      ]
+    },
+    {
+      "source": "Agent Manifest",
+      "revision": "9478b56cc349bef01441db4e17e61849c8d69d6f",
+      "release": "agent-manifest==0.12.0",
+      "rights_basis": "Apache-2.0",
+      "mechanisms": [
+        {
+          "mechanism": "deployment identity and checkpoint/delta evidence",
+          "posture": "optional_interoperability",
+          "qualification_evidence": ["#440", "#476"],
+          "bounded_negative_result": "accepted checkpoint advancement does not bind supplied appended ops to the checkpoint root",
+          "authority_effect": "none"
+        }
+      ]
+    },
+    {
+      "source": "agentrust-io/cmcp",
+      "revision": "a2e95151356c9ae6c545330c900f3d4af0e447c1",
+      "release": "v0.4.0",
+      "rights_basis": "external open-source peer under inspected release rights",
+      "mechanisms": [
+        {
+          "mechanism": "gateway claim and field-level external evidence normalization",
+          "posture": "optional_interoperability",
+          "qualification_evidence": ["docs/profiles/cmcp-external-evidence-profile.md"],
+          "historical_pin": true,
+          "authority_effect": "none"
+        }
+      ]
+    },
+    {
+      "source": "agentrust-io/cmcp",
+      "revision": "d03b9af504535d3d43f192bc6d9eff89b8afd12f",
+      "release": "v0.5.0",
+      "observed_main": "ac40f28bc193730473130d38ef9c028fcda6cea9",
+      "rights_basis": "exact reuse rights to be rechecked during qualification",
+      "mechanisms": [
+        {
+          "mechanism": "security-semantic changes to compliance crossing, RFC8785 policy hashing, certificate rotation and redaction",
+          "posture": "optional_interoperability",
+          "qualification_evidence": ["#485"],
+          "qualification_status": "open",
+          "authority_effect": "none"
+        }
+      ]
+    }
+  ],
+  "open_closeout_items": [
+    "#485 cMCP 0.5.0 executable requalification",
+    "TRACE source-registry file-class license reconciliation",
+    "uor-foundry repository-level rights verification",
+    "uor-jcs-nfc final publication follow-up if provisional source changes",
+    "PrismPM review only if a concrete memory or verification lesson is identified"
+  ]
+}
