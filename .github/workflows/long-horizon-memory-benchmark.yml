@@ -24,6 +24,13 @@ jobs:
           PYTHONPATH=reference python reference/run_long_horizon_memory_benchmark.py
           --agent-memory-commit "$AGENT_MEMORY_COMMIT"
           --output long-horizon-memory.json
+      - name: Run keyed rebinding and stale-value resistance benchmark
+        env:
+          AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          PYTHONPATH=reference python reference/run_keyed_rebinding_benchmark.py
+          --agent-memory-commit "$AGENT_MEMORY_COMMIT"
+          --output keyed-rebinding-memory.json
       - run: |
           python - <<'PY'
           import json
@@ -35,11 +42,34 @@ jobs:
               assert 'stale_influence_rate' in row
               assert row['current_only']['stage_2']['final_success_rate'] >= 0
           print([(x['representation'],x['adaptation']) for x in r['representations']])
+
+          k=json.load(open('keyed-rebinding-memory.json'))
+          assert k['benchmark_id']=='agent-memory-keyed-rebinding-stale-resistance'
+          assert k['benchmark_version']=='1.0.1'
+          assert k['passed'] is True
+          assert k['quality']['correction_commit_rate']==1.0
+          assert k['quality']['current_fact_retrieval_rate']==1.0
+          assert k['quality']['stale_fact_candidate_rate'] >= 0.0
+          assert k['quality']['stale_fact_candidate_rate_is_diagnostic'] is True
+          assert k['quality']['stale_fact_admission_rate']==0.0
+          assert k['quality']['matched_control_stability_rate']==1.0
+          assert k['governance']['wrong_scope_admission_count']==0
+          assert k['governance']['candidate_presence_is_authority_effect'] is False
+          assert k['checks']['superseded_facts_never_admitted_as_current'] is True
+          assert 'superseded_facts_never_candidates' not in k['checks']
+          assert k['runtime_recovery']['restart_count']==2
+          assert k['runtime_recovery']['configuration_digest_stable'] is True
+          assert 'health_score' not in k and 'score' not in k
+          assert k['source_pressure']['revision']=='552d847d49fb263966165004b835f2f53cccaae1'
+          assert k['source_pressure']['geometric_model_adopted'] is False
+          print(k['quality'])
           PY
       - uses: actions/upload-artifact@v7
         with:
           name: long-horizon-memory-local
-          path: long-horizon-memory.json
+          path: |
+            long-horizon-memory.json
+            keyed-rebinding-memory.json
           if-no-files-found: error
 
   vjepa2-1-frozen-representation:
