@@ -1,0 +1,393 @@
+{
+  "schema_version": "1.0.0",
+  "artifact_id": "agent-memory-harvest-closeout-final-v1",
+  "issue": 470,
+  "status": "complete_exhaustive_closeout",
+  "evaluated_against_agent_memory_revision": "ba9b06aa5b73251f00910c0f78fb3fa00d1dc624",
+  "supersedes": [
+    "reference/fixtures/harvest-closeout-wave1.json",
+    "reference/fixtures/harvest-closeout-wave2.json"
+  ],
+  "claim_boundary": {
+    "planned_native_harvest_sequence_complete": true,
+    "exhaustive_known_source_harvest_complete": true,
+    "future_upstream_changes_require_new_review_not_reopening_this_snapshot": true,
+    "external_swe_benchmark_required_for_harvest": false,
+    "adapter_or_comparator_counts_as_native_absorption": false,
+    "external_peer_evidence_can_create_memory_authority": false
+  },
+  "sources": [
+    {
+      "source": "MythologIQ-Labs-LLC/EvolveAI",
+      "revision": "21161ce7b88dbffeb7ed59757b4d02d24a9c2acd",
+      "source_class": "same_owner_first_party_ancestry",
+      "license_rights": "same-owner controlled material; public repository metadata records Apache-2.0",
+      "mechanisms": [
+        {
+          "mechanism": "semantic/vector retrieval, temporal behavior, lifecycle/metabolism, consolidation and prune pressure",
+          "current_agent_memory_equivalent": "native semantic/vector retrieval, typed temporal/entity/causal traversal, governed native metabolism",
+          "posture": "absorbed",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#456", "#458", "#461", "#462", "#463", "#464"],
+          "known_limitations": "provider-specific EvolveAI estimator behavior is not adopted as authority"
+        },
+        {
+          "mechanism": "ShadowGenome typed failure identity, recurrence evidence and bounded persistence",
+          "current_agent_memory_equivalent": "governed negative/failure memory",
+          "posture": "absorbed",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#473"],
+          "known_limitations": "recurrence or similarity does not create block authority"
+        }
+      ]
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/CodeGenome",
+      "revision": "6dac705e137a3aea795163a766c263a38285416d",
+      "source_class": "same_owner_first_party_ancestry_and_specialized_domain_source",
+      "license_rights": "same-owner controlled material; public repository metadata records MIT",
+      "mechanisms": [
+        {
+          "mechanism": "generic weighted directional relation propagation and traversal",
+          "current_agent_memory_equivalent": "native typed graph traversal and bounded impact propagation",
+          "posture": "absorbed",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#461", "#462"],
+          "known_limitations": "code-specific blast-radius and criticality semantics remain specialized"
+        },
+        {
+          "mechanism": "continuous experiment and regression pressure",
+          "current_agent_memory_equivalent": "continuous revision-bound retrieval/memory regression",
+          "posture": "absorbed",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#465", "#466", "#493"],
+          "known_limitations": "external efficacy still requires real frozen benchmark inputs"
+        },
+        {
+          "mechanism": "noisy-OR numerical confidence fusion as generic evidence qualification",
+          "current_agent_memory_equivalent": "typed evidence and authority separation",
+          "posture": "intentionally_not_adopted",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["ADR-037"],
+          "known_limitations": "numeric confidence cannot substitute for authority or independent evidential class"
+        }
+      ]
+    },
+    {
+      "source": "MythologIQ-Labs-LLC/COREFORGE",
+      "revision": "43b423dbaf8ec1f4323f0556ed462cfa02405a22",
+      "source_class": "private_same_owner_first_party_ancestry_and_downstream_consumer",
+      "license_rights": "same-owner controlled material; no public redistribution claim required for this harvest",
+      "mechanisms": [
+        {
+          "mechanism": "generic Vault/Neurospace provider ownership boundary and generic mutation/lineage authority",
+          "current_agent_memory_equivalent": "native runtime memory space, PAMA, provenance and lifecycle",
+          "posture": "obsolete_or_superseded",
+          "required_action": "downstream COREFORGE should consume Agent Memory rather than remain generic memory owner",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#455", "ADR-004", "#478", "#480"],
+          "known_limitations": "COREFORGE keeps product-specific UI, inference, packaging, cache and orchestration concerns"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/UOR-Framework",
+      "revision": "51c01382200b0179d6640b07e9c8119364ab69a1",
+      "source_class": "external_lineage",
+      "license_rights": "MIT at inspected revision",
+      "mechanisms": [
+        {
+          "mechanism": "deterministic identity and conformance lineage",
+          "current_agent_memory_equivalent": "Agent Memory identity contract with optional exact-reference interoperability",
+          "posture": "optional_interoperability",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["ADR-001"],
+          "known_limitations": "UOR identity is not lifecycle, recall admission, or mutation authority"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-addr",
+      "revision": "165b51e3e2113ee5d032730cde709335d4fe9b60",
+      "source_class": "external_identity_interoperability",
+      "license_rights": "open-source optional profile as recorded by Agent Memory source-rights evidence",
+      "mechanisms": [
+        {
+          "mechanism": "exact content references",
+          "current_agent_memory_equivalent": "optional UOR-Addr content-reference profile",
+          "posture": "optional_interoperability",
+          "required_action": "none",
+          "native_owner": "Agent Memory identity boundary",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["docs/profiles/uor-addr-content-reference-profile.md"],
+          "known_limitations": "profile is optional and cannot become memory authority"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-r4",
+      "revision": "552d847d49fb263966165004b835f2f53cccaae1",
+      "source_class": "external_research_lineage",
+      "license_rights": "MIT",
+      "mechanisms": [
+        {
+          "mechanism": "geometric predictive memory model",
+          "current_agent_memory_equivalent": "none required",
+          "posture": "intentionally_not_adopted",
+          "required_action": "retain as research pressure only",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": [],
+          "known_limitations": "current source does not establish superiority over ordinary matched controls"
+        },
+        {
+          "mechanism": "repeated exact-key rebinding, matched controls, stale-value measurement and negative-result discipline",
+          "current_agent_memory_equivalent": "keyed rebinding/currentness benchmark",
+          "posture": "absorbed",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#483", "#484", "reference/run_keyed_rebinding_benchmark.py"],
+          "known_limitations": "stale candidate presence is diagnostic; stale final admission is the governed failure"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-foundry",
+      "revision": "5b4711aed4fbb7da9d8b0aa04048a2b04713de4a",
+      "source_class": "external_verification_and_release_peer",
+      "license_rights": "verified MIT OR Apache-2.0 with root LICENSE-MIT and LICENSE-APACHE at exact revision",
+      "mechanisms": [
+        {
+          "mechanism": "scoped authority, replayable acceptance and evidence-honesty discipline",
+          "current_agent_memory_equivalent": "PAMA, revision-bound qualification, D/F/H/R/P evidence depth and capability maturity",
+          "posture": "absorbed",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#489", "docs/programs/runtime-evidence/security-evidence-depth.md"],
+          "known_limitations": "organization quorum and product-release machinery remains specialized"
+        },
+        {
+          "mechanism": "producer/artifact release identity and supply-chain closure",
+          "current_agent_memory_equivalent": "bounded source/config/runtime identity",
+          "posture": "specialized_source_only",
+          "required_action": "none",
+          "native_owner": "external release engineering",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#489"],
+          "known_limitations": "Agent Memory does not claim Foundry-level product-release closure"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-jcs-nfc",
+      "revision": "303591128094362857791930fdc12b73875d1ff6",
+      "source_class": "external_identity_and_conformance_research",
+      "license_rights": "Apache-2.0 with NOTICE at inspected provisional RC5 revision",
+      "mechanisms": [
+        {
+          "mechanism": "pinned JCS/NFC canonicalization context and Unicode-version-bound digest profile",
+          "current_agent_memory_equivalent": "existing Agent Memory content/reference identity contracts",
+          "posture": "intentionally_not_adopted",
+          "required_action": "none for current harvest; a future final release may be reviewed as a new interoperability candidate",
+          "native_owner": "Agent Memory identity boundary",
+          "runtime_dependency_required": false,
+          "qualification_evidence": [],
+          "known_limitations": "source explicitly remains provisional RC5 and says a later final commit must be cited for registry publication"
+        },
+        {
+          "mechanism": "mutation sensitivity for conformance and benchmark checks",
+          "current_agent_memory_equivalent": "benchmark evaluator mutation-integrity probes",
+          "posture": "absorbed",
+          "required_action": "run as evaluator integrity evidence around benchmark development",
+          "native_owner": "Agent Memory evaluation",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["reference/run_benchmark_integrity_mutants.py", "docs/51-benchmark-integrity-mutation-probes.md", "#470"],
+          "known_limitations": "mutation-probe success does not establish benchmark efficacy or external comparability"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/uor-matmul",
+      "revision": "3cc5882f210667f9ac00fd8c02c5b5957b493f5d",
+      "source_class": "external_conformance_research",
+      "license_rights": "MIT",
+      "mechanisms": [
+        {
+          "mechanism": "exact arithmetic and conformance methodology",
+          "current_agent_memory_equivalent": "existing deterministic identity/evidence checks",
+          "posture": "intentionally_not_adopted",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": [],
+          "known_limitations": "no generic memory machinery gap was identified"
+        }
+      ]
+    },
+    {
+      "source": "UOR-Foundation/PrismPM",
+      "revision": "73d041a46a4e15127e7fdef1dc16a8d592c5ccd3",
+      "source_class": "external_verification_conformance_and_release_peer",
+      "license_rights": "verified MIT OR Apache-2.0 at exact revision; root LICENSE-MIT and LICENSE-APACHE present",
+      "mechanisms": [
+        {
+          "mechanism": "typed authority binding distinct from executable oracle plus locked drift refusal",
+          "current_agent_memory_equivalent": "source qualification remains distinct from runtime configuration, estimator evidence and PAMA authority",
+          "posture": "absorbed",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["docs/programs/runtime-evidence/runtime-configuration.md", "docs/profiles/pama-1-3-structural-delegation.md", "#470"],
+          "known_limitations": "PrismPM formal/build verification is not imported as memory authority"
+        },
+        {
+          "mechanism": "positive/negative corpora and mutation pressure against stale, bypassed or trivially passing verification",
+          "current_agent_memory_equivalent": "benchmark evaluator mutation-integrity probes plus existing adversarial governance fixtures",
+          "posture": "absorbed",
+          "required_action": "keep mutation sensitivity separate from benchmark efficacy",
+          "native_owner": "Agent Memory evaluation",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["reference/run_benchmark_integrity_mutants.py", "docs/51-benchmark-integrity-mutation-probes.md", "#470"],
+          "known_limitations": "current probes cover retrieval-evaluator semantics, not all Agent Memory verification surfaces"
+        },
+        {
+          "mechanism": "complete OCI release graph, self-rebuild and deployment/publication closure",
+          "current_agent_memory_equivalent": "bounded revision/config/runtime evidence only",
+          "posture": "specialized_source_only",
+          "required_action": "none",
+          "native_owner": "external release engineering",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#470"],
+          "known_limitations": "Agent Memory does not claim PrismPM's broader release, compiler or deployment guarantees"
+        }
+      ]
+    },
+    {
+      "source": "microsoft/agent-governance-toolkit",
+      "revision": "e0574c1eb44a9b02f106e2b4c63fc60ec3c017ce",
+      "source_class": "external_governance_peer",
+      "license_rights": "MIT at inspected revision",
+      "mechanisms": [
+        {
+          "mechanism": "identity, external policy/enforcement and audit boundary",
+          "current_agent_memory_equivalent": "optional enforcement interoperability outside PAMA semantic ownership",
+          "posture": "optional_interoperability",
+          "required_action": "none",
+          "native_owner": "Agent Memory for memory authority semantics",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["docs/programs/runtime-evidence/README.md"],
+          "known_limitations": "external enforcement cannot become recall-admission or mutation authority merely by integration"
+        }
+      ]
+    },
+    {
+      "source": "AgentTrust TRACE",
+      "revision": "3a561d84d752794b9afa994ce16ed35c24ac0acb",
+      "release": "agentrust-trace==0.10.0",
+      "source_class": "external_trust_evidence_peer",
+      "license_rights": "mixed by file class: normative specification CSL-1.0; source/SDK/tests/examples/workflows Apache-2.0; non-spec documentation CC-BY-4.0; historical v0.1 grant retained",
+      "mechanisms": [
+        {
+          "mechanism": "portable action/trust evidence and revocation/security semantics",
+          "current_agent_memory_equivalent": "external evidence normalization feeding Agent Memory-owned policy and memory decisions",
+          "posture": "optional_interoperability",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#440", "#476", "#487", "#488", "reference/fixtures/trace-source-rights-v1.json"],
+          "known_limitations": "TRACE evidence does not create Agent Memory authority"
+        }
+      ]
+    },
+    {
+      "source": "Agent Manifest",
+      "revision": "9478b56cc349bef01441db4e17e61849c8d69d6f",
+      "release": "agent-manifest==0.12.0",
+      "source_class": "external_deployment_identity_peer",
+      "license_rights": "Apache-2.0",
+      "mechanisms": [
+        {
+          "mechanism": "deployment identity and checkpoint/delta evidence",
+          "current_agent_memory_equivalent": "optional external evidence correlated with Agent Memory-owned operation semantics",
+          "posture": "optional_interoperability",
+          "required_action": "none",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#440", "#476"],
+          "known_limitations": "0.12.0 checkpoint acceptance does not bind supplied appended operations to the checkpoint root"
+        }
+      ]
+    },
+    {
+      "source": "agentrust-io/cmcp",
+      "revision": "a2e95151356c9ae6c545330c900f3d4af0e447c1",
+      "release": "v0.4.0",
+      "source_class": "historical_external_call_boundary_peer",
+      "license_rights": "MIT at inspected release",
+      "mechanisms": [
+        {
+          "mechanism": "gateway claim and field-level external evidence normalization",
+          "current_agent_memory_equivalent": "optional external evidence comparator",
+          "posture": "optional_interoperability",
+          "required_action": "retain as historical qualified evidence",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["docs/profiles/cmcp-external-evidence-profile.md"],
+          "known_limitations": "historical release is not rewritten by later qualification"
+        }
+      ]
+    },
+    {
+      "source": "agentrust-io/cmcp",
+      "revision": "d03b9af504535d3d43f192bc6d9eff89b8afd12f",
+      "release": "v0.5.0",
+      "source_class": "external_call_boundary_peer",
+      "license_rights": "MIT at exact qualified release commit",
+      "mechanisms": [
+        {
+          "mechanism": "field-level external evidence, regulated-domain crossing, RFC8785 policy hashing, certificate-pinned rotation and extensible compliance domains",
+          "current_agent_memory_equivalent": "optional evidence normalization and comparator boundary",
+          "posture": "optional_interoperability",
+          "required_action": "future versions require separate qualification",
+          "native_owner": "Agent Memory",
+          "runtime_dependency_required": false,
+          "qualification_evidence": ["#485", "#486", "cMCP External Evidence Comparator run 36095747420"],
+          "known_limitations": "verifier evidence has authority effect none"
+        }
+      ]
+    }
+  ],
+  "closeout": {
+    "unresolved_known_harvest_items": [],
+    "future_monitoring_not_blocking_this_closeout": [
+      "uor-jcs-nfc final publication may be reviewed if it becomes relevant for direct interoperability",
+      "new upstream releases of optional peers require ordinary version-specific qualification",
+      "new ancestry or peer systems discovered later create a new harvest review rather than invalidating this snapshot"
+    ],
+    "external_efficacy_work": [
+      "#467 SWE-ContextBench protocol-comparable 99-query / 100-gold-edge run",
+      "#388 longitudinal governed-memory field efficacy",
+      "#408 longitudinal semantic-recall/canonical-truth case study"
+    ],
+    "final_answers": {
+      "materially_useful_known_generic_mechanisms_harvested_or_dispositioned": true,
+      "every_known_non_harvest_has_explicit_reason": true,
+      "generic_runtime_dependency_on_evolveai_codegenome_or_coreforge": false
+    }
+  }
+}
