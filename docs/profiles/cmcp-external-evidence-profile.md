@@ -2,9 +2,14 @@
 
 ## Purpose
 
-This profile proves the inbound half of Agent Memory's evidence relationship with cMCP `v0.4.0`.
+This profile defines Agent Memory's inbound evidence relationship with cMCP while preserving exact-version provenance and historical evidence.
 
-The repository already exercises the opposite direction through the released TRACE/cMCP audit-bundle comparator:
+Two cMCP boundaries are intentionally retained:
+
+- `v0.4.0` is the historical qualified boundary already used by existing comparator evidence;
+- `v0.5.0` is the current requalified boundary under issue #485 / PR #486.
+
+The repository also exercises the opposite direction through the released TRACE/cMCP audit-bundle comparator:
 
 ```text
 Agent Memory portable governance evidence
@@ -12,7 +17,7 @@ Agent Memory portable governance evidence
 -> released cMCP verifier
 ```
 
-This profile adds:
+The inbound path is:
 
 ```text
 released cMCP GatewayClaim + verifier result
@@ -20,9 +25,11 @@ released cMCP GatewayClaim + verifier result
 -> Agent Memory generic external-evidence normalization
 ```
 
-cMCP remains an optional independent peer. It does not become a required Agent Memory runtime or policy store.
+cMCP remains an optional independent peer. It does not become a required Agent Memory runtime, memory owner, policy store, or PAMA authority.
 
-## Exact peer pin
+## Exact qualified peers
+
+### Historical qualified boundary
 
 ```text
 repository: agentrust-io/cmcp
@@ -33,13 +40,45 @@ TRACE package: agentrust-trace==0.10.0
 Agent Manifest package: agent-manifest==0.12.0
 ```
 
-The cMCP release stays pinned at v0.4.0 while #440 re-qualifies its released verifier against the exact TRACE 0.10.0 + Agent Manifest 0.12.0 pair. A green cMCP comparator therefore establishes compatibility of this bounded evidence path with that exact environment, not generic future-version compatibility.
+Historical evidence produced against this boundary remains labeled as `0.4.0`. It is not rewritten as though it came from the newer release.
 
-The v0.4.0 pin matters semantically. That release tightened attestation verification after earlier versions could over-report assurance for incomplete or forged TPM evidence.
+### Current qualified boundary
 
-## One peer claim, two evidence records
+```text
+repository: agentrust-io/cmcp
+release: v0.5.0
+source commit: d03b9af504535d3d43f192bc6d9eff89b8afd12f
+runtime package: cmcp-runtime==0.5.0
+TRACE package: agentrust-trace==0.10.0
+Agent Manifest package: agent-manifest==0.12.0
+verifier: cmcp-verify==0.5.0
+```
 
-A cMCP GatewayClaim contains several different kinds of evidence. V0.1 deliberately refuses to collapse them into a single boolean.
+Issue #485 and PR #486 execute this exact environment in CI. The qualification run installs the exact released packages, executes `cmcp_verify.verify_trace_claim`, normalizes the resulting field-level evidence, and preserves the authority boundary described below.
+
+The exact-head cMCP workflow for the qualified PR head completed successfully after exercising both the historical 0.4 comparator and the 0.5 security-semantic qualification side by side.
+
+## Why v0.5.0 required explicit requalification
+
+The release changed evidence-relevant behavior rather than merely package metadata. Qualification therefore exercises the semantics Agent Memory can safely consume instead of assuming forward compatibility.
+
+The bounded 0.5 qualification covers:
+
+- regulated compliance-domain crossing data in the signed peer claim;
+- RFC 8785 policy-bundle canonical hashing;
+- `cert-pinned` catalog rotation mode being expressible;
+- built-in regulated compliance domains;
+- undeclared custom compliance domains failing closed;
+- explicitly declared custom compliance-domain extension;
+- software-only attestation remaining non-hardware;
+- wrong approved policy hash invalidating enforcement evidence;
+- exact source/version/verifier identity in normalized evidence.
+
+The release repository is MIT-licensed at the inspected `v0.5.0` source commit. That rights fact permits reuse under the MIT terms where needed, but the current Agent Memory implementation remains an independently owned normalization boundary rather than importing cMCP as a runtime owner.
+
+## One peer claim, multiple evidence records
+
+A cMCP GatewayClaim can contain several different evidence responsibilities. Agent Memory deliberately refuses to collapse them into one trust boolean.
 
 ```text
 signed gateway/session claim
@@ -57,9 +96,9 @@ The adapter emits at least two independent Agent Memory candidates.
 The enforcement record preserves bounded facts such as:
 
 - gateway/session subject;
-- cMCP release and verifier identity;
-- exact signed-claim digest;
-- approved policy bundle ref/hash;
+- exact cMCP source, package, release, and verifier identity;
+- signed-claim digest;
+- policy-bundle ref/hash;
 - tool-catalog configuration ref;
 - audit-chain root/tip refs;
 - `enforce`, `advisory`, or `silent` posture;
@@ -84,11 +123,11 @@ A software-only claim therefore remains explicitly non-hardware-backed. It canno
 
 ## Claim-scoped verification
 
-cMCP's verifier exposes a global status plus `verified_fields` and `unverified_fields`.
+cMCP's verifier exposes a global status plus `verified_fields`, `unverified_fields`, and a failure reason.
 
-Agent Memory consumes the field-level evidence rather than copying the global label blindly.
+Agent Memory consumes field-level evidence rather than copying the global label blindly.
 
-For enforcement/configuration evidence, V0.1 requires:
+For enforcement/configuration evidence, the adapter requires:
 
 ```text
 schema
@@ -112,7 +151,20 @@ software-only / absent hardware proof    -> unknown
 hardware/key-binding verification failure -> failed
 ```
 
-Freshness is still evaluated independently by the generic Agent Memory normalizer.
+Freshness is evaluated independently by the generic Agent Memory normalizer.
+
+## Source registration and historical immutability
+
+The generic external-evidence normalizer recognizes both exact cMCP source tuples:
+
+```text
+(cMCP, cmcp-runtime==0.4.0, a2e95151356c9ae6c545330c900f3d4af0e447c1)
+(cMCP, cmcp-runtime==0.5.0, d03b9af504535d3d43f192bc6d9eff89b8afd12f)
+```
+
+This is additive. The default adapter constants remain pinned to the historical 0.4 boundary so existing evidence cannot be silently relabeled. New 0.5 qualification evidence uses explicit source rebinding to the exact 0.5 tuple and verifier identity.
+
+Unsupported future versions continue to normalize as `unsupported` until they receive their own executable qualification.
 
 ## Core boundaries
 
@@ -124,15 +176,16 @@ hardware attestation != semantic correctness
 verified gateway identity != Agent Memory authority
 policy allow != approval
 software-only verification != hardware provenance
+signed compliance-domain data != memory access authority
 ```
 
 These remain true even when every cryptographic check available to the peer passes.
 
 ## Privacy and minimization
 
-The normalized records use refs and digests rather than copying cMCP's rich payloads.
+Normalized records use refs and digests rather than copying cMCP's rich payloads.
 
-V0.1 does not retain:
+The adapter does not retain:
 
 - raw tool arguments or responses;
 - tool transcript entries;
@@ -140,9 +193,10 @@ V0.1 does not retain:
 - raw TEE/TPM evidence;
 - quote signatures;
 - certificate chains;
-- complete Agent Manifest payloads.
+- complete Agent Manifest payloads;
+- regulated-domain detail merely because it appears in the signed peer envelope.
 
-The full cMCP claim may be held by the external evidence custodian, while Agent Memory records the stable digest and bounded provenance needed to reconstruct where the evidence came from.
+The full cMCP claim may be held by the external evidence custodian while Agent Memory records the stable digest and bounded provenance needed to reconstruct where the evidence came from.
 
 ## Failure semantics
 
@@ -159,21 +213,17 @@ attestation evidence = unknown
 
 when those exact field-level conditions hold.
 
-### Stale attestation
-
-Expired evidence remains historical evidence but is not current applicability.
-
 ### Policy/catalog/signature mismatch
 
 A failed signed-policy/configuration binding invalidates the enforcement evidence. It is not softened merely because another field in the same peer claim verified.
 
+### Stale attestation
+
+Expired attestation evidence remains historical evidence but is not current hardware applicability. Its expiry does not retroactively expire an independently current signed configuration/enforcement record.
+
 ### Hardware evidence supplied but invalid
 
 Hardware-attestation failure remains failed evidence. It must not degrade to a successful hardware claim.
-
-### Missing hardware evidence
-
-Absence of hardware proof must remain visibly unverified/unknown rather than being upgraded by the existence of a signed software claim.
 
 ## Relationship to execution evidence
 
@@ -187,26 +237,41 @@ this specific Agent Memory action executed or was prevented
 
 Execution claims continue to require the separate execution/evidence contracts already defined by Agent Memory.
 
-## V0.1 evidence target
+## Executable evidence
 
-The dedicated exact-head comparator uses the real released cMCP claim builder and verifier to exercise:
+The dedicated workflow runs both boundaries in isolated environments:
 
-- `enforce`, `advisory`, and `silent` modes;
-- software-only partial verification without hardware overclaim;
-- stale attestation;
-- wrong approved policy hash;
-- tampered claim signature;
-- privacy minimization of attestation payloads.
+```text
+historical comparator:
+  cmcp-runtime==0.4.0
+  agentrust-trace==0.10.0
+  agent-manifest==0.12.0
 
-Synthetic unit tests separately mutation-test claim-scoped classification and unknown-field minimization without making cMCP a core dependency.
+current qualification:
+  cmcp-runtime==0.5.0
+  agentrust-trace==0.10.0
+  agent-manifest==0.12.0
+```
+
+Relevant implementation surfaces:
+
+```text
+reference/agentmem_ref/memory/cmcp_external_evidence.py
+reference/tests/test_cmcp_external_evidence.py
+reference/run_cmcp_external_evidence_comparator.py
+reference/run_cmcp_050_qualification.py
+.github/workflows/cmcp-external-evidence.yml
+```
+
+The 0.5 qualification also verifies that the Agent Memory normalizer does not promote cMCP's compliance-domain or cross-boundary detail into Agent Memory access or lifecycle authority.
 
 ## Non-goals
 
 - claiming production cMCP deployment;
-- provisioning real TPM, SNP, or TDX hardware in CI;
+- provisioning real TPM, SNP, TDX, or other hardware in CI;
 - making cMCP a required Agent Memory gateway;
 - importing cMCP claim schema as Agent Memory doctrine;
 - treating cMCP policy as canonical Agent Memory policy;
 - treating an Agent Manifest binding as PAMA authority;
-- storing raw audit, tool, identity, or attestation payloads;
-- implementing Cedarling or another policy peer in this slice.
+- storing raw audit, tool, identity, compliance, or attestation payloads;
+- claiming compatibility with future cMCP versions without another exact qualification.

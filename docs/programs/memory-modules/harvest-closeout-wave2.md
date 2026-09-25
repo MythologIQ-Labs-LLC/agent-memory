@@ -7,7 +7,7 @@ Status: **active, incomplete exhaustive closeout**
 
 ## Purpose
 
-Wave 2 is the current harvest summary after the native failure-memory slice, the CodeGenome and COREFORGE dispositions, the Agent Manifest plus TRACE exact-version qualification, and the first UOR-R4-derived evaluation improvement.
+Wave 2 is the current harvest summary after the native failure-memory slice, the CodeGenome and COREFORGE dispositions, the Agent Manifest plus TRACE exact-version qualification, the first UOR-R4-derived evaluation improvement, and the cMCP 0.5.0 requalification.
 
 This document does not rewrite Wave 1 as if later evidence had existed earlier. Wave 1 remains historical audit evidence. Wave 2 carries the current disposition summary.
 
@@ -42,8 +42,8 @@ An adapter or comparator is not proof of native absorption. A benchmark result i
 | Microsoft Agent Governance Toolkit | `e0574c1eb44a9b02f106e2b4c63fc60ec3c017ce` | MIT | external identity/policy/enforcement/audit boundary | **optional_interoperability** | useful peer/comparator only; AGT never owns PAMA or memory authority |
 | AgentTrust TRACE | qualified package `agentrust-trace==0.10.0`, source `3a561d84d752794b9afa994ce16ed35c24ac0acb` | mixed file-class rights: normative spec CSL 1.0; source/SDK/tests/examples Apache-2.0; non-spec docs CC BY 4.0 | portable trust/action evidence, revocation/security semantics | **optional_interoperability, exact pair qualified** | #440 / PR #476 complete executable qualification; source-registry wording still needs exact file-class reconciliation |
 | Agent Manifest | qualified package `agent-manifest==0.12.0`, source `9478b56cc349bef01441db4e17e61849c8d69d6f` | Apache-2.0 | deployment identity, checkpoint/delta evidence | **optional_interoperability, exact pair qualified** | #440 / PR #476; bounded negative result preserved: accepted checkpoint advancement does not bind supplied appended `ops` to the checkpoint root |
-| cMCP qualified boundary | `v0.4.0`, source `a2e95151356c9ae6c545330c900f3d4af0e447c1` | external open-source peer under its inspected release rights | gateway claim, field-level verification, policy/audit/attestation evidence | **optional_interoperability, historical qualified pin** | preserve historical evidence; do not silently reinterpret as current upstream |
-| cMCP current release | `v0.5.0`, source `d03b9af504535d3d43f192bc6d9eff89b8afd12f`; main observed `ac40f28bc193730473130d38ef9c028fcda6cea9` | external open-source peer, exact reuse rights to be rechecked during qualification | security fixes to compliance crossing, RFC 8785 policy hashing, cert-pinned rotation, extensible compliance domains, credential redaction | **qualification open** | #485 owns executable v0.5.0 requalification against TRACE 0.10.0 + Agent Manifest 0.12.0 |
+| cMCP historical boundary | `v0.4.0`, source `a2e95151356c9ae6c545330c900f3d4af0e447c1` | MIT at inspected release | gateway claim, field-level verification, policy/audit/attestation evidence | **optional_interoperability, historical qualified pin** | preserve historical evidence and default adapter binding; do not relabel old evidence as 0.5 |
+| cMCP current boundary | `v0.5.0`, source `d03b9af504535d3d43f192bc6d9eff89b8afd12f` | MIT at exact qualified release | regulated-domain crossing evidence, RFC 8785 policy hashing, cert-pinned rotation, extensible compliance domains, field-level verification | **optional_interoperability, exact release qualified** | #485 / PR #486; cMCP comparator run `36095380166` passed exact 0.4 historical and 0.5 qualification lanes |
 
 ## UOR-R4 benchmark harvest result
 
@@ -105,11 +105,45 @@ Agent Memory therefore continues to bind operation semantics in its own evidence
 
 TRACE source rights are also more precise than older source-registry prose currently states. Current upstream `LICENSE` assigns normative specification material to Community Specification License 1.0, source/SDK/test/example/workflow code to Apache-2.0, and non-spec documentation to CC BY 4.0. Updating the registry record remains an explicit #470 cleanup item.
 
-## cMCP current-upstream pressure
+## cMCP v0.5 qualification result
 
-Agent Memory's current qualified cMCP evidence path is pinned to v0.4.0. Current upstream has released v0.5.0 with security changes that can affect evidence meaning, including regulated-domain crossing records and canonical policy hashing.
+Issue #485 deliberately treated cMCP 0.5.0 as a fresh evidence-boundary qualification rather than an automatic dependency bump.
 
-That is now tracked in #485. The intended shape is version-exact requalification, not an automatic dependency bump.
+The qualification environment is exact:
+
+```text
+cmcp-runtime==0.5.0
+source d03b9af504535d3d43f192bc6d9eff89b8afd12f
+agentrust-trace==0.10.0
+agent-manifest==0.12.0
+```
+
+The executable qualification passed after exercising:
+
+- real released claim generation and `cmcp_verify.verify_trace_claim`;
+- software-only attestation remaining non-hardware;
+- wrong approved policy hash invalidating enforcement evidence;
+- regulated compliance-domain and cross-boundary data remaining peer evidence rather than Agent Memory access authority;
+- `cert-pinned` rotation mode being reachable;
+- built-in regulated compliance domains;
+- undeclared custom compliance domains failing closed;
+- explicitly declared custom compliance-domain extension;
+- RFC 8785 policy-bundle hashing, including non-ASCII author identity and order-independent canonicalization;
+- exact source/version/verifier binding in normalized evidence.
+
+The first qualification attempt also produced a useful negative result: the local fixture used an undeclared `restricted` sensitivity label and cMCP 0.5.0 rejected it. The fixture was corrected to use the peer's declared vocabulary rather than weakening the peer to make CI green.
+
+A second failure exposed a real Agent Memory integration condition rather than a cMCP defect: the generic external-evidence normalizer correctly marked the newly re-bound 0.5 source as unsupported until that exact source tuple was explicitly registered. The final slice therefore adds the exact 0.5 tuple while retaining the 0.4 tuple and default adapter constants unchanged.
+
+The resulting contract is:
+
+```text
+cMCP 0.4 historical evidence -> stays 0.4
+cMCP 0.5 exact evidence      -> may normalize under exact registered tuple
+future cMCP version          -> unsupported until separately qualified
+```
+
+The authority boundary is unchanged:
 
 ```text
 stronger external verifier
@@ -121,8 +155,6 @@ stronger external verifier
 
 Exhaustive harvest is still not complete. Current bounded work includes:
 
-- #483 matrix/evidence closeout after PR #484 lands;
-- #485 cMCP 0.5.0 executable requalification;
 - TRACE source-registry file-class license reconciliation;
 - uor-foundry repository-level rights verification;
 - uor-jcs-nfc final/publication follow-up if the provisional source changes;

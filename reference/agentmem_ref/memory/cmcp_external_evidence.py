@@ -1,4 +1,8 @@
-"""cMCP v0.4.0 adapter into Agent Memory's generic external-evidence seam.
+"""cMCP external-evidence adapter into Agent Memory's generic evidence seam.
+
+The historical/default binding remains cMCP v0.4.0 because already-produced
+qualification evidence must not be rewritten as though it came from a newer peer.
+Version-exact qualification paths may supply a different source binding explicitly.
 
 The adapter deliberately splits one cMCP GatewayClaim into separate evidence
 records for enforcement/configuration posture and runtime attestation posture.
@@ -29,7 +33,7 @@ CMCP_VERSION = "cmcp-runtime==0.4.0"
 CMCP_RELEASE = "a2e95151356c9ae6c545330c900f3d4af0e447c1"
 CMCP_VERIFIER_ID = "cmcp-verify==0.4.0"
 ADAPTER_ID = "agent-memory-cmcp-external-evidence"
-ADAPTER_VERSION = "0.1.0"
+ADAPTER_VERSION = "0.2.0"
 
 _CRITICAL_ENFORCEMENT_FAILURES = {
     "SIGNATURE_INVALID",
@@ -214,10 +218,6 @@ def build_cmcp_adapter_results(
         "limitations": enforcement_limitations,
     }
 
-    # Attestation freshness is a separate temporal fact from the freshness of
-    # the newly signed GatewayClaim. A claim can be issued now while carrying
-    # older attestation evidence. Do not make that old attestation retroactively
-    # expire the policy/configuration evidence record.
     attestation = {
         **common,
         "issued_at": str(gateway["attestation_generated_at"]),
@@ -231,6 +231,48 @@ def build_cmcp_adapter_results(
     return enforcement, attestation
 
 
+def _rebind_source(
+    records: tuple[dict[str, Any], dict[str, Any]],
+    *,
+    source_version: str,
+    source_release_ref: str,
+    verifier_id: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Bind newly executed peer evidence to the exact peer that produced it.
+
+    Historical/default v0.4.0 constants remain untouched. This helper exists so a
+    qualification run cannot accidentally execute cMCP 0.5.0 while labeling the
+    evidence as 0.4.0, which would be a pleasantly green but useless lie.
+    """
+    if not source_version or not source_release_ref or not verifier_id:
+        raise ValueError("exact cMCP source version, release ref, and verifier id are required")
+    rebound = []
+    for record in records:
+        row = dict(record)
+        row["source_version"] = source_version
+        row["source_release_ref"] = source_release_ref
+        row["verifier_id"] = verifier_id
+        rebound.append(row)
+    return rebound[0], rebound[1]
+
+
+def build_cmcp_adapter_results_for_source(
+    claim: Mapping[str, Any],
+    verifier_result: Mapping[str, Any],
+    *,
+    source_version: str,
+    source_release_ref: str,
+    verifier_id: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Build records bound to an explicitly qualified cMCP peer revision."""
+    return _rebind_source(
+        build_cmcp_adapter_results(claim, verifier_result),
+        source_version=source_version,
+        source_release_ref=source_release_ref,
+        verifier_id=verifier_id,
+    )
+
+
 def normalize_cmcp_claim(
     claim: Mapping[str, Any],
     verifier_result: Mapping[str, Any],
@@ -239,6 +281,41 @@ def normalize_cmcp_claim(
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Normalize cMCP enforcement and attestation evidence under exact session context."""
     enforcement_adapter, attestation_adapter = build_cmcp_adapter_results(claim, verifier_result)
+    context = EvidenceContext(
+        subject_ref=enforcement_adapter["subject_ref"],
+        scope=enforcement_adapter["claim_scope"],
+    )
+    return (
+        normalize_external_evidence(
+            enforcement_adapter,
+            context=context,
+            observed_at=observed_at,
+        ),
+        normalize_external_evidence(
+            attestation_adapter,
+            context=context,
+            observed_at=observed_at,
+        ),
+    )
+
+
+def normalize_cmcp_claim_for_source(
+    claim: Mapping[str, Any],
+    verifier_result: Mapping[str, Any],
+    *,
+    observed_at: str,
+    source_version: str,
+    source_release_ref: str,
+    verifier_id: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Normalize evidence from a non-default cMCP peer under exact source binding."""
+    enforcement_adapter, attestation_adapter = build_cmcp_adapter_results_for_source(
+        claim,
+        verifier_result,
+        source_version=source_version,
+        source_release_ref=source_release_ref,
+        verifier_id=verifier_id,
+    )
     context = EvidenceContext(
         subject_ref=enforcement_adapter["subject_ref"],
         scope=enforcement_adapter["claim_scope"],

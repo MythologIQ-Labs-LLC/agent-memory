@@ -2,7 +2,7 @@
 
 ## Status
 
-Reference V0.1 implementation profile for issue #180, now exercised against materially different real peer families including TRACE, cMCP, and Agent Manifest evidence adapters.
+Reference V0.2 implementation profile for the vendor-neutral external-evidence boundary. The profile is exercised against materially different real peer families including TRACE, cMCP, and Agent Manifest evidence adapters.
 
 ## Purpose
 
@@ -50,11 +50,9 @@ The reference implementation begins at the adapter/verifier-result boundary. It 
 
 That split is intentional. A peer adapter may understand peer vocabulary and wire details. Canonical Agent Memory evidence semantics must not.
 
-## Pinned reference peers
+## Exact supported reference peers
 
 ### TRACE
-
-TRACE is a reference comparator because the repository already has executable TRACE/cMCP evidence work and an exact release pin.
 
 ```text
 peer:                TRACE
@@ -63,13 +61,9 @@ TRACE release ref:   3a561d84d752794b9afa994ce16ed35c24ac0acb
 reference contract:  TRACE action-receipt verification / external action-evidence surface
 ```
 
-This reuses the exact #440/P4.5c pin documented in `docs/programs/runtime-evidence/trace-action-evidence.md`.
-
 TRACE remains a comparator. It is not a required Agent Memory runtime dependency and does not define Agent Memory vocabulary.
 
-### cMCP
-
-The second materially different peer is cMCP `v0.4.0`:
+### cMCP historical boundary
 
 ```text
 peer:                cMCP
@@ -78,14 +72,37 @@ cMCP release commit: a2e95151356c9ae6c545330c900f3d4af0e447c1
 qualified TRACE:     agentrust-trace==0.10.0
 qualified manifest:  agent-manifest==0.12.0
 verifier:            cmcp_verify.verify_trace_claim
-reference contract:  GatewayClaim enforcement/configuration + runtime-attestation evidence
 ```
 
-cMCP differs from the first TRACE-shaped evidence comparator because one signed GatewayClaim can carry multiple independently verifiable evidence layers at once: policy bundle identity, audit-chain evidence, declared enforcement mode, runtime measurement, attestation posture, and optional Agent Manifest identity.
+This exact tuple remains supported because existing evidence was qualified against it. Historical evidence is not rewritten to a newer peer version.
 
-The V0.1 cMCP adapter therefore proves that one peer record may normalize into more than one generic evidence record without collapsing those evidence layers into one global trust boolean.
+### cMCP current qualified boundary
 
-A different TRACE/cMCP version, release ref, or unsupported peer is preserved as source metadata but receives `applicability.status = unsupported` until an implementation explicitly validates that exact version.
+Issue #485 / PR #486 adds an independently executed exact source tuple:
+
+```text
+peer:                cMCP
+runtime package:     cmcp-runtime==0.5.0
+cMCP release commit: d03b9af504535d3d43f192bc6d9eff89b8afd12f
+qualified TRACE:     agentrust-trace==0.10.0
+qualified manifest:  agent-manifest==0.12.0
+verifier:            cmcp-verify==0.5.0
+```
+
+The qualification executes the released package and verifier rather than assuming compatibility from release notes. It exercises regulated-domain crossing evidence, RFC 8785 policy hashing, `cert-pinned` rotation reachability, compliance-domain extensibility, software-only attestation separation, and fail-closed policy mismatch behavior.
+
+The generic source registry inside the normalizer therefore recognizes both exact cMCP tuples. A future cMCP version remains `unsupported` until separately qualified.
+
+### Agent Manifest
+
+```text
+peer:                Agent Manifest
+runtime package:     agent-manifest==0.12.0
+release ref:         9478b56cc349bef01441db4e17e61849c8d69d6f
+reference contract:  deployment identity / checkpoint / delta evidence
+```
+
+Agent Manifest remains external evidence. It does not become memory authority merely because its own validation succeeds.
 
 ## Adapter/verifier input boundary
 
@@ -146,21 +163,9 @@ Reference implementation:
 
 `reference/agentmem_ref/memory/external_evidence.py`
 
-The normalized candidate contains distinct surfaces for:
+The normalized candidate keeps separate surfaces for source provenance, issuer/signer identity, verification state, claim identity and scope, freshness, revocation, current-context applicability, stable evidence digest/references, and explicit interpretation non-claims.
 
-```text
-source provenance
-issuer / signer identity
-verification state
-claim identity and scope
-freshness
-revocation
-current-context applicability
-stable evidence digest / references
-explicit interpretation non-claims
-```
-
-The V0.1 interpretation block is deliberately fixed:
+The interpretation block remains fixed:
 
 ```json
 {
@@ -187,15 +192,13 @@ unavailable
 
 Schema-valid or successfully parsed evidence is never promoted to `verified` by the normalizer.
 
-A failed verification produces an invalid applicability result.
-
-Unknown, not-performed, or unavailable verification produces insufficient evidence rather than optimistic acceptance.
+A failed verification produces an invalid applicability result. Unknown, not-performed, or unavailable verification produces insufficient evidence rather than optimistic acceptance.
 
 ### Claim-scoped verification from cMCP
 
 cMCP's released verifier reports a global status together with `verified_fields`, `unverified_fields`, and a failure reason. Agent Memory does not copy the global label blindly into every evidence layer.
 
-For example, a real software-only cMCP claim can verify:
+A real software-only cMCP claim can verify:
 
 ```text
 schema
@@ -223,7 +226,7 @@ runtime hardware-attestation evidence = unknown/insufficient_evidence
 
 provided the enforcement/configuration evidence is independently bound by the exact released verifier result.
 
-This is not a relaxation. It is stricter evidence typing. The hardware layer is not allowed to inherit verification from the policy/signature layer, and the policy/signature layer is not falsely erased merely because hardware evidence is absent.
+This is stricter evidence typing, not a relaxation. The hardware layer does not inherit verification from policy/signature evidence, and the policy/signature layer is not erased merely because hardware proof is absent.
 
 ## Freshness and revocation
 
@@ -245,15 +248,11 @@ revoked
 unknown
 ```
 
-Expired or revoked evidence is stale even when its historical signature remains valid.
-
-Unknown revocation state remains unknown and prevents V0.1 from reporting the evidence as fully applicable.
+Expired or revoked evidence is stale even when its historical signature remains valid. Unknown revocation state prevents the evidence from being reported as fully applicable.
 
 Historical evidence may remain reconstructable after expiry or revocation. That historical reconstructability is not current authority.
 
 ### Claim freshness is not attestation freshness
-
-The real cMCP comparator exposed a useful temporal distinction.
 
 A GatewayClaim may be newly signed while carrying older attestation evidence. Therefore:
 
@@ -272,13 +271,13 @@ must not retroactively expire a newly issued policy/configuration evidence recor
 
 The cMCP adapter emits the signed enforcement/configuration record with the GatewayClaim `trace.iat`, while the attestation record uses its own generated-at plus validity window.
 
-A stale attestation may therefore become historical/stale while independently verified current claim/signature/policy evidence remains current. This distinction is claim-scoped and does not imply that stale hardware evidence is acceptable as current hardware assurance.
+A stale attestation may therefore become historical/stale while independently verified current claim/signature/policy evidence remains current. This does not make stale hardware evidence acceptable as current hardware assurance.
 
 ## Applicability
 
 The normalizer compares evidence binding against the current Agent Memory context supplied by the consumer.
 
-V0.1 supports:
+Supported applicability states are:
 
 ```text
 applicable
@@ -299,7 +298,7 @@ resource_ref
 action_ref
 ```
 
-When the current context requires a binding and the evidence omits it, V0.1 reports a mismatch rather than assuming equivalence.
+When the current context requires a binding and the evidence omits it, the normalizer reports a mismatch rather than assuming equivalence.
 
 Examples:
 
@@ -319,16 +318,7 @@ exact/current/verified/not-revoked      -> applicable
 
 ## Claim-layer separation
 
-The normalized claim may preserve independently supplied references or postures for:
-
-```text
-decision
-enforcement
-execution
-runtime / configuration
-identity / attestation
-delegation
-```
+The normalized claim may preserve independently supplied references or postures for decision, enforcement, execution, runtime/configuration, identity/attestation, and delegation.
 
 The normalizer does not manufacture missing layers.
 
@@ -336,7 +326,7 @@ For example, a valid decision record with no enforcement or execution claim rema
 
 ### cMCP enforcement posture is not execution evidence
 
-The real cMCP adapter preserves the peer's three declared modes:
+The cMCP adapter preserves the peer's declared modes:
 
 ```text
 enforce
@@ -344,26 +334,26 @@ advisory
 silent
 ```
 
-Those modes describe the gateway's configured/declared enforcement posture. Even `enforce` does not establish that a particular Agent Memory action executed or was prevented.
+Those modes describe configured/declared gateway enforcement posture. Even `enforce` does not establish that a particular Agent Memory action executed or was prevented.
 
 The cMCP adapter therefore does not populate `execution_posture` merely because the GatewayClaim says `enforce`.
 
+### Signed compliance metadata is not Agent Memory access authority
+
+The 0.5 qualification deliberately includes regulated compliance-domain and cross-boundary detail in the signed peer claim. The normalizer does not import those details as Agent Memory access policy, lifecycle authority, or PAMA permission.
+
+```text
+signed peer compliance metadata
+!= Agent Memory access authority
+```
+
 ## Privacy and minimization
 
-V0.1 defaults to stable references and digests.
+The normalized output defaults to stable references and digests.
 
-The normalized output does not require:
+It does not require raw prompts, raw memory content, full tool payloads, complete peer attestation bundles, complete peer signatures, or peer-only authority vocabulary.
 
-- raw prompts;
-- raw memory content;
-- full tool payloads;
-- complete peer attestation bundles;
-- peer signatures when a stable evidence digest/reference is sufficient for custody or later verification;
-- peer-only authority vocabulary.
-
-The cMCP real comparator specifically verifies that raw attestation evidence, quote signatures, certificate chains, and complete tool transcript entries do not escape into normalized records. Stable claim, audit-root/tip, policy-bundle, tool-catalog, and optional Agent Manifest references are sufficient for the bounded evidence candidate.
-
-The source record remains independently referencable through `record_ref` and `evidence_digest` when policy permits retention or retrieval.
+The cMCP comparators verify that raw attestation evidence, quote signatures, certificate chains, tool transcript entries, and regulated-domain detail do not escape into normalized records. Stable claim, audit-root/tip, policy-bundle, tool-catalog, and optional Agent Manifest references are sufficient for the bounded evidence candidate.
 
 ## Deployment profiles
 
@@ -377,7 +367,7 @@ The normalizer has no network requirement. A local caller may supply static or p
 
 ### E: enterprise
 
-The verifier identity and verification method are explicit, allowing external attestation or identity services to supply verifier results without becoming mandatory core dependencies.
+Verifier identity and verification method remain explicit, allowing external attestation or identity services to supply verifier results without becoming mandatory core dependencies.
 
 ### H: high assurance
 
@@ -385,56 +375,40 @@ Peer/release version, verifier identity, freshness, revocation, exact context bi
 
 ### X: cross-organization
 
-Cross-organization delegation semantics are not a V0.1 completion target. A `delegation_ref` may be preserved as evidence, but it does not create delegated Agent Memory authority.
+Cross-organization delegation semantics are not a V0.2 completion target. A `delegation_ref` may be preserved as evidence, but it does not create delegated Agent Memory authority.
 
 ## Required negative paths
 
-The generic fixture matrix covers:
+The generic fixture matrix covers wrong scope, cross-tenant mismatch, wrong action binding, expired evidence, revoked evidence, unknown verification, verifier unavailable, failed verification, unknown revocation state, unsupported source/version, unsupported peer claim type, decision evidence without enforcement/execution claims, peer-only fields attempting to inject PAMA/lifecycle/trust-score semantics, malformed/unparsed evidence, and missing required current-context binding.
 
-- verified evidence with wrong scope;
-- cross-tenant mismatch;
-- wrong action binding;
-- expired evidence;
-- revoked evidence;
-- unknown verification;
-- verifier unavailable;
-- failed verification;
-- unknown revocation state;
-- unsupported source/version;
-- unsupported peer claim type;
-- decision evidence without enforcement/execution claims;
-- peer-only fields attempting to inject PAMA, lifecycle, or trust-score semantics;
-- malformed/unparsed peer evidence;
-- missing required current-context binding.
-
-The real cMCP comparator adds:
+The cMCP evidence lanes add:
 
 - `enforce`, `advisory`, and `silent` posture preservation;
 - software-only partial peer verification without hardware overclaim;
 - stale attestation scoped to the attestation record;
 - wrong approved policy hash producing invalid enforcement evidence;
 - tampered signature producing invalid enforcement evidence;
-- raw attestation/certificate material excluded from normalized evidence.
+- raw attestation/certificate material excluded from normalized evidence;
+- exact 0.4 historical source retention;
+- exact 0.5 source registration without historical relabeling;
+- regulated-domain crossing detail not promoted to Agent Memory access authority;
+- `cert-pinned` reachability and compliance-domain extensibility under the exact 0.5 peer;
+- RFC 8785 policy-bundle hashing under the exact 0.5 peer.
 
-Generic fixture:
-
-`fixtures/external-evidence-normalization-matrix.json`
-
-Generic tests:
-
-`reference/tests/test_external_evidence.py`
-
-cMCP adapter tests and real comparator:
+Relevant surfaces:
 
 ```text
+fixtures/external-evidence-normalization-matrix.json
+reference/tests/test_external_evidence.py
 reference/tests/test_cmcp_external_evidence.py
 reference/run_cmcp_external_evidence_comparator.py
+reference/run_cmcp_050_qualification.py
 .github/workflows/cmcp-external-evidence.yml
 ```
 
-## What the V0.1 evidence proves
+## What V0.2 evidence proves
 
-Within the bounded reference implementation, fixtures, and real peer comparators, V0.1 demonstrates that:
+Within the bounded reference implementation, fixtures, and real peer comparators, V0.2 demonstrates that:
 
 - external trust/attestation evidence enters through an explicit vendor-neutral normalization boundary;
 - exact peer version and release provenance remain reconstructable;
@@ -444,32 +418,19 @@ Within the bounded reference implementation, fixtures, and real peer comparators
 - decision evidence is not upgraded into enforcement/execution evidence;
 - runtime/configuration attestation does not establish semantic correctness;
 - one rich peer record can produce multiple claim-scoped normalized evidence records without importing peer ontology into the generic schema;
-- global peer verification status does not have to erase field-level evidence distinctions;
+- global peer verification status does not erase field-level evidence distinctions;
 - software-only verification cannot become hardware attestation by association;
 - stale attestation cannot silently become current hardware evidence;
 - enforcement posture cannot manufacture execution evidence;
 - raw peer payloads are unnecessary for the normalized candidate;
 - unknown peer fields cannot widen PAMA or mutate canonical lifecycle state;
-- removing the peer adapter leaves the normalized evidence contract understandable as generic evidence metadata.
+- exact supported peer tuples are additive and historical evidence can remain version-correct across peer upgrades.
 
 The released comparators are runtime evidence for bounded adapter/verifier paths. They are not production deployment evidence and do not prove universal peer assurance.
 
-## What V0.1 does not prove
+## What V0.2 does not prove
 
-V0.1 does not prove:
-
-- that TRACE, cMCP, Agent Manifest, or another peer is universally trustworthy;
-- production key discovery, rotation, revocation, or trust-anchor policy;
-- semantic correctness of an attested claim;
-- Agent Memory mutation authorization;
-- downstream enforcement merely because an enforcement posture exists;
-- physical execution merely because an attestation exists;
-- correction, deletion, forgetting, or other lifecycle obligation satisfaction;
-- cross-organization delegation authority;
-- compatibility with future peer versions;
-- real TPM/SNP/TDX hardware assurance merely because a software-only comparator passed;
-- production cMCP deployment;
-- a need for a TRACE or cMCP core-schema change.
+V0.2 does not prove that TRACE, cMCP, Agent Manifest, or another peer is universally trustworthy; production key discovery, rotation, revocation, or trust-anchor policy; semantic correctness of an attested claim; Agent Memory mutation authorization; downstream enforcement merely because an enforcement posture exists; physical execution merely because an attestation exists; lifecycle obligation satisfaction; cross-organization delegation authority; compatibility with future peer versions; real hardware assurance merely because a software-only comparator passed; or production cMCP deployment.
 
 ## Rollback / disable behavior
 
@@ -481,8 +442,6 @@ No canonical memory object requires peer-only vocabulary to remain interpretable
 
 ## Follow-on gate
 
-Additional peers should be added only when they test a materially different evidence responsibility, not merely to accumulate protocol logos. Agent Manifest already has a separate exact-version identity/configuration/attestation profile and #440 re-qualifies it with TRACE as one coordinated pair.
-
-Cedarling research is separately evaluating whether its JWT/multi-issuer verification can become a useful identity-evidence source while its policy decision continues to use the already-proven external-policy seam. That work must preserve the same rule: verified identity is evidence, not Agent Memory authority.
+Additional peers or versions should be added only when they test a materially different evidence responsibility or current compatibility question, not merely to accumulate protocol logos.
 
 Speculative breadth is not evidence.
