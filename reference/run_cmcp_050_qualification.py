@@ -90,7 +90,7 @@ def _claim(mode: str = "enforce") -> tuple[dict, SigningKey]:
             tool_calls_denied=0,
             tool_calls_faulted=0,
             tools_invoked=["records.read", "network.send"],
-            session_max_sensitivity="restricted",
+            session_max_sensitivity="hipaa_phi",
             call_graph_summary=CallGraphSummary(
                 compliance_domains_touched=["hipaa_phi", "external"],
                 cross_boundary_events=[
@@ -149,7 +149,7 @@ def _catalog_probe() -> dict:
         "definition_hash": "sha256:" + hashlib.sha256(canonical_definition).hexdigest(),
         "compliance_domain": "hipaa_phi",
         "requires_baa": True,
-        "sensitivity_level": "restricted",
+        "sensitivity_level": "hipaa_phi",
         "added_at": "2026-09-24T00:00:00Z",
         "approved_by": "agent-memory-qualification",
     }
