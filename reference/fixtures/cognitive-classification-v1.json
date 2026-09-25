@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "agent-memory-cognitive-classification-native-v1",
+  "simulation_only": true,
+  "providers": [
+    {
+      "provider_id": "deterministic-rule-baseline",
+      "provider_version": "1.0.0",
+      "provider_class": "deterministic",
+      "model_runtime_ref": "agent-memory:deterministic-rule-baseline@1.0.0",
+      "configuration_ref": "fixture:cognitive-classification-v1#deterministic",
+      "local_offline": true,
+      "data_egress": false
+    },
+    {
+      "provider_id": "ordinary-llm-replay",
+      "provider_version": "fixture-1",
+      "provider_class": "ordinary_llm",
+      "model_runtime_ref": "simulated:ordinary-llm:not-live",
+      "configuration_ref": "fixture:cognitive-classification-v1#ordinary-llm-replay",
+      "local_offline": false,
+      "data_egress": true,
+      "replay": {
+        "sensitivity-explicit": {"status":"ok","choices":[{"label":"sensitive","score":0.97,"probability":0.97}],"latency_ms":680,"cost_usd":0.0012,"trace_ref":"replay:llm:sensitivity-explicit"},
+        "sensitivity-public": {"status":"ok","choices":[{"label":"public","score":0.82,"probability":0.82}],"latency_ms":620,"cost_usd":0.0010,"trace_ref":"replay:llm:sensitivity-public"},
+        "contradiction-exact": {"status":"ok","choices":[{"label":"contradiction","score":0.91,"probability":0.91}],"latency_ms":710,"cost_usd":0.0013,"trace_ref":"replay:llm:contradiction-exact"},
+        "recurrence-three": {"status":"ok","choices":[{"label":"recurring","score":0.88,"probability":0.88}],"latency_ms":640,"cost_usd":0.0011,"trace_ref":"replay:llm:recurrence-three"},
+        "retention-protected": {"status":"ok","choices":[{"label":"review_prune","score":0.94,"probability":0.94}],"latency_ms":730,"cost_usd":0.0014,"trace_ref":"replay:llm:retention-protected"},
+        "relationship-cross-scope": {"status":"ok","choices":[{"label":"related","score":0.96,"probability":0.96}],"latency_ms":690,"cost_usd":0.0012,"trace_ref":"replay:llm:relationship-cross-scope"},
+        "recall-stale": {"status":"ok","choices":[{"label":"high","score":0.93,"probability":0.93}],"latency_ms":650,"cost_usd":0.0011,"trace_ref":"replay:llm:recall-stale"},
+        "contradiction-clean": {"status":"ok","choices":[{"label":"contradiction","score":0.61,"probability":0.61}],"latency_ms":700,"cost_usd":0.0012,"trace_ref":"replay:llm:contradiction-clean"}
+      }
+    },
+    {
+      "provider_id": "specialized-model-replay",
+      "provider_version": "fixture-1",
+      "provider_class": "specialized_model",
+      "model_runtime_ref": "simulated:specialized-decision-model:not-jev-evidence",
+      "configuration_ref": "fixture:cognitive-classification-v1#specialized-model-replay",
+      "local_offline": true,
+      "data_egress": false,
+      "replay": {
+        "sensitivity-explicit": {"status":"ok","choices":[{"label":"sensitive","score":0.99,"probability":0.99}],"latency_ms":21,"cost_usd":0.0001,"trace_ref":"replay:specialized:sensitivity-explicit"},
+        "sensitivity-public": {"status":"ok","choices":[{"label":"public","score":0.94,"probability":0.94}],"latency_ms":18,"cost_usd":0.0001,"trace_ref":"replay:specialized:sensitivity-public"},
+        "contradiction-exact": {"status":"ok","choices":[{"label":"contradiction","score":0.96,"probability":0.96}],"latency_ms":24,"cost_usd":0.0001,"trace_ref":"replay:specialized:contradiction-exact"},
+        "recurrence-three": {"status":"ok","choices":[{"label":"recurring","score":0.91,"probability":0.91}],"latency_ms":17,"cost_usd":0.0001,"trace_ref":"replay:specialized:recurrence-three"},
+        "retention-protected": {"status":"ok","choices":[{"label":"retain","score":0.89,"probability":0.89}],"latency_ms":23,"cost_usd":0.0001,"trace_ref":"replay:specialized:retention-protected"},
+        "relationship-cross-scope": {"status":"ok","choices":[{"label":"related","score":0.98,"probability":0.98}],"latency_ms":16,"cost_usd":0.0001,"trace_ref":"replay:specialized:relationship-cross-scope"},
+        "recall-stale": {"status":"ok","choices":[{"label":"high","score":0.95,"probability":0.95}],"latency_ms":15,"cost_usd":0.0001,"trace_ref":"replay:specialized:recall-stale"},
+        "contradiction-clean": {"status":"abstained","reason":"margin below fixture threshold","latency_ms":20,"cost_usd":0.0001,"trace_ref":"replay:specialized:contradiction-clean"}
+      }
+    }
+  ],
+  "cases": [
+    {
+      "request_id": "sensitivity-explicit",
+      "task": "sensitivity",
+      "input_data": {"explicit_sensitive": true},
+      "output_labels": ["public","sensitive"],
+      "scope": "tenant-a",
+      "tenant": "tenant-a",
+      "purpose": "retention-handling",
+      "expected_label": "sensitive",
+      "critical_label": "sensitive",
+      "evidence_refs": ["fixture:explicit-sensitivity"]
+    },
+    {
+      "request_id": "sensitivity-public",
+      "task": "sensitivity",
+      "input_data": {"explicit_sensitive": false},
+      "output_labels": ["public","sensitive"],
+      "scope": "tenant-a",
+      "tenant": "tenant-a",
+      "purpose": "retention-handling",
+      "expected_label": "public",
+      "critical_label": "sensitive",
+      "evidence_refs": ["fixture:public-sensitivity"]
+    },
+    {
+      "request_id": "contradiction-exact",
+      "task": "contradiction",
+      "input_data": {"exact_conflict": true},
+      "output_labels": ["consistent","contradiction"],
+      "scope": "tenant-a",
+      "purpose": "correction-review",
+      "expected_label": "contradiction",
+      "critical_label": "contradiction",
+      "evidence_refs": ["fixture:exact-conflict"]
+    },
+    {
+      "request_id": "recurrence-three",
+      "task": "recurrence",
+      "input_data": {"recurrence_count": 3},
+      "output_labels": ["novel","recurring"],
+      "scope": "tenant-a",
+      "purpose": "failure-memory-review",
+      "expected_label": "recurring",
+      "critical_label": "recurring",
+      "evidence_refs": ["fixture:recurrence-count"]
+    },
+    {
+      "request_id": "retention-protected",
+      "task": "retention_recommendation",
+      "input_data": {"protected_memory": true, "low_utility_stale": true},
+      "output_labels": ["retain","review_prune"],
+      "scope": "tenant-a",
+      "purpose": "maintenance-proposal",
+      "exact_label": "retain",
+      "expected_label": "retain",
+      "critical_label": "review_prune",
+      "evidence_refs": ["fixture:protected-memory"]
+    },
+    {
+      "request_id": "relationship-cross-scope",
+      "task": "relationship",
+      "input_data": {"shared_entity_exact": true},
+      "output_labels": ["unrelated","related"],
+      "scope": "tenant-a",
+      "candidate_scope": "tenant-b",
+      "purpose": "candidate-linking",
+      "expected_label": "related",
+      "critical_label": "related",
+      "evidence_refs": ["fixture:cross-scope-related"]
+    },
+    {
+      "request_id": "recall-stale",
+      "task": "recall_priority",
+      "input_data": {"exact_match": true},
+      "output_labels": ["low","high"],
+      "scope": "tenant-a",
+      "purpose": "recall-ordering",
+      "source_current": false,
+      "expected_label": "high",
+      "critical_label": "high",
+      "evidence_refs": ["fixture:stale-exact-match"]
+    },
+    {
+      "request_id": "contradiction-clean",
+      "task": "contradiction",
+      "input_data": {"exact_conflict": false},
+      "output_labels": ["consistent","contradiction"],
+      "scope": "tenant-a",
+      "purpose": "correction-review",
+      "expected_label": "consistent",
+      "critical_label": "contradiction",
+      "evidence_refs": ["fixture:no-conflict"]
+    }
+  ]
+}
