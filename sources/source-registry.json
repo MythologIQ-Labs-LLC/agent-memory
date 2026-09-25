@@ -340,6 +340,48 @@
       "provenance_note": "Rights reconciled against exact qualified TRACE source 3a561d84d752794b9afa994ce16ed35c24ac0acb and package agentrust-trace==0.10.0 under issue #487. Mixed file-class licensing is intentionally not flattened into one SPDX identifier.",
       "limitations": "Before any future direct reuse, classify the exact material by file class and preserve the applicable CSL 1.0, Apache-2.0, or CC BY 4.0 obligations. Linking, comparison, verifier execution, and independent synthesis do not transfer TRACE authority into Agent Memory.",
       "verified_at": "2026-09-25"
+    },
+    {
+      "source_id": "longmemeval-benchmark",
+      "title": "LongMemEval benchmark code and cleaned dataset",
+      "source_type": "external_benchmark",
+      "public_url": "https://github.com/xiaowu0162/LongMemEval",
+      "repository": "xiaowu0162/LongMemEval",
+      "access": "public",
+      "copyright_owner_or_originator": "Di Wu and LongMemEval contributors",
+      "license_spdx": "MIT",
+      "license_url": "https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/LICENSE",
+      "rights_status": "verified_open_license",
+      "reuse_mode": "independent_synthesis",
+      "reuse_basis": "Repository code at 9e0b455f4ef0e2ab8f2e582289761153549043fc is MIT. The cleaned dataset (huggingface.co/datasets/xiaowu0162/longmemeval-cleaned) independently declares license: mit on its dataset card. Agent Memory re-expresses the upstream retrieval corpus/label/metric semantics in reference/run_longmemeval.py and verifies parity differentially against the pinned source; no dataset content is vendored.",
+      "material_reused": "Retrieval evaluation semantics (process_item_flat_index, evaluate_retrieval, evaluate_retrieval_turn2session, abstention/no-target exclusion) re-expressed with attribution; no upstream data files.",
+      "attribution_required": true,
+      "notice_required": false,
+      "modification_notice_required": false,
+      "provenance_note": "Qualified under #499/#516; profile merged in #521.",
+      "limitations": "External runs bind the exact local dataset SHA-256. Upstream QA evaluation is model-judged and is not part of the retrieval profile.",
+      "verified_at": "2026-09-25"
+    },
+    {
+      "source_id": "agentmembench-memdialogue",
+      "title": "AgentMemBench harness and MemDialogue v2 dataset",
+      "source_type": "external_benchmark",
+      "public_url": "https://github.com/mazaiying/AgentMemBench",
+      "repository": "mazaiying/AgentMemBench",
+      "access": "public",
+      "copyright_owner_or_originator": "AgentMemBench authors; MemDialogue derived from WildChat-4.8M by the Allen Institute for AI",
+      "license_spdx": null,
+      "license_url": "https://github.com/mazaiying/AgentMemBench/blob/186c9a54edd47aae42d8b6990520f8e902b60303/DATA_USE.md",
+      "rights_status": "verified_open_license",
+      "reuse_mode": "independent_synthesis",
+      "reuse_basis": "At 186c9a54edd47aae42d8b6990520f8e902b60303 the code is MIT (LICENSE) and MemDialogue v2 is a derived database distributed under ODC-By 1.0 (DATA_USE.md, DATASET_CARD.md); the MIT license does not replace the data license. Agent Memory re-expresses the deterministic workload phases of agentmembench/evaluation/unified_benchmark.py (identical workload strings and metric formulas, parity-checked against upstream) in reference/run_agentmembench.py. MemDialogue records are not vendored; runs bind data/memdialogue_v2.jsonl SHA-256 33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6.",
+      "material_reused": "Workload templates and phase metric formulas from unified_benchmark.py (MIT) with attribution; no MemDialogue records.",
+      "attribution_required": true,
+      "notice_required": true,
+      "modification_notice_required": false,
+      "provenance_note": "Qualified under #499/#517. Required ODC-By attribution: 'MemDialogue is derived from WildChat-4.8M by the Allen Institute for AI.' WildChat-4.8M source revision c827c6df8fcf008219ffaffa4d1dd77491099367.",
+      "limitations": "Mixed licensing (MIT code, ODC-By 1.0 data) is intentionally not flattened into one SPDX identifier. Any future redistribution of MemDialogue records must carry the ODC-By attribution. Do not attempt to identify users or infer sensitive data.",
+      "verified_at": "2026-09-25"
     }
   ]
 }

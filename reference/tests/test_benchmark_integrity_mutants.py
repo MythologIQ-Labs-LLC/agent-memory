@@ -96,10 +96,33 @@ class LongMemEvalIntegrityProbeTests(unittest.TestCase):
         self.assertEqual(self.profile["known_insensitivities"], ["irrelevant_at_rank_one"])
         self.assertTrue(self.profile["known_insensitivities_confirmed"])
 
-    def test_unavailable_profiles_are_explicit(self) -> None:
-        profile = mutants.run_mutation_probes()["profiles"]["agentmembench_memdialogue"]
-        self.assertEqual(profile["status"], "profile_not_available")
-        self.assertIsNone(profile["all_detected"])
+
+
+class AgentMemBenchIntegrityProbeTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.profile = mutants.run_mutation_probes()["profiles"]["agentmembench_memdialogue"]
+
+    def test_clean_baseline(self) -> None:
+        baseline = self.profile["baseline"]
+        self.assertEqual(baseline["new_fact_rate"], 1.0)
+        self.assertEqual(baseline["staleness_rate"], 0.0)
+        self.assertEqual(baseline["cross_user_leak_rate"], 0.0)
+        self.assertEqual(baseline["audited_deletion_rate"], 1.0)
+        self.assertEqual(baseline["scale_recall_at_3"], 1.0)
+
+    def test_every_backend_misbehavior_is_detected(self) -> None:
+        names = {probe["name"] for probe in self.profile["probes"] if probe["detected"]}
+        self.assertEqual(
+            names,
+            {"stale_over_current", "cross_user_leak", "deletion_ignored", "write_dropped", "identity_mapping_corruption"},
+        )
+        self.assertTrue(self.profile["all_detected"])
+        self.assertIn("retrieval", self.profile["not_probed"])
+
+    def test_every_profile_is_exercised(self) -> None:
+        profiles = mutants.run_mutation_probes()["profiles"]
+        self.assertEqual(set(profiles), {"swe_contextbench", "longmemeval", "agentmembench_memdialogue"})
+        self.assertTrue(all(profile["all_detected"] for profile in profiles.values()))
 
 
 if __name__ == "__main__":

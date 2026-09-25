@@ -68,9 +68,19 @@ The baseline applies an ideal gold-only ranking (most recent gold first, nothing
 
 Known upstream evaluator insensitivity, recorded rather than hidden: upstream `eval_utils.dcg` weights ranks 1 and 2 equally (`rel₁ + rel₂/log₂2 + …`). Displacing a single gold item from rank 1 to rank 2 therefore leaves `ndcg_any` unchanged. The `irrelevant_at_rank_one` probe asserts that this non-detection still holds (`known_insensitivities_confirmed`). For that damage, `recall_all@1` is the sensitive signal. The profile keeps upstream parity and does not silently "fix" upstream arithmetic.
 
-### AgentMemBench / MemDialogue
+### AgentMemBench / MemDialogue (`run_agentmembench` phase functions)
 
-`profile_not_available` until the #517 profile exists. The report records this explicitly rather than omitting the profile.
+AgentMemBench's deterministic phases score backend behavior, so these probes wrap an ideal per-user reference store (newest matching memory first) in controlled misbehavior and require the re-expressed upstream phase metrics to notice:
+
+| Probe | Required detection |
+|---|---|
+| stale over current | conflict `staleness_rate` rises and `new_fact_rate` falls |
+| cross-user leak | isolation `cross_user_leak_rate` rises |
+| deletion ignored | `audited_deletion_rate` falls |
+| write dropped | scale write success and `recall_at_3` fall |
+| identity mapping corruption | scale `recall_at_3` falls |
+
+Retrieval is not probed, because `exact_source_recall` is a direct string-membership check and the upstream LLM-judged metric is not run. Concurrency is not probed either, because it measures errors and throughput rather than a scored quality outcome.
 
 The process exits non-zero if any expected detection fails in any exercised profile.
 

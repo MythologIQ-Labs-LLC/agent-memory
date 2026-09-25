@@ -1,0 +1,295 @@
+{
+  "backends": {
+    "no_memory": {
+      "authority_effect": "none",
+      "governance": {},
+      "phase_errors": {},
+      "phase_wall_seconds": {
+        "concurrency": 0.021,
+        "conflict": 0.001,
+        "deletion": 0.0,
+        "isolation": 0.0,
+        "retrieval": 0.059,
+        "scale": 0.059
+      },
+      "phases": {
+        "concurrency": {
+          "1": {
+            "error_count": 0,
+            "error_examples": [],
+            "latency": {
+              "mean_ms": 0.0006798599940793792,
+              "n": 200,
+              "p50_ms": 0.0005344999181033927,
+              "p95_ms": 0.0009297499559579594,
+              "p99_ms": 0.005058089811882374
+            },
+            "materialization_rate": 0.0,
+            "operation_success_rate": 1.0,
+            "records": 200,
+            "throughput_ops_s": 43210.11393164971,
+            "workers": 1
+          },
+          "16": {
+            "error_count": 0,
+            "error_examples": [],
+            "latency": {
+              "mean_ms": 0.0011272449887655966,
+              "n": 200,
+              "p50_ms": 0.0006880000000819564,
+              "p95_ms": 0.002800699871841065,
+              "p99_ms": 0.0049575298862691835
+            },
+            "materialization_rate": 0.0,
+            "operation_success_rate": 1.0,
+            "records": 200,
+            "throughput_ops_s": 30078.38125371394,
+            "workers": 16
+          },
+          "4": {
+            "error_count": 0,
+            "error_examples": [],
+            "latency": {
+              "mean_ms": 0.0006346849897909124,
+              "n": 200,
+              "p50_ms": 0.0005189999683352653,
+              "p95_ms": 0.0009603498597243744,
+              "p99_ms": 0.0023173700265033226
+            },
+            "materialization_rate": 0.0,
+            "operation_success_rate": 1.0,
+            "records": 200,
+            "throughput_ops_s": 39118.09047290614,
+            "workers": 4
+          },
+          "8": {
+            "error_count": 0,
+            "error_examples": [],
+            "latency": {
+              "mean_ms": 0.0007783149885653984,
+              "n": 200,
+              "p50_ms": 0.0005960000635241158,
+              "p95_ms": 0.0016021999272197726,
+              "p99_ms": 0.003341390058722014
+            },
+            "materialization_rate": 0.0,
+            "operation_success_rate": 1.0,
+            "records": 200,
+            "throughput_ops_s": 42767.57533588908,
+            "workers": 8
+          }
+        },
+        "conflict": {
+          "dual_version_rate": 0.0,
+          "new_fact_rate": 0.0,
+          "pairs": 250,
+          "read_latency": {
+            "mean_ms": 0.00023056800182530424,
+            "n": 250,
+            "p50_ms": 0.00022200015337148216,
+            "p95_ms": 0.000286050055819942,
+            "p99_ms": 0.0005158700059837426
+          },
+          "staleness_rate": 0.0,
+          "write_latency": {
+            "mean_ms": 0.0002045500013991841,
+            "n": 500,
+            "p50_ms": 0.0001939999947353499,
+            "p95_ms": 0.0002950500629594899,
+            "p99_ms": 0.0006560401106980862
+          }
+        },
+        "deletion": {
+          "audited_deletion_rate": null,
+          "post_delete_absence_rate": 1.0,
+          "pre_delete_visibility_rate": 0.0,
+          "records": 200
+        },
+        "isolation": {
+          "cross_user_leak_rate": 0.0,
+          "cross_user_queries": 100,
+          "facts_per_user": 5,
+          "users": 100
+        },
+        "retrieval": {
+          "exact_source_recall_at_k": 0.0,
+          "exact_source_recall_at_k_95ci": [
+            0.0,
+            0.0
+          ],
+          "exact_source_recall_by_event_type": {
+            "PERSONAL_FACT": 0.0,
+            "TASK_REQUEST": 0.0
+          },
+          "group_size": 10,
+          "metric_note": "exact_source_hit = the record's own memory text is among the top-k results for its query within its user group; profile-local and not the upstream LLM-judged recall",
+          "read_latency": {
+            "mean_ms": 0.0005291119991852611,
+            "n": 1000,
+            "p50_ms": 0.0004309999894758221,
+            "p95_ms": 0.0006842000402684787,
+            "p99_ms": 0.002040300025782926
+          },
+          "records": 1000,
+          "top_k": 5,
+          "upstream_llm_judged_recall_at_k": "not_run",
+          "write_latency": {
+            "mean_ms": 0.0005382639985782589,
+            "n": 1000,
+            "p50_ms": 0.0005099999498270336,
+            "p95_ms": 0.0007314000072256018,
+            "p99_ms": 0.0009641800352255812
+          },
+          "write_success_rate": 0.0
+        },
+        "scale": {
+          "100": {
+            "read_latency": {
+              "mean_ms": 0.00030818998766335426,
+              "n": 100,
+              "p50_ms": 0.00028599993129319046,
+              "p95_ms": 0.0003533999120008957,
+              "p99_ms": 0.0008472699732919896
+            },
+            "recall_at_3": 0.0,
+            "recall_at_3_95ci": [
+              0.0,
+              0.0
+            ],
+            "stored_records": 100,
+            "write_latency": {
+              "mean_ms": 0.0005365199945117638,
+              "n": 100,
+              "p50_ms": 0.00031650006349082105,
+              "p95_ms": 0.0006798499725846334,
+              "p99_ms": 0.0020259598159100985
+            },
+            "write_success_rate": 0.0
+          },
+          "1000": {
+            "read_latency": {
+              "mean_ms": 0.0003025950104529329,
+              "n": 200,
+              "p50_ms": 0.00029300008463906124,
+              "p95_ms": 0.0003290999416094567,
+              "p99_ms": 0.000507860095240175
+            },
+            "recall_at_3": 0.0,
+            "recall_at_3_95ci": [
+              0.0,
+              0.0
+            ],
+            "stored_records": 1000,
+            "write_latency": {
+              "mean_ms": 0.0003135969966479024,
+              "n": 1000,
+              "p50_ms": 0.00030499995773425326,
+              "p95_ms": 0.00036105003573538847,
+              "p99_ms": 0.0004480600364331621
+            },
+            "write_success_rate": 0.0
+          }
+        }
+      },
+      "wall_seconds": 0.142
+    }
+  },
+  "claim_boundary": {
+    "aggregate_memory_health_score": "not_defined",
+    "answer_generation_quality_measured": false,
+    "benchmark_score_is_authority": false
+  },
+  "comparability": {
+    "latency_note": "local in-process latency; not comparable to upstream service-backed latency",
+    "reference_systems": "upstream Mem0/Graphiti/LangMem/Letta/Naive RAG results are not reproduced here",
+    "status": "bounded-operational-profile",
+    "upstream_llm_judged_retrieval": "not_run"
+  },
+  "dimensions": {
+    "concurrency": "phases.concurrency",
+    "deletion": "phases.deletion.audited_deletion_rate",
+    "governance": "governance (Agent Memory refusal/outcome tallies per phase)",
+    "isolation": "phases.isolation.cross_user_leak_rate",
+    "llm_portability": "not_exercised: no LLM backend is part of this profile",
+    "retrieval_quality": "phases.retrieval.exact_source_recall_at_k (deterministic, profile-local)",
+    "scale": "phases.scale",
+    "temporal_consistency": "phases.conflict",
+    "write_efficiency": "phases.retrieval.write_latency / write_success_rate"
+  },
+  "execution": {
+    "agent_memory_package_version": "0.2.0",
+    "agent_memory_revision": "03197cd5c866b890b1f9b4505eee3b6f93bcbe2b",
+    "agent_memory_worktree_dirty": false,
+    "backends": [
+      "no_memory"
+    ],
+    "finished_at": "2026-09-25T18:30:07.871162+00:00",
+    "implementation": "CPython",
+    "numpy": "2.4.6",
+    "phases": [
+      "retrieval",
+      "conflict",
+      "isolation",
+      "deletion",
+      "concurrency",
+      "scale"
+    ],
+    "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "python": "3.11.15",
+    "report_note": "per-record retrieval details omitted; regenerate deterministically with the recorded revision, input SHA-256, and parameters",
+    "resource_consumption": {
+      "peak_rss_mb_process": 52.7
+    },
+    "started_at": "2026-09-25T18:30:07.601159+00:00",
+    "wall_seconds": 0.27
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "matches_upstream_release": true,
+    "path_name": "memdialogue_v2.jsonl",
+    "selection": {
+      "method": "upstream load_records: source-unique, event-type-stratified, numpy default_rng(seed)",
+      "records": 1000,
+      "seed": 2027,
+      "source_ids_sha256": "db563c1fc4251384577f698eda1efbad1e18ba119f6a9ed847c42e0d56261afa"
+    },
+    "sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "size_bytes": 7663311
+  },
+  "parameters": {
+    "concurrency_records": 200,
+    "conflict_pairs": 250,
+    "deletion_records": 200,
+    "group_size": 10,
+    "isolation_facts": 5,
+    "isolation_users": 100,
+    "retrieval_records": 1000,
+    "scale_read_queries": 200,
+    "scales": [
+      100,
+      1000
+    ],
+    "seed": 2027,
+    "top_k": 5,
+    "warmup_writes": 5,
+    "workers": [
+      1,
+      4,
+      8,
+      16
+    ]
+  },
+  "profile_id": "agent-memory-agentmembench-memdialogue-operational-v1",
+  "schema_version": "1.0.0",
+  "upstream": {
+    "code_license": "MIT",
+    "data_attribution": "MemDialogue is derived from WildChat-4.8M by the Allen Institute for AI.",
+    "data_license": "ODC-By-1.0",
+    "dataset": "data/memdialogue_v2.jsonl",
+    "dataset_sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "harness": "agentmembench/evaluation/unified_benchmark.py",
+    "harness_sha256": "d0d407129aa506f6eacbf6df19a26c1a9ddd000aa0bfb931cb4e4ae984e594df",
+    "repository": "mazaiying/AgentMemBench",
+    "revision": "186c9a54edd47aae42d8b6990520f8e902b60303"
+  }
+}
