@@ -7,7 +7,7 @@ Status: **active, incomplete exhaustive closeout**
 
 ## Purpose
 
-Wave 2 is the current harvest summary after the native failure-memory slice, the CodeGenome and COREFORGE dispositions, the Agent Manifest plus TRACE exact-version qualification, the first UOR-R4-derived evaluation improvement, the cMCP 0.5.0 requalification, and the TRACE mixed-license source-rights reconciliation.
+Wave 2 is the current harvest summary after the native failure-memory slice, the CodeGenome and COREFORGE dispositions, the Agent Manifest plus TRACE exact-version qualification, the first UOR-R4-derived evaluation improvement, the cMCP 0.5.0 requalification, the TRACE mixed-license source-rights reconciliation, and the exact uor-foundry rights/mechanism disposition.
 
 This document does not rewrite Wave 1 as if later evidence had existed earlier. Wave 1 remains historical audit evidence. Wave 2 carries the current disposition summary.
 
@@ -36,7 +36,7 @@ An adapter or comparator is not proof of native absorption. A benchmark result i
 | uor-addr | `165b51e3e2113ee5d032730cde709335d4fe9b60` | existing open-source optional profile | exact content references | **optional_interoperability** | retain existing optional profile; no normal runtime dependency |
 | uor-r4, geometry/model | `552d847d49fb263966165004b835f2f53cccaae1` | MIT | geometric/predictive memory model | **intentionally_not_adopted** | current evidence does not justify importing the model or runtime |
 | uor-r4, evaluation lesson | `552d847d49fb263966165004b835f2f53cccaae1` | MIT | repeated exact-key rebinding, matched controls, stale-value measurement, explicit negative-result discipline | **absorbed as native evaluation pressure** | #483 / PR #484 add Agent Memory-owned keyed-rebinding benchmark through the public facade and existing governance |
-| uor-foundry | `5b4711aed4fbb7da9d8b0aa04048a2b04713de4a` | `Cargo.toml` declares `MIT OR Apache-2.0`; root license distribution was not verified in Wave 1 | scoped authority, replayable acceptance, producer/artifact identity | **blocked_by_rights for direct code reuse** | verify repository-level license distribution before copying code; independent conceptual synthesis remains available |
+| uor-foundry | `5b4711aed4fbb7da9d8b0aa04048a2b04713de4a` | verified dual-license `MIT OR Apache-2.0`; root `LICENSE-MIT` and `LICENSE-APACHE` present; no root `NOTICE` at inspected revision | scoped authority, replayable acceptance, producer/artifact identity, honesty-level/conformance discipline | **external verification/evidence peer; generic lessons already native** | #489 and `docs/research/uor-foundry-harvest-disposition.md`; no new implementation or runtime dependency required |
 | uor-jcs-nfc | `303591128094362857791930fdc12b73875d1ff6` | Apache-2.0 with NOTICE at inspected provisional revision | pinned canonicalization context, Unicode version binding, refusal/conformance vectors | **intentionally_not_adopted at provisional revision** | re-check final publication before direct adoption; retain methodological pressure |
 | uor-matmul | `3cc5882f210667f9ac00fd8c02c5b5957b493f5d` | MIT | exact arithmetic/conformance methodology | **intentionally_not_adopted as memory machinery** | no generic Agent Memory mechanism gap identified |
 | Microsoft Agent Governance Toolkit | `e0574c1eb44a9b02f106e2b4c63fc60ec3c017ce` | MIT | external identity/policy/enforcement/audit boundary | **optional_interoperability** | useful peer/comparator only; AGT never owns PAMA or memory authority |
@@ -77,6 +77,53 @@ Accordingly:
 - quality, performance, governance, and recovery remain separate.
 
 This is a harvested lesson improving Agent Memory without adopting UOR-R4's geometry or runtime.
+
+## UOR Foundry closeout result
+
+Issue #489 removed the stale direct-reuse rights blocker and completed the bounded mechanism review at exact source `5b4711aed4fbb7da9d8b0aa04048a2b04713de4a`.
+
+The repository-level rights posture is now verified:
+
+```text
+Cargo.toml
+  -> MIT OR Apache-2.0
+
+LICENSE-MIT
+  -> MIT License, Copyright (c) 2026 The UOR Foundation
+
+LICENSE-APACHE
+  -> Apache License 2.0
+
+root NOTICE
+  -> not present at the inspected revision
+```
+
+No Foundry expression is copied or adapted by this review. Licensing permission therefore changes the rights disposition without creating an implementation requirement.
+
+Mechanism comparison produced a deliberate negative implementation result:
+
+- scoped authority is already owned by PAMA and Agent Memory scope/authority doctrine;
+- replayable acceptance is already covered by explicit D/F/H/R/P evidence depth, exact-head evidence binding, and restart/recovery qualification;
+- producer/artifact identity is already covered for the bounded memory/runtime evidence scope by revision/config/runtime binding and reproducible RC evidence;
+- Foundry's `some-true` / `build` / `open` honesty levels reinforce a useful principle, but Agent Memory already has capability maturity plus evidence-depth taxonomies and should not add a parallel vocabulary.
+
+Final disposition:
+
+```text
+open license
+  != required reuse
+
+useful verification peer
+  != missing Agent Memory mechanism
+
+uor-foundry
+  -> external verification/evidence peer
+  -> no runtime dependency
+  -> no new authority layer
+  -> no new native implementation slice from #489
+```
+
+The detailed review is `docs/research/uor-foundry-harvest-disposition.md`.
 
 ## TRACE / Agent Manifest correction since Wave 1
 
@@ -182,7 +229,6 @@ stronger external verifier
 
 Exhaustive harvest is still not complete. Current bounded work includes:
 
-- uor-foundry repository-level rights verification;
 - uor-jcs-nfc final/publication follow-up if the provisional source changes;
 - PrismPM review only where it produces a concrete generic memory or verification lesson;
 - any additional implementation slice actually exposed by those reviews.

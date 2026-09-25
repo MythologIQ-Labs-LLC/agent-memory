@@ -143,15 +143,38 @@
     {
       "source": "UOR-Foundation/uor-foundry",
       "revision": "5b4711aed4fbb7da9d8b0aa04048a2b04713de4a",
-      "rights_basis": "Cargo.toml declares MIT OR Apache-2.0; root license distribution not verified in Wave 1",
+      "rights_basis": "verified dual-license MIT OR Apache-2.0 at exact inspected revision; root LICENSE-MIT and LICENSE-APACHE present; no root NOTICE present",
+      "rights_status": "verified_open_license",
       "mechanisms": [
         {
-          "mechanism": "scoped authority, replayable acceptance, producer/artifact identity",
-          "posture": "blocked_by_rights",
-          "qualification_evidence": [],
-          "required_action": "verify repository-level license distribution before direct code reuse"
+          "mechanism": "scoped multi-administrator authority and quorum discipline",
+          "posture": "absorbed",
+          "qualification_evidence": ["docs/04-governance-and-pama.md", "ADR-004", "#489"],
+          "reason": "generic memory authority/scope lesson is already native through PAMA; Foundry organization/quorum semantics remain specialized peer evidence"
+        },
+        {
+          "mechanism": "replayable acceptance and conformance-ID discipline",
+          "posture": "absorbed",
+          "qualification_evidence": ["docs/programs/runtime-evidence/security-evidence-depth.md", "docs/42-governed-mutable-memory-fabric.md", "#489"],
+          "reason": "Agent Memory already separates doctrine, fixture, behavioral harness, exact-head runtime and production evidence and binds capability maturity independently"
+        },
+        {
+          "mechanism": "producer/artifact identity and source-integration versus consumer-acceptance boundary",
+          "posture": "specialized_source_only",
+          "qualification_evidence": ["docs/49-rc1-evidence-closeout.md", "#489"],
+          "reason": "bounded revision/config/runtime identity is already native; broader product-release and supply-chain closure remains specialized external release-engineering machinery"
+        },
+        {
+          "mechanism": "some-true/build/open honesty-level discipline",
+          "posture": "absorbed",
+          "qualification_evidence": ["docs/programs/runtime-evidence/security-evidence-depth.md", "docs/42-governed-mutable-memory-fabric.md", "#489"],
+          "reason": "underlying evidence-honesty lesson is already native through capability maturity plus D/F/H/R/P evidence depth; Foundry terminology is intentionally not imported as a parallel taxonomy"
         }
-      ]
+      ],
+      "runtime_dependency_required": false,
+      "direct_material_reuse_registered": false,
+      "authority_effect": "none",
+      "final_disposition": "mixed_final_disposition_generic_lessons_absorbed_release_engineering_specialized"
     },
     {
       "source": "UOR-Foundation/uor-jcs-nfc",
@@ -258,7 +281,6 @@
     }
   ],
   "open_closeout_items": [
-    "uor-foundry repository-level rights verification",
     "uor-jcs-nfc final publication follow-up if provisional source changes",
     "PrismPM review only if a concrete memory or verification lesson is identified"
   ]
