@@ -40,7 +40,7 @@ AgentMemory.open
   -> attempt one unqualified correction
   -> repeat qualified correction rounds
   -> governed recall after every correction
-  -> check every previously superseded fact identity
+  -> measure every previously superseded fact identity at candidate and admission layers
   -> midpoint close/reopen
   -> continue corrections
   -> verify matched controls
@@ -51,6 +51,29 @@ AgentMemory.open
 
 Stable logical identity is the benchmark key. Corrections create new current fact identities while prior identities remain historical rather than becoming current again.
 
+## Candidate generation is not current admission
+
+The first executable run caught an important benchmark mistake rather than an Agent Memory defect. The initial benchmark assumed a superseded fact must never appear in candidate generation. That is stronger than Agent Memory's architecture and would make historical evidence artificially undiscoverable.
+
+The actual invariant is:
+
+```text
+historical / superseded fact
+  -> MAY remain discoverable as candidate evidence
+  -> MUST retain stale/currentness metadata
+  -> MUST NOT be admitted as current context
+```
+
+This follows the existing boundary:
+
+```text
+candidate generation != governed final admission
+```
+
+The benchmark therefore keeps `stale_fact_candidate_rate` as a diagnostic measurement. It does not turn candidate presence into a conformance failure. `stale_fact_admission_rate == 0` is the load-bearing currentness gate.
+
+Changing retrieval to hide all historical candidates merely to make a benchmark green would erase useful provenance and teach the test the wrong architecture. The benchmark was corrected instead.
+
 ## Measurements
 
 The report intentionally keeps four dimensions separate.
@@ -59,8 +82,8 @@ The report intentionally keeps four dimensions separate.
 
 - qualified correction commit rate;
 - current fact retrieval rate;
-- stale fact candidate rate;
-- stale fact admission rate;
+- stale fact candidate rate, diagnostic only;
+- stale fact admission rate, currentness gate;
 - matched-control stability rate;
 - history preservation rate.
 
@@ -79,8 +102,9 @@ Timing is observational and is not a conformance gate.
 
 - whether an unqualified correction silently committed;
 - wrong-scope admission count;
-- stale/superseded currentness violations;
-- explicit `authority_effect = none` for retrieval evidence.
+- stale/superseded currentness violations at final admission;
+- explicit `authority_effect = none` for retrieval evidence;
+- explicit statement that candidate presence itself has no authority effect.
 
 ### Recovery
 
@@ -98,7 +122,7 @@ A system can appear to handle rebinding correctly simply because every key is be
 A passing run must show both:
 
 ```text
-rebound key -> current value advances, stale identities stay historical
+rebound key -> current value advances; stale identities may remain historical candidates but never regain current admission
 control key -> original current value remains stable
 ```
 
@@ -139,4 +163,4 @@ PYTHONPATH=reference python reference/run_keyed_rebinding_benchmark.py \
   --output keyed-rebinding-memory.json
 ```
 
-The existing Long Horizon Memory Benchmark workflow runs the exact PR revision and uploads the resulting JSON artifact. The benchmark fails only on structural/currentness/governance/recovery invariants, never on wall-clock latency.
+The existing Long Horizon Memory Benchmark workflow runs the exact PR revision and uploads the resulting JSON artifact. The benchmark fails on currentness, governance, structural, matched-control, and recovery invariants. Historical candidate visibility and wall-clock latency remain diagnostic observations rather than authority or conformance gates.
