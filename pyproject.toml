@@ -32,5 +32,4 @@ where = ["reference"]
 include = ["agentmem_ref*"]
 
 [tool.setuptools.package-data]
-agentmem_ref = ["_schemas/*.json"]
-
+agentmem_ref = ["_schemas/*.json", "_profiles/*.json"]
