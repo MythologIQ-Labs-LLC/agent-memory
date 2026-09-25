@@ -1,7 +1,7 @@
 {
   "schema": "../schemas/source-record.schema.json",
   "policy": "../docs/SOURCE_RIGHTS_POLICY.md",
-  "verified_at": "2026-09-24",
+  "verified_at": "2026-09-25",
   "default_external_research_posture": "citation_only_or_independent_synthesis_unless_material_reuse_is_explicitly_registered",
   "scope_note": "This registry tracks external, private, same-owner first-party ancestry, successor/related, or materially reused sources. Native Agent Memory doctrine such as PAMA is documented in the doctrine tree and does not require an external source record.",
   "sources": [
@@ -327,19 +327,19 @@
       "public_url": "https://github.com/agentrust-io/trace-spec",
       "repository": "agentrust-io/trace-spec",
       "access": "public",
-      "copyright_owner_or_originator": "AgentTrust TRACE contributors",
+      "copyright_owner_or_originator": "OPAQUE Systems, Inc. and TRACE Specification contributors",
       "license_spdx": null,
-      "license_url": "https://github.com/agentrust-io/trace-spec/blob/main/LICENSE",
-      "rights_status": "verified_open_license",
+      "license_url": "https://github.com/agentrust-io/trace-spec/blob/3a561d84d752794b9afa994ce16ed35c24ac0acb/LICENSE",
+      "rights_status": "verified_open_license_mixed_file_class",
       "reuse_mode": "independent_synthesis",
-      "reuse_basis": "Current repository licensing was verified as component-specific rather than flattened to one license: code and current specification material are generally Apache-2.0, while non-specification documentation is CC BY 4.0 and legacy v0.1 material retains its documented treatment. Agent Memory currently uses independent synthesis and interoperability comparison rather than copying TRACE expression.",
-      "material_reused": "None registered by this record.",
+      "reuse_basis": "At the exact qualified source revision, normative specification material under spec/, the normative schema/trace-claim.json, and other Draft/Approved Specification material are under Community Specification License 1.0; source/SDK/test/example/workflow/reference code including src/, tests/, examples/, and .github/ is Apache-2.0 unless a file states otherwise; non-specification documentation including README.md, CHANGELOG.md, docs/, and project-process Markdown is CC BY 4.0 unless a file states otherwise. Historical spec/trace-v0.1.md retains its prior CC BY 4.0 grant. Agent Memory currently uses independent synthesis and optional interoperability rather than copying TRACE expression.",
+      "material_reused": "None registered by this reconciliation; qualification executes released peer behavior without adopting TRACE as Agent Memory doctrine or runtime ownership.",
       "attribution_required": true,
       "notice_required": false,
       "modification_notice_required": false,
-      "provenance_note": "Registered because TRACE/cMCP evidence surfaces are named and exercised by the reference evidence program. Split licensing is recorded explicitly rather than represented as a single SPDX identifier.",
-      "limitations": "Verify the exact TRACE file/version license before any direct reuse. Linking, comparison, and independent synthesis do not transfer TRACE rights into Agent Memory's Apache-2.0 license.",
-      "verified_at": "2026-08-13"
+      "provenance_note": "Rights reconciled against exact qualified TRACE source 3a561d84d752794b9afa994ce16ed35c24ac0acb and package agentrust-trace==0.10.0 under issue #487. Mixed file-class licensing is intentionally not flattened into one SPDX identifier.",
+      "limitations": "Before any future direct reuse, classify the exact material by file class and preserve the applicable CSL 1.0, Apache-2.0, or CC BY 4.0 obligations. Linking, comparison, verifier execution, and independent synthesis do not transfer TRACE authority into Agent Memory.",
+      "verified_at": "2026-09-25"
     }
   ]
 }
