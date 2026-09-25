@@ -46,7 +46,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
     "contracts": (
         "capabilities", "qualification", "component_fallback", "component_failure_probe",
         "hindsight_qualification", "memos_qualification", "resource_provider_substitution",
-        "resource_exchange", "evolveai_profile",
+        "resource_exchange", "evolveai_profile", "cognitive_classification",
     ),
     "runtime": (
         "adapter", "restart_runtime", "sqlite_runtime", "sqlite_composition",
