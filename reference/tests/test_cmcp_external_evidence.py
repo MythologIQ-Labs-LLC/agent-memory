@@ -11,7 +11,9 @@ from agentmem_ref.cmcp_external_evidence import (
     CMCP_RELEASE,
     CMCP_VERSION,
     build_cmcp_adapter_results,
+    build_cmcp_adapter_results_for_source,
     normalize_cmcp_claim,
+    normalize_cmcp_claim_for_source,
 )
 
 
@@ -101,6 +103,48 @@ class CmcpExternalEvidenceTests(unittest.TestCase):
         self.assertEqual(enforcement["source_release_ref"], CMCP_RELEASE)
         self.assertEqual(enforcement["claim_type"], "enforcement")
         self.assertEqual(attestation["claim_type"], "attestation")
+
+    def test_exact_nondefault_source_binding_does_not_rewrite_historical_default(self):
+        source_version = "cmcp-runtime==0.5.0"
+        source_release = "d03b9af504535d3d43f192bc6d9eff89b8afd12f"
+        verifier_id = "cmcp-verify==0.5.0"
+        enforcement, attestation = build_cmcp_adapter_results_for_source(
+            self._claim(),
+            self._verification(),
+            source_version=source_version,
+            source_release_ref=source_release,
+            verifier_id=verifier_id,
+        )
+        self.assertEqual(enforcement["source_version"], source_version)
+        self.assertEqual(enforcement["source_release_ref"], source_release)
+        self.assertEqual(enforcement["verifier_id"], verifier_id)
+        self.assertEqual(attestation["source_version"], source_version)
+        self.assertEqual(CMCP_VERSION, "cmcp-runtime==0.4.0")
+        self.assertEqual(CMCP_RELEASE, "a2e95151356c9ae6c545330c900f3d4af0e447c1")
+
+        observed = datetime.now(tz=timezone.utc).isoformat()
+        normalized = normalize_cmcp_claim_for_source(
+            self._claim(),
+            self._verification(),
+            observed_at=observed,
+            source_version=source_version,
+            source_release_ref=source_release,
+            verifier_id=verifier_id,
+        )
+        for record in normalized:
+            self.assertEqual(record["source"]["version"], source_version)
+            self.assertEqual(record["source"]["release_ref"], source_release)
+            self.assertEqual(record["interpretation"]["authority_effect"], "none")
+
+    def test_empty_nondefault_binding_fails_closed(self):
+        with self.assertRaisesRegex(ValueError, "exact cMCP source version"):
+            build_cmcp_adapter_results_for_source(
+                self._claim(),
+                self._verification(),
+                source_version="",
+                source_release_ref="release",
+                verifier_id="verifier",
+            )
 
     def test_enforcement_mode_preserved_without_execution_claim(self):
         for mode in ("enforce", "advisory", "silent"):
