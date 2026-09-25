@@ -28,6 +28,9 @@ jobs:
       - name: Execute RC developer facade tests
         run: python -m unittest discover -s reference/tests -t reference -p 'test_developer_facade.py'
 
+      - name: Execute RC cognitive-memory scenario tests
+        run: python -m unittest discover -s reference/tests -t reference -p 'test_rc_cognitive_memory_scenario.py'
+
       - name: Verify installed facade and packaged local profile
         run: |
           python -m pip install --disable-pip-version-check .
@@ -58,6 +61,14 @@ jobs:
           --read-count 80
           --output sqlite-production-substrate.json
 
+      - name: Emit exact-head RC cognitive-memory lifecycle evidence
+        env:
+          AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: >-
+          PYTHONPATH=reference python reference/run_rc_cognitive_memory_scenario.py
+          --agent-memory-revision "$AGENT_MEMORY_COMMIT"
+          --output rc-cognitive-memory-scenario.json
+
       - name: Validate qualification evidence
         run: |
           python - <<'PY'
@@ -79,27 +90,46 @@ jobs:
           ]
           if failed:
               raise SystemExit(f"SQLite qualification invariants failed: {failed}")
-          print(f"validated {len(report['structural_invariants'])} SQLite qualification invariants")
+
+          scenario = json.loads(Path("rc-cognitive-memory-scenario.json").read_text())
+          if len(scenario["agent_memory_revision"]) != 40:
+              raise SystemExit("RC cognitive-memory evidence is not exact-head bound")
+          if not scenario["passed"]:
+              failed = [name for name, passed in scenario["checks"].items() if not passed]
+              raise SystemExit(f"RC cognitive-memory checks failed: {failed}")
+          if "health_score" in scenario or "score" in scenario:
+              raise SystemExit("RC cognitive-memory evidence must not emit an aggregate health score")
+          for section in ("quality", "governance", "runtime_recovery"):
+              if section not in scenario:
+                  raise SystemExit(f"RC cognitive-memory evidence missing {section}")
+          print(
+              f"validated {len(report['structural_invariants'])} SQLite qualification invariants "
+              f"and {len(scenario['checks'])} RC cognitive-memory checks"
+          )
           PY
 
-      - name: Upload SQLite qualification evidence
+      - name: Upload SQLite and RC lifecycle evidence
         uses: actions/upload-artifact@v7
         with:
           name: sqlite-production-substrate
-          path: sqlite-production-substrate.json
+          path: |
+            sqlite-production-substrate.json
+            rc-cognitive-memory-scenario.json
           if-no-files-found: error
 
       - name: Publish SQLite qualification summary
         if: always()
         run: |
           {
-            echo "## SQLite production canonical substrate"
+            echo "## SQLite production canonical substrate and RC lifecycle"
             echo ""
-            echo "This workflow qualifies the bounded single-host SQLite profile and the RC developer facade over it. It does not claim distributed or multi-host durability."
+            echo "This workflow qualifies the bounded single-host SQLite profile, the RC developer facade, and the deterministic end-to-end cognitive-memory lifecycle over it. It does not claim distributed or multi-host durability."
             echo ""
             echo '```'
             echo "python -m unittest discover -s reference/tests -t reference -p 'test_sqlite_production_substrate.py'"
             echo "python -m unittest discover -s reference/tests -t reference -p 'test_developer_facade.py'"
+            echo "python -m unittest discover -s reference/tests -t reference -p 'test_rc_cognitive_memory_scenario.py'"
             echo "python reference/run_sqlite_production_qualification.py --agent-memory-revision <exact-40-hex-commit> --runtime-config reference/fixtures/runtime-configuration/reference-composed-runtime.json --output sqlite-production-substrate.json"
+            echo "PYTHONPATH=reference python reference/run_rc_cognitive_memory_scenario.py --agent-memory-revision <exact-40-hex-commit> --output rc-cognitive-memory-scenario.json"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
