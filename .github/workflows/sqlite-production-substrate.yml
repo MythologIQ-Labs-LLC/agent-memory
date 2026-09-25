@@ -25,6 +25,25 @@ jobs:
       - name: Execute focused SQLite qualification tests
         run: python -m unittest discover -s reference/tests -t reference -p 'test_sqlite_production_substrate.py'
 
+      - name: Execute RC developer facade tests
+        run: python -m unittest discover -s reference/tests -t reference -p 'test_developer_facade.py'
+
+      - name: Verify installed facade and packaged local profile
+        run: |
+          python -m pip install --disable-pip-version-check .
+          cd /tmp
+          python - <<'PY'
+          import json
+          import importlib.resources
+          from agentmem_ref import AgentMemory
+
+          profile = importlib.resources.files("agentmem_ref") / "_profiles" / "rc1-local.json"
+          payload = json.loads(profile.read_text(encoding="utf-8"))
+          assert AgentMemory.__name__ == "AgentMemory"
+          assert payload["runtime"]["profile_id"] == "rc1-local-sqlite-composition"
+          print("installed AgentMemory facade and packaged rc1-local profile verified")
+          PY
+
       - name: Verify package architecture
         run: python scripts/restructure_package.py --check
 
@@ -76,10 +95,11 @@ jobs:
           {
             echo "## SQLite production canonical substrate"
             echo ""
-            echo "This workflow qualifies the bounded single-host SQLite profile. It does not claim distributed or multi-host durability."
+            echo "This workflow qualifies the bounded single-host SQLite profile and the RC developer facade over it. It does not claim distributed or multi-host durability."
             echo ""
             echo '```'
             echo "python -m unittest discover -s reference/tests -t reference -p 'test_sqlite_production_substrate.py'"
+            echo "python -m unittest discover -s reference/tests -t reference -p 'test_developer_facade.py'"
             echo "python reference/run_sqlite_production_qualification.py --agent-memory-revision <exact-40-hex-commit> --runtime-config reference/fixtures/runtime-configuration/reference-composed-runtime.json --output sqlite-production-substrate.json"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
