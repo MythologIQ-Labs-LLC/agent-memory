@@ -6,86 +6,111 @@ Status: bounded external benchmark profile for #516 under #498/#519.
 
 ```text
 upstream repository: xiaowu0162/LongMemEval
-inspected revision: 9e0b455f4ef0e2ab8f2e582289761153549043fc
-license: MIT
+inspected revision:  9e0b455f4ef0e2ab8f2e582289761153549043fc (repository license: MIT)
+dataset distribution: huggingface.co/datasets/xiaowu0162/longmemeval-cleaned
+dataset card license: mit (declared independently on the dataset card)
+headline input:      longmemeval_s_cleaned.json (277,383,467 bytes as listed by the Hub)
 ```
 
-The inspected upstream release describes 500 questions spanning information extraction, multi-session reasoning, knowledge updates, temporal reasoning, and abstention. Its released records bind questions to timestamped history sessions through `haystack_session_ids`, `haystack_dates`, `haystack_sessions`, `answer_session_ids`, and turn-level `has_answer` labels.
+The upstream release contains 500 questions spanning single-session user/assistant/preference recall, multi-session reasoning, knowledge updates, temporal reasoning, and abstention (`_abs`) variants. Records bind questions to timestamped history sessions through `haystack_session_ids`, `haystack_dates`, `haystack_sessions`, `answer_session_ids`, and turn-level `has_answer` labels.
 
-This Agent Memory profile does not vendor the external dataset. A real run consumes an explicitly supplied local LongMemEval JSON artifact and records its SHA-256 digest.
+This profile does not vendor the external dataset. A real run consumes an explicitly supplied local LongMemEval JSON artifact and records its SHA-256 digest and size. `longmemeval_oracle.json` removes the retrieval challenge and is not a headline retrieval input.
 
-## What this profile measures
+## Replicated upstream semantics
 
-The profile evaluates two retrieval granularities:
+Corpus construction, gold labels, question exclusion, and metric arithmetic replicate the bound revision exactly:
 
-```text
-session
-turn
-```
+| Upstream (`@9e0b455`) | Replicated behavior |
+| --- | --- |
+| `run_retrieval.py::process_item_flat_index` | Only **user** turns are indexed. A session item is the space-joined user contents; a turn item is one user turn with id `<session_id>_<turn_index+1>`. An `answer` session (or turn) with no user `has_answer` is relabelled `noans`. |
+| `run_retrieval.py` `correct_docs` | Gold items are corpus ids containing `answer`. |
+| `run_retrieval.py::main` averaging | Questions whose id contains `_abs` are excluded, and so are questions with no user-side `has_answer` target (for example, assistant-only evidence). |
+| `eval_utils.py::evaluate_retrieval` | `recall_any@k`, `recall_all@k`, and `ndcg_any@k`, where `ndcg_any` is binary-relevance NDCG normalized by the ideal ordering of *all* gold items, with upstream's `dcg` weighting (`rel₁ + Σ relᵢ / log₂ i`, i ≥ 2). |
+| `eval_utils.py::evaluate_retrieval_turn2session` | Turn runs also report `turn_to_session` metrics with upstream's distinct-session k expansion. |
 
-For non-abstention questions it reports the upstream retrieval metric family:
+Metrics are computed at k ∈ {1, 3, 5, 10, 30, 50}. The headline families follow upstream `print_retrieval_metrics.py`:
 
 - session: `recall_all@5`, `ndcg_any@5`, `recall_all@10`, `ndcg_any@10`;
-- turn: the same @5/@10 metrics plus `recall_all@50` and `ndcg_any@50`.
+- turn: the same, plus `recall_all@50` and `ndcg_any@50`.
 
-Abstention questions remain outside the retrieval-recall denominator because the upstream retrieval evaluation excludes them when no answer location exists. Their retrieval activity is reported separately instead of quietly manufacturing a gold location.
+Parity with upstream `evaluate_retrieval`, `evaluate_retrieval_turn2session`, and `process_item_flat_index` was checked differentially against the pinned upstream source: randomized full and truncated rankings, and randomized upstream-shaped haystacks. Focused unit tests pin representative cases.
 
-Question-type metrics are also kept separate. In particular, `knowledge-update` is preserved as a bounded currentness slice rather than averaged into a universal memory score.
+A backend that returns fewer items than the corpus is scored against its returned list. Unreturned items count as not retrieved, so a backend earns no credit it did not produce.
+
+## Separately reported surfaces
+
+```text
+headline retrieval metrics (upstream families, scored questions only)
+by question type
+currentness: knowledge-update metrics + latest-gold-ranked-first diagnostic
+abstention diagnostic (returned-any rate; not an upstream metric)
+failures: runtime and ingestion, counted, never dropped
+Agent Memory governance: candidates, admitted, refusal reasons, unmapped admissions
+timing: wall seconds; Agent Memory ingest/recall seconds
+execution: Agent Memory revision + dirty flag, package version, Python, platform, start/end
+```
+
+`latest_gold_ranked_first` is profile-local: among scored knowledge-update questions whose gold items span two or more dates, it is the fraction where the most recently dated gold item is returned ahead of every older gold item. It is a currentness *retrieval-ordering* signal, not answer correctness. Resource consumption (memory, token, compute cost) is `not_measured`.
 
 ## Backends
 
-The runner supports materially different retrieval postures under the same frozen input:
-
 ```text
-no_memory
-lexical_overlap
-agent_memory
+no_memory        returns nothing
+lexical_overlap  deterministic token-overlap/Jaccard baseline (profile-local)
+agent_memory     public AgentMemory facade
 ```
 
-`no_memory` returns nothing. `lexical_overlap` is a deterministic credential-free overlap/Jaccard baseline. `agent_memory` uses the public `AgentMemory` facade, retains each session or turn through ordinary governed commit, invokes recall without an exact-identity shortcut, and converts admitted fact UUIDs back to benchmark item IDs.
+All three consume the same frozen input and the same corpus items. `agent_memory` retains every item through ordinary governed commit, under a fresh tenant/scope per question. It then invokes `recall(question)`: candidate generation followed by the canonical governed admission pass. Benchmark item ids never enter Agent Memory, because target references are opaque positional handles. Ids are recovered only from admitted fact UUIDs. A runtime exception is recorded per question and the question scores as a miss.
 
-Agent Memory candidate generation and final admission remain distinct. A benchmark-relevant item can be discovered and still refused by governance.
+Upstream's `flat-bm25` and dense retrievers are not reproduced. Results are therefore comparable across this profile's backends, not to paper retriever tables.
 
 ## Answer-quality boundary
 
-LongMemEval's upstream QA evaluation is a separate model-dependent answer evaluator. This profile deliberately does not invoke it.
+LongMemEval's upstream QA evaluation is a separate model-dependent answer evaluator. This profile does not invoke it.
 
 ```text
-retrieval/currentness result
-    !=
-LongMemEval QA score
-    !=
-answer-generation quality
+retrieval/currentness result != LongMemEval QA score != answer-generation quality
 ```
 
-A future answer-generation profile may bind an exact reader/evaluator model and configuration. Until then, this runner must not be presented as an official LongMemEval QA result.
+## Running
 
-## Synthetic smoke fixture
-
-The repository contains:
-
-```text
-reference/fixtures/benchmarks/longmemeval/synthetic.json
-```
-
-It exercises a simple single-session fact, one knowledge update, and one abstention question. It exists to prove the benchmark contract and Agent Memory adapter path. It is not external benchmark evidence.
-
-Run it with:
+Synthetic smoke fixture: evaluator/adapter conformance only, never external evidence.
 
 ```bash
 PYTHONPATH=reference python reference/run_longmemeval.py
 ```
 
-A real frozen input can be run with:
+The fixture is upstream-shaped. It covers `answer_` session ids, a `noans` relabel, a knowledge update across two dated sessions, a multi-session question, an assistant-only question (no user target), and an `_abs` question that still carries `answer_session_ids`.
+
+Bounded external subset (deterministic, not cherry-picked: SHA-256 of `seed ‖ NUL ‖ question_id`, first N, source order preserved):
 
 ```bash
 PYTHONPATH=reference python reference/run_longmemeval.py \
-  --input /path/to/longmemeval_s_cleaned.json \
-  --corpus-class external_frozen \
-  --output longmemeval-agent-memory.json
+  --input /path/to/longmemeval_s_cleaned.json --corpus-class external_frozen \
+  --subset-size 50 --output longmemeval-s-subset50.json
 ```
 
-The report binds the exact input SHA-256. `external_frozen` means only that the supplied artifact is being treated as a frozen external input for this profile. It does not claim paper-result reproduction or upstream QA parity.
+Full LongMemEval_S:
+
+```bash
+PYTHONPATH=reference python reference/run_longmemeval.py \
+  --input /path/to/longmemeval_s_cleaned.json --corpus-class external_frozen \
+  --omit-rows --output longmemeval-s-full.json
+```
+
+`external_frozen` only means that the supplied artifact is treated as a frozen external input. It does not claim paper-result reproduction or QA parity.
+
+## Execution status
+
+| Run | Status |
+| --- | --- |
+| Synthetic smoke | COMPLETE (conformance only) |
+| LongMemEval_S bounded subset | NOT RUN: `huggingface.co` was denied by the executing environment's egress policy |
+| LongMemEval_S full | NOT RUN: same input-access blocker |
+| LongMemEval_M | NOT RUN |
+| Upstream QA (model-judged) | NOT RUN |
+
+No external LongMemEval number exists for Agent Memory until a run binds the exact input SHA-256 and Agent Memory revision.
 
 ## Governance and evidence boundaries
 
@@ -97,12 +122,8 @@ knowledge-update retrieval != proof of answer correctness
 synthetic smoke != external evidence
 ```
 
-Quality, currentness, abstention behavior, performance, and governance must remain separate surfaces. No aggregate memory-health score is defined.
+Quality, currentness, abstention behavior, performance, and governance remain separate surfaces. No aggregate memory-health score is defined.
 
 ## Relationship to evaluator integrity
 
-#518 owns wiring the benchmark-integrity mutation probes into accepted external benchmark profiles. Those probes test whether the evaluator notices controlled damage. They do not improve or certify Agent Memory's benchmark score.
-
-## Remaining full-run work
-
-This slice establishes the reproducible runner, input binding, profile semantics, focused tests, and bounded smoke. A publication-quality external result still requires selecting and SHA-binding the exact released LongMemEval artifact, recording any reader/evaluator configuration used for answer-quality work, and publishing the resulting evidence against an exact Agent Memory revision.
+#518 owns wiring benchmark-integrity mutation probes into accepted external profiles. Those probes test whether the evaluator notices controlled damage. They do not improve or certify Agent Memory's score.
