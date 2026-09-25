@@ -112,15 +112,17 @@ class LayoutMatchesMover(unittest.TestCase):
         import agentmem_ref
 
         self.assertEqual(
-            agentmem_ref.__all__, ["adapter", "governance_projection", "policy", "receipts", "substrate", "surface"]
+            agentmem_ref.__all__,
+            ["AgentMemory", "adapter", "governance_projection", "policy", "receipts", "substrate", "surface"],
         )
+        self.assertIs(agentmem_ref.AgentMemory, agentmem_ref.surface.AgentMemory)
 
     def test_top_level_residents(self):
         for name in MOVER.STAYS:
             self.assertTrue((PACKAGE / f"{name}.py").is_file(), name)
             self.assertNotIn(name, TABLE)
-        # _schemas/ is build-time package data (setup.py copies schemas/ into the wheel);
-        # its resolution is proven out of tree by the wheel smoke, not here.
+        # _schemas/ and _profiles/ are package data; their resolution is proven
+        # out of tree by the wheel/install smoke rather than by this layout test.
 
     def test_no_depth_coupled_path_resolution_remains(self):
         offenders = [
