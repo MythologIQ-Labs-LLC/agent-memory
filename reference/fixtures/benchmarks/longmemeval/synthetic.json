@@ -1,0 +1,70 @@
+[
+  {
+    "question_id": "single_editor",
+    "question_type": "single-session-user",
+    "question": "Which editor does the user prefer for Python work?",
+    "answer": "VS Code",
+    "question_date": "2026-09-01",
+    "haystack_session_ids": ["editor", "lunch", "music"],
+    "haystack_dates": ["2026-08-01", "2026-08-02", "2026-08-03"],
+    "haystack_sessions": [
+      [
+        {"role": "user", "content": "For Python work I prefer VS Code because the debugger is familiar.", "has_answer": true},
+        {"role": "assistant", "content": "I will keep the VS Code preference in mind."}
+      ],
+      [
+        {"role": "user", "content": "Lunch today was tomato soup."},
+        {"role": "assistant", "content": "Tomato soup sounds simple."}
+      ],
+      [
+        {"role": "user", "content": "I listened to a jazz record this morning."},
+        {"role": "assistant", "content": "Noted."}
+      ]
+    ],
+    "answer_session_ids": ["editor"]
+  },
+  {
+    "question_id": "update_branch",
+    "question_type": "knowledge-update",
+    "question": "What is the current release branch?",
+    "answer": "main",
+    "question_date": "2026-09-10",
+    "haystack_session_ids": ["branch-old", "weather", "branch-new"],
+    "haystack_dates": ["2026-08-10", "2026-08-11", "2026-09-09"],
+    "haystack_sessions": [
+      [
+        {"role": "user", "content": "The release branch used to be release."},
+        {"role": "assistant", "content": "The old release branch is release."}
+      ],
+      [
+        {"role": "user", "content": "The weather was rainy yesterday."},
+        {"role": "assistant", "content": "I noted the rain."}
+      ],
+      [
+        {"role": "user", "content": "Update: the current release branch is main.", "has_answer": true},
+        {"role": "assistant", "content": "The current release branch is main."}
+      ]
+    ],
+    "answer_session_ids": ["branch-new"]
+  },
+  {
+    "question_id": "unknown_abs",
+    "question_type": "single-session-user",
+    "question": "What color bicycle did the user buy?",
+    "answer": "I don't know",
+    "question_date": "2026-09-12",
+    "haystack_session_ids": ["garden", "book"],
+    "haystack_dates": ["2026-09-01", "2026-09-02"],
+    "haystack_sessions": [
+      [
+        {"role": "user", "content": "I planted basil in the garden."},
+        {"role": "assistant", "content": "Basil is useful in the kitchen."}
+      ],
+      [
+        {"role": "user", "content": "I finished reading a history book."},
+        {"role": "assistant", "content": "Noted."}
+      ]
+    ],
+    "answer_session_ids": []
+  }
+]
