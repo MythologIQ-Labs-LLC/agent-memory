@@ -1,0 +1,179 @@
+{
+  "description": "LongMemEval_M full run analysis (derived from the frozen report and rows; no re-execution)",
+  "host": {
+    "concurrent_heavy_work": "none; ~30 s of niced unit tests (#563 token-index tests) ran on a spare core during the run",
+    "cores": 4,
+    "memory_gb": 15,
+    "run_worktree": "clean detached worktree at 409098f"
+  },
+  "planes": {
+    "session": {
+      "agent_memory_candidates_per_recall_mean": 450.2,
+      "agent_memory_ms_per_write": {
+        "max": 9.38,
+        "mean_larger_half_stores": 5.3,
+        "mean_smaller_half_stores": 5.32,
+        "p50": 5.27,
+        "p95": 5.76
+      },
+      "agent_memory_recall_seconds": {
+        "max": 0.393,
+        "p50": 0.194
+      },
+      "corpus_items_per_question": {
+        "max": 490,
+        "mean": 475.3
+      },
+      "headline_S_vs_M": {
+        "agent_memory": {
+          "ndcg_any@10": {
+            "M_409098f": 0.770204,
+            "S_fa8828c": 0.878274
+          },
+          "ndcg_any@5": {
+            "M_409098f": 0.749183,
+            "S_fa8828c": 0.863142
+          },
+          "recall_all@10": {
+            "M_409098f": 0.778043,
+            "S_fa8828c": 0.892601
+          },
+          "recall_all@5": {
+            "M_409098f": 0.708831,
+            "S_fa8828c": 0.823389
+          }
+        },
+        "lexical_overlap": {
+          "ndcg_any@10": {
+            "M_409098f": 0.556021,
+            "S_fa8828c": 0.792944
+          },
+          "ndcg_any@5": {
+            "M_409098f": 0.528169,
+            "S_fa8828c": 0.767471
+          },
+          "recall_all@10": {
+            "M_409098f": 0.551313,
+            "S_fa8828c": 0.825776
+          },
+          "recall_all@5": {
+            "M_409098f": 0.453461,
+            "S_fa8828c": 0.73031
+          }
+        }
+      },
+      "knowledge_update_recall_all@5_S_vs_M": {
+        "agent_memory": {
+          "M": 0.916667,
+          "S": 0.972222
+        },
+        "lexical_overlap": {
+          "M": 0.694444,
+          "S": 0.916667
+        }
+      },
+      "latest_gold_ranked_first_rate_S_vs_M": {
+        "agent_memory": {
+          "M": 0.471429,
+          "S": 0.457143
+        },
+        "lexical_overlap": {
+          "M": 0.442857,
+          "S": 0.457143
+        }
+      }
+    },
+    "turn": {
+      "agent_memory_candidates_per_recall_mean": 2040.8,
+      "agent_memory_ms_per_write": {
+        "max": 5.87,
+        "mean_larger_half_stores": 5.32,
+        "mean_smaller_half_stores": 5.32,
+        "p50": 5.3,
+        "p95": 5.55
+      },
+      "agent_memory_recall_seconds": {
+        "max": 1.045,
+        "p50": 0.699
+      },
+      "corpus_items_per_question": {
+        "max": 2597,
+        "mean": 2427.9
+      },
+      "headline_S_vs_M": {
+        "agent_memory": {
+          "ndcg_any@10": {
+            "M_409098f": 0.592292,
+            "S_fa8828c": 0.68156
+          },
+          "ndcg_any@5": {
+            "M_409098f": 0.569334,
+            "S_fa8828c": 0.648611
+          },
+          "ndcg_any@50": {
+            "M_409098f": 0.621492,
+            "S_fa8828c": 0.711426
+          },
+          "recall_all@10": {
+            "M_409098f": 0.610979,
+            "S_fa8828c": 0.72315
+          },
+          "recall_all@5": {
+            "M_409098f": 0.53222,
+            "S_fa8828c": 0.601432
+          },
+          "recall_all@50": {
+            "M_409098f": 0.742243,
+            "S_fa8828c": 0.859189
+          }
+        },
+        "lexical_overlap": {
+          "ndcg_any@10": {
+            "M_409098f": 0.385809,
+            "S_fa8828c": 0.559738
+          },
+          "ndcg_any@5": {
+            "M_409098f": 0.352937,
+            "S_fa8828c": 0.527168
+          },
+          "ndcg_any@50": {
+            "M_409098f": 0.421515,
+            "S_fa8828c": 0.598419
+          },
+          "recall_all@10": {
+            "M_409098f": 0.398568,
+            "S_fa8828c": 0.587112
+          },
+          "recall_all@5": {
+            "M_409098f": 0.298329,
+            "S_fa8828c": 0.486874
+          },
+          "recall_all@50": {
+            "M_409098f": 0.553699,
+            "S_fa8828c": 0.761337
+          }
+        }
+      },
+      "knowledge_update_recall_all@5_S_vs_M": {
+        "agent_memory": {
+          "M": 0.708333,
+          "S": 0.791667
+        },
+        "lexical_overlap": {
+          "M": 0.472222,
+          "S": 0.680556
+        }
+      },
+      "latest_gold_ranked_first_rate_S_vs_M": {
+        "agent_memory": {
+          "M": 0.514286,
+          "S": 0.557143
+        },
+        "lexical_overlap": {
+          "M": 0.571429,
+          "S": 0.614286
+        }
+      }
+    }
+  }
+}

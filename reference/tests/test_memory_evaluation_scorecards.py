@@ -107,7 +107,7 @@ class ScorecardTests(unittest.TestCase):
         self.assertEqual([item["status"] for item in swe["evidence"]], ["blocked"])
         self.assertEqual(swe["dimensions_measured"], [])
         markdown = render_markdown(document)
-        self.assertIn("| longmemeval_m_cleaned | not_run |", markdown)
+        self.assertIn("| upstream_model_judged_qa | not_run |", markdown)
         self.assertIn("| lite_protocol_comparable_99_query_100_edge | blocked |", markdown)
         self.assertNotIn("overall_score", markdown)
         self.assertNotIn("health score:", markdown.lower())

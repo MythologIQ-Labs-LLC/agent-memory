@@ -27,6 +27,7 @@ from agentmem_ref.evaluation.scorecard import build, render_markdown  # noqa: E4
 
 SOURCES = (
     (normalize_longmemeval, "reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json"),
+    (normalize_longmemeval, "reports/benchmarks/longmemeval/longmemeval-m-full-409098f.json"),
     (normalize_agentmembench, "reports/benchmarks/agentmembench/memdialogue-v2-no_memory-03197cd.json"),
     (normalize_agentmembench, "reports/benchmarks/agentmembench/memdialogue-v2-lexical_overlap-03197cd.json"),
     (normalize_agentmembench, "reports/benchmarks/agentmembench/memdialogue-v2-agent_memory-03197cd.json"),

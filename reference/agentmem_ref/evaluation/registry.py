@@ -47,7 +47,7 @@ _PROFILES = (
         "runner": "reference/run_longmemeval.py",
         "supporting_runners": (),
         "implementation_status": "implemented_bounded_profile",
-        "external_evidence_status": "longmemeval_s_full_complete_m_not_run_qa_not_run",
+        "external_evidence_status": "longmemeval_s_and_m_full_complete_qa_not_run",
         "external_evidence": (
             {
                 "variant": "longmemeval_s_cleaned",
@@ -58,7 +58,14 @@ _PROFILES = (
                 "report": "reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json",
                 "evidence_pr": 536,
             },
-            {"variant": "longmemeval_m_cleaned", "status": "not_run"},
+            {
+                "variant": "longmemeval_m_cleaned",
+                "status": "complete",
+                "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+                "input_sha256": "9d79e5524794a2e6900a3aa9cb7d9152c5a3e8319c9a87c25494ba1eacee495f",
+                "agent_memory_revision": "409098ffeec5105cfaa317f2210d54e37cae3a83",
+                "report": "reports/benchmarks/longmemeval/longmemeval-m-full-409098f.json",
+            },
             {"variant": "upstream_model_judged_qa", "status": "not_run"},
         ),
         "product_findings": (
