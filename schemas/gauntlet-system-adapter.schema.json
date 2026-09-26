@@ -14,7 +14,7 @@
       "additionalProperties": false,
       "required": ["id", "kind", "revision"],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
+        "id": {"$ref": "#/$defs/identifier"},
         "kind": {"type": "string", "minLength": 1},
         "version": {"type": ["string", "null"]},
         "revision": {"type": "string", "minLength": 1},
@@ -29,7 +29,7 @@
       "additionalProperties": false,
       "required": ["id", "version", "revision"],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
+        "id": {"$ref": "#/$defs/identifier"},
         "version": {"type": "string", "minLength": 1},
         "revision": {"type": "string", "minLength": 1}
       }
@@ -85,6 +85,12 @@
     "authority_effect": {"const": "none"}
   },
   "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
     "capability": {
       "type": "object",
       "additionalProperties": false,
