@@ -47,6 +47,10 @@ SQLITE_SOURCE_RIGHTS = "SQLite public domain; Python sqlite3 under the Python li
 LEGACY_DIGEST_PREFIX = "sha256:"
 BUCKETED_DIGEST_SCHEME = "bmerkle-v1"
 DIGEST_BUCKETS = 256
+# Derived lexical token index (#563). Identifies the tokenizer (``_tokens``) and the row
+# shape; a stored index under any other identity is rebuilt from canonical facts.
+TOKEN_INDEX_SCHEME = "ftok-v1"
+_SQLITE_IN_CHUNK = 500
 
 
 def _canonical_bytes(value: object) -> bytes:
@@ -85,6 +89,14 @@ _EMPTY_BUCKET = _bucket_digest([])
 
 def _tokens(text: str) -> set[str]:
     return {token.strip(".,;:!?").lower() for token in text.split() if token.strip(".,;:!?")}
+
+
+def _fact_token_rows(group_id: str, fact_text: str, uuid: str) -> list[tuple[str, str, str]]:
+    return [(group_id, token, uuid) for token in sorted(_tokens(fact_text))]
+
+
+class TokenIndexIntegrityError(RuntimeError):
+    """The derived token index disagrees with canonical facts."""
 
 
 class SqliteDeterministicIds(DeterministicIds):
@@ -435,6 +447,12 @@ class SQLiteTemporalGraph:
         # it or verified it row-for-row against the canonical tables.
         self._digest_index_trusted = False
         self.governance = SQLiteGovernanceStore(self._connection)
+        # The token index (#563) is derived candidate-generation data, never canonical
+        # state and never permission. It is verified against the canonical facts table
+        # when the store opens and rebuilt if it differs; until then search scans.
+        self._token_index_trusted = False
+        self.token_index_status = "unverified"
+        self.verify_or_rebuild_token_index()
 
     def _initialize_schema(self) -> None:
         self._connection.executescript(
@@ -535,6 +553,13 @@ class SQLiteTemporalGraph:
                 singleton INTEGER PRIMARY KEY CHECK (singleton = 1),
                 value_json TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS fact_tokens (
+                group_id TEXT NOT NULL,
+                token TEXT NOT NULL,
+                uuid TEXT NOT NULL,
+                PRIMARY KEY (group_id, token, uuid)
+            ) WITHOUT ROWID;
+            CREATE INDEX IF NOT EXISTS fact_tokens_uuid_idx ON fact_tokens(uuid);
             """
         )
         self._connection.execute(
@@ -704,6 +729,10 @@ class SQLiteTemporalGraph:
                     _canonical_bytes(fact.attributes).decode("utf-8"),
                 ),
             )
+            self._connection.executemany(
+                "INSERT OR IGNORE INTO fact_tokens(group_id, token, uuid) VALUES(?, ?, ?)",
+                _fact_token_rows(fact.group_id, fact.fact_text, fact.uuid),
+            )
         self._log("write_fact", fact.uuid)
 
     def invalidate_fact(self, uuid: str, invalid_at: str, expired_at: str) -> None:
@@ -716,6 +745,7 @@ class SQLiteTemporalGraph:
 
     def delete_fact(self, uuid: str) -> None:
         self._connection.execute("DELETE FROM facts WHERE uuid = ?", (uuid,))
+        self._connection.execute("DELETE FROM fact_tokens WHERE uuid = ?", (uuid,))
         self._log("delete_fact", uuid)
 
     def write_relation(self, relation: TypedRelation) -> None:
@@ -905,7 +935,47 @@ class SQLiteTemporalGraph:
         eligible=None,
     ) -> list[tuple[Fact, float]]:
         """Lexical discovery. ``eligible`` (#548) skips facts before scoring; it is a
-        minimisation filter supplied by the governed caller, never permission."""
+        minimisation filter supplied by the governed caller, never permission.
+
+        With a verified token index (#563) only facts sharing at least one query token
+        are materialized; the overlap count comes from the index and every other step
+        (partition filter, ``eligible``, score, ordering) is the scan's. The result is
+        identical to ``search_by_scan``; the index never decides admissibility.
+        """
+        if not self._token_index_trusted:
+            return self.search_by_scan(query, group_ids, eligible)
+        terms = _tokens(query)
+        if not terms or (group_ids is not UNFILTERED and not group_ids):
+            return []
+        overlaps: dict[str, int] = {}
+        ordered_terms = sorted(terms)
+        for start in range(0, len(ordered_terms), _SQLITE_IN_CHUNK):
+            chunk = ordered_terms[start:start + _SQLITE_IN_CHUNK]
+            sql = f"SELECT uuid, COUNT(*) FROM fact_tokens WHERE token IN ({','.join('?' for _ in chunk)})"
+            parameters: list[str] = list(chunk)
+            if group_ids is not UNFILTERED:
+                sql += f" AND group_id IN ({','.join('?' for _ in group_ids)})"
+                parameters.extend(group_ids)
+            for uuid, count in self._connection.execute(sql + " GROUP BY uuid", parameters):
+                overlaps[uuid] = overlaps.get(uuid, 0) + int(count)
+        scored: list[tuple[Fact, float]] = []
+        for fact in self._facts_by_uuid(sorted(overlaps)):
+            if group_ids is not UNFILTERED and fact.group_id not in group_ids:
+                continue
+            if eligible is not None and not eligible(fact):
+                continue
+            scored.append((fact, overlaps[fact.uuid] / max(len(terms), 1)))
+        scored.sort(key=lambda pair: (-pair[1], pair[0].uuid))
+        return scored
+
+    def search_by_scan(
+        self,
+        query: str,
+        group_ids: list[str] | None = UNFILTERED,
+        eligible=None,
+    ) -> list[tuple[Fact, float]]:
+        """The reference lexical scan: tokenize every partition fact. Used before the
+        token index is verified and as the equivalence oracle for the index."""
         terms = _tokens(query)
         scored: list[tuple[Fact, float]] = []
         for fact in self._facts_for_groups(group_ids):
@@ -917,6 +987,76 @@ class SQLiteTemporalGraph:
             scored.append((fact, len(overlap) / max(len(terms), 1)))
         scored.sort(key=lambda pair: (-pair[1], pair[0].uuid))
         return scored
+
+    def _facts_by_uuid(self, uuids: list[str]) -> list[Fact]:
+        facts: list[Fact] = []
+        for start in range(0, len(uuids), _SQLITE_IN_CHUNK):
+            chunk = uuids[start:start + _SQLITE_IN_CHUNK]
+            rows = self._connection.execute(
+                f"SELECT * FROM facts WHERE uuid IN ({','.join('?' for _ in chunk)}) ORDER BY uuid", chunk
+            ).fetchall()
+            facts.extend(self._fact_from_row(row) for row in rows)
+        if len(facts) != len(uuids):
+            # An index row naming a fact that no longer exists: the index is not
+            # consistent with canonical state, so do not trust it for this answer.
+            raise TokenIndexIntegrityError("token index references facts absent from the canonical table")
+        return facts
+
+    # -- derived token index (#563) --
+
+    def _canonical_token_rows(self) -> set[tuple[str, str, str]]:
+        rows: set[tuple[str, str, str]] = set()
+        for row in self._connection.execute("SELECT uuid, group_id, fact_text FROM facts"):
+            rows.update(_fact_token_rows(row[1], row[2], row[0]))
+        return rows
+
+    def _stored_token_index_scheme(self) -> str | None:
+        row = self._connection.execute(
+            "SELECT value FROM agent_memory_meta WHERE key = 'token_index_scheme'"
+        ).fetchone()
+        return None if row is None else row[0]
+
+    def verify_token_index(self) -> bool:
+        """Row-for-row comparison of the stored index with one recomputed from canonical facts."""
+
+        if self._stored_token_index_scheme() != TOKEN_INDEX_SCHEME:
+            return False
+        stored = {
+            (row[0], row[1], row[2])
+            for row in self._connection.execute("SELECT group_id, token, uuid FROM fact_tokens")
+        }
+        return stored == self._canonical_token_rows()
+
+    def rebuild_token_index(self) -> None:
+        """Replace the index with one derived from the canonical facts table."""
+
+        rows = sorted(self._canonical_token_rows())
+        owns_transaction = not self._connection.in_transaction
+        if owns_transaction:
+            self._connection.execute("BEGIN IMMEDIATE")
+        try:
+            self._connection.execute("DELETE FROM fact_tokens")
+            self._connection.executemany("INSERT INTO fact_tokens(group_id, token, uuid) VALUES(?, ?, ?)", rows)
+            self._connection.execute(
+                "INSERT INTO agent_memory_meta(key, value) VALUES('token_index_scheme', ?) "
+                "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                (TOKEN_INDEX_SCHEME,),
+            )
+        except Exception:
+            if owns_transaction:
+                self._connection.execute("ROLLBACK")
+            raise
+        if owns_transaction:
+            self._connection.execute("COMMIT")
+
+    def verify_or_rebuild_token_index(self) -> str:
+        if self.verify_token_index():
+            self.token_index_status = "verified"
+        else:
+            self.rebuild_token_index()
+            self.token_index_status = "rebuilt"
+        self._token_index_trusted = True
+        return self.token_index_status
 
     def _facts_for_groups(self, group_ids: list[str] | None) -> tuple[Fact, ...]:
         if group_ids is UNFILTERED:
