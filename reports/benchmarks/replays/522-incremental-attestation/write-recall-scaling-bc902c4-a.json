@@ -1,0 +1,97 @@
+{
+  "authority_effect": "none",
+  "host": {
+    "machine": "x86_64",
+    "note": "4-core container; no other benchmark running",
+    "python": "3.11.15"
+  },
+  "parameters": {
+    "recalls": 20,
+    "seed": 1,
+    "window": 40,
+    "words_per_fact": 40,
+    "words_per_query": 8
+  },
+  "results": [
+    {
+      "facts_before_window": 100,
+      "recall": {
+        "components_mean_ms": {
+          "runtime._governance_snapshot": 0.096,
+          "runtime._persist_unlocked": 6.221,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.021,
+          "substrate.incremental_state_digest": 0.307,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.018,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 2.091,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 2.362
+        },
+        "mean_ms": 14.96,
+        "median_ms": 14.967,
+        "ops": 20
+      },
+      "write": {
+        "components_mean_ms": {
+          "runtime._governance_snapshot": 0.081,
+          "runtime._persist_unlocked": 5.325,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.021,
+          "substrate.incremental_state_digest": 0.404,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.013,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 1.9
+        },
+        "mean_ms": 9.775,
+        "median_ms": 9.379,
+        "ops": 40
+      }
+    },
+    {
+      "facts_before_window": 1000,
+      "recall": {
+        "components_mean_ms": {
+          "runtime._governance_snapshot": 0.617,
+          "runtime._persist_unlocked": 48.975,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.024,
+          "substrate.incremental_state_digest": 0.466,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.032,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 15.845,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 21.151
+        },
+        "mean_ms": 106.091,
+        "median_ms": 106.578,
+        "ops": 20
+      },
+      "write": {
+        "components_mean_ms": {
+          "runtime._governance_snapshot": 0.625,
+          "runtime._persist_unlocked": 47.347,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.025,
+          "substrate.incremental_state_digest": 0.647,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.022,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 20.836
+        },
+        "mean_ms": 65.228,
+        "median_ms": 64.231,
+        "ops": 40
+      }
+    }
+  ],
+  "revision": "bc902c47f6ae5fb8dea91f30a9487bff735a1dd9",
+  "schema": "agent-memory-write-recall-scaling/1"
+}

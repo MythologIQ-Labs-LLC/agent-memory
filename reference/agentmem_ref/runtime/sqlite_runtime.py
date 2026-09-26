@@ -88,38 +88,70 @@ def _journal_record(
     return {**material, "record_digest": _digest(material)}
 
 
+_JOURNAL_MATERIAL_FIELDS = (
+    "schema_version",
+    "transaction_protocol",
+    "generation",
+    "substrate_digest",
+    "governance_digest",
+    "interpretation_digest",
+    "previous_record_digest",
+)
+
+
+def _validate_record(raw: dict, expected_generation: int) -> None:
+    if raw.get("schema_version") != SQLITE_RUNTIME_SCHEMA_VERSION:
+        raise RuntimeRecoveryError("unsupported SQLite runtime journal schema")
+    if raw.get("transaction_protocol") != SQLITE_TRANSACTION_PROTOCOL:
+        raise RuntimeRecoveryError("SQLite runtime transaction protocol changed")
+    try:
+        generation = int(raw["generation"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RuntimeRecoveryError("SQLite runtime journal generation is malformed") from exc
+    if generation != expected_generation:
+        raise RuntimeRecoveryError("SQLite runtime journal is not contiguous")
+    try:
+        material = {key: raw[key] for key in _JOURNAL_MATERIAL_FIELDS}
+    except KeyError as exc:
+        raise RuntimeRecoveryError("SQLite runtime journal record is incomplete") from exc
+    if raw.get("record_digest") != _digest(material):
+        raise RuntimeRecoveryError("SQLite runtime journal record digest mismatch")
+
+
 def _validate_journal(rows: Iterable[dict]) -> dict | None:
+    """Recovery-time full chain verification."""
+
     previous: dict | None = None
     for index, raw in enumerate(rows, start=1):
-        if raw.get("schema_version") != SQLITE_RUNTIME_SCHEMA_VERSION:
-            raise RuntimeRecoveryError("unsupported SQLite runtime journal schema")
-        if raw.get("transaction_protocol") != SQLITE_TRANSACTION_PROTOCOL:
-            raise RuntimeRecoveryError("SQLite runtime transaction protocol changed")
-        try:
-            generation = int(raw["generation"])
-        except (KeyError, TypeError, ValueError) as exc:
-            raise RuntimeRecoveryError("SQLite runtime journal generation is malformed") from exc
-        if generation != index:
-            raise RuntimeRecoveryError("SQLite runtime journal is not contiguous")
         previous_digest = "" if previous is None else str(previous["record_digest"])
         if raw.get("previous_record_digest") != previous_digest:
             raise RuntimeRecoveryError("SQLite runtime journal chain is broken")
-        material = {
-            key: raw[key]
-            for key in (
-                "schema_version",
-                "transaction_protocol",
-                "generation",
-                "substrate_digest",
-                "governance_digest",
-                "interpretation_digest",
-                "previous_record_digest",
-            )
-        }
-        if raw.get("record_digest") != _digest(material):
-            raise RuntimeRecoveryError("SQLite runtime journal record digest mismatch")
+        _validate_record(raw, index)
         previous = dict(raw)
     return previous
+
+
+def _validate_journal_tail(
+    tail: dict | None, generation: int, bound_record_digest: str | None
+) -> dict | None:
+    """Commit-time operation integrity (#522): verify only the record being extended.
+
+    The full chain was verified when this handle recovered it, and every later record
+    was appended by a committed transaction that passed this same check. Here the tail
+    must be self-consistent, sit at the current generation, and be the record the
+    runtime state binds.
+    """
+
+    if generation == 0:
+        if tail is not None:
+            raise RuntimeRecoveryError("SQLite runtime journal exists without runtime state")
+        return None
+    if tail is None:
+        raise RuntimeRecoveryError("SQLite runtime journal is missing")
+    _validate_record(tail, generation)
+    if tail.get("record_digest") != bound_record_digest:
+        raise RuntimeRecoveryError("SQLite runtime state does not bind the journal tail")
+    return tail
 
 
 class SQLiteRestartSafeRuntime:
@@ -240,7 +272,7 @@ class SQLiteRestartSafeRuntime:
                 raise RuntimeRecoveryError("SQLite governance state is missing")
             if _digest(governance) != state.get("governance_digest"):
                 raise RuntimeRecoveryError("SQLite governance state digest mismatch")
-            if substrate.state_digest() != state.get("substrate_digest"):
+            if not substrate.verify_recorded_state_digest(str(state.get("substrate_digest", ""))):
                 raise RuntimeRecoveryError("SQLite canonical substrate digest mismatch")
 
             latest = _validate_journal(substrate.read_runtime_journal())
@@ -252,6 +284,8 @@ class SQLiteRestartSafeRuntime:
             for field in ("substrate_digest", "governance_digest", "interpretation_digest"):
                 if latest.get(field) != state.get(field):
                     raise RuntimeRecoveryError("SQLite runtime journal does not bind current state")
+            if latest.get("record_digest") != state.get("journal_record_digest"):
+                raise RuntimeRecoveryError("SQLite runtime state does not bind the journal tail")
 
             tenant = governance.get("tenant")
             adapter_raw = governance.get("adapter")
@@ -312,8 +346,8 @@ class SQLiteRestartSafeRuntime:
         }
 
     def _persist_unlocked(self) -> SQLiteRecoveryEvidence:
-        current = self.substrate.read_runtime_state()
-        current_generation = 0 if current is None else int(current.get("generation", 0))
+        binding = self.substrate.read_runtime_binding()
+        current_generation = 0 if binding is None else binding[0]
         if current_generation != self._observed_generation:
             raise RuntimeCheckpointConflict(
                 "SQLite generation conflict: "
@@ -322,10 +356,13 @@ class SQLiteRestartSafeRuntime:
 
         governance = self._governance_snapshot()
         governance_digest = _digest(governance)
-        substrate_digest = self.substrate.state_digest()
+        substrate_digest = self.substrate.incremental_state_digest()
         generation = current_generation + 1
-        journal_rows = self.substrate.read_runtime_journal()
-        previous = _validate_journal(journal_rows)
+        previous = _validate_journal_tail(
+            self.substrate.read_runtime_journal_tail(),
+            current_generation,
+            None if binding is None else binding[1],
+        )
         previous_digest = "" if previous is None else str(previous["record_digest"])
         record = _journal_record(
             generation=generation,
@@ -395,8 +432,8 @@ class SQLiteRestartSafeRuntime:
         with self._serialization_lock:
             try:
                 with self.substrate.transaction():
-                    current = self.substrate.read_runtime_state()
-                    generation = 0 if current is None else int(current.get("generation", 0))
+                    binding = self.substrate.read_runtime_binding()
+                    generation = 0 if binding is None else binding[0]
                     if generation != self._observed_generation:
                         raise RuntimeCheckpointConflict(
                             "SQLite generation conflict: "
