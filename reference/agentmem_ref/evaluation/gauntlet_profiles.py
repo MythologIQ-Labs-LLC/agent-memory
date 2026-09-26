@@ -21,6 +21,7 @@ _PROFILES = (
             "It is not an external efficacy benchmark."
         ),
         "runner": "agentmem_ref.evaluation.gauntlet_probe:run_retrieval_probe",
+        "operations": ("describe", "reset", "remember", "recall"),
         "requirements": {
             "contract_family": "agent-memory-gauntlet-profile-requirements",
             "contract_version": "0.1.0",
@@ -36,7 +37,7 @@ _PROFILES = (
             },
             "notes": [
                 "baseline_or_probe provenance; no external efficacy claim",
-                "destructive reset is permitted only for a disposable-instance isolation claim",
+                "destructive reset is permitted only for a disposable-instance isolation claim and explicit caller consent for non-fixtures",
             ],
             "authority_effect": "none",
         },

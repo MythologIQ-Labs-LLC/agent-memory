@@ -57,7 +57,7 @@ class GauntletOrchestrationTests(unittest.TestCase):
             self.assertEqual(no_run["authority_effect"], "none")
             self.assertEqual(lex_run["authority_effect"], "none")
 
-    def test_stdio_transport_requires_explicit_opt_in_and_then_executes(self):
+    def test_stdio_transport_requires_execution_and_reset_opt_in_then_executes(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             manifest = _load_fixture("lexical-adapter.json")
@@ -71,27 +71,41 @@ class GauntletOrchestrationTests(unittest.TestCase):
                 "kind": "stdio",
                 "startup": [
                     sys.executable,
-                    "-m",
-                    "agentmem_ref.evaluation.gauntlet_stdio_fixture",
+                    str(REPO_ROOT / "reference" / "gauntlet_stdio_fixture.py"),
                 ],
             }
             manifest["metadata"] = {"provenance_class": "baseline_or_probe"}
             path = _write_manifest(root, manifest)
 
-            blocked = run_gauntlet(
+            blocked_process = run_gauntlet(
                 path,
                 ORCHESTRATION_PROBE_PROFILE_ID,
-                output_dir=root / "blocked",
+                output_dir=root / "blocked-process",
             )
-            self.assertEqual(blocked["status"], "blocked")
-            self.assertEqual(blocked["failure"]["source"], "orchestrator")
-            self.assertEqual(blocked["failure"]["code"], "external_process_opt_in_required")
+            self.assertEqual(blocked_process["status"], "blocked")
+            self.assertEqual(blocked_process["failure"]["source"], "orchestrator")
+            self.assertEqual(
+                blocked_process["failure"]["code"], "external_process_opt_in_required"
+            )
+
+            blocked_reset = run_gauntlet(
+                path,
+                ORCHESTRATION_PROBE_PROFILE_ID,
+                output_dir=root / "blocked-reset",
+                allow_external_process=True,
+            )
+            self.assertEqual(blocked_reset["status"], "blocked")
+            self.assertEqual(blocked_reset["failure"]["source"], "orchestrator")
+            self.assertEqual(
+                blocked_reset["failure"]["code"], "destructive_reset_opt_in_required"
+            )
 
             completed = run_gauntlet(
                 path,
                 ORCHESTRATION_PROBE_PROFILE_ID,
                 output_dir=root / "completed",
                 allow_external_process=True,
+                allow_destructive_reset=True,
             )
             self.assertEqual(completed["status"], "complete")
             run = load_run(completed["artifacts"]["normalized_run"]["path"])

@@ -57,6 +57,7 @@ def execute(
     manifest_path: str | None = None,
     output_dir: str | None = None,
     allow_external_process: bool = False,
+    allow_destructive_reset: bool = False,
     timeout_seconds: float = 10.0,
 ) -> dict[str, Any]:
     if command == "list":
@@ -77,6 +78,7 @@ def execute(
             profile_id,
             output_dir=output_dir or "./gauntlet-runs",
             allow_external_process=allow_external_process,
+            allow_destructive_reset=allow_destructive_reset,
             timeout_seconds=timeout_seconds,
         )
     raise ValueError(f"unsupported gauntlet command: {command}")
@@ -149,7 +151,8 @@ def _parser() -> argparse.ArgumentParser:
     inspect.add_argument("--json", action="store_true", help="emit machine-readable JSON")
 
     validate = commands.add_parser(
-        "validate-adapter", help="validate one Gauntlet system-adapter manifest without executing it"
+        "validate-adapter",
+        help="validate one Gauntlet system-adapter manifest without executing it",
     )
     validate.add_argument("manifest", help="path to the adapter manifest JSON")
     validate.add_argument("--json", action="store_true", help="emit machine-readable JSON")
@@ -166,6 +169,14 @@ def _parser() -> argparse.ArgumentParser:
         "--allow-external-process",
         action="store_true",
         help="explicitly permit execution of a stdio adapter startup command",
+    )
+    run.add_argument(
+        "--allow-destructive-reset",
+        action="store_true",
+        help=(
+            "explicitly permit a non-fixture adapter to receive reset during this run; "
+            "a disposable-instance manifest claim is still required"
+        ),
     )
     run.add_argument(
         "--timeout-seconds",
@@ -203,6 +214,7 @@ def main(argv: list[str] | None = None) -> int:
             manifest_path=getattr(args, "manifest", None) or getattr(args, "system", None),
             output_dir=getattr(args, "output_dir", None),
             allow_external_process=bool(getattr(args, "allow_external_process", False)),
+            allow_destructive_reset=bool(getattr(args, "allow_destructive_reset", False)),
             timeout_seconds=float(getattr(args, "timeout_seconds", 10.0)),
         )
     except (GauntletContractError, KeyError, TypeError, ValueError) as exc:

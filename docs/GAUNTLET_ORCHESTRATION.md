@@ -31,13 +31,22 @@ agent-memory gauntlet run \
 ```
 
 A `stdio` manifest contains an executable startup command and therefore requires explicit
-opt-in:
+execution opt-in. Because the first probe also invokes `reset`, a non-fixture adapter
+requires a second explicit destructive-operation opt-in:
 
 ```bash
 agent-memory gauntlet run \
   --system ./my-stdio-adapter.json \
   --profile gauntlet-orchestration-retrieval-probe-v1 \
-  --allow-external-process
+  --allow-external-process \
+  --allow-destructive-reset
+```
+
+The two flags have different meanings:
+
+```text
+--allow-external-process   permission to launch manifest-declared executable content
+--allow-destructive-reset  permission for this run to issue reset to a non-fixture adapter
 ```
 
 Validation never executes an adapter.
@@ -71,6 +80,9 @@ For this alpha, the orchestrator executes that profile only when the manifest de
 }
 ```
 
+That declaration is necessary but is **not itself permission**. For any non-fixture
+adapter, the caller must also pass `--allow-destructive-reset`.
+
 This is intentionally narrower than the manifest schema. A declaration such as `tenant`,
 `namespace`, `database`, or `remote_test_project` may eventually be sufficient, but the
 orchestrator will not assume its teardown semantics before they are explicitly specified
@@ -78,6 +90,7 @@ and tested.
 
 ```text
 declared isolation != proven safe reset boundary
+manifest claim != destructive-operation consent
 ```
 
 ## First probe
@@ -174,6 +187,10 @@ restricted to trusted repository fixtures.
 
 `stdio` manifests can execute the startup command declared by the manifest. `run`
 requires explicit `--allow-external-process`; `validate-adapter` does not execute it.
+
+A manifest's `disposable_instance` declaration remains descriptive evidence. It does not
+by itself authorize reset. Non-fixture adapters additionally require explicit
+`--allow-destructive-reset` for profiles that contain reset.
 
 This alpha does not claim sandboxing of arbitrary hostile adapters.
 

@@ -15,9 +15,10 @@ import platform
 import sys
 import time
 import uuid
+from collections.abc import Mapping
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any
 
 from .contract import DIMENSIONS, dimension_report, metric_observation, validate_run, write_run
 from .gauntlet_contract import (
@@ -31,11 +32,20 @@ from .gauntlet_profiles import get_gauntlet_profile
 from .gauntlet_transport import AdapterSession, GauntletExecutionError
 
 QUALIFICATION_VERSION = "0.1.0"
-_ALLOWED_COMMON_KINDS = {"no_memory", "lexical", "vector", "agent_memory", "external_memory", "other"}
+_ALLOWED_COMMON_KINDS = {
+    "no_memory",
+    "lexical",
+    "vector",
+    "agent_memory",
+    "external_memory",
+    "other",
+}
 
 
 def _canonical_json_bytes(value: Mapping[str, Any]) -> bytes:
-    return (json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
+    return (
+        json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n"
+    ).encode("utf-8")
 
 
 def _write_json(path: Path, value: Mapping[str, Any]) -> str:
@@ -62,13 +72,17 @@ def _load_json(path: str | Path) -> dict[str, Any]:
 def _load_profile_runner(path: str):
     module_name, separator, attribute = path.partition(":")
     if not separator:
-        raise GauntletExecutionError("benchmark_adapter", "invalid_runner", f"invalid profile runner: {path}")
+        raise GauntletExecutionError(
+            "benchmark_adapter", "invalid_runner", f"invalid profile runner: {path}"
+        )
     try:
         module = importlib.import_module(module_name)
         runner = getattr(module, attribute)
     except (ImportError, AttributeError) as exc:
         raise GauntletExecutionError(
-            "benchmark_adapter", "runner_unavailable", f"unable to load profile runner {path}: {exc}"
+            "benchmark_adapter",
+            "runner_unavailable",
+            f"unable to load profile runner {path}: {exc}",
         ) from exc
     if not callable(runner):
         raise GauntletExecutionError(
@@ -191,7 +205,9 @@ def _dimensions_for_blocked(manifest_sha: str) -> dict[str, Any]:
                 population="validated adapter manifest",
             ),
         ],
-        notes=["Execution was blocked, but frozen input and manifest identity remain reconstructable."],
+        notes=[
+            "Execution was blocked, but frozen input and manifest identity remain reconstructable."
+        ],
     )
     return dimensions
 
@@ -218,7 +234,7 @@ def _normalized_run(
     else:
         dimensions = _dimensions_for_blocked(manifest_sha)
         limitations = [
-            "Execution did not complete; blocked evidence must not be treated as a zero score.",
+            "Execution did not complete; blocked evidence must not be treated as a zero score."
         ]
     if failure:
         limitations.append(
@@ -296,15 +312,49 @@ def _qualification_base(
     }
 
 
+def _persist_qualification(run_root: Path, qualification: dict[str, Any]) -> dict[str, Any]:
+    qualification_path = run_root / "qualification.json"
+    qualification_sha = _write_json(qualification_path, qualification)
+    qualification["artifacts"]["qualification"] = {
+        "path": str(qualification_path),
+        "sha256": qualification_sha,
+    }
+    return qualification
+
+
+def _blocked_before_execution(
+    *,
+    run_root: Path,
+    qualification: dict[str, Any],
+    profile: Mapping[str, Any],
+    code: str,
+    message: str,
+) -> dict[str, Any]:
+    qualification["status"] = "blocked"
+    qualification["failure"] = {
+        "source": "orchestrator",
+        "code": code,
+        "message": message,
+    }
+    qualification["coverage"] = {dimension: "blocked" for dimension in profile["dimensions"]}
+    return _persist_qualification(run_root, qualification)
+
+
 def run_gauntlet(
     manifest_path: str | Path,
     profile_id: str,
     *,
     output_dir: str | Path,
     allow_external_process: bool = False,
+    allow_destructive_reset: bool = False,
     timeout_seconds: float = 10.0,
 ) -> dict[str, Any]:
-    """Run one qualified Gauntlet profile and persist reconstructable evidence."""
+    """Run one qualified Gauntlet profile and persist reconstructable evidence.
+
+    A manifest may claim a disposable benchmark boundary, but a non-fixture adapter does
+    not receive destructive-reset permission from that claim alone. The caller must also
+    opt in explicitly. Declaration is evidence; it is not permission.
+    """
 
     manifest = load_adapter_manifest(manifest_path)
     profile = get_gauntlet_profile(profile_id)
@@ -322,7 +372,6 @@ def run_gauntlet(
 
     manifest_path_out = run_root / "adapter-manifest.json"
     manifest_artifact_sha = _write_json(manifest_path_out, manifest)
-
     qualification["artifacts"] = {
         "adapter_manifest": {
             "path": str(manifest_path_out),
@@ -336,34 +385,48 @@ def run_gauntlet(
             dimension: ("unsupported" if negotiation["outcome"] == "unsupported" else "blocked")
             for dimension in profile["dimensions"]
         }
-        qualification_path = run_root / "qualification.json"
-        qualification_sha = _write_json(qualification_path, qualification)
-        qualification["artifacts"]["qualification"] = {
-            "path": str(qualification_path),
-            "sha256": qualification_sha,
-        }
-        return qualification
+        return _persist_qualification(run_root, qualification)
 
-    isolation = manifest.get("benchmark_isolation")
-    if not isinstance(isolation, Mapping) or isolation.get("strategy") != "disposable_instance":
-        failure = {
-            "source": "orchestrator",
-            "code": "unproven_destructive_isolation",
-            "message": (
-                "this alpha profile invokes reset and therefore requires "
-                "benchmark_isolation.strategy=disposable_instance"
-            ),
-        }
-        qualification["status"] = "blocked"
-        qualification["failure"] = failure
-        qualification["coverage"] = {dimension: "blocked" for dimension in profile["dimensions"]}
-        qualification_path = run_root / "qualification.json"
-        qualification_sha = _write_json(qualification_path, qualification)
-        qualification["artifacts"]["qualification"] = {
-            "path": str(qualification_path),
-            "sha256": qualification_sha,
-        }
-        return qualification
+    transport_kind = manifest["transport"]["kind"]
+    if transport_kind == "stdio" and not allow_external_process:
+        return _blocked_before_execution(
+            run_root=run_root,
+            qualification=qualification,
+            profile=profile,
+            code="external_process_opt_in_required",
+            message="stdio adapter execution requires explicit external-process opt-in",
+        )
+
+    operations = tuple(profile.get("operations", ()))
+    if "reset" in operations:
+        isolation = manifest.get("benchmark_isolation")
+        if not isinstance(isolation, Mapping) or isolation.get("strategy") != "disposable_instance":
+            return _blocked_before_execution(
+                run_root=run_root,
+                qualification=qualification,
+                profile=profile,
+                code="unproven_destructive_isolation",
+                message=(
+                    "this alpha profile invokes reset and therefore requires "
+                    "benchmark_isolation.strategy=disposable_instance"
+                ),
+            )
+
+        trusted_fixture = (
+            transport_kind == "in_process"
+            and manifest.get("metadata", {}).get("trusted_fixture") is True
+        )
+        if not trusted_fixture and not allow_destructive_reset:
+            return _blocked_before_execution(
+                run_root=run_root,
+                qualification=qualification,
+                profile=profile,
+                code="destructive_reset_opt_in_required",
+                message=(
+                    "profile invokes reset against a non-fixture adapter; caller must explicitly "
+                    "allow destructive reset even when the manifest declares a disposable instance"
+                ),
+            )
 
     started_wall = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     started = time.perf_counter()
@@ -435,13 +498,7 @@ def run_gauntlet(
             "normalized_run": {"path": str(normalized_path), "sha256": normalized_sha},
         }
     )
-    qualification_path = run_root / "qualification.json"
-    qualification_sha = _write_json(qualification_path, qualification)
-    qualification["artifacts"]["qualification"] = {
-        "path": str(qualification_path),
-        "sha256": qualification_sha,
-    }
-    return qualification
+    return _persist_qualification(run_root, qualification)
 
 
 __all__ = ["QUALIFICATION_VERSION", "load_adapter_manifest", "run_gauntlet"]

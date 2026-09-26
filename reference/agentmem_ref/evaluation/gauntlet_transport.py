@@ -127,17 +127,25 @@ class AdapterSession:
         raise GauntletExecutionError("orchestrator", "unknown_transport", f"unknown transport: {kind}")
 
     def __exit__(self, exc_type, exc, tb) -> None:
-        if self._process is not None:
-            if self._process.stdin is not None:
-                try:
-                    self._process.stdin.close()
-                except OSError:
-                    pass
+        if self._process is None:
+            return
+        if self._process.stdin is not None:
             try:
-                self._process.wait(timeout=1.0)
-            except subprocess.TimeoutExpired:
-                self._process.kill()
-                self._process.wait(timeout=1.0)
+                self._process.stdin.close()
+            except OSError:
+                pass
+        try:
+            self._process.wait(timeout=1.0)
+        except subprocess.TimeoutExpired:
+            self._process.kill()
+            self._process.wait(timeout=1.0)
+        if self._process.stdout is not None:
+            try:
+                self._process.stdout.close()
+            except OSError:
+                pass
+        if self._reader_thread is not None:
+            self._reader_thread.join(timeout=0.25)
 
     def invoke(self, request: Mapping[str, Any]) -> dict[str, Any]:
         validated = validate_operation_envelope(request)
@@ -215,7 +223,10 @@ class AdapterSession:
             raise GauntletExecutionError(
                 "system_adapter", "wrong_direction", "adapter must emit a response envelope"
             )
-        if response["request_id"] != validated["request_id"] or response["operation"] != validated["operation"]:
+        if (
+            response["request_id"] != validated["request_id"]
+            or response["operation"] != validated["operation"]
+        ):
             raise GauntletExecutionError(
                 "system_adapter",
                 "response_correlation_mismatch",
