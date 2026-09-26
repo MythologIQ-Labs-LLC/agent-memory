@@ -34,7 +34,7 @@ from pathlib import Path
 
 from .adapter import RecallContext, eligible_search
 from .configured_restart import ConfigBoundRestartRuntime
-from .contextual_recall_adapter import admit_preselected_candidates
+from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
 from .temporal_intent import resolve_intent
 from .ranking_policy import PostAdmissionRankingPolicy
@@ -109,6 +109,8 @@ class MultiRouteRecallResult:
     ranking_evidence: dict[str, dict] = field(default_factory=dict)
     query_temporal_intent: dict = field(default_factory=dict)
     candidate_policy: dict = field(default_factory=dict)
+    admission_mode: str = "current_state"
+    admission_basis: dict[str, dict] = field(default_factory=dict)
 
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
         return tuple(self.route_hits.get(candidate_ref, ()))
@@ -247,14 +249,17 @@ class DeterministicMultiRouteRecallPlanner:
                 ordered_candidates.append(hit.candidate_ref)
             by_candidate[hit.candidate_ref].append(hit)
 
+        intent = resolve_intent(query, temporal_intent)
+        admission_mode, historical_target = admission_mode_for_intent(intent)
         admission = admit_preselected_candidates(
             self.adapter,
             ordered_candidates,
             context,
             query_label=query,
+            admission_mode=admission_mode,
+            historical_target_seconds=historical_target,
         )
 
-        intent = resolve_intent(query, temporal_intent)
         ranked, ranking_evidence = MULTI_ROUTE_RANKING_POLICY.rank(
             admission.admitted,
             by_candidate,
@@ -276,6 +281,8 @@ class DeterministicMultiRouteRecallPlanner:
             ranking_policy=MULTI_ROUTE_RANKING_POLICY.identity(),
             ranking_evidence=ranking_evidence,
             candidate_policy=dict(admission.candidate_policy),
+            admission_mode=admission.admission_mode,
+            admission_basis=dict(admission.admission_basis),
             query_temporal_intent=intent.to_dict(),
         )
 
@@ -444,7 +451,8 @@ class ConfiguredCompositionRuntime:
                 )
         return result
 
-    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
+    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None,
+                replacement_kind="error_correction"):
         """Commit a governed correction; derived currentness changes by relation.
 
         No rebuild is triggered here. A correction therefore cannot use
@@ -453,7 +461,8 @@ class ConfiguredCompositionRuntime:
         Forwards the qualified-evidence channel (ADR-037 step 4b-2, DoD 20).
         """
         return self.durable_runtime.commit_proposal(
-            proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal
+            proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal,
+            replacement_kind=replacement_kind,
         )
 
     def recall(self, query: str, context: RecallContext):

@@ -28,7 +28,7 @@ from ..core.evidence_qualification import EvidenceItem
 from ..core.verification import VerifierRegistry
 from ..core.readmission import RejectedValueRegistry
 from ..state.substrate import DeterministicIds, Episode, Fact, TemporalGraphPort
-from .temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal
+from .temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal, parse_time
 
 
 class Clock:
@@ -94,6 +94,15 @@ class CommitResult:
     refusal: str | None = None
 
 
+# #549: current-state admission and historical-evidence admission are distinct modes.
+CURRENT_STATE_ADMISSION = "current_state"
+HISTORICAL_EVIDENCE_ADMISSION = "historical_evidence"
+ERROR_CORRECTION = "error_correction"
+STATE_CHANGE = "state_change"
+REPLACEMENT_KINDS = (ERROR_CORRECTION, STATE_CHANGE)
+REPLACEMENT_RECORDS_KEY = "replacement_records"
+
+
 @dataclass
 class AdmissionResult:
     candidates: list[str] = field(default_factory=list)
@@ -108,6 +117,10 @@ class AdmissionResult:
     evaluated_at: str = ""
     # #548: how raw discovery matches became candidates. Never a count.
     candidate_policy: dict = field(default_factory=dict)
+    # #549: per-admitted-candidate admission basis (mode, and for historical evidence the
+    # replacement kind and validity it was admitted under).
+    admission_basis: dict[str, dict] = field(default_factory=dict)
+    admission_mode: str = CURRENT_STATE_ADMISSION
 
 
 # #548 (#522 Part B): raw discovery matches that fail the shared domain-eligibility
@@ -261,6 +274,7 @@ class GovernedMemoryAdapter:
         evidence: "Sequence[EvidenceItem] | None" = None,
         attestation: policy.ExternalVerification | None = None,
         temporal: "Mapping[str, str] | None" = None,
+        replacement_kind: str = ERROR_CORRECTION,
     ) -> CommitResult:
         """Commit a proposal through the governed path.
 
@@ -351,7 +365,7 @@ class GovernedMemoryAdapter:
         fact_uuid = None
         if commits:
             if proposal.operation == "correction":
-                self._supersede_current(proposal)
+                self._supersede_current(proposal, replacement_kind, temporal)
                 self._rejected_values.readmit(
                     memory_id=proposal.target_reference,
                     value=fact_text,
@@ -453,12 +467,28 @@ class GovernedMemoryAdapter:
         )
         return not approved_reversal
 
-    def _supersede_current(self, proposal: policy.Proposal) -> None:
-        """Invalidate the current fact and record its value as rejected.
+    def _supersede_current(
+        self,
+        proposal: policy.Proposal,
+        replacement_kind: str = ERROR_CORRECTION,
+        temporal: "Mapping[str, str] | None" = None,
+    ) -> None:
+        """Invalidate the current fact; record why it was replaced.
+
+        ``error_correction`` (default): the prior value was wrong. It is recorded as a
+        rejected value and is never presented as historically true.
+
+        ``state_change`` (#549): the prior value was true until the replacement's
+        effective time. It is not a rejected value. It becomes eligible only for explicit
+        historical or as-of recall at a time inside its validity, and only as non-current
+        historical evidence. The kind is part of the governed correction proposal
+        (same PAMA decision), is recorded, and is inspectable.
 
         This is the minimum correction seam needed to test ADR-023/ADR-027
         composition. It does not claim full #142 closure.
         """
+        if replacement_kind not in REPLACEMENT_KINDS:
+            raise ValueError(f"unknown replacement kind {replacement_kind!r}")
         current_uuid = self._current_fact_by_memory.get(proposal.target_reference)
         if not current_uuid:
             return
@@ -467,6 +497,10 @@ class GovernedMemoryAdapter:
             return
 
         rejected_at = self._clock.now()
+        self._record_replacement(current, proposal, replacement_kind, temporal, rejected_at)
+        if replacement_kind == STATE_CHANGE:
+            self._substrate.invalidate_fact(current.uuid, invalid_at=rejected_at, expired_at=self._clock.now())
+            return
         self._rejected_values.reject(
             memory_id=proposal.target_reference,
             value=current.fact_text,
@@ -582,6 +616,7 @@ class GovernedMemoryAdapter:
         context: RecallContext,
         refusal: str | None,
         evaluated_at: str,
+        historical_evidence: bool = False,
     ) -> dict:
         """A built-in admission decision in the canonical recall-decision shape.
 
@@ -613,8 +648,8 @@ class GovernedMemoryAdapter:
                 "purpose": context.purpose,
                 "destination_ref": "",
             },
-            "outcome": "admit" if refusal is None else "block",
-            "reason_code": refusal or "builtin_admission",
+            "outcome": ("admit_with_warning" if historical_evidence else "admit") if refusal is None else "block",
+            "reason_code": refusal or ("historical_evidence_not_current" if historical_evidence else "builtin_admission"),
             "evidence_refs": [],
             "evaluated_at": evaluated_at,
             "interpretation": {
@@ -689,7 +724,13 @@ class GovernedMemoryAdapter:
 
         return fact is not None and self._domain_eligibility_refusal(fact, context) is None
 
-    def _admission_refusal(self, fact: Fact, context: RecallContext) -> str | None:
+    def _admission_refusal(
+        self,
+        fact: Fact,
+        context: RecallContext,
+        mode: str = CURRENT_STATE_ADMISSION,
+        target_seconds: float | None = None,
+    ) -> str | None:
         if fact.group_id != self._tenant:
             return "out_of_scope"
         if fact.uuid in self._tombstones:
@@ -697,10 +738,57 @@ class GovernedMemoryAdapter:
         if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
             return "derived_from_tombstoned_source"
         if fact.is_event_invalid:
-            return "superseded_not_current"
+            historical = self._historical_evidence_refusal(fact, mode, target_seconds)
+            if historical is not None:
+                return historical
         if fact.uuid in self._disputed:
             return "disputed"
         return self._domain_eligibility_refusal(fact, context)
+
+    def _record_replacement(
+        self,
+        current: Fact,
+        proposal: policy.Proposal,
+        replacement_kind: str,
+        temporal: "Mapping[str, str] | None",
+        replaced_at: str,
+    ) -> None:
+        prior_declared = dict((current.attributes or {}).get(DECLARED_TEMPORAL_KEY) or {})
+        effective = dict(temporal or {}).get("valid_from")
+        self.extension_state.setdefault(REPLACEMENT_RECORDS_KEY, {})[current.uuid] = {
+            "kind": replacement_kind,
+            "memory_id": proposal.target_reference,
+            "proposal_id": proposal.proposal_id,
+            "evidence_refs": list(proposal.evidence_refs),
+            "replaced_at": replaced_at,
+            "valid_from": prior_declared.get("valid_from"),
+            "valid_until": effective,
+            "valid_until_basis": "replacement_declared_valid_from" if effective else "replacement_time",
+        }
+
+    def replacement_record(self, fact_uuid: str) -> dict | None:
+        record = (self.extension_state.get(REPLACEMENT_RECORDS_KEY) or {}).get(fact_uuid)
+        return dict(record) if record else None
+
+    def _historical_evidence_refusal(self, fact: Fact, mode: str, target_seconds: float | None) -> str | None:
+        """#549: an event-invalid fact is admissible only as historical evidence of a
+        governed state change, under explicit historical/as-of admission, inside its
+        validity. Everything else stays refused.
+        """
+
+        if mode != HISTORICAL_EVIDENCE_ADMISSION:
+            return "superseded_not_current"
+        record = self.replacement_record(fact.uuid)
+        if record is None:
+            return "superseded_not_current"
+        if record["kind"] == ERROR_CORRECTION:
+            return "corrected_as_false"
+        if target_seconds is not None:
+            start = parse_time(record.get("valid_from"))
+            end = parse_time(record.get("valid_until")) or parse_time(record.get("replaced_at"))
+            if (start is not None and target_seconds < start) or (end is not None and target_seconds >= end):
+                return "outside_historical_validity"
+        return None
 
     def _domain_eligibility_refusal(self, fact: Fact, context: RecallContext) -> str | None:
         """Shared necessary conditions: tenant, scope metadata, isolation domains,

@@ -55,9 +55,11 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         with self.serialization_lock:
             return super().retain(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal)
 
-    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
+    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None,
+                replacement_kind="error_correction"):
         with self.serialization_lock:
-            return super().correct(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal)
+            return super().correct(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal,
+                                   replacement_kind=replacement_kind)
 
     def delete_current(self, proposal, *, evidence=None, external_verification=None):
         with self.serialization_lock:

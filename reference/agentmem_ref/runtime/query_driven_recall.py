@@ -28,7 +28,7 @@ from dataclasses import dataclass
 import re
 
 from .adapter import RecallContext, eligible_search
-from .contextual_recall_adapter import admit_preselected_candidates
+from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .temporal_intent import resolve_intent
 from .ranking_policy import PostAdmissionRankingPolicy
 from .restart_runtime import RuntimeRecoveryError
@@ -200,13 +200,16 @@ class DeterministicQueryDrivenRecallPlanner:
                 ordered_candidates.append(hit.candidate_ref)
             by_candidate[hit.candidate_ref].append(hit)
 
+        intent = resolve_intent(query, temporal_intent)
+        admission_mode, historical_target = admission_mode_for_intent(intent)
         admission = admit_preselected_candidates(
             self.adapter,
             ordered_candidates,
             context,
             query_label=query,
+            admission_mode=admission_mode,
+            historical_target_seconds=historical_target,
         )
-        intent = resolve_intent(query, temporal_intent)
         ranked, ranking_evidence = QUERY_DRIVEN_RANKING_POLICY.rank(
             admission.admitted,
             by_candidate,
@@ -228,6 +231,8 @@ class DeterministicQueryDrivenRecallPlanner:
             ranking_policy=QUERY_DRIVEN_RANKING_POLICY.identity(),
             ranking_evidence=ranking_evidence,
             candidate_policy=dict(admission.candidate_policy),
+            admission_mode=admission.admission_mode,
+            admission_basis=dict(admission.admission_basis),
             query_temporal_intent=intent.to_dict(),
         )
 
