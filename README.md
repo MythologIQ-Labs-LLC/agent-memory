@@ -204,7 +204,7 @@ Current known limitations:
 - Query-conditioned applicability (policy 3.0.0) is implemented, but **ADR-039 remains Proposed**. No orthogonal temporal gauntlet has yet tested it.
 - Implicit supersession, where a newer statement contradicts an older one without a governed correction, is not inferred (#531 class B).
 - The replacement kind (error correction vs state change) is caller-declared within a governed correction.
-- Per-commit persistence still rewrites the governance-state blob, and lexical candidate generation still visits every fact in the tenant. Scale beyond the measured sizes is not claimed.
+- Per-commit persistence still digests and rewrites the whole governance state (#562: ~0.73 s per write at ~10,000 facts). Lexical candidate generation still visits every fact in the tenant (#563). Scale beyond the measured sizes is not claimed.
 - Temporal-intent cues are a small English lexicon.
 
 Current product and substrate maturity is documented in **[docs/43-substrate-inventory-and-maturity.md](docs/43-substrate-inventory-and-maturity.md)** and the **[RC1 profile](docs/45-agent-memory-rc1-implementation-profile.md)**.
@@ -220,7 +220,7 @@ Current portfolio highlights:
 | Profile | Status | What it currently tells us |
 |---|---|---|
 | **LongMemEval_S** | Complete frozen external run, plus remediation replays | Retrieval/currentness behavior, operational cost, zero runtime failures on the measured profile; exposed ranking/currentness weaknesses |
-| **LongMemEval_M** | Held | Not run until scale evidence justifies it |
+| **LongMemEval_M** | Held | Not run until per-commit persistence (#562) is bounded; running it now would re-measure a known quadratic ingest |
 | **AgentMemBench / MemDialogue** | Complete bounded external run | Retrieval, conflict/currentness, deletion, isolation, concurrency, scaling; exposed thread-affinity and scaling defects |
 | **SWE-ContextBench Lite** | Protocol-comparable external run blocked | Harness/evidence contract exists; exact frozen research-compatible corpus/provenance is still required |
 | **Internal RC retrieval fixture** | Complete | Demonstrates composed routes can recover memories lexical-only recall misses while preserving governance on the synthetic fixture |
@@ -252,14 +252,14 @@ The external gauntlets have not falsified Agent Memory's core authority/lifecycl
 | Ranking/currentness policy was implicit (#538, #531 class A) | Explicit post-admission ranking policy, admitted-set BM25, and a query-conditioned applicability profile (policy 3.0.0) | Landed. **[ADR-039](docs/adr/ADR-039-recall-ranking-uses-query-conditioned-applicability.md) remains Proposed** (#544) |
 | Unsafe cross-thread use of one handle (#530) | Runtime-owned serialization | Landed |
 | O(state) integrity work on every commit (#522 Part A) | Incremental attestation | Landed |
-| Every tenant fact became a recall candidate (#522 Part B, #548) | Privacy-preserving domain-eligibility prefilter; public contract 1.3.0 | See #548 |
-| Historically true but superseded state was unrepresentable (#549) | Explicit current-state vs historical-evidence admission | See #549 |
+| Every tenant fact became a recall candidate (#522 Part B, #548) | Privacy-preserving domain-eligibility prefilter; public contract 1.3.0 | Landed (#552) |
+| Historically true but superseded state was unrepresentable (#549) | Explicit current-state vs historical-evidence admission ([docs/58](docs/58-historical-evidence-admission.md)) | Landed (#553) |
 | Implicit-supersession questions (#531 class B) | Recorded as an explicit product limitation, not reopened | Limitation |
 
 Still open or held:
 
-- the governance-state rewrite and lexical scan costs at scale;
-- LongMemEval_M, held until scale evidence justifies it;
+- per-commit governance-state persistence (#562) and lexical candidate generation (#563), which dominate at 5,000–10,000 facts;
+- LongMemEval_M, held until #562 is bounded;
 - an orthogonal temporal gauntlet ([docs/59](docs/59-orthogonal-temporal-gauntlet-qualification.md));
 - the external SWE-ContextBench corpus (#467).
 

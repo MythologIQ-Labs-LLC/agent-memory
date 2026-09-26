@@ -33,7 +33,7 @@ Profile documentation: [`docs/profiles/longmemeval-retrieval-currentness-profile
 Current status:
 
 - **LongMemEval_S full:** complete frozen external run;
-- **LongMemEval_M:** held. It is not run merely because a remediation slice landed; the scale evidence that gates it is recorded in [`docs/56`](docs/56-benchmark-gauntlet-remediation-evidence.md);
+- **LongMemEval_M:** held. It is not run merely because a remediation slice landed. The post-prefilter scale probe in [`docs/56`](docs/56-benchmark-gauntlet-remediation-evidence.md) shows per-commit persistence dominating at 5,000–10,000 facts (#562), so M is promoted only after #562 is bounded;
 - **upstream model-judged QA:** not run;
 - session and turn retrieval/currentness evidence is committed;
 - external run is revision/input bound;
