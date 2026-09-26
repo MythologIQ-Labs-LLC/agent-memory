@@ -32,6 +32,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 
+from benchmark_ranking_variants import VARIANTS, apply_ranking_variant
 from agentmem_ref import AgentMemory
 
 
@@ -270,7 +271,7 @@ def _lexical_rank(question: str, items: Sequence[Mapping[str, str]]) -> list[str
 
 
 TEMPORAL_METADATA_MODES = ("none", "host_declared")
-RANKING_VARIANTS = ("default", "unspecified_newer_first_among_ties", "universal_newer_first")
+RANKING_VARIANTS = tuple(VARIANTS)
 # Evaluation-only configuration of the Agent Memory adapter, recorded in every report.
 _AGENT_MEMORY_CONFIGURATION: dict[str, str] = {"temporal_metadata": "none", "ranking_variant": "default"}
 _DATE = re.compile(r"^(\d{4})/(\d{2})/(\d{2})(?:\s*\([A-Za-z]{3}\))?\s*(\d{2}):(\d{2})")
@@ -302,24 +303,7 @@ def configure_agent_memory(*, temporal_metadata: str = "none", ranking_variant: 
 
     if temporal_metadata not in TEMPORAL_METADATA_MODES:
         raise ValueError(f"unknown temporal_metadata {temporal_metadata!r}")
-    if ranking_variant not in RANKING_VARIANTS:
-        raise ValueError(f"unknown ranking_variant {ranking_variant!r}")
-    if ranking_variant != "default":
-        import dataclasses
-
-        from agentmem_ref.runtime import query_driven_recall, recall_control, runtime_composition
-
-        overrides = (
-            {"unspecified_intent_order": "newer_first_among_ties"}
-            if ranking_variant == "unspecified_newer_first_among_ties"
-            else {"temporal_regime": "universal_newer_first", "stable_fallback": "candidate_ref_asc"}
-        )
-        for module, name in (
-            (runtime_composition, "MULTI_ROUTE_RANKING_POLICY"),
-            (query_driven_recall, "QUERY_DRIVEN_RANKING_POLICY"),
-            (recall_control, "CONTROLLED_RECALL_RANKING_POLICY"),
-        ):
-            setattr(module, name, dataclasses.replace(getattr(module, name), **overrides))
+    apply_ranking_variant(ranking_variant)
     _AGENT_MEMORY_CONFIGURATION.update(temporal_metadata=temporal_metadata, ranking_variant=ranking_variant)
     return dict(_AGENT_MEMORY_CONFIGURATION)
 
