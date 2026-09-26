@@ -163,6 +163,13 @@ def _recall_observation(
 ) -> ForbiddenHitObservation:
     result = adapter.governed_recall(query, context)
     candidate = fact_uuid in result.candidates
+    refusal = result.refusals.get(fact_uuid, "")
+    if not candidate:
+        # #548: a domain-ineligible match never becomes a candidate. Its forbidden class is
+        # still named, by the same shared predicate full admission applies.
+        fact = adapter._substrate.get_fact(fact_uuid)
+        if fact is not None:
+            refusal = adapter._domain_eligibility_refusal(fact, context or RecallContext(target_domain_refs=(TENANT,))) or ""
     admitted = fact_uuid in result.admitted
     # The reference runtime does not surface or permit influence from a memory
     # that failed admission. These remain separate report fields so a future
@@ -175,7 +182,7 @@ def _recall_observation(
         admitted=admitted,
         context_surfaced=context_surfaced,
         downstream_influence=downstream_influence,
-        refusal=result.refusals.get(fact_uuid, ""),
+        refusal=refusal,
     )
 
 
@@ -239,6 +246,9 @@ def _derived_residue() -> ForbiddenHitObservation:
         created_at="2026-01-01T00:00:00Z",
     )
     substrate.write_fact(derived)
+    # The derived residue shares its source's scope; this case tests tombstoned-source
+    # derivation, not missing scope metadata (which #548 excludes before candidacy).
+    adapter._fact_scope[derived.uuid] = dict(adapter._fact_scope[committed.fact_uuid])
     adapter.governed_delete(
         _proposal(proposal_id="fh:source-prune", operation="pruning", risk_class="low"),
         committed.fact_uuid,

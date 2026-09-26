@@ -29,6 +29,9 @@ from agentmem_ref.vector_retrieval import (
 )
 
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "reference" / "fixtures" / "runtime-configuration" / "reference-composed-runtime.json"
 TENANT = "tenant-native-vector"
@@ -225,6 +228,8 @@ class NativeVectorRetrievalTests(unittest.TestCase):
         self.assertEqual(hit.similarity_metric, "cosine")
         self.assertEqual(hit.currentness_basis, "governed_recall_admission")
         self.assertEqual(hit.authority_effect, "none")
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_vector_candidate_in_wrong_project_is_discovered_then_refused(self) -> None:
         foreign = self._retain(

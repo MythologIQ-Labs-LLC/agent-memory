@@ -66,9 +66,12 @@ class PhaseSemanticsTests(unittest.TestCase):
             governance = adapter.governance()
         finally:
             adapter.close()
-        self.assertEqual(governance["candidate_count"], 2)
+        # Contract 1.3.0 (#548): bob's canary is outside alice's domain, so it never becomes
+        # alice's candidate. Isolation holds before admission, and admission rechecks it.
+        self.assertEqual(governance["candidate_count"], 1)
         self.assertEqual(governance["admitted_count"], 1)
-        self.assertEqual(governance["refusal_reasons"], {"required_isolation_domain_missing": 1})
+        self.assertEqual(governance["refusal_reasons"], {})
+        self.assertEqual(governance["candidate_scopes"], {"domain_eligible": 1})
 
     def test_agent_memory_deletion_is_governed_tombstone(self) -> None:
         adapter = M.AgentMemoryAdapter()
@@ -119,7 +122,8 @@ class ProfileReportTests(unittest.TestCase):
         self.assertEqual(phases["isolation"]["cross_user_leak_rate"], 0.0)
         self.assertEqual(phases["deletion"]["audited_deletion_rate"], 1.0)
         self.assertEqual(phases["scale"]["30"]["recall_at_3"], 1.0)
-        self.assertGreater(backend["governance"]["isolation"]["refusal_reasons"]["required_isolation_domain_missing"], 0)
+        self.assertNotIn("required_isolation_domain_missing", backend["governance"]["isolation"]["refusal_reasons"])
+        self.assertEqual(set(backend["governance"]["isolation"]["candidate_scopes"]), {"domain_eligible"})
         for key in ("new_fact_rate", "staleness_rate", "dual_version_rate"):
             self.assertIn(key, phases["conflict"])
         self.assertIn("boundary", backend)

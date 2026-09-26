@@ -14,7 +14,7 @@ class RCCognitiveMemoryScenario(unittest.TestCase):
         self.assertTrue(report["passed"])
         self.assertEqual(report["scenario_id"], "agent-memory-rc1-cognitive-lifecycle")
         self.assertEqual(report["scenario_version"], "1.0.0")
-        self.assertEqual(report["contract_version"], "1.2.0")
+        self.assertEqual(report["contract_version"], "1.3.0")
         self.assertEqual(set(report) & {"quality", "governance", "runtime_recovery"}, {"quality", "governance", "runtime_recovery"})
         self.assertNotIn("health_score", report)
         self.assertNotIn("score", report)

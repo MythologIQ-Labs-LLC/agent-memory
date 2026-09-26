@@ -102,20 +102,22 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
         self.assertEqual(lexical["mean_reciprocal_rank"], 0.6)
 
         self.assertEqual(multi["relevant_total"], 7)
-        self.assertEqual(multi["candidate_total"], 11)
+        # Contract 1.3.0 (#548): the two foreign-scope neighbours are excluded before
+        # candidacy, so candidate totals and noise drop by two; admitted results are unchanged.
+        self.assertEqual(multi["candidate_total"], 9)
         self.assertEqual(multi["admitted_total"], 7)
         self.assertEqual(multi["candidate_recall"], 1.0)
         self.assertEqual(multi["admitted_recall"], 1.0)
         self.assertEqual(multi["admitted_precision"], 1.0)
         self.assertEqual(multi["mean_reciprocal_rank"], 1.0)
-        self.assertEqual(multi["candidate_noise"], 4)
+        self.assertEqual(multi["candidate_noise"], 2)
 
         comparison = report["comparison"]
         self.assertEqual(comparison["candidate_recall_delta"], 0.571429)
         self.assertEqual(comparison["admitted_recall_delta"], 0.571429)
         self.assertEqual(comparison["admitted_precision_delta"], 0.0)
         self.assertEqual(comparison["mean_reciprocal_rank_delta"], 0.4)
-        self.assertEqual(comparison["candidate_amplification"], 8)
+        self.assertEqual(comparison["candidate_amplification"], 6)
 
     def test_route_contributions_show_exact_and_relational_unique_gains(self) -> None:
         report = self._report()
@@ -126,7 +128,7 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
             {
                 "exact_logical_identity": 3,
                 "lexical": 3,
-                "shared_evidence_neighbor": 6,
+                "shared_evidence_neighbor": 4,  # 1.3.0: foreign neighbours are not candidates
             },
         )
         self.assertEqual(
@@ -161,10 +163,10 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
         self.assertEqual(
             relational["result"]["refusals"],
             {
-                "memory:foreign-related": "required_isolation_domain_missing",
                 "memory:stale-related": "superseded_not_current",
             },
         )
+        self.assertNotIn("memory:foreign-related", relational["result"]["candidates"])
         self.assertNotIn(
             "memory:foreign-related",
             relational["result"]["ranked_admitted"],
@@ -277,10 +279,8 @@ class RetrievalQualityBenchmarkTests(unittest.TestCase):
         rescue = rows["typed-graph-two-hop-rescue"]
         self.assertIn("memory:deploy-owner", rescue["result"]["admitted"])
         self.assertIn("memory:backup-policy", rescue["result"]["admitted"])
-        self.assertEqual(
-            rescue["result"]["refusals"]["memory:foreign-graph-only"],
-            "required_isolation_domain_missing",
-        )
+        self.assertNotIn("memory:foreign-graph-only", rescue["result"]["refusals"])  # 1.3.0 (#548)
+        self.assertNotIn("memory:foreign-graph-only", rescue["result"]["admitted"])
         self.assertEqual(
             rescue["result"]["refusals"]["memory:stale-graph-only"],
             "superseded_not_current",

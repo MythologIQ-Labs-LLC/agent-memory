@@ -274,6 +274,7 @@ class AgentMemoryAdapter:
             "remember_refusals": {},
             "recall_calls": 0,
             "candidate_count": 0,
+            "candidate_scopes": {},
             "admitted_count": 0,
             "refusal_reasons": {},
             "forget_calls": 0,
@@ -332,6 +333,12 @@ class AgentMemoryAdapter:
         recalled = self._memory.recall(query, target_domain_refs=[self.tenant, scope], project_ref=scope)
         self._stats["recall_calls"] += 1
         self._stats["candidate_count"] += len(recalled["candidates"])
+        # Contract 1.3.0 (#548) declares candidates domain-eligible; older contracts
+        # exposed every retrieval match, so candidate counts are compared per scope.
+        self._tally(
+            self._stats["candidate_scopes"],
+            str((recalled.get("candidate_policy") or {}).get("candidate_scope", "retrieval_candidates")),
+        )
         self._stats["admitted_count"] += len(recalled["admitted"])
         for candidate, decision in recalled["admissions"].items():
             if candidate not in recalled["admitted"]:

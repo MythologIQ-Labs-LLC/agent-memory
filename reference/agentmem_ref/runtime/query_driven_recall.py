@@ -27,7 +27,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import re
 
-from .adapter import RecallContext
+from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admit_preselected_candidates
 from .temporal_intent import resolve_intent
 from .ranking_policy import PostAdmissionRankingPolicy
@@ -130,7 +130,7 @@ class DeterministicQueryDrivenRecallPlanner:
 
         hits: list[RetrievalRouteHit] = []
         routes_executed: list[str] = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
-        lexical_results = list(substrate.search(query, group_ids=[tenant]))
+        lexical_results = list(eligible_search(substrate, query, tenant, lambda fact: self.adapter.domain_eligible(fact, context)))
         for fact, score in lexical_results:
             hits.append(
                 RetrievalRouteHit(
@@ -221,12 +221,13 @@ class DeterministicQueryDrivenRecallPlanner:
             admitted=list(admission.admitted),
             refusals=dict(admission.refusals),
             decisions=dict(admission.decisions),
-            route_hits=by_candidate,
+            route_hits={ref: hits for ref, hits in by_candidate.items() if ref in admission.candidates},
             ranked_admitted=ranked,
             policy_version=admission.policy_version,
             evaluated_at=admission.evaluated_at,
             ranking_policy=QUERY_DRIVEN_RANKING_POLICY.identity(),
             ranking_evidence=ranking_evidence,
+            candidate_policy=dict(admission.candidate_policy),
             query_temporal_intent=intent.to_dict(),
         )
 

@@ -26,6 +26,9 @@ from agentmem_ref.restart_runtime import (  # noqa: E402
 )
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 TENANT = "tenant-a"
 SHARED = "domain:shared-security"
 OTHER = "domain:other"
@@ -140,6 +143,8 @@ class SharedMembershipGovernance(unittest.TestCase):
         self.assertEqual(result.pama_decision["decision"]["outcome"], policy.REQUIRE_EXTERNAL_VERIFICATION)
         self.assertEqual(result.refusal, "external_verification_required")
         self.assertEqual(current_shared_domain_members(self.memory, SHARED), (ALICE, BOB))
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_bound_external_verification_commits_without_rewriting_pama_to_allow(self):
         fact_uuid = _shared_fact(self.memory)

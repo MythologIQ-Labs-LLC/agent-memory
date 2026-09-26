@@ -11,6 +11,9 @@ from agentmem_ref import policy, receipts
 from agentmem_ref.adapter import GovernedMemoryAdapter, RecallContext
 from agentmem_ref.substrate import Fact, InMemoryTemporalGraph
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 TENANT = "tenant-A"
 
 
@@ -89,7 +92,11 @@ class RecallEventTest(unittest.TestCase):
         event = self._last_event()
         self.assertEqual("mallory", event["principal"])
         self.assertEqual(0, event["payload"]["admitted_count"])
-        self.assertEqual(1, event["payload"]["candidate_count"])
+        # #548: the out-of-domain match is not a candidate, and the event does not reveal
+        # that anything matched. The read itself is still recorded, with its prefilter proof.
+        self.assertEqual(0, event["payload"]["candidate_count"])
+        self.assertEqual(event["payload"]["outcomes"], {})
+        self.assertEqual(event["payload"]["candidate_policy"]["candidate_scope"], "domain_eligible")
 
 
 class RecallDecisionTest(unittest.TestCase):
@@ -109,6 +116,8 @@ class RecallDecisionTest(unittest.TestCase):
         decision = result.decisions[self.committed.fact_uuid]
         self.assertEqual("admit", decision["outcome"])
         self.assertEqual("builtin_admission", decision["reason_code"])
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_refused_decision_carries_the_reason_code(self):
         self.substrate.write_fact(

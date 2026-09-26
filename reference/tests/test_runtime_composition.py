@@ -13,6 +13,9 @@ from agentmem_ref.runtime_composition import ConfiguredCompositionRuntime
 from agentmem_ref.runtime_config import validate_runtime_configuration
 
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "reference" / "fixtures" / "runtime-configuration" / "reference-composed-runtime.json"
 TENANT = "tenant-acme"
@@ -119,6 +122,8 @@ class ConfiguredRuntimeCompositionTests(unittest.TestCase):
         admission = self.runtime.projection_admission()
         self.assertTrue(admission.admitted)
         self.assertEqual(admission.authority_effect, "none")
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_governed_retrieval_keeps_project_isolation(self) -> None:
         retained = self._retain_initial()

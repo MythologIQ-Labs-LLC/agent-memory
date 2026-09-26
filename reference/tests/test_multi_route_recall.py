@@ -16,6 +16,9 @@ from agentmem_ref.runtime_composition import (
 from agentmem_ref.runtime_config import validate_runtime_configuration
 
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "reference" / "fixtures" / "runtime-configuration" / "reference-composed-runtime.json"
 TENANT = "tenant-acme"
@@ -139,6 +142,8 @@ class MultiRouteRecallTests(unittest.TestCase):
         )
         self.assertEqual(result.ranked_admitted, [deploy.fact_uuid])
 
+    @admission_only()  # exercises full admission's own domain refusal (#548)
+
     def test_exact_identity_score_cannot_bypass_project_scope(self) -> None:
         deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")
 
@@ -175,6 +180,8 @@ class MultiRouteRecallTests(unittest.TestCase):
         self.assertIn(deploy.fact_uuid, result.candidates)
         self.assertNotIn(deploy.fact_uuid, result.admitted)
         self.assertEqual(result.refusals[deploy.fact_uuid], "superseded_not_current")
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_refused_candidate_never_enters_ranked_list(self) -> None:
         deploy = self._retain(MEMORY_DEPLOY, "deploy window is Thursday")

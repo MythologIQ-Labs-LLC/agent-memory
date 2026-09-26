@@ -174,8 +174,8 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.memory = _open(self._temp.name)
         recalled = self.memory.recall("What is the current project status?", reference_time=NOW)
         self.assertNotIn(foreign_fact, recalled["admitted"])
-        self.assertIn("refusal", recalled["admissions"][foreign_fact])
-        self.assertNotIn("ranking_evidence", recalled["admissions"][foreign_fact])
+        self.assertNotIn(foreign_fact, recalled["candidates"])  # contract 1.3.0 (#548)
+        self.assertNotIn(foreign_fact, recalled["admissions"])
         self.assertEqual(recalled["admitted"], [local])
 
     # C13 / C14: timeline shape keeps several states in chronological order.

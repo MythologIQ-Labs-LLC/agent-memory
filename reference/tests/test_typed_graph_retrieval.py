@@ -27,6 +27,9 @@ from agentmem_ref.sqlite_substrate import SQLiteTemporalGraph
 from agentmem_ref.substrate import Fact, InMemoryTemporalGraph, TypedRelation
 
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "reference" / "fixtures" / "runtime-configuration" / "reference-composed-runtime.json"
 TENANT = "tenant-typed-graph"
@@ -365,6 +368,8 @@ class TypedGraphGovernedRecallTests(unittest.TestCase):
             result.graph_candidate_hits[neighbor.fact_uuid].seed_candidate_ref,
             seed.fact_uuid,
         )
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_graph_reachable_cross_project_fact_is_discovered_then_refused(self) -> None:
         seed = self._retain("memory:seed", "seed memory")

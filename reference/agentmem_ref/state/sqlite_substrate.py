@@ -591,10 +591,15 @@ class SQLiteTemporalGraph:
         self,
         query: str,
         group_ids: list[str] | None = UNFILTERED,
+        eligible=None,
     ) -> list[tuple[Fact, float]]:
+        """Lexical discovery. ``eligible`` (#548) skips facts before scoring; it is a
+        minimisation filter supplied by the governed caller, never permission."""
         terms = _tokens(query)
         scored: list[tuple[Fact, float]] = []
         for fact in self._facts_for_groups(group_ids):
+            if eligible is not None and not eligible(fact):
+                continue
             overlap = terms & _tokens(fact.fact_text)
             if not overlap:
                 continue

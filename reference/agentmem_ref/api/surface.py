@@ -102,7 +102,8 @@ def recall(memory: GovernedMemoryAdapter, query: str, context_envelope: Mapping[
         return early
     admission = memory.governed_recall(query, contract.recall_context_from_envelope(validated))
     return contract.result("recall", compat, candidates=list(admission.candidates),
-                           admitted=list(admission.admitted), admissions=dict(admission.decisions))
+                           admitted=list(admission.admitted), admissions=dict(admission.decisions),
+                           candidate_policy=dict(admission.candidate_policy))
 
 
 def forget(memory: GovernedMemoryAdapter, envelope: Mapping[str, Any], *,
@@ -610,6 +611,7 @@ class AgentMemory:
             candidates=list(result.candidates),
             admitted=list(result.ranked_admitted),
             admissions=admissions,
+            candidate_policy=dict(getattr(result, "candidate_policy", {}) or {}) or None,
         )
 
     @_serialized

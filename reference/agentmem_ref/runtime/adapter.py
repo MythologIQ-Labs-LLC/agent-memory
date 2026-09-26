@@ -106,6 +106,43 @@ class AdmissionResult:
     decisions: dict[str, dict] = field(default_factory=dict)
     policy_version: str = ""
     evaluated_at: str = ""
+    # #548: how raw discovery matches became candidates. Never a count.
+    candidate_policy: dict = field(default_factory=dict)
+
+
+# #548 (#522 Part B): raw discovery matches that fail the shared domain-eligibility
+# predicate never become candidates. The predicate uses only necessary conditions that
+# full canonical admission rechecks on every candidate; it is a minimisation boundary,
+# never permission.
+PREFILTER_POLICY_ID = "domain-eligibility-prefilter"
+PREFILTER_POLICY_VERSION = "1.0.0"
+CANDIDATE_SCOPE = "domain_eligible"
+
+
+def candidate_policy_evidence() -> dict:
+    """Per-recall proof of how candidates were formed. Carries no identifiers and no counts."""
+
+    return {
+        "candidate_scope": CANDIDATE_SCOPE,
+        "prefilter_policy_id": PREFILTER_POLICY_ID,
+        "prefilter_policy_version": PREFILTER_POLICY_VERSION,
+        "prefilter_authority": "none",
+        "admission": "full_canonical_admission_on_every_candidate",
+    }
+
+
+def eligible_search(substrate, query: str, tenant: str, eligible) -> list:
+    """Tenant-partitioned lexical discovery restricted to domain-eligible facts.
+
+    Reference substrates accept ``eligible`` and skip ineligible facts before scoring.
+    Any other substrate is searched as before and filtered afterwards, which removes
+    visibility but not the scoring work.
+    """
+
+    try:
+        return list(substrate.search(query, group_ids=[tenant], eligible=eligible))
+    except TypeError:
+        return [(fact, score) for fact, score in substrate.search(query, group_ids=[tenant]) if eligible(fact)]
 
 
 @dataclass(frozen=True)
@@ -516,8 +553,11 @@ class GovernedMemoryAdapter:
         result = AdmissionResult(
             policy_version=policy.POLICY_VERSION, evaluated_at=evaluated_at
         )
+        result.candidate_policy = candidate_policy_evidence()
         correlation = self._ids.next()
-        for fact, _score in self._substrate.search(query, group_ids=[self._tenant]):
+        for fact, _score in eligible_search(
+            self._substrate, query, self._tenant, lambda fact: self.domain_eligible(fact, context)
+        ):
             result.candidates.append(fact.uuid)
             refusal = self._admission_refusal(fact, context)
             if refusal:
@@ -632,6 +672,7 @@ class GovernedMemoryAdapter:
                 "project_ref": context.project_ref,
                 "task_ref": context.task_ref,
                 "purpose": context.purpose,
+                "candidate_policy": dict(result.candidate_policy or candidate_policy_evidence()),
                 "candidate_count": len(result.candidates),
                 "admitted_count": len(result.admitted),
                 "outcomes": {
@@ -642,6 +683,11 @@ class GovernedMemoryAdapter:
         }
         receipts.validate("memory-audit-event.schema.json", document)
         return document
+
+    def domain_eligible(self, fact: Fact | None, context: RecallContext) -> bool:
+        """The #548 prefilter: the domain-eligibility conditions admission itself applies."""
+
+        return fact is not None and self._domain_eligibility_refusal(fact, context) is None
 
     def _admission_refusal(self, fact: Fact, context: RecallContext) -> str | None:
         if fact.group_id != self._tenant:
@@ -654,7 +700,14 @@ class GovernedMemoryAdapter:
             return "superseded_not_current"
         if fact.uuid in self._disputed:
             return "disputed"
+        return self._domain_eligibility_refusal(fact, context)
 
+    def _domain_eligibility_refusal(self, fact: Fact, context: RecallContext) -> str | None:
+        """Shared necessary conditions: tenant, scope metadata, isolation domains,
+        shared-space membership, project, task. Full admission always re-applies them."""
+
+        if fact.group_id != self._tenant:
+            return "out_of_scope"
         scope = self._fact_scope.get(fact.uuid)
         if scope is None:
             # GAP-ARCH-18 (LD1): docs/34:139 -- "candidates that arrive without

@@ -32,7 +32,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .adapter import RecallContext
+from .adapter import RecallContext, eligible_search
 from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
@@ -108,6 +108,7 @@ class MultiRouteRecallResult:
     ranking_policy: dict = field(default_factory=dict)
     ranking_evidence: dict[str, dict] = field(default_factory=dict)
     query_temporal_intent: dict = field(default_factory=dict)
+    candidate_policy: dict = field(default_factory=dict)
 
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
         return tuple(self.route_hits.get(candidate_ref, ()))
@@ -167,7 +168,7 @@ class DeterministicMultiRouteRecallPlanner:
 
         hits: list[RetrievalRouteHit] = []
         routes_executed = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
-        for fact, score in substrate.search(query, group_ids=[tenant]):
+        for fact, score in eligible_search(substrate, query, tenant, lambda fact: self.adapter.domain_eligible(fact, context)):
             hits.append(
                 RetrievalRouteHit(
                     route_id=LEXICAL_ROUTE,
@@ -268,12 +269,13 @@ class DeterministicMultiRouteRecallPlanner:
             admitted=list(admission.admitted),
             refusals=dict(admission.refusals),
             decisions=dict(admission.decisions),
-            route_hits=by_candidate,
+            route_hits={ref: hits for ref, hits in by_candidate.items() if ref in admission.candidates},
             ranked_admitted=ranked,
             policy_version=admission.policy_version,
             evaluated_at=admission.evaluated_at,
             ranking_policy=MULTI_ROUTE_RANKING_POLICY.identity(),
             ranking_evidence=ranking_evidence,
+            candidate_policy=dict(admission.candidate_policy),
             query_temporal_intent=intent.to_dict(),
         )
 

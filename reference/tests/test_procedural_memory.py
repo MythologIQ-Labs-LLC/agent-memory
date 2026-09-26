@@ -25,6 +25,9 @@ from agentmem_ref.procedural_memory import (  # noqa: E402
 )
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 TENANT = "tenant:fixture"
 PROJECT = "project:fixture"
 OTHER_PROJECT = "project:other"
@@ -246,6 +249,8 @@ class ProceduralMemoryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "skill_approval_binding_missing"):
             self.runtime.commit_skill(forged)
         self.assertEqual(self.adapter.state_version(v1.memory_reference), 1)
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_high_relevance_foreign_project_skill_is_candidate_but_not_activated(self):
         artifact = self.skill(version=1, branch="release")
