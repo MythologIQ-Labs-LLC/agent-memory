@@ -386,6 +386,11 @@ class ConfigBoundRestartRuntime:
         return self.base.adapter
 
     @property
+    def serialization_lock(self):
+        """The base runtime's serialization lock, or None if the base has none."""
+        return getattr(self.base, "serialization_lock", None)
+
+    @property
     def visibility_snapshots(self) -> dict[str, dict]:
         return self.base.visibility_snapshots
 

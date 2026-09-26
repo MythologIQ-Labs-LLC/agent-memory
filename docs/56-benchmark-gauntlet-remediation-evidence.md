@@ -66,6 +66,24 @@ Every other session and turn headline metric has a paired 95% interval that incl
 
 The run shared its host with a concurrent replay for part of its duration. Timing from this slice is **not** performance evidence; #522 owns clean measurements.
 
+## Slice 2: runtime-owned serialization for one handle (#530)
+
+Candidate revision `59dc80d` (branch `runtime/530-serialized-handle`). Evidence is in `reports/benchmarks/replays/530-serialized-handle-59dc80d/`.
+
+**Change.**
+
+- One `AgentMemory` handle may be shared across threads. The runtime owns a single re-entrant lock covering the connection, governance state, generation compare-and-swap, journal append, and recovery.
+- Every public facade operation and every composition entry point acquires that lock.
+- `check_same_thread=False` is set only together with that lock. A connection-only change is falsified by the tests: it fails with `nested SQLite substrate transactions are unsupported`.
+- No per-thread handles are created, and the isolation, admission, and PAMA paths are unchanged.
+
+| AgentMemBench concurrency (200 records) | workers | 03197cd | 59dc80d |
+| --- | --- | --- | --- |
+| operation success / materialization | 1, 4, 8, 16 | 0.00 / 0.00 (200 `ProgrammingError` each) | **1.00 / 1.00**, 0 errors |
+| throughput (ops/s) | 1 / 4 / 8 / 16 | n/a (all failed) | 69.5 / 62.2 / 69.2 / 67.0 |
+
+**Stated cost.** Throughput is flat across worker counts because writes are serialized: a single handle is correct under concurrency but does not scale with threads. Latency grows with queue depth (p50 14 ms at 1 worker, 218 ms at 16). Multi-writer throughput would need a different design and is not claimed here. The host was shared with a concurrent replay, so the absolute latencies are not performance evidence.
+
 ## Slice 3: integrity attestation scaling (#522)
 
 At ~1,000 facts the SQLite runtime re-derived its entire integrity posture on every commit. It serialized every canonical row into one SHA-256 digest (`state_digest`), re-validated the full journal chain, and parsed the whole runtime-state blob twice. Because governed recall also commits a generation (audit and identifier progress), recall paid the same cost.
