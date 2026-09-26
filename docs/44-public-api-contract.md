@@ -1,6 +1,6 @@
 # Public API Contract
 
-**Status**: contract version `1.2.0`. `1.0.0` (Sprint 4a, plan `docs/plan-sprint4a-public-api-contract.md`, ledger Entry #45) implemented PRD-001 R1's proposal, decision, approval, commit, retrieval-candidate and recall-admission stages; `1.1.0` (Sprint 4c-1, plan `docs/plan-sprint4c1-history-posture.md`, Entry #51) added the history/provenance and posture inspection operations; `1.2.0` (Sprint 4c-2, plan `docs/plan-sprint4c2-action-authority.md`, ADR-038) adds the action-authority and execution-evidence stages. The JS runtime's conformance is Sprint 4b, held (Entry #47).
+**Status**: contract version `1.3.0`. `1.0.0` (Sprint 4a, plan `docs/plan-sprint4a-public-api-contract.md`, ledger Entry #45) implemented PRD-001 R1's proposal, decision, approval, commit, retrieval-candidate and recall-admission stages; `1.1.0` (Sprint 4c-1, plan `docs/plan-sprint4c1-history-posture.md`, Entry #51) added the history/provenance and posture inspection operations; `1.2.0` (Sprint 4c-2, plan `docs/plan-sprint4c2-action-authority.md`, ADR-038) adds the action-authority and execution-evidence stages; `1.3.0` (#548, #522 Part B) redefines recall `candidates` as **domain-eligible candidates** and adds `candidate_policy` to recall results (see "Recall candidates" below). The JS runtime's conformance is Sprint 4b, held (Entry #47).
 
 ## What the contract is
 
@@ -40,7 +40,7 @@ Schema validation is a second, separate check ("serialization success is not sem
 | `propose(memory, envelope)` | `proposal` (and `decision`, as the projection every result carries) | no | validates, converts, runs the base PAMA evaluation, returns the decision projection |
 | `approve(memory, envelope, *, evidence=(), attestation=None)` | `approval` | no | the ADR-037 4a discharge: qualified evidence grouped and verified through the **adapter's own** registry, or an attestation for `require_external_verification`; returns the decision with `discharge_authority` / `review_discharge` |
 | `commit(memory, envelope, fact_text, *, evidence=(), attestation=None)` | `commit` | yes, or parks | forwards evidence and attestation unchanged to `commit_proposal`; returns the receipt, `committed`, `fact_uuid`, `refusal` |
-| `recall(memory, query, context_envelope)` | `recall` (retrieval candidate and recall admission) | no | `candidates` are the retrieval candidates; `admissions` are the adapter's per-candidate decision records (`outcome`: `admit` / `block`, `reason_code`), passed through unchanged; `admitted` is the admitted subset |
+| `recall(memory, query, context_envelope)` | `recall` (retrieval candidate and recall admission) | no | `candidates` are the **domain-eligible** retrieval candidates (1.3.0); `admissions` are the adapter's per-candidate decision records (`outcome`: `admit` / `block`, `reason_code`), passed through unchanged; `admitted` is the admitted subset; `candidate_policy` states how candidates were formed |
 | `forget(memory, envelope, *, evidence=(), attestation=None)` | `forget` | yes, or parks or refuses | resolves the target's current fact and forwards to `governed_delete`; an unknown target refuses `fact_not_found` |
 | `history(memory, target_envelope, *, fact_text=None)` | `history` (inspect history/provenance) | no | the target's retained audit events (commit and deletion events; recall events carry no target and are read from `memory.events` directly), `current_fact_uuid`, `state_version`, `tombstoned`, and, given a value, that value's rejected-value history (recorded when a committed correction superseded it) |
 | `posture(config_path, *, qualification_path=None, state_dir=None)` | `posture` (inspect configured posture) | no | the doctor's report for a configuration, validated against `api-posture-report`; takes paths, not an adapter, and emits `compatibility: current`; a missing or invalid configuration returns `stage: none` with `validation_error` |
@@ -67,6 +67,27 @@ The decision projection carries `outcome`, `permitted_actions`, `prohibited_acti
 The attestation-only path is intentionally narrow. `policy.evaluate_with_external_verification` changes only a base `require_external_verification` outcome; a medium-risk correction that requires qualified review evidence remains `require_review` even when an attestation is supplied. Binding, self-verification, authority-kind, and risk-ceiling checks remain in the shared evaluator.
 
 Issue #395 corrected the former `commit_proposal` asymmetry in which `approve` and `governed_delete` honored an attestation alone while commit accepted the parameter and ignored it. This is an implementation correction to the already-sanctioned ADR-037 step 4b-2 entry-point channel, not a new envelope or signature, so the public contract remains `1.2.0`.
+
+## Recall candidates (contract `1.3.0`, #548)
+
+In `1.2.0`, `candidates` were every tenant-partitioned retrieval match, and each carried a per-candidate admission decision. A caller could therefore see identifiers, refusal reasons, and the number of memories in *other* isolation domains that matched its query. Cardinality is information too.
+
+`1.3.0` defines the stages explicitly:
+
+```text
+raw discovery matches
+  -> necessary domain-eligibility prefilter
+  -> candidate set            (caller-visible `candidates`)
+  -> full canonical governed admission
+  -> admitted set             (caller-visible `admitted`)
+```
+
+- **The prefilter uses only necessary conditions that full admission independently re-applies**, through one shared predicate: tenant, scope metadata, isolation domains and required compartments, shared-space membership, project, and task. It is a minimisation boundary, never permission. Every remaining candidate still crosses full admission, which rechecks the same conditions plus lifecycle, dispute, deletion, and derivation.
+- **Domain-ineligible matches are never caller-visible.** They do not appear in `candidates`, `admissions`, ranking evidence, route provenance, or the ordinary `memory.recall` audit event, and no count of them is reported. Lifecycle refusals within the caller's own domain (`superseded_not_current`, `tombstoned`, `disputed`, …) remain visible candidates with decisions, as before.
+- **`candidate_policy` is per-recall proof of how candidates were formed:** `candidate_scope: domain_eligible`, `prefilter_policy_id`, `prefilter_policy_version`, `prefilter_authority: none`, `admission: full_canonical_admission_on_every_candidate`. It carries no identifiers and no counts. The same object is recorded in the recall audit event.
+- **No excluded-match telemetry exists.** Aggregate prefilter evidence may be retained only on a surface whose authorization model permits that observation. No such operator surface is defined yet, so none is recorded.
+
+**Compatibility.** Additive minor: `1.0.0`–`1.2.0` envelopes remain `current`. Results are stamped with the implementation's contract version, so a `1.2.0` envelope receives a `1.3.0` recall result with `candidate_policy` present. The prefilter is not optional per request: re-exposing foreign identifiers would be a disclosure, not a compatibility mode.
 
 ## Action authority and execution evidence (contract `1.2.0`, ADR-038)
 

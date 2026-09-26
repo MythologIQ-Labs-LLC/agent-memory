@@ -18,7 +18,7 @@ from dataclasses import dataclass, field
 from typing import Any, Iterable
 
 from ..core import policy, receipts
-from .adapter import AdmissionResult, Clock, GovernedMemoryAdapter, RecallContext
+from .adapter import AdmissionResult, Clock, GovernedMemoryAdapter, RecallContext, candidate_policy_evidence
 from ..core.contextual_recall import ADMITTING_OUTCOMES, fail_closed_decision
 
 
@@ -56,6 +56,7 @@ def admit_preselected_candidates(
         policy_version=policy.POLICY_VERSION,
         evaluated_at=evaluated_at,
     )
+    result.candidate_policy = candidate_policy_evidence()
     correlation = base._ids.next()
     seen: set[str] = set()
 
@@ -63,9 +64,13 @@ def admit_preselected_candidates(
         if not candidate_ref or candidate_ref in seen:
             continue
         seen.add(candidate_ref)
+        fact = substrate.get_fact(candidate_ref)
+        # #548: a discovered fact outside the caller's domain never becomes a candidate.
+        # Full admission below re-applies the same conditions to everything that remains.
+        if fact is not None and not base.domain_eligible(fact, context):
+            continue
         result.candidates.append(candidate_ref)
 
-        fact = substrate.get_fact(candidate_ref)
         refusal = (
             "candidate_not_found"
             if fact is None

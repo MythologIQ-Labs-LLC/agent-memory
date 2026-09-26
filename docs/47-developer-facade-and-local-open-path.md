@@ -74,7 +74,7 @@ contract            1.2.0
 
 The result keeps:
 
-- candidate identifiers separate from admitted identifiers;
+- candidate identifiers separate from admitted identifiers. Since contract `1.3.0`, candidates are **domain-eligible**: matches outside the caller's isolation domains never appear as candidates, refusals, or counts (#548, `docs/44-public-api-contract.md`);
 - refusal decisions separate from ranking;
 - per-candidate route provenance inside the existing `admissions` object;
 - exact-identity, lexical, and bounded relational provenance when those routes produce a candidate;

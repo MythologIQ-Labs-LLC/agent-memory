@@ -178,9 +178,13 @@ class PublicSurface(unittest.TestCase):
         self.assertIn(fact, result["candidates"])
         self.assertEqual(result["admissions"][fact]["outcome"], "admit")
         self.assertEqual(result["admissions"][fact]["reason_code"], "builtin_admission")
+        self.assertEqual(result["candidate_policy"]["candidate_scope"], "domain_eligible")
+        # Contract 1.3.0 (#548): outside the caller's domains the fact is not a candidate,
+        # has no admission record, and nothing reveals that it matched.
         blocked = surface.recall(self.memory, "release branch", {**RECALL, "target_domain_refs": ["org:elsewhere"]})
-        self.assertEqual(blocked["admissions"][fact]["outcome"], "block")
-        self.assertNotEqual(blocked["admissions"][fact]["reason_code"], "builtin_admission")
+        self.assertEqual(blocked["candidates"], [])
+        self.assertEqual(blocked["admissions"], {})
+        self.assertEqual(blocked["admitted"], [])
 
     def test_forget_forwards_and_refuses_unknown(self):
         unknown = surface.forget(self.memory, {**_correction(), "target_reference": "repo:example:nothing"})

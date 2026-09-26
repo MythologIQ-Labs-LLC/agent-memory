@@ -536,7 +536,7 @@ class InMemoryTemporalGraph:
         neighbors.sort(key=lambda item: (-item[2], item[0].uuid))
         return neighbors
 
-    def search(self, query: str, group_ids: list[str] | None = UNFILTERED) -> list[tuple[Fact, float]]:
+    def search(self, query: str, group_ids: list[str] | None = UNFILTERED, eligible=None) -> list[tuple[Fact, float]]:
         """Candidate generation by lexical overlap.
 
         Two modelled behaviors matter more than the ranking quality:
@@ -550,6 +550,8 @@ class InMemoryTemporalGraph:
         scored: list[tuple[Fact, float]] = []
         for fact in self._facts.values():
             if group_ids is not UNFILTERED and fact.group_id not in group_ids:
+                continue
+            if eligible is not None and not eligible(fact):
                 continue
             overlap = terms & _tokens(fact.fact_text)
             if not overlap:

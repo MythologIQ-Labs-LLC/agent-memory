@@ -243,11 +243,14 @@ class FacadeRankingTests(unittest.TestCase):
             foreign = memory.remember("memory:foreign", "The current release codename is Zelkova.", overrides=other_scope)
             self.assertTrue(foreign["committed"])
             recalled = memory.recall(QUERY)
-            for refused in (first["fact_uuid"], foreign["fact_uuid"]):
-                self.assertIn(refused, recalled["candidates"])
-                self.assertNotIn(refused, recalled["admitted"])
-                self.assertIn("refusal", recalled["admissions"][refused])
-                self.assertNotIn("ranking_evidence", recalled["admissions"][refused])
+            # The superseded fact is in the caller's own scope: a visible, refused candidate.
+            self.assertIn(first["fact_uuid"], recalled["candidates"])
+            self.assertNotIn(first["fact_uuid"], recalled["admitted"])
+            self.assertIn("refusal", recalled["admissions"][first["fact_uuid"]])
+            self.assertNotIn("ranking_evidence", recalled["admissions"][first["fact_uuid"]])
+            # The foreign fact never becomes a candidate at all (contract 1.3.0, #548).
+            self.assertNotIn(foreign["fact_uuid"], recalled["candidates"])
+            self.assertNotIn(foreign["fact_uuid"], recalled["admissions"])
             self.assertEqual(recalled["admitted"], [corrected["fact_uuid"]])
 
     def test_route_provenance_survives_ranking(self):

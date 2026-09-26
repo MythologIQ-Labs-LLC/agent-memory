@@ -59,7 +59,9 @@ class ContinuousRetrievalRegressionTests(unittest.TestCase):
         self.assertEqual(report["metric_contract"]["aggregate_health_score"], "not_defined")
 
         refusal_counts = report["governance_evidence"]["multi_route"]["refusal_reason_counts"]
-        self.assertGreater(refusal_counts.get("required_isolation_domain_missing", 0), 0)
+        # Contract 1.3.0 (#548): domain-ineligible matches never become candidates, so no
+        # isolation refusal is recorded. In-domain lifecycle refusals stay visible as evidence.
+        self.assertEqual(refusal_counts.get("required_isolation_domain_missing", 0), 0)
         self.assertGreater(refusal_counts.get("superseded_not_current", 0), 0)
         self.assertEqual(report["governance_evidence"]["multi_route"]["authority_effect"], "none")
 

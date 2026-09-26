@@ -17,6 +17,9 @@ from agentmem_ref import policy  # noqa: E402
 from agentmem_ref.adapter import Clock, GovernedMemoryAdapter, RecallContext  # noqa: E402
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 TENANT = "tenant-a"
 AGENT = "agent:planner"
 DOMAIN_A = "domain:project-a"
@@ -102,6 +105,8 @@ class IsolationDomainRecallTests(unittest.TestCase):
         self.assertIn(fact_uuid, recall.candidates)
         self.assertIn(fact_uuid, recall.admitted)
 
+    @admission_only()  # exercises full admission's own domain refusal (#548)
+
     def test_same_agent_same_tenant_wrong_project_is_blocked(self):
         fact_uuid = self._commit("mem:a2", DOMAIN_A, "project-a", "task-1")
 
@@ -121,6 +126,8 @@ class IsolationDomainRecallTests(unittest.TestCase):
         self.assertNotIn(fact_uuid, recall.admitted)
         self.assertEqual(recall.refusals[fact_uuid], "isolation_domain_mismatch")
 
+    @admission_only()  # exercises full admission's own domain refusal (#548)
+
     def test_same_agent_same_project_wrong_task_is_blocked(self):
         fact_uuid = self._commit("mem:a3", DOMAIN_A, "project-a", "task-1")
 
@@ -137,6 +144,8 @@ class IsolationDomainRecallTests(unittest.TestCase):
         self.assertIn(fact_uuid, recall.candidates)
         self.assertNotIn(fact_uuid, recall.admitted)
         self.assertEqual(recall.refusals[fact_uuid], "task_scope_mismatch")
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_task_switch_does_not_carry_prior_context_authority(self):
         fact_uuid = self._commit("mem:a4", DOMAIN_A, "project-a", "task-1")
@@ -156,6 +165,8 @@ class IsolationDomainRecallTests(unittest.TestCase):
         self.assertNotIn(fact_uuid, switched.admitted)
         self.assertEqual(switched.refusals[fact_uuid], "isolation_domain_mismatch")
 
+    @admission_only()  # exercises full admission's own domain refusal (#548)
+
     def test_unresolved_target_domain_fails_closed_for_scoped_memory(self):
         fact_uuid = self._commit("mem:a5", DOMAIN_A, "project-a", "task-1")
 
@@ -167,6 +178,8 @@ class IsolationDomainRecallTests(unittest.TestCase):
         self.assertIn(fact_uuid, recall.candidates)
         self.assertNotIn(fact_uuid, recall.admitted)
         self.assertEqual(recall.refusals[fact_uuid], "isolation_domain_mismatch")
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_same_tenant_missing_required_compartment_is_blocked(self):
         fact_uuid = self._commit(

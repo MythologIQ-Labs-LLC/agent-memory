@@ -14,6 +14,9 @@ from agentmem_ref import policy
 from agentmem_ref.adapter import GovernedMemoryAdapter, RecallContext
 from agentmem_ref.substrate import Fact, InMemoryTemporalGraph
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 TENANT = "tenant-A"
 OTHER_TENANT = "tenant-B"
 
@@ -53,11 +56,15 @@ class UnknownScopeRefusalTest(unittest.TestCase):
         self.substrate = InMemoryTemporalGraph()
         self.adapter = GovernedMemoryAdapter(self.substrate, tenant=TENANT)
 
+    @admission_only()  # exercises full admission's own domain refusal (#548)
+
     def test_scopeless_fact_is_refused(self):
         self.substrate.write_fact(_scopeless_fact())
         result = self.adapter.governed_recall("deploy")
         self.assertNotIn("no-scope-1", result.admitted)
         self.assertEqual("unknown_scope", result.refusals["no-scope-1"])
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_refused_even_with_empty_target_domains(self):
         """The pre-fix probe admitted this exact case."""
@@ -67,6 +74,8 @@ class UnknownScopeRefusalTest(unittest.TestCase):
         )
         self.assertEqual([], result.admitted)
         self.assertEqual("unknown_scope", result.refusals["no-scope-1"])
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_refusal_string_matches_the_js_runtime(self):
         """Parity source: integrations/agent-memory-runtime/src/index.mjs:114."""
@@ -93,6 +102,8 @@ class RefusalOrderingTest(unittest.TestCase):
         self.substrate.write_fact(_scopeless_fact(uuid="foreign-1", group_id=OTHER_TENANT))
         result = self.adapter.governed_recall("deploy")
         self.assertNotIn("foreign-1", result.candidates)
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_tombstoned_source_outranks_unknown_scope(self):
         """forbidden_hits' shield: derived_from_tombstoned_source fires first."""

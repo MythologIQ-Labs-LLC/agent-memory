@@ -6,6 +6,9 @@ import unittest
 
 from tests.qualified_fixtures import attestation_for, corpus_for, registry_for, rule
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 BRANCH_MEMORY = "memory:deploy-branch"
 
 
@@ -110,6 +113,8 @@ class RestartSafeRuntimeTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         self.temp.cleanup()
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_release_branch_survives_restart_with_currentness_scope_and_stale_replay(self) -> None:
         session_a = RestartSafeRuntime.create(self.root, tenant="tenant-acme", profile=self.profile,
