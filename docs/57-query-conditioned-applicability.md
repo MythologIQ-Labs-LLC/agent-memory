@@ -206,3 +206,4 @@ Additional dimensions the evidence says are missing (recorded, not squeezed into
 - Applicability without a `reference_time` cannot evaluate declared intervals (`no_reference_time`). Hosts must supply the reference clock for current-state claims.
 - The timeline shape is conveyed through per-candidate evidence because the public result envelope does not allow new top-level fields. A first-class structured recall result would be a contract change.
 - Timing in these replays is host-shared and is not performance evidence.
+- No external corpus yet exercises validity intervals, as-of, or prospective classes. The qualification of candidate gauntlets is recorded in `docs/59-orthogonal-temporal-gauntlet-qualification.md`.
