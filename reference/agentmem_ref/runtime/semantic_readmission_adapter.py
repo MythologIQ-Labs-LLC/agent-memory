@@ -149,8 +149,13 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
             self.events.append(event)
         return result
 
-    def _supersede_current(self, proposal: policy.Proposal) -> None:
-        """Preserve correction authority in rejection metadata for this profile."""
+    def _supersede_current(self, proposal: policy.Proposal, replacement_kind: str = "error_correction", temporal=None) -> None:
+        """Preserve correction authority in rejection metadata for this profile.
+
+        A #549 state change is not a rejection; it follows the base adapter's path.
+        """
+        if replacement_kind != "error_correction":
+            return super()._supersede_current(proposal, replacement_kind, temporal)
         current_uuid = self._current_fact_by_memory.get(proposal.target_reference)
         if not current_uuid:
             return
@@ -159,6 +164,7 @@ class SemanticReadmissionAdapter(GovernedMemoryAdapter):
             return
 
         rejected_at = self._clock.now()
+        self._record_replacement(current, proposal, replacement_kind, temporal, rejected_at)
         self._rejected_values.reject(
             memory_id=proposal.target_reference,
             value=current.fact_text,
