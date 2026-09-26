@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/gauntlet-profile-requirements.schema.json",
+  "title": "Agent Memory Gauntlet Profile Capability Requirements",
+  "description": "Capability support classes accepted by one Gauntlet profile. Requirements are system-neutral and do not create memory authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_family", "contract_version", "profile_id", "requires", "optional", "authority_effect"],
+  "properties": {
+    "contract_family": {"const": "agent-memory-gauntlet-profile-requirements"},
+    "contract_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "profile_id": {"type": "string", "minLength": 1},
+    "requires": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/accepted_support"}
+    },
+    "optional": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/accepted_support"}
+    },
+    "notes": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "authority_effect": {"const": "none"}
+  },
+  "$defs": {
+    "accepted_support": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["native", "mapped", "derived"]}
+    }
+  }
+}

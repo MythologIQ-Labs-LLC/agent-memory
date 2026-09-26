@@ -16,6 +16,17 @@ from .contract import (
     validate_run,
     write_run,
 )
+from .gauntlet_contract import (
+    CONTRACT_VERSION as GAUNTLET_CONTRACT_VERSION,
+    GauntletContractError,
+    canonical_manifest_bytes,
+    capability_support,
+    manifest_digest,
+    negotiate_capabilities,
+    validate_manifest,
+    validate_operation_envelope,
+    validate_profile_requirements,
+)
 
 __all__ = [
     "BenchmarkContractError",
@@ -27,4 +38,13 @@ __all__ = [
     "metric_observation",
     "validate_run",
     "write_run",
+    "GAUNTLET_CONTRACT_VERSION",
+    "GauntletContractError",
+    "canonical_manifest_bytes",
+    "capability_support",
+    "manifest_digest",
+    "negotiate_capabilities",
+    "validate_manifest",
+    "validate_operation_envelope",
+    "validate_profile_requirements",
 ]
