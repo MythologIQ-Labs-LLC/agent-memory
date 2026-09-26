@@ -185,7 +185,7 @@ Supported:
 Narrowed:
 
 1. **Condition 2 is partly triggered for benchmark-observable behavior.** On both external gauntlets under the shipped relevance, typed applicability is metric-identical to the universal tie-break. Its benefit is demonstrated only with declared temporal evidence (the fixtures), which neither gauntlet supplies. The empirical claim should be scoped to workloads that carry validity or temporal intent. Neither LongMemEval_S nor AgentMemBench does, beyond question wording.
-2. **Interpretation is the binding constraint.** Only 16 of 78 knowledge-update questions contain a high-confidence temporal cue. ADR-039's "ranking quality is bounded by query-interpretation quality" is confirmed strongly. Task-level intent (a host knowing it is asking about current state) must be declarable, and it is (`temporal_intent`). No deterministic text interpreter recovers it from these questions.
+2. **Interpretation is the binding constraint.** Only 16 of 78 knowledge-update questions contain a high-confidence *current* cue (23 contain any high-confidence temporal cue). ADR-039's "ranking quality is bounded by query-interpretation quality" is confirmed strongly. Task-level intent (a host knowing it is asking about current state) must be declarable, and it is (`temporal_intent`). No deterministic text interpreter recovers it from these questions.
 3. **"Universal-tie-break regressions" were not one class.** Some were real (KU recall, turn nDCG). Some universal *gains* came from a benchmark positional artifact. Neither aggregate is evidence about temporal semantics.
 
 Not tested:
