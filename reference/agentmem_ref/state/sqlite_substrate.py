@@ -126,6 +126,287 @@ class SqliteDeterministicIds(DeterministicIds):
             )
 
 
+# Incremental governance-state commitment (#562). Governance state is persisted as
+# sections instead of one re-serialized blob:
+#   map sections       keyed entries, committed by per-section bucketed roots
+#   log sections       append-only entries, committed by a hash chain (count + head)
+#   residual           the small remainder, committed by one digest
+# The root string is self-describing ("gsect-v1:<hex>"); the legacy full-JSON governance
+# digest ("sha256:<hex>") is the "full-json-v1" scheme.
+GOVERNANCE_SCHEME = "gsect-v1"
+LEGACY_GOVERNANCE_SCHEME = "full-json-v1"
+GOVERNANCE_MAP_SECTIONS = ("current_fact_by_memory", "fact_memory", "fact_scope", "state_version", "tombstones")
+GOVERNANCE_LOG_SECTIONS = ("events",)
+GOVERNANCE_BUCKETS = 256
+_GOVERNANCE_CHAIN_START = ""
+
+
+class GovernanceIntegrityError(ValueError):
+    """Persisted governance rows do not establish the recorded commitment."""
+
+
+def _text_hash(*parts: str) -> str:
+    return hashlib.sha256(_canonical_bytes(list(parts))).hexdigest()
+
+
+def _governance_bucket(section: str, key: str) -> int:
+    return int(hashlib.sha256(f"{section}\x00{key}".encode("utf-8")).hexdigest()[:8], 16) % GOVERNANCE_BUCKETS
+
+
+def _governance_entry_hash(section: str, key: str, value_json: str) -> str:
+    return _text_hash("entry", section, key, value_json)
+
+
+def _governance_chain(section: str, seq: int, previous: str, value_json: str) -> str:
+    return _text_hash("log", section, str(seq), previous, hashlib.sha256(value_json.encode("utf-8")).hexdigest())
+
+
+def _governance_map_root(section: str, bucket_digests: list[str]) -> str:
+    return hashlib.sha256(_canonical_bytes({"section": section, "buckets": bucket_digests})).hexdigest()
+
+
+def _governance_root(map_roots: dict[str, str], logs: dict[str, dict], residual_digest: str) -> str:
+    material = {
+        "scheme": GOVERNANCE_SCHEME,
+        "maps": {name: map_roots[name] for name in GOVERNANCE_MAP_SECTIONS},
+        "logs": {name: logs[name] for name in GOVERNANCE_LOG_SECTIONS},
+        "residual": residual_digest,
+    }
+    return f"{GOVERNANCE_SCHEME}:" + hashlib.sha256(_canonical_bytes(material)).hexdigest()
+
+
+def _json_text(value: object) -> str:
+    return _canonical_bytes(value).decode("utf-8")
+
+
+_EMPTY_BUCKET = _bucket_digest([])
+
+
+class SQLiteGovernanceStore:
+    """Sectioned governance persistence with an incrementally maintained commitment.
+
+    Three layers are kept apart, as for canonical rows (#522 Part A):
+
+    * per-generation integrity: ``apply`` writes only the changed entries, appends to
+      the logs, and returns the root the journal record binds;
+    * current-state commitment: bucket digests per map section (``governance_buckets``),
+      log heads, and the residual digest, maintained from the rows each generation
+      changed. That index is derived data, trusted only after this process rebuilt it
+      or verified it row-for-row against the entries;
+    * recovery-time full verification: ``load_verified`` recomputes every entry hash,
+      bucket, chain link, and the root from the stored rows alone, never from the index.
+    """
+
+    def __init__(self, connection: sqlite3.Connection) -> None:
+        self._connection = connection
+        self._bucket_cache: dict[str, list[str]] | None = None
+        self._log_heads: dict[str, tuple[int, str]] | None = None
+        self._residual_json: str | None = None
+        self.full_rewrites = 0
+
+    # -- transaction cache discipline --
+
+    def cache_snapshot(self) -> tuple:
+        buckets = None if self._bucket_cache is None else {k: list(v) for k, v in self._bucket_cache.items()}
+        heads = None if self._log_heads is None else dict(self._log_heads)
+        return (buckets, heads, self._residual_json)
+
+    def restore_cache(self, snapshot: tuple) -> None:
+        self._bucket_cache, self._log_heads, self._residual_json = snapshot
+
+    def invalidate(self) -> None:
+        self._bucket_cache = None
+        self._log_heads = None
+        self._residual_json = None
+
+    @property
+    def trusted(self) -> bool:
+        return self._bucket_cache is not None and self._log_heads is not None and self._residual_json is not None
+
+    # -- per-generation publication --
+
+    def write_full(self, maps: dict[str, dict], logs: dict[str, list], residual: dict) -> str:
+        """Replace every governance row (creation, legacy migration, or index rebuild)."""
+
+        self.full_rewrites += 1
+        for table in ("governance_entries", "governance_buckets", "governance_log", "governance_residual"):
+            self._connection.execute(f"DELETE FROM {table}")
+        buckets: dict[str, list[list[str]]] = {}
+        for section in GOVERNANCE_MAP_SECTIONS:
+            per_bucket: list[list[str]] = [[] for _ in range(GOVERNANCE_BUCKETS)]
+            rows = []
+            for key, value in maps.get(section, {}).items():
+                key = str(key)
+                value_json = _json_text(value)
+                bucket = _governance_bucket(section, key)
+                entry_hash = _governance_entry_hash(section, key, value_json)
+                per_bucket[bucket].append(entry_hash)
+                rows.append((section, key, bucket, value_json, entry_hash))
+            self._connection.executemany(
+                "INSERT INTO governance_entries(section, entry_key, bucket, value_json, entry_hash) VALUES(?, ?, ?, ?, ?)",
+                rows,
+            )
+            buckets[section] = per_bucket
+        self._bucket_cache = {section: [_bucket_digest(v) for v in buckets[section]] for section in GOVERNANCE_MAP_SECTIONS}
+        self._connection.executemany(
+            "INSERT INTO governance_buckets(section, bucket, digest) VALUES(?, ?, ?)",
+            [(section, index, digest) for section, digests in self._bucket_cache.items() for index, digest in enumerate(digests)],
+        )
+        self._log_heads = {}
+        for section in GOVERNANCE_LOG_SECTIONS:
+            self._log_heads[section] = (0, _GOVERNANCE_CHAIN_START)
+            self._append_log(section, logs.get(section, []))
+        self._write_residual(residual, force=True)
+        return self.root()
+
+    def apply(self, maps: dict[str, dict], deleted: dict[str, set], logs: dict[str, list], residual: dict) -> str:
+        """Publish one generation's governance changes; O(changed entries + touched buckets)."""
+
+        if not self.trusted:
+            raise GovernanceIntegrityError("governance index is not trusted; a full write is required")
+        touched: dict[str, set[int]] = {}
+        for section in GOVERNANCE_MAP_SECTIONS:
+            for key in sorted(deleted.get(section, ())):
+                key = str(key)
+                touched.setdefault(section, set()).add(_governance_bucket(section, key))
+                self._connection.execute(
+                    "DELETE FROM governance_entries WHERE section = ? AND entry_key = ?", (section, key)
+                )
+            for key, value in sorted(maps.get(section, {}).items()):
+                key = str(key)
+                value_json = _json_text(value)
+                bucket = _governance_bucket(section, key)
+                touched.setdefault(section, set()).add(bucket)
+                self._connection.execute(
+                    "INSERT INTO governance_entries(section, entry_key, bucket, value_json, entry_hash) "
+                    "VALUES(?, ?, ?, ?, ?) ON CONFLICT(section, entry_key) DO UPDATE SET "
+                    "bucket = excluded.bucket, value_json = excluded.value_json, entry_hash = excluded.entry_hash",
+                    (section, key, bucket, value_json, _governance_entry_hash(section, key, value_json)),
+                )
+        for section, buckets in sorted(touched.items()):
+            for bucket in sorted(buckets):
+                hashes = [
+                    row[0]
+                    for row in self._connection.execute(
+                        "SELECT entry_hash FROM governance_entries WHERE section = ? AND bucket = ?", (section, bucket)
+                    ).fetchall()
+                ]
+                digest = _bucket_digest(hashes)
+                self._bucket_cache[section][bucket] = digest
+                self._connection.execute(
+                    "UPDATE governance_buckets SET digest = ? WHERE section = ? AND bucket = ?", (digest, section, bucket)
+                )
+        for section in GOVERNANCE_LOG_SECTIONS:
+            self._append_log(section, logs.get(section, []))
+        self._write_residual(residual)
+        return self.root()
+
+    def _append_log(self, section: str, entries: list) -> None:
+        count, head = self._log_heads[section]
+        rows = []
+        for value in entries:
+            count += 1
+            value_json = _json_text(value)
+            head = _governance_chain(section, count, head, value_json)
+            rows.append((section, count, value_json, head))
+        if rows:
+            self._connection.executemany(
+                "INSERT INTO governance_log(section, seq, value_json, chain) VALUES(?, ?, ?, ?)", rows
+            )
+        self._log_heads[section] = (count, head)
+
+    def _write_residual(self, residual: dict, *, force: bool = False) -> None:
+        value_json = _json_text(residual)
+        if force or value_json != self._residual_json:
+            self._connection.execute(
+                "INSERT INTO governance_residual(singleton, value_json) VALUES(1, ?) "
+                "ON CONFLICT(singleton) DO UPDATE SET value_json = excluded.value_json",
+                (value_json,),
+            )
+        self._residual_json = value_json
+
+    def root(self) -> str:
+        return _governance_root(
+            {section: _governance_map_root(section, self._bucket_cache[section]) for section in GOVERNANCE_MAP_SECTIONS},
+            {section: {"count": count, "head": head} for section, (count, head) in self._log_heads.items()},
+            hashlib.sha256(self._residual_json.encode("utf-8")).hexdigest(),
+        )
+
+    def log_count(self, section: str) -> int:
+        return self._log_heads[section][0]
+
+    # -- recovery-time full verification --
+
+    def load_verified(self, recorded_root: str) -> dict:
+        """Rebuild and verify the governance state from the stored rows alone.
+
+        Returns ``{"maps": {...}, "logs": {...}, "residual": {...}}`` or raises
+        ``GovernanceIntegrityError``. Trusts the maintained bucket index only when it
+        matches the recomputation row for row; otherwise the next publication rebuilds it.
+        """
+
+        if not recorded_root.startswith(f"{GOVERNANCE_SCHEME}:"):
+            raise GovernanceIntegrityError("governance commitment scheme is not gsect-v1")
+        self.invalidate()
+        maps: dict[str, dict] = {section: {} for section in GOVERNANCE_MAP_SECTIONS}
+        per_bucket = {section: [[] for _ in range(GOVERNANCE_BUCKETS)] for section in GOVERNANCE_MAP_SECTIONS}
+        for row in self._connection.execute(
+            "SELECT section, entry_key, bucket, value_json, entry_hash FROM governance_entries ORDER BY section, entry_key"
+        ):
+            section, key, bucket, value_json, entry_hash = row[0], row[1], int(row[2]), row[3], row[4]
+            if section not in maps:
+                raise GovernanceIntegrityError(f"unknown governance section {section!r}")
+            if bucket != _governance_bucket(section, key):
+                raise GovernanceIntegrityError("governance entry is filed in the wrong bucket")
+            if entry_hash != _governance_entry_hash(section, key, value_json):
+                raise GovernanceIntegrityError("governance entry hash mismatch")
+            maps[section][key] = json.loads(value_json)
+            per_bucket[section][bucket].append(entry_hash)
+        digests = {section: [_bucket_digest(v) for v in per_bucket[section]] for section in GOVERNANCE_MAP_SECTIONS}
+        logs: dict[str, list] = {section: [] for section in GOVERNANCE_LOG_SECTIONS}
+        heads = {section: (0, _GOVERNANCE_CHAIN_START) for section in GOVERNANCE_LOG_SECTIONS}
+        for row in self._connection.execute("SELECT section, seq, value_json, chain FROM governance_log ORDER BY section, seq"):
+            section, seq, value_json, chain = row[0], int(row[1]), row[2], row[3]
+            if section not in logs:
+                raise GovernanceIntegrityError(f"unknown governance log {section!r}")
+            count, head = heads[section]
+            if seq != count + 1:
+                raise GovernanceIntegrityError("governance log is not contiguous")
+            expected = _governance_chain(section, seq, head, value_json)
+            if chain != expected:
+                raise GovernanceIntegrityError("governance log chain mismatch")
+            logs[section].append(json.loads(value_json))
+            heads[section] = (seq, expected)
+        residual_row = self._connection.execute(
+            "SELECT value_json FROM governance_residual WHERE singleton = 1"
+        ).fetchone()
+        if residual_row is None:
+            raise GovernanceIntegrityError("governance residual state is missing")
+        residual_json = residual_row[0]
+        root = _governance_root(
+            {section: _governance_map_root(section, digests[section]) for section in GOVERNANCE_MAP_SECTIONS},
+            {section: {"count": count, "head": head} for section, (count, head) in heads.items()},
+            hashlib.sha256(residual_json.encode("utf-8")).hexdigest(),
+        )
+        if root != recorded_root:
+            raise GovernanceIntegrityError("governance commitment mismatch")
+        residual = json.loads(residual_json)
+        if not isinstance(residual, dict):
+            raise GovernanceIntegrityError("governance residual state is malformed")
+        stored: dict[str, list[str]] = {section: [_EMPTY_BUCKET] * GOVERNANCE_BUCKETS for section in GOVERNANCE_MAP_SECTIONS}
+        stored_rows = 0
+        for row in self._connection.execute("SELECT section, bucket, digest FROM governance_buckets"):
+            section, bucket = row[0], int(row[1])
+            if section in stored and 0 <= bucket < GOVERNANCE_BUCKETS:
+                stored[section][bucket] = row[2]
+                stored_rows += 1
+        if stored == digests and stored_rows == GOVERNANCE_BUCKETS * len(GOVERNANCE_MAP_SECTIONS):
+            self._bucket_cache = digests
+            self._log_heads = heads
+            self._residual_json = residual_json
+        return {"maps": maps, "logs": logs, "residual": residual}
+
+
 class SQLiteTemporalGraph:
     """Production-credible single-host implementation of ``TemporalGraphPort``."""
 
@@ -153,6 +434,7 @@ class SQLiteTemporalGraph:
         # The maintained index is derived data: it is trusted only after this process rebuilt
         # it or verified it row-for-row against the canonical tables.
         self._digest_index_trusted = False
+        self.governance = SQLiteGovernanceStore(self._connection)
 
     def _initialize_schema(self) -> None:
         self._connection.executescript(
@@ -226,6 +508,33 @@ class SQLiteTemporalGraph:
                 bucket INTEGER PRIMARY KEY,
                 digest TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS governance_entries (
+                section TEXT NOT NULL,
+                entry_key TEXT NOT NULL,
+                bucket INTEGER NOT NULL,
+                value_json TEXT NOT NULL,
+                entry_hash TEXT NOT NULL,
+                PRIMARY KEY (section, entry_key)
+            );
+            CREATE INDEX IF NOT EXISTS governance_entries_bucket_idx
+                ON governance_entries(section, bucket);
+            CREATE TABLE IF NOT EXISTS governance_buckets (
+                section TEXT NOT NULL,
+                bucket INTEGER NOT NULL,
+                digest TEXT NOT NULL,
+                PRIMARY KEY (section, bucket)
+            );
+            CREATE TABLE IF NOT EXISTS governance_log (
+                section TEXT NOT NULL,
+                seq INTEGER NOT NULL,
+                value_json TEXT NOT NULL,
+                chain TEXT NOT NULL,
+                PRIMARY KEY (section, seq)
+            );
+            CREATE TABLE IF NOT EXISTS governance_residual (
+                singleton INTEGER PRIMARY KEY CHECK (singleton = 1),
+                value_json TEXT NOT NULL
+            );
             """
         )
         self._connection.execute(
@@ -286,6 +595,7 @@ class SQLiteTemporalGraph:
         self._connection.execute("BEGIN IMMEDIATE")
         dirty_before = set(self._digest_dirty)
         trusted_before = self._digest_index_trusted
+        governance_before = self.governance.cache_snapshot()
         try:
             yield
         except Exception:
@@ -293,6 +603,7 @@ class SQLiteTemporalGraph:
             # Rows and digest tables roll back together; forget changes that no longer exist.
             self._digest_dirty = dirty_before
             self._digest_index_trusted = trusted_before
+            self.governance.restore_cache(governance_before)
             raise
         else:
             self._connection.execute("COMMIT")

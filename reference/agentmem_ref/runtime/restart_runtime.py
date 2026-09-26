@@ -127,6 +127,124 @@ class RecoveryEvidence:
         return asdict(self)
 
 
+class TrackedMap(dict):
+    """A governance map that records which keys changed since the last publication (#562).
+
+    Every key-level write path is covered. A value mutated in place after insertion is
+    not seen, so only sections whose values are replaced whole are tracked this way.
+    Anything that cannot be expressed as key changes marks the section for a full rewrite.
+    """
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.dirty: set = set()
+        self.rewrite = False
+
+    def __setitem__(self, key, value) -> None:
+        super().__setitem__(key, value)
+        self.dirty.add(key)
+
+    def __delitem__(self, key) -> None:
+        super().__delitem__(key)
+        self.dirty.add(key)
+
+    def pop(self, key, *default):
+        present = key in self
+        value = super().pop(key, *default)
+        if present:
+            self.dirty.add(key)
+        return value
+
+    def popitem(self):
+        key, value = super().popitem()
+        self.dirty.add(key)
+        return key, value
+
+    def setdefault(self, key, default=None):
+        if key not in self:
+            self.dirty.add(key)
+        return super().setdefault(key, default)
+
+    def update(self, *args, **kwargs) -> None:
+        changes = dict(*args, **kwargs)
+        super().update(changes)
+        self.dirty.update(changes)
+
+    def __ior__(self, other):
+        self.update(other)
+        return self
+
+    def clear(self) -> None:
+        super().clear()
+        self.rewrite = True
+
+
+class TrackedLog(list):
+    """An append-only governance log; anything but appending forces a full rewrite (#562)."""
+
+    def __init__(self, *args) -> None:
+        super().__init__(*args)
+        self.persisted = len(self)
+        self.rewrite = False
+
+    def _rewritten(self) -> None:
+        self.rewrite = True
+
+    def __setitem__(self, index, value) -> None:
+        super().__setitem__(index, value)
+        self._rewritten()
+
+    def __delitem__(self, index) -> None:
+        super().__delitem__(index)
+        self._rewritten()
+
+    def __iadd__(self, other):
+        self.extend(other)
+        return self
+
+    def __imul__(self, other):
+        result = super().__imul__(other)
+        self._rewritten()
+        return result
+
+    def insert(self, index, value) -> None:
+        super().insert(index, value)
+        self._rewritten()
+
+    def pop(self, *args):
+        value = super().pop(*args)
+        self._rewritten()
+        return value
+
+    def remove(self, value) -> None:
+        super().remove(value)
+        self._rewritten()
+
+    def clear(self) -> None:
+        super().clear()
+        self._rewritten()
+
+    def sort(self, *args, **kwargs) -> None:
+        super().sort(*args, **kwargs)
+        self._rewritten()
+
+    def reverse(self) -> None:
+        super().reverse()
+        self._rewritten()
+
+
+# Governance sections persisted incrementally (#562): keyed maps whose values are replaced
+# whole, and the append-only audit log. Everything else is the (small) residual.
+TRACKED_MAP_ATTRIBUTES = {
+    "current_fact_by_memory": "_current_fact_by_memory",
+    "fact_memory": "_fact_memory",
+    "fact_scope": "_fact_scope",
+    "state_version": "_state_version",
+    "tombstones": "_tombstones",
+}
+TRACKED_LOG_ATTRIBUTES = {"events": "events"}
+
+
 class CheckpointableGovernedMemoryAdapter(GovernedMemoryAdapter):
     """Reference governed adapter with a declared durability state-provider seam.
 
@@ -151,6 +269,68 @@ class CheckpointableGovernedMemoryAdapter(GovernedMemoryAdapter):
 
     def export_checkpoint_state(self) -> dict:
         """Export adapter-owned governance state in the existing v1 wire shape."""
+        return {
+            **self.export_governance_residual(),
+            "state_version": dict(sorted(self._state_version.items())),
+            "tombstones": self._tombstones,
+            "fact_scope": self._fact_scope,
+            "fact_memory": dict(sorted(self._fact_memory.items())),
+            "current_fact_by_memory": dict(sorted(self._current_fact_by_memory.items())),
+            "events": list(self.events),
+        }
+
+    # -- incremental governance publication (#562) --
+
+    def track_governance_changes(self) -> None:
+        """Adopt the current governance state as the published baseline and track changes."""
+        for attribute in TRACKED_MAP_ATTRIBUTES.values():
+            setattr(self, attribute, TrackedMap(getattr(self, attribute)))
+        for attribute in TRACKED_LOG_ATTRIBUTES.values():
+            setattr(self, attribute, TrackedLog(getattr(self, attribute)))
+
+    def export_governance_sections(self) -> tuple[dict, dict]:
+        """Full map and log sections, for a full publication."""
+        maps = {section: dict(getattr(self, attribute)) for section, attribute in TRACKED_MAP_ATTRIBUTES.items()}
+        logs = {section: list(getattr(self, attribute)) for section, attribute in TRACKED_LOG_ATTRIBUTES.items()}
+        return maps, logs
+
+    def export_governance_changes(self) -> tuple[dict, dict, dict] | None:
+        """Changed map entries, deleted keys, and appended log entries since the baseline.
+
+        Returns ``None`` when a section can no longer be expressed as a change set (a
+        section object was replaced, or the log was edited rather than appended); the
+        caller then publishes the full state.
+        """
+        maps: dict[str, dict] = {}
+        deleted: dict[str, set] = {}
+        logs: dict[str, list] = {}
+        for section, attribute in TRACKED_MAP_ATTRIBUTES.items():
+            value = getattr(self, attribute)
+            if not isinstance(value, TrackedMap) or value.rewrite:
+                return None
+            maps[section] = {key: value[key] for key in value.dirty if key in value}
+            deleted[section] = {key for key in value.dirty if key not in value}
+        for section, attribute in TRACKED_LOG_ATTRIBUTES.items():
+            value = getattr(self, attribute)
+            if not isinstance(value, TrackedLog) or value.rewrite or len(value) < value.persisted:
+                return None
+            logs[section] = list(value[value.persisted:])
+        return maps, deleted, logs
+
+    def mark_governance_published(self) -> None:
+        for attribute in TRACKED_MAP_ATTRIBUTES.values():
+            value = getattr(self, attribute)
+            if isinstance(value, TrackedMap):
+                value.dirty.clear()
+                value.rewrite = False
+        for attribute in TRACKED_LOG_ATTRIBUTES.values():
+            value = getattr(self, attribute)
+            if isinstance(value, TrackedLog):
+                value.persisted = len(value)
+                value.rewrite = False
+
+    def export_governance_residual(self) -> dict:
+        """Governance state outside the incrementally tracked sections (small, content-hashed)."""
         selector_mode = getattr(self._selector, "mode", "unknown")
         if selector_mode != "deterministic":
             raise ValueError(
@@ -166,19 +346,13 @@ class CheckpointableGovernedMemoryAdapter(GovernedMemoryAdapter):
             # Legacy v1 location retained for compatibility. The value is read
             # through the substrate-owned contract rather than from `_ids._n`.
             "id_counter": int(identifier_checkpoint()),
-            "state_version": dict(sorted(self._state_version.items())),
             "disputed": sorted(self._disputed),
-            "tombstones": self._tombstones,
-            "fact_scope": self._fact_scope,
-            "fact_memory": dict(sorted(self._fact_memory.items())),
             "shared_domain_members": {
                 key: sorted(value) for key, value in sorted(self._shared_domain_members.items())
             },
-            "current_fact_by_memory": dict(sorted(self._current_fact_by_memory.items())),
             "rejected_values": self._rejected_values.export_checkpoint_rows(),
             "rejected_values_descriptor": self._rejected_values.checkpoint_descriptor(),
             "containment_violations": list(self.containment_violations),
-            "events": list(self.events),
             "extension_state": {
                 key: self.extension_state[key] for key in sorted(self.extension_state)
             },

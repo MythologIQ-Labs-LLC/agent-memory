@@ -16,6 +16,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import hashlib
 import json
+import os
 from pathlib import Path
 import threading
 from typing import Iterable
@@ -36,10 +37,25 @@ from .restart_runtime import (
     _assert_profile_compatible,
 )
 from .runtime_config import RuntimeConfigurationPlan
-from ..state.sqlite_substrate import SQLiteTemporalGraph, SQLITE_SUBSTRATE_PROFILE
+from ..state.sqlite_substrate import (
+    GOVERNANCE_SCHEME,
+    GovernanceIntegrityError,
+    SQLiteTemporalGraph,
+    SQLITE_SUBSTRATE_PROFILE,
+)
 
 
+# Journal records keep schema 1.0.0: their material is unchanged, and the governance
+# digest they bind is self-describing ("sha256:" = full-json-v1, "gsect-v1:" = #562).
 SQLITE_RUNTIME_SCHEMA_VERSION = "1.0.0"
+# Runtime-state envelope versions. 1.0.0 embeds the whole governance snapshot and binds
+# its full-JSON digest (full-json-v1). 1.1.0 persists governance as sections and binds
+# the gsect-v1 root; the envelope no longer carries the snapshot (#562).
+LEGACY_RUNTIME_STATE_SCHEMA_VERSION = "1.0.0"
+SQLITE_RUNTIME_STATE_SCHEMA_VERSION = "1.1.0"
+# Test and qualification aid: after every publication, re-read the governance rows and
+# require them to equal a full export of the in-memory governance state.
+GOVERNANCE_SELF_CHECK_ENV = "AGENT_MEMORY_GOVERNANCE_SELF_CHECK"
 SQLITE_DURABILITY_PROFILE = "sqlite_transactional_runtime_v1"
 SQLITE_TRANSACTION_PROTOCOL = "sqlite_begin_immediate_generation_v1"
 
@@ -154,6 +170,59 @@ def _validate_journal_tail(
     return tail
 
 
+def _assemble_governance(loaded: dict) -> dict:
+    """The v1-shaped governance snapshot from verified gsect-v1 sections."""
+
+    residual = loaded["residual"]
+    adapter = residual.get("adapter")
+    if not isinstance(adapter, dict):
+        raise RuntimeRecoveryError("SQLite governance residual state is malformed")
+    maps = loaded["maps"]
+    return {
+        "tenant": residual.get("tenant"),
+        "adapter": {
+            **adapter,
+            "state_version": maps["state_version"],
+            "tombstones": maps["tombstones"],
+            "fact_scope": maps["fact_scope"],
+            "fact_memory": maps["fact_memory"],
+            "current_fact_by_memory": maps["current_fact_by_memory"],
+            "events": loaded["logs"]["events"],
+        },
+        "visibility_snapshots": residual.get("visibility_snapshots", {}),
+    }
+
+
+def _verified_governance(substrate: SQLiteTemporalGraph, state: dict, state_schema) -> tuple[dict, bool]:
+    """Recovery-time full verification of the committed governance state.
+
+    Returns ``(governance, legacy)``. A 1.0.0 envelope must embed the snapshot and bind
+    its full-JSON digest (full-json-v1); a 1.1.0 envelope must name gsect-v1, carry no
+    embedded snapshot, and bind a root that the stored sections reproduce exactly.
+    Mixing the two is refused rather than reinterpreted.
+    """
+
+    digest = str(state.get("governance_digest", ""))
+    if state_schema == LEGACY_RUNTIME_STATE_SCHEMA_VERSION:
+        governance = state.get("governance")
+        if "governance_scheme" in state or not digest.startswith("sha256:"):
+            raise RuntimeRecoveryError("SQLite governance scheme does not match the runtime state schema")
+        if not isinstance(governance, dict):
+            raise RuntimeRecoveryError("SQLite governance state is missing")
+        if _digest(governance) != digest:
+            raise RuntimeRecoveryError("SQLite governance state digest mismatch")
+        return governance, True
+    if state.get("governance_scheme") != GOVERNANCE_SCHEME or "governance" in state:
+        raise RuntimeRecoveryError("SQLite governance scheme does not match the runtime state schema")
+    try:
+        loaded = substrate.governance.load_verified(digest)
+    except GovernanceIntegrityError as exc:
+        raise RuntimeRecoveryError(f"SQLite governance state digest mismatch: {exc}") from exc
+    except (ValueError, TypeError) as exc:
+        raise RuntimeRecoveryError("SQLite governance state is malformed") from exc
+    return _assemble_governance(loaded), False
+
+
 class SQLiteRestartSafeRuntime:
     """Governed runtime whose canonical and governance state commit atomically."""
 
@@ -211,6 +280,7 @@ class SQLiteRestartSafeRuntime:
             tenant=tenant,
             verifier_registry=verifier_registry,
         )
+        adapter.track_governance_changes()
         runtime = cls(
             root=root_path,
             substrate=substrate,
@@ -238,7 +308,8 @@ class SQLiteRestartSafeRuntime:
             state = substrate.read_runtime_state()
             if state is None:
                 raise RuntimeRecoveryError("required SQLite runtime state is missing")
-            if state.get("schema_version") != SQLITE_RUNTIME_SCHEMA_VERSION:
+            state_schema = state.get("schema_version")
+            if state_schema not in (LEGACY_RUNTIME_STATE_SCHEMA_VERSION, SQLITE_RUNTIME_STATE_SCHEMA_VERSION):
                 raise RuntimeRecoveryError("unsupported SQLite runtime state schema")
             if state.get("durability_profile") != SQLITE_DURABILITY_PROFILE:
                 raise RuntimeRecoveryError("SQLite durability profile changed")
@@ -267,11 +338,7 @@ class SQLiteRestartSafeRuntime:
             if state.get("interpretation_digest") != profile.interpretation_digest:
                 raise RuntimeRecoveryError("SQLite runtime interpretation digest mismatch")
 
-            governance = state.get("governance")
-            if not isinstance(governance, dict):
-                raise RuntimeRecoveryError("SQLite governance state is missing")
-            if _digest(governance) != state.get("governance_digest"):
-                raise RuntimeRecoveryError("SQLite governance state digest mismatch")
+            governance, legacy_governance = _verified_governance(substrate, state, state_schema)
             if not substrate.verify_recorded_state_digest(str(state.get("substrate_digest", ""))):
                 raise RuntimeRecoveryError("SQLite canonical substrate digest mismatch")
 
@@ -303,6 +370,10 @@ class SQLiteRestartSafeRuntime:
                 adapter.restore_checkpoint_state(adapter_raw)
             except (TypeError, ValueError) as exc:
                 raise RuntimeRecoveryError("SQLite governance state cannot be reconstructed") from exc
+            adapter.track_governance_changes()
+            if legacy_governance:
+                # full-json-v1 store: the next generation migrates it to gsect-v1 atomically.
+                substrate.governance.invalidate()
 
             evidence = SQLiteRecoveryEvidence(
                 generation=generation,
@@ -354,8 +425,7 @@ class SQLiteRestartSafeRuntime:
                 f"observed {self._observed_generation}, current {current_generation}"
             )
 
-        governance = self._governance_snapshot()
-        governance_digest = _digest(governance)
+        governance_digest = self._publish_governance()
         substrate_digest = self.substrate.incremental_state_digest()
         generation = current_generation + 1
         previous = _validate_journal_tail(
@@ -372,20 +442,23 @@ class SQLiteRestartSafeRuntime:
             previous_record_digest=previous_digest,
         )
         state = {
-            "schema_version": SQLITE_RUNTIME_SCHEMA_VERSION,
+            "schema_version": SQLITE_RUNTIME_STATE_SCHEMA_VERSION,
             "durability_profile": SQLITE_DURABILITY_PROFILE,
             "transaction_protocol": SQLITE_TRANSACTION_PROTOCOL,
             "generation": generation,
             "profile": self.profile.to_dict(),
             "interpretation_digest": self.profile.interpretation_digest,
             "substrate_digest": substrate_digest,
+            "governance_scheme": GOVERNANCE_SCHEME,
             "governance_digest": governance_digest,
-            "governance": governance,
             "substrate_identity": self.substrate.operational_identity(),
             "journal_record_digest": record["record_digest"],
         }
         self.substrate.write_runtime_state(state)
         self.substrate.append_runtime_journal(generation, record)
+        if os.environ.get(GOVERNANCE_SELF_CHECK_ENV) == "1":
+            self._self_check_governance(governance_digest)
+        self.adapter.mark_governance_published()
         return SQLiteRecoveryEvidence(
             generation=generation,
             durability_profile=SQLITE_DURABILITY_PROFILE,
@@ -396,6 +469,48 @@ class SQLiteRestartSafeRuntime:
             sqlite_version=self.substrate.sqlite_version,
             recovery_posture="committed_atomic_sqlite_generation",
         )
+
+    def _governance_residual(self) -> dict:
+        try:
+            adapter_residual = self.adapter.export_governance_residual()
+            tenant = self.adapter.checkpoint_tenant()
+        except (TypeError, ValueError) as exc:
+            raise RuntimeRecoveryError("SQLite governance checkpoint export failed") from exc
+        if not isinstance(tenant, str) or not tenant:
+            raise RuntimeRecoveryError("SQLite governance checkpoint is malformed")
+        return {"tenant": tenant, "adapter": adapter_residual, "visibility_snapshots": self.visibility_snapshots}
+
+    def _publish_governance(self) -> str:
+        """Write this generation's governance changes inside the open transaction (#562).
+
+        Publishes only changed entries and appended log records when the maintained
+        commitment is trusted and every section is expressible as a change set;
+        otherwise (creation, legacy migration, an untrusted index, or a non-append
+        edit) it publishes the whole state once. Either way the result is the same root.
+        """
+        store = self.substrate.governance
+        residual = self._governance_residual()
+        changes = self.adapter.export_governance_changes() if store.trusted else None
+        try:
+            if changes is None:
+                maps, logs = self.adapter.export_governance_sections()
+                return store.write_full(maps, logs, residual)
+            maps, deleted, logs = changes
+            return store.apply(maps, deleted, logs, residual)
+        except (TypeError, ValueError) as exc:
+            raise RuntimeRecoveryError("SQLite governance publication failed") from exc
+
+    def _self_check_governance(self, root: str) -> None:
+        store = self.substrate.governance
+        snapshot = store.cache_snapshot()
+        try:
+            loaded = store.load_verified(root)
+        except GovernanceIntegrityError as exc:
+            raise RuntimeRecoveryError(f"SQLite governance self-check failed: {exc}") from exc
+        finally:
+            store.restore_cache(snapshot)
+        if _digest(_assemble_governance(loaded)) != _digest(self._governance_snapshot()):
+            raise RuntimeRecoveryError("SQLite governance rows diverged from in-memory governance state")
 
     def checkpoint(self) -> SQLiteRecoveryEvidence:
         with self._serialization_lock:
@@ -409,14 +524,16 @@ class SQLiteRestartSafeRuntime:
         state = self.substrate.read_runtime_state()
         if state is None:
             return
-        governance = state.get("governance", {})
-        if not isinstance(governance, dict):
-            raise RuntimeRecoveryError("cannot restore governance after SQLite rollback")
+        try:
+            governance, _ = _verified_governance(self.substrate, state, state.get("schema_version"))
+        except RuntimeRecoveryError as exc:
+            raise RuntimeRecoveryError("cannot restore governance after SQLite rollback") from exc
         adapter_raw = governance.get("adapter")
         visibility = governance.get("visibility_snapshots", {})
         if not isinstance(adapter_raw, dict) or not isinstance(visibility, dict):
             raise RuntimeRecoveryError("cannot restore governance after SQLite rollback")
         self.adapter.restore_checkpoint_state(adapter_raw)
+        self.adapter.track_governance_changes()
         self.visibility_snapshots = dict(visibility)
 
     def _transactional_operation(self, operation):
