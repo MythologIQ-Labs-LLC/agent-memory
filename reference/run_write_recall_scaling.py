@@ -28,6 +28,7 @@ from pathlib import Path
 from agentmem_ref import AgentMemory
 from agentmem_ref.runtime import runtime_composition, sqlite_runtime
 from agentmem_ref.runtime.adapter import GovernedMemoryAdapter
+from agentmem_ref.state import sqlite_substrate
 from agentmem_ref.state.sqlite_substrate import SQLiteTemporalGraph
 
 COMPONENTS = {
@@ -42,6 +43,10 @@ COMPONENTS = {
     "runtime._validate_journal_tail": (sqlite_runtime, "_validate_journal_tail"),
     "runtime._governance_snapshot": (sqlite_runtime.SQLiteRestartSafeRuntime, "_governance_snapshot"),
     "runtime._persist_unlocked": (sqlite_runtime.SQLiteRestartSafeRuntime, "_persist_unlocked"),
+    # #562 governance publication (absent before gsect-v1).
+    "runtime._publish_governance": (sqlite_runtime.SQLiteRestartSafeRuntime, "_publish_governance"),
+    "governance.apply": (getattr(sqlite_substrate, "SQLiteGovernanceStore", None), "apply"),
+    "governance.write_full": (getattr(sqlite_substrate, "SQLiteGovernanceStore", None), "write_full"),
     "adapter._recall_decision": (GovernedMemoryAdapter, "_recall_decision"),
     "composition.admit_preselected_candidates": (runtime_composition, "admit_preselected_candidates"),
 }
@@ -96,6 +101,7 @@ def measure(size: int, *, window: int, recalls: int, seed: int, scopes: int = 1)
     timers = Timers()
     present = timers.install()
     candidate_counts: list[int] = []
+    store_bytes = 0
     admitted_counts: list[int] = []
     try:
         with tempfile.TemporaryDirectory() as directory:
@@ -127,6 +133,7 @@ def measure(size: int, *, window: int, recalls: int, seed: int, scopes: int = 1)
                     admitted_counts.append(len(recalled["admitted"]))
                 recall_components = dict(timers.totals)
                 timers.active = False
+            store_bytes = sum(path.stat().st_size for path in Path(directory).rglob("*") if path.is_file())
     finally:
         timers.uninstall()
 
@@ -136,6 +143,7 @@ def measure(size: int, *, window: int, recalls: int, seed: int, scopes: int = 1)
     return {
         "facts_before_window": size,
         "scopes": scopes,
+        "store_bytes": store_bytes,
         "write": {
             "ops": window,
             "median_ms": round(statistics.median(write_times) * 1000, 3),
