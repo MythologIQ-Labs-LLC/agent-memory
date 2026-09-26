@@ -255,3 +255,33 @@ The admitted counts and retrieval scores are identical, so governance is not wea
 | 1 | recall median | 91.9–99.3 ms | 100.0–106.3 ms |
 
 **Tradeoff recorded.** With a single scope there is nothing to exclude, and the per-fact eligibility check adds ~2–3 ms to lexical search. Recall persistence (`_persist_unlocked`, ~38–45 ms) is now the largest recall term, dominated by the governance-state rewrite. The lexical scan still visits every fact in the tenant; it only skips tokenizing ineligible ones.
+
+## Post-prefilter scale probe and the LongMemEval_M decision (#537)
+
+This probe was run after Slices 3 and 5 landed, to decide whether LongMemEval_M is justified and which remaining term dominates. It used `reference/run_write_recall_scaling.py` at `14b422c`, the prefilter head, whose runtime is identical to `main` `27c8e77`. The host was a 4-core container with no other benchmark running. Artifacts are in `reports/benchmarks/replays/537-post-prefilter-scale-14b422c/`.
+
+| shape | facts | write p50 | write `_persist_unlocked` | recall p50 | recall search | recall admission | recall `_persist_unlocked` |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 10 scopes | ~100 | 9.7 ms | 4.7 ms | 11.5 ms | 1.4 ms | 1.0 ms | 5.4 ms |
+| 10 scopes | ~1,000 | 60.7 ms | 41.4 ms | 74.7 ms | 10.3 ms | 3.0 ms | 44.9 ms |
+| 10 scopes | ~5,000 | 329.8 ms | 251.5 ms | 417.4 ms | 67.9 ms | 10.8 ms | 246.7 ms |
+| 10 scopes | ~10,000 | 730.4 ms | 583.6 ms | 914.5 ms | 136.7 ms | 18.7 ms | 587.4 ms |
+| 1 scope | ~100 | 10.6 ms | 5.4 ms | 14.2 ms | 1.9 ms | 2.5 ms | 5.3 ms |
+| 1 scope | ~1,000 | 61.5 ms | 42.9 ms | 105.2 ms | 17.2 ms | 19.7 ms | 43.6 ms |
+| 1 scope | ~5,000 | 314.5 ms | 228.5 ms | 524.1 ms | 84.2 ms | 90.8 ms | 222.7 ms |
+
+The single-scope 10,000-fact point was not run. Its fill costs about an hour on this host, and the 10-scope row already establishes the trend.
+
+Findings:
+
+- **Persistence dominates and is linear in retained state.**
+  - At 10,000 facts, `_persist_unlocked` is 80% of a write and 64% of a recall.
+  - Nearly all of it is the governance snapshot: a canonical-JSON digest of the whole snapshot plus a rewrite of the whole blob.
+  - Substrate attestation stays at 0.4–0.8 ms at every size (Slice 3).
+  - Tracked as #562.
+- **Lexical candidate generation is the next term.**
+  - Search visits every tenant fact.
+  - Admission cost follows the number of eligible matches.
+  - Tracked as #563.
+- **The prefilter holds at scale.** With 10 scopes, admission stays at 18.7 ms at 10,000 facts.
+- **LongMemEval_M stays held.** Its turn plane implies thousands of commits per haystack. At ~0.3–0.7 s per commit at those sizes, a run would mostly re-measure the quadratic ingest that #562 already isolates. It becomes a promotion gauntlet after #562 is bounded, as #537 Phase 4 requires.
