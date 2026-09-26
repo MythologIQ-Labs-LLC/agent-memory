@@ -112,3 +112,21 @@ Currentness for such writes is a **write-time** contract:
 - caller-declared temporal intent, such as `valid_at` on the write or an explicit "latest" query mode. That would be a new, separately governed feature, not a ranking heuristic.
 
 Benchmarks that write contradictory facts as independent remembers measure this limitation, and results should be read that way. Class B stays open on #531 as a product-contract item, not a ranking defect.
+
+## Slice 2: runtime-owned serialization for one handle (#530)
+
+Candidate revision `59dc80d` (branch `runtime/530-serialized-handle`). Evidence is in `reports/benchmarks/replays/530-serialized-handle-59dc80d/`.
+
+**Change.**
+
+- One `AgentMemory` handle may be shared across threads. The runtime owns a single re-entrant lock covering the connection, governance state, generation compare-and-swap, journal append, and recovery.
+- Every public facade operation and every composition entry point acquires that lock.
+- `check_same_thread=False` is set only together with that lock. A connection-only change is falsified by the tests: it fails with `nested SQLite substrate transactions are unsupported`.
+- No per-thread handles are created, and the isolation, admission, and PAMA paths are unchanged.
+
+| AgentMemBench concurrency (200 records) | workers | 03197cd | 59dc80d |
+| --- | --- | --- | --- |
+| operation success / materialization | 1, 4, 8, 16 | 0.00 / 0.00 (200 `ProgrammingError` each) | **1.00 / 1.00**, 0 errors |
+| throughput (ops/s) | 1 / 4 / 8 / 16 | n/a (all failed) | 69.5 / 62.2 / 69.2 / 67.0 |
+
+**Stated cost.** Throughput is flat across worker counts because writes are serialized: a single handle is correct under concurrency but does not scale with threads. Latency grows with queue depth (p50 14 ms at 1 worker, 218 ms at 16). Multi-writer throughput would need a different design and is not claimed here. The host was shared with a concurrent replay, so the absolute latencies are not performance evidence.
