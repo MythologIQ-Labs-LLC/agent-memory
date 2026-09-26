@@ -21,6 +21,7 @@ from typing import Callable, Mapping, Sequence
 
 import random
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
 
 from ..core import policy, receipts
 from ..core.evidence_qualification import EvidenceItem
@@ -30,14 +31,22 @@ from ..state.substrate import DeterministicIds, Episode, Fact, TemporalGraphPort
 
 
 class Clock:
-    """Deterministic clock, so runs are reproducible."""
+    """Deterministic clock, so runs are reproducible.
+
+    Each tick is one second after ``2026-01-01T00:00:00Z``. Timestamps are valid
+    ISO-8601 and sort chronologically as strings for every tick. Earlier revisions
+    rendered the raw tick as the seconds field, so ticks >= 60 produced invalid
+    timestamps and ticks >= 100 stopped sorting chronologically; see #538.
+    """
+
+    _EPOCH = datetime(2026, 1, 1, tzinfo=timezone.utc)
 
     def __init__(self, start: int = 0) -> None:
         self._t = start
 
     def now(self) -> str:
         self._t += 1
-        return f"2026-01-01T00:00:{self._t:02d}Z"
+        return (self._EPOCH + timedelta(seconds=self._t)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class DeterministicSelector:

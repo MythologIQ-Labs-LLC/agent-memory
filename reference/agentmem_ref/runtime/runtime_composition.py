@@ -36,6 +36,7 @@ from .adapter import RecallContext
 from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
+from .ranking_policy import PostAdmissionRankingPolicy
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.projections import (
     CURRENT,
@@ -103,9 +104,18 @@ class MultiRouteRecallResult:
     policy_version: str = ""
     evaluated_at: str = ""
     authority_effect: str = "none"
+    ranking_policy: dict = field(default_factory=dict)
+    ranking_evidence: dict[str, dict] = field(default_factory=dict)
 
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
         return tuple(self.route_hits.get(candidate_ref, ()))
+
+
+MULTI_ROUTE_RANKING_POLICY = PostAdmissionRankingPolicy(
+    policy_id="multi-route-default",
+    route_score_order=(SEMANTIC_VECTOR_ROUTE, SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
+    exact_identity_route=EXACT_IDENTITY_ROUTE,
+)
 
 
 class DeterministicMultiRouteRecallPlanner:
@@ -238,12 +248,10 @@ class DeterministicMultiRouteRecallPlanner:
             query_label=query,
         )
 
-        ranked = sorted(
+        ranked, ranking_evidence = MULTI_ROUTE_RANKING_POLICY.rank(
             admission.admitted,
-            key=lambda candidate_ref: self._rank_key(
-                candidate_ref,
-                by_candidate.get(candidate_ref, ()),
-            ),
+            by_candidate,
+            substrate.get_fact,
         )
         return MultiRouteRecallResult(
             query=query,
@@ -256,31 +264,8 @@ class DeterministicMultiRouteRecallPlanner:
             ranked_admitted=ranked,
             policy_version=admission.policy_version,
             evaluated_at=admission.evaluated_at,
-        )
-
-    @staticmethod
-    def _rank_key(candidate_ref: str, hits) -> tuple[object, ...]:
-        route_ids = {hit.route_id for hit in hits}
-        exact = 1 if EXACT_IDENTITY_ROUTE in route_ids else 0
-        vector_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == SEMANTIC_VECTOR_ROUTE),
-            default=0.0,
-        )
-        relational_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == SHARED_EVIDENCE_ROUTE),
-            default=0.0,
-        )
-        lexical_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == LEXICAL_ROUTE),
-            default=0.0,
-        )
-        return (
-            -len(route_ids),
-            -exact,
-            -vector_score,
-            -relational_score,
-            -lexical_score,
-            candidate_ref,
+            ranking_policy=MULTI_ROUTE_RANKING_POLICY.identity(),
+            ranking_evidence=ranking_evidence,
         )
 
 

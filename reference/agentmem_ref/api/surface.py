@@ -564,6 +564,9 @@ class AgentMemory:
             decision["route_provenance"] = [hit.to_dict() for hit in result.provenance_for(candidate)]
             if candidate in rank:
                 decision["rank_position"] = rank[candidate]
+                ranking = getattr(result, "ranking_evidence", {}).get(candidate)
+                if ranking is not None:
+                    decision["ranking_evidence"] = dict(ranking)
             if candidate in result.refusals:
                 decision["refusal"] = result.refusals[candidate]
             admissions[candidate] = decision
