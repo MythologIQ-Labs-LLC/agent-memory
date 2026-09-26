@@ -101,10 +101,15 @@ class SQLiteTemporalGraph:
     def __init__(self, path: str | Path) -> None:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        # check_same_thread=False is safe ONLY because every use of this connection by
+        # an Agent Memory handle happens while holding the owning runtime's
+        # serialization lock (SQLiteRestartSafeRuntime.serialization_lock, #530).
+        # This substrate is not independently thread-safe.
         self._connection = sqlite3.connect(
             str(self.path),
             timeout=30.0,
             isolation_level=None,
+            check_same_thread=False,
         )
         self._connection.row_factory = sqlite3.Row
         self._connection.execute("PRAGMA foreign_keys = ON")

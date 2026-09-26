@@ -108,6 +108,17 @@ requested tenant differs from recovered tenant
 
 The facade never interprets a recovery problem as permission to create fresh memory over the same state directory.
 
+## Threading contract (#530)
+
+One `AgentMemory` handle may be called from any thread, including worker pools and async executors. Every public operation (`remember`, `correct`, `recall`, `forget`, `history`, `posture`, `close`) runs under a single runtime-owned reentrant lock (`handle.runtime.serialization_lock`). That lock also guards the SQLite connection, the observed generation (CAS), governance state, visibility snapshots, and journal publication.
+
+- Operations never interleave. Each still commits as one single-writer SQLite generation.
+- Concurrency therefore gives correctness, not parallel write throughput.
+- A failing operation rolls back and restores governance state before the next operation runs.
+- Closing waits for any in-flight operation. Later calls from any thread raise `RuntimeError("AgentMemory runtime is closed")`.
+- Objects reached through `handle.runtime` are not independently thread-safe. Direct callers must hold `handle.runtime.serialization_lock`.
+- Multiple independent handles on the same store in one or more processes are not part of this contract. The bounded single-host profile remains single-writer, with generation-conflict detection.
+
 ## Boundaries
 
 This surface does not establish:
