@@ -42,6 +42,11 @@ from .substrate import (
 SQLITE_SUBSTRATE_SCHEMA_VERSION = "1.0.0"
 SQLITE_SUBSTRATE_PROFILE = "sqlite_single_host_v1"
 SQLITE_SOURCE_RIGHTS = "SQLite public domain; Python sqlite3 under the Python license"
+# Incremental canonical-state commitment (#522). The digest string is self-describing:
+# "sha256:<hex>" is the legacy full-JSON digest, "bmerkle-v1:<hex>" the bucketed Merkle root.
+LEGACY_DIGEST_PREFIX = "sha256:"
+BUCKETED_DIGEST_SCHEME = "bmerkle-v1"
+DIGEST_BUCKETS = 256
 
 
 def _canonical_bytes(value: object) -> bytes:
@@ -50,6 +55,32 @@ def _canonical_bytes(value: object) -> bytes:
 
 def _digest(value: object) -> str:
     return "sha256:" + hashlib.sha256(_canonical_bytes(value)).hexdigest()
+
+
+_OPERATION_TABLES = {
+    "add_episode": "episodes",
+    "write_fact": "facts",
+    "invalidate_fact": "facts",
+    "delete_fact": "facts",
+    "write_relation": "typed_relations",
+    "invalidate_relation": "typed_relations",
+    "delete_relation": "typed_relations",
+}
+
+
+def _bucket_of(table: str, key: str) -> int:
+    return int(hashlib.sha256(f"{table}\x00{key}".encode("utf-8")).hexdigest()[:8], 16) % DIGEST_BUCKETS
+
+
+def _row_hash(table: str, payload: dict) -> str:
+    return hashlib.sha256(_canonical_bytes({"table": table, "row": payload})).hexdigest()
+
+
+def _bucket_digest(row_hashes: list[str]) -> str:
+    return hashlib.sha256(_canonical_bytes(sorted(row_hashes))).hexdigest()
+
+
+_EMPTY_BUCKET = _bucket_digest([])
 
 
 def _tokens(text: str) -> set[str]:
@@ -112,6 +143,11 @@ class SQLiteTemporalGraph:
         self._connection.execute("PRAGMA journal_mode = WAL")
         self._initialize_schema()
         self._ids = SqliteDeterministicIds(self._connection)
+        # Canonical rows changed since the digest index was last brought current.
+        self._digest_dirty: set[tuple[str, str]] = set()
+        # The maintained index is derived data: it is trusted only after this process rebuilt
+        # it or verified it row-for-row against the canonical tables.
+        self._digest_index_trusted = False
 
     def _initialize_schema(self) -> None:
         self._connection.executescript(
@@ -173,6 +209,18 @@ class SQLiteTemporalGraph:
                 generation INTEGER PRIMARY KEY,
                 payload_json TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS digest_rows (
+                table_name TEXT NOT NULL,
+                row_key TEXT NOT NULL,
+                bucket INTEGER NOT NULL,
+                row_hash TEXT NOT NULL,
+                PRIMARY KEY (table_name, row_key)
+            );
+            CREATE INDEX IF NOT EXISTS digest_rows_bucket_idx ON digest_rows(bucket);
+            CREATE TABLE IF NOT EXISTS digest_buckets (
+                bucket INTEGER PRIMARY KEY,
+                digest TEXT NOT NULL
+            );
             """
         )
         self._connection.execute(
@@ -231,10 +279,15 @@ class SQLiteTemporalGraph:
         if self._connection.in_transaction:
             raise RuntimeError("nested SQLite substrate transactions are unsupported")
         self._connection.execute("BEGIN IMMEDIATE")
+        dirty_before = set(self._digest_dirty)
+        trusted_before = self._digest_index_trusted
         try:
             yield
         except Exception:
             self._connection.execute("ROLLBACK")
+            # Rows and digest tables roll back together; forget changes that no longer exist.
+            self._digest_dirty = dirty_before
+            self._digest_index_trusted = trusted_before
             raise
         else:
             self._connection.execute("COMMIT")
@@ -409,6 +462,10 @@ class SQLiteTemporalGraph:
             "INSERT INTO substrate_write_log(operation, reference) VALUES(?, ?)",
             (operation, reference),
         )
+        table = _OPERATION_TABLES.get(operation)
+        if table is None:
+            raise RuntimeError(f"canonical write {operation!r} has no digest table mapping")
+        self._digest_dirty.add((table, reference))
 
     # -- canonical substrate reads --
 
@@ -606,6 +663,169 @@ class SQLiteTemporalGraph:
                 "relations": relations,
             }
         )
+
+    # -- incremental canonical-state commitment (#522) --
+
+    def _row_payload(self, table: str, key: str) -> dict | None:
+        if table == "episodes":
+            value = self.get_episode(key)
+        elif table == "facts":
+            value = self.get_fact(key)
+        elif table == "typed_relations":
+            value = self.get_relation(key)
+        else:
+            raise ValueError(f"unknown digest table {table!r}")
+        return None if value is None else asdict(value)
+
+    def _bucketed_root(self, bucket_digests: list[str]) -> str:
+        material = {
+            "scheme": BUCKETED_DIGEST_SCHEME,
+            "schema_version": SQLITE_SUBSTRATE_SCHEMA_VERSION,
+            "relation_schema_version": TYPED_RELATION_SCHEMA_VERSION,
+            "id_counter": self.identifier_checkpoint(),
+            "buckets": bucket_digests,
+        }
+        return f"{BUCKETED_DIGEST_SCHEME}:" + hashlib.sha256(_canonical_bytes(material)).hexdigest()
+
+    def _canonical_digest_rows(self) -> list[tuple[str, str, int, str]]:
+        rows: list[tuple[str, str, int, str]] = []
+        for episode in self._all_episodes():
+            rows.append(("episodes", episode.uuid, _bucket_of("episodes", episode.uuid), _row_hash("episodes", asdict(episode))))
+        for fact in self.all_facts():
+            rows.append(("facts", fact.uuid, _bucket_of("facts", fact.uuid), _row_hash("facts", asdict(fact))))
+        for relation in self.all_relations():
+            rows.append((
+                "typed_relations", relation.relation_id,
+                _bucket_of("typed_relations", relation.relation_id), _row_hash("typed_relations", asdict(relation)),
+            ))
+        return rows
+
+    @staticmethod
+    def _bucket_digests(rows: list[tuple[str, str, int, str]]) -> list[str]:
+        buckets: list[list[str]] = [[] for _ in range(DIGEST_BUCKETS)]
+        for _, _, bucket, row_hash in rows:
+            buckets[bucket].append(row_hash)
+        return [_bucket_digest(values) for values in buckets]
+
+    def recompute_bucketed_digest(self) -> str:
+        """Full recomputation from the canonical tables themselves (never from the index)."""
+
+        return self._bucketed_root(self._bucket_digests(self._canonical_digest_rows()))
+
+    def rebuild_digest_index(self) -> str:
+        """Rebuild the maintained digest index from canonical rows; return the root."""
+
+        rows = self._canonical_digest_rows()
+        digests = self._bucket_digests(rows)
+        self._connection.execute("DELETE FROM digest_rows")
+        self._connection.execute("DELETE FROM digest_buckets")
+        self._connection.executemany(
+            "INSERT INTO digest_rows(table_name, row_key, bucket, row_hash) VALUES(?, ?, ?, ?)", rows
+        )
+        self._connection.executemany(
+            "INSERT INTO digest_buckets(bucket, digest) VALUES(?, ?)", list(enumerate(digests))
+        )
+        self._digest_dirty.clear()
+        self._digest_index_trusted = True
+        return self._bucketed_root(digests)
+
+    def incremental_state_digest(self) -> str:
+        """Bring the digest index current for rows changed since the last call; return the root.
+
+        Cost is O(changed rows + rows in touched buckets + bucket count), independent of
+        total store size for bounded buckets. ``recompute_bucketed_digest`` reproduces the
+        same root from the canonical tables alone.
+        """
+
+        if not self._digest_index_trusted:
+            return self.rebuild_digest_index()
+        touched: set[int] = set()
+        for table, key in sorted(self._digest_dirty):
+            bucket = _bucket_of(table, key)
+            touched.add(bucket)
+            payload = self._row_payload(table, key)
+            if payload is None:
+                self._connection.execute(
+                    "DELETE FROM digest_rows WHERE table_name = ? AND row_key = ?", (table, key)
+                )
+            else:
+                self._connection.execute(
+                    "INSERT INTO digest_rows(table_name, row_key, bucket, row_hash) VALUES(?, ?, ?, ?) "
+                    "ON CONFLICT(table_name, row_key) DO UPDATE SET bucket = excluded.bucket, "
+                    "row_hash = excluded.row_hash",
+                    (table, key, bucket, _row_hash(table, payload)),
+                )
+        for bucket in sorted(touched):
+            hashes = [
+                row[0]
+                for row in self._connection.execute(
+                    "SELECT row_hash FROM digest_rows WHERE bucket = ?", (bucket,)
+                ).fetchall()
+            ]
+            self._connection.execute(
+                "UPDATE digest_buckets SET digest = ? WHERE bucket = ?", (_bucket_digest(hashes), bucket)
+            )
+        self._digest_dirty.clear()
+        digests = [
+            row[0]
+            for row in self._connection.execute("SELECT digest FROM digest_buckets ORDER BY bucket").fetchall()
+        ]
+        return self._bucketed_root(digests)
+
+    def verify_recorded_state_digest(self, recorded: str) -> bool:
+        """Recovery-time full verification for either digest scheme, from canonical rows.
+
+        Never consults the maintained index to decide the answer. As a side effect it
+        checks the index row-for-row against the canonical rows and trusts it only when
+        they match; otherwise the next persist rebuilds it. Nothing is written here.
+        """
+
+        if recorded.startswith(f"{BUCKETED_DIGEST_SCHEME}:"):
+            rows = self._canonical_digest_rows()
+            digests = self._bucket_digests(rows)
+            if self._bucketed_root(digests) != recorded:
+                return False
+            indexed = {
+                (row[0], row[1], int(row[2]), row[3])
+                for row in self._connection.execute(
+                    "SELECT table_name, row_key, bucket, row_hash FROM digest_rows"
+                ).fetchall()
+            }
+            stored = [
+                row[0]
+                for row in self._connection.execute("SELECT digest FROM digest_buckets ORDER BY bucket").fetchall()
+            ]
+            self._digest_index_trusted = indexed == set(rows) and stored == digests
+            return True
+        if recorded.startswith(LEGACY_DIGEST_PREFIX):
+            # Legacy full-JSON commitment; the index is rebuilt at the next persist.
+            self._digest_index_trusted = False
+            return self.state_digest() == recorded
+        return False
+
+    # -- light runtime-state reads (#522) --
+
+    def read_runtime_binding(self) -> tuple[int, str | None] | None:
+        """(generation, journal_record_digest) without parsing the whole state blob."""
+
+        row = self._connection.execute(
+            "SELECT json_extract(payload_json, '$.generation'), "
+            "json_extract(payload_json, '$.journal_record_digest') FROM runtime_state WHERE singleton = 1"
+        ).fetchone()
+        if row is None:
+            return None
+        return int(row[0] or 0), row[1]
+
+    def read_runtime_journal_tail(self) -> dict | None:
+        row = self._connection.execute(
+            "SELECT payload_json FROM runtime_journal ORDER BY generation DESC LIMIT 1"
+        ).fetchone()
+        if row is None:
+            return None
+        value = json.loads(row[0])
+        if not isinstance(value, dict):
+            raise ValueError("SQLite runtime journal row is malformed")
+        return value
 
     def _all_episodes(self) -> tuple[Episode, ...]:
         rows = self._connection.execute(
