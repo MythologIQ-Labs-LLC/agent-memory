@@ -16,6 +16,9 @@ qualified SQLite composition. It is not a second contract or authority surface.
 
 from __future__ import annotations
 
+import functools
+import threading
+
 import hashlib
 import importlib.resources
 import json
@@ -218,8 +221,25 @@ def _atomic_write_text(path: Path, text: str) -> None:
     os.replace(temporary, path)
 
 
+def _serialized(method):
+    """Run one public handle operation under the runtime-owned serialization lock (#530)."""
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        with self._serialization_lock:
+            return method(self, *args, **kwargs)
+
+    return wrapper
+
+
 class AgentMemory:
     """Small developer surface over one governed SQLite Agent Memory runtime.
+
+    Thread contract (#530): one handle may be called from any thread. Every public
+    operation runs under the runtime-owned serialization lock, so operations never
+    interleave and each still commits as one single-writer SQLite generation.
+    Objects reached through ``handle.runtime`` are not independently thread-safe;
+    direct callers must hold ``handle.runtime.serialization_lock``.
 
     Defaults are explicit and bounded to low-risk local operation. Higher-risk
     mutation remains subject to the same public proposal contract, evidence
@@ -249,6 +269,7 @@ class AgentMemory:
         self.purpose = purpose
         self.runtime = runtime
         self._closed = False
+        self._serialization_lock = getattr(runtime, "serialization_lock", None) or threading.RLock()
 
     @classmethod
     def open(
@@ -423,6 +444,7 @@ class AgentMemory:
             refusal=outcome.refusal,
         )
 
+    @_serialized
     def remember(
         self,
         target_reference: str,
@@ -460,6 +482,7 @@ class AgentMemory:
         )
         return self._commit_result(outcome)
 
+    @_serialized
     def correct(
         self,
         target_reference: str,
@@ -503,6 +526,7 @@ class AgentMemory:
         )
         return self._commit_result(outcome)
 
+    @_serialized
     def recall(
         self,
         query: str,
@@ -551,6 +575,7 @@ class AgentMemory:
             admissions=admissions,
         )
 
+    @_serialized
     def forget(
         self,
         target_reference: str,
@@ -594,6 +619,7 @@ class AgentMemory:
         )
         return self._commit_result(outcome, stage="forget")
 
+    @_serialized
     def history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
         self._require_open()
         return history(
@@ -602,6 +628,7 @@ class AgentMemory:
             fact_text=fact_text,
         )
 
+    @_serialized
     def posture(self) -> dict:
         """Return the canonical doctor report, including SQLite recovery when present."""
         self._require_open()
@@ -613,6 +640,7 @@ class AgentMemory:
         contract.validate_posture_report(report)
         return contract.result("posture", contract.CURRENT, posture=report)
 
+    @_serialized
     def close(self) -> None:
         if self._closed:
             return

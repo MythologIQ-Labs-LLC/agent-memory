@@ -17,6 +17,7 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 from pathlib import Path
+import threading
 from typing import Iterable
 
 from .configured_restart import (
@@ -144,6 +145,15 @@ class SQLiteRestartSafeRuntime:
         self.recovery_evidence = recovery_evidence
         self._observed_generation = int(observed_generation)
         self._verifier_registry = verifier_registry
+        # Runtime-owned serialization boundary (#530). One reentrant lock covers the
+        # SQLite connection, observed generation (CAS), adapter governance state,
+        # visibility snapshots, and journal publication. Operations still commit as
+        # single-writer SQLite generations; they simply never interleave.
+        self._serialization_lock = threading.RLock()
+
+    @property
+    def serialization_lock(self) -> threading.RLock:
+        return self._serialization_lock
 
     @property
     def database_path(self) -> Path:
@@ -284,7 +294,8 @@ class SQLiteRestartSafeRuntime:
             raise
 
     def close(self) -> None:
-        self.substrate.close()
+        with self._serialization_lock:
+            self.substrate.close()
 
     def _governance_snapshot(self) -> dict:
         try:
@@ -350,11 +361,12 @@ class SQLiteRestartSafeRuntime:
         )
 
     def checkpoint(self) -> SQLiteRecoveryEvidence:
-        with self.substrate.transaction():
-            evidence = self._persist_unlocked()
-        self._observed_generation = evidence.generation
-        self.recovery_evidence = evidence
-        return evidence
+        with self._serialization_lock:
+            with self.substrate.transaction():
+                evidence = self._persist_unlocked()
+            self._observed_generation = evidence.generation
+            self.recovery_evidence = evidence
+            return evidence
 
     def _restore_governance_after_rollback(self) -> None:
         state = self.substrate.read_runtime_state()
@@ -380,23 +392,24 @@ class SQLiteRestartSafeRuntime:
         advancing durable identifier state without advancing the bound runtime
         generation.
         """
-        try:
-            with self.substrate.transaction():
-                current = self.substrate.read_runtime_state()
-                generation = 0 if current is None else int(current.get("generation", 0))
-                if generation != self._observed_generation:
-                    raise RuntimeCheckpointConflict(
-                        "SQLite generation conflict: "
-                        f"observed {self._observed_generation}, current {generation}"
-                    )
-                result = operation()
-                evidence = self._persist_unlocked()
-        except Exception:
-            self._restore_governance_after_rollback()
-            raise
-        self._observed_generation = evidence.generation
-        self.recovery_evidence = evidence
-        return result
+        with self._serialization_lock:
+            try:
+                with self.substrate.transaction():
+                    current = self.substrate.read_runtime_state()
+                    generation = 0 if current is None else int(current.get("generation", 0))
+                    if generation != self._observed_generation:
+                        raise RuntimeCheckpointConflict(
+                            "SQLite generation conflict: "
+                            f"observed {self._observed_generation}, current {generation}"
+                        )
+                    result = operation()
+                    evidence = self._persist_unlocked()
+            except Exception:
+                self._restore_governance_after_rollback()
+                raise
+            self._observed_generation = evidence.generation
+            self.recovery_evidence = evidence
+            return result
 
     def run_governed_read(self, operation):
         return self._transactional_operation(operation)
@@ -452,16 +465,18 @@ class SQLiteRestartSafeRuntime:
             raise ValueError("visibility operation id is required")
         if not isinstance(snapshot, dict):
             raise ValueError("visibility snapshot must be a mapping")
-        previous = dict(self.visibility_snapshots)
-        self.visibility_snapshots[operation_id] = snapshot
-        try:
-            return self.checkpoint()
-        except Exception:
-            self.visibility_snapshots = previous
-            raise
+        with self._serialization_lock:
+            previous = dict(self.visibility_snapshots)
+            self.visibility_snapshots[operation_id] = snapshot
+            try:
+                return self.checkpoint()
+            except Exception:
+                self.visibility_snapshots = previous
+                raise
 
     def backup_to(self, destination: str | Path) -> None:
-        self.substrate.backup_to(destination)
+        with self._serialization_lock:
+            self.substrate.backup_to(destination)
 
 
 class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
