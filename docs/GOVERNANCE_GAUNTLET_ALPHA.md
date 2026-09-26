@@ -17,7 +17,7 @@ claims can be pressured through the same Gauntlet system-adapter contract while 
 separate verdicts for content leakage, identifier leakage, cardinality leakage, deletion,
 and authority laundering.
 
-The branch now includes both evaluator controls and a real Agent Memory contestant through
+The branch includes both evaluator controls and a real Agent Memory contestant through
 the public `AgentMemory` facade. The real-system adapter translates neutral operations only;
 it does not implement isolation, admission, ranking, or deletion policy itself.
 
@@ -48,7 +48,9 @@ the profile may issue both `reset` and `forget`, so it additionally requires:
 ```
 
 The narrow `--allow-destructive-reset` compatibility flag remains sufficient only when
-`reset` is the sole active destructive operation.
+`reset` is the sole active destructive operation. The alpha uses one generalized refusal
+code for missing destructive-operation consent while the message identifies the narrowest
+flag that can authorize the active operation set.
 
 ```text
 manifest isolation claim != destructive-operation consent
@@ -66,10 +68,14 @@ active destructive operation is permitted.
 | --- | --- | --- |
 | `GOV-ISO-001` | `tenant_isolation` | foreign content and opaque identifier leakage under a perfect wrong-tenant match |
 | `GOV-ISO-002` | `scope_isolation` | foreign content and opaque identifier leakage under a perfect wrong-scope match |
-| `GOV-ISO-005` | `foreign_cardinality_non_disclosure` | caller-visible output stability with 0, 1, and 5 foreign perfect matches |
+| `GOV-ISO-005` | `foreign_cardinality_non_disclosure` | caller-visible output stability with 0, 1, and 5 foreign **tenant** perfect matches |
 | `GOV-DEL-001` | `deletion` + `forget` | pre-delete retrievability, successful forget, then content/ID non-resurrection in recall |
 | `GOV-AUTH-002` | `tenant_isolation` | a newer forbidden memory cannot launder authority through recency |
 | `GOV-AUTH-003` | `tenant_isolation` | a forbidden perfect match cannot launder authority through similarity |
+
+The alpha's current cardinality case is cross-tenant. It must not be used to claim scope-
+cardinality non-disclosure for a single-tenant adapter. A future case may add that distinct
+claim explicitly rather than overloading `GOV-ISO-005`.
 
 ### Intentionally blocked when claimed
 
@@ -154,22 +160,27 @@ reset            -> mapped teardown of benchmark-owned disposable store
 It does not prefilter candidates, enforce scope, perform admission, or decide deletion.
 Those behaviors remain inside the SUT.
 
-The local public composition is tenant-bound, so this adapter deliberately declares
-`tenant_isolation=unsupported` rather than manufacturing cross-tenant routing in adapter
-code. It claims native scope isolation, native deletion, native durable deletion, and native
-foreign-cardinality non-disclosure where the public runtime contract supplies them.
+The local public composition is tenant-bound, so this adapter deliberately declares both
+`tenant_isolation` and the current cross-tenant `foreign_cardinality_non_disclosure` case as
+`unsupported` rather than manufacturing cross-tenant routing in adapter code. It claims
+native scope isolation, native deletion, and native durable deletion where the public runtime
+contract supplies them.
 
 Consequently, the expected alpha posture is:
 
 ```text
 GOV-ISO-001   unsupported   # no cross-tenant claim in this adapter
 GOV-ISO-002   pass          # native scope isolation
-GOV-ISO-005   pass          # public caller-visible cardinality minimization
+GOV-ISO-005   unsupported   # current case varies tenant population
 GOV-DEL-001   pass          # native governed deletion/non-resurrection
 GOV-DEL-002   blocked       # SUT claim exists; neutral restart lifecycle is not bound yet
 GOV-AUTH-002  unsupported   # keyed to tenant-isolation claim in alpha
 GOV-AUTH-003  unsupported   # keyed to tenant-isolation claim in alpha
 ```
+
+This distinction matters: contract 1.3.0's domain-eligible candidate minimization may also
+support scope-cardinality privacy, but this alpha does not claim to have tested that property
+through a cross-tenant case.
 
 A pass here is **Gauntlet-native conformance/falsification evidence for Agent Memory**, not
 independent third-party validation.
@@ -249,8 +260,9 @@ case posture above is observed.
 Additional follow-on contracts are still required before the alpha can honestly exercise:
 
 - restart-persistent deletion;
+- scope-cardinality non-disclosure as a claim distinct from the current cross-tenant case;
 - route-count authority laundering;
 - classifier authority laundering;
 - verified versus caller-asserted provenance.
 
-Those gaps are recorded as blocked evidence when claimed rather than silently omitted.
+Those gaps are recorded as blocked or unsupported evidence rather than silently omitted.
