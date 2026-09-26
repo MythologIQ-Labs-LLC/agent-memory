@@ -1,0 +1,66 @@
+{
+  "authority_effect": "none",
+  "host": {
+    "machine": "x86_64",
+    "note": "4-core container; no other benchmark running",
+    "python": "3.11.15"
+  },
+  "parameters": {
+    "recalls": 20,
+    "scopes": 1,
+    "seed": 1,
+    "window": 40,
+    "words_per_fact": 40,
+    "words_per_query": 8
+  },
+  "results": [
+    {
+      "facts_before_window": 1000,
+      "recall": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 16.61,
+          "composition.admit_preselected_candidates": 19.008,
+          "runtime._governance_snapshot": 0.491,
+          "runtime._persist_unlocked": 45.491,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.021,
+          "substrate.incremental_state_digest": 0.332,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.028,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 13.682,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 20.919
+        },
+        "mean_admitted": 104.45,
+        "mean_candidates": 104.45,
+        "mean_ms": 101.963,
+        "median_ms": 99.263,
+        "ops": 20
+      },
+      "scopes": 1,
+      "write": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 0.0,
+          "composition.admit_preselected_candidates": 0.0,
+          "runtime._governance_snapshot": 0.478,
+          "runtime._persist_unlocked": 42.784,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.075,
+          "substrate.incremental_state_digest": 0.547,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.021,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 20.054
+        },
+        "mean_ms": 61.536,
+        "median_ms": 62.224,
+        "ops": 40
+      }
+    }
+  ],
+  "revision": "1415da3f6b723e61c9fc685b9ff1259bbf640105",
+  "schema": "agent-memory-write-recall-scaling/1"
+}

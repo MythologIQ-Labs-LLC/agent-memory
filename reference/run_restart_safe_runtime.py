@@ -215,8 +215,13 @@ def build_report(agent_memory_commit: str) -> dict:
             "superseded_release_not_current": release_uuid is not None
             and current.refusals.get(release_uuid) == "superseded_not_current",
             "rejection_history_recovered": len(rejected_history) == 1 and rejected_history[0]["active"] is True,
+            # #548: a foreign-project fact is excluded before candidacy (never a
+            # candidate, never admitted, never named in refusals); full admission
+            # would refuse it as project_scope_mismatch.
             "project_scope_still_enforced": main_uuid is not None
-            and wrong_scope.refusals.get(main_uuid) == "project_scope_mismatch",
+            and main_uuid not in wrong_scope.candidates
+            and main_uuid not in wrong_scope.admitted
+            and main_uuid not in wrong_scope.refusals,
             "pending_visibility_obligation_recovered": (
                 restored_visibility["quiescent"] is False
                 and "projection:search-index" in restored_visibility["pending_required_obligations"]

@@ -185,8 +185,11 @@ def build_report(agent_memory_commit: str) -> dict:
                 initial_fact is not None and same_scope.admitted == [initial_fact]
             ),
             "foreign_project_recall_refused": bool(
+                # #548: excluded before candidacy by the domain-eligibility prefilter.
                 initial_fact is not None
-                and foreign_scope.refusals.get(initial_fact) == "project_scope_mismatch"
+                and initial_fact not in foreign_scope.candidates
+                and initial_fact not in foreign_scope.admitted
+                and initial_fact not in foreign_scope.refusals
             ),
             "correction_supersedes_canonical_fact": bool(
                 correction.committed
