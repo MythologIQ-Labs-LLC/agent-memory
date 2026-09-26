@@ -130,3 +130,12 @@ Candidate revision `59dc80d` (branch `runtime/530-serialized-handle`). Evidence 
 | throughput (ops/s) | 1 / 4 / 8 / 16 | n/a (all failed) | 69.5 / 62.2 / 69.2 / 67.0 |
 
 **Stated cost.** Throughput is flat across worker counts because writes are serialized: a single handle is correct under concurrency but does not scale with threads. Latency grows with queue depth (p50 14 ms at 1 worker, 218 ms at 16). Multi-writer throughput would need a different design and is not claimed here. The host was shared with a concurrent replay, so the absolute latencies are not performance evidence.
+
+## Slice 4: query-conditioned applicability (#538, ADR-039 proposed)
+
+Recorded separately in `docs/57-query-conditioned-applicability.md`. In summary:
+
+- Under admitted-set BM25, the query-conditioned policy is metric-identical to the 2.1 universal tie-break on both gauntlets, with zero failures.
+- Under tie-heavy overlap relevance, it keeps currentness gains where the query expresses current intent. It withholds recency elsewhere, with net retrieval against universal statistically indistinguishable from zero.
+- Two reproduction variants match frozen `f73b872` and `9c2ba70` exactly.
+

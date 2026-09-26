@@ -118,4 +118,91 @@ Negative control: run against the 2.x universal regime, 12 of the 18 base fixtur
 
 ## 5. Replay evidence
 
-Recorded in `reports/benchmarks/replays/538-query-conditioned-applicability-148823f/` and summarized below once the runs complete.
+Every replay ran from a clean worktree pinned at the recorded revision, against frozen inputs (LongMemEval_S `d6f21ea9…c442`; AgentMemBench MemDialogue v2 `33632710…ca2a6`). Pre-remediation evidence is untouched. Artifacts:
+
+- `reports/benchmarks/replays/538-query-conditioned-applicability-148823f/`: shipped relevance (admitted-set BM25), four temporal configurations.
+- `reports/benchmarks/replays/538-query-conditioned-applicability-43a8484/`: token-overlap relevance ablation, including two reproduction checks.
+
+Analyses are regenerated with `reference/analyze_applicability_replay.py` (`analysis-*.md` in each directory). Retrieval, currentness, question types, and failures are reported separately, with no aggregate score. **Runtime, ingestion, out-of-corpus, and unmapped-admission failures are zero in every configuration.**
+
+### 5.1 Harness validation
+
+Two variants reproduce frozen evidence **exactly**: `reproduce_f73b872` matches `f73b872`, and `reproduce_9c2ba70` matches `9c2ba70`. Both have 0 differing ranked lists on either plane. AgentMemBench `reproduce_9c2ba70` gives conflict 0.60 / 0.40, identical to `9c2ba70`. So every difference below is attributable to the policy configuration.
+
+### 5.2 Under the shipped relevance (BM25), the temporal regime is benchmark-invisible
+
+| configuration (`148823f`) | session r@5 | turn r@10 | latest-first KU session / turn | AMB conflict new/stale | AMB exact@5 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| universal newer-first + BM25 (`75bbe87`) | 0.823 | 0.723 | 0.457 / 0.557 | 0.20 / 0.80 | 0.899 |
+| **query-conditioned + BM25 (policy 3.0.0)** | **0.823** | **0.723** | **0.457 / 0.557** | **0.20 / 0.80** | **0.899** |
+| query-conditioned, host-declared dates | 0.823 | 0.723 | 0.457 / 0.557 | n/a | n/a |
+| unspecified → newer among ties | 0.823 | 0.723 | 0.457 / 0.557 | n/a | n/a |
+| unspecified → newer, host-declared dates | 0.823 | 0.723 | 0.457 / 0.557 | n/a | n/a |
+
+- Every paired Δ against `75bbe87` is exactly 0, on every metric and question type.
+- The regimes do produce different orders: 1 session row and 86 turn rows are reordered. **No gold item moves in any row.**
+- Continuous BM25 scores almost never tie at gold positions, so the temporal stage almost never decides anything a benchmark scores.
+- The currentness "give-back" recorded for #543 was therefore not a relevance-versus-currentness trade. BM25 removed the relevance ties that had let a tie-break act at all.
+
+### 5.3 Under tie-heavy token-overlap relevance, the regime matters
+
+`43a8484`, overlap relevance. Paired Δ is against the universal tie-break (`9c2ba70`), 95% bootstrap CI.
+
+| measure | frozen `f73b872` | universal `9c2ba70` | query-conditioned (digest fallback) | query-conditioned (ascending-id fallback) | query-conditioned + host dates |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| session recall_all@5 | 0.675 | 0.687 | 0.668, Δ −0.019 [−0.041, +0.002] | 0.673 | 0.668 |
+| session nDCG_any@5 | 0.722 | 0.732 | 0.729 | 0.719 | 0.729 |
+| turn recall_all@10 | 0.525 | 0.532 | 0.516, Δ −0.017 [−0.036, +0.002] | 0.525 | 0.516 |
+| turn nDCG_any@5 | 0.502 | **0.484** | 0.490 | 0.498 | 0.490 |
+| session KU recall_all@5 | 0.931 | **0.889** | 0.889 | 0.917 | 0.889 |
+| latest-first KU, **current-intent questions** (n=15) session / turn | 0.533 / 0.467 | 0.667 / 0.867 | **0.667 / 0.867** | **0.667 / 0.867** | **0.667 / 0.867** |
+| latest-first KU, **no established intent** (n=54) session / turn | 0.278 / 0.481 | 0.611 / 0.704 | 0.426 / 0.574 | 0.278 / 0.481 | 0.426 / 0.574 |
+| latest-first, all multi-date gold (n=282) session / turn | 0.372 / 0.411 | 0.532 / 0.589 | 0.457 / 0.500 | 0.383 / 0.440 | 0.461 / 0.500 |
+| AMB conflict new / stale | 0.00 / 1.00 (`03197cd`) | 0.60 / 0.40 | **0.60 / 0.40** | n/a | n/a |
+
+Reading, against the question this slice was asked to answer:
+
+- **Genuine currentness gains are retained where the query expresses current intent.** On the 15 knowledge-update questions with an established current intent, latest-first equals the universal tie-break on both planes. AgentMemBench conflict keeps 0.60, because every conflict query says "current".
+- **Where intent is not established, the recency gain is not retained, by design.** 54 of the 70 applicable knowledge-update questions carry no temporal cue. Their currentness expectation lives in the benchmark's task category, not in the question text. With the time-neutral fallback, part of the gain survives by chance (0.426 / 0.574). With the ascending-id fallback it returns exactly to frozen (0.278 / 0.481), because that fallback is an old-first clock.
+- **The universal regressions partly disappear, but so do some universal gains.**
+  - Recovered with the ascending-id fallback: session KU recall_all@5 (0.889 → 0.917) and turn nDCG@5 (0.484 → 0.498).
+  - Given up: the universal tie-break also improved *atemporal* single-session types (single-session-user r@5 0.938 → 0.984, preference 0.333 → 0.433). The query-conditioned regime gives those back.
+  - Cause: the haystack construction places gold slightly late in write order (mean gold position 0.54–0.59 for single-session types against 0.50 uniform). Recency was exploiting a positional artifact, not temporal semantics. Those samples are small (n = 30–70).
+  - Net retrieval against universal is not distinguishable from zero on either plane: session −0.019 [−0.041, +0.002], turn −0.017 [−0.036, +0.002].
+- **Host-declared observation time barely changes anything.** It matters only inside current-intent ties: all multi-date latest-first moves 0.457 → 0.461 on session and is unchanged on turn. The C5 clock separation is correct and observable in evidence. The benchmark rarely exercises it.
+- **Stable fallback.** A time-neutral digest vs ascending id trades KU recall_all@5 and turn nDCG@5 (id is better) against latest-first (digest is better) on this benchmark. The digest is kept as the default because the ascending id is a hidden clock. The benchmark effect of that choice is itself an artifact of write order.
+
+## 6. What the evidence says about ADR-039
+
+**Overall: it narrows the proposal, and it is not contradicted.**
+
+Supported:
+
+1. **Semantic separation is necessary for declared temporal evidence.** The universal regime fails C1, C2, C5, C18, and C23, or cannot express them. The query-conditioned policy meets them without any regression on either external gauntlet.
+2. **Query-conditioning keeps currentness where the query asks for it** (15/15 current-intent KU questions, AgentMemBench conflict 0.60) and withholds recency where the query does not, with no measurable net retrieval cost.
+3. **Clocks must stay separate.** The pre-slice "temporal evidence" was transaction time. In 211/500 LongMemEval_S haystacks, transaction order and session-date order disagree.
+
+Narrowed:
+
+1. **Condition 2 is partly triggered for benchmark-observable behavior.** On both external gauntlets under the shipped relevance, typed applicability is metric-identical to the universal tie-break. Its benefit is demonstrated only with declared temporal evidence (the fixtures), which neither gauntlet supplies. The empirical claim should be scoped to workloads that carry validity or temporal intent. Neither LongMemEval_S nor AgentMemBench does, beyond question wording.
+2. **Interpretation is the binding constraint.** Only 16 of 78 knowledge-update questions contain a high-confidence temporal cue. ADR-039's "ranking quality is bounded by query-interpretation quality" is confirmed strongly. Task-level intent (a host knowing it is asking about current state) must be declarable, and it is (`temporal_intent`). No deterministic text interpreter recovers it from these questions.
+3. **"Universal-tie-break regressions" were not one class.** Some were real (KU recall, turn nDCG). Some universal *gains* came from a benchmark positional artifact. Neither aggregate is evidence about temporal semantics.
+
+Not tested:
+
+- **Condition 1** (a simpler universal scalar matching query-conditioned applicability across current, historical, as-of, and prospective workloads). The external gauntlets contain no declared validity and almost no historical, as-of, or prospective intent. The acceptance gate's orthogonal-benchmark item is **unmet**. A workload with declared validity intervals and as-of or historical queries is needed.
+
+Additional dimensions the evidence says are missing (recorded, not squeezed into this profile):
+
+- **Exception / specificity precedence** (C4 during the exception).
+- **Event-relative temporal relations** (C15).
+- **Historical admission of governed-superseded states** (C14 / C25). This is an admission-level gap against docs/26 (governed recall, line 265), not a ranking change.
+- **Property identity and cardinality** for conflict detection (C8–C11 coexistence is met only because nothing is inferred).
+- **Memory-side temporal self-description.** AgentMemBench's stale-strictly-higher class: "…has moved and now lives in X" states its own currentness in text, and a governed write-time interpretation could declare it instead of guessing at read time.
+
+## 7. Remaining uncertainties
+
+- The cue lexicon is small and English-only. Its false-positive and false-negative rates beyond these datasets are unmeasured.
+- Applicability without a `reference_time` cannot evaluate declared intervals (`no_reference_time`). Hosts must supply the reference clock for current-state claims.
+- The timeline shape is conveyed through per-candidate evidence because the public result envelope does not allow new top-level fields. A first-class structured recall result would be a contract change.
+- Timing in these replays is host-shared and is not performance evidence.
