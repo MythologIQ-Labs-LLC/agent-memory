@@ -76,6 +76,7 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="agent-memory",
         description="Validate, discover, and diagnose the Agent Memory reference runtime.",
+        epilog="Memory Evaluation commands: agent-memory benchmark {list,validate,compare} (see docs/54-memory-evaluation-cli.md).",
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
 
