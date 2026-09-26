@@ -12,8 +12,9 @@ semantics and are scored by that profile's existing evaluator:
 * SWE-ContextBench: ``run_swe_context_bench_harness._quality``;
 * LongMemEval: ``run_longmemeval.score_record`` / ``summarize`` (the replicated
   upstream retrieval evaluator);
-* AgentMemBench / MemDialogue: recorded as not yet available until its profile
-  exists.
+* AgentMemBench / MemDialogue: ``run_agentmembench`` phase functions (the
+  re-expressed upstream deterministic phases), probed through controlled
+  backend misbehavior.
 
 No second retrieval implementation is created and there is no memory-authority
 effect.
@@ -27,6 +28,7 @@ import json
 from pathlib import Path
 from typing import Any, Callable
 
+import run_agentmembench as agentmembench
 import run_longmemeval as longmemeval
 import run_swe_context_bench_harness as harness
 
@@ -341,11 +343,130 @@ def _longmemeval_probes() -> dict[str, Any]:
     }
 
 
-def _agentmembench_probes() -> dict[str, Any]:
+# AgentMemBench / MemDialogue -----------------------------------------------
+
+
+class _ReferenceStore:
+    """Ideal per-user store for probe baselines: newest matching memories first."""
+
+    name = "probe_reference"
+
+    def __init__(self) -> None:
+        self.reset()
+
+    def reset(self) -> None:
+        self.items: dict[str, tuple[str, str]] = {}
+        self.counter = 0
+
+    def add(self, text: str, user_id: str) -> list[str]:
+        memory_id = f"ref:{self.counter}"
+        self.counter += 1
+        self.items[memory_id] = (user_id, text)
+        return [memory_id]
+
+    def _matching(self, query: str, owners) -> list[str]:
+        terms = agentmembench._tokens(query)
+        hits = [text for owner, text in self.items.values() if owner in owners and terms & agentmembench._tokens(text)]
+        return list(reversed(hits))
+
+    def search(self, query: str, user_id: str, limit: int) -> list[str]:
+        return self._matching(query, {user_id})[:limit]
+
+    def delete(self, memory_ids: list[str]) -> None:
+        for memory_id in memory_ids:
+            self.items.pop(memory_id, None)
+
+    def close(self) -> None:
+        pass
+
+
+class _StaleFirst(_ReferenceStore):
+    def search(self, query: str, user_id: str, limit: int) -> list[str]:
+        return list(reversed(self._matching(query, {user_id})))[:limit]
+
+
+class _CrossUserLeak(_ReferenceStore):
+    def search(self, query: str, user_id: str, limit: int) -> list[str]:
+        owners = {owner for owner, _ in self.items.values()}
+        return self._matching(query, owners)[:limit]
+
+
+class _DeletionIgnored(_ReferenceStore):
+    def delete(self, memory_ids: list[str]) -> None:
+        pass
+
+
+class _WriteDropped(_ReferenceStore):
+    def add(self, text: str, user_id: str) -> list[str]:
+        return []
+
+
+class _IdentityCorruption(_ReferenceStore):
+    def search(self, query: str, user_id: str, limit: int) -> list[str]:
+        return self._matching(query, {user_id + "_shifted"})[:limit]
+
+
+def _amb_measure(adapter) -> dict[str, Any]:
+    conflict = agentmembench.run_conflict(adapter, 10)
+    scale = agentmembench.run_scale(adapter, [20], 5)["20"]
     return {
-        "status": "profile_not_available",
-        "reason": "no accepted AgentMemBench / MemDialogue evaluator exists yet (#517); probes are added with that profile",
-        "all_detected": None,
+        "new_fact_rate": conflict["new_fact_rate"],
+        "staleness_rate": conflict["staleness_rate"],
+        "cross_user_leak_rate": agentmembench.run_isolation(adapter, 4, 2)["cross_user_leak_rate"],
+        "audited_deletion_rate": agentmembench.run_deletion(adapter, 5)["audited_deletion_rate"],
+        "scale_recall_at_3": scale["recall_at_3"],
+        "scale_write_success_rate": scale["write_success_rate"],
+    }
+
+
+def _agentmembench_probes() -> dict[str, Any]:
+    base = _amb_measure(_ReferenceStore())
+    specs = [
+        (
+            "stale_over_current",
+            _StaleFirst,
+            lambda b, v: v["staleness_rate"] > b["staleness_rate"] and v["new_fact_rate"] < b["new_fact_rate"],
+            "returning the superseded fact first must raise staleness and lower the new-fact rate",
+        ),
+        (
+            "cross_user_leak",
+            _CrossUserLeak,
+            lambda b, v: v["cross_user_leak_rate"] > b["cross_user_leak_rate"],
+            "serving another user's memories must raise the cross-user leak rate",
+        ),
+        (
+            "deletion_ignored",
+            _DeletionIgnored,
+            lambda b, v: (v["audited_deletion_rate"] or 0.0) < (b["audited_deletion_rate"] or 0.0),
+            "a delete that leaves memories retrievable must lower the audited deletion rate",
+        ),
+        (
+            "write_dropped",
+            _WriteDropped,
+            lambda b, v: v["scale_write_success_rate"] < b["scale_write_success_rate"]
+            and v["scale_recall_at_3"] < b["scale_recall_at_3"],
+            "writes that are acknowledged without materializing must lower write success and recall",
+        ),
+        (
+            "identity_mapping_corruption",
+            _IdentityCorruption,
+            lambda b, v: v["scale_recall_at_3"] < b["scale_recall_at_3"],
+            "resolving a request against the wrong user identity must lower recall",
+        ),
+    ]
+    probes = []
+    for name, factory, detect, expectation in specs:
+        metrics = _amb_measure(factory())
+        probes.append({"name": name, "detected": bool(detect(base, metrics)), "expectation": expectation, "metrics": metrics})
+    return {
+        "evaluator": "run_agentmembench phase functions (conflict, isolation, deletion, scale)",
+        "baseline": {"backend": "ideal per-user store, newest matching memory first", **base},
+        "probes": probes,
+        "all_detected": all(probe["detected"] for probe in probes),
+        "not_probed": {
+            "retrieval": "exact_source_recall is a direct string-membership check; the upstream LLM-judged metric is not run",
+            "concurrency": "measures operation errors/throughput, not a scored quality outcome",
+        },
     }
 
 

@@ -21,19 +21,26 @@ SHA_A = "a" * 64
 CONFIG_A = "b" * 64
 
 
-def _empty_dimensions():
+def _empty_dimensions(status: str = "not_measured"):
     return {
-        "retrieval": dimension_report("not_measured", notes=["not measured in this fixture"]),
-        "currentness": dimension_report("not_measured", notes=["not measured in this fixture"]),
-        "reasoning": dimension_report("not_measured", notes=["not measured in this fixture"]),
-        "governance": dimension_report("not_measured", notes=["not measured in this fixture"]),
-        "efficiency": dimension_report("not_measured", notes=["not measured in this fixture"]),
-        "evaluator_integrity": dimension_report("not_measured", notes=["not measured in this fixture"]),
-        "reproducibility": dimension_report("not_measured", notes=["not measured in this fixture"]),
+        "retrieval": dimension_report(status, notes=["not measured in this fixture"]),
+        "currentness": dimension_report(status, notes=["not measured in this fixture"]),
+        "reasoning": dimension_report(status, notes=["not measured in this fixture"]),
+        "governance": dimension_report(status, notes=["not measured in this fixture"]),
+        "efficiency": dimension_report(status, notes=["not measured in this fixture"]),
+        "evaluator_integrity": dimension_report(status, notes=["not measured in this fixture"]),
+        "reproducibility": dimension_report(status, notes=["not measured in this fixture"]),
     }
 
 
-def _run(system_id: str, recall: float = 0.5, *, input_sha: str = SHA_A, denominator: int = 10):
+def _run(
+    system_id: str,
+    recall: float = 0.5,
+    *,
+    input_sha: str | None = SHA_A,
+    denominator: int = 10,
+    status: str = "complete",
+):
     dimensions = _empty_dimensions()
     dimensions["retrieval"] = dimension_report(
         "measured",
@@ -73,7 +80,7 @@ def _run(system_id: str, recall: float = 0.5, *, input_sha: str = SHA_A, denomin
     return {
         "schema_version": "1.0.0",
         "run_id": f"run:{system_id}",
-        "status": "complete",
+        "status": status,
         "benchmark": {
             "id": "example-memory-benchmark",
             "source_url": "https://example.test/benchmark",
@@ -104,6 +111,15 @@ def _run(system_id: str, recall: float = 0.5, *, input_sha: str = SHA_A, denomin
         "artifacts": [],
         "authority_effect": "none",
     }
+
+
+def _unexecuted(status: str):
+    run = _run("agent-memory", input_sha=None, status=status)
+    run["execution"]["sample_count"] = 0
+    run["dimensions"] = _empty_dimensions("blocked" if status == "blocked" else "not_measured")
+    run["native_results"] = {}
+    run["limitations"] = ["exact frozen benchmark input has not been materialized"]
+    return run
 
 
 class MemoryEvaluationContractTests(unittest.TestCase):
@@ -149,6 +165,24 @@ class MemoryEvaluationContractTests(unittest.TestCase):
         with self.assertRaises(BenchmarkContractError):
             validate_run(run)
 
+    def test_blocked_manifest_can_record_unavailable_input_without_fake_digest(self):
+        run = validate_run(_unexecuted("blocked"))
+        self.assertEqual(run["status"], "blocked")
+        self.assertIsNone(run["benchmark"]["input_sha256"])
+        self.assertEqual(run["dimensions"]["retrieval"]["status"], "blocked")
+
+    def test_not_run_manifest_can_record_unavailable_input_without_fake_digest(self):
+        run = validate_run(_unexecuted("not_run"))
+        self.assertEqual(run["status"], "not_run")
+        self.assertIsNone(run["benchmark"]["input_sha256"])
+
+    def test_complete_and_partial_runs_require_exact_input_digest(self):
+        for status in ("complete", "partial"):
+            with self.subTest(status=status):
+                run = _run("agent-memory", input_sha=None, status=status)
+                with self.assertRaises(BenchmarkContractError):
+                    validate_run(run)
+
     def test_compare_compatible_runs_emits_dimension_specific_delta(self):
         baseline = _run("lexical", recall=0.4)
         candidate = _run("agent-memory", recall=0.7)
@@ -165,6 +199,13 @@ class MemoryEvaluationContractTests(unittest.TestCase):
     def test_compare_rejects_different_frozen_input(self):
         baseline = _run("lexical")
         candidate = _run("agent-memory", input_sha="c" * 64)
+        with self.assertRaises(ComparisonCompatibilityError):
+            compare_runs(baseline, candidate)
+
+    def test_compare_rejects_unavailable_input_even_when_both_are_null(self):
+        baseline = _unexecuted("blocked")
+        candidate = _unexecuted("blocked")
+        candidate["run_id"] = "run:agent-memory-candidate"
         with self.assertRaises(ComparisonCompatibilityError):
             compare_runs(baseline, candidate)
 
