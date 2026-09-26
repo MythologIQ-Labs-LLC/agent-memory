@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from agentmem_ref.cli import main
+from agentmem_ref.console import main
 from agentmem_ref.evaluation import dimension_report, metric_observation, write_run
 
 
@@ -94,6 +94,50 @@ class MemoryEvaluationCliTests(unittest.TestCase):
             if profile["profile_id"] == "swe-context-bench-lite-external-retrieval-v1"
         )
         self.assertIn("blocked", swe["external_evidence_status"])
+
+    def test_registry_evidence_is_truthful_and_bound_to_committed_reports(self):
+        from agentmem_ref.evaluation.registry import list_profiles
+
+        root = Path(__file__).resolve().parents[2]
+        profiles = {profile["profile_id"]: profile for profile in list_profiles()}
+        self.assertIn("agent-memory-agentmembench-memdialogue-operational-v1", profiles)
+        statuses = {
+            (profile_id, item["variant"]): item["status"]
+            for profile_id, profile in profiles.items()
+            for item in profile["external_evidence"]
+        }
+        self.assertEqual(
+            statuses[("swe-context-bench-lite-external-retrieval-v1", "lite_protocol_comparable_99_query_100_edge")],
+            "blocked",
+        )
+        longmemeval = "agent-memory-longmemeval-retrieval-currentness-v1"
+        self.assertEqual(statuses[(longmemeval, "longmemeval_s_cleaned")], "complete")
+        self.assertEqual(statuses[(longmemeval, "longmemeval_m_cleaned")], "not_run")
+        self.assertEqual(statuses[(longmemeval, "upstream_model_judged_qa")], "not_run")
+        for profile in profiles.values():
+            for item in profile["external_evidence"]:
+                self.assertIn(item["status"], {"complete", "partial", "blocked", "not_run"})
+                if item["status"] != "complete":
+                    self.assertNotIn("report", item)
+                    continue
+                report = json.loads((root / item["report"]).read_text(encoding="utf-8"))
+                self.assertEqual(report["input"]["sha256"], item["input_sha256"])
+                self.assertEqual(report["execution"]["agent_memory_revision"], item["agent_memory_revision"])
+                self.assertEqual(report["input"]["corpus_class"], "external_frozen")
+
+    def test_console_routes_runtime_commands_and_runtime_never_imports_evaluation(self):
+        import ast
+
+        root = Path(__file__).resolve().parents[2]
+        source = (root / "reference" / "agentmem_ref" / "runtime" / "cli.py").read_text(encoding="utf-8")
+        for node in ast.walk(ast.parse(source)):
+            if isinstance(node, ast.ImportFrom):
+                self.assertNotIn("evaluation", node.module or "")
+        error = io.StringIO()
+        with contextlib.redirect_stderr(error), self.assertRaises(SystemExit) as raised:
+            main(["no-such-command"])
+        self.assertEqual(raised.exception.code, 2)
+        self.assertIn("agent-memory", error.getvalue())
 
     def test_benchmark_list_human_output_names_profiles(self):
         output = io.StringIO()

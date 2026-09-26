@@ -75,7 +75,7 @@ def _failure(command: str, exc: Exception, *, json_output: bool) -> int:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="agent-memory",
-        description="Validate, discover, diagnose, and evaluate the Agent Memory reference runtime.",
+        description="Validate, discover, and diagnose the Agent Memory reference runtime.",
     )
     subcommands = parser.add_subparsers(dest="command", required=True)
 
@@ -102,33 +102,6 @@ def _parser() -> argparse.ArgumentParser:
     doctor.add_argument("--probe", action="store_true", help="execute explicitly declared read-only provider probes")
     doctor.add_argument("--probes", help="path to an explicit read-only provider probe manifest")
     doctor.add_argument("--json", action="store_true", help="emit machine-readable JSON")
-
-    benchmark = subcommands.add_parser(
-        "benchmark",
-        help="discover profiles and validate or compare Memory Evaluation evidence",
-    )
-    benchmark_sub = benchmark.add_subparsers(dest="benchmark_command", required=True)
-
-    benchmark_list = benchmark_sub.add_parser(
-        "list",
-        help="list repository-owned benchmark profiles",
-    )
-    benchmark_list.add_argument("--json", action="store_true", help="emit machine-readable JSON")
-
-    benchmark_validate = benchmark_sub.add_parser(
-        "validate",
-        help="validate one common memory-benchmark run manifest",
-    )
-    benchmark_validate.add_argument("report", help="path to a memory-benchmark run JSON report")
-    benchmark_validate.add_argument("--json", action="store_true", help="emit machine-readable JSON")
-
-    benchmark_compare = benchmark_sub.add_parser(
-        "compare",
-        help="compare two compatible common memory-benchmark run manifests",
-    )
-    benchmark_compare.add_argument("baseline", help="path to the baseline run JSON report")
-    benchmark_compare.add_argument("candidate", help="path to the candidate run JSON report")
-    benchmark_compare.add_argument("--json", action="store_true", help="emit machine-readable JSON")
     return parser
 
 
@@ -170,18 +143,6 @@ def main(argv: list[str] | None = None) -> int:
                 return 1
             if value["provider_availability"].get("startability") == "blocked_by_required_probe":
                 return 1
-            return 0
-        if args.command == "benchmark":
-            from ..evaluation.cli import emit as emit_benchmark
-            from ..evaluation.cli import execute as execute_benchmark
-
-            value = execute_benchmark(
-                args.benchmark_command,
-                report=getattr(args, "report", None),
-                baseline=getattr(args, "baseline", None),
-                candidate=getattr(args, "candidate", None),
-            )
-            emit_benchmark(value, json_output=json_output)
             return 0
     except (
         DiagnosticInputError,

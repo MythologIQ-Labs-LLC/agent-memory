@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -83,6 +85,8 @@ def emit(value: dict[str, Any], *, json_output: bool) -> None:
             )
             print(f"  runner: {profile['runner']}")
             print(f"  evidence: {profile['external_evidence_status']}")
+            for item in profile.get("external_evidence", ()):
+                print(f"    - {item['variant']}: {item['status']}")
             print(f"  dimensions: {dimensions}")
         print("Authority effect: none")
         return
@@ -123,3 +127,52 @@ def emit(value: dict[str, Any], *, json_output: bool) -> None:
         return
 
     raise ValueError(f"unsupported benchmark output command: {command}")
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="agent-memory benchmark",
+        description="Discover Memory Evaluation profiles and validate or compare benchmark evidence.",
+    )
+    commands = parser.add_subparsers(dest="benchmark_command", required=True)
+    listing = commands.add_parser("list", help="list repository-owned benchmark profiles")
+    listing.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+    validate = commands.add_parser("validate", help="validate one common memory-benchmark run manifest")
+    validate.add_argument("report", help="path to a memory-benchmark run JSON report")
+    validate.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+    compare = commands.add_parser("compare", help="compare two compatible common memory-benchmark run manifests")
+    compare.add_argument("baseline", help="path to the baseline run JSON report")
+    compare.add_argument("candidate", help="path to the candidate run JSON report")
+    compare.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+    return parser
+
+
+def _failure(command: str, exc: Exception, *, json_output: bool) -> int:
+    value = {
+        "schema_version": "1.0.0",
+        "command": f"benchmark_{command}",
+        "valid": False,
+        "status": "refused",
+        "error": str(exc),
+        "authority_effect": "none",
+    }
+    if json_output:
+        print(json.dumps(value, indent=2, sort_keys=True))
+    else:
+        print(f"Refused: {exc}", file=sys.stderr)
+    return 2
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = _parser().parse_args(argv)
+    try:
+        value = execute(
+            args.benchmark_command,
+            report=getattr(args, "report", None),
+            baseline=getattr(args, "baseline", None),
+            candidate=getattr(args, "candidate", None),
+        )
+    except (KeyError, TypeError, ValueError) as exc:
+        return _failure(args.benchmark_command, exc, json_output=args.json)
+    emit(value, json_output=args.json)
+    return 0
