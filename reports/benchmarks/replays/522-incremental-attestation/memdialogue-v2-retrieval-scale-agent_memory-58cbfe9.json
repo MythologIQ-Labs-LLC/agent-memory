@@ -1,0 +1,218 @@
+{
+  "backends": {
+    "agent_memory": {
+      "authority_effect": "none",
+      "boundary": "public AgentMemory facade; one tenant, one governed scope per upstream user_id; candidate generation followed by canonical governed admission; deletion = governed tombstone",
+      "governance": {
+        "retrieval": {
+          "admitted_count": 9937,
+          "candidate_count": 993210,
+          "forget_calls": 0,
+          "forget_committed": 0,
+          "forget_outcomes": {},
+          "recall_calls": 1000,
+          "refusal_reasons": {
+            "required_isolation_domain_missing": 983273
+          },
+          "remember_calls": 1000,
+          "remember_committed": 1000,
+          "remember_refusals": {}
+        },
+        "scale": {
+          "admitted_count": 300,
+          "candidate_count": 210000,
+          "forget_calls": 0,
+          "forget_committed": 0,
+          "forget_outcomes": {},
+          "recall_calls": 300,
+          "refusal_reasons": {
+            "required_isolation_domain_missing": 209700
+          },
+          "remember_calls": 1100,
+          "remember_committed": 1100,
+          "remember_refusals": {}
+        }
+      },
+      "phase_errors": {},
+      "phase_wall_seconds": {
+        "retrieval": 1135.825,
+        "scale": 126.511
+      },
+      "phases": {
+        "retrieval": {
+          "exact_source_recall_at_k": 0.902,
+          "exact_source_recall_at_k_95ci": [
+            0.883,
+            0.92
+          ],
+          "exact_source_recall_by_event_type": {
+            "PERSONAL_FACT": 0.946,
+            "TASK_REQUEST": 0.858
+          },
+          "group_size": 10,
+          "metric_note": "exact_source_hit = the record's own memory text is among the top-k results for its query within its user group; profile-local and not the upstream LLM-judged recall",
+          "read_latency": {
+            "mean_ms": 1101.1161667769866,
+            "n": 1000,
+            "p50_ms": 1076.5057424996485,
+            "p95_ms": 1824.7107825003695,
+            "p99_ms": 2077.1741148696947
+          },
+          "records": 1000,
+          "top_k": 5,
+          "upstream_llm_judged_recall_at_k": "not_run",
+          "write_latency": {
+            "mean_ms": 34.63428849299544,
+            "n": 1000,
+            "p50_ms": 32.83817450028437,
+            "p95_ms": 66.98713785017388,
+            "p99_ms": 83.11609690027579
+          },
+          "write_success_rate": 1.0
+        },
+        "scale": {
+          "100": {
+            "read_latency": {
+              "mean_ms": 38.96346504005123,
+              "n": 100,
+              "p50_ms": 36.69989499985604,
+              "p95_ms": 50.02047440025307,
+              "p99_ms": 67.62295923012063
+            },
+            "recall_at_3": 1.0,
+            "recall_at_3_95ci": [
+              1.0,
+              1.0
+            ],
+            "stored_records": 100,
+            "write_latency": {
+              "mean_ms": 6.202033809959175,
+              "n": 100,
+              "p50_ms": 6.0288079998827016,
+              "p95_ms": 8.827371449933706,
+              "p99_ms": 10.13363462960116
+            },
+            "write_success_rate": 1.0
+          },
+          "1000": {
+            "read_latency": {
+              "mean_ms": 444.95120739507,
+              "n": 200,
+              "p50_ms": 450.7403469997371,
+              "p95_ms": 571.6915309494652,
+              "p99_ms": 606.3770111701342
+            },
+            "recall_at_3": 1.0,
+            "recall_at_3_95ci": [
+              1.0,
+              1.0
+            ],
+            "stored_records": 1000,
+            "write_latency": {
+              "mean_ms": 32.82752098900346,
+              "n": 1000,
+              "p50_ms": 30.800727500263747,
+              "p95_ms": 61.97190695020253,
+              "p99_ms": 74.42544539127992
+            },
+            "write_success_rate": 1.0
+          }
+        }
+      },
+      "wall_seconds": 1262.412
+    }
+  },
+  "claim_boundary": {
+    "aggregate_memory_health_score": "not_defined",
+    "answer_generation_quality_measured": false,
+    "benchmark_score_is_authority": false
+  },
+  "comparability": {
+    "latency_note": "local in-process latency; not comparable to upstream service-backed latency",
+    "reference_systems": "upstream Mem0/Graphiti/LangMem/Letta/Naive RAG results are not reproduced here",
+    "status": "bounded-operational-profile",
+    "upstream_llm_judged_retrieval": "not_run"
+  },
+  "dimensions": {
+    "concurrency": "phases.concurrency",
+    "deletion": "phases.deletion.audited_deletion_rate",
+    "governance": "governance (Agent Memory refusal/outcome tallies per phase)",
+    "isolation": "phases.isolation.cross_user_leak_rate",
+    "llm_portability": "not_exercised: no LLM backend is part of this profile",
+    "retrieval_quality": "phases.retrieval.exact_source_recall_at_k (deterministic, profile-local)",
+    "scale": "phases.scale",
+    "temporal_consistency": "phases.conflict",
+    "write_efficiency": "phases.retrieval.write_latency / write_success_rate"
+  },
+  "execution": {
+    "agent_memory_package_version": "0.2.0",
+    "agent_memory_revision": "58cbfe928eff6de05e710313bc7a8108ddfb0e5e",
+    "agent_memory_worktree_dirty": false,
+    "backends": [
+      "agent_memory"
+    ],
+    "finished_at": "2026-09-26T02:38:32.521223+00:00",
+    "implementation": "CPython",
+    "numpy": "2.4.6",
+    "phases": [
+      "retrieval",
+      "scale"
+    ],
+    "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "python": "3.11.15",
+    "resource_consumption": {
+      "peak_rss_mb_process": 417.5
+    },
+    "started_at": "2026-09-26T02:17:29.902928+00:00",
+    "wall_seconds": 1262.618
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "matches_upstream_release": true,
+    "path_name": "memdialogue_v2.jsonl",
+    "selection": {
+      "method": "upstream load_records: source-unique, event-type-stratified, numpy default_rng(seed)",
+      "records": 1000,
+      "seed": 2027,
+      "source_ids_sha256": "db563c1fc4251384577f698eda1efbad1e18ba119f6a9ed847c42e0d56261afa"
+    },
+    "sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "size_bytes": 7663311
+  },
+  "parameters": {
+    "concurrency_records": 200,
+    "conflict_pairs": 250,
+    "deletion_records": 200,
+    "group_size": 10,
+    "isolation_facts": 5,
+    "isolation_users": 100,
+    "retrieval_records": 1000,
+    "scale_read_queries": 200,
+    "scales": [
+      100,
+      1000
+    ],
+    "seed": 2027,
+    "top_k": 5,
+    "warmup_writes": 5,
+    "workers": [
+      1,
+      4,
+      8,
+      16
+    ]
+  },
+  "profile_id": "agent-memory-agentmembench-memdialogue-operational-v1",
+  "schema_version": "1.0.0",
+  "upstream": {
+    "code_license": "MIT",
+    "data_attribution": "MemDialogue is derived from WildChat-4.8M by the Allen Institute for AI.",
+    "data_license": "ODC-By-1.0",
+    "dataset": "data/memdialogue_v2.jsonl",
+    "dataset_sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "harness": "agentmembench/evaluation/unified_benchmark.py",
+    "harness_sha256": "d0d407129aa506f6eacbf6df19a26c1a9ddd000aa0bfb931cb4e4ae984e594df",
+    "repository": "mazaiying/AgentMemBench",
+    "revision": "186c9a54edd47aae42d8b6990520f8e902b60303"
+  }
+}
