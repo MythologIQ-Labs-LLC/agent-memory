@@ -83,3 +83,63 @@ Candidate revision `59dc80d` (branch `runtime/530-serialized-handle`). Evidence 
 | throughput (ops/s) | 1 / 4 / 8 / 16 | n/a (all failed) | 69.5 / 62.2 / 69.2 / 67.0 |
 
 **Stated cost.** Throughput is flat across worker counts because writes are serialized: a single handle is correct under concurrency but does not scale with threads. Latency grows with queue depth (p50 14 ms at 1 worker, 218 ms at 16). Multi-writer throughput would need a different design and is not claimed here. The host was shared with a concurrent replay, so the absolute latencies are not performance evidence.
+
+## Slice 3: integrity attestation scaling (#522)
+
+At ~1,000 facts the SQLite runtime re-derived its entire integrity posture on every commit. It serialized every canonical row into one SHA-256 digest (`state_digest`), re-validated the full journal chain, and parsed the whole runtime-state blob twice. Because governed recall also commits a generation (audit and identifier progress), recall paid the same cost.
+
+**Change.** Three integrity layers that one O(state) pass had conflated are now separate. None is removed.
+
+| layer | when | what is verified | cost |
+| --- | --- | --- | --- |
+| operation integrity | every commit | generation compare-and-swap (a `json_extract` binding read), and the journal **tail** being extended: self-consistent record digest, current generation, bound by the runtime state | O(1) |
+| current-state attestation | every commit | `bmerkle-v1` root: 256 buckets of per-row hashes over episodes, facts, and typed relations, plus the identifier counter; maintained from the rows the transaction changed | O(changed rows + touched buckets) |
+| recovery-time full verification | every open/recover | root **recomputed from canonical rows** (never from the maintained index), full journal chain, and the state-to-tail binding (new) | O(state), unchanged |
+
+Boundaries:
+
+- The digest index (`digest_rows`, `digest_buckets`) is derived data. It is trusted only after this process rebuilds it, or verifies it row-for-row against canonical rows during recovery. Otherwise the next commit rebuilds it. A tampered index cannot change any recovery answer.
+- Every canonical write path is mapped to its table. An unmapped write raises instead of silently escaping the commitment.
+- Digests are self-describing. A legacy `sha256:` store recovers under the full-JSON commitment and upgrades at its next commit. Mixed-scheme journal chains verify end to end. An unknown scheme refuses recovery.
+- **Stronger than before on one path.** Previously, a canonical row altered out-of-band while a handle was open was folded into the next full digest, which laundered the alteration. It is now absent from the maintained root, so the next recovery refuses.
+- `state_digest()` is unchanged and still used by harnesses and qualification.
+
+Tests: `reference/tests/test_incremental_attestation.py`. 8 of its 15 tests fail against the previous runtime. The tamper-refusal tests pass on both, which shows the existing guarantees are preserved.
+
+### Evidence
+
+The artifacts are in `reports/benchmarks/replays/522-incremental-attestation/`. Scaling ran on a 4-core container with no other benchmark running: two interleaved runs per revision, before = `main` `0007f5f`, after = `bc902c4`. It was produced by `reference/run_write_recall_scaling.py` through the installed facade.
+
+| facts in store | metric | 0007f5f | bc902c4 |
+| --- | --- | --- | --- |
+| ~100 | write median | 15.5 ms | 9.1–9.4 ms |
+| ~100 | recall median | 22.6–23.5 ms | 15.0–15.2 ms |
+| ~1,000 | write median | 120–130 ms | **64 ms** |
+| ~1,000 | recall median | 174–179 ms | **107–108 ms** |
+| ~1,000 | integrity work per commit (digest + journal validation + state reads) | 62–67 ms | **0.7 ms** |
+| ~1,000 | governance-state rewrite per commit (`write_runtime_state`) | 20–23 ms | 20–21 ms |
+
+AgentMemBench scale and retrieval were replayed at `58cbfe9`. That is the same attestation code, before the merge of #542's lock. The input is `33632710…`, compared against frozen `03197cd`.
+
+| phase | metric | 03197cd | 58cbfe9 |
+| --- | --- | --- | --- |
+| scale, 1,000 records | write p50 / p95 | 50.6 / 104.1 ms | **30.8 / 62.0 ms** |
+| scale, 1,000 records | read p50 / p95 | 496.8 / 625.3 ms | 450.7 / 571.7 ms |
+| scale, 100 and 1,000 records | recall@3, write success | 1.0, 1.0 | 1.0, 1.0 |
+| retrieval (1,000 records) | write p50 | 53.8 ms | **32.8 ms** |
+| retrieval (1,000 records) | exact_source_recall@5 | 0.889 | 0.902 [0.883, 0.920] |
+
+The exact_source_recall change comes from #540's ranking policy, which `58cbfe9` contains. It does not come from this slice.
+
+Full LongMemEval_S was replayed at `58cbfe9`:
+
+- **Retrieval is bit-for-bit identical to `9c2ba70`.** Every paired Δ is exactly 0 on every metric of both planes, including latest-first, with zero failures. The attestation change alters no ranking.
+- Agent Memory ingest, turn plane: 2,163 s (`f73b872`) and 2,281 s (`9c2ba70`, shared host) → **1,232 s**.
+- Session plane: 149 → 117 s.
+- Run wall time: 2,406 → 1,435 s. Peak RSS is unchanged at 2.4 GB.
+
+### Remaining O(state) terms (measured, not addressed here)
+
+- The governance-state blob is re-serialized and rewritten every generation. That is ~20 ms per commit at ~1,000 facts, and it is now the largest persistence term.
+- Lexical search tokenizes every fact in the tenant (~16 ms per recall at ~1,000 facts in one scope).
+- AgentMemBench scale reads (~450 ms p50 at 1,000 records) are dominated by admission and audit work per candidate. #522 part B, the scope-aware prefilter, is measured but awaits a contract decision on #522: prefiltering changes which refusals are visible to callers and to the audit.
