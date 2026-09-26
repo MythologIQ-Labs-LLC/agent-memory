@@ -1,0 +1,57 @@
+{
+  "adapter": {
+    "id": "gauntlet-governance-leaky-fixture",
+    "revision": "governance-leaky-v1",
+    "version": "0.1.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "repository-owned negative-control governance fixture keyed by unique Gauntlet run id",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "classifier_authority_isolation": {"support": "unsupported"},
+    "deletion": {
+      "notes": "negative-control fixture still implements deletion to prove independent case verdicts",
+      "support": "derived"
+    },
+    "describe": {"support": "native"},
+    "durable_deletion": {"support": "unsupported"},
+    "foreign_cardinality_non_disclosure": {
+      "notes": "intentionally false claim used to prove evaluator failure detection",
+      "support": "derived"
+    },
+    "forget": {"support": "native"},
+    "health": {"support": "native"},
+    "recall": {"support": "native"},
+    "remember": {"support": "native"},
+    "reset": {"support": "native"},
+    "route_authority_isolation": {"support": "unsupported"},
+    "scope_isolation": {
+      "notes": "intentionally false claim used to prove evaluator failure detection",
+      "support": "derived"
+    },
+    "source_trust": {"support": "unsupported"},
+    "tenant_isolation": {
+      "notes": "intentionally false claim used to prove evaluator failure detection",
+      "support": "derived"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "fixture_role": "negative_governance_evaluator_control",
+    "provenance_class": "baseline_or_probe",
+    "trusted_fixture": true
+  },
+  "system": {
+    "id": "gauntlet-governance-leaky-fixture",
+    "kind": "other",
+    "revision": "governance-leaky-v1",
+    "version": "0.1.0"
+  },
+  "transport": {
+    "callable": "agentmem_ref.evaluation.gauntlet_governance:leaky_governance_adapter",
+    "kind": "in_process"
+  }
+}

@@ -1,26 +1,31 @@
 # Agent Memory Gauntlet Orchestration Alpha
 
-Status: implementation guidance for issue #558  
+Status: implementation guidance for issues #558 and #559  
 Contract version: `0.1.0`  
 Authority effect: none
 
 ## Purpose
 
-This document describes the first executable orchestration layer built on the
+This document describes the executable orchestration layer built on the
 [Gauntlet System Adapter Contract](GAUNTLET_SYSTEM_ADAPTER_CONTRACT.md).
 
 The alpha exists to prove that heterogeneous memory systems can enter a common
 qualification flow without pretending that all systems expose the same architecture,
 that all benchmarks share one metric, or that adapter translation creates capabilities.
 
-The first executable profile is deliberately a **baseline/orchestration probe**. It is
-not independent efficacy evidence.
+The first executable profiles are deliberately bounded:
+
+- `gauntlet-orchestration-retrieval-probe-v1` is `baseline_or_probe` evidence;
+- `governance-isolation-deletion-alpha-v1` is `gauntlet_native_gap` evidence.
+
+Neither is independent external efficacy evidence.
 
 ## CLI
 
 ```bash
 agent-memory gauntlet list
 agent-memory gauntlet inspect gauntlet-orchestration-retrieval-probe-v1
+agent-memory gauntlet inspect governance-isolation-deletion-alpha-v1
 
 agent-memory gauntlet validate-adapter fixtures/gauntlet/lexical-adapter.json
 
@@ -28,25 +33,6 @@ agent-memory gauntlet run \
   --system fixtures/gauntlet/lexical-adapter.json \
   --profile gauntlet-orchestration-retrieval-probe-v1 \
   --output-dir ./gauntlet-runs
-```
-
-A `stdio` manifest contains an executable startup command and therefore requires explicit
-execution opt-in. Because the first probe also invokes `reset`, a non-fixture adapter
-requires a second explicit destructive-operation opt-in:
-
-```bash
-agent-memory gauntlet run \
-  --system ./my-stdio-adapter.json \
-  --profile gauntlet-orchestration-retrieval-probe-v1 \
-  --allow-external-process \
-  --allow-destructive-reset
-```
-
-The two flags have different meanings:
-
-```text
---allow-external-process   permission to launch manifest-declared executable content
---allow-destructive-reset  permission for this run to issue reset to a non-fixture adapter
 ```
 
 Validation never executes an adapter.
@@ -66,11 +52,29 @@ Declared by the adapter contract but not yet executable:
 
 An unsupported transport is an orchestration block, not a benchmark score.
 
-## Destructive isolation rule
+## Execution and destructive-operation consent
 
-The first orchestration probe calls `reset`.
+A `stdio` manifest contains executable startup content and therefore requires:
 
-For this alpha, the orchestrator executes that profile only when the manifest declares:
+```text
+--allow-external-process
+```
+
+Destructive operations are a separate consent boundary.
+
+Profiles declare which operations are destructive and, where appropriate, which claimed
+capability activates them. For example:
+
+```text
+retrieval probe:
+    reset -> always active
+
+governance alpha:
+    reset  -> always active
+    forget -> active only when deletion is positively claimed
+```
+
+A non-fixture adapter must declare:
 
 ```json
 {
@@ -80,25 +84,46 @@ For this alpha, the orchestrator executes that profile only when the manifest de
 }
 ```
 
-That declaration is necessary but is **not itself permission**. For any non-fixture
-adapter, the caller must also pass `--allow-destructive-reset`.
+That declaration is necessary evidence but is **not itself permission**.
 
-This is intentionally narrower than the manifest schema. A declaration such as `tenant`,
-`namespace`, `database`, or `remote_test_project` may eventually be sufficient, but the
-orchestrator will not assume its teardown semantics before they are explicitly specified
-and tested.
+The narrow compatibility flag:
 
 ```text
-declared isolation != proven safe reset boundary
-manifest claim != destructive-operation consent
+--allow-destructive-reset
 ```
 
-## First probe
+is sufficient only when `reset` is the sole active destructive operation.
+
+A profile that may issue another destructive operation, such as `forget`, requires:
+
+```text
+--allow-destructive-operations
+```
+
+So an external governance-alpha run that claims deletion normally requires:
+
+```bash
+agent-memory gauntlet run \
+  --system ./my-governance-adapter.json \
+  --profile governance-isolation-deletion-alpha-v1 \
+  --allow-external-process \
+  --allow-destructive-operations
+```
+
+Controlling invariants:
+
+```text
+declared isolation != proven safe destructive boundary
+manifest claim != destructive-operation consent
+claimed deletion != permission to delete arbitrary state
+```
+
+## Retrieval orchestration probe
 
 `gauntlet-orchestration-retrieval-probe-v1` uses three deterministic records and three
 queries.
 
-It exists to verify:
+It verifies:
 
 - capability negotiation;
 - reset/write/recall invocation;
@@ -109,13 +134,7 @@ It exists to verify:
 - common Memory Evaluation normalization;
 - reconstructable manifest/input identity.
 
-Its provenance class is:
-
-```text
-baseline_or_probe
-```
-
-Therefore:
+Its provenance class is `baseline_or_probe`.
 
 ```text
 probe pass != independent memory efficacy
@@ -125,6 +144,17 @@ probe score != authority
 
 The in-repository no-memory and lexical baselines intentionally produce different
 retrieval results through the same orchestration contract.
+
+## Governance alpha
+
+`governance-isolation-deletion-alpha-v1` executes claim-driven synthetic cases for tenant
+and scope isolation, foreign-cardinality non-disclosure, deletion, and selected authority-
+laundering pressure.
+
+Its provenance class is `gauntlet_native_gap`.
+
+See [Governance Gauntlet Alpha](GOVERNANCE_GAUNTLET_ALPHA.md) for case-level semantics,
+negative controls, blocked claims, and the remaining real-system gate for issue #559.
 
 ## Evidence layout
 
@@ -139,8 +169,8 @@ Each executed run receives its own directory:
 ```
 
 The normalized run uses the existing Memory Evaluation common evidence contract.
-Heterogeneous benchmark-native semantics remain in `native_results`; normalization does
-not invent comparability.
+Heterogeneous profile-native semantics remain in `native_results`; normalization does not
+invent comparability.
 
 A qualification result preserves distinctions such as:
 
@@ -159,6 +189,7 @@ In particular:
 unsupported != failed
 blocked != zero score
 adapter failure != SUT failure
+governance case failure != harness execution failure
 ```
 
 ## Failure attribution
@@ -188,28 +219,28 @@ restricted to trusted repository fixtures.
 `stdio` manifests can execute the startup command declared by the manifest. `run`
 requires explicit `--allow-external-process`; `validate-adapter` does not execute it.
 
-A manifest's `disposable_instance` declaration remains descriptive evidence. It does not
-by itself authorize reset. Non-fixture adapters additionally require explicit
-`--allow-destructive-reset` for profiles that contain reset.
+The alpha does not claim sandboxing of arbitrary hostile adapters.
 
-This alpha does not claim sandboxing of arbitrary hostile adapters.
+System and adapter identifiers are schema-constrained before they can participate in run
+paths, preventing manifest-controlled path traversal through run identity.
 
 ## Explicit non-goals
 
-This slice does not:
+The orchestration alpha does not:
 
 - freeze the canonical Agent Memory runtime adapter;
 - accept ADR-039;
-- create a universal memory-health score;
+- create a universal memory-health or governance score;
 - flatten external benchmark protocols;
-- implement the Governance Gauntlet;
 - implement HTTP transport;
-- treat the deterministic probe as independent benchmark evidence;
-- change runtime authority or licensing.
+- treat probe or Gauntlet-native evidence as independent external validation;
+- change runtime authority, naming, or licensing.
 
 ## Next slices
 
-Issue #559 builds the first executable Governance Gauntlet on this orchestration layer.
+Issue #559 remains open until a real memory system runs the governance protocol in addition
+to the composed evaluator controls.
+
 Issue #560 continues qualification of independent benchmark families against the
 Benchmark Coverage Atlas.
 

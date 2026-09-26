@@ -1,0 +1,57 @@
+{
+  "adapter": {
+    "id": "gauntlet-governance-strict-fixture",
+    "revision": "governance-strict-v1",
+    "version": "0.1.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "repository-owned synthetic governance fixture keyed by unique Gauntlet run id",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "classifier_authority_isolation": {"support": "unsupported"},
+    "deletion": {
+      "notes": "composed evaluator fixture behavior; not a native external-system claim",
+      "support": "derived"
+    },
+    "describe": {"support": "native"},
+    "durable_deletion": {"support": "unsupported"},
+    "foreign_cardinality_non_disclosure": {
+      "notes": "caller-visible recall output is independent of foreign-scope population",
+      "support": "derived"
+    },
+    "forget": {"support": "native"},
+    "health": {"support": "native"},
+    "recall": {"support": "native"},
+    "remember": {"support": "native"},
+    "reset": {"support": "native"},
+    "route_authority_isolation": {"support": "unsupported"},
+    "scope_isolation": {
+      "notes": "composed fixture enforces exact tenant/scope partitioning",
+      "support": "derived"
+    },
+    "source_trust": {"support": "unsupported"},
+    "tenant_isolation": {
+      "notes": "composed fixture enforces exact tenant/scope partitioning",
+      "support": "derived"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "fixture_role": "positive_governance_evaluator_control",
+    "provenance_class": "baseline_or_probe",
+    "trusted_fixture": true
+  },
+  "system": {
+    "id": "gauntlet-governance-strict-fixture",
+    "kind": "other",
+    "revision": "governance-strict-v1",
+    "version": "0.1.0"
+  },
+  "transport": {
+    "callable": "agentmem_ref.evaluation.gauntlet_governance:strict_governance_adapter",
+    "kind": "in_process"
+  }
+}
