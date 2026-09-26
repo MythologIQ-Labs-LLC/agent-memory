@@ -269,21 +269,77 @@ def _lexical_rank(question: str, items: Sequence[Mapping[str, str]]) -> list[str
     return [entry[2] for entry in scored]
 
 
-def _no_memory(question: str, items: Sequence[Mapping[str, str]], row_index: int) -> dict[str, Any]:
+TEMPORAL_METADATA_MODES = ("none", "host_declared")
+RANKING_VARIANTS = ("default", "unspecified_newer_first_among_ties", "universal_newer_first")
+# Evaluation-only configuration of the Agent Memory adapter, recorded in every report.
+_AGENT_MEMORY_CONFIGURATION: dict[str, str] = {"temporal_metadata": "none", "ranking_variant": "default"}
+_DATE = re.compile(r"^(\d{4})/(\d{2})/(\d{2})(?:\s*\([A-Za-z]{3}\))?\s*(\d{2}):(\d{2})")
+
+
+def _iso_date(value: str) -> str | None:
+    """LongMemEval ``YYYY/MM/DD (Day) HH:MM`` to ISO-8601 UTC; ``None`` when unparseable."""
+
+    match = _DATE.match(str(value).strip())
+    if not match:
+        return None
+    year, month, day, hour, minute = match.groups()
+    return f"{year}-{month}-{day}T{hour}:{minute}:00Z"
+
+
+def configure_agent_memory(*, temporal_metadata: str = "none", ranking_variant: str = "default") -> dict[str, str]:
+    """Select how the Agent Memory adapter uses the host-visible temporal information.
+
+    ``temporal_metadata = none`` (default, frozen comparability): only question and
+    session text reach Agent Memory. ``host_declared``: the adapter declares each
+    session's date as ``observed_at`` on write and the question date as the recall
+    ``reference_time``, which a host that knows when conversations happened could do.
+    No validity interval is declared (a session date is not a validity claim), and no
+    temporal intent is declared: intent is still interpreted from the question text.
+
+    ``ranking_variant`` selects an evaluated alternative of the post-admission policy
+    for ablation only; ``default`` is the runtime's shipped policy.
+    """
+
+    if temporal_metadata not in TEMPORAL_METADATA_MODES:
+        raise ValueError(f"unknown temporal_metadata {temporal_metadata!r}")
+    if ranking_variant not in RANKING_VARIANTS:
+        raise ValueError(f"unknown ranking_variant {ranking_variant!r}")
+    if ranking_variant != "default":
+        import dataclasses
+
+        from agentmem_ref.runtime import query_driven_recall, recall_control, runtime_composition
+
+        overrides = (
+            {"unspecified_intent_order": "newer_first_among_ties"}
+            if ranking_variant == "unspecified_newer_first_among_ties"
+            else {"temporal_regime": "universal_newer_first", "stable_fallback": "candidate_ref_asc"}
+        )
+        for module, name in (
+            (runtime_composition, "MULTI_ROUTE_RANKING_POLICY"),
+            (query_driven_recall, "QUERY_DRIVEN_RANKING_POLICY"),
+            (recall_control, "CONTROLLED_RECALL_RANKING_POLICY"),
+        ):
+            setattr(module, name, dataclasses.replace(getattr(module, name), **overrides))
+    _AGENT_MEMORY_CONFIGURATION.update(temporal_metadata=temporal_metadata, ranking_variant=ranking_variant)
+    return dict(_AGENT_MEMORY_CONFIGURATION)
+
+
+def _no_memory(question: str, items: Sequence[Mapping[str, str]], row_index: int, row: Mapping[str, Any] | None = None) -> dict[str, Any]:
     return {"ranked": []}
 
 
-def _lexical(question: str, items: Sequence[Mapping[str, str]], row_index: int) -> dict[str, Any]:
+def _lexical(question: str, items: Sequence[Mapping[str, str]], row_index: int, row: Mapping[str, Any] | None = None) -> dict[str, Any]:
     return {"ranked": _lexical_rank(question, items)}
 
 
-def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: int) -> dict[str, Any]:
+def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: int, row: Mapping[str, Any] | None = None) -> dict[str, Any]:
     """Public facade only: governed retain, then candidate generation + admission.
 
     Benchmark item ids never enter Agent Memory. Target references are opaque
     positional handles; ids are recovered only from admitted fact UUIDs.
     """
     ingestion_failures: list[str] = []
+    host_declared = _AGENT_MEMORY_CONFIGURATION["temporal_metadata"] == "host_declared"
     with tempfile.TemporaryDirectory(prefix="agent-memory-longmemeval-") as temporary:
         with AgentMemory.open(
             temporary,
@@ -295,14 +351,20 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
             uuid_to_item: dict[str, str] = {}
             started = time.perf_counter()
             for item_index, item in enumerate(items):
-                retained = memory.remember(f"memory:longmemeval:{row_index}:{item_index}", item["text"])
+                declared = {}
+                if host_declared:
+                    observed = _iso_date(item.get("date", ""))
+                    if observed is not None:
+                        declared["observed_at"] = observed
+                retained = memory.remember(f"memory:longmemeval:{row_index}:{item_index}", item["text"], **declared)
                 if not retained.get("committed") or not retained.get("fact_uuid"):
                     ingestion_failures.append(str(retained.get("refusal") or "not_committed"))
                     continue
                 uuid_to_item[str(retained["fact_uuid"])] = item["id"]
             ingest_seconds = time.perf_counter() - started
             started = time.perf_counter()
-            recalled = memory.recall(question)
+            reference_time = _iso_date(str((row or {}).get("question_date", ""))) if host_declared else None
+            recalled = memory.recall(question, reference_time=reference_time)
             recall_seconds = time.perf_counter() - started
     unmapped_admitted = [value for value in recalled["admitted"] if value not in uuid_to_item]
     refusals: dict[str, int] = {}
@@ -433,7 +495,7 @@ def _evaluate_backend(dataset: Sequence[Mapping[str, Any]], granularity: str, ba
     for row_index, row in enumerate(dataset):
         items, _ = corpus(row, granularity)
         try:
-            outcome = retriever(str(row["question"]), items, row_index)
+            outcome = retriever(str(row["question"]), items, row_index, row)
             error = None
         except Exception as exc:  # recorded, never hidden; the question scores as a miss
             outcome = {"ranked": []}
@@ -569,6 +631,7 @@ def run(
             "wall_seconds": round((finished_at - started_at).total_seconds(), 3),
             "backends": selected_backends,
             "granularities": list(granularities),
+            "agent_memory_configuration": dict(_AGENT_MEMORY_CONFIGURATION),
             "resource_consumption": "not_measured",
         },
         "planes": planes,
@@ -598,8 +661,14 @@ def main() -> int:
     parser.add_argument("--backend", choices=BACKENDS, action="append")
     parser.add_argument("--without-agent-memory", action="store_true")
     parser.add_argument("--omit-rows", action="store_true", help="drop per-question rows from the written report")
+    parser.add_argument("--agent-memory-temporal-metadata", choices=TEMPORAL_METADATA_MODES, default="none")
+    parser.add_argument("--agent-memory-ranking-variant", choices=RANKING_VARIANTS, default="default")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    configure_agent_memory(
+        temporal_metadata=args.agent_memory_temporal_metadata,
+        ranking_variant=args.agent_memory_ranking_variant,
+    )
     report = run(
         args.input.resolve(),
         corpus_class=args.corpus_class,

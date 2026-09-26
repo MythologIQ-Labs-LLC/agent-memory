@@ -211,6 +211,25 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertIn("superseded_not_current", refusals)
         self.assertEqual(recalled["admitted"], [corrected["fact_uuid"]])
 
+    # C15: LIMITATION. Event-relative temporal relations ("immediately before X") are not
+    # modelled; the interpreter only reports a low-confidence historical cue and no
+    # relation to the referenced event participates in ordering.
+    def test_c15_event_relative_relation_is_not_modelled(self):
+        intent = interpret_query("What happened immediately before the migration?")
+        self.assertEqual((intent.mode, intent.confidence), ("historical", "low"))
+        self.assertFalse(intent.orders_temporally)
+        self.assertIsNone(intent.target_start)
+
+    # Evaluated alternative (off by default): unspecified intent ordered newer-first among ties.
+    def test_unspecified_intent_default_is_explicit_and_versioned(self):
+        import dataclasses
+
+        variant = dataclasses.replace(MULTI_ROUTE_RANKING_POLICY, unspecified_intent_order="newer_first_among_ties")
+        self.assertEqual(MULTI_ROUTE_RANKING_POLICY.identity()["unspecified_intent_order"], "none")
+        self.assertEqual(variant.identity()["unspecified_intent_order"], "newer_first_among_ties")
+        with self.assertRaises(ValueError):
+            dataclasses.replace(MULTI_ROUTE_RANKING_POLICY, unspecified_intent_order="newest_wins")
+
     # C16: a low-confidence cue never becomes a temporal exclusion.
     def test_c16_low_confidence_intent_does_not_demote(self):
         expired = self.remember("rain:expired", "It is raining in Stevensville.", valid_until="2026-01-01")

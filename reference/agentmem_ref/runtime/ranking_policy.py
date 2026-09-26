@@ -210,6 +210,7 @@ class PostAdmissionRankingPolicy:
     lexical_route: str | None = None
     lexical_relevance: str = "route_score"
     stable_fallback: str = "neutral_digest"
+    unspecified_intent_order: str = "none"
     version: str = POLICY_VERSION
 
     def __post_init__(self) -> None:
@@ -217,6 +218,8 @@ class PostAdmissionRankingPolicy:
             raise ValueError(f"unsupported temporal_regime: {self.temporal_regime}")
         if self.lexical_relevance not in {"route_score", "bm25_admitted_set"}:
             raise ValueError(f"unsupported lexical_relevance: {self.lexical_relevance}")
+        if self.unspecified_intent_order not in {"none", "newer_first_among_ties"}:
+            raise ValueError(f"unsupported unspecified_intent_order: {self.unspecified_intent_order}")
         if self.stable_fallback not in {"neutral_digest", "candidate_ref_asc"}:
             raise ValueError(f"unsupported stable_fallback: {self.stable_fallback}")
         if self.lexical_relevance == "bm25_admitted_set" and self.lexical_route not in self.route_score_order:
@@ -249,6 +252,7 @@ class PostAdmissionRankingPolicy:
             "lexical_relevance_statistics_scope": "admitted_set" if self.lexical_relevance == "bm25_admitted_set" else None,
             "bm25_parameters": {"k1": BM25_K1, "b": BM25_B} if self.lexical_relevance == "bm25_admitted_set" else None,
             "stable_fallback": self.stable_fallback,
+            "unspecified_intent_order": self.unspecified_intent_order,
             "metabolic_evidence": "not_used",
             "authority_effect": "none",
         }
@@ -281,11 +285,25 @@ class PostAdmissionRankingPolicy:
             clock, seconds = _ordering_clock(temporal)
             record["temporal_evidence"] = temporal
             record["temporal_applicability"] = temporal_applicability(intent, temporal)
-            record["temporal_ordering_clock"] = clock if intent.orders_temporally else None
+            record["temporal_ordering_clock"] = clock if (intent.orders_temporally or self._defaults_unspecified(intent)) else None
             record["_ordering_seconds"] = seconds
         return record
 
+    def _defaults_unspecified(self, intent: TemporalIntent) -> bool:
+        """Evaluated alternative, off by default: unestablished intent behaves as current among ties.
+
+        ADR-039 forbids silently treating unspecified intent as current. This option makes
+        that default explicit and versioned so it can be measured, never implied.
+        """
+
+        return self.unspecified_intent_order == "newer_first_among_ties" and not intent.orders_temporally
+
     def _temporal_order_key(self, evidence: Mapping[str, Any], intent: TemporalIntent) -> tuple[Any, ...]:
+        if self._defaults_unspecified(intent):
+            clock, seconds = evidence.get("temporal_ordering_clock"), evidence.get("_ordering_seconds")
+            if clock is None or seconds is None:
+                return (1, len(_CLOCK_ORDER), 0.0)
+            return (0, _CLOCK_ORDER.index(clock), -seconds)
         if not intent.orders_temporally:
             return (0,)
         clock = evidence.get("temporal_ordering_clock")
