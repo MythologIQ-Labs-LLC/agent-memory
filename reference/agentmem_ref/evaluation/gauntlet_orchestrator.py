@@ -1,4 +1,4 @@
-"""Execution/orchestration shell for Agent Memory Gauntlet (#558).
+"""Execution/orchestration shell for Agent Memory Gauntlet.
 
 The orchestrator coordinates capability negotiation, transport invocation, evidence
 persistence, and common Memory Evaluation normalization. It never grants memory authority
@@ -23,6 +23,7 @@ from typing import Any
 from .contract import DIMENSIONS, dimension_report, metric_observation, validate_run, write_run
 from .gauntlet_contract import (
     GauntletContractError,
+    capability_support,
     manifest_digest,
     negotiate_capabilities,
     validate_manifest,
@@ -40,6 +41,7 @@ _ALLOWED_COMMON_KINDS = {
     "external_memory",
     "other",
 }
+_POSITIVE_SUPPORT = {"native", "mapped", "derived"}
 
 
 def _canonical_json_bytes(value: Mapping[str, Any]) -> bytes:
@@ -193,21 +195,13 @@ def _dimensions_for_blocked(manifest_sha: str) -> dict[str, Any]:
         "measured",
         [
             metric_observation(
-                "fixture_sha256",
-                value=FIXTURE_SHA256,
-                direction="descriptive",
-                population="probe fixture",
-            ),
-            metric_observation(
                 "adapter_manifest_sha256",
                 value=manifest_sha,
                 direction="descriptive",
                 population="validated adapter manifest",
             ),
         ],
-        notes=[
-            "Execution was blocked, but frozen input and manifest identity remain reconstructable."
-        ],
+        notes=["Execution was blocked; manifest identity remains reconstructable."],
     )
     return dimensions
 
@@ -225,7 +219,11 @@ def _normalized_run(
     status: str,
     failure: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    if status == "complete":
+    provided_dimensions = native_results.get("normalized_dimensions")
+    if status == "complete" and isinstance(provided_dimensions, Mapping):
+        dimensions = json.loads(json.dumps(provided_dimensions))
+        limitations = list(native_results.get("normalization_limitations", []))
+    elif status == "complete":
         dimensions = _dimensions_for_success(native_results, manifest_sha)
         limitations = [
             "This is baseline_or_probe evidence for Gauntlet orchestration, not an independent memory-quality benchmark.",
@@ -245,23 +243,38 @@ def _normalized_run(
     if native_artifact is not None:
         artifacts.append(dict(native_artifact))
 
+    identity = native_results.get("benchmark_identity")
+    if not isinstance(identity, Mapping):
+        identity = {}
+    input_sha256 = identity.get("input_sha256") or native_results.get("fixture_sha256")
+    benchmark = {
+        "id": identity.get("id") or f"agent-memory-gauntlet-{profile_id}",
+        "source_revision": identity.get("source_revision") or "0.1.0",
+        "dataset_id": identity.get("dataset_id") or profile_id,
+        "dataset_revision": identity.get("dataset_revision") or "0.1.0",
+        "input_sha256": input_sha256,
+        "task_profile": profile_id,
+    }
+    sample_count = int(native_results.get("sample_count", 0))
+    selection_id = native_results.get("selection_id")
+    if not isinstance(selection_id, str) or not selection_id:
+        selection_id = (
+            f"all:{str(input_sha256)[:16]}" if input_sha256 else f"profile:{profile_id}"
+        )
+    selection_method = native_results.get("selection_method")
+    if not isinstance(selection_method, str) or not selection_method:
+        selection_method = "full declared profile workload"
+
     document = {
         "schema_version": "1.0.0",
         "run_id": run_id,
         "status": status,
-        "benchmark": {
-            "id": "agent-memory-gauntlet-orchestration-probe",
-            "source_revision": "1.0.0",
-            "dataset_id": "gauntlet-orchestration-probe-fixture",
-            "dataset_revision": "1.0.0",
-            "input_sha256": FIXTURE_SHA256,
-            "task_profile": profile_id,
-        },
+        "benchmark": benchmark,
         "system": _common_system(manifest),
         "execution": {
-            "selection_id": f"all:{FIXTURE_SHA256[:16]}",
-            "selection_method": "full deterministic fixture",
-            "sample_count": 3,
+            "selection_id": selection_id,
+            "selection_method": selection_method,
+            "sample_count": sample_count,
             "started_at": started_at,
             "elapsed_ms": elapsed_ms,
             "environment": {
@@ -340,6 +353,22 @@ def _blocked_before_execution(
     return _persist_qualification(run_root, qualification)
 
 
+def _active_destructive_operations(
+    profile: Mapping[str, Any], manifest: Mapping[str, Any]
+) -> tuple[str, ...]:
+    declared = profile.get("destructive_operations")
+    if not isinstance(declared, Mapping):
+        return ()
+    active: list[str] = []
+    for operation, trigger_capability in declared.items():
+        if trigger_capability is None:
+            active.append(str(operation))
+            continue
+        if capability_support(manifest, str(trigger_capability)) in _POSITIVE_SUPPORT:
+            active.append(str(operation))
+    return tuple(sorted(set(active)))
+
+
 def run_gauntlet(
     manifest_path: str | Path,
     profile_id: str,
@@ -347,13 +376,15 @@ def run_gauntlet(
     output_dir: str | Path,
     allow_external_process: bool = False,
     allow_destructive_reset: bool = False,
+    allow_destructive_operations: bool = False,
     timeout_seconds: float = 10.0,
 ) -> dict[str, Any]:
     """Run one qualified Gauntlet profile and persist reconstructable evidence.
 
-    A manifest may claim a disposable benchmark boundary, but a non-fixture adapter does
-    not receive destructive-reset permission from that claim alone. The caller must also
-    opt in explicitly. Declaration is evidence; it is not permission.
+    Manifest isolation claims are necessary evidence, not permission. A non-fixture
+    adapter needs explicit caller consent for active destructive operations. The legacy
+    reset-only consent remains sufficient only when reset is the sole active destructive
+    operation; a profile that may issue deletion/forget requires the broader consent.
     """
 
     manifest = load_adapter_manifest(manifest_path)
@@ -397,8 +428,8 @@ def run_gauntlet(
             message="stdio adapter execution requires explicit external-process opt-in",
         )
 
-    operations = tuple(profile.get("operations", ()))
-    if "reset" in operations:
+    destructive_operations = _active_destructive_operations(profile, manifest)
+    if destructive_operations:
         isolation = manifest.get("benchmark_isolation")
         if not isinstance(isolation, Mapping) or isolation.get("strategy") != "disposable_instance":
             return _blocked_before_execution(
@@ -407,7 +438,7 @@ def run_gauntlet(
                 profile=profile,
                 code="unproven_destructive_isolation",
                 message=(
-                    "this alpha profile invokes reset and therefore requires "
+                    "this profile may issue destructive operations and therefore requires "
                     "benchmark_isolation.strategy=disposable_instance"
                 ),
             )
@@ -416,17 +447,28 @@ def run_gauntlet(
             transport_kind == "in_process"
             and manifest.get("metadata", {}).get("trusted_fixture") is True
         )
-        if not trusted_fixture and not allow_destructive_reset:
-            return _blocked_before_execution(
-                run_root=run_root,
-                qualification=qualification,
-                profile=profile,
-                code="destructive_reset_opt_in_required",
-                message=(
-                    "profile invokes reset against a non-fixture adapter; caller must explicitly "
-                    "allow destructive reset even when the manifest declares a disposable instance"
-                ),
+        if not trusted_fixture:
+            requires_broad_consent = any(operation != "reset" for operation in destructive_operations)
+            consented = (
+                allow_destructive_operations
+                or (not requires_broad_consent and allow_destructive_reset)
             )
+            if not consented:
+                required_flag = (
+                    "--allow-destructive-operations"
+                    if requires_broad_consent
+                    else "--allow-destructive-reset or --allow-destructive-operations"
+                )
+                return _blocked_before_execution(
+                    run_root=run_root,
+                    qualification=qualification,
+                    profile=profile,
+                    code="destructive_operation_opt_in_required",
+                    message=(
+                        f"profile may issue {', '.join(destructive_operations)} against a non-fixture "
+                        f"adapter; explicit caller consent is required via {required_flag}"
+                    ),
+                )
 
     started_wall = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     started = time.perf_counter()
@@ -456,7 +498,7 @@ def run_gauntlet(
         failure = {"source": exc.source, "code": exc.code, "message": str(exc)}
         native = {
             "profile_kind": profile["kind"],
-            "fixture_sha256": FIXTURE_SHA256,
+            "sample_count": 0,
             "failure": failure,
             "authority_effect": "none",
         }

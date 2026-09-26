@@ -58,6 +58,7 @@ def execute(
     output_dir: str | None = None,
     allow_external_process: bool = False,
     allow_destructive_reset: bool = False,
+    allow_destructive_operations: bool = False,
     timeout_seconds: float = 10.0,
 ) -> dict[str, Any]:
     if command == "list":
@@ -79,6 +80,7 @@ def execute(
             output_dir=output_dir or "./gauntlet-runs",
             allow_external_process=allow_external_process,
             allow_destructive_reset=allow_destructive_reset,
+            allow_destructive_operations=allow_destructive_operations,
             timeout_seconds=timeout_seconds,
         )
     raise ValueError(f"unsupported gauntlet command: {command}")
@@ -104,6 +106,11 @@ def emit(value: dict[str, Any], *, json_output: bool) -> None:
         print("Required capabilities:")
         for capability, support in sorted(profile["requirements"]["requires"].items()):
             print(f"  - {capability}: {', '.join(support)}")
+        optional = profile["requirements"].get("optional") or {}
+        if optional:
+            print("Optional / claim-driven capabilities:")
+            for capability, support in sorted(optional.items()):
+                print(f"  - {capability}: {', '.join(support)}")
         print("Authority effect: none")
         return
     if command == "gauntlet_validate_adapter":
@@ -174,8 +181,16 @@ def _parser() -> argparse.ArgumentParser:
         "--allow-destructive-reset",
         action="store_true",
         help=(
-            "explicitly permit a non-fixture adapter to receive reset during this run; "
-            "a disposable-instance manifest claim is still required"
+            "permit reset for a non-fixture profile when reset is the only active destructive "
+            "operation; retained as a narrow alpha compatibility flag"
+        ),
+    )
+    run.add_argument(
+        "--allow-destructive-operations",
+        action="store_true",
+        help=(
+            "permit active destructive operations such as reset and forget/delete for this "
+            "run; a disposable-instance manifest claim is still required"
         ),
     )
     run.add_argument(
@@ -215,6 +230,9 @@ def main(argv: list[str] | None = None) -> int:
             output_dir=getattr(args, "output_dir", None),
             allow_external_process=bool(getattr(args, "allow_external_process", False)),
             allow_destructive_reset=bool(getattr(args, "allow_destructive_reset", False)),
+            allow_destructive_operations=bool(
+                getattr(args, "allow_destructive_operations", False)
+            ),
             timeout_seconds=float(getattr(args, "timeout_seconds", 10.0)),
         )
     except (GauntletContractError, KeyError, TypeError, ValueError) as exc:

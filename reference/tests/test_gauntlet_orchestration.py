@@ -96,9 +96,13 @@ class GauntletOrchestrationTests(unittest.TestCase):
             )
             self.assertEqual(blocked_reset["status"], "blocked")
             self.assertEqual(blocked_reset["failure"]["source"], "orchestrator")
+            # #559 generalizes the alpha refusal code so reset-only and multi-operation
+            # profiles share one destructive-operation consent taxonomy. The message
+            # still names the narrower reset flag where it is sufficient.
             self.assertEqual(
-                blocked_reset["failure"]["code"], "destructive_reset_opt_in_required"
+                blocked_reset["failure"]["code"], "destructive_operation_opt_in_required"
             )
+            self.assertIn("--allow-destructive-reset", blocked_reset["failure"]["message"])
 
             completed = run_gauntlet(
                 path,
