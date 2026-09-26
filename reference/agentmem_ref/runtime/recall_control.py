@@ -19,6 +19,7 @@ from typing import Protocol
 
 from .adapter import RecallContext
 from .contextual_recall_adapter import admit_preselected_candidates
+from .ranking_policy import PostAdmissionRankingPolicy
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
     EXACT_IDENTITY_ROUTE,
@@ -42,6 +43,13 @@ GRAPH_OUTGOING = "outgoing"
 GRAPH_INCOMING = "incoming"
 GRAPH_BOTH = "both"
 MAX_GRAPH_SEED_REFS = 16
+
+# Pre-existing route precedence of the controlled planner, now declared rather than implicit.
+CONTROLLED_RECALL_RANKING_POLICY = PostAdmissionRankingPolicy(
+    policy_id="controlled-multi-route",
+    route_score_order=(SEMANTIC_VECTOR_ROUTE, TYPED_GRAPH_ROUTE, LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE),
+    exact_identity_route=EXACT_IDENTITY_ROUTE,
+)
 
 _WORD = re.compile(r"[a-z0-9]+")
 _STOPWORDS = frozenset(
@@ -706,12 +714,10 @@ class ControlledRecallPlanner:
             context,
             query_label=query,
         )
-        ranked = sorted(
+        ranked, ranking_evidence = CONTROLLED_RECALL_RANKING_POLICY.rank(
             admission.admitted,
-            key=lambda candidate_ref: self._rank_key(
-                candidate_ref,
-                by_candidate.get(candidate_ref, ()),
-            ),
+            by_candidate,
+            substrate.get_fact,
         )
         routes_executed = tuple(
             budget.route_id
@@ -729,6 +735,8 @@ class ControlledRecallPlanner:
             ranked_admitted=ranked,
             policy_version=admission.policy_version,
             evaluated_at=admission.evaluated_at,
+            ranking_policy=CONTROLLED_RECALL_RANKING_POLICY.identity(),
+            ranking_evidence=ranking_evidence,
         )
         sufficient = len(ranked) >= plan.evidence_sufficiency_target
         return ControlledRecallResult(
@@ -794,32 +802,3 @@ class ControlledRecallPlanner:
             added += 1
         return added
 
-    @staticmethod
-    def _rank_key(candidate_ref: str, hits) -> tuple[object, ...]:
-        route_ids = {hit.route_id for hit in hits}
-        exact = 1 if EXACT_IDENTITY_ROUTE in route_ids else 0
-        vector_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == SEMANTIC_VECTOR_ROUTE),
-            default=0.0,
-        )
-        graph_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == TYPED_GRAPH_ROUTE),
-            default=0.0,
-        )
-        lexical_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == LEXICAL_ROUTE),
-            default=0.0,
-        )
-        relational_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == SHARED_EVIDENCE_ROUTE),
-            default=0.0,
-        )
-        return (
-            -len(route_ids),
-            -exact,
-            -vector_score,
-            -graph_score,
-            -lexical_score,
-            -relational_score,
-            candidate_ref,
-        )
