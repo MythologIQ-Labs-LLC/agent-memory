@@ -21,8 +21,8 @@
       "support": "native"
     },
     "foreign_cardinality_non_disclosure": {
-      "notes": "public contract 1.3.0 exposes only domain-eligible candidates; adapter reports only that caller-visible candidate count",
-      "support": "native"
+      "notes": "GOV-ISO-005 currently varies foreign tenant population; this single-tenant adapter cannot exercise that claim without manufacturing tenant routing",
+      "support": "unsupported"
     },
     "forget": {"support": "native"},
     "health": {"support": "mapped"},
