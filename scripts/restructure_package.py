@@ -99,7 +99,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
 }
 
 # Top-level residents: neither moved nor aliased.
-STAYS = ("__init__", "__main__", "_paths")
+STAYS = ("__init__", "__main__", "_paths", "console")
 
 LAYER_DOCS = {
     "core": "The PAMA evaluator, receipts and schema validation, evidence qualification, "

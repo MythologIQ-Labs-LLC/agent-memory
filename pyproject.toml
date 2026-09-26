@@ -22,7 +22,7 @@ comparators = [
 ]
 
 [project.scripts]
-agent-memory = "agentmem_ref.cli:main"
+agent-memory = "agentmem_ref.console:main"
 
 [tool.setuptools]
 package-dir = {"" = "reference"}
