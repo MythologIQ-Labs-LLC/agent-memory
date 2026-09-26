@@ -371,3 +371,70 @@ M's per-question size comes from an exact sample of 11 questions at upstream `98
 
 - **Recall: lexical candidate generation and candidate admission (#563).** At ~10,000 facts, search takes 143 ms of a 178 ms recall with 10 scopes. With a single scope it is 162 ms search plus 192 ms admission, for ~1,030 candidates.
 - **Write: the fixed per-operation cost** (~4–5 ms), now independent of retained state.
+
+## Slice 7: streaming LongMemEval input (#568)
+
+**Finding.** After Slice 6 the LongMemEval_M runtime gate passed, but the harness did not fit. `run_longmemeval.py` read the whole input with `read_text` + `json.loads`. On S that peaks at 2.40 GB for a 277 MB file, which projects to ~23.5 GB for M's 2.74 GB on a 15 GB host. This slice changes the harness only; the runtime is untouched.
+
+**Change.** `InputStream` in `reference/run_longmemeval.py`:
+- Raw bytes are read in 1 MiB chunks. Every byte read goes into a SHA-256, so input identity is still the digest of the source bytes, never of parsed or re-serialized JSON.
+- The bytes are decoded as strict incremental UTF-8.
+- Each top-level array element is decoded by the standard library's `json.JSONDecoder.raw_decode`, the decoder `json.loads` uses. Element values are therefore identical.
+- A byte-order mark, a non-array or empty top level, a malformed or truncated element, a missing separator, a trailing comma, content after the closing `]`, invalid UTF-8, and an element over 2^28 characters all fail closed.
+
+`run` streams in two phases:
+1. **Scan pass.** Validates every question with the unchanged rules: required fields, unique question ids, equal haystack lengths, repeated session ids carrying identical content, and answer ids present. It keeps only a per-question summary, and selection (prefix, or the seeded hash subset) runs on those summaries.
+2. **Evaluation passes, one per (plane, backend).** Each streams the selected questions again, one resident at a time, in source order. It must reproduce the scan digest and the selected order, or the run fails.
+
+For S, 1 + 2 × 3 passes of ~3 s each add about 20 s. For M they add about 7 min over a multi-hour run.
+
+Report schema 2.1.0 adds, with no change to result semantics:
+- `input.sha256_scope`, `input.source_question_count`;
+- `execution.input_loading`: method, chunk size, resident question count, and the bytes and digest of each pass;
+- `execution.resource_consumption`: `peak_rss_mb_process` and `peak_rss_mb_after_input_scan`.
+
+**Tests.** `reference/tests/test_longmemeval_streaming.py` has 16 tests, using the pre-#568 loader kept verbatim as an oracle:
+- equivalence at chunk sizes from 1 byte to 1 MiB, plus compact, indented and padded formatting;
+- first and last element boundaries, and a single-question array;
+- the raw-byte digest, a digest that is unavailable before the input is fully consumed, and bytes that change between passes;
+- seeded subsets and prefixes matching whole-file selection;
+- duplicate session ids across chunk boundaries and across questions, including the different-content refusal;
+- non-ASCII text split mid-character, and invalid UTF-8;
+- 15 malformed shapes, plus a malformed question between valid ones, which is never skipped;
+- an oversized element, an empty array (still rejected), and whole-report equivalence with the whole-file evaluation path.
+
+### Evidence
+
+The artifacts are in `reports/benchmarks/replays/568-streaming-loader-fa8828c/`, from a 4-core, 15 GB container with no other benchmark running.
+
+**LongMemEval_S equivalence**, full 500 questions, all three backends, runner `fa8828c` (clean tree):
+- **IDENTICAL** on every non-timing field (`compare_semantics.py`):
+  - input sha256 `d6f21ea9…c442`, size, question count, abstention / no-target / duplicate-session counts, and the selection and question-id digest;
+  - question order;
+  - every per-question row: gold, ranked top-50, metrics, candidate / admitted / refusal counts, out-of-corpus, unmapped, and failures;
+  - every aggregate, numerator, denominator, currentness slice, and governance tally.
+- The comparison covers 1,000 `agent_memory` rows against `2cedb6c` and 2,000 baseline rows against the frozen `f73b872`.
+- Only wall-clock fields differ.
+
+| | whole-file loader | streaming loader |
+| --- | ---: | ---: |
+| S loader-only peak RSS | 2,404.9 MB (25.1 s) | 53.2 MB (3.1 s) |
+| S whole-run peak RSS, 3 backends × 2 planes | ~2.4 GB+ (not recorded before) | **80.8 MB** |
+| M loader-only peak RSS | ~23.5 GB projected, not attempted | **166.1 MB** (60.3 s, 500 questions validated) |
+
+**M input provenance.** `longmemeval_m_cleaned.json` from `xiaowu0162/longmemeval-cleaned` @ `98d7416c24c778c2fee6e6f3006e7a073259d48f`:
+- 2,737,100,077 bytes;
+- sha256 `9d79e5524794a2e6900a3aa9cb7d9152c5a3e8319c9a87c25494ba1eacee495f`, which equals the upstream LFS object id (`X-Linked-ETag`) at that revision.
+
+### LongMemEval_M readiness decision: run
+
+| gate | status |
+| --- | --- |
+| streaming loader bounded in memory | pass: 166 MB for the M scan; one question resident per pass |
+| S semantic results identical | pass: 3,000/3,000 rows, all aggregates |
+| input identity preserved | pass: raw-byte digest equal to frozen S, and M equal to the upstream LFS id |
+| #562 bounded | pass: no runtime change since `2cedb6c` (only evaluation / Gauntlet modules changed) |
+| no newly exposed O(state) ingest term | pass on S: turn ingest 619.6 s against 606.5 s at `2cedb6c`, a flat ~5 ms per write; re-checked on M during the run |
+| host memory fits with margin | pass: projected well under 1 GB against 15 GB |
+
+#563 (recall scaling) is minutes of M's cost and does not hold the run. M runs from the merge commit of this slice, with the same backends and planes as S (`no_memory`, `lexical_overlap`, `agent_memory`; session and turn) and the frozen default configuration (`temporal_metadata=none`, `ranking_variant=default`).
