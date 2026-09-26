@@ -541,8 +541,8 @@ Examples that MUST NOT be automatically treated as contradiction merely because 
 "Kevin likes coffee"
 "Kevin likes tea"
 
-"Kevin works at Bicameral"
-"Kevin works at Accountable.Live"
+"Kevin works at Acme Labs"
+"Kevin works at Globex"
 
 "Kevin lives in Maryland"
 "Kevin lives in Stevensville"
@@ -1334,8 +1334,8 @@ Expected:
 ### C11. Multi-employer case
 
 ```text
-Kevin works at Bicameral
-Kevin works at Accountable.Live
+Kevin works at Acme Labs
+Kevin works at Globex
 ```
 
 Expected:
