@@ -167,6 +167,20 @@ class GauntletOrchestrationTests(unittest.TestCase):
             self.assertNotIn("failure", result)
             self.assertNotIn("normalized_run", result["artifacts"])
 
+    def test_external_identity_cannot_escape_run_output_root(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            manifest = _load_fixture("lexical-adapter.json")
+            manifest["system"] = dict(manifest["system"], id="../../escape")
+            path = _write_manifest(root, manifest)
+            with self.assertRaises(ValueError):
+                run_gauntlet(
+                    path,
+                    ORCHESTRATION_PROBE_PROFILE_ID,
+                    output_dir=root / "runs",
+                )
+            self.assertFalse((root / "escape").exists())
+
     def test_console_routes_gauntlet_without_runtime_import_contract(self):
         output = io.StringIO()
         with redirect_stdout(output):
