@@ -440,7 +440,7 @@ class ConfigBoundRestartRuntime:
         return self.recovery_evidence
 
     def commit_proposal(self, proposal, fact_text: str, episode=None, *,
-                        evidence=None, attestation=None):
+                        evidence=None, attestation=None, temporal=None):
         """Forward the governed commit, including the qualified-evidence channel.
 
         ADR-037 step 4b-2, DoD 20. This was the wrapper the operator named: the
@@ -451,7 +451,7 @@ class ConfigBoundRestartRuntime:
         appears here.
         """
         result = self.base.adapter.commit_proposal(
-            proposal, fact_text, episode, evidence=evidence, attestation=attestation
+            proposal, fact_text, episode, evidence=evidence, attestation=attestation, temporal=temporal
         )
         self.checkpoint()
         return result

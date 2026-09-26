@@ -28,6 +28,7 @@ from ..core.evidence_qualification import EvidenceItem
 from ..core.verification import VerifierRegistry
 from ..core.readmission import RejectedValueRegistry
 from ..state.substrate import DeterministicIds, Episode, Fact, TemporalGraphPort
+from .temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal
 
 
 class Clock:
@@ -222,6 +223,7 @@ class GovernedMemoryAdapter:
         *,
         evidence: "Sequence[EvidenceItem] | None" = None,
         attestation: policy.ExternalVerification | None = None,
+        temporal: "Mapping[str, str] | None" = None,
     ) -> CommitResult:
         """Commit a proposal through the governed path.
 
@@ -325,7 +327,7 @@ class GovernedMemoryAdapter:
                         attestation.authority_kind if attestation is not None else None
                     ),
                 )
-            fact_uuid = self._write(proposal, fact_text)
+            fact_uuid = self._write(proposal, fact_text, temporal)
             self._current_fact_by_memory[proposal.target_reference] = fact_uuid
             events.append(
                 self._event(
@@ -468,7 +470,8 @@ class GovernedMemoryAdapter:
             return "defer" if "defer" in permitted else permitted[0]
         return choice
 
-    def _write(self, proposal: policy.Proposal, fact_text: str) -> str:
+    def _write(self, proposal: policy.Proposal, fact_text: str, temporal: "Mapping[str, str] | None" = None) -> str:
+        declared = declared_temporal(temporal)
         domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
         required_domains = tuple(dict.fromkeys(proposal.required_isolation_domain_refs))
         if required_domains and not set(required_domains).issubset(set(domain_refs)):
@@ -483,6 +486,7 @@ class GovernedMemoryAdapter:
                 episode_uuids=tuple(proposal.evidence_refs),
                 valid_at=self._clock.now(),
                 created_at=self._clock.now(),
+                attributes={DECLARED_TEMPORAL_KEY: declared} if declared else {},
             )
         )
         self._fact_scope[uuid] = {

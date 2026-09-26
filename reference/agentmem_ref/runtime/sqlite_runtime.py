@@ -464,6 +464,7 @@ class SQLiteRestartSafeRuntime:
         *,
         evidence=None,
         attestation=None,
+        temporal=None,
     ):
         return self._transactional_operation(
             lambda: self.adapter.commit_proposal(
@@ -472,6 +473,7 @@ class SQLiteRestartSafeRuntime:
                 episode,
                 evidence=evidence,
                 attestation=attestation,
+                temporal=temporal,
             )
         )
 
@@ -584,13 +586,14 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
             lambda: self.adapter.governed_recall(query, context)
         )
 
-    def commit_proposal(self, proposal, fact_text: str, episode=None, *, evidence=None, attestation=None):
+    def commit_proposal(self, proposal, fact_text: str, episode=None, *, evidence=None, attestation=None, temporal=None):
         result = self.base.commit_proposal(
             proposal,
             fact_text,
             episode,
             evidence=evidence,
             attestation=attestation,
+            temporal=temporal,
         )
         self._bind_current_base()
         return result

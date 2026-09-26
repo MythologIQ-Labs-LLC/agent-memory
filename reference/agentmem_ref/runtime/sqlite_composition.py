@@ -51,13 +51,13 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         """Runtime-owned lock serializing every operation on this handle (#530)."""
         return self.durable_runtime.base.serialization_lock
 
-    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None):
+    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
         with self.serialization_lock:
-            return super().retain(proposal, fact_text, evidence=evidence, attestation=attestation)
+            return super().retain(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal)
 
-    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None):
+    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
         with self.serialization_lock:
-            return super().correct(proposal, fact_text, evidence=evidence, attestation=attestation)
+            return super().correct(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal)
 
     def delete_current(self, proposal, *, evidence=None, external_verification=None):
         with self.serialization_lock:
@@ -77,6 +77,7 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         context,
         *,
         logical_memory_refs: tuple[str, ...] = (),
+        temporal_intent=None,
     ):
         """Persist preselected-admission decisions and audit evidence atomically."""
         with self.serialization_lock:
@@ -86,6 +87,7 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
                     query,
                     context,
                     logical_memory_refs=logical_memory_refs,
+                    temporal_intent=temporal_intent,
                 )
             )
 

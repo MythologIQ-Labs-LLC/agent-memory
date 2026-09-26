@@ -29,6 +29,7 @@ import re
 
 from .adapter import RecallContext
 from .contextual_recall_adapter import admit_preselected_candidates
+from .temporal_intent import resolve_intent
 from .ranking_policy import PostAdmissionRankingPolicy
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
@@ -49,6 +50,8 @@ QUERY_DRIVEN_RANKING_POLICY = PostAdmissionRankingPolicy(
     policy_id="query-driven-relational",
     route_score_order=(LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
+    lexical_route=LEXICAL_ROUTE,
+    lexical_relevance="bm25_admitted_set",
 )
 
 _WORD = re.compile(r"[a-z0-9]+")
@@ -120,6 +123,7 @@ class DeterministicQueryDrivenRecallPlanner:
         context: RecallContext,
         *,
         logical_memory_refs: tuple[str, ...] = (),
+        temporal_intent=None,
     ) -> MultiRouteRecallResult:
         substrate = self.adapter.checkpoint_substrate()
         tenant = self.adapter.checkpoint_tenant()
@@ -202,10 +206,13 @@ class DeterministicQueryDrivenRecallPlanner:
             context,
             query_label=query,
         )
+        intent = resolve_intent(query, temporal_intent)
         ranked, ranking_evidence = QUERY_DRIVEN_RANKING_POLICY.rank(
             admission.admitted,
             by_candidate,
             substrate.get_fact,
+            query=query,
+            intent=intent,
         )
         return MultiRouteRecallResult(
             query=query,
@@ -220,6 +227,7 @@ class DeterministicQueryDrivenRecallPlanner:
             evaluated_at=admission.evaluated_at,
             ranking_policy=QUERY_DRIVEN_RANKING_POLICY.identity(),
             ranking_evidence=ranking_evidence,
+            query_temporal_intent=intent.to_dict(),
         )
 
     def _expand_seed(

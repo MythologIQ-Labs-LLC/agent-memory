@@ -36,6 +36,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Protocol, Sequence
 
+from benchmark_ranking_variants import VARIANTS, apply_ranking_variant
 from agentmem_ref import AgentMemory
 
 
@@ -752,6 +753,7 @@ def run(
             "wall_seconds": round((finished_at - started_at).total_seconds(), 3),
             "backends": list(backends),
             "phases": list(phases),
+            "agent_memory_ranking_variant": _RANKING_VARIANT[0],
             "resource_consumption": "not_measured",
         },
         "backends": results,
@@ -793,6 +795,9 @@ def _peak_rss_mb() -> float | None:
     return round(peak / (1024 * 1024) if sys.platform == "darwin" else peak / 1024, 1)
 
 
+_RANKING_VARIANT = ["default"]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--input", type=Path, default=DEFAULT_FIXTURE)
@@ -813,8 +818,11 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=2027)
     parser.add_argument("--warmup-writes", type=int, default=5)
     parser.add_argument("--omit-details", action="store_true")
+    parser.add_argument("--agent-memory-ranking-variant", choices=tuple(VARIANTS), default="default")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    apply_ranking_variant(args.agent_memory_ranking_variant)
+    _RANKING_VARIANT[0] = args.agent_memory_ranking_variant
     report = run(
         args.input.resolve(),
         corpus_class=args.corpus_class,

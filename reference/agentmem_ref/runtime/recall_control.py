@@ -19,6 +19,7 @@ from typing import Protocol
 
 from .adapter import RecallContext
 from .contextual_recall_adapter import admit_preselected_candidates
+from .temporal_intent import resolve_intent
 from .ranking_policy import PostAdmissionRankingPolicy
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
@@ -49,6 +50,8 @@ CONTROLLED_RECALL_RANKING_POLICY = PostAdmissionRankingPolicy(
     policy_id="controlled-multi-route",
     route_score_order=(SEMANTIC_VECTOR_ROUTE, TYPED_GRAPH_ROUTE, LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
+    lexical_route=LEXICAL_ROUTE,
+    lexical_relevance="bm25_admitted_set",
 )
 
 _WORD = re.compile(r"[a-z0-9]+")
@@ -534,6 +537,7 @@ class ControlledRecallPlanner:
         context: RecallContext,
         *,
         logical_memory_refs: tuple[str, ...] = (),
+        temporal_intent=None,
     ) -> ControlledRecallResult:
         substrate = self.adapter.checkpoint_substrate()
         tenant = self.adapter.checkpoint_tenant()
@@ -714,10 +718,13 @@ class ControlledRecallPlanner:
             context,
             query_label=query,
         )
+        intent = resolve_intent(query, temporal_intent)
         ranked, ranking_evidence = CONTROLLED_RECALL_RANKING_POLICY.rank(
             admission.admitted,
             by_candidate,
             substrate.get_fact,
+            query=query,
+            intent=intent,
         )
         routes_executed = tuple(
             budget.route_id
@@ -737,6 +744,7 @@ class ControlledRecallPlanner:
             evaluated_at=admission.evaluated_at,
             ranking_policy=CONTROLLED_RECALL_RANKING_POLICY.identity(),
             ranking_evidence=ranking_evidence,
+            query_temporal_intent=intent.to_dict(),
         )
         sufficient = len(ranked) >= plan.evidence_sufficiency_target
         return ControlledRecallResult(

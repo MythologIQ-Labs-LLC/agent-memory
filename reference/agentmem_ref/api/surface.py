@@ -30,6 +30,7 @@ from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
 from ..runtime.adapter import GovernedMemoryAdapter
+from ..runtime.temporal_intent import declared_temporal, resolve_intent
 from . import contract
 
 __all__ = [
@@ -458,8 +459,20 @@ class AgentMemory:
         downstream_authority: str = policy.A1,
         purpose: str | None = None,
         overrides: Mapping[str, object] | None = None,
+        valid_from: str | None = None,
+        valid_until: str | None = None,
+        observed_at: str | None = None,
     ) -> dict:
-        """Retain a low-risk observation through ordinary PAMA and durable commit."""
+        """Retain a low-risk observation through ordinary PAMA and durable commit.
+
+        ``valid_from``/``valid_until``/``observed_at`` optionally declare temporal
+        evidence (ISO-8601). They are recorded as the caller's claim and used only as
+        post-admission applicability evidence (ADR-039, proposed). They never refuse,
+        supersede, or change currentness.
+        """
+        temporal = declared_temporal(
+            {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
+        )
         proposal = contract.proposal_from_envelope(
             self._proposal(
                 target_reference=target_reference,
@@ -479,6 +492,7 @@ class AgentMemory:
             fact_text,
             evidence=list(evidence) or None,
             attestation=attestation,
+            temporal=temporal,
         )
         return self._commit_result(outcome)
 
@@ -494,8 +508,14 @@ class AgentMemory:
         risk_class: str = "medium",
         purpose: str | None = None,
         overrides: Mapping[str, object] | None = None,
+        valid_from: str | None = None,
+        valid_until: str | None = None,
+        observed_at: str | None = None,
     ) -> dict:
         """Propose/commit a correction. Review requirements are not hidden or auto-satisfied."""
+        temporal = declared_temporal(
+            {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
+        )
         current = self.runtime.adapter.current_fact_uuid(target_reference)
         if current is None:
             return contract.result(
@@ -523,6 +543,7 @@ class AgentMemory:
             fact_text,
             evidence=list(evidence) or None,
             attestation=attestation,
+            temporal=temporal,
         )
         return self._commit_result(outcome)
 
@@ -537,9 +558,21 @@ class AgentMemory:
         project_ref: str | None = None,
         task_ref: str | None = None,
         purpose: str | None = None,
+        temporal_intent: Mapping[str, Any] | None = None,
+        reference_time: str | None = None,
     ) -> dict:
-        """Run composed candidate generation followed by one governed admission pass."""
+        """Run composed candidate generation followed by one governed admission pass.
+
+        ``temporal_intent`` optionally declares what time the query is about
+        (``{"mode": "current"|"as_of"|"historical"|"atemporal_or_unspecified"|
+        "prospective", "reference_time", "target_start", "target_end",
+        "expected_recall_shape"}``); explicit intent is authoritative. Without it, a
+        bounded deterministic interpreter infers intent from generic temporal cues and
+        records its confidence; ``reference_time`` anchors current/prospective
+        applicability. Intent only orders admitted candidates (ADR-039, proposed).
+        """
         self._require_open()
+        intent = resolve_intent(query, temporal_intent, reference_time=reference_time)
         domains = tuple(target_domain_refs) if target_domain_refs is not None else self._domain_refs()
         envelope = {
             "contract_version": contract.CONTRACT_VERSION,
@@ -556,6 +589,7 @@ class AgentMemory:
             query,
             context,
             logical_memory_refs=tuple(logical_memory_refs),
+            temporal_intent=intent,
         )
         rank = {candidate: index + 1 for index, candidate in enumerate(result.ranked_admitted)}
         admissions: dict[str, dict] = {}
