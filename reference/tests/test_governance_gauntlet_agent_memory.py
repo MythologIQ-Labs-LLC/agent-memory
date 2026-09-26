@@ -30,16 +30,17 @@ class AgentMemoryGovernanceGauntletTests(unittest.TestCase):
             run = load_run(result["artifacts"]["normalized_run"]["path"])
             cases = _cases(run)
 
-            # This local public composition is deliberately not credited with a
-            # cross-tenant claim manufactured by adapter routing.
+            # This local public composition is deliberately not credited with claims
+            # whose current alpha cases require a cross-tenant population. Adapter-side
+            # tenant routing would manufacture the tested property.
             self.assertEqual(cases["GOV-ISO-001"]["result"], "unsupported")
+            self.assertEqual(cases["GOV-ISO-005"]["result"], "unsupported")
             self.assertEqual(cases["GOV-AUTH-002"]["result"], "unsupported")
             self.assertEqual(cases["GOV-AUTH-003"]["result"], "unsupported")
 
             # These properties are exercised through the actual public facade and
             # canonical runtime, not implemented by the adapter.
             self.assertEqual(cases["GOV-ISO-002"]["result"], "pass", cases["GOV-ISO-002"])
-            self.assertEqual(cases["GOV-ISO-005"]["result"], "pass", cases["GOV-ISO-005"])
             self.assertEqual(cases["GOV-DEL-001"]["result"], "pass", cases["GOV-DEL-001"])
 
             # Agent Memory claims restart-safe deletion, but the alpha is honest about
@@ -55,6 +56,9 @@ class AgentMemoryGovernanceGauntletTests(unittest.TestCase):
             manifest = run["native_results"].get("manifest_capability_posture")
             if manifest is not None:
                 self.assertEqual(manifest.get("tenant_isolation"), "unsupported")
+                self.assertEqual(
+                    manifest.get("foreign_cardinality_non_disclosure"), "unsupported"
+                )
 
 
 if __name__ == "__main__":
