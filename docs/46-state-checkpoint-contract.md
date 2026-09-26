@@ -130,6 +130,48 @@ representations. A pre-transaction v1 checkpoint can still recover after the
 original v1 checks succeed and is baselined into the generation journal only on
 its next write. See `docs/47-transactional-checkpoint-generations.md`.
 
+## SQLite governance persistence: `gsect-v1` (#562)
+
+This applies only to the qualified SQLite profile (`sqlite_transactional_runtime_v1`). The adapter still owns its state and exports the same v1 governance fields. What changes is how the SQLite runtime persists and commits them.
+
+Before #562, every generation, including every governed recall, serialized the whole governance snapshot to canonical JSON, hashed it, and rewrote it inside the runtime-state row. That scheme is `full-json-v1`, and its digest has the form `sha256:<hex>`. Its cost grew with retained state.
+
+`gsect-v1` persists governance as sections in the same SQLite transaction as canonical rows, the runtime-state envelope, and the journal record:
+
+| section kind | sections | stored as | committed by |
+| --- | --- | --- | --- |
+| keyed map | `fact_scope`, `fact_memory`, `current_fact_by_memory`, `state_version`, `tombstones` | one `governance_entries` row per key | per-section root over 256 buckets of entry hashes |
+| append-only log | `events` (the audit log) | one `governance_log` row per record, each carrying its chain link | hash chain: record count + head |
+| residual | tenant, scalars, disputes, shared-space members, rejected values, containment violations, extension state, visibility snapshots | one `governance_residual` row | one digest of its canonical JSON |
+
+The governance root is `gsect-v1:<hex>`: a hash over the scheme, the five map roots, the log count and head, and the residual digest.
+
+**What generation N attests.** Its journal record binds `governance_digest`, the root after generation N, alongside the substrate digest, the interpretation digest, and the previous record digest. The journal record schema is unchanged (1.0.0), because the digest string names its own scheme.
+
+**Normal commit.** The adapter tracks which map keys changed and which log records were appended since the last publication. The runtime writes only those rows. It updates only the touched buckets, extends the chain, rewrites the residual if its content changed, and computes the root from the maintained bucket digests. A section replaced wholesale, or a log edited rather than appended to, falls back to one full publication of the same root. Cost is O(changed entries + touched buckets + residual size), independent of retained facts and audit length.
+
+**Checkpoint.** An explicit checkpoint is an ordinary publication; no separate snapshot is materialized.
+
+**Recovery (full verification).** Every entry hash is recomputed from its stored value, and every entry must sit in its own bucket. Every bucket digest, every chain link, the residual digest, and the root are recomputed from the stored rows alone. The root must equal both the runtime-state envelope and the journal tail. The journal chain is verified end to end as before. Unknown sections, gaps in the log, and a missing residual all refuse recovery.
+
+The maintained bucket index (`governance_buckets`) is derived data. It is trusted only after this process rebuilt it or verified it row for row, so a tampered index cannot change a recovery answer; the next publication rebuilds it.
+
+**Envelope versions and migration.**
+
+| runtime-state envelope | governance | digest |
+| --- | --- | --- |
+| `1.0.0` | embedded snapshot | `sha256:` (`full-json-v1`) |
+| `1.1.0` | `governance_scheme: gsect-v1`, no embedded snapshot | `gsect-v1:` |
+
+- A `1.0.0` store recovers under full-JSON verification. Its next generation migrates it atomically: all sections are written, and the envelope becomes `1.1.0`, in one transaction. A failed migration generation leaves the legacy store intact.
+- Earlier journal records keep their `sha256:` commitments and are never reinterpreted. A mixed chain verifies end to end.
+- An envelope whose schema and scheme disagree is refused.
+- Migration is forward-only. Earlier code refuses a `1.1.0` envelope rather than misreading it.
+
+**Tracking boundary.** Map sections are tracked key by key, so their values must be replaced, not mutated in place. The audit log must only be appended to. The residual has no such requirement, because it is hashed by content. Under the reference test suite, every publication is re-read from the rows and compared with a full export (`AGENT_MEMORY_GOVERNANCE_SELF_CHECK=1`), so a governance change that escapes tracking fails loudly.
+
+Tests: `reference/tests/test_governance_attestation.py`.
+
 ## Auxiliary correctness-state contracts
 
 Issue #422 defines owner-level restart contracts. They are intentionally not

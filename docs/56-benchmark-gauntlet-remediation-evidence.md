@@ -285,3 +285,89 @@ Findings:
   - Tracked as #563.
 - **The prefilter holds at scale.** With 10 scopes, admission stays at 18.7 ms at 10,000 facts.
 - **LongMemEval_M stays held.** Its turn plane implies thousands of commits per haystack. At ~0.3–0.7 s per commit at those sizes, a run would mostly re-measure the quadratic ingest that #562 already isolates. It becomes a promotion gauntlet after #562 is bounded, as #537 Phase 4 requires.
+
+## Slice 6: incremental governance-state attestation (#562)
+
+**Root cause.** After Slices 3 and 5, every generation still committed governance state the `full-json-v1` way. The whole snapshot was canonical-JSON serialized, hashed, and rewritten inside the runtime-state row. That happened on every write and on every recall, because recall commits audit and identifier progress.
+
+The snapshot is dominated by two parts, measured on a 1,000-fact facade store:
+
+| part | share of bytes | how it changes per operation |
+| --- | ---: | --- |
+| the append-only audit log (`events`) | 84% | +4 records on a write, +1 on a recall |
+| four keyed maps (`fact_scope`, `fact_memory`, `current_fact_by_memory`, `state_version`) | 16% | ≤1 key each |
+| everything else (disputes, tombstones, rejected values, extension state, scalars) | <0.1% | rarely |
+
+The cost was O(state), but each generation's change is O(1).
+
+**Change.** The new scheme is `gsect-v1`; its contract is in `docs/46-state-checkpoint-contract.md`.
+- Map sections are written per changed key and committed by 256-bucket roots.
+- The audit log is appended and committed by a hash chain.
+- The small residual is content-hashed.
+- The journal binds the self-describing `gsect-v1:` root.
+- Recovery recomputes every entry hash, bucket, chain link, and the root from the stored rows.
+- Envelope `1.0.0` stores migrate atomically at their next generation, historical `sha256:` journal records stay as they are, and mixed envelopes are refused.
+
+Tests are in `reference/tests/test_governance_attestation.py` (24):
+- equivalence with a full export;
+- locality;
+- tampering with an entry, a self-consistent forged entry, a log record, a forged log record with a valid chain, the residual, the root, and the journal binding;
+- stale governance rows under a newer journal tail;
+- the derived index;
+- mixed envelopes, atomicity under an injected failure, and legacy migration.
+
+Every publication in the full reference suite (1,638 tests) is also re-read from the rows and compared with a full export.
+
+### Evidence
+
+The artifacts are in `reports/benchmarks/replays/562-governance-attestation-2cedb6c/`. Before = `main` `0eba679`, after = `2cedb6c`, on a 4-core container with no other benchmark running. Scaling runs used the after revision's harness file over both runtimes, so manifests report a dirty worktree for harness-only changes. The ~10,000-fact "before" point is the post-prefilter probe at `14b422c`, whose persistence code is identical to `0eba679`.
+
+**Write/recall scaling, 10 scopes.**
+
+| facts | write p50 before → after | `_persist_unlocked` (write) before → after | governance publication (after) | substrate digest (after) | recall p50 before → after | store bytes before → after |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| ~100 | 8.7 → 5.2 ms | 4.25 → 1.18 ms | 0.67 ms | 0.27 ms | 12.2 → 5.2 ms | 0.74 → 0.89 MB |
+| ~1,000 | 56.0 → 4.6 ms | 40.2 → 1.44 ms | 0.86 ms | 0.33 ms | 75.5 → 15.6 ms | 4.50 → 4.42 MB |
+| ~5,000 | 320.9 → 4.4 ms | 242.8 → 1.60 ms | 1.02 ms | 0.35 ms | 397.7 → 69.5 ms | 21.3 → 20.0 MB |
+| ~10,000 | 730.4 → 5.6 ms | 583.6 → 2.22 ms | 1.42 ms | 0.45 ms | 914.5 → 177.8 ms | n/a → 39.6 MB |
+
+**Acceptance bound.** Per-commit persistence at ~10,000 facts is **1.5×** the ~1,000-fact value (2.22 / 1.44 ms); before, it was 14×. Single-scope runs give 1.48 → 2.12 ms (1.4×). The residual term grows only with disputes, rejected values, and extension state, never with facts or audit length.
+
+**AgentMemBench / MemDialogue v2, all deterministic phases**, on the same frozen input `33632710…`:
+- **Zero non-timing differences** between `0eba679` and `2cedb6c` across retrieval, conflict/currentness, isolation, deletion, concurrency, and scale, including every governance refusal and outcome tally.
+- Wall 226.2 → 46.3 s.
+- Retrieval write p50 28.8 → 5.1 ms and read p50 97.4 → 14.3 ms.
+- Scale at 1,000 records: write p50 30.6 → 5.1 ms, read p50 72.1 → 11.5 ms.
+- Concurrency throughput 99–112 → 171–185 ops/s at 1–16 workers.
+
+**LongMemEval_S, frozen `d6f21ea9…c442`.**
+- Per-question rankings are **bit-for-bit identical** to the frozen policy-3.0.0 replay `148823f`: 500/500 session and 500/500 turn rows.
+- Between `0eba679` and `2cedb6c`, only the per-row timing fields differ.
+- Failures are zero.
+
+| plane | ingest `0eba679` → `2cedb6c` | recall total |
+| --- | ---: | ---: |
+| session | 126.7 → 116.1 s | 11.0 → 10.2 s |
+| turn | 1,262.9 → 606.5 s | 36.6 → 31.4 s |
+| run wall | 1,475.6 → 811.7 s | |
+
+At S scale (≤305 turns per store), the remaining ingest is the fixed per-write cost, about 5 ms: PAMA decision, receipts, canonical write, and SQLite fsync. It no longer depends on how much is retained.
+
+### LongMemEval_M readiness
+
+M's per-question size comes from an exact sample of 11 questions at upstream `98d7416c` (a range request on the 2.74 GB file): about 476 sessions and 2,426 user turns per question. That is ~9.9× S (47.7 sessions and 245 user turns).
+
+| estimate (agent_memory backend, both planes) | before #562 | after #562 |
+| --- | ---: | ---: |
+| turn ingest, 500 × ~2,426 writes | ~25 h (per-write cost rising to ~150 ms by the end of each haystack) | **~1.7 h** at the measured flat ~4.95 ms per write |
+| session ingest, 500 × ~476 writes | ~1.2 h | **~0.3 h** at ~4.9 ms per write |
+| recall, 1,000 recalls on ~2.4k-fact single-scope stores | minutes | minutes (#563 governs this term) |
+
+- **Runtime gate: passes.** #562's bound holds, no O(state) write path remains, and the expected cost is operationally reasonable.
+- **Run: still held, on a new harness-side blocker.** `run_longmemeval.py` loads the whole input with `read_text` + `json.loads`. On S that peaks at 2.39 GB for a 277 MB file (8.6×), which projects to ~23.5 GB for M on this 15 GB host.
+- A streaming, per-question loader is a benchmark-harness change outside #562. It is the next step before M.
+
+### Remaining dominant costs
+
+- **Recall: lexical candidate generation and candidate admission (#563).** At ~10,000 facts, search takes 143 ms of a 178 ms recall with 10 scopes. With a single scope it is 162 ms search plus 192 ms admission, for ~1,030 candidates.
+- **Write: the fixed per-operation cost** (~4–5 ms), now independent of retained state.

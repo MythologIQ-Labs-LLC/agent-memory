@@ -1,0 +1,232 @@
+{
+  "authority_effect": "none",
+  "host": {
+    "machine": "x86_64",
+    "note": "4-core container; no other benchmark running",
+    "python": "3.11.15"
+  },
+  "parameters": {
+    "recalls": 20,
+    "scopes": 1,
+    "seed": 1,
+    "window": 40,
+    "words_per_fact": 40,
+    "words_per_query": 8
+  },
+  "results": [
+    {
+      "facts_before_window": 100,
+      "recall": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 2.354,
+          "composition.admit_preselected_candidates": 2.834,
+          "governance.apply": 0.63,
+          "governance.write_full": 0.0,
+          "runtime._governance_snapshot": 0.0,
+          "runtime._persist_unlocked": 1.229,
+          "runtime._publish_governance": 0.659,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.017,
+          "substrate.incremental_state_digest": 0.256,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.018,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 2.301,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 0.03
+        },
+        "mean_admitted": 13.4,
+        "mean_candidates": 13.4,
+        "mean_ms": 9.057,
+        "median_ms": 8.987,
+        "ops": 20
+      },
+      "scopes": 1,
+      "store_bytes": 893275,
+      "write": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 0.0,
+          "composition.admit_preselected_candidates": 0.0,
+          "governance.apply": 0.668,
+          "governance.write_full": 0.0,
+          "runtime._governance_snapshot": 0.0,
+          "runtime._persist_unlocked": 1.228,
+          "runtime._publish_governance": 0.695,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.014,
+          "substrate.incremental_state_digest": 0.281,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.011,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 0.025
+        },
+        "mean_ms": 4.382,
+        "median_ms": 4.224,
+        "ops": 40
+      }
+    },
+    {
+      "facts_before_window": 1000,
+      "recall": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 15.64,
+          "composition.admit_preselected_candidates": 18.022,
+          "governance.apply": 0.725,
+          "governance.write_full": 0.0,
+          "runtime._governance_snapshot": 0.0,
+          "runtime._persist_unlocked": 1.289,
+          "runtime._publish_governance": 0.76,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.016,
+          "substrate.incremental_state_digest": 0.237,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.02,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 15.043,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 0.026
+        },
+        "mean_admitted": 104.45,
+        "mean_candidates": 104.45,
+        "mean_ms": 42.001,
+        "median_ms": 42.869,
+        "ops": 20
+      },
+      "scopes": 1,
+      "store_bytes": 4464988,
+      "write": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 0.0,
+          "composition.admit_preselected_candidates": 0.0,
+          "governance.apply": 0.89,
+          "governance.write_full": 0.0,
+          "runtime._governance_snapshot": 0.0,
+          "runtime._persist_unlocked": 1.483,
+          "runtime._publish_governance": 0.918,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.014,
+          "substrate.incremental_state_digest": 0.325,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.011,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 0.026
+        },
+        "mean_ms": 4.935,
+        "median_ms": 4.772,
+        "ops": 40
+      }
+    },
+    {
+      "facts_before_window": 5000,
+      "recall": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 84.984,
+          "composition.admit_preselected_candidates": 99.024,
+          "governance.apply": 1.086,
+          "governance.write_full": 0.0,
+          "runtime._governance_snapshot": 0.0,
+          "runtime._persist_unlocked": 1.878,
+          "runtime._publish_governance": 1.152,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.025,
+          "substrate.incremental_state_digest": 0.297,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.03,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 79.145,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 0.053
+        },
+        "mean_admitted": 516.45,
+        "mean_candidates": 516.45,
+        "mean_ms": 216.816,
+        "median_ms": 216.402,
+        "ops": 20
+      },
+      "scopes": 1,
+      "store_bytes": 20226396,
+      "write": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 0.0,
+          "composition.admit_preselected_candidates": 0.0,
+          "governance.apply": 1.129,
+          "governance.write_full": 0.0,
+          "runtime._governance_snapshot": 0.0,
+          "runtime._persist_unlocked": 1.907,
+          "runtime._publish_governance": 1.159,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.018,
+          "substrate.incremental_state_digest": 0.468,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.016,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 0.028
+        },
+        "mean_ms": 5.698,
+        "median_ms": 5.335,
+        "ops": 40
+      }
+    },
+    {
+      "facts_before_window": 10000,
+      "recall": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 161.517,
+          "composition.admit_preselected_candidates": 191.669,
+          "governance.apply": 1.174,
+          "governance.write_full": 0.0,
+          "runtime._governance_snapshot": 0.0,
+          "runtime._persist_unlocked": 1.873,
+          "runtime._publish_governance": 1.237,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.018,
+          "substrate.incremental_state_digest": 0.261,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.027,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 161.721,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 0.031
+        },
+        "mean_admitted": 1031.85,
+        "mean_candidates": 1031.85,
+        "mean_ms": 434.225,
+        "median_ms": 435.786,
+        "ops": 20
+      },
+      "scopes": 1,
+      "store_bytes": 39924061,
+      "write": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 0.0,
+          "composition.admit_preselected_candidates": 0.0,
+          "governance.apply": 1.362,
+          "governance.write_full": 0.0,
+          "runtime._governance_snapshot": 0.0,
+          "runtime._persist_unlocked": 2.118,
+          "runtime._publish_governance": 1.394,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.017,
+          "substrate.incremental_state_digest": 0.456,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.014,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 0.027
+        },
+        "mean_ms": 5.557,
+        "median_ms": 5.312,
+        "ops": 40
+      }
+    }
+  ],
+  "revision": "2cedb6c37cdb3ff3192d34b8ed785e382e8f9fe7",
+  "schema": "agent-memory-write-recall-scaling/1"
+}
