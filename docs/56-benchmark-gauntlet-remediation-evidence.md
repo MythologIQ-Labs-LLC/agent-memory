@@ -62,6 +62,10 @@ Every other session and turn headline metric has a paired 95% interval that incl
 - **#531 class B.** 26 session-plane knowledge-update failures where stale evidence scores strictly higher. A relevance-tier sweep (ε = 0.05–0.30 relative) did not recover them on either gauntlet without losing retrieval: on AgentMemBench the stale fact is genuinely more lexically relevant to the question.
 - **The broader lexical deficit (#538).** Session recall_all@5 is still below the lexical baseline (0.687 vs 0.730).
 
+### Timing
+
+The run shared its host with a concurrent replay for part of its duration. Timing from this slice is **not** performance evidence; #522 owns clean measurements.
+
 ## Slice 1b: admitted-set BM25 lexical relevance (#538)
 
 Candidate revision `75bbe87` (branch `recall/538-admitted-bm25`). Evidence is in `reports/benchmarks/replays/538-admitted-bm25-75bbe87/`.
@@ -108,7 +112,3 @@ Currentness for such writes is a **write-time** contract:
 - caller-declared temporal intent, such as `valid_at` on the write or an explicit "latest" query mode. That would be a new, separately governed feature, not a ranking heuristic.
 
 Benchmarks that write contradictory facts as independent remembers measure this limitation, and results should be read that way. Class B stays open on #531 as a product-contract item, not a ranking defect.
-
-### Timing
-
-The run shared its host with a concurrent replay for part of its duration. Timing from this slice is **not** performance evidence; #522 owns clean measurements.
