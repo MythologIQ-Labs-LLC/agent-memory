@@ -4,7 +4,7 @@ Agent Memory is the canonical repository for a governed memory product/runtime, 
 
 It is not a collection of equally authoritative implementation opinions, and it is no longer accurately described as only a reference architecture.
 
-The repository operating model is defined in [`docs/56-repository-operating-model.md`](docs/56-repository-operating-model.md).
+The repository operating model is defined in [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md).
 
 ## Stewardship and maintainer
 
@@ -166,7 +166,10 @@ benchmark score != recall admission
 benchmark score != mutation authority
 benchmark result != doctrine automatically
 benchmark improvement != production readiness
+implementation evidence != doctrine acceptance
 ```
+
+An ADR proposal may be merged as **Proposed** so that it can be reviewed, tested, and challenged in-tree. Merging a proposal does not accept it. Acceptance (`Proposed -> Accepted`) is a separate maintainer ruling on the recorded evidence, and it is never implied by an implementation landing or a benchmark improving. For example, ADR-039 is Proposed while its reference profile is implemented behind policy 3.0.0.
 
 Benchmark adapters and reports must preserve exact revision/input/configuration identity where comparability depends on them.
 

@@ -198,7 +198,27 @@ architecture formation
     -> frozen benchmark replay
 ```
 
-Recent external evidence has already separated strong areas such as governed isolation/deletion from weaker areas such as currentness ranking, thread-safe host integration, and scaling efficiency. Those findings are tracked as product/architecture issues rather than hidden in benchmark reports.
+External evidence separated strong areas, such as governed isolation and deletion, from weaker areas: currentness ranking, thread-safe host integration, and scaling efficiency. Those findings became bounded product and architecture issues rather than footnotes in benchmark reports.
+
+Each remediation slice is replayed against the same frozen input. The slices are recorded in [`56-benchmark-gauntlet-remediation-evidence.md`](56-benchmark-gauntlet-remediation-evidence.md):
+
+- explicit ranking policy;
+- runtime-owned handle serialization;
+- incremental attestation;
+- query-conditioned applicability;
+- the domain-eligibility prefilter.
+
+The cycle also produced examples of each learning class:
+
+| Class | Example |
+|---|---|
+| implementation defect | unsafe cross-thread handle use (#530) |
+| runtime/product contract gap | tenant-wide candidate generation exposing foreign refusals (#548, contract 1.3.0) |
+| architecture gap against existing doctrine | historically true superseded state was unrepresentable (#549) |
+| explicit product limitation | implicit supersession without a governed correction (#531 class B) |
+| doctrine proposal, not acceptance | query-conditioned applicability (ADR-039, Proposed; #544) |
+
+Evidence can change product behavior quickly. Doctrine changes only through a separate ruling.
 
 The controlling benchmark-remediation architecture issue is #537.
 

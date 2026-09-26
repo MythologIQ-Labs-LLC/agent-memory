@@ -4,7 +4,7 @@ Benchmarking is now a first-class repository function, not an auxiliary test har
 
 Agent Memory keeps benchmark adapters, evaluator-integrity probes, frozen run evidence, normalized manifests, scorecards, and remediation links alongside the runtime so behavior can be reproduced against exact revisions and compared before and after product changes.
 
-The governing repository relationship is documented in [`docs/56-repository-operating-model.md`](docs/56-repository-operating-model.md).
+The governing repository relationship is documented in [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md).
 
 ## Why benchmarks live here
 
@@ -33,12 +33,12 @@ Profile documentation: [`docs/profiles/longmemeval-retrieval-currentness-profile
 Current status:
 
 - **LongMemEval_S full:** complete frozen external run;
-- **LongMemEval_M:** not run at the current pre-remediation boundary;
+- **LongMemEval_M:** held. It is not run merely because a remediation slice landed; the scale evidence that gates it is recorded in [`docs/56`](docs/56-benchmark-gauntlet-remediation-evidence.md);
 - **upstream model-judged QA:** not run;
 - session and turn retrieval/currentness evidence is committed;
 - external run is revision/input bound;
 - no runtime, ingestion, out-of-corpus, or unmapped-admission failures occurred in the frozen S run;
-- the run exposed currentness/ranking and scaling weaknesses now tracked as product issues.
+- the run exposed currentness/ranking and scaling weaknesses. These were remediated in bounded slices and replayed against the same frozen input; the pre-remediation `f73b872` artifacts stay immutable.
 
 The S run is a retrieval/currentness profile. It must not be presented as the upstream model-judged LongMemEval QA score.
 
@@ -50,7 +50,11 @@ Current status:
 - deterministic retrieval, conflict/currentness, isolation, deletion, concurrency, and scale phases recorded;
 - upstream LLM-judged retrieval is not run;
 - M6 LLM portability is not run;
-- product defects exposed include #530, #531, and #522.
+- product defects exposed:
+  - #530, remediated;
+  - #531 class A, remediated through #538's ranking policy; class B is recorded as an explicit limitation;
+  - #522, with Part A (attestation) and Part B (domain-eligibility prefilter, #548) remediated and the remaining scale terms tracked.
+- The pre-remediation `03197cd` artifacts stay immutable.
 
 ### SWE-ContextBench Lite
 
@@ -67,6 +71,19 @@ Do not substitute the synthetic fixture for the external result.
 The repository also retains deterministic internal fixtures that prove specific architecture behavior, such as multi-route recall recovering relevant memories missed by lexical-only recall while preserving governed admission.
 
 These fixtures are valuable conformance evidence. They are not external efficacy evidence.
+
+### Remediation replays
+
+Every remediation slice under #537 is replayed against the same frozen input. It records improvements, regressions, and tradeoffs side by side, with artifacts under `reports/benchmarks/replays/`. The summary is in [`docs/56-benchmark-gauntlet-remediation-evidence.md`](docs/56-benchmark-gauntlet-remediation-evidence.md).
+
+### Orthogonal temporal gauntlet (qualification only)
+
+LongMemEval_S and AgentMemBench barely exercise validity intervals, as-of, or prospective questions. Candidate gauntlets are qualified in [`docs/59-orthogonal-temporal-gauntlet-qualification.md`](docs/59-orthogonal-temporal-gauntlet-qualification.md):
+
+- **Ground Truth First** is blocked on artifact availability.
+- **Microsoft RHELM** is runnable, but cannot falsify the targeted temporal claims.
+
+Any run keeps the protocol-faithful text-only lane separate from the explicit-temporal-metadata conformance lane. The metadata lane is never presented as published-comparable.
 
 ## Generated scorecards
 

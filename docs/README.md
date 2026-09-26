@@ -6,7 +6,7 @@
 
 This directory is the canonical documentation map for Agent Memory as it exists now: **an executable governed memory runtime, a canonical architecture/governance corpus, and an evaluation/benchmark laboratory**.
 
-Start with [`56-repository-operating-model.md`](56-repository-operating-model.md) if you are unsure which role a document, issue, or contribution belongs to.
+Start with [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md) if you are unsure which role a document, issue, or contribution belongs to.
 
 ## Choose your path
 
@@ -18,7 +18,7 @@ Start with [`56-repository-operating-model.md`](56-repository-operating-model.md
 | Understand governance / PAMA | [`pama/README.md`](pama/README.md) | `04`, `17`, `33`, `34`, [`../GOVERNANCE.md`](../GOVERNANCE.md) |
 | Evaluate / benchmark Agent Memory | [`../BENCHMARKS.md`](../BENCHMARKS.md) | [`53-memory-evaluation-subsystem.md`](53-memory-evaluation-subsystem.md), [`54-memory-evaluation-cli.md`](54-memory-evaluation-cli.md), [`55-memory-evaluation-scorecards.md`](55-memory-evaluation-scorecards.md) |
 | Review benchmark results | [`../reports/benchmarks/scorecards/scorecards.md`](../reports/benchmarks/scorecards/scorecards.md) | normalized manifests in `../reports/benchmarks/normalized/` |
-| Contribute code or evidence | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | [`56-repository-operating-model.md`](56-repository-operating-model.md), [`../GOVERNANCE.md`](../GOVERNANCE.md) |
+| Contribute code or evidence | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md), [`../GOVERNANCE.md`](../GOVERNANCE.md) |
 | Review source rights / intellectual lineage | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) |
 | Review security/privacy | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41`, [`../SECURITY.md`](../SECURITY.md) |
 
@@ -39,7 +39,7 @@ The roles are deliberately connected but authority-separated.
 - Evaluation pressures both with external and adversarial evidence.
 - Governance prevents benchmark scores, model outputs, implementation shortcuts, or research ancestry from silently granting themselves authority.
 
-Full guidance: [`56-repository-operating-model.md`](56-repository-operating-model.md).
+Full guidance: [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md).
 
 ## Product and RC documentation
 
@@ -54,6 +54,7 @@ The repository has moved beyond a theory-only reference implementation.
 | [`47-developer-facade-and-local-open-path.md`](47-developer-facade-and-local-open-path.md) | Installed `AgentMemory` developer facade and local qualified open path |
 | [`48-rc-cognitive-memory-lifecycle-evidence.md`](48-rc-cognitive-memory-lifecycle-evidence.md) | End-to-end cognitive-memory lifecycle evidence |
 | [`49-rc1-evidence-closeout.md`](49-rc1-evidence-closeout.md) | RC evidence closeout and claim boundaries |
+| [`58-historical-evidence-admission.md`](58-historical-evidence-admission.md) | Current-state vs explicit historical-evidence admission for governed state changes |
 
 A working runtime is not the same thing as production 1.0. The qualified persistence posture remains deliberately bounded, especially around single-host SQLite versus distributed deployment.
 
@@ -68,7 +69,10 @@ Evaluation is a first-class subsystem rather than a collection of one-off script
 | [`53-memory-evaluation-subsystem.md`](53-memory-evaluation-subsystem.md) | Benchmark-neutral evaluation architecture and runtime/evaluation separation |
 | [`54-memory-evaluation-cli.md`](54-memory-evaluation-cli.md) | Benchmark registry, validation and comparison CLI |
 | [`55-memory-evaluation-scorecards.md`](55-memory-evaluation-scorecards.md) | Deterministic normalized scorecards and portfolio reporting |
-| [`56-repository-operating-model.md`](56-repository-operating-model.md) | How benchmark evidence can drive product or architecture changes without becoming authority |
+| [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md) | How benchmark evidence can drive product or architecture changes without becoming authority |
+| [`56-benchmark-gauntlet-remediation-evidence.md`](56-benchmark-gauntlet-remediation-evidence.md) | Before/after replay evidence for each benchmark-driven remediation slice (#537) |
+| [`57-query-conditioned-applicability.md`](57-query-conditioned-applicability.md) | Query-conditioned applicability reference profile and its gauntlet evidence (ADR-039, Proposed) |
+| [`59-orthogonal-temporal-gauntlet-qualification.md`](59-orthogonal-temporal-gauntlet-qualification.md) | Qualification of temporal gauntlets able to falsify ADR-039's claims |
 
 Generated evidence:
 

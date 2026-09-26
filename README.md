@@ -18,7 +18,7 @@ A usable governed memory runtime, a canonical architecture and doctrine corpus, 
 [![ADRs](https://img.shields.io/badge/ADRs-Canonical%20Index-2563eb)](docs/adr/README.md)
 [![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)
 
-**[Documentation](docs/README.md)** · **[Repository operating model](docs/56-repository-operating-model.md)** · **[Benchmarks](BENCHMARKS.md)** · **[Scorecards](reports/benchmarks/scorecards/scorecards.md)** · **[RC1 profile](docs/45-agent-memory-rc1-implementation-profile.md)** · **[PAMA](docs/pama/README.md)** · **[Governance](GOVERNANCE.md)**
+**[Documentation](docs/README.md)** · **[Repository operating model](docs/REPOSITORY_OPERATING_MODEL.md)** · **[Benchmarks](BENCHMARKS.md)** · **[Scorecards](reports/benchmarks/scorecards/scorecards.md)** · **[RC1 profile](docs/45-agent-memory-rc1-implementation-profile.md)** · **[PAMA](docs/pama/README.md)** · **[Governance](GOVERNANCE.md)**
 
 </div>
 
@@ -41,7 +41,7 @@ Agent Memory serves three connected roles:
 | **Architecture / governance lab** | ADRs, PAMA, lifecycle/currentness doctrine, memory metabolism, identity/provenance/authority boundaries, research synthesis | Doctrine is immune from falsification |
 | **Evaluation / benchmark lab** | LongMemEval, AgentMemBench/MemDialogue, SWE-ContextBench adapters, evaluator-integrity probes, frozen reports, normalized manifests, scorecards | Benchmark score becomes truth or authority |
 
-See **[Repository Operating Model](docs/56-repository-operating-model.md)** for the canonical relationship between those roles.
+See **[Repository Operating Model](docs/REPOSITORY_OPERATING_MODEL.md)** for the canonical relationship between those roles.
 
 The core development loop is now:
 
@@ -187,16 +187,25 @@ The repository is strict about the difference between **implemented**, **qualifi
 | Epistemic belief memory | Executable with confidence, evidence, dispute and retraction lineage |
 | Procedural / skill memory | Executable with action-authority separation |
 | Predictive / counterfactual memory | Executable governed surface |
-| Governed recall admission | Executable scope/tenant/project/currentness boundary |
+| Governed recall admission | Executable scope/tenant/project/currentness boundary; a domain-eligibility prefilter minimizes candidates without granting anything (contract 1.3.0) |
+| Historical-evidence admission | Executable: superseded state from a governed state change is admitted only under explicit historical/as-of intent, labelled non-current |
 | Multi-route retrieval | Executable lexical, exact, relational and other bounded routes with provenance |
 | Native semantic/vector retrieval | Implemented |
 | Typed temporal/entity/causal traversal | Implemented |
 | Native cognitive metabolism | Implemented deterministic decay/reinforcement/consolidation/pruning evidence and proposal surface |
-| Correction / supersession | Executable and restart-safe in the declared reference profile |
+| Correction / supersession | Executable and restart-safe in the declared reference profile; error correction vs state change is recorded |
 | Forgetting / tombstones | Executable, evidence-bearing and restart-safe in the declared profile |
 | SQLite canonical substrate | Qualified for bounded single-host RC use |
 | Distributed/multi-host persistence | Not established |
 | Production 1.0 readiness | Not claimed |
+
+Current known limitations:
+
+- Query-conditioned applicability (policy 3.0.0) is implemented, but **ADR-039 remains Proposed**. No orthogonal temporal gauntlet has yet tested it.
+- Implicit supersession, where a newer statement contradicts an older one without a governed correction, is not inferred (#531 class B).
+- The replacement kind (error correction vs state change) is caller-declared within a governed correction.
+- Per-commit persistence still rewrites the governance-state blob, and lexical candidate generation still visits every fact in the tenant. Scale beyond the measured sizes is not claimed.
+- Temporal-intent cues are a small English lexicon.
 
 Current product and substrate maturity is documented in **[docs/43-substrate-inventory-and-maturity.md](docs/43-substrate-inventory-and-maturity.md)** and the **[RC1 profile](docs/45-agent-memory-rc1-implementation-profile.md)**.
 
@@ -210,7 +219,8 @@ Current portfolio highlights:
 
 | Profile | Status | What it currently tells us |
 |---|---|---|
-| **LongMemEval_S** | Complete frozen external run | Retrieval/currentness behavior, operational cost, zero runtime failures on the measured profile; exposed ranking/currentness weaknesses |
+| **LongMemEval_S** | Complete frozen external run, plus remediation replays | Retrieval/currentness behavior, operational cost, zero runtime failures on the measured profile; exposed ranking/currentness weaknesses |
+| **LongMemEval_M** | Held | Not run until scale evidence justifies it |
 | **AgentMemBench / MemDialogue** | Complete bounded external run | Retrieval, conflict/currentness, deletion, isolation, concurrency, scaling; exposed thread-affinity and scaling defects |
 | **SWE-ContextBench Lite** | Protocol-comparable external run blocked | Harness/evidence contract exists; exact frozen research-compatible corpus/provenance is still required |
 | **Internal RC retrieval fixture** | Complete | Demonstrates composed routes can recover memories lexical-only recall misses while preserving governance on the synthetic fixture |
@@ -235,16 +245,30 @@ See **[BENCHMARKS.md](BENCHMARKS.md)** and **[Memory Evaluation subsystem](docs/
 
 ## Current benchmark-driven remediation
 
-The external gauntlets have not falsified Agent Memory's core authority/lifecycle architecture, but they have exposed concrete product weaknesses.
+The external gauntlets have not falsified Agent Memory's core authority/lifecycle architecture, but they exposed concrete product weaknesses. Remediation is tracked under issue #537, with every slice replayed against the same frozen input. The before/after evidence is in **[docs/56](docs/56-benchmark-gauntlet-remediation-evidence.md)**.
 
-Current remediation architecture is tracked under issue #537 and includes:
+| Finding | Remediation | State |
+|---|---|---|
+| Ranking/currentness policy was implicit (#538, #531 class A) | Explicit post-admission ranking policy, admitted-set BM25, and a query-conditioned applicability profile (policy 3.0.0) | Landed. **[ADR-039](docs/adr/ADR-039-recall-ranking-uses-query-conditioned-applicability.md) remains Proposed** (#544) |
+| Unsafe cross-thread use of one handle (#530) | Runtime-owned serialization | Landed |
+| O(state) integrity work on every commit (#522 Part A) | Incremental attestation | Landed |
+| Every tenant fact became a recall candidate (#522 Part B, #548) | Privacy-preserving domain-eligibility prefilter; public contract 1.3.0 | See #548 |
+| Historically true but superseded state was unrepresentable (#549) | Explicit current-state vs historical-evidence admission | See #549 |
+| Implicit-supersession questions (#531 class B) | Recorded as an explicit product limitation, not reopened | Limitation |
 
-- explicit post-admission ranking/currentness policy work (#538 / #531);
-- safe single-host cross-thread runtime behavior (#530);
-- governed commit/checkpoint and candidate-generation scaling (#522);
-- exact frozen before/after benchmark replay.
+Still open or held:
 
-This matters because the repository now treats benchmark results as falsification surfaces rather than README decoration.
+- the governance-state rewrite and lexical scan costs at scale;
+- LongMemEval_M, held until scale evidence justifies it;
+- an orthogonal temporal gauntlet ([docs/59](docs/59-orthogonal-temporal-gauntlet-qualification.md));
+- the external SWE-ContextBench corpus (#467).
+
+The benchmark results are treated as falsification surfaces rather than README decoration:
+
+```text
+benchmark score != doctrine
+implementation evidence != doctrine acceptance
+```
 
 ---
 
@@ -310,7 +334,7 @@ See **[GOVERNANCE.md](GOVERNANCE.md)** and **[Evidence Promotion Policy](docs/po
 
 Start with:
 
-1. **[Repository Operating Model](docs/56-repository-operating-model.md)**
+1. **[Repository Operating Model](docs/REPOSITORY_OPERATING_MODEL.md)**
 2. **[Contributing](CONTRIBUTING.md)**
 3. **[Governance](GOVERNANCE.md)**
 4. **[Documentation index](docs/README.md)**
