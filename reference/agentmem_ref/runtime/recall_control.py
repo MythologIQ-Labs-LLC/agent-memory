@@ -49,6 +49,8 @@ CONTROLLED_RECALL_RANKING_POLICY = PostAdmissionRankingPolicy(
     policy_id="controlled-multi-route",
     route_score_order=(SEMANTIC_VECTOR_ROUTE, TYPED_GRAPH_ROUTE, LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
+    lexical_route=LEXICAL_ROUTE,
+    lexical_relevance="bm25_admitted_set",
 )
 
 _WORD = re.compile(r"[a-z0-9]+")
@@ -718,6 +720,7 @@ class ControlledRecallPlanner:
             admission.admitted,
             by_candidate,
             substrate.get_fact,
+            query=query,
         )
         routes_executed = tuple(
             budget.route_id

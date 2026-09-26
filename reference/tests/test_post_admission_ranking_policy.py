@@ -12,7 +12,12 @@ sys.path.insert(0, str(ROOT / "reference"))
 from agentmem_ref import AgentMemory, policy  # noqa: E402
 from agentmem_ref.memory import procedural_memory as pm  # noqa: E402
 from agentmem_ref.runtime.adapter import Clock  # noqa: E402
-from agentmem_ref.runtime.ranking_policy import PostAdmissionRankingPolicy, temporal_evidence  # noqa: E402
+from agentmem_ref.runtime.ranking_policy import (  # noqa: E402
+    PostAdmissionRankingPolicy,
+    admitted_set_bm25,
+    relevance_tokens,
+    temporal_evidence,
+)
 from agentmem_ref.runtime.runtime_composition import EXACT_IDENTITY_ROUTE, MULTI_ROUTE_RANKING_POLICY  # noqa: E402
 
 TENANT = "tenant:ranking"
@@ -101,6 +106,9 @@ class PolicyUnitTests(unittest.TestCase):
         self.assertEqual(identity["authority_effect"], "none")
         self.assertFalse(identity["route_scores_cross_comparable"])
         self.assertEqual(identity["stages"][-2:], ["temporal_evidence:newer_first", "candidate_ref_asc"])
+        self.assertIn("lexical_relevance_desc:bm25_admitted_set:lexical", identity["stages"])
+        self.assertEqual(identity["lexical_relevance_statistics_scope"], "admitted_set")
+        self.assertEqual(identity["bm25_parameters"], {"k1": 1.2, "b": 0.75})
 
     def test_clock_timestamps_are_valid_and_chronological_past_old_overflow(self):
         clock = Clock()
@@ -108,6 +116,57 @@ class PolicyUnitTests(unittest.TestCase):
         self.assertEqual(stamps, sorted(stamps))
         self.assertEqual(stamps[59], "2026-01-01T00:01:00Z")
         self.assertTrue(all(temporal_evidence(_Fact(valid_at=stamp))[2] is not None for stamp in stamps))
+
+
+class AdmittedSetBm25Tests(unittest.TestCase):
+    def test_bm25_prefers_rare_query_terms_over_stopword_overlap(self):
+        scores = admitted_set_bm25(
+            "What is the release codename?",
+            {"a": "The release codename is Alder.", "b": "The weather is what it is.", "c": "The lunch was fine."},
+        )
+        self.assertGreater(scores["a"], scores["b"])
+        self.assertGreater(scores["b"], scores["c"])
+        self.assertEqual(relevance_tokens("The user's plan"), ["the", "user", "s", "plan"])
+
+    def test_statistics_come_only_from_the_admitted_set(self):
+        admitted = {"a": "release codename Alder", "b": "release codename Birch"}
+        alone = admitted_set_bm25("release codename", admitted)
+        # Adding refused/foreign text must not be possible through the API: the function
+        # sees exactly what the policy passes, which is the admitted set.
+        with_foreign = admitted_set_bm25("release codename", {**admitted, "x": "release release release"})
+        self.assertNotEqual(alone["a"], with_foreign["a"])
+        policy = PostAdmissionRankingPolicy(
+            policy_id="bm25", route_score_order=("lexical",), exact_identity_route="exact",
+            lexical_route="lexical", lexical_relevance="bm25_admitted_set",
+        )
+        facts = {"a": _Fact(), "b": _Fact()}
+        for ref, text in admitted.items():
+            facts[ref].fact_text = text
+        hits = {ref: [_Hit("lexical", 0.5)] for ref in admitted}
+        _, evidence = policy.rank(list(admitted), hits, facts.get, query="release codename")
+        self.assertAlmostEqual(evidence["a"]["lexical_relevance_score"], alone["a"])
+
+    def test_bm25_policy_requires_a_declared_lexical_route(self):
+        with self.assertRaises(ValueError):
+            PostAdmissionRankingPolicy(
+                policy_id="x", route_score_order=("vector",), exact_identity_route="e",
+                lexical_route="lexical", lexical_relevance="bm25_admitted_set",
+            )
+
+    def test_foreign_scope_text_cannot_change_admitted_ordering(self):
+        def order(foreign_text):
+            with tempfile.TemporaryDirectory() as root, AgentMemory.open(
+                root, tenant=TENANT, actor_id="agent:ranking", scope=SCOPE, purpose="ranking tests"
+            ) as memory:
+                a = memory.remember("memory:a", "The release codename is Alder and the train is late.")
+                b = memory.remember("memory:b", "The release train codename changed.")
+                other = {"scope": "project:other", "isolation_domain_refs": [TENANT, "project:other"],
+                         "required_isolation_domain_refs": [TENANT, "project:other"], "project_ref": "project:other"}
+                memory.remember("memory:foreign", foreign_text, overrides=other)
+                recalled = memory.recall("What is the release codename for the train?")
+                ids = {a["fact_uuid"]: "a", b["fact_uuid"]: "b"}
+                return [ids[ref] for ref in recalled["admitted"] if ref in ids]
+        self.assertEqual(order("codename codename codename release"), order("train train train release"))
 
 
 class FacadeRankingTests(unittest.TestCase):

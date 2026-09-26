@@ -115,6 +115,8 @@ MULTI_ROUTE_RANKING_POLICY = PostAdmissionRankingPolicy(
     policy_id="multi-route-default",
     route_score_order=(SEMANTIC_VECTOR_ROUTE, SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
+    lexical_route=LEXICAL_ROUTE,
+    lexical_relevance="bm25_admitted_set",
 )
 
 
@@ -252,6 +254,7 @@ class DeterministicMultiRouteRecallPlanner:
             admission.admitted,
             by_candidate,
             substrate.get_fact,
+            query=query,
         )
         return MultiRouteRecallResult(
             query=query,

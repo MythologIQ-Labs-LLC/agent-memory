@@ -49,6 +49,8 @@ QUERY_DRIVEN_RANKING_POLICY = PostAdmissionRankingPolicy(
     policy_id="query-driven-relational",
     route_score_order=(LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
+    lexical_route=LEXICAL_ROUTE,
+    lexical_relevance="bm25_admitted_set",
 )
 
 _WORD = re.compile(r"[a-z0-9]+")
@@ -206,6 +208,7 @@ class DeterministicQueryDrivenRecallPlanner:
             admission.admitted,
             by_candidate,
             substrate.get_fact,
+            query=query,
         )
         return MultiRouteRecallResult(
             query=query,
