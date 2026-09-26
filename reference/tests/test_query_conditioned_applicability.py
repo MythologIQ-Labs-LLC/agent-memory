@@ -152,7 +152,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         pairs = [
             ("likes", "Kevin likes coffee.", "Kevin likes tea.", "What does Kevin currently like?"),
             ("lives", "Kevin lives in Maryland.", "Kevin lives in Stevensville.", "Where does Kevin currently live?"),
-            ("works", "Kevin works at Bicameral.", "Kevin works at Accountable.Live.", "Where does Kevin currently work?"),
+            ("works", "Kevin works at Acme Labs.", "Kevin works at Globex.", "Where does Kevin currently work?"),
         ]
         for key, first_text, second_text, query in pairs:
             first = self.remember(f"{key}:1", first_text)
