@@ -36,6 +36,8 @@ from .adapter import RecallContext
 from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
+from .temporal_intent import resolve_intent
+from .ranking_policy import PostAdmissionRankingPolicy
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.projections import (
     CURRENT,
@@ -103,9 +105,21 @@ class MultiRouteRecallResult:
     policy_version: str = ""
     evaluated_at: str = ""
     authority_effect: str = "none"
+    ranking_policy: dict = field(default_factory=dict)
+    ranking_evidence: dict[str, dict] = field(default_factory=dict)
+    query_temporal_intent: dict = field(default_factory=dict)
 
     def provenance_for(self, candidate_ref: str) -> tuple[RetrievalRouteHit, ...]:
         return tuple(self.route_hits.get(candidate_ref, ()))
+
+
+MULTI_ROUTE_RANKING_POLICY = PostAdmissionRankingPolicy(
+    policy_id="multi-route-default",
+    route_score_order=(SEMANTIC_VECTOR_ROUTE, SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
+    exact_identity_route=EXACT_IDENTITY_ROUTE,
+    lexical_route=LEXICAL_ROUTE,
+    lexical_relevance="bm25_admitted_set",
+)
 
 
 class DeterministicMultiRouteRecallPlanner:
@@ -146,6 +160,7 @@ class DeterministicMultiRouteRecallPlanner:
         context: RecallContext,
         *,
         logical_memory_refs: tuple[str, ...] = (),
+        temporal_intent=None,
     ) -> MultiRouteRecallResult:
         substrate = self.adapter.checkpoint_substrate()
         tenant = self.adapter.checkpoint_tenant()
@@ -238,12 +253,13 @@ class DeterministicMultiRouteRecallPlanner:
             query_label=query,
         )
 
-        ranked = sorted(
+        intent = resolve_intent(query, temporal_intent)
+        ranked, ranking_evidence = MULTI_ROUTE_RANKING_POLICY.rank(
             admission.admitted,
-            key=lambda candidate_ref: self._rank_key(
-                candidate_ref,
-                by_candidate.get(candidate_ref, ()),
-            ),
+            by_candidate,
+            substrate.get_fact,
+            query=query,
+            intent=intent,
         )
         return MultiRouteRecallResult(
             query=query,
@@ -256,31 +272,9 @@ class DeterministicMultiRouteRecallPlanner:
             ranked_admitted=ranked,
             policy_version=admission.policy_version,
             evaluated_at=admission.evaluated_at,
-        )
-
-    @staticmethod
-    def _rank_key(candidate_ref: str, hits) -> tuple[object, ...]:
-        route_ids = {hit.route_id for hit in hits}
-        exact = 1 if EXACT_IDENTITY_ROUTE in route_ids else 0
-        vector_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == SEMANTIC_VECTOR_ROUTE),
-            default=0.0,
-        )
-        relational_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == SHARED_EVIDENCE_ROUTE),
-            default=0.0,
-        )
-        lexical_score = max(
-            (hit.raw_score for hit in hits if hit.route_id == LEXICAL_ROUTE),
-            default=0.0,
-        )
-        return (
-            -len(route_ids),
-            -exact,
-            -vector_score,
-            -relational_score,
-            -lexical_score,
-            candidate_ref,
+            ranking_policy=MULTI_ROUTE_RANKING_POLICY.identity(),
+            ranking_evidence=ranking_evidence,
+            query_temporal_intent=intent.to_dict(),
         )
 
 
@@ -425,7 +419,7 @@ class ConfiguredCompositionRuntime:
     def projection_id(self) -> str:
         return self._projection_id
 
-    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None):
+    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
         """Commit canonical memory, then materialize the configured derived declaration.
 
         Forwards the qualified-evidence channel (ADR-037 step 4b-2, DoD 20).
@@ -433,7 +427,7 @@ class ConfiguredCompositionRuntime:
         mutation while making the remediation route unreachable.
         """
         result = self.durable_runtime.commit_proposal(
-            proposal, fact_text, evidence=evidence, attestation=attestation
+            proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal
         )
         if result.committed and self._projection_component_enabled:
             if self.projections.store.get(self._projection_id) is None:
@@ -448,7 +442,7 @@ class ConfiguredCompositionRuntime:
                 )
         return result
 
-    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None):
+    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
         """Commit a governed correction; derived currentness changes by relation.
 
         No rebuild is triggered here. A correction therefore cannot use
@@ -457,7 +451,7 @@ class ConfiguredCompositionRuntime:
         Forwards the qualified-evidence channel (ADR-037 step 4b-2, DoD 20).
         """
         return self.durable_runtime.commit_proposal(
-            proposal, fact_text, evidence=evidence, attestation=attestation
+            proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal
         )
 
     def recall(self, query: str, context: RecallContext):
@@ -471,6 +465,7 @@ class ConfiguredCompositionRuntime:
         context: RecallContext,
         *,
         logical_memory_refs: tuple[str, ...] = (),
+        temporal_intent=None,
     ) -> MultiRouteRecallResult:
         """Multiple candidate routes, one canonical governed admission boundary."""
         self._route_for(RETRIEVAL_CAPABILITY)
@@ -478,6 +473,7 @@ class ConfiguredCompositionRuntime:
             query,
             context,
             logical_memory_refs=logical_memory_refs,
+            temporal_intent=temporal_intent,
         )
 
     def projection_admission(self) -> ProjectionAdmission:

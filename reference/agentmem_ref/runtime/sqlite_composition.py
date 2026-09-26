@@ -46,12 +46,30 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         )
         return cls(durable_runtime=durable, plan=plan)
 
+    @property
+    def serialization_lock(self):
+        """Runtime-owned lock serializing every operation on this handle (#530)."""
+        return self.durable_runtime.base.serialization_lock
+
+    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
+        with self.serialization_lock:
+            return super().retain(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal)
+
+    def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
+        with self.serialization_lock:
+            return super().correct(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal)
+
+    def delete_current(self, proposal, *, evidence=None, external_verification=None):
+        with self.serialization_lock:
+            return super().delete_current(proposal, evidence=evidence, external_verification=external_verification)
+
     def recall(self, query: str, context):
         """Persist recall decisions/audit evidence in the SQLite generation."""
-        self._route_for(RETRIEVAL_CAPABILITY)
-        return self.durable_runtime.run_governed_read(
-            lambda: self.adapter.governed_recall(query, context)
-        )
+        with self.serialization_lock:
+            self._route_for(RETRIEVAL_CAPABILITY)
+            return self.durable_runtime.run_governed_read(
+                lambda: self.adapter.governed_recall(query, context)
+            )
 
     def multi_route_recall(
         self,
@@ -59,16 +77,20 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         context,
         *,
         logical_memory_refs: tuple[str, ...] = (),
+        temporal_intent=None,
     ):
         """Persist preselected-admission decisions and audit evidence atomically."""
-        self._route_for(RETRIEVAL_CAPABILITY)
-        return self.durable_runtime.run_governed_read(
-            lambda: self.recall_planner.recall(
-                query,
-                context,
-                logical_memory_refs=logical_memory_refs,
+        with self.serialization_lock:
+            self._route_for(RETRIEVAL_CAPABILITY)
+            return self.durable_runtime.run_governed_read(
+                lambda: self.recall_planner.recall(
+                    query,
+                    context,
+                    logical_memory_refs=logical_memory_refs,
+                    temporal_intent=temporal_intent,
+                )
             )
-        )
 
     def close(self) -> None:
-        self.durable_runtime.base.close()
+        with self.serialization_lock:
+            self.durable_runtime.base.close()

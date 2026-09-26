@@ -44,6 +44,7 @@ ADR-035: Accepted
 ADR-036: Accepted
 ADR-037: Accepted
 ADR-038: Accepted
+ADR-039: Proposed
 ```
 
 ADRs 001-020, ADR-022, ADR-024, ADR-028, ADR-030, ADR-031, ADR-032, ADR-033, ADR-034, ADR-035, ADR-036, ADR-037, and ADR-038 have satisfied their doctrine-maturity gates.
@@ -413,6 +414,18 @@ governance becomes numerology.
 Acceptance is doctrine, not implementation. The implementation order is rigid:
 parked state, then evidence qualification and dependence lineage, then governed
 resumption, and only then the fail-closed conversion of the 51 callers.
+
+### Recall ranking uses query-conditioned applicability
+
+[`ADR-039`](ADR-039-recall-ranking-uses-query-conditioned-applicability.md) is **Proposed**.
+
+Relevance and temporal applicability are separate typed evidence dimensions. They
+compose after governed admission through a query-conditioned policy, not through a
+universal `relevance + recency` score. Currentness is one case of temporal
+applicability. Metabolic strength is not temporal validity, and ranking has no
+authority. A reference implementation profile and replay evidence (#538, #547) support
+and narrow the proposal. The acceptance gate, including orthogonal temporal-workload
+evidence and doctrine alignment, is incomplete, and doctrine review continues in #544.
 
 ### Action execution is not authority change
 

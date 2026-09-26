@@ -142,7 +142,7 @@ class LongMemEvalProfileTests(unittest.TestCase):
             M.run(FIXTURE, corpus_class="synthetic", subset_size=2, max_questions=2, include_agent_memory=False)
 
     def test_runtime_failures_are_recorded_not_hidden(self) -> None:
-        def broken(question, items, row_index):
+        def broken(question, items, row_index, row=None):
             raise RuntimeError("boom")
 
         with mock.patch.dict(M.RETRIEVERS, {"lexical_overlap": broken}):

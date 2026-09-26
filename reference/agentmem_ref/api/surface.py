@@ -16,6 +16,9 @@ qualified SQLite composition. It is not a second contract or authority surface.
 
 from __future__ import annotations
 
+import functools
+import threading
+
 import hashlib
 import importlib.resources
 import json
@@ -27,6 +30,7 @@ from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
 from ..runtime.adapter import GovernedMemoryAdapter
+from ..runtime.temporal_intent import declared_temporal, resolve_intent
 from . import contract
 
 __all__ = [
@@ -218,8 +222,25 @@ def _atomic_write_text(path: Path, text: str) -> None:
     os.replace(temporary, path)
 
 
+def _serialized(method):
+    """Run one public handle operation under the runtime-owned serialization lock (#530)."""
+
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        with self._serialization_lock:
+            return method(self, *args, **kwargs)
+
+    return wrapper
+
+
 class AgentMemory:
     """Small developer surface over one governed SQLite Agent Memory runtime.
+
+    Thread contract (#530): one handle may be called from any thread. Every public
+    operation runs under the runtime-owned serialization lock, so operations never
+    interleave and each still commits as one single-writer SQLite generation.
+    Objects reached through ``handle.runtime`` are not independently thread-safe;
+    direct callers must hold ``handle.runtime.serialization_lock``.
 
     Defaults are explicit and bounded to low-risk local operation. Higher-risk
     mutation remains subject to the same public proposal contract, evidence
@@ -249,6 +270,7 @@ class AgentMemory:
         self.purpose = purpose
         self.runtime = runtime
         self._closed = False
+        self._serialization_lock = getattr(runtime, "serialization_lock", None) or threading.RLock()
 
     @classmethod
     def open(
@@ -423,6 +445,7 @@ class AgentMemory:
             refusal=outcome.refusal,
         )
 
+    @_serialized
     def remember(
         self,
         target_reference: str,
@@ -436,8 +459,20 @@ class AgentMemory:
         downstream_authority: str = policy.A1,
         purpose: str | None = None,
         overrides: Mapping[str, object] | None = None,
+        valid_from: str | None = None,
+        valid_until: str | None = None,
+        observed_at: str | None = None,
     ) -> dict:
-        """Retain a low-risk observation through ordinary PAMA and durable commit."""
+        """Retain a low-risk observation through ordinary PAMA and durable commit.
+
+        ``valid_from``/``valid_until``/``observed_at`` optionally declare temporal
+        evidence (ISO-8601). They are recorded as the caller's claim and used only as
+        post-admission applicability evidence (ADR-039, proposed). They never refuse,
+        supersede, or change currentness.
+        """
+        temporal = declared_temporal(
+            {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
+        )
         proposal = contract.proposal_from_envelope(
             self._proposal(
                 target_reference=target_reference,
@@ -457,9 +492,11 @@ class AgentMemory:
             fact_text,
             evidence=list(evidence) or None,
             attestation=attestation,
+            temporal=temporal,
         )
         return self._commit_result(outcome)
 
+    @_serialized
     def correct(
         self,
         target_reference: str,
@@ -471,8 +508,14 @@ class AgentMemory:
         risk_class: str = "medium",
         purpose: str | None = None,
         overrides: Mapping[str, object] | None = None,
+        valid_from: str | None = None,
+        valid_until: str | None = None,
+        observed_at: str | None = None,
     ) -> dict:
         """Propose/commit a correction. Review requirements are not hidden or auto-satisfied."""
+        temporal = declared_temporal(
+            {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
+        )
         current = self.runtime.adapter.current_fact_uuid(target_reference)
         if current is None:
             return contract.result(
@@ -500,9 +543,11 @@ class AgentMemory:
             fact_text,
             evidence=list(evidence) or None,
             attestation=attestation,
+            temporal=temporal,
         )
         return self._commit_result(outcome)
 
+    @_serialized
     def recall(
         self,
         query: str,
@@ -513,9 +558,21 @@ class AgentMemory:
         project_ref: str | None = None,
         task_ref: str | None = None,
         purpose: str | None = None,
+        temporal_intent: Mapping[str, Any] | None = None,
+        reference_time: str | None = None,
     ) -> dict:
-        """Run composed candidate generation followed by one governed admission pass."""
+        """Run composed candidate generation followed by one governed admission pass.
+
+        ``temporal_intent`` optionally declares what time the query is about
+        (``{"mode": "current"|"as_of"|"historical"|"atemporal_or_unspecified"|
+        "prospective", "reference_time", "target_start", "target_end",
+        "expected_recall_shape"}``); explicit intent is authoritative. Without it, a
+        bounded deterministic interpreter infers intent from generic temporal cues and
+        records its confidence; ``reference_time`` anchors current/prospective
+        applicability. Intent only orders admitted candidates (ADR-039, proposed).
+        """
         self._require_open()
+        intent = resolve_intent(query, temporal_intent, reference_time=reference_time)
         domains = tuple(target_domain_refs) if target_domain_refs is not None else self._domain_refs()
         envelope = {
             "contract_version": contract.CONTRACT_VERSION,
@@ -532,6 +589,7 @@ class AgentMemory:
             query,
             context,
             logical_memory_refs=tuple(logical_memory_refs),
+            temporal_intent=intent,
         )
         rank = {candidate: index + 1 for index, candidate in enumerate(result.ranked_admitted)}
         admissions: dict[str, dict] = {}
@@ -540,6 +598,9 @@ class AgentMemory:
             decision["route_provenance"] = [hit.to_dict() for hit in result.provenance_for(candidate)]
             if candidate in rank:
                 decision["rank_position"] = rank[candidate]
+                ranking = getattr(result, "ranking_evidence", {}).get(candidate)
+                if ranking is not None:
+                    decision["ranking_evidence"] = dict(ranking)
             if candidate in result.refusals:
                 decision["refusal"] = result.refusals[candidate]
             admissions[candidate] = decision
@@ -551,6 +612,7 @@ class AgentMemory:
             admissions=admissions,
         )
 
+    @_serialized
     def forget(
         self,
         target_reference: str,
@@ -594,6 +656,7 @@ class AgentMemory:
         )
         return self._commit_result(outcome, stage="forget")
 
+    @_serialized
     def history(self, target_reference: str, *, fact_text: str | None = None) -> dict:
         self._require_open()
         return history(
@@ -602,6 +665,7 @@ class AgentMemory:
             fact_text=fact_text,
         )
 
+    @_serialized
     def posture(self) -> dict:
         """Return the canonical doctor report, including SQLite recovery when present."""
         self._require_open()
@@ -613,6 +677,7 @@ class AgentMemory:
         contract.validate_posture_report(report)
         return contract.result("posture", contract.CURRENT, posture=report)
 
+    @_serialized
     def close(self) -> None:
         if self._closed:
             return
