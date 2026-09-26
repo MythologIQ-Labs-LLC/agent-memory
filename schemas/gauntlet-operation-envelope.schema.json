@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/gauntlet-operation-envelope.schema.json",
+  "title": "Agent Memory Gauntlet Operation Envelope",
+  "description": "Transport-neutral request/response envelope for Gauntlet system-adapter operations. It records operation outcomes without granting memory authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_family", "contract_version", "direction", "operation", "request_id", "authority_effect"],
+  "properties": {
+    "contract_family": {"const": "agent-memory-gauntlet-operation"},
+    "contract_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "direction": {"enum": ["request", "response"]},
+    "operation": {
+      "enum": ["describe", "reset", "remember", "recall", "correct", "forget", "history", "checkpoint", "recover", "health"]
+    },
+    "request_id": {"type": "string", "minLength": 1},
+    "payload": {"type": "object"},
+    "status": {
+      "enum": ["ok", "unsupported", "refused", "invalid_request", "timeout", "system_error", "adapter_error", "blocked"]
+    },
+    "result": {"type": ["object", "null"]},
+    "error": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "source": {"enum": ["benchmark_input", "benchmark_adapter", "orchestrator", "system_adapter", "system_under_test", "expected_refusal"]},
+        "code": {"type": ["string", "null"]},
+        "message": {"type": ["string", "null"]}
+      }
+    },
+    "timing": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "elapsed_ms": {"type": "number", "minimum": 0}
+      }
+    },
+    "adapter_evidence": {"type": "object"},
+    "authority_effect": {"const": "none"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"direction": {"const": "request"}}, "required": ["direction"]},
+      "then": {
+        "required": ["payload"],
+        "not": {"anyOf": [{"required": ["status"]}, {"required": ["result"]}, {"required": ["error"]}, {"required": ["timing"]}]}
+      }
+    },
+    {
+      "if": {"properties": {"direction": {"const": "response"}}, "required": ["direction"]},
+      "then": {"required": ["status", "result", "error", "timing", "adapter_evidence"]}
+    }
+  ]
+}
