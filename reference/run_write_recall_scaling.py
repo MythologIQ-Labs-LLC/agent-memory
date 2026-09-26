@@ -15,6 +15,7 @@ The script is revision-agnostic: components absent at a revision report
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import platform
 import random
@@ -39,6 +40,10 @@ COMPONENTS = {
     "substrate.read_runtime_journal_tail": (SQLiteTemporalGraph, "read_runtime_journal_tail"),
     "substrate.write_runtime_state": (SQLiteTemporalGraph, "write_runtime_state"),
     "substrate.search": (SQLiteTemporalGraph, "search"),
+    # #563 derived token index (absent before ftok-v1).
+    "substrate.search_by_scan": (SQLiteTemporalGraph, "search_by_scan"),
+    "substrate._facts_by_uuid": (SQLiteTemporalGraph, "_facts_by_uuid"),
+    "substrate.verify_or_rebuild_token_index": (SQLiteTemporalGraph, "verify_or_rebuild_token_index"),
     "runtime._validate_journal": (sqlite_runtime, "_validate_journal"),
     "runtime._validate_journal_tail": (sqlite_runtime, "_validate_journal_tail"),
     "runtime._governance_snapshot": (sqlite_runtime.SQLiteRestartSafeRuntime, "_governance_snapshot"),
@@ -103,6 +108,7 @@ def measure(size: int, *, window: int, recalls: int, seed: int, scopes: int = 1)
     candidate_counts: list[int] = []
     store_bytes = 0
     admitted_counts: list[int] = []
+    recall_identity: list[dict] = []
     try:
         with tempfile.TemporaryDirectory() as directory:
             names = ["benchmark:scale"] if scopes == 1 else [f"benchmark:scale:{index}" for index in range(scopes)]
@@ -110,7 +116,9 @@ def measure(size: int, *, window: int, recalls: int, seed: int, scopes: int = 1)
                 with _open(directory, scope) as other:
                     for index in range(scope_index, size, scopes):
                         other.remember(f"memory:{index}", _text(rng, words, 40))
+            opened = time.perf_counter()
             with _open(directory, names[0]) as memory:
+                open_seconds = time.perf_counter() - opened
                 for index in range(0, size, scopes):
                     memory.remember(f"memory:{index}", _text(rng, words, 40))
                 write_times = []
@@ -130,6 +138,16 @@ def measure(size: int, *, window: int, recalls: int, seed: int, scopes: int = 1)
                     recalled = memory.recall(_text(rng, words, 8))
                     recall_times.append(time.perf_counter() - start)
                     candidate_counts.append(len(recalled["candidates"]))
+                    recall_identity.append(
+                        {
+                            "candidates": list(recalled["candidates"]),
+                            "admitted": list(recalled["admitted"]),
+                            "admissions": {
+                                ref: {key: value for key, value in decision.items() if key != "evaluated_at"}
+                                for ref, decision in recalled["admissions"].items()
+                            },
+                        }
+                    )
                     admitted_counts.append(len(recalled["admitted"]))
                 recall_components = dict(timers.totals)
                 timers.active = False
@@ -144,6 +162,16 @@ def measure(size: int, *, window: int, recalls: int, seed: int, scopes: int = 1)
         "facts_before_window": size,
         "scopes": scopes,
         "store_bytes": store_bytes,
+        "open_ms_measured_handle": round(open_seconds * 1000, 3),
+        # Candidates and admitted order only: independent of the process hash seed.
+        "recall_order_identity_sha256": hashlib.sha256(
+            json.dumps([[item["candidates"], item["admitted"]] for item in recall_identity], separators=(",", ":")).encode("utf-8")
+        ).hexdigest(),
+        # Every decision field except wall-clock evaluated_at. Compare across processes only
+        # under a fixed PYTHONHASHSEED: policy 3.0.0 BM25 sums terms in set order (#576).
+        "recall_identity_sha256": hashlib.sha256(
+            json.dumps(recall_identity, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest(),
         "write": {
             "ops": window,
             "median_ms": round(statistics.median(write_times) * 1000, 3),
@@ -177,6 +205,7 @@ def main(argv: list[str] | None = None) -> int:
         revision = "unknown"
     report = {
         "schema": "agent-memory-write-recall-scaling/1",
+        "pythonhashseed": __import__("os").environ.get("PYTHONHASHSEED"),
         "revision": revision,
         "host": {"python": platform.python_version(), "machine": platform.machine(), "note": args.host_note},
         "parameters": {"window": args.window, "recalls": args.recalls, "seed": args.seed, "scopes": args.scopes, "words_per_fact": 40, "words_per_query": 8},

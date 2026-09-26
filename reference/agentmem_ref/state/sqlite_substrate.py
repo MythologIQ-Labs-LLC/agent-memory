@@ -559,7 +559,6 @@ class SQLiteTemporalGraph:
                 uuid TEXT NOT NULL,
                 PRIMARY KEY (group_id, token, uuid)
             ) WITHOUT ROWID;
-            CREATE INDEX IF NOT EXISTS fact_tokens_uuid_idx ON fact_tokens(uuid);
             """
         )
         self._connection.execute(
@@ -744,8 +743,14 @@ class SQLiteTemporalGraph:
             self._log("invalidate_fact", uuid)
 
     def delete_fact(self, uuid: str) -> None:
+        row = self._connection.execute("SELECT group_id, fact_text FROM facts WHERE uuid = ?", (uuid,)).fetchone()
         self._connection.execute("DELETE FROM facts WHERE uuid = ?", (uuid,))
-        self._connection.execute("DELETE FROM fact_tokens WHERE uuid = ?", (uuid,))
+        if row is not None:
+            # Index keys are derived from the fact itself, so no secondary index is needed.
+            self._connection.executemany(
+                "DELETE FROM fact_tokens WHERE group_id = ? AND token = ? AND uuid = ?",
+                _fact_token_rows(row[0], row[1], uuid),
+            )
         self._log("delete_fact", uuid)
 
     def write_relation(self, relation: TypedRelation) -> None:
