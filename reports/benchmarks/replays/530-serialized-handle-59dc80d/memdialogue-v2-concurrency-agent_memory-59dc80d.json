@@ -1,0 +1,187 @@
+{
+  "backends": {
+    "agent_memory": {
+      "authority_effect": "none",
+      "boundary": "public AgentMemory facade; one tenant, one governed scope per upstream user_id; candidate generation followed by canonical governed admission; deletion = governed tombstone",
+      "governance": {
+        "concurrency": {
+          "admitted_count": 0,
+          "candidate_count": 0,
+          "forget_calls": 0,
+          "forget_committed": 0,
+          "forget_outcomes": {},
+          "recall_calls": 0,
+          "refusal_reasons": {},
+          "remember_calls": 800,
+          "remember_committed": 800,
+          "remember_refusals": {}
+        }
+      },
+      "phase_errors": {},
+      "phase_wall_seconds": {
+        "concurrency": 12.044
+      },
+      "phases": {
+        "concurrency": {
+          "1": {
+            "error_count": 0,
+            "error_examples": [],
+            "latency": {
+              "mean_ms": 14.332955200002289,
+              "n": 200,
+              "p50_ms": 14.08146299991131,
+              "p95_ms": 25.1257694999822,
+              "p99_ms": 33.40971702974453
+            },
+            "materialization_rate": 1.0,
+            "operation_success_rate": 1.0,
+            "records": 200,
+            "throughput_ops_s": 69.48742490188367,
+            "workers": 1
+          },
+          "16": {
+            "error_count": 0,
+            "error_examples": [],
+            "latency": {
+              "mean_ms": 223.1091348499922,
+              "n": 200,
+              "p50_ms": 218.33502000026783,
+              "p95_ms": 400.762712100277,
+              "p99_ms": 609.8458916800697
+            },
+            "materialization_rate": 1.0,
+            "operation_success_rate": 1.0,
+            "records": 200,
+            "throughput_ops_s": 66.98049522587338,
+            "workers": 16
+          },
+          "4": {
+            "error_count": 0,
+            "error_examples": [],
+            "latency": {
+              "mean_ms": 63.41048969497024,
+              "n": 200,
+              "p50_ms": 61.43884799985244,
+              "p95_ms": 112.43042614992194,
+              "p99_ms": 188.65168775040726
+            },
+            "materialization_rate": 1.0,
+            "operation_success_rate": 1.0,
+            "records": 200,
+            "throughput_ops_s": 62.23879968695417,
+            "workers": 4
+          },
+          "8": {
+            "error_count": 0,
+            "error_examples": [],
+            "latency": {
+              "mean_ms": 112.07445396502862,
+              "n": 200,
+              "p50_ms": 115.28389600016453,
+              "p95_ms": 194.76837985007478,
+              "p99_ms": 208.72037650017626
+            },
+            "materialization_rate": 1.0,
+            "operation_success_rate": 1.0,
+            "records": 200,
+            "throughput_ops_s": 69.2317811437825,
+            "workers": 8
+          }
+        }
+      },
+      "wall_seconds": 12.105
+    }
+  },
+  "claim_boundary": {
+    "aggregate_memory_health_score": "not_defined",
+    "answer_generation_quality_measured": false,
+    "benchmark_score_is_authority": false
+  },
+  "comparability": {
+    "latency_note": "local in-process latency; not comparable to upstream service-backed latency",
+    "reference_systems": "upstream Mem0/Graphiti/LangMem/Letta/Naive RAG results are not reproduced here",
+    "status": "bounded-operational-profile",
+    "upstream_llm_judged_retrieval": "not_run"
+  },
+  "dimensions": {
+    "concurrency": "phases.concurrency",
+    "deletion": "phases.deletion.audited_deletion_rate",
+    "governance": "governance (Agent Memory refusal/outcome tallies per phase)",
+    "isolation": "phases.isolation.cross_user_leak_rate",
+    "llm_portability": "not_exercised: no LLM backend is part of this profile",
+    "retrieval_quality": "phases.retrieval.exact_source_recall_at_k (deterministic, profile-local)",
+    "scale": "phases.scale",
+    "temporal_consistency": "phases.conflict",
+    "write_efficiency": "phases.retrieval.write_latency / write_success_rate"
+  },
+  "execution": {
+    "agent_memory_package_version": "0.2.0",
+    "agent_memory_revision": "59dc80ddbcba7cc2f196bed21bc5cb6638f83d48",
+    "agent_memory_worktree_dirty": false,
+    "backends": [
+      "agent_memory"
+    ],
+    "finished_at": "2026-09-26T01:55:17.730183+00:00",
+    "implementation": "CPython",
+    "numpy": "2.4.6",
+    "phases": [
+      "concurrency"
+    ],
+    "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "python": "3.11.15",
+    "resource_consumption": {
+      "peak_rss_mb_process": 68.0
+    },
+    "started_at": "2026-09-26T01:55:05.556287+00:00",
+    "wall_seconds": 12.174
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "matches_upstream_release": true,
+    "path_name": "memdialogue_v2.jsonl",
+    "selection": {
+      "method": "upstream load_records: source-unique, event-type-stratified, numpy default_rng(seed)",
+      "records": 0,
+      "seed": 2027,
+      "source_ids_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "size_bytes": 7663311
+  },
+  "parameters": {
+    "concurrency_records": 200,
+    "conflict_pairs": 250,
+    "deletion_records": 200,
+    "group_size": 10,
+    "isolation_facts": 5,
+    "isolation_users": 100,
+    "retrieval_records": 1000,
+    "scale_read_queries": 200,
+    "scales": [
+      100,
+      1000
+    ],
+    "seed": 2027,
+    "top_k": 5,
+    "warmup_writes": 5,
+    "workers": [
+      1,
+      4,
+      8,
+      16
+    ]
+  },
+  "profile_id": "agent-memory-agentmembench-memdialogue-operational-v1",
+  "schema_version": "1.0.0",
+  "upstream": {
+    "code_license": "MIT",
+    "data_attribution": "MemDialogue is derived from WildChat-4.8M by the Allen Institute for AI.",
+    "data_license": "ODC-By-1.0",
+    "dataset": "data/memdialogue_v2.jsonl",
+    "dataset_sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "harness": "agentmembench/evaluation/unified_benchmark.py",
+    "harness_sha256": "d0d407129aa506f6eacbf6df19a26c1a9ddd000aa0bfb931cb4e4ae984e594df",
+    "repository": "mazaiying/AgentMemBench",
+    "revision": "186c9a54edd47aae42d8b6990520f8e902b60303"
+  }
+}
