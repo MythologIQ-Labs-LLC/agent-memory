@@ -438,3 +438,62 @@ The artifacts are in `reports/benchmarks/replays/568-streaming-loader-fa8828c/`,
 | host memory fits with margin | pass: projected well under 1 GB against 15 GB |
 
 #563 (recall scaling) is minutes of M's cost and does not hold the run. M runs from the merge commit of this slice, with the same backends and planes as S (`no_memory`, `lexical_overlap`, `agent_memory`; session and turn) and the frozen default configuration (`temporal_metadata=none`, `ranking_variant=default`).
+
+### LongMemEval_M run (frozen)
+
+The artifacts are `reports/benchmarks/longmemeval/longmemeval-m-full-409098f.{json,rows.json.gz,analysis.json}`, with normalized manifests in `reports/benchmarks/normalized/*-409098ffeec5.json`.
+
+**Run conditions.**
+- Revision `409098f` (the merge of #573), run from a clean detached worktree.
+- Input: `longmemeval_m_cleaned.json` @ `98d7416c`, sha256 `9d79e552…495f` (the upstream LFS id), all 500 questions.
+- Backends and planes were the same as S, with the frozen default configuration.
+- Host: 4 cores and 15 GB, with nothing else heavy running. The only exception was ~30 s of niced unit tests on a spare core.
+
+| | value |
+| --- | ---: |
+| wall | 8,658 s (2.40 h) |
+| peak RSS: after scan / whole run | 167.6 MB / 212.1 MB |
+| input passes (all equal to the scan digest) | 7 × 2,737,100,077 bytes |
+| runtime / ingestion / out-of-corpus / unmapped failures | 0 / 0 / 0 / 0 |
+| questions scored (after upstream `_abs` and no-target exclusions) | 419 of 500 |
+| questions with repeated haystack session ids (handled as upstream does) | 449 |
+
+| plane | backend | recall_all@5 | ndcg_any@5 | recall_all@10 | ndcg_any@10 | recall_all@50 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| session | lexical_overlap | 0.4535 | 0.5282 | 0.5513 | 0.5560 | |
+| session | agent_memory | **0.7088** | **0.7492** | **0.7780** | **0.7702** | |
+| turn | lexical_overlap | 0.2983 | 0.3529 | 0.3986 | 0.3858 | 0.5537 |
+| turn | agent_memory | **0.5322** | **0.5693** | **0.6110** | **0.5923** | **0.7422** |
+
+`no_memory` is 0 everywhere.
+
+**Comparison with S under the same runtime policy** (`fa8828c`, as above):
+- Both backends lose recall on M, which has ~10× the haystack.
+- Agent Memory's margin over the lexical baseline widens:
+  - session recall_all@5: +0.093 on S, +0.255 on M;
+  - turn recall_all@5: +0.115 on S, +0.234 on M.
+- Knowledge-update recall_all@5, session plane:
+  - agent_memory: 0.972 → 0.917;
+  - lexical: 0.917 → 0.694.
+
+**Currentness diagnostic** (latest gold ranked first, 70 applicable questions):
+- Session plane: agent_memory 0.471 vs lexical 0.443.
+- Turn plane: agent_memory 0.514 vs lexical 0.571.
+- The turn-plane shortfall has the same sign and size as on S (0.557 vs 0.614), so it is the known currentness-ordering class (#531, #538), not a new M finding.
+
+**Scale behavior.**
+- Agent Memory wrote ~475 (session) and ~2,428 (turn) facts per question. The per-write cost was flat:
+  - turn plane: p50 5.30 ms, p95 5.55 ms, max 5.87 ms;
+  - the mean is 5.32 ms for both the smaller and the larger half of the stores.
+- No O(state) ingest term reappeared, and #562's bound held across 1.45 M governed writes.
+- Recall:
+  - turn plane: p50 0.70 s, max 1.04 s, at ~2,041 candidates per recall;
+  - session plane: p50 0.19 s.
+- Recall is the #563/#572 cost term: minutes in total (341 s turn, 100 s session), not hours.
+- Every candidate was admitted, because these are single-scope stores with no disputes or tombstones. This is expected, not a governance bypass: admission ran on every candidate.
+
+**Classification.**
+- Architecture validation at scale: bounded memory, flat write cost, zero failures, exact provenance.
+- Benchmark difficulty: M's lower absolute recall affects both backends.
+- The currentness ordering is the known class (#531, #538); no new defect was found.
+- The run tuned nothing. Policy 3.0.0 and the ADR-039 status are unchanged, and M is not new validity/as-of evidence.

@@ -12,7 +12,7 @@ Reading rules: each Δ outcome applies one metric's own direction and says nothi
 |  |  | upstream_llm_judged_retrieval_recall | not_run |  |  |  |
 |  |  | llm_portability_m6 | not_run |  |  |  |
 | `agent-memory-longmemeval-retrieval-currentness-v1` | #516 | longmemeval_s_cleaned | complete | agent_memory, lexical_overlap, no_memory | currentness, efficiency, governance, reproducibility, retrieval | #531, #538, #522 |
-|  |  | longmemeval_m_cleaned | not_run |  |  |  |
+|  |  | longmemeval_m_cleaned | complete |  |  |  |
 |  |  | upstream_model_judged_qa | not_run |  |  |  |
 | `swe-context-bench-lite-external-retrieval-v1` | #467 | lite_protocol_comparable_99_query_100_edge | blocked | none | none | none |
 
@@ -82,6 +82,138 @@ Input sha256 `33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6` 
 | --- | ---: | ---: | ---: | --- | --- |
 | agent_memory_worktree_clean | true | true | true | comparable_non_numeric | comparable_non_numeric |
 | input_matches_upstream_release | true | true | true | comparable_non_numeric | comparable_non_numeric |
+| input_sha256_bound | true | true | true | comparable_non_numeric | comparable_non_numeric |
+
+## longmemeval — agent-memory-longmemeval-retrieval-currentness-v1:session
+
+Input sha256 `9d79e5524794a2e6900a3aa9cb7d9152c5a3e8319c9a87c25494ba1eacee495f` · source `9e0b455f4ef0e2ab8f2e582289761153549043fc` · selection `all` (n=500) · baseline for deltas: `lexical_overlap`
+
+### retrieval (no_memory=measured, lexical_overlap=measured, agent_memory=measured)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| ndcg_any@10 | 0.000 | 0.556 | 0.770 | -0.556 (regressed) | +0.214 (improved) |
+| ndcg_any@5 | 0.000 | 0.528 | 0.749 | -0.528 (regressed) | +0.221 (improved) |
+| recall_all@10 | 0.000 | 0.551 | 0.778 | -0.551 (regressed) | +0.227 (improved) |
+| recall_all@5 | 0.000 | 0.453 | 0.709 | -0.453 (regressed) | +0.255 (improved) |
+
+### currentness (no_memory=measured, lexical_overlap=measured, agent_memory=measured)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| knowledge_update_ndcg_any@10 | 0.000 | 0.796 | 0.925 | -0.796 (regressed) | +0.129 (improved) |
+| knowledge_update_ndcg_any@5 | 0.000 | 0.770 | 0.913 | -0.770 (regressed) | +0.142 (improved) |
+| knowledge_update_recall_all@10 | 0.000 | 0.806 | 0.972 | -0.806 (regressed) | +0.167 (improved) |
+| knowledge_update_recall_all@5 | 0.000 | 0.694 | 0.917 | -0.694 (regressed) | +0.222 (improved) |
+| latest_gold_ranked_first | 0.000 | 0.443 | 0.471 | -0.443 (regressed) | +0.029 (improved) |
+
+### reasoning (no_memory=not_measured, lexical_overlap=not_measured, agent_memory=not_measured)
+
+- agent_memory: upstream model-judged QA was not run
+- lexical_overlap: upstream model-judged QA was not run
+- no_memory: upstream model-judged QA was not run
+
+### governance (no_memory=not_applicable, lexical_overlap=not_applicable, agent_memory=measured)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| candidate_count_total | absent | absent | 225104 | metric_missing | metric_missing |
+| refused_candidate_count_total | absent | absent | 0 | metric_missing | metric_missing |
+| unmapped_admitted_count_total | absent | absent | 0 | metric_missing | metric_missing |
+
+### efficiency (no_memory=partial, lexical_overlap=partial, agent_memory=partial)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| backend_wall_seconds | 52.866 | 67.980 | 1,436.2 | -15.114 (improved) | +1368.193 (regressed) |
+| ingest_seconds_total | absent | absent | 1,261.7 | metric_missing | metric_missing |
+| peak_rss_mb | not_measured | not_measured | not_measured | state_not_measured | state_not_measured |
+| recall_seconds_max | absent | absent | 0.393 | metric_missing | metric_missing |
+| recall_seconds_total | absent | absent | 99.727 | metric_missing | metric_missing |
+| store_size_bytes | not_measured | not_measured | not_measured | state_not_measured | state_not_measured |
+
+### evaluator_integrity (no_memory=not_measured, lexical_overlap=not_measured, agent_memory=not_measured)
+
+- agent_memory: evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run
+- lexical_overlap: evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run
+- no_memory: evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run
+
+### reproducibility (no_memory=measured, lexical_overlap=measured, agent_memory=measured)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| agent_memory_worktree_clean | true | true | true | comparable_non_numeric | comparable_non_numeric |
+| execution_ingestion_failure_count | 0 | 0 | 0 | +0.000 (unchanged) | +0.000 (unchanged) |
+| execution_out_of_corpus_returned_count | 0 | 0 | 0 | +0.000 (unchanged) | +0.000 (unchanged) |
+| execution_runtime_failure_count | 0 | 0 | 0 | +0.000 (unchanged) | +0.000 (unchanged) |
+| input_sha256_bound | true | true | true | comparable_non_numeric | comparable_non_numeric |
+
+## longmemeval — agent-memory-longmemeval-retrieval-currentness-v1:turn
+
+Input sha256 `9d79e5524794a2e6900a3aa9cb7d9152c5a3e8319c9a87c25494ba1eacee495f` · source `9e0b455f4ef0e2ab8f2e582289761153549043fc` · selection `all` (n=500) · baseline for deltas: `lexical_overlap`
+
+### retrieval (no_memory=measured, lexical_overlap=measured, agent_memory=measured)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| ndcg_any@10 | 0.000 | 0.386 | 0.592 | -0.386 (regressed) | +0.206 (improved) |
+| ndcg_any@5 | 0.000 | 0.353 | 0.569 | -0.353 (regressed) | +0.216 (improved) |
+| ndcg_any@50 | 0.000 | 0.422 | 0.621 | -0.422 (regressed) | +0.200 (improved) |
+| recall_all@10 | 0.000 | 0.399 | 0.611 | -0.399 (regressed) | +0.212 (improved) |
+| recall_all@5 | 0.000 | 0.298 | 0.532 | -0.298 (regressed) | +0.234 (improved) |
+| recall_all@50 | 0.000 | 0.554 | 0.742 | -0.554 (regressed) | +0.189 (improved) |
+
+### currentness (no_memory=measured, lexical_overlap=measured, agent_memory=measured)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| knowledge_update_ndcg_any@10 | 0.000 | 0.576 | 0.740 | -0.576 (regressed) | +0.165 (improved) |
+| knowledge_update_ndcg_any@5 | 0.000 | 0.537 | 0.720 | -0.537 (regressed) | +0.183 (improved) |
+| knowledge_update_ndcg_any@50 | 0.000 | 0.605 | 0.764 | -0.605 (regressed) | +0.160 (improved) |
+| knowledge_update_recall_all@10 | 0.000 | 0.597 | 0.806 | -0.597 (regressed) | +0.208 (improved) |
+| knowledge_update_recall_all@5 | 0.000 | 0.472 | 0.708 | -0.472 (regressed) | +0.236 (improved) |
+| knowledge_update_recall_all@50 | 0.000 | 0.764 | 0.944 | -0.764 (regressed) | +0.181 (improved) |
+| latest_gold_ranked_first | 0.000 | 0.571 | 0.514 | -0.571 (regressed) | -0.057 (regressed) |
+
+### reasoning (no_memory=not_measured, lexical_overlap=not_measured, agent_memory=not_measured)
+
+- agent_memory: upstream model-judged QA was not run
+- lexical_overlap: upstream model-judged QA was not run
+- no_memory: upstream model-judged QA was not run
+
+### governance (no_memory=not_applicable, lexical_overlap=not_applicable, agent_memory=measured)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| candidate_count_total | absent | absent | 1020398 | metric_missing | metric_missing |
+| refused_candidate_count_total | absent | absent | 0 | metric_missing | metric_missing |
+| unmapped_admitted_count_total | absent | absent | 0 | metric_missing | metric_missing |
+
+### efficiency (no_memory=partial, lexical_overlap=partial, agent_memory=partial)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| backend_wall_seconds | 58.991 | 77.262 | 6,891.3 | -18.271 (improved) | +6814.040 (regressed) |
+| ingest_seconds_total | absent | absent | 6,457.6 | metric_missing | metric_missing |
+| peak_rss_mb | not_measured | not_measured | not_measured | state_not_measured | state_not_measured |
+| recall_seconds_max | absent | absent | 1.045 | metric_missing | metric_missing |
+| recall_seconds_total | absent | absent | 341.322 | metric_missing | metric_missing |
+| store_size_bytes | not_measured | not_measured | not_measured | state_not_measured | state_not_measured |
+
+### evaluator_integrity (no_memory=not_measured, lexical_overlap=not_measured, agent_memory=not_measured)
+
+- agent_memory: evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run
+- lexical_overlap: evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run
+- no_memory: evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run
+
+### reproducibility (no_memory=measured, lexical_overlap=measured, agent_memory=measured)
+
+| metric | no_memory | lexical_overlap | agent_memory | Δ no_memory vs lexical_overlap | Δ agent_memory vs lexical_overlap |
+| --- | ---: | ---: | ---: | --- | --- |
+| agent_memory_worktree_clean | true | true | true | comparable_non_numeric | comparable_non_numeric |
+| execution_ingestion_failure_count | 0 | 0 | 0 | +0.000 (unchanged) | +0.000 (unchanged) |
+| execution_out_of_corpus_returned_count | 0 | 0 | 0 | +0.000 (unchanged) | +0.000 (unchanged) |
+| execution_runtime_failure_count | 0 | 0 | 0 | +0.000 (unchanged) | +0.000 (unchanged) |
 | input_sha256_bound | true | true | true | comparable_non_numeric | comparable_non_numeric |
 
 ## longmemeval — agent-memory-longmemeval-retrieval-currentness-v1:session

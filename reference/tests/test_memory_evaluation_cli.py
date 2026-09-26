@@ -112,7 +112,7 @@ class MemoryEvaluationCliTests(unittest.TestCase):
         )
         longmemeval = "agent-memory-longmemeval-retrieval-currentness-v1"
         self.assertEqual(statuses[(longmemeval, "longmemeval_s_cleaned")], "complete")
-        self.assertEqual(statuses[(longmemeval, "longmemeval_m_cleaned")], "not_run")
+        self.assertEqual(statuses[(longmemeval, "longmemeval_m_cleaned")], "complete")
         self.assertEqual(statuses[(longmemeval, "upstream_model_judged_qa")], "not_run")
         for profile in profiles.values():
             for item in profile["external_evidence"]:
