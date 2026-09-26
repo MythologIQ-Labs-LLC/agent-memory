@@ -1,0 +1,63 @@
+{
+  "adapter": {
+    "id": "agent-memory-public-governance-adapter",
+    "revision": "public-facade-governance-v1",
+    "version": "0.1.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "repository-owned disposable Agent Memory SQLite stores keyed by unique Gauntlet run namespace",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "classifier_authority_isolation": {"support": "unsupported"},
+    "deletion": {
+      "notes": "public AgentMemory.forget() governed pruning/non-resurrection semantics",
+      "support": "native"
+    },
+    "describe": {"support": "mapped"},
+    "durable_deletion": {
+      "notes": "runtime is restart-safe; alpha evaluator currently blocks GOV-DEL-002 until neutral restart lifecycle is bound",
+      "support": "native"
+    },
+    "foreign_cardinality_non_disclosure": {
+      "notes": "public contract 1.3.0 exposes only domain-eligible candidates; adapter reports only that caller-visible candidate count",
+      "support": "native"
+    },
+    "forget": {"support": "native"},
+    "health": {"support": "mapped"},
+    "recall": {"support": "native"},
+    "remember": {"support": "native"},
+    "reset": {
+      "notes": "adapter teardown of the disposable benchmark-owned SQLite store; not a native Agent Memory operation",
+      "support": "mapped"
+    },
+    "route_authority_isolation": {"support": "unsupported"},
+    "scope_isolation": {
+      "notes": "exercised through the public facade and canonical governed admission in one tenant",
+      "support": "native"
+    },
+    "source_trust": {"support": "unsupported"},
+    "tenant_isolation": {
+      "notes": "this adapter intentionally models one qualified local tenant and does not manufacture cross-tenant routing",
+      "support": "unsupported"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "fixture_role": "real_system_public_facade_conformance",
+    "provenance_class": "gauntlet_native_gap",
+    "trusted_fixture": true
+  },
+  "system": {
+    "id": "agent-memory-public-runtime",
+    "kind": "agent_memory",
+    "revision": "public-contract-1.3.0@f17991493e834b31b20559f893aad2ddb430e799",
+    "version": "1.3.0"
+  },
+  "transport": {
+    "callable": "agentmem_ref.evaluation.gauntlet_agent_memory:agent_memory_public_adapter",
+    "kind": "in_process"
+  }
+}
