@@ -26,7 +26,8 @@ from collections import defaultdict
 from pathlib import Path
 
 from agentmem_ref import AgentMemory
-from agentmem_ref.runtime import sqlite_runtime
+from agentmem_ref.runtime import runtime_composition, sqlite_runtime
+from agentmem_ref.runtime.adapter import GovernedMemoryAdapter
 from agentmem_ref.state.sqlite_substrate import SQLiteTemporalGraph
 
 COMPONENTS = {
@@ -41,6 +42,8 @@ COMPONENTS = {
     "runtime._validate_journal_tail": (sqlite_runtime, "_validate_journal_tail"),
     "runtime._governance_snapshot": (sqlite_runtime.SQLiteRestartSafeRuntime, "_governance_snapshot"),
     "runtime._persist_unlocked": (sqlite_runtime.SQLiteRestartSafeRuntime, "_persist_unlocked"),
+    "adapter._recall_decision": (GovernedMemoryAdapter, "_recall_decision"),
+    "composition.admit_preselected_candidates": (runtime_composition, "admit_preselected_candidates"),
 }
 
 
@@ -80,15 +83,29 @@ def _text(rng: random.Random, words: list[str], count: int) -> str:
     return " ".join(rng.choices(words, k=count))
 
 
-def measure(size: int, *, window: int, recalls: int, seed: int) -> dict:
+def _open(directory: str, scope: str) -> AgentMemory:
+    return AgentMemory.open(directory, tenant="tenant:scale", actor_id="agent:scale", scope=scope, purpose="scaling")
+
+
+def measure(size: int, *, window: int, recalls: int, seed: int, scopes: int = 1) -> dict:
+    """``scopes > 1`` spreads the store round-robin over that many isolation scopes and
+    measures from the first one, so most lexical matches belong to other scopes."""
+
     rng = random.Random(seed)
     words = [f"w{index}" for index in range(3000)]
     timers = Timers()
     present = timers.install()
+    candidate_counts: list[int] = []
+    admitted_counts: list[int] = []
     try:
         with tempfile.TemporaryDirectory() as directory:
-            with AgentMemory.open(directory, tenant="tenant:scale", actor_id="agent:scale", scope="benchmark:scale", purpose="scaling") as memory:
-                for index in range(size):
+            names = ["benchmark:scale"] if scopes == 1 else [f"benchmark:scale:{index}" for index in range(scopes)]
+            for scope_index, scope in enumerate(names[1:], start=1):
+                with _open(directory, scope) as other:
+                    for index in range(scope_index, size, scopes):
+                        other.remember(f"memory:{index}", _text(rng, words, 40))
+            with _open(directory, names[0]) as memory:
+                for index in range(0, size, scopes):
                     memory.remember(f"memory:{index}", _text(rng, words, 40))
                 write_times = []
                 timers.active = True
@@ -104,8 +121,10 @@ def measure(size: int, *, window: int, recalls: int, seed: int) -> dict:
                 recall_times = []
                 for _ in range(recalls):
                     start = time.perf_counter()
-                    memory.recall(_text(rng, words, 8))
+                    recalled = memory.recall(_text(rng, words, 8))
                     recall_times.append(time.perf_counter() - start)
+                    candidate_counts.append(len(recalled["candidates"]))
+                    admitted_counts.append(len(recalled["admitted"]))
                 recall_components = dict(timers.totals)
                 timers.active = False
     finally:
@@ -116,6 +135,7 @@ def measure(size: int, *, window: int, recalls: int, seed: int) -> dict:
 
     return {
         "facts_before_window": size,
+        "scopes": scopes,
         "write": {
             "ops": window,
             "median_ms": round(statistics.median(write_times) * 1000, 3),
@@ -127,6 +147,8 @@ def measure(size: int, *, window: int, recalls: int, seed: int) -> dict:
             "median_ms": round(statistics.median(recall_times) * 1000, 3),
             "mean_ms": round(statistics.fmean(recall_times) * 1000, 3),
             "components_mean_ms": per_op(recall_components, recalls),
+            "mean_candidates": round(statistics.fmean(candidate_counts), 2),
+            "mean_admitted": round(statistics.fmean(admitted_counts), 2),
         },
     }
 
@@ -137,6 +159,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--window", type=int, default=40)
     parser.add_argument("--recalls", type=int, default=20)
     parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument("--scopes", type=int, default=1, help="spread the store over N isolation scopes")
     parser.add_argument("--host-note", default="")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
@@ -148,8 +171,8 @@ def main(argv: list[str] | None = None) -> int:
         "schema": "agent-memory-write-recall-scaling/1",
         "revision": revision,
         "host": {"python": platform.python_version(), "machine": platform.machine(), "note": args.host_note},
-        "parameters": {"window": args.window, "recalls": args.recalls, "seed": args.seed, "words_per_fact": 40, "words_per_query": 8},
-        "results": [measure(size, window=args.window, recalls=args.recalls, seed=args.seed) for size in args.sizes],
+        "parameters": {"window": args.window, "recalls": args.recalls, "seed": args.seed, "scopes": args.scopes, "words_per_fact": 40, "words_per_query": 8},
+        "results": [measure(size, window=args.window, recalls=args.recalls, seed=args.seed, scopes=args.scopes) for size in args.sizes],
         "authority_effect": "none",
     }
     text = json.dumps(report, indent=2, sort_keys=True) + "\n"
