@@ -19,6 +19,7 @@ arithmetic replicate the bound upstream revision exactly:
 from __future__ import annotations
 
 import argparse
+import codecs
 import hashlib
 import json
 import math
@@ -30,7 +31,7 @@ import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable, Mapping, Sequence
+from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
 from benchmark_ranking_variants import VARIANTS, apply_ranking_variant
 from agentmem_ref import AgentMemory
@@ -40,7 +41,7 @@ UPSTREAM_REPOSITORY = "xiaowu0162/LongMemEval"
 UPSTREAM_REVISION = "9e0b455f4ef0e2ab8f2e582289761153549043fc"
 UPSTREAM_DATASET = "huggingface.co/datasets/xiaowu0162/longmemeval-cleaned"
 PROFILE_ID = "agent-memory-longmemeval-retrieval-currentness-v1"
-SCHEMA_VERSION = "2.0.0"
+SCHEMA_VERSION = "2.1.0"  # 2.1.0 (#568): streaming input, measured peak RSS; result semantics unchanged
 DEFAULT_FIXTURE = Path(__file__).resolve().parent / "fixtures" / "benchmarks" / "longmemeval" / "synthetic.json"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 KS = (1, 3, 5, 10, 30, 50)
@@ -55,23 +56,12 @@ _TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
 _DATE_RE = re.compile(r"(\d{4})[/-](\d{2})[/-](\d{2})(?:\D+(\d{2}):(\d{2}))?")
 
 
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
 def _tokens(text: str) -> frozenset[str]:
     return frozenset(token.lower() for token in _TOKEN_RE.findall(text) if len(token) > 1)
 
 
-def _load(path: Path) -> list[dict[str, Any]]:
-    value = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(value, list) or not value:
-        raise ValueError("LongMemEval input must be a non-empty JSON list")
-    required = {
+REQUIRED_FIELDS = frozenset(
+    {
         "question_id",
         "question_type",
         "question",
@@ -82,30 +72,213 @@ def _load(path: Path) -> list[dict[str, Any]]:
         "haystack_sessions",
         "answer_session_ids",
     }
+)
+READ_CHUNK_BYTES = 1 << 20
+# A single question larger than this (in decoded characters) is refused rather than
+# buffered without bound. LongMemEval_S questions are ~0.6 MB and _M ~6 MB.
+MAX_QUESTION_CHARS = 1 << 28
+_JSON_WHITESPACE = " \t\n\r"
+
+
+class InputStream:
+    """One bounded-memory pass over a LongMemEval JSON array (#568).
+
+    The input is read as raw bytes in chunks. Every byte read is fed to a SHA-256
+    digest, so the input identity is the digest of the source bytes themselves,
+    never of a parsed or re-serialized form. The bytes are decoded incrementally
+    as strict UTF-8, and each top-level array element is decoded by the standard
+    library ``json.JSONDecoder``, the same decoder ``json.loads`` uses. Only the
+    element being decoded and at most one unread chunk are resident.
+
+    The accepted grammar is exactly a single JSON array with optional JSON
+    whitespace around it. A byte-order mark, a non-array top-level value,
+    malformed or truncated elements, a missing separator, a trailing comma, and
+    any content after the closing bracket all fail closed.
+    """
+
+    def __init__(self, path: Path, *, chunk_bytes: int = READ_CHUNK_BYTES) -> None:
+        self.path = path
+        self.chunk_bytes = chunk_bytes
+        self.digest = hashlib.sha256()
+        self.bytes_read = 0
+        self.complete = False
+
+    def __iter__(self) -> Iterator[Any]:
+        decoder = json.JSONDecoder()
+        text = codecs.getincrementaldecoder("utf-8")(errors="strict")
+        with self.path.open("rb") as handle:
+            buffer = ""
+            pos = 0
+            eof = False
+
+            def fill(size: int) -> bool:
+                nonlocal buffer, pos, eof
+                if eof:
+                    return False
+                raw = handle.read(size)
+                self.digest.update(raw)
+                self.bytes_read += len(raw)
+                if not raw:
+                    eof = True
+                buffer = buffer[pos:] + text.decode(raw, final=eof)
+                pos = 0
+                return not eof
+
+            def peek() -> str:
+                # next non-whitespace character, or "" at end of input
+                nonlocal pos
+                while True:
+                    while pos < len(buffer) and buffer[pos] in _JSON_WHITESPACE:
+                        pos += 1
+                    if pos < len(buffer):
+                        return buffer[pos]
+                    if not fill(self.chunk_bytes):
+                        return ""
+
+            while not buffer and fill(self.chunk_bytes):
+                pass
+            if buffer.startswith("\ufeff"):
+                raise ValueError("LongMemEval input starts with a UTF-8 byte-order mark; JSON input must not")
+            if peek() != "[":
+                raise ValueError("LongMemEval input must be a non-empty JSON list")
+            pos += 1
+            index = 0
+            if peek() == "]":
+                pos += 1
+            else:
+                while True:
+                    if peek() == "":
+                        raise ValueError(f"LongMemEval input truncated before element {index}")
+                    want = self.chunk_bytes
+                    while True:
+                        try:
+                            value, end = decoder.raw_decode(buffer, pos)
+                            break
+                        except json.JSONDecodeError as exc:
+                            if len(buffer) - pos > MAX_QUESTION_CHARS:
+                                raise ValueError(
+                                    f"LongMemEval element {index} exceeds {MAX_QUESTION_CHARS} characters without completing"
+                                ) from exc
+                            if not fill(want):
+                                raise ValueError(f"LongMemEval element {index} is malformed or truncated: {exc}") from exc
+                            want = min(want * 2, 1 << 26)
+                    pos = end
+                    yield value
+                    index += 1
+                    separator = peek()
+                    if separator == ",":
+                        pos += 1
+                        continue
+                    if separator == "]":
+                        pos += 1
+                        break
+                    if separator == "":
+                        raise ValueError(f"LongMemEval input truncated after element {index - 1}")
+                    raise ValueError(f"LongMemEval input expected ',' or ']' after element {index - 1}, found {separator!r}")
+            if peek() != "":
+                raise ValueError("LongMemEval input has unexpected content after the closing ']'")
+        size = self.path.stat().st_size
+        if self.bytes_read != size:
+            raise ValueError(f"LongMemEval input changed while reading: read {self.bytes_read} of {size} bytes")
+        self.complete = True
+
+    def hexdigest(self) -> str:
+        if not self.complete:
+            raise ValueError("input digest requested before the whole input was consumed")
+        return self.digest.hexdigest()
+
+
+def _validate_row(index: int, raw: Any, seen: set[str]) -> dict[str, Any]:
+    if not isinstance(raw, dict):
+        raise ValueError(f"row {index} must be an object")
+    missing = REQUIRED_FIELDS.difference(raw)
+    if missing:
+        raise ValueError(f"row {index} missing fields: {sorted(missing)}")
+    question_id = str(raw["question_id"])
+    if question_id in seen:
+        raise ValueError(f"row {index} duplicates question_id {question_id!r}")
+    seen.add(question_id)
+    session_ids = [str(item) for item in raw["haystack_session_ids"]]
+    if not (len(session_ids) == len(raw["haystack_dates"]) == len(raw["haystack_sessions"])):
+        raise ValueError(f"row {index} haystack arrays must have equal length")
+    seen_sessions: dict[str, str] = {}
+    for session_id, session in zip(session_ids, raw["haystack_sessions"]):
+        content = json.dumps(session, sort_keys=True)
+        if seen_sessions.setdefault(session_id, content) != content:
+            raise ValueError(f"row {index} reuses session id {session_id!r} for different content")
+    if not set(str(item) for item in raw["answer_session_ids"]).issubset(session_ids):
+        raise ValueError(f"row {index} answer_session_ids must be present in haystack_session_ids")
+    return dict(raw)
+
+
+def iter_questions(stream: InputStream) -> Iterator[dict[str, Any]]:
+    """Validated questions in source order; validation is identical to the former whole-file loader."""
+
     seen: set[str] = set()
-    rows: list[dict[str, Any]] = []
-    for index, raw in enumerate(value):
-        if not isinstance(raw, dict):
-            raise ValueError(f"row {index} must be an object")
-        missing = required.difference(raw)
-        if missing:
-            raise ValueError(f"row {index} missing fields: {sorted(missing)}")
-        question_id = str(raw["question_id"])
-        if question_id in seen:
-            raise ValueError(f"row {index} duplicates question_id {question_id!r}")
-        seen.add(question_id)
-        session_ids = [str(item) for item in raw["haystack_session_ids"]]
-        if not (len(session_ids) == len(raw["haystack_dates"]) == len(raw["haystack_sessions"])):
-            raise ValueError(f"row {index} haystack arrays must have equal length")
-        seen_sessions: dict[str, str] = {}
-        for session_id, session in zip(session_ids, raw["haystack_sessions"]):
-            content = json.dumps(session, sort_keys=True)
-            if seen_sessions.setdefault(session_id, content) != content:
-                raise ValueError(f"row {index} reuses session id {session_id!r} for different content")
-        if not set(str(item) for item in raw["answer_session_ids"]).issubset(session_ids):
-            raise ValueError(f"row {index} answer_session_ids must be present in haystack_session_ids")
-        rows.append(dict(raw))
-    return rows
+    count = 0
+    for index, raw in enumerate(stream):
+        yield _validate_row(index, raw, seen)
+        count += 1
+    if count == 0:
+        raise ValueError("LongMemEval input must be a non-empty JSON list")
+
+
+def _load(path: Path) -> list[dict[str, Any]]:
+    """Materialize a (small) input. Benchmark runs stream instead; see ``run``."""
+
+    return list(iter_questions(InputStream(path)))
+
+
+def _question_summary(row: Mapping[str, Any]) -> dict[str, Any]:
+    session_ids = [str(item) for item in row["haystack_session_ids"]]
+    return {
+        "question_id": row["question_id"],
+        "abstention": is_abstention(row),
+        "no_user_target": not is_abstention(row) and not has_user_target(row),
+        "duplicate_session_ids": len(set(session_ids)) != len(session_ids),
+    }
+
+
+def _scan(path: Path) -> tuple[list[dict[str, Any]], InputStream]:
+    """Pass 1: validate every question and hash every byte, retaining only per-question summaries."""
+
+    stream = InputStream(path)
+    summaries = [_question_summary(row) for row in iter_questions(stream)]
+    return summaries, stream
+
+
+def _selected_questions(
+    path: Path, selected: Sequence[str], expected_sha256: str, passes: list[dict[str, Any]], label: str
+) -> Iterator[dict[str, Any]]:
+    """A later pass: yield the selected questions in source order, one resident at a time.
+
+    Rows were validated in pass 1; this pass re-hashes the bytes and fails closed if
+    they differ from pass 1, so every pass evaluates the same input identity.
+    """
+
+    wanted = set(selected)
+    stream = InputStream(path)
+    yielded: list[str] = []
+    for raw in stream:
+        question_id = raw.get("question_id") if isinstance(raw, dict) else None
+        if question_id in wanted:
+            yielded.append(str(question_id))
+            yield dict(raw)
+    digest = stream.hexdigest()
+    if digest != expected_sha256:
+        raise ValueError(f"input bytes changed between passes ({label}): {digest} != {expected_sha256}")
+    if yielded != [str(item) for item in selected]:
+        raise ValueError(f"pass {label} did not reproduce the selected question order")
+    passes.append({"pass": label, "bytes_read": stream.bytes_read, "sha256": digest})
+
+
+def _peak_rss_mb() -> float | None:
+    try:
+        import resource
+    except ImportError:  # pragma: no cover - non-POSIX
+        return None
+    peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return round(peak / (1024 * 1024) if sys.platform == "darwin" else peak / 1024, 1)
 
 
 def _subset(
@@ -472,7 +645,7 @@ def summarize(records: Sequence[Mapping[str, Any]], granularity: str) -> dict[st
     }
 
 
-def _evaluate_backend(dataset: Sequence[Mapping[str, Any]], granularity: str, backend: str) -> dict[str, Any]:
+def _evaluate_backend(dataset: Iterable[Mapping[str, Any]], granularity: str, backend: str) -> dict[str, Any]:
     retriever = RETRIEVERS[backend]
     rows: list[dict[str, Any]] = []
     started = time.perf_counter()
@@ -551,28 +724,44 @@ def run(
     include_agent_memory: bool = True,
 ) -> dict[str, Any]:
     started_at = datetime.now(timezone.utc)
-    dataset = _load(input_path)
     if max_questions is not None and subset_size is not None:
         raise ValueError("use either max_questions or subset_size, not both")
-    if max_questions is not None:
-        if max_questions < 1:
-            raise ValueError("max_questions must be >= 1")
-        selection = {"method": "source-order prefix", "size": min(max_questions, len(dataset)), "source_question_count": len(dataset)}
-        dataset = dataset[:max_questions]
-    else:
-        dataset, selection = _subset(dataset, size=subset_size, seed=subset_seed)
-    selection["question_ids_sha256"] = hashlib.sha256(
-        "\n".join(str(row["question_id"]) for row in dataset).encode("utf-8")
-    ).hexdigest()
+    if max_questions is not None and max_questions < 1:
+        raise ValueError("max_questions must be >= 1")
     selected_backends = [name for name in backends if include_agent_memory or name != "agent_memory"]
     for name in selected_backends:
         if name not in RETRIEVERS:
             raise ValueError(f"unknown backend {name!r}")
 
+    # Pass 1 streams and validates every question and hashes every source byte,
+    # keeping only per-question summaries. Selection runs on those summaries with
+    # the same rules as before; later passes stream the selected questions again,
+    # one resident at a time, and must reproduce the pass-1 digest (#568).
+    scan_started = time.perf_counter()
+    summaries, scan = _scan(input_path)
+    input_sha256 = scan.hexdigest()
+    scan_seconds = time.perf_counter() - scan_started
+    peak_rss_after_scan = _peak_rss_mb()
+    passes: list[dict[str, Any]] = [{"pass": "scan", "bytes_read": scan.bytes_read, "sha256": input_sha256}]
+    if max_questions is not None:
+        selection = {"method": "source-order prefix", "size": min(max_questions, len(summaries)), "source_question_count": len(summaries)}
+        chosen = summaries[:max_questions]
+    else:
+        chosen, selection = _subset(summaries, size=subset_size, seed=subset_seed)
+    selected_ids = [str(row["question_id"]) for row in chosen]
+    selection["question_ids_sha256"] = hashlib.sha256("\n".join(selected_ids).encode("utf-8")).hexdigest()
+
     planes: dict[str, Any] = {}
     for granularity in granularities:
         planes[granularity] = {
-            "backends": {backend: _evaluate_backend(dataset, granularity, backend) for backend in selected_backends}
+            "backends": {
+                backend: _evaluate_backend(
+                    _selected_questions(input_path, selected_ids, input_sha256, passes, f"{granularity}/{backend}"),
+                    granularity,
+                    backend,
+                )
+                for backend in selected_backends
+            }
         }
 
     finished_at = datetime.now(timezone.utc)
@@ -593,17 +782,15 @@ def run(
         },
         "input": {
             "path_name": input_path.name,
-            "sha256": _sha256(input_path),
-            "size_bytes": input_path.stat().st_size,
+            "sha256": input_sha256,
+            "sha256_scope": "raw source bytes, every byte read in each streaming pass; all passes must agree",
+            "size_bytes": scan.bytes_read,
             "corpus_class": corpus_class,
-            "question_count": len(dataset),
-            "abstention_question_count": sum(1 for row in dataset if is_abstention(row)),
-            "no_user_target_question_count": sum(
-                1 for row in dataset if not is_abstention(row) and not has_user_target(row)
-            ),
-            "duplicate_session_id_question_count": sum(
-                1 for row in dataset if len(set(map(str, row["haystack_session_ids"]))) != len(row["haystack_session_ids"])
-            ),
+            "source_question_count": len(summaries),
+            "question_count": len(chosen),
+            "abstention_question_count": sum(1 for row in chosen if row["abstention"]),
+            "no_user_target_question_count": sum(1 for row in chosen if row["no_user_target"]),
+            "duplicate_session_id_question_count": sum(1 for row in chosen if row["duplicate_session_ids"]),
             "duplicate_session_id_note": "upstream indexes each repeated haystack session as its own corpus item under "
             "the same id; this profile does the same (repeats must carry identical content)",
             "selection": selection,
@@ -616,7 +803,18 @@ def run(
             "backends": selected_backends,
             "granularities": list(granularities),
             "agent_memory_configuration": dict(_AGENT_MEMORY_CONFIGURATION),
-            "resource_consumption": "not_measured",
+            "resource_consumption": {
+                "method": "getrusage(RUSAGE_SELF).ru_maxrss; the process high-water mark, not attributable to one backend",
+                "peak_rss_mb_process": _peak_rss_mb(),
+                "peak_rss_mb_after_input_scan": peak_rss_after_scan,
+            },
+            "input_loading": {
+                "method": "streaming: incremental UTF-8 + json.JSONDecoder.raw_decode per top-level element (#568)",
+                "read_chunk_bytes": READ_CHUNK_BYTES,
+                "resident_questions_max": 1,
+                "scan_seconds": round(scan_seconds, 3),
+                "passes": passes,
+            },
         },
         "planes": planes,
         "comparability": {
