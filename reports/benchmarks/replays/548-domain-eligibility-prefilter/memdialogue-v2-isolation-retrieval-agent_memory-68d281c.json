@@ -1,0 +1,179 @@
+{
+  "backends": {
+    "agent_memory": {
+      "authority_effect": "none",
+      "boundary": "public AgentMemory facade; one tenant, one governed scope per upstream user_id; candidate generation followed by canonical governed admission; deletion = governed tombstone",
+      "governance": {
+        "isolation": {
+          "admitted_count": 500,
+          "candidate_count": 500,
+          "candidate_scopes": {
+            "domain_eligible": 100
+          },
+          "forget_calls": 0,
+          "forget_committed": 0,
+          "forget_outcomes": {},
+          "recall_calls": 100,
+          "refusal_reasons": {},
+          "remember_calls": 500,
+          "remember_committed": 500,
+          "remember_refusals": {}
+        },
+        "retrieval": {
+          "admitted_count": 9937,
+          "candidate_count": 9937,
+          "candidate_scopes": {
+            "domain_eligible": 1000
+          },
+          "forget_calls": 0,
+          "forget_committed": 0,
+          "forget_outcomes": {},
+          "recall_calls": 1000,
+          "refusal_reasons": {},
+          "remember_calls": 1000,
+          "remember_committed": 1000,
+          "remember_refusals": {}
+        }
+      },
+      "phase_errors": {},
+      "phase_wall_seconds": {
+        "isolation": 12.584,
+        "retrieval": 132.967
+      },
+      "phases": {
+        "isolation": {
+          "cross_user_leak_rate": 0.0,
+          "cross_user_queries": 100,
+          "facts_per_user": 5,
+          "users": 100
+        },
+        "retrieval": {
+          "exact_source_recall_at_k": 0.899,
+          "exact_source_recall_at_k_95ci": [
+            0.88,
+            0.918
+          ],
+          "exact_source_recall_by_event_type": {
+            "PERSONAL_FACT": 0.962,
+            "TASK_REQUEST": 0.836
+          },
+          "group_size": 10,
+          "metric_note": "exact_source_hit = the record's own memory text is among the top-k results for its query within its user group; profile-local and not the upstream LLM-judged recall",
+          "read_latency": {
+            "mean_ms": 100.55636809898851,
+            "n": 1000,
+            "p50_ms": 99.82630149988836,
+            "p95_ms": 139.91934825003224,
+            "p99_ms": 163.60752562966806
+          },
+          "records": 1000,
+          "top_k": 5,
+          "upstream_llm_judged_recall_at_k": "not_run",
+          "write_latency": {
+            "mean_ms": 32.33285237100745,
+            "n": 1000,
+            "p50_ms": 31.07162499986771,
+            "p95_ms": 61.22791464990768,
+            "p99_ms": 70.1118565197794
+          },
+          "write_success_rate": 1.0
+        }
+      },
+      "wall_seconds": 145.62
+    }
+  },
+  "claim_boundary": {
+    "aggregate_memory_health_score": "not_defined",
+    "answer_generation_quality_measured": false,
+    "benchmark_score_is_authority": false
+  },
+  "comparability": {
+    "latency_note": "local in-process latency; not comparable to upstream service-backed latency",
+    "reference_systems": "upstream Mem0/Graphiti/LangMem/Letta/Naive RAG results are not reproduced here",
+    "status": "bounded-operational-profile",
+    "upstream_llm_judged_retrieval": "not_run"
+  },
+  "dimensions": {
+    "concurrency": "phases.concurrency",
+    "deletion": "phases.deletion.audited_deletion_rate",
+    "governance": "governance (Agent Memory refusal/outcome tallies per phase)",
+    "isolation": "phases.isolation.cross_user_leak_rate",
+    "llm_portability": "not_exercised: no LLM backend is part of this profile",
+    "retrieval_quality": "phases.retrieval.exact_source_recall_at_k (deterministic, profile-local)",
+    "scale": "phases.scale",
+    "temporal_consistency": "phases.conflict",
+    "write_efficiency": "phases.retrieval.write_latency / write_success_rate"
+  },
+  "execution": {
+    "agent_memory_package_version": "0.2.0",
+    "agent_memory_ranking_variant": "default",
+    "agent_memory_revision": "68d281c0785a9f8104153eb415476c12a29a6357",
+    "agent_memory_worktree_dirty": false,
+    "backends": [
+      "agent_memory"
+    ],
+    "finished_at": "2026-09-26T14:29:49.202938+00:00",
+    "implementation": "CPython",
+    "numpy": "2.4.6",
+    "phases": [
+      "isolation",
+      "retrieval"
+    ],
+    "platform": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "python": "3.11.15",
+    "resource_consumption": {
+      "peak_rss_mb_process": 86.0
+    },
+    "started_at": "2026-09-26T14:27:23.458010+00:00",
+    "wall_seconds": 145.745
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "matches_upstream_release": true,
+    "path_name": "memdialogue_v2.jsonl",
+    "selection": {
+      "method": "upstream load_records: source-unique, event-type-stratified, numpy default_rng(seed)",
+      "records": 1000,
+      "seed": 2027,
+      "source_ids_sha256": "db563c1fc4251384577f698eda1efbad1e18ba119f6a9ed847c42e0d56261afa"
+    },
+    "sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "size_bytes": 7663311
+  },
+  "parameters": {
+    "concurrency_records": 200,
+    "conflict_pairs": 250,
+    "deletion_records": 200,
+    "group_size": 10,
+    "isolation_facts": 5,
+    "isolation_users": 100,
+    "retrieval_records": 1000,
+    "scale_read_queries": 200,
+    "scales": [
+      100,
+      1000
+    ],
+    "seed": 2027,
+    "top_k": 5,
+    "warmup_writes": 5,
+    "workers": [
+      1,
+      4,
+      8,
+      16
+    ]
+  },
+  "profile_id": "agent-memory-agentmembench-memdialogue-operational-v1",
+  "schema_version": "1.0.0",
+  "upstream": {
+    "code_license": "MIT",
+    "data_attribution": "MemDialogue is derived from WildChat-4.8M by the Allen Institute for AI.",
+    "data_license": "ODC-By-1.0",
+    "dataset": "data/memdialogue_v2.jsonl",
+    "dataset_sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "harness": "agentmembench/evaluation/unified_benchmark.py",
+    "harness_sha256": "d0d407129aa506f6eacbf6df19a26c1a9ddd000aa0bfb931cb4e4ae984e594df",
+    "repository": "mazaiying/AgentMemBench",
+    "revision": "186c9a54edd47aae42d8b6990520f8e902b60303"
+  }
+}
