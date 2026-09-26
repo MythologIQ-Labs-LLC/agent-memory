@@ -52,7 +52,14 @@ class _Fact:
 
 
 def _policy() -> PostAdmissionRankingPolicy:
-    return PostAdmissionRankingPolicy(policy_id="test", route_score_order=("lexical",), exact_identity_route="exact")
+    """The 2.x universal regime, kept so frozen 2.x evidence stays reproducible."""
+    return PostAdmissionRankingPolicy(
+        policy_id="test",
+        route_score_order=("lexical",),
+        exact_identity_route="exact",
+        temporal_regime="universal_newer_first",
+        stable_fallback="candidate_ref_asc",
+    )
 
 
 class PolicyUnitTests(unittest.TestCase):
@@ -90,7 +97,11 @@ class PolicyUnitTests(unittest.TestCase):
 
     def test_temporal_tiebreak_can_be_disabled_explicitly(self):
         policy = PostAdmissionRankingPolicy(
-            policy_id="no-time", route_score_order=("lexical",), exact_identity_route="exact", temporal_tiebreak="none"
+            policy_id="no-time",
+            route_score_order=("lexical",),
+            exact_identity_route="exact",
+            temporal_regime="none",
+            stable_fallback="candidate_ref_asc",
         )
         hits = {ref: [_Hit("lexical", 0.5)] for ref in ("ref-0001", "ref-0002")}
         facts = {"ref-0001": _Fact(valid_at="2026-01-01T00:00:01Z"), "ref-0002": _Fact(valid_at="2026-01-02T00:00:00Z")}
@@ -98,14 +109,17 @@ class PolicyUnitTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             PostAdmissionRankingPolicy(policy_id="x", route_score_order=("a", "a"), exact_identity_route="e")
         with self.assertRaises(ValueError):
-            PostAdmissionRankingPolicy(policy_id="x", route_score_order=("a",), exact_identity_route="e", temporal_tiebreak="oldest")
+            PostAdmissionRankingPolicy(policy_id="x", route_score_order=("a",), exact_identity_route="e", temporal_regime="oldest")
 
     def test_policy_identity_is_explicit_and_authority_neutral(self):
         identity = MULTI_ROUTE_RANKING_POLICY.identity()
         self.assertEqual(identity["policy_id"], "multi-route-default")
         self.assertEqual(identity["authority_effect"], "none")
         self.assertFalse(identity["route_scores_cross_comparable"])
-        self.assertEqual(identity["stages"][-2:], ["temporal_evidence:newer_first", "candidate_ref_asc"])
+        self.assertEqual(identity["temporal_regime"], "query_conditioned")
+        self.assertEqual(identity["stages"][0], "temporal_applicability_tier")
+        self.assertEqual(identity["stages"][-2:], ["temporal_order_within_query_regime", "candidate_ref_neutral_digest"])
+        self.assertEqual(identity["metabolic_evidence"], "not_used")
         self.assertIn("lexical_relevance_desc:bm25_admitted_set:lexical", identity["stages"])
         self.assertEqual(identity["lexical_relevance_statistics_scope"], "admitted_set")
         self.assertEqual(identity["bm25_parameters"], {"k1": 1.2, "b": 0.75})
@@ -184,7 +198,15 @@ class FacadeRankingTests(unittest.TestCase):
             old_evidence = recalled["admissions"][old["fact_uuid"]]["ranking_evidence"]
             new_evidence = recalled["admissions"][new["fact_uuid"]]["ranking_evidence"]
             self.assertEqual(old_evidence["route_scores"], new_evidence["route_scores"])
-            self.assertGreater(new_evidence["temporal_seconds"], old_evidence["temporal_seconds"])
+            # "current" is a high-confidence cue, so newer transaction time orders the tie.
+            self.assertEqual(new_evidence["query_temporal_intent"]["mode"], "current")
+            self.assertEqual(new_evidence["temporal_ordering_clock"], "transaction_time")
+            self.assertEqual(old_evidence["temporal_applicability"], "unknown_temporal_basis")
+            self.assertEqual(
+                old_evidence["temporal_evidence"]["clocks"]["transaction_time"]["seconds"]
+                < new_evidence["temporal_evidence"]["clocks"]["transaction_time"]["seconds"],
+                True,
+            )
             self.assertEqual(new_evidence["policy_id"], "multi-route-default")
             self.assertEqual(new_evidence["authority_effect"], "none")
             # Ranking is not supersession: both facts stay current and admitted.

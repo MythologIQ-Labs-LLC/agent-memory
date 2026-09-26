@@ -853,6 +853,7 @@ class RestartSafeRuntime:
         *,
         evidence=None,
         attestation=None,
+        temporal=None,
     ):
         """Forward the governed commit, including the qualified-evidence channel.
 
@@ -864,7 +865,7 @@ class RestartSafeRuntime:
         `verifiers=` parameter here either.
         """
         result = self.adapter.commit_proposal(
-            proposal, fact_text, episode, evidence=evidence, attestation=attestation
+            proposal, fact_text, episode, evidence=evidence, attestation=attestation, temporal=temporal
         )
         self.checkpoint()
         return result

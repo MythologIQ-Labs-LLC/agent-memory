@@ -29,6 +29,7 @@ import re
 
 from .adapter import RecallContext
 from .contextual_recall_adapter import admit_preselected_candidates
+from .temporal_intent import resolve_intent
 from .ranking_policy import PostAdmissionRankingPolicy
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
@@ -122,6 +123,7 @@ class DeterministicQueryDrivenRecallPlanner:
         context: RecallContext,
         *,
         logical_memory_refs: tuple[str, ...] = (),
+        temporal_intent=None,
     ) -> MultiRouteRecallResult:
         substrate = self.adapter.checkpoint_substrate()
         tenant = self.adapter.checkpoint_tenant()
@@ -204,11 +206,13 @@ class DeterministicQueryDrivenRecallPlanner:
             context,
             query_label=query,
         )
+        intent = resolve_intent(query, temporal_intent)
         ranked, ranking_evidence = QUERY_DRIVEN_RANKING_POLICY.rank(
             admission.admitted,
             by_candidate,
             substrate.get_fact,
             query=query,
+            intent=intent,
         )
         return MultiRouteRecallResult(
             query=query,
@@ -223,6 +227,7 @@ class DeterministicQueryDrivenRecallPlanner:
             evaluated_at=admission.evaluated_at,
             ranking_policy=QUERY_DRIVEN_RANKING_POLICY.identity(),
             ranking_evidence=ranking_evidence,
+            query_temporal_intent=intent.to_dict(),
         )
 
     def _expand_seed(

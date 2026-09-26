@@ -76,7 +76,11 @@ class LoCoMoEvidenceBenchmarkTests(unittest.TestCase):
         #   the query), so D2:2 ranked first and the MRR delta fell to -0.083333.
         # - 2.1.0 orders the lexical stage by Okapi BM25 over the admitted set. D2:1 now
         #   wins on relevance, not on tie order, and the MRR delta is +0.027778.
-        self.assertAlmostEqual(report["comparison"]["mean_reciprocal_rank_delta"], 0.027778)
+        # - 3.0.0 applies temporal order only under an established temporal intent (#538,
+        #   ADR-039 proposed). The pottery question is atemporal; its gold D1:3 had reached
+        #   rank 4 under 2.x only because it was newer than equally scored distractors. That
+        #   coincidental gain is gone, and the MRR delta is +0.011111.
+        self.assertAlmostEqual(report["comparison"]["mean_reciprocal_rank_delta"], 0.011111)
         weekend = next(
             row
             for row in report["query_driven_multi_route"]["questions"]

@@ -260,6 +260,44 @@ def interpret_query(query: str, *, reference_time: str | None = None) -> Tempora
                           expected_recall_shape=shape, evidence=evidence)
 
 
+DECLARED_TEMPORAL_KEY = "declared_temporal"
+_DECLARED_FIELDS = ("valid_from", "valid_until", "observed_at")
+
+
+def declared_temporal(value: Mapping[str, Any] | None) -> dict[str, str] | None:
+    """Validate caller-declared temporal evidence for a write.
+
+    ``valid_from``/``valid_until`` declare when the proposition applies (valid time);
+    ``observed_at`` declares when it was observed. They are recorded as the caller's
+    claim (``basis = caller_declared``). They are evidence for applicability, not
+    lifecycle: an elapsed ``valid_until`` never refuses the fact at admission, never
+    supersedes another fact, and never changes currentness state.
+    """
+
+    if not value:
+        return None
+    if value.get("basis", "caller_declared") != "caller_declared":
+        raise ValueError("declared temporal basis must be caller_declared")
+    unknown = set(value) - set(_DECLARED_FIELDS) - {"basis"}
+    if unknown:
+        raise ValueError(f"unknown declared temporal fields: {sorted(unknown)}")
+    declared: dict[str, str] = {}
+    for key in _DECLARED_FIELDS:
+        raw = value.get(key)
+        if raw is None:
+            continue
+        if parse_time(raw) is None:
+            raise ValueError(f"declared {key} {raw!r} is not ISO-8601")
+        declared[key] = str(raw)
+    start, end = parse_time(declared.get("valid_from")), parse_time(declared.get("valid_until"))
+    if start is not None and end is not None and end <= start:
+        raise ValueError("declared valid_until must be after valid_from")
+    if not declared:
+        return None
+    declared["basis"] = "caller_declared"
+    return declared
+
+
 def resolve_intent(
     query: str,
     temporal_intent: Mapping[str, Any] | TemporalIntent | None = None,
@@ -276,5 +314,5 @@ def resolve_intent(
 __all__ = [
     "AS_OF", "ATEMPORAL", "CURRENT", "HISTORICAL", "PROSPECTIVE", "MODES", "RANKED", "TIMELINE",
     "EXPLICIT", "INFERRED", "UNSPECIFIED", "HIGH", "LOW", "INTERPRETER_REF", "INTERPRETER_VERSION",
-    "TemporalIntent", "explicit_intent", "interpret_query", "parse_time", "resolve_intent",
+    "DECLARED_TEMPORAL_KEY", "TemporalIntent", "declared_temporal", "explicit_intent", "interpret_query", "parse_time", "resolve_intent",
 ]
