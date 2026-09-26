@@ -75,7 +75,7 @@ Current implementation characteristics include:
 - `synchronous=FULL`;
 - foreign-key enforcement;
 - canonical episodes and facts stored directly in SQLite;
-- deterministic lexical candidate generation and provenance-neighbor lookup on the native substrate;
+- deterministic lexical candidate generation and provenance-neighbor lookup on the native substrate, restricted to domain-eligible facts before tokenization (#548; a minimization boundary, never permission);
 - durable substrate-scoped identifier progress;
 - explicit transactions using `BEGIN IMMEDIATE`;
 - runtime-state and generation-journal storage;

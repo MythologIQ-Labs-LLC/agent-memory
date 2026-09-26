@@ -1,6 +1,10 @@
 # Repository Governance
 
-Agent Memory is a public reference architecture with one canonical doctrine tree, not a collection of equally authoritative implementation opinions.
+Agent Memory is the canonical repository for a governed memory product/runtime, its architecture and doctrine, and its evaluation/benchmark laboratory.
+
+It is not a collection of equally authoritative implementation opinions, and it is no longer accurately described as only a reference architecture.
+
+The repository operating model is defined in [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md).
 
 ## Stewardship and maintainer
 
@@ -9,6 +13,30 @@ The repository is stewarded by **MythologIQ Labs LLC** through `MythologIQ-Labs-
 The current repository maintainer and doctrine owner is **Kevin R. Knapp** (`@Knapp-Kevin`). Organization stewardship does not rewrite individual authorship provenance.
 
 PAMA is native Agent Memory doctrine authored by Kevin R. Knapp. External implementations may conform to, challenge, or extend the doctrine through the contribution process, but they do not acquire doctrine ownership by implementing it.
+
+## Repository roles
+
+Agent Memory currently operates in three first-class roles:
+
+```text
+product/runtime
+architecture/governance laboratory
+evaluation/benchmark laboratory
+```
+
+Each role may produce evidence that affects the others, but no role grants itself authority automatically.
+
+### Product/runtime
+
+The repository contains an installed developer-facing runtime and qualified bounded execution profiles. Runtime behavior can falsify architecture assumptions and may require doctrine clarification, but an implementation shortcut does not become canonical doctrine merely because it shipped.
+
+### Architecture/governance laboratory
+
+The repository remains the canonical home for Agent Memory architecture, ADRs, PAMA, lifecycle/currentness semantics, and authority boundaries. Canonical means decision-owning, not immune from challenge.
+
+### Evaluation/benchmark laboratory
+
+The repository contains benchmark adapters, frozen evidence, evaluator-integrity probes, common evidence contracts, normalized manifests, comparisons, and scorecards. Benchmark results are evidence about measured behavior, never memory authority and never automatic doctrine changes.
 
 ## AI-assisted contribution authority
 
@@ -41,9 +69,9 @@ Examples:
 - corrected links;
 - non-semantic navigation improvements.
 
-These should not change doctrine meaning.
+These should not change doctrine, product contract, benchmark denominator, or evidence meaning.
 
-### Evidence
+### Evidence / evaluation
 
 Examples:
 
@@ -52,9 +80,24 @@ Examples:
 - source-rights records;
 - implementation mappings;
 - adversarial fixtures;
-- runtime evidence.
+- runtime evidence;
+- evaluator-integrity probes;
+- normalized benchmark manifests and scorecards.
 
-Evidence may support, challenge, or narrow existing doctrine. Adding evidence does not automatically change an ADR.
+Evidence may support, challenge, or narrow existing doctrine or product assumptions. Adding evidence does not automatically change an ADR or runtime contract.
+
+### Product / runtime
+
+Examples:
+
+- developer-facing behavior;
+- recall/ranking changes;
+- lifecycle execution;
+- persistence and recovery behavior;
+- substrate implementation;
+- runtime concurrency or scaling changes.
+
+Product changes require tests and contract compatibility analysis where applicable. When the change remediates a benchmark-discovered defect, the relevant frozen benchmark should be replayed when valid and practical.
 
 ### Contract
 
@@ -65,7 +108,8 @@ Examples:
 - conformance-level changes;
 - adapter contracts;
 - telemetry/interchange contracts;
-- PAMA machine-readable interfaces.
+- PAMA machine-readable interfaces;
+- benchmark-run evidence contracts.
 
 Contract changes require compatibility analysis and validation updates.
 
@@ -75,7 +119,8 @@ Examples:
 
 - changing an architectural invariant;
 - changing the meaning of PAMA authority classes;
-- changing lifecycle semantics;
+- changing lifecycle or currentness semantics;
+- changing the relationship between ranking, admission, and authority;
 - accepting, superseding, or rejecting an ADR.
 
 Doctrine changes require explicit rationale, affected-surface analysis, evidence, and a preserved decision trail.
@@ -94,9 +139,12 @@ Where material, distinguish:
 
 ```text
 native doctrine
+product contract
+implementation
 external evidence
-implementation observation
 conformance evidence
+benchmark evidence
+field evidence
 runtime proof
 hypothesis
 analogy
@@ -106,38 +154,106 @@ Native authorship establishes provenance and repository ownership of a decision.
 
 A validator passing is evidence about the validator's declared contract. It is not automatic proof of production behavior.
 
+## Benchmark and evaluation governance
+
+Evaluation is governed by the same evidence discipline as the rest of the repository.
+
+Required invariants include:
+
+```text
+benchmark score != truth
+benchmark score != recall admission
+benchmark score != mutation authority
+benchmark result != doctrine automatically
+benchmark improvement != production readiness
+implementation evidence != doctrine acceptance
+```
+
+An ADR proposal may be merged as **Proposed** so that it can be reviewed, tested, and challenged in-tree. Merging a proposal does not accept it. Acceptance (`Proposed -> Accepted`) is a separate maintainer ruling on the recorded evidence, and it is never implied by an implementation landing or a benchmark improving. For example, ADR-039 is Proposed while its reference profile is implemented behind policy 3.0.0.
+
+Benchmark adapters and reports must preserve exact revision/input/configuration identity where comparability depends on them.
+
+Missing or blocked evidence must remain visibly missing or blocked. `not_run`, `not_measured`, `not_applicable`, and `blocked` must not be silently converted to zero.
+
+A benchmark harness change must not silently alter product behavior. A product remediation must not silently alter the benchmark denominator, frozen input, or evaluator semantics used to prove the before/after result.
+
+### Benchmark-discovered defects
+
+When an external or internal benchmark exposes a material defect, the preferred learning loop is:
+
+```text
+observation
+  -> classify the failure
+  -> open a bounded product/architecture/evaluation issue
+  -> remediate
+  -> replay the same frozen workload where valid
+  -> record improvement, regression, and remaining limitations
+```
+
+A benchmark-discovered defect should not be closed only because focused unit tests pass when the originating workload can directly exercise the repaired path.
+
+One benchmark finding may be a hypothesis. Convergence across independent benchmark families is stronger evidence of a general product or architecture weakness.
+
+No benchmark-specific special case may enter runtime behavior solely to improve a score.
+
+## Architecture-learning governance
+
+The repository is allowed to evolve its architecture in response to evidence. It is not allowed to rewrite architecture reflexively whenever a metric is red.
+
+Before promoting a benchmark or field observation into doctrine, identify whether the evidence indicates:
+
+```text
+architecture validated
+implementation defect
+architecture gap
+runtime/product contract gap
+evaluation defect or gap
+benchmark mismatch / non-applicable assumption
+inconclusive result
+```
+
+The smallest defensible remediation is preferred over broad architecture replacement unless evidence demonstrates the existing boundary itself is wrong.
+
 ## Public-source and reuse-rights rule
 
 Contributors must follow `docs/SOURCE_RIGHTS_POLICY.md`.
 
 Public availability does not imply permission to copy expressive material. External sources should normally be linked and independently synthesized unless a stronger reuse basis is both necessary and documented.
 
+Benchmark datasets and reference implementations retain their own licenses and attribution requirements. Frozen input identity does not imply redistribution permission.
+
 ## Merge expectations
 
 A change is merge-ready when:
 
-1. the intended consequence is explicit;
-2. affected doctrine and contracts are internally consistent;
+1. the intended consequence and principal change class are explicit;
+2. affected doctrine, product behavior, benchmark semantics, and contracts are internally consistent;
 3. source provenance and reuse rights are resolved;
 4. tests/validators relevant to the change pass;
 5. repository authority for any agent-executed action is bounded and accountable;
 6. any explicitly active contribution-provenance requirement is satisfied;
 7. the PR distinguishes what it proves from what remains unproven;
-8. material disagreement is either resolved or recorded rather than silently erased.
+8. material disagreement is either resolved or recorded rather than silently erased;
+9. benchmark-discovered defect remediations include before/after replay evidence when that workload can validly exercise the fix;
+10. documentation surfaces that would otherwise become misleading are updated in the same change or explicitly tracked.
 
 Where a task specifies exact-head validation, that validated head is the merge boundary. A later head must be revalidated rather than inheriting trust from an earlier result.
 
 ## Implementation neutrality
 
-Named products and repositories appear in Agent Memory only when they add a concrete implementation, comparison, interoperability, or conformance value.
+Named products and repositories appear in Agent Memory only when they add a concrete implementation, comparison, interoperability, ancestry, or conformance value.
 
 Conceptual adjacency does not create architectural ownership.
+
+EvolveAI, CodeGenome, COREFORGE, UOR-derived mechanisms, Jev/Jev-Mem, and other peers may contribute mechanisms or evidence without becoming mandatory runtime dependencies. Generic memory behavior implemented natively here remains owned by Agent Memory unless an explicit architectural decision states otherwise.
 
 ## Security-sensitive changes
 
 Security-sensitive findings should follow `SECURITY.md`. Do not force public disclosure merely to satisfy normal issue-tracking ceremony.
 
 AI assistance does not reduce the review bar for cryptography, authentication, authorization, policy enforcement, isolation boundaries, provenance, destructive lifecycle actions, or other security-sensitive surfaces. Independent validation is required when self-referential tests could mask an implementation error.
+
+Benchmark pressure is never justification for weakening a security or governance boundary without an explicit architecture/governance decision.
 
 ## Forks and derivative works
 
