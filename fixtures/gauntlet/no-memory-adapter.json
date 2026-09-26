@@ -1,0 +1,47 @@
+{
+  "adapter": {
+    "id": "gauntlet-no-memory-in-process",
+    "revision": "builtin-no-memory-v1",
+    "version": "0.1.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "repository-owned baseline fixture state keyed by unique Gauntlet run id",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "describe": {
+      "support": "native"
+    },
+    "health": {
+      "support": "native"
+    },
+    "recall": {
+      "notes": "returns an empty candidate set by design",
+      "support": "native"
+    },
+    "remember": {
+      "notes": "accepts probe writes but intentionally retains nothing",
+      "support": "native"
+    },
+    "reset": {
+      "support": "native"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "provenance_class": "baseline_or_probe",
+    "trusted_fixture": true
+  },
+  "system": {
+    "id": "gauntlet-no-memory-baseline",
+    "kind": "no_memory",
+    "revision": "builtin-no-memory-v1",
+    "version": "0.1.0"
+  },
+  "transport": {
+    "callable": "agentmem_ref.evaluation.gauntlet_baselines:no_memory_adapter",
+    "kind": "in_process"
+  }
+}
