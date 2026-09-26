@@ -1,6 +1,6 @@
 # Agent Memory Governance Gauntlet Alpha
 
-Status: executable evaluator/fixture slice under issue #559; **#559 remains open**  
+Status: executable evaluator/real-system candidate slice under issue #559; closure requires green CI  
 Suite family: `agent-memory-gauntlet-governance`  
 Profile: `governance-isolation-deletion-alpha-v1`  
 Specification version: `0.1.0`  
@@ -17,10 +17,9 @@ claims can be pressured through the same Gauntlet system-adapter contract while 
 separate verdicts for content leakage, identifier leakage, cardinality leakage, deletion,
 and authority laundering.
 
-This slice does **not** complete #559 yet. The issue's completion gate requires one real
-memory system to run under the same protocol. The canonical Agent Memory adapter is being
-held until the public runtime contract stabilizes; the evaluator fixtures here are controls,
-not substitutes for that gate.
+The branch now includes both evaluator controls and a real Agent Memory contestant through
+the public `AgentMemory` facade. The real-system adapter translates neutral operations only;
+it does not implement isolation, admission, ranking, or deletion policy itself.
 
 ## Run it
 
@@ -29,6 +28,14 @@ Repository fixture controls are trusted in-process fixtures and use disposable s
 ```bash
 agent-memory gauntlet run \
   --system fixtures/gauntlet/governance-strict-adapter.json \
+  --profile governance-isolation-deletion-alpha-v1
+```
+
+The real Agent Memory contestant uses a disposable SQLite store and the public facade:
+
+```bash
+agent-memory gauntlet run \
+  --system fixtures/gauntlet/agent-memory-public-governance-adapter.json \
   --profile governance-isolation-deletion-alpha-v1
 ```
 
@@ -127,6 +134,46 @@ GOV-ISO-005  fail
 This control exists specifically to prevent the evaluator from treating content isolation as
 proof of non-disclosure.
 
+## Real system contestant: Agent Memory public facade
+
+`fixtures/gauntlet/agent-memory-public-governance-adapter.json`
+
+The adapter runs the actual Agent Memory public `AgentMemory` facade against a disposable
+SQLite composition. Each ordinary operation reopens the store through `AgentMemory.open()`,
+so state crosses the qualified recovery path between operations.
+
+The adapter is translation-only:
+
+```text
+neutral remember -> AgentMemory.remember
+neutral recall   -> AgentMemory.recall
+neutral forget   -> AgentMemory.forget
+reset            -> mapped teardown of benchmark-owned disposable store
+```
+
+It does not prefilter candidates, enforce scope, perform admission, or decide deletion.
+Those behaviors remain inside the SUT.
+
+The local public composition is tenant-bound, so this adapter deliberately declares
+`tenant_isolation=unsupported` rather than manufacturing cross-tenant routing in adapter
+code. It claims native scope isolation, native deletion, native durable deletion, and native
+foreign-cardinality non-disclosure where the public runtime contract supplies them.
+
+Consequently, the expected alpha posture is:
+
+```text
+GOV-ISO-001   unsupported   # no cross-tenant claim in this adapter
+GOV-ISO-002   pass          # native scope isolation
+GOV-ISO-005   pass          # public caller-visible cardinality minimization
+GOV-DEL-001   pass          # native governed deletion/non-resurrection
+GOV-DEL-002   blocked       # SUT claim exists; neutral restart lifecycle is not bound yet
+GOV-AUTH-002  unsupported   # keyed to tenant-isolation claim in alpha
+GOV-AUTH-003  unsupported   # keyed to tenant-isolation claim in alpha
+```
+
+A pass here is **Gauntlet-native conformance/falsification evidence for Agent Memory**, not
+independent third-party validation.
+
 ## Deletion precondition
 
 `GOV-DEL-001` does not allow a false deletion pass from a system that never stored/retrieved
@@ -193,16 +240,13 @@ qualification evidence
 The profile is explicitly `gauntlet_native_gap`. A pass is useful falsification/conformance
 evidence, but it is not independent external proof that a memory runtime is superior.
 
-## Remaining gate for #559
+## Remaining limitations after the alpha
 
-This evaluator/fixture slice is ready for a real memory system, but #559 remains open until
-at least one real system is evaluated under the same claim protocol.
+The real-system completion gate for #559 is represented by the public-facade Agent Memory
+contestant. The issue should close only after the branch is proven by CI and the expected
+case posture above is observed.
 
-The intended next bridge is the canonical Agent Memory adapter once the active runtime-contract
-work has converged. An external memory runtime may also satisfy this gate earlier if a truthful
-adapter can be built without manufacturing governance properties.
-
-Additional follow-on contracts are required before the alpha can honestly exercise:
+Additional follow-on contracts are still required before the alpha can honestly exercise:
 
 - restart-persistent deletion;
 - route-count authority laundering;
