@@ -70,7 +70,21 @@ class LoCoMoEvidenceBenchmarkTests(unittest.TestCase):
             lexical["at_k"]["5"]["micro_recall"],
         )
         self.assertEqual(multi["at_k"]["5"]["micro_recall"], 1.0)
-        self.assertGreater(report["comparison"]["mean_reciprocal_rank_delta"], 0.0)
+        # Ranking policy 2.0.0 (#538/#531) breaks exact relevance ties newer-first instead of
+        # by ascending insertion id. On "What two things did the friends plan for the
+        # weekend?" gold D2:1 and non-gold D2:2 tie on every relevance stage (two routes,
+        # identical lexical and shared-evidence scores: each shares one stopword with the
+        # query), so D2:2 (newer) now ranks first and that question's reciprocal rank falls
+        # from 1.0 to 0.5. The earlier positive MRR delta depended on that arbitrary tie
+        # order. It is recorded as a known regression on this fixture, not hidden; the
+        # coarse lexical scoring that creates the tie is owned by #538.
+        self.assertAlmostEqual(report["comparison"]["mean_reciprocal_rank_delta"], -0.083333)
+        weekend = next(
+            row
+            for row in report["query_driven_multi_route"]["questions"]
+            if row["question"] == "What two things did the friends plan for the weekend?"
+        )
+        self.assertEqual(weekend["ranked_dialog_ids"][:2], ["D2:2", "D2:1"])
         self.assertEqual(report["governance"]["query_driven_refusal_count"], 0)
         self.assertEqual(report["governance"]["route_authority_effect_violations"], 0)
 
