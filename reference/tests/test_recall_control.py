@@ -23,6 +23,9 @@ from agentmem_ref.runtime_composition import (
 from agentmem_ref.runtime_config import validate_runtime_configuration
 
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "reference" / "fixtures" / "runtime-configuration" / "reference-composed-runtime.json"
 TENANT = "tenant-recall-control"
@@ -205,6 +208,8 @@ class RecallControlTests(unittest.TestCase):
             if hit.route_id == SHARED_EVIDENCE_ROUTE
         ]
         self.assertEqual(len(relation_hits), 1)
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_controller_cannot_authorize_cross_project_neighbor(self) -> None:
         self._retain(

@@ -16,6 +16,9 @@ from agentmem_ref.runtime_composition import (
 from agentmem_ref.runtime_config import validate_runtime_configuration
 
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "reference" / "fixtures" / "runtime-configuration" / "reference-composed-runtime.json"
 TENANT = "tenant-acme"
@@ -164,6 +167,8 @@ class SharedEvidenceNeighborRecallTests(unittest.TestCase):
         self.assertEqual(len(hits), 1)
         self.assertEqual(hits[0].shared_evidence_refs, shared)
         self.assertEqual(hits[0].raw_score, 1.0)
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_cross_project_related_candidate_is_still_refused(self) -> None:
         shared = ("experience:cross-project",)

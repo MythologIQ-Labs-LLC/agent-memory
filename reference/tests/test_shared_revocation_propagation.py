@@ -19,6 +19,9 @@ from agentmem_ref.shared_revocation import (  # noqa: E402
 )
 from agentmem_ref.substrate import InMemoryTemporalGraph  # noqa: E402
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 TENANT = "tenant-a"
 SHARED = "domain:shared-security"
 AGGREGATE = "domain:security-aggregate"
@@ -116,6 +119,8 @@ class SharedRevocationPropagationTests(unittest.TestCase):
         )
         self.assertTrue(result.committed)
         self.assertEqual(result.decision.outcome, policy.REQUIRE_EXTERNAL_VERIFICATION)
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_revocation_blocks_future_shared_recall_and_invalidates_broader_derived_scope(self):
         before = self.adapter.governed_recall(

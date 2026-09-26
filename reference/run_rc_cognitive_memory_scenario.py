@@ -307,8 +307,9 @@ def run_scenario(agent_memory_revision: str) -> dict:
             and corrected_primary in final_primary_recall_s["admitted"]
             and secondary_fact not in final_secondary_recall_s["admitted"]
         ),
+        # Contract 1.3.0 (#548): the wrong-scope match is not even a candidate.
         "wrong_scope_candidate_never_admitted": (
-            corrected_primary in wrong_scope_s["candidates"]
+            corrected_primary not in wrong_scope_s["candidates"]
             and corrected_primary not in wrong_scope_s["admitted"]
         ),
         "confidence_does_not_widen_authority": (

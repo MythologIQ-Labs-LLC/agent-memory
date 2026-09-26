@@ -20,6 +20,9 @@ from agentmem_ref.restart_runtime import (
     RuntimeRecoveryError,
 )
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 TENANT = "tenant:multi-memory"
 PROJECT = "project:multi-memory"
 PURPOSE = "release-planning"
@@ -375,6 +378,8 @@ class SemanticEpistemicCompositionTests(unittest.TestCase):
                 available_components=("DifferentEpistemicProvider",),
                 verifier_registry=self.registry,
             )
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_wrong_project_is_refused_for_both_memory_forms_after_restart(self) -> None:
         runtime = self._runtime()

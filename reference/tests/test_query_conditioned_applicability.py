@@ -174,8 +174,8 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.memory = _open(self._temp.name)
         recalled = self.memory.recall("What is the current project status?", reference_time=NOW)
         self.assertNotIn(foreign_fact, recalled["admitted"])
-        self.assertIn("refusal", recalled["admissions"][foreign_fact])
-        self.assertNotIn("ranking_evidence", recalled["admissions"][foreign_fact])
+        self.assertNotIn(foreign_fact, recalled["candidates"])  # contract 1.3.0 (#548)
+        self.assertNotIn(foreign_fact, recalled["admissions"])
         self.assertEqual(recalled["admitted"], [local])
 
     # C13 / C14: timeline shape keeps several states in chronological order.
@@ -192,10 +192,11 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertEqual([evidence[ref]["timeline_position"] for ref in roles], [1, 2, 3])
         self.assertEqual(evidence[roles[0]]["query_temporal_intent"]["mode"], "historical")
 
-    # C14 / C25 (governed correction): LIMITATION. A governed-superseded record is refused
-    # at admission for every temporal intent, so recall cannot return the prior state.
-    # history() serves it. Changing that is an admission decision, not a ranking one.
-    def test_c14_c25_governed_superseded_state_is_not_recallable(self):
+    # C14 / C25 (governed correction), resolved by #549 as an admission decision: an
+    # error-corrected record is never admissible as historical truth. A state-changed
+    # record is admissible only under explicit historical/as-of intent
+    # (test_historical_evidence_admission).
+    def test_c14_c25_error_corrected_state_is_never_historical_truth(self):
         self.remember("policy:retention", "The retention policy is 30 days.")
         corrected = self.memory.correct(
             "memory:policy:retention", "The retention policy is 90 days.", risk_class="low",
@@ -208,7 +209,10 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         )
         self.assertTrue(corrected["committed"], corrected)
         refusals = {decision.get("refusal") for decision in recalled["admissions"].values()}
-        self.assertIn("superseded_not_current", refusals)
+        # #549: a default correction is an error correction: the prior value was wrong, so
+        # even explicit historical recall never presents it as historically true.
+        # State-change supersession is covered in test_historical_evidence_admission.
+        self.assertIn("corrected_as_false", refusals)
         self.assertEqual(recalled["admitted"], [corrected["fact_uuid"]])
 
     # C15: LIMITATION. Event-relative temporal relations ("immediately before X") are not

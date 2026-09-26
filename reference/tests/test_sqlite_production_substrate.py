@@ -17,6 +17,9 @@ from agentmem_ref.sqlite_substrate import SQLiteTemporalGraph
 from agentmem_ref.substrate import Episode, Fact
 
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "reference" / "fixtures" / "runtime-configuration" / "reference-composed-runtime.json"
 TENANT = "tenant-acme"
@@ -213,6 +216,8 @@ class SQLiteRestartRuntimeTests(unittest.TestCase):
             profile=self.profile,
             verifier_registry=registry_for(self.corpus),
         )
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_retain_stop_restart_recall_and_scope(self) -> None:
         runtime = self._create()

@@ -51,7 +51,7 @@ class DeveloperFacade(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             memory = self._open(root)
-            self.assertEqual(memory.contract_version, "1.2.0")
+            self.assertEqual(memory.contract_version, "1.3.0")
             retained = memory.remember(TARGET, "release branch main")
             self.assertTrue(retained["committed"])
             self.assertEqual(retained["stage"], "commit")
@@ -117,7 +117,9 @@ class DeveloperFacade(unittest.TestCase):
             self.assertNotIn(seed["fact_uuid"], recalled["admitted"])
             recovered.close()
 
-    def test_wrong_scope_is_discoverable_but_not_admitted(self):
+    def test_wrong_scope_is_neither_a_candidate_nor_admitted(self):
+        # Contract 1.3.0 (#548): a domain-ineligible match never becomes a caller-visible
+        # candidate, even through an exact logical reference.
         with tempfile.TemporaryDirectory() as temporary:
             memory = self._open(Path(temporary))
             retained = memory.remember(TARGET, "shared release detail")
@@ -128,9 +130,11 @@ class DeveloperFacade(unittest.TestCase):
                 target_domain_refs=("tenant:other", "project:other"),
                 project_ref="project:other",
             )
-            self.assertIn(candidate, result["candidates"])
+            self.assertNotIn(candidate, result["candidates"])
             self.assertNotIn(candidate, result["admitted"])
-            self.assertIn("refusal", result["admissions"][candidate])
+            self.assertNotIn(candidate, result["admissions"])
+            self.assertEqual(result["candidate_policy"]["candidate_scope"], "domain_eligible")
+            self.assertEqual(result["candidate_policy"]["admission"], "full_canonical_admission_on_every_candidate")
             memory.close()
 
     def test_confidence_does_not_change_mutation_authority(self):

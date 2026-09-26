@@ -199,3 +199,59 @@ Recorded separately in `docs/57-query-conditioned-applicability.md`. In summary:
 - Under tie-heavy overlap relevance, it keeps currentness gains where the query expresses current intent. It withholds recency elsewhere, with net retrieval against universal statistically indistinguishable from zero.
 - Two reproduction variants match frozen `f73b872` and `9c2ba70` exactly.
 
+
+## Slice 5: privacy-preserving domain-eligibility prefilter (#548, #522 Part B)
+
+Before this slice, every lexical match in the tenant became a recall candidate, and governed admission then refused the foreign-scope ones one by one. Admission stayed correct, but two costs followed:
+
+- candidate and admission work scaled with the whole tenant, not with the caller's scope;
+- the caller-visible result and audit event carried foreign-scope identifiers as refusals.
+
+**Change.**
+
+```text
+raw discovery matches -> necessary domain-eligibility prefilter -> candidate set
+    -> full canonical governed admission -> admitted set
+```
+
+- The prefilter is the same predicate that full admission re-applies: tenant, scope metadata, isolation domains and required compartments, shared-space membership, project, task. It is a minimization boundary, never permission: it cannot admit and it changes no admission outcome.
+- Public contract 1.3.0 (additive) documents that `candidates` are domain-eligible, and exposes only `candidate_policy` (policy id and version, `prefilter_authority: none`).
+- No foreign identifier and no foreign-match count is observable. See `docs/44-public-api-contract.md`.
+
+Tests: `reference/tests/test_domain_eligibility_prefilter.py`. The privacy tests fail with the prefilter bypassed, and admitted sets are identical with and without it.
+
+### Evidence
+
+The artifacts are in `reports/benchmarks/replays/548-domain-eligibility-prefilter/`. Before = `main` `1415da3`, after = `68d281c`. Everything ran on a 4-core container with no other benchmark running.
+
+The before scaling runs used the after revision's harness file (which adds `--scopes` and the candidate counters) over the unchanged `1415da3` runtime, so their manifests report a dirty worktree. One after run overlapped a test run and was repeated on a quiet host.
+
+**AgentMemBench / MemDialogue v2, isolation and retrieval phases.** The input is `33632710…`, the same as Slice 3.
+
+| phase | metric | 1415da3 | 68d281c |
+| --- | --- | --- | --- |
+| isolation (100 users) | cross_user_leak_rate | 0.0 | **0.0** |
+| isolation | candidates / admitted | 50,000 / 500 | **500 / 500** |
+| isolation | refusals (`required_isolation_domain_missing`) | 49,500 | 0 (never candidates) |
+| retrieval (1,000 records) | exact_source_recall@5 | 0.899 | **0.899** |
+| retrieval | by event type (PERSONAL_FACT / TASK_REQUEST) | 0.962 / 0.836 | 0.962 / 0.836 |
+| retrieval | candidates / admitted | 993,210 / 9,937 | **9,937 / 9,937** |
+| retrieval | read p50 / p95 | 995.6 / 1,701.2 ms | **99.8 / 139.9 ms** |
+| retrieval | write p50 | 29.8 ms | 31.1 ms |
+| retrieval | phase wall time | 1,041.7 s | 133.0 s |
+
+The admitted counts and retrieval scores are identical, so governance is not weakened. The only thing removed is the refusal of candidates that could never have been admitted.
+
+**Write/recall scaling at ~1,000 facts** (`reference/run_write_recall_scaling.py`, two runs each).
+
+| scopes | metric | 1415da3 | 68d281c |
+| --- | --- | --- | --- |
+| 10 | candidates / admitted per recall | 104.45 / 13.4 | **13.4 / 13.4** |
+| 10 | admission work per recall (`admit_preselected_candidates`) | 18.7–18.9 ms | **2.7 ms** |
+| 10 | lexical search per recall | 14.6–14.8 ms | 9.9–10.0 ms |
+| 10 | recall median | 90.9–95.5 ms | **66.6–73.6 ms** |
+| 1 | candidates / admitted per recall | 104.45 / 104.45 | 104.45 / 104.45 |
+| 1 | lexical search per recall | 13.1–13.7 ms | 15.8–16.1 ms |
+| 1 | recall median | 91.9–99.3 ms | 100.0–106.3 ms |
+
+**Tradeoff recorded.** With a single scope there is nothing to exclude, and the per-fact eligibility check adds ~2–3 ms to lexical search. Recall persistence (`_persist_unlocked`, ~38–45 ms) is now the largest recall term, dominated by the governance-state rewrite. The lexical scan still visits every fact in the tenant; it only skips tokenizing ineligible ones.

@@ -18,8 +18,28 @@ from dataclasses import dataclass, field
 from typing import Any, Iterable
 
 from ..core import policy, receipts
-from .adapter import AdmissionResult, Clock, GovernedMemoryAdapter, RecallContext
+from .adapter import (
+    CURRENT_STATE_ADMISSION,
+    HISTORICAL_EVIDENCE_ADMISSION,
+    AdmissionResult,
+    Clock,
+    GovernedMemoryAdapter,
+    RecallContext,
+    candidate_policy_evidence,
+)
 from ..core.contextual_recall import ADMITTING_OUTCOMES, fail_closed_decision
+
+
+def admission_mode_for_intent(intent) -> tuple[str, float | None]:
+    """#549: historical-evidence admission only for EXPLICIT historical or as-of intent.
+
+    Inferred intent, however confident, never widens admission; it only orders.
+    """
+
+    if getattr(intent, "posture", None) == "explicit" and getattr(intent, "mode", None) in ("historical", "as_of"):
+        target = intent.target_instant() if intent.mode == "as_of" else None
+        return HISTORICAL_EVIDENCE_ADMISSION, target
+    return CURRENT_STATE_ADMISSION, None
 
 
 def admit_preselected_candidates(
@@ -28,6 +48,8 @@ def admit_preselected_candidates(
     context: RecallContext,
     *,
     query_label: str = "preselected-candidates",
+    admission_mode: str = CURRENT_STATE_ADMISSION,
+    historical_target_seconds: float | None = None,
 ) -> AdmissionResult:
     """Apply canonical built-in admission to a preselected candidate set once.
 
@@ -56,6 +78,10 @@ def admit_preselected_candidates(
         policy_version=policy.POLICY_VERSION,
         evaluated_at=evaluated_at,
     )
+    result.candidate_policy = candidate_policy_evidence()
+    if admission_mode not in (CURRENT_STATE_ADMISSION, HISTORICAL_EVIDENCE_ADMISSION):
+        raise ValueError(f"unknown admission mode {admission_mode!r}")
+    result.admission_mode = admission_mode
     correlation = base._ids.next()
     seen: set[str] = set()
 
@@ -63,23 +89,42 @@ def admit_preselected_candidates(
         if not candidate_ref or candidate_ref in seen:
             continue
         seen.add(candidate_ref)
+        fact = substrate.get_fact(candidate_ref)
+        # #548: a discovered fact outside the caller's domain never becomes a candidate.
+        # Full admission below re-applies the same conditions to everything that remains.
+        if fact is not None and not base.domain_eligible(fact, context):
+            continue
         result.candidates.append(candidate_ref)
 
-        fact = substrate.get_fact(candidate_ref)
         refusal = (
             "candidate_not_found"
             if fact is None
-            else base._admission_refusal(fact, context)
+            else base._admission_refusal(fact, context, admission_mode, historical_target_seconds)
         )
+        historical = refusal is None and fact is not None and fact.is_event_invalid
         if refusal:
             result.refusals[candidate_ref] = refusal
         else:
             result.admitted.append(candidate_ref)
+            basis = {"admission_mode": admission_mode, "currentness": "current_state"}
+            if historical:
+                record = base.replacement_record(candidate_ref) or {}
+                basis = {
+                    "admission_mode": HISTORICAL_EVIDENCE_ADMISSION,
+                    "currentness": "historical_evidence_not_current",
+                    "replacement_kind": record.get("kind"),
+                    "valid_from": record.get("valid_from"),
+                    "valid_until": record.get("valid_until"),
+                    "replaced_at": record.get("replaced_at"),
+                    "authority_effect": "none",
+                }
+            result.admission_basis[candidate_ref] = basis
         result.decisions[candidate_ref] = base._recall_decision(
             candidate_ref,
             context,
             refusal,
             evaluated_at,
+            historical_evidence=historical,
         )
 
     base.events.append(

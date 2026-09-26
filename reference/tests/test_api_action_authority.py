@@ -90,7 +90,7 @@ class Authorize(unittest.TestCase):
     def test_older_contract_version_is_current(self):
         result = surface.authorize(self.memory, {**ACTION, "contract_version": "1.1.0"})
         self.assertEqual((result["compatibility"], result["stage"]), (contract.CURRENT, "action_authority"))
-        self.assertEqual(surface.authorize(self.memory, {**ACTION, "contract_version": "1.3.0"})["stage"], "none")
+        self.assertEqual(surface.authorize(self.memory, {**ACTION, "contract_version": "1.4.0"})["stage"], "none")
 
 
 class Witness(unittest.TestCase):

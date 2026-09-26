@@ -15,6 +15,9 @@ from agentmem_ref.runtime_composition import SHARED_EVIDENCE_ROUTE, ConfiguredCo
 from agentmem_ref.runtime_config import validate_runtime_configuration
 
 
+from tests.prefilter_bypass import admission_only  # noqa: E402
+
+
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = ROOT / "reference" / "fixtures" / "runtime-configuration" / "reference-composed-runtime.json"
 TENANT = "tenant-query-driven"
@@ -173,6 +176,8 @@ class QueryDrivenRecallTests(unittest.TestCase):
         self.assertIn(seed.fact_uuid, result.candidates)
         self.assertEqual(result.refusals[seed.fact_uuid], "superseded_not_current")
         self.assertNotIn(related.fact_uuid, result.candidates)
+
+    @admission_only()  # exercises full admission's own domain refusal (#548)
 
     def test_cross_project_neighbor_is_discovered_but_refused(self) -> None:
         shared = ("session:1",)

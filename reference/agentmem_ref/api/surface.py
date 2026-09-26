@@ -29,7 +29,7 @@ from typing import Any, Mapping, Sequence
 from ..core import policy
 from ..memory import action_authority
 from ..runtime import doctor
-from ..runtime.adapter import GovernedMemoryAdapter
+from ..runtime.adapter import REPLACEMENT_KINDS, GovernedMemoryAdapter
 from ..runtime.temporal_intent import declared_temporal, resolve_intent
 from . import contract
 
@@ -102,7 +102,8 @@ def recall(memory: GovernedMemoryAdapter, query: str, context_envelope: Mapping[
         return early
     admission = memory.governed_recall(query, contract.recall_context_from_envelope(validated))
     return contract.result("recall", compat, candidates=list(admission.candidates),
-                           admitted=list(admission.admitted), admissions=dict(admission.decisions))
+                           admitted=list(admission.admitted), admissions=dict(admission.decisions),
+                           candidate_policy=dict(admission.candidate_policy))
 
 
 def forget(memory: GovernedMemoryAdapter, envelope: Mapping[str, Any], *,
@@ -511,11 +512,22 @@ class AgentMemory:
         valid_from: str | None = None,
         valid_until: str | None = None,
         observed_at: str | None = None,
+        replacement_kind: str = "error_correction",
     ) -> dict:
-        """Propose/commit a correction. Review requirements are not hidden or auto-satisfied."""
+        """Propose/commit a correction. Review requirements are not hidden or auto-satisfied.
+
+        ``replacement_kind`` (#549) records why the current value is replaced:
+        ``error_correction`` (default; the prior value was wrong and is never presented as
+        historically true) or ``state_change`` (the prior value was true until this
+        replacement's ``valid_from``, or the replacement time). The kind rides the same
+        governed correction; it grants nothing, and only explicit historical/as-of recall
+        may return a state-changed record, labelled as non-current historical evidence.
+        """
         temporal = declared_temporal(
             {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
         )
+        if replacement_kind not in REPLACEMENT_KINDS:
+            raise ValueError(f"unknown replacement_kind {replacement_kind!r}")
         current = self.runtime.adapter.current_fact_uuid(target_reference)
         if current is None:
             return contract.result(
@@ -544,6 +556,7 @@ class AgentMemory:
             evidence=list(evidence) or None,
             attestation=attestation,
             temporal=temporal,
+            replacement_kind=replacement_kind,
         )
         return self._commit_result(outcome)
 
@@ -596,6 +609,9 @@ class AgentMemory:
         for candidate in result.candidates:
             decision = dict(result.decisions.get(candidate, {}))
             decision["route_provenance"] = [hit.to_dict() for hit in result.provenance_for(candidate)]
+            basis = getattr(result, "admission_basis", {}).get(candidate)
+            if basis is not None:
+                decision["admission_basis"] = dict(basis)
             if candidate in rank:
                 decision["rank_position"] = rank[candidate]
                 ranking = getattr(result, "ranking_evidence", {}).get(candidate)
@@ -610,6 +626,7 @@ class AgentMemory:
             candidates=list(result.candidates),
             admitted=list(result.ranked_admitted),
             admissions=admissions,
+            candidate_policy=dict(getattr(result, "candidate_policy", {}) or {}) or None,
         )
 
     @_serialized

@@ -18,7 +18,7 @@ from ..core import policy, receipts
 from ..memory.procedural_memory import ActionProposal
 from ..runtime.adapter import RecallContext
 
-CONTRACT_VERSION = "1.2.0"
+CONTRACT_VERSION = "1.3.0"
 
 PROPOSAL_SCHEMA = "api-proposal-envelope.schema.json"
 RECALL_CONTEXT_SCHEMA = "api-recall-context.schema.json"
