@@ -118,6 +118,11 @@ manifest claim != destructive-operation consent
 claimed deletion != permission to delete arbitrary state
 ```
 
+Repository-trusted in-process fixtures may execute destructive operations only against
+explicit benchmark-owned disposable state. `trusted_fixture=true` is an execution-trust
+classification, not evidence that the underlying memory system supplies a governance
+capability natively.
+
 ## Retrieval orchestration probe
 
 `gauntlet-orchestration-retrieval-probe-v1` uses three deterministic records and three
@@ -153,8 +158,14 @@ laundering pressure.
 
 Its provenance class is `gauntlet_native_gap`.
 
+The evaluator contains positive and negative composed fixtures plus a real Agent Memory
+contestant through the public `AgentMemory` facade. The real-system adapter translates
+neutral operations only and deliberately refuses to manufacture a cross-tenant claim for
+the single-tenant local composition.
+
 See [Governance Gauntlet Alpha](GOVERNANCE_GAUNTLET_ALPHA.md) for case-level semantics,
-negative controls, blocked claims, and the remaining real-system gate for issue #559.
+negative controls, the real-system capability posture, and claims intentionally reported
+as blocked until neutral lifecycle/evidence-injection contracts exist.
 
 ## Evidence layout
 
@@ -228,7 +239,6 @@ paths, preventing manifest-controlled path traversal through run identity.
 
 The orchestration alpha does not:
 
-- freeze the canonical Agent Memory runtime adapter;
 - accept ADR-039;
 - create a universal memory-health or governance score;
 - flatten external benchmark protocols;
@@ -236,13 +246,19 @@ The orchestration alpha does not:
 - treat probe or Gauntlet-native evidence as independent external validation;
 - change runtime authority, naming, or licensing.
 
+The Agent Memory governance contestant is a bounded conformance adapter for the stabilized
+public facade. It is not a precedent for binding future external adapters to Agent Memory
+internals.
+
 ## Next slices
 
-Issue #559 remains open until a real memory system runs the governance protocol in addition
-to the composed evaluator controls.
+Issue #559 can close only after the real-system governance candidate and evaluator controls
+are proven together by CI with reconstructable evidence.
 
 Issue #560 continues qualification of independent benchmark families against the
 Benchmark Coverage Atlas.
 
-The canonical Agent Memory adapter should be added only against the stable public runtime
-contract rather than binding the Gauntlet to moving internal implementation details.
+Future Governance Gauntlet slices should bind neutral restart/recovery and evidence-
+injection operations before claiming to test durable deletion, route-count laundering,
+classifier laundering, or verified provenance. Until then those claims remain visibly
+blocked rather than simulated.
