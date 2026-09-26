@@ -100,6 +100,10 @@ A profile that may issue another destructive operation, such as `forget`, requir
 --allow-destructive-operations
 ```
 
+The alpha uses the generalized refusal code `destructive_operation_opt_in_required` for
+missing destructive-operation consent. Its message identifies whether the reset-only flag
+is sufficient or the broader operations flag is required.
+
 So an external governance-alpha run that claims deletion normally requires:
 
 ```bash
