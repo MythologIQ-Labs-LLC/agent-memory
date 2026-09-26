@@ -1,0 +1,158 @@
+{
+  "authority_effect": "none",
+  "host": {
+    "machine": "x86_64",
+    "note": "4-core container; no other benchmark running",
+    "python": "3.11.15"
+  },
+  "parameters": {
+    "recalls": 20,
+    "scopes": 1,
+    "seed": 1,
+    "window": 40,
+    "words_per_fact": 40,
+    "words_per_query": 8
+  },
+  "results": [
+    {
+      "facts_before_window": 100,
+      "recall": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 2.054,
+          "composition.admit_preselected_candidates": 2.457,
+          "runtime._governance_snapshot": 0.085,
+          "runtime._persist_unlocked": 5.32,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.018,
+          "substrate.incremental_state_digest": 0.28,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.022,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 1.88,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 2.157
+        },
+        "mean_admitted": 13.4,
+        "mean_candidates": 13.4,
+        "mean_ms": 15.014,
+        "median_ms": 14.219,
+        "ops": 20
+      },
+      "scopes": 1,
+      "write": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 0.0,
+          "composition.admit_preselected_candidates": 0.0,
+          "runtime._governance_snapshot": 0.095,
+          "runtime._persist_unlocked": 5.43,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.02,
+          "substrate.incremental_state_digest": 0.414,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.018,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 2.103
+        },
+        "mean_ms": 11.146,
+        "median_ms": 10.587,
+        "ops": 40
+      }
+    },
+    {
+      "facts_before_window": 1000,
+      "recall": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 17.087,
+          "composition.admit_preselected_candidates": 19.686,
+          "runtime._governance_snapshot": 0.469,
+          "runtime._persist_unlocked": 43.648,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.023,
+          "substrate.incremental_state_digest": 0.366,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.03,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 17.243,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 20.235
+        },
+        "mean_admitted": 104.45,
+        "mean_candidates": 104.45,
+        "mean_ms": 105.844,
+        "median_ms": 105.155,
+        "ops": 20
+      },
+      "scopes": 1,
+      "write": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 0.0,
+          "composition.admit_preselected_candidates": 0.0,
+          "runtime._governance_snapshot": 0.52,
+          "runtime._persist_unlocked": 42.92,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.019,
+          "substrate.incremental_state_digest": 0.515,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.02,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 20.434
+        },
+        "mean_ms": 62.439,
+        "median_ms": 61.508,
+        "ops": 40
+      }
+    },
+    {
+      "facts_before_window": 5000,
+      "recall": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 77.907,
+          "composition.admit_preselected_candidates": 90.82,
+          "runtime._governance_snapshot": 4.547,
+          "runtime._persist_unlocked": 222.689,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.028,
+          "substrate.incremental_state_digest": 0.382,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.039,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 84.151,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 103.438
+        },
+        "mean_admitted": 516.45,
+        "mean_candidates": 516.45,
+        "mean_ms": 525.59,
+        "median_ms": 524.136,
+        "ops": 20
+      },
+      "scopes": 1,
+      "write": {
+        "components_mean_ms": {
+          "adapter._recall_decision": 0.0,
+          "composition.admit_preselected_candidates": 0.0,
+          "runtime._governance_snapshot": 3.967,
+          "runtime._persist_unlocked": 228.511,
+          "runtime._validate_journal": 0.0,
+          "runtime._validate_journal_tail": 0.023,
+          "substrate.incremental_state_digest": 0.645,
+          "substrate.read_runtime_journal": 0.0,
+          "substrate.read_runtime_journal_tail": 0.026,
+          "substrate.read_runtime_state": 0.0,
+          "substrate.search": 0.0,
+          "substrate.state_digest": 0.0,
+          "substrate.write_runtime_state": 115.274
+        },
+        "mean_ms": 316.624,
+        "median_ms": 314.524,
+        "ops": 40
+      }
+    }
+  ],
+  "revision": "14b422c1fcc7e5ceca214dcd13419e166ccdc1f1",
+  "schema": "agent-memory-write-recall-scaling/1"
+}
