@@ -9,7 +9,26 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from reference.tests.test_longmemeval import FIXTURE, M
+import importlib.util
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+REFERENCE = ROOT / "reference"
+FIXTURE = REFERENCE / "fixtures" / "benchmarks" / "longmemeval" / "synthetic.json"
+if str(REFERENCE) not in sys.path:
+    sys.path.insert(0, str(REFERENCE))
+
+
+def _module():
+    spec = importlib.util.spec_from_file_location("run_longmemeval", REFERENCE / "run_longmemeval.py")
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+M = _module()
 
 
 def _legacy_load(path: Path) -> list[dict]:
