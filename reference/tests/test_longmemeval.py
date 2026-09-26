@@ -107,7 +107,7 @@ class LongMemEvalProfileTests(unittest.TestCase):
         execution = report["execution"]
         for key in ("agent_memory_revision", "python", "started_at", "finished_at", "wall_seconds"):
             self.assertIn(key, execution)
-        self.assertEqual(execution["resource_consumption"], "not_measured")
+        self.assertIsInstance(execution["resource_consumption"]["peak_rss_mb_process"], (float, type(None)))
 
     def test_knowledge_update_currentness_slice_is_separate(self) -> None:
         report = M.run(FIXTURE, corpus_class="synthetic", include_agent_memory=False)

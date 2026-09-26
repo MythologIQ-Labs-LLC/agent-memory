@@ -1,0 +1,91 @@
+{
+  "backends": [
+    "no_memory",
+    "lexical_overlap"
+  ],
+  "checks": {
+    "input.abstention_question_count": true,
+    "input.duplicate_session_id_question_count": true,
+    "input.no_user_target_question_count": true,
+    "input.question_count": true,
+    "input.selection": true,
+    "input.sha256": true,
+    "input.size_bytes": true,
+    "session/lexical_overlap.aggregate": true,
+    "session/lexical_overlap.authority_effect": true,
+    "session/lexical_overlap.by_question_type": true,
+    "session/lexical_overlap.currentness": true,
+    "session/lexical_overlap.failures": true,
+    "session/lexical_overlap.question_order": true,
+    "session/lexical_overlap.rows_semantic_identical(500)": true,
+    "session/no_memory.aggregate": true,
+    "session/no_memory.authority_effect": true,
+    "session/no_memory.by_question_type": true,
+    "session/no_memory.currentness": true,
+    "session/no_memory.failures": true,
+    "session/no_memory.question_order": true,
+    "session/no_memory.rows_semantic_identical(500)": true,
+    "turn/lexical_overlap.aggregate": true,
+    "turn/lexical_overlap.authority_effect": true,
+    "turn/lexical_overlap.by_question_type": true,
+    "turn/lexical_overlap.currentness": true,
+    "turn/lexical_overlap.failures": true,
+    "turn/lexical_overlap.question_order": true,
+    "turn/lexical_overlap.rows_semantic_identical(500)": true,
+    "turn/no_memory.aggregate": true,
+    "turn/no_memory.authority_effect": true,
+    "turn/no_memory.by_question_type": true,
+    "turn/no_memory.currentness": true,
+    "turn/no_memory.failures": true,
+    "turn/no_memory.question_order": true,
+    "turn/no_memory.rows_semantic_identical(500)": true
+  },
+  "differences": [],
+  "frozen": "reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json",
+  "new": "reports/benchmarks/replays/568-streaming-loader-fa8828c/longmemeval-s-full-fa8828c.json (+ .rows.json.gz)",
+  "resource_consumption_new": {
+    "method": "getrusage(RUSAGE_SELF).ru_maxrss; the process high-water mark, not attributable to one backend",
+    "peak_rss_mb_after_input_scan": 57.4,
+    "peak_rss_mb_process": 80.8
+  },
+  "rows_compared": 2000,
+  "timing": {
+    "session/lexical_overlap": {
+      "frozen": {
+        "wall_seconds": 1.612
+      },
+      "new": {
+        "wall_seconds": 4.136
+      }
+    },
+    "session/no_memory": {
+      "frozen": {
+        "wall_seconds": 0.156
+      },
+      "new": {
+        "wall_seconds": 2.443
+      }
+    },
+    "turn/lexical_overlap": {
+      "frozen": {
+        "wall_seconds": 2.68
+      },
+      "new": {
+        "wall_seconds": 5.059
+      }
+    },
+    "turn/no_memory": {
+      "frozen": {
+        "wall_seconds": 0.665
+      },
+      "new": {
+        "wall_seconds": 2.876
+      }
+    }
+  },
+  "verdict": "IDENTICAL",
+  "wall_seconds": {
+    "frozen": 2406.314,
+    "new": 845.155
+  }
+}
