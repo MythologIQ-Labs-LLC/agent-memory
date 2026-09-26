@@ -61,6 +61,11 @@ _PROFILES = (
             {"variant": "longmemeval_m_cleaned", "status": "not_run"},
             {"variant": "upstream_model_judged_qa", "status": "not_run"},
         ),
+        "product_findings": (
+            {"issue": 531, "summary": "currentness ordering: anti-recency exact ties and stale-higher-score cases"},
+            {"issue": 538, "summary": "default post-admission ranking below the lexical baseline"},
+            {"issue": 522, "summary": "commit and recall cost grow with store size"},
+        ),
         "dimensions": (
             "retrieval",
             "currentness",
@@ -94,6 +99,11 @@ _PROFILES = (
             },
             {"variant": "upstream_llm_judged_retrieval_recall", "status": "not_run"},
             {"variant": "llm_portability_m6", "status": "not_run"},
+        ),
+        "product_findings": (
+            {"issue": 531, "summary": "independent newer writes lose to stale writes (staleness 1.00)"},
+            {"issue": 530, "summary": "public handle is thread-affine (concurrency success 0.0)"},
+            {"issue": 522, "summary": "write and recall latency grow with retained-state and tenant size"},
         ),
         "dimensions": (
             "retrieval",
