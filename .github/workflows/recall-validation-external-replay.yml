@@ -1,0 +1,195 @@
+name: Recall Validation External Replay
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/recall-validation-external-replay.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  agentmembench:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact implementation revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install benchmark dependencies
+        run: |
+          python -m pip install --disable-pip-version-check -r reference/requirements.txt
+          python -m pip install --disable-pip-version-check numpy
+
+      - name: Acquire frozen AgentMemBench input
+        run: |
+          git clone --filter=blob:none https://github.com/mazaiying/AgentMemBench.git /tmp/AgentMemBench
+          git -C /tmp/AgentMemBench checkout 186c9a54edd47aae42d8b6990520f8e902b60303
+          git -C /tmp/AgentMemBench lfs pull || true
+          test "$(sha256sum /tmp/AgentMemBench/data/memdialogue_v2.jsonl | awk '{print $1}')" = "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6"
+
+      - name: Replay AgentMemBench all phases
+        run: |
+          PYTHONPATH=reference python reference/run_agentmembench.py \
+            --input /tmp/AgentMemBench/data/memdialogue_v2.jsonl \
+            --corpus-class external_frozen \
+            --backend agent_memory \
+            --output agentmembench-572.json
+
+      - name: Compare AgentMemBench semantics against frozen policy 3.0.1 evidence
+        run: |
+          python - <<'PY'
+          import json
+          frozen = json.load(open(
+              'reports/benchmarks/replays/576-deterministic-bm25/'
+              'memdialogue-v2-all-phases-agent_memory-8bd6c91-seed0.json',
+              encoding='utf-8'))
+          after = json.load(open('agentmembench-572.json', encoding='utf-8'))
+          assert after['input']['sha256'] == '33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6'
+          assert after['parameters'] == frozen['parameters']
+          drop = {
+              'latency', 'read_latency', 'write_latency', 'phase_wall_seconds',
+              'wall_seconds', 'throughput_ops_s', 'resource_consumption'
+          }
+          def scrub(value):
+              if isinstance(value, dict):
+                  return {k: scrub(v) for k, v in value.items() if k not in drop}
+              if isinstance(value, list):
+                  return [scrub(v) for v in value]
+              return value
+          def differences(expected, observed, path=''):
+              out = []
+              if type(expected) is not type(observed):
+                  return [(path, expected, observed)]
+              if isinstance(expected, dict):
+                  for key in sorted(set(expected) | set(observed)):
+                      child = f'{path}.{key}' if path else key
+                      if key not in expected or key not in observed:
+                          out.append((child, expected.get(key, '<missing>'), observed.get(key, '<missing>')))
+                      else:
+                          out.extend(differences(expected[key], observed[key], child))
+                  return out
+              if isinstance(expected, list):
+                  if len(expected) != len(observed):
+                      out.append((path + '.length', len(expected), len(observed)))
+                      return out
+                  for index, (left, right) in enumerate(zip(expected, observed)):
+                      out.extend(differences(left, right, f'{path}[{index}]'))
+                  return out
+              if expected != observed:
+                  out.append((path, expected, observed))
+              return out
+          expected = scrub(frozen['backends']['agent_memory'])
+          observed = scrub(after['backends']['agent_memory'])
+          diffs = differences(expected, observed)
+          evidence = {
+              'frozen_revision': frozen['execution']['agent_memory_revision'],
+              'after_revision': after['execution']['agent_memory_revision'],
+              'input_sha256': after['input']['sha256'],
+              'non_timing_difference_count': len(diffs),
+              'differences': [
+                  {'path': path, 'before': before, 'after': after_value}
+                  for path, before, after_value in diffs
+              ],
+              'wall_seconds': after['execution']['wall_seconds'],
+              'retrieval_read_p50_ms': after['backends']['agent_memory']['phases']['retrieval']['read_latency']['p50_ms'],
+          }
+          json.dump(evidence, open('agentmembench-572-comparison.json', 'w', encoding='utf-8'), indent=2, sort_keys=True)
+          print(json.dumps(evidence, indent=2, sort_keys=True))
+          assert after['claim_boundary'] == frozen['claim_boundary']
+          if diffs:
+              raise SystemExit(f'AgentMemBench has {len(diffs)} non-timing semantic difference(s)')
+          print('AgentMemBench non-timing semantics are identical to frozen policy 3.0.1 evidence.')
+          PY
+
+      - name: Upload AgentMemBench replay
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: recall-validation-agentmembench
+          path: |
+            agentmembench-572.json
+            agentmembench-572-comparison.json
+          if-no-files-found: error
+
+  longmemeval-s:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact implementation revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+
+      - name: Acquire frozen LongMemEval_S input
+        run: |
+          curl -L --fail --retry 3 --retry-delay 2 \
+            -o /tmp/longmemeval_s_cleaned.json \
+            'https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned/resolve/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_s_cleaned.json?download=true'
+          test "$(sha256sum /tmp/longmemeval_s_cleaned.json | awk '{print $1}')" = "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+
+      - name: Replay LongMemEval_S Agent Memory
+        run: |
+          PYTHONPATH=reference python reference/run_longmemeval.py \
+            --input /tmp/longmemeval_s_cleaned.json \
+            --corpus-class external_frozen \
+            --backend agent_memory \
+            --output longmemeval-s-572.json
+
+      - name: Verify row-level semantic identity against frozen policy 3.0.1 evidence
+        run: |
+          python - <<'PY'
+          import gzip, json
+          frozen_path = 'reports/benchmarks/replays/576-deterministic-bm25/longmemeval-s-full-8bd6c91-seed1.rows.json.gz'
+          after_path = 'longmemeval-s-572.rows.json.gz'
+          frozen = json.load(gzip.open(frozen_path, 'rt', encoding='utf-8'))
+          after = json.load(gzip.open(after_path, 'rt', encoding='utf-8'))
+          for plane in ('session', 'turn'):
+              before_rows = {row['question_id']: row for row in frozen[plane]['agent_memory']}
+              after_rows = {row['question_id']: row for row in after[plane]['agent_memory']}
+              assert before_rows.keys() == after_rows.keys(), (plane, 'question set differs')
+              for qid in before_rows:
+                  b, a = before_rows[qid], after_rows[qid]
+                  for key in ('status', 'gold', 'ranked_top', 'metrics', 'latest_gold_first',
+                              'runtime_error', 'ingestion_failures', 'out_of_corpus',
+                              'unmapped_admissions'):
+                      if key in b or key in a:
+                          assert b.get(key) == a.get(key), (plane, qid, key, b.get(key), a.get(key))
+          print('LongMemEval_S row-level rankings and scored semantics are identical to frozen policy 3.0.1 evidence.')
+          PY
+
+      - name: Emit LongMemEval_S diagnostic comparison
+        run: |
+          python reference/compare_longmemeval_reports.py \
+            reports/benchmarks/replays/576-deterministic-bm25/longmemeval-s-full-8bd6c91-seed1.json \
+            reports/benchmarks/replays/576-deterministic-bm25/longmemeval-s-full-8bd6c91-seed1.rows.json.gz \
+            longmemeval-s-572.json longmemeval-s-572.rows.json.gz \
+            | tee longmemeval-s-572-comparison.txt
+
+      - name: Upload LongMemEval_S replay
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: recall-validation-longmemeval-s
+          path: |
+            longmemeval-s-572.json
+            longmemeval-s-572.rows.json.gz
+            longmemeval-s-572-comparison.txt
+          if-no-files-found: error

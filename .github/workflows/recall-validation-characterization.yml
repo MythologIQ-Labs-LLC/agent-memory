@@ -1,0 +1,67 @@
+name: Recall Validation Characterization
+
+on:
+  pull_request:
+    paths:
+      - 'reference/agentmem_ref/core/receipts.py'
+      - 'reference/agentmem_ref/runtime/adapter.py'
+      - 'schemas/contextual-recall-admission.schema.json'
+      - 'reference/run_recall_validation_scaling.py'
+      - 'reference/tests/test_recall_validation_fastpath.py'
+      - '.github/workflows/recall-validation-characterization.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  characterize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+
+      - name: Run #572 fast-path equivalence tests
+        run: PYTHONPATH=reference python -m unittest reference.tests.test_recall_validation_fastpath
+
+      - name: Run controlled recall validation scaling
+        env:
+          AGENT_MEMORY_REVISION: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          PYTHONPATH=reference python reference/run_recall_validation_scaling.py \
+            --revision "$AGENT_MEMORY_REVISION" \
+            --sizes 100,1000,5000,10000 \
+            --repeats 3 \
+            --output recall-validation-scaling.json
+          python - <<'PY'
+          import json
+          report = json.load(open('recall-validation-scaling.json', encoding='utf-8'))
+          assert report['all_semantics_identical'] is True
+          for row in report['rows']:
+              print({
+                  'facts': row['retained_facts'],
+                  'candidates': row['candidate_count'],
+                  'canonical_recall_ms': round(row['canonical_recall']['median_ns'] / 1_000_000, 3),
+                  'fast_recall_ms': round(row['fast_recall']['median_ns'] / 1_000_000, 3),
+                  'recall_speedup': row['recall_median_speedup'],
+                  'canonical_validation_us_per_candidate': round(row['canonical_validation']['mean_per_candidate_ns_from_median_total'] / 1_000, 3),
+                  'fast_validation_us_per_candidate': round(row['fast_validation']['mean_per_candidate_ns_from_median_total'] / 1_000, 3),
+                  'validation_speedup': row['validation_median_speedup'],
+              })
+          PY
+
+      - name: Upload #572 characterization evidence
+        uses: actions/upload-artifact@v7
+        with:
+          name: recall-validation-characterization
+          path: recall-validation-scaling.json
+          if-no-files-found: error
