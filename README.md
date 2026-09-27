@@ -201,7 +201,7 @@ The repository is strict about the difference between **implemented**, **qualifi
 
 Current known limitations:
 
-- Query-conditioned applicability (policy 3.0.0) is implemented, but **ADR-039 remains Proposed**. No orthogonal temporal gauntlet has yet tested it.
+- Query-conditioned applicability (policy 3.0.1) is implemented, but **ADR-039 remains Proposed**. No orthogonal temporal gauntlet has yet tested it.
 - Implicit supersession, where a newer statement contradicts an older one without a governed correction, is not inferred (#531 class B).
 - The replacement kind (error correction vs state change) is caller-declared within a governed correction.
 - Per-commit persistence still digests and rewrites the whole governance state (#562: ~0.73 s per write at ~10,000 facts). Lexical candidate generation still visits every fact in the tenant (#563). Scale beyond the measured sizes is not claimed.

@@ -11,7 +11,7 @@ A policy is a documented, versioned sequence of lexicographic stages. Stage valu
 their own types; nothing is summed into one number, and the final order is not a claim
 that the contributing evidence shares a unit.
 
-Stages (policy version 3.0.0, ``temporal_regime = query_conditioned``):
+Stages (policy version 3.0.1, ``temporal_regime = query_conditioned``):
 
 1. temporal applicability tier. **Only** when the query's temporal intent is explicit or
    inferred with high confidence, and only for ``current``, ``as_of``, and
@@ -25,7 +25,9 @@ Stages (policy version 3.0.0, ``temporal_regime = query_conditioned``):
 3. exact identity: surfaced by an exact logical-memory lookup;
 4. route-native relevance, one stage per route in declared order, never summed or
    cross-scaled. For the lexical route under ``bm25_admitted_set``, Okapi BM25
-   (k1=1.2, b=0.75, untuned) with term statistics over the admitted set only;
+   (k1=1.2, b=0.75, untuned) with term statistics over the admitted set only, and
+   per-term contributions accumulated in sorted term order so the score is identical
+   across processes;
 5. temporal order within the query's regime, among candidates equal on every earlier
    stage, only when the intent orders temporally:
    ``current``: newest first; ``as_of``: latest evidence at or before the target first,
@@ -64,7 +66,7 @@ from typing import Any, Callable, Iterable, Mapping, Sequence
 from .temporal_intent import AS_OF, CURRENT, DECLARED_TEMPORAL_KEY, PROSPECTIVE, TIMELINE, TemporalIntent, parse_time
 
 POLICY_FAMILY = "agent-memory-post-admission-ranking"
-POLICY_VERSION = "3.0.0"
+POLICY_VERSION = "3.0.1"
 BM25_K1 = 1.2
 BM25_B = 0.75
 _TOKEN = re.compile(r"[a-z0-9]+")
@@ -96,7 +98,10 @@ def admitted_set_bm25(query: str, texts: Mapping[str, str]) -> dict[str, float]:
     for ref, tokens in documents.items():
         term_counts = Counter(tokens)
         score = 0.0
-        for term in terms:
+        # Sorted, not set order: set iteration follows the per-process string hash, and
+        # float addition is not associative, so set order made the score's last bits
+        # (and true near-tie order) depend on PYTHONHASHSEED (#576, policy 3.0.1).
+        for term in sorted(terms):
             tf = term_counts.get(term, 0)
             if not tf:
                 continue

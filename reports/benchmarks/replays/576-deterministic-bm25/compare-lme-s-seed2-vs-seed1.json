@@ -1,0 +1,54 @@
+{
+  "backends": [
+    "agent_memory"
+  ],
+  "checks": {
+    "input.abstention_question_count": true,
+    "input.duplicate_session_id_question_count": true,
+    "input.no_user_target_question_count": true,
+    "input.question_count": true,
+    "input.selection": true,
+    "input.sha256": true,
+    "input.size_bytes": true,
+    "session/agent_memory.aggregate": true,
+    "session/agent_memory.authority_effect": true,
+    "session/agent_memory.boundary": true,
+    "session/agent_memory.by_question_type": true,
+    "session/agent_memory.currentness": true,
+    "session/agent_memory.failures": true,
+    "session/agent_memory.governance": true,
+    "session/agent_memory.question_order": true,
+    "session/agent_memory.rows_semantic_identical(500)": true,
+    "turn/agent_memory.aggregate": true,
+    "turn/agent_memory.authority_effect": true,
+    "turn/agent_memory.boundary": true,
+    "turn/agent_memory.by_question_type": true,
+    "turn/agent_memory.currentness": true,
+    "turn/agent_memory.failures": true,
+    "turn/agent_memory.governance": true,
+    "turn/agent_memory.question_order": true,
+    "turn/agent_memory.rows_semantic_identical(500)": true
+  },
+  "differences": [],
+  "expected_version_changes": [],
+  "frozen": "scratch/longmemeval-s-full-8bd6c91-seed1.json",
+  "metrics": {
+    "session/agent_memory": {
+      "frozen": null,
+      "new": null
+    },
+    "turn/agent_memory": {
+      "frozen": null,
+      "new": null
+    }
+  },
+  "new": "scratch/longmemeval-s-agent_memory-8bd6c91-seed2.json",
+  "rank_difference_count": 0,
+  "rank_differences": [],
+  "rows_compared": 1000,
+  "verdict": "IDENTICAL",
+  "wall_seconds": {
+    "frozen": 1078.346,
+    "new": 1050.869
+  }
+}

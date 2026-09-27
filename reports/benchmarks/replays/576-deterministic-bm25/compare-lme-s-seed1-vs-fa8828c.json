@@ -1,0 +1,100 @@
+{
+  "backends": [
+    "no_memory",
+    "lexical_overlap",
+    "agent_memory"
+  ],
+  "checks": {
+    "input.abstention_question_count": true,
+    "input.duplicate_session_id_question_count": true,
+    "input.no_user_target_question_count": true,
+    "input.question_count": true,
+    "input.selection": true,
+    "input.sha256": true,
+    "input.size_bytes": true,
+    "session/agent_memory.aggregate": true,
+    "session/agent_memory.authority_effect": true,
+    "session/agent_memory.boundary": true,
+    "session/agent_memory.by_question_type": true,
+    "session/agent_memory.currentness": true,
+    "session/agent_memory.failures": true,
+    "session/agent_memory.governance": true,
+    "session/agent_memory.question_order": true,
+    "session/agent_memory.rows_semantic_identical(500)": true,
+    "session/lexical_overlap.aggregate": true,
+    "session/lexical_overlap.authority_effect": true,
+    "session/lexical_overlap.by_question_type": true,
+    "session/lexical_overlap.currentness": true,
+    "session/lexical_overlap.failures": true,
+    "session/lexical_overlap.question_order": true,
+    "session/lexical_overlap.rows_semantic_identical(500)": true,
+    "session/no_memory.aggregate": true,
+    "session/no_memory.authority_effect": true,
+    "session/no_memory.by_question_type": true,
+    "session/no_memory.currentness": true,
+    "session/no_memory.failures": true,
+    "session/no_memory.question_order": true,
+    "session/no_memory.rows_semantic_identical(500)": true,
+    "turn/agent_memory.aggregate": true,
+    "turn/agent_memory.authority_effect": true,
+    "turn/agent_memory.boundary": true,
+    "turn/agent_memory.by_question_type": true,
+    "turn/agent_memory.currentness": true,
+    "turn/agent_memory.failures": true,
+    "turn/agent_memory.governance": true,
+    "turn/agent_memory.question_order": true,
+    "turn/agent_memory.rows_semantic_identical(500)": true,
+    "turn/lexical_overlap.aggregate": true,
+    "turn/lexical_overlap.authority_effect": true,
+    "turn/lexical_overlap.by_question_type": true,
+    "turn/lexical_overlap.currentness": true,
+    "turn/lexical_overlap.failures": true,
+    "turn/lexical_overlap.question_order": true,
+    "turn/lexical_overlap.rows_semantic_identical(500)": true,
+    "turn/no_memory.aggregate": true,
+    "turn/no_memory.authority_effect": true,
+    "turn/no_memory.by_question_type": true,
+    "turn/no_memory.currentness": true,
+    "turn/no_memory.failures": true,
+    "turn/no_memory.question_order": true,
+    "turn/no_memory.rows_semantic_identical(500)": true
+  },
+  "differences": [],
+  "expected_version_changes": [],
+  "frozen": "reports/benchmarks/replays/568-streaming-loader-fa8828c/longmemeval-s-full-fa8828c.json",
+  "metrics": {
+    "session/agent_memory": {
+      "frozen": null,
+      "new": null
+    },
+    "session/lexical_overlap": {
+      "frozen": null,
+      "new": null
+    },
+    "session/no_memory": {
+      "frozen": null,
+      "new": null
+    },
+    "turn/agent_memory": {
+      "frozen": null,
+      "new": null
+    },
+    "turn/lexical_overlap": {
+      "frozen": null,
+      "new": null
+    },
+    "turn/no_memory": {
+      "frozen": null,
+      "new": null
+    }
+  },
+  "new": "scratch/longmemeval-s-full-8bd6c91-seed1.json",
+  "rank_difference_count": 0,
+  "rank_differences": [],
+  "rows_compared": 3000,
+  "verdict": "IDENTICAL",
+  "wall_seconds": {
+    "frozen": 845.155,
+    "new": 1078.346
+  }
+}
