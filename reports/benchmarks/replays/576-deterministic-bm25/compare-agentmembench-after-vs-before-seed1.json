@@ -1,0 +1,57 @@
+{
+  "canonical": "scratch/trace/amb-before-seed1.json",
+  "dimensions": {
+    "concurrency": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "deletion": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "governance": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "isolation": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "llm_portability": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "retrieval_quality": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "scale": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "temporal_consistency": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "write_efficiency": {
+      "examples": [],
+      "non_timing_differences": 0
+    }
+  },
+  "governance": {
+    "agent_memory": {
+      "examples": [],
+      "non_timing_differences": 0
+    }
+  },
+  "input_sha256_equal": true,
+  "new": "scratch/trace/amb-after-seed1.json",
+  "parameters_equal": true,
+  "retrieval_details_dropped_for_comparability": [],
+  "total_non_timing_differences": 0,
+  "verdict": "IDENTICAL",
+  "wall_seconds": {
+    "canonical": 60.849,
+    "new": 63.302
+  }
+}

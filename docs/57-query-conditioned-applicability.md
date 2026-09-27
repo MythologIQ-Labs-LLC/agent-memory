@@ -31,6 +31,8 @@ Findings:
 
 ## 2. Design chosen (policy 3.0.0, `temporal_regime = query_conditioned`)
 
+**Patch 3.0.1 (#576).** Admitted-set BM25 now adds per-term contributions in sorted term order. Before, it added them in `set` iteration order, which follows the per-process string hash (`PYTHONHASHSEED`). Nothing else changed: the formula, IDF, tokenization, statistics scope, stages, and admission are all the same. The patch makes BM25 evidence and order byte-identical across processes. It does not make every mathematically tied pair bit-equal. Two texts with the same addends can still round 1 ulp apart, deterministically, when their distinguishing term sorts at a different position. Evidence: [docs/56, Slice 8](56-benchmark-gauntlet-remediation-evidence.md#slice-8-deterministic-bm25-accumulation-576-policy-301). ADR-039 remains Proposed.
+
 ```text
 query
   -> temporal intent (explicit caller intent, else bounded deterministic inference, else unspecified)
@@ -112,7 +114,7 @@ Negative control: run against the 2.x universal regime, 12 of the 18 base fixtur
 | C16: low confidence and ambiguity | **met**. Low-confidence cues do not demote, and conflicting cues stay ambiguous. |
 | C17: explicit over inferred | **met**. An explicit `as_of` overrides the text's `current` cue. |
 | C18: prospective | **met**. A future-valid commitment ranks first for a prospective query and is demoted for a current query. |
-| C19, C20: determinism and versioning | **met**. Order is identical across calls and restart, and policy 3.0.0 and the regime are recorded per candidate. |
+| C19, C20: determinism and versioning | **met** since 3.0.1. Order is identical across calls, restart, and processes, and the policy version and regime are recorded per candidate. Under 3.0.0 it held only within one string-hash seed: BM25 summed terms in `set` order, so a true near-tie could order differently per process (#576). |
 | C21: no benchmark branching | **met**. The policy and interpreter modules contain no dataset identifiers or benchmark ontology terms. |
 | C24: disputed | **stronger than required**. This runtime refuses disputed facts at admission, so applicability never presents them. |
 

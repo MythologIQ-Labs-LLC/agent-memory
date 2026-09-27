@@ -8,6 +8,13 @@ candidates could change order. The fixture below is such a near-tie: m0, m3 and 
 score identically in exact arithmetic, and at ``8dba9eb`` seeds 0, 1 and 2 ranked them
 three different ways.
 
+Scope of the guarantee: 3.0.1 makes the accumulation order a function of the inputs
+alone, so evidence is identical across processes. It does **not** make every
+mathematically tied pair bit-equal. Two texts whose addends are the same multiset can
+still round 1 ulp apart when the distinguishing term sorts at a different position
+(``RESIDUAL_ULP`` below; AgentMemBench record 149 is a live instance). That residual
+order is deterministic, and is pinned here so a later change to it is visible.
+
 The cross-process tests run fresh interpreters with explicit seeds because a single
 process cannot change its own string-hash seed.
 """
@@ -41,6 +48,23 @@ TEXTS = {
     "m5": "echo delta hotel charlie",
 }
 NEAR_TIE = ("m0", "m3", "m5")
+
+# Same addend multiset ({the, user, for} plus one query term unique to each text), same
+# length; "zulu" sorts after every shared term and "apple" before, so under sorted
+# accumulation the sums round 1 ulp apart, identically in every process.
+RESIDUAL_QUERY = "which tool does the user zulu for apple"
+RESIDUAL_TEXTS = {
+    "a": "the user zulu for x0 x1 x2 x3",
+    "b": "the user apple for y0 y1 y2 y3",
+    "o0": "the user for o0w0 o0w1",
+    "o1": "the user for o1w0 o1w1",
+    "o2": "the user for o2w0 o2w1",
+    "o3": "the user p0w0 p0w1",
+    "o4": "the user p1w0 p1w1",
+    "o5": "the user p2w0 p2w1",
+    "o6": "the user p3w0 p3w1",
+    "o7": "the user p4w0 p4w1",
+}
 SEEDS = ("0", "1", "2")
 
 _CHILD = textwrap.dedent(
@@ -75,9 +99,9 @@ _CHILD = textwrap.dedent(
 )
 
 
-def _run_under_seed(seed: str) -> dict:
+def _run_under_seed(seed: str, query: str = QUERY, texts: dict[str, str] = TEXTS) -> dict:
     env = {**os.environ, "PYTHONHASHSEED": seed}
-    payload = json.dumps([QUERY, TEXTS])
+    payload = json.dumps([query, texts])
     completed = subprocess.run(
         [sys.executable, "-c", _CHILD, str(ROOT / "reference"), payload],
         env=env, capture_output=True, text=True, check=True,
@@ -155,6 +179,13 @@ class BM25HashSeedDeterminismTests(unittest.TestCase):
             self.assertEqual(
                 recalled["admissions"][uuid]["ranking_evidence"]["ordered_before_next_by"], "candidate_ref_neutral_digest"
             )
+
+    def test_residual_one_ulp_tie_order_is_deterministic_across_hash_seeds(self):
+        runs = [_run_under_seed(seed, RESIDUAL_QUERY, RESIDUAL_TEXTS) for seed in SEEDS]
+        self.assertEqual([run["scores"] for run in runs[1:]], [runs[0]["scores"]] * (len(runs) - 1))
+        self.assertEqual([run["admitted"] for run in runs[1:]], [runs[0]["admitted"]] * (len(runs) - 1))
+        a, b = (float.fromhex(runs[0]["scores"][ref]) for ref in ("a", "b"))
+        self.assertEqual(a, math.nextafter(b, math.inf))
 
     def test_policy_version_records_the_patch(self):
         self.assertEqual(ranking_policy.POLICY_VERSION, "3.0.1")

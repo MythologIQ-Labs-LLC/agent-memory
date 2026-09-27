@@ -497,3 +497,111 @@ The artifacts are `reports/benchmarks/longmemeval/longmemeval-m-full-409098f.{js
 - Benchmark difficulty: M's lower absolute recall affects both backends.
 - The currentness ordering is the known class (#531, #538); no new defect was found.
 - The run tuned nothing. Policy 3.0.0 and the ADR-039 status are unchanged, and M is not new validity/as-of evidence.
+
+## Slice 8: deterministic BM25 accumulation (#576, policy 3.0.1)
+
+**Defect.** `admitted_set_bm25` in `reference/agentmem_ref/runtime/ranking_policy.py` summed each text's per-term contributions in `set(relevance_tokens(query))` iteration order. For strings, that order follows the per-process hash seed (`PYTHONHASHSEED`). Float addition is not associative, so the same revision, store, and query could record `lexical_relevance_score` values that differ in the last bits between processes, and a true near-tie could be ordered differently. This is a reproducibility defect, not a relevance change.
+
+**Fix.** The loop is now `for term in sorted(terms):`. The accumulation semantics are unchanged: one `score += …` per matched term, with the same BM25 formula, k1/b, IDF, tokenization, and admitted-set statistics scope. No `math.fsum` is used. Candidate generation, admission and refusal, stage order, and temporal policy are untouched.
+
+**Policy version.** `POLICY_VERSION` goes from 3.0.0 to **3.0.1**. It is a patch because recorded score bits change and a near-tie can reorder, so it is a ranking-policy change even though the stage design is not. **ADR-039 remains Proposed.** This slice does not test or promote it.
+
+**Revisions.**
+- Before: `8dba9eb` (main at handoff).
+- After: `8bd6c91` (the fix commit, which is identical in runtime code to the PR head).
+- Evidence: `reports/benchmarks/replays/576-deterministic-bm25/`.
+
+### Cross-process proof
+
+`seed_probe.py` / `cross_seed.py` run a near-tie fixture in fresh processes for `PYTHONHASHSEED` 0–7, twice per seed (restart). Three texts (m0, m3, m5) tie in exact arithmetic. The probe records the pure BM25 scores and a full governed recall, including a forgotten memory that must be refused.
+
+| | before `8dba9eb` | after `8bd6c91` |
+| --- | --- | --- |
+| same seed, restarted process | identical | identical |
+| distinct BM25/evidence digests across 8 seeds | **4** | **1** |
+| distinct governed admitted orders across seeds | **2** (seed 0 `m3,m0,m5`; seed 1 `m0,m5,m3`) | **1** (`m3,m0,m5`) |
+| m0 / m3 / m5 score, seed 0 | `…c2e7` / `…c2e7` / `…c2e7` | `…c2e7` ×3 |
+| m0 / m3 / m5 score, seed 1 | `…c2e7` / `…c2e6` / `…c2e7` (1.2314461177267562 vs 1.231446117726756) | `…c2e7` ×3 |
+| m0 / m3 / m5 score, seed 2 | `…c2e6` / `…c2e7` / `…c2e6` | `…c2e7` ×3 |
+| refused set, refusal reason | `forgotten`, `tombstoned` in every seed | unchanged |
+
+`reference/tests/test_bm25_hash_seed_determinism.py` has 9 tests. They cover:
+- score bits across seeds 0/1/2;
+- governed order and evidence across seeds;
+- restart;
+- admission and refusal;
+- bit equality with an independent sorted-order restatement;
+- stable-fallback resolution of the fixture tie;
+- the residual 1-ulp case below;
+- the version.
+
+Run against `8dba9eb`, 5 of the 9 fail (the four cross-seed or tie assertions and the version).
+
+**Scope of the guarantee.** Sorted accumulation makes the result a function of the inputs only. It does **not** make every mathematically tied pair bit-equal. Two texts whose addends are the same multiset still round 1 ulp apart when their distinguishing term sorts at a different position. That residual order is deterministic, and the test suite pins it.
+
+### AgentMemBench / MemDialogue v2, all phases
+
+The input is frozen `33632710…ca2a6`, with the canonical parameters. `amb_order_trace.py` wraps the unmodified harness and records the ordered top-5 of every search (2,051) and every BM25 score. It ran at before and after under `PYTHONHASHSEED` 0, 1, and 2 (`agentmembench-traces/`, `agentmembench-order-trace-compare.json`).
+
+| comparison | retrieval-order differences | BM25 calls with different bits |
+| --- | ---: | ---: |
+| before, across seeds (0↔1, 0↔2, 1↔2) | 0, 0, 0 | 931, 499, 864 |
+| after, across seeds | 0, 0, 0 | **0, 0, 0** |
+| before ↔ after, same seed (0, 1, 2) | **1, 1, 1** | 700, 690, 527 |
+
+**One rank change: retrieval record 149**, the query "Which tool does the user use for building AudioProcessingKit?" in group `user_00014`. In both revisions the top-5 membership is the same, but ranks 2 and 3 swap:
+
+| text (sha256[:16]) | before score (seed 0 / 1 / 2) | after score (all seeds) |
+| --- | --- | --- |
+| `f0e061f7…` "The user wants to learn how to use R for data analysis and web scraping." | `…868e` / `…868f` / `…868f` | `0x1.74cf38343868ep+1` (2.9125738387090854) |
+| `716444c0…` "The user uses CMake … for AudioProcessingKit." | `…868e` / `…868f` / `…868e` | `0x1.74cf38343868fp+1` (2.912573838709086) |
+
+**Mechanism.**
+- The two texts are the same length (15 tokens), and each matches four query terms with *bit-identical* addends:
+  - `for` (df 5);
+  - `the` and `user` (df 10);
+  - one df-1 term: `use` in one text, `audioprocessingkit` in the other.
+- Before, the set order made seeds 0 and 1 bit-tied, so the neutral-digest fallback placed `f0e0…` first. Seed 2 put `f0e0…` ahead by 1 ulp. The before order agreed across these three seeds only by coincidence.
+- After, `audioprocessingkit` sorts first and `use` sorts third, so `716444c0…` rounds 1 ulp higher in every process.
+- The query's own source text is not affected: the exact-source hit is unchanged.
+
+**Every AgentMemBench metric and governance tally is identical.** After ↔ canonical `2cedb6c` and after ↔ before (same seed) show zero non-timing differences in every dimension, for each seed. The canonical report omits per-query details, so those are dropped for that comparison only.
+
+| dimension | result (before = after = canonical) |
+| --- | --- |
+| retrieval (exact-source recall@5) | 0.899 (PERSONAL_FACT 0.962, TASK_REQUEST 0.836); write success 1.0 |
+| conflict / currentness | new-fact 0.20, staleness 0.80, dual-version 0.0 (250 pairs) |
+| isolation | cross-user leak 0.0 (100 users, 100 cross-user queries) |
+| deletion | pre-delete visibility 1.0, post-delete absence 1.0, audited deletion 1.0 |
+| concurrency | 0 errors, materialization 1.0 at 1/4/8/16 workers |
+| scale | recall@3 1.0 at 100 and 1,000 records |
+| failures | `phase_errors` empty |
+
+### LongMemEval_S
+
+The input is frozen `d6f21ea9…c442`, all 500 questions, with the same backends, planes, and default configuration as the frozen `fa8828c` replay (policy 3.0.0). Runs at `8bd6c91`:
+- `PYTHONHASHSEED=1`, all backends: `longmemeval-s-full-8bd6c91-seed1.*`, wall 1,078 s, peak RSS 84 MB.
+- `PYTHONHASHSEED=2`, agent_memory only.
+
+| comparison | rows compared | rank differences | other non-timing differences |
+| --- | ---: | ---: | ---: |
+| seed 1 ↔ frozen `fa8828c` (3 backends × 2 planes) | 3,000 | **0** | 0 |
+| seed 2 ↔ frozen `fa8828c` (agent_memory × 2 planes) | 1,000 | **0** | 0 |
+| seed 2 ↔ seed 1 | 1,000 | **0** | 0 |
+
+Rows record `ranked_top` to depth 50 (`REPORTED_RANK_DEPTH`), which covers every metric cutoff. Deeper turn-plane ranks are not recorded, so rank identity is established to depth 50. All metrics are therefore unchanged:
+
+| plane | backend | recall_all@5 | ndcg_any@5 | recall_all@10 | knowledge-update recall_all@5 | latest gold first |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| session | lexical_overlap | 0.7303 | 0.7675 | 0.8258 | 0.9167 | 0.457 |
+| session | agent_memory | 0.8234 | 0.8631 | 0.8926 | 0.9722 | 0.457 |
+| turn | lexical_overlap | 0.4869 | 0.5272 | 0.5871 | 0.6806 | 0.614 |
+| turn | agent_memory | 0.6014 | 0.6486 | 0.7232 | 0.7917 | 0.557 |
+
+Runtime, ingestion, out-of-corpus, and unmapped failures are all zero.
+
+### Disposition
+
+- The success criterion holds. The same revision, store, and query give byte-identical BM25 evidence and ranking across processes and hash seeds, and governed recall semantics (candidates, admission, refusal, stages, temporal policy) are unchanged.
+- The patch changes one frozen AgentMemBench ranking: record 149, ranks 2 and 3, a 1-ulp exact tie. It changes no metric and no LongMemEval_S row.
+- A LongMemEval_M replay was **not** run. Because AgentMemBench shows a real rank change from the patch, M rank identity is not assumed; M is ~10× S per question, so more exact ties are likely. Whether to replay M is a maintainer decision.
