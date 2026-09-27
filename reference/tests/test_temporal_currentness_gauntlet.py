@@ -42,8 +42,10 @@ class GauntletTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.suite = tc.load_suite(FIXTURE)
-        cls.runs = {case["case_id"]: tc.execute_case(case) for case in cls.suite["cases"]}
-        cls.rows = [row for run in cls.runs.values() for row in tc.score_case(run)]
+        # Scored exactly as the frozen baseline was (variant-backed invariance included).
+        cls.rows = tc.run_suite(cls.suite, diagnostics=False)["rows"]
+        # Raw executions, re-scored under deliberate corruption by the sensitivity tests.
+        cls.runs = {case["case_id"]: tc.execute_case(case, restart=False) for case in cls.suite["cases"]}
 
     def rescore(self, mutate) -> list:
         rows = []
@@ -138,8 +140,15 @@ class GauntletTests(unittest.TestCase):
 
     def test_honest_unknown_is_never_counted_as_pass(self):
         target = _metric(self.rows, "self_description_currentness_rate", "target")
+        self.assertIsNotNone(target["value"])
         self.assertGreater(target["honest_unknown"], 0)
         self.assertEqual(target["value"], round(target["pass"] / target["units"], 4))
+
+    def test_incidental_target_passes_are_flagged_not_hidden(self):
+        incidental = tc.incidental_passes(self.rows)
+        self.assertTrue(incidental)
+        for item in incidental:
+            self.assertLessEqual(set(item["applicability"]), {"unknown_temporal_basis", "not_evaluated", "None"})
 
     # ------------------------------------------------------------------ runtime mutants
 
@@ -174,7 +183,7 @@ class GauntletTests(unittest.TestCase):
     # ------------------------------------------------------------------ no benchmark branch
 
     def test_no_runtime_module_references_the_gauntlet(self):
-        tokens = {"temporal-gauntlet", "temporal_currentness", "mallory", "stevensville", "gauntlet-v1"}
+        tokens = {"temporal-gauntlet", "evaluation.temporal_currentness", "temporal-currentness-gauntlet", "mallory street", "gauntlet-v1"}
         for directory in ("runtime", "memory", "core", "api"):
             for path in (ROOT / "reference" / "agentmem_ref" / directory).glob("*.py"):
                 source = path.read_text(encoding="utf-8").lower()

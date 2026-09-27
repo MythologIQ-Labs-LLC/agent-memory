@@ -31,7 +31,7 @@ from typing import Any, Callable, Mapping
 
 SUITE_SCHEMA_VERSION = "1.0.0"
 REPORT_SCHEMA_VERSION = "1.0.0"
-EVALUATOR_VERSION = "1.0.0"
+EVALUATOR_VERSION = "1.1.0"
 
 TENANT = "tenant:temporal-gauntlet"
 SCOPE = "project:temporal-gauntlet"
@@ -550,6 +550,30 @@ def score_case(run: Mapping[str, Any], variant_runner: Callable[[str], Mapping[s
     return rows
 
 
+def incidental_passes(rows: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Passing TARGET orderings that no temporal evidence decided.
+
+    A target ``precedes`` that holds while neither memory has an affirmed temporal basis
+    (unknown or not evaluated) was decided by relevance, not by knowing which state is
+    current. It is reported so that a later change cannot count it as progress, and so
+    a regression that flips it is read as relevance movement, not temporal behavior.
+    """
+
+    out = []
+    for row in rows:
+        per_key = row["observation"]["per_key"]
+        for result in row["assertions"]:
+            if result["type"] != "precedes" or result["level"] != "target" or result["status"] != "pass":
+                continue
+            a, b = per_key.get(result["a"]), per_key.get(result["b"])
+            labels = {(a or {}).get("applicability"), (b or {}).get("applicability")}
+            if b and labels <= {"unknown_temporal_basis", "not_evaluated", None}:
+                out.append({"case_id": row["case_id"], "probe_id": row["probe_id"], "a": result["a"], "b": result["b"],
+                            "applicability": sorted(str(x) for x in labels),
+                            "decided_by": a.get("ordered_before_next_by") if a and b and a["rank"] + 1 == b["rank"] else "non_adjacent"})
+    return out
+
+
 def units(rows: list[Mapping[str, Any]]) -> dict[tuple[str, str, str, str], str]:
     grouped: dict[tuple[str, str, str, str], list[str]] = {}
     for row in rows:
@@ -726,7 +750,8 @@ def run_suite(suite: Mapping[str, Any], *, transform: str | None = None, diagnos
         if diagnostics:
             findings.extend(diagnose(case, case_rows, runner))
             controls.extend(negative_controls(case, runner))
-    return {"rows": rows, "metrics": compute_metrics(rows), "diagnostics": findings, "fixture_negative_controls": controls}
+    return {"rows": rows, "metrics": compute_metrics(rows), "diagnostics": findings, "fixture_negative_controls": controls,
+            "incidental_target_passes": incidental_passes(rows)}
 
 
 def order_digests(rows: list[Mapping[str, Any]]) -> dict[str, str]:

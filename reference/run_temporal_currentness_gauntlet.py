@@ -109,6 +109,7 @@ def run_one(fixture: Path, *, variant: str, transform: str, mutant: str | None, 
         "order_digests": tc.order_digests(result["rows"]),
         "diagnostics": result["diagnostics"],
         "fixture_negative_controls": result["fixture_negative_controls"],
+        "incidental_target_passes": result["incidental_target_passes"],
         "rows": result["rows"],
     }
 
@@ -151,6 +152,17 @@ def _unit_table(report: dict) -> dict:
     return {"/".join(key): status for key, status in tc.units(report["rows"]).items()}
 
 
+def _classes(report: dict) -> dict:
+    out: dict = {}
+    for finding in report["diagnostics"]:
+        entry = out.setdefault(finding["failure_class"], {"units": 0, "probes": set(), "levels": set(), "statuses": set()})
+        entry["units"] += 1
+        entry["probes"].add(f"{finding['case_id']}/{finding['probe_id']}")
+        entry["levels"].add(finding["level"])
+        entry["statuses"].add(finding["status"])
+    return {cls: {k: sorted(v) if isinstance(v, set) else v for k, v in entry.items()} for cls, entry in sorted(out.items())}
+
+
 def summarize(reports: dict) -> dict:
     base = reports["baseline"]
     base_units = _unit_table(base)
@@ -176,6 +188,8 @@ def summarize(reports: dict) -> dict:
         "claim_boundary": base["claim_boundary"],
         "baseline_provenance": base["provenance"],
         "baseline_metrics": _metric_values(base),
+        "baseline_incidental_target_passes": base["incidental_target_passes"],
+        "baseline_failure_classes": _classes(base),
         "cross_process_order_reproduction": {
             "seeds": ["0", "1"], "probes": len(base["order_digests"]),
             "reproduced": len(base["order_digests"]) - len(cross),
