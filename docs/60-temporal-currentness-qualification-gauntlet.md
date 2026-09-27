@@ -217,7 +217,7 @@ The first passing rung names the smallest missing mechanism. When no single rung
    - The only dispute mechanism, `adapter.mark_disputed`, changes in-memory state. It reaches durable state only if some later operation persists governance state in the same session.
    - If the session closes first, the dispute is lost on reopen. Explicit historical and as-of recall then admit the disputed, superseded state as labelled historical evidence.
    - #549's "disputed stays controlling" silently depends on persistence ordering, and the facade has no governed dispute operation.
-   - This is a governance-state durability defect, not a temporal one. It is out of scope here and reported separately.
+   - This is a governance-state durability defect, not a temporal one. It is out of scope here and reported separately as #582.
 6. **"Now" is not current intent.**
    - The frozen interpreter treats "now" as a low-confidence cue, so "Where do I live now?" establishes no current ordering.
    - ADR-039 L652 says unambiguous explicit query language should dominate. This is recorded as a target failure and an open calibration question (ADR-039 L1640).
@@ -257,7 +257,7 @@ memory text (+ declared observed_at)
 - Temporal-cue tokens in relevance (finding 3).
 - "Now" calibration (finding 6).
 - Exception precedence (finding 7).
-- Dispute durability (finding 5).
+- Dispute durability (finding 5, #582).
 
 ## Reproduce
 
