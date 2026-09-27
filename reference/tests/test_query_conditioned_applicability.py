@@ -281,7 +281,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.memory = _open(self._temp.name)
         self.assertEqual(self.memory.recall("Who is the current CEO of Acme?", reference_time=NOW)["admitted"], runs[0])
         identity = MULTI_ROUTE_RANKING_POLICY.identity()
-        self.assertEqual((identity["policy_version"], identity["temporal_regime"]), ("3.0.0", "query_conditioned"))
+        self.assertEqual((identity["policy_version"], identity["temporal_regime"]), ("3.0.1", "query_conditioned"))
 
     # C21: no benchmark-specific branching in the applicability path.
     def test_c21_no_benchmark_identifiers_in_policy_modules(self):
