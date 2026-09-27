@@ -65,7 +65,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertEqual(old_evidence["temporal_applicability"], "outside_target_interval")
         self.assertEqual(new_evidence["temporal_applicability"], "applicable")
         self.assertEqual(new_evidence["ordered_before_next_by"], "temporal_applicability_tier")
-        # Demoted, not refused: historical context remains available.
         self.assertIn(old, recalled["admitted"])
 
     # C2: as-of query prefers the evidence valid at the target instant.
@@ -88,7 +87,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertIsNone(a["temporal_ordering_clock"])
         top = _evidence(recalled, recalled["admitted"][0])
         self.assertIn(top["ordered_before_next_by"], {"candidate_ref_neutral_digest", "lexical_relevance_desc:bm25_admitted_set:lexical"})
-        # An older, more relevant memory beats a newer distractor (C22).
         gold = self.remember("notes:gold", "Memory half-life decay notes: half-life depends on context.", valid_from="2019-01-01")
         self.remember("notes:new", "Half-life came up briefly.", valid_from="2026-09-01")
         self.assertEqual(self.memory.recall("What did I write about memory half-life decay?", reference_time=NOW)["admitted"][0], gold)
@@ -104,11 +102,8 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertEqual(_evidence(during, exception)["temporal_applicability"], "applicable")
         self.assertEqual(_evidence(during, rule)["temporal_applicability"], "applicable")
         after = self.memory.recall("When does the office currently close?", reference_time="2026-09-27T12:00:00Z")
-        self.assertEqual(after["admitted"][0], rule)  # the rule is current again without reinsertion
+        self.assertEqual(after["admitted"][0], rule)
         self.assertEqual(_evidence(after, exception)["temporal_applicability"], "outside_target_interval")
-        # LIMITATION (ADR-039 C4, first half): during the exception both are applicable,
-        # and the policy has no exception/specificity dimension. Relevance decides, so the
-        # exception is not guaranteed to rank first. Recorded as an unmodelled dimension.
         self.assertEqual(set(during["admitted"][:2]), {rule, exception})
 
     # C5: disagreeing clocks; valid time, not transaction or observation time, orders current state.
@@ -140,14 +135,13 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
     # C7: metabolic strength is not used and cannot resurrect stale current state.
     def test_c7_metabolic_strength_is_not_used(self):
         old, new = self._ceo_pair()
-        for _ in range(10):  # repeated use of the stale memory
+        for _ in range(10):
             self.memory.recall("Alice Smith chief executive officer", reference_time=NOW)
         recalled = self.memory.recall("Who is the current CEO of Acme?", reference_time=NOW)
         self.assertEqual(recalled["admitted"][0], new)
         self.assertEqual(_evidence(recalled, old)["metabolic_evidence"], "not_used")
 
-    # C8, C9, C10, C11: newer independent writes never supersede; multi-valued and
-    # hierarchical properties coexist.
+    # C8, C9, C10, C11: newer independent writes never supersede; multi-valued and hierarchical properties coexist.
     def test_c8_to_c11_independent_writes_coexist(self):
         pairs = [
             ("likes", "Kevin likes coffee.", "Kevin likes tea.", "What does Kevin currently like?"),
@@ -174,7 +168,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.memory = _open(self._temp.name)
         recalled = self.memory.recall("What is the current project status?", reference_time=NOW)
         self.assertNotIn(foreign_fact, recalled["admitted"])
-        self.assertNotIn(foreign_fact, recalled["candidates"])  # contract 1.3.0 (#548)
+        self.assertNotIn(foreign_fact, recalled["candidates"])
         self.assertNotIn(foreign_fact, recalled["admissions"])
         self.assertEqual(recalled["admitted"], [local])
 
@@ -192,10 +186,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertEqual([evidence[ref]["timeline_position"] for ref in roles], [1, 2, 3])
         self.assertEqual(evidence[roles[0]]["query_temporal_intent"]["mode"], "historical")
 
-    # C14 / C25 (governed correction), resolved by #549 as an admission decision: an
-    # error-corrected record is never admissible as historical truth. A state-changed
-    # record is admissible only under explicit historical/as-of intent
-    # (test_historical_evidence_admission).
+    # C14 / C25 (governed correction), resolved by #549 as an admission decision.
     def test_c14_c25_error_corrected_state_is_never_historical_truth(self):
         self.remember("policy:retention", "The retention policy is 30 days.")
         corrected = self.memory.correct(
@@ -209,22 +200,16 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         )
         self.assertTrue(corrected["committed"], corrected)
         refusals = {decision.get("refusal") for decision in recalled["admissions"].values()}
-        # #549: a default correction is an error correction: the prior value was wrong, so
-        # even explicit historical recall never presents it as historically true.
-        # State-change supersession is covered in test_historical_evidence_admission.
         self.assertIn("corrected_as_false", refusals)
         self.assertEqual(recalled["admitted"], [corrected["fact_uuid"]])
 
-    # C15: LIMITATION. Event-relative temporal relations ("immediately before X") are not
-    # modelled; the interpreter only reports a low-confidence historical cue and no
-    # relation to the referenced event participates in ordering.
+    # C15: LIMITATION. Event-relative temporal relations are not modelled.
     def test_c15_event_relative_relation_is_not_modelled(self):
         intent = interpret_query("What happened immediately before the migration?")
         self.assertEqual((intent.mode, intent.confidence), ("historical", "low"))
         self.assertFalse(intent.orders_temporally)
         self.assertIsNone(intent.target_start)
 
-    # Evaluated alternative (off by default): unspecified intent ordered newer-first among ties.
     def test_unspecified_intent_default_is_explicit_and_versioned(self):
         import dataclasses
 
@@ -242,7 +227,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertEqual(evidence["query_temporal_intent"]["confidence"], "low")
         self.assertFalse(evidence["query_temporal_intent"]["orders_temporally"])
         self.assertEqual(evidence["temporal_applicability"], "not_evaluated")
-        # Conflicting cues preserve ambiguity rather than choosing.
         ambiguous = interpret_query("Where do I live now, and where did I live before?")
         self.assertEqual((ambiguous.mode, ambiguous.confidence), ("atemporal_or_unspecified", "low"))
 
@@ -290,11 +274,17 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
             for token in ("longmemeval", "agentmembench", "memdialogue", "locomo", "knowledge-update", "question_type"):
                 self.assertNotIn(token, source, (module.__name__, token))
 
-    # C24: disputed evidence stays disputed. LIMITATION/stronger: this runtime refuses a
-    # disputed fact at admission, so applicability never presents it at all.
+    # C24: disputed evidence stays disputed. The public governed dispute path is used so
+    # this conformance case also proves the refusal is not an ephemeral harness side effect.
     def test_c24_disputed_current_evidence_is_refused(self):
         disputed = self.remember("status:disputed", "The current release is Cedar.", valid_from="2026-09-01")
-        self.memory.runtime.adapter.mark_disputed(disputed)
+        result = self.memory.dispute(
+            "memory:status:disputed",
+            fact_uuid=disputed,
+            evidence=_correction_evidence(),
+            risk_class="low",
+        )
+        self.assertTrue(result["committed"], result)
         recalled = self.memory.recall("What is the current release?", reference_time=NOW)
         self.assertNotIn(disputed, recalled["admitted"])
         self.assertEqual(recalled["admissions"][disputed]["refusal"], "disputed")
@@ -307,7 +297,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
             self.memory.remember("memory:bad", "bad time", valid_from="yesterday")
         expired = self.remember("fact:expired", "The legacy endpoint is beta.example.", valid_until="2020-01-01")
         recalled = self.memory.recall("legacy endpoint beta", reference_time=NOW)
-        self.assertEqual(recalled["admitted"], [expired])  # admitted: validity is not admission
+        self.assertEqual(recalled["admitted"], [expired])
         self.assertEqual(self.memory.history("memory:fact:expired")["history"]["current_fact_uuid"], expired)
 
 
