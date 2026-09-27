@@ -600,8 +600,34 @@ Rows record `ranked_top` to depth 50 (`REPORTED_RANK_DEPTH`), which covers every
 
 Runtime, ingestion, out-of-corpus, and unmapped failures are all zero.
 
+### LongMemEval_M (maintainer-required replay)
+
+Required by the maintainer on #579 after the AgentMemBench rank change. Run conditions:
+- Revision `41d9c32` (the PR head), from a clean detached worktree (`agent_memory_worktree_dirty: false`), with `PYTHONHASHSEED=0`.
+- Input: `longmemeval_m_cleaned.json` @ `98d7416c`, sha256 `9d79e552…495f` (re-verified), all 500 questions and 419 scored.
+- The same backends, planes, and default configuration as frozen `409098f` (#575).
+- Artifacts: `longmemeval-m-full-41d9c32-seed0.{json,rows.json.gz}` and `compare-lme-m-seed0-vs-409098f.json`.
+
+| comparison | rows compared | rank differences (depth 50) | other non-timing differences |
+| --- | ---: | ---: | ---: |
+| `41d9c32` seed 0 ↔ frozen `409098f` (3 backends × 2 planes) | 3,000 | **0** | 0 |
+
+Every per-question row is identical except for timing fields. Aggregates, `by_question_type`, currentness, governance, and failure classes are equal to `409098f` for every backend and plane:
+
+| plane | backend | recall_all@5 | ndcg_any@5 | recall_all@10 | knowledge-update recall_all@5 | latest gold first |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| session | lexical_overlap | 0.4535 | 0.5282 | 0.5513 | 0.6944 | 0.443 |
+| session | agent_memory | 0.7088 | 0.7492 | 0.7780 | 0.9167 | 0.471 |
+| turn | lexical_overlap | 0.2983 | 0.3529 | 0.3986 | 0.4722 | 0.571 |
+| turn | agent_memory | 0.5322 | 0.5693 | 0.6110 | 0.7083 | 0.514 |
+
+- **Failures.** Runtime, ingestion, and out-of-corpus failures are 0 / 0 / 0, before and after.
+- **Resources.** Peak RSS was 168.2 MB after the scan and 211.6 MB for the whole run (frozen: 167.6 / 212.1).
+- **Wall time.** 11,374 s against the frozen 8,658 s. The slowdown is uniform, 25–40% on every term, including the lexical baseline (68 → 94 s session) and governed ingest, neither of which executes the changed BM25 loop. It is host-speed variance, not a cost of the patch.
+
+This is reproducibility and ranking evidence only. It is not new validity or as-of evidence. **ADR-039 remains Proposed.**
+
 ### Disposition
 
 - The success criterion holds. The same revision, store, and query give byte-identical BM25 evidence and ranking across processes and hash seeds, and governed recall semantics (candidates, admission, refusal, stages, temporal policy) are unchanged.
-- The patch changes one frozen AgentMemBench ranking: record 149, ranks 2 and 3, a 1-ulp exact tie. It changes no metric and no LongMemEval_S row.
-- A LongMemEval_M replay was **not** run. Because AgentMemBench shows a real rank change from the patch, M rank identity is not assumed; M is ~10× S per question, so more exact ties are likely. Whether to replay M is a maintainer decision.
+- The patch changes exactly one frozen ranking across the three benchmarks: AgentMemBench record 149, ranks 2 and 3, a 1-ulp exact tie. It changes no metric. LongMemEval_S (4,000 rows) and LongMemEval_M (3,000 rows) are rank-identical to their frozen evidence at depth 50.
