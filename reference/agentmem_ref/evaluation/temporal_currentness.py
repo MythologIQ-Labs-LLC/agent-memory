@@ -256,8 +256,14 @@ def _run_setup(memory, root: str, case: Mapping[str, Any]):
             if not memory.forget(f"memory:{op['target']}").get("committed"):
                 raise GauntletError(f"setup forget {op['target']} was not committed")
         elif kind == "dispute":
-            # Harness hook: the facade exposes no governed dispute operation.
-            memory.runtime.adapter.mark_disputed(keys[op["key"]])
+            result = memory.dispute(
+                f"memory:{op['target']}",
+                fact_uuid=keys[op["key"]],
+                evidence=_correction_evidence(SCOPE),
+                risk_class="low",
+            )
+            if not result.get("committed"):
+                raise GauntletError(f"setup dispute {op['key']} was not committed: {result.get('refusal') or result.get('outcome')}")
         elif kind == "remember_foreign_scope":
             memory.close()
             with _open(root, scope=op["scope"]) as foreign:
