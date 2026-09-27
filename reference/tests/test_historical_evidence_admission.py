@@ -91,9 +91,7 @@ class HistoricalEvidenceAdmissionTests(unittest.TestCase):
         self.assertEqual(basis["replacement_kind"], "state_change")
         self.assertEqual((basis["valid_from"], basis["valid_until"]), ("2020-01-01", "2024-06-01"))
         self.assertEqual(basis["authority_effect"], "none")
-        # The current state is still current, and marked as such.
         self.assertEqual(self._admission(recalled, self.new)["admission_basis"]["currentness"], "current_state")
-        # Historical admission mutates nothing.
         self.assertEqual(self.memory.history("memory:city")["history"]["current_fact_uuid"], self.new)
 
     def test_explicit_as_of_respects_the_validity_interval(self):
@@ -118,7 +116,8 @@ class HistoricalEvidenceAdmissionTests(unittest.TestCase):
         self.assertEqual(self._admission(recalled, wrong)["refusal"], "corrected_as_false")
 
     def test_disputed_superseded_state_stays_refused(self):
-        self.memory.runtime.adapter.mark_disputed(self.old)
+        disputed = self.memory.dispute("memory:city", fact_uuid=self.old, evidence=_evidence(), risk_class="low")
+        self.assertTrue(disputed["committed"], disputed)
         recalled = self.memory.recall("Where does Kevin live?", temporal_intent=HISTORICAL, reference_time=NOW)
         self.assertNotIn(self.old, recalled["admitted"])
         self.assertEqual(self._admission(recalled, self.old)["refusal"], "disputed")

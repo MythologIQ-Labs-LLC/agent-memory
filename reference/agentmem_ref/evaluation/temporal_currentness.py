@@ -50,8 +50,6 @@ ROLES = {"current_applicable", "not_current", "not_affirmed_current", "prospecti
 OPS = {"remember", "correct", "forget", "dispute", "remember_foreign_scope", "recall_repeat"}
 DECLARED_FIELDS = ("valid_from", "valid_until", "observed_at")
 
-# Metric definitions. "accuracy" = pass / units; "event_rate" = fail / units (the failure
-# IS the event, e.g. stale presented ahead of current); "count" = failed assertions.
 METRICS: dict[str, str] = {
     "current_applicability_accuracy": "accuracy",
     "stale_as_current_rate": "event_rate",
@@ -81,9 +79,6 @@ NOT_MEASURABLE = {
 
 TEMPORAL_STAGES = {"temporal_applicability_tier", "temporal_order_within_query_regime", "temporal_evidence:newer_first"}
 NOT_CURRENT_REFUSALS = {"superseded_not_current", "outside_historical_validity", "corrected_as_false"}
-# Demotion semantics per intent, stated from doctrine rather than imported from the
-# runtime: under current/as_of a candidate valid only outside the target instant is not
-# the canonical answer; under prospective, one that is merely valid now is not.
 DEMOTED_LABELS = {
     "current": {"outside_target_interval", "prospectively_applicable"},
     "as_of": {"outside_target_interval", "prospectively_applicable"},
@@ -95,23 +90,17 @@ LADDER_CLASSES = {
     "declared_cross": "missing_proposition_identity_or_cardinality",
     "governed_state_change": "resolvable_today_by_governed_state_change",
 }
-# Failures whose class follows from the metric itself rather than from a ladder rung.
 METRIC_CLASSES = {
     "intent_interpretation_accuracy": "query_intent_interpretation",
     "temporal_self_claim_rank_influence_count": "relevance_ranking_rewards_temporal_self_claims",
 }
 ASSERTION_CLASSES = {"invariant_under_variant": "relevance_ranking_rewards_temporal_self_claims"}
-# Canonical smallest-first order of counterfactual mechanisms. A probe's declared ladder
-# comes first; every other diagnostic variant the case defines is appended in this order.
 CANONICAL_LADDER = ("explicit_intent", "declared_self", "declared_cross", "governed_state_change")
 DIMENSION_CLASSES = {"B_as_of_historical": "historical_admission", "E_metabolism_vs_validity": "metabolism_vs_validity"}
 
 
 class GauntletError(RuntimeError):
     """The harness could not execute a case faithfully. Never silently skipped."""
-
-
-# ---------------------------------------------------------------------------- suite
 
 
 def suite_digest(path: str | Path) -> str:
@@ -175,9 +164,6 @@ def validate_suite(suite: Mapping[str, Any]) -> None:
             for vid in probe.get("diagnostic_ladder", ()):
                 if vid not in variants and vid != "explicit_intent":
                     raise GauntletError(f"{cid}/{pid}: undefined ladder variant {vid!r}")
-
-
-# ---------------------------------------------------------------------------- execution
 
 
 def _correction_evidence(scope: str):
@@ -256,8 +242,18 @@ def _run_setup(memory, root: str, case: Mapping[str, Any]):
             if not memory.forget(f"memory:{op['target']}").get("committed"):
                 raise GauntletError(f"setup forget {op['target']} was not committed")
         elif kind == "dispute":
-            # Harness hook: the facade exposes no governed dispute operation.
-            memory.runtime.adapter.mark_disputed(keys[op["key"]])
+            fact_uuid = keys[op["key"]]
+            target_reference = memory.runtime.adapter._fact_memory.get(fact_uuid)
+            if not target_reference:
+                raise GauntletError(f"setup dispute {op['key']} has no canonical fact-to-memory binding")
+            result = memory.dispute(
+                target_reference,
+                fact_uuid=fact_uuid,
+                evidence=_correction_evidence(SCOPE),
+                risk_class="low",
+            )
+            if not result.get("committed"):
+                raise GauntletError(f"setup dispute {op['key']} was not committed: {result.get('refusal') or result.get('outcome')}")
         elif kind == "remember_foreign_scope":
             memory.close()
             with _open(root, scope=op["scope"]) as foreign:
@@ -291,7 +287,7 @@ def _metabolism(case: Mapping[str, Any], keys: Mapping[str, str]) -> dict[str, A
 
 def _observe(memory, probe: Mapping[str, Any], keys: Mapping[str, str], targets: Mapping[str, str]) -> dict[str, Any]:
     by_uuid = {uuid: key for key, uuid in keys.items()}
-    name = lambda uuid: by_uuid.get(uuid, f"unkeyed:{uuid}")  # noqa: E731
+    name = lambda uuid: by_uuid.get(uuid, f"unkeyed:{uuid}")
     recalled = memory.recall(probe["query"], temporal_intent=probe.get("temporal_intent"), reference_time=probe.get("reference_time"))
     per_key: dict[str, dict[str, Any]] = {}
     intent = None
@@ -339,8 +335,6 @@ def _digest(value: Any) -> str:
 
 def execute_case(case: Mapping[str, Any], *, patch: Mapping[str, Any] | None = None, transform: str | None = None,
                  restart: bool = True) -> dict[str, Any]:
-    """Run one case in a fresh store: setup, every probe, then restart and re-probe."""
-
     case = _apply_patch(case, patch, transform)
     with tempfile.TemporaryDirectory() as root:
         memory = _open(root)
@@ -362,9 +356,6 @@ def execute_case(case: Mapping[str, Any], *, patch: Mapping[str, Any] | None = N
         "restart_digests": restart_digests,
         "metabolism": _metabolism(case, keys),
     }
-
-
-# ---------------------------------------------------------------------------- scoring
 
 
 def _role_holds(role: str, obs: Mapping[str, Any] | None, mode: str | None) -> bool:
@@ -406,12 +397,10 @@ def _resolve(ref: str, observation: Mapping[str, Any]) -> str | None:
 
 def evaluate_assertion(assertion: Mapping[str, Any], observation: Mapping[str, Any], run: Mapping[str, Any],
                        probe: Mapping[str, Any], variant_runner: Callable[[str], Mapping[str, Any]] | None) -> tuple[str, str]:
-    """Return (status, detail). Evaluation reads only the observation and the gold."""
-
     kind = assertion["type"]
     per_key = observation["per_key"]
     mode = (observation.get("intent") or {}).get("mode")
-    get = lambda ref: per_key.get(ref) if ref else None  # noqa: E731
+    get = lambda ref: per_key.get(ref) if ref else None
     target_level = assertion["level"] == "target"
 
     def verdict(ok: bool, detail: str, involved: tuple[str, ...] = ()) -> tuple[str, str]:
@@ -551,14 +540,6 @@ def score_case(run: Mapping[str, Any], variant_runner: Callable[[str], Mapping[s
 
 
 def incidental_passes(rows: list[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """Passing TARGET orderings that no temporal evidence decided.
-
-    A target ``precedes`` that holds while neither memory has an affirmed temporal basis
-    (unknown or not evaluated) was decided by relevance, not by knowing which state is
-    current. It is reported so that a later change cannot count it as progress, and so
-    a regression that flips it is read as relevance movement, not temporal behavior.
-    """
-
     out = []
     for row in rows:
         per_key = row["observation"]["per_key"]
@@ -612,9 +593,6 @@ def compute_metrics(rows: list[Mapping[str, Any]]) -> dict[str, Any]:
     return metrics
 
 
-# ---------------------------------------------------------------------------- diagnostics
-
-
 def auto_variant(case: Mapping[str, Any], vid: str, probe_id: str) -> Mapping[str, Any] | None:
     variants = case.get("diagnostic_variants", {})
     if vid in variants:
@@ -628,13 +606,6 @@ def auto_variant(case: Mapping[str, Any], vid: str, probe_id: str) -> Mapping[st
 
 
 def diagnose(case: Mapping[str, Any], rows: list[Mapping[str, Any]], runner: Callable[[str, Mapping[str, Any]], Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """For every failed or honest-unknown unit, find the smallest diagnostic variant that resolves it.
-
-    Variants are counterfactual *inputs* (caller intent, declared validity, a governed
-    state change), never runtime changes. The first passing rung of the probe's ladder
-    names the smallest mechanism that would supply the missing information.
-    """
-
     unit_status = units(rows)
     findings = []
 
@@ -659,7 +630,6 @@ def diagnose(case: Mapping[str, Any], rows: list[Mapping[str, Any]], runner: Cal
         rungs = [{"variant": vid, "status": attempt((vid,), case_id, probe_id, metric, level)} for vid in ladder]
         resolving = next((r["variant"] for r in rungs if r["status"] == "pass"), None)
         if resolving is None:
-            # No single mechanism suffices: try pairs, smallest first, in ladder order.
             for i, first in enumerate(ladder):
                 for second in ladder[i + 1:]:
                     status_pair = attempt((first, second), case_id, probe_id, metric, level)
@@ -683,8 +653,6 @@ def diagnose(case: Mapping[str, Any], rows: list[Mapping[str, Any]], runner: Cal
 
 
 def negative_controls(case: Mapping[str, Any], runner: Callable[[str, Mapping[str, Any]], Mapping[str, Any]]) -> list[dict[str, Any]]:
-    """Fixture-declared bad inputs that the required assertions must reject."""
-
     out = []
     for vid in case.get("negative_control_variants", ()):
         rows = score_case(runner(vid, case["diagnostic_variants"][vid]))
@@ -694,19 +662,10 @@ def negative_controls(case: Mapping[str, Any], runner: Callable[[str, Mapping[st
     return out
 
 
-# ---------------------------------------------------------------------------- runtime mutants
-
-
 MUTANTS = ("invent_currency", "ignore_validity")
 
 
 def install_mutant(name: str) -> None:
-    """Evaluation-process-only runtime mutants proving the evaluator can fail bad temporal behavior.
-
-    ``invent_currency``: unknown temporal basis is reported as applicable.
-    ``ignore_validity``: every candidate is reported applicable, so nothing is demoted.
-    """
-
     from agentmem_ref.runtime import ranking_policy
 
     original = ranking_policy.temporal_applicability
@@ -721,9 +680,6 @@ def install_mutant(name: str) -> None:
     else:
         raise ValueError(f"unknown mutant {name!r}")
     ranking_policy.temporal_applicability = mutant
-
-
-# ---------------------------------------------------------------------------- suite run
 
 
 def run_suite(suite: Mapping[str, Any], *, transform: str | None = None, diagnostics: bool = True,

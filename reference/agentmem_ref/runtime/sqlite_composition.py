@@ -61,6 +61,18 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
             return super().correct(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal,
                                    replacement_kind=replacement_kind)
 
+    def dispute(self, proposal, fact_uuid: str, *, evidence=None, attestation=None):
+        """Persist one governed dispute transition in the same SQLite generation as its audit evidence."""
+        with self.serialization_lock:
+            return self.durable_runtime.run_governed_read(
+                lambda: self.adapter.governed_dispute(
+                    proposal,
+                    fact_uuid,
+                    evidence=evidence,
+                    attestation=attestation,
+                )
+            )
+
     def delete_current(self, proposal, *, evidence=None, external_verification=None):
         with self.serialization_lock:
             return super().delete_current(proposal, evidence=evidence, external_verification=external_verification)

@@ -83,9 +83,10 @@ def _exercise(memory: AgentMemory) -> None:
         replacement_kind="state_change",
     )
     memory.forget("memory:item-3")
-    base = _base(memory)
     fact = memory.history("memory:item-4")["history"]["current_fact_uuid"]
-    base.run_governed_read(lambda: base.adapter.mark_disputed(fact))
+    disputed = memory.dispute("memory:item-4", fact_uuid=fact, evidence=_evidence(), risk_class="low")
+    if not disputed.get("committed"):
+        raise AssertionError(f"governed dispute did not commit: {disputed}")
     memory.recall("item deploy")
 
 

@@ -836,7 +836,129 @@ class GovernedMemoryAdapter:
         return None
 
     def mark_disputed(self, fact_uuid: str) -> None:
+        """In-memory harness primitive; durable runtimes must use governed_dispute()."""
+        if getattr(self, "checkpoint_owner", None):
+            raise RuntimeError("restart-safe adapters require governed_dispute; direct mark_disputed bypasses durable governance")
         self._disputed.add(fact_uuid)
+
+    def _dispute_refusal(self, proposal: policy.Proposal, fact_uuid: str) -> str | None:
+        fact = self._substrate.get_fact(fact_uuid)
+        if fact is None:
+            return "fact_not_found"
+        if fact.group_id != self._tenant:
+            return "cross_tenant_dispute"
+        bound_memory = self._fact_memory.get(fact_uuid)
+        if bound_memory is None:
+            return "target_binding_unknown"
+        if bound_memory != proposal.target_reference:
+            return "target_binding_mismatch"
+        if fact_uuid in self._disputed:
+            return "already_disputed"
+        return None
+
+    def governed_dispute(
+        self,
+        proposal: policy.Proposal,
+        fact_uuid: str,
+        *,
+        evidence: "Sequence[EvidenceItem] | None" = None,
+        attestation: policy.ExternalVerification | None = None,
+    ) -> CommitResult:
+        """Durably mark one bound fact disputed through the existing authority envelope.
+
+        ``mark_disputed`` is a conflict-resolution action in repository doctrine but is
+        not yet a closed public PAMA mutation enum. The public facade therefore classifies
+        this bounded transition conservatively as ``other``; changing that enum is a
+        separate contract/doctrine decision. The audit event records the actual dispute
+        semantics and exact fact identity.
+        """
+        if proposal.operation != "other":
+            raise ValueError("governed dispute requires conservative PAMA operation 'other'")
+
+        correlation = self._ids.next()
+        propose_event = self._event("memory.propose", proposal.target_reference, correlation)
+        decision = self.evaluate_proposal(proposal, evidence=evidence, attestation=attestation)
+        authorize_event = self._event(
+            "memory.authorize",
+            proposal.target_reference,
+            correlation,
+            causation_id=propose_event["event_id"],
+            policy_version=decision.policy_version,
+            authority={
+                "permitted_actions": list(decision.permitted_actions),
+                "prohibited_actions": list(decision.prohibited_actions),
+                "selection_mode": "none",
+            },
+        )
+        events = [propose_event, authorize_event]
+
+        refusal = self._dispute_refusal(proposal, fact_uuid)
+        stale = self._is_stale(proposal)
+        selected = self._select_action(decision, proposal, blocked_by_stale=stale)
+        committed = refusal is None and selected == proposal.operation
+        if refusal is None and stale:
+            refusal = "stale_decision"
+        before_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+
+        if committed:
+            self._disputed.add(fact_uuid)
+            self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
+
+        after_state = f"v{self._state_version.get(proposal.target_reference, 0)}"
+        receipt_id = self._ids.next()
+        receipt = receipts.build_receipt(
+            receipt_id=receipt_id,
+            proposal=proposal,
+            decision=decision,
+            selected_action=selected,
+            selection_mode=self._selector.mode if selected != receipts.NO_ACTION else "none",
+            timestamp=self._clock.now(),
+            before_state=before_state,
+            after_state=after_state,
+            rollback_ref=f"recovery:{proposal.target_reference}:{before_state}" if committed else None,
+        )
+        pama_decision = receipts.build_pama_decision(
+            proposal,
+            decision,
+            selected,
+            self._selector.mode if selected != receipts.NO_ACTION else None,
+            receipt_id,
+        )
+
+        dispute_event = {
+            "schema_version": "1.0.0",
+            "event_id": self._ids.next(),
+            "event_type": "memory.dispute",
+            "event_version": "1.0.0",
+            "timestamp": self._clock.now(),
+            "component": "governed-adapter",
+            "memory_id": proposal.target_reference,
+            "correlation_id": correlation,
+            "causation_id": authorize_event["event_id"],
+            "policy_version": decision.policy_version,
+            "receipt_ref": receipt_id,
+            "payload": {
+                "fact_uuid": fact_uuid,
+                "proposal_id": proposal.proposal_id,
+                "evidence_refs": list(proposal.evidence_refs),
+                "committed": committed,
+                "refusal": refusal,
+                "operation_classification": "other",
+            },
+        }
+        receipts.validate("memory-audit-event.schema.json", dispute_event)
+        events.append(dispute_event)
+        self.events.extend(events)
+
+        return CommitResult(
+            decision=decision,
+            pama_decision=pama_decision,
+            receipt=receipt,
+            events=events,
+            committed=committed,
+            fact_uuid=fact_uuid if committed else None,
+            refusal=refusal,
+        )
 
     # -- canonical state accessors --------------------------------------
 
