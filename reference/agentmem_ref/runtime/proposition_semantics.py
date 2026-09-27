@@ -103,6 +103,16 @@ _SELF_CLAIMS = {
     "currentness": r"\b(this (memory|note|record|fact) is (the )?(current|latest|valid))\b|\b(is|are) current;",
     "instruction": r"\b(ignore (all )?(previous|prior)|mark this as|treat this as|you must)\b",
 }
+# Temporal aspect the memory asserts about itself. Recorded as typed evidence even when no
+# proposition parses, so a memory's own "currently" is carried by type rather than only by
+# lexical overlap (#583). Evidence only: never a validity window, never currentness.
+_ASPECT_CUES = {
+    "present": ("currently", "right now", "at the moment", "these days", "nowadays", "presently", "at present",
+                "as of now", "now"),
+    "prospective": ("planning to", "plan to", "going to", "intend to", "will", "next week", "next month",
+                    "next year", "tomorrow", "upcoming", "soon"),
+    "past_habitual": ("used to", "no longer", "not anymore", "previously", "formerly"),
+}
 _SELF_REFERENCE = re.compile(r"^(this|the) (memory|note|record|fact|entry)\b")
 
 _NUMBER_WORDS = {"a": 1, "an": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
@@ -424,6 +434,8 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
     month_free = re.sub(r"\bmay(?=\s+\d)", "maymonth", lowered)  # "May 3" is a date, not a hedge
     hedges = sorted(h for h in _HEDGES if _contains(month_free, h))
     self_claims = sorted(name for name, pattern in _SELF_CLAIMS.items() if re.search(pattern, lowered))
+    aspect = {name: sorted(cue for cue in cues if _contains(lowered, cue)) for name, cues in _ASPECT_CUES.items()}
+    aspect = {name: cues for name, cues in aspect.items() if cues}
     clauses: list[dict[str, Any]] = []
     antecedent: str | None = None
     for raw in _split_clauses(text):
@@ -496,7 +508,8 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
         "proposition": proposition,
         "ended_values": ended,
         "cardinality": cardinality,
-        "markers": {"change": change, "coexistence": coexistence, "hedge": hedges, "self_claims": self_claims},
+        "markers": {"change": change, "coexistence": coexistence, "hedge": hedges, "self_claims": self_claims,
+                    "aspect": aspect},
         "self_validity": self_validity,
         "proposal_ineligible_reasons": ineligible,
     })
