@@ -444,6 +444,8 @@ def evaluate_assertion(assertion: Mapping[str, Any], observation: Mapping[str, A
                        f"{assertion['key']} clock={obs and obs['ordering_clock']} expected {assertion['clock']}")
     if kind == "intent":
         gold, seen = probe["gold_intent"], observation.get("intent") or {}
+        if not seen:
+            return "not_applicable", "ranking evidence carries no query temporal intent under this policy"
         ok = seen.get("mode") == gold["mode"] and seen.get("posture") == gold["posture"]
         if gold["mode"] != "historical":
             ok = ok and seen.get("orders_temporally") == gold["orders_temporally"]
