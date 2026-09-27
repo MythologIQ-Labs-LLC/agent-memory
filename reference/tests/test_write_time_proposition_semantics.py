@@ -273,6 +273,22 @@ class ClassificationAndProposalTests(_MemoryCase):
         boston = self.write("home:boston", "The user has moved and now lives in Boston.")
         self.assertEqual(self.relations(boston), [])
 
+    def test_semantic_evidence_never_crosses_scope_or_survives_deletion(self):
+        denver = self.write("home:denver", "The user lives in Denver.")
+        boston = self.write("home:boston", "The user has moved and now lives in Boston.")
+        self.memory.close()
+        with _open(self.root, scope="project:elsewhere") as other:
+            self.assertIsNone(other.write_semantics(boston))
+            self.assertIsNone(other.write_semantics(denver))
+            self.assertEqual(other.semantic_proposals(), [])
+            refused = other.apply_semantic_proposal(ps.proposal_id(boston, denver), evidence=_evidence("project:elsewhere"), risk_class="low")
+            self.assertEqual(refused["refusal"], "semantic_proposal_not_found")
+        self.memory = _open(self.root)
+        self.assertEqual(len(self.memory.semantic_proposals()), 1)
+        self.assertTrue(self.memory.forget("memory:home:boston")["committed"])
+        self.assertIsNone(self.memory.write_semantics(boston))  # deletion stays controlling
+        self.assertEqual(self.memory.semantic_proposals(), [])
+
     def test_superseded_or_forgotten_facts_are_not_related(self):
         self.write("home:denver", "The user lives in Denver.")
         self.assertTrue(self.memory.forget("memory:home:denver")["committed"])
@@ -374,11 +390,21 @@ class GovernedApplicationTests(_MemoryCase):
     def test_proposal_goes_stale_when_its_target_changes(self):
         self.write("drink:tea", "The user prefers tea.")
         coffee = self.write("drink:coffee", "The user used to prefer tea, but now prefers coffee.")
-        self.assertTrue(self.memory.forget("memory:drink:tea")["committed"])
-        self.assertEqual([p["status"] for p in self.memory.semantic_proposals()], ["stale"])
         proposal_id = self.relations(coffee)[0]["proposal"]["proposal_id"]
+        corrected = self.memory.correct("memory:drink:tea", "The user prefers green tea.", evidence=_evidence(), risk_class="low")
+        self.assertTrue(corrected["committed"], corrected)
+        self.assertEqual([p["status"] for p in self.memory.semantic_proposals()], ["stale"])
         self.assertEqual(self.memory.apply_semantic_proposal(proposal_id, evidence=_evidence(), risk_class="low")["refusal"],
                          "semantic_proposal_not_open")
+
+    def test_proposal_against_a_deleted_target_is_not_listed(self):
+        self.write("drink:tea", "The user prefers tea.")
+        coffee = self.write("drink:coffee", "The user used to prefer tea, but now prefers coffee.")
+        proposal_id = self.relations(coffee)[0]["proposal"]["proposal_id"]
+        self.assertTrue(self.memory.forget("memory:drink:tea")["committed"])
+        self.assertEqual(self.memory.semantic_proposals(), [])
+        self.assertEqual(self.memory.apply_semantic_proposal(proposal_id, evidence=_evidence(), risk_class="low")["refusal"],
+                         "semantic_proposal_not_found")
 
 
 class PersistenceTests(_MemoryCase):
@@ -399,6 +425,18 @@ class PersistenceTests(_MemoryCase):
         # The rebuilt slot index relates a post-restart write to pre-restart facts.
         austin = self.write("home:austin", "The user used to live in Denver, but now lives in Austin.")
         self.assertEqual({r["other_fact_uuid"] for r in self.relations(austin)}, {denver, boston})
+
+    def test_rolled_back_write_leaves_no_semantic_residue(self):
+        from unittest import mock
+        denver = self.write("home:denver", "The user lives in Denver.")
+        runtime = self.memory.runtime.durable_runtime.base
+        with mock.patch.object(type(runtime), "_persist_unlocked", side_effect=RuntimeError("injected")):
+            with self.assertRaises(RuntimeError):
+                self.memory.remember("memory:home:ghost", "The user has moved and now lives in Ghosttown.")
+        self.assertIsNone(self.memory.runtime.adapter._semantic_slot_index)  # rebuilt, not trusted
+        self.assertEqual(self.memory.semantic_proposals(), [])
+        boston = self.write("home:boston", "The user has moved and now lives in Boston.")
+        self.assertEqual([r["other_fact_uuid"] for r in self.relations(boston)], [denver])
 
     def test_stored_interpretation_is_version_pinned(self):
         fact = self.write("home:denver", "The user lives in Denver.")

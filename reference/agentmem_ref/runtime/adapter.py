@@ -654,14 +654,25 @@ class GovernedMemoryAdapter:
             self._semantic_slot_index = index
         return self._semantic_slot_index
 
-    def write_semantics(self, fact_uuid: str) -> dict | None:
+    def _semantics_visible(self, fact_uuid: str, context: RecallContext) -> Fact | None:
+        """Interpretation evidence is readable only where the fact itself could be recalled
+        from: same tenant, domain-eligible for the caller, and not deleted."""
+
         fact = self._substrate.get_fact(fact_uuid)
-        if fact is None or fact.group_id != self._tenant:
+        if fact is None or fact.uuid in self._tombstones:
+            return None
+        if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
+            return None
+        return fact if self.domain_eligible(fact, context) else None
+
+    def write_semantics(self, fact_uuid: str, context: RecallContext) -> dict | None:
+        fact = self._semantics_visible(fact_uuid, context)
+        if fact is None:
             return None
         value = (fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY)
         return json.loads(json.dumps(value)) if value is not None else None
 
-    def semantic_proposals(self) -> list[dict]:
+    def semantic_proposals(self, context: RecallContext) -> list[dict]:
         """Every write-time ``state_change`` proposal with its status derived now.
 
         ``open``: the proposal's target is still that memory's current fact and the
@@ -672,12 +683,12 @@ class GovernedMemoryAdapter:
 
         proposals = []
         for fact in getattr(self._substrate, "all_facts", lambda: ())():
-            if fact.group_id != self._tenant:
+            if self._semantics_visible(fact.uuid, context) is None:
                 continue
             value = (fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY) or {}
             for relation in value.get("relations", ()):
                 proposal = relation.get("proposal")
-                if not proposal:
+                if not proposal or self._semantics_visible(proposal["target_fact_uuid"], context) is None:
                     continue
                 proposals.append({**json.loads(json.dumps(proposal)), "status": self._proposal_status(proposal),
                                   "classification": relation["classification"], "basis": relation["basis"],

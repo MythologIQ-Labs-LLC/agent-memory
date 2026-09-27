@@ -569,7 +569,7 @@ class AgentMemory:
         ``authority_effect: none``; nothing in it refuses, supersedes, or mutates.
         """
         self._require_open()
-        return self.runtime.adapter.write_semantics(fact_uuid)
+        return self.runtime.adapter.write_semantics(fact_uuid, self._handle_recall_context())
 
     @_serialized
     def semantic_proposals(self, *, status: str | None = None) -> list[dict]:
@@ -578,8 +578,19 @@ class AgentMemory:
         ``open`` / ``applied`` / ``stale``. A proposal is never applied automatically.
         """
         self._require_open()
-        proposals = self.runtime.adapter.semantic_proposals()
+        proposals = self.runtime.adapter.semantic_proposals(self._handle_recall_context())
         return [item for item in proposals if status is None or item["status"] == status]
+
+    def _handle_recall_context(self):
+        """This handle's own recall context: evidence is visible only where recall could see it."""
+        envelope = {
+            "contract_version": contract.CONTRACT_VERSION,
+            "target_domain_refs": list(self._domain_refs()),
+            "principal_ref": self.actor_id,
+            "project_ref": self.scope,
+            "purpose": self.purpose,
+        }
+        return contract.recall_context_from_envelope(contract.validate_recall_context(envelope))
 
     @_serialized
     def apply_semantic_proposal(
@@ -602,7 +613,7 @@ class AgentMemory:
         applied as an effective time, and a proposal that is not ``open`` is refused.
         """
         self._require_open()
-        proposal = next((item for item in self.runtime.adapter.semantic_proposals()
+        proposal = next((item for item in self.runtime.adapter.semantic_proposals(self._handle_recall_context())
                          if item["proposal_id"] == proposal_id), None)
         if proposal is None or proposal["status"] != "open":
             return contract.result(
