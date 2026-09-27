@@ -8,12 +8,13 @@ candidates could change order. The fixture below is such a near-tie: m0, m3 and 
 score identically in exact arithmetic, and at ``8dba9eb`` seeds 0, 1 and 2 ranked them
 three different ways.
 
-Scope of the guarantee: 3.0.1 makes the accumulation order a function of the inputs
-alone, so evidence is identical across processes. It does **not** make every
-mathematically tied pair bit-equal. Two texts whose addends are the same multiset can
-still round 1 ulp apart when the distinguishing term sorts at a different position
-(``RESIDUAL_ULP`` below; AgentMemBench record 149 is a live instance). That residual
-order is deterministic, and is pinned here so a later change to it is visible.
+Scope of the guarantee: 3.0.1 made the accumulation order a function of the inputs
+alone, and policy 3.0.2 preserves that guarantee while separating consumed temporal
+intent cues from lexical relevance (#583). It does **not** make every mathematically
+tied pair bit-equal. Two texts whose addends are the same multiset can still round 1
+ulp apart when the distinguishing term sorts at a different position (``RESIDUAL_ULP``
+below; AgentMemBench record 149 is a live instance). That residual order is
+deterministic, and is pinned here so a later change to it is visible.
 
 The cross-process tests run fresh interpreters with explicit seeds because a single
 process cannot change its own string-hash seed.
@@ -110,7 +111,7 @@ def _run_under_seed(seed: str, query: str = QUERY, texts: dict[str, str] = TEXTS
 
 
 def _sorted_order_reference(query: str, texts: dict[str, str]) -> dict[str, float]:
-    """Independent restatement of the 3.0.1 accumulation: sorted term order, same formula."""
+    """Independent restatement of the sorted BM25 accumulation used since 3.0.1."""
 
     documents = {ref: ranking_policy.relevance_tokens(text) for ref, text in texts.items()}
     count = len(documents)
@@ -188,7 +189,7 @@ class BM25HashSeedDeterminismTests(unittest.TestCase):
         self.assertEqual(a, math.nextafter(b, math.inf))
 
     def test_policy_version_records_the_patch(self):
-        self.assertEqual(ranking_policy.POLICY_VERSION, "3.0.1")
+        self.assertEqual(ranking_policy.POLICY_VERSION, "3.0.2")
 
 
 if __name__ == "__main__":

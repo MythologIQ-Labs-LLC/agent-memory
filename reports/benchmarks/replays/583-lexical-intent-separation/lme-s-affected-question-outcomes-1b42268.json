@@ -1,0 +1,252 @@
+{
+ "affected": 23,
+ "gold_contains_cue": 6,
+ "no_gold": 4,
+ "outcomes": {
+  "session": {
+   "identical": 5,
+   "metric_gain": 1,
+   "metric_loss": 1,
+   "rank_only": 16
+  },
+  "turn": {
+   "identical": 7,
+   "metric_gain": 2,
+   "metric_loss": 4,
+   "metric_loss+latest_gold_first_lost": 1,
+   "rank_only": 9
+  }
+ },
+ "questions": [
+  {
+   "question_id": "07741c45",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 1,
+   "session": "rank_only",
+   "turn": "metric_loss+latest_gold_first_lost"
+  },
+  {
+   "question_id": "18bc8abd",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 1,
+   "session": "rank_only",
+   "turn": "identical"
+  },
+  {
+   "question_id": "1a8a66a6",
+   "question_type": "multi-session",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 3,
+   "gold_turns_containing_cue": 0,
+   "session": "identical",
+   "turn": "identical"
+  },
+  {
+   "question_id": "1cea1afa",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 0,
+   "session": "identical",
+   "turn": "identical"
+  },
+  {
+   "question_id": "3ba21379",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 0,
+   "session": "identical",
+   "turn": "identical"
+  },
+  {
+   "question_id": "46a3abf7",
+   "question_type": "multi-session",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 3,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "metric_gain"
+  },
+  {
+   "question_id": "488d3006",
+   "question_type": "single-session-assistant",
+   "cue": "planning to",
+   "intent": "prospective/inferred/high",
+   "gold_turns": 0,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "4d6b87c8",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 1,
+   "session": "identical",
+   "turn": "identical"
+  },
+  {
+   "question_id": "5a4f22c0",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 1,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "6d550036",
+   "question_type": "multi-session",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 4,
+   "gold_turns_containing_cue": 0,
+   "session": "identical",
+   "turn": "identical"
+  },
+  {
+   "question_id": "8464fc84",
+   "question_type": "single-session-assistant",
+   "cue": "planning to",
+   "intent": "prospective/inferred/high",
+   "gold_turns": 0,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "86f00804",
+   "question_type": "single-session-user",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 1,
+   "gold_turns_containing_cue": 1,
+   "session": "rank_only",
+   "turn": "metric_loss"
+  },
+  {
+   "question_id": "89941a93",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 0,
+   "session": "metric_loss",
+   "turn": "identical"
+  },
+  {
+   "question_id": "a9f6b44c",
+   "question_type": "multi-session",
+   "cue": "plan to",
+   "intent": "prospective/inferred/high",
+   "gold_turns": 4,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "metric_loss"
+  },
+  {
+   "question_id": "b6025781",
+   "question_type": "single-session-preference",
+   "cue": "next week",
+   "intent": "prospective/inferred/high",
+   "gold_turns": 1,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "c14c00dd",
+   "question_type": "single-session-user",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 1,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "c4f10528",
+   "question_type": "single-session-assistant",
+   "cue": "planning to",
+   "intent": "prospective/inferred/high",
+   "gold_turns": 0,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "cf22b7bf",
+   "question_type": "knowledge-update",
+   "cue": "going to",
+   "intent": "prospective/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "metric_loss"
+  },
+  {
+   "question_id": "e493bb7c",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "e9327a54",
+   "question_type": "single-session-assistant",
+   "cue": "planning to",
+   "intent": "prospective/inferred/high",
+   "gold_turns": 0,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "eace081b",
+   "question_type": "knowledge-update",
+   "cue": "planning to",
+   "intent": "prospective/inferred/high",
+   "gold_turns": 1,
+   "gold_turns_containing_cue": 1,
+   "session": "rank_only",
+   "turn": "metric_loss"
+  },
+  {
+   "question_id": "ed4ddc30",
+   "question_type": "knowledge-update",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 2,
+   "gold_turns_containing_cue": 0,
+   "session": "rank_only",
+   "turn": "rank_only"
+  },
+  {
+   "question_id": "gpt4_194be4b3",
+   "question_type": "multi-session",
+   "cue": "currently",
+   "intent": "current/inferred/high",
+   "gold_turns": 4,
+   "gold_turns_containing_cue": 0,
+   "session": "metric_gain",
+   "turn": "metric_gain"
+  }
+ ]
+}

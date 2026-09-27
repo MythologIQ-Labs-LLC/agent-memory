@@ -11,7 +11,7 @@ A policy is a documented, versioned sequence of lexicographic stages. Stage valu
 their own types; nothing is summed into one number, and the final order is not a claim
 that the contributing evidence shares a unit.
 
-Stages (policy version 3.0.1, ``temporal_regime = query_conditioned``):
+Stages (policy version 3.0.2, ``temporal_regime = query_conditioned``):
 
 1. temporal applicability tier. **Only** when the query's temporal intent is explicit or
    inferred with high confidence, and only for ``current``, ``as_of``, and
@@ -27,7 +27,9 @@ Stages (policy version 3.0.1, ``temporal_regime = query_conditioned``):
    cross-scaled. For the lexical route under ``bm25_admitted_set``, Okapi BM25
    (k1=1.2, b=0.75, untuned) with term statistics over the admitted set only, and
    per-term contributions accumulated in sorted term order so the score is identical
-   across processes;
+   across processes. For inferred high-confidence temporal intent, interpreter evidence
+   that is classified as intent-only is removed from the lexical query before BM25 so
+   a candidate cannot gain relevance merely by repeating the temporal instruction.
 5. temporal order within the query's regime, among candidates equal on every earlier
    stage, only when the intent orders temporally:
    ``current``: newest first; ``as_of``: latest evidence at or before the target first,
@@ -66,16 +68,88 @@ from typing import Any, Callable, Iterable, Mapping, Sequence
 from .temporal_intent import AS_OF, CURRENT, DECLARED_TEMPORAL_KEY, PROSPECTIVE, TIMELINE, TemporalIntent, parse_time
 
 POLICY_FAMILY = "agent-memory-post-admission-ranking"
-POLICY_VERSION = "3.0.1"
+POLICY_VERSION = "3.0.2"
 BM25_K1 = 1.2
 BM25_B = 0.75
 _TOKEN = re.compile(r"[a-z0-9]+")
+
+# #583: only interpreter cues that are safely intent-only are excluded from lexical
+# relevance. Ambiguous/content-bearing cues such as ``current`` and every low-confidence
+# cue stay in the relevance query. This is a generic interpreter/ranking seam, not a
+# benchmark stopword list. #585 owns broader intent calibration (notably plain ``now``).
+_RELEVANCE_INTENT_ONLY_CUES = frozenset(
+    {
+        "currently",
+        "right now",
+        "at the moment",
+        "at present",
+        "presently",
+        "nowadays",
+        "these days",
+        "as of now",
+        "as of today",
+        "used to",
+        "previously",
+        "formerly",
+        "in the past",
+        "back then",
+        "prior to",
+        "next week",
+        "next month",
+        "next year",
+        "tomorrow",
+        "planning to",
+        "plan to",
+        "going to",
+        "intend to",
+    }
+)
 
 
 def relevance_tokens(text: str) -> list[str]:
     """Lower-cased alphanumeric tokens (``user's`` -> ``user``, ``s``)."""
 
     return _TOKEN.findall(text.lower())
+
+
+def relevance_query_for_intent(query: str, intent: TemporalIntent) -> tuple[str, tuple[str, ...]]:
+    """Return lexical query text with interpreter-consumed intent-only cues removed.
+
+    The temporal interpreter remains the source of truth for which cues matched and
+    which mode/confidence was established. Ranking only removes a matched cue when all
+    of the following are true:
+
+    * the intent is inferred from this query rather than declared by a caller;
+    * the inference is high-confidence and actually orders temporally;
+    * the cue helped establish the selected mode; and
+    * the cue is classified here as intent-only rather than potentially content-bearing.
+
+    Low-confidence/ambiguous cues remain untouched. In particular, ``now`` is not
+    removed until #585 decides when it is genuinely explicit temporal language, and
+    ``current`` remains because phrases such as ``current account`` carry lexical
+    meaning independent of temporal intent.
+    """
+
+    if not intent.orders_temporally or intent.posture != "inferred" or intent.confidence != "high":
+        return query, ()
+
+    prefix = f"{intent.mode}:high:"
+    matched = {
+        item[len(prefix):]
+        for item in intent.evidence
+        if item.startswith(prefix) and item[len(prefix):] in _RELEVANCE_INTENT_ONLY_CUES
+    }
+    if not matched:
+        return query, ()
+
+    filtered = query
+    consumed: list[str] = []
+    for cue in sorted(matched, key=lambda value: (-len(value), value)):
+        pattern = re.compile(r"\b" + re.escape(cue) + r"\b", re.IGNORECASE)
+        if pattern.search(filtered):
+            filtered = pattern.sub(" ", filtered)
+            consumed.append(cue)
+    return " ".join(filtered.split()), tuple(sorted(consumed))
 
 
 def admitted_set_bm25(query: str, texts: Mapping[str, str]) -> dict[str, float]:
@@ -255,6 +329,11 @@ class PostAdmissionRankingPolicy:
             "route_scores_cross_comparable": False,
             "lexical_relevance": self.lexical_relevance,
             "lexical_relevance_statistics_scope": "admitted_set" if self.lexical_relevance == "bm25_admitted_set" else None,
+            "lexical_query_temporal_cue_policy": (
+                "exclude_inferred_high_confidence_intent_only_v1"
+                if self.temporal_regime == "query_conditioned" and self.lexical_relevance == "bm25_admitted_set"
+                else None
+            ),
             "bm25_parameters": {"k1": BM25_K1, "b": BM25_B} if self.lexical_relevance == "bm25_admitted_set" else None,
             "stable_fallback": self.stable_fallback,
             "unspecified_intent_order": self.unspecified_intent_order,
@@ -376,8 +455,11 @@ class PostAdmissionRankingPolicy:
         }
         if self.lexical_relevance == "bm25_admitted_set":
             texts = {ref: getattr(fact, "fact_text", "") or "" for ref, fact in facts.items()}
-            for ref, score in admitted_set_bm25(query, texts).items():
+            lexical_query, excluded_cues = relevance_query_for_intent(query, intent)
+            for ref, score in admitted_set_bm25(lexical_query, texts).items():
                 evidence[ref]["lexical_relevance_score"] = score
+                evidence[ref]["lexical_relevance_query"] = lexical_query
+                evidence[ref]["lexical_relevance_excluded_query_cues"] = list(excluded_cues)
         keyed = {ref: self.keyed_stages(evidence[ref], intent) for ref in evidence}
         ordered = sorted(evidence, key=lambda ref: tuple(value for _, value in keyed[ref]))
         identity = self.identity()

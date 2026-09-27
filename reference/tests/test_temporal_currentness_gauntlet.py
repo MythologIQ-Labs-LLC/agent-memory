@@ -7,8 +7,10 @@ These tests check the evaluator, not Agent Memory's score:
 * the scorer is sensitive: corrupting real observations moves the metric that should
   catch the corruption (scorer-level negative controls);
 * evaluation-process runtime mutants are detected (runtime-level negative controls);
-* the live runtime still reproduces the frozen pre-#550 baseline exactly. A deliberate
-  behavior change (for example #550) must regenerate the baseline and explain the diff;
+* the frozen pre-#550 baseline remains immutable. While the live ranking policy is the
+  frozen policy version it must reproduce that baseline exactly; a deliberately
+  versioned ranking change may improve failures, but may not regress any previously
+  passing required unit;
 * no runtime module references the gauntlet (no benchmark-specific branch).
 """
 
@@ -27,11 +29,13 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref.evaluation import temporal_currentness as tc  # noqa: E402
+from agentmem_ref.runtime import ranking_policy  # noqa: E402
 
 FIXTURE = ROOT / "reference" / "fixtures" / "benchmarks" / "temporal-currentness" / "temporal-currentness-gauntlet-v1.json"
 FIXTURE_SHA256 = "394be82e8dfabe30ad1faf064f36a88d0b0b8e7ab8157f746ecb4cbae9e64492"
 BASELINE = ROOT / "reports" / "benchmarks" / "temporal-currentness" / "baseline-0bace49" / "baseline.json"
 RUNNER = ROOT / "reference" / "run_temporal_currentness_gauntlet.py"
+FROZEN_RANKING_POLICY_VERSION = "3.0.1"
 
 
 def _metric(rows, name, level="required"):
@@ -169,13 +173,26 @@ class GauntletTests(unittest.TestCase):
 
     # ------------------------------------------------------------------ frozen baseline
 
-    def test_live_runtime_reproduces_frozen_pre_550_baseline(self):
+    def test_frozen_pre_550_baseline_is_immutable_and_versioned_changes_do_not_regress_required_units(self):
         frozen = json.loads(BASELINE.read_text(encoding="utf-8"))
         self.assertEqual(frozen["provenance"]["fixture_sha256"], FIXTURE_SHA256)
         self.assertEqual(frozen["provenance"]["runtime_changes_since_boundary"], [])
-        self.assertEqual({"/".join(k): v for k, v in tc.units(self.rows).items()},
-                         {"/".join(k): v for k, v in tc.units(frozen["rows"]).items()})
-        self.assertEqual(tc.order_digests(self.rows), frozen["order_digests"])
+
+        live_units = tc.units(self.rows)
+        frozen_units = tc.units(frozen["rows"])
+        if ranking_policy.POLICY_VERSION == FROZEN_RANKING_POLICY_VERSION:
+            self.assertEqual({"/".join(k): v for k, v in live_units.items()},
+                             {"/".join(k): v for k, v in frozen_units.items()})
+            self.assertEqual(tc.order_digests(self.rows), frozen["order_digests"])
+            return
+
+        changed = [key for key, status in frozen_units.items() if live_units.get(key) != status]
+        self.assertTrue(changed, "ranking policy version changed without an observable gauntlet delta")
+        regressions = [
+            key for key, status in frozen_units.items()
+            if key[3] == "required" and status == "pass" and live_units.get(key) != "pass"
+        ]
+        self.assertEqual(regressions, [], f"versioned ranking change regressed required #580 units: {regressions}")
 
     def test_restart_reproduces_every_probe(self):
         self.assertEqual(tc.compute_metrics(self.rows)["restart_reproduction_rate"]["value"], 1.0)

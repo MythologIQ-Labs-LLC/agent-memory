@@ -1,0 +1,261 @@
+{
+ "candidate_trace": "trace-amb-1b42268-seed0.json",
+ "canonical_trace": "trace-after-seed0.json.gz",
+ "search_calls": 2051,
+ "searches_with_excluded_cues": 116,
+ "searches_with_excluded_cues_order_unchanged": 106,
+ "order_differences": 10,
+ "order_differences_without_excluded_cue": 0,
+ "exact_source_hit_changes": 0,
+ "differences": [
+  {
+   "search_index": 277,
+   "excluded_cues": [
+    "intend to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": false,
+   "positions_changed": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 276,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "ad7f35704da03a69708ab6f1007a7e58",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 280,
+   "excluded_cues": [
+    "planning to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": false,
+   "positions_changed": [
+    3,
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 279,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "3e5d5e01a8c6e26bbce5a6c1ee122ad8",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 332,
+   "excluded_cues": [
+    "plan to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": false,
+   "positions_changed": [
+    3,
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 331,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "1f716ecb0c74d80bf1df301be43db2e9",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 468,
+   "excluded_cues": [
+    "plan to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": true,
+   "positions_changed": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 467,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "86d254936bf00851e43cc89d612ca8aa",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 549,
+   "excluded_cues": [
+    "plan to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": false,
+   "positions_changed": [
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 548,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "04d8e99ea67c0fc931979ed05ca0405a",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 619,
+   "excluded_cues": [
+    "plan to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": true,
+   "positions_changed": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 618,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "df917f0cf09e08dc791de060d7c06e0a",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 2,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 784,
+   "excluded_cues": [
+    "plan to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": false,
+   "positions_changed": [
+    2,
+    3,
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 783,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "6742b13ab53ad066eb3adb91c223e838",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 822,
+   "excluded_cues": [
+    "plan to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": false,
+   "positions_changed": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 821,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "7a21cd35b3c70e6ddb04db36345a3f81",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 935,
+   "excluded_cues": [
+    "plan to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": false,
+   "positions_changed": [
+    2,
+    4
+   ],
+   "phase": "retrieval",
+   "record_index": 934,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "6f280f825de2317d08c4ca00c7cda3cf",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  },
+  {
+   "search_index": 990,
+   "excluded_cues": [
+    "plan to"
+   ],
+   "intent": [
+    "prospective/inferred/high"
+   ],
+   "same_topk_set": false,
+   "positions_changed": [
+    2,
+    3
+   ],
+   "phase": "retrieval",
+   "record_index": 989,
+   "event_type": "PERSONAL_FACT",
+   "source_id": "95c33b0d3f5fc805712489886c0b37ff",
+   "gold_rank_3_0_2": 1,
+   "gold_rank_3_0_1": 1,
+   "exact_source_hit_changed": false,
+   "cue_occurrences_in_query": 1,
+   "gold_text_contains_cue": false,
+   "classification": "INTENDED_583_EFFECT"
+  }
+ ]
+}

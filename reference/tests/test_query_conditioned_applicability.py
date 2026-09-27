@@ -65,7 +65,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertEqual(old_evidence["temporal_applicability"], "outside_target_interval")
         self.assertEqual(new_evidence["temporal_applicability"], "applicable")
         self.assertEqual(new_evidence["ordered_before_next_by"], "temporal_applicability_tier")
-        # Demoted, not refused: historical context remains available.
         self.assertIn(old, recalled["admitted"])
 
     # C2: as-of query prefers the evidence valid at the target instant.
@@ -88,7 +87,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertIsNone(a["temporal_ordering_clock"])
         top = _evidence(recalled, recalled["admitted"][0])
         self.assertIn(top["ordered_before_next_by"], {"candidate_ref_neutral_digest", "lexical_relevance_desc:bm25_admitted_set:lexical"})
-        # An older, more relevant memory beats a newer distractor (C22).
         gold = self.remember("notes:gold", "Memory half-life decay notes: half-life depends on context.", valid_from="2019-01-01")
         self.remember("notes:new", "Half-life came up briefly.", valid_from="2026-09-01")
         self.assertEqual(self.memory.recall("What did I write about memory half-life decay?", reference_time=NOW)["admitted"][0], gold)
@@ -104,11 +102,8 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertEqual(_evidence(during, exception)["temporal_applicability"], "applicable")
         self.assertEqual(_evidence(during, rule)["temporal_applicability"], "applicable")
         after = self.memory.recall("When does the office currently close?", reference_time="2026-09-27T12:00:00Z")
-        self.assertEqual(after["admitted"][0], rule)  # the rule is current again without reinsertion
+        self.assertEqual(after["admitted"][0], rule)
         self.assertEqual(_evidence(after, exception)["temporal_applicability"], "outside_target_interval")
-        # LIMITATION (ADR-039 C4, first half): during the exception both are applicable,
-        # and the policy has no exception/specificity dimension. Relevance decides, so the
-        # exception is not guaranteed to rank first. Recorded as an unmodelled dimension.
         self.assertEqual(set(during["admitted"][:2]), {rule, exception})
 
     # C5: disagreeing clocks; valid time, not transaction or observation time, orders current state.
@@ -140,7 +135,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
     # C7: metabolic strength is not used and cannot resurrect stale current state.
     def test_c7_metabolic_strength_is_not_used(self):
         old, new = self._ceo_pair()
-        for _ in range(10):  # repeated use of the stale memory
+        for _ in range(10):
             self.memory.recall("Alice Smith chief executive officer", reference_time=NOW)
         recalled = self.memory.recall("Who is the current CEO of Acme?", reference_time=NOW)
         self.assertEqual(recalled["admitted"][0], new)
@@ -174,7 +169,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.memory = _open(self._temp.name)
         recalled = self.memory.recall("What is the current project status?", reference_time=NOW)
         self.assertNotIn(foreign_fact, recalled["admitted"])
-        self.assertNotIn(foreign_fact, recalled["candidates"])  # contract 1.3.0 (#548)
+        self.assertNotIn(foreign_fact, recalled["candidates"])
         self.assertNotIn(foreign_fact, recalled["admissions"])
         self.assertEqual(recalled["admitted"], [local])
 
@@ -194,8 +189,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
 
     # C14 / C25 (governed correction), resolved by #549 as an admission decision: an
     # error-corrected record is never admissible as historical truth. A state-changed
-    # record is admissible only under explicit historical/as-of intent
-    # (test_historical_evidence_admission).
+    # record is admissible only under explicit historical/as-of intent.
     def test_c14_c25_error_corrected_state_is_never_historical_truth(self):
         self.remember("policy:retention", "The retention policy is 30 days.")
         corrected = self.memory.correct(
@@ -209,9 +203,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         )
         self.assertTrue(corrected["committed"], corrected)
         refusals = {decision.get("refusal") for decision in recalled["admissions"].values()}
-        # #549: a default correction is an error correction: the prior value was wrong, so
-        # even explicit historical recall never presents it as historically true.
-        # State-change supersession is covered in test_historical_evidence_admission.
         self.assertIn("corrected_as_false", refusals)
         self.assertEqual(recalled["admitted"], [corrected["fact_uuid"]])
 
@@ -224,7 +215,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertFalse(intent.orders_temporally)
         self.assertIsNone(intent.target_start)
 
-    # Evaluated alternative (off by default): unspecified intent ordered newer-first among ties.
     def test_unspecified_intent_default_is_explicit_and_versioned(self):
         import dataclasses
 
@@ -242,7 +232,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertEqual(evidence["query_temporal_intent"]["confidence"], "low")
         self.assertFalse(evidence["query_temporal_intent"]["orders_temporally"])
         self.assertEqual(evidence["temporal_applicability"], "not_evaluated")
-        # Conflicting cues preserve ambiguity rather than choosing.
         ambiguous = interpret_query("Where do I live now, and where did I live before?")
         self.assertEqual((ambiguous.mode, ambiguous.confidence), ("atemporal_or_unspecified", "low"))
 
@@ -257,6 +246,29 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         intent = _evidence(recalled, old)["query_temporal_intent"]
         self.assertEqual((intent["mode"], intent["posture"]), ("as_of", "explicit"))
         self.assertEqual(recalled["admitted"][0], old)
+
+    # #583: high-confidence temporal intent-only cues do not also become relevance terms.
+    def test_temporal_intent_only_cues_are_separated_from_lexical_relevance(self):
+        query = "Where does the user currently live?"
+        intent = interpret_query(query)
+        lexical_query, excluded = ranking_policy.relevance_query_for_intent(query, intent)
+        self.assertEqual(lexical_query, "Where does the user live?")
+        self.assertEqual(excluded, ("currently",))
+
+        # Ambiguous/content-bearing `current` stays available to relevance even though
+        # the v1 interpreter currently classifies it as a high-confidence current cue.
+        content_query = "What is my current account balance?"
+        content_intent = interpret_query(content_query)
+        lexical_query, excluded = ranking_policy.relevance_query_for_intent(content_query, content_intent)
+        self.assertEqual(lexical_query, content_query)
+        self.assertEqual(excluded, ())
+
+        # Plain `now` remains low-confidence until #585, so #583 must not consume it.
+        low_query = "Where do I live now?"
+        low_intent = interpret_query(low_query)
+        lexical_query, excluded = ranking_policy.relevance_query_for_intent(low_query, low_intent)
+        self.assertEqual(lexical_query, low_query)
+        self.assertEqual(excluded, ())
 
     # C18: prospective memory is returned for prospective queries and demoted for current ones.
     def test_c18_prospective_commitment(self):
@@ -281,7 +293,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.memory = _open(self._temp.name)
         self.assertEqual(self.memory.recall("Who is the current CEO of Acme?", reference_time=NOW)["admitted"], runs[0])
         identity = MULTI_ROUTE_RANKING_POLICY.identity()
-        self.assertEqual((identity["policy_version"], identity["temporal_regime"]), ("3.0.1", "query_conditioned"))
+        self.assertEqual((identity["policy_version"], identity["temporal_regime"]), ("3.0.2", "query_conditioned"))
 
     # C21: no benchmark-specific branching in the applicability path.
     def test_c21_no_benchmark_identifiers_in_policy_modules(self):
@@ -299,7 +311,6 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
         self.assertNotIn(disputed, recalled["admitted"])
         self.assertEqual(recalled["admissions"][disputed]["refusal"], "disputed")
 
-    # Declared temporal evidence is validated and never becomes lifecycle state.
     def test_declared_temporal_is_evidence_not_lifecycle(self):
         with self.assertRaises(ValueError):
             self.memory.remember("memory:bad", "bad interval", valid_from="2026-01-02", valid_until="2026-01-01")
@@ -307,7 +318,7 @@ class QueryConditionedApplicabilityTests(unittest.TestCase):
             self.memory.remember("memory:bad", "bad time", valid_from="yesterday")
         expired = self.remember("fact:expired", "The legacy endpoint is beta.example.", valid_until="2020-01-01")
         recalled = self.memory.recall("legacy endpoint beta", reference_time=NOW)
-        self.assertEqual(recalled["admitted"], [expired])  # admitted: validity is not admission
+        self.assertEqual(recalled["admitted"], [expired])
         self.assertEqual(self.memory.history("memory:fact:expired")["history"]["current_fact_uuid"], expired)
 
 
