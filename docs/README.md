@@ -73,6 +73,8 @@ Evaluation is a first-class subsystem rather than a collection of one-off script
 | [`56-benchmark-gauntlet-remediation-evidence.md`](56-benchmark-gauntlet-remediation-evidence.md) | Before/after replay evidence for each benchmark-driven remediation slice (#537) |
 | [`57-query-conditioned-applicability.md`](57-query-conditioned-applicability.md) | Query-conditioned applicability reference profile and its gauntlet evidence (ADR-039, Proposed) |
 | [`59-orthogonal-temporal-gauntlet-qualification.md`](59-orthogonal-temporal-gauntlet-qualification.md) | Qualification of temporal gauntlets able to falsify ADR-039's claims |
+| [`60-temporal-currentness-qualification-gauntlet.md`](60-temporal-currentness-qualification-gauntlet.md) | Repository-owned temporal/currentness gauntlet and the frozen pre-#550 baseline (#580) |
+| [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md) | Lessons learned from the temporal/currentness arc: evidence discipline, what replays overturned, and hygiene failures |
 
 Generated evidence:
 

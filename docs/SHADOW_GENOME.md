@@ -445,6 +445,8 @@ The plan described the audit-event shape from `_event` and assumed `_recall_even
 
 ## Pattern Library (Extracted Lessons)
 
+Cross-cutting lessons from the temporal/currentness and evidence work (#538 through #550) are collected in [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md).
+
 ### Section 4 Razor Violations
 
 | Anti-Pattern | Correct Pattern | Examples |
