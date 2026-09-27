@@ -9,7 +9,7 @@ These tests check the evaluator, not Agent Memory's score:
 * evaluation-process runtime mutants are detected (runtime-level negative controls);
 * the frozen pre-#550 baseline remains immutable and acts as a monotonic comparator:
   live behavior may resolve a frozen failure/honest-unknown, but a frozen required pass
-  may not regress and unrelated probe behavior may not drift;
+  may not regress and unrelated case behavior may not drift;
 * no runtime module references the gauntlet (no benchmark-specific branch).
 """
 
@@ -175,9 +175,9 @@ class GauntletTests(unittest.TestCase):
 
         The baseline remains the immutable record of policy 3.0.1 at 0bace49. Later
         bounded remediation is allowed to turn ``fail``/``honest_unknown`` into stronger
-        outcomes, but it may not regress a required pass. A probe digest may change only
-        when at least one scored unit on that probe improves, preventing unrelated drift
-        from being hidden behind an intentional remediation elsewhere.
+        outcomes, but it may not regress a required pass. The fixture executes setup once
+        per case, so an intentional setup-level remediation may change all probe digests
+        in that case; observation drift in unrelated cases remains forbidden.
         """
         frozen = json.loads(BASELINE.read_text(encoding="utf-8"))
         self.assertEqual(frozen["provenance"]["fixture_sha256"], FIXTURE_SHA256)
@@ -211,14 +211,14 @@ class GauntletTests(unittest.TestCase):
         }
         self.assertEqual(invalid_changes, {})
 
-        improved_probes = {(key[0], key[1]) for key in changed}
+        improved_cases = {key[0] for key in changed}
         frozen_digests = frozen["order_digests"]
         live_digests = tc.order_digests(self.rows)
         unexplained_digest_changes = {
             probe: (frozen_digests.get(probe), digest)
             for probe, digest in live_digests.items()
             if frozen_digests.get(probe) != digest
-            and tuple(probe.split("/", 1)) not in improved_probes
+            and probe.split("/", 1)[0] not in improved_cases
         }
         self.assertEqual(unexplained_digest_changes, {})
 
