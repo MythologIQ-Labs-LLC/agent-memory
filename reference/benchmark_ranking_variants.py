@@ -17,6 +17,8 @@ VARIANTS: dict[str, dict[str, Any]] = {
     # Shipped relevance (admitted-set BM25) with evaluated temporal alternatives.
     "unspecified_newer_first_among_ties": {"unspecified_intent_order": "newer_first_among_ties"},
     "universal_newer_first": {"temporal_regime": "universal_newer_first", "stable_fallback": "candidate_ref_asc"},
+    # No temporal stage at all under shipped relevance (#580 ablation).
+    "no_temporal_preference": {"temporal_regime": "none"},
     # Token-overlap route score (policy 2.0 relevance), where relevance ties are common.
     "overlap_query_conditioned": {"lexical_relevance": "route_score"},
     "overlap_query_conditioned_ref_asc": {"lexical_relevance": "route_score", "stable_fallback": "candidate_ref_asc"},
