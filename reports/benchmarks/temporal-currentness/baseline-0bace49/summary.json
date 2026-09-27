@@ -1,0 +1,2215 @@
+{
+  "ablations_and_negative_controls": {
+    "inferred_only": {
+      "changed": {
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/as-of-architect/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/as-of-architect/historical_state_admission_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/as-of-engineer/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/as-of-engineer/historical_state_admission_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/as-of-engineer/state_change_vs_error_correction_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/as-of-intern/historical_state_admission_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/as-of-intern/state_change_vs_error_correction_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/explicit-historical-timeline/historical_state_admission_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B6-state-change-chain/explicit-historical-timeline/timeline_preservation_rate/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B8-error-correction-never-historical/as-of-inside-claimed-validity/corrected_false_as_historical_rate/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B8-error-correction-never-historical/as-of-inside-claimed-validity/state_change_vs_error_correction_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B8-error-correction-never-historical/explicit-historical/corrected_false_as_historical_rate/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "B8-error-correction-never-historical/explicit-historical/state_change_vs_error_correction_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "inferred_only": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "inferred_only": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "inferred_only": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "inferred_only": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/prospective_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "inferred_only": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "inferred_only": "fail"
+        }
+      },
+      "metrics": {
+        "as_of_state_accuracy": {
+          "required": 0.0,
+          "target": null
+        },
+        "atemporal_relevance_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "authority_or_scope_violation_count": {
+          "required": 3,
+          "target": 0
+        },
+        "clock_source_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "coexistence_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "conflict_coexistence_classification_accuracy": "not_measurable_pre_550",
+        "corrected_false_as_historical_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "current_applicability_accuracy": {
+          "required": 0.9231,
+          "target": 0.5455
+        },
+        "current_demoted_as_stale_rate": {
+          "required": 0.0769,
+          "target": null
+        },
+        "historical_state_admission_accuracy": {
+          "required": 0.4286,
+          "target": null
+        },
+        "intent_interpretation_accuracy": {
+          "required": 1.0,
+          "target": 0.0
+        },
+        "metabolism_validity_separation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "prospective_applicability_accuracy": {
+          "required": 0.3333,
+          "target": 0.0
+        },
+        "restart_reproduction_rate": 1.0,
+        "self_description_currentness_rate": {
+          "required": null,
+          "target": 0.0909
+        },
+        "stale_as_current_rate": {
+          "required": 0.1818,
+          "target": 0.3
+        },
+        "state_change_vs_error_correction_accuracy": {
+          "required": 0.0,
+          "target": null
+        },
+        "temporal_self_claim_rank_influence_count": {
+          "required": 1,
+          "target": 0
+        },
+        "timeline_preservation_rate": {
+          "required": 0.5,
+          "target": null
+        },
+        "unknown_temporal_basis_honesty_rate": {
+          "required": 1.0,
+          "target": null
+        }
+      },
+      "purpose": "ablation: explicit caller intent removed, text inference only",
+      "units_changed_vs_baseline": 27,
+      "units_improved": [],
+      "units_regressed": [
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_demoted_as_stale_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required",
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required",
+        "B6-state-change-chain/as-of-architect/as_of_state_accuracy/required",
+        "B6-state-change-chain/as-of-architect/historical_state_admission_accuracy/required",
+        "B6-state-change-chain/as-of-engineer/as_of_state_accuracy/required",
+        "B6-state-change-chain/as-of-engineer/historical_state_admission_accuracy/required",
+        "B6-state-change-chain/as-of-engineer/state_change_vs_error_correction_accuracy/required",
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required",
+        "B6-state-change-chain/as-of-intern/historical_state_admission_accuracy/required",
+        "B6-state-change-chain/as-of-intern/state_change_vs_error_correction_accuracy/required",
+        "B6-state-change-chain/explicit-historical-timeline/historical_state_admission_accuracy/required",
+        "B6-state-change-chain/explicit-historical-timeline/timeline_preservation_rate/required",
+        "B8-error-correction-never-historical/as-of-inside-claimed-validity/corrected_false_as_historical_rate/required",
+        "B8-error-correction-never-historical/as-of-inside-claimed-validity/state_change_vs_error_correction_accuracy/required",
+        "B8-error-correction-never-historical/explicit-historical/corrected_false_as_historical_rate/required",
+        "B8-error-correction-never-historical/explicit-historical/state_change_vs_error_correction_accuracy/required",
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required",
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required"
+      ]
+    },
+    "mutant-ignore_validity": {
+      "changed": {
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "A4-current-query-no-temporal-basis/current-inferred/unknown_temporal_basis_honesty_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-inferred/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "C13-unknown-future-basis/prospective-explicit/unknown_temporal_basis_honesty_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity/unknown_temporal_basis_honesty_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F24-no-longer-works-at/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F24-no-longer-works-at/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F26-for-the-next-two-weeks/after-interval/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F26-for-the-next-two-weeks/after-interval/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F26-for-the-next-two-weeks/during-interval/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F26-for-the-next-two-weeks/during-interval/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F27-starting-next-month/current-after-start/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F27-starting-next-month/current-after-start/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F27-starting-next-month/current-after-start/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F27-starting-next-month/current-before-start/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F27-starting-next-month/current-before-start/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/prospective_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-ignore_validity": "fail"
+        },
+        "F29-ambiguous-temporal-language/current-explicit/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "F30-memory-text-claims-authority-and-currentness/current-address/authority_or_scope_violation_count/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "F30-memory-text-claims-authority-and-currentness/current-address/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        },
+        "F30-memory-text-claims-authority-and-currentness/currently-live/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-ignore_validity": "fail"
+        }
+      },
+      "metrics": {
+        "as_of_state_accuracy": {
+          "required": 0.4,
+          "target": null
+        },
+        "atemporal_relevance_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "authority_or_scope_violation_count": {
+          "required": 5,
+          "target": 0
+        },
+        "clock_source_accuracy": {
+          "required": 0.75,
+          "target": null
+        },
+        "coexistence_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "conflict_coexistence_classification_accuracy": "not_measurable_pre_550",
+        "corrected_false_as_historical_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "current_applicability_accuracy": {
+          "required": 0.6923,
+          "target": 0.5455
+        },
+        "current_demoted_as_stale_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "historical_state_admission_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "intent_interpretation_accuracy": {
+          "required": 1.0,
+          "target": 0.0
+        },
+        "metabolism_validity_separation_rate": {
+          "required": 0.6667,
+          "target": null
+        },
+        "prospective_applicability_accuracy": {
+          "required": 0.0,
+          "target": 0.0
+        },
+        "restart_reproduction_rate": 1.0,
+        "self_description_currentness_rate": {
+          "required": null,
+          "target": 0.0909
+        },
+        "stale_as_current_rate": {
+          "required": 0.8182,
+          "target": 0.9
+        },
+        "state_change_vs_error_correction_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "temporal_self_claim_rank_influence_count": {
+          "required": 1,
+          "target": 0
+        },
+        "timeline_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "unknown_temporal_basis_honesty_rate": {
+          "required": 0.0,
+          "target": null
+        }
+      },
+      "purpose": "negative control: declared validity ignored",
+      "units_changed_vs_baseline": 46,
+      "units_improved": [],
+      "units_regressed": [
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/stale_as_current_rate/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_applicability_accuracy/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/stale_as_current_rate/required",
+        "A4-current-query-no-temporal-basis/current-inferred/unknown_temporal_basis_honesty_rate/required",
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required",
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required",
+        "C11-C12-prospective-commitment/current-reverses/stale_as_current_rate/required",
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/prospective-inferred/prospective_applicability_accuracy/required",
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required",
+        "C13-unknown-future-basis/prospective-explicit/unknown_temporal_basis_honesty_rate/required",
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity/clock_source_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity/unknown_temporal_basis_honesty_rate/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_applicability_accuracy/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/metabolism_validity_separation_rate/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/stale_as_current_rate/required",
+        "F29-ambiguous-temporal-language/current-explicit/stale_as_current_rate/required",
+        "F30-memory-text-claims-authority-and-currentness/current-address/authority_or_scope_violation_count/required",
+        "F30-memory-text-claims-authority-and-currentness/current-address/stale_as_current_rate/required",
+        "F30-memory-text-claims-authority-and-currentness/currently-live/stale_as_current_rate/required"
+      ]
+    },
+    "mutant-invent_currency": {
+      "changed": {
+        "A4-current-query-no-temporal-basis/current-inferred/unknown_temporal_basis_honesty_rate/required": {
+          "baseline": "pass",
+          "mutant-invent_currency": "fail"
+        },
+        "C13-unknown-future-basis/prospective-explicit/unknown_temporal_basis_honesty_rate/required": {
+          "baseline": "pass",
+          "mutant-invent_currency": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "mutant-invent_currency": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity/unknown_temporal_basis_honesty_rate/required": {
+          "baseline": "pass",
+          "mutant-invent_currency": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F24-no-longer-works-at/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F24-no-longer-works-at/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F26-for-the-next-two-weeks/after-interval/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F26-for-the-next-two-weeks/after-interval/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F26-for-the-next-two-weeks/during-interval/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F26-for-the-next-two-weeks/during-interval/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F27-starting-next-month/current-after-start/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F27-starting-next-month/current-after-start/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F27-starting-next-month/current-after-start/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F27-starting-next-month/current-before-start/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F27-starting-next-month/current-before-start/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/prospective_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "mutant-invent_currency": "fail"
+        },
+        "F29-ambiguous-temporal-language/current-explicit/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-invent_currency": "fail"
+        },
+        "F30-memory-text-claims-authority-and-currentness/current-address/authority_or_scope_violation_count/required": {
+          "baseline": "pass",
+          "mutant-invent_currency": "fail"
+        },
+        "F30-memory-text-claims-authority-and-currentness/current-address/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-invent_currency": "fail"
+        },
+        "F30-memory-text-claims-authority-and-currentness/currently-live/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "mutant-invent_currency": "fail"
+        }
+      },
+      "metrics": {
+        "as_of_state_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "atemporal_relevance_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "authority_or_scope_violation_count": {
+          "required": 5,
+          "target": 0
+        },
+        "clock_source_accuracy": {
+          "required": 0.75,
+          "target": null
+        },
+        "coexistence_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "conflict_coexistence_classification_accuracy": "not_measurable_pre_550",
+        "corrected_false_as_historical_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "current_applicability_accuracy": {
+          "required": 1.0,
+          "target": 0.5455
+        },
+        "current_demoted_as_stale_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "historical_state_admission_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "intent_interpretation_accuracy": {
+          "required": 1.0,
+          "target": 0.0
+        },
+        "metabolism_validity_separation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "prospective_applicability_accuracy": {
+          "required": 1.0,
+          "target": 0.0
+        },
+        "restart_reproduction_rate": 1.0,
+        "self_description_currentness_rate": {
+          "required": null,
+          "target": 0.0909
+        },
+        "stale_as_current_rate": {
+          "required": 0.2727,
+          "target": 0.9
+        },
+        "state_change_vs_error_correction_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "temporal_self_claim_rank_influence_count": {
+          "required": 1,
+          "target": 0
+        },
+        "timeline_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "unknown_temporal_basis_honesty_rate": {
+          "required": 0.0,
+          "target": null
+        }
+      },
+      "purpose": "negative control: unknown basis reported applicable",
+      "units_changed_vs_baseline": 29,
+      "units_improved": [],
+      "units_regressed": [
+        "A4-current-query-no-temporal-basis/current-inferred/unknown_temporal_basis_honesty_rate/required",
+        "C13-unknown-future-basis/prospective-explicit/unknown_temporal_basis_honesty_rate/required",
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity/clock_source_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity/unknown_temporal_basis_honesty_rate/required",
+        "F29-ambiguous-temporal-language/current-explicit/stale_as_current_rate/required",
+        "F30-memory-text-claims-authority-and-currentness/current-address/authority_or_scope_violation_count/required",
+        "F30-memory-text-claims-authority-and-currentness/current-address/stale_as_current_rate/required",
+        "F30-memory-text-claims-authority-and-currentness/currently-live/stale_as_current_rate/required"
+      ]
+    },
+    "no_temporal_preference": {
+      "changed": {
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "not_applicable"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A3-two-valid-relevance-decides/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A3-two-valid-relevance-decides/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-inferred/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "not_applicable"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/plain-now-inferred/intent_interpretation_accuracy/target": {
+          "baseline": "fail",
+          "no_temporal_preference": "not_applicable"
+        },
+        "B10-independent-timeline/timeline-inferred/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "not_applicable"
+        },
+        "B10-independent-timeline/timeline-inferred/timeline_preservation_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "B6-state-change-chain/as-of-architect/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "B6-state-change-chain/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "B6-state-change-chain/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "B6-state-change-chain/explicit-historical-timeline/timeline_preservation_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "B6-state-change-chain/inferred-historical-never-widens/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "not_applicable"
+        },
+        "B8-error-correction-never-historical/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "C11-C12-prospective-commitment/current-after-effective/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "C11-C12-prospective-commitment/current-after-effective/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-inferred/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "not_applicable"
+        },
+        "C11-C12-prospective-commitment/prospective-inferred/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "D14-atemporal-old-exact-vs-new-distractor/atemporal/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "not_applicable"
+        },
+        "D16-no-validity-no-intent-recency-must-not-decide/atemporal/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "not_applicable"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "no_temporal_preference": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F24-no-longer-works-at/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F24-no-longer-works-at/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F26-for-the-next-two-weeks/after-interval/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F26-for-the-next-two-weeks/after-interval/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F26-for-the-next-two-weeks/during-interval/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F26-for-the-next-two-weeks/during-interval/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F27-starting-next-month/current-after-start/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F27-starting-next-month/current-after-start/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F27-starting-next-month/current-after-start/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F27-starting-next-month/current-before-start/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F27-starting-next-month/current-before-start/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/prospective_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "no_temporal_preference": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/plain-now/intent_interpretation_accuracy/target": {
+          "baseline": "fail",
+          "no_temporal_preference": "not_applicable"
+        }
+      },
+      "metrics": {
+        "as_of_state_accuracy": {
+          "required": 0.2,
+          "target": null
+        },
+        "atemporal_relevance_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "authority_or_scope_violation_count": {
+          "required": 3,
+          "target": 0
+        },
+        "clock_source_accuracy": {
+          "required": 0.25,
+          "target": null
+        },
+        "coexistence_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "conflict_coexistence_classification_accuracy": "not_measurable_pre_550",
+        "corrected_false_as_historical_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "current_applicability_accuracy": {
+          "required": 0.0769,
+          "target": 0.5455
+        },
+        "current_demoted_as_stale_rate": {
+          "required": 0.7692,
+          "target": null
+        },
+        "historical_state_admission_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "intent_interpretation_accuracy": {
+          "required": null,
+          "target": null
+        },
+        "metabolism_validity_separation_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "prospective_applicability_accuracy": {
+          "required": 0.0,
+          "target": 0.0
+        },
+        "restart_reproduction_rate": 1.0,
+        "self_description_currentness_rate": {
+          "required": null,
+          "target": 0.0909
+        },
+        "stale_as_current_rate": {
+          "required": 0.5455,
+          "target": 0.9
+        },
+        "state_change_vs_error_correction_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "temporal_self_claim_rank_influence_count": {
+          "required": 1,
+          "target": 0
+        },
+        "timeline_preservation_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "unknown_temporal_basis_honesty_rate": {
+          "required": 1.0,
+          "target": null
+        }
+      },
+      "purpose": "ablation: no temporal stage",
+      "units_changed_vs_baseline": 73,
+      "units_improved": [],
+      "units_regressed": [
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_demoted_as_stale_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/clock_source_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_demoted_as_stale_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/intent_interpretation_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/stale_as_current_rate/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_applicability_accuracy/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_demoted_as_stale_rate/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/stale_as_current_rate/required",
+        "A3-two-valid-relevance-decides/current-inferred/current_applicability_accuracy/required",
+        "A3-two-valid-relevance-decides/current-inferred/current_demoted_as_stale_rate/required",
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required",
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-inferred/intent_interpretation_accuracy/required",
+        "B10-independent-timeline/timeline-inferred/intent_interpretation_accuracy/required",
+        "B10-independent-timeline/timeline-inferred/timeline_preservation_rate/required",
+        "B6-state-change-chain/as-of-architect/as_of_state_accuracy/required",
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required",
+        "B6-state-change-chain/current-inferred/current_applicability_accuracy/required",
+        "B6-state-change-chain/current-inferred/current_demoted_as_stale_rate/required",
+        "B6-state-change-chain/explicit-historical-timeline/timeline_preservation_rate/required",
+        "B6-state-change-chain/inferred-historical-never-widens/intent_interpretation_accuracy/required",
+        "B8-error-correction-never-historical/current-inferred/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-after-effective/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-after-effective/current_demoted_as_stale_rate/required",
+        "C11-C12-prospective-commitment/current-reverses/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-reverses/current_demoted_as_stale_rate/required",
+        "C11-C12-prospective-commitment/current-reverses/stale_as_current_rate/required",
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/prospective-inferred/intent_interpretation_accuracy/required",
+        "C11-C12-prospective-commitment/prospective-inferred/prospective_applicability_accuracy/required",
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required",
+        "D14-atemporal-old-exact-vs-new-distractor/atemporal/intent_interpretation_accuracy/required",
+        "D16-no-validity-no-intent-recency-must-not-decide/atemporal/intent_interpretation_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_applicability_accuracy/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_demoted_as_stale_rate/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/metabolism_validity_separation_rate/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/stale_as_current_rate/required",
+        "E21-old-but-still-valid/current-inferred/current_applicability_accuracy/required",
+        "E21-old-but-still-valid/current-inferred/current_demoted_as_stale_rate/required",
+        "E21-old-but-still-valid/current-inferred/metabolism_validity_separation_rate/required",
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/current_demoted_as_stale_rate/required",
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/metabolism_validity_separation_rate/required"
+      ]
+    },
+    "transaction_only": {
+      "changed": {
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A3-two-valid-relevance-decides/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A3-two-valid-relevance-decides/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B10-independent-timeline/timeline-inferred/timeline_preservation_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B6-state-change-chain/as-of-architect/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B6-state-change-chain/as-of-architect/historical_state_admission_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B6-state-change-chain/as-of-engineer/historical_state_admission_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B6-state-change-chain/as-of-intern/historical_state_admission_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B6-state-change-chain/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B6-state-change-chain/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "B8-error-correction-never-historical/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "C11-C12-prospective-commitment/current-after-effective/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "C11-C12-prospective-commitment/current-after-effective/current_applicability_accuracy/target": {
+          "baseline": "fail",
+          "transaction_only": "honest_unknown"
+        },
+        "C11-C12-prospective-commitment/current-after-effective/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "C11-C12-prospective-commitment/current-after-effective/stale_as_current_rate/target": {
+          "baseline": "fail",
+          "transaction_only": "honest_unknown"
+        },
+        "C11-C12-prospective-commitment/current-reverses/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-inferred/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        },
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "transaction_only": "fail"
+        }
+      },
+      "metrics": {
+        "as_of_state_accuracy": {
+          "required": 0.2,
+          "target": null
+        },
+        "atemporal_relevance_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "authority_or_scope_violation_count": {
+          "required": 3,
+          "target": 0
+        },
+        "clock_source_accuracy": {
+          "required": 0.25,
+          "target": null
+        },
+        "coexistence_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "conflict_coexistence_classification_accuracy": "not_measurable_pre_550",
+        "corrected_false_as_historical_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "current_applicability_accuracy": {
+          "required": 0.0769,
+          "target": 0.5455
+        },
+        "current_demoted_as_stale_rate": {
+          "required": 0.7692,
+          "target": null
+        },
+        "historical_state_admission_accuracy": {
+          "required": 0.5714,
+          "target": null
+        },
+        "intent_interpretation_accuracy": {
+          "required": 1.0,
+          "target": 0.0
+        },
+        "metabolism_validity_separation_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "prospective_applicability_accuracy": {
+          "required": 0.0,
+          "target": 0.0
+        },
+        "restart_reproduction_rate": 1.0,
+        "self_description_currentness_rate": {
+          "required": null,
+          "target": 0.0909
+        },
+        "stale_as_current_rate": {
+          "required": 0.5455,
+          "target": 0.1
+        },
+        "state_change_vs_error_correction_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "temporal_self_claim_rank_influence_count": {
+          "required": 1,
+          "target": 0
+        },
+        "timeline_preservation_rate": {
+          "required": 0.5,
+          "target": null
+        },
+        "unknown_temporal_basis_honesty_rate": {
+          "required": 1.0,
+          "target": null
+        }
+      },
+      "purpose": "ablation: declared valid/observation clocks removed",
+      "units_changed_vs_baseline": 47,
+      "units_improved": [],
+      "units_regressed": [
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_demoted_as_stale_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/clock_source_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_demoted_as_stale_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/stale_as_current_rate/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_applicability_accuracy/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_demoted_as_stale_rate/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/stale_as_current_rate/required",
+        "A3-two-valid-relevance-decides/current-inferred/current_applicability_accuracy/required",
+        "A3-two-valid-relevance-decides/current-inferred/current_demoted_as_stale_rate/required",
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required",
+        "B10-independent-timeline/timeline-inferred/timeline_preservation_rate/required",
+        "B6-state-change-chain/as-of-architect/as_of_state_accuracy/required",
+        "B6-state-change-chain/as-of-architect/historical_state_admission_accuracy/required",
+        "B6-state-change-chain/as-of-engineer/historical_state_admission_accuracy/required",
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required",
+        "B6-state-change-chain/as-of-intern/historical_state_admission_accuracy/required",
+        "B6-state-change-chain/current-inferred/current_applicability_accuracy/required",
+        "B6-state-change-chain/current-inferred/current_demoted_as_stale_rate/required",
+        "B8-error-correction-never-historical/current-inferred/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-after-effective/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-after-effective/current_demoted_as_stale_rate/required",
+        "C11-C12-prospective-commitment/current-reverses/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-reverses/current_demoted_as_stale_rate/required",
+        "C11-C12-prospective-commitment/current-reverses/stale_as_current_rate/required",
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/prospective-inferred/prospective_applicability_accuracy/required",
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_applicability_accuracy/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_demoted_as_stale_rate/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/metabolism_validity_separation_rate/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/stale_as_current_rate/required",
+        "E21-old-but-still-valid/current-inferred/current_applicability_accuracy/required",
+        "E21-old-but-still-valid/current-inferred/current_demoted_as_stale_rate/required",
+        "E21-old-but-still-valid/current-inferred/metabolism_validity_separation_rate/required",
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/current_demoted_as_stale_rate/required",
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/metabolism_validity_separation_rate/required"
+      ]
+    },
+    "universal_newer_first": {
+      "changed": {
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "not_applicable"
+        },
+        "A1-expired-exact-vs-current-weaker/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A2-not-yet-valid-exact-vs-current/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A3-two-valid-relevance-decides/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A3-two-valid-relevance-decides/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-inferred/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "not_applicable"
+        },
+        "A5-explicit-current-vs-ambiguous-cues/plain-now-inferred/intent_interpretation_accuracy/target": {
+          "baseline": "fail",
+          "universal_newer_first": "not_applicable"
+        },
+        "B10-independent-timeline/timeline-inferred/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "not_applicable"
+        },
+        "B10-independent-timeline/timeline-inferred/timeline_preservation_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "B6-state-change-chain/as-of-architect/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "B6-state-change-chain/as-of-engineer/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "B6-state-change-chain/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "B6-state-change-chain/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "B6-state-change-chain/explicit-historical-timeline/timeline_preservation_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "B6-state-change-chain/inferred-historical-never-widens/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "not_applicable"
+        },
+        "B8-error-correction-never-historical/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "C11-C12-prospective-commitment/current-after-effective/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "C11-C12-prospective-commitment/current-after-effective/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "C11-C12-prospective-commitment/current-reverses/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "C11-C12-prospective-commitment/prospective-inferred/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "not_applicable"
+        },
+        "C11-C12-prospective-commitment/prospective-inferred/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "D14-atemporal-old-exact-vs-new-distractor/atemporal/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "not_applicable"
+        },
+        "D16-no-validity-no-intent-recency-must-not-decide/atemporal/atemporal_relevance_preservation_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "D16-no-validity-no-intent-recency-must-not-decide/atemporal/intent_interpretation_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "not_applicable"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/stale_as_current_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/current_applicability_accuracy/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E21-old-but-still-valid/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/current_demoted_as_stale_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/metabolism_validity_separation_rate/required": {
+          "baseline": "pass",
+          "universal_newer_first": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F23-has-moved-now-lives/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F24-no-longer-works-at/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F24-no-longer-works-at/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F26-for-the-next-two-weeks/after-interval/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F26-for-the-next-two-weeks/after-interval/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F26-for-the-next-two-weeks/during-interval/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F26-for-the-next-two-weeks/during-interval/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F27-starting-next-month/current-after-start/current_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F27-starting-next-month/current-after-start/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F27-starting-next-month/current-after-start/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F27-starting-next-month/current-before-start/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F27-starting-next-month/current-before-start/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/prospective_applicability_accuracy/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F27-starting-next-month/prospective-explicit/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/current-inferred/self_description_currentness_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/current-inferred/stale_as_current_rate/target": {
+          "baseline": "honest_unknown",
+          "universal_newer_first": "fail"
+        },
+        "F28-used-to-prefer-now-prefer/plain-now/intent_interpretation_accuracy/target": {
+          "baseline": "fail",
+          "universal_newer_first": "not_applicable"
+        }
+      },
+      "metrics": {
+        "as_of_state_accuracy": {
+          "required": 0.0,
+          "target": null
+        },
+        "atemporal_relevance_preservation_rate": {
+          "required": 0.5,
+          "target": null
+        },
+        "authority_or_scope_violation_count": {
+          "required": 3,
+          "target": 0
+        },
+        "clock_source_accuracy": {
+          "required": 0.25,
+          "target": null
+        },
+        "coexistence_preservation_rate": {
+          "required": 1.0,
+          "target": null
+        },
+        "conflict_coexistence_classification_accuracy": "not_measurable_pre_550",
+        "corrected_false_as_historical_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "current_applicability_accuracy": {
+          "required": 0.0769,
+          "target": 0.5455
+        },
+        "current_demoted_as_stale_rate": {
+          "required": 0.7692,
+          "target": null
+        },
+        "historical_state_admission_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "intent_interpretation_accuracy": {
+          "required": null,
+          "target": null
+        },
+        "metabolism_validity_separation_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "prospective_applicability_accuracy": {
+          "required": 0.0,
+          "target": 0.0
+        },
+        "restart_reproduction_rate": 1.0,
+        "self_description_currentness_rate": {
+          "required": null,
+          "target": 0.0909
+        },
+        "stale_as_current_rate": {
+          "required": 0.5455,
+          "target": 0.9
+        },
+        "state_change_vs_error_correction_accuracy": {
+          "required": 1.0,
+          "target": null
+        },
+        "temporal_self_claim_rank_influence_count": {
+          "required": 1,
+          "target": 0
+        },
+        "timeline_preservation_rate": {
+          "required": 0.0,
+          "target": null
+        },
+        "unknown_temporal_basis_honesty_rate": {
+          "required": 1.0,
+          "target": null
+        }
+      },
+      "purpose": "ablation: policy 2.x newer-first among ties, every intent",
+      "units_changed_vs_baseline": 75,
+      "units_improved": [],
+      "units_regressed": [
+        "A1-expired-exact-vs-current-weaker/as-of-2018/as_of_state_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/current_demoted_as_stale_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-explicit/stale_as_current_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/clock_source_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_applicability_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/current_demoted_as_stale_rate/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/intent_interpretation_accuracy/required",
+        "A1-expired-exact-vs-current-weaker/current-inferred/stale_as_current_rate/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_applicability_accuracy/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/current_demoted_as_stale_rate/required",
+        "A2-not-yet-valid-exact-vs-current/current-inferred/stale_as_current_rate/required",
+        "A3-two-valid-relevance-decides/current-inferred/current_applicability_accuracy/required",
+        "A3-two-valid-relevance-decides/current-inferred/current_demoted_as_stale_rate/required",
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-explicit-current/stale_as_current_rate/required",
+        "A5-explicit-current-vs-ambiguous-cues/ambiguous-inferred/intent_interpretation_accuracy/required",
+        "B10-independent-timeline/timeline-inferred/intent_interpretation_accuracy/required",
+        "B10-independent-timeline/timeline-inferred/timeline_preservation_rate/required",
+        "B6-state-change-chain/as-of-architect/as_of_state_accuracy/required",
+        "B6-state-change-chain/as-of-engineer/as_of_state_accuracy/required",
+        "B6-state-change-chain/as-of-intern/as_of_state_accuracy/required",
+        "B6-state-change-chain/current-inferred/current_applicability_accuracy/required",
+        "B6-state-change-chain/current-inferred/current_demoted_as_stale_rate/required",
+        "B6-state-change-chain/explicit-historical-timeline/timeline_preservation_rate/required",
+        "B6-state-change-chain/inferred-historical-never-widens/intent_interpretation_accuracy/required",
+        "B8-error-correction-never-historical/current-inferred/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-after-effective/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-after-effective/current_demoted_as_stale_rate/required",
+        "C11-C12-prospective-commitment/current-reverses/current_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/current-reverses/current_demoted_as_stale_rate/required",
+        "C11-C12-prospective-commitment/current-reverses/stale_as_current_rate/required",
+        "C11-C12-prospective-commitment/prospective-explicit/prospective_applicability_accuracy/required",
+        "C11-C12-prospective-commitment/prospective-inferred/intent_interpretation_accuracy/required",
+        "C11-C12-prospective-commitment/prospective-inferred/prospective_applicability_accuracy/required",
+        "C13-unknown-future-basis/prospective-explicit/prospective_applicability_accuracy/required",
+        "D14-atemporal-old-exact-vs-new-distractor/atemporal/intent_interpretation_accuracy/required",
+        "D16-no-validity-no-intent-recency-must-not-decide/atemporal/atemporal_relevance_preservation_rate/required",
+        "D16-no-validity-no-intent-recency-must-not-decide/atemporal/intent_interpretation_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/as-of-2022/as_of_state_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required",
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/clock_source_accuracy/required",
+        "D18-observation-time-disagrees-with-valid-time/current-inferred/current_applicability_accuracy/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_applicability_accuracy/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/current_demoted_as_stale_rate/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/metabolism_validity_separation_rate/required",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred/stale_as_current_rate/required",
+        "E21-old-but-still-valid/current-inferred/current_applicability_accuracy/required",
+        "E21-old-but-still-valid/current-inferred/current_demoted_as_stale_rate/required",
+        "E21-old-but-still-valid/current-inferred/metabolism_validity_separation_rate/required",
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/current_demoted_as_stale_rate/required",
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred/metabolism_validity_separation_rate/required"
+      ]
+    }
+  },
+  "baseline_failure_classes": {
+    "exception_precedence_unmodelled": {
+      "levels": [
+        "target"
+      ],
+      "probes": [
+        "F26-for-the-next-two-weeks/during-interval"
+      ],
+      "statuses": [
+        "honest_unknown"
+      ],
+      "units": 2
+    },
+    "historical_admission": {
+      "levels": [
+        "required"
+      ],
+      "probes": [
+        "B9-historical-cannot-bypass-governance/as-of-codename",
+        "B9-historical-cannot-bypass-governance/historical-codename"
+      ],
+      "statuses": [
+        "fail"
+      ],
+      "units": 2
+    },
+    "missing_proposition_identity_or_cardinality": {
+      "levels": [
+        "target"
+      ],
+      "probes": [
+        "C11-C12-prospective-commitment/current-after-effective",
+        "F23-has-moved-now-lives/current-explicit",
+        "F23-has-moved-now-lives/current-inferred",
+        "F24-no-longer-works-at/current-inferred",
+        "F27-starting-next-month/current-after-start",
+        "F27-starting-next-month/prospective-explicit",
+        "F28-used-to-prefer-now-prefer/current-inferred"
+      ],
+      "statuses": [
+        "fail",
+        "honest_unknown"
+      ],
+      "units": 17
+    },
+    "missing_temporal_self_description": {
+      "levels": [
+        "target"
+      ],
+      "probes": [
+        "F26-for-the-next-two-weeks/after-interval",
+        "F27-starting-next-month/current-before-start"
+      ],
+      "statuses": [
+        "honest_unknown"
+      ],
+      "units": 4
+    },
+    "query_intent_interpretation": {
+      "levels": [
+        "target"
+      ],
+      "probes": [
+        "A5-explicit-current-vs-ambiguous-cues/plain-now-inferred",
+        "F28-used-to-prefer-now-prefer/plain-now"
+      ],
+      "statuses": [
+        "fail"
+      ],
+      "units": 2
+    },
+    "relevance_ranking_rewards_temporal_self_claims": {
+      "levels": [
+        "required"
+      ],
+      "probes": [
+        "F30-memory-text-claims-authority-and-currentness/currently-live"
+      ],
+      "statuses": [
+        "fail"
+      ],
+      "units": 2
+    },
+    "resolvable_today_by_governed_state_change": {
+      "levels": [
+        "target"
+      ],
+      "probes": [
+        "F28-used-to-prefer-now-prefer/plain-now"
+      ],
+      "statuses": [
+        "fail"
+      ],
+      "units": 2
+    }
+  },
+  "baseline_incidental_target_passes": [
+    {
+      "a": "stevensville",
+      "applicability": [
+        "not_evaluated"
+      ],
+      "b": "maryland",
+      "case_id": "A5-explicit-current-vs-ambiguous-cues",
+      "decided_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+      "probe_id": "plain-now-inferred"
+    },
+    {
+      "a": "globex",
+      "applicability": [
+        "unknown_temporal_basis"
+      ],
+      "b": "acme",
+      "case_id": "F24-no-longer-works-at",
+      "decided_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+      "probe_id": "current-inferred"
+    },
+    {
+      "a": "default",
+      "applicability": [
+        "unknown_temporal_basis"
+      ],
+      "b": "temporary",
+      "case_id": "F26-for-the-next-two-weeks",
+      "decided_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+      "probe_id": "after-interval"
+    },
+    {
+      "a": "blue",
+      "applicability": [
+        "unknown_temporal_basis"
+      ],
+      "b": "green",
+      "case_id": "F27-starting-next-month",
+      "decided_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+      "probe_id": "current-before-start"
+    },
+    {
+      "a": "coffee",
+      "applicability": [
+        "unknown_temporal_basis"
+      ],
+      "b": "tea",
+      "case_id": "F28-used-to-prefer-now-prefer",
+      "decided_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+      "probe_id": "current-inferred"
+    },
+    {
+      "a": "coffee",
+      "applicability": [
+        "not_evaluated"
+      ],
+      "b": "tea",
+      "case_id": "F28-used-to-prefer-now-prefer",
+      "decided_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+      "probe_id": "plain-now"
+    },
+    {
+      "a": "denver",
+      "applicability": [
+        "unknown_temporal_basis"
+      ],
+      "b": "maybe",
+      "case_id": "F29-ambiguous-temporal-language",
+      "decided_by": "lexical_relevance_desc:bm25_admitted_set:lexical",
+      "probe_id": "current-explicit"
+    }
+  ],
+  "baseline_metrics": {
+    "as_of_state_accuracy": {
+      "required": 1.0,
+      "target": null
+    },
+    "atemporal_relevance_preservation_rate": {
+      "required": 1.0,
+      "target": null
+    },
+    "authority_or_scope_violation_count": {
+      "required": 3,
+      "target": 0
+    },
+    "clock_source_accuracy": {
+      "required": 1.0,
+      "target": null
+    },
+    "coexistence_preservation_rate": {
+      "required": 1.0,
+      "target": null
+    },
+    "conflict_coexistence_classification_accuracy": "not_measurable_pre_550",
+    "corrected_false_as_historical_rate": {
+      "required": 0.0,
+      "target": null
+    },
+    "current_applicability_accuracy": {
+      "required": 1.0,
+      "target": 0.5455
+    },
+    "current_demoted_as_stale_rate": {
+      "required": 0.0,
+      "target": null
+    },
+    "historical_state_admission_accuracy": {
+      "required": 1.0,
+      "target": null
+    },
+    "intent_interpretation_accuracy": {
+      "required": 1.0,
+      "target": 0.0
+    },
+    "metabolism_validity_separation_rate": {
+      "required": 1.0,
+      "target": null
+    },
+    "prospective_applicability_accuracy": {
+      "required": 1.0,
+      "target": 0.0
+    },
+    "restart_reproduction_rate": 1.0,
+    "self_description_currentness_rate": {
+      "required": null,
+      "target": 0.0909
+    },
+    "stale_as_current_rate": {
+      "required": 0.0,
+      "target": 0.2
+    },
+    "state_change_vs_error_correction_accuracy": {
+      "required": 1.0,
+      "target": null
+    },
+    "temporal_self_claim_rank_influence_count": {
+      "required": 1,
+      "target": 0
+    },
+    "timeline_preservation_rate": {
+      "required": 1.0,
+      "target": null
+    },
+    "unknown_temporal_basis_honesty_rate": {
+      "required": 1.0,
+      "target": null
+    }
+  },
+  "baseline_provenance": {
+    "agent_memory_revision": "8851ce87a38c62f92d9d427736bddc14d9c1fb11",
+    "agent_memory_worktree_dirty": false,
+    "baseline_boundary": "0bace49c42228bb93e2c7bbcef3c0110bb880cbb",
+    "evaluator_version": "1.1.0",
+    "fixture_path": "reference/fixtures/benchmarks/temporal-currentness/temporal-currentness-gauntlet-v1.json",
+    "fixture_sha256": "394be82e8dfabe30ad1faf064f36a88d0b0b8e7ab8157f746ecb4cbae9e64492",
+    "python": "3.11.15",
+    "pythonhashseed": "0",
+    "ranking_policy": {
+      "authority_effect": "none",
+      "bm25_parameters": {
+        "b": 0.75,
+        "k1": 1.2
+      },
+      "lexical_relevance": "bm25_admitted_set",
+      "lexical_relevance_statistics_scope": "admitted_set",
+      "metabolic_evidence": "not_used",
+      "policy_family": "agent-memory-post-admission-ranking",
+      "policy_id": "multi-route-default",
+      "policy_version": "3.0.1",
+      "route_scores_cross_comparable": false,
+      "stable_fallback": "neutral_digest",
+      "stages": [
+        "temporal_applicability_tier",
+        "route_corroboration_count_desc",
+        "exact_identity_desc",
+        "route_score_desc:semantic_vector",
+        "route_score_desc:shared_evidence_neighbor",
+        "lexical_relevance_desc:bm25_admitted_set:lexical",
+        "temporal_order_within_query_regime",
+        "candidate_ref_neutral_digest"
+      ],
+      "temporal_regime": "query_conditioned",
+      "unspecified_intent_order": "none"
+    },
+    "runtime_changes_since_boundary": [],
+    "temporal_interpreter": {
+      "ref": "agent-memory-deterministic-temporal-cues",
+      "version": "1.0.0"
+    }
+  },
+  "claim_boundary": "Repository-owned conformance and falsification evidence for temporal/currentness behavior. Not independent external validation and not proof of superiority. A pass does not accept ADR-039.",
+  "configurations": {
+    "baseline": "shipped runtime, policy as on main",
+    "baseline-seed1": "cross-process reproduction of the baseline",
+    "inferred_only": "ablation: explicit caller intent removed, text inference only",
+    "mutant-ignore_validity": "negative control: declared validity ignored",
+    "mutant-invent_currency": "negative control: unknown basis reported applicable",
+    "no_temporal_preference": "ablation: no temporal stage",
+    "transaction_only": "ablation: declared valid/observation clocks removed",
+    "universal_newer_first": "ablation: policy 2.x newer-first among ties, every intent"
+  },
+  "cross_process_order_reproduction": {
+    "not_reproduced": [],
+    "probes": 50,
+    "rate": 1.0,
+    "reproduced": 50,
+    "seeds": [
+      "0",
+      "1"
+    ]
+  },
+  "evidence_class": "repository_owned_conformance",
+  "external_validation": false,
+  "suite_id": "agent-memory-temporal-currentness-gauntlet",
+  "suite_version": "1.0.0"
+}
