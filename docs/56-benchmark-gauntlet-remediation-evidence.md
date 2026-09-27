@@ -497,3 +497,71 @@ The artifacts are `reports/benchmarks/longmemeval/longmemeval-m-full-409098f.{js
 - Benchmark difficulty: M's lower absolute recall affects both backends.
 - The currentness ordering is the known class (#531, #538); no new defect was found.
 - The run tuned nothing. Policy 3.0.0 and the ADR-039 status are unchanged, and M is not new validity/as-of evidence.
+
+## Slice 8 (draft, not recommended to merge as-is): derived lexical token index (#563)
+
+**What was built.** The change is in `reference/agentmem_ref/state/sqlite_substrate.py`.
+- `fact_tokens(group_id, token, uuid)` is derived from canonical facts using the existing tokenizer (scheme `ftok-v1`).
+- It is written and deleted in the same SQLite transaction as the fact. Delete keys are derived from the stored fact, so no secondary index is needed.
+- It is verified row-for-row against `facts` when the store opens, and rebuilt on any difference.
+- The index is not part of either canonical digest, and it never decides admissibility.
+- `search` takes the overlap count from the index and materializes only the facts that share a query token. The partition filter, the `eligible` predicate, the score and the ordering are unchanged from the scan, which is kept as `search_by_scan` for the fallback and as the equivalence oracle.
+- There is no candidate budget, threshold or truncation.
+
+**Tests.** `reference/tests/test_token_index.py` has 14 tests:
+- search is identical to the scan across random stores, partition filters and `eligible` predicates, and after deletes, invalidations, rollback and reopen;
+- the index is excluded from canonical digests;
+- a missing row, a forged row, a moved row, a stale row, an edited fact text, a dropped table and a foreign scheme are each rebuilt at open;
+- a row naming an absent fact fails closed during search;
+- governed recall is identical end to end (candidates, admissions, refusals, ranking) with the scan disabled on the indexed path.
+
+The artifacts are in `reports/benchmarks/replays/563-token-index-2fdb7c5/`, from a 4-core container with no other benchmark running.
+
+### Identity
+
+| comparison | result |
+| --- | --- |
+| scaling harness, 100/1k/5k/10k, 1 and 10 scopes, `PYTHONHASHSEED=0` | recall identity digest (every decision field except `evaluated_at`) **equal at all 8 points** between `409098f` and `2fdb7c5` |
+| AgentMemBench MemDialogue v2, all phases | zero non-timing differences from frozen `2cedb6c`; the only diff is the per-record `details` block the frozen run omitted |
+| LongMemEval_S full, agent_memory, both planes | **IDENTICAL** to `fa8828c`: 1,000 rows and all aggregates |
+
+**Finding recorded during identity checking (#576).** Without a fixed hash seed, two runs of the *same* revision differ in the last ulp of the BM25 `lexical_relevance_score`. `admitted_set_bm25` sums terms in `set` iteration order. This is pre-existing, is not caused by this slice, and is filed separately. Candidates and admitted order were equal in every unseeded comparison.
+
+### Cost and benefit
+
+The synthetic scaling workload (40 random words per fact from a 3,000-word vocabulary) is highly selective:
+
+| facts | scopes | search before → after | recall p50 before → after | write p50 before → after | store MB before → after |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 1,000 | 1 | 17.0 → 1.5 ms | 48.2 → 33.4 ms | 4.79 → 5.92 ms | 4.5 → 5.9 |
+| 10,000 | 1 | 202.3 → 14.6 ms | 535.7 → 313.5 ms | 5.87 → 6.28 ms | 39.9 → 54.4 |
+| 1,000 | 10 | 10.4 → 1.3 ms | 16.6 → 8.6 ms | 5.14 → 5.82 ms | 4.4 → 5.9 |
+| 10,000 | 10 | 143.0 → 18.4 ms | 195.1 → 50.5 ms | 5.76 → 6.45 ms | 39.6 → 54.1 |
+
+Other costs of the index:
+- Open-time verification is O(N). Opening a handle over ~9,000 existing facts takes 1.43 → 2.40 s.
+- The variant that keeps a secondary `uuid` index (`1ba8eee`) costs +72% store size, against +36% for this one.
+
+On natural language the benefit disappears:
+
+| workload | candidates / store | search share of recall | recall before → after |
+| --- | ---: | ---: | ---: |
+| LongMemEval_M turn stores (3 questions, ~2,430 facts) | ~2,350 / ~2,430 (97%) | 6% | 769 → 757 ms |
+| LongMemEval_S, total recall time | | | session 11.7 → 10.2 s; turn 34.8 → 33.7 s |
+| AgentMemBench retrieval read p50 | | | 14.3 → 16.3 ms |
+
+On LongMemEval_S, ingest rose by 8% (session) and 7% (turn).
+
+### Classification
+
+- **Implementation: correct.** The slice preserves identity exactly.
+- **Optimization: sub-dominant on the workloads that matter.** Candidate generation admits any fact sharing any token with the query, including the most common words. On natural-language stores that makes nearly the whole store a candidate. What remains is:
+  - materializing those candidates;
+  - per-candidate admission, which is 67% of an M recall and is mostly schema validation (#572);
+  - ranking over ~2,300 admitted items.
+- No derived index can remove that volume without a change to candidate policy. A pre-admission budget, a threshold, or stopword/term-weight gating would each be a versioned retrieval-policy decision with benchmark replays, which is outside #563 by rule.
+- **Recommendation.** Do not merge this slice as the #563 fix. Its write, storage and open-time costs are not repaid on natural-language workloads. The next levers are:
+  1. #572: bounded per-candidate decision validation, under governance review;
+  2. an explicit, versioned candidate-generation policy question for the maintainer (for example IDF-aware candidate gating), replayed on AgentMemBench and LongMemEval S/M.
+
+  The index design remains available on this branch if a selective-vocabulary deployment profile makes it worthwhile.

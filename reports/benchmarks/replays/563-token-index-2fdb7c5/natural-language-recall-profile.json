@@ -1,0 +1,16 @@
+{
+  "description": "LongMemEval_M turn-plane stores for the first 3 questions (2511, 2373, 2409 facts), 3 recalls each of the question text, revision 2fdb7c5; 'scan' patches SQLiteTemporalGraph.search to search_by_scan. Means per recall.",
+  "index": {
+    "admission_ms": 509.9,
+    "candidates": 2350,
+    "recall_ms": 756.6,
+    "search_ms": 44.2
+  },
+  "scan": {
+    "admission_ms": 516.1,
+    "candidates": 2350,
+    "recall_ms": 769.2,
+    "search_ms": 47.4
+  },
+  "script": "prof_natural_language.py"
+}

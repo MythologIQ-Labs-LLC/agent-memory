@@ -1,0 +1,76 @@
+{
+  "backends": [
+    "agent_memory"
+  ],
+  "checks": {
+    "input.abstention_question_count": true,
+    "input.duplicate_session_id_question_count": true,
+    "input.no_user_target_question_count": true,
+    "input.question_count": true,
+    "input.selection": true,
+    "input.sha256": true,
+    "input.size_bytes": true,
+    "session/agent_memory.aggregate": true,
+    "session/agent_memory.authority_effect": true,
+    "session/agent_memory.boundary": true,
+    "session/agent_memory.by_question_type": true,
+    "session/agent_memory.currentness": true,
+    "session/agent_memory.failures": true,
+    "session/agent_memory.governance": true,
+    "session/agent_memory.question_order": true,
+    "session/agent_memory.rows_semantic_identical(500)": true,
+    "turn/agent_memory.aggregate": true,
+    "turn/agent_memory.authority_effect": true,
+    "turn/agent_memory.boundary": true,
+    "turn/agent_memory.by_question_type": true,
+    "turn/agent_memory.currentness": true,
+    "turn/agent_memory.failures": true,
+    "turn/agent_memory.governance": true,
+    "turn/agent_memory.question_order": true,
+    "turn/agent_memory.rows_semantic_identical(500)": true
+  },
+  "differences": [],
+  "frozen": "reports/benchmarks/replays/568-streaming-loader-fa8828c/longmemeval-s-full-fa8828c.json (+ rows)",
+  "new": "reports/benchmarks/replays/563-token-index-2fdb7c5/longmemeval-s-full-2fdb7c5.json (+ rows)",
+  "resource_consumption_new": {
+    "method": "getrusage(RUSAGE_SELF).ru_maxrss; the process high-water mark, not attributable to one backend",
+    "peak_rss_mb_after_input_scan": 55.2,
+    "peak_rss_mb_process": 72.3
+  },
+  "rows_compared": 1000,
+  "timing": {
+    "session/agent_memory": {
+      "frozen": {
+        "ingest_seconds_total": 122.584,
+        "recall_seconds_max": 0.047893,
+        "recall_seconds_total": 11.722,
+        "wall_seconds": 153.097
+      },
+      "new": {
+        "ingest_seconds_total": 132.237,
+        "recall_seconds_max": 0.036192,
+        "recall_seconds_total": 10.174,
+        "wall_seconds": 161.026
+      }
+    },
+    "turn/agent_memory": {
+      "frozen": {
+        "ingest_seconds_total": 619.597,
+        "recall_seconds_max": 0.112322,
+        "recall_seconds_total": 34.816,
+        "wall_seconds": 674.396
+      },
+      "new": {
+        "ingest_seconds_total": 663.211,
+        "recall_seconds_max": 0.140652,
+        "recall_seconds_total": 33.704,
+        "wall_seconds": 717.279
+      }
+    }
+  },
+  "verdict": "IDENTICAL",
+  "wall_seconds": {
+    "frozen": 845.155,
+    "new": 881.38
+  }
+}
