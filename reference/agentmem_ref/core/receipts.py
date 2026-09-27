@@ -17,6 +17,7 @@ validation may use it.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from functools import lru_cache
 from importlib import resources
@@ -56,6 +57,56 @@ _DEFERRED_OUTCOMES = {
     "collect_more_evidence",
 }
 
+_CONTEXTUAL_RECALL_SCHEMA = "contextual-recall-admission.schema.json"
+# #572: the fast path below is valid only for this exact canonical schema blob.
+# If the schema changes, validation automatically falls back to jsonschema until
+# the optimized validator is reviewed against the new contract.
+_CONTEXTUAL_RECALL_SCHEMA_BLOB_SHA = "b9663c491e576608f89ee3df56e1d9f46d5e6c4a"
+_CONTEXTUAL_RECALL_TOP_LEVEL_KEYS = frozenset(
+    {
+        "schema_version",
+        "profile_version",
+        "decision_id",
+        "candidate_ref",
+        "policy",
+        "context",
+        "outcome",
+        "reason_code",
+        "evidence_refs",
+        "evaluated_at",
+        "interpretation",
+    }
+)
+_CONTEXTUAL_RECALL_POLICY_KEYS = frozenset(
+    {"policy_ref", "policy_version", "status", "selection_mode"}
+)
+_CONTEXTUAL_RECALL_CONTEXT_KEYS = frozenset(
+    {
+        "target_domain_refs",
+        "principal_ref",
+        "project_ref",
+        "task_ref",
+        "purpose",
+        "destination_ref",
+    }
+)
+_CONTEXTUAL_RECALL_INTERPRETATION = {
+    "authority_effect": "current_recall_only",
+    "prior_admission_authority": "none",
+    "memory_mutation": "not_performed",
+    "relevance_authority": "none",
+    "risk_signal_authority": "none",
+}
+_CONTEXTUAL_RECALL_OUTCOMES = {
+    "admit",
+    "admit_with_warning",
+    "require_verification",
+    "require_review",
+    "quarantine",
+    "block",
+}
+_CONTEXTUAL_RECALL_POLICY_STATUSES = {"evaluated", "unavailable", "error", "invalid"}
+
 
 @lru_cache(maxsize=None)
 def _validator(schema_name: str) -> jsonschema.Draft202012Validator:
@@ -63,12 +114,148 @@ def _validator(schema_name: str) -> jsonschema.Draft202012Validator:
     return jsonschema.Draft202012Validator(schema)
 
 
-def validate(schema_name: str, document: dict) -> None:
-    """Raise if the document does not satisfy its canonical schema."""
+def _validate_with_jsonschema(schema_name: str, document: dict) -> None:
+    """Canonical JSON Schema validation oracle."""
     errors = sorted(_validator(schema_name).iter_errors(document), key=lambda e: list(e.path))
     if errors:
         location = ".".join(str(part) for part in errors[0].path) or "<root>"
         raise ValueError(f"{schema_name} at {location}: {errors[0].message}")
+
+
+@lru_cache(maxsize=1)
+def _builtin_recall_fastpath_enabled() -> bool:
+    """Use the optimized validator only while the canonical schema is byte-identical.
+
+    This is deliberately a Git-blob identity rather than a semantic guess. A
+    schema edit disables the fast path and restores the canonical jsonschema
+    validator automatically, so performance code cannot silently outlive the
+    evidence contract it was reviewed against.
+    """
+
+    raw = (schema_dir() / _CONTEXTUAL_RECALL_SCHEMA).read_bytes()
+    header = f"blob {len(raw)}\0".encode("ascii")
+    observed = hashlib.sha1(header + raw, usedforsecurity=False).hexdigest()
+    return observed == _CONTEXTUAL_RECALL_SCHEMA_BLOB_SHA
+
+
+def _nonempty_string(value: object) -> bool:
+    return isinstance(value, str) and bool(value)
+
+
+def _string_list_is_unique_and_nonempty(value: object) -> bool:
+    if not isinstance(value, list):
+        return False
+    if not all(_nonempty_string(item) for item in value):
+        return False
+    return len(value) == len(set(value))
+
+
+def _fast_validation_error(path: str, message: str) -> ValueError:
+    location = path or "<root>"
+    return ValueError(f"{_CONTEXTUAL_RECALL_SCHEMA} at {location}: {message}")
+
+
+def _is_builtin_recall_fastpath_candidate(document: object) -> bool:
+    """Return whether a document belongs to the fixed built-in recall-decision shape.
+
+    Contextual policy decisions and decisions carrying optional risk evidence
+    stay on canonical jsonschema. The optimized path exists only for the hot
+    built-in admission record emitted by GovernedMemoryAdapter._recall_decision.
+    """
+
+    if not isinstance(document, dict) or "risk_evidence" in document:
+        return False
+    policy_document = document.get("policy")
+    return (
+        isinstance(policy_document, dict)
+        and policy_document.get("policy_ref") == "contextual-recall-policy:none"
+        and policy_document.get("status") == "unavailable"
+    )
+
+
+def _validate_builtin_recall_decision(document: dict) -> None:
+    """Schema-equivalent validator for the fixed built-in recall decision.
+
+    The schema is intentionally simple and self-contained. This validator checks
+    every constraint exercised by the canonical Draft 2020-12 schema for the
+    no-risk-evidence built-in shape: object closure, required keys, const/enum
+    values, string types/minLength, array item types/uniqueness, and nested
+    object closure. `evaluated_at` remains a string check because the canonical
+    jsonschema validator is instantiated without a FormatChecker, so `format:
+    date-time` is annotation-only in the current contract.
+    """
+
+    if frozenset(document) != _CONTEXTUAL_RECALL_TOP_LEVEL_KEYS:
+        raise _fast_validation_error("<root>", "unexpected or missing top-level properties")
+    if document.get("schema_version") != "1.0.0":
+        raise _fast_validation_error("schema_version", "must be '1.0.0'")
+    if document.get("profile_version") != "0.1.0":
+        raise _fast_validation_error("profile_version", "must be '0.1.0'")
+    if not _nonempty_string(document.get("decision_id")):
+        raise _fast_validation_error("decision_id", "must be a non-empty string")
+    if not _nonempty_string(document.get("candidate_ref")):
+        raise _fast_validation_error("candidate_ref", "must be a non-empty string")
+
+    policy_document = document.get("policy")
+    if not isinstance(policy_document, dict) or frozenset(policy_document) != _CONTEXTUAL_RECALL_POLICY_KEYS:
+        raise _fast_validation_error("policy", "must contain exactly the canonical policy properties")
+    if not _nonempty_string(policy_document.get("policy_ref")):
+        raise _fast_validation_error("policy.policy_ref", "must be a non-empty string")
+    if not _nonempty_string(policy_document.get("policy_version")):
+        raise _fast_validation_error("policy.policy_version", "must be a non-empty string")
+    if policy_document.get("status") not in _CONTEXTUAL_RECALL_POLICY_STATUSES:
+        raise _fast_validation_error("policy.status", "is not a supported status")
+    if policy_document.get("selection_mode") != "deterministic":
+        raise _fast_validation_error("policy.selection_mode", "must be 'deterministic'")
+
+    context = document.get("context")
+    if not isinstance(context, dict) or frozenset(context) != _CONTEXTUAL_RECALL_CONTEXT_KEYS:
+        raise _fast_validation_error("context", "must contain exactly the canonical context properties")
+    if not _string_list_is_unique_and_nonempty(context.get("target_domain_refs")):
+        raise _fast_validation_error(
+            "context.target_domain_refs",
+            "must be a unique array of non-empty strings",
+        )
+    for field_name in ("principal_ref", "project_ref", "task_ref", "purpose", "destination_ref"):
+        if not isinstance(context.get(field_name), str):
+            raise _fast_validation_error(f"context.{field_name}", "must be a string")
+
+    if document.get("outcome") not in _CONTEXTUAL_RECALL_OUTCOMES:
+        raise _fast_validation_error("outcome", "is not a supported outcome")
+    if not _nonempty_string(document.get("reason_code")):
+        raise _fast_validation_error("reason_code", "must be a non-empty string")
+    if not _string_list_is_unique_and_nonempty(document.get("evidence_refs")) and document.get("evidence_refs") != []:
+        raise _fast_validation_error("evidence_refs", "must be a unique array of non-empty strings")
+    if not isinstance(document.get("evaluated_at"), str):
+        raise _fast_validation_error("evaluated_at", "must be a string")
+
+    interpretation = document.get("interpretation")
+    if not isinstance(interpretation, dict) or interpretation != _CONTEXTUAL_RECALL_INTERPRETATION:
+        raise _fast_validation_error(
+            "interpretation",
+            "must contain exactly the canonical authority interpretation",
+        )
+
+
+def validate(schema_name: str, document: dict) -> None:
+    """Raise if the document does not satisfy its canonical schema.
+
+    #572 keeps the built-in recall decision at the same per-record validation
+    boundary but avoids full jsonschema traversal for its fixed, internally
+    constructed shape. The fast validator is enabled only while the exact
+    canonical schema blob matches the reviewed revision. All other documents,
+    including contextual-policy decisions and any future schema revision, use
+    the canonical jsonschema oracle unchanged.
+    """
+
+    if (
+        schema_name == _CONTEXTUAL_RECALL_SCHEMA
+        and _builtin_recall_fastpath_enabled()
+        and _is_builtin_recall_fastpath_candidate(document)
+    ):
+        _validate_builtin_recall_decision(document)
+        return
+    _validate_with_jsonschema(schema_name, document)
 
 
 def decision_ref_for(proposal_id: str) -> str:
