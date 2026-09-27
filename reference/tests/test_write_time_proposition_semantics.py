@@ -103,6 +103,20 @@ class InterpreterContractTests(unittest.TestCase):
                  ("The user lives in Denver.", "The user is living in Boston.", "The user currently lives in Austin.")}
         self.assertEqual(len(slots), 1)
 
+    def test_generic_clause_structure(self):
+        # Simple past ends the subject and is not a present-state proposition.
+        changed = ps.interpret_write("The user changed jobs and now works as a pilot.")
+        self.assertEqual((changed["proposition"]["entity"], changed["proposition"]["value"]), ("user", "pilot"))
+        self.assertEqual(ps.interpret_write("I lived in Maryland.")["proposition"]["status"], ps.UNKNOWN)
+        # A pronoun after a possessive-subject clause resolves to the owner.
+        pref = ps.interpret_write("The user's taste changed; they now prefer jazz.")
+        self.assertEqual(ps.write_slot(pref), ps.write_slot(ps.interpret_write("The user prefers rock.")))
+        # A revision qualifier names the same slot and is change evidence, not a new entity.
+        revised = ps.interpret_write("The revised launch date is May 3.")
+        self.assertEqual(ps.write_slot(revised), ps.write_slot(ps.interpret_write("The launch date is April 1.")))
+        self.assertEqual(revised["cardinality"]["class"], ps.SINGLE_VALUED)
+        self.assertEqual(ps.interpret_write("The new launch date is May 3.")["cardinality"]["class"], ps.UNKNOWN)
+
     def test_cardinality_comes_only_from_markers_never_from_the_property(self):
         self.assertEqual(ps.interpret_write("The user also works at Globex.")["cardinality"]["class"], ps.MULTI_VALUED)
         self.assertEqual(ps.interpret_write("The user has moved and now lives in Boston.")["cardinality"]["class"], ps.SINGLE_VALUED)

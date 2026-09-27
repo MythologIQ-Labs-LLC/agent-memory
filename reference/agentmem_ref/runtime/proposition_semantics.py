@@ -82,6 +82,10 @@ _TRAILING_ADVERBS = ("now", "currently", "anymore", "any more", "too", "as well"
 _MID_ADVERBS = {"also", "currently", "now", "still", "always", "already", "just", "really", "actually",
                 "presently", "usually", "often", "sometimes", "again", "then",
                 "maybe", "perhaps", "probably", "possibly", "likely"}
+# Leading noun-phrase qualifiers that describe recency or revision, not the entity:
+# "the updated project budget" names the same slot as "the project budget".
+_NP_QUALIFIERS = {"updated", "revised", "new", "latest", "current", "corrected"}
+_REVISION_QUALIFIERS = {"updated", "revised", "corrected"}
 # Words that open a new clause after "and": adverbs, subject pronouns, determiners.
 _CLAUSE_OPENERS = _MID_ADVERBS | {"he", "she", "they", "i", "we", "the", "my", "our", "their", "his", "her"}
 _CONTRACTIONS = (("i'm", "i am"), ("we're", "we are"), ("they're", "they are"), ("you're", "you are"),
@@ -179,6 +183,10 @@ def _is_finite_verb(words: list[str], index: int) -> bool:
     word = words[index].strip(",.;:")
     if word in _AUX or word in {"used", "no", "not", "never"} or word in _MID_ADVERBS:
         return True
+    if word.endswith("ed") and len(word) > 4 and index >= 2:
+        # Simple past after a noun ("the user changed jobs"); a participle *before* the
+        # head noun ("the updated budget") sits at index 1 and stays a qualifier.
+        return True
     if "'" in word or word.endswith("ss") or len(word) < 3 or not word.endswith("s"):
         return False
     following = words[index + 1].strip(",.;:") if index + 1 < len(words) else ""
@@ -211,7 +219,10 @@ def _subject(words: list[str]) -> tuple[str | None, int, str]:
     if first in _DETERMINERS:
         for index in range(2, min(len(words), 7)):
             if _is_finite_verb(words, index):
-                phrase = " ".join(w.strip(",.;:") for w in words[1:index])
+                qualifiers = [w.strip(",.;:") for w in words[1:index]]
+                while len(qualifiers) > 1 and qualifiers[0] in _NP_QUALIFIERS:
+                    qualifiers = qualifiers[1:]
+                phrase = " ".join(qualifiers)
                 owner = {"my": "speaker", "our": "speaker_group"}.get(first)
                 return (f"{owner}'s {phrase}" if owner else phrase), index, "noun"
         return None, 0, "none"
@@ -243,6 +254,8 @@ def _parse_clause(raw: str, antecedent: str | None) -> dict[str, Any] | None:
     markers: list[str] = []
     words = _skip_adverbs(_norm(raw).split(), markers)
     entity, index, kind = _subject(words)
+    if kind == "noun" and index > 1:
+        markers.extend(w.strip(",.;:") for w in words[1:index] if w.strip(",.;:") in _REVISION_QUALIFIERS)
     if kind == "none" and antecedent is not None and words and _is_finite_verb(words, 0):
         entity, index, kind = antecedent, 0, "inherited"
     if kind == "none":
@@ -259,7 +272,7 @@ def _parse_clause(raw: str, antecedent: str | None) -> dict[str, Any] | None:
         polarity, rest = ENDED, rest[2:]
         markers.append("used to")
     modal, auxiliaries = None, []
-    while rest and rest[0].strip(",") in _AUX:
+    while rest and rest[0].strip(",") in _AUX and not (rest[0] == "may" and len(rest) > 1 and rest[1][:1].isdigit()):
         auxiliaries.append(rest[0].strip(","))
         head = rest[0].strip(",")
         if head in _MODALS:
@@ -269,7 +282,8 @@ def _parse_clause(raw: str, antecedent: str | None) -> dict[str, Any] | None:
             polarity, rest = NEGATED, _skip_adverbs(rest[1:], markers)
         if head in {"is", "are", "am", "was", "were"}:
             nxt = rest[0].strip(",") if rest else ""
-            if nxt.endswith("ing") or nxt in {"scheduled", "going", "planning"} or nxt in _AUX:
+            month = nxt == "may" and len(rest) > 1 and rest[1][:1].isdigit()
+            if nxt.endswith("ing") or nxt in {"scheduled", "going", "planning"} or (nxt in _AUX and not month):
                 continue
             value = _norm_value(" ".join(_strip_edges(rest, _TRAILING_ADVERBS, leading=False, found=markers)))
             return _clause(entity, "be", value, PAST if head in {"was", "were"} and polarity == AFFIRMED else polarity,
@@ -407,7 +421,8 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
     """Deterministic typed interpretation of one write. Evidence only; grants nothing."""
 
     lowered = _norm(text)
-    hedges = sorted(h for h in _HEDGES if _contains(lowered, h))
+    month_free = re.sub(r"\bmay(?=\s+\d)", "maymonth", lowered)  # "May 3" is a date, not a hedge
+    hedges = sorted(h for h in _HEDGES if _contains(month_free, h))
     self_claims = sorted(name for name, pattern in _SELF_CLAIMS.items() if re.search(pattern, lowered))
     clauses: list[dict[str, Any]] = []
     antecedent: str | None = None
@@ -423,7 +438,8 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
         if clause["entity"] and clause["subject"] in {"noun", "pronoun"} and not clause.get("self_reference"):
             antecedent = clause["entity"]
     propositional = [c for c in clauses if not c.get("self_reference")]
-    change = sorted({m for c in propositional for m in c["markers"] if m in {"no longer", "used to", "not anymore", *_REPLACEMENT_VERBS}})
+    change = sorted({m for c in propositional for m in c["markers"]
+                     if m in {"no longer", "used to", "not anymore", *_REPLACEMENT_VERBS, *_REVISION_QUALIFIERS}})
     coexistence = sorted({m for c in propositional for m in c["markers"] if m in _COEXISTENCE}
                          | {m for m in ("in addition", "additionally", "as well") if _contains(lowered, m)})
     if any(c.get("modal") in {"might", "may", "could"} for c in propositional):
@@ -452,9 +468,9 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
 
     if coexistence:
         cardinality = {"class": MULTI_VALUED, "basis": "interpreted_coexistence_marker", "evidence": coexistence}
-    elif any(m in _REPLACEMENT_VERBS for m in change) and proposition["status"] == KNOWN:
+    elif any(m in _REPLACEMENT_VERBS or m in _REVISION_QUALIFIERS for m in change) and proposition["status"] == KNOWN:
         cardinality = {"class": SINGLE_VALUED, "basis": "interpreted_replacement_marker",
-                       "evidence": [m for m in change if m in _REPLACEMENT_VERBS]}
+                       "evidence": [m for m in change if m in _REPLACEMENT_VERBS or m in _REVISION_QUALIFIERS]}
     else:
         cardinality = {"class": UNKNOWN, "basis": "none", "evidence": []}
 
