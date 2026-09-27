@@ -561,6 +561,58 @@ class AgentMemory:
         return self._commit_result(outcome)
 
     @_serialized
+    def dispute(
+        self,
+        target_reference: str,
+        *,
+        fact_uuid: str | None = None,
+        evidence: Sequence = (),
+        attestation: policy.ExternalVerification | None = None,
+        evidence_refs: Sequence[str] = (),
+        risk_class: str = "low",
+        purpose: str | None = None,
+        overrides: Mapping[str, object] | None = None,
+    ) -> dict:
+        """Govern and durably mark one retained fact disputed without deleting or rewriting it.
+
+        The closed public proposal vocabulary does not yet contain ``mark_disputed``.
+        Until doctrine explicitly promotes that operation, the PAMA proposal uses the
+        conservative ``other`` cell (review by default). The durable audit event records
+        the actual ``memory.dispute`` transition and exact fact UUID. This is deliberately
+        separate from correction/supersession and grants no truth or currentness authority.
+        """
+        self._require_open()
+        target_fact = fact_uuid or self.runtime.adapter.current_fact_uuid(target_reference)
+        if not target_fact:
+            return contract.result(
+                "commit",
+                contract.CURRENT,
+                committed=False,
+                fact_uuid=None,
+                refusal="fact_not_found",
+            )
+        refs = tuple(dict.fromkeys((f"fact:{target_fact}", *tuple(evidence_refs))))
+        proposal = contract.proposal_from_envelope(
+            self._proposal(
+                target_reference=target_reference,
+                operation="other",
+                current_strength="reinforced",
+                proposed_strength="blocked",
+                risk_class=risk_class,
+                evidence_refs=refs,
+                purpose=purpose,
+                overrides=overrides,
+            )
+        )
+        outcome = self.runtime.dispute(
+            proposal,
+            target_fact,
+            evidence=list(evidence) or None,
+            attestation=attestation,
+        )
+        return self._commit_result(outcome)
+
+    @_serialized
     def recall(
         self,
         query: str,
