@@ -561,6 +561,70 @@ class AgentMemory:
         return self._commit_result(outcome)
 
     @_serialized
+    def write_semantics(self, fact_uuid: str) -> dict | None:
+        """Typed write-time interpretation persisted with one fact (#550). Evidence only.
+
+        Proposition identity, cardinality, markers, anchored self-validity, and the
+        same-slot classification computed when the fact was written. It carries
+        ``authority_effect: none``; nothing in it refuses, supersedes, or mutates.
+        """
+        self._require_open()
+        return self.runtime.adapter.write_semantics(fact_uuid)
+
+    @_serialized
+    def semantic_proposals(self, *, status: str | None = None) -> list[dict]:
+        """Write-time ``state_change`` proposals (#550) with status derived from lifecycle.
+
+        ``open`` / ``applied`` / ``stale``. A proposal is never applied automatically.
+        """
+        self._require_open()
+        proposals = self.runtime.adapter.semantic_proposals()
+        return [item for item in proposals if status is None or item["status"] == status]
+
+    @_serialized
+    def apply_semantic_proposal(
+        self,
+        proposal_id: str,
+        *,
+        evidence: Sequence = (),
+        attestation: policy.ExternalVerification | None = None,
+        evidence_refs: Sequence[str] = (),
+        risk_class: str = "medium",
+        purpose: str | None = None,
+        valid_from: str | None = None,
+    ) -> dict:
+        """Explicitly route one open write-time proposal through the governed correction.
+
+        This is the caller's decision, not the interpreter's: it is exactly
+        ``correct(target, replacement_text, replacement_kind="state_change")`` under
+        ordinary PAMA, citing the proposal id as an evidence ref. Review requirements are
+        not hidden or auto-satisfied, the proposal's ``effective_no_later_than`` is not
+        applied as an effective time, and a proposal that is not ``open`` is refused.
+        """
+        self._require_open()
+        proposal = next((item for item in self.runtime.adapter.semantic_proposals()
+                         if item["proposal_id"] == proposal_id), None)
+        if proposal is None or proposal["status"] != "open":
+            return contract.result(
+                "commit",
+                contract.CURRENT,
+                committed=False,
+                fact_uuid=None,
+                refusal="semantic_proposal_not_open" if proposal else "semantic_proposal_not_found",
+            )
+        return self.correct(
+            proposal["target_reference"],
+            proposal["replacement_text"],
+            evidence=evidence,
+            attestation=attestation,
+            evidence_refs=(*tuple(evidence_refs), proposal_id),
+            risk_class=risk_class,
+            purpose=purpose,
+            valid_from=valid_from,
+            replacement_kind=proposal["replacement_kind"],
+        )
+
+    @_serialized
     def dispute(
         self,
         target_reference: str,

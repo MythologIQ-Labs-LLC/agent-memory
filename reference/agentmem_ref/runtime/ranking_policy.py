@@ -11,7 +11,7 @@ A policy is a documented, versioned sequence of lexicographic stages. Stage valu
 their own types; nothing is summed into one number, and the final order is not a claim
 that the contributing evidence shares a unit.
 
-Stages (policy version 3.0.1, ``temporal_regime = query_conditioned``):
+Stages (policy version 3.1.0, ``temporal_regime = query_conditioned``):
 
 1. temporal applicability tier. **Only** when the query's temporal intent is explicit or
    inferred with high confidence, and only for ``current``, ``as_of``, and
@@ -21,6 +21,14 @@ Stages (policy version 3.0.1, ``temporal_regime = query_conditioned``):
    returned, labelled with why. This stage is non-compensatory. Relevance cannot rescue
    a candidate whose declared validity excludes it from the requested time (ADR-039
    C1, C2, C23). Unknown temporal basis is never treated as timeless or as current.
+   Since 3.1.0 (#550), when the caller declared no validity, a *resolved*, anchored
+   write-time self-validity window (basis ``interpreted``) may **limit** the memory's
+   own applicability (``outside_target_interval`` / ``prospectively_applicable`` under
+   current or as-of intent; ``outside_target_interval`` / ``applicable_not_prospective``
+   under prospective intent). It never affirms applicability: a label that would not
+   demote stays ``unknown_temporal_basis``. Caller-declared validity always wins, and
+   ``temporal_applicability_basis`` records the source of every label. Lexical
+   relevance is unchanged from 3.0.1.
 2. route corroboration: the number of distinct candidate routes that surfaced the fact;
 3. exact identity: surfaced by an exact logical-memory lookup;
 4. route-native relevance, one stage per route in declared order, never summed or
@@ -63,10 +71,11 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
+from .proposition_semantics import WRITE_SEMANTICS_KEY, interpreted_validity
 from .temporal_intent import AS_OF, CURRENT, DECLARED_TEMPORAL_KEY, PROSPECTIVE, TIMELINE, TemporalIntent, parse_time
 
 POLICY_FAMILY = "agent-memory-post-admission-ranking"
-POLICY_VERSION = "3.0.1"
+POLICY_VERSION = "3.1.0"
 BM25_K1 = 1.2
 BM25_B = 0.75
 _TOKEN = re.compile(r"[a-z0-9]+")
@@ -151,9 +160,14 @@ def typed_temporal_evidence(fact: Any) -> dict[str, Any]:
         for key in ("invalid_at", "expired_at")
         if getattr(fact, key, None)
     }
+    semantics = (getattr(fact, "attributes", None) or {}).get(WRITE_SEMANTICS_KEY)
+    caller_declared_validity = bool(declared.get("valid_from") or declared.get("valid_until"))
     return {
         "clocks": clocks,
         "declared_basis": declared.get("basis"),
+        # #550: write-time self-validity, basis ``interpreted``. Never a clock, never a
+        # declared basis, and ignored whenever the caller declared any validity.
+        "interpreted_validity": None if caller_declared_validity else interpreted_validity(semantics),
         "lifecycle": lifecycle,
         "substrate_valid_at_basis": "runtime_write_clock",
     }
@@ -167,15 +181,56 @@ def _ordering_clock(temporal: Mapping[str, Any]) -> tuple[str | None, float | No
     return None, None
 
 
-def temporal_applicability(intent: TemporalIntent, temporal: Mapping[str, Any]) -> str:
-    """Relationship between the query's temporal target and a candidate's declared validity."""
+def _validity_window(temporal: Mapping[str, Any]) -> tuple[float | None, float | None, str | None]:
+    """(start, end, basis). Caller-declared validity outranks interpreted self-validity."""
 
-    if not intent.orders_temporally:
-        return "not_evaluated"
-    target = intent.target_instant()
     clocks = temporal["clocks"]
     start = clocks.get("declared_valid_from", {}).get("seconds")
     end = clocks.get("declared_valid_until", {}).get("seconds")
+    if start is not None or end is not None:
+        return start, end, "caller_declared"
+    interpreted = temporal.get("interpreted_validity") or {}
+    start, end = parse_time(interpreted.get("valid_from")), parse_time(interpreted.get("valid_until"))
+    if start is not None or end is not None:
+        return start, end, "interpreted"
+    return None, None, None
+
+
+def temporal_applicability(intent: TemporalIntent, temporal: Mapping[str, Any]) -> str:
+    """Relationship between the query's temporal target and a candidate's validity."""
+
+    return temporal_applicability_with_basis(intent, temporal)[0]
+
+
+def temporal_applicability_basis(intent: TemporalIntent, temporal: Mapping[str, Any]) -> str | None:
+    """Which validity source produced the label: caller_declared, interpreted, or None."""
+
+    return temporal_applicability_with_basis(intent, temporal)[1]
+
+
+def temporal_applicability_with_basis(intent: TemporalIntent, temporal: Mapping[str, Any]) -> tuple[str, str | None]:
+    """(label, basis). Interpreted self-validity may only *limit* a memory's own applicability.
+
+    A memory's text may always make a weaker claim about itself ("for the next two
+    weeks": after that it no longer applies; "starting next month": not yet). It may
+    never affirm its own applicability or currentness: that would let memory text
+    promote itself (ADR-039 intent/temporal poisoning; #580 F30). So an interpreted
+    window yields only labels that demote under the query's mode; otherwise the basis
+    stays unknown. Caller-declared validity is used in both directions, as before.
+    """
+
+    label = _applicability_label(intent, temporal)
+    basis = _validity_window(temporal)[2] if label not in {"not_evaluated", "unknown_temporal_basis", "no_reference_time"} else None
+    if basis == "interpreted" and label not in _DEMOTED.get(intent.mode, set()):
+        return "unknown_temporal_basis", None
+    return label, basis
+
+
+def _applicability_label(intent: TemporalIntent, temporal: Mapping[str, Any]) -> str:
+    if not intent.orders_temporally:
+        return "not_evaluated"
+    target = intent.target_instant()
+    start, end, _ = _validity_window(temporal)
     if start is None and end is None:
         return "unknown_temporal_basis"
     if target is None:
@@ -290,6 +345,7 @@ class PostAdmissionRankingPolicy:
             clock, seconds = _ordering_clock(temporal)
             record["temporal_evidence"] = temporal
             record["temporal_applicability"] = temporal_applicability(intent, temporal)
+            record["temporal_applicability_basis"] = temporal_applicability_basis(intent, temporal)
             record["temporal_ordering_clock"] = clock if (intent.orders_temporally or self._defaults_unspecified(intent)) else None
             record["_ordering_seconds"] = seconds
         return record
