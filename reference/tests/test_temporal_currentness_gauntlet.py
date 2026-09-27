@@ -7,8 +7,9 @@ These tests check the evaluator, not Agent Memory's score:
 * the scorer is sensitive: corrupting real observations moves the metric that should
   catch the corruption (scorer-level negative controls);
 * evaluation-process runtime mutants are detected (runtime-level negative controls);
-* the live runtime still reproduces the frozen pre-#550 baseline exactly. A deliberate
-  behavior change (for example #550) must regenerate the baseline and explain the diff;
+* the frozen pre-#550 baseline remains immutable and acts as a monotonic comparator:
+  live behavior may resolve a frozen failure/honest-unknown, but a frozen required pass
+  may not regress and unrelated probe behavior may not drift;
 * no runtime module references the gauntlet (no benchmark-specific branch).
 """
 
@@ -169,13 +170,57 @@ class GauntletTests(unittest.TestCase):
 
     # ------------------------------------------------------------------ frozen baseline
 
-    def test_live_runtime_reproduces_frozen_pre_550_baseline(self):
+    def test_live_runtime_is_monotonic_against_frozen_pre_550_baseline(self):
+        """Freeze gold and old evidence, not known defects.
+
+        The baseline remains the immutable record of policy 3.0.1 at 0bace49. Later
+        bounded remediation is allowed to turn ``fail``/``honest_unknown`` into stronger
+        outcomes, but it may not regress a required pass. A probe digest may change only
+        when at least one scored unit on that probe improves, preventing unrelated drift
+        from being hidden behind an intentional remediation elsewhere.
+        """
         frozen = json.loads(BASELINE.read_text(encoding="utf-8"))
         self.assertEqual(frozen["provenance"]["fixture_sha256"], FIXTURE_SHA256)
         self.assertEqual(frozen["provenance"]["runtime_changes_since_boundary"], [])
-        self.assertEqual({"/".join(k): v for k, v in tc.units(self.rows).items()},
-                         {"/".join(k): v for k, v in tc.units(frozen["rows"]).items()})
-        self.assertEqual(tc.order_digests(self.rows), frozen["order_digests"])
+
+        frozen_units = tc.units(frozen["rows"])
+        live_units = tc.units(self.rows)
+        self.assertEqual(set(live_units), set(frozen_units))
+
+        required_regressions = {
+            "/".join(key): (old, live_units[key])
+            for key, old in frozen_units.items()
+            if key[3] == "required" and old == "pass" and live_units[key] != "pass"
+        }
+        self.assertEqual(required_regressions, {})
+
+        allowed_improvements = {
+            ("fail", "pass"),
+            ("fail", "honest_unknown"),
+            ("honest_unknown", "pass"),
+        }
+        changed = {
+            key: (old, live_units[key])
+            for key, old in frozen_units.items()
+            if live_units[key] != old
+        }
+        invalid_changes = {
+            "/".join(key): transition
+            for key, transition in changed.items()
+            if transition not in allowed_improvements
+        }
+        self.assertEqual(invalid_changes, {})
+
+        improved_probes = {(key[0], key[1]) for key in changed}
+        frozen_digests = frozen["order_digests"]
+        live_digests = tc.order_digests(self.rows)
+        unexplained_digest_changes = {
+            probe: (frozen_digests.get(probe), digest)
+            for probe, digest in live_digests.items()
+            if frozen_digests.get(probe) != digest
+            and tuple(probe.split("/", 1)) not in improved_probes
+        }
+        self.assertEqual(unexplained_digest_changes, {})
 
     def test_restart_reproduces_every_probe(self):
         self.assertEqual(tc.compute_metrics(self.rows)["restart_reproduction_rate"]["value"], 1.0)
