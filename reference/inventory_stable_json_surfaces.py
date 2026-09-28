@@ -50,6 +50,12 @@ def _risk_hint(path: Path) -> str:
     return "unclassified_candidate"
 
 
+def _source_segment(source: str, node: ast.AST) -> str:
+    segment = ast.get_source_segment(source, node) or ""
+    segment = " ".join(segment.split())
+    return segment if len(segment) <= 300 else segment[:297] + "..."
+
+
 class Visitor(ast.NodeVisitor):
     def __init__(self, path: Path, source: str) -> None:
         self.path = path
@@ -73,47 +79,64 @@ class Visitor(ast.NodeVisitor):
         self.stack.pop()
 
     def visit_Call(self, node: ast.Call) -> Any:
-        if not self._is_json_dumps(node.func):
+        family = self._serializer_family(node)
+        if family is None:
             self.generic_visit(node)
             return
 
-        keywords = {keyword.arg: keyword.value for keyword in node.keywords if keyword.arg}
-        sort_keys = _literal(keywords.get("sort_keys"))
-        if sort_keys is not True:
-            self.generic_visit(node)
-            return
-
-        separators = _literal(keywords.get("separators"))
-        ensure_ascii = _literal(keywords.get("ensure_ascii")) if "ensure_ascii" in keywords else "<default_true>"
-        allow_nan = _literal(keywords.get("allow_nan")) if "allow_nan" in keywords else "<default_true>"
-        segment = ast.get_source_segment(self.source, node) or ""
-        segment = " ".join(segment.split())
-        if len(segment) > 300:
-            segment = segment[:297] + "..."
-
-        self.rows.append(
-            {
+        if family == "python_sorted_json":
+            keywords = {keyword.arg: keyword.value for keyword in node.keywords if keyword.arg}
+            sort_keys = _literal(keywords.get("sort_keys"))
+            if sort_keys is not True:
+                self.generic_visit(node)
+                return
+            row = {
+                "serializer_family": family,
                 "path": self.path.as_posix(),
                 "line": node.lineno,
                 "scope": _qualname(self.stack),
                 "sort_keys": True,
-                "separators": separators,
-                "ensure_ascii": ensure_ascii,
-                "allow_nan": allow_nan,
+                "separators": _literal(keywords.get("separators")),
+                "ensure_ascii": _literal(keywords.get("ensure_ascii"))
+                if "ensure_ascii" in keywords
+                else "<default_true>",
+                "allow_nan": _literal(keywords.get("allow_nan"))
+                if "allow_nan" in keywords
+                else "<default_true>",
                 "risk_hint": _risk_hint(self.path),
-                "source": segment,
+                "source": _source_segment(self.source, node),
             }
-        )
+        else:
+            row = {
+                "serializer_family": family,
+                "path": self.path.as_posix(),
+                "line": node.lineno,
+                "scope": _qualname(self.stack),
+                "sort_keys": "rfc8785_defined",
+                "separators": "rfc8785_defined",
+                "ensure_ascii": "rfc8785_defined",
+                "allow_nan": "rfc8785_rejects_nonfinite",
+                "risk_hint": _risk_hint(self.path),
+                "source": _source_segment(self.source, node),
+            }
+
+        self.rows.append(row)
         self.generic_visit(node)
 
     @staticmethod
-    def _is_json_dumps(node: ast.AST) -> bool:
-        return (
-            isinstance(node, ast.Attribute)
-            and node.attr == "dumps"
-            and isinstance(node.value, ast.Name)
-            and node.value.id in {"json", "_json"}
-        )
+    def _serializer_family(node: ast.Call) -> str | None:
+        func = node.func
+        if not (
+            isinstance(func, ast.Attribute)
+            and func.attr == "dumps"
+            and isinstance(func.value, ast.Name)
+        ):
+            return None
+        if func.value.id in {"json", "_json"}:
+            return "python_sorted_json"
+        if func.value.id == "rfc8785":
+            return "rfc8785_jcs"
+        return None
 
 
 def inventory(root: Path, roots: tuple[Path, ...]) -> dict[str, Any]:
@@ -138,27 +161,42 @@ def inventory(root: Path, roots: tuple[Path, ...]) -> dict[str, Any]:
             visitor.visit(tree)
             rows.extend(visitor.rows)
 
-    rows.sort(key=lambda row: (row["path"], row["line"], row["scope"]))
-    serialized_rows = json.dumps(rows, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-    counts: dict[str, int] = {}
+    rows.sort(
+        key=lambda row: (
+            row["serializer_family"],
+            row["path"],
+            row["line"],
+            row["scope"],
+        )
+    )
+    serialized_rows = json.dumps(
+        rows, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+
+    risk_counts: dict[str, int] = {}
+    family_counts: dict[str, int] = {}
     for row in rows:
-        counts[row["risk_hint"]] = counts.get(row["risk_hint"], 0) + 1
+        risk_counts[row["risk_hint"]] = risk_counts.get(row["risk_hint"], 0) + 1
+        family = row["serializer_family"]
+        family_counts[family] = family_counts.get(family, 0) + 1
 
     return {
-        "schema_version": 1,
-        "inventory_kind": "stable_json_dumps_sort_keys_candidates",
+        "schema_version": 2,
+        "inventory_kind": "canonical_json_candidate_surfaces",
         "roots": [item.as_posix() for item in roots],
         "parsed_python_files": parsed_files,
         "candidate_count": len(rows),
-        "risk_hint_counts": dict(sorted(counts.items())),
+        "serializer_family_counts": dict(sorted(family_counts.items())),
+        "risk_hint_counts": dict(sorted(risk_counts.items())),
         "candidate_rows_sha256": hashlib.sha256(serialized_rows).hexdigest(),
         "parse_errors": parse_errors,
         "candidates": rows,
         "qualification": [
             "AST inventory only; risk_hint is non-normative and requires manual consequence classification",
             "captures json/_json.dumps calls with literal sort_keys=True",
+            "captures direct rfc8785.dumps calls as a separate existing canonicalization family",
             "does not prove that a candidate feeds a digest or persisted identity",
-            "does not capture custom serializers or dynamically aliased json.dumps without separate review",
+            "does not capture custom serializers or dynamically aliased serializer calls without separate review",
         ],
         "authority_effect": "none",
     }
@@ -172,8 +210,25 @@ def main() -> int:
 
     payload = inventory(args.repo_root.resolve(), DEFAULT_ROOTS)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({key: payload[key] for key in ("candidate_count", "risk_hint_counts", "candidate_rows_sha256", "parse_errors")}, indent=2, sort_keys=True))
+    args.output.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(
+        json.dumps(
+            {
+                key: payload[key]
+                for key in (
+                    "candidate_count",
+                    "serializer_family_counts",
+                    "risk_hint_counts",
+                    "candidate_rows_sha256",
+                    "parse_errors",
+                )
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
     return 1 if payload["parse_errors"] else 0
 
 
