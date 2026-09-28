@@ -19,6 +19,14 @@ from agentmem_ref.runtime.adapter import GovernedMemoryAdapter
 
 
 def admission_only():
-    """Patch the shared prefilter to pass every existing fact; admission is unchanged."""
+    """Patch the shared prefilter to pass every existing fact; admission is unchanged.
 
-    return mock.patch.object(GovernedMemoryAdapter, "domain_eligible", lambda self, fact, context: fact is not None)
+    The prefilter has a fact form and (#591) an identity form that substrates apply
+    before materializing facts. Both are the same #548 prefilter, so both are bypassed.
+    """
+
+    return mock.patch.multiple(
+        GovernedMemoryAdapter,
+        domain_eligible=lambda self, fact, context: fact is not None,
+        domain_eligible_identity=lambda self, fact_uuid, group_id, context: True,
+    )

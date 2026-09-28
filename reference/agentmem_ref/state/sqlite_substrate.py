@@ -898,15 +898,33 @@ class SQLiteTemporalGraph:
         neighbors.sort(key=lambda item: (-item[2], item[0].uuid))
         return neighbors
 
+    # #591: this substrate can apply a caller's identity-level eligibility predicate
+    # before materializing facts (see ``search``).
+    supports_identity_prefilter = True
+    _MATERIALIZE_BATCH = 500
+
     def search(
         self,
         query: str,
         group_ids: list[str] | None = UNFILTERED,
         eligible=None,
+        eligible_identity=None,
     ) -> list[tuple[Fact, float]]:
         """Lexical discovery. ``eligible`` (#548) skips facts before scoring; it is a
-        minimisation filter supplied by the governed caller, never permission."""
+        minimisation filter supplied by the governed caller, never permission.
+
+        ``eligible_identity(uuid, group_id)`` (#591), when supplied, is the same
+        predicate evaluated on a fact's identity. Discovery then reads only
+        ``uuid, group_id, fact_text``, applies the identity predicate and lexical
+        overlap, and fully materializes (episodes and attributes decoded) only the
+        survivors. ``eligible(fact)`` is still applied to every materialized fact, and
+        the result is sorted exactly as before (score desc, uuid). Membership, scores,
+        and order are therefore identical; only facts that could never become
+        candidates are no longer decoded.
+        """
         terms = _tokens(query)
+        if eligible_identity is not None:
+            return self._identity_first_search(terms, group_ids, eligible, eligible_identity)
         scored: list[tuple[Fact, float]] = []
         for fact in self._facts_for_groups(group_ids):
             if eligible is not None and not eligible(fact):
@@ -917,6 +935,49 @@ class SQLiteTemporalGraph:
             scored.append((fact, len(overlap) / max(len(terms), 1)))
         scored.sort(key=lambda pair: (-pair[1], pair[0].uuid))
         return scored
+
+    def _identity_first_search(self, terms, group_ids, eligible, eligible_identity) -> list[tuple[Fact, float]]:
+        survivors: list[tuple[str, float]] = []
+        for uuid, group_id, fact_text in self._identity_rows_for_groups(group_ids):
+            if not eligible_identity(uuid, group_id):
+                continue
+            overlap = terms & _tokens(fact_text)
+            if not overlap:
+                continue
+            survivors.append((uuid, len(overlap) / max(len(terms), 1)))
+        facts = self._facts_by_uuid([uuid for uuid, _ in survivors])
+        scored: list[tuple[Fact, float]] = []
+        for uuid, score in survivors:
+            fact = facts.get(uuid)
+            if fact is None or (eligible is not None and not eligible(fact)):
+                continue
+            scored.append((fact, score))
+        scored.sort(key=lambda pair: (-pair[1], pair[0].uuid))
+        return scored
+
+    def _identity_rows_for_groups(self, group_ids: list[str] | None) -> list[tuple[str, str, str]]:
+        """Candidate-discovery projection: identity and text only, no JSON decoding."""
+        if group_ids is UNFILTERED:
+            rows = self._connection.execute("SELECT uuid, group_id, fact_text FROM facts ORDER BY uuid").fetchall()
+        elif not group_ids:
+            return []
+        else:
+            placeholders = ",".join("?" for _ in group_ids)
+            rows = self._connection.execute(
+                f"SELECT uuid, group_id, fact_text FROM facts WHERE group_id IN ({placeholders}) ORDER BY uuid",
+                tuple(group_ids),
+            ).fetchall()
+        return [(row[0], row[1], row[2]) for row in rows]
+
+    def _facts_by_uuid(self, uuids: list[str]) -> dict[str, Fact]:
+        facts: dict[str, Fact] = {}
+        for start in range(0, len(uuids), self._MATERIALIZE_BATCH):
+            batch = uuids[start:start + self._MATERIALIZE_BATCH]
+            placeholders = ",".join("?" for _ in batch)
+            for row in self._connection.execute(f"SELECT * FROM facts WHERE uuid IN ({placeholders})", tuple(batch)):
+                fact = self._fact_from_row(row)
+                facts[fact.uuid] = fact
+        return facts
 
     def _facts_for_groups(self, group_ids: list[str] | None) -> tuple[Fact, ...]:
         if group_ids is UNFILTERED:

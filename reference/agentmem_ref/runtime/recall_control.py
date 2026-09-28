@@ -562,7 +562,10 @@ class ControlledRecallPlanner:
         graph_candidate_hits: dict[str, GraphCandidateHit] = {}
 
         lexical_budget = plan.budget_for(LEXICAL_ROUTE)
-        lexical_results = list(eligible_search(substrate, query, tenant, lambda fact: self.adapter.domain_eligible(fact, context)))
+        lexical_results = list(eligible_search(
+            substrate, query, tenant, lambda fact: self.adapter.domain_eligible(fact, context),
+            lambda uuid, group_id: self.adapter.domain_eligible_identity(uuid, group_id, context),
+        ))
         if lexical_budget.candidate_limit:
             lexical_results = lexical_results[: lexical_budget.candidate_limit]
             for fact, score in lexical_results:

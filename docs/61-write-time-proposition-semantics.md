@@ -231,6 +231,8 @@ Row classification: there are no changed rows, so no row falls into `INTENDED_55
 
 **Where the read cost comes from.** Candidate generation decodes the attributes of every fact in the tenant on each search (in AgentMemBench, about 1,000 facts per search, before domain filtering). That was harmless while attributes were almost always `{}`. #550 gives every fact a small write-semantics record, so each of those decodes costs about 1 µs more. The persisted form is already compact: 25 bytes with no evidence, about 150 bytes with one proposition, and about 250 bytes for a rich turn (an earlier 440–1,000-byte form measured +68% read p50 and was replaced). Removing the rest is a substrate change: decode attributes lazily, or store write semantics outside the fact row. It is proposed as a separate follow-up rather than widening this PR.
 
+**Update (#591).** Candidate discovery now applies the #548 prefilter to a fact's identity before materializing it, and decodes attributes only for surviving candidates. The #550 semantics stay with the fact. AgentMemBench read p50 went from 17.9 ms to 7.7 ms and total wall from 54.6 s to 38.6 s, below the pre-#550 values, with semantically identical replays. Evidence: `reports/benchmarks/replays/591-identity-first-materialization-f76c441/`.
+
 **Write cost** is interpretation plus same-slot classification. In the same-slot worst case, classification compares against every current same-slot fact in the scope (O(k)) using an in-memory index. It never re-reads SQLite.
 
 ## 6. Known limitations

@@ -1,0 +1,52 @@
+{
+ "273722e": {
+  "runs": 3,
+  "wall": [
+   54.5,
+   54.8,
+   54.6
+  ],
+  "wall_median": 54.62,
+  "read_p50_median": 17.91,
+  "read_p95_median": 31.37,
+  "write_p50_median": 5.56,
+  "retrieval_phase_median": 25.58,
+  "scale_phase_median": 10.57,
+  "dirty": [
+   false
+  ]
+ },
+ "550abf0": {
+  "runs": 2,
+  "wall": [
+   48.0,
+   47.6
+  ],
+  "wall_median": 47.81,
+  "read_p50_median": 14.87,
+  "read_p95_median": 25.78,
+  "write_p50_median": 4.99,
+  "retrieval_phase_median": 21.48,
+  "scale_phase_median": 9.55,
+  "dirty": [
+   false
+  ]
+ },
+ "f76c441": {
+  "runs": 3,
+  "wall": [
+   39.4,
+   38.6,
+   38.0
+  ],
+  "wall_median": 38.63,
+  "read_p50_median": 7.68,
+  "read_p95_median": 11.87,
+  "write_p50_median": 5.51,
+  "retrieval_phase_median": 14.09,
+  "scale_phase_median": 8.12,
+  "dirty": [
+   false
+  ]
+ }
+}

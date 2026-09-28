@@ -1,0 +1,57 @@
+{
+  "canonical": "reports/benchmarks/replays/550-write-time-semantics-eb44c34/memdialogue-v2-all-phases-agent_memory-eb44c34-seed1.json",
+  "dimensions": {
+    "concurrency": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "deletion": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "governance": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "isolation": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "llm_portability": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "retrieval_quality": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "scale": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "temporal_consistency": {
+      "examples": [],
+      "non_timing_differences": 0
+    },
+    "write_efficiency": {
+      "examples": [],
+      "non_timing_differences": 0
+    }
+  },
+  "governance": {
+    "agent_memory": {
+      "examples": [],
+      "non_timing_differences": 0
+    }
+  },
+  "input_sha256_equal": true,
+  "new": "memdialogue-v2-all-phases-agent_memory-f76c441-seed1.json",
+  "parameters_equal": true,
+  "retrieval_details_dropped_for_comparability": [],
+  "total_non_timing_differences": 0,
+  "verdict": "IDENTICAL",
+  "wall_seconds": {
+    "canonical": 55.506,
+    "new": 36.852
+  }
+}
