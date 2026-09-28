@@ -1,0 +1,428 @@
+{
+ "by_part": {
+  "random": {
+   "items_changed": 3,
+   "items_in_part": 100,
+   "reasons": {
+    "coexisting_states_are_multi_valued": 1,
+    "one_explicit_decision_is_single_valued": 1,
+    "upstream_proposition_defect_turn_alone_budget_object": 1
+   },
+   "status_transitions": {
+    "known->ambiguous": 1,
+    "known->known": 2
+   }
+  },
+  "stratified": {
+   "items_changed": 2,
+   "items_in_part": 168,
+   "reasons": {
+    "coexisting_states_are_multi_valued": 1,
+    "exclusivity_not_determinable": 1
+   },
+   "status_transitions": {
+    "known->known": 2
+   }
+  }
+ },
+ "by_reason": {
+  "coexisting_states_are_multi_valued": {
+   "count": 2,
+   "items": [
+    "ps1-046",
+    "ps1-200"
+   ]
+  },
+  "exclusivity_not_determinable": {
+   "count": 1,
+   "items": [
+    "ps1-192"
+   ]
+  },
+  "one_explicit_decision_is_single_valued": {
+   "count": 1,
+   "items": [
+    "ps1-055"
+   ]
+  },
+  "upstream_proposition_defect_turn_alone_budget_object": {
+   "count": 1,
+   "items": [
+    "ps1-072"
+   ]
+  }
+ },
+ "by_ruling_class": {
+  "corpus_rereview": {
+   "count": 3,
+   "items": [
+    "ps1-055",
+    "ps1-192",
+    "ps1-200"
+   ]
+  },
+  "maintainer_gold_freeze_review": {
+   "count": 2,
+   "items": [
+    "ps1-046",
+    "ps1-072"
+   ]
+  }
+ },
+ "by_status_transition": {
+  "known->ambiguous": {
+   "count": 1,
+   "items": [
+    "ps1-072"
+   ]
+  },
+  "known->known": {
+   "count": 4,
+   "items": [
+    "ps1-046",
+    "ps1-055",
+    "ps1-192",
+    "ps1-200"
+   ]
+  }
+ },
+ "by_stratum": {
+  "change_language": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "coexistence_language": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "employment": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "hedging": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "past_habitual": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "preference": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "present_current": {
+   "items": [
+    "ps1-192"
+   ],
+   "items_changed": 1,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "known->known": 1
+   }
+  },
+  "proper_noun_subject": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "prospective": {
+   "items": [
+    "ps1-200"
+   ],
+   "items_changed": 1,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "known->known": 1
+   }
+  },
+  "residence_location": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "simple_first_person_statement": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "temporal_word_non_temporal": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  }
+ },
+ "changes": [
+  {
+   "cardinality_v4": "single_valued",
+   "cardinality_v5": "multi_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-046",
+   "notes": "asserted current states with determinate values ('struggling to get back on track', 'feeling really overwhelmed', added stress); the job change (employer unspecified) is the supporting cause. The states coexist, and the value itself bundles more than one, so multi_valued; the property is unchanged from v4",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "state since starting a new job",
+    "value": "struggling to get back on track; feeling really overwhelmed"
+   },
+   "principal_v5": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "state since starting a new job",
+    "value": "struggling to get back on track; feeling really overwhelmed"
+   },
+   "reason": "coexisting_states_are_multi_valued",
+   "ruling_class": "maintainer_gold_freeze_review",
+   "status_v4": "known",
+   "status_v5": "known",
+   "stratum": null,
+   "temporal_aspect_v4": "present",
+   "temporal_aspect_v5": "present"
+  },
+  {
+   "cardinality_v4": "multi_valued",
+   "cardinality_v5": "single_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-055",
+   "notes": "explicit hedged choice ('I think I'll go with the Moscato d'Asti') from the recommended dessert wines: one selection for one decision, the same class as ps1-165, 168 and 251. v3's multi_valued rested on the superseded 'choices default to multi' row; the property is unchanged",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "chose",
+    "value": "Moscato d'Asti"
+   },
+   "principal_v5": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "chose",
+    "value": "Moscato d'Asti"
+   },
+   "reason": "one_explicit_decision_is_single_valued",
+   "ruling_class": "corpus_rereview",
+   "status_v4": "known",
+   "status_v5": "known",
+   "stratum": null,
+   "temporal_aspect_v4": "prospective",
+   "temporal_aspect_v5": "prospective"
+  },
+  {
+   "cardinality_v4": "single_valued",
+   "cardinality_v5": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-072",
+   "notes": "the turn asserts a hedged amount ('something around $50 would be nice') but never says what it is a budget for; 'gift budget' imported hidden context. The necklace purchase is a past episode and does not identify the current budget's object. Recorded conservatively as the first candidate; cardinality unknown because the slot's object is unresolved",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "gift budget",
+    "value": "around $50"
+   },
+   "principal_v5": null,
+   "reason": "upstream_proposition_defect_turn_alone_budget_object",
+   "ruling_class": "maintainer_gold_freeze_review",
+   "status_v4": "known",
+   "status_v5": "ambiguous",
+   "stratum": null,
+   "temporal_aspect_v4": "present",
+   "temporal_aspect_v5": "present"
+  },
+  {
+   "cardinality_v4": "single_valued",
+   "cardinality_v5": "unknown",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-192",
+   "notes": "'lately'; example is supporting. 'Commenting more than posting' is a comparison within unscoped 'social media habits' (platforms and scope unstated), so no exclusive slot is defensible from the turn: cardinality unknown, not single_valued",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "social media habit",
+    "value": "comments more than posts"
+   },
+   "principal_v5": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "social media habit",
+    "value": "comments more than posts"
+   },
+   "reason": "exclusivity_not_determinable",
+   "ruling_class": "corpus_rereview",
+   "status_v4": "known",
+   "status_v5": "known",
+   "stratum": "present_current",
+   "temporal_aspect_v4": "present",
+   "temporal_aspect_v5": "present"
+  },
+  {
+   "cardinality_v4": "single_valued",
+   "cardinality_v5": "multi_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-200",
+   "notes": "asserted attitude with a determinate value, hedged ('it sounds like', 'I don't know if'). The value bundles two coexisting attitudes toward the gym (a hassle; unsure it is worth it), so multi_valued (v3/v4 claimed 'one attitude at a time'); the property is unchanged. The v1 note rested on duration, a retention reason, and is withdrawn",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "attitude toward going to the gym",
+    "value": "a hassle; unsure it is worth it"
+   },
+   "principal_v5": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "attitude toward going to the gym",
+    "value": "a hassle; unsure it is worth it"
+   },
+   "reason": "coexisting_states_are_multi_valued",
+   "ruling_class": "corpus_rereview",
+   "status_v4": "known",
+   "status_v5": "known",
+   "stratum": "prospective",
+   "temporal_aspect_v4": "present",
+   "temporal_aspect_v5": "present"
+  }
+ ],
+ "field_change_counts": {
+  "cardinality": 5,
+  "principal_proposition": 1,
+  "status": 1,
+  "temporal_aspect": 0
+ },
+ "generated_by": "build_change_manifest.py",
+ "interpreter_output_consulted": false,
+ "items_changed": 5,
+ "items_reviewed": 268,
+ "items_unchanged": 263,
+ "maintainer_rulings": {
+  "change": [
+   "ps1-087",
+   "ps1-098",
+   "ps1-134",
+   "ps1-158",
+   "ps1-166",
+   "ps1-180",
+   "ps1-181",
+   "ps1-197",
+   "ps1-205",
+   "ps1-218",
+   "ps1-257"
+  ],
+  "keep": [
+   "ps1-006",
+   "ps1-051",
+   "ps1-150",
+   "ps1-267"
+  ],
+  "total": 15
+ },
+ "manifest": "proposition-semantics draft v4 -> draft v5 change manifest",
+ "new": {
+  "file": "draft-annotations-v5.json",
+  "rubric": "annotation-rubric-v5.md",
+  "rubric_sha256": "94775c3c6b4f4bcc13f8b3455e7cfda7a90c8dfa54dade0937f89270ca1618ad",
+  "sha256": "bb336e72281b64dbdd090447194a67f0638b820a4adb18f1463d24c77859aec7",
+  "version": "v5"
+ },
+ "old": {
+  "file": "draft-annotations-v4.json",
+  "rubric": "annotation-rubric-v4.md",
+  "rubric_sha256": "1b8fe1132986d2b8c1094a7844f5a55fac9e05aea2906d64954b428d4297e94d",
+  "sha256": "9314154aa65d1240a7af454bae04f46fdcce9bc132e1c0892bae629c226d356c",
+  "version": "v4"
+ },
+ "status_counts": {
+  "v4": {
+   "all": {
+    "ambiguous": 34,
+    "known": 149,
+    "unknown": 85
+   },
+   "random": {
+    "ambiguous": 12,
+    "known": 55,
+    "unknown": 33
+   },
+   "stratified": {
+    "ambiguous": 22,
+    "known": 94,
+    "unknown": 52
+   }
+  },
+  "v5": {
+   "all": {
+    "ambiguous": 35,
+    "known": 148,
+    "unknown": 85
+   },
+   "random": {
+    "ambiguous": 13,
+    "known": 54,
+    "unknown": 33
+   },
+   "stratified": {
+    "ambiguous": 22,
+    "known": 94,
+    "unknown": 52
+   }
+  }
+ },
+ "status_labels": [
+  "DRAFT",
+  "MODEL-ASSISTED",
+  "NOT ACCEPTED GOLD",
+  "NOT SCORED"
+ ],
+ "status_transition_matrix": {
+  "ambiguous": {
+   "ambiguous": 34,
+   "known": 0,
+   "unknown": 0
+  },
+  "known": {
+   "ambiguous": 1,
+   "known": 148,
+   "unknown": 0
+  },
+  "unknown": {
+   "ambiguous": 0,
+   "known": 0,
+   "unknown": 85
+  }
+ }
+}

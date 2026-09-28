@@ -127,7 +127,8 @@ class EvaluatorContractTests(unittest.TestCase):
 
 class GoldFreezeTests(unittest.TestCase):
     def test_draft_annotations_are_refused(self) -> None:
-        for name in ("draft-annotations-v1.json", "draft-annotations-v2.json", "draft-annotations-v3.json", "draft-annotations-v4.json"):
+        for name in ("draft-annotations-v1.json", "draft-annotations-v2.json", "draft-annotations-v3.json", "draft-annotations-v4.json",
+                     "draft-annotations-v5.json"):
             with self.assertRaises(E.GoldNotAccepted):
                 E.load_gold(FIXTURES / name)
 
@@ -167,7 +168,8 @@ class SampleIndependenceTests(unittest.TestCase):
     def test_draft_annotations_cover_the_sample_and_stay_marked_draft(self) -> None:
         sample = json.loads((FIXTURES / "sample-v1.json").read_text(encoding="utf-8"))
         for name, rubric in (("draft-annotations-v1.json", "annotation-rubric.md"), ("draft-annotations-v2.json", "annotation-rubric-v2.md"),
-                             ("draft-annotations-v3.json", "annotation-rubric-v3.md"), ("draft-annotations-v4.json", "annotation-rubric-v4.md")):
+                             ("draft-annotations-v3.json", "annotation-rubric-v3.md"), ("draft-annotations-v4.json", "annotation-rubric-v4.md"),
+                             ("draft-annotations-v5.json", "annotation-rubric-v5.md")):
             draft = json.loads((FIXTURES / name).read_text(encoding="utf-8"))
             self.assertEqual(set(draft["status_labels"]), {"DRAFT", "MODEL-ASSISTED", "NOT ACCEPTED GOLD", "NOT SCORED"})
             self.assertFalse(draft["provenance"]["interpreter_output_consulted"])
@@ -235,18 +237,25 @@ class SampleIndependenceTests(unittest.TestCase):
         "annotation-rubric-v3.md": "d8b9da4900c9996e0a9843587d827800a14b97b5ac8ee569d597d5b35bf249b7",
         "draft-annotations-v3.json": "e9fe56ee6b15c6c7fce8e129a836046c4c25adf503e764aa9984cd1d66f32fa4",
         "draft-v2-to-v3-change-manifest.json": "d9af0eab27160d045d73dc08b84654b92821d51a1bc40043d1569cee3a5f28bb",
+        # v4 frozen by the gold-freeze review (PR #595 review 5339604740)
+        "annotation-rubric-v4.md": "1b8fe1132986d2b8c1094a7844f5a55fac9e05aea2906d64954b428d4297e94d",
+        "draft-annotations-v4.json": "9314154aa65d1240a7af454bae04f46fdcce9bc132e1c0892bae629c226d356c",
+        "draft-v3-to-v4-change-manifest.json": "e529a259c1c1b8b4c546a353d012be779c3b79df6b7f44cddf2543571c40d47a",
     }
 
-    def test_frozen_drafts_v1_to_v3_are_unchanged(self) -> None:
+    def test_frozen_drafts_v1_to_v4_are_unchanged(self) -> None:
         for name, digest in self.FROZEN_SHA256.items():
             self.assertEqual(hashlib.sha256((FIXTURES / name).read_bytes()).hexdigest(), digest, name)
 
-    def test_v4_records_no_request_only_content_as_a_proposition(self) -> None:
-        v4 = json.loads((FIXTURES / "draft-annotations-v4.json").read_text(encoding="utf-8"))
-        by_id = {item["item_id"]: item for item in v4["items"]}
+    def test_v4_and_v5_record_no_request_only_content_as_a_proposition(self) -> None:
+        for version in ("v4", "v5"):
+            self.assertNoRequestOnlyContent(json.loads((FIXTURES / f"draft-annotations-{version}.json").read_text(encoding="utf-8")))
+
+    def assertNoRequestOnlyContent(self, draft: dict) -> None:
+        by_id = {item["item_id"]: item for item in draft["items"]}
         excluded = {item_id for item_id, item in by_id.items() if item["excluded_request_only_content"]}
         self.assertLessEqual({"ps1-063", "ps1-082", "ps1-086", "ps1-103"}, excluded)
-        for item in v4["items"]:
+        for item in draft["items"]:
             rendered = json.dumps(item["propositions"]).lower()
             for entry in item["excluded_request_only_content"]:
                 for term in entry["absent_terms"]:
@@ -270,6 +279,46 @@ class SampleIndependenceTests(unittest.TestCase):
             self.skipTest("base commit not available in this checkout (shallow clone)")
         diff = subprocess.run(["git", "-C", str(ROOT), "diff", "--quiet", base, "HEAD", "--", "reference/agentmem_ref"], capture_output=True)
         self.assertEqual(diff.returncode, 0, "runtime files under reference/agentmem_ref changed")
+
+    def test_v5_preserves_v4_and_its_change_manifest_is_complete(self) -> None:
+        manifest = self.assertManifestComplete("v4", "v5")
+        self.assertEqual(set(manifest["by_ruling_class"]["maintainer_gold_freeze_review"]["items"]), {"ps1-046", "ps1-072"})
+        self.assertIn("upstream_proposition_defect_turn_alone_budget_object", manifest["by_reason"])
+
+    def test_v5_cardinality_invariants(self) -> None:
+        v4 = {i["item_id"]: i for i in json.loads((FIXTURES / "draft-annotations-v4.json").read_text(encoding="utf-8"))["items"]}
+        v5 = json.loads((FIXTURES / "draft-annotations-v5.json").read_text(encoding="utf-8"))
+        by_id = {item["item_id"]: item for item in v5["items"]}
+        for item in v5["items"]:
+            # single_valued needs a recorded exclusive slot; uncertainty never defaults to it.
+            self.assertEqual(item["cardinality"] == "single_valued", bool(item["cardinality_basis"]), item["item_id"])
+            properties = " ".join(p["property"].lower() for p in item["propositions"])
+            self.assertNotIn("overall state", properties, item["item_id"])
+            old = v4[item["item_id"]]
+            # A cardinality decision never rewrites the principal property.
+            if item["cardinality"] != old["cardinality"] and item["status"] == old["status"] == "known":
+                self.assertEqual(item["propositions"][item["principal"]]["property"], old["propositions"][old["principal"]]["property"], item["item_id"])
+        # Gold-freeze review rulings.
+        self.assertEqual((by_id["ps1-072"]["status"], by_id["ps1-072"]["principal"], by_id["ps1-072"]["cardinality"]), ("ambiguous", None, "unknown"))
+        self.assertNotIn("gift budget", json.dumps(by_id["ps1-072"]["propositions"]))
+        self.assertEqual(by_id["ps1-046"]["cardinality"], "multi_valued")
+        for item_id in ("ps1-095", "ps1-156"):
+            self.assertEqual(by_id[item_id]["status"], "known")
+        for item_id in ("ps1-089", "ps1-234", "ps1-190", "ps1-052"):
+            self.assertEqual(by_id[item_id]["status"], "ambiguous")
+
+    def test_v5_labels_are_internally_consistent(self) -> None:
+        v5 = json.loads((FIXTURES / "draft-annotations-v5.json").read_text(encoding="utf-8"))
+        v4 = {i["item_id"]: i for i in json.loads((FIXTURES / "draft-annotations-v4.json").read_text(encoding="utf-8"))["items"]}
+        for item in v5["items"]:
+            status = item["status"]
+            self.assertEqual(item["principal"] is not None, status == "known", item["item_id"])
+            self.assertEqual(bool(item["propositions"]), status != "unknown", item["item_id"])
+            if status == "known":
+                self.assertLess(item["principal"], len(item["propositions"]))
+            if item["item_id"] != "ps1-072":
+                self.assertEqual(status, v4[item["item_id"]]["status"], item["item_id"])
+            self.assertNotRegex(item["notes"], r"(?i)\b(transient|not (clearly )?durable|momentary)\b", item["item_id"])
 
     def test_change_manifests_are_regenerated_from_the_annotation_files(self) -> None:
         spec = importlib.util.spec_from_file_location("build_change_manifest", FIXTURES / "build_change_manifest.py")

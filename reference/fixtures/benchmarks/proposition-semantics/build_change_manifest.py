@@ -23,10 +23,12 @@ PAIRS = {
     "draft-v1-to-v2-change-manifest.json": ("v1", "v2"),
     "draft-v2-to-v3-change-manifest.json": ("v2", "v3"),
     "draft-v3-to-v4-change-manifest.json": ("v3", "v4"),
+    "draft-v4-to-v5-change-manifest.json": ("v4", "v5"),
 }
 # The maintainer review whose rulings a version applies; its items get their own ruling class.
-REVIEW_FIELDS = {"v3": ("maintainer_review_2", "maintainer_second_review"), "v4": ("maintainer_review_3", "maintainer_third_review")}
-RUBRICS = {"v1": "annotation-rubric.md", "v2": "annotation-rubric-v2.md", "v3": "annotation-rubric-v3.md", "v4": "annotation-rubric-v4.md"}
+REVIEW_FIELDS = {"v3": ("maintainer_review_2", "maintainer_second_review"), "v4": ("maintainer_review_3", "maintainer_third_review"),
+                 "v5": ("maintainer_review_4", "maintainer_gold_freeze_review")}
+RUBRICS = {"v1": "annotation-rubric.md", "v2": "annotation-rubric-v2.md", "v3": "annotation-rubric-v3.md", "v4": "annotation-rubric-v4.md", "v5": "annotation-rubric-v5.md"}
 STATUSES = ("known", "ambiguous", "unknown")
 LABEL_FIELDS = (
     "status", "propositions", "principal", "cardinality", "temporal_aspect", "aspect_explicit",

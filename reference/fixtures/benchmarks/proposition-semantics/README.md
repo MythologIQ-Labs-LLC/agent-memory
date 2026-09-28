@@ -1,6 +1,6 @@
 # Proposition-semantics qualification corpus (#594 Phase B)
 
-Status: **pre-gold package, draft v4, awaiting maintainer review.** Nothing in this directory is benchmark gold. No interpreter score exists or may be computed from these files. The interpreter has still not been run on any sampled item.
+Status: **pre-gold package, draft v5, the gold-freeze candidate, awaiting maintainer review.** Nothing in this directory is benchmark gold. No interpreter score exists or may be computed from these files. The interpreter has still not been run on any sampled item.
 
 ## Why this exists
 
@@ -31,6 +31,8 @@ source corpus
   -> rubric v3 + draft v3 + change manifest annotation-rubric-v3.md, draft-annotations-v3.json, draft-v2-to-v3-change-manifest.json
   -> maintainer review 3                  PR #595 review 5339238113: proposition-list boundary; 5 direct rulings
   -> rubric v4 + draft v4 + change manifest annotation-rubric-v4.md, draft-annotations-v4.json, draft-v3-to-v4-change-manifest.json
+  -> gold-freeze review                   PR #595 review 5339604740: cardinality / turn-alone pass; 2 direct rulings
+  -> rubric v5 + draft v5 + change manifest annotation-rubric-v5.md, draft-annotations-v5.json, draft-v4-to-v5-change-manifest.json
   -> STOP FOR MAINTAINER REVIEW           <- this package stops here
   -> accepted gold later                  a new, separately versioned file with an acceptance record
   -> only then interpreter scoring        proposition_semantics_evaluator.py (refuses non-accepted gold)
@@ -64,6 +66,9 @@ The Phase A activation counts ran the interpreter over the whole corpus only *af
 | `draft-annotations-v3.json` | all 268 items under rubric v3; same four draft labels; pins v2 by hash; per-item `v3_change_reason` |
 | `annotation-rubric-v4.md` | rubric v4: `propositions` holds only asserted or legitimately presupposed propositions; a request may resolve a separate declarative; a different predicate does not by itself compete (§11) |
 | `draft-annotations-v4.json` | all 268 items under rubric v4; pins v3 by hash; per-item `v4_change_reason`, `maintainer_review_3`, and `excluded_request_only_content` (content deliberately not recorded because it appears only in a question or request) |
+| `annotation-rubric-v5.md` | rubric v5: tightened cardinality (§4): property chosen first; `single_valued` only with an inherent exclusive slot recorded in `cardinality_basis`; coexisting states `multi_valued`; uncertainty `unknown` (§12) |
+| `draft-annotations-v5.json` | all 268 items under rubric v5; pins v4 by hash; per-item `v5_change_reason`, `maintainer_review_4`, and `cardinality_basis` |
+| `draft-v4-to-v5-change-manifest.json` | every v4 → v5 change, separating the gold-freeze rulings from the bounded cardinality review's findings |
 | `draft-v3-to-v4-change-manifest.json` | every v3 → v4 change, separating the review's direct rulings from corpus-wide findings |
 | `draft-v2-to-v3-change-manifest.json` | every v2 → v3 change in the same shape, plus the outcome of re-reviewing each of the 77 v1 → v2 changes |
 | `build_change_manifest.py` | regenerates both manifests from the annotation files; a test pins that the committed manifests are current |
@@ -192,7 +197,7 @@ Field changes: status 15, principal proposition 15, cardinality 12, temporal asp
 * ps1-180 and 267 are ruled items whose ruled status is kept;
 * the other 18 come from the corpus re-review.
 
-### Draft v4 (current)
+### Draft v4 (kept as the gold-freeze review read it)
 
 The third maintainer review found a proposition-list boundary defect. Some lists recorded question or request content as affirmed propositions even where the note said it was not asserted. In two cases, supporting context displaced a clear principal. Rubric v4 (§1, §3, §11) states the boundary:
 
@@ -242,11 +247,55 @@ The third maintainer review found a proposition-list boundary defect. Some lists
 * Field changes: status 8, principal proposition 14, cardinality 3, temporal aspect 4.
 * Of the kept ambiguous items, ps1-014, 035, 039, 050, 109, 128, 131, 169, 178, 207, 237, and 250 have genuinely competing candidates. ps1-089 and 234 have hypothetical guesses about another party, which rubric §3 keeps as ambiguous.
 
+### Draft v5 (current, gold-freeze candidate)
+
+The gold-freeze review accepted v4's question/request boundary and confirmed that ps1-095 and 156 stay `known` and ps1-089, 234, 190, and 052 stay `ambiguous`. It held freeze for one narrow cardinality and turn-alone pass. Rubric v5 (§4, §12) adds:
+
+* the principal property is chosen before cardinality, and a cardinality decision never rewrites it;
+* `single_valued` requires an exclusive slot inherent in ordinary meaning and scope, recorded in `cardinality_basis`;
+* no artificial "overall state" slot is allowed; coexisting states and attitudes are `multi_valued`;
+* uncertainty is `unknown`, never `single_valued`.
+
+**Direct rulings (2).**
+
+| item | ruling |
+| --- | --- |
+| ps1-072 | known → ambiguous: upstream proposition defect. "Something around $50 would be nice" never says what the budget is for; "gift budget" imported hidden context. Cardinality becomes unknown. |
+| ps1-046 | single_valued → multi_valued: struggling, stress, and feeling overwhelmed coexist. The property is unchanged. |
+
+**Bounded cardinality review.** The review covered the 20 `single_valued` items, the 14 items whose cardinality changed in v2→v3 or v3→v4, and every `known` item whose property label carries an annotator-created scope (plan, state, stance, choice, budget, search, habit, …): 81 items in all. It found 3 more changes:
+
+| item | change | why |
+| --- | --- | --- |
+| ps1-200 | single_valued → multi_valued | the value bundles two coexisting attitudes toward the gym, the same defect as ps1-046 |
+| ps1-192 | single_valued → unknown | "commenting more than posting" across unscoped "social media habits" has no defensible exclusive slot |
+| ps1-055 | multi_valued → single_valued | "I think I'll go with the Moscato d'Asti" is one explicit selection for one decision, the same class as ps1-165, 168, and 251; v3's change rested on the superseded "choices default to multi" row |
+
+The other 17 `single_valued` items each hold an inherent exclusive slot, now recorded in `cardinality_basis`. The slots are:
+
+* a count, date, or amount (ps1-076, 151, 223);
+* one graded level of one attribute (ps1-135, 171, 201, 258);
+* one explicit decision (ps1-165, 168, 251);
+* one luggage mode for one trip (ps1-180);
+* one view on one binary question (ps1-033);
+* a habitual time (ps1-224, and ps1-250's first candidate);
+* one brand voice (ps1-232);
+* one object's location (ps1-169's first candidate).
+
+No property was rewritten to change its class. Apart from ps1-072, no other upstream proposition defect surfaced.
+
+| | v4 | v5 |
+| --- | ---: | ---: |
+| known | 149 | 148 |
+| ambiguous | 34 | 35 |
+| unknown | 85 | 85 |
+
+5 items changed (`draft-v4-to-v5-change-manifest.json`): 3 in Part R and 2 in Part S. That is 1 status change (ps1-072) and 5 cardinality changes. Among known items, cardinality is now multi_valued 131, single_valued 15, hierarchical 1, and unknown 1.
+
 ### What the next review should sample first
 
-* The six false-ambiguity findings (ps1-095, 124, 125, 154, 156, 209), especially ps1-095 and ps1-156, where the supporting reading is least certain.
-* The kept ambiguous items listed above, as the complement of the same check.
-* ps1-097, where the request resolves "their" (the ps1-063 pattern) but its "oily skin" constraint is not recorded.
+* ps1-055, the one change toward `single_valued`, which rests on "one explicit decision";
+* ps1-033 (one view on a binary question) and ps1-232 (one brand voice), the least conventional exclusive slots.
 
 ### Items adjudicated in review 1 (v1 text kept for the record)
 
@@ -261,7 +310,7 @@ The drafting model had read `proposition_semantics.py` in earlier sessions (#550
 
 ## Evaluator
 
-`reference/proposition_semantics_evaluator.py` is the evaluator contract. `reference/tests/test_proposition_evaluator.py` holds 26 tests: evaluator tests on synthetic evaluator-only fixtures, plus integrity tests on the frozen files. They prove the evaluator detects each of these, each with its own counter and no aggregate:
+`reference/proposition_semantics_evaluator.py` is the evaluator contract. `reference/tests/test_proposition_evaluator.py` holds 29 tests: evaluator tests on synthetic evaluator-only fixtures, plus integrity tests on the frozen files. They prove the evaluator detects each of these, each with its own counter and no aggregate:
 
 * wrong proposition slot;
 * wrong value;
@@ -277,10 +326,11 @@ The tests also pin that:
 * only a set with an explicit acceptance record loads;
 * the frozen sample matches its manifest;
 * the drafts cover exactly the frozen sample and stay marked draft;
-* each draft pins its predecessor by hash (v2 → v1, v3 → v2, v4 → v3);
+* each draft pins its predecessor by hash (v2 → v1, v3 → v2, v4 → v3, v5 → v4);
 * each change manifest lists exactly the changed items with every required field, and both regenerate byte-identically from the annotation files;
 * the v2 → v3 manifest accounts for every v1 → v2 change;
-* the frozen v1–v3 files match pinned sha256 values;
+* the frozen v1–v4 files match pinned sha256 values;
+* v5's cardinality invariants hold: `single_valued` if and only if `cardinality_basis` is set; no "overall state" property; a cardinality change never rewrites a known principal property; the gold-freeze rulings are applied;
 * no content listed in `excluded_request_only_content` survives in any v4 proposition list;
 * no prediction or accepted-gold file exists, and no draft consulted interpreter output;
 * no file under `reference/agentmem_ref` differs from the #594 base (skipped only in a shallow clone);
