@@ -63,7 +63,7 @@ The Phase A activation counts ran the interpreter over the whole corpus only *af
 | `annotation-rubric-v3.md` | rubric v3: v2 plus attitudes/states as propositions, the coordinated-list rule limited to one governing predicate, and the second-pass rules (§10 lists every difference from v2) |
 | `draft-annotations-v3.json` | all 268 items under rubric v3; same four draft labels; pins v2 by hash; per-item `v3_change_reason` |
 | `annotation-rubric-v4.md` | rubric v4: `propositions` holds only asserted or legitimately presupposed propositions; a request may resolve a separate declarative; a different predicate does not by itself compete (§11) |
-| `draft-annotations-v4.json` | all 268 items under rubric v4; pins v3 by hash; per-item `v4_change_reason` and `maintainer_review_3` |
+| `draft-annotations-v4.json` | all 268 items under rubric v4; pins v3 by hash; per-item `v4_change_reason`, `maintainer_review_3`, and `excluded_request_only_content` (content deliberately not recorded because it appears only in a question or request) |
 | `draft-v3-to-v4-change-manifest.json` | every v3 → v4 change, separating the review's direct rulings from corpus-wide findings |
 | `draft-v2-to-v3-change-manifest.json` | every v2 → v3 change in the same shape, plus the outcome of re-reviewing each of the 77 v1 → v2 changes |
 | `build_change_manifest.py` | regenerates both manifests from the annotation files; a test pins that the committed manifests are current |
@@ -261,7 +261,7 @@ The drafting model had read `proposition_semantics.py` in earlier sessions (#550
 
 ## Evaluator
 
-`reference/proposition_semantics_evaluator.py` is the evaluator contract. `reference/tests/test_proposition_evaluator.py` holds 23 tests: evaluator tests on synthetic evaluator-only fixtures, plus integrity tests on the frozen files. They prove the evaluator detects each of these, each with its own counter and no aggregate:
+`reference/proposition_semantics_evaluator.py` is the evaluator contract. `reference/tests/test_proposition_evaluator.py` holds 26 tests: evaluator tests on synthetic evaluator-only fixtures, plus integrity tests on the frozen files. They prove the evaluator detects each of these, each with its own counter and no aggregate:
 
 * wrong proposition slot;
 * wrong value;
@@ -280,6 +280,10 @@ The tests also pin that:
 * each draft pins its predecessor by hash (v2 → v1, v3 → v2, v4 → v3);
 * each change manifest lists exactly the changed items with every required field, and both regenerate byte-identically from the annotation files;
 * the v2 → v3 manifest accounts for every v1 → v2 change;
+* the frozen v1–v3 files match pinned sha256 values;
+* no content listed in `excluded_request_only_content` survives in any v4 proposition list;
+* no prediction or accepted-gold file exists, and no draft consulted interpreter output;
+* no file under `reference/agentmem_ref` differs from the #594 base (skipped only in a shallow clone);
 * v4 labels are internally consistent, carry the 15 ruled statuses and every second- and third-review outcome, and no note gives duration as a reason.
 
 The fixtures are not Agent Memory performance evidence.

@@ -10,6 +10,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -222,6 +223,53 @@ class SampleIndependenceTests(unittest.TestCase):
         manifest = self.assertManifestComplete("v3", "v4")
         direct = set(manifest["by_ruling_class"]["maintainer_third_review"]["items"])
         self.assertEqual(direct, {"ps1-063", "ps1-068", "ps1-082", "ps1-086", "ps1-103"})
+
+    # Frozen draft provenance (maintainer rulings on PR #595): these bytes may never change.
+    FROZEN_SHA256 = {
+        "annotation-rubric.md": "47df0caf2413a0e65f9fe609181f162f54c2a6a857583a92e050ac89a33dff26",
+        "draft-annotations-v1.json": "5cba499b99c820c8b8462d2ae28197f690fe1c2b88a9d97a598f9398184295f4",
+        "annotation-rubric-v2.md": "ac13697f6a1a301dee7c088cfbf88925636e28fd224e22e9050a8b7cf10c92a2",
+        "draft-annotations-v2.json": "8f333b3800bb2ce7553ac5968c8b6978f5fe64662e2863b58fea16dc463f1b2d",
+        "draft-v1-to-v2-changes.json": "0cd415b9d8b8b61b1d2e4676b5d285cc9cc3b36443faee7ccd968dad024569be",
+        "draft-v1-to-v2-change-manifest.json": "be6983311639d9407581a0c8c8df71ba0e63d7b8f96a24cf301efe1a8e3543bb",
+        "annotation-rubric-v3.md": "d8b9da4900c9996e0a9843587d827800a14b97b5ac8ee569d597d5b35bf249b7",
+        "draft-annotations-v3.json": "e9fe56ee6b15c6c7fce8e129a836046c4c25adf503e764aa9984cd1d66f32fa4",
+        "draft-v2-to-v3-change-manifest.json": "d9af0eab27160d045d73dc08b84654b92821d51a1bc40043d1569cee3a5f28bb",
+    }
+
+    def test_frozen_drafts_v1_to_v3_are_unchanged(self) -> None:
+        for name, digest in self.FROZEN_SHA256.items():
+            self.assertEqual(hashlib.sha256((FIXTURES / name).read_bytes()).hexdigest(), digest, name)
+
+    def test_v4_records_no_request_only_content_as_a_proposition(self) -> None:
+        v4 = json.loads((FIXTURES / "draft-annotations-v4.json").read_text(encoding="utf-8"))
+        by_id = {item["item_id"]: item for item in v4["items"]}
+        excluded = {item_id for item_id, item in by_id.items() if item["excluded_request_only_content"]}
+        self.assertLessEqual({"ps1-063", "ps1-082", "ps1-086", "ps1-103"}, excluded)
+        for item in v4["items"]:
+            rendered = json.dumps(item["propositions"]).lower()
+            for entry in item["excluded_request_only_content"]:
+                for term in entry["absent_terms"]:
+                    self.assertNotIn(term.lower(), rendered, (item["item_id"], entry["value"]))
+            self.assertTrue(all(p["polarity"] in {"affirmed", "ended", "negated"} for p in item["propositions"]))
+        principal = by_id["ps1-063"]["propositions"][by_id["ps1-063"]["principal"]]
+        self.assertEqual((principal["property"], principal["value"]),
+                         ("looking for", "a hotel in Seattle, close to the city center and not too expensive"))
+        self.assertIn("vinyl", json.dumps(by_id["ps1-086"]["propositions"]))
+        self.assertIn("dessert adventure", json.dumps(by_id["ps1-103"]["propositions"]))
+
+    def test_no_prediction_file_and_no_runtime_change(self) -> None:
+        names = {path.name for path in FIXTURES.iterdir()}
+        self.assertFalse([name for name in names if "prediction" in name or "accepted-gold" in name])
+        for name in names:
+            if name.startswith("draft-annotations-"):
+                self.assertFalse(json.loads((FIXTURES / name).read_text(encoding="utf-8"))["provenance"]["interpreter_output_consulted"])
+        base = "691251ca27f5e8e87a7c259c1a47a7050f32291b"  # #594 base on main
+        probe = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", f"{base}^{{commit}}"], capture_output=True)
+        if probe.returncode != 0:
+            self.skipTest("base commit not available in this checkout (shallow clone)")
+        diff = subprocess.run(["git", "-C", str(ROOT), "diff", "--quiet", base, "HEAD", "--", "reference/agentmem_ref"], capture_output=True)
+        self.assertEqual(diff.returncode, 0, "runtime files under reference/agentmem_ref changed")
 
     def test_change_manifests_are_regenerated_from_the_annotation_files(self) -> None:
         spec = importlib.util.spec_from_file_location("build_change_manifest", FIXTURES / "build_change_manifest.py")
