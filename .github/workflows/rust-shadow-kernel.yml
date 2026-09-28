@@ -7,6 +7,7 @@ on:
       - "reference/fixtures/runtime-kernel/**"
       - "reference/tests/test_rust_shadow_kernel_fixture.py"
       - "reference/tests/test_rust_shadow_canonical_json_fixture.py"
+      - "reference/tests/test_rust_shadow_candidate_prefilter_fixture.py"
       - ".github/workflows/rust-shadow-kernel.yml"
   workflow_dispatch:
 
@@ -35,7 +36,8 @@ jobs:
         run: |
           pytest -q \
             reference/tests/test_rust_shadow_kernel_fixture.py \
-            reference/tests/test_rust_shadow_canonical_json_fixture.py
+            reference/tests/test_rust_shadow_canonical_json_fixture.py \
+            reference/tests/test_rust_shadow_candidate_prefilter_fixture.py
 
       - name: Set up stable Rust
         uses: dtolnay/rust-toolchain@stable
