@@ -4,13 +4,14 @@
   "as_of": "2026-09-28",
   "authority_effect": "none",
   "aggregate_score": "not_defined",
-  "main_head": "a24e993958d741379993341e8b3f63ed37482df3",
+  "main_head": "fb80d6fca67f97a8f36e5cad335bf280d81df9ba",
   "reading_rules": [
     "benchmark score != memory authority",
     "published vendor score != same-harness comparator",
     "historical self-comparison != market position",
     "implementation language != doctrine",
     "cross-language parity != runtime promotion",
+    "hot-path speedup != full-runtime speedup",
     "non-float canonical parity != persisted-state parity",
     "blocked/not_run/unsupported/evidence_gap are states, never numeric zero",
     "Part R is the population sample for #594 Phase B; Part S is stratified diagnostic evidence only",
@@ -21,7 +22,7 @@
     "same_harness": "multiple systems executed against the same frozen input, evaluator, budgets, and model/judge configuration",
     "published_reference": "vendor or research result retained for market context but not numerically comparable unless methodology is proven equivalent",
     "external_cross_system_reference": "independent multi-system suite useful for triangulation but not a substitute for local same-harness reproduction",
-    "runtime_qualification": "cross-language implementation-profile conformance and performance evidence; never a memory-quality or authority score"
+    "runtime_qualification": "cross-language implementation-profile conformance and matched implementation performance evidence; never a memory-quality or authority score"
   },
   "competitive_evidence": {
     "status": "infrastructure_merged_result_pending",
@@ -62,8 +63,8 @@
     "issue": 602,
     "controlling_adr": "ADR-028",
     "current_runtime": "Python qualified runtime/reference implementation",
-    "rust_status": "evaluation_only_shadow",
-    "merged_prs": [605, 610, 611],
+    "rust_status": "evaluation_only_shadow_leading_hybrid_hypothesis",
+    "merged_prs": [605, 610, 611, 614],
     "qualified_ci_profile": "ubuntu-latest",
     "accepted_shadow_evidence": [
       {
@@ -87,10 +88,47 @@
         "result": "exact #591 identity-first candidate-prefilter membership, ordering and score-bit parity"
       }
     ],
+    "matched_hot_path_performance": {
+      "pr": 614,
+      "workflow_run": 36487679509,
+      "evidence_class": "matched_ci_hot_path_performance",
+      "contract": "591_identity_first_prefilter_compute_v1",
+      "result_parity": "PASS",
+      "result_signature_sha256": "ea2a12c19df6c059d75e768b2ebae0044547ea358f1a9033a6da56564e15b18b",
+      "workload": {
+        "rows": 20000,
+        "queries": 8,
+        "iterations_per_execution": 8,
+        "execution_orders": ["python_then_rust", "rust_then_python"],
+        "timing_scope": "prefilter_compute_only_rows_prebuilt",
+        "rust_compile_time_included": false
+      },
+      "python": {
+        "median_total_ms": 1485.7167425,
+        "median_p50_query_ms": 23.6164495,
+        "median_p95_query_ms": 26.950329,
+        "median_projected_rows_examined_per_second": 861584.4585929906
+      },
+      "rust": {
+        "median_total_ms": 597.272856,
+        "median_p50_query_ms": 9.2759855,
+        "median_p95_query_ms": 10.5352755,
+        "median_projected_rows_examined_per_second": 2143123.356296
+      },
+      "relative": {
+        "rust_speedup_by_total_time": 2.4875008592387795,
+        "rust_throughput_multiple": 2.487421093685725
+      },
+      "artifact": {
+        "id": 10999893635,
+        "zip_sha256": "99b050d26d3d32b4d8f9fea079586e3a920fa717a2c5946383cb1bd918c84889"
+      },
+      "qualification": "bounded hot-path evidence only; excludes SQLite query, materialization, admission, lifecycle/governance, FFI, packaging, and compilation"
+    },
     "persistence_determinism_gate": {
       "issue": 609,
       "status": "active",
-      "finding": "TypedRelation retrieval_weight is float-bearing canonical state and current persisted integrity bytes inherit CPython JSON floating-number spelling",
+      "finding": "TypedRelation retrieval_weight is float-bearing canonical state and current persisted integrity bytes inherit CPython JSON floating-number spelling; repository also contains existing deliberate RFC8785/JCS canonicalization families that must retain their own identities",
       "adr_candidate": "ADR-040",
       "adr_pr": 612,
       "adr_status": "draft_proposed_not_accepted",
@@ -102,8 +140,9 @@
       "state/integrity parity over affected rows",
       "Rust-owned restart/checkpoint compatibility",
       "cross-platform floating-math identity beyond the qualified BM25 CI profile",
-      "matched Python/Rust performance advantage",
-      "FFI or native Rust runtime promotion"
+      "Python-Rust FFI/binding overhead",
+      "integrated end-to-end search improvement",
+      "native Rust runtime promotion"
     ],
     "decision_candidates": [
       "A Python preferred runtime",
@@ -111,7 +150,7 @@
       "C native Rust runtime plus Python bindings",
       "D parallel conformant Python and Rust profiles"
     ],
-    "current_hypothesis": "B strengthened by exact deterministic parity on ranking, hashing, non-floating canonical bytes, and the #591 candidate-generation hot path; not yet selected"
+    "current_hypothesis": "B is the evidence-backed leading hypothesis: exact deterministic parity plus about 2.49x matched speedup on the #591 prefilter compute contract; still not selected pending FFI/end-to-end/state/operational evidence"
   },
   "published_reference": [
     {
@@ -169,7 +208,8 @@
     "performance": [
       {"metric":"#591 AgentMemBench wall seconds","current":38.6,"previous":54.6,"delta":-16.0,"direction":"lower","evidence_class":"repository-owned performance evidence","source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/"},
       {"metric":"#591 search latency p50 ms","current":7.7,"previous":17.9,"delta":-10.2,"direction":"lower","evidence_class":"repository-owned performance evidence","source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/"},
-      {"metric":"#591 search latency p95 ms","current":11.9,"previous":31.4,"delta":-19.5,"direction":"lower","evidence_class":"repository-owned performance evidence","source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/"}
+      {"metric":"#591 search latency p95 ms","current":11.9,"previous":31.4,"delta":-19.5,"direction":"lower","evidence_class":"repository-owned performance evidence","source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/"},
+      {"metric":"#602 Rust/Python candidate-prefilter compute speedup","current":2.4875008592387795,"previous":"not_run","delta":"first_matched_baseline","direction":"higher","evidence_class":"matched_ci_hot_path_performance","qualification":"exact result parity; compute-only hot path, not full runtime","source":"reports/benchmarks/runtime/602-prefilter-performance/EVIDENCE.md"}
     ],
     "semantic_interpretation": [
       {"metric":"#594 Part R known precision","current":0.8,"previous":"not_run","delta":"first_baseline","direction":"higher","evidence_class":"repository-owned conformance","source":"reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"},
@@ -195,7 +235,8 @@
     "competitive_comparator_program":601,
     "competitive_infrastructure":"MERGED_604_606_RESULT_PENDING",
     "rust_runtime_qualification":602,
-    "rust_shadow_status":"TOKENIZATION_BM25_SHA_NONFLOAT_CANONICAL_PREFILTER_PARITY_PASS_RUNTIME_NOT_PROMOTED",
+    "rust_shadow_status":"PARITY_PASS_AND_MATCHED_PREFILTER_PERFORMANCE_PASS_RUNTIME_NOT_PROMOTED",
+    "rust_leading_hypothesis":"PYTHON_FACADE_PLUS_RUST_KERNEL_PENDING_FFI_END_TO_END_AND_STATE_EVIDENCE",
     "persistence_determinism_gate":609,
     "next_rc_step":585,
     "temporal_dependency_added_by_594":598,
