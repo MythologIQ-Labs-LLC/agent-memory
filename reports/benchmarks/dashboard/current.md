@@ -1,18 +1,21 @@
 # Canonical Agent Memory benchmark dashboard
 
-Status: **current accepted evidence through #594**, plus a clearly separated published-market reference layer as of 2026-09-28. No universal aggregate score exists. `blocked`, `not_run`, `unsupported`, and `evidence_gap` are states, never numeric zero.
+Status: **current accepted evidence through #594**, plus current pre-1.0 comparator/runtime-qualification state as of 2026-09-28.
 
-Current merged main boundary: `80566b5e3affd7b038f31bc24039054ef87d07a1` (PR #595 merged). Competitive same-harness work is tracked by #601 under maturity program #600.
+Current merged `main`: `b50d6d1db35e21a87cf91de63c363104f8c77d87`.
+
+No universal aggregate score exists. `blocked`, `not_run`, `unsupported`, and `evidence_gap` are states, never numeric zero.
 
 ## How to read this dashboard
 
-This dashboard has three different comparison classes. They must not be mixed.
+Four evidence classes are intentionally separate:
 
 1. **Agent Memory longitudinal** — current accepted Agent Memory evidence versus an earlier accepted Agent Memory signal under a sufficiently comparable profile.
-2. **Same-harness systems** — competing memory systems executed locally against the exact same frozen input, evaluator, retrieval/context budget, and model/judge configuration. This is the preferred competitive evidence class.
-3. **Published reference** — current vendor/research results useful for market context but not numerically comparable to Agent Memory unless their methodology matches exactly.
+2. **Same-harness systems** — multiple memory systems executed against the same frozen input, evaluator, retrieval/context budget, and model/judge configuration.
+3. **Published reference** — vendor/research results useful for market context but not numerically comparable unless methodology is proven equivalent.
+4. **Runtime qualification** — implementation-profile evidence such as Python/Rust parity. This is not a memory-quality score.
 
-A missing historical baseline is normal when a metric is new. A missing same-harness competitor is a **competitive evidence gap** and is being remediated by #601.
+A new metric having no prior Agent Memory baseline is normal. A missing controlled competitor is a **competitive evidence gap**.
 
 ## Executive view — Agent Memory longitudinal
 
@@ -32,15 +35,35 @@ A missing historical baseline is normal when a metric is new. A missing same-har
 | #594 unknown precision / recall | **1.000 / 0.848** | not run | first baseline | repository-owned conformance |
 | #594 strict slot/value conformance | **0.000** | not run | exact-label diagnostic only; #597 | repository-owned conformance |
 
-The strict slot/value number deliberately uses zero aliases frozen before scoring. It mixes true extraction failures with semantically close property labels and must not be sold as semantic synonym precision. That distinction is governed by #597 rather than repaired after seeing the score.
+The strict slot/value result uses zero aliases frozen before scoring. It is exact-label conformance, not semantic-synonym precision.
 
 ## Competitive view — same-harness systems
 
-**Status: competitive evidence gap / implementation active in #601.**
+**Status: infrastructure merged, accepted competitive result pending.**
 
-No non-Agent-Memory runtime has yet been accepted into this dashboard as a same-harness LongMemEval or AgentMemBench result. Existing repository comparators, including the pinned Mem0 P6 adversarial comparator, measure useful runtime behavior but are not the same retrieval/QA profile used for the headline rows above.
+#601 now has executable independent-harness infrastructure:
 
-The first-wave same-harness targets are:
+- AMB bridge merged in PR #604;
+- frozen external harness revision `03c1d0f1d27da63034f0931121c858faba512383`;
+- credential-free AMB retrieval lane merged in PR #606;
+- manual competitive workflow at `.github/workflows/amb-competitive.yml`.
+
+The first credential-free profile is:
+
+```text
+dataset: precisionmembench
+split: single-turn
+mode: retrieval
+providers: agent-memory, bm25
+```
+
+Frozen AMB `RetrievalMode` makes no LLM calls and scores returned belief/document IDs directly.
+
+**No same-harness competitive result is accepted into this dashboard yet.** The manual run must be deliberately executed and its raw artifact reviewed first. BM25 is a baseline comparator, not a market-position claim.
+
+The LLM-judged AMB profile is frozen to `gemini:gemini-2.5-flash-lite` for answer and judge, but remains **blocked pending authorized evaluation credentials**.
+
+First-wave market targets remain:
 
 1. Mem0 OSS;
 2. Hindsight;
@@ -49,47 +72,69 @@ The first-wave same-harness targets are:
 5. Cognee;
 6. LangMem.
 
-Required competitive lanes are:
-
-- exact frozen LongMemEval_S retrieval parity;
-- a separate end-to-end LongMemEval QA lane with one frozen answer model/judge/budget;
-- AgentMemBench / MemDialogue operational parity where semantics are meaningfully expressible;
-- matched latency/token/storage evidence where technically comparable.
-
-Unsupported lifecycle or benchmark surfaces are reported as `unsupported`, never zero.
+Unsupported lifecycle or benchmark surfaces are `unsupported`, never zero.
 
 ## Market context — published reference only
 
-These rows answer **“what are leading systems currently publishing?”** They do **not** answer **“is Agent Memory better or worse?”** Different rows use different metrics, models, retrieval budgets, managed/OSS implementations, and evaluation protocols. They are retained here so readers have current market context while #601 builds controlled reproduction.
+These rows answer “what are leading systems currently publishing?” They do **not** answer “is Agent Memory better or worse?”
 
 | system | published signal | methodology distinction | comparability here | source |
 | --- | --- | --- | --- | --- |
-| **Hindsight v0.4.19** | LongMemEval **94.6%**; LoCoMo **92.0%** | single-query end-to-end accuracy in Hindsight Agent Memory Benchmark; open pluggable harness | `published_reference` until reproduced | [Hindsight AMB](https://hindsight.vectorize.io/blog/2026/03/23/agent-memory-benchmark) |
-| **Mem0 managed platform** | LongMemEval **94.4%**; LoCoMo **92.5%**; BEAM-1M avg **0.641** | end-to-end QA / managed production pipeline; LongMemEval top-200/top-50 published separately | `published_reference`; not Agent Memory recall@k | [Mem0 evaluation](https://github.com/mem0ai/mem0/blob/main/docs/core-concepts/memory-evaluation.mdx) |
-| **Zep** | LongMemEval **90.2%** (451/500); LoCoMo **94.7%** | end-to-end accuracy; published LongMemEval retrieval p50/p95 **104/162 ms**, median context **4,408 tokens** | `published_reference`; model/judge differs | [Zep research](https://www.getzep.com/research/) |
-| **Supermemory** | LongMemEval-S **97% Recall@20** with aggregation | retrieval Recall@20, not end-to-end QA and not Agent Memory recall_all@5/@10 | `published_reference`; metric differs materially | [Supermemory research](https://supermemory.ai/research/) |
-| **Cognee** | BEAM 100K **0.79**, BEAM 10M **0.67** | BEAM long-horizon evaluation; different benchmark family | `published_reference`; ecosystem context only | [Cognee results](https://www.cognee.ai/research-and-evaluation-results) |
+| **Hindsight v0.4.19** | LongMemEval **94.6%**; LoCoMo **92.0%** | single-query end-to-end accuracy in Hindsight AMB; open pluggable harness | `published_reference` until reproduced | [Hindsight AMB](https://hindsight.vectorize.io/blog/2026/03/23/agent-memory-benchmark) |
+| **Mem0 managed platform** | LongMemEval **94.4%**; LoCoMo **92.5%**; BEAM-1M avg **0.641** | managed end-to-end QA; published retrieval budgets differ | `published_reference` | [Mem0 evaluation](https://github.com/mem0ai/mem0/blob/main/docs/core-concepts/memory-evaluation.mdx) |
+| **Zep** | LongMemEval **90.2%**; LoCoMo **94.7%** | end-to-end accuracy; published retrieval p50/p95 **104/162 ms**, median context **4,408 tokens** | `published_reference` | [Zep research](https://www.getzep.com/research/) |
+| **Supermemory** | LongMemEval-S **97% Recall@20** with aggregation | retrieval Recall@20, not Agent Memory recall_all@5/@10 | `published_reference` | [Supermemory research](https://supermemory.ai/research/) |
+| **Cognee** | BEAM 100K **0.79**, BEAM 10M **0.67** | different benchmark family | `published_reference` | [Cognee results](https://www.cognee.ai/research-and-evaluation-results) |
 
-Independent multi-system benchmark suites may also be recorded as `external_cross_system_reference`, but they do not replace our same-harness reproduction because model, adapter, and evaluator choices can move results substantially.
+Independent multi-system suites may be recorded as `external_cross_system_reference`, but they do not replace local same-harness reproduction.
+
+## Runtime qualification — Python vs Rust
+
+**Status: deterministic Rust shadow primitives qualified; runtime promotion not established.**
+
+ADR-028 remains controlling: the normative core is language-neutral.
+
+Merged PR #605 added an evaluation-only, dependency-free Rust shadow crate and shared frozen Python/Rust fixtures.
+
+Accepted evidence:
+
+- workflow `36457677348`: exact relevance-token vectors and every admitted-set BM25 IEEE-754 score bit reproduced on Ubuntu CI, including an exact tie;
+- workflow `36458112635`: BM25 parity retained and UTF-8 SHA-256 vectors reproduced exactly.
+
+This supports continuing the Rust qualification program. It does **not** establish:
+
+- canonical serialization parity;
+- cross-platform floating-math identity;
+- lifecycle/state parity;
+- matched performance advantage;
+- FFI or native-Rust runtime promotion.
+
+Current decision candidates remain:
+
+```text
+A. Python preferred runtime
+B. Python facade + Rust kernel
+C. native Rust runtime + Python bindings
+D. parallel conformant Python and Rust profiles
+```
 
 ## Architecture progression
 
 | milestone | architectural move | evidence outcome |
 | --- | --- | --- |
 | frozen pre-remediation `f73b872` | baseline external retrieval/currentness | LME-S session recall@5 0.675; latest-first 0.343 / 0.486 |
-| #538 ranking policy | explicit post-admission tie-break | currentness improved among ties; retrieval regression recorded |
-| #538 admitted-set BM25 | relevance over admitted set only | LME-S session recall@5 0.823; turn recall@10 0.723; currentness trade-off exposed |
-| #530 | runtime-owned handle serialization | concurrency failures -> operation/materialization success 1.0 |
-| #522 / #548 | incremental attestation + identity/domain prefilter | removed major O(state) integrity/candidate costs without authority change |
-| #576 | deterministic BM25 accumulation | score bits and order stable across hash seeds |
-| #550 | typed proposition/cardinality/aspect/self-validity evidence | no external rank drift; four #580 target units honest_unknown -> pass; policy 3.1.0 |
-| #591 | identity-first candidate materialization | p50 17.9 -> 7.7 ms; p95 31.4 -> 11.9 ms; semantic rankings identical |
-| #594 Phase A | source-anchored natural external profile | no effect; demotion efficacy remains an explicit evidence gap |
-| #594 Phase B | independently frozen 268-turn gold | interpreter is safe-leaning but severely under-recognizes valid propositions; defects split to #596-#598 |
-| #600 / #601 | pre-1.0 competitive maturity program | same-harness market comparison now an explicit evidence requirement |
-| #602 | Python-vs-Rust runtime qualification | implementation-language decision moved from preference to cross-language evidence |
+| #538 | explicit ranking policy / admitted-set BM25 | retrieval improved; currentness trade-offs exposed |
+| #530 | runtime-owned serialization | concurrency failure -> operation/materialization success 1.0 |
+| #522 / #548 | incremental attestation + domain prefilter | major state/candidate costs removed without authority change |
+| #576 | deterministic BM25 accumulation | score bits/order stable across hash seeds |
+| #550 | typed proposition/cardinality/aspect/self-validity evidence | four #580 targets improved; policy 3.1.0 |
+| #591 | identity-first materialization | p50 17.9 -> 7.7 ms; p95 31.4 -> 11.9 ms; rankings identical |
+| #594 A | source-anchored external profile | interpreted-demotion efficacy remains evidence gap |
+| #594 B | independently frozen natural-data gold | severe under-recognition exposed; #596-#598 split out |
+| #600 / #601 | pre-1.0 competitive maturity program | independent AMB infrastructure now merged; result pending |
+| #602 / #605 | Rust deterministic shadow | BM25/tokenization/SHA exact parity passes on qualified CI |
 
-## #594 Phase B, unbiased Part R
+## #594 Phase B — unbiased Part R
 
 | gold status | predicted known | predicted ambiguous | predicted unknown |
 | --- | ---: | ---: | ---: |
@@ -97,11 +142,11 @@ Independent multi-system benchmark suites may also be recorded as `external_cros
 | ambiguous (13) | 0 | 13 | 0 |
 | unknown (33) | 2 | 3 | 28 |
 
-The largest measured weakness is **over-ambiguity / under-recognition**. Known precision is 0.80, but known recall is only 0.148. Unknown precision is 1.0. This is materially weak efficacy, but its dominant failure mode is conservative and does not create authority.
+Largest measured weakness: **over-ambiguity / under-recognition**. Known precision is 0.80, but known recall is only 0.148. Unknown precision is 1.0.
 
 Other Part R counters: wrong slot 8, unknown->known 2, aspect mismatch 4, aspect over-classification 1, over-eager single-valued 0.
 
-## Governance / safety posture
+## Governance posture
 
 Still true:
 
@@ -123,36 +168,43 @@ implementation language != doctrine
 
 Active state:
 
-- #591 complete.
-- #594 **QUALIFIED**.
-- canonical dashboard complete and now explicitly exposes the competitive evidence gap.
-- #600 is the pre-1.0 maturity umbrella.
-- #601 owns same-harness competitive comparison.
-- #602 owns Python-vs-Rust implementation-profile qualification under ADR-028.
-- ADR-039 remains **Proposed**.
-- #583 / PR #587 remains **DRAFT / HOLD**; old lexical-cue-removal implementation must not be revived.
-- #585 is the next query-side RC step.
-- #598 is a prerequisite before redesigned #583 because #594 exposed memory-side aspect calibration defects.
-- #596 and #597 are high-priority interpreter-quality work, but are not automatic RC1 blockers while their dominant failure remains fail-safe ambiguity/abstention.
-- #586 remains post-RC unless later evidence pulls it forward.
+- #591 complete;
+- #594 **QUALIFIED**;
+- #600 pre-1.0 maturity program active;
+- #601 competitive infrastructure merged, first accepted same-harness result pending;
+- #602 Rust shadow deterministic primitive parity **PASS**, runtime not promoted;
+- ADR-028 **Accepted**;
+- ADR-039 **Proposed**;
+- #583 / PR #587 remains **DRAFT / HOLD**;
+- #585 remains next query-side RC step;
+- #598 remains prerequisite before redesigned #583;
+- #596/#597 remain high-priority nonautomatic RC blockers;
+- #586 remains post-RC unless evidence pulls it forward.
 
-## Next RC and maturity paths
+## Next paths
 
 ```text
 RC temporal path
-#585 query-intent span calibration
-  -> #598 write-time aspect calibration
+#585
+  -> #598
   -> redesigned #583
   -> final #580 replay
-  -> #584 policy ruling
+  -> #584
   -> RC1 declaration decision
 
-pre-1.0 maturity path (parallel)
+pre-1.0 maturity path
 #600
-  +-> #601 same-harness competitive league
-  +-> #602 Python-vs-Rust runtime qualification
+  +-> #601 first independent retrieval result
+  |      -> controlled market systems
+  |      -> accepted dashboard competitor rows
+  |
+  +-> #602 canonical bytes
+         -> hot-path/state parity
+         -> lifecycle shadow
+         -> matched performance
+         -> A/B/C/D runtime decision
 ```
 
-A later 1.0 decision should require both an explicit RC disposition and a defensible maturity position. Beating named products on one benchmark is not sufficient; neither is merely being better than an older Agent Memory commit.
+A later 1.0 decision should require both a defensible RC disposition and a defensible maturity position. Beating one product on one benchmark is insufficient. So is merely beating our former selves.
 
 Machine-readable form: `current.json`.
