@@ -37,6 +37,7 @@ jobs:
           path = pathlib.Path(os.environ["RUNNER_TEMP"]) / "canonical-surface-inventory" / "inventory.json"
           payload = json.loads(path.read_text())
           print("candidate_count=", payload["candidate_count"])
+          print("serializer_family_counts=", json.dumps(payload["serializer_family_counts"], sort_keys=True))
           print("risk_hint_counts=", json.dumps(payload["risk_hint_counts"], sort_keys=True))
           print("candidate_rows_sha256=", payload["candidate_rows_sha256"])
           print("parse_errors=", len(payload["parse_errors"]))
