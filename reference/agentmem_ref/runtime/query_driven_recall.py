@@ -130,7 +130,10 @@ class DeterministicQueryDrivenRecallPlanner:
 
         hits: list[RetrievalRouteHit] = []
         routes_executed: list[str] = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
-        lexical_results = list(eligible_search(substrate, query, tenant, lambda fact: self.adapter.domain_eligible(fact, context)))
+        lexical_results = list(eligible_search(
+            substrate, query, tenant, lambda fact: self.adapter.domain_eligible(fact, context),
+            lambda uuid, group_id: self.adapter.domain_eligible_identity(uuid, group_id, context),
+        ))
         for fact, score in lexical_results:
             hits.append(
                 RetrievalRouteHit(

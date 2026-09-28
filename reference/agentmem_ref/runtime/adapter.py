@@ -147,14 +147,23 @@ def candidate_policy_evidence() -> dict:
     }
 
 
-def eligible_search(substrate, query: str, tenant: str, eligible) -> list:
+def eligible_search(substrate, query: str, tenant: str, eligible, eligible_identity=None) -> list:
     """Tenant-partitioned lexical discovery restricted to domain-eligible facts.
 
     Reference substrates accept ``eligible`` and skip ineligible facts before scoring.
     Any other substrate is searched as before and filtered afterwards, which removes
     visibility but not the scoring work.
+
+    #591: a substrate that declares ``supports_identity_prefilter`` also receives
+    ``eligible_identity(uuid, group_id)``, the same domain-eligibility predicate
+    evaluated on a fact's identity. It can then skip materializing facts that cannot
+    become candidates. It still applies ``eligible(fact)`` to every fact it
+    materializes, so candidate membership and order are unchanged. Both predicates
+    are minimization only, never permission.
     """
 
+    if eligible_identity is not None and getattr(substrate, "supports_identity_prefilter", False):
+        return list(substrate.search(query, group_ids=[tenant], eligible=eligible, eligible_identity=eligible_identity))
     try:
         return list(substrate.search(query, group_ids=[tenant], eligible=eligible))
     except TypeError:
@@ -726,7 +735,8 @@ class GovernedMemoryAdapter:
         result.candidate_policy = candidate_policy_evidence()
         correlation = self._ids.next()
         for fact, _score in eligible_search(
-            self._substrate, query, self._tenant, lambda fact: self.domain_eligible(fact, context)
+            self._substrate, query, self._tenant, lambda fact: self.domain_eligible(fact, context),
+            lambda uuid, group_id: self.domain_eligible_identity(uuid, group_id, context),
         ):
             result.candidates.append(fact.uuid)
             refusal = self._admission_refusal(fact, context)
@@ -860,6 +870,17 @@ class GovernedMemoryAdapter:
 
         return fact is not None and self._domain_eligibility_refusal(fact, context) is None
 
+    def domain_eligible_identity(self, fact_uuid: str, group_id: str, context: RecallContext) -> bool:
+        """The same #548 prefilter evaluated on a fact's identity alone (#591).
+
+        Domain eligibility reads only the fact's tenant and uuid; scope comes from this
+        adapter's canonical ``_fact_scope``. A substrate can therefore apply it before
+        materializing a fact. It is exactly ``domain_eligible`` for any fact with that
+        identity, and it grants nothing: admission still evaluates every candidate.
+        """
+
+        return self._domain_identity_refusal(fact_uuid, group_id, context) is None
+
     def _admission_refusal(
         self,
         fact: Fact,
@@ -930,9 +951,12 @@ class GovernedMemoryAdapter:
         """Shared necessary conditions: tenant, scope metadata, isolation domains,
         shared-space membership, project, task. Full admission always re-applies them."""
 
-        if fact.group_id != self._tenant:
+        return self._domain_identity_refusal(fact.uuid, fact.group_id, context)
+
+    def _domain_identity_refusal(self, fact_uuid: str, group_id: str, context: RecallContext) -> str | None:
+        if group_id != self._tenant:
             return "out_of_scope"
-        scope = self._fact_scope.get(fact.uuid)
+        scope = self._fact_scope.get(fact_uuid)
         if scope is None:
             # GAP-ARCH-18 (LD1): docs/34:139 -- "candidates that arrive without
             # scope metadata are rejected from admission; unknown scope is

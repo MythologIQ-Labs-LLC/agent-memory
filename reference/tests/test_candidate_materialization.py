@@ -160,6 +160,72 @@ class CandidateFormationTests(_Store):
         self.assertEqual(len(state["admitted"]), 5)
 
 
+class MaterializationTests(_Store):
+    """#591: facts that cannot become candidates are not materialized."""
+
+    def _populate(self, users: int = 60, items: int = 5) -> None:
+        for user in range(users):
+            for item in range(items):
+                self.write(f"u{user}:{item}", f"The user prefers tool {item} for project {user}.", _scope(f"u{user:02d}"))
+
+    def test_only_surviving_candidates_are_materialized(self):
+        self._populate()
+        substrate = self.adapter._substrate
+        context = _context("u07")
+        search = substrate.search
+        calls = []
+        original = type(substrate)._fact_from_row
+
+        def counting(row):
+            calls.append(row["uuid"])
+            return original(row)
+
+        with mock.patch.object(type(substrate), "_fact_from_row", staticmethod(counting)):
+            results = search("which tool does the user prefer", group_ids=[TENANT],
+                             eligible=lambda fact: self.adapter.domain_eligible(fact, context),
+                             eligible_identity=lambda uuid, group: self.adapter.domain_eligible_identity(uuid, group, context))
+        self.assertEqual(len(results), 5)
+        self.assertEqual(sorted(calls), sorted(fact.uuid for fact, _ in results))  # 5 of 300, not 300
+
+    def test_identity_path_equals_full_materialization_path(self):
+        self._populate(users=30)
+        substrate = self.adapter._substrate
+        for user in ("u00", "u07", "u29", "nobody"):
+            context = _context(user)
+            for query in ("which tool does the user prefer", "project 7", "tool 3", "unrelated words"):
+                eligible = lambda fact, context=context: self.adapter.domain_eligible(fact, context)
+                identity = lambda uuid, group, context=context: self.adapter.domain_eligible_identity(uuid, group, context)
+                full = substrate.search(query, group_ids=[TENANT], eligible=eligible)
+                fast = substrate.search(query, group_ids=[TENANT], eligible=eligible, eligible_identity=identity)
+                self.assertEqual([(f.uuid, s, f) for f, s in fast], [(f.uuid, s, f) for f, s in full], (user, query))
+
+    def test_identity_predicate_is_exactly_the_fact_predicate(self):
+        self.write("a:1", "The deploy key rotates.", _scope("a"))
+        self.write("a:task", "The deploy checklist.", _scope("a", task_ref="task:7"))
+        self.write("b:1", "The deploy key rotates.", _scope("b"))
+        self.adapter.set_shared_domain_members("space:s", ("agent:591",))
+        self.write("s:1", "The deploy runbook.", {"scope": "space:s", "isolation_domain_refs": ["space:s"],
+                                                  "required_isolation_domain_refs": ["space:s"], "project_ref": ""})
+        contexts = [_context("a"), _context("b"), _context("a", task_ref="task:7"),
+                    _context("a", target_domain_refs=("space:s",), project_ref=""),
+                    _context("a", target_domain_refs=("space:s",), project_ref="", principal_ref="agent:other"),
+                    _context("a", target_domain_refs=())]
+        for fact in self.adapter._substrate.all_facts():
+            for context in contexts:
+                self.assertEqual(self.adapter.domain_eligible_identity(fact.uuid, fact.group_id, context),
+                                 self.adapter.domain_eligible(fact, context))
+        self.assertFalse(self.adapter.domain_eligible_identity("unknown-uuid", TENANT, _context("a")))  # unknown scope fails closed
+        self.assertFalse(self.adapter.domain_eligible_identity(next(iter(self.adapter._fact_scope)), "tenant:other", _context("a")))
+
+    def test_materialized_facts_are_still_checked_by_the_fact_predicate(self):
+        uuid = self.write("a:1", "The deploy key rotates.", _scope("a"))
+        results = self.adapter._substrate.search("deploy key", group_ids=[TENANT], eligible=lambda fact: False,
+                                                 eligible_identity=lambda uuid, group: True)
+        self.assertEqual(results, [])  # an over-permissive identity predicate cannot widen visibility
+        self.assertEqual(self.adapter._substrate.search("deploy key", group_ids=[TENANT], eligible=None,
+                                                        eligible_identity=lambda uuid, group: True)[0][0].uuid, uuid)
+
+
 class DurabilityTests(_Store):
     def _populate(self) -> None:
         for user in ("a", "b"):
