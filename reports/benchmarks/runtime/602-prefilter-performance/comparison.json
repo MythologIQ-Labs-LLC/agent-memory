@@ -1,0 +1,54 @@
+{
+  "authority_effect": "none",
+  "contract": "591_identity_first_prefilter_compute_v1",
+  "evidence_class": "matched_ci_hot_path_performance",
+  "platform_scope": "same_ubuntu_github_actions_job",
+  "python": {
+    "individual_total_ms": [
+      1496.739129,
+      1474.694356
+    ],
+    "median_p50_query_ms": 23.6164495,
+    "median_p95_query_ms": 26.950329,
+    "median_projected_rows_examined_per_second": 861584.4585929906,
+    "median_total_ms": 1485.7167425
+  },
+  "qualification": [
+    "same deterministic generated workload",
+    "same CI job/runner",
+    "result signature equality required before timing comparison",
+    "two execution orders to reduce first/second-run bias",
+    "micro/hot-path evidence only; not full-runtime performance"
+  ],
+  "relative": {
+    "rust_speedup_by_total_time": 2.4875008592387795,
+    "rust_throughput_multiple": 2.487421093685725
+  },
+  "result_parity": {
+    "signature_sha256": "ea2a12c19df6c059d75e768b2ebae0044547ea358f1a9033a6da56564e15b18b",
+    "status": "PASS"
+  },
+  "rust": {
+    "individual_total_ms": [
+      600.135675,
+      594.410037
+    ],
+    "median_p50_query_ms": 9.2759855,
+    "median_p95_query_ms": 10.535275500000001,
+    "median_projected_rows_examined_per_second": 2143123.356296,
+    "median_total_ms": 597.272856
+  },
+  "schema_version": 1,
+  "workload": {
+    "execution_orders": [
+      "python_then_rust",
+      "rust_then_python"
+    ],
+    "iterations_per_run": 8,
+    "queries": 8,
+    "query_samples_per_run": 64,
+    "rows": 20000,
+    "rust_compile_time_included": false,
+    "timing_scope": "prefilter_compute_only_rows_prebuilt"
+  }
+}
