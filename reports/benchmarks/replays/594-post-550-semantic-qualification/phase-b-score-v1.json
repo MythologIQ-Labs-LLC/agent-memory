@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "issue": 594,
+  "disposition": "QUALIFIED",
+  "evidence_class": "repository-owned conformance",
+  "aggregate_score": "not_defined",
+  "scored_head_sha": "73216bebc596de4876692a8f00d1e3fabaa899f1",
+  "workflow_run_id": 36434626348,
+  "artifact_id": 10974877443,
+  "artifact_zip_sha256": "34decf958f7ed1b537241b360cc863eb8904ca27aa220fcf48c876b4975345f9",
+  "score_json_sha256": "f4ff433c89f8d14de087182204b70a101257cdbb5f4c481f96217445706577a8",
+  "predictions_json_sha256": "940cab5933e340e394fa83dfd8d067c8cab5dec113275a0517514644943ec686",
+  "gold": {
+    "manifest": "reference/fixtures/benchmarks/proposition-semantics/gold-v1.json",
+    "accepted_source": "draft-annotations-v5.json",
+    "accepted_source_sha256": "bb336e72281b64dbdd090447194a67f0638b820a4adb18f1463d24c77859aec7",
+    "rubric_sha256": "94775c3c6b4f4bcc13f8b3455e7cfda7a90c8dfa54dade0937f89270ca1618ad",
+    "sample_sha256": "b1957ca4ff95c3b8a227b8b75f74327911172305cf770c927d56091e7fedd8d3",
+    "item_text_hash_list_sha256": "3dceb7cde08abf45af3ea1d4dc12d117c390a3441eed38b3ca2273e04f986b88",
+    "accepted_by": "Knapp-Kevin",
+    "accepted_at": "2026-09-28T14:02:38Z",
+    "review_id": 5339771805,
+    "counts": {"known": 148, "ambiguous": 35, "unknown": 85}
+  },
+  "property_aliases": {
+    "count": 0,
+    "frozen_pre_score": true,
+    "interpretation": "strict property-label conformance only; do not read zero slot/value precision as semantic-synonym precision"
+  },
+  "deterministic_replay_identical": true,
+  "prediction_status_counts_all_268": {"known": 49, "ambiguous": 147, "unknown": 72},
+  "part_R_population_sample": {
+    "n": 100,
+    "gold_counts": {"known": 54, "ambiguous": 13, "unknown": 33},
+    "status_confusion": {
+      "known": {"known": 8, "ambiguous": 46, "unknown": 0},
+      "ambiguous": {"known": 0, "ambiguous": 13, "unknown": 0},
+      "unknown": {"known": 2, "ambiguous": 3, "unknown": 28}
+    },
+    "status_metrics": {
+      "known": {"precision": 0.8, "recall": 0.148148},
+      "ambiguous": {"precision": 0.209677, "recall": 1.0},
+      "unknown": {"precision": 1.0, "recall": 0.848485}
+    },
+    "failure_counts": {
+      "wrong_slot": 8,
+      "unknown_promoted_to_known": 2,
+      "aspect_mismatch": 4,
+      "aspect_over_classification": 1
+    },
+    "cardinality_pairs": {
+      "hierarchical->unknown": 1,
+      "multi_valued->multi_valued": 11,
+      "multi_valued->unknown": 45,
+      "single_valued->unknown": 3,
+      "unknown->unknown": 40
+    }
+  },
+  "all_268_diagnostic_not_population_estimate": {
+    "status_metrics": {
+      "known": {"precision": 0.55102, "recall": 0.182432},
+      "ambiguous": {"precision": 0.176871, "recall": 0.742857},
+      "unknown": {"precision": 0.847222, "recall": 0.717647}
+    },
+    "failure_counts": {
+      "wrong_slot": 27,
+      "unknown_promoted_to_known": 22,
+      "aspect_mismatch": 17,
+      "aspect_over_classification": 23,
+      "coexistence_as_replacement": 1
+    },
+    "unknown_promoted_to_known_items": ["ps1-009","ps1-018","ps1-104","ps1-108","ps1-111","ps1-129","ps1-133","ps1-134","ps1-148","ps1-186","ps1-215","ps1-228","ps1-239","ps1-245","ps1-248","ps1-257","ps1-260","ps1-262","ps1-263","ps1-265","ps1-266","ps1-268"],
+    "wrong_slot_items": ["ps1-010","ps1-040","ps1-044","ps1-053","ps1-058","ps1-076","ps1-083","ps1-097","ps1-120","ps1-138","ps1-155","ps1-157","ps1-161","ps1-163","ps1-180","ps1-201","ps1-203","ps1-221","ps1-230","ps1-247","ps1-255","ps1-256","ps1-258","ps1-259","ps1-261","ps1-264","ps1-267"],
+    "aspect_mismatch_items": ["ps1-010","ps1-031","ps1-035","ps1-045","ps1-101","ps1-114","ps1-122","ps1-125","ps1-128","ps1-132","ps1-189","ps1-190","ps1-201","ps1-203","ps1-224","ps1-225","ps1-226"],
+    "aspect_over_classification_items": ["ps1-015","ps1-104","ps1-105","ps1-107","ps1-111","ps1-129","ps1-185","ps1-186","ps1-187","ps1-188","ps1-199","ps1-202","ps1-204","ps1-214","ps1-215","ps1-216","ps1-223","ps1-233","ps1-242","ps1-245","ps1-246","ps1-248","ps1-254"],
+    "coexistence_as_replacement_items": ["ps1-122"]
+  },
+  "interpretation": {
+    "primary_defect": "under-recognition / over-ambiguity of valid propositions",
+    "safety_posture": "conservative failure dominates the unbiased sample; two gold-unknown turns were promoted to known",
+    "cardinality": "mostly under-specific/unknown; no Part R over-eager single-valued failures",
+    "slot_value": "strict exact-label conformance is intentionally harsh because aliases were frozen empty; inspected failures include both benign synonym differences and genuine malformed property/value boundaries",
+    "temporal_aspect": "bounded mismatch and over-classification defects are real and receive a separate follow-on"
+  },
+  "follow_on_issues": [596, 597, 598]
+}
