@@ -36,6 +36,10 @@ jobs:
       - name: Set up stable Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Verify frozen vectors against Rust shadow
+      - name: Verify frozen vectors against Rust shadow and print resolved lock
         working-directory: rust/agent-memory-kernel-shadow
-        run: cargo test --locked
+        run: |
+          cargo test
+          echo "---BEGIN RESOLVED CARGO.LOCK---"
+          cat Cargo.lock
+          echo "---END RESOLVED CARGO.LOCK---"
