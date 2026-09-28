@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import importlib.util
 import json
 import sys
 import tempfile
@@ -177,18 +178,46 @@ class SampleIndependenceTests(unittest.TestCase):
         v1_bytes = (FIXTURES / "draft-annotations-v1.json").read_bytes()
         v1 = json.loads(v1_bytes)
         v2 = json.loads((FIXTURES / "draft-annotations-v2.json").read_text(encoding="utf-8"))
-        manifest = json.loads((FIXTURES / "draft-v1-to-v2-changes.json").read_text(encoding="utf-8"))
+        manifest = json.loads((FIXTURES / "draft-v1-to-v2-change-manifest.json").read_text(encoding="utf-8"))
         self.assertEqual(v2["supersedes"]["sha256"], hashlib.sha256(v1_bytes).hexdigest())
         self.assertEqual(manifest["v2"]["sha256"], hashlib.sha256((FIXTURES / "draft-annotations-v2.json").read_bytes()).hexdigest())
         label_fields = ("status", "propositions", "principal", "cardinality", "temporal_aspect", "aspect_explicit",
                         "change_marker", "coexistence_marker", "hedged", "self_authority_claim", "temporal_language_non_temporal")
         changed = {a["item_id"] for a, b in zip(v1["items"], v2["items"]) if any(a[f] != b[f] for f in label_fields)}
-        listed = {c["item_id"] for group in manifest["by_reason"].values() for c in group["items"]}
-        self.assertEqual(changed, listed)
+        self.assertEqual(changed, {c["item_id"] for c in manifest["changes"]})
+        self.assertEqual(changed, {i for group in manifest["by_reason"].values() for i in group["items"]})
         self.assertEqual(manifest["items_changed"], len(changed))
+        required = {"item_id", "status_v1", "status_v2", "principal_v1", "principal_v2", "cardinality_v1", "cardinality_v2",
+                    "temporal_aspect_v1", "temporal_aspect_v2", "reason", "ruling_class", "part", "stratum"}
+        for change in manifest["changes"]:
+            self.assertLessEqual(required, set(change))
         rulings = [i for i in v2["items"] if i["maintainer_ruling"]]
         self.assertEqual(len(rulings), 15)
         self.assertEqual({i["item_id"] for i in rulings}, {i["item_id"] for i in v1["items"] if i["boundary_case"]})
+
+    def test_change_manifest_is_regenerated_from_the_annotation_files(self) -> None:
+        spec = importlib.util.spec_from_file_location("build_change_manifest", FIXTURES / "build_change_manifest.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertEqual(module.render(), (FIXTURES / "draft-v1-to-v2-change-manifest.json").read_text(encoding="utf-8"))
+
+    def test_v2_labels_are_internally_consistent(self) -> None:
+        v2 = json.loads((FIXTURES / "draft-annotations-v2.json").read_text(encoding="utf-8"))
+        rulings = {"ps1-006": "known", "ps1-051": "ambiguous", "ps1-087": "known", "ps1-098": "known", "ps1-134": "ambiguous",
+                   "ps1-150": "known", "ps1-158": "ambiguous", "ps1-166": "known", "ps1-180": "known", "ps1-181": "known",
+                   "ps1-197": "known", "ps1-205": "ambiguous", "ps1-218": "ambiguous", "ps1-257": "ambiguous", "ps1-267": "known"}
+        for item in v2["items"]:
+            status = item["status"]
+            self.assertIn(status, E.STATUSES)
+            self.assertEqual(item["principal"] is not None, status == "known", item["item_id"])
+            self.assertEqual(bool(item["propositions"]), status != "unknown", item["item_id"])
+            if status == "known":
+                self.assertLess(item["principal"], len(item["propositions"]))
+                self.assertNotEqual(item["cardinality"], "unknown", item["item_id"])
+            if item["item_id"] in rulings:
+                self.assertEqual(status, rulings[item["item_id"]], item["item_id"])
+            # Semantic interpretation is not retention policy: duration is never a stated reason.
+            self.assertNotRegex(item["notes"], r"(?i)\b(transient|not (clearly )?durable|momentary)\b", item["item_id"])
 
 
 if __name__ == "__main__":

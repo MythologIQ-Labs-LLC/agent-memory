@@ -1,0 +1,3027 @@
+{
+ "by_part": {
+  "random": {
+   "items_changed": 33,
+   "items_in_part": 100,
+   "reasons": {
+    "asserted_attitude_or_state_with_determinate_value": 1,
+    "asserted_proposition_with_unresolved_value": 2,
+    "coordinated_value_list_is_one_proposition": 4,
+    "duration_rationale_removed": 2,
+    "maintainer_boundary_ruling": 2,
+    "principal_with_supporting_context": 17,
+    "search_constraint_or_goal_is_a_proposition": 2,
+    "short_lived_plan_or_choice_is_a_proposition": 2,
+    "unresolved_reference_is_not_known": 1
+   },
+   "status_transitions": {
+    "ambiguous->known": 26,
+    "known->ambiguous": 1,
+    "known->known": 1,
+    "unknown->ambiguous": 2,
+    "unknown->known": 3
+   }
+  },
+  "stratified": {
+   "items_changed": 54,
+   "items_in_part": 168,
+   "reasons": {
+    "asserted_attitude_or_state_with_determinate_value": 6,
+    "cardinality_by_semantic_meaning": 2,
+    "coordinated_value_list_is_one_proposition": 6,
+    "determinate_value_on_a_different_property": 1,
+    "duration_rationale_removed": 1,
+    "maintainer_boundary_ruling": 9,
+    "principal_with_supporting_context": 25,
+    "reference_resolvable_within_the_turn": 1,
+    "short_lived_plan_or_choice_is_a_proposition": 2,
+    "unresolved_reference_is_not_known": 1
+   },
+   "status_transitions": {
+    "ambiguous->known": 44,
+    "known->ambiguous": 1,
+    "known->known": 2,
+    "unknown->ambiguous": 5,
+    "unknown->known": 2
+   }
+  }
+ },
+ "by_reason": {
+  "asserted_attitude_or_state_with_determinate_value": {
+   "count": 7,
+   "items": [
+    "ps1-010",
+    "ps1-143",
+    "ps1-157",
+    "ps1-162",
+    "ps1-163",
+    "ps1-201",
+    "ps1-258"
+   ]
+  },
+  "asserted_proposition_with_unresolved_value": {
+   "count": 2,
+   "items": [
+    "ps1-057",
+    "ps1-096"
+   ]
+  },
+  "cardinality_by_semantic_meaning": {
+   "count": 2,
+   "items": [
+    "ps1-264",
+    "ps1-267"
+   ]
+  },
+  "coordinated_value_list_is_one_proposition": {
+   "count": 10,
+   "items": [
+    "ps1-038",
+    "ps1-064",
+    "ps1-066",
+    "ps1-068",
+    "ps1-160",
+    "ps1-170",
+    "ps1-174",
+    "ps1-179",
+    "ps1-226",
+    "ps1-252"
+   ]
+  },
+  "determinate_value_on_a_different_property": {
+   "count": 1,
+   "items": [
+    "ps1-151"
+   ]
+  },
+  "duration_rationale_removed": {
+   "count": 3,
+   "items": [
+    "ps1-031",
+    "ps1-074",
+    "ps1-200"
+   ]
+  },
+  "maintainer_boundary_ruling": {
+   "count": 11,
+   "items": [
+    "ps1-087",
+    "ps1-098",
+    "ps1-134",
+    "ps1-158",
+    "ps1-166",
+    "ps1-180",
+    "ps1-181",
+    "ps1-197",
+    "ps1-205",
+    "ps1-218",
+    "ps1-257"
+   ]
+  },
+  "principal_with_supporting_context": {
+   "count": 42,
+   "items": [
+    "ps1-033",
+    "ps1-040",
+    "ps1-041",
+    "ps1-042",
+    "ps1-044",
+    "ps1-048",
+    "ps1-049",
+    "ps1-053",
+    "ps1-054",
+    "ps1-065",
+    "ps1-078",
+    "ps1-082",
+    "ps1-085",
+    "ps1-090",
+    "ps1-094",
+    "ps1-099",
+    "ps1-100",
+    "ps1-110",
+    "ps1-112",
+    "ps1-113",
+    "ps1-122",
+    "ps1-123",
+    "ps1-136",
+    "ps1-137",
+    "ps1-138",
+    "ps1-139",
+    "ps1-140",
+    "ps1-141",
+    "ps1-152",
+    "ps1-153",
+    "ps1-164",
+    "ps1-167",
+    "ps1-182",
+    "ps1-195",
+    "ps1-196",
+    "ps1-206",
+    "ps1-208",
+    "ps1-220",
+    "ps1-222",
+    "ps1-223",
+    "ps1-240",
+    "ps1-251"
+   ]
+  },
+  "reference_resolvable_within_the_turn": {
+   "count": 1,
+   "items": [
+    "ps1-221"
+   ]
+  },
+  "search_constraint_or_goal_is_a_proposition": {
+   "count": 2,
+   "items": [
+    "ps1-072",
+    "ps1-097"
+   ]
+  },
+  "short_lived_plan_or_choice_is_a_proposition": {
+   "count": 4,
+   "items": [
+    "ps1-055",
+    "ps1-061",
+    "ps1-165",
+    "ps1-168"
+   ]
+  },
+  "unresolved_reference_is_not_known": {
+   "count": 2,
+   "items": [
+    "ps1-063",
+    "ps1-103"
+   ]
+  }
+ },
+ "by_ruling_class": {
+  "corpus_rereview": {
+   "count": 75,
+   "items": [
+    "ps1-010",
+    "ps1-031",
+    "ps1-033",
+    "ps1-038",
+    "ps1-040",
+    "ps1-041",
+    "ps1-042",
+    "ps1-044",
+    "ps1-048",
+    "ps1-049",
+    "ps1-053",
+    "ps1-054",
+    "ps1-055",
+    "ps1-057",
+    "ps1-061",
+    "ps1-063",
+    "ps1-064",
+    "ps1-065",
+    "ps1-066",
+    "ps1-068",
+    "ps1-072",
+    "ps1-074",
+    "ps1-078",
+    "ps1-082",
+    "ps1-085",
+    "ps1-090",
+    "ps1-094",
+    "ps1-096",
+    "ps1-097",
+    "ps1-099",
+    "ps1-100",
+    "ps1-103",
+    "ps1-110",
+    "ps1-112",
+    "ps1-113",
+    "ps1-122",
+    "ps1-123",
+    "ps1-136",
+    "ps1-137",
+    "ps1-138",
+    "ps1-139",
+    "ps1-140",
+    "ps1-141",
+    "ps1-143",
+    "ps1-151",
+    "ps1-152",
+    "ps1-153",
+    "ps1-157",
+    "ps1-160",
+    "ps1-162",
+    "ps1-163",
+    "ps1-164",
+    "ps1-165",
+    "ps1-167",
+    "ps1-168",
+    "ps1-170",
+    "ps1-174",
+    "ps1-179",
+    "ps1-182",
+    "ps1-195",
+    "ps1-196",
+    "ps1-200",
+    "ps1-201",
+    "ps1-206",
+    "ps1-208",
+    "ps1-220",
+    "ps1-221",
+    "ps1-222",
+    "ps1-223",
+    "ps1-226",
+    "ps1-240",
+    "ps1-251",
+    "ps1-252",
+    "ps1-258",
+    "ps1-264"
+   ]
+  },
+  "maintainer_ruling_change": {
+   "count": 11,
+   "items": [
+    "ps1-087",
+    "ps1-098",
+    "ps1-134",
+    "ps1-158",
+    "ps1-166",
+    "ps1-180",
+    "ps1-181",
+    "ps1-197",
+    "ps1-205",
+    "ps1-218",
+    "ps1-257"
+   ]
+  },
+  "maintainer_ruling_keep_status": {
+   "count": 1,
+   "items": [
+    "ps1-267"
+   ]
+  }
+ },
+ "by_status_transition": {
+  "ambiguous->known": {
+   "count": 70,
+   "items": [
+    "ps1-010",
+    "ps1-033",
+    "ps1-038",
+    "ps1-040",
+    "ps1-041",
+    "ps1-042",
+    "ps1-044",
+    "ps1-048",
+    "ps1-049",
+    "ps1-053",
+    "ps1-054",
+    "ps1-061",
+    "ps1-064",
+    "ps1-065",
+    "ps1-066",
+    "ps1-068",
+    "ps1-072",
+    "ps1-074",
+    "ps1-078",
+    "ps1-082",
+    "ps1-085",
+    "ps1-090",
+    "ps1-094",
+    "ps1-097",
+    "ps1-099",
+    "ps1-100",
+    "ps1-110",
+    "ps1-112",
+    "ps1-113",
+    "ps1-122",
+    "ps1-123",
+    "ps1-136",
+    "ps1-137",
+    "ps1-138",
+    "ps1-139",
+    "ps1-140",
+    "ps1-141",
+    "ps1-143",
+    "ps1-151",
+    "ps1-152",
+    "ps1-153",
+    "ps1-157",
+    "ps1-160",
+    "ps1-162",
+    "ps1-163",
+    "ps1-164",
+    "ps1-165",
+    "ps1-167",
+    "ps1-168",
+    "ps1-170",
+    "ps1-174",
+    "ps1-179",
+    "ps1-180",
+    "ps1-181",
+    "ps1-182",
+    "ps1-195",
+    "ps1-196",
+    "ps1-197",
+    "ps1-200",
+    "ps1-206",
+    "ps1-208",
+    "ps1-220",
+    "ps1-221",
+    "ps1-222",
+    "ps1-223",
+    "ps1-226",
+    "ps1-240",
+    "ps1-251",
+    "ps1-252",
+    "ps1-258"
+   ]
+  },
+  "known->ambiguous": {
+   "count": 2,
+   "items": [
+    "ps1-063",
+    "ps1-103"
+   ]
+  },
+  "known->known": {
+   "count": 3,
+   "items": [
+    "ps1-031",
+    "ps1-264",
+    "ps1-267"
+   ]
+  },
+  "unknown->ambiguous": {
+   "count": 7,
+   "items": [
+    "ps1-057",
+    "ps1-096",
+    "ps1-134",
+    "ps1-158",
+    "ps1-205",
+    "ps1-218",
+    "ps1-257"
+   ]
+  },
+  "unknown->known": {
+   "count": 5,
+   "items": [
+    "ps1-055",
+    "ps1-087",
+    "ps1-098",
+    "ps1-166",
+    "ps1-201"
+   ]
+  }
+ },
+ "by_stratum": {
+  "change_language": {
+   "items": [
+    "ps1-103",
+    "ps1-110",
+    "ps1-112",
+    "ps1-113"
+   ],
+   "items_changed": 4,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 3,
+    "known->ambiguous": 1
+   }
+  },
+  "coexistence_language": {
+   "items": [
+    "ps1-122",
+    "ps1-123"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 2
+   }
+  },
+  "employment": {
+   "items": [
+    "ps1-134",
+    "ps1-136",
+    "ps1-137",
+    "ps1-138",
+    "ps1-139",
+    "ps1-140",
+    "ps1-141"
+   ],
+   "items_changed": 7,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 6,
+    "unknown->ambiguous": 1
+   }
+  },
+  "hedging": {
+   "items": [
+    "ps1-174",
+    "ps1-179",
+    "ps1-180",
+    "ps1-181",
+    "ps1-182"
+   ],
+   "items_changed": 5,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 5
+   }
+  },
+  "past_habitual": {
+   "items": [
+    "ps1-218",
+    "ps1-220",
+    "ps1-221",
+    "ps1-222",
+    "ps1-223",
+    "ps1-226"
+   ],
+   "items_changed": 6,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 5,
+    "unknown->ambiguous": 1
+   }
+  },
+  "preference": {
+   "items": [
+    "ps1-157",
+    "ps1-158",
+    "ps1-160",
+    "ps1-162",
+    "ps1-163",
+    "ps1-164",
+    "ps1-165",
+    "ps1-166",
+    "ps1-167",
+    "ps1-168",
+    "ps1-170"
+   ],
+   "items_changed": 11,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 9,
+    "unknown->ambiguous": 1,
+    "unknown->known": 1
+   }
+  },
+  "present_current": {
+   "items": [
+    "ps1-195",
+    "ps1-196",
+    "ps1-197"
+   ],
+   "items_changed": 3,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 3
+   }
+  },
+  "proper_noun_subject": {
+   "items": [
+    "ps1-240"
+   ],
+   "items_changed": 1,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 1
+   }
+  },
+  "prospective": {
+   "items": [
+    "ps1-200",
+    "ps1-201",
+    "ps1-205",
+    "ps1-206",
+    "ps1-208"
+   ],
+   "items_changed": 5,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 3,
+    "unknown->ambiguous": 1,
+    "unknown->known": 1
+   }
+  },
+  "residence_location": {
+   "items": [
+    "ps1-143",
+    "ps1-151",
+    "ps1-152",
+    "ps1-153"
+   ],
+   "items_changed": 4,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 4
+   }
+  },
+  "simple_first_person_statement": {
+   "items": [
+    "ps1-257",
+    "ps1-258",
+    "ps1-264",
+    "ps1-267"
+   ],
+   "items_changed": 4,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 1,
+    "known->known": 2,
+    "unknown->ambiguous": 1
+   }
+  },
+  "temporal_word_non_temporal": {
+   "items": [
+    "ps1-251",
+    "ps1-252"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 2
+   }
+  }
+ },
+ "changes": [
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-010",
+   "origin": "public_chat_filler",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "tends to worry about",
+    "value": "disagreements leading to a toxic work environment"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-031",
+   "origin": "public_chat_filler",
+   "part": "random",
+   "principal_v1": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "upcoming trip destination",
+    "value": "Osprey Reef"
+   },
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "upcoming trip destination",
+    "value": "Osprey Reef"
+   },
+   "reason": "duration_rationale_removed",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "known",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-033",
+   "origin": "public_chat_filler",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "stance on getting an MBA",
+    "value": "not worth the cost"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-038",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "interested in watching",
+    "value": "Defending Jacob and Truth Be Told"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-040",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering buying",
+    "value": "a self-watering planter (for the ficus tree)"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-041",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering gift for niece",
+    "value": "Yamaha PSR-E263"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "hedged"
+   ],
+   "item_id": "ps1-042",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "planning",
+    "value": "a family reunion in the summer"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-044",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering",
+    "value": "getting the rare book collection appraised"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-048",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "hobby",
+    "value": "coin collecting (about two months)"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-049",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "goal",
+    "value": "keep track of business expenses"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-053",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "a meeting with siblings about selling the parents' old house"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-054",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "goal",
+    "value": "save money on luxury items"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "aspect_explicit",
+    "hedged"
+   ],
+   "item_id": "ps1-055",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "chose",
+    "value": "Moscato d'Asti"
+   },
+   "reason": "short_lived_plan_or_choice_is_a_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "unknown",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-057",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": null,
+   "reason": "asserted_proposition_with_unresolved_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "unknown",
+   "status_v2": "ambiguous",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-061",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering gift for coworker",
+    "value": "a glass or crystal paperweight with a brief message"
+   },
+   "reason": "short_lived_plan_or_choice_is_a_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-063",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "planned trip destination",
+    "value": "Seattle"
+   },
+   "principal_v2": null,
+   "reason": "unresolved_reference_is_not_known",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "known",
+   "status_v2": "ambiguous",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-064",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to try",
+    "value": "wet-on-wet and glazing watercolor techniques"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-065",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering tires",
+    "value": "Michelin Pilot Sport Cup 2 R (for a 2018 BMW M4)"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-066",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering MBA programs",
+    "value": "University of Florida and Arizona State University"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-068",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to sell",
+    "value": "vintage items (1960s Fender Jazzmaster, first-edition 'To Kill a Mockingbird', 1960s Batman figure)"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-072",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "gift budget",
+    "value": "around $50"
+   },
+   "reason": "search_constraint_or_goal_is_a_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-074",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans for the data project",
+    "value": "start by identifying the business problems and defining goals and objectives"
+   },
+   "reason": "duration_rationale_removed",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-078",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to visit",
+    "value": "Tokyo DisneySea with friends next month"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-082",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering paint",
+    "value": "Mig Productions rust paints (for the T-34 model)"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-085",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "reads",
+    "value": "fantasy and thriller novels"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "aspect_explicit",
+    "hedged"
+   ],
+   "item_id": "ps1-087",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to wear",
+    "value": "the boots with a dark grey pencil skirt and a white top"
+   },
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "unknown",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-090",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to ride",
+    "value": "Twisted Colossus"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-094",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to get authenticated",
+    "value": "the 1972 doubled die cent"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-096",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": null,
+   "reason": "asserted_proposition_with_unresolved_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "unknown",
+   "status_v2": "ambiguous",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "single_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-097",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "interested in",
+    "value": "Embryolisse moisturizers and cleansers for oily skin"
+   },
+   "reason": "search_constraint_or_goal_is_a_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "aspect_explicit",
+    "hedged"
+   ],
+   "item_id": "ps1-098",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to pack",
+    "value": "toiletries (shampoo, conditioner, toothbrush)"
+   },
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "unknown",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-099",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering buying",
+    "value": "a modern sleek lamp (chrome or silver finish)"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-100",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "goal",
+    "value": "track online shopping spending"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": null,
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-103",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "upcoming trip destination",
+    "value": "Orlando (with family)"
+   },
+   "principal_v2": null,
+   "reason": "unresolved_reference_is_not_known",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "known",
+   "status_v2": "ambiguous",
+   "stratum": "change_language",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "hierarchical",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-110",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "goal",
+    "value": "meet new people"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "change_language",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "single_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-112",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "rearrange balcony plants for more sunlight"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "change_language",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "hierarchical",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-113",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to sell",
+    "value": "duplicate action figures on eBay"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "change_language",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-122",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering taking up",
+    "value": "swimming"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "coexistence_language",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-123",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering buying",
+    "value": "a bike rack for the car"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "coexistence_language",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-134",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": null,
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "unknown",
+   "status_v2": "ambiguous",
+   "stratum": "employment",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-136",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to replace",
+    "value": "the worn-out left shoelace"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "employment",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "hedged"
+   ],
+   "item_id": "ps1-137",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "organizing",
+    "value": "the jewelry collection"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "employment",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-138",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "an online gaming session with coworker David"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "employment",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "hedged"
+   ],
+   "item_id": "ps1-139",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "planning",
+    "value": "a farewell party for a coworker"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "employment",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-140",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "goal",
+    "value": "a promotion or senior role within the current company"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "employment",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-141",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "interested in",
+    "value": "using AI for content creation"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "employment",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-143",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "wants",
+    "value": "solar panels on the roof"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "residence_location",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "hierarchical",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-151",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "apartment move-in date",
+    "value": "August 15th"
+   },
+   "reason": "determinate_value_on_a_different_property",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "residence_location",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-152",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to visit",
+    "value": "downtown city center (leave 9 am, return 5 pm, bus or train)"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "residence_location",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "hedged"
+   ],
+   "item_id": "ps1-153",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering serving",
+    "value": "seafood-based appetizers"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "residence_location",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-157",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "wants",
+    "value": "a collar necklace"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-158",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": null,
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "unknown",
+   "status_v2": "ambiguous",
+   "stratum": "preference",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-160",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "likes",
+    "value": "grilled meats and spicy dishes"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-162",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "likes",
+    "value": "Taylor Swift's experimentation with new sounds and styles"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-163",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "wants",
+    "value": "beeswax wraps (instead of plastic wrap)"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-164",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "'marketing 101' educational content series"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-165",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "chose main course",
+    "value": "Grilled Lemon Herb Chicken (for a dinner party)"
+   },
+   "reason": "short_lived_plan_or_choice_is_a_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "aspect_explicit",
+    "hedged"
+   ],
+   "item_id": "ps1-166",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to roast for the quinoa salad",
+    "value": "broccoli and sweet potatoes"
+   },
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "unknown",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-167",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "looking to buy",
+    "value": "a new dining table and chairs"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-168",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "pricing structure for candles",
+    "value": "simple tiered pricing"
+   },
+   "reason": "short_lived_plan_or_choice_is_a_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-170",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "likes gift ideas",
+    "value": "art supplies kit and building sets or LEGO"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "preference",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-174",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to try",
+    "value": "kick drills and treading water"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "hedging",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-179",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "owns",
+    "value": "vintage cameras (Canon AE-1, Polaroid Land Camera)"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "hedging",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-180",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "luggage plan for this trip",
+    "value": "carry-on only, packing light"
+   },
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "hedging",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-181",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to decorate",
+    "value": "the ceramic planter with paint or decoupage"
+   },
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "hedging",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-182",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans garden layout",
+    "value": "sunflowers in a loose circle, zinnias scattered in the raised bed"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "hedging",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-195",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "struggling with",
+    "value": "volleyball serves"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "present_current",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-196",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "a charity bike ride next month"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "present_current",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-197",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "current goal",
+    "value": "plan meals for the rest of the week"
+   },
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "present_current",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "hedged"
+   ],
+   "item_id": "ps1-200",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "attitude toward going to the gym",
+    "value": "a hassle; unsure it is worth it"
+   },
+   "reason": "duration_rationale_removed",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "prospective",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-201",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "concern about toxins",
+    "value": "none"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "unknown",
+   "status_v2": "known",
+   "stratum": "prospective",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-205",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": null,
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "unknown",
+   "status_v2": "ambiguous",
+   "stratum": "prospective",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-206",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "add more plants to the garden"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "prospective",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-208",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "Alex and Sophia",
+    "polarity": "affirmed",
+    "property": "planning",
+    "value": "a summer wedding next year"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "prospective",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-218",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": null,
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "unknown",
+   "status_v2": "ambiguous",
+   "stratum": "past_habitual",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-220",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering watching",
+    "value": "more Oscar-nominated films from last year"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "past_habitual",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-221",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "has had",
+    "value": "appliance/converter issues when traveling internationally"
+   },
+   "reason": "reference_resolvable_within_the_turn",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "past_habitual",
+   "temporal_aspect_v1": "past_habitual",
+   "temporal_aspect_v2": "past_habitual"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "hedged"
+   ],
+   "item_id": "ps1-222",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering",
+    "value": "a cooking class (Korean, Indian, Thai)"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "past_habitual",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "hedged"
+   ],
+   "item_id": "ps1-223",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "gift spending past month",
+    "value": "about $400"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "past_habitual",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "none_unknown"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect",
+    "aspect_explicit",
+    "hedged"
+   ],
+   "item_id": "ps1-226",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to try",
+    "value": "Trello and Todoist"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "past_habitual",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-240",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "goal",
+    "value": "keep cat Luna more active and engaged"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "proper_noun_subject",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "single_valued",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-251",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "oil choice",
+    "value": "conventional oil (for now)"
+   },
+   "reason": "principal_with_supporting_context",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "temporal_word_non_temporal",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "multi_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-252",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering buying",
+    "value": "a PS5 or an Xbox Series X"
+   },
+   "reason": "coordinated_value_list_is_one_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "temporal_word_non_temporal",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect",
+    "aspect_explicit",
+    "hedged"
+   ],
+   "item_id": "ps1-257",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": null,
+   "reason": "maintainer_boundary_ruling",
+   "ruling_class": "maintainer_ruling_change",
+   "status_v1": "unknown",
+   "status_v2": "ambiguous",
+   "stratum": "simple_first_person_statement",
+   "temporal_aspect_v1": "none_unknown",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "unknown",
+   "cardinality_v2": "single_valued",
+   "fields_changed": [
+    "status",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-258",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v1": null,
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "confidence about relationship",
+    "value": "more confident"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "ambiguous",
+   "status_v2": "known",
+   "stratum": "simple_first_person_statement",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  },
+  {
+   "cardinality_v1": "single_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-264",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "wake up earlier on Sundays for meal prep"
+   },
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "wake up earlier on Sundays for meal prep"
+   },
+   "reason": "cardinality_by_semantic_meaning",
+   "ruling_class": "corpus_rereview",
+   "status_v1": "known",
+   "status_v2": "known",
+   "stratum": "simple_first_person_statement",
+   "temporal_aspect_v1": "prospective",
+   "temporal_aspect_v2": "prospective"
+  },
+  {
+   "cardinality_v1": "single_valued",
+   "cardinality_v2": "multi_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-267",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v1": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "looking for",
+    "value": "a hostel at $30-40 a night"
+   },
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "looking for",
+    "value": "a hostel at $30-40 a night"
+   },
+   "reason": "cardinality_by_semantic_meaning",
+   "ruling_class": "maintainer_ruling_keep_status",
+   "status_v1": "known",
+   "status_v2": "known",
+   "stratum": "simple_first_person_statement",
+   "temporal_aspect_v1": "present",
+   "temporal_aspect_v2": "present"
+  }
+ ],
+ "field_change_counts": {
+  "cardinality": 30,
+  "principal_proposition": 77,
+  "status": 84,
+  "temporal_aspect": 36
+ },
+ "generated_by": "build_change_manifest.py",
+ "interpreter_output_consulted": false,
+ "items_changed": 87,
+ "items_reviewed": 268,
+ "items_unchanged": 181,
+ "maintainer_rulings": {
+  "change": [
+   "ps1-087",
+   "ps1-098",
+   "ps1-134",
+   "ps1-158",
+   "ps1-166",
+   "ps1-180",
+   "ps1-181",
+   "ps1-197",
+   "ps1-205",
+   "ps1-218",
+   "ps1-257"
+  ],
+  "keep": [
+   "ps1-006",
+   "ps1-051",
+   "ps1-150",
+   "ps1-267"
+  ],
+  "total": 15
+ },
+ "manifest": "proposition-semantics draft v1 -> draft v2 change manifest",
+ "status_counts": {
+  "v1": {
+   "all": {
+    "ambiguous": 106,
+    "known": 64,
+    "unknown": 98
+   },
+   "random": {
+    "ambiguous": 39,
+    "known": 23,
+    "unknown": 38
+   },
+   "stratified": {
+    "ambiguous": 67,
+    "known": 41,
+    "unknown": 60
+   }
+  },
+  "v2": {
+   "all": {
+    "ambiguous": 45,
+    "known": 137,
+    "unknown": 86
+   },
+   "random": {
+    "ambiguous": 16,
+    "known": 51,
+    "unknown": 33
+   },
+   "stratified": {
+    "ambiguous": 29,
+    "known": 86,
+    "unknown": 53
+   }
+  }
+ },
+ "status_labels": [
+  "DRAFT",
+  "MODEL-ASSISTED",
+  "NOT ACCEPTED GOLD",
+  "NOT SCORED"
+ ],
+ "status_transition_matrix": {
+  "ambiguous": {
+   "ambiguous": 36,
+   "known": 70,
+   "unknown": 0
+  },
+  "known": {
+   "ambiguous": 2,
+   "known": 62,
+   "unknown": 0
+  },
+  "unknown": {
+   "ambiguous": 7,
+   "known": 5,
+   "unknown": 86
+  }
+ },
+ "v1": {
+  "file": "draft-annotations-v1.json",
+  "rubric": "annotation-rubric.md",
+  "rubric_sha256": "47df0caf2413a0e65f9fe609181f162f54c2a6a857583a92e050ac89a33dff26",
+  "sha256": "5cba499b99c820c8b8462d2ae28197f690fe1c2b88a9d97a598f9398184295f4"
+ },
+ "v2": {
+  "file": "draft-annotations-v2.json",
+  "rubric": "annotation-rubric-v2.md",
+  "rubric_sha256": "e924bd5858c52c713735e33f2a71585fc390ea528b6e8f470214f1e5bc1d4dab",
+  "sha256": "21b579c3d990d9b51b67e7ef0328f37cfa8a3ec250bb33757f2702a7d97bf215"
+ }
+}

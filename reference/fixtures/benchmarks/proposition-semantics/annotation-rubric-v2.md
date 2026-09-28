@@ -6,9 +6,9 @@ Unit: one user turn from `sample-v1.json`, read on its own. Annotators see only 
 
 ## 1. What is being labelled
 
-**Semantic interpretation is not retention policy.** The interpreter's job is to identify the proposition that a text in the write path expresses. It does not decide whether that proposition deserves long-term retention; retention and lifecycle policy decide how long it survives. Duration therefore never disqualifies a proposition. A short-term plan, a momentary choice, or an active search constraint is labelled exactly like a lasting fact.
+**Semantic interpretation is not retention policy.** The interpreter's job is to identify the proposition that a text in the write path expresses. It does not decide whether that proposition deserves long-term retention; retention and lifecycle policy decide how long it survives. Duration therefore never disqualifies a proposition. A short-term plan, a momentary choice, or an active search constraint is labelled exactly like a lasting fact. **Short-lived is not non-proposition.** A note never gives duration ("transient", "not durable", "task-local") as the reason for a status.
 
-A **proposition** is an asserted state, relation, preference, goal, search constraint, plan, choice, or bounded condition about an identifiable entity. Its entity, property, and value must all be determinable **from the turn alone**. The entity must be one of:
+A **proposition** is an asserted state, relation, preference, goal, search constraint, plan, intention, choice, or bounded condition about an identifiable entity. Its entity, property, and value must all be determinable **from the turn alone**. The entity must be one of:
 
 * the speaker (`user`);
 * a person, pet, organization, place, or object in the speaker's life that the text identifies (`my sister`, `Max`, `my car`, `Acme`);
@@ -16,15 +16,16 @@ A **proposition** is an asserted state, relation, preference, goal, search const
 
 These are **not** memory propositions:
 
-* questions and requests;
+* pure questions and pure requests;
 * instructions to the assistant;
 * hypotheticals;
 * fiction and role-play content;
-* text the user asks the assistant to process (an essay to edit, code, a prompt to rewrite);
+* quoted text, or text the user asks the assistant to process (an essay to edit, code, a prompt to rewrite);
 * general world knowledge ("Python is interpreted");
-* opinions about general topics without a subject in the speaker's life.
+* opinions about general topics without a subject in the speaker's life;
+* unresolved statements that do not identify any proposition.
 
-**Unresolved references.** The unit is one turn read on its own. `that`, `these`, `those teams`, `them`, `both of those apps` and similar cannot be filled from hidden conversation context. When an intention or state is asserted but its entity or value depends on such a reference, the item is `ambiguous`, not `unknown`. A reference is resolved if its antecedent appears earlier in the same turn.
+**Unresolved references.** The unit is one turn read on its own. `that`, `these`, `those teams`, `them`, `both of those apps` and similar cannot be filled from hidden conversation context. When an intention or state is asserted but its entity or value depends on such a reference, the item is `ambiguous`, not `unknown`; **an unresolved reference is never `known`**. The same holds when a proposition clearly exists but its value is left unspecified ("I have a good plan in place"). A value that appears only inside a question or request ("help me find a hotel in Seattle") is not asserted and cannot resolve the reference. A reference is resolved if its antecedent appears earlier in the same turn.
 
 A proposition embedded in a request still counts. For example, "I just moved to Austin, what neighborhoods are good for families?" commits to `(user, residence, Austin)`.
 
@@ -51,7 +52,8 @@ A proposition embedded in a request still counts. For example, "I just moved to 
   * **Supporting context does not compete.** Episodic anecdotes (what happened last week), reasons, background ownership, and closing acknowledgements that serve the principal proposition are supporting context. The principal is usually the plan, goal, state, or preference the turn is about, often the one its request targets.
   * **One predicate over a list is one proposition.** A single predicate applied to a coordinated list ("I'm considering UF and ASU", "packing shampoo, conditioner, and toothbrush") is one proposition whose value is the list. An explicit disjunction inside one value ("a glass or crystal paperweight") is also one value.
   * **Hedging does not change status.** A hedged claim can still be `known` (set `hedged = yes`); hedging concerns commitment, not identifiability.
-* **ambiguous**: the text contains proposition(s), but the principal one cannot be determined uniquely. Reasons include:
+  * **Several propositions do not by themselves make a turn ambiguous.** Supporting context may contain further propositions while one clearly dominates the turn. In the maintainer rulings, ps1-166's principal is the cooking plan and the liking is supporting; ps1-197's principal is the meal-planning goal and the leftovers are supporting episodic context. Record supporting propositions in `propositions` after the principal.
+* **ambiguous**: the text contains proposition(s), but the principal one cannot be determined uniquely. Use it only then, never merely because a turn contains more than one proposition. Reasons include:
   * two or more independent propositions of comparable standing compete (for example, two unrelated current plans, or a plan and an unrelated current state);
   * the entity or value depends on an unresolved reference (§1);
   * the value is vague ("more sustainable practices");
@@ -62,12 +64,26 @@ A proposition embedded in a request still counts. For example, "I just moved to 
 
 ## 4. Cardinality (ordinary meaning of the principal property)
 
-Cardinality asks how many values the entity can hold at once for this property, in ordinary meaning. It is not about how many values this text mentions.
+Cardinality asks how many values the entity can hold at once for this property, in ordinary meaning. It is not about how many values this text mentions, and it is not about how long the proposition lasts. **Never infer `single_valued` because the turn states one value.**
 
 * **single_valued**: the entity holds one value at a time: age, marital status, a favorite X, the car one currently drives when stated as "my car".
 * **multi_valued**: several values may hold at once: hobbies, things one likes, pets, languages spoken, employers (people can hold more than one job), memberships.
 * **hierarchical**: values relate by containment, so a finer and a coarser value can both be true (Brooklyn and New York). Use this for residence and location, where different values at the *same level* conflict.
-* **unknown**: the property's cardinality cannot be determined, or there is no principal proposition.
+* **unknown**: the property's cardinality cannot be determined, or there is no proposition at all.
+
+For an `ambiguous` item, `cardinality` records the ordinary-meaning cardinality of the first-listed candidate's property, or `unknown`. This makes no claim that the candidate is principal (the convention is unchanged from v1 and is written down here in v2).
+
+Guidance for the property types most easily mislabelled:
+
+| property type | default | single_valued only when |
+| --- | --- | --- |
+| plans, intentions, goals | `multi_valued` (a person holds several at once) | the property is itself an exclusive slot, such as a move-in date |
+| searches and task constraints | `multi_valued` (several searches can run at once; a stated range is part of the search's value) | the property is one parameter of one task, such as the budget for one gift |
+| choices | `multi_valued` | the choice fills a slot that holds one value in ordinary meaning (the main course, the luggage mode for one trip, the oil in one car) |
+| preferences, likes, attitudes toward a topic | `multi_valued` for likes; `single_valued` for one attitude toward one object at a time | "favorite", or one stance on one object |
+| employers, jobs, memberships | `multi_valued` | never inferred from a single stated employer |
+| residence, location | `hierarchical` | never: finer and coarser places coexist |
+| a list of objects under one predicate | follows the predicate, never the list length | as for the predicate |
 
 ## 5. Temporal aspect (of the principal proposition)
 
@@ -120,5 +136,9 @@ These rules are in the evaluator, pinned by synthetic evaluator-only tests (`tes
 | unresolved references | implied | explicit: an asserted intention whose value is an unresolved reference is `ambiguous` |
 | supporting context | not defined; any second proposition could compete | episodic anecdotes, reasons, and background ownership do not compete with the principal proposition |
 | coordinated values | two values of one property were `ambiguous` | one predicate over a list is one proposition with a list value |
+| several propositions | could make a turn ambiguous | ambiguous only when no principal is uniquely determinable |
+| values inside a question or request | not addressed | not asserted; cannot resolve a reference |
+| duration in notes | "transient", "not durable" used as reasons | never a reason for a status |
+| cardinality (§4) | definitions only; ambiguous items' convention unwritten | explicit rule against inferring `single_valued` from one stated value, and a guidance table by property type |
 
-Nothing else changed. §2's fields, §4 cardinality, §5 aspect, and §7–§8's evaluator contract are unchanged. The evaluator still refuses non-accepted gold, and Phase B predictions are produced without a declared `observed_at`. The timestamp-leakage assertion therefore stays a guard against benchmark metadata entering proposition scoring.
+Nothing else changed. §2's fields, §4's class definitions, §5 aspect, and §7–§8's evaluator contract are unchanged. The evaluator still refuses non-accepted gold, and Phase B predictions are produced without a declared `observed_at`. The timestamp-leakage assertion therefore stays a guard against benchmark metadata entering proposition scoring.

@@ -182,14 +182,14 @@
   {
    "aspect_explicit": "no",
    "boundary_case": false,
-   "cardinality": "unknown",
+   "cardinality": "multi_valued",
    "change_marker": "no",
    "coexistence_marker": "no",
    "hedged": "no",
    "item_id": "ps1-010",
    "maintainer_ruling": null,
-   "notes": "general disposition; value vague",
-   "principal": null,
+   "notes": "asserted habitual worry ('I always worry') with a determinate object; the first sentence is a reaction. v1 'value vague' is withdrawn: the value is stated",
+   "principal": 0,
    "propositions": [
     {
      "entity": "user",
@@ -199,11 +199,11 @@
     }
    ],
    "self_authority_claim": "no",
-   "status": "ambiguous",
+   "status": "known",
    "temporal_aspect": "present",
    "temporal_language_non_temporal": "no",
    "text_sha256": "2150a449e8db9ca09a277b3b8600cb0a08ba81012537b3f13a150e8c455bd325",
-   "v2_change_reason": null
+   "v2_change_reason": "asserted_attitude_or_state_with_determinate_value"
   },
   {
    "aspect_explicit": "no",
@@ -607,7 +607,7 @@
    "hedged": "no",
    "item_id": "ps1-031",
    "maintainer_ruling": null,
-   "notes": "trip presupposed by 'my trip to'; 'feeling better now' is a transient mood, not durable",
+   "notes": "trip presupposed by 'my trip to' and targeted by the request; 'feeling much better now' is an asserted present state recorded as supporting context (v1 excluded it on duration grounds, a retention reason)",
    "principal": 0,
    "propositions": [
     {
@@ -615,6 +615,12 @@
      "polarity": "affirmed",
      "property": "upcoming trip destination",
      "value": "Osprey Reef"
+    },
+    {
+     "entity": "user",
+     "polarity": "affirmed",
+     "property": "mood",
+     "value": "feeling much better"
     }
    ],
    "self_authority_claim": "no",
@@ -622,7 +628,7 @@
    "temporal_aspect": "prospective",
    "temporal_language_non_temporal": "no",
    "text_sha256": "0df01317a7043f90bb307891ae1d84a82edde2b4dd53131e1aa23f401846330e",
-   "v2_change_reason": null
+   "v2_change_reason": "duration_rationale_removed"
   },
   {
    "aspect_explicit": "no",
@@ -646,13 +652,13 @@
   {
    "aspect_explicit": "no",
    "boundary_case": false,
-   "cardinality": "unknown",
+   "cardinality": "single_valued",
    "change_marker": "no",
    "coexistence_marker": "no",
    "hedged": "yes",
    "item_id": "ps1-033",
    "maintainer_ruling": null,
-   "notes": "debt aversion and learning-on-the-job are reasons supporting the stance",
+   "notes": "debt aversion and learning-on-the-job are reasons supporting the stance; one stance on one object holds at a time, so single_valued (rubric v2 §4 table)",
    "principal": 0,
    "propositions": [
     {
@@ -1253,13 +1259,13 @@
   {
    "aspect_explicit": "yes",
    "boundary_case": false,
-   "cardinality": "single_valued",
+   "cardinality": "multi_valued",
    "change_marker": "no",
    "coexistence_marker": "no",
    "hedged": "yes",
    "item_id": "ps1-055",
    "maintainer_ruling": null,
-   "notes": "short-lived explicit choice is a proposition",
+   "notes": "explicit hedged choice of a dessert wine; the choice slot is not exclusive (several wines can be served), so multi_valued",
    "principal": 0,
    "propositions": [
     {
@@ -1304,15 +1310,22 @@
    "hedged": "no",
    "item_id": "ps1-057",
    "maintainer_ruling": null,
-   "notes": "'for now' is discourse",
+   "notes": "an asserted state (a plan is in place) exists, but its value is not determinable from the turn; 'for now' is discourse",
    "principal": null,
-   "propositions": [],
+   "propositions": [
+    {
+     "entity": "user",
+     "polarity": "affirmed",
+     "property": "has a plan to stay organized and motivated",
+     "value": "a good plan (unspecified)"
+    }
+   ],
    "self_authority_claim": "no",
-   "status": "unknown",
-   "temporal_aspect": "none_unknown",
+   "status": "ambiguous",
+   "temporal_aspect": "present",
    "temporal_language_non_temporal": "yes",
    "text_sha256": "32c0615b8017fd6914626e19055a5a58c99821e4ce6f5dde97b184a5fb810cf6",
-   "v2_change_reason": null
+   "v2_change_reason": "asserted_proposition_with_unresolved_value"
   },
   {
    "aspect_explicit": "no",
@@ -1447,28 +1460,34 @@
   {
    "aspect_explicit": "no",
    "boundary_case": false,
-   "cardinality": "multi_valued",
+   "cardinality": "unknown",
    "change_marker": "no",
    "coexistence_marker": "no",
    "hedged": "yes",
    "item_id": "ps1-063",
    "maintainer_ruling": null,
-   "notes": "trip implied by booking a ticket and a Seattle hotel",
-   "principal": 0,
+   "notes": "the plan's value 'the ticket' is unresolved in the isolated turn; Seattle appears only inside a request, so the trip destination is inferred, not asserted",
+   "principal": null,
    "propositions": [
     {
      "entity": "user",
      "polarity": "affirmed",
-     "property": "planned trip destination",
+     "property": "plans to book",
+     "value": "the ticket (unresolved)"
+    },
+    {
+     "entity": "user",
+     "polarity": "affirmed",
+     "property": "needs a hotel in",
      "value": "Seattle"
     }
    ],
    "self_authority_claim": "no",
-   "status": "known",
+   "status": "ambiguous",
    "temporal_aspect": "prospective",
    "temporal_language_non_temporal": "no",
    "text_sha256": "52bda3a9216ceba9388aa8573d277f14c9f676b812ece681a040434365cbdaf1",
-   "v2_change_reason": null
+   "v2_change_reason": "unresolved_reference_is_not_known"
   },
   {
    "aspect_explicit": "yes",
@@ -1719,34 +1738,34 @@
   {
    "aspect_explicit": "no",
    "boundary_case": false,
-   "cardinality": "unknown",
+   "cardinality": "multi_valued",
    "change_marker": "no",
    "coexistence_marker": "yes",
    "hedged": "yes",
    "item_id": "ps1-074",
    "maintainer_ruling": null,
-   "notes": "transient work-task plans",
-   "principal": null,
+   "notes": "one coherent, hedged work plan ('I think I'll start by ... I'll also ...'), as in the ps1-180 ruling; the second step is part of the same plan, not a competing proposition. The v1 note rested on duration, a retention reason, and is withdrawn",
+   "principal": 0,
    "propositions": [
     {
      "entity": "user",
      "polarity": "affirmed",
-     "property": "plans",
-     "value": "identify business problems and define goals"
+     "property": "plans for the data project",
+     "value": "start by identifying the business problems and defining goals and objectives"
     },
     {
      "entity": "user",
      "polarity": "affirmed",
-     "property": "plans",
+     "property": "plans for the data project",
      "value": "communicate findings to team and stakeholders"
     }
    ],
    "self_authority_claim": "no",
-   "status": "ambiguous",
+   "status": "known",
    "temporal_aspect": "prospective",
    "temporal_language_non_temporal": "no",
    "text_sha256": "600b128290cfd0b24b3c1612ca6af4e1fceb9cec52a5a6723ec6a73c69bba570",
-   "v2_change_reason": null
+   "v2_change_reason": "duration_rationale_removed"
   },
   {
    "aspect_explicit": "yes",
@@ -2326,15 +2345,28 @@
    "hedged": "no",
    "item_id": "ps1-096",
    "maintainer_ruling": null,
-   "notes": "request",
+   "notes": "an attitude and an intention are asserted, but 'these ideas' is unresolved in the isolated turn",
    "principal": null,
-   "propositions": [],
+   "propositions": [
+    {
+     "entity": "user",
+     "polarity": "affirmed",
+     "property": "likes",
+     "value": "these ideas (unresolved)"
+    },
+    {
+     "entity": "user",
+     "polarity": "affirmed",
+     "property": "intends to pursue",
+     "value": "one of these ideas (undecided, unresolved)"
+    }
+   ],
    "self_authority_claim": "no",
-   "status": "unknown",
-   "temporal_aspect": "none_unknown",
+   "status": "ambiguous",
+   "temporal_aspect": "present",
    "temporal_language_non_temporal": "no",
    "text_sha256": "a633aef783a0768ba2c4fc14da4e2ee3119c127917adc09864d5038349194358",
-   "v2_change_reason": null
+   "v2_change_reason": "asserted_proposition_with_unresolved_value"
   },
   {
    "aspect_explicit": "no",
@@ -2495,28 +2527,34 @@
   {
    "aspect_explicit": "no",
    "boundary_case": false,
-   "cardinality": "multi_valued",
+   "cardinality": "unknown",
    "change_marker": "no",
    "coexistence_marker": "no",
    "hedged": "no",
    "item_id": "ps1-103",
    "maintainer_ruling": null,
-   "notes": "destination inferred from the question about Orlando",
-   "principal": 0,
+   "notes": "'this dessert adventure' is unresolved in the isolated turn; Orlando appears only inside a question, so the destination is inferred, not asserted",
+   "principal": null,
    "propositions": [
     {
      "entity": "user",
      "polarity": "affirmed",
+     "property": "excited to take on",
+     "value": "this dessert adventure with family (unresolved)"
+    },
+    {
+     "entity": "user",
+     "polarity": "affirmed",
      "property": "upcoming trip destination",
-     "value": "Orlando (with family)"
+     "value": "Orlando"
     }
    ],
    "self_authority_claim": "no",
-   "status": "known",
+   "status": "ambiguous",
    "temporal_aspect": "prospective",
    "temporal_language_non_temporal": "no",
    "text_sha256": "ff9e78e2a5ddc7d4ec98d19c424c95d160d729a4b35fb8e48de0eb4770a1e012",
-   "v2_change_reason": null
+   "v2_change_reason": "unresolved_reference_is_not_known"
   },
   {
    "aspect_explicit": "no",
@@ -4409,13 +4447,13 @@
    "hedged": "yes",
    "item_id": "ps1-180",
    "maintainer_ruling": "CHANGE ambiguous -> known: carry-on / pack-light form one coherent travel strategy; 'I think I'll'",
-   "notes": "carry-on / pack-light form one coherent travel strategy; 'I think I'll'",
+   "notes": "carry-on / pack-light form one coherent travel strategy; 'I think I'll'; single_valued because the luggage mode for one trip is an exclusive slot (rubric v2 §4 table)",
    "principal": 0,
    "propositions": [
     {
      "entity": "user",
      "polarity": "affirmed",
-     "property": "travel plan",
+     "property": "luggage plan for this trip",
      "value": "carry-on only, packing light"
     }
    ],
@@ -4881,28 +4919,28 @@
   {
    "aspect_explicit": "no",
    "boundary_case": false,
-   "cardinality": "unknown",
+   "cardinality": "single_valued",
    "change_marker": "no",
    "coexistence_marker": "no",
-   "hedged": "no",
+   "hedged": "yes",
    "item_id": "ps1-200",
    "maintainer_ruling": null,
-   "notes": "attitude, not clearly durable",
-   "principal": null,
+   "notes": "asserted attitude with a determinate value, hedged ('it sounds like', 'I don't know if'); one attitude toward the gym holds at a time. The v1 note rested on duration, a retention reason, and is withdrawn",
+   "principal": 0,
    "propositions": [
     {
      "entity": "user",
      "polarity": "affirmed",
-     "property": "attitude toward the gym",
-     "value": "a hassle"
+     "property": "attitude toward going to the gym",
+     "value": "a hassle; unsure it is worth it"
     }
    ],
    "self_authority_claim": "no",
-   "status": "ambiguous",
+   "status": "known",
    "temporal_aspect": "present",
    "temporal_language_non_temporal": "no",
    "text_sha256": "861241762948530a7912371da685845f6ba713bcfeefcda4d0e96b650a40e60a",
-   "v2_change_reason": null
+   "v2_change_reason": "duration_rationale_removed"
   },
   {
    "aspect_explicit": "no",
@@ -6481,13 +6519,13 @@
   {
    "aspect_explicit": "yes",
    "boundary_case": false,
-   "cardinality": "single_valued",
+   "cardinality": "multi_valued",
    "change_marker": "no",
    "coexistence_marker": "no",
    "hedged": "yes",
    "item_id": "ps1-264",
    "maintainer_ruling": null,
-   "notes": "",
+   "notes": "hedged prospective plan; a person holds several plans at once, so the property 'plans' is multi_valued (v1 single_valued inferred from the one stated value)",
    "principal": 0,
    "propositions": [
     {
@@ -6502,7 +6540,7 @@
    "temporal_aspect": "prospective",
    "temporal_language_non_temporal": "no",
    "text_sha256": "219853f87fabe0ba5e06b80f0c91e1eadbfdece752793c0515ed4ac9b3813cf0",
-   "v2_change_reason": null
+   "v2_change_reason": "cardinality_by_semantic_meaning"
   },
   {
    "aspect_explicit": "no",
@@ -6545,13 +6583,13 @@
   {
    "aspect_explicit": "no",
    "boundary_case": true,
-   "cardinality": "single_valued",
+   "cardinality": "multi_valued",
    "change_marker": "no",
    "coexistence_marker": "no",
    "hedged": "no",
    "item_id": "ps1-267",
    "maintainer_ruling": "KEEP known: determinate active search constraint (hostel around $30-40/night); semantically representable though task-local",
-   "notes": "determinate active search constraint (hostel around $30-40/night); semantically representable though task-local",
+   "notes": "KEEP known per ruling: determinate active search constraint (hostel around $30-40/night); task-local nature concerns retention, not representability. Cardinality: a person can run several searches at once, and the price range is part of this search's value, so multi_valued (v1 single_valued)",
    "principal": 0,
    "propositions": [
     {
@@ -6566,7 +6604,7 @@
    "temporal_aspect": "present",
    "temporal_language_non_temporal": "no",
    "text_sha256": "ccd0c3c41cf4d6275ccd5eba3322ce1bfba9a8dfccee32fd58960a3711b4308e",
-   "v2_change_reason": null
+   "v2_change_reason": "cardinality_by_semantic_meaning"
   },
   {
    "aspect_explicit": "no",
@@ -6593,13 +6631,13 @@
   "source": "PR #595 issue comment 5869562771 (2026-09-28)"
  },
  "provenance": {
-  "annotator": "model-assisted draft revision in the #594 session from item text only; all 268 items re-reviewed under rubric v2",
+  "annotator": "model-assisted draft revision in the #594 session from item text only; all 268 items re-reviewed under rubric v2 (two passes: 799e44c, then a second pass for unresolved references, duration-based notes, and cardinality by semantic meaning)",
   "disclosure": "The drafting model had read proposition_semantics.py in earlier sessions (#550); labels follow the rubric's semantic definitions, not runtime rules, but that exposure cannot be ruled out as an influence. Independent maintainer review is therefore required before any use as gold.",
   "interpreter_output_consulted": false,
   "runtime_code_consulted_for_labels": false
  },
  "rubric": "annotation-rubric-v2.md (draft)",
- "rubric_sha256": "ac13697f6a1a301dee7c088cfbf88925636e28fd224e22e9050a8b7cf10c92a2",
+ "rubric_sha256": "e924bd5858c52c713735e33f2a71585fc390ea528b6e8f470214f1e5bc1d4dab",
  "sample_file_sha256": "b1957ca4ff95c3b8a227b8b75f74327911172305cf770c927d56091e7fedd8d3",
  "sample_id": "proposition-semantics-sample-v1",
  "status_labels": [
