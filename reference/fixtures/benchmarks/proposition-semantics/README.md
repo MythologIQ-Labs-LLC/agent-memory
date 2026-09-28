@@ -56,6 +56,7 @@ The Phase A activation counts ran the interpreter over the whole corpus only *af
 | `draft-annotations-v1.json` | v1 labels (kept unchanged), marked **DRAFT / MODEL-ASSISTED / NOT ACCEPTED GOLD / NOT SCORED** |
 | `annotation-rubric-v2.md` | rubric v2 as the second maintainer review read it (kept unchanged): interpretation is not retention policy; unresolved references; supporting context; coordinated values |
 | `draft-annotations-v2.json` | v2 labels as the second review read them (kept unchanged; the 15 rulings applied; pins v1) |
+| `draft-v1-to-v2-changes.json` | the original v1 → v2 manifest as the second review read it (`799e44c`, kept unchanged) |
 | `draft-v1-to-v2-change-manifest.json` | every v1 → v2 change: old/new status, principal, cardinality, aspect, reason, ruling class; grouped by transition, reason, ruling class, part, and stratum |
 | `annotation-rubric-v3.md` | rubric v3: v2 plus attitudes/states as propositions, the coordinated-list rule limited to one governing predicate, and the second-pass rules (§10 lists every difference from v2) |
 | `draft-annotations-v3.json` | all 268 items under rubric v3; same four draft labels; pins v2 by hash; per-item `v3_change_reason` |

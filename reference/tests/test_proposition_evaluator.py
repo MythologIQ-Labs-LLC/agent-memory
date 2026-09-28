@@ -204,6 +204,13 @@ class SampleIndependenceTests(unittest.TestCase):
         self.assertEqual(len(rulings), 15)
         self.assertEqual({i["item_id"] for i in rulings}, {i["item_id"] for i in v1["items"] if i["boundary_case"]})
 
+    def test_original_v1_to_v2_manifest_is_preserved_and_agrees(self) -> None:
+        original = json.loads((FIXTURES / "draft-v1-to-v2-changes.json").read_text(encoding="utf-8"))
+        generated = json.loads((FIXTURES / "draft-v1-to-v2-change-manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(original["v2"]["sha256"], generated["new"]["sha256"])
+        self.assertEqual({i["item_id"] for group in original["by_reason"].values() for i in group["items"]},
+                         {c["item_id"] for c in generated["changes"]})
+
     def test_v3_preserves_v2_and_its_change_manifest_is_complete(self) -> None:
         manifest = self.assertManifestComplete("v2", "v3")
         rereview = manifest["rereview_of_v1_to_v2_changes"]
