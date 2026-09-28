@@ -62,6 +62,10 @@ jobs:
       GOOGLE_API_KEY: ${{ secrets.AMB_GEMINI_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.AMB_OPENAI_API_KEY }}
       SUPERMEMORY_API_KEY: ${{ secrets.AMB_SUPERMEMORY_API_KEY }}
+      OMB_ANSWER_LLM: gemini
+      OMB_ANSWER_MODEL: gemini-2.5-flash-lite
+      OMB_JUDGE_LLM: gemini
+      OMB_JUDGE_MODEL: gemini-2.5-flash-lite
     steps:
       - name: Checkout Agent Memory
         uses: actions/checkout@v4
@@ -82,12 +86,36 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Require evaluation credential for AMB run lane
+      - name: Resolve credential posture
         shell: bash
         run: |
+          set -euo pipefail
+          mode='${{ inputs.mode }}'
+          memory='${{ inputs.memory }}'
+
+          if [ "$mode" = "retrieval" ] && { [ "$memory" = "agent-memory" ] || [ "$memory" = "bm25" ]; }; then
+            # Frozen AMB constructs its configured answer client even though RetrievalMode
+            # explicitly makes no LLM calls. Supply an inert value only to satisfy client
+            # construction; this value is never valid benchmark-generation authority.
+            if [ -z "${GEMINI_API_KEY}" ]; then
+              echo "GEMINI_API_KEY=retrieval-only-unused" >> "$GITHUB_ENV"
+              echo "GOOGLE_API_KEY=retrieval-only-unused" >> "$GITHUB_ENV"
+            fi
+            echo "Credential-free retrieval profile admitted for $memory."
+            exit 0
+          fi
+
           if [ -z "${GEMINI_API_KEY}" ]; then
-            echo "AMB_GEMINI_API_KEY is required for the frozen AMB run surface." >&2
+            echo "AMB_GEMINI_API_KEY is required for LLM-judged lanes and provider paths that use Gemini." >&2
             echo "Missing credential is BLOCKED, never a numeric benchmark result." >&2
+            exit 2
+          fi
+          if [ "$memory" = "cognee" ] && [ -z "${OPENAI_API_KEY}" ]; then
+            echo "AMB_OPENAI_API_KEY is required for the frozen Cognee provider." >&2
+            exit 2
+          fi
+          if [ "$memory" = "supermemory" ] && [ -z "${SUPERMEMORY_API_KEY}" ]; then
+            echo "AMB_SUPERMEMORY_API_KEY is required for the Supermemory provider." >&2
             exit 2
           fi
 
@@ -124,6 +152,7 @@ jobs:
         if: always()
         shell: bash
         run: |
+          mkdir -p "$RUNNER_TEMP/amb-output"
           cat > "$RUNNER_TEMP/amb-output/agent-memory-execution-identity.json" <<EOF
           {
             "evidence_class": "same_harness_external_candidate",
@@ -134,6 +163,8 @@ jobs:
             "memory": "${{ inputs.memory }}",
             "mode": "${{ inputs.mode }}",
             "query_limit": "${{ inputs.query_limit }}",
+            "answer_model": "${{ inputs.mode == 'retrieval' && 'none' || 'gemini:gemini-2.5-flash-lite' }}",
+            "judge_model": "${{ inputs.mode == 'retrieval' && 'none' || 'gemini:gemini-2.5-flash-lite' }}",
             "workflow_run_id": "${GITHUB_RUN_ID}",
             "authority_effect": "none"
           }
