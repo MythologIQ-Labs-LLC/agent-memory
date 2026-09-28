@@ -125,8 +125,9 @@ class EvaluatorContractTests(unittest.TestCase):
 
 class GoldFreezeTests(unittest.TestCase):
     def test_draft_annotations_are_refused(self) -> None:
-        with self.assertRaises(E.GoldNotAccepted):
-            E.load_gold(FIXTURES / "draft-annotations-v1.json")
+        for name in ("draft-annotations-v1.json", "draft-annotations-v2.json"):
+            with self.assertRaises(E.GoldNotAccepted):
+                E.load_gold(FIXTURES / name)
 
     def test_only_explicitly_accepted_gold_loads(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -162,13 +163,32 @@ class SampleIndependenceTests(unittest.TestCase):
         self.assertFalse(manifest["selection"]["gold_fields_used"])
 
     def test_draft_annotations_cover_the_sample_and_stay_marked_draft(self) -> None:
-        draft = json.loads((FIXTURES / "draft-annotations-v1.json").read_text(encoding="utf-8"))
         sample = json.loads((FIXTURES / "sample-v1.json").read_text(encoding="utf-8"))
-        self.assertEqual(set(draft["status_labels"]), {"DRAFT", "MODEL-ASSISTED", "NOT ACCEPTED GOLD", "NOT SCORED"})
-        self.assertFalse(draft["provenance"]["interpreter_output_consulted"])
-        self.assertEqual([i["item_id"] for i in draft["items"]], [i["item_id"] for i in sample["items"]])
-        self.assertEqual([i["text_sha256"] for i in draft["items"]], [i["text_sha256"] for i in sample["items"]])
-        self.assertEqual(draft["sample_file_sha256"], hashlib.sha256((FIXTURES / "sample-v1.json").read_bytes()).hexdigest())
+        for name, rubric in (("draft-annotations-v1.json", "annotation-rubric.md"), ("draft-annotations-v2.json", "annotation-rubric-v2.md")):
+            draft = json.loads((FIXTURES / name).read_text(encoding="utf-8"))
+            self.assertEqual(set(draft["status_labels"]), {"DRAFT", "MODEL-ASSISTED", "NOT ACCEPTED GOLD", "NOT SCORED"})
+            self.assertFalse(draft["provenance"]["interpreter_output_consulted"])
+            self.assertEqual([i["item_id"] for i in draft["items"]], [i["item_id"] for i in sample["items"]])
+            self.assertEqual([i["text_sha256"] for i in draft["items"]], [i["text_sha256"] for i in sample["items"]])
+            self.assertEqual(draft["sample_file_sha256"], hashlib.sha256((FIXTURES / "sample-v1.json").read_bytes()).hexdigest())
+            self.assertEqual(draft["rubric_sha256"], hashlib.sha256((FIXTURES / rubric).read_bytes()).hexdigest())
+
+    def test_v2_preserves_v1_and_its_change_manifest_is_complete(self) -> None:
+        v1_bytes = (FIXTURES / "draft-annotations-v1.json").read_bytes()
+        v1 = json.loads(v1_bytes)
+        v2 = json.loads((FIXTURES / "draft-annotations-v2.json").read_text(encoding="utf-8"))
+        manifest = json.loads((FIXTURES / "draft-v1-to-v2-changes.json").read_text(encoding="utf-8"))
+        self.assertEqual(v2["supersedes"]["sha256"], hashlib.sha256(v1_bytes).hexdigest())
+        self.assertEqual(manifest["v2"]["sha256"], hashlib.sha256((FIXTURES / "draft-annotations-v2.json").read_bytes()).hexdigest())
+        label_fields = ("status", "propositions", "principal", "cardinality", "temporal_aspect", "aspect_explicit",
+                        "change_marker", "coexistence_marker", "hedged", "self_authority_claim", "temporal_language_non_temporal")
+        changed = {a["item_id"] for a, b in zip(v1["items"], v2["items"]) if any(a[f] != b[f] for f in label_fields)}
+        listed = {c["item_id"] for group in manifest["by_reason"].values() for c in group["items"]}
+        self.assertEqual(changed, listed)
+        self.assertEqual(manifest["items_changed"], len(changed))
+        rulings = [i for i in v2["items"] if i["maintainer_ruling"]]
+        self.assertEqual(len(rulings), 15)
+        self.assertEqual({i["item_id"] for i in rulings}, {i["item_id"] for i in v1["items"] if i["boundary_case"]})
 
 
 if __name__ == "__main__":

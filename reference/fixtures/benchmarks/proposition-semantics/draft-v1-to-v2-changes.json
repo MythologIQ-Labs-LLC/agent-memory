@@ -1,0 +1,1070 @@
+{
+ "by_reason": {
+  "asserted_attitude_or_state_with_determinate_value": {
+   "count": 6,
+   "items": [
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-143",
+     "reason": "asserted_attitude_or_state_with_determinate_value",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-157",
+     "reason": "asserted_attitude_or_state_with_determinate_value",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-162",
+     "reason": "asserted_attitude_or_state_with_determinate_value",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-163",
+     "reason": "asserted_attitude_or_state_with_determinate_value",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-201",
+     "reason": "asserted_attitude_or_state_with_determinate_value",
+     "status_v1": "unknown",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "principal",
+      "cardinality"
+     ],
+     "item_id": "ps1-258",
+     "reason": "asserted_attitude_or_state_with_determinate_value",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    }
+   ],
+   "transitions": {
+    "ambiguous->known": 5,
+    "unknown->known": 1
+   }
+  },
+  "coordinated_value_list_is_one_proposition": {
+   "count": 10,
+   "items": [
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-038",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-064",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-066",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-068",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-160",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-170",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-174",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-179",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "aspect_explicit",
+      "hedged"
+     ],
+     "item_id": "ps1-226",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-252",
+     "reason": "coordinated_value_list_is_one_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    }
+   ],
+   "transitions": {
+    "ambiguous->known": 10
+   }
+  },
+  "determinate_value_on_a_different_property": {
+   "count": 1,
+   "items": [
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality"
+     ],
+     "item_id": "ps1-151",
+     "reason": "determinate_value_on_a_different_property",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    }
+   ],
+   "transitions": {
+    "ambiguous->known": 1
+   }
+  },
+  "maintainer_boundary_ruling": {
+   "count": 11,
+   "items": [
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect",
+      "aspect_explicit",
+      "hedged"
+     ],
+     "item_id": "ps1-087",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "unknown",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect",
+      "aspect_explicit",
+      "hedged"
+     ],
+     "item_id": "ps1-098",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "unknown",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-134",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "unknown",
+     "status_v2": "ambiguous"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-158",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "unknown",
+     "status_v2": "ambiguous"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect",
+      "aspect_explicit",
+      "hedged"
+     ],
+     "item_id": "ps1-166",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "unknown",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-180",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality"
+     ],
+     "item_id": "ps1-181",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-197",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-205",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "unknown",
+     "status_v2": "ambiguous"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-218",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "unknown",
+     "status_v2": "ambiguous"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "temporal_aspect",
+      "aspect_explicit",
+      "hedged"
+     ],
+     "item_id": "ps1-257",
+     "reason": "maintainer_boundary_ruling",
+     "status_v1": "unknown",
+     "status_v2": "ambiguous"
+    }
+   ],
+   "transitions": {
+    "ambiguous->known": 3,
+    "unknown->ambiguous": 5,
+    "unknown->known": 3
+   }
+  },
+  "principal_with_supporting_context": {
+   "count": 42,
+   "items": [
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-033",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-040",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality"
+     ],
+     "item_id": "ps1-041",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "hedged"
+     ],
+     "item_id": "ps1-042",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-044",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-048",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-049",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-053",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-054",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-065",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-078",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-082",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-085",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-090",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-094",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-099",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-100",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-110",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-112",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-113",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-122",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-123",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-136",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "hedged"
+     ],
+     "item_id": "ps1-137",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-138",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "hedged"
+     ],
+     "item_id": "ps1-139",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-140",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-141",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-152",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "hedged"
+     ],
+     "item_id": "ps1-153",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-164",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-167",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-182",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-195",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-196",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-206",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality"
+     ],
+     "item_id": "ps1-208",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-220",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "temporal_aspect",
+      "hedged"
+     ],
+     "item_id": "ps1-222",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "hedged"
+     ],
+     "item_id": "ps1-223",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-240",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-251",
+     "reason": "principal_with_supporting_context",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    }
+   ],
+   "transitions": {
+    "ambiguous->known": 42
+   }
+  },
+  "reference_resolvable_within_the_turn": {
+   "count": 1,
+   "items": [
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal"
+     ],
+     "item_id": "ps1-221",
+     "reason": "reference_resolvable_within_the_turn",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    }
+   ],
+   "transitions": {
+    "ambiguous->known": 1
+   }
+  },
+  "search_constraint_or_goal_is_a_proposition": {
+   "count": 2,
+   "items": [
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect"
+     ],
+     "item_id": "ps1-072",
+     "reason": "search_constraint_or_goal_is_a_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality"
+     ],
+     "item_id": "ps1-097",
+     "reason": "search_constraint_or_goal_is_a_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    }
+   ],
+   "transitions": {
+    "ambiguous->known": 2
+   }
+  },
+  "short_lived_plan_or_choice_is_a_proposition": {
+   "count": 4,
+   "items": [
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "temporal_aspect",
+      "aspect_explicit",
+      "hedged"
+     ],
+     "item_id": "ps1-055",
+     "reason": "short_lived_plan_or_choice_is_a_proposition",
+     "status_v1": "unknown",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-061",
+     "reason": "short_lived_plan_or_choice_is_a_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality",
+      "aspect_explicit"
+     ],
+     "item_id": "ps1-165",
+     "reason": "short_lived_plan_or_choice_is_a_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    },
+    {
+     "fields_changed": [
+      "status",
+      "propositions",
+      "principal",
+      "cardinality"
+     ],
+     "item_id": "ps1-168",
+     "reason": "short_lived_plan_or_choice_is_a_proposition",
+     "status_v1": "ambiguous",
+     "status_v2": "known"
+    }
+   ],
+   "transitions": {
+    "ambiguous->known": 3,
+    "unknown->known": 1
+   }
+  }
+ },
+ "interpreter_output_consulted": false,
+ "items_changed": 77,
+ "items_reviewed": 268,
+ "items_unchanged": 191,
+ "maintainer_rulings": {
+  "change": [
+   "ps1-087",
+   "ps1-098",
+   "ps1-134",
+   "ps1-158",
+   "ps1-166",
+   "ps1-180",
+   "ps1-181",
+   "ps1-197",
+   "ps1-205",
+   "ps1-218",
+   "ps1-257"
+  ],
+  "keep": [
+   "ps1-006",
+   "ps1-051",
+   "ps1-150",
+   "ps1-267"
+  ],
+  "total": 15
+ },
+ "manifest": "proposition-semantics draft v1 -> draft v2 changes",
+ "status_counts": {
+  "v1": {
+   "ambiguous": 106,
+   "known": 64,
+   "unknown": 98
+  },
+  "v2": {
+   "ambiguous": 44,
+   "known": 136,
+   "unknown": 88
+  }
+ },
+ "status_labels": [
+  "DRAFT",
+  "MODEL-ASSISTED",
+  "NOT ACCEPTED GOLD",
+  "NOT SCORED"
+ ],
+ "status_transitions": {
+  "ambiguous->known": 67,
+  "unknown->ambiguous": 5,
+  "unknown->known": 5
+ },
+ "v1": {
+  "file": "draft-annotations-v1.json",
+  "rubric": "annotation-rubric.md",
+  "rubric_sha256": "47df0caf2413a0e65f9fe609181f162f54c2a6a857583a92e050ac89a33dff26",
+  "sha256": "5cba499b99c820c8b8462d2ae28197f690fe1c2b88a9d97a598f9398184295f4"
+ },
+ "v2": {
+  "file": "draft-annotations-v2.json",
+  "rubric": "annotation-rubric-v2.md",
+  "rubric_sha256": "ac13697f6a1a301dee7c088cfbf88925636e28fd224e22e9050a8b7cf10c92a2",
+  "sha256": "8f333b3800bb2ce7553ac5968c8b6978f5fe64662e2863b58fea16dc463f1b2d"
+ }
+}

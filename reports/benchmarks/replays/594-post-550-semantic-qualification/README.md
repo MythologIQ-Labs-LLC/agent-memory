@@ -4,6 +4,15 @@ This is evaluation only. There are no runtime semantic changes: ranking policy 3
 
 ## Phase A: source-anchored LongMemEval_S
 
+**Maintainer ruling (2026-09-28, PR #595).** Phase A is accepted as valid evidence:
+
+* C is the canonical profile;
+* P1 is ADAPTED EXTERNAL EVIDENCE;
+* P2 is an APPROVED SEPARATE MECHANISM DIAGNOSTIC;
+* the complete null result is accepted, and demotion efficacy on external data is an EVIDENCE GAP, not a failure.
+
+The latest-gold-first endogeneity caveat and the pre-registered future-dated subgroup stay as written. Neither profile is changed or filtered after the result. LongMemEval_M remains unwarranted.
+
 **Classification: ADAPTED EXTERNAL EVIDENCE.** It is not the upstream LongMemEval score and not independent validation of doctrine. The canonical profile is kept intact and reproduced.
 
 * **Outcome: NO EFFECT.** 0 changed rows on either plane, fully attributed, with 0 unexplained differences.
@@ -51,7 +60,7 @@ It defines three profiles:
 | --- | --- |
 | **C** | nothing (canonical) |
 | **P1** (primary) | `observed_at` = session date, and nothing else |
-| **P2** (diagnostic, separately labelled) | P1 + recall `reference_time` = `question_date` |
+| **P2** (approved separate mechanism diagnostic) | P1 + recall `reference_time` = `question_date` |
 
 P2 exists because P1 cannot exercise interpreted demotion at all. The runtime has no default reference instant, so every interpreted window is labelled `no_reference_time`.
 

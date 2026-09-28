@@ -1,6 +1,6 @@
 # Proposition-semantics qualification corpus (#594 Phase B)
 
-Status: **pre-gold package, awaiting maintainer review.** Nothing in this directory is benchmark gold. No interpreter score exists or may be computed from these files.
+Status: **pre-gold package, draft v2, awaiting a second maintainer sample review.** Nothing in this directory is benchmark gold. No interpreter score exists or may be computed from these files. The interpreter has still not been run on any sampled item.
 
 ## Why this exists
 
@@ -25,7 +25,9 @@ source corpus
   -> frozen sample manifest               sample-v1.json, sample-v1.manifest.json
   -> annotation rubric                    annotation-rubric.md        (committed 1a4d012, before any label)
   -> draft human-readable annotations     draft-annotations-v1.json   (committed 6fc1114)
-  -> STOP FOR MAINTAINER REVIEW           <- this package stops here
+  -> maintainer review 1                  PR #595 ruling: interpretation != retention; 15 boundary rulings
+  -> rubric v2 + draft v2 + change manifest annotation-rubric-v2.md, draft-annotations-v2.json, draft-v1-to-v2-changes.json
+  -> STOP FOR SECOND MAINTAINER REVIEW    <- this package stops here
   -> accepted gold later                  a new, separately versioned file with an acceptance record
   -> only then interpreter scoring        proposition_semantics_evaluator.py (refuses non-accepted gold)
 ```
@@ -48,8 +50,11 @@ The Phase A activation counts ran the interpreter over the whole corpus only *af
 | `select_sample.py` | deterministic selector; imports nothing from Agent Memory and reads no gold field |
 | `sample-v1.json` | 268 frozen items: `item_id`, `part`, `stratum`, `origin`, `surface_cues`, `text_sha256`, `text` |
 | `sample-v1.manifest.json` | source identity, algorithm, seed, eligibility, strata, cell counts, population counts, hashes |
-| `annotation-rubric.md` | semantic label definitions, written independently of the runtime grammar |
-| `draft-annotations-v1.json` | labels marked **DRAFT / MODEL-ASSISTED / NOT ACCEPTED GOLD / NOT SCORED** |
+| `annotation-rubric.md` | rubric v1: semantic label definitions, written independently of the runtime grammar (kept unchanged) |
+| `draft-annotations-v1.json` | v1 labels (kept unchanged), marked **DRAFT / MODEL-ASSISTED / NOT ACCEPTED GOLD / NOT SCORED** |
+| `annotation-rubric-v2.md` | rubric v2: interpretation is not retention policy; unresolved references; supporting context; coordinated values (§9 lists every difference from v1) |
+| `draft-annotations-v2.json` | all 268 items re-reviewed under rubric v2, with the 15 maintainer rulings applied; same four draft labels; pins the v1 file by hash |
+| `draft-v1-to-v2-changes.json` | every changed item, grouped by reason and by status transition |
 
 ## Sample
 
@@ -108,7 +113,36 @@ Across all 268 items:
 | self-authority | 2, both self-corrections ("I meant to say…") |
 | temporal language used non-temporally | 13 |
 
-### Items the maintainer should adjudicate first
+### Draft v2 (current)
+
+Rubric v2 applies the maintainer ruling that semantic interpretation must not decide retention worthiness. A short-term plan, choice, search constraint, or state is a proposition whenever its entity, property, and value are determinable from the turn alone. All 268 items were re-reviewed, and the interpreter was not consulted.
+
+| | v1 | v2 | v2 Part R | v2 Part S |
+| --- | ---: | ---: | ---: | ---: |
+| known | 64 | 136 | 50 | 86 |
+| ambiguous | 106 | 44 | 15 | 29 |
+| unknown | 98 | 88 | 35 | 53 |
+
+77 items changed (`draft-v1-to-v2-changes.json`):
+
+| reason | items | transitions |
+| --- | ---: | --- |
+| maintainer boundary ruling (plus 4 confirmed unchanged) | 11 | 3 unknown→known, 3 ambiguous→known, 5 unknown→ambiguous |
+| principal proposition with supporting context | 42 | ambiguous→known |
+| coordinated value list is one proposition | 10 | ambiguous→known |
+| asserted attitude or state with a determinate value | 6 | 5 ambiguous→known, 1 unknown→known |
+| short-lived plan or choice is a proposition | 4 | 3 ambiguous→known, 1 unknown→known |
+| search constraint or goal is a proposition | 2 | ambiguous→known |
+| determinate value on a different property | 1 | ambiguous→known |
+| reference resolvable within the turn | 1 | ambiguous→known |
+
+### What the second review should sample first
+
+* **"Principal with supporting context" (42 items).** This is the largest source of change and my own generalization of the rulings on ps1-166, 180, 181, and 197: episodic anecdotes, reasons, and background ownership do not compete with the plan, goal, or state that the turn is about. The line between a *supporting* second proposition and a *competing* one remains the least certain call. The items kept `ambiguous` under the competing reading include ps1-014, 035, 039, 045, 047, 050, 074, 086, 095, 124, 125, 128, 131, 154, 156, 169, 178, 203, 207, 209, 234, 237, 239, and 250.
+* **Coordinated values (10 items)** such as "UF and ASU" or "a PS5 or an Xbox Series X" are now one proposition with a list value. ps1-252 is an undecided choice between two named values; it is labelled `known` under this rule, but it could equally be read as competing.
+* **Attitudes as propositions (6 items):** ps1-143, 157, 162, 163, 201, 258.
+
+### Items adjudicated in review 1 (v1 text kept for the record)
 
 * **15 `boundary_case` items.** These are momentary intentions or choices ("I'll try the Moscato", "I'm thinking of packing…") versus lasting plans. The rubric's "durable or lasting state" line is least certain here, and the drafts are not fully consistent across that line.
 * **Residence or job changes with no value.** For example, "I moved into my new apartment a month ago". These are drafted `ambiguous` because the value (a location or employer) is missing.

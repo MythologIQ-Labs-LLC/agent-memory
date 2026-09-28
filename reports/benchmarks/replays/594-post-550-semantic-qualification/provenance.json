@@ -11,13 +11,15 @@
  },
  "evidence_classification": {
   "phase_A": "ADAPTED EXTERNAL EVIDENCE (not the upstream LongMemEval score; not independent validation of doctrine; canonical LongMemEval_S kept intact)",
+  "phase_A_P2": "APPROVED SEPARATE MECHANISM DIAGNOSTIC (maintainer ruling, PR #595, 2026-09-28)",
   "phase_A_efficacy_for_550_self_validity_demotion": "EVIDENCE GAP: the natural corpus offers 0 rows where a resolved interpreted window could demote under an ordering query",
+  "phase_A_maintainer_ruling": "accepted as valid evidence; null result accepted; demotion efficacy on external data = EVIDENCE GAP, not failure; LongMemEval_M unwarranted",
   "phase_A_outcome": "NO EFFECT: 0 changed rows on either plane in P1 or P2; fully attributed, 0 unexplained",
-  "phase_B": "pre-gold package; draft annotations are DRAFT / MODEL-ASSISTED / NOT ACCEPTED GOLD / NOT SCORED"
+  "phase_B": "pre-gold package, draft v2 (rubric v2 + 15 boundary rulings + full re-review); DRAFT / MODEL-ASSISTED / NOT ACCEPTED GOLD / NOT SCORED; awaiting second maintainer sample review"
  },
  "execution_note": "C, P1, P2 and the activation count ran concurrently on 4 cores; wall times are not comparable and no timing claim is made",
  "files_sha256": {
-  "README.md": "0e1ef9dac7be5613a700a40986d0d52c19764272fd5957453db4a44acc6b8932",
+  "README.md": "dfaa15e58089e93a1cc063a091ced89be14a178ae8f6ee6656f02369d547d907",
   "compare_profiles.py": "935bd1fd480beef3da2c51182533391c4c024541e13e9660798c4efaf584d3a1",
   "comparisons/compare-canonical-vs-P1.json": "7a560c2f79a1ba7bc4c1b92f7e93239446f32c7eb826c61b73dc9dae7f1fd7ed",
   "comparisons/compare-canonical-vs-P2.json": "7523575563ccfb107a397b7d8793fb54e81c909591e1d91857a16fcf23cba5c1",
