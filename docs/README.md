@@ -8,23 +8,26 @@ This directory is the canonical documentation map for Agent Memory as it exists 
 
 Start with [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md) if you are unsure which role a document, issue, or contribution belongs to.
 
+For the current RC/evidence boundary after #591/#594, start with [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) and the canonical dashboard at [`../reports/benchmarks/dashboard/current.md`](../reports/benchmarks/dashboard/current.md).
+
 ## Choose your path
 
 | Goal | Start here | Continue with |
 |---|---|---|
 | Use Agent Memory as a local runtime | [`47-developer-facade-and-local-open-path.md`](47-developer-facade-and-local-open-path.md) | [`45-agent-memory-rc1-implementation-profile.md`](45-agent-memory-rc1-implementation-profile.md), [`46-state-checkpoint-contract.md`](46-state-checkpoint-contract.md), [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md) |
 | Understand the architecture | [`01-layer-model.md`](01-layer-model.md) | `11`, `13`, `18`, `22`, `24`, `42`, ADR index |
-| Understand lifecycle/currentness | [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md) | [`03-scoring-and-decay.md`](03-scoring-and-decay.md), [`18-temporal-causality-layer.md`](18-temporal-causality-layer.md), [`21-forgetting-consolidation-and-memory-metabolism.md`](21-forgetting-consolidation-and-memory-metabolism.md) |
+| Understand current RC/governance state | [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) | issue #410, current benchmark dashboard |
+| Understand lifecycle/currentness | [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md) | [`18-temporal-causality-layer.md`](18-temporal-causality-layer.md), [`60-temporal-currentness-qualification-gauntlet.md`](60-temporal-currentness-qualification-gauntlet.md), [`61-write-time-proposition-semantics.md`](61-write-time-proposition-semantics.md) |
 | Understand governance / PAMA | [`pama/README.md`](pama/README.md) | `04`, `17`, `33`, `34`, [`../GOVERNANCE.md`](../GOVERNANCE.md) |
 | Evaluate / benchmark Agent Memory | [`../BENCHMARKS.md`](../BENCHMARKS.md) | [`53-memory-evaluation-subsystem.md`](53-memory-evaluation-subsystem.md), [`54-memory-evaluation-cli.md`](54-memory-evaluation-cli.md), [`55-memory-evaluation-scorecards.md`](55-memory-evaluation-scorecards.md) |
-| Review benchmark results | [`../reports/benchmarks/scorecards/scorecards.md`](../reports/benchmarks/scorecards/scorecards.md) | normalized manifests in `../reports/benchmarks/normalized/` |
+| Review current benchmark results | [`../reports/benchmarks/dashboard/current.md`](../reports/benchmarks/dashboard/current.md) | [`../reports/benchmarks/dashboard/current.json`](../reports/benchmarks/dashboard/current.json), #594 closeout |
 | Contribute code or evidence | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md), [`../GOVERNANCE.md`](../GOVERNANCE.md) |
 | Review source rights / intellectual lineage | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) |
 | Review security/privacy | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41`, [`../SECURITY.md`](../SECURITY.md) |
 
 ## Repository operating model
 
-Agent Memory now has three first-class roles:
+Agent Memory has three first-class roles:
 
 ```text
 product / runtime
@@ -32,7 +35,7 @@ architecture / governance laboratory
 evaluation / benchmark laboratory
 ```
 
-The roles are deliberately connected but authority-separated.
+The roles are connected but authority-separated.
 
 - Product execution makes architecture falsifiable.
 - Architecture gives product behavior principled boundaries.
@@ -43,8 +46,6 @@ Full guidance: [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md).
 
 ## Product and RC documentation
 
-The repository has moved beyond a theory-only reference implementation.
-
 | Document | Purpose |
 |---|---|
 | [`43-substrate-inventory-and-maturity.md`](43-substrate-inventory-and-maturity.md) | Substrate inventory, qualification and maturity boundaries |
@@ -53,92 +54,67 @@ The repository has moved beyond a theory-only reference implementation.
 | [`46-state-checkpoint-contract.md`](46-state-checkpoint-contract.md) | Restart, integrity, checkpoint and recovery contract |
 | [`47-developer-facade-and-local-open-path.md`](47-developer-facade-and-local-open-path.md) | Installed `AgentMemory` developer facade and local qualified open path |
 | [`48-rc-cognitive-memory-lifecycle-evidence.md`](48-rc-cognitive-memory-lifecycle-evidence.md) | End-to-end cognitive-memory lifecycle evidence |
-| [`49-rc1-evidence-closeout.md`](49-rc1-evidence-closeout.md) | RC evidence closeout and claim boundaries |
-| [`58-historical-evidence-admission.md`](58-historical-evidence-admission.md) | Current-state vs explicit historical-evidence admission for governed state changes |
+| [`49-rc1-evidence-closeout.md`](49-rc1-evidence-closeout.md) | Earlier RC evidence closeout and claim boundaries |
+| [`58-historical-evidence-admission.md`](58-historical-evidence-admission.md) | Current-state vs explicit historical-evidence admission |
+| [`61-write-time-proposition-semantics.md`](61-write-time-proposition-semantics.md) | Current #550 semantics contract plus #591/#594 qualification results |
+| [`63-post-550-architecture-reconciliation.md`](63-post-550-architecture-reconciliation.md) | Post-#550 architecture reconciliation |
+| [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) | Canonical current RC dependency/governance state after #594 |
 
-A working runtime is not the same thing as production 1.0. The qualified persistence posture remains deliberately bounded, especially around single-host SQLite versus distributed deployment.
+A working runtime is not production 1.0. The qualified persistence posture remains deliberately bounded, especially around single-host SQLite versus distributed deployment.
 
 ## Evaluation and benchmark documentation
 
-Evaluation is a first-class subsystem rather than a collection of one-off scripts.
-
 | Document | Purpose |
 |---|---|
-| [`../BENCHMARKS.md`](../BENCHMARKS.md) | Human entry point to the benchmark portfolio and gauntlet-learning rules |
+| [`../BENCHMARKS.md`](../BENCHMARKS.md) | Current benchmark portfolio, evidence classes and learning-loop rules |
 | [`50-swe-contextbench-comparison-harness.md`](50-swe-contextbench-comparison-harness.md) | SWE-ContextBench comparison harness and comparability boundary |
-| [`53-memory-evaluation-subsystem.md`](53-memory-evaluation-subsystem.md) | Benchmark-neutral evaluation architecture and runtime/evaluation separation |
+| [`53-memory-evaluation-subsystem.md`](53-memory-evaluation-subsystem.md) | Benchmark-neutral evaluation architecture |
 | [`54-memory-evaluation-cli.md`](54-memory-evaluation-cli.md) | Benchmark registry, validation and comparison CLI |
-| [`55-memory-evaluation-scorecards.md`](55-memory-evaluation-scorecards.md) | Deterministic normalized scorecards and portfolio reporting |
-| [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md) | How benchmark evidence can drive product or architecture changes without becoming authority |
-| [`56-benchmark-gauntlet-remediation-evidence.md`](56-benchmark-gauntlet-remediation-evidence.md) | Before/after replay evidence for each benchmark-driven remediation slice (#537) |
-| [`57-query-conditioned-applicability.md`](57-query-conditioned-applicability.md) | Query-conditioned applicability reference profile and its gauntlet evidence (ADR-039, Proposed) |
-| [`59-orthogonal-temporal-gauntlet-qualification.md`](59-orthogonal-temporal-gauntlet-qualification.md) | Qualification of temporal gauntlets able to falsify ADR-039's claims |
-| [`60-temporal-currentness-qualification-gauntlet.md`](60-temporal-currentness-qualification-gauntlet.md) | Repository-owned temporal/currentness gauntlet and the frozen pre-#550 baseline (#580) |
-| [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md) | Lessons learned from the temporal/currentness arc: evidence discipline, what replays overturned, and hygiene failures |
+| [`55-memory-evaluation-scorecards.md`](55-memory-evaluation-scorecards.md) | Historical deterministic normalized scorecard machinery |
+| [`56-benchmark-gauntlet-remediation-evidence.md`](56-benchmark-gauntlet-remediation-evidence.md) | Before/after replay evidence for benchmark-driven remediation |
+| [`57-query-conditioned-applicability.md`](57-query-conditioned-applicability.md) | Query-conditioned applicability reference profile (ADR-039 Proposed) |
+| [`59-orthogonal-temporal-gauntlet-qualification.md`](59-orthogonal-temporal-gauntlet-qualification.md) | Which temporal gauntlets can/cannot falsify ADR-039 claims |
+| [`60-temporal-currentness-qualification-gauntlet.md`](60-temporal-currentness-qualification-gauntlet.md) | Frozen repository-owned temporal/currentness gauntlet |
+| [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md) | Lessons from the temporal/currentness arc |
+| [`64-current-governance-and-benchmark-dashboard.md`](64-current-governance-and-benchmark-dashboard.md) | Current dashboard interpretation and RC sequencing |
 
-Generated evidence:
+Current generated evidence:
 
+- `../reports/benchmarks/dashboard/current.md` is the canonical current human-readable portfolio;
+- `../reports/benchmarks/dashboard/current.json` is its machine-readable form;
 - `../reports/benchmarks/normalized/` contains common run manifests;
-- `../reports/benchmarks/scorecards/scorecards.md` is the human-readable portfolio;
-- `../reports/benchmarks/scorecards/scorecards.json` is the machine-readable portfolio;
+- `../reports/benchmarks/scorecards/` remains historical generated scorecard evidence;
 - benchmark-specific frozen evidence remains under `../reports/benchmarks/`.
 
 The repository intentionally does **not** define a universal memory-health score.
 
-## 00-10: Canonical architecture spine
+## Current semantic/temporal state
 
-| # | Document | Purpose |
-|---|---|---|
-| 00 | [`00-glossary.md`](00-glossary.md) | Canonical vocabulary and term boundaries |
-| 01 | [`01-layer-model.md`](01-layer-model.md) | Layer ownership, deterministic substrate, probabilistic epistemics, governance boundaries |
-| 02 | [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md) | Memory states, proposal-versus-commit, promotion, dispute, correction, pruning |
-| 03 | [`03-scoring-and-decay.md`](03-scoring-and-decay.md) | Saturation, decay, uncertainty, calibration, drift and threshold stability |
-| 04 | [`04-governance-and-pama.md`](04-governance-and-pama.md) | Native PAMA specialization and bounded consequence |
-| 05 | [`05-repo-implementation-map.md`](05-repo-implementation-map.md) | Implementation ancestry and ownership mapping |
-| 06 | [`06-conformance-test-plan.md`](06-conformance-test-plan.md) | Conformance levels and adversarial fixture requirements |
-| 07 | [`07-integration-roadmap.md`](07-integration-roadmap.md) | Doctrine-to-implementation roadmap |
-| 08 | [`08-source-material-index.md`](08-source-material-index.md) | Source provenance, rights posture and evidence domains |
-| 09 | [`09-calibration-protocol.md`](09-calibration-protocol.md) | Calibration, abstention, hysteresis, disagreement and drift |
-| 10 | [`10-memory-unit-examples.md`](10-memory-unit-examples.md) | Concrete memory, uncertainty, authority, receipt and scope examples |
+#550's deterministic write-time semantic carrier is implemented and policy 3.1.0 is active. #591 repaired candidate-materialization overhead without changing semantic/retrieval results. #594 is **QUALIFIED** with:
 
-## 11-19: Composition, trust, time and privacy
+- defensible adapted external evidence for source-anchored LongMemEval_S, but an explicit self-validity-demotion efficacy **EVIDENCE GAP**;
+- independently accepted 268-turn proposition-semantics gold;
+- first deterministic natural-data interpreter score;
+- follow-ons #596, #597 and #598.
 
-| # | Document | Purpose |
-|---|---|---|
-| 11 | [`11-component-architecture.md`](11-component-architecture.md) | Component boundaries and ownership |
-| 12 | [`12-concept-segmentation-matrix.md`](12-concept-segmentation-matrix.md) | Concept placement and doctrine-promotion criteria |
-| 13 | [`13-system-composition-boundaries.md`](13-system-composition-boundaries.md) | Typed handoffs and composition failure modes |
-| 14 | [`14-expanded-scope-recommendations.md`](14-expanded-scope-recommendations.md) | Controlled expansion candidates |
-| 15 | [`15-memory-threat-model.md`](15-memory-threat-model.md) | Poisoning, leakage, authority laundering and lifecycle attacks |
-| 16 | [`16-source-trust-and-reputation.md`](16-source-trust-and-reputation.md) | Source trust, independence and reputation scope |
-| 17 | [`17-conflict-resolution-engine.md`](17-conflict-resolution-engine.md) | Conflict interpretation and governed consequences |
-| 18 | [`18-temporal-causality-layer.md`](18-temporal-causality-layer.md) | Event time, valid time, supersession and causal uncertainty |
-| 19 | [`19-privacy-and-sensitivity-classifier.md`](19-privacy-and-sensitivity-classifier.md) | Sensitivity, privacy, minimization and deletion fidelity |
+#598 is now on the temporal dependency path before redesigned #583. #585 remains the separate query-side intent calibration. PR #587 / #583 stays DRAFT/HOLD. ADR-039 stays Proposed.
 
-## 20-25: Theory and governed uncertainty
+## Canonical architecture spine
 
-| # | Document | Purpose |
-|---|---|---|
-| 20 | [`20-memory-foundations-across-scales.md`](20-memory-foundations-across-scales.md) | Biological, cognitive, agentic and collective memory foundations |
-| 21 | [`21-forgetting-consolidation-and-memory-metabolism.md`](21-forgetting-consolidation-and-memory-metabolism.md) | Forgetting, consolidation, semanticization and metabolism |
-| 22 | [`22-agentic-memory-theory-and-development.md`](22-agentic-memory-theory-and-development.md) | Engineering doctrine and development sequence |
-| 23 | [`23-research-bibliography.md`](23-research-bibliography.md) | Evidence map across memory science and agent-memory research |
-| 24 | [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md) | Deterministic/probabilistic boundary and governed uncertainty |
-| 25 | [`25-governed-uncertainty-documentation-conformance-audit.md`](25-governed-uncertainty-documentation-conformance-audit.md) | Documentation-conformance rubric |
+The `00` through `42` series contains the canonical architecture and operational-contract corpus. Key starting points:
 
-## 26-42: Operational and executable contracts
-
-The `26` through `42` series turns the architecture into explicit operational contracts, including governed recall, schema evolution, deletion/tombstones, tenancy, observability, recovery, quality metrics, PAMA decision tables, adapter/interoperability contracts, policy-as-memory, budgets, correction UX, ownership, isolation domains, and the governed mutable memory fabric.
-
-Key entries:
-
+- [`00-glossary.md`](00-glossary.md)
+- [`01-layer-model.md`](01-layer-model.md)
+- [`02-lifecycle-state-machine.md`](02-lifecycle-state-machine.md)
+- [`04-governance-and-pama.md`](04-governance-and-pama.md)
+- [`05-repo-implementation-map.md`](05-repo-implementation-map.md)
+- [`13-system-composition-boundaries.md`](13-system-composition-boundaries.md)
+- [`15-memory-threat-model.md`](15-memory-threat-model.md)
+- [`18-temporal-causality-layer.md`](18-temporal-causality-layer.md)
+- [`21-forgetting-consolidation-and-memory-metabolism.md`](21-forgetting-consolidation-and-memory-metabolism.md)
+- [`24-determinism-probability-and-governed-uncertainty.md`](24-determinism-probability-and-governed-uncertainty.md)
 - [`26-governed-recall-planner.md`](26-governed-recall-planner.md)
-- [`28-retention-deletion-and-tombstones.md`](28-retention-deletion-and-tombstones.md)
-- [`29-actor-scope-consent-and-tenancy.md`](29-actor-scope-consent-and-tenancy.md)
-- [`31-recovery-rollback-and-replay.md`](31-recovery-rollback-and-replay.md)
-- [`32-memory-quality-metrics.md`](32-memory-quality-metrics.md)
 - [`33-pama-decision-table.md`](33-pama-decision-table.md)
-- [`39-implementation-ownership-map.md`](39-implementation-ownership-map.md)
 - [`41-memory-isolation-domains-and-governed-crossing.md`](41-memory-isolation-domains-and-governed-crossing.md)
 - [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md)
 
@@ -152,9 +128,7 @@ The ADR index is the canonical doctrine-status ledger. Implementation or benchma
 
 **Proportional Adaptive Mutation Authority (PAMA)** is native Agent Memory doctrine authored by **Kevin R. Knapp**.
 
-Start with [`pama/README.md`](pama/README.md), then use [`04-governance-and-pama.md`](04-governance-and-pama.md) and [`33-pama-decision-table.md`](33-pama-decision-table.md) for the Agent Memory specialization.
-
-Core separation:
+Start with [`pama/README.md`](pama/README.md), then use [`04-governance-and-pama.md`](04-governance-and-pama.md) and [`33-pama-decision-table.md`](33-pama-decision-table.md).
 
 ```text
 adaptation != authority
@@ -187,4 +161,4 @@ research / ancestry
 hypothesis
 ```
 
-Those labels exist to prevent maturity and authority from spreading by association. A benchmark result can challenge doctrine. A passing fixture can validate a contract. Neither one becomes something else merely because it is convenient to describe it that way.
+Those labels prevent maturity and authority from spreading by association. A benchmark result can challenge doctrine. A passing fixture can validate a contract. Neither becomes something else merely because it is convenient to describe it that way.
