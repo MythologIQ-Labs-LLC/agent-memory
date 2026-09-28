@@ -1,0 +1,22 @@
+{
+ "273722e": {
+  "candidates_per_search": null,
+  "fact_from_row": 305994,
+  "fact_from_row_per_search": 1020.0,
+  "json_raw_decode_calls": 612290,
+  "json_raw_decode_per_search": 2041.0,
+  "profiled_wall_s": 11.0,
+  "raw_decode_cpu_s": 1.576,
+  "searches": 300
+ },
+ "f76c441": {
+  "candidates_per_search": null,
+  "fact_from_row": 8991,
+  "fact_from_row_per_search": 30.0,
+  "json_raw_decode_calls": 18284,
+  "json_raw_decode_per_search": 60.9,
+  "profiled_wall_s": 4.54,
+  "raw_decode_cpu_s": 0.05,
+  "searches": 300
+ }
+}
