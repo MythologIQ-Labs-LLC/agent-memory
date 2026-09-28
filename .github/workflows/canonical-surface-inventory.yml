@@ -1,0 +1,51 @@
+name: Canonical Serialization Surface Inventory
+
+on:
+  pull_request:
+    paths:
+      - "reference/inventory_stable_json_surfaces.py"
+      - ".github/workflows/canonical-surface-inventory.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate canonical serialization candidate inventory
+        run: |
+          mkdir -p "$RUNNER_TEMP/canonical-surface-inventory"
+          python reference/inventory_stable_json_surfaces.py \
+            --repo-root . \
+            --output "$RUNNER_TEMP/canonical-surface-inventory/inventory.json"
+
+      - name: Summarize inventory
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          path = pathlib.Path(os.environ["RUNNER_TEMP"]) / "canonical-surface-inventory" / "inventory.json"
+          payload = json.loads(path.read_text())
+          print("candidate_count=", payload["candidate_count"])
+          print("risk_hint_counts=", json.dumps(payload["risk_hint_counts"], sort_keys=True))
+          print("candidate_rows_sha256=", payload["candidate_rows_sha256"])
+          print("parse_errors=", len(payload["parse_errors"]))
+          PY
+
+      - name: Upload inventory evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-surface-inventory-${{ github.sha }}
+          path: ${{ runner.temp }}/canonical-surface-inventory/inventory.json
+          if-no-files-found: error
+          retention-days: 30
