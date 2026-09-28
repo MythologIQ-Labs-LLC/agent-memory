@@ -1,0 +1,74 @@
+{
+  "manifest_id": "lme-s-source-anchor-v1",
+  "issue": "#594",
+  "status": "FROZEN before any Agent Memory score of an adapted profile was produced or inspected",
+  "evidence_classification": "ADAPTED EXTERNAL EVIDENCE (not the upstream LongMemEval score; not independent validation of Agent Memory doctrine; does not replace canonical LongMemEval_S)",
+  "runtime_base": "691251ca27f5e8e87a7c259c1a47a7050f32291b",
+  "source": {
+    "dataset": "xiaowu0162/longmemeval-cleaned",
+    "revision": "98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "file": "longmemeval_s_cleaned.json",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "size_bytes": 277383467,
+    "committed_to_repository": false
+  },
+  "upstream_semantics_consulted": {
+    "repository": "xiaowu0162/LongMemEval",
+    "revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+    "files": {
+      "README.md": "haystack_dates: 'a list of the timestamps of the history sessions'; question_date: 'the date of the question'; 'you may directly feed the timestamped history to your own chat system'",
+      "data/custom_history/sample_haystack_and_timestamp.py": {
+        "sha256": "a2105d0d05116e52ff6f8fd997aa5a426661a6e3d2e6c0971a211f5791fe30f4",
+        "reading": "session dates are generator-assigned simulated occurrence times of each history session; evidence-session dates come from the question's designed timeline (e.g. knowledge_update fact_1_date/fact_2_date), filler dates are sampled around them, and every date receives a random same-day time"
+      }
+    }
+  },
+  "timestamp_field_inventory": [
+    {"field": "haystack_dates[i]", "type": "string 'YYYY/MM/DD (Ddd) HH:MM'", "scope": "one per haystack session, aligned with haystack_session_ids[i] and haystack_sessions[i]", "generated_by": "upstream history compiler (simulated session time)", "attached_to": "session", "maps_to_observed_at": "YES (session-level observation anchor of every user turn in that session)"},
+    {"field": "question_date", "type": "string 'YYYY/MM/DD (Ddd) HH:MM'", "scope": "one per question", "generated_by": "upstream history compiler", "attached_to": "question (query time), not to any memory", "maps_to_observed_at": "NO (it is the time of asking, not of any observation); used only as recall reference_time in the separately labelled diagnostic profile P2"},
+    {"field": "haystack_sessions[i][j] (role, content, has_answer)", "type": "object", "scope": "message", "generated_by": "upstream", "attached_to": "message", "maps_to_observed_at": "NO: messages carry no timestamp; has_answer is a gold label and is never read by the adapter"},
+    {"field": "answer_session_ids / answer / has_answer", "type": "gold", "scope": "question/message", "generated_by": "upstream gold", "attached_to": "-", "maps_to_observed_at": "NO (gold; never passed to Agent Memory)"},
+    {"field": "haystack_session_ids", "type": "string id", "scope": "session", "generated_by": "upstream", "attached_to": "session", "maps_to_observed_at": "NO (identifier; the 'answer_' prefix is gold-bearing and never reaches Agent Memory)"}
+  ],
+  "source_checks": {
+    "questions": 500,
+    "haystack_lengths_aligned": 500,
+    "sessions": 23867,
+    "haystack_dates_unparseable": 0,
+    "day_of_week_mismatches": 0,
+    "years": {"2021": 118, "2022": 714, "2023": 22886, "2024": 149},
+    "questions_whose_haystack_list_is_chronological": 289,
+    "adjacent_order_inversions_total": 3167,
+    "order_inversion_note": "sessions are ordered by day; the random same-day time makes within-day list order non-chronological, so canonical transaction (ingestion) order differs from source time order in 211 questions",
+    "questions_with_duplicate_session_timestamps": 95,
+    "question_date_before_latest_session": 76,
+    "message_level_timestamps": 0
+  },
+  "mapping": {
+    "adapter_profile_version": "run_longmemeval.py --agent-memory-temporal-metadata source_observed_at (added in #594)",
+    "source_field": "haystack_dates[i] of the session containing the ingested item",
+    "applies_to": {"session_plane": "the session's concatenated user turns", "turn_plane": "each user turn of the session (all turns share the session timestamp)"},
+    "transformation": "regex ^(\\d{4})/(\\d{2})/(\\d{2})(?:\\s*\\([A-Za-z]{3}\\))?\\s*(\\d{2}):(\\d{2}) -> 'YYYY-MM-DDTHH:MM:00Z' (run_longmemeval._iso_date, pre-existing)",
+    "timezone": "the source carries no zone; values are declared as UTC by convention for every item. Only relative order and day-scale windows are exercised; absolute zone is unknown and not claimed",
+    "missing_or_invalid": "an unparseable date declares no observed_at for that item (counted as unmapped); no fallback, no inference from order, gold, or question",
+    "declared_fields": ["observed_at"],
+    "not_declared": ["valid_from", "valid_until", "replacement_kind", "proposition identity", "cardinality", "temporal intent", "reference_time (P1)"],
+    "semantic_proposals": "never applied",
+    "queries_gold_ranking_policy_lexical_relevance": "unchanged",
+    "expected_counts": {
+      "session_plane": {"items": 23867, "mapped": 23867, "unmapped": 0},
+      "turn_plane": {"items": 122416, "mapped": 122416, "unmapped": 0}
+    }
+  },
+  "profiles": {
+    "C": {"name": "canonical", "temporal_metadata": "none", "role": "canonical LongMemEval_S at the runtime base; kept intact"},
+    "P1": {"name": "source-anchored", "temporal_metadata": "source_observed_at", "role": "PRIMARY adapted profile: differs from C only by observed_at"},
+    "P2": {"name": "source-anchored + question reference time", "temporal_metadata": "host_declared", "role": "DIAGNOSTIC adapted profile: P1 plus recall reference_time = question_date. Separately labelled because it changes two inputs; pre-registered here because without a recall reference instant the runtime labels every interpreted window 'no_reference_time', so P1 cannot exercise interpreted self-validity demotion at all"}
+  },
+  "pre_registered_hazards": [
+    "latest_gold_ranked_first defines 'latest' by the same haystack_dates that P1/P2 declare as observed_at; any change in that metric under P1/P2 is partly endogenous and must be attributed to the ordering stage that used the clock",
+    "P1/P2 replace transaction_time with declared_observed_at as the ordering clock in temporal_order_within_query_regime (a BM25-tie stage under ordering intents); this is a declared-clock tiebreak mechanism distinct from interpreted self-validity",
+    "P2: 76 questions have sessions dated after question_date (1,475 session items / 7,525 turn items, including 66 / 67 gold items), an artifact of the upstream compiler; interpreted windows anchored at such sessions can read as not-yet-applicable at the question's reference time"
+  ],
+  "tuning_rule": "this mapping is not revised after Agent Memory metrics are observed"
+}

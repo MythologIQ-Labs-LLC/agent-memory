@@ -443,7 +443,7 @@ def _lexical_rank(question: str, items: Sequence[Mapping[str, str]]) -> list[str
     return [entry[2] for entry in scored]
 
 
-TEMPORAL_METADATA_MODES = ("none", "host_declared")
+TEMPORAL_METADATA_MODES = ("none", "host_declared", "source_observed_at")
 RANKING_VARIANTS = tuple(VARIANTS)
 # Evaluation-only configuration of the Agent Memory adapter, recorded in every report.
 _AGENT_MEMORY_CONFIGURATION: dict[str, str] = {"temporal_metadata": "none", "ranking_variant": "default"}
@@ -467,8 +467,11 @@ def configure_agent_memory(*, temporal_metadata: str = "none", ranking_variant: 
     session text reach Agent Memory. ``host_declared``: the adapter declares each
     session's date as ``observed_at`` on write and the question date as the recall
     ``reference_time``, which a host that knows when conversations happened could do.
-    No validity interval is declared (a session date is not a validity claim), and no
-    temporal intent is declared: intent is still interpreted from the question text.
+    ``source_observed_at`` (#594 adapted profile): the session date is declared as
+    ``observed_at`` on write and nothing else changes; recall receives no
+    ``reference_time``. No validity interval is declared (a session date is not a
+    validity claim), and no temporal intent is declared: intent is still interpreted
+    from the question text.
 
     ``ranking_variant`` selects an evaluated alternative of the post-admission policy
     for ablation only; ``default`` is the runtime's shipped policy.
@@ -497,6 +500,8 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
     """
     ingestion_failures: list[str] = []
     host_declared = _AGENT_MEMORY_CONFIGURATION["temporal_metadata"] == "host_declared"
+    declare_observed = _AGENT_MEMORY_CONFIGURATION["temporal_metadata"] in {"host_declared", "source_observed_at"}
+    observed_mapped = observed_unmapped = 0
     with tempfile.TemporaryDirectory(prefix="agent-memory-longmemeval-") as temporary:
         with AgentMemory.open(
             temporary,
@@ -509,10 +514,13 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
             started = time.perf_counter()
             for item_index, item in enumerate(items):
                 declared = {}
-                if host_declared:
+                if declare_observed:
                     observed = _iso_date(item.get("date", ""))
                     if observed is not None:
                         declared["observed_at"] = observed
+                        observed_mapped += 1
+                    else:
+                        observed_unmapped += 1
                 retained = memory.remember(f"memory:longmemeval:{row_index}:{item_index}", item["text"], **declared)
                 if not retained.get("committed") or not retained.get("fact_uuid"):
                     ingestion_failures.append(str(retained.get("refusal") or "not_committed"))
@@ -530,7 +538,9 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
             continue
         reason = str(decision.get("refusal") or "not_admitted")
         refusals[reason] = refusals.get(reason, 0) + 1
+    extra = {"observed_at_mapped_count": observed_mapped, "observed_at_unmapped_count": observed_unmapped} if declare_observed else {}
     return {
+        **extra,
         "ranked": [uuid_to_item[value] for value in recalled["admitted"] if value in uuid_to_item],
         "candidate_count": len(recalled["candidates"]),
         "admitted_count": len(recalled["admitted"]),

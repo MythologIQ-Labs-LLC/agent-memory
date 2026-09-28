@@ -1,0 +1,41 @@
+{
+ "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+ "mapping_counts": {
+  "session": {
+   "gold_items_observed_after_question_date": 66,
+   "items": 23867,
+   "items_observed_after_question_date": 1475,
+   "mapped": 23867,
+   "questions_affected_by_later_sessions": 76
+  },
+  "turn": {
+   "gold_items_observed_after_question_date": 67,
+   "items": 122416,
+   "items_observed_after_question_date": 7525,
+   "mapped": 122416,
+   "questions_affected_by_later_sessions": 76
+  }
+ },
+ "message_key_sets": {
+  "content,has_answer,role": 10960,
+  "content,role": 235790
+ },
+ "message_level_timestamps": 0,
+ "source_checks": {
+  "adjacent_order_inversions_total": 3167,
+  "day_of_week_mismatches": 0,
+  "haystack_lengths_aligned": 500,
+  "question_date_before_latest_session": 76,
+  "question_date_unparseable": 0,
+  "questions": 500,
+  "questions_whose_haystack_list_is_chronological": 289,
+  "questions_with_duplicate_session_timestamps": 95,
+  "sessions": 23867
+ },
+ "years": {
+  "2021": 118,
+  "2022": 714,
+  "2023": 22886,
+  "2024": 149
+ }
+}
