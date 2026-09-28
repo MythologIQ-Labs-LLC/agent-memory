@@ -7,6 +7,7 @@
   "activation": "PYTHONPATH=reference python semantic_activation.py SOURCE OUT",
   "audit": "PYTHONPATH=reference python null_mechanism_audit.py SOURCE OUT",
   "compare": "python compare_profiles.py C.json P.json OUT.json",
+  "future_dated_subgroup": "PYTHONPATH=reference python future_dated_subgroup.py SOURCE C.rows.json.gz P1.rows.json.gz P2.rows.json.gz comparisons/future-dated-subgroup.json (C rows = accepted f76c441 rows)",
   "source_audit": "PYTHONPATH=reference python source_timestamp_audit.py SOURCE OUT"
  },
  "evidence_classification": {
@@ -19,10 +20,12 @@
  },
  "execution_note": "C, P1, P2 and the activation count ran concurrently on 4 cores; wall times are not comparable and no timing claim is made",
  "files_sha256": {
-  "README.md": "dfaa15e58089e93a1cc063a091ced89be14a178ae8f6ee6656f02369d547d907",
+  "README.md": "e0c50df5032212fa30281f0f6afa45e8cb1fa6049063acb7841e01c0c6f99b93",
   "compare_profiles.py": "935bd1fd480beef3da2c51182533391c4c024541e13e9660798c4efaf584d3a1",
   "comparisons/compare-canonical-vs-P1.json": "7a560c2f79a1ba7bc4c1b92f7e93239446f32c7eb826c61b73dc9dae7f1fd7ed",
   "comparisons/compare-canonical-vs-P2.json": "7523575563ccfb107a397b7d8793fb54e81c909591e1d91857a16fcf23cba5c1",
+  "comparisons/future-dated-subgroup.json": "8ead8fcd18c6d3e3da87259f6e05a9a84a05cd04a8b54b09b87d2ee6964cee68",
+  "future_dated_subgroup.py": "9b4a6ddf462ead58b2e4aebc7281252d031d71e72f344b38cdac2ab956607c42",
   "longmemeval-s-canonical-9fc452f.json": "6bba2184c507ac4e91231ce362094aebe94969ac1a8b07fe8f02fb81652cb0dc",
   "longmemeval-s-source-anchored-P1-9fc452f.json": "8591ac738407b14fb31c27590cfdc295bab979fb6d30b6a95bba91a43ed98506",
   "longmemeval-s-source-anchored-P1-9fc452f.rows.json.gz": "0bf7b5afa8316af85caf3206beb084e580ba4c3643afa71705e18ea4e70b279f",

@@ -157,6 +157,34 @@ A ranking change requires a query whose intent orders temporally. That is 40 of 
 
 **Latest-gold-first coupling hazard: did not materialize.** The metric is unchanged, and no row moved.
 
+### Pre-registered future-dated subgroup (`comparisons/future-dated-subgroup.json`)
+
+The subgroup was pre-registered as a P2 hazard in `source-anchor-manifest.json` before any adapted score existed. Its members are the questions with at least one haystack session dated after `question_date`.
+
+* Membership is fixed from the source alone and does not depend on any result.
+* It is reported separately here; neither profile is filtered or changed.
+* `future_dated_subgroup.py` reads the committed rows: C from the accepted `f76c441` rows, which C reproduces exactly, and the P1 and P2 `.rows.json.gz` files.
+
+| definition count | session | turn |
+| --- | ---: | ---: |
+| questions | 76 | 76 |
+| items dated after `question_date` | 1,475 | 7,525 |
+| gold items dated after `question_date` | 66 | 67 |
+
+These match the manifest's pre-registered counts. The 76 questions are 60 temporal-reasoning and 16 knowledge-update; 69 of them are scored.
+
+| subgroup result, C vs P1 and C vs P2 | session | turn |
+| --- | ---: | ---: |
+| changed ranking rows | 0 / 0 | 0 / 0 |
+| changed gold-rank rows | 0 / 0 | 0 / 0 |
+| latest-gold-first changes | 0 / 0 | 0 / 0 |
+| rows with any metric change | 0 / 0 | 0 / 0 |
+| latest-gold-first true (of 67 evaluable), each profile | 26 | 28 |
+| recall_all@5 / @10, each profile | 0.942 / 0.971 | 0.696 / 0.841 |
+| ndcg_any@10, each profile | 0.953 | 0.757 |
+
+The subgroup's outcome is identical in C, P1, and P2. That follows from the global comparison's zero changed rows, and it is now stated explicitly. The hazard, that a window anchored at a later session could read as not yet applicable at the question's reference time, did not act on any subgroup row.
+
 **Mechanism classification of changed gold ranks: none to classify.**
 
 | mechanism | count |
@@ -186,6 +214,7 @@ A ranking change requires a query whose intent orders temporally. That is 40 of 
 | `compare_profiles.py` | paired profile comparison; every metric per plane, changed rows, gold ranks |
 | `semantic_activation.py` | activation counts |
 | `null_mechanism_audit.py` | stage-level attribution over the ordering-intent questions |
+| `future_dated_subgroup.py` | the pre-registered future-dated subgroup, per plane and profile, from the committed rows |
 
 ## Phase B
 
