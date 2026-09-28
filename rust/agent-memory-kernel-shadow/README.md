@@ -16,18 +16,36 @@ The shadow currently covers:
 - `admitted_set_bm25` from the same module;
 - BM25 constants `k1=1.2`, `b=0.75`;
 - sorted query-term accumulation introduced by #576;
-- UTF-8 SHA-256 digest reproduction against Python `hashlib` vectors.
+- UTF-8 SHA-256 digest reproduction against Python `hashlib` vectors;
+- exact canonical JSON byte serialization for the explicitly non-floating domain: null, booleans, integers, strings, arrays, and string-keyed objects.
 
 Cross-language oracles are frozen at:
 
 - `reference/fixtures/runtime-kernel/bm25-v1.tsv`;
-- `reference/fixtures/runtime-kernel/sha256-v1.tsv`.
+- `reference/fixtures/runtime-kernel/sha256-v1.tsv`;
+- `reference/fixtures/runtime-kernel/canonical-json-nonfloat-v1.tsv`.
 
-The Python runtime must reproduce the frozen vectors first. The Rust shadow then reproduces the same vectors independently.
+The Python runtime must reproduce each frozen vector first. The Rust shadow then reproduces the same vectors independently.
 
 The fixtures are frozen before their corresponding Rust execution evidence is observed. A Rust mismatch is evidence to investigate, not permission to edit the Python oracle or loosen the fixture after the fact.
 
 The SHA-256 implementation is dependency-free for this evidence slice so the result is not coupled to third-party crate resolution. It is not a recommendation to ship hand-rolled cryptography in a production Rust runtime. Any promoted runtime would use a reviewed cryptographic implementation behind the already-qualified byte contract.
+
+The canonical JSON shadow is likewise dependency-free and deliberately cannot represent floating-point values. That is a qualification boundary, not a claim that Agent Memory persistence contains no floats.
+
+## Numeric serialization gate discovered by #602
+
+The current Python canonical-byte helper delegates numeric spelling to CPython's JSON encoder. That becomes architecture-significant because `TypedRelation.retrieval_weight` is a float and SQLite integrity commitments hash `asdict(relation)` through the canonical-byte helper.
+
+Therefore persisted integrity parity across languages is **not yet qualified** for floating values.
+
+Issue #609 owns the required language-neutral numeric canonicalization and migration decision. Until #609 is dispositioned, this shadow may prove non-floating canonical-byte parity but may not claim state/integrity parity for surfaces that can contain floats.
+
+```text
+semantic JSON equality != canonical byte identity
+CPython float spelling != architecture doctrine
+non-float parity != persisted-state parity
+```
 
 ## Why BM25 score bits are strict
 
@@ -39,9 +57,9 @@ If later platforms cannot preserve exact parity because transcendental math diff
 
 ## Next slices, only after deterministic primitives qualify
 
-1. canonical byte/serialization primitives under an explicit cross-language contract;
-2. candidate prefilter/index hot paths;
-3. integrity/state primitives;
+1. complete canonical byte/serialization qualification, with #609 governing floating numbers and persisted-state migration;
+2. candidate prefilter/index hot paths that do not depend on unresolved persisted numeric bytes;
+3. integrity/state primitives only after #609 is resolved;
 4. minimal `open -> remember -> recall -> restart` shadow lifecycle;
 5. matched performance and operational comparison;
 6. only then consider Python FFI or a native Rust runtime profile.
