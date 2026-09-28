@@ -2,7 +2,7 @@
 
 Status: **current accepted evidence through #594**, plus current pre-1.0 comparator/runtime-qualification state as of 2026-09-28.
 
-Current merged `main`: `a24e993958d741379993341e8b3f63ed37482df3`.
+Current merged `main`: `fb80d6fca67f97a8f36e5cad335bf280d81df9ba`.
 
 No universal aggregate score exists. `blocked`, `not_run`, `unsupported`, and `evidence_gap` are states, never numeric zero.
 
@@ -13,7 +13,7 @@ Four evidence classes are intentionally separate:
 1. **Agent Memory longitudinal** — current accepted Agent Memory evidence versus an earlier accepted Agent Memory signal under a sufficiently comparable profile.
 2. **Same-harness systems** — multiple memory systems executed against the same frozen input, evaluator, retrieval/context budget, and model/judge configuration.
 3. **Published reference** — vendor/research results useful for market context but not numerically comparable unless methodology is proven equivalent.
-4. **Runtime qualification** — implementation-profile evidence such as Python/Rust parity. This is not a memory-quality score.
+4. **Runtime qualification** — implementation-profile conformance and matched implementation performance evidence. This is not a memory-quality score.
 
 A new metric having no prior Agent Memory baseline is normal. A missing controlled competitor is a **competitive evidence gap**.
 
@@ -90,13 +90,13 @@ Independent multi-system suites may be recorded as `external_cross_system_refere
 
 ## Runtime qualification — Python vs Rust
 
-**Status: three deterministic Rust-shadow slices qualified; runtime promotion not established.**
+**Status: deterministic Rust-shadow parity plus one material matched hot-path performance result; runtime promotion not established.**
 
 ADR-028 remains controlling: the normative core is language-neutral.
 
 Python remains the qualified runtime/reference implementation. Rust remains evaluation-only and is not linked into the product runtime.
 
-### Accepted Rust-shadow evidence
+### Accepted Rust-shadow conformance evidence
 
 **PR #605 — ranking and digest primitives**
 
@@ -115,13 +115,47 @@ Python remains the qualified runtime/reference implementation. Rust remains eval
 - the full exact-head repository matrix was green before merge;
 - this is candidate-generation/minimization parity only. Materialized fact eligibility and canonical recall admission remain downstream and authoritative.
 
+### Accepted matched performance evidence — PR #614
+
+The first same-runner performance result compares the already-qualified #591 candidate-prefilter compute contract.
+
+Workload:
+
+- 20,000 deterministic projected rows;
+- 8 fixed queries;
+- 8 timed iterations per execution after warmup;
+- both Python -> Rust and Rust -> Python execution orders in the same GitHub-hosted Ubuntu job;
+- row generation and Rust compilation excluded;
+- identical ordered `(uuid, score_bits)` result signature required before timing interpretation.
+
+Result parity: **PASS**.
+
+Shared signature:
+
+`ea2a12c19df6c059d75e768b2ebae0044547ea358f1a9033a6da56564e15b18b`
+
+| metric | Python | Rust | relative |
+| --- | ---: | ---: | ---: |
+| median total | **1485.717 ms** | **597.273 ms** | Rust **2.488x** faster |
+| median p50 query | 23.616 ms | 9.276 ms | Rust ~2.55x lower |
+| median p95 query | 26.950 ms | 10.535 ms | Rust ~2.56x lower |
+| projected rows examined/sec | 861,584 | 2,143,123 | Rust **2.487x** throughput |
+
+Workflow: `36487679509`. Raw artifact ID: `10999893635`. Artifact ZIP SHA-256: `99b050d26d3d32b4d8f9fea079586e3a920fa717a2c5946383cb1bd918c84889`.
+
+This is **hot-path compute evidence**, not a full-runtime benchmark. It excludes SQLite query time, row generation, fact materialization, canonical admission, lifecycle/governance, Python↔Rust FFI, packaging, and compilation.
+
+The result establishes a real performance rationale for investigating a Rust kernel. It does not establish that a native Rust Agent Memory runtime would be 2.49x faster.
+
 ### Persistence determinism gap — #609
 
 #602 exposed a real portability defect in the current persistence contract.
 
-`TypedRelation.retrieval_weight` is a float and typed-relation rows participate in SQLite integrity commitments. Current canonical serialization delegates floating-number spelling to CPython's JSON encoder. Therefore full cross-language persisted-state identity is not yet language-neutral.
+`TypedRelation.retrieval_weight` is a float and typed-relation rows participate in SQLite integrity commitments. Current persistence canonical serialization delegates floating-number spelling to CPython's JSON encoder. Therefore full cross-language persisted-state identity is not yet language-neutral.
 
 Issue #609 owns the numeric canonicalization and migration contract. A draft ADR-040 proposal is under review separately; no current runtime bytes or digest schemes have changed.
+
+The #609 inventory work has also found multiple canonicalization families. Agent Memory already uses RFC 8785/JCS deliberately in governance/evidence identity surfaces, so a persistence-v2 serializer must not silently redefine those existing identifiers.
 
 Until #609 is dispositioned, the following remain **not established**:
 
@@ -129,8 +163,9 @@ Until #609 is dispositioned, the following remain **not established**:
 - state/integrity parity over affected rows;
 - restart/checkpoint compatibility for a Rust-owned state runtime;
 - cross-platform floating-math identity beyond the currently qualified BM25 CI profile;
-- matched Python/Rust performance advantage;
-- FFI or native-Rust runtime promotion.
+- Python↔Rust FFI/binding overhead;
+- integrated end-to-end search improvement;
+- native-Rust runtime promotion.
 
 Current decision candidates remain:
 
@@ -141,7 +176,9 @@ C. native Rust runtime + Python bindings
 D. parallel conformant Python and Rust profiles
 ```
 
-Current evidence strengthens **B as a hypothesis**, not as a decision. Deterministic ranking, hashing, non-floating canonical bytes, and a real candidate-generation hot path have all ported exactly so far. The next meaningful question is whether Rust produces material matched performance/assurance value without creating unacceptable FFI and maintenance cost.
+Current evidence makes **B the leading hypothesis, not the final decision**. Deterministic ranking, hashing, non-floating canonical bytes, and a real candidate-generation hot path all port exactly, and the qualified prefilter compute is about 2.49x faster under a matched workload.
+
+The next meaningful question is whether enough of that advantage survives a real Python↔Rust integration boundary to improve end-to-end Agent Memory search materially. Candidate C remains unsupported because state/restart, lifecycle, packaging, ecosystem, and maintenance costs have not been justified.
 
 ## Architecture progression
 
@@ -160,7 +197,8 @@ Current evidence strengthens **B as a hypothesis**, not as a decision. Determini
 | #602 / #605 | Rust deterministic shadow | BM25/tokenization/SHA exact parity passes on qualified CI |
 | #602 / #610 | canonical non-float byte shadow | exact Python/Rust byte + digest parity; float persistence gap isolated |
 | #602 / #611 | Rust #591 prefilter shadow | exact candidate membership/order/score-bit parity on a real hot path |
-| #609 | language-neutral persistence determinism | float-bearing integrity serialization identified as an explicit architecture/migration gate |
+| #602 / #614 | matched Rust prefilter performance | exact result parity; Rust ~**2.49x** faster on bounded same-runner compute workload |
+| #609 | language-neutral persistence determinism | float-bearing integrity serialization plus multiple canonicalization families identified as explicit architecture/migration concerns |
 
 ## #594 Phase B — unbiased Part R
 
@@ -193,6 +231,7 @@ benchmark score != memory authority
 published vendor score != same-harness comparator
 implementation language != doctrine
 cross-language parity != runtime promotion
+hot-path speedup != full-runtime speedup
 non-float canonical parity != persisted-state parity
 ```
 
@@ -202,7 +241,9 @@ Active state:
 - #594 **QUALIFIED**;
 - #600 pre-1.0 maturity program active;
 - #601 competitive infrastructure merged, first accepted same-harness result pending;
-- #602 Rust shadow tokenization/BM25/SHA/non-float-canonical/prefilter qualification **PASS**, runtime not promoted;
+- #602 Rust tokenization/BM25/SHA/non-float-canonical/prefilter parity **PASS**;
+- #602 matched prefilter compute performance **PASS**, Rust ~2.49x faster under the bounded same-runner workload;
+- Python remains the qualified runtime; Rust is not product-linked or promoted;
 - #609 active persistence-determinism gate; ADR-040 proposal is draft/unaccepted;
 - ADR-028 **Accepted**;
 - ADR-039 **Proposed**;
@@ -229,7 +270,8 @@ pre-1.0 maturity path
   |      -> controlled market systems
   |      -> accepted dashboard competitor rows
   |
-  +-> #602 matched candidate-prefilter performance
+  +-> #602 Python↔Rust integration/FFI cost
+         -> end-to-end search impact
          -> #609 numeric canonicalization + migration
          -> state/integrity parity
          -> lifecycle shadow
