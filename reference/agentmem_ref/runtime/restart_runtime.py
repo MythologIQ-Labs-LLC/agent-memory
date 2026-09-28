@@ -378,6 +378,8 @@ class CheckpointableGovernedMemoryAdapter(GovernedMemoryAdapter):
                 raise ValueError(f"governance checkpoint {name} is not a mapping")
             return value
 
+        # #550: the proposition-slot index is derived; rebuild it from persisted facts.
+        self._semantic_slot_index = None
         try:
             self._clock = Clock(start=int(raw.get("clock_tick", 0)))
 

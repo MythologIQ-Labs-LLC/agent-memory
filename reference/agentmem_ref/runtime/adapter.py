@@ -17,6 +17,8 @@ Stdlib only apart from the schema validation reached through `receipts`.
 
 from __future__ import annotations
 
+import json
+
 from typing import Callable, Mapping, Sequence
 
 import random
@@ -28,6 +30,7 @@ from ..core.evidence_qualification import EvidenceItem
 from ..core.verification import VerifierRegistry
 from ..core.readmission import RejectedValueRegistry
 from ..state.substrate import DeterministicIds, Episode, Fact, TemporalGraphPort
+from . import proposition_semantics as semantics
 from .temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal, parse_time
 
 
@@ -223,6 +226,9 @@ class GovernedMemoryAdapter:
         # (the memory-layer action path keeps its consumption records here). Persisted
         # by restart_runtime beside `events`; JSON-able; not a host interface.
         self.extension_state: dict[str, dict] = {}
+        # #550: derived, rebuildable index (proposition slot, scope) -> fact uuids. Built lazily from
+        # the persisted write-semantics attributes; every hit is re-validated before use.
+        self._semantic_slot_index: dict[str, dict[str, dict]] | None = None
 
     # -- isolation-domain administration -------------------------------
 
@@ -549,6 +555,17 @@ class GovernedMemoryAdapter:
             raise ValueError("required isolation domains must also be bound isolation domains")
 
         uuid = self._ids.next()
+        scope = {
+            "domain_refs": domain_refs,
+            "required_domain_refs": required_domains,
+            "project_ref": proposal.project_ref,
+            "task_ref": proposal.task_ref,
+            "purpose": proposal.purpose,
+        }
+        attributes: dict = {DECLARED_TEMPORAL_KEY: declared} if declared else {}
+        attributes[semantics.WRITE_SEMANTICS_KEY] = semantics.persisted_form(
+            self._interpret_write(uuid, proposal.target_reference, fact_text, declared, scope)
+        )
         self._substrate.write_fact(
             Fact(
                 uuid=uuid,
@@ -557,19 +574,138 @@ class GovernedMemoryAdapter:
                 episode_uuids=tuple(proposal.evidence_refs),
                 valid_at=self._clock.now(),
                 created_at=self._clock.now(),
-                attributes={DECLARED_TEMPORAL_KEY: declared} if declared else {},
+                attributes=attributes,
             )
         )
-        self._fact_scope[uuid] = {
-            "domain_refs": domain_refs,
-            "required_domain_refs": required_domains,
-            "project_ref": proposal.project_ref,
-            "task_ref": proposal.task_ref,
-            "purpose": proposal.purpose,
-        }
+        self._fact_scope[uuid] = scope
+        summary = semantics.index_summary(attributes[semantics.WRITE_SEMANTICS_KEY])
+        if summary is not None and self._semantic_slot_index is not None:
+            key = self._semantic_key(semantics.write_slot(summary), scope)
+            self._semantic_slot_index.setdefault(key, {})[uuid] = summary
         self._fact_memory[uuid] = proposal.target_reference
         self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
         return uuid
+
+    # -- write-time semantics (#550) ----------------------------------------
+
+    def _interpret_write(
+        self, uuid: str, memory_ref: str, fact_text: str, declared: "Mapping[str, str] | None", scope: dict
+    ) -> dict:
+        """Typed write-time evidence: interpretation, then same-slot classification.
+
+        Evidence only. Nothing here mutates another fact, refuses, supersedes, or
+        changes currentness; a ``state_change`` proposal is applied only by an explicit
+        governed correction.
+        """
+
+        interpretation = semantics.interpret_write(fact_text, declared_temporal=declared)
+        slots = {semantics.write_slot(interpretation)} | semantics.ended_slots(interpretation)
+        slots.discard(None)
+        retained = []
+        if slots:
+            index = self._semantic_index()
+            keys = [self._semantic_key(slot, scope) for slot in slots]
+            candidates = {}
+            for key in keys:
+                candidates.update(index.get(key, {}))
+            for other in sorted(candidates):
+                # Lifecycle maps decide currentness: a governed correction or state change
+                # moves the memory's current fact, and forget/dispute are recorded here.
+                other_ref = self._fact_memory.get(other)
+                if other_ref is None or other_ref == memory_ref or self._current_fact_by_memory.get(other_ref) != other:
+                    continue
+                if other in self._tombstones or other in self._disputed:
+                    continue
+                if not self._same_semantic_scope(self._fact_scope.get(other), scope):
+                    continue
+                retained.append((other, other_ref, candidates[other]))
+        relations = semantics.classify_write(
+            interpretation, uuid, fact_text, retained, observed_at=(declared or {}).get("observed_at")
+        )
+        interpretation.update(semantics.bounded_relations(relations))
+        return interpretation
+
+    @staticmethod
+    def _same_semantic_scope(other: dict | None, scope: dict) -> bool:
+        if not other:
+            return False
+        return (
+            set(other.get("domain_refs", ())) == set(scope["domain_refs"])
+            and other.get("project_ref", "") == scope.get("project_ref", "")
+            and other.get("task_ref", "") == scope.get("task_ref", "")
+        )
+
+    @staticmethod
+    def _semantic_key(slot: str, scope: dict | None) -> str:
+        scope = scope or {}
+        return json.dumps([slot, sorted(scope.get("domain_refs", ())), scope.get("project_ref") or "",
+                           scope.get("task_ref") or ""])
+
+    def _semantic_index(self) -> dict[str, dict[str, dict]]:
+        if self._semantic_slot_index is None:
+            index: dict[str, dict[str, dict]] = {}
+            for fact in getattr(self._substrate, "all_facts", lambda: ())():
+                if fact.group_id != self._tenant:
+                    continue
+                summary = semantics.index_summary((fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY))
+                if summary is not None:
+                    key = self._semantic_key(semantics.write_slot(summary), self._fact_scope.get(fact.uuid))
+                    index.setdefault(key, {})[fact.uuid] = summary
+            self._semantic_slot_index = index
+        return self._semantic_slot_index
+
+    def _semantics_visible(self, fact_uuid: str, context: RecallContext) -> Fact | None:
+        """Interpretation evidence is readable only where the fact itself could be recalled
+        from: same tenant, domain-eligible for the caller, and not deleted."""
+
+        fact = self._substrate.get_fact(fact_uuid)
+        if fact is None or fact.uuid in self._tombstones:
+            return None
+        if any(source_ref in self._tombstones for source_ref in fact.episode_uuids):
+            return None
+        return fact if self.domain_eligible(fact, context) else None
+
+    def write_semantics(self, fact_uuid: str, context: RecallContext) -> dict | None:
+        fact = self._semantics_visible(fact_uuid, context)
+        if fact is None:
+            return None
+        value = semantics.expanded_form((fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY))
+        return json.loads(json.dumps(value)) if value is not None else None
+
+    def semantic_proposals(self, context: RecallContext) -> list[dict]:
+        """Every write-time ``state_change`` proposal with its status derived now.
+
+        ``open``: the proposal's target is still that memory's current fact and the
+        source write is still current. ``applied``: a governed correction cited it.
+        ``stale``: anything else. Status is derived from lifecycle state; the
+        proposal itself is immutable write-time evidence.
+        """
+
+        proposals = []
+        for fact in getattr(self._substrate, "all_facts", lambda: ())():
+            if self._semantics_visible(fact.uuid, context) is None:
+                continue
+            value = (fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY) or {}
+            for relation in value.get("relations", ()):
+                proposal = relation.get("proposal")
+                if not proposal or self._semantics_visible(proposal["target_fact_uuid"], context) is None:
+                    continue
+                proposals.append({**json.loads(json.dumps(proposal)), "status": self._proposal_status(proposal),
+                                  "classification": relation["classification"], "basis": relation["basis"],
+                                  "slot": relation["slot"]})
+        return sorted(proposals, key=lambda item: item["proposal_id"])
+
+    def _proposal_status(self, proposal: dict) -> str:
+        target, source = proposal["target_fact_uuid"], proposal["source_fact_uuid"]
+        record = self.replacement_record(target)
+        if record and proposal["proposal_id"] in record.get("evidence_refs", ()):
+            return "applied"
+        source_ref = self._fact_memory.get(source)
+        live = lambda uuid, ref: (
+            ref is not None and self._current_fact_by_memory.get(ref) == uuid
+            and uuid not in self._tombstones and uuid not in self._disputed
+        )
+        return "open" if live(target, proposal["target_reference"]) and live(source, source_ref) else "stale"
 
     # -- read path ------------------------------------------------------
 

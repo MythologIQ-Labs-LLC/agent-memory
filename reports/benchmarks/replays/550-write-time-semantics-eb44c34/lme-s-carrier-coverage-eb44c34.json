@@ -1,0 +1,44 @@
+{
+ "cardinality": {
+  "multi_valued": 8435,
+  "single_valued": 25,
+  "unknown": 85471
+ },
+ "cues_583_carried_by_typed_aspect": {
+  "currently": {
+   "carried": 551,
+   "occurrences": 551
+  },
+  "going to": {
+   "carried": 1314,
+   "occurrences": 1314
+  },
+  "planning to": {
+   "carried": 2076,
+   "occurrences": 2076
+  }
+ },
+ "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+ "interpreter": {
+  "ref": "agent-memory-deterministic-write-semantics",
+  "version": "1.0.0"
+ },
+ "proposition_status": {
+  "ambiguous": 44692,
+  "known": 13655,
+  "unknown": 35584
+ },
+ "turns_with_aspect": {
+  "past_habitual": 882,
+  "present": 4291,
+  "prospective": 9621
+ },
+ "turns_with_marker": {
+  "aspect": 13809,
+  "change": 206,
+  "coexistence": 8435,
+  "hedge": 22285,
+  "self_claims": 320
+ },
+ "unique_user_turns": 93931
+}
