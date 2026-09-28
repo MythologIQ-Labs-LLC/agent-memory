@@ -1,6 +1,6 @@
 # Independent AMB competitive profile
 
-Status: **IMPLEMENTED BRIDGE / COMPETITIVE SCORE NOT YET RUN**  
+Status: **IMPLEMENTED BRIDGE / RETRIEVAL LANE RUNNABLE / RAG SCORE NOT YET RUN**  
 Owner: #601  
 Parent maturity program: #600  
 External harness: `vectorize-io/agent-memory-benchmark` (AMB)  
@@ -54,11 +54,13 @@ The AMB README describes the default evaluation flow as:
 ```text
 ingest
  -> retrieve
- -> Gemini answer generation
- -> Gemini judge
+ -> answer generation
+ -> judge
 ```
 
-and reports retrieval time separately from generation. Therefore an end-to-end AMB accuracy result is **not** numerically interchangeable with Agent Memory's native LongMemEval retrieval-only `recall_all@k` evidence.
+The frozen harness also provides `retrieval` mode for PrecisionMemBench. That mode explicitly makes no LLM calls: the provider-returned document IDs are scored directly against required and forbidden belief IDs.
+
+Therefore an end-to-end AMB accuracy result is **not** numerically interchangeable with Agent Memory's native LongMemEval retrieval-only `recall_all@k` evidence, and an AMB PrecisionMemBench retrieval score is a distinct exact-ID retrieval profile rather than a conversational QA score.
 
 ## Agent Memory bridge
 
@@ -67,6 +69,7 @@ Implementation:
 - `reference/amb_agent_memory_bridge.py`
 - `reference/run_amb_external.py`
 - `reference/tests/test_amb_agent_memory_bridge.py`
+- `.github/workflows/amb-competitive.yml`
 
 The bridge:
 
@@ -92,8 +95,8 @@ A locally executed AMB run may use this class only when all of the following are
 - exact Agent Memory revision;
 - exact dataset/split identity;
 - memory provider/configuration;
-- answer model identity;
-- judge model identity;
+- answer model identity, or explicit `none` for retrieval mode;
+- judge model identity, or explicit `none` for retrieval mode;
 - retrieval/context budget;
 - output artifact digest;
 - execution failures separately from score;
@@ -107,27 +110,50 @@ Vendor/project scores copied from public sources remain a separate reference lay
 
 A run requiring credentials or an unavailable managed service is `blocked` until those requirements are satisfied. Missing credentials are not score zero.
 
-## Initial execution posture
+## Execution posture
 
-The bridge itself can be validated credential-free in repository CI. A full AMB `run` currently requires the external harness's configured Gemini credential for its default generate/judge lane.
+The bridge itself is validated credential-free in ordinary repository CI.
 
-Until that credential is supplied to an explicitly authorized execution environment, the first end-to-end Agent Memory AMB score is:
+### Credential-free retrieval lane
+
+For `mode=retrieval` with `agent-memory` or `bm25`, the workflow admits execution without a real model credential. The frozen AMB `RetrievalMode` explicitly makes no LLM calls. Because the frozen CLI still constructs its configured answer client before selecting that mode, the workflow may provide an inert placeholder API-key value solely to satisfy client construction. That placeholder is never used to generate, judge, extract, rank, or authorize memory.
+
+The first intended profile is:
+
+```text
+dataset: precisionmembench
+split: single-turn
+mode: retrieval
+providers: agent-memory, bm25
+```
+
+This lane can validate independent-harness ingestion/retrieval/scoring immediately. BM25 is a baseline comparator, not a claim of market competitiveness.
+
+### LLM-judged / provider-LLM lanes
+
+RAG and any provider that requires model-assisted ingestion remain fail-closed on real credentials. The workflow freezes both answer and judge configuration to:
+
+`gemini:gemini-2.5-flash-lite`
+
+until #601 explicitly versions a different competitive profile.
+
+Until an authorized environment supplies the required evaluation credential, the first end-to-end Agent Memory AMB RAG score is:
 
 **BLOCKED_PENDING_EVALUATION_CREDENTIAL**
 
 This is an execution dependency, not a product result.
 
-Retrieval-only AMB profiles that do not require answer generation/judging may be admitted separately when their dataset/profile semantics match the intended comparison.
-
 ## First comparison sequence
 
 1. prove the Agent Memory bridge against repository-owned integration tests;
-2. execute a small AMB smoke run at the frozen revision;
-3. freeze answer/judge model and run configuration before competitive scoring;
-4. run Agent Memory and at least two reproducible non-Agent-Memory providers under the same AMB profile;
-5. retain raw outputs and digests;
-6. add results to the canonical dashboard only after comparability review;
-7. repeat on additional AMB datasets only when they add a materially distinct pressure dimension.
+2. run PrecisionMemBench retrieval for Agent Memory and BM25 under the frozen external harness;
+3. retain raw outputs and execution identity as workflow artifacts;
+4. configure authorized evaluation credentials;
+5. execute a bounded AMB RAG smoke at the frozen revision;
+6. freeze answer/judge model and run configuration before full competitive scoring;
+7. run Agent Memory and at least two reproducible non-Agent-Memory providers under the same profile;
+8. add results to the canonical dashboard only after comparability review;
+9. repeat on additional AMB datasets only when they add a materially distinct pressure dimension.
 
 The native Agent Memory Gauntlet remains responsible for governance/currentness-specific pressure that AMB does not model.
 
@@ -141,6 +167,7 @@ published vendor score != same-harness evidence
 benchmark adapter != product policy
 query timestamp != memory authority
 competitive advantage != architecture truth
+placeholder client credential != evaluation credential
 ```
 
 No Agent Memory runtime behavior may be specialized to AMB dataset IDs, gold labels, benchmark phrases, or expected outcomes.
