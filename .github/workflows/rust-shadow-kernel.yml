@@ -6,6 +6,7 @@ on:
       - "rust/agent-memory-kernel-shadow/**"
       - "reference/fixtures/runtime-kernel/**"
       - "reference/tests/test_rust_shadow_kernel_fixture.py"
+      - "reference/tests/test_rust_shadow_canonical_json_fixture.py"
       - ".github/workflows/rust-shadow-kernel.yml"
   workflow_dispatch:
 
@@ -31,7 +32,10 @@ jobs:
           python -m pip install -e . pytest
 
       - name: Verify frozen vectors against Python oracle
-        run: pytest -q reference/tests/test_rust_shadow_kernel_fixture.py
+        run: |
+          pytest -q \
+            reference/tests/test_rust_shadow_kernel_fixture.py \
+            reference/tests/test_rust_shadow_canonical_json_fixture.py
 
       - name: Set up stable Rust
         uses: dtolnay/rust-toolchain@stable
