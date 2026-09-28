@@ -1,0 +1,10 @@
+case	query	query_tokens	ref	text	expected_tokens	expected_score_bits
+simple	blue lantern launch	blue,lantern,launch	a	blue lantern launch code aurora	blue,lantern,launch,code,aurora	4610526857487855151
+simple	blue lantern launch	blue,lantern,launch	b	lavender garden blue	lavender,garden,blue	4602890923821706317
+simple	blue lantern launch	blue,lantern,launch	c	the launch was delayed	the,launch,was,delayed	4602138452596041423
+near	alpha beta	alpha,beta	a	alpha beta alpha	alpha,beta,alpha	4599384653253533521
+near	alpha beta	alpha,beta	b	alpha beta beta	alpha,beta,beta	4599384653253533521
+near	alpha beta	alpha,beta	c	alpha gamma beta	alpha,gamma,beta	4598482595358434426
+unicode	İstanbul café 42	i,stanbul,caf,42	a	İstanbul cafe 42	i,stanbul,cafe,42	4613013204981075962
+unicode	İstanbul café 42	i,stanbul,caf,42	b	istanbul café 41	istanbul,caf,41	4607009744062031801
+unicode	İstanbul café 42	i,stanbul,caf,42	c	plain text	plain,text	0
