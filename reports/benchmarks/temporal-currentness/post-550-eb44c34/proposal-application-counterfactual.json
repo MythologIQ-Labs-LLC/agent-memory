@@ -1,0 +1,329 @@
+{
+  "cases": {
+    "A1-expired-exact-vs-current-weaker": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "A2-not-yet-valid-exact-vs-current": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "A3-two-valid-relevance-decides": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "A4-current-query-no-temporal-basis": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "A5-explicit-current-vs-ambiguous-cues": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "B10-independent-timeline": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "B6-state-change-chain": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "B8-error-correction-never-historical": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "B9-historical-cannot-bypass-governance": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "C11-C12-prospective-commitment": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "C13-unknown-future-basis": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "D14-atemporal-old-exact-vs-new-distractor": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "D16-no-validity-no-intent-recency-must-not-decide": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "D17-transaction-order-disagrees-with-valid-time": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "D18-observation-time-disagrees-with-valid-time": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "E19-E20-reinforced-expired-vs-decayed-valid": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "E21-old-but-still-valid": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "E22-decay-affects-accessibility-only-under-policy": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "F23-has-moved-now-lives": {
+      "applied": [
+        {
+          "committed": true,
+          "proposal_id": "semantic-proposal:ab2c48dd21e927aa30ffabc3767887b0",
+          "refusal": null,
+          "target": "memory:home:denver"
+        }
+      ],
+      "proposals_emitted": [
+        {
+          "basis": "single_valued_replacement_marker",
+          "source": "boston",
+          "status": "open",
+          "target": "denver"
+        }
+      ],
+      "units_changed_by_application": {
+        "F23-has-moved-now-lives/current-explicit/authority_or_scope_violation_count/required": [
+          "pass",
+          "fail"
+        ],
+        "F23-has-moved-now-lives/current-explicit/coexistence_preservation_rate/required": [
+          "pass",
+          "fail"
+        ],
+        "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": [
+          "honest_unknown",
+          "pass"
+        ],
+        "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": [
+          "honest_unknown",
+          "pass"
+        ],
+        "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": [
+          "honest_unknown",
+          "pass"
+        ],
+        "F23-has-moved-now-lives/current-inferred/authority_or_scope_violation_count/required": [
+          "pass",
+          "fail"
+        ],
+        "F23-has-moved-now-lives/current-inferred/coexistence_preservation_rate/required": [
+          "pass",
+          "fail"
+        ],
+        "F23-has-moved-now-lives/current-inferred/current_applicability_accuracy/target": [
+          "honest_unknown",
+          "pass"
+        ],
+        "F23-has-moved-now-lives/current-inferred/self_description_currentness_rate/target": [
+          "honest_unknown",
+          "pass"
+        ],
+        "F23-has-moved-now-lives/current-inferred/stale_as_current_rate/target": [
+          "honest_unknown",
+          "pass"
+        ]
+      },
+      "write_time_classification": {
+        "boston": [
+          {
+            "basis": "single_valued_replacement_marker",
+            "classification": "state_change_candidate",
+            "other": "denver"
+          }
+        ]
+      }
+    },
+    "F24-no-longer-works-at": {
+      "applied": [
+        {
+          "committed": true,
+          "proposal_id": "semantic-proposal:ab2c48dd21e927aa30ffabc3767887b0",
+          "refusal": null,
+          "target": "memory:work:acme"
+        }
+      ],
+      "proposals_emitted": [
+        {
+          "basis": "explicit_termination:no longer",
+          "source": "globex",
+          "status": "open",
+          "target": "acme"
+        }
+      ],
+      "units_changed_by_application": {
+        "F24-no-longer-works-at/current-inferred/authority_or_scope_violation_count/required": [
+          "pass",
+          "fail"
+        ],
+        "F24-no-longer-works-at/current-inferred/coexistence_preservation_rate/required": [
+          "pass",
+          "fail"
+        ],
+        "F24-no-longer-works-at/current-inferred/self_description_currentness_rate/target": [
+          "honest_unknown",
+          "pass"
+        ],
+        "F24-no-longer-works-at/current-inferred/stale_as_current_rate/target": [
+          "honest_unknown",
+          "pass"
+        ]
+      },
+      "write_time_classification": {
+        "globex": [
+          {
+            "basis": "explicit_termination:no longer",
+            "classification": "state_change_candidate",
+            "other": "acme"
+          }
+        ]
+      }
+    },
+    "F25-also-works-at-cardinality-control": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {
+        "globex": [
+          {
+            "basis": "cardinality:multi_valued",
+            "classification": "coexistence",
+            "other": "acme"
+          }
+        ]
+      }
+    },
+    "F26-for-the-next-two-weeks": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "F27-starting-next-month": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "F28-used-to-prefer-now-prefer": {
+      "applied": [
+        {
+          "committed": true,
+          "proposal_id": "semantic-proposal:ab2c48dd21e927aa30ffabc3767887b0",
+          "refusal": null,
+          "target": "memory:drink:tea"
+        }
+      ],
+      "proposals_emitted": [
+        {
+          "basis": "explicit_termination:used to",
+          "source": "coffee",
+          "status": "open",
+          "target": "tea"
+        }
+      ],
+      "units_changed_by_application": {
+        "F28-used-to-prefer-now-prefer/current-inferred/authority_or_scope_violation_count/required": [
+          "pass",
+          "fail"
+        ],
+        "F28-used-to-prefer-now-prefer/current-inferred/coexistence_preservation_rate/required": [
+          "pass",
+          "fail"
+        ],
+        "F28-used-to-prefer-now-prefer/current-inferred/self_description_currentness_rate/target": [
+          "honest_unknown",
+          "pass"
+        ],
+        "F28-used-to-prefer-now-prefer/current-inferred/stale_as_current_rate/target": [
+          "honest_unknown",
+          "pass"
+        ],
+        "F28-used-to-prefer-now-prefer/plain-now/authority_or_scope_violation_count/required": [
+          "pass",
+          "fail"
+        ],
+        "F28-used-to-prefer-now-prefer/plain-now/coexistence_preservation_rate/required": [
+          "pass",
+          "fail"
+        ],
+        "F28-used-to-prefer-now-prefer/plain-now/self_description_currentness_rate/target": [
+          "fail",
+          "pass"
+        ],
+        "F28-used-to-prefer-now-prefer/plain-now/stale_as_current_rate/target": [
+          "fail",
+          "pass"
+        ]
+      },
+      "write_time_classification": {
+        "coffee": [
+          {
+            "basis": "explicit_termination:used to",
+            "classification": "state_change_candidate",
+            "other": "tea"
+          }
+        ]
+      }
+    },
+    "F29-ambiguous-temporal-language": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    },
+    "F30-memory-text-claims-authority-and-currentness": {
+      "applied": [],
+      "proposals_emitted": [],
+      "units_changed_by_application": {},
+      "write_time_classification": {}
+    }
+  },
+  "counterfactual": "reviewing caller applies every open write-time proposal",
+  "evidence_class": "repository_owned_conformance",
+  "external_validation": false,
+  "fixture_sha256": "394be82e8dfabe30ad1faf064f36a88d0b0b8e7ab8157f746ecb4cbae9e64492"
+}
