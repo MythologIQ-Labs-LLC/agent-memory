@@ -1,46 +1,34 @@
 {
  "by_part": {
   "random": {
-   "items_changed": 33,
+   "items_changed": 27,
    "items_in_part": 100,
    "reasons": {
-    "asserted_attitude_or_state_with_determinate_value": 1,
-    "asserted_proposition_with_unresolved_value": 2,
     "coordinated_value_list_is_one_proposition": 4,
-    "duration_rationale_removed": 2,
     "maintainer_boundary_ruling": 2,
     "principal_with_supporting_context": 17,
     "search_constraint_or_goal_is_a_proposition": 2,
-    "short_lived_plan_or_choice_is_a_proposition": 2,
-    "unresolved_reference_is_not_known": 1
+    "short_lived_plan_or_choice_is_a_proposition": 2
    },
    "status_transitions": {
-    "ambiguous->known": 26,
-    "known->ambiguous": 1,
-    "known->known": 1,
-    "unknown->ambiguous": 2,
+    "ambiguous->known": 24,
     "unknown->known": 3
    }
   },
   "stratified": {
-   "items_changed": 54,
+   "items_changed": 50,
    "items_in_part": 168,
    "reasons": {
     "asserted_attitude_or_state_with_determinate_value": 6,
-    "cardinality_by_semantic_meaning": 2,
     "coordinated_value_list_is_one_proposition": 6,
     "determinate_value_on_a_different_property": 1,
-    "duration_rationale_removed": 1,
     "maintainer_boundary_ruling": 9,
     "principal_with_supporting_context": 25,
     "reference_resolvable_within_the_turn": 1,
-    "short_lived_plan_or_choice_is_a_proposition": 2,
-    "unresolved_reference_is_not_known": 1
+    "short_lived_plan_or_choice_is_a_proposition": 2
    },
    "status_transitions": {
-    "ambiguous->known": 44,
-    "known->ambiguous": 1,
-    "known->known": 2,
+    "ambiguous->known": 43,
     "unknown->ambiguous": 5,
     "unknown->known": 2
    }
@@ -48,29 +36,14 @@
  },
  "by_reason": {
   "asserted_attitude_or_state_with_determinate_value": {
-   "count": 7,
+   "count": 6,
    "items": [
-    "ps1-010",
     "ps1-143",
     "ps1-157",
     "ps1-162",
     "ps1-163",
     "ps1-201",
     "ps1-258"
-   ]
-  },
-  "asserted_proposition_with_unresolved_value": {
-   "count": 2,
-   "items": [
-    "ps1-057",
-    "ps1-096"
-   ]
-  },
-  "cardinality_by_semantic_meaning": {
-   "count": 2,
-   "items": [
-    "ps1-264",
-    "ps1-267"
    ]
   },
   "coordinated_value_list_is_one_proposition": {
@@ -92,14 +65,6 @@
    "count": 1,
    "items": [
     "ps1-151"
-   ]
-  },
-  "duration_rationale_removed": {
-   "count": 3,
-   "items": [
-    "ps1-031",
-    "ps1-074",
-    "ps1-200"
    ]
   },
   "maintainer_boundary_ruling": {
@@ -186,21 +151,12 @@
     "ps1-165",
     "ps1-168"
    ]
-  },
-  "unresolved_reference_is_not_known": {
-   "count": 2,
-   "items": [
-    "ps1-063",
-    "ps1-103"
-   ]
   }
  },
  "by_ruling_class": {
   "corpus_rereview": {
-   "count": 75,
+   "count": 66,
    "items": [
-    "ps1-010",
-    "ps1-031",
     "ps1-033",
     "ps1-038",
     "ps1-040",
@@ -212,25 +168,20 @@
     "ps1-053",
     "ps1-054",
     "ps1-055",
-    "ps1-057",
     "ps1-061",
-    "ps1-063",
     "ps1-064",
     "ps1-065",
     "ps1-066",
     "ps1-068",
     "ps1-072",
-    "ps1-074",
     "ps1-078",
     "ps1-082",
     "ps1-085",
     "ps1-090",
     "ps1-094",
-    "ps1-096",
     "ps1-097",
     "ps1-099",
     "ps1-100",
-    "ps1-103",
     "ps1-110",
     "ps1-112",
     "ps1-113",
@@ -260,7 +211,6 @@
     "ps1-182",
     "ps1-195",
     "ps1-196",
-    "ps1-200",
     "ps1-201",
     "ps1-206",
     "ps1-208",
@@ -272,8 +222,7 @@
     "ps1-240",
     "ps1-251",
     "ps1-252",
-    "ps1-258",
-    "ps1-264"
+    "ps1-258"
    ]
   },
   "maintainer_ruling_change": {
@@ -291,19 +240,12 @@
     "ps1-218",
     "ps1-257"
    ]
-  },
-  "maintainer_ruling_keep_status": {
-   "count": 1,
-   "items": [
-    "ps1-267"
-   ]
   }
  },
  "by_status_transition": {
   "ambiguous->known": {
-   "count": 70,
+   "count": 67,
    "items": [
-    "ps1-010",
     "ps1-033",
     "ps1-038",
     "ps1-040",
@@ -320,7 +262,6 @@
     "ps1-066",
     "ps1-068",
     "ps1-072",
-    "ps1-074",
     "ps1-078",
     "ps1-082",
     "ps1-085",
@@ -361,7 +302,6 @@
     "ps1-195",
     "ps1-196",
     "ps1-197",
-    "ps1-200",
     "ps1-206",
     "ps1-208",
     "ps1-220",
@@ -375,26 +315,9 @@
     "ps1-258"
    ]
   },
-  "known->ambiguous": {
-   "count": 2,
-   "items": [
-    "ps1-063",
-    "ps1-103"
-   ]
-  },
-  "known->known": {
-   "count": 3,
-   "items": [
-    "ps1-031",
-    "ps1-264",
-    "ps1-267"
-   ]
-  },
   "unknown->ambiguous": {
-   "count": 7,
+   "count": 5,
    "items": [
-    "ps1-057",
-    "ps1-096",
     "ps1-134",
     "ps1-158",
     "ps1-205",
@@ -416,16 +339,14 @@
  "by_stratum": {
   "change_language": {
    "items": [
-    "ps1-103",
     "ps1-110",
     "ps1-112",
     "ps1-113"
    ],
-   "items_changed": 4,
+   "items_changed": 3,
    "items_in_stratum": 14,
    "status_transitions": {
-    "ambiguous->known": 3,
-    "known->ambiguous": 1
+    "ambiguous->known": 3
    }
   },
   "coexistence_language": {
@@ -532,16 +453,15 @@
   },
   "prospective": {
    "items": [
-    "ps1-200",
     "ps1-201",
     "ps1-205",
     "ps1-206",
     "ps1-208"
    ],
-   "items_changed": 5,
+   "items_changed": 4,
    "items_in_stratum": 14,
    "status_transitions": {
-    "ambiguous->known": 3,
+    "ambiguous->known": 2,
     "unknown->ambiguous": 1,
     "unknown->known": 1
    }
@@ -562,15 +482,12 @@
   "simple_first_person_statement": {
    "items": [
     "ps1-257",
-    "ps1-258",
-    "ps1-264",
-    "ps1-267"
+    "ps1-258"
    ],
-   "items_changed": 4,
+   "items_changed": 2,
    "items_in_stratum": 14,
    "status_transitions": {
     "ambiguous->known": 1,
-    "known->known": 2,
     "unknown->ambiguous": 1
    }
   },
@@ -589,69 +506,14 @@
  "changes": [
   {
    "cardinality_v1": "unknown",
-   "cardinality_v2": "multi_valued",
-   "fields_changed": [
-    "status",
-    "principal",
-    "cardinality"
-   ],
-   "item_id": "ps1-010",
-   "origin": "public_chat_filler",
-   "part": "random",
-   "principal_v1": null,
-   "principal_v2": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "tends to worry about",
-    "value": "disagreements leading to a toxic work environment"
-   },
-   "reason": "asserted_attitude_or_state_with_determinate_value",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "ambiguous",
-   "status_v2": "known",
-   "stratum": null,
-   "temporal_aspect_v1": "present",
-   "temporal_aspect_v2": "present"
-  },
-  {
-   "cardinality_v1": "multi_valued",
-   "cardinality_v2": "multi_valued",
-   "fields_changed": [
-    "propositions"
-   ],
-   "item_id": "ps1-031",
-   "origin": "public_chat_filler",
-   "part": "random",
-   "principal_v1": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "upcoming trip destination",
-    "value": "Osprey Reef"
-   },
-   "principal_v2": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "upcoming trip destination",
-    "value": "Osprey Reef"
-   },
-   "reason": "duration_rationale_removed",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "known",
-   "status_v2": "known",
-   "stratum": null,
-   "temporal_aspect_v1": "prospective",
-   "temporal_aspect_v2": "prospective"
-  },
-  {
-   "cardinality_v1": "unknown",
-   "cardinality_v2": "single_valued",
+   "cardinality_v2": "unknown",
    "fields_changed": [
     "status",
     "propositions",
-    "principal",
-    "cardinality"
+    "principal"
    ],
    "item_id": "ps1-033",
+   "notes": "debt aversion and learning-on-the-job are reasons supporting the stance",
    "origin": "public_chat_filler",
    "part": "random",
    "principal_v1": null,
@@ -678,6 +540,7 @@
     "principal"
    ],
    "item_id": "ps1-038",
+   "notes": "one predicate over a coordinated value list",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -706,6 +569,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-040",
+   "notes": "ficus ownership is presupposed supporting context",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -733,6 +597,7 @@
     "cardinality"
    ],
    "item_id": "ps1-041",
+   "notes": "'I think ... would be a great choice'",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -760,6 +625,7 @@
     "hedged"
    ],
    "item_id": "ps1-042",
+   "notes": "grandma visit is supporting episodic context; lake house is only considered",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -788,6 +654,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-044",
+   "notes": "the request targets the appraisal plan; checking out communities is a closing acknowledgement",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -814,6 +681,7 @@
     "principal"
    ],
    "item_id": "ps1-048",
+   "notes": "all statements are facets of one hobby",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -840,6 +708,7 @@
     "principal"
    ],
    "item_id": "ps1-049",
+   "notes": "LLC filing and content calendar are supporting context for the expense question",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -869,6 +738,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-053",
+   "notes": "",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -896,6 +766,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-054",
+   "notes": "the Gucci purchase is supporting episodic context",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -915,7 +786,7 @@
   },
   {
    "cardinality_v1": "unknown",
-   "cardinality_v2": "multi_valued",
+   "cardinality_v2": "single_valued",
    "fields_changed": [
     "status",
     "propositions",
@@ -926,6 +797,7 @@
     "hedged"
    ],
    "item_id": "ps1-055",
+   "notes": "short-lived explicit choice is a proposition",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -945,27 +817,6 @@
   },
   {
    "cardinality_v1": "unknown",
-   "cardinality_v2": "unknown",
-   "fields_changed": [
-    "status",
-    "propositions",
-    "temporal_aspect"
-   ],
-   "item_id": "ps1-057",
-   "origin": "simulated_user",
-   "part": "random",
-   "principal_v1": null,
-   "principal_v2": null,
-   "reason": "asserted_proposition_with_unresolved_value",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "unknown",
-   "status_v2": "ambiguous",
-   "stratum": null,
-   "temporal_aspect_v1": "none_unknown",
-   "temporal_aspect_v2": "present"
-  },
-  {
-   "cardinality_v1": "unknown",
    "cardinality_v2": "multi_valued",
    "fields_changed": [
     "status",
@@ -975,6 +826,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-061",
+   "notes": "material disjunction inside one determinate value (paperweight)",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -994,33 +846,6 @@
   },
   {
    "cardinality_v1": "multi_valued",
-   "cardinality_v2": "unknown",
-   "fields_changed": [
-    "status",
-    "propositions",
-    "principal",
-    "cardinality"
-   ],
-   "item_id": "ps1-063",
-   "origin": "simulated_user",
-   "part": "random",
-   "principal_v1": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "planned trip destination",
-    "value": "Seattle"
-   },
-   "principal_v2": null,
-   "reason": "unresolved_reference_is_not_known",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "known",
-   "status_v2": "ambiguous",
-   "stratum": null,
-   "temporal_aspect_v1": "prospective",
-   "temporal_aspect_v2": "prospective"
-  },
-  {
-   "cardinality_v1": "multi_valued",
    "cardinality_v2": "multi_valued",
    "fields_changed": [
     "status",
@@ -1029,6 +854,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-064",
+   "notes": "one predicate over a coordinated value list",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1057,6 +883,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-065",
+   "notes": "earlier track-tire purchase and car ownership are supporting",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1084,6 +911,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-066",
+   "notes": "one predicate over a coordinated value list",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1112,6 +940,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-068",
+   "notes": "one predicate over a coordinated value list",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1140,6 +969,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-072",
+   "notes": "search constraint; the necklace purchase is supporting episodic context",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1158,33 +988,6 @@
    "temporal_aspect_v2": "present"
   },
   {
-   "cardinality_v1": "unknown",
-   "cardinality_v2": "multi_valued",
-   "fields_changed": [
-    "status",
-    "propositions",
-    "principal",
-    "cardinality"
-   ],
-   "item_id": "ps1-074",
-   "origin": "simulated_user",
-   "part": "random",
-   "principal_v1": null,
-   "principal_v2": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "plans for the data project",
-    "value": "start by identifying the business problems and defining goals and objectives"
-   },
-   "reason": "duration_rationale_removed",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "ambiguous",
-   "status_v2": "known",
-   "stratum": null,
-   "temporal_aspect_v1": "prospective",
-   "temporal_aspect_v2": "prospective"
-  },
-  {
    "cardinality_v1": "multi_valued",
    "cardinality_v2": "multi_valued",
    "fields_changed": [
@@ -1193,6 +996,7 @@
     "principal"
    ],
    "item_id": "ps1-078",
+   "notes": "parade and costume prize are supporting episodic context",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1220,6 +1024,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-082",
+   "notes": "current Vallejo use is supporting",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1246,6 +1051,7 @@
     "principal"
    ],
    "item_id": "ps1-085",
+   "notes": "'lately'; finished series and re-reads are supporting episodic context",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1276,6 +1082,7 @@
     "hedged"
    ],
    "item_id": "ps1-087",
+   "notes": "explicit hedged outfit plan; the question about shorts is not a proposition",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1304,6 +1111,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-090",
+   "notes": "Wizarding World visit is supporting episodic context",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1331,6 +1139,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-094",
+   "notes": "'soon'; grading-service comparison and coin-show question are supporting",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1349,27 +1158,6 @@
    "temporal_aspect_v2": "prospective"
   },
   {
-   "cardinality_v1": "unknown",
-   "cardinality_v2": "unknown",
-   "fields_changed": [
-    "status",
-    "propositions",
-    "temporal_aspect"
-   ],
-   "item_id": "ps1-096",
-   "origin": "simulated_user",
-   "part": "random",
-   "principal_v1": null,
-   "principal_v2": null,
-   "reason": "asserted_proposition_with_unresolved_value",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "unknown",
-   "status_v2": "ambiguous",
-   "stratum": null,
-   "temporal_aspect_v1": "none_unknown",
-   "temporal_aspect_v2": "present"
-  },
-  {
    "cardinality_v1": "single_valued",
    "cardinality_v2": "multi_valued",
    "fields_changed": [
@@ -1379,6 +1167,7 @@
     "cardinality"
    ],
    "item_id": "ps1-097",
+   "notes": "search constraint; skin type itself stays implied",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1409,6 +1198,7 @@
     "hedged"
    ],
    "item_id": "ps1-098",
+   "notes": "explicit packing plan with a determinate value",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1437,6 +1227,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-099",
+   "notes": "finish preference is supporting",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1464,6 +1255,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-100",
+   "notes": "Zara order is supporting episodic context",
    "origin": "simulated_user",
    "part": "random",
    "principal_v1": null,
@@ -1482,33 +1274,6 @@
    "temporal_aspect_v2": "present"
   },
   {
-   "cardinality_v1": "multi_valued",
-   "cardinality_v2": "unknown",
-   "fields_changed": [
-    "status",
-    "propositions",
-    "principal",
-    "cardinality"
-   ],
-   "item_id": "ps1-103",
-   "origin": "public_chat_filler",
-   "part": "stratified",
-   "principal_v1": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "upcoming trip destination",
-    "value": "Orlando (with family)"
-   },
-   "principal_v2": null,
-   "reason": "unresolved_reference_is_not_known",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "known",
-   "status_v2": "ambiguous",
-   "stratum": "change_language",
-   "temporal_aspect_v1": "prospective",
-   "temporal_aspect_v2": "prospective"
-  },
-  {
    "cardinality_v1": "hierarchical",
    "cardinality_v2": "multi_valued",
    "fields_changed": [
@@ -1519,6 +1284,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-110",
+   "notes": "move and isolation are supporting context (the move has no location value)",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1548,6 +1314,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-112",
+   "notes": "completed fern/succulent moves are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1576,6 +1343,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-113",
+   "notes": "move into a new apartment is supporting context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1602,6 +1370,7 @@
     "principal"
    ],
    "item_id": "ps1-122",
+   "notes": "past competitive swimming and treadmill PB are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1629,6 +1398,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-123",
+   "notes": "trail visits are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1656,6 +1426,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-134",
+   "notes": "intention is real, but 'suggest a few' leaves the value unresolved in the isolated turn",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -1679,6 +1450,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-136",
+   "notes": "oxfords anecdote is supporting episodic context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1707,6 +1479,7 @@
     "hedged"
    ],
    "item_id": "ps1-137",
+   "notes": "hedged necklace recollection is supporting episodic context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1733,6 +1506,7 @@
     "principal"
    ],
    "item_id": "ps1-138",
+   "notes": "'soon'; coworker relation is supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1760,6 +1534,7 @@
     "hedged"
    ],
    "item_id": "ps1-139",
+   "notes": "past mug purchase is supporting episodic context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1786,6 +1561,7 @@
     "principal"
    ],
    "item_id": "ps1-140",
+   "notes": "new certification is supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1812,6 +1588,7 @@
     "principal"
    ],
    "item_id": "ps1-141",
+   "notes": "worries and the company are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1839,6 +1616,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-143",
+   "notes": "'always wanted'; house ownership presupposed",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -1866,6 +1644,7 @@
     "cardinality"
    ],
    "item_id": "ps1-151",
+   "notes": "the date is determinate even though the location is not",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1892,6 +1671,7 @@
     "principal"
    ],
    "item_id": "ps1-152",
+   "notes": "one coherent trip plan",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1920,6 +1700,7 @@
     "hedged"
    ],
    "item_id": "ps1-153",
+   "notes": "seafood cooking and market access are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -1947,6 +1728,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-157",
+   "notes": "liking plus search for one",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -1974,6 +1756,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-158",
+   "notes": "'both of those apps' leaves the value unresolved; 'both' is not coexistence of held values",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -1995,6 +1778,7 @@
     "principal"
    ],
    "item_id": "ps1-160",
+   "notes": "one predicate over a coordinated value list; the Shiraz pairing plan is supporting",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2021,6 +1805,7 @@
     "principal"
    ],
    "item_id": "ps1-162",
+   "notes": "asserted preference with determinate value",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2048,6 +1833,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-163",
+   "notes": "liking plus search for them",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2074,6 +1860,7 @@
     "principal"
    ],
    "item_id": "ps1-164",
+   "notes": "business and audience are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2102,6 +1889,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-165",
+   "notes": "short-lived explicit choice; the party is supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2132,6 +1920,7 @@
     "hedged"
    ],
    "item_id": "ps1-166",
+   "notes": "principal cooking plan; the expressed liking is supporting context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2159,6 +1948,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-167",
+   "notes": "bookshelf rearrangement is supporting episodic context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2186,6 +1976,7 @@
     "cardinality"
    ],
    "item_id": "ps1-168",
+   "notes": "short-lived explicit decision; candle business is supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2213,6 +2004,7 @@
     "temporal_aspect"
    ],
    "item_id": "ps1-170",
+   "notes": "one predicate over a coordinated value list",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2239,6 +2031,7 @@
     "principal"
    ],
    "item_id": "ps1-174",
+   "notes": "one predicate over a coordinated value list",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2265,6 +2058,7 @@
     "principal"
    ],
    "item_id": "ps1-179",
+   "notes": "one predicate over a coordinated value list; 'Now that you mentioned' is discourse",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2293,13 +2087,14 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-180",
+   "notes": "carry-on / pack-light form one coherent travel strategy; 'I think I'll'",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
    "principal_v2": {
     "entity": "user",
     "polarity": "affirmed",
-    "property": "luggage plan for this trip",
+    "property": "travel plan",
     "value": "carry-on only, packing light"
    },
    "reason": "maintainer_boundary_ruling",
@@ -2320,6 +2115,7 @@
     "cardinality"
    ],
    "item_id": "ps1-181",
+   "notes": "principal plan; 'these tips' is unresolved supporting context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2346,6 +2142,7 @@
     "principal"
    ],
    "item_id": "ps1-182",
+   "notes": "one coherent plan",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2372,6 +2169,7 @@
     "principal"
    ],
    "item_id": "ps1-195",
+   "notes": "tournament result and clinic are supporting episodic context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2398,6 +2196,7 @@
     "principal"
    ],
    "item_id": "ps1-196",
+   "notes": "gala donation is supporting episodic context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2425,6 +2224,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-197",
+   "notes": "principal current goal; leftovers statements are supporting episodic context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2450,37 +2250,10 @@
     "propositions",
     "principal",
     "cardinality",
-    "hedged"
-   ],
-   "item_id": "ps1-200",
-   "origin": "public_chat_filler",
-   "part": "stratified",
-   "principal_v1": null,
-   "principal_v2": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "attitude toward going to the gym",
-    "value": "a hassle; unsure it is worth it"
-   },
-   "reason": "duration_rationale_removed",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "ambiguous",
-   "status_v2": "known",
-   "stratum": "prospective",
-   "temporal_aspect_v1": "present",
-   "temporal_aspect_v2": "present"
-  },
-  {
-   "cardinality_v1": "unknown",
-   "cardinality_v2": "single_valued",
-   "fields_changed": [
-    "status",
-    "propositions",
-    "principal",
-    "cardinality",
     "temporal_aspect"
    ],
    "item_id": "ps1-201",
+   "notes": "asserted attitude",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2508,6 +2281,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-205",
+   "notes": "intention exists, but 'those teams' is unresolved",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2529,6 +2303,7 @@
     "principal"
    ],
    "item_id": "ps1-206",
+   "notes": "permaculture reading and seed planting are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2556,6 +2331,7 @@
     "cardinality"
    ],
    "item_id": "ps1-208",
+   "notes": "third-party subject; sister's help and party games are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2583,6 +2359,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-218",
+   "notes": "intention exists, but 'these' is unresolved",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2604,6 +2381,7 @@
     "principal"
    ],
    "item_id": "ps1-220",
+   "notes": "movie count is supporting episodic context",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2630,6 +2408,7 @@
     "principal"
    ],
    "item_id": "ps1-221",
+   "notes": "'this' resolves to the converter named in the same turn",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2658,6 +2437,7 @@
     "hedged"
    ],
    "item_id": "ps1-222",
+   "notes": "sushi habit is supporting context (cf. ruling on ps1-197)",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2686,6 +2466,7 @@
     "hedged"
    ],
    "item_id": "ps1-223",
+   "notes": "gift cards are supporting context for the expense question",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2715,6 +2496,7 @@
     "hedged"
    ],
    "item_id": "ps1-226",
+   "notes": "named values (unlike ps1-158); new role is supporting and has no value",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2741,6 +2523,7 @@
     "principal"
    ],
    "item_id": "ps1-240",
+   "notes": "Luna's toy preference and worn scratching post are supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2768,6 +2551,7 @@
     "aspect_explicit"
    ],
    "item_id": "ps1-251",
+   "notes": "'I meant to say' correction is supporting; 'for now' is self-limiting and temporal",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2794,6 +2578,7 @@
     "principal"
    ],
    "item_id": "ps1-252",
+   "notes": "one undecided choice over two named values; PlayStation fandom is supporting",
    "origin": "simulated_user",
    "part": "stratified",
    "principal_v1": null,
@@ -2822,6 +2607,7 @@
     "hedged"
    ],
    "item_id": "ps1-257",
+   "notes": "intention exists, but 'them' is unresolved",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2843,6 +2629,7 @@
     "cardinality"
    ],
    "item_id": "ps1-258",
+   "notes": "short-lived asserted state; 'now'",
    "origin": "public_chat_filler",
    "part": "stratified",
    "principal_v1": null,
@@ -2859,77 +2646,19 @@
    "stratum": "simple_first_person_statement",
    "temporal_aspect_v1": "present",
    "temporal_aspect_v2": "present"
-  },
-  {
-   "cardinality_v1": "single_valued",
-   "cardinality_v2": "multi_valued",
-   "fields_changed": [
-    "cardinality"
-   ],
-   "item_id": "ps1-264",
-   "origin": "simulated_user",
-   "part": "stratified",
-   "principal_v1": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "plans",
-    "value": "wake up earlier on Sundays for meal prep"
-   },
-   "principal_v2": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "plans",
-    "value": "wake up earlier on Sundays for meal prep"
-   },
-   "reason": "cardinality_by_semantic_meaning",
-   "ruling_class": "corpus_rereview",
-   "status_v1": "known",
-   "status_v2": "known",
-   "stratum": "simple_first_person_statement",
-   "temporal_aspect_v1": "prospective",
-   "temporal_aspect_v2": "prospective"
-  },
-  {
-   "cardinality_v1": "single_valued",
-   "cardinality_v2": "multi_valued",
-   "fields_changed": [
-    "cardinality"
-   ],
-   "item_id": "ps1-267",
-   "origin": "simulated_user",
-   "part": "stratified",
-   "principal_v1": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "looking for",
-    "value": "a hostel at $30-40 a night"
-   },
-   "principal_v2": {
-    "entity": "user",
-    "polarity": "affirmed",
-    "property": "looking for",
-    "value": "a hostel at $30-40 a night"
-   },
-   "reason": "cardinality_by_semantic_meaning",
-   "ruling_class": "maintainer_ruling_keep_status",
-   "status_v1": "known",
-   "status_v2": "known",
-   "stratum": "simple_first_person_statement",
-   "temporal_aspect_v1": "present",
-   "temporal_aspect_v2": "present"
   }
  ],
  "field_change_counts": {
-  "cardinality": 30,
-  "principal_proposition": 77,
-  "status": 84,
-  "temporal_aspect": 36
+  "cardinality": 22,
+  "principal_proposition": 72,
+  "status": 77,
+  "temporal_aspect": 34
  },
  "generated_by": "build_change_manifest.py",
  "interpreter_output_consulted": false,
- "items_changed": 87,
+ "items_changed": 77,
  "items_reviewed": 268,
- "items_unchanged": 181,
+ "items_unchanged": 191,
  "maintainer_rulings": {
   "change": [
    "ps1-087",
@@ -2953,6 +2682,20 @@
   "total": 15
  },
  "manifest": "proposition-semantics draft v1 -> draft v2 change manifest",
+ "new": {
+  "file": "draft-annotations-v2.json",
+  "rubric": "annotation-rubric-v2.md",
+  "rubric_sha256": "ac13697f6a1a301dee7c088cfbf88925636e28fd224e22e9050a8b7cf10c92a2",
+  "sha256": "8f333b3800bb2ce7553ac5968c8b6978f5fe64662e2863b58fea16dc463f1b2d",
+  "version": "v2"
+ },
+ "old": {
+  "file": "draft-annotations-v1.json",
+  "rubric": "annotation-rubric.md",
+  "rubric_sha256": "47df0caf2413a0e65f9fe609181f162f54c2a6a857583a92e050ac89a33dff26",
+  "sha256": "5cba499b99c820c8b8462d2ae28197f690fe1c2b88a9d97a598f9398184295f4",
+  "version": "v1"
+ },
  "status_counts": {
   "v1": {
    "all": {
@@ -2973,14 +2716,14 @@
   },
   "v2": {
    "all": {
-    "ambiguous": 45,
-    "known": 137,
-    "unknown": 86
+    "ambiguous": 44,
+    "known": 136,
+    "unknown": 88
    },
    "random": {
-    "ambiguous": 16,
-    "known": 51,
-    "unknown": 33
+    "ambiguous": 15,
+    "known": 50,
+    "unknown": 35
    },
    "stratified": {
     "ambiguous": 29,
@@ -2997,31 +2740,19 @@
  ],
  "status_transition_matrix": {
   "ambiguous": {
-   "ambiguous": 36,
-   "known": 70,
+   "ambiguous": 39,
+   "known": 67,
    "unknown": 0
   },
   "known": {
-   "ambiguous": 2,
-   "known": 62,
+   "ambiguous": 0,
+   "known": 64,
    "unknown": 0
   },
   "unknown": {
-   "ambiguous": 7,
+   "ambiguous": 5,
    "known": 5,
-   "unknown": 86
+   "unknown": 88
   }
- },
- "v1": {
-  "file": "draft-annotations-v1.json",
-  "rubric": "annotation-rubric.md",
-  "rubric_sha256": "47df0caf2413a0e65f9fe609181f162f54c2a6a857583a92e050ac89a33dff26",
-  "sha256": "5cba499b99c820c8b8462d2ae28197f690fe1c2b88a9d97a598f9398184295f4"
- },
- "v2": {
-  "file": "draft-annotations-v2.json",
-  "rubric": "annotation-rubric-v2.md",
-  "rubric_sha256": "e924bd5858c52c713735e33f2a71585fc390ea528b6e8f470214f1e5bc1d4dab",
-  "sha256": "21b579c3d990d9b51b67e7ef0328f37cfa8a3ec250bb33757f2702a7d97bf215"
  }
 }

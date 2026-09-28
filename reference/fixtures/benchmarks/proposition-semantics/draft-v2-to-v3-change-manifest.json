@@ -1,0 +1,1100 @@
+{
+ "by_part": {
+  "random": {
+   "items_changed": 12,
+   "items_in_part": 100,
+   "reasons": {
+    "asserted_attitude_or_state_with_determinate_value": 3,
+    "asserted_proposition_with_unresolved_value": 2,
+    "cardinality_by_semantic_meaning": 2,
+    "different_predicates_are_not_one_list": 1,
+    "duration_rationale_removed": 2,
+    "unresolved_reference_is_not_known": 1,
+    "value_inside_a_question_is_not_asserted": 1
+   },
+   "status_transitions": {
+    "ambiguous->known": 4,
+    "known->ambiguous": 2,
+    "known->known": 4,
+    "unknown->ambiguous": 2
+   }
+  },
+  "stratified": {
+   "items_changed": 10,
+   "items_in_part": 168,
+   "reasons": {
+    "asserted_attitude_or_state_with_determinate_value": 4,
+    "cardinality_by_semantic_meaning": 3,
+    "different_predicates_are_not_one_list": 1,
+    "duration_rationale_removed": 1,
+    "unresolved_reference_is_not_known": 1
+   },
+   "status_transitions": {
+    "ambiguous->known": 4,
+    "known->ambiguous": 2,
+    "known->known": 3,
+    "unknown->known": 1
+   }
+  }
+ },
+ "by_reason": {
+  "asserted_attitude_or_state_with_determinate_value": {
+   "count": 7,
+   "items": [
+    "ps1-010",
+    "ps1-046",
+    "ps1-086",
+    "ps1-102",
+    "ps1-203",
+    "ps1-230",
+    "ps1-235"
+   ]
+  },
+  "asserted_proposition_with_unresolved_value": {
+   "count": 2,
+   "items": [
+    "ps1-057",
+    "ps1-096"
+   ]
+  },
+  "cardinality_by_semantic_meaning": {
+   "count": 5,
+   "items": [
+    "ps1-033",
+    "ps1-055",
+    "ps1-180",
+    "ps1-264",
+    "ps1-267"
+   ]
+  },
+  "different_predicates_are_not_one_list": {
+   "count": 2,
+   "items": [
+    "ps1-068",
+    "ps1-252"
+   ]
+  },
+  "duration_rationale_removed": {
+   "count": 3,
+   "items": [
+    "ps1-031",
+    "ps1-074",
+    "ps1-200"
+   ]
+  },
+  "unresolved_reference_is_not_known": {
+   "count": 2,
+   "items": [
+    "ps1-063",
+    "ps1-103"
+   ]
+  },
+  "value_inside_a_question_is_not_asserted": {
+   "count": 1,
+   "items": [
+    "ps1-082"
+   ]
+  }
+ },
+ "by_ruling_class": {
+  "corpus_rereview": {
+   "count": 18,
+   "items": [
+    "ps1-031",
+    "ps1-033",
+    "ps1-046",
+    "ps1-055",
+    "ps1-057",
+    "ps1-063",
+    "ps1-068",
+    "ps1-074",
+    "ps1-082",
+    "ps1-086",
+    "ps1-096",
+    "ps1-102",
+    "ps1-103",
+    "ps1-200",
+    "ps1-203",
+    "ps1-230",
+    "ps1-235",
+    "ps1-264"
+   ]
+  },
+  "corpus_rereview_on_ruled_item": {
+   "count": 2,
+   "items": [
+    "ps1-180",
+    "ps1-267"
+   ]
+  },
+  "maintainer_second_review": {
+   "count": 2,
+   "items": [
+    "ps1-010",
+    "ps1-252"
+   ]
+  }
+ },
+ "by_status_transition": {
+  "ambiguous->known": {
+   "count": 8,
+   "items": [
+    "ps1-010",
+    "ps1-046",
+    "ps1-074",
+    "ps1-086",
+    "ps1-102",
+    "ps1-200",
+    "ps1-203",
+    "ps1-235"
+   ]
+  },
+  "known->ambiguous": {
+   "count": 4,
+   "items": [
+    "ps1-063",
+    "ps1-068",
+    "ps1-103",
+    "ps1-252"
+   ]
+  },
+  "known->known": {
+   "count": 7,
+   "items": [
+    "ps1-031",
+    "ps1-033",
+    "ps1-055",
+    "ps1-082",
+    "ps1-180",
+    "ps1-264",
+    "ps1-267"
+   ]
+  },
+  "unknown->ambiguous": {
+   "count": 2,
+   "items": [
+    "ps1-057",
+    "ps1-096"
+   ]
+  },
+  "unknown->known": {
+   "count": 1,
+   "items": [
+    "ps1-230"
+   ]
+  }
+ },
+ "by_stratum": {
+  "change_language": {
+   "items": [
+    "ps1-102",
+    "ps1-103"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 1,
+    "known->ambiguous": 1
+   }
+  },
+  "coexistence_language": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "employment": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "hedging": {
+   "items": [
+    "ps1-180"
+   ],
+   "items_changed": 1,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "known->known": 1
+   }
+  },
+  "past_habitual": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "preference": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "present_current": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "proper_noun_subject": {
+   "items": [
+    "ps1-230",
+    "ps1-235"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 1,
+    "unknown->known": 1
+   }
+  },
+  "prospective": {
+   "items": [
+    "ps1-200",
+    "ps1-203"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 2
+   }
+  },
+  "residence_location": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "simple_first_person_statement": {
+   "items": [
+    "ps1-264",
+    "ps1-267"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "known->known": 2
+   }
+  },
+  "temporal_word_non_temporal": {
+   "items": [
+    "ps1-252"
+   ],
+   "items_changed": 1,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "known->ambiguous": 1
+   }
+  }
+ },
+ "changes": [
+  {
+   "cardinality_v2": "unknown",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-010",
+   "notes": "asserted habitual worry ('I always worry') with a determinate object; the first sentence is a reaction. v1 'value vague' is withdrawn: the value is stated",
+   "origin": "public_chat_filler",
+   "part": "random",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "tends to worry about",
+    "value": "disagreements leading to a toxic work environment"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "maintainer_second_review",
+   "status_v2": "ambiguous",
+   "status_v3": "known",
+   "stratum": null,
+   "temporal_aspect_v2": "present",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-031",
+   "notes": "trip presupposed by 'my trip to' and targeted by the request; 'feeling much better now' is an asserted present state recorded as supporting context (v1 excluded it on duration grounds, a retention reason)",
+   "origin": "public_chat_filler",
+   "part": "random",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "upcoming trip destination",
+    "value": "Osprey Reef"
+   },
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "upcoming trip destination",
+    "value": "Osprey Reef"
+   },
+   "reason": "duration_rationale_removed",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "known",
+   "status_v3": "known",
+   "stratum": null,
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "unknown",
+   "cardinality_v3": "single_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-033",
+   "notes": "debt aversion and learning-on-the-job are reasons supporting the stance; one stance on one object holds at a time, so single_valued (rubric v2 §4 table)",
+   "origin": "public_chat_filler",
+   "part": "random",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "stance on getting an MBA",
+    "value": "not worth the cost"
+   },
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "stance on getting an MBA",
+    "value": "not worth the cost"
+   },
+   "reason": "cardinality_by_semantic_meaning",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "known",
+   "status_v3": "known",
+   "stratum": null,
+   "temporal_aspect_v2": "present",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-046",
+   "notes": "asserted current state with a determinate value; the job change (employer unspecified) is the supporting cause. One overall state holds at a time",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "state since starting a new job",
+    "value": "struggling to get back on track; feeling really overwhelmed"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "ambiguous",
+   "status_v3": "known",
+   "stratum": null,
+   "temporal_aspect_v2": "present",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "single_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-055",
+   "notes": "explicit hedged choice of a dessert wine; the choice slot is not exclusive (several wines can be served), so multi_valued",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "chose",
+    "value": "Moscato d'Asti"
+   },
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "chose",
+    "value": "Moscato d'Asti"
+   },
+   "reason": "cardinality_by_semantic_meaning",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "known",
+   "status_v3": "known",
+   "stratum": null,
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "unknown",
+   "cardinality_v3": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-057",
+   "notes": "an asserted state (a plan is in place) exists, but its value is not determinable from the turn; 'for now' is discourse",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": null,
+   "principal_v3": null,
+   "reason": "asserted_proposition_with_unresolved_value",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "unknown",
+   "status_v3": "ambiguous",
+   "stratum": null,
+   "temporal_aspect_v2": "none_unknown",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-063",
+   "notes": "the plan's value 'the ticket' is unresolved in the isolated turn; Seattle appears only inside a request, so the trip destination is inferred, not asserted",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "planned trip destination",
+    "value": "Seattle"
+   },
+   "principal_v3": null,
+   "reason": "unresolved_reference_is_not_known",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "known",
+   "status_v3": "ambiguous",
+   "stratum": null,
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-068",
+   "notes": "the plan's value is 'some of my vintage items'; the named list sits under a different predicate ('I have a few rare items, including'), so v2's coordinated-list reading merged two predicates. Which items are to be sold is not determinable from the plan itself",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to sell",
+    "value": "vintage items (1960s Fender Jazzmaster, first-edition 'To Kill a Mockingbird', 1960s Batman figure)"
+   },
+   "principal_v3": null,
+   "reason": "different_predicates_are_not_one_list",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "known",
+   "status_v3": "ambiguous",
+   "stratum": null,
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "unknown",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-074",
+   "notes": "one coherent, hedged work plan ('I think I'll start by ... I'll also ...'), as in the ps1-180 ruling; the second step is part of the same plan, not a competing proposition. The v1 note rested on duration, a retention reason, and is withdrawn",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans for the data project",
+    "value": "start by identifying the business problems and defining goals and objectives"
+   },
+   "reason": "duration_rationale_removed",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "ambiguous",
+   "status_v3": "known",
+   "stratum": null,
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "propositions",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-082",
+   "notes": "the asserted state is using Vallejo Model Color; considering Mig Productions appears only inside the question ('Do you think they're worth trying out'), so it is not the asserted principal",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering paint",
+    "value": "Mig Productions rust paints (for the T-34 model)"
+   },
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "uses paint (for the T-34 tank model)",
+    "value": "Vallejo Model Color"
+   },
+   "reason": "value_inside_a_question_is_not_asserted",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "known",
+   "status_v3": "known",
+   "stratum": null,
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "principal"
+   ],
+   "item_id": "ps1-086",
+   "notes": "the only asserted principal is the resumed hobby ('getting back into collecting vinyl records too'); the garage-sale find is supporting episodic context, and the lens appears only inside a request (not asserted)",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "hobby",
+    "value": "collecting vinyl records"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "ambiguous",
+   "status_v3": "known",
+   "stratum": null,
+   "temporal_aspect_v2": "present",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "unknown",
+   "cardinality_v3": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-096",
+   "notes": "an attitude and an intention are asserted, but 'these ideas' is unresolved in the isolated turn",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v2": null,
+   "principal_v3": null,
+   "reason": "asserted_proposition_with_unresolved_value",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "unknown",
+   "status_v3": "ambiguous",
+   "stratum": null,
+   "temporal_aspect_v2": "none_unknown",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "unknown",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-102",
+   "notes": "asserted worry with a determinate object; the conditional is inside the worry's content, and the smoking it presupposes is supporting context",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "worried about",
+    "value": "gaining weight if quitting smoking"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "ambiguous",
+   "status_v3": "known",
+   "stratum": "change_language",
+   "temporal_aspect_v2": "present",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "unknown",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality"
+   ],
+   "item_id": "ps1-103",
+   "notes": "'this dessert adventure' is unresolved in the isolated turn; Orlando appears only inside a question, so the destination is inferred, not asserted",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "upcoming trip destination",
+    "value": "Orlando (with family)"
+   },
+   "principal_v3": null,
+   "reason": "unresolved_reference_is_not_known",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "known",
+   "status_v3": "ambiguous",
+   "stratum": "change_language",
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "single_valued",
+   "cardinality_v3": "single_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-180",
+   "notes": "carry-on / pack-light form one coherent travel strategy; 'I think I'll'; single_valued because the luggage mode for one trip is an exclusive slot (rubric v2 §4 table)",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "travel plan",
+    "value": "carry-on only, packing light"
+   },
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "luggage plan for this trip",
+    "value": "carry-on only, packing light"
+   },
+   "reason": "cardinality_by_semantic_meaning",
+   "ruling_class": "corpus_rereview_on_ruled_item",
+   "status_v2": "known",
+   "status_v3": "known",
+   "stratum": "hedging",
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "unknown",
+   "cardinality_v3": "single_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "hedged"
+   ],
+   "item_id": "ps1-200",
+   "notes": "asserted attitude with a determinate value, hedged ('it sounds like', 'I don't know if'); one attitude toward the gym holds at a time. The v1 note rested on duration, a retention reason, and is withdrawn",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "attitude toward going to the gym",
+    "value": "a hassle; unsure it is worth it"
+   },
+   "reason": "duration_rationale_removed",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "ambiguous",
+   "status_v3": "known",
+   "stratum": "prospective",
+   "temporal_aspect_v2": "present",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-203",
+   "notes": "'I have a sweet tooth' is an asserted state with a determinate value, and the request targets it; the restaurant plan's value is unresolved ('those restaurants') and is supporting, not a competing determinate proposition",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "likes",
+    "value": "sweets (has a sweet tooth)"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "ambiguous",
+   "status_v3": "known",
+   "stratum": "prospective",
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "unknown",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "coexistence_marker"
+   ],
+   "item_id": "ps1-230",
+   "notes": "asserted appreciation with a determinate object, the same class as ps1-159 and ps1-162 (known in v2); 'also' marks another appreciated thing held alongside",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "appreciates",
+    "value": "J.K. Rowling's portrayal of love and friendship from unexpected places in the Harry Potter series"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "unknown",
+   "status_v3": "known",
+   "stratum": "proper_noun_subject",
+   "temporal_aspect_v2": "none_unknown",
+   "temporal_aspect_v3": "present"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-235",
+   "notes": "asserted attitude with a determinate value ('particularly drawn to'); the 'also appreciated' clause is supporting. A reaction at one event is still a proposition; aspect none_unknown because it concerns one past event",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v2": null,
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "was drawn to (at the exhibition)",
+    "value": "the abstract expressionist pieces"
+   },
+   "reason": "asserted_attitude_or_state_with_determinate_value",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "ambiguous",
+   "status_v3": "known",
+   "stratum": "proper_noun_subject",
+   "temporal_aspect_v2": "none_unknown",
+   "temporal_aspect_v3": "none_unknown"
+  },
+  {
+   "cardinality_v2": "multi_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-252",
+   "notes": "two values under different predicates ('considering getting', 'curious about') and an explicitly undecided choice; an undecided set across predicates is not one proposition (rubric v3 §3), so the candidates compete",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering buying",
+    "value": "a PS5 or an Xbox Series X"
+   },
+   "principal_v3": null,
+   "reason": "different_predicates_are_not_one_list",
+   "ruling_class": "maintainer_second_review",
+   "status_v2": "known",
+   "status_v3": "ambiguous",
+   "stratum": "temporal_word_non_temporal",
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "single_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-264",
+   "notes": "hedged prospective plan; a person holds several plans at once, so the property 'plans' is multi_valued (v1 single_valued inferred from the one stated value)",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "wake up earlier on Sundays for meal prep"
+   },
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "wake up earlier on Sundays for meal prep"
+   },
+   "reason": "cardinality_by_semantic_meaning",
+   "ruling_class": "corpus_rereview",
+   "status_v2": "known",
+   "status_v3": "known",
+   "stratum": "simple_first_person_statement",
+   "temporal_aspect_v2": "prospective",
+   "temporal_aspect_v3": "prospective"
+  },
+  {
+   "cardinality_v2": "single_valued",
+   "cardinality_v3": "multi_valued",
+   "fields_changed": [
+    "cardinality"
+   ],
+   "item_id": "ps1-267",
+   "notes": "KEEP known per ruling: determinate active search constraint (hostel around $30-40/night); task-local nature concerns retention, not representability. Cardinality: a person can run several searches at once, and the price range is part of this search's value, so multi_valued (v1 single_valued)",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v2": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "looking for",
+    "value": "a hostel at $30-40 a night"
+   },
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "looking for",
+    "value": "a hostel at $30-40 a night"
+   },
+   "reason": "cardinality_by_semantic_meaning",
+   "ruling_class": "corpus_rereview_on_ruled_item",
+   "status_v2": "known",
+   "status_v3": "known",
+   "stratum": "simple_first_person_statement",
+   "temporal_aspect_v2": "present",
+   "temporal_aspect_v3": "present"
+  }
+ ],
+ "field_change_counts": {
+  "cardinality": 12,
+  "principal_proposition": 15,
+  "status": 15,
+  "temporal_aspect": 5
+ },
+ "generated_by": "build_change_manifest.py",
+ "interpreter_output_consulted": false,
+ "items_changed": 22,
+ "items_reviewed": 268,
+ "items_unchanged": 246,
+ "maintainer_rulings": {
+  "change": [
+   "ps1-087",
+   "ps1-098",
+   "ps1-134",
+   "ps1-158",
+   "ps1-166",
+   "ps1-180",
+   "ps1-181",
+   "ps1-197",
+   "ps1-205",
+   "ps1-218",
+   "ps1-257"
+  ],
+  "keep": [
+   "ps1-006",
+   "ps1-051",
+   "ps1-150",
+   "ps1-267"
+  ],
+  "total": 15
+ },
+ "manifest": "proposition-semantics draft v2 -> draft v3 change manifest",
+ "new": {
+  "file": "draft-annotations-v3.json",
+  "rubric": "annotation-rubric-v3.md",
+  "rubric_sha256": "d8b9da4900c9996e0a9843587d827800a14b97b5ac8ee569d597d5b35bf249b7",
+  "sha256": "e9fe56ee6b15c6c7fce8e129a836046c4c25adf503e764aa9984cd1d66f32fa4",
+  "version": "v3"
+ },
+ "old": {
+  "file": "draft-annotations-v2.json",
+  "rubric": "annotation-rubric-v2.md",
+  "rubric_sha256": "ac13697f6a1a301dee7c088cfbf88925636e28fd224e22e9050a8b7cf10c92a2",
+  "sha256": "8f333b3800bb2ce7553ac5968c8b6978f5fe64662e2863b58fea16dc463f1b2d",
+  "version": "v2"
+ },
+ "rereview_of_v1_to_v2_changes": {
+  "confirmed": 71,
+  "items": 77,
+  "outcomes": {
+   "ps1-033": "revised_in_v3: cardinality_by_semantic_meaning",
+   "ps1-038": "confirmed",
+   "ps1-040": "confirmed",
+   "ps1-041": "confirmed",
+   "ps1-042": "confirmed",
+   "ps1-044": "confirmed",
+   "ps1-048": "confirmed",
+   "ps1-049": "confirmed",
+   "ps1-053": "confirmed",
+   "ps1-054": "confirmed",
+   "ps1-055": "revised_in_v3: cardinality_by_semantic_meaning",
+   "ps1-061": "confirmed",
+   "ps1-064": "confirmed",
+   "ps1-065": "confirmed",
+   "ps1-066": "confirmed",
+   "ps1-068": "revised_in_v3: different_predicates_are_not_one_list",
+   "ps1-072": "confirmed",
+   "ps1-078": "confirmed",
+   "ps1-082": "revised_in_v3: value_inside_a_question_is_not_asserted",
+   "ps1-085": "confirmed",
+   "ps1-087": "confirmed",
+   "ps1-090": "confirmed",
+   "ps1-094": "confirmed",
+   "ps1-097": "confirmed",
+   "ps1-098": "confirmed",
+   "ps1-099": "confirmed",
+   "ps1-100": "confirmed",
+   "ps1-110": "confirmed",
+   "ps1-112": "confirmed",
+   "ps1-113": "confirmed",
+   "ps1-122": "confirmed",
+   "ps1-123": "confirmed",
+   "ps1-134": "confirmed",
+   "ps1-136": "confirmed",
+   "ps1-137": "confirmed",
+   "ps1-138": "confirmed",
+   "ps1-139": "confirmed",
+   "ps1-140": "confirmed",
+   "ps1-141": "confirmed",
+   "ps1-143": "confirmed",
+   "ps1-151": "confirmed",
+   "ps1-152": "confirmed",
+   "ps1-153": "confirmed",
+   "ps1-157": "confirmed",
+   "ps1-158": "confirmed",
+   "ps1-160": "confirmed",
+   "ps1-162": "confirmed",
+   "ps1-163": "confirmed",
+   "ps1-164": "confirmed",
+   "ps1-165": "confirmed",
+   "ps1-166": "confirmed",
+   "ps1-167": "confirmed",
+   "ps1-168": "confirmed",
+   "ps1-170": "confirmed",
+   "ps1-174": "confirmed",
+   "ps1-179": "confirmed",
+   "ps1-180": "revised_in_v3: cardinality_by_semantic_meaning",
+   "ps1-181": "confirmed",
+   "ps1-182": "confirmed",
+   "ps1-195": "confirmed",
+   "ps1-196": "confirmed",
+   "ps1-197": "confirmed",
+   "ps1-201": "confirmed",
+   "ps1-205": "confirmed",
+   "ps1-206": "confirmed",
+   "ps1-208": "confirmed",
+   "ps1-218": "confirmed",
+   "ps1-220": "confirmed",
+   "ps1-221": "confirmed",
+   "ps1-222": "confirmed",
+   "ps1-223": "confirmed",
+   "ps1-226": "confirmed",
+   "ps1-240": "confirmed",
+   "ps1-251": "confirmed",
+   "ps1-252": "revised_in_v3: different_predicates_are_not_one_list",
+   "ps1-257": "confirmed",
+   "ps1-258": "confirmed"
+  },
+  "revised": 6
+ },
+ "status_counts": {
+  "v2": {
+   "all": {
+    "ambiguous": 44,
+    "known": 136,
+    "unknown": 88
+   },
+   "random": {
+    "ambiguous": 15,
+    "known": 50,
+    "unknown": 35
+   },
+   "stratified": {
+    "ambiguous": 29,
+    "known": 86,
+    "unknown": 53
+   }
+  },
+  "v3": {
+   "all": {
+    "ambiguous": 42,
+    "known": 141,
+    "unknown": 85
+   },
+   "random": {
+    "ambiguous": 15,
+    "known": 52,
+    "unknown": 33
+   },
+   "stratified": {
+    "ambiguous": 27,
+    "known": 89,
+    "unknown": 52
+   }
+  }
+ },
+ "status_labels": [
+  "DRAFT",
+  "MODEL-ASSISTED",
+  "NOT ACCEPTED GOLD",
+  "NOT SCORED"
+ ],
+ "status_transition_matrix": {
+  "ambiguous": {
+   "ambiguous": 36,
+   "known": 8,
+   "unknown": 0
+  },
+  "known": {
+   "ambiguous": 4,
+   "known": 132,
+   "unknown": 0
+  },
+  "unknown": {
+   "ambiguous": 2,
+   "known": 1,
+   "unknown": 85
+  }
+ }
+}
