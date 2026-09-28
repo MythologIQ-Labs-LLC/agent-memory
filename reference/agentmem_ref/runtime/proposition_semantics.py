@@ -515,6 +515,67 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
     })
 
 
+def persisted_form(interpretation: Mapping[str, Any]) -> dict[str, Any]:
+    """The compact stored form: only non-default evidence plus one version tag.
+
+    Every fact carries this, and recall decodes fact attributes for every candidate,
+    so defaults (unknown proposition and cardinality, no self-validity, no relations,
+    the constant interpreter ref, ``authority_effect: none``) are implied, not stored.
+    Clause-level parses are diagnostic and are not persisted (``clause_count`` is).
+    ``expanded_form`` restores the full typed contract exactly.
+    """
+
+    stored: dict[str, Any] = {"version": f"{INTERPRETER_VERSION}/{CLASSIFIER_VERSION}"}
+    proposition = {k: v for k, v in (interpretation.get("proposition") or {}).items() if k != "basis"}
+    if proposition.get("status", UNKNOWN) != UNKNOWN:
+        if "slots" in proposition:
+            proposition["slot_count"] = len(proposition.pop("slots"))
+        stored["proposition"] = proposition
+    cardinality = interpretation.get("cardinality") or {}
+    if cardinality.get("class", UNKNOWN) != UNKNOWN:
+        stored["cardinality"] = dict(cardinality)
+    validity = interpretation.get("self_validity") or {}
+    if validity.get("status", "none") != "none":
+        stored["self_validity"] = dict(validity)
+    for key in ("ended_values", "markers", "relations", "clause_count", "relation_count",
+                "unresolved_cardinality_unknown_count"):
+        if interpretation.get(key):
+            stored[key] = interpretation[key]
+    reasons = [r for r in interpretation.get("proposal_ineligible_reasons") or () if not r.startswith("proposition_")]
+    if reasons:
+        stored["proposal_ineligible_reasons"] = reasons
+    return stored
+
+
+def expanded_form(stored: Mapping[str, Any] | None) -> dict[str, Any] | None:
+    """The full typed contract from a stored form; ``None`` for pre-#550 facts."""
+
+    if not stored:
+        return None
+    interpreter_version, _, classifier_version = str(stored.get("version", "")).partition("/")
+    proposition = dict(stored.get("proposition") or {"status": UNKNOWN})
+    proposition["basis"] = "none" if proposition["status"] == UNKNOWN else "interpreted"
+    reasons = list(stored.get("proposal_ineligible_reasons") or ())
+    if proposition.get("status") != KNOWN:
+        reasons.append(f"proposition_{proposition.get('status', UNKNOWN)}")
+    return {
+        "interpreter": {"ref": INTERPRETER_REF, "version": interpreter_version},
+        "classifier": {"version": classifier_version},
+        "authority_effect": "none",
+        "proposition": proposition,
+        "cardinality": dict(stored.get("cardinality") or {"class": UNKNOWN, "basis": "none"}),
+        "self_validity": dict(stored.get("self_validity") or {"status": "none"}),
+        "markers": dict(stored.get("markers") or {}),
+        "ended_values": list(stored.get("ended_values") or ()),
+        "relations": list(stored.get("relations") or ()),
+        "relation_count": int(stored.get("relation_count", 0)),
+        "clause_count": int(stored.get("clause_count", 0)),
+        **({"unresolved_cardinality_unknown_count": stored["unresolved_cardinality_unknown_count"]}
+           if "unresolved_cardinality_unknown_count" in stored else {}),
+        "proposal_ineligible_reasons": reasons,
+    }
+
+
 def index_summary(interpretation: Mapping[str, Any] | None) -> dict[str, Any] | None:
     """The minimal stored fields classification reads; kept in the in-memory slot index."""
 
@@ -545,7 +606,8 @@ def interpreted_validity(interpretation: Mapping[str, Any] | None) -> dict[str, 
         return None
     return {"valid_from": validity.get("valid_from"), "valid_until": validity.get("valid_until"),
             "basis": "interpreted", "anchor": validity.get("anchor"),
-            "interpreter": dict((interpretation or {}).get("interpreter") or {})}
+            "interpreter": dict((interpretation or {}).get("interpreter") or {
+                "ref": INTERPRETER_REF, "version": str((interpretation or {}).get("version", "")).partition("/")[0]})}
 
 
 # --------------------------------------------------------------------------- classification
@@ -661,6 +723,6 @@ def classify_write(
 __all__ = [
     "AFFIRMED", "AMBIGUOUS", "CARDINALITIES", "CLASSIFICATIONS", "CLASSIFIER_VERSION", "COEXISTENCE", "CONFLICT",
     "ENDED", "HIERARCHICAL", "INTERPRETER_REF", "INTERPRETER_VERSION", "KNOWN", "MULTI_VALUED", "SAME_VALUE",
-    "SINGLE_VALUED", "STATE_CHANGE_CANDIDATE", "UNKNOWN", "UNRESOLVED", "WRITE_SEMANTICS_KEY", "bounded_relations", "classify_write", "index_summary",
+    "SINGLE_VALUED", "STATE_CHANGE_CANDIDATE", "UNKNOWN", "UNRESOLVED", "WRITE_SEMANTICS_KEY", "bounded_relations", "classify_write", "expanded_form", "index_summary", "persisted_form",
     "ended_slots", "interpret_write", "interpreted_validity", "proposal_id", "slot_key", "write_slot",
 ]

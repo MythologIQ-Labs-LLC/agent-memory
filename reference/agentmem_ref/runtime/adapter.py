@@ -563,8 +563,8 @@ class GovernedMemoryAdapter:
             "purpose": proposal.purpose,
         }
         attributes: dict = {DECLARED_TEMPORAL_KEY: declared} if declared else {}
-        attributes[semantics.WRITE_SEMANTICS_KEY] = self._interpret_write(
-            uuid, proposal.target_reference, fact_text, declared, scope
+        attributes[semantics.WRITE_SEMANTICS_KEY] = semantics.persisted_form(
+            self._interpret_write(uuid, proposal.target_reference, fact_text, declared, scope)
         )
         self._substrate.write_fact(
             Fact(
@@ -669,7 +669,7 @@ class GovernedMemoryAdapter:
         fact = self._semantics_visible(fact_uuid, context)
         if fact is None:
             return None
-        value = (fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY)
+        value = semantics.expanded_form((fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY))
         return json.loads(json.dumps(value)) if value is not None else None
 
     def semantic_proposals(self, context: RecallContext) -> list[dict]:
