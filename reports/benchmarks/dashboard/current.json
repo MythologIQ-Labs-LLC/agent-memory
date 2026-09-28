@@ -4,12 +4,14 @@
   "as_of": "2026-09-28",
   "authority_effect": "none",
   "aggregate_score": "not_defined",
-  "main_head": "b50d6d1db35e21a87cf91de63c363104f8c77d87",
+  "main_head": "a24e993958d741379993341e8b3f63ed37482df3",
   "reading_rules": [
     "benchmark score != memory authority",
     "published vendor score != same-harness comparator",
     "historical self-comparison != market position",
     "implementation language != doctrine",
+    "cross-language parity != runtime promotion",
+    "non-float canonical parity != persisted-state parity",
     "blocked/not_run/unsupported/evidence_gap are states, never numeric zero",
     "Part R is the population sample for #594 Phase B; Part S is stratified diagnostic evidence only",
     "strict proposition slot conformance uses zero property aliases frozen before scoring"
@@ -18,7 +20,8 @@
     "agent_memory_longitudinal": "current accepted Agent Memory evidence versus earlier accepted Agent Memory evidence under a sufficiently comparable profile",
     "same_harness": "multiple systems executed against the same frozen input, evaluator, budgets, and model/judge configuration",
     "published_reference": "vendor or research result retained for market context but not numerically comparable unless methodology is proven equivalent",
-    "external_cross_system_reference": "independent multi-system suite useful for triangulation but not a substitute for local same-harness reproduction"
+    "external_cross_system_reference": "independent multi-system suite useful for triangulation but not a substitute for local same-harness reproduction",
+    "runtime_qualification": "cross-language implementation-profile conformance and performance evidence; never a memory-quality or authority score"
   },
   "competitive_evidence": {
     "status": "infrastructure_merged_result_pending",
@@ -60,22 +63,45 @@
     "controlling_adr": "ADR-028",
     "current_runtime": "Python qualified runtime/reference implementation",
     "rust_status": "evaluation_only_shadow",
-    "merged_pr": 605,
+    "merged_prs": [605, 610, 611],
     "qualified_ci_profile": "ubuntu-latest",
     "accepted_shadow_evidence": [
       {
+        "pr": 605,
         "workflow_run": 36457677348,
         "result": "exact tokenization and BM25 IEEE-754 score-bit parity including exact tie"
       },
       {
+        "pr": 605,
         "workflow_run": 36458112635,
         "result": "BM25 parity retained and UTF-8 SHA-256 vectors reproduced exactly"
+      },
+      {
+        "pr": 610,
+        "workflow_run": 36485253610,
+        "result": "exact canonical UTF-8 bytes and SHA-256 digest parity for the explicitly non-floating JSON domain"
+      },
+      {
+        "pr": 611,
+        "workflow_run": 36486001629,
+        "result": "exact #591 identity-first candidate-prefilter membership, ordering and score-bit parity"
       }
     ],
+    "persistence_determinism_gate": {
+      "issue": 609,
+      "status": "active",
+      "finding": "TypedRelation retrieval_weight is float-bearing canonical state and current persisted integrity bytes inherit CPython JSON floating-number spelling",
+      "adr_candidate": "ADR-040",
+      "adr_pr": 612,
+      "adr_status": "draft_proposed_not_accepted",
+      "runtime_bytes_changed": false,
+      "digest_schemes_changed": false
+    },
     "not_established": [
-      "canonical serialization parity",
-      "cross-platform floating-math identity",
-      "runtime lifecycle parity",
+      "float-bearing persisted canonical serialization parity",
+      "state/integrity parity over affected rows",
+      "Rust-owned restart/checkpoint compatibility",
+      "cross-platform floating-math identity beyond the qualified BM25 CI profile",
       "matched Python/Rust performance advantage",
       "FFI or native Rust runtime promotion"
     ],
@@ -84,7 +110,8 @@
       "B Python facade plus Rust kernel",
       "C native Rust runtime plus Python bindings",
       "D parallel conformant Python and Rust profiles"
-    ]
+    ],
+    "current_hypothesis": "B strengthened by exact deterministic parity on ranking, hashing, non-floating canonical bytes, and the #591 candidate-generation hot path; not yet selected"
   },
   "published_reference": [
     {
@@ -160,6 +187,7 @@
   "active_governance": {
     "ADR-028":"ACCEPTED_LANGUAGE_NEUTRAL_CORE",
     "ADR-039":"PROPOSED",
+    "ADR-040":"DRAFT_PROPOSAL_PR_612_NOT_ACCEPTED",
     "583_PR_587":"DRAFT_HOLD",
     "594":"QUALIFIED",
     "591":"COMPLETE",
@@ -167,7 +195,8 @@
     "competitive_comparator_program":601,
     "competitive_infrastructure":"MERGED_604_606_RESULT_PENDING",
     "rust_runtime_qualification":602,
-    "rust_shadow_status":"DETERMINISTIC_PRIMITIVES_PARITY_PASS_RUNTIME_NOT_PROMOTED",
+    "rust_shadow_status":"TOKENIZATION_BM25_SHA_NONFLOAT_CANONICAL_PREFILTER_PARITY_PASS_RUNTIME_NOT_PROMOTED",
+    "persistence_determinism_gate":609,
     "next_rc_step":585,
     "temporal_dependency_added_by_594":598,
     "high_priority_nonautomatic_rc_blockers":[596,597],
