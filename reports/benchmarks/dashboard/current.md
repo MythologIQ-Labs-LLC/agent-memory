@@ -2,7 +2,7 @@
 
 Status: **current accepted evidence through #594**, plus current pre-1.0 comparator/runtime-qualification state as of 2026-09-28.
 
-Current merged `main`: `b50d6d1db35e21a87cf91de63c363104f8c77d87`.
+Current merged `main`: `a24e993958d741379993341e8b3f63ed37482df3`.
 
 No universal aggregate score exists. `blocked`, `not_run`, `unsupported`, and `evidence_gap` are states, never numeric zero.
 
@@ -90,23 +90,46 @@ Independent multi-system suites may be recorded as `external_cross_system_refere
 
 ## Runtime qualification — Python vs Rust
 
-**Status: deterministic Rust shadow primitives qualified; runtime promotion not established.**
+**Status: three deterministic Rust-shadow slices qualified; runtime promotion not established.**
 
 ADR-028 remains controlling: the normative core is language-neutral.
 
-Merged PR #605 added an evaluation-only, dependency-free Rust shadow crate and shared frozen Python/Rust fixtures.
+Python remains the qualified runtime/reference implementation. Rust remains evaluation-only and is not linked into the product runtime.
 
-Accepted evidence:
+### Accepted Rust-shadow evidence
+
+**PR #605 — ranking and digest primitives**
 
 - workflow `36457677348`: exact relevance-token vectors and every admitted-set BM25 IEEE-754 score bit reproduced on Ubuntu CI, including an exact tie;
 - workflow `36458112635`: BM25 parity retained and UTF-8 SHA-256 vectors reproduced exactly.
 
-This supports continuing the Rust qualification program. It does **not** establish:
+**PR #610 — non-floating canonical JSON bytes**
 
-- canonical serialization parity;
-- cross-platform floating-math identity;
-- lifecycle/state parity;
-- matched performance advantage;
+- workflow `36485253610`: Python and Rust reproduced exact frozen UTF-8 canonical bytes and SHA-256 digests for null, booleans, exact integers, strings, arrays, and string-keyed objects;
+- full exact-head repository validation was green before merge;
+- the Rust value model for this slice cannot represent floats, making the qualification boundary structural rather than advisory.
+
+**PR #611 — #591 identity-first candidate prefilter**
+
+- workflow `36486001629`: exact candidate membership, ordering, and score-bit parity across wrong-group exclusion, identity-ineligible exclusion, exact ties, duplicate query terms, empty stripped queries, and current punctuation semantics;
+- the full exact-head repository matrix was green before merge;
+- this is candidate-generation/minimization parity only. Materialized fact eligibility and canonical recall admission remain downstream and authoritative.
+
+### Persistence determinism gap — #609
+
+#602 exposed a real portability defect in the current persistence contract.
+
+`TypedRelation.retrieval_weight` is a float and typed-relation rows participate in SQLite integrity commitments. Current canonical serialization delegates floating-number spelling to CPython's JSON encoder. Therefore full cross-language persisted-state identity is not yet language-neutral.
+
+Issue #609 owns the numeric canonicalization and migration contract. A draft ADR-040 proposal is under review separately; no current runtime bytes or digest schemes have changed.
+
+Until #609 is dispositioned, the following remain **not established**:
+
+- float-bearing persisted canonical serialization parity;
+- state/integrity parity over affected rows;
+- restart/checkpoint compatibility for a Rust-owned state runtime;
+- cross-platform floating-math identity beyond the currently qualified BM25 CI profile;
+- matched Python/Rust performance advantage;
 - FFI or native-Rust runtime promotion.
 
 Current decision candidates remain:
@@ -117,6 +140,8 @@ B. Python facade + Rust kernel
 C. native Rust runtime + Python bindings
 D. parallel conformant Python and Rust profiles
 ```
+
+Current evidence strengthens **B as a hypothesis**, not as a decision. Deterministic ranking, hashing, non-floating canonical bytes, and a real candidate-generation hot path have all ported exactly so far. The next meaningful question is whether Rust produces material matched performance/assurance value without creating unacceptable FFI and maintenance cost.
 
 ## Architecture progression
 
@@ -131,8 +156,11 @@ D. parallel conformant Python and Rust profiles
 | #591 | identity-first materialization | p50 17.9 -> 7.7 ms; p95 31.4 -> 11.9 ms; rankings identical |
 | #594 A | source-anchored external profile | interpreted-demotion efficacy remains evidence gap |
 | #594 B | independently frozen natural-data gold | severe under-recognition exposed; #596-#598 split out |
-| #600 / #601 | pre-1.0 competitive maturity program | independent AMB infrastructure now merged; result pending |
+| #600 / #601 | pre-1.0 competitive maturity program | independent AMB infrastructure merged; result pending |
 | #602 / #605 | Rust deterministic shadow | BM25/tokenization/SHA exact parity passes on qualified CI |
+| #602 / #610 | canonical non-float byte shadow | exact Python/Rust byte + digest parity; float persistence gap isolated |
+| #602 / #611 | Rust #591 prefilter shadow | exact candidate membership/order/score-bit parity on a real hot path |
+| #609 | language-neutral persistence determinism | float-bearing integrity serialization identified as an explicit architecture/migration gate |
 
 ## #594 Phase B — unbiased Part R
 
@@ -164,6 +192,8 @@ newer != superseding
 benchmark score != memory authority
 published vendor score != same-harness comparator
 implementation language != doctrine
+cross-language parity != runtime promotion
+non-float canonical parity != persisted-state parity
 ```
 
 Active state:
@@ -172,7 +202,8 @@ Active state:
 - #594 **QUALIFIED**;
 - #600 pre-1.0 maturity program active;
 - #601 competitive infrastructure merged, first accepted same-harness result pending;
-- #602 Rust shadow deterministic primitive parity **PASS**, runtime not promoted;
+- #602 Rust shadow tokenization/BM25/SHA/non-float-canonical/prefilter qualification **PASS**, runtime not promoted;
+- #609 active persistence-determinism gate; ADR-040 proposal is draft/unaccepted;
 - ADR-028 **Accepted**;
 - ADR-039 **Proposed**;
 - #583 / PR #587 remains **DRAFT / HOLD**;
@@ -198,10 +229,11 @@ pre-1.0 maturity path
   |      -> controlled market systems
   |      -> accepted dashboard competitor rows
   |
-  +-> #602 canonical bytes
-         -> hot-path/state parity
+  +-> #602 matched candidate-prefilter performance
+         -> #609 numeric canonicalization + migration
+         -> state/integrity parity
          -> lifecycle shadow
-         -> matched performance
+         -> matched operational evidence
          -> A/B/C/D runtime decision
 ```
 
