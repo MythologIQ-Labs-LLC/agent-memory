@@ -4,7 +4,7 @@
   "as_of": "2026-09-28",
   "authority_effect": "none",
   "aggregate_score": "not_defined",
-  "main_head": "80566b5e3affd7b038f31bc24039054ef87d07a1",
+  "main_head": "b50d6d1db35e21a87cf91de63c363104f8c77d87",
   "reading_rules": [
     "benchmark score != memory authority",
     "published vendor score != same-harness comparator",
@@ -21,17 +21,69 @@
     "external_cross_system_reference": "independent multi-system suite useful for triangulation but not a substitute for local same-harness reproduction"
   },
   "competitive_evidence": {
-    "status": "gap_active_remediation",
+    "status": "infrastructure_merged_result_pending",
     "umbrella_issue": 600,
     "same_harness_issue": 601,
+    "external_harness": {
+      "repository": "vectorize-io/agent-memory-benchmark",
+      "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "agent_memory_bridge": "merged_pr_604",
+      "credential_free_retrieval_lane": "merged_pr_606",
+      "manual_workflow": ".github/workflows/amb-competitive.yml"
+    },
     "same_harness_accepted_systems": [],
-    "note": "No non-Agent-Memory runtime has yet been accepted into this dashboard as a same-harness LongMemEval or AgentMemBench result.",
+    "note": "Competitive infrastructure is merged, but no external same-harness result is accepted into the dashboard until a deliberate run is executed and its raw artifact reviewed.",
+    "credential_free_profile": {
+      "dataset": "precisionmembench",
+      "split": "single-turn",
+      "mode": "retrieval",
+      "providers": ["agent-memory", "bm25"],
+      "llm_calls": false,
+      "status": "runnable_not_yet_accepted"
+    },
+    "llm_judged_profile": {
+      "answer_model": "gemini:gemini-2.5-flash-lite",
+      "judge_model": "gemini:gemini-2.5-flash-lite",
+      "status": "blocked_pending_authorized_evaluation_credential"
+    },
     "first_wave": ["Mem0 OSS", "Hindsight", "Zep / Graphiti", "Letta", "Cognee", "LangMem"],
     "required_lanes": [
+      "independent credential-free retrieval profile",
       "LongMemEval_S retrieval parity",
       "LongMemEval end-to-end QA parity with one frozen answer model/judge/budget",
       "AgentMemBench / MemDialogue operational parity where semantically expressible",
       "matched latency/token/storage evidence where technically comparable"
+    ]
+  },
+  "runtime_qualification": {
+    "issue": 602,
+    "controlling_adr": "ADR-028",
+    "current_runtime": "Python qualified runtime/reference implementation",
+    "rust_status": "evaluation_only_shadow",
+    "merged_pr": 605,
+    "qualified_ci_profile": "ubuntu-latest",
+    "accepted_shadow_evidence": [
+      {
+        "workflow_run": 36457677348,
+        "result": "exact tokenization and BM25 IEEE-754 score-bit parity including exact tie"
+      },
+      {
+        "workflow_run": 36458112635,
+        "result": "BM25 parity retained and UTF-8 SHA-256 vectors reproduced exactly"
+      }
+    ],
+    "not_established": [
+      "canonical serialization parity",
+      "cross-platform floating-math identity",
+      "runtime lifecycle parity",
+      "matched Python/Rust performance advantage",
+      "FFI or native Rust runtime promotion"
+    ],
+    "decision_candidates": [
+      "A Python preferred runtime",
+      "B Python facade plus Rust kernel",
+      "C native Rust runtime plus Python bindings",
+      "D parallel conformant Python and Rust profiles"
     ]
   },
   "published_reference": [
@@ -113,7 +165,9 @@
     "591":"COMPLETE",
     "maturity_program":600,
     "competitive_comparator_program":601,
+    "competitive_infrastructure":"MERGED_604_606_RESULT_PENDING",
     "rust_runtime_qualification":602,
+    "rust_shadow_status":"DETERMINISTIC_PRIMITIVES_PARITY_PASS_RUNTIME_NOT_PROMOTED",
     "next_rc_step":585,
     "temporal_dependency_added_by_594":598,
     "high_priority_nonautomatic_rc_blockers":[596,597],
