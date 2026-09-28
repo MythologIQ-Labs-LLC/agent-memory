@@ -1,0 +1,6 @@
+case	source_json_b64	expected_canonical	expected_sha256
+scalars	eyJ6IjogbnVsbCwgIm4iOiA0MiwgIm0iOiAtNywgImIiOiB0cnVlLCAiYSI6IGZhbHNlfQ==	{"a":false,"b":true,"m":-7,"n":42,"z":null}	7522974418a5d3976ee7c22f42b699cf1c976b6be067edd67c5e0d883b1ca1ae
+unicode	eyJncmVldGluZyI6ImjDqWxsbyDwn4yo77iPIiwiZW1wdHkiOiIiLCJjaXR5IjoiTcO8bmNoZW4ifQ==	{"city":"München","empty":"","greeting":"héllo 🌨️"}	09b2725abb57f0ef73d119ef2b21f89c47913b5e8984171dbf3d2a3455610902
+nested	eyJjIjpbeyJrIjoidiJ9LG51bGwsZmFsc2VdLCJiIjpbMywyLDFdLCJhIjp7InkiOiJ5ZXMiLCJ4Ijoibm8ifX0=	{"a":{"x":"no","y":"yes"},"b":[3,2,1],"c":[{"k":"v"},null,false]}	c712757ba80e4ee3428825aafb0e09f95708c42b1a5858813dad2235468a616c
+escaping	eyJzbGFzaCI6ImFcXGIiLCJxdW90ZSI6ImFcImIiLCJjb250cm9sIjoibGluZVxuYnJlYWtcdGVuZCJ9	{"control":"line\nbreak\tend","quote":"a\"b","slash":"a\\b"}	b1002a9ea44ca52d9690bd04c2427b809ae234f5e2c5dacc3db5754a13d2a483
+ints	eyJwb3NpdGl2ZSI6MTIzNDU2Nzg5MDEyMzQ1Njc4OTAsInplcm8iOjAsIm5lZ2F0aXZlIjotMTIzNDU2Nzg5fQ==	{"negative":-123456789,"positive":12345678901234567890,"zero":0}	dc67c42656a945a1e0830bbf845df3bcdc8a0f79ffb9d09b905cc712a8a4a70d
