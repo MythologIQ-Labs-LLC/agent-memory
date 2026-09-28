@@ -1,258 +1,224 @@
 # Write-Time Proposition Identity, Cardinality, and Temporal Self-Description (#550)
 
-Status: implementation and evidence for #550 on draft PR, not merged. ADR-039 remains **Proposed**; nothing here promotes it. The #580 gauntlet used below is repository-owned conformance and falsification evidence, not independent external validation. AgentMemBench and LongMemEval are external benchmark evidence, bounded to their corpora and retrieval profiles.
+Status: **implemented on main and naturally qualified by #594**. ADR-039 remains **Proposed**; nothing in #550 or #594 promotes it. PR #587 / #583 remains **DRAFT / HOLD**.
 
-## 1. What #550 had to solve
+The detailed revision-bound #550 replay artifacts remain under `reports/benchmarks/replays/550-write-time-semantics-eb44c34/` and the frozen #580 evidence under `reports/benchmarks/temporal-currentness/`. The current natural-data qualification is `reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md`.
 
-The frozen #580 Phase 1 baseline (docs/60) showed that the largest currentness failure class is not temporal phrase harvesting. It is **proposition identity and cardinality**:
-
-```text
-old: "The user lives in Denver."
-new: "The user has moved and now lives in Boston."
-```
-
-Giving Boston its own validity does not make Denver stale unless the runtime also knows that both statements occupy the same proposition slot (entity `user`, property `live in`) and that the slot is single-valued. The #583 external replay (PR #587, HOLD) added a second constraint. Lexical overlap on words such as `currently` is today the only carrier of a memory's own temporal self-description. #550 therefore has to provide a **typed** carrier before #583 can safely separate query intent cues from relevance.
-
-## 2. Architecture
+## 1. Architecture
 
 ```text
 memory text + caller-declared write metadata
   -> bounded, deterministic, versioned write-time interpretation      (evidence)
-       proposition candidate: entity / property / value, known | unknown | ambiguous
-       cardinality: single_valued | multi_valued | hierarchical | unknown
-       markers: change, coexistence, hedge, self-claim           (data, never instructions)
-       self-validity: anchored interval / start                  (basis: interpreted)
-  -> classification against current same-scope same-slot memories  (evidence)
-       same_value | coexistence | state_change_candidate | conflict | unresolved
-  -> governed state_change proposal, only for explicit unhedged change   (evidence)
-  -> existing lifecycle: AgentMemory.correct(replacement_kind="state_change") under PAMA
-       only when a caller chooses to apply it (apply_semantic_proposal)
+       proposition candidate: entity / property / value
+       cardinality evidence
+       temporal aspect
+       bounded self-validity
+       change / coexistence / hedge / self-claim markers
+  -> classification against current same-scope same-slot memories     (evidence)
+  -> governed state-change proposal when eligible                      (evidence)
+  -> existing lifecycle under PAMA
+       only when a caller chooses to apply the proposal
 ```
 
-Load-bearing invariants, each pinned by a test in `reference/tests/test_write_time_proposition_semantics.py`:
+Interpretation is evidence, never authority:
 
 ```text
-interpretation != authority                 classifier confidence != truth
-proposition match != authority to replace   single-valued candidate != automatic supersession
-conflict detection != mutation              proposal != application
-newer != superseding                        historically true != corrected-as-false
+interpretation != authority
+semantic interpretation != retention/lifecycle policy
+proposition match != authority to replace
+classifier confidence != truth
+single-valued candidate != automatic supersession
+conflict detection != mutation
+proposal != application
+newer != superseding
+historically true != corrected-as-false
 ```
 
-### 2.1 Typed contracts (`agentmem_ref.runtime.proposition_semantics`)
+## 2. Typed write-time contract
 
-| contract | content |
-| --- | --- |
-| interpreter identity | `agent-memory-deterministic-write-semantics` 1.0.0; classifier 1.0.0 |
-| proposition | `status` known / unknown / ambiguous, `entity`, `property`, `value`, `basis` (`interpreted`; `caller_declared` is reserved), `reason` when not known |
-| cardinality | `class` single_valued / multi_valued / hierarchical / unknown, `basis`, `evidence` |
-| markers | `change` (no longer, used to, not anymore, moved, changed, switched, updated, ...), `coexistence` (also, too, as well, ...), `hedge`, `self_claims`, `aspect` (present / prospective / past_habitual, with cue words) |
-| self-validity | `status` none / resolved / unanchored / hedged_not_resolved / ambiguous / superseded_by_caller_declared, `valid_from`, `valid_until`, `anchor` {value, source}, `basis: interpreted` |
-| relation | `classification`, `basis`, `other_fact_uuid`, `other_memory_ref`, `slot`, optional `proposal` |
-| proposal | `proposal_id`, `operation: correction`, `replacement_kind: state_change`, target reference and fact, source fact, replacement text, `effective_no_later_than` (an upper bound only), `applied: false`, `authority_effect: none` |
+The native deterministic interpreter records:
 
-Every interpretation carries `authority_effect: none`.
+- proposition status (`known`, `ambiguous`, `unknown`) and candidate entity/property/value;
+- cardinality (`single_valued`, `multi_valued`, `hierarchical`, `unknown`);
+- change, coexistence, hedge, and self-claim markers;
+- temporal aspect (`present`, `prospective`, `past_habitual`);
+- bounded interpreted self-validity when an explicit temporal expression can be anchored to caller-declared `observed_at`;
+- same-slot relation evidence and any governed state-change proposal.
 
-### 2.2 Proposition identity
+Every interpretation has `authority_effect: none`.
 
-A bounded clause grammar reads determiner-led noun phrases and subject pronouns, auxiliaries, negation (`no longer`, `not ... anymore`, `used to`), modals, and a verb or copula with an optional preposition. It uses generic English function words only; there is no property list and no domain vocabulary. Slot identity is `entity|property` with an inflection-insensitive verb key (`lives` / `living` / `live`). Pronouns resolve to the nearest preceding explicit subject; a clause about the memory itself ("this memory is ...") is never an antecedent. **Unknown** is the fail-safe result: imperatives, proper-noun subjects, and anything the grammar cannot parse stay `unknown`. More than one affirmed slot or value in one write is `ambiguous`.
+The persisted interpretation is versioned at write time. Historical writes are not silently reinterpreted when the interpreter changes.
 
-### 2.3 Cardinality
+## 3. Temporal self-validity boundary
 
-Cardinality is never inferred from the property. It is `unknown` unless:
+Caller-declared `valid_from` / `valid_until` remains stronger than interpreted text.
 
-* the write itself carries a **coexistence** marker (`also`, `too`, `as well`, ...), giving `multi_valued`; or
-* the write itself carries a **replacement** marker (`moved`, `changed`, `switched`, a revision qualifier such as `updated`), giving `single_valued` for this write's slot.
+Interpreted self-validity is asymmetric:
 
-`hierarchical` is part of the contract but is never produced from text. It is reserved for caller-declared cardinality (see §6). The same property with and without a marker is classified differently, and a test pins this.
+```text
+caller-declared validity
+  > interpreted self-validity as LIMIT ONLY
+  > unknown temporal basis
+```
 
-### 2.4 Temporal self-description
+A resolved interpreted window may demote a memory that is outside its own asserted applicability interval. It may never affirm that memory as current merely because its text says it is current.
 
-Anchored relative expressions (`for the next N days|weeks|months|years`, `starting|from tomorrow|next week|next month|next year`, `until ...`, and ISO starts and ends) resolve **only** against a caller-declared `observed_at`. Without an anchor the status is `unanchored` and nothing is resolved: imported text is never silently anchored to ingestion time. Hedged or conflicting expressions are not resolved. Caller-declared `valid_from`/`valid_until` always win (`superseded_by_caller_declared`), and the interpreted window is never reported as a clock or as a caller-declared basis.
+That limit-only rule is ranking policy **3.1.0**. BM25 and lexical relevance are otherwise unchanged by #550.
 
-### 2.4a Temporal aspect: the typed carrier #583 lacked
+## 4. State-change proposal boundary
 
-Independently of whether a proposition parses, the interpreter records the temporal **aspect** the memory asserts about itself, together with the cue words that set it:
-* `present`: currently, right now, these days, ...;
-* `prospective`: planning to, going to, will, next week, ...;
-* `past_habitual`: used to, no longer, previously, ...
+A same-slot relationship can be classified as same value, coexistence, state-change candidate, conflict, or unresolved. A state-change candidate can produce a proposal, but proposal creation is not mutation.
 
-The marker is evidence only. It creates no validity window and no applicability basis, and ranking does not read it. It exists so that a memory's own "currently" is carried by **type**, not only by lexical overlap. On LongMemEval_S user turns it carries every occurrence of the #583 cues (§4.2).
+A caller must explicitly apply an open proposal through the existing governed correction lifecycle. Hedged writes, self-authority claims, unknown/ambiguous propositions, ineligible scope, or insufficient evidence do not become automatic corrections.
 
-### 2.5 Classification and proposals
+The #549 distinction remains intact: a changed real-world state is a state change, not an error correction.
 
-Only current, same-scope (domain refs, project, task) memories of the same slot are compared. Superseded, tombstoned, disputed, and other-scope facts never are.
+## 5. #550 repository-owned evidence
 
-| condition | classification | proposal |
-| --- | --- | --- |
-| same slot, same value | `same_value` | no |
-| new write explicitly ends the other's value (`no longer X`, `used to X`) | `state_change_candidate` (`explicit_termination`) | yes, unless ineligible |
-| either side multi-valued or hierarchical | `coexistence` | no |
-| new write single-valued with a replacement marker | `state_change_candidate` (`single_valued_replacement_marker`) | yes, unless ineligible |
-| single-valued without change evidence | `conflict` | no |
-| cardinality unknown | `unresolved` | no |
+Against the frozen #580 currentness gauntlet:
 
-A write is **ineligible** to originate a proposal when it is hedged (`maybe`, `might`, `probably`, `I think`, ...), carries a self-claim (authority, verification, supersession, currentness, instructions), or has an unknown or ambiguous proposition. Its change evidence is then recorded as `unresolved: change_evidence_not_proposable:<reasons>`.
+- required passes regressed: **0**;
+- four target units improved from `honest_unknown` to `pass`;
+- self-description currentness target rate improved **0.091 -> 0.273**;
+- interpreted self-validity fixed the intended after-interval and before-start target cases without allowing self-affirmation;
+- automatic proposal application remained falsified because it breaks required no-mutation/admission units.
 
-`semantic_proposals()` derives each proposal's status (`open` / `applied` / `stale`) from lifecycle state. `apply_semantic_proposal(id, evidence=..., ...)` is the caller's explicit decision. It is exactly `correct(target, replacement_text, replacement_kind="state_change")` under ordinary PAMA, cites the proposal id as an evidence ref, is not auto-satisfied (it is refused without qualified review evidence), and refuses a proposal that is not `open`. The #549 boundary holds: the replaced fact is a state change, never an error correction. It is refused for current intent and admitted only as labelled historical evidence under explicit historical intent.
+The external #550 replay changed no AgentMemBench or LongMemEval_S ranking row because those canonical runs do not declare `observed_at`, so interpreted windows do not resolve and proposals are never auto-applied.
 
-### 2.5a Visibility of semantic evidence
+## 6. #591 performance repair
 
-`write_semantics()` and `semantic_proposals()` are bounded exactly like recall. Evidence is readable only for facts that are domain-eligible for the calling handle's own context (tenant, isolation domains, project, task), and never for tombstoned facts or facts derived from tombstoned sources. A proposal is hidden when its target is not visible. Adversarial review before the PR found that the first version filtered by tenant only, which would have let another scope read interpreted values and, through `replacement_text`, memory text. That is fixed and pinned by tests.
+#550 made an existing substrate inefficiency visible because every fact now carries a small semantic record. Candidate discovery was materializing and decoding all tenant facts before #548 identity/domain eligibility narrowed the set.
 
-### 2.6 Ranking: policy 3.0.1 -> 3.1.0 (applicability tier only)
+#591 changed the implementation shape to:
 
-Lexical relevance, BM25, and its #576 sorted accumulation are unchanged. The only ranking change: when the caller declared no validity, a resolved interpreted window may **limit** a memory's own applicability (`outside_target_interval`, and `prospectively_applicable` under current and as-of intent; `outside_target_interval` and `applicable_not_prospective` under prospective intent). It never **affirms** applicability: a label that would not demote stays `unknown_temporal_basis`. `temporal_applicability_basis` records `caller_declared` or `interpreted` for every label.
+```text
+lightweight identity projection
+  -> #548 identity/domain eligibility
+  -> lexical candidate scoring
+  -> materialize surviving full facts only
+  -> full eligibility
+  -> canonical admission
+```
 
-The asymmetry was chosen on evidence, not preference. A first, symmetric version let interpreted windows also affirm `applicable`. Against the frozen gauntlet it converted 7 target units from `honest_unknown` to `fail` (F26 during-interval, F27 after-start and prospective-explicit) without changing any order: the self-describing memory became affirmed while its rival stayed unknown-basis, so relevance still decided. The same effect is docs/60 finding 1 and #584's territory. A memory's text may always make a weaker claim about itself; affirming its own currentness is the self-promotion class F30 forbids.
+No ranking/admission/authority/semantic contract changed.
 
-### 2.7 Persistence and versioning
+Accepted performance evidence:
 
-The interpretation, its relations, and any proposal are computed once at write and stored in the fact's attributes (canonical JSON, immutable after write). They are version-pinned and never recomputed. A later interpreter version therefore cannot silently reinterpret historical writes. Facts written before #550 carry no interpretation and are treated as `unknown`; reinterpreting them would need a declared migration. The in-memory (slot, scope) index is derived, rebuilt lazily from persisted attributes on recovery, and every hit is re-validated against lifecycle state. Restart reproduces interpretation, classification, proposals, and recall exactly (tests), and interpretation is identical across `PYTHONHASHSEED` 0, 1, and 2.
+- AgentMemBench wall: **54.6 s -> 38.6 s**;
+- search p50: **17.9 ms -> 7.7 ms**;
+- search p95: **31.4 ms -> 11.9 ms**;
+- full fact materializations: about 1,020 -> about 30 per search;
+- JSON decodes: about 2,041 -> about 61 per search;
+- search orders and BM25 score bits unchanged;
+- LongMemEval_S canonical rows unchanged.
 
-The index is also invalidated whenever adapter checkpoint state is restored (including a SQLite rollback), so a rolled-back write leaves no semantic residue (test).
+Evidence: `reports/benchmarks/replays/591-identity-first-materialization-f76c441/`.
 
-Storage is bounded and compact. The persisted form keeps only non-default evidence plus one version tag (`"version": "<interpreter>/<classifier>"`). Diagnostic clause parses are not stored (only `clause_count`). Relations are capped at 8, most significant first, and plain same-slot pairs with unknown cardinality are kept as a count only. `write_semantics()` expands the stored form back to the full typed contract.
+## 7. #594 Phase A: source-anchored external qualification
 
-## 3. #580 before/after (repository-owned evidence)
+#594 added a defensible **adapted external evidence** profile using the existing LongMemEval_S session timestamps.
 
-Artifacts: `reports/benchmarks/temporal-currentness/post-550-eb44c34/`. The full matrix is regenerated at `eb44c34` with a clean runtime tree. Fixture sha256 `394be82e…4492`, unchanged; gold unchanged.
+Profiles:
 
-Columns: frozen pre-#550 baseline `0bace49` (3.0.1) | `main` `550abf0` (3.0.1, includes #582) | #550 `eb44c34` (3.1.0). Cells: value (pass / honest_unknown / fail of units). There is no aggregate score.
+- C: canonical;
+- P1: source/session date -> caller-declared `observed_at`;
+- P2: P1 plus the question date as a host-declared recall `reference_time`.
 
-| metric | level | frozen `0bace49` | `main` `550abf0` | #550 `eb44c34` |
-| --- | --- | --- | --- | --- |
-| current_applicability_accuracy | required | 1.0 (13/0/0) | 1.0 (13/0/0) | 1.0 (13/0/0) |
-| current_applicability_accuracy | target | 0.545 (6/4/1) | 0.545 (6/4/1) | 0.545 (6/4/1) |
-| stale_as_current_rate | required | 0.0 (0 of 11) | 0.0 | 0.0 |
-| stale_as_current_rate | target | 0.2 (1/7/2 of 10) | 0.2 (1/7/2) | 0.2 (**3/5/2**) |
-| current_demoted_as_stale_rate | required | 0.0 (0 of 13) | 0.0 | 0.0 |
-| as_of_state_accuracy | required | 1.0 (5/5) | 1.0 | 1.0 |
-| historical_state_admission_accuracy | required | 1.0 (7/7) | 1.0 | 1.0 |
-| corrected_false_as_historical_rate | required | 0.0 (0 of 2) | 0.0 | 0.0 |
-| prospective_applicability_accuracy | required / target | 1.0 / 0.0 (0/1/0) | same | same |
-| unknown_temporal_basis_honesty_rate | required | 1.0 (3/3) | 1.0 | 1.0 |
-| atemporal_relevance_preservation_rate | required | 1.0 (2/2) | 1.0 | 1.0 |
-| clock_source_accuracy | required | 1.0 (4/4) | 1.0 | 1.0 |
-| intent_interpretation_accuracy | required / target | 1.0 / 0.0 (0/0/2) | same | same |
-| state_change_vs_error_correction_accuracy | required | 1.0 (4/4) | 1.0 | 1.0 |
-| coexistence_preservation_rate | required | 1.0 (15/15) | 1.0 | 1.0 |
-| timeline_preservation_rate | required | 1.0 (2/2) | 1.0 | 1.0 |
-| metabolism_validity_separation_rate | required | 1.0 (3/3) | 1.0 | 1.0 |
-| self_description_currentness_rate | target | 0.091 (1/9/1 of 11) | 0.091 (1/9/1) | **0.273 (3/7/1)** |
-| authority_or_scope_violation_count | required | 3 | 1 (#582 fixed B9) | 1 |
-| temporal_self_claim_rank_influence_count | required | 1 (F30) | 1 | 1 (F30 stays #583) |
-| conflict_coexistence_classification_accuracy | – | not measurable | not measurable | not measurable by the frozen gold (no assertions); measured by the #550 test suite and the counterfactual below |
-| restart_reproduction_rate | – | 1.0 (50/50) | 1.0 | 1.0 |
-| cross_process_order_reproduction_rate | – | 1.0 (50/50) | – | 1.0 (50/50) |
+Result:
 
-**Units changed by #550 (vs `main`): 4, all target `honest_unknown -> pass`.**
-* F26 after-interval: `temporary` is now `outside_target_interval` (interpreted), so it is `not_current` and demoted. Stale-as-current and self-description both pass.
-* F27 before-start: `green` is now `prospectively_applicable` (interpreted), so blue precedes green and green is prospective.
+- session mapped 23,867 / 23,867;
+- turn mapped 122,416 / 122,416;
+- interpreted self-validity resolved for 8 session memories and 33 turn memories;
+- **0 changed ranking rows** and **0 changed gold ranks** under P1 or P2;
+- 0 admitted candidates in the ordering-intent audit carried applicability basis `interpreted`;
+- the one admitted resolved-window turn was non-gold at rank 132 and the P2 reference time was inside its window, so limit-only semantics correctly did not affirm it.
 
-Both probes' "precedes" orderings were previously **incidental** passes (decided by BM25 while both memories were unknown-basis). They now hold for the intended temporal reason, so incidental target passes fall from 7 to 5.
+The correct conclusion is therefore:
 
-**Required passes regressed: none.** No target unit worsened. Probe digests changed only in the 2 improved probes. Every ablation and runtime mutant still regresses units and improves none, and the F25 over-eager fixture control is still detected.
+> **EVIDENCE GAP for external demotion efficacy on this corpus, not runtime failure.**
 
-### 3.1 Previously failing #550-related cases
+LongMemEval_M escalation for this adapted profile was not warranted because S already characterized the reachable mechanism population.
 
-| case / probe | frozen | #550 | why |
-| --- | --- | --- | --- |
-| F23 current-inferred / current-explicit | honest_unknown | honest_unknown | `state_change_candidate` + open proposal (Denver); **not applied**, so Denver stays current |
-| F24 current-inferred | honest_unknown | honest_unknown | `state_change_candidate` (explicit_termination: no longer) + open proposal |
-| F28 current-inferred | honest_unknown | honest_unknown | `state_change_candidate` (explicit_termination: used to) + open proposal |
-| F28 plain-now | fail | fail | as above; the query-side "now" calibration is #585 |
-| C11 current-after-effective | honest_unknown | honest_unknown | "runs on the old cluster" vs "is scheduled to move to the new cluster" parse to different slots, so no relation. Honest limitation |
-| F26 after-interval | honest_unknown | **pass** | interpreted self-validity limits `temporary` |
-| F26 during-interval | honest_unknown | honest_unknown | interpretation never affirms; exception precedence is #586 |
-| F27 before-start | honest_unknown | **pass** | interpreted start limits `green` |
-| F27 after-start, prospective-explicit | honest_unknown | honest_unknown | interpretation never affirms; imperatives have no proposition |
-| F25 (also) | pass (required) | pass | `coexistence`, no proposal |
-| F29 (maybe) | pass (required) | pass | hedged; different slot (`move to`); no proposal |
-| F30 (self-claims) | 1 required fail (#583) | same | self-claims recorded; no relation, proposal, or authority; the rank influence is #583 |
+## 8. #594 Phase B: accepted natural-language proposition qualification
 
-### 3.2 Governed-application counterfactual
+Coverage counts from the full LongMemEval_S corpus were never sufficient to establish precision. #594 therefore froze a separate 268-turn natural-language corpus before scoring:
 
-`proposal-application-counterfactual.json` plays a reviewing caller who applies every open proposal through `apply_semantic_proposal` with qualified evidence, then re-scores with the unmodified evaluator.
+- Part R: 100 random turns, the population-estimating sample;
+- Part S: 168 stratified turns for diagnostic categories only.
 
-| case | proposal | target units converted | required units broken by the mutation |
-| --- | --- | --- | --- |
-| F23 | Boston -> Denver (`single_valued_replacement_marker`) | 6 | 4 |
-| F24 | Globex -> Acme (`explicit_termination: no longer`) | 2 | 2 |
-| F28 | Coffee -> Tea (`explicit_termination: used to`) | 4 (including the plain-now fails) | 4 |
+The annotation process preserved five versioned drafts. Interpreter output was not run or consulted during label creation/review. Maintainer review `5339771805` accepted v5 as the semantic source for immutable `gold-v1.json`.
 
-The proposals are the right ones, and accepting them would reach every F23/F24/F28 target. Accepting them also breaks the fixture's **required** `no_mutation`/`admitted` units, because the gold encodes that text alone must not mutate memory. This is concrete evidence that the proposal must remain a proposal: automatic application would violate required doctrine.
+Accepted gold counts:
 
-## 4. External replay (bounded external evidence)
+- known: 148;
+- ambiguous: 35;
+- unknown: 85.
 
-Candidate `eb44c34` (the reviewed head), compared with the canonical policy-3.0.1 evidence of #576 (`reports/benchmarks/replays/576-deterministic-bm25/*8bd6c91*`). The inputs are byte-identical to the #583 replay:
+The property-alias table was frozen empty before scoring to prevent after-the-fact benchmark fitting.
 
-* AgentMemBench `memdialogue_v2.jsonl` sha256 `33632710…ca2a6` at `186c9a54`;
-* LongMemEval_S `longmemeval_s_cleaned.json` sha256 `d6f21ea9…a442` at dataset revision `98d7416c`.
+### First accepted score
 
-Evidence: `reports/benchmarks/replays/550-write-time-semantics-eb44c34/`.
+Scored head: `73216bebc596de4876692a8f00d1e3fabaa899f1`.
 
-**AgentMemBench** (all phases, seeds 0 and 1): **0 non-timing differences** in every dimension and in the governance tallies. All 2,051 per-search orders and every BM25 score bit are identical to canonical. This is expected: the harness declares no `observed_at`, so no interpreted window resolves, and proposals are never applied.
+On unbiased Part R:
 
-The typed evidence does recognize the benchmark's conflict class (evaluation-only probe of the five conflict templates). Location, role, preference, status, and numeric updates each become a same-slot `state_change_candidate` with an open proposal. The rules that recognize them are generic (replacement verbs, simple-past subject boundaries, revision qualifiers), and none is applied, so the benchmark's staleness rate is unchanged by design.
+| status | precision | recall |
+| --- | ---: | ---: |
+| known | **0.800** | **0.148** |
+| ambiguous | 0.210 | **1.000** |
+| unknown | **1.000** | 0.848 |
 
-### 4.1 LongMemEval_S
+Gold-known confusion is the dominant result: 8/54 gold-known turns are recognized as known and **46/54 become ambiguous**.
 
-`compare-lme-s-eb44c34-seed1-vs-8bd6c91.json` gives **IDENTICAL**: all 53 checks, and 3,000/3,000 rows (session and turn planes, all three backends) semantically identical, with **0 rank differences**.
-* Headline retrieval, knowledge-update currentness, and latest-gold-ranked-first are unchanged (session 0.457, turn 0.557).
-* Governance (admissions, refusals), failures, authority effect, and boundary are unchanged.
-* Wall time is 997 s against 1,078 s canonical, on a different machine load; it is not a semantic signal.
+The runtime is therefore materially under-capable relative to the accepted semantic contract, but its dominant natural failure is conservative abstention/ambiguity rather than unsafe known-status promotion.
 
-Row classification: there are no changed rows, so no row falls into `INTENDED_550_EFFECT`, `NUMERICAL_ONLY`, `UNRELATED_DRIFT`, `FAILURE_OR_GOVERNANCE_CHANGE`, or `UNEXPLAINED`. This is expected: the default replay declares no `observed_at`, so no interpreted window resolves, and proposals are never applied.
+Part R also records:
 
-**LongMemEval_M is not required.** None of the escalation triggers holds (no drift, currentness change, retrieval regression, or governance change), and S characterizes the affected population exactly: it is zero rows, by construction of the anchoring rule.
+- wrong proposition slot: 8;
+- unknown -> known overreach: 2;
+- temporal-aspect mismatch: 4;
+- temporal-aspect over-classification: 1;
+- over-eager single-valued cardinality: 0.
 
-### 4.2 Typed-carrier coverage on natural data
+Strict slot/value conformance is 0 with the frozen empty alias table. This is an exact-label diagnostic, not semantic synonym precision. Inspection contains both harmless synonym/normalization variation and real malformed property/value boundaries, so canonicalization must be defined independently before re-score.
 
-`lme-s-carrier-coverage-eb44c34.json` covers 93,931 unique LongMemEval_S user turns, interpreted exactly as the default replay writes them:
+## 9. Active limitations and follow-ons
 
-| measure | value |
-| --- | --- |
-| proposition known / ambiguous / unknown | 13,655 (14.5%) / 44,692 (47.6%) / 35,584 (37.9%) |
-| cardinality single / multi / unknown | 25 / 8,435 / 85,471 |
-| turns with aspect / change / coexistence / hedge / self-claim markers | 13,809 / 206 / 8,435 / 22,285 / 320 |
-| #583 cues carried by the typed aspect marker | `currently` 551/551, `planning to` 2,076/2,076, `going to` 1,314/1,314 |
+The qualification created three bounded remediation issues:
 
-## 5. Costs (idle, against a clean `550abf0` worktree)
+- **#596**: improve natural proposition recognition without weakening abstention;
+- **#597**: define canonical property/value boundaries and pre-score normalization without post-hoc alias fitting;
+- **#598**: calibrate write-time temporal aspect on natural turns.
 
-| workload | `main` | #550 `eb44c34` |
-| --- | --- | --- |
-| AgentMemBench all phases, wall (3 runs each, alternated) | 47.4–48.2 s | 53.6–55.6 s (+15%) |
-| AgentMemBench retrieval write p50 / read p50 / read p95 | 4.90 / 15.0 / 25.3 ms | 5.42 / 17.7 / 31.0 ms |
-| 1,000 natural first-person writes, per write | 5.3 ms | 6.3 ms (+18%) |
-| 1,000 same-slot facts in one scope, per write | 5.0–5.6 ms | 7.2–7.8 ms (+40%) |
-| DB size after 1,000 writes | 4.04–4.10 MB | 4.30–4.33 MB (+6%) |
-| recall over 1,000 rich-text candidates | 319–322 ms | 341–350 ms (+7–9%) |
-| LongMemEval_S full replay wall | 1,078 s (canonical) | 997 s |
+#598 is on the temporal critical path because redesigned #583 depends on trustworthy memory-side aspect evidence. #585 remains the separate query-side temporal-intent calibration issue.
 
-**Where the read cost comes from.** Candidate generation decodes the attributes of every fact in the tenant on each search (in AgentMemBench, about 1,000 facts per search, before domain filtering). That was harmless while attributes were almost always `{}`. #550 gives every fact a small write-semantics record, so each of those decodes costs about 1 µs more. The persisted form is already compact: 25 bytes with no evidence, about 150 bytes with one proposition, and about 250 bytes for a rich turn (an earlier 440–1,000-byte form measured +68% read p50 and was replaced). Removing the rest is a substrate change: decode attributes lazily, or store write semantics outside the fact row. It is proposed as a separate follow-up rather than widening this PR.
+#596/#597 are high-priority interpreter-quality limitations. They are not automatically RC blockers while their dominant behavior remains conservative evidence abstention and does not create authority. Final RC evidence may still promote them onto the critical path if the declared product contract requires it.
 
-**Update (#591).** Candidate discovery now applies the #548 prefilter to a fact's identity before materializing it, and decodes attributes only for surviving candidates. The #550 semantics stay with the fact. AgentMemBench read p50 went from 17.9 ms to 7.7 ms and total wall from 54.6 s to 38.6 s, below the pre-#550 values, with semantically identical replays. Evidence: `reports/benchmarks/replays/591-identity-first-materialization-f76c441/`.
+Other unchanged limitations:
 
-**Write cost** is interpretation plus same-slot classification. In the same-slot worst case, classification compares against every current same-slot fact in the scope (O(k)) using an in-memory index. It never re-reads SQLite.
+- pre-#550 facts have no stored interpretation and require an explicit migration to be reinterpreted;
+- interpreted self-validity never affirms applicability;
+- no semantic proposal applies automatically;
+- implicit supersession of independently written contradictions remains outside this parser's authority;
+- ADR-039 remains Proposed.
 
-## 6. Known limitations
+## 10. Current dependency map
 
-* **Grammar coverage on natural data.** Of 93,931 unique LongMemEval_S user turns, 14.5% yield a *known* proposition, 47.6% *ambiguous* (usually several propositions in one turn), and 37.9% *unknown*. Cardinality is `unknown` for 91%. The typed **aspect** carrier covers every #583 cue occurrence, but proposition-level evidence is sparse on long conversational turns.
-* **Grammar coverage, specific gaps.** Proper-noun subjects ("Kevin lives in ..."), imperatives, and many natural sentences resolve to `unknown` or `ambiguous`. That is honest, but it limits recall of the mechanism. C11 is a concrete miss: "runs on" and "is scheduled to move to" are different slots.
-* **External efficacy is unmeasured (#594).** A source-anchored LongMemEval_S profile declared each session's date as `observed_at` for all 146,283 ingested memories. It changed no ranking row. Anchoring resolves only 8 session-plane and 33 turn-plane self-validity windows. Only one of those is admitted under an ordering-intent query, and that query's reference time falls inside its window, so the window cannot demote. Without a recall `reference_time`, every interpreted window is labelled `no_reference_time`. Result: adapted external evidence, no effect; an evidence gap for the demotion mechanism. Precision of the proposition outputs awaits maintainer-accepted gold (`reference/fixtures/benchmarks/proposition-semantics/`). Evidence: `reports/benchmarks/replays/594-post-550-semantic-qualification/`.
-* **No caller-declared proposition input yet.** `hierarchical` cardinality and `basis: caller_declared` are in the contract but not yet reachable from the facade, because threading them through the commit chain is a separate change.
-* **Pre-#550 facts** are `unknown`. A declared migration would be needed to interpret them.
-* **Interpretation never affirms applicability.** Inside a self-described window a memory stays `unknown_temporal_basis`. Whether affirmed-over-unknown should order is #584.
-* **Nothing is applied automatically.** Currentness improves for F23, F24, and F28 only when governance accepts a proposal. Whether any class of proposal should ever apply without review is a separate ruling and not part of #550.
+```text
+#550 IMPLEMENTED
+  -> #591 PERFORMANCE REPAIR COMPLETE
+  -> #594 NATURAL QUALIFICATION COMPLETE / QUALIFIED
+  -> current dashboard regenerated
+  -> #585 query-intent span calibration
+  -> #598 memory-side aspect calibration
+  -> redesigned #583
+  -> final #580 replay
+  -> #584 policy ruling
+  -> RC1 declaration decision
+```
 
-## 7. What this means for #583
+Canonical current dashboard: `reports/benchmarks/dashboard/current.md`.
 
-#550 now provides the typed memory-side carrier #583 lacked. Per fact, it persists and versions:
-* the aspect marker, which carries 551/551 `currently`, 2,076/2,076 `planning to`, and 1,314/1,314 `going to` occurrences on LongMemEval_S user turns;
-* the proposition slot and cardinality;
-* change and self-claim markers;
-* an anchored self-validity window.
-
-A redesigned #583 can therefore require that removing a consumed query cue from lexical relevance never discards the equivalent **typed** evidence the memory carries. For example, a query cue `currently` would be separated from BM25 only if memories that assert `present` aspect keep an equivalent typed signal. Whether that signal should *order* results is itself a ranking decision entangled with #584 (unknown-basis posture), because aspect is self-assertion, not validity. That redesign is not done here. This PR provides the carrier and does not change #583's HOLD.
+Full #594 closeout: `reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md`.
 
 ADR-039 remains **Proposed**. Interpretation grants no authority.
