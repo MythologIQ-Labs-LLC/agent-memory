@@ -1,0 +1,179 @@
+{
+ "population": {
+  "eligible": 90375,
+  "eligible_by_origin": {
+   "public_chat_filler": 38501,
+   "simulated_user": 51874
+  },
+  "unique_user_turns": 93931
+ },
+ "sample": {
+  "item_text_sha256_list_sha256": "3dceb7cde08abf45af3ea1d4dc12d117c390a3441eed38b3ca2273e04f986b88",
+  "part_R": 100,
+  "part_S": 168,
+  "sample_file_sha256": "b1957ca4ff95c3b8a227b8b75f74327911172305cf770c927d56091e7fedd8d3",
+  "size": 268
+ },
+ "sample_id": "proposition-semantics-sample-v1",
+ "selection": {
+  "eligibility": {
+   "max_chars": 600,
+   "min_chars": 20,
+   "min_words": 4,
+   "privacy_exclusion": "[\\w.+-]+@[\\w-]+\\.[\\w.]+|https?://|www\\.|\\d[\\d\\s().-]{8,}\\d"
+  },
+  "gold_fields_used": false,
+  "interpreter_used": false,
+  "order_key": "sha256(SEED || NUL || sha256(text))",
+  "part_R": {
+   "method": "first R_SIZE eligible items by order key (simple random sample of the eligible population)",
+   "size": 100
+  },
+  "part_S": {
+   "cells": {
+    "change_language/public_chat_filler": {
+     "eligible_population": 129,
+     "selected": 7
+    },
+    "change_language/simulated_user": {
+     "eligible_population": 483,
+     "selected": 7
+    },
+    "coexistence_language/public_chat_filler": {
+     "eligible_population": 2754,
+     "selected": 7
+    },
+    "coexistence_language/simulated_user": {
+     "eligible_population": 11499,
+     "selected": 7
+    },
+    "employment/public_chat_filler": {
+     "eligible_population": 99,
+     "selected": 7
+    },
+    "employment/simulated_user": {
+     "eligible_population": 467,
+     "selected": 7
+    },
+    "hedging/public_chat_filler": {
+     "eligible_population": 2042,
+     "selected": 7
+    },
+    "hedging/simulated_user": {
+     "eligible_population": 14016,
+     "selected": 7
+    },
+    "past_habitual/public_chat_filler": {
+     "eligible_population": 299,
+     "selected": 7
+    },
+    "past_habitual/simulated_user": {
+     "eligible_population": 750,
+     "selected": 7
+    },
+    "preference/public_chat_filler": {
+     "eligible_population": 665,
+     "selected": 7
+    },
+    "preference/simulated_user": {
+     "eligible_population": 3070,
+     "selected": 7
+    },
+    "present_current/public_chat_filler": {
+     "eligible_population": 281,
+     "selected": 7
+    },
+    "present_current/simulated_user": {
+     "eligible_population": 3077,
+     "selected": 7
+    },
+    "proper_noun_subject/public_chat_filler": {
+     "eligible_population": 377,
+     "selected": 7
+    },
+    "proper_noun_subject/simulated_user": {
+     "eligible_population": 193,
+     "selected": 7
+    },
+    "prospective/public_chat_filler": {
+     "eligible_population": 1007,
+     "selected": 7
+    },
+    "prospective/simulated_user": {
+     "eligible_population": 3917,
+     "selected": 7
+    },
+    "residence_location/public_chat_filler": {
+     "eligible_population": 182,
+     "selected": 7
+    },
+    "residence_location/simulated_user": {
+     "eligible_population": 802,
+     "selected": 7
+    },
+    "simple_first_person_statement/public_chat_filler": {
+     "eligible_population": 84,
+     "selected": 7
+    },
+    "simple_first_person_statement/simulated_user": {
+     "eligible_population": 111,
+     "selected": 7
+    },
+    "temporal_word_non_temporal/public_chat_filler": {
+     "eligible_population": 132,
+     "selected": 7
+    },
+    "temporal_word_non_temporal/simulated_user": {
+     "eligible_population": 738,
+     "selected": 7
+    }
+   },
+   "cue_patterns": {
+    "change_language": "\\b(moved|switched|changed (to|my)|no longer|not anymore|any ?more|stopped|quit|used to\\b.*\\bnow)\\b",
+    "coexistence_language": "\\b(also|as well|in addition|both|another)\\b|\\btoo\\b",
+    "employment": "\\b(i work|working (at|for|as)|my (job|boss|employer|company|coworkers?|colleagues?|manager)|hired|internship|part-time|full-time|side (job|gig|hustle))\\b",
+    "hedging": "\\b(maybe|might|perhaps|probably|possibly|i think|i guess|not sure|i believe)\\b",
+    "past_habitual": "\\b(used to|back when|when i was (a |younger|in)|i would always|in the past)\\b",
+    "preference": "\\b(i (really |absolutely |just )?(love|like|prefer|enjoy|hate|dislike|adore)|my favou?rite|i'?m (a big )?fan of|i'?m into)\\b",
+    "present_current": "\\b(currently|right now|these days|at the moment|nowadays|lately)\\b",
+    "proper_noun_subject": "(?:^|[.!?]\\s+)(?!I\\b|The\\b|This\\b|That\\b|It\\b|My\\b|What\\b|How\\b|Can\\b|Could\\b|Please\\b|Write\\b)[A-Z][a-z]+(?:\\s[A-Z][a-z]+)?\\s(?:is|was|has|works|lives|likes|loves|moved|went|got)\\b",
+    "prospective": "\\b(planning (to|on)|going to|gonna|will be|next (week|month|year|weekend)|upcoming|starting (next|in|on)|about to)\\b",
+    "residence_location": "\\b(i live|living in|live in|my (apartment|house|home|neighborhood|hometown|city)|relocat\\w*|based in|moved (to|into|from))\\b",
+    "simple_first_person_statement": "^I(?:'m| am| have| live| work| like| love| own| got| just)\\b[^.!?;,]{3,100}[.!]?$",
+    "temporal_word_non_temporal": "(?:^|[.!?]\\s+)now,|\\bnow that\\b|\\bfor now\\b|\\bjust now\\b|\\bany time\\b|\\bat the same time\\b|\\bin time\\b"
+   },
+   "origins_in_order": [
+    "simulated_user",
+    "public_chat_filler"
+   ],
+   "per_cell": 7,
+   "strata_in_order": [
+    "change_language",
+    "coexistence_language",
+    "employment",
+    "residence_location",
+    "preference",
+    "hedging",
+    "present_current",
+    "prospective",
+    "past_habitual",
+    "proper_noun_subject",
+    "temporal_word_non_temporal",
+    "simple_first_person_statement"
+   ]
+  },
+  "script": "reference/fixtures/benchmarks/proposition-semantics/select_sample.py",
+  "script_sha256": "fa2cd28bcdc33edbeb8f5e8a25c128261a9e4ba29633827b3253ec7e1c1b9943",
+  "seed": "agent-memory-594-proposition-sample-v1"
+ },
+ "source": {
+  "dataset": "xiaowu0162/longmemeval-cleaned",
+  "file": "longmemeval_s_cleaned.json",
+  "license_note": "LongMemEval is distributed by its authors under MIT; filler turns originate from ShareGPT/UltraChat as redistributed there",
+  "revision": "98d7416c24c778c2fee6e6f3006e7a073259d48f",
+  "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+ },
+ "status": "FROZEN sample; annotations are not accepted gold",
+ "unit": "unique user-turn text of the turn-plane corpus (exact-text dedupe, first occurrence in source order)",
+ "weighting_note": "Part R estimates population rates directly. Part S deliberately over-represents cue strata; report it per stratum and never pool it with Part R into one population rate."
+}

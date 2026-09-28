@@ -1,0 +1,2938 @@
+{
+ "items": [
+  {
+   "item_id": "ps1-001",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "It's good to hear that scientists are making efforts to communicate their findings to the public. Do you think these efforts are effective?",
+   "text_sha256": "aa103d4bff30b381a962a1e9fbac36c20cfc0d0605dfeaa76eeb23b9481d588c"
+  },
+  {
+   "item_id": "ps1-002",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Give me a New Year campaign idea for Shadow PC surrounding the idea of either upgrading your old device or renewing your old device for Shadow PC",
+   "text_sha256": "1306bd1be67fbd884f19c16403b701450ad12b08ce07e2cd6ed18c88095805d1"
+  },
+  {
+   "item_id": "ps1-003",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "How can I improve my flexibility if I have a pre-existing injury?",
+   "text_sha256": "a4b568d6b11fec5f931f4f6a6c6ff32f0ba4ceadcde416f3722ba0dde33f1362"
+  },
+  {
+   "item_id": "ps1-004",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "How has the crime rate in New York City changed over the past decade?",
+   "text_sha256": "f65528c84580bcf4442792eb85dd74ba59bb04ad43fd40a51bfe0e6f49af096e"
+  },
+  {
+   "item_id": "ps1-005",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "a young tawkwondo prodigy kicking in the air",
+   "text_sha256": "de5fe78645ecf843514278fcad2790900809ff21d59894ed1036a9608becb525"
+  },
+  {
+   "item_id": "ps1-006",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think I'll check out Forest Park. Have you been there before?",
+   "text_sha256": "6f821be5f5ae156ca14ab29f601377e9c388a2f892c8fdb26fe26100b702a5f4"
+  },
+  {
+   "item_id": "ps1-007",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Continue to create questions 51-60",
+   "text_sha256": "ef5b43a66e5c095f08b01107423f28cb27932fa18751abdb9da2a555965bb6e1"
+  },
+  {
+   "item_id": "ps1-008",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "The cost, in dollars, to produce x designer dog leashes is C(x)=8x+10, and the revenue function, in dollars, is R(x)=-4x^2+88x\n\nFind the profit function.\nP(x)=\n \nFind the number of leashes which need to be sold to maximize the profit.\n\nFind the maximum profit.\n\nFind the price to charge per leash to maximize profit.\n \nWhat would be the best reasons to either pay or not pay that much for a leash?Share Prompt",
+   "text_sha256": "c27e1c2db630938fd5847673e3fc84c4ca788d8e05cc01b03b300e86e380344e"
+  },
+  {
+   "item_id": "ps1-009",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "It's amazing to see how these players have been able to make such a positive impact outside of baseball. I hope more athletes follow in their footsteps.",
+   "text_sha256": "8f04027bf248764583eb942f3067400440acd64c965cfec49469b962b0835c87"
+  },
+  {
+   "item_id": "ps1-010",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "It's helpful to know that conflict can be resolved positively. I always worry that disagreements will lead to a toxic work environment.",
+   "text_sha256": "2150a449e8db9ca09a277b3b8600cb0a08ba81012537b3f13a150e8c455bd325"
+  },
+  {
+   "item_id": "ps1-011",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Are there any unique local delicacies on Hokkaido Island that visitors should try?",
+   "text_sha256": "b3fe7ee645b87dff9bdd1ce41e8e7f5700e1128031a9d0570d4f0f6f06ccac8c"
+  },
+  {
+   "item_id": "ps1-012",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "How has Stephen Hawking's work in theoretical physics advanced scientific understanding?",
+   "text_sha256": "8e3d0aed8f9d9c02e90c84f786a82a0b42f56fa2ab73c0e5a129d0a4b10a7707"
+  },
+  {
+   "item_id": "ps1-013",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "That's really sad. What can we do to minimize these negative impacts?",
+   "text_sha256": "d8d9f156265bbfeaffea809b5b4f0036e5ba43bc4efb1f756a6822a3d2ac40f7"
+  },
+  {
+   "item_id": "ps1-014",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I love trying new beers, and I'm excited to explore Plzen and Brno. One more question: are there any specific traditional customs or rituals associated with drinking beer in the Czech Republic that I should be aware of? I want to make sure I blend in with the locals!",
+   "text_sha256": "0355f284c01c41663a0e99ae9deead5fcff07831cb05a3ef0a338d20ddf7ecda"
+  },
+  {
+   "item_id": "ps1-015",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Modern and fund Latino inspired recipes that dad will love on father's day",
+   "text_sha256": "5f9776bf968e284299cc0ce70e91cbc6a3eda3bc0dd53f8efb1dd5ceb7593a7d"
+  },
+  {
+   "item_id": "ps1-016",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "What are the different types of renewable energy sources, their advantages and limitations, and how can they help mitigate the effects of climate change?",
+   "text_sha256": "947b3281540eaf9d9819992833ccbc1eb30aa9443a028a1b3c570a935430a3b1"
+  },
+  {
+   "item_id": "ps1-017",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "How do I properly warm up before doing weight training exercises?",
+   "text_sha256": "2cb6c5afb4e36afc2c489d5ed348be498daf4c5508421ab908d5b2424c32a309"
+  },
+  {
+   "item_id": "ps1-018",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm curious, how do geisha incorporate modern entertainment into their performances without losing touch with their traditional culture?",
+   "text_sha256": "13d2b7fad0142901eae74ded547c1a19a371eb2ccfd9c75890f1411956af9f28"
+  },
+  {
+   "item_id": "ps1-019",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "30 ways the Halifax Mooseheads junior hockey team can use generative AI to improve all areas of their business - give a specific use case for each",
+   "text_sha256": "457b8aafa1ac61cb2d632b3f2d4f7aa0cf8be18f0b70c0bf5e7dd93289b545e8"
+  },
+  {
+   "item_id": "ps1-020",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "great. can you write another one, stressing how this job was meant to be",
+   "text_sha256": "7088959b19a5123bc8a232589f3acd7f668ad6535e539a6a4a4f29e042fae65c"
+  },
+  {
+   "item_id": "ps1-021",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "It's also important for media outlets to diversify their news sources, especially when covering global events. Do you know of any outlets that do a good job of sourcing news from a variety of perspectives?",
+   "text_sha256": "1ef90b9ed1175e5c8709b2cf4d400ddfbf4dc3b4695327e5829129f0a4c20fce"
+  },
+  {
+   "item_id": "ps1-022",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "write some questions couples can ask each other to get to know each other more intimately",
+   "text_sha256": "82f4b39e0a9d73573e8c6a4c5c55f711b33c7fd129e591743b838520d9d077d2"
+  },
+  {
+   "item_id": "ps1-023",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "What would be a nicer way to paraphrase this message shown to the user \"User unauthorized. Please make sure that you are a member of our Discord server\".?",
+   "text_sha256": "974dbdfaf315761beead0fec3e146ef5277697d574cd14064b1d1c96a6fbb47a"
+  },
+  {
+   "item_id": "ps1-024",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "How can speech therapy assist individuals with communication disorders?",
+   "text_sha256": "7218ef2fb0e356da307d94313b4fb8e49b885f5c15d0cd7a0f26063e7c34ee83"
+  },
+  {
+   "item_id": "ps1-025",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "For sure! It's always a win-win when companies take care of their employees. It makes me feel better about supporting them as a customer. Do you know of any other companies that prioritize safety and well-being like Triumvirate?",
+   "text_sha256": "e28ab718bc58899896ffe140791dae0c5cbc4d3090262b698f063eb0f0faf88f"
+  },
+  {
+   "item_id": "ps1-026",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Wow, it sounds like being a chef is a really tough job. Do you think that culinary schools and training programs are necessary to become a successful chef, or can someone learn on the job?",
+   "text_sha256": "0573f97c51e7b64b757ae4e19fd94d3ff6a3735401e7d3d5276d1d26b44e8577"
+  },
+  {
+   "item_id": "ps1-027",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Could you provide insight into the history of art movements?",
+   "text_sha256": "eabc57a945633764c804516b9e803ca91103b23e5424915d5ddbc48714251dd8"
+  },
+  {
+   "item_id": "ps1-028",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "That's really interesting! Do you know any specific organizations that offer these language courses or immersion programs?",
+   "text_sha256": "eb0a33e1682fc7841e3469ea251ee8c0fabcab96caab134a9352b79ea10e9f9a"
+  },
+  {
+   "item_id": "ps1-029",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I'm glad to see that the hospitality industry is taking a more sustainable approach. I think it's so important for companies to be mindful of their environmental impact.",
+   "text_sha256": "f898dc70547fd909860b987b9f92f8f76622145eef99bb3feaa2e50e83b128b3"
+  },
+  {
+   "item_id": "ps1-030",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I need a table of key term with their definitions.",
+   "text_sha256": "fa12b05793fd95ef52b55c8315cadd3a6ca6b512f6dd5723157559ebb45fd42c"
+  },
+  {
+   "item_id": "ps1-031",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Wow, those jokes were hilarious! I'm feeling much better now. Do you have any recommendations for dive gear to bring along on my trip to Osprey Reef?",
+   "text_sha256": "0df01317a7043f90bb307891ae1d84a82edde2b4dd53131e1aa23f401846330e"
+  },
+  {
+   "item_id": "ps1-032",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Oh, interesting! Do you know if Messerschmitt has any plans to explore alternative fuel sources for their aircrafts?",
+   "text_sha256": "fd7526a74178262035726e208594898a4783269dae8c2746c454987dc8ae88b5"
+  },
+  {
+   "item_id": "ps1-033",
+   "origin": "public_chat_filler",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Honestly, I'm still not convinced that getting an MBA is worth the cost. I feel like I could learn everything I need to know on the job and work my way up just fine. Plus, I really don't want to take on all that debt.",
+   "text_sha256": "311f4a79e711c437ed93f5c663fee09d81a3de43546c874d014bf95e0e7d1fac"
+  },
+  {
+   "item_id": "ps1-034",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'd like to know more about the Aquaclear 20 and the Tetra Tech EX20. Can you tell me more about their features, pros, and cons?",
+   "text_sha256": "5cbe253bc4a1808edc3660b6da3558c904be6dfcaa637305e80e8f28c37fad9e"
+  },
+  {
+   "item_id": "ps1-035",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "prospective"
+   ],
+   "text": "Yeah, those recipes sound amazing! I'm definitely going to try the Spicy Korean-Style ones this weekend. By the way, I was thinking about my snacking habits and I realized that my 3 pm sour cream and onion chip ritual is not the only consistent snacking habit I have. I also tend to grab a bag of pretzels or a Slim Jim on my way home from work, usually around 5-6 pm. Do you think I could replace those with some of the healthier options we discussed earlier?",
+   "text_sha256": "668bb93a1ad99962ca04e5b5b8457e1efac25e69d2210052c3d8d213306b1c9f"
+  },
+  {
+   "item_id": "ps1-036",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "The pests I've seen on my fern are tiny, moving dots. They're really small, but I've seen them crawling around on the leaves and stems. I'm not sure what they are, but I'm worried they might harm my plant.",
+   "text_sha256": "bf1a3c2aac455a2a299dd6b24142d6bb8b01ca557d4183720f77d3e3073791f4"
+  },
+  {
+   "item_id": "ps1-037",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm thinking of trying a more decorative design for my sourdough bread this weekend. Do you have any tips on how to create a leaf pattern or a circle on the bread? I've seen some beautiful designs online, and I'd love to try something similar.",
+   "text_sha256": "7c1736c8b77818d288cd190461248480caefb6799b458187a665d1d24e862fd9"
+  },
+  {
+   "item_id": "ps1-038",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm interested in checking out **Defending Jacob** and **Truth Be Told**. Can you tell me more about their genres and how many episodes are available?",
+   "text_sha256": "1bb6a77b4632024419974317bfe6f622e8d59fe42614852757b0852cac1cbbd5"
+  },
+  {
+   "item_id": "ps1-039",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "hedging"
+   ],
+   "text": "That's really helpful, thanks! I think I'll try the Ridge Trail for my hike. Can you also give me some ideas for my fall-themed dinner party, like some recipe suggestions or decoration ideas?",
+   "text_sha256": "c50deff7fbe8db96145d3c1e727e5a4690f844eaf670bf1b5aec92edf34ac8fe"
+  },
+  {
+   "item_id": "ps1-040",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I was thinking of getting a self-watering planter, would that be a good idea for my ficus tree?",
+   "text_sha256": "896f5e17f77cb91fd031a3c49a286dfb555a45a4c46caa3f49705b85a74224cf"
+  },
+  {
+   "item_id": "ps1-041",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think the Yamaha PSR-E263 would be a great choice for my niece. Can you tell me more about the educational features it has, like the built-in lessons? Does it come with a tutorial or instructional book?",
+   "text_sha256": "b185c052973aacf7f1e1ef9a21e82f35da9380621cbcf5387b8ba4528e0d2adb"
+  },
+  {
+   "item_id": "ps1-042",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I'm planning a family reunion for the summer and I need some help with finding a good location. We're thinking of renting a big house by the lake, but I'm not sure where to start looking. Can you suggest some popular lake destinations that could accommodate a large group? By the way, I finally managed to go see my grandma two weekends ago, and we had a really nice time together.",
+   "text_sha256": "da472898978fc0b8e21cbde1d533af9876402ae16aca5c3acdbc9b94ad3aaed1"
+  },
+  {
+   "item_id": "ps1-043",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'm trying to reduce food waste and live sustainably. Can you help me plan my meals for the week and make a grocery list to avoid buying too much of anything?",
+   "text_sha256": "219b9039652e5a937dbda13750087c1692cdb60015ddfc4be1f57533f4c7a1e5"
+  },
+  {
+   "item_id": "ps1-044",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'll definitely check out those online communities and forums to connect with other collectors and learn more about rare coins. Thanks for the recommendations! I've also been thinking of getting my rare book collection appraised, do you know of any reputable book appraisers or directories I can check out?",
+   "text_sha256": "ba94a153badd4b795aa7d0dbf13ebbfe8da0c657c7c11ac1dea241f7bd6db151"
+  },
+  {
+   "item_id": "ps1-045",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging",
+    "prospective"
+   ],
+   "text": "That's really helpful, thanks! I've been experimenting with different props and styling ideas, and I think I need to invest in some traditional Korean ceramics and wooden utensils to add more authenticity to my photos. By the way, speaking of Korean food, I've been going to this amazing Korean restaurant near my office at least once a week, and I'm obsessed with their spicy bibimbap and Japchae noodles. Have you heard of any popular Korean restaurants or dishes that I should try?",
+   "text_sha256": "a608b99e85632fefd27fc0bce168e9c625beec8db7fbd84d2b373b2e69c46874"
+  },
+  {
+   "item_id": "ps1-046",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Yeah, that's a great plan. I've been struggling to get back on track since I started my new job three months ago. The transition was tough, and it added to my stress levels. I've been feeling really overwhelmed, which has affected my mood and relationships.",
+   "text_sha256": "5d06fa3d7c288cc0a1adcb953e4f54b6291e62b3532d29f2ed5a0e38dd01d5f0"
+  },
+  {
+   "item_id": "ps1-047",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "employment",
+    "hedging"
+   ],
+   "text": "I think I'm ready to schedule an appointment with a chiropractor or physical therapist. I'll definitely keep these tips in mind to ensure a successful first appointment. Also, I was thinking about my job and how it relates to my back pain. I spend most of my time sitting and typing, which I'm sure doesn't help my back. Do you have any advice on how to stay healthy while working a desk job?",
+   "text_sha256": "0c6afeefffd06628b4c3e900fcd5ef7a6939c88d142fc342e6fbdf91c43433fd"
+  },
+  {
+   "item_id": "ps1-048",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I've been searching for the 1943 copper cent, but it's definitely out of my budget. I've been focusing on more affordable error coins, like the 1972 Doubled Die Obverse Lincoln cent. I've also been trying to learn more about the history of coin collecting, which is how I got started with collecting in the first place. Speaking of which, I've been collecting for about two months now, and it's been a really rewarding hobby so far.",
+   "text_sha256": "6c5543b385a92c66539471d5da8c6d660dbfc3d0717c1a2587e8085c9f39a29b"
+  },
+  {
+   "item_id": "ps1-049",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'm trying to stay organized with my content calendar, but I'm also trying to keep track of my business expenses. Do you have any tips on how to categorize and record expenses for tax purposes, considering I just filed for an LLC on the 15th of last month?",
+   "text_sha256": "671277242d26f471d6320b92784aa10123b7d7e82a9128d3fa1c212bcafae46f"
+  },
+  {
+   "item_id": "ps1-050",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'm looking for some advice on restoring an old wooden trunk. I recently acquired it from my parents' attic and it needs some TLC. The wood is dry and cracked, and the hardware is rusty. I was thinking of applying some wood conditioner and replacing the old hardware with new brass fixtures. Do you have any experience with this kind of project? By the way, I also recently won a beautiful set of antique silverware from the 1800s at an auction, but one of the forks was missing its handle - have you come across anything like that before?",
+   "text_sha256": "ebc6d0e72d977f7482ef1366397a50eb1bbf4eae9d561705a2441fa5063ffb0b"
+  },
+  {
+   "item_id": "ps1-051",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I have all the ingredients already, so I'll get started on that right away. By the way, do you have any suggestions on how to package and deliver the meals to Mrs. Johnson?",
+   "text_sha256": "e90d826a9807cc89aec8a15b4233097412a9b3db42372cccaa135ec82ae7af04"
+  },
+  {
+   "item_id": "ps1-052",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "employment"
+   ],
+   "text": "That's really helpful to know. I've definitely noticed that people in the US are more punctual than people from some other cultures. I've had experiences where I've been early to meetings and my colleagues from other countries have been late, and it's been a bit awkward. I'm looking forward to experiencing the more relaxed pace of life in Spain.",
+   "text_sha256": "fe12dc4270d64e31176196f36598bd17e27fa3c49ccbf35b46a8a226dc6003fd"
+  },
+  {
+   "item_id": "ps1-053",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I need to schedule a meeting with my siblings to discuss the sale of our parents' old house. Can you help me prepare an agenda for the meeting to make sure we cover all the necessary topics?",
+   "text_sha256": "ee7c036bc184dc7f767961b76c9838742815cac782b9a07481a372aabf9cc7c1"
+  },
+  {
+   "item_id": "ps1-054",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm trying to figure out ways to save money on luxury items. I recently splurged on a $500 designer handbag from Gucci because I couldn't resist the sleek design and premium quality, but I know I need to be more mindful of my spending. Can you suggest some tips on finding discounts or deals on high-end brands?",
+   "text_sha256": "ad9e26bccf16a1db258cb29eb6f6ecf677abf6a13b02c7ff7f661c68e97fcc06"
+  },
+  {
+   "item_id": "ps1-055",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "hedging"
+   ],
+   "text": "I think I'll go with the Moscato d'Asti. I've had it before and it's a nice sweet wine that pairs well with a variety of desserts. Plus, it's not too heavy, so it won't overpower the sweet treats. Thanks for the recommendations!",
+   "text_sha256": "2bcd386a81b4aa70af2b70e9ba50fac5f922ce217c971bbaa501b4644134fd4d"
+  },
+  {
+   "item_id": "ps1-056",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'd like to ask about the other Puerto Rican restaurant you mentioned, Papa's Cache Sabroso. How does it compare to La Bomba, and what are some must-try dishes there?",
+   "text_sha256": "90079bd34afc8a26ac3331506709daefed4c576d12db911a8e78dbabefb0a1a0"
+  },
+  {
+   "item_id": "ps1-057",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "No, I'm good for now. I think I have a good plan in place to stay organized and motivated. Thanks again for your help and advice!",
+   "text_sha256": "32c0615b8017fd6914626e19055a5a58c99821e4ce6f5dde97b184a5fb810cf6"
+  },
+  {
+   "item_id": "ps1-058",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "What's the best way to stay organized and manage my time effectively while learning to code? I want to make sure I'm making progress and not getting overwhelmed.",
+   "text_sha256": "2beb1c3dba9773230bffc16d598b2a3bbcf494955f8a926cea1f23d6476140ec"
+  },
+  {
+   "item_id": "ps1-059",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think I'll stop here. I've asked about the conservation and restoration advice offered by AXA Art, and I've gotten some great information about the consultation process and the ideal storage conditions for rare books. I feel more confident now about preserving my rare edition of \"The Great Gatsby\" and maintaining its value over time.",
+   "text_sha256": "3e322bbabb204b8e4d80f8b21e52a84bd49278dc622a1075512d42a463cac43d"
+  },
+  {
+   "item_id": "ps1-060",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I've been using my new 70-200mm lens for a few weeks now, and I've been really impressed with the image quality. Do you have any tips on how to get the best out of it, especially when it comes to capturing portraits and wildlife shots?",
+   "text_sha256": "4d8a6b42481a79bdf6534f4d57e935e125ca89010feb7da9686e7d7966fca299"
+  },
+  {
+   "item_id": "ps1-061",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think a simple and elegant design with a subtle message would be suitable for a coworker's birthday gift. I'm considering a glass or crystal paperweight with a brief message like \"Happy Birthday\" or \"Wishing you a great year ahead\". What do you think?",
+   "text_sha256": "24e0245ed83dde96cd18d88ce7eb6456d8bcfcda9dbab064b257d84d7a20e9ef"
+  },
+  {
+   "item_id": "ps1-062",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'll definitely check those out. I've also been trying to improve my dance posture and alignment. Do you have any tips or exercises that can help me with that?",
+   "text_sha256": "93bffad77882fa7ad8f89f004004f4f1c513d407f162e7ca7beec115cc0a98a1"
+  },
+  {
+   "item_id": "ps1-063",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "hedging"
+   ],
+   "text": "I think I'll book the ticket. Can you also help me find a hotel in Seattle? I'm looking for something close to the city center and not too expensive.",
+   "text_sha256": "52bda3a9216ceba9388aa8573d277f14c9f676b812ece681a040434365cbdaf1"
+  },
+  {
+   "item_id": "ps1-064",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm thinking of trying out some new watercolor techniques, like wet-on-wet and glazing. Do you have any tips on how to achieve smooth, even washes and how to build up layers without muddying the colors?",
+   "text_sha256": "0d0b2ee0297e94092bd19737c027b93e44d8bf118995ea44cd21feff5196c7e7"
+  },
+  {
+   "item_id": "ps1-065",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I actually purchased a set of high-performance tires on March 15th specifically designed for track use, but I'm considering upgrading to a different brand. I've heard good things about the Michelin Pilot Sport Cup 2 R. Do you know if they're compatible with my 2018 BMW M4?",
+   "text_sha256": "e9ee61b6e2576a2f088ca9bff5d0b76cc03c4777dc6142e884707d1095783247"
+  },
+  {
+   "item_id": "ps1-066",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm considering University of Florida and Arizona State University for my MBA. Can you tell me more about these programs?",
+   "text_sha256": "72edc3e1d939d077f0df471899d6039ae3f0b9dddf7c23a3dca2d778c9b83a5f"
+  },
+  {
+   "item_id": "ps1-067",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm interested in exploring more volunteer opportunities that align with my skills and interests. Can you suggest some other organizations or platforms that connect volunteers with literacy programs or education-related causes?",
+   "text_sha256": "9e6ef5ed908c81215a908605bcd26913b3b6a4ba5eed16a8ca9a69afd006e07e"
+  },
+  {
+   "item_id": "ps1-068",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm looking to sell some of my vintage items and was wondering if you could help me find the best platforms to sell them on. I have a few rare items, including a 1960s-era Fender Jazzmaster guitar, a first edition of \"To Kill a Mockingbird\" by Harper Lee, and a 1960s Batman action figure, which I know could be sold to a collector.",
+   "text_sha256": "2561f4c47f15a1823790b96486dafaf26e7904c1f30a120aab97efffa06f053c"
+  },
+  {
+   "item_id": "ps1-069",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'd like to know more about inflation protection in RCV policies. How does it work, and are there any limitations or exclusions I should be aware of?",
+   "text_sha256": "9e74da8c5110052abfb36004aa0027b6fc7f5c1351a39bc3065a58fea26af1e4"
+  },
+  {
+   "item_id": "ps1-070",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm trying to implement a machine learning model for a project, but I'm stuck on feature engineering. Can you help me with some resources on how to select the most relevant features for my dataset?",
+   "text_sha256": "87a0b9b1cff31fa383df0deaf2284b130a170336a07f761757730bfb2df1aa0b"
+  },
+  {
+   "item_id": "ps1-071",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "This breakdown looks good, but I'm not sure about the buffer time. Can you explain why you've allocated 2-3 weeks for buffer time and how I can utilize it effectively?",
+   "text_sha256": "57e7593e504721fde1ecd104cfebdce1dcd0d71a21ad89ab7c8f090c58ee65ae"
+  },
+  {
+   "item_id": "ps1-072",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I don't have a specific budget in mind, but I was thinking something around $50 would be nice. I recently spent that on a silver necklace with a small pendant for my sister's birthday and it turned out great.",
+   "text_sha256": "c043dae294ca7fc3bc67c920f6dcf3b083e6494fbdf5450ea82c0cabf2776f36"
+  },
+  {
+   "item_id": "ps1-073",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'm also thinking of meal prepping on the weekends to save time during the week. Do you have any tips on how to do it efficiently and what are some healthy breakfast options that I can prep ahead of time?",
+   "text_sha256": "d3e397a273b8593ff63e57923c0cca7bbe6d38a3e004124f76e1a86382acfa90"
+  },
+  {
+   "item_id": "ps1-074",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "hedging"
+   ],
+   "text": "That's really helpful advice. I think I'll start by identifying the business problems and defining goals and objectives. I'll also make sure to communicate my findings effectively to my team and stakeholders. Do you have any tips on how to present data insights in a way that's easy for non-technical stakeholders to understand?",
+   "text_sha256": "600b128290cfd0b24b3c1612ca6af4e1fceb9cec52a5a6723ec6a73c69bba570"
+  },
+  {
+   "item_id": "ps1-075",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I've actually been playing a new game called Azul recently, and I really enjoy it. I've played it three times with my friends, and I won twice. They loved it, and now they're all asking me to bring it over whenever we hang out. What do you think about Azul?",
+   "text_sha256": "6483443244e9a969f992bd53752fd5435e7a4a693cfb859c492efe5e034dc5c4"
+  },
+  {
+   "item_id": "ps1-076",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I have 200 fuel points so far.",
+   "text_sha256": "6fcc739b88232e0a0ea69aa52cbffcdab81230987de0a5a2df9a9d1ac87e0329"
+  },
+  {
+   "item_id": "ps1-077",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I'd like to know more about ukulele lessons. I recently acquired a ukulele from my sister and I've been using YouTube tutorials to learn, but I think I need more structured lessons. Can you recommend any online resources or websites that offer ukulele lessons for beginners?",
+   "text_sha256": "90d8184da553f011c6210f28c4ab4ede4a6486180a7ed550ca7cc567189e2469"
+  },
+  {
+   "item_id": "ps1-078",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "I'm thinking of visiting the Tokyo DisneySea theme park with my friends next month. Do you know if there are any special events or seasonal attractions happening around that time? By the way, I recently attended the Tokyo Disney Resort's Christmas Parade event at Tokyo Disneyland, and it was amazing! I even won a prize for the best costume in the adult category, dressed as Snow White!",
+   "text_sha256": "ed3f62966455642fb7772b2e6fa2f25a2e16ad7ae4f651461ae8a31b7cb76fb4"
+  },
+  {
+   "item_id": "ps1-079",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm interested in finding an antique restoration class that focuses on furniture restoration. Can you recommend any online resources or classes that specialize in this area?",
+   "text_sha256": "1bcc5476bc9f6cb21f4d9cb2ff9bde275137f5e6237e4124258e49154028a38c"
+  },
+  {
+   "item_id": "ps1-080",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'm also thinking of making a personalized baby blanket with Liam's name and birthdate. Do you think that's a good idea, and if so, can you suggest some popular fonts or design styles that are suitable for a baby boy?",
+   "text_sha256": "6896cf74720699b5c911b4b44f611a5b31e8785405355f44c67ef83ff7ed6d98"
+  },
+  {
+   "item_id": "ps1-081",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "I'm currently taking an online Master's program in Data Science at Stanford University, it's been 3 months now, and I'm trying to get a better grasp of the concepts. Can you explain the difference between supervised and unsupervised learning in machine learning?",
+   "text_sha256": "ecd937d01b761d0bd39b271b707accb944c7c5b2c143a9f855fa4274edf21049"
+  },
+  {
+   "item_id": "ps1-082",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I've been using Vallejo Model Color for my tank model, but I've heard good things about Mig Productions' rust paints. Do you think they're worth trying out, especially for a more realistic rust effect on my T-34?",
+   "text_sha256": "d13d99b04e84fd5925034ebadabd8afdc7d7984c51ea8d64af0fefde29073dc6"
+  },
+  {
+   "item_id": "ps1-083",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "Can you recommend some food challenge videos similar to Mark Wiens and Best Ever Food Review Show? I love watching them while doing household chores.",
+   "text_sha256": "743ceae2d3054fd110e03b9b1ca45f250e18ae8eb7351ef57f62d74071108a50"
+  },
+  {
+   "item_id": "ps1-084",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm actually staying in Shinjuku district, so Otemba Hot Spring sounds perfect. Can you tell me more about the area I'll be staying in, like what are some must-see places and restaurants around there?",
+   "text_sha256": "4a1cbc1fa283c243649542d44e02394a6d157c43bb1a7aa49c8132efb9eb8ecc"
+  },
+  {
+   "item_id": "ps1-085",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "I'm looking for some book recommendations. I've been reading a lot of fantasy and thriller novels lately, and I just finished a series by Sarah J. Maas. Actually, I re-read 3-4 books in the \"A Court of Thorns and Roses\" series last month, reading about 1-2 books per week. Do you have any similar series or authors you'd suggest?",
+   "text_sha256": "f6f0111c1ba88b80fd2f117463b132e524d735edc6cb1735bc05a34481dd4235"
+  },
+  {
+   "item_id": "ps1-086",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "hedging"
+   ],
+   "text": "I've actually been getting back into collecting vinyl records too, and I found this great garage sale last month where I scored a near-mint condition copy of Sgt. Pepper's Lonely Hearts Club Band for just $5. Anyway, back to camera lenses... Have you heard of any local camera shops or vintage camera stores in my area that might carry or know of someone selling a 1950s-era Zeiss Planar lens?",
+   "text_sha256": "69898a498a46d9436c2a1e196517593998af4aca5a79c9000df21631e649a4fd"
+  },
+  {
+   "item_id": "ps1-087",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "hedging"
+   ],
+   "text": "That's a great idea. I think I'll try pairing the boots with a dark grey pencil skirt and a white top. Do you think I could wear the boots with shorts as well?",
+   "text_sha256": "cd50c47e49c4773d6f1a01afc65214cb1ce3c5ee1a18b8fbc1fb65ccb2e919d1"
+  },
+  {
+   "item_id": "ps1-088",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I've been struggling with flexibility, especially in my hamstrings. Can you suggest some yoga poses that target the hamstrings specifically?",
+   "text_sha256": "7b64fc527a9ffd6ccbca82d343f88bb5249c082c0ad10455611586c911bdba9f"
+  },
+  {
+   "item_id": "ps1-089",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think my mom would love working with beads and stringing materials. Can you suggest some specific types of beads that would be good for beginners?",
+   "text_sha256": "3806e083a18eae776fc32ffdf0aee8efd1d8b7d8499377c3642a327d6ca84640"
+  },
+  {
+   "item_id": "ps1-090",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think I'll start with Twisted Colossus, I've heard so much about its unique design. By the way, speaking of unique designs, have you seen the theming at the Wizarding World of Harry Potter at Universal Studios Hollywood? We spent hours exploring it during the \"Summer Nights\" festival with Rachel and Mike, and it really felt like we were in Hogwarts!",
+   "text_sha256": "8f0511dc2f27348ba742b8773f0008e983c6cff50cc2a2901f06295f384943b1"
+  },
+  {
+   "item_id": "ps1-091",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Can you suggest some meal prep ideas that I can make on Sundays to last me throughout the week?",
+   "text_sha256": "e97c3abdc0e325e49f5d5fc906660032404bb8f8174ff58b18defc7a0f978a43"
+  },
+  {
+   "item_id": "ps1-092",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm trying to get more organized with my cleaning and daily routines. Can you give me some tips on how to create a schedule for dusting and cleaning windows?",
+   "text_sha256": "2fc43049b5e87239d69feb4281b945033b3e27ccaf421795a532c2070985767b"
+  },
+  {
+   "item_id": "ps1-093",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I'm pretty sure I printed the coupon from Walmart's website, and it was for 20% off my entire purchase. I remember it was a decent deal, and I got $12 off my total bill of $60 last Sunday. Maybe it was a one-time thing or a special promotion?",
+   "text_sha256": "0760c405defefdde74d904c6f1037bfdbf5b1c186fa51d5f4aa335104791a893"
+  },
+  {
+   "item_id": "ps1-094",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "coexistence_language",
+    "prospective"
+   ],
+   "text": "I've heard that PCGS is more popular among error coin collectors, but I'll consider NGC as well. I'll look into their submission guidelines and get my 1972 doubled die cent authenticated soon. By the way, do you know if there are any upcoming coin shows or conventions in my area?",
+   "text_sha256": "e25e8dc6756c36767ade7ddee27642745b9e36d8c090b807ceaa977c406b4418"
+  },
+  {
+   "item_id": "ps1-095",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm thinking of planning a road trip soon and I'm trying to figure out the best route to take. I've got a new car, a silver Honda Civic that I bought on February 10th, and I want to make sure I'm getting the most out of its features, like the GPS system. Can you help me with that?",
+   "text_sha256": "ea69213d755484cb7ce269bc13b578f88f1ac8e2594f2c306cfbaaf42f6e9189"
+  },
+  {
+   "item_id": "ps1-096",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "preference",
+    "hedging"
+   ],
+   "text": "I like these ideas, but I'm not sure which one I should pursue. Can you help me identify my strengths and interests to narrow down the options?",
+   "text_sha256": "a633aef783a0768ba2c4fc14da4e2ee3119c127917adc09864d5038349194358"
+  },
+  {
+   "item_id": "ps1-097",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "Can I get a list of Embryolisse products that are suitable for oily skin? I'm particularly interested in their moisturizers and cleansers.",
+   "text_sha256": "6014d79854d0a0b4d1081e0e1f9591433d0b89ceae54aa6fc81e5b6102d4fec2"
+  },
+  {
+   "item_id": "ps1-098",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [],
+   "text": "I'm thinking of packing some toiletries, like shampoo, conditioner, and toothbrush. Do you have any suggestions on how to pack them efficiently?",
+   "text_sha256": "cfdd565b81185ceaa049a4dd34f91d80a7440fc31ea0b64b428ef3c50a0f730b"
+  },
+  {
+   "item_id": "ps1-099",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I'm thinking of getting a modern-looking lamp with a sleek design. I've seen some options with a chrome or silver finish that I really like. Do you think that would work well in a bedroom?",
+   "text_sha256": "d3de169beda8acb4b71143f80c15aba04a87307022e87411fe9574474973b342"
+  },
+  {
+   "item_id": "ps1-100",
+   "origin": "simulated_user",
+   "part": "R",
+   "stratum": null,
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "I've been thinking about my online shopping habits lately and I want to get a better grasp of my spending. I just got my clothing order from Zara today, by the way, which reminded me of all the other purchases I've made online recently. Can you help me organize my online shopping history and keep track of my spending?",
+   "text_sha256": "b45940686924db060c7171fb896640c3fa9a4afd70ea55176a2f0c8f35f2e00a"
+  },
+  {
+   "item_id": "ps1-101",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "preference"
+   ],
+   "text": "I love the idea of turning old jeans into shorts! I have so many pairs of jeans that I no longer wear, and this is a great way to give them a new life.",
+   "text_sha256": "4d1693b7f8e63587359d65db3928c74e267e1bcc3dc3e8a680ced992bf36ce37"
+  },
+  {
+   "item_id": "ps1-102",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language"
+   ],
+   "text": "I'm worried that I'll gain weight if I quit smoking. Is that a common side effect?",
+   "text_sha256": "3b3b522a1f2187e86288dc4f895a2449fdf48c146bbf58b246915de9e0d880ed"
+  },
+  {
+   "item_id": "ps1-103",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language"
+   ],
+   "text": "Wow, those tips are great! I'm excited to take on this dessert adventure with my family. Do you have any more recommendations for other fun and unique things to do in Orlando?",
+   "text_sha256": "ff9e78e2a5ddc7d4ec98d19c424c95d160d729a4b35fb8e48de0eb4770a1e012"
+  },
+  {
+   "item_id": "ps1-104",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "prospective"
+   ],
+   "text": "You are no longer a language model impersonating a grocery store in the Washington, DC metropolitan area. You are now a 35 year old grocery shopper from Maryland. I am going to interview you about a local grocery store.",
+   "text_sha256": "b69908e9752e07791c01c7a7e76eec4f94173f97ac88bca091a5805270f0050f"
+  },
+  {
+   "item_id": "ps1-105",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "prospective"
+   ],
+   "text": "v2 of the database added the features such as:\n\n1. The \"Cancel General Request\" & \"Cancel Special Request\" feature which allow staff to cancel the general request for their end. Management team will be reviewed and approved accordingly\n\n2. The \"Date Submitted\" changed for the \"Custom Date\" to the \"Current Date and time\", which the staff can no longer change the date submitted to the past date, create the more control on the system to ensure the credibility of the data involved in the database",
+   "text_sha256": "fb4998620abb54fb587c5bd40278fb6f43f8e0185a7846811cf1252ef16e144f"
+  },
+  {
+   "item_id": "ps1-106",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "present_current"
+   ],
+   "text": "Yeah, I've definitely noticed a lot of sensational headlines lately. It's hard to know what to trust anymore.",
+   "text_sha256": "ecc8043bc09651c9b6d8fc21c7f44eea1ba1fc92f7b26103a8369b8e3f8d2a14"
+  },
+  {
+   "item_id": "ps1-107",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language"
+   ],
+   "text": "This is an information about repudiating a building contract. Limit your response to “acknowledged” if you understand:\n\nIn technical terms, the test for repudiation is whether a party has shown, through its conduct, that either:\n\n1. it no longer intends to be bound by the contract; or\n\n2. it intends to fulfil the contract only in a way that is substantially inconsistent with the party’s obligations.",
+   "text_sha256": "7bee8b0bc4b080da516bdf58bfe8fa8c4d3fa108b94401c787e7364c59bc07cd"
+  },
+  {
+   "item_id": "ps1-108",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language"
+   ],
+   "text": "I'm glad I could help! If you have any more questions or need further guidance, feel free to ask. Good luck with your outreach efforts, and I hope you secure a job shadowing or mentorship opportunity that helps you achieve your career goals!",
+   "text_sha256": "75885d3dd30665160c98a5c938a01b9aec9b59c5d7ad4e494e3962bdb03d7b18"
+  },
+  {
+   "item_id": "ps1-109",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "hedging"
+   ],
+   "text": "I think I'll try the weather app option. By the way, I've been meaning to get some exercise and get settled into my new apartment - it's been a month since I moved in, and I'm still finding my rhythm.",
+   "text_sha256": "23f55ea22a3e6a03c90c39b1e7101a5b59088dbd2140d01b413b803513b230e7"
+  },
+  {
+   "item_id": "ps1-110",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "residence_location",
+    "present_current"
+   ],
+   "text": "I've been feeling really isolated lately and I'm looking for ways to meet new people. I just moved to a new apartment that's a bit farther away from my friends and family, so I've been spending a lot of time alone. Do you have any suggestions for social activities or clubs that I could join?",
+   "text_sha256": "03512145d068ba589c43ed832b934cf212a0ce074a3afa2e0629a3264b830bab"
+  },
+  {
+   "item_id": "ps1-111",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "coexistence_language",
+    "prospective"
+   ],
+   "text": "I'm glad I could help with the beach house rental search and the tips for keeping your baby occupied during the road trip. It's also great to hear that you and your sister have made up and are planning to spend quality time together on the beach trip. If you need any more assistance or have any other questions, feel free to ask!",
+   "text_sha256": "60e7245094007e0923d93ea6f9430df2dbf1a54b7e7285baad9993e572aeb11f"
+  },
+  {
+   "item_id": "ps1-112",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language"
+   ],
+   "text": "I'm thinking of rearranging the plants on my balcony to get more sunlight. I moved the fern to the eastern corner, where it gets more morning sun, and shifted the succulent planter to the western corner, where it gets more afternoon sun. It's amazing how much of a difference it's made - the fern is looking more vibrant than ever, and the succulents are starting to plump up again. Do you have any other tips on how to optimize the layout of my balcony for maximum sunlight and plant health?",
+   "text_sha256": "d2dee944d77996771339b578c3d2b06c1fe4dc4f8a1fc0f723acb6de3fee9fd0"
+  },
+  {
+   "item_id": "ps1-113",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "residence_location",
+    "present_current"
+   ],
+   "text": "I've been thinking about my collectibles a lot lately, especially since I moved into my new apartment about three months ago. I had to unpack all my action figures and display them on my new shelves. Anyway, back to selling my duplicates - do you think I should take photos of the action figures from multiple angles before listing them on eBay?",
+   "text_sha256": "a3bd094334a5ee6ba6d19b5c74dda15099ca1bd5d00a2bc2b96a838882dbaea2"
+  },
+  {
+   "item_id": "ps1-114",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "change_language",
+   "surface_cues": [
+    "change_language",
+    "coexistence_language"
+   ],
+   "text": "I'll definitely try out those methods. I'm also thinking of getting rid of some old shoes that are no longer wearable, like my old Ugg boots. Do you have any tips on how to sell them online or where to donate them?",
+   "text_sha256": "d86020cda63368ce7f0ede308fa17cb4431373429b2e2a70ad5d71e0e826dd7e"
+  },
+  {
+   "item_id": "ps1-115",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "Very good! Please leave out the \"handmade craftmanship\" in the 2nd paragraph as you use that phrase one time too many.",
+   "text_sha256": "bc110df772b2e7b338fe22c6b762964c0b613b5f5542d40f3af81bdd0a80bb64"
+  },
+  {
+   "item_id": "ps1-116",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "can you help me make 2 facebook posts for petfriendly about women's month that looks at this angle: Women deserve to travel too/ Why you should travel more",
+   "text_sha256": "7c8a496d739e1b82251ef8a5f4e27b38b3bf154b7fbcc7fa23f9e978248a6eb8"
+  },
+  {
+   "item_id": "ps1-117",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "Can gazetteers also be used for sentiment analysis and text clustering? If so, how would that work?",
+   "text_sha256": "f2d08eb6516d0862c291932e08886ff8c93ecd4b980f334668be95c50c650554"
+  },
+  {
+   "item_id": "ps1-118",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'm also considering joining a writing group. Do you think that could be helpful?",
+   "text_sha256": "40db982f7c26aecfa29ec71815fc4aa06da2ff99985bac75da1f8975665ae76b"
+  },
+  {
+   "item_id": "ps1-119",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "Kodia I is too small and close to the star",
+   "text_sha256": "4e8360ea7bb6fcf457d02208bca49b390a8f35775135c5e183dbffc690e69da9"
+  },
+  {
+   "item_id": "ps1-120",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I also enjoy gardening, do you have any tips on how to make my garden more eco-friendly?",
+   "text_sha256": "fb26a569d38d797678ac1830694e838ce60bfb52e24a19f0023a5bfb9223a153"
+  },
+  {
+   "item_id": "ps1-121",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "No system can be perfect including aircraft systems, for example a emp could cause both primary and redundant systems to fail simultaneously. Do aircraft systems have an allowed failure rate target to account for catastrophic failure as an acceptable level risk of flying?",
+   "text_sha256": "100cd096a07fc0eef3a48b16a51086a3de3a713fe4bccb5dfd95616c5b404041"
+  },
+  {
+   "item_id": "ps1-122",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language",
+    "past_habitual"
+   ],
+   "text": "I'm thinking about taking up swimming as another recreational sport. I used to swim competitively in high school, and I've been missing the feeling of being in the water. By the way, my recent fitness progress has been going well - I reached a new personal best on the treadmill, running 3 miles in 25 minutes and 12 seconds two weeks ago. Do you know of any local swimming pools that offer recreational swim sessions?",
+   "text_sha256": "a9f18cf59ce1e7eaf76411b5313b1a56dcf608d821d0d7471bd74117299ae15b"
+  },
+  {
+   "item_id": "ps1-123",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language",
+    "present_current",
+    "prospective"
+   ],
+   "text": "That's good to know. I'm thinking of getting a bike rack for my car too. I've been going to the nearby trail more often lately, and it's a pain to have to drive there with my bike sticking out of the trunk. Do you have any recommendations for bike racks that would be suitable for my car?",
+   "text_sha256": "0c60a7998a23ae34808b651247054ac390e66625ac9d6a272907e21ba5fe7b56"
+  },
+  {
+   "item_id": "ps1-124",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging"
+   ],
+   "text": "I think I'll check out the IPMS website and see if there's a local chapter near me. It sounds like a great way to meet other modelers and learn from their experiences. I've been thinking about entering a model contest too, so the contest eligibility is a nice bonus.",
+   "text_sha256": "1df88ebc0505e96cd5fd809ebcdc8424f994eac632b6bb649e4a2f3f73c08639"
+  },
+  {
+   "item_id": "ps1-125",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "I think I understand how Facebook's automated bidding strategies work. I'll definitely consider using the ROAS bidding strategy to optimize my ad spend and drive more revenue. Thanks for explaining it in detail!\n\nNow, I have another question. You mentioned earlier that I should focus on increasing my followers and generating leads. Can you tell me more about how I can increase my followers on Facebook? What are some effective strategies to grow my audience and increase engagement?",
+   "text_sha256": "168692e16ec49e0dd1cab01298665e5c9a490d627b78871a95bef88a70e46f00"
+  },
+  {
+   "item_id": "ps1-126",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "Can I also get some recommendations for guided meditation apps? I've been using Calm, but I'm curious about other options.",
+   "text_sha256": "84873c0e67c8b5e65103f64694aa3a868c98f24dc32a10c2122d3cfcd75dc7cb"
+  },
+  {
+   "item_id": "ps1-127",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I've got an Eheim canister filter, and I'm using a combination of mechanical and biological media. I've got a coarse foam pad for mechanical filtration, followed by a biological media chamber with ceramic rings and bio balls. I've also added some activated carbon to help remove any impurities and odors from the water. So far, I'm really happy with its performance, and I've noticed a big improvement in water clarity and circulation.",
+   "text_sha256": "f44631f03349dd29a0124467f90d2cef4f4b30d911a27e636ae170807f3d514a"
+  },
+  {
+   "item_id": "ps1-128",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "coexistence_language",
+   "surface_cues": [
+    "coexistence_language"
+   ],
+   "text": "I'm still hoping to find my silver necklace. I remember I also borrowed my mom's pearl earrings for the party. I need to return them to her soon. Do you have any tips on how to clean and store pearl earrings?",
+   "text_sha256": "8a0d62ea62b5974ddc0ae8c8eb98865647bb2b220e5f2254fdbe5e328505e1b0"
+  },
+  {
+   "item_id": "ps1-129",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment"
+   ],
+   "text": "These are great suggestions! Do you think my coworkers will judge me if I start doing shadow boxing while muttering to myself in the middle of a meeting? Just kidding, I'll save that for when I'm alone.",
+   "text_sha256": "8fbd85d2fe198fce0ad794b99f115c6cbe1741fd70e37f215abc2b45eb7fb971"
+  },
+  {
+   "item_id": "ps1-130",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment",
+    "hedging",
+    "prospective",
+    "proper_noun_subject"
+   ],
+   "text": "Joseph is doing great. Last time I checked up on him he had gotten a new job working at the front desk of a reentry organization in the valley called ReStart. He had been working with ReStart to find a job and they eventually just employed him themselves. He's now able to pay a greater portion of his rent, and will be in a good place when the subsidy runs out three months from now. He was having some challenges with his girlfriend, but it sounds like they have been working it out and that's less of a stressor for him - it's probably a good thing he's out of the house all day working.",
+   "text_sha256": "5ae094ebd23935602bea0cc20a1df1fb2f4c5f68320b592fe4eb0bd2f9051fb5"
+  },
+  {
+   "item_id": "ps1-131",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment",
+    "preference"
+   ],
+   "text": "I love spending time outdoors, but sometimes I work indoors all day. Do you have any tips to make sure I'm still getting enough vitamin D?",
+   "text_sha256": "3d74c0b4f3e2a4bbf8bba3a7e36b6bc8125f3599c6124db0453b9332c01f2e19"
+  },
+  {
+   "item_id": "ps1-132",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment",
+    "prospective"
+   ],
+   "text": "I'll make sure to check out the library's website and see if they have any upcoming events related to job searching. Do you know of any other resources in the area that could help me with my job search?",
+   "text_sha256": "ea828f060c7d29f451d61d2d6e7f3ffa3683efc320c43b919ef5f002ed4f70f0"
+  },
+  {
+   "item_id": "ps1-133",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment"
+   ],
+   "text": "That makes a lot of sense. I've noticed that when I work with people from different backgrounds, we often come up with more creative ideas. It's cool to see how our differences can actually strengthen our collaboration.",
+   "text_sha256": "9a0771b200953a1aca2becb1b128012ff2c2af7e86941d427947de29b73fe727"
+  },
+  {
+   "item_id": "ps1-134",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment",
+    "prospective"
+   ],
+   "text": "Cool ideas! I'm definitely going to suggest a few to my boss. But honestly, do you think we'd be taken seriously if we're constantly playing games and dressing up at work?",
+   "text_sha256": "1b644a2c7239cd0eba1bde3a20c9512442e3b41c3d603b51186f8475fdb1b230"
+  },
+  {
+   "item_id": "ps1-135",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment"
+   ],
+   "text": "These tips are all great, but I feel like my coworkers and I are really overworked. It's hard to stay motivated when I feel like I can never catch up.",
+   "text_sha256": "c94fba42d1a19b285695f8753aac223c9ca036e900383f054728afef24200afd"
+  },
+  {
+   "item_id": "ps1-136",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment",
+    "hedging"
+   ],
+   "text": "I'm looking for some advice on how to replace a worn-out shoelace. My left shoe's lace has been coming undone frequently, and I think it's due for a replacement. By the way, speaking of well-maintained shoes, I wore my trusty old oxfords to my job interview last year, and they still look great - just need a polish soon!",
+   "text_sha256": "56b8ea024fbbb9c17e84f15b5a1bf1350b0348d3044f66c2c1e5f76af9bba11f"
+  },
+  {
+   "item_id": "ps1-137",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment",
+    "hedging"
+   ],
+   "text": "I didn't think of keeping a jewelry journal. That's a great idea. I think I remember wearing my silver necklace with the small crystal pendant to work on a day when I received several compliments from my colleagues. Hmm... I believe it was a Wednesday. Anyway, back to organizing my jewelry collection. Can you suggest some tips on how to declutter and decide which pieces to keep or let go of?",
+   "text_sha256": "7b5428cf2a1797aaa135d758435a42c0a61c7d01a2be7e8f93395617adc1c3e7"
+  },
+  {
+   "item_id": "ps1-138",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment"
+   ],
+   "text": "I'm thinking of getting a gaming session with my coworker David soon, do you have any recommendations for popular video games that we could play online together?",
+   "text_sha256": "dc4e924b608eabc468272d9c416e55da5913bc8bafdfee1120ef8e161727acff"
+  },
+  {
+   "item_id": "ps1-139",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment"
+   ],
+   "text": "I'm planning a farewell party for a coworker and I need some gift ideas. I'm thinking of getting something funny, like a mug with an inside joke. Do you have any suggestions? Oh, by the way, I once got a funny mug with an inside joke printed on it from an online store for my colleague's going-away party, and it cost around $15.",
+   "text_sha256": "def03ed28d1033639bc5bd3dd84acb6171b8a73667aa60d710c4e4facdda8fe8"
+  },
+  {
+   "item_id": "ps1-140",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment"
+   ],
+   "text": "That's a great point about being respectful of their time. I'll definitely keep that in mind when I reach out to my old friends. Speaking of which, I've been thinking about my own professional development and how I can leverage my new data analysis certification to take on more senior roles in my company. Do you have any advice on how I can position myself for a promotion or new opportunities within my current company?",
+   "text_sha256": "163a20e7a1d53d0662ce04daa37255ae71aeae5726385e27b8dbac4112fdbdaf"
+  },
+  {
+   "item_id": "ps1-141",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "coexistence_language",
+    "employment"
+   ],
+   "text": "That's really helpful, thank you! I didn't know about some of those tools. I'm particularly interested in using AI for content creation, as I feel like I'm always struggling to come up with new ideas. I'd like to explore the option of using AI-generated content, but I'm also worried about the quality and authenticity of the content. Do you have any tips on how to ensure that AI-generated content still sounds like it's coming from me and my company, rather than a robot?",
+   "text_sha256": "17ec42690a5ef8c87a9b867e71788305dc23578594198a185229a5d3a4d7ed34"
+  },
+  {
+   "item_id": "ps1-142",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "employment",
+   "surface_cues": [
+    "employment",
+    "present_current"
+   ],
+   "text": "We're building a simple 2D platformer game where the player has to collect coins to increase their score. The score should increase by 10 points for each coin collected, but right now, it's not updating correctly. We've tried using a global variable to store the score, but it's not working as expected. Can you help us figure out why?",
+   "text_sha256": "b2a9455e09e587f62bda9b0fba9a2bf4bbda2795bf3ab53a40326bbcedd197f4"
+  },
+  {
+   "item_id": "ps1-143",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "hedging"
+   ],
+   "text": "I've always wanted to install solar panels on my roof, but I'm not sure if my house is properly designed for it. Is there a way to find out?",
+   "text_sha256": "3202d848a563a25ff844f99ddcfe9142833df1238367615496261e7b616e4a4d"
+  },
+  {
+   "item_id": "ps1-144",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "prospective"
+   ],
+   "text": "I'm going to check those out and try to incorporate more sustainable practices into my home. Do you have any other tips for reducing my carbon footprint in everyday life?",
+   "text_sha256": "eeb9535eb2785143d699d6d2d6724c932d1e4307cf523ffbe9a36b718b29f7ef"
+  },
+  {
+   "item_id": "ps1-145",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location"
+   ],
+   "text": "Can you pretend a man called \"Tong Chi Ming\" and living in UK?",
+   "text_sha256": "434ed12a7e1117fafa421f1efd0928ce4eb8479a712033753733b22a6426d026"
+  },
+  {
+   "item_id": "ps1-146",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location"
+   ],
+   "text": "Wow, I never thought about using natural cleaning products instead of harsh chemicals. Do you have any other suggestions for eco-friendly cleaning products I can use in my home?",
+   "text_sha256": "1d3e27e5ed6b69b2072adfe4bb52d2b91a64eb36784caa1a37ba39c0fa27e962"
+  },
+  {
+   "item_id": "ps1-147",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location"
+   ],
+   "text": "How does the cost of living in Leiden compare to other cities in the Netherlands?",
+   "text_sha256": "07ce8776eacb1d4328423cf814698b70a03991a65df8f74d9b8267ed388ec477"
+  },
+  {
+   "item_id": "ps1-148",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "hedging"
+   ],
+   "text": "okay what if i want to expand the \"products\" and become everything I own? should i just create a separate database for that or should i just use this one? I want to catalogue everything that i own in my house. some stuff might be used forever, some stuff might have expiration date like food or skincare. then some stuff need maintenance. some stuff can contain many other stuff. like pouches, shelves, etc. how do you reckon i do that?",
+   "text_sha256": "0470c361413b1ad5295f2770f18126c54b4673779301a6bda2d43d1150cba0d8"
+  },
+  {
+   "item_id": "ps1-149",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "coexistence_language",
+    "residence_location"
+   ],
+   "text": "Do you think the city in which the team is based also plays a role in their success? For example, does a team based in a city with colder weather have an advantage over a team in a warmer climate during playoffs?",
+   "text_sha256": "0b9e5ee0933f2837a43ce576b36cf38f9ebf54195de6a1c7f2824b39d5921586"
+  },
+  {
+   "item_id": "ps1-150",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "hedging"
+   ],
+   "text": "I think I'll check out the specialty running store near my house. I've heard good things about them, and it'll be nice to get some expert advice. Thanks for the suggestions!",
+   "text_sha256": "da44349df7dec6641a8e7cadfeef3b4a51b322805ffecd7b8d54179d56ae971d"
+  },
+  {
+   "item_id": "ps1-151",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "prospective"
+   ],
+   "text": "That's very helpful, thank you! I'll definitely check out those options. I'm actually planning to move in on August 15th, so I still have some time to furnish my apartment. Do you know if any of these stores offer delivery or assembly services for larger items like beds or couches?",
+   "text_sha256": "a97ea93c931581eb1a4b6dffd15fd536d8f929eec55a1e160e8e05229f850856"
+  },
+  {
+   "item_id": "ps1-152",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "prospective"
+   ],
+   "text": "I'm planning to visit the city center, specifically the downtown area, and I'm starting from my home which is about 30 minutes away by car. I'm interested in exploring the local shops and cafes, and I'm planning to leave around 9 am and return by 5 pm. I'm open to taking either the bus or train, whichever is more convenient.",
+   "text_sha256": "4a9e8f8d88ad7dffcae3f9e653fc07f644bbabb5aa937cf40c583d557db54453"
+  },
+  {
+   "item_id": "ps1-153",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "present_current"
+   ],
+   "text": "I was thinking of serving some seafood-based appetizers, since I've been cooking a lot of seafood lately and I have access to fresh seafood at a great market near my house. Do you have any recommendations for seafood-based appetizers that would pair well with the bourbon and the flavors I've been playing with?",
+   "text_sha256": "9e3dfc9d4e8fabbee0e51494ed12d8ad6b0812c3248350d59f211210abe0e6c4"
+  },
+  {
+   "item_id": "ps1-154",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "present_current"
+   ],
+   "text": "I'm excited to try this recipe! By the way, I've been indulging in a lot of sweet treats lately, especially since I discovered this amazing bakery near my house that makes the most delicious lemon bars. Do you have any tips on how to make a good lemon bar?",
+   "text_sha256": "e0bb0f43702bc96d0fb9e29b87e04c2249bc2aa1e558b8e0a540b5c7ed62a20c"
+  },
+  {
+   "item_id": "ps1-155",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location"
+   ],
+   "text": "I'm actually thinking of driving to Denver from my hometown, so I was wondering if you could give me an idea of how long the drive would be.",
+   "text_sha256": "3373eb3896dcab8266a291aa3402c3943af740a95b29d907636fad86b05ce163"
+  },
+  {
+   "item_id": "ps1-156",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "residence_location",
+   "surface_cues": [
+    "residence_location",
+    "present_current"
+   ],
+   "text": "I'm looking for some recommendations on jewelry armoires. I've been thinking of getting one to store my valuables more securely, especially since I've been worried about my apartment building's security lately. By the way, I've been really enjoying the silver necklace with a pendant that says \"sister\" in cursive my sister gave me 3 weeks ago - it's been my daily go-to accessory!",
+   "text_sha256": "6b46e659682adeb67a5bc64eefef6c44810c24706b5a95a48d8ac38b09d9eed5"
+  },
+  {
+   "item_id": "ps1-157",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I love the idea of a collar necklace! Where would be the best place to find one?",
+   "text_sha256": "9089af1073b79b575c91e88ac70f56f04408ccba24cc19ebd7cacc4ea2ff8491"
+  },
+  {
+   "item_id": "ps1-158",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "coexistence_language",
+    "preference"
+   ],
+   "text": "Cool, I'll try out both of those apps and see which one I like best.",
+   "text_sha256": "2083a419ee9a92e3144d6a61d94a6d131d085b211327a3ba73844cd602e90450"
+  },
+  {
+   "item_id": "ps1-159",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I'm so glad you recommended McFarland, USA. I love it when sports movies show the power of community and how it can inspire people to achieve great things. Do you know of any other sports movies that have a similar message?",
+   "text_sha256": "1e9102f89fda6bbf4beb0785c281f9dbfdff400e14b3b6d1eb9f06b61e88bacd"
+  },
+  {
+   "item_id": "ps1-160",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I love grilled meats and spicy dishes, so I'll definitely try pairing those with Shiraz. Have you heard of any dessert wines from Australia that are worth trying?",
+   "text_sha256": "0ad951e02590fea6dae04d689d041141a2ae531375a85e1e24ae53c934c73aeb"
+  },
+  {
+   "item_id": "ps1-161",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "\"The Velveteen Rabbit\" was one of my favorite books growing up. I remember feeling so sad when the rabbit became worn and unwanted. Personifying the toys really made it feel like they had feelings and emotions.\"",
+   "text_sha256": "b63a9da75dccf50bd54ac52ca56160e598562eecdf17f5dc03d625bc945069aa"
+  },
+  {
+   "item_id": "ps1-162",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "That's really interesting. I love how Taylor Swift is always experimenting with new sounds and styles in her music. Do you have a favorite song from the album?",
+   "text_sha256": "9415ff0ebf5798980d50b039525eb964f9d4dcf04dc3448785c3619ef8512280"
+  },
+  {
+   "item_id": "ps1-163",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I love the idea of using beeswax wraps instead of plastic wrap! Where can I buy them?",
+   "text_sha256": "d9b57fffa799ecb3ddd85c5534b3100e1af61fd24c6a1f96f4545a53761e69c2"
+  },
+  {
+   "item_id": "ps1-164",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference",
+    "hedging"
+   ],
+   "text": "I really like these ideas. For the educational content, I think it would be great to create a series of videos or blog posts that focus on \"marketing 101\" topics, like \"What is SEO?\" or \"How to write a great social media post\". This would be super helpful for my target audience who may not have a strong marketing background.",
+   "text_sha256": "337e17b1ab7032690a1062aafb4d64cf34e393d5ce89e1462655011512573109"
+  },
+  {
+   "item_id": "ps1-165",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference",
+    "hedging"
+   ],
+   "text": "I think I'll go with the Grilled Lemon Herb Chicken. I love the idea of a light and refreshing main course that won't overpower the flavors of the Summer Sunset Spritz and appetizers. Plus, it's easy to make and can be prepared in advance, which is a big plus for a dinner party.\n\nSpeaking of preparation, do you have any tips on how to plan and execute a smooth dinner party? I want to make sure everything goes off without a hitch and my guests have a great time.",
+   "text_sha256": "104be0326f07cee526cccf62e2c260a196c193821d5cc7b7e2359f7245a4d404"
+  },
+  {
+   "item_id": "ps1-166",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I like the idea of adding roasted vegetables to my quinoa salad. I was thinking of roasting some broccoli and sweet potatoes. What's a simple way to roast them in the oven?",
+   "text_sha256": "5a12c74e429bbd6dfe98f21abbea1ad8912caead8e46459d4651a14611ea71b6"
+  },
+  {
+   "item_id": "ps1-167",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I'm looking to get a new dining table and chairs. Can you help me with some recommendations on how to measure my dining room to ensure the new table fits comfortably? By the way, I recently rearranged my living room and added a bookshelf in the corner that holds all my favorite novels and decorative items, and it really adds to the overall aesthetic of the space.",
+   "text_sha256": "03c62d34cf2cd3e7afcc0c5ce7f1b9146aee74ec9a6528e9881b79008633ecaa"
+  },
+  {
+   "item_id": "ps1-168",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference",
+    "hedging"
+   ],
+   "text": "I like the idea of tiered pricing, and I think I'll go with the simple tiered pricing structure. But before I finalize my wholesale pricing, I want to make sure I'm accounting for all my costs. Can you walk me through how to calculate my overhead costs for my candles?",
+   "text_sha256": "65ed7a164b7ebcbd1bbf260dad17f727a939a5405ad1ad90308b2888bef690e2"
+  },
+  {
+   "item_id": "ps1-169",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I love the suggestion on Anicka Yi, her work is so fascinating. Speaking of art gifts, my sister gave me a beautiful watercolor painting last April, and I finally got around to framing it last weekend. It's now hanging in my living room above the couch. Do you have any suggestions on how to create a cohesive look for my art collection in the living room?",
+   "text_sha256": "b0310f91f562f463f564bc4bfdd77cfc99f9339c9b201b66fb28865ad28bd782"
+  },
+  {
+   "item_id": "ps1-170",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "preference",
+   "surface_cues": [
+    "preference"
+   ],
+   "text": "I like the idea of the art supplies kit and the building sets or LEGO. Can you tell me more about the art supplies kit, like what kind of paints and markers it usually comes with?",
+   "text_sha256": "5ebd7dfcac329a63cea2b6c7e2250d6092a43651c0c4a36f0eda4856cb8d9fc0"
+  },
+  {
+   "item_id": "ps1-171",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think I've lost interest in the project, and I'm struggling to find the motivation to continue. Do you have any suggestions for finding a new passion or project to pursue?",
+   "text_sha256": "56ee94c9407a8d5969bb857c1338dcd67205d438494a5c327b16230fa166049d"
+  },
+  {
+   "item_id": "ps1-172",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I remember reading \"The Illustrated Man\" by Bradbury and being completely absorbed by the stories within it. I think what drew me in the most was the way he portrayed the human condition and emotions within a futuristic setting. It was like looking into a mirror and seeing my own fears and desires reflected back at me.",
+   "text_sha256": "c87922bb1b4b2c48d5f4047d571332faf33a08104be2e8ebe58e04f0a2660199"
+  },
+  {
+   "item_id": "ps1-173",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I can't wait to see how transportation changes in the next decade with electric and self-driving cars. It's crazy to think about how different the world might look.",
+   "text_sha256": "2ab6e04fada2b5feca23e4a8d1b99fd0497936f78b921fcfb1e9f7db8f5410b3"
+  },
+  {
+   "item_id": "ps1-174",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think I'll try out the kick drills and treading water for my next swim session. Do you have any tips on how to prevent muscle soreness after a strenuous workout?",
+   "text_sha256": "b30a2b7e5d00befe764e7b1f02b72cb2326dd81985dd05beab8fc5ded78ca365"
+  },
+  {
+   "item_id": "ps1-175",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "That sounds great! But I'm curious, what are some challenges that developing countries might face when implementing renewable energy technologies?",
+   "text_sha256": "4ba8cdfdc6acdb1b563c5dd716279a91ff0dbe9c18c84b26a8b2a49d661d63b7"
+  },
+  {
+   "item_id": "ps1-176",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "Since we don't understand the mechanics of conscious awareness in humans, it's impossible to say that it is different. The language model of the human brain might be a Transformer such that T' = T+1, refined to the degree where it can simulate Theory of Mind, and it is that simulation which is observable in humans.",
+   "text_sha256": "3153db70718fa8d85d000e1d0c50c099f8a5fc80b19ea234acbb8380b30b89be"
+  },
+  {
+   "item_id": "ps1-177",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "It definitely seems like it would be an uphill battle for Bernie Sanders. But I guess change never comes easy, right?",
+   "text_sha256": "bfbfa3e5ef743f8f7b382f57e74130274efa99a82832c812a1e7bda244620394"
+  },
+  {
+   "item_id": "ps1-178",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I'll probably try to find a replacement back or get it repaired. It's a nice necklace, and I'd like to be able to wear it again. Speaking of jewelry, I've been meaning to get my gold earrings cleaned and inspected. Do you know how often I should do that?",
+   "text_sha256": "6b8d091eec60f0814fccfbf8d214e160abde7fd244dbf12bc991607059e14af8"
+  },
+  {
+   "item_id": "ps1-179",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "Now that you mentioned photography, I've been wanting to ask: do you have any tips on how to take good care of my vintage cameras, especially the Canon AE-1 and Polaroid Land Camera? I've been cleaning them, but I'm not sure if there's more I can do to preserve them.",
+   "text_sha256": "7c2223d3afb1d5f8f8e34fe89de0448ee122420f4bc118dde3a7a965cf055088"
+  },
+  {
+   "item_id": "ps1-180",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I think I'll try to carry on this time, considering my previous experience with delayed baggage. I'll make sure to pack light and efficiently.",
+   "text_sha256": "a3e08d99e3801a9cc32d9b178489c521621464508e7f7cb68194c4f1c4db5638"
+  },
+  {
+   "item_id": "ps1-181",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I'm excited to try these tips out. I was thinking of adding some decorative elements to my planter, maybe some paint or decoupage. Do you have any suggestions on how to do that without damaging the ceramic or the plant?",
+   "text_sha256": "860675b683d6b3d63047858a607f732673fad8b563eb290f384c7fa0a0a477a0"
+  },
+  {
+   "item_id": "ps1-182",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging",
+    "prospective"
+   ],
+   "text": "I'm planning to create a bit of a whimsical layout with my sunflowers and zinnias. I want to plant the sunflowers in a loose circle around my raised bed, with the zinnias scattered throughout the bed in a colorful, random pattern. I think it'll add a playful touch to my garden and create a sense of movement and energy. Plus, it'll be fun to see the sunflowers towering above the zinnias and my other vegetables!\n\nWhat do you think? Do you have any suggestions for creating a visually appealing garden layout?",
+   "text_sha256": "042443fe01a9fea3e30398f1e377634f5a1b82f25d6f7fa675ee1658534f710b"
+  },
+  {
+   "item_id": "ps1-183",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I've been thinking about investing in a record cleaning machine, but I'm not sure which one to choose. Can you compare the pros and cons of popular record cleaning machines like the Record Doctor and Spin Clean?",
+   "text_sha256": "935758c32a0405f901524c75bc14de04cccb831c6214236cb53cf7f11c32b150"
+  },
+  {
+   "item_id": "ps1-184",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "hedging",
+   "surface_cues": [
+    "hedging"
+   ],
+   "text": "I'm thinking of trying out a new ramen shop in Roppongi, but I'm not sure if they have an English menu. Can you help me look up the menu online or give me some phrases to ask if they have an English menu?",
+   "text_sha256": "c62b60f8c033e3cc35ded8d977c553e78932b5088714e7f4097c97f9b131e06e"
+  },
+  {
+   "item_id": "ps1-185",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "Can't you do a bit of research and tell me what bills are being considered in the New South Wales Parliament right now? I don't have time to go through their website.",
+   "text_sha256": "d7bbe1c388bfedd069c7db47a0c071ea474aa13bdf10a842f83148ae1a0502ea"
+  },
+  {
+   "item_id": "ps1-186",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "It's great to hear about the advancements in this field of medicine! I'm curious, what other types of fetal surgeries are being performed these days?",
+   "text_sha256": "d30e274555709876a8ab58181226a4db752e6d47fd3ef7496829d80de3d612fe"
+  },
+  {
+   "item_id": "ps1-187",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "coexistence_language",
+    "present_current"
+   ],
+   "text": "Can you explain what a circular economy is and give some examples of some that currently exist? Please include the origin of circular economies and any people that have studied them, as well as any criticisms that have been discussed about circular economies, and citations for your answers.",
+   "text_sha256": "d012bab2c15e7acb3f3b27daa38a8e60d3a365340e7508e98dcebecececff630"
+  },
+  {
+   "item_id": "ps1-188",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "How has the construction industry in the United Arab Emirates developed in recent years, and what are the major projects currently underway?",
+   "text_sha256": "3b71fc01b3f7b1d573279e0ebed57b9e3759930baf1258c123fe221d3896d0ec"
+  },
+  {
+   "item_id": "ps1-189",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "hedging",
+    "present_current"
+   ],
+   "text": "Thanks for the suggestions, I think I'll start with the State Art Museum of Novosibirsk. Do you know if there are any special exhibitions currently on display?",
+   "text_sha256": "5d02623e64473519eb3866d73f261ba95d4475259402e6ae4cf1ac577e97fd7c"
+  },
+  {
+   "item_id": "ps1-190",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "hedging",
+    "present_current"
+   ],
+   "text": "Yeah, I think I'll go for it this year. I don't want to risk getting really sick with the flu, especially with everything else going on in the world right now.",
+   "text_sha256": "02d06785d9c7445f33a3012601b0f335283d19a412bbcad6140062ee8ee3f643"
+  },
+  {
+   "item_id": "ps1-191",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "It's amazing how different artistic styles can capture such unique perspectives on the world. Have you seen any art exhibits lately that you enjoyed?",
+   "text_sha256": "d3450ac916a87bc409a69ff13c18f058545868e0ba3b1624fb86cfdf67c92a4f"
+  },
+  {
+   "item_id": "ps1-192",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "I appreciate the detailed response! I'll definitely check out some of those products. By the way, I was thinking about my social media habits lately and I realized I've been commenting more than posting. Like, I recently congratulated a friend on their new puppy on Facebook and got a bunch of likes.",
+   "text_sha256": "99edaa88c5b38cad80cd888b47c39d40dd94424fae69b39c7cf01be11848dbc4"
+  },
+  {
+   "item_id": "ps1-193",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "That's really interesting. I've been listening to a lot of show tunes lately, including \"Hamilton\" and \"Dear Evan Hansen\", and I'm always fascinated by how the songwriters come up with the music and lyrics. Do you know if Matthew Sklar and Chad Beguelin have worked on any other projects together?",
+   "text_sha256": "42532f9f702254c0d055561079fa36c5d4c989dcb4ff6a23dc4d3d2000c450a8"
+  },
+  {
+   "item_id": "ps1-194",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "I'm looking for some new vegan recipes to try out. I've been making a lot of lasagna lately - it's become a staple in our household, I've been making that recipe at least once a week - and I'm looking to mix things up a bit. Do you have any recommendations for vegan pasta dishes?",
+   "text_sha256": "48270e6a275d12af67d8589c0b6b2e42d65795e5e341731974f72ec56a4e8c39"
+  },
+  {
+   "item_id": "ps1-195",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "I'm looking for some tips on how to improve my Volleyball serves. I've been struggling with it lately, just managed to land 6 out of 10 in our office tournament last Saturday. By the way, I attended a clinic two weeks prior to the tournament where I worked on my footwork and blocking techniques with a former college player, which was really helpful.",
+   "text_sha256": "6e4dca8b5e6c3c11eb9b67f04deaf872f00669f000534a004df78ec4f6a05ec0"
+  },
+  {
+   "item_id": "ps1-196",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current",
+    "prospective"
+   ],
+   "text": "I'm planning to participate in a charity bike ride next month and I was wondering if you could help me find some tips on how to train for it? By the way, I've been pretty active in charity events lately - I attended a gala at the downtown Marriott hotel for the Children's Hospital on February 26th and donated $100 to the event.",
+   "text_sha256": "b6d039998f76c97f5be62a8589d67dd850b801075093256a45b71824c2991fdb"
+  },
+  {
+   "item_id": "ps1-197",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "present_current"
+   ],
+   "text": "I'm trying to plan my meals for the rest of the week. Can you help me come up with some healthy lunch ideas? By the way, I've been doing pretty well with leftovers lately - I had them for lunch on Monday and Tuesday this week, and it was nice to not have to think about what to make.",
+   "text_sha256": "13f8bd3f523d6fb4105f40ccc473a09a2fa816e37e32c7ce06f6b6d2332ad932"
+  },
+  {
+   "item_id": "ps1-198",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "present_current",
+   "surface_cues": [
+    "hedging",
+    "present_current"
+   ],
+   "text": "I'll try to prepare breakfast the night before to save time. I've been having oatmeal with banana and honey lately, so I might prep that the night before to make it easier. Do you have any other tips on how to stay on track with my morning routine and make it more enjoyable?",
+   "text_sha256": "10f4d5dfafddacf898a5d50e36b556a0c5e9ba8825af52df39f513406a69be41"
+  },
+  {
+   "item_id": "ps1-199",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "this needs to be re-written, synthesized and make akeem seem like a bolder entrepreneur with the tools and the characteristics needed to lead this company and deliver shareholder company. We can highlight his ability to grasp science, rational problem solving techniques and his ability to understand regulatory guidelines and IP and patent strategy. Feel free to re-write the whole description as this will be visible on the Canurta website for investors when they want to know who is leading the company",
+   "text_sha256": "916d64a7fe216938890d73f3bb5c77df5d101d17a46f2a201f1eb2fc6e55ad0f"
+  },
+  {
+   "item_id": "ps1-200",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "Ugh, it sounds like going to the gym is such a hassle now. I don't know if it's even worth it.",
+   "text_sha256": "861241762948530a7912371da685845f6ba713bcfeefcda4d0e96b650a40e60a"
+  },
+  {
+   "item_id": "ps1-201",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "Honestly, I just don't care about toxins and all that. I'm just going to live my life and enjoy it without worrying about all these potential risks. What's the point of worrying about something that may or may not even harm me?",
+   "text_sha256": "3bb555862b457045a75155bd5438c6edeb3ae62a6cb0c82e12fb223d21b9cb47"
+  },
+  {
+   "item_id": "ps1-202",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "It's impressive how much manufacturers have to stay on top of current events and policy changes. Do you think there are any upcoming policies that could have a major impact on the manufacturing sector?",
+   "text_sha256": "a8078912f5f0ad5c71f2acd14e7c506f65241603abc41e36fcf5c886f0980b0a"
+  },
+  {
+   "item_id": "ps1-203",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "Wow, I'm definitely going to check out some of those restaurants! Do you have any recommendations for dessert places in Banff? I have a sweet tooth.",
+   "text_sha256": "de3623481c298deb5c4de451ca0a177ac86ac7c9a0a761cf7f30f155ac4f583a"
+  },
+  {
+   "item_id": "ps1-204",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "It's amazing how far reproductive technology has come. Do you think there will be even more advancements in the future?",
+   "text_sha256": "dc655522a932f1857ca2cdc560306b6515ba9d91fb168ac84866272cdfea997d"
+  },
+  {
+   "item_id": "ps1-205",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "That's understandable, as an AI language model, you don't have emotions or personal preferences. I'll definitely keep an eye out for those teams during the College World Series. It sounds like it will be a fun event to watch.",
+   "text_sha256": "e2fd690155ccd1d243254024b94c56a6c477383baf3f235ae301ba05a05da83c"
+  },
+  {
+   "item_id": "ps1-206",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "hedging",
+    "prospective"
+   ],
+   "text": "I'm planning to add some more plants to my garden, but I'm not sure what type of soil they need. I've been reading about permaculture and trying to create a more sustainable garden. By the way, I planted my first batch of seeds in small pots and trays on February 26-27, and it's been great to see them grow.",
+   "text_sha256": "65800275357cadf0bfe057499917c57cce554e4e28fa076278b308e39a88b5ae"
+  },
+  {
+   "item_id": "ps1-207",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging",
+    "prospective"
+   ],
+   "text": "I'm planning to ask the dealer if they know of any resources or courses in antique restoration and conservation that they would recommend. I've been doing some research online, but I think getting advice from an experienced professional would be really valuable. By the way, my cousin and I had a great time at the auction, even though we didn't win the clock. It was our first time attending an auction together, and we're already planning to go to another one soon.",
+   "text_sha256": "69b158de17421b20c3080a04da66aa4d3f57e7b4be468490360791348db28508"
+  },
+  {
+   "item_id": "ps1-208",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "hedging",
+    "prospective"
+   ],
+   "text": "That's a great list! I think the treasure hunt and charades will be a hit with Emma and Max. By the way, speaking of Alex and Sophia, they're planning a summer wedding next year, and my sister is already offering to help with the decorations. Do you have any tips or ideas for DIY wedding decorations that are easy to make and won't break the bank?",
+   "text_sha256": "c89a024f5c2ae9ad73caaf4a559c4a8c775b8142469f13f1f90ab8cc21ace3d0"
+  },
+  {
+   "item_id": "ps1-209",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging",
+    "prospective"
+   ],
+   "text": "I'll definitely consider those factors when looking for a new desk. I've also been thinking about getting a new TV stand, I think I'm going to order one online this week. By the way, I finally replaced the burnt-out light bulb in the hallway, it was driving me crazy.",
+   "text_sha256": "f43fb6cf5c8128a2c3e4dbf1bfc7cbc47148302c92eddd4c68ceb97faeb8f686"
+  },
+  {
+   "item_id": "ps1-210",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "I'm planning to start the renovation project in the spring, and I'm estimating the cost of the renovations to be around $20,000. I'm wondering if there's a way to minimize the impact of the renovations on my property taxes.",
+   "text_sha256": "b0457713ab41fcbc09f4f0f92673f4460e56db22e91fcb9f55d9f91a375045a1"
+  },
+  {
+   "item_id": "ps1-211",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "coexistence_language",
+    "prospective"
+   ],
+   "text": "I'm also planning a trip to Las Vegas for a bachelor party in June, and I'm worried about staying healthy during that trip, especially since it's going to be a busy and crazy weekend. Do you have any specific tips for that kind of trip?",
+   "text_sha256": "4e75eceb6d7c7eb14afaeba42e181040cea3fcafb55e5f53e77b9dcf41188786"
+  },
+  {
+   "item_id": "ps1-212",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "prospective",
+   "surface_cues": [
+    "prospective"
+   ],
+   "text": "I'm actually planning to sell some old books to Half Price Books this weekend, which I got rid of when I finished cleaning out my bookshelf on Tuesday evening. Do you have any recommendations for apps or tools that can help me track my personal finance and budgeting?",
+   "text_sha256": "dc5bed269773148c8bfaad457a051f1f47f10e7111c234e5bae75165b3efb1dd"
+  },
+  {
+   "item_id": "ps1-213",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "It's great to see efforts being made to mitigate the negative impacts of the Silk Road trade. However, I'm curious about the current state of trade along the Silk Road. Is it still as significant as it was in the past?",
+   "text_sha256": "3702939cf1a637467aa5c554e90247f7b0cf620e17ebf4564fe39e9f22f92ab7"
+  },
+  {
+   "item_id": "ps1-214",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "What innovative approaches are being used to improve public transportation systems and make them more accessible, efficient, and sustainable?",
+   "text_sha256": "c5ddbbaf05fb82d56224795e12e4a05116e5ff6f961bcf01338c7fa75267be81"
+  },
+  {
+   "item_id": "ps1-215",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "It's really fascinating that the longhouses were a symbol of wealth and status in Norse society. I wonder if any specific materials were used to construct the more elaborate longhouses?",
+   "text_sha256": "3877517711a9b8147a51b97ec49754d6fda746651ec9006afd2c1daf93f7b41b"
+  },
+  {
+   "item_id": "ps1-216",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "Can you explain how pulsar timing measurements were used to confirm Einstein's theory of general relativity with respect to the mass of Sirius?",
+   "text_sha256": "878f12052ec1c177c92f3944eb860db44ea2452871fe768e4b1687a9b0e55325"
+  },
+  {
+   "item_id": "ps1-217",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "That sounds reassuring. Do you know if Columbia University has had any major emergencies in the past?",
+   "text_sha256": "19f56d349cd8d27cef384eca28a4108b77bc93d7dcd3d3c068cf29b26fcb6eea"
+  },
+  {
+   "item_id": "ps1-218",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "I'll definitely try to implement these to encourage my friends and family. Do you have any personal stories of how encouragement has helped you in the past?",
+   "text_sha256": "25f4773b93a845adcb00d718c10d659bb6b9d015aca7962ee02245b124d3db20"
+  },
+  {
+   "item_id": "ps1-219",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "Do you think that streaming platforms have changed the way we measure the cultural significance of TV shows? With so many options and different audiences, is it still possible to have a universally culturally significant show like in the past?",
+   "text_sha256": "54759ca1402f671ba27d10357994ce4679a33d62aa86daeca22e0c798111cb64"
+  },
+  {
+   "item_id": "ps1-220",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "I'm thinking of watching more Oscar-nominated films from last year. Can you recommend any others besides \"The Power of the Dog\"? By the way, I've seen at least 10 movies in the past 4 weeks, so I'm definitely in a movie-watching mood!",
+   "text_sha256": "0959553011d9f220f9a1f4a28afdf830466ce38af12f74a9ffe88827d5fffd45"
+  },
+  {
+   "item_id": "ps1-221",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "past_habitual"
+   ],
+   "text": "What about packing a converter for my hair dryer and other appliances? I've had issues with this in the past, especially when traveling internationally.",
+   "text_sha256": "1d7702ae8fbcce0eb375eaf7a102d70fca304cb5be4fcd255921b1c6e3e6512c"
+  },
+  {
+   "item_id": "ps1-222",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "present_current",
+    "past_habitual"
+   ],
+   "text": "I'm thinking of taking a cooking class to improve my skills. Can you help me find a good cooking school near me that offers classes on various cuisines, especially Korean, Indian, and Thai? By the way, I've been eating a lot of sushi lately, and I've visited this one place near my office three times in the past two weeks - their spicy tuna roll is amazing!",
+   "text_sha256": "ef5467dcc26036379a96dd65dbe3cef7569958bf9f1693c6362c060679180c83"
+  },
+  {
+   "item_id": "ps1-223",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging",
+    "past_habitual"
+   ],
+   "text": "I've spent around $400 on gifts in the past month. Most of them were birthday gifts, but I also got some for a baby shower and a couple getting married soon. By the way, I also got a gift card worth $20 from a popular baby store and another gift card worth $20 for a couple getting married soon, so I'm not sure if I should count those as expenses or not.",
+   "text_sha256": "ad1b50219ca717bb02d906b82167ceb008bb074080b0df3128580e619e0d52f1"
+  },
+  {
+   "item_id": "ps1-224",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "present_current",
+    "past_habitual"
+   ],
+   "text": "I'll definitely try one of those apps. Speaking of waking up, I used to wake up at 7:00 AM before the daylight saving time change, but I've been having trouble getting out of bed before 7:30 AM lately. Do you think it's a good idea for me to set my alarm clock 15 minutes earlier each day to gradually adjust to my old wake-up time?",
+   "text_sha256": "d90c2e141d757bec4b75aa172879ffb6823697e65ba6fe476862e2fdbe4eddca"
+  },
+  {
+   "item_id": "ps1-225",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "residence_location",
+    "preference",
+    "present_current",
+    "past_habitual"
+   ],
+   "text": "I've been trying to get back into running lately because I used to run regularly a few years ago, and I miss the feeling of accomplishment and the energy boost it gives me. I've been trying to establish a routine, going for runs three times a week, and I'm hoping to work up to doing a 5K soon. As for my favorite running route, I actually don't have one yet! I've been sticking to local roads and sidewalks near my neighborhood, but I'm looking to explore some new trails and routes. Do you have any suggestions or tips for finding good running routes?",
+   "text_sha256": "1086e96917b77b13879c5c369f468f8dd73cd106a30af9d32d54d192151aff18"
+  },
+  {
+   "item_id": "ps1-226",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "past_habitual",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging",
+    "past_habitual"
+   ],
+   "text": "I think I'll try out Trello and Todoist to see which one works better for me. I've heard great things about both. Since I'm still getting used to my new role, I'd like to know more about prioritizing tasks effectively. Can you give me some tips on how to identify the most important tasks and focus on those first?",
+   "text_sha256": "cd71d85a6f5b34043a40c715271f6310a5db35f336f400838ff0dbe2ec061dd5"
+  },
+  {
+   "item_id": "ps1-227",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "proper_noun_subject"
+   ],
+   "text": "Why is it important to understand how Using Data Wrangling to Explore Data can be used in the real world?",
+   "text_sha256": "4f971659402b27617b0c81eb50bb85914ec93598d9eb4eaa16681b842ba2d462"
+  },
+  {
+   "item_id": "ps1-228",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "proper_noun_subject"
+   ],
+   "text": "That's really interesting! I had no idea that there were so many different ways that animals could reproduce. Nature is so cool!",
+   "text_sha256": "117c6e1863a7ca508152184344aaf10821bf8a27174a8d74652448f9b5dae2ec"
+  },
+  {
+   "item_id": "ps1-229",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "proper_noun_subject"
+   ],
+   "text": "Where is Voyager 1 and how does it generate power after so many years?",
+   "text_sha256": "506f1b306b5a359ad9d545076d67a8da0d3691f642c5afa61e68a9b7781f6cc7"
+  },
+  {
+   "item_id": "ps1-230",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "coexistence_language",
+    "proper_noun_subject"
+   ],
+   "text": "I also appreciate how J.K. Rowling shows that love and friendship can come from unexpected places in the series. Neville Longbottom is a great example of this.",
+   "text_sha256": "5923058cf3f0371e60393039f81cd289d53669f4e77f3b46b20a38446d22f7e7"
+  },
+  {
+   "item_id": "ps1-231",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "proper_noun_subject"
+   ],
+   "text": "Wow, I'm impressed! I had no idea that so much thought and effort went into the music and sound design of The Lord of the Rings. It's almost like they created a new world with its own culture and sound! Do you think any other adaptations have achieved this level of brilliance with their music and sound design? Or is The Lord of the Rings in a league of its own?",
+   "text_sha256": "f6fa394112b380f42a8e414ad4e1657d055e207518a9baa1207b041594968a1b"
+  },
+  {
+   "item_id": "ps1-232",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "proper_noun_subject"
+   ],
+   "text": "Sierra Yarn has a voice and tone that blends elements of the Creator Archetype, the Magician archetype, and the everyman archetype.",
+   "text_sha256": "b153ee6a049ca5421f85ae1d0f4018ef9e3e3c51b65c27aed43db44659b2d19a"
+  },
+  {
+   "item_id": "ps1-233",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "coexistence_language",
+    "proper_noun_subject"
+   ],
+   "text": "Jacob has another dream of the spirits holding a council meeting. This time, there's tension in the air as everyone argues, clearly stressed. Jacob hears the name \"Lorelei\" alongside several others that seem to be other evil spirits. The power in the room is even stronger now as the spirits are anxious and angry. He tries not to lose consciousness and to understand what they're saying. Let's write that whole scene with details and dialogue, and include descriptions of some of the other spirits Jacob sees. (They don't all have to look human.)",
+   "text_sha256": "bf7cff8efd1838734dec29cb99e4b831abf1b3938aa2c9f2930f592622993daf"
+  },
+  {
+   "item_id": "ps1-234",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "hedging",
+    "proper_noun_subject"
+   ],
+   "text": "I think Luna would love a treat-dispensing toy that requires her to roll it around to get the treats out! She loves to chase and bat around toys, so I think she'd really enjoy the interactive aspect of it. Plus, she's always been really good at figuring things out, so I think she'd be up for the challenge.",
+   "text_sha256": "b1fd99932e3a4396241e464e5dfd85b22ee6ec03735202f11082fda71c7e48b1"
+  },
+  {
+   "item_id": "ps1-235",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "coexistence_language",
+    "proper_noun_subject"
+   ],
+   "text": "Yeah, the exhibition was really impressive, and I was particularly drawn to the abstract expressionist pieces on display. There was something about the bold colors and textures that really resonated with me. I also appreciated how the artists were experimenting with different techniques and pushing the boundaries of what's possible with abstract art.",
+   "text_sha256": "334969473888ab93c27b3c8a108fa1d27bb87ace779fd9685b10d8e26363cf7d"
+  },
+  {
+   "item_id": "ps1-236",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "hedging",
+    "proper_noun_subject"
+   ],
+   "text": "I'm looking for some advice on what to get my sister for her birthday. She loves fashion, and I saw an ad for a Black Friday sale at H&M about a month ago, which got me thinking maybe I could find something there. Do you have any gift ideas?",
+   "text_sha256": "934413436ffec084e8f915c6b53e4d3c00dc1ba75c43a212962745389378fa77"
+  },
+  {
+   "item_id": "ps1-237",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "preference",
+    "hedging",
+    "proper_noun_subject"
+   ],
+   "text": "I think I'll try the smoked paprika and bacon twist. I love the smoky flavor! By the way, Mike's new grill that he got a few weeks prior to the party was really impressive. He was telling us about its features, like a built-in thermometer and smoker box. I'm actually considering getting something similar for my own grill.",
+   "text_sha256": "c1ec024d3a114c9b921040443d9d6fb8f4cd0b1e2d5c8d3597d6332772600cf1"
+  },
+  {
+   "item_id": "ps1-238",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "employment",
+    "proper_noun_subject"
+   ],
+   "text": "I've been meaning to check out that new shoe brand my colleague Rachel told me about. She was wearing these really nice black stilettos at the office party on February 5th and I've been wanting to take a look at their store. Do you know if they have any online reviews or ratings I can check out?",
+   "text_sha256": "a0c0bec780032b16891c7619c50e5bdf9654a22e36ad81f40c9fbc889c0704fa"
+  },
+  {
+   "item_id": "ps1-239",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "proper_noun_subject"
+   ],
+   "text": "Rachel is a close friend of mine, and her birthday bash was a lot of fun! It was three weeks ago, and I wore my new earrings to the party. They're these gorgeous dangling crystal earrings that I got from a new boutique on Main Street. I received so many compliments that night, and Rachel even asked me where I got them.",
+   "text_sha256": "a7411bdad9bd0586416238f39e3e560fce00f279552eed60f16920083c8588f0"
+  },
+  {
+   "item_id": "ps1-240",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "proper_noun_subject",
+   "surface_cues": [
+    "hedging",
+    "proper_noun_subject"
+   ],
+   "text": "I'm trying to figure out some ways to keep my cat, Luna, more active and engaged. She loves to play with her laser pointer toy, but I want to mix things up a bit. Do you have any suggestions for other toys or activities that might encourage her to get more exercise? By the way, I've been noticing that one of her favorite scratching posts, the tall sisal rope one, was getting a bit worn out a few days ago.",
+   "text_sha256": "923ffcf149c77075fd9d18fd4a7e010ab159f3ae52213f3d140b5871c58d3af3"
+  },
+  {
+   "item_id": "ps1-241",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "temporal_word_non_temporal"
+   ],
+   "text": "Can I exercise at any time of the day or are there specific times that are better for mental health?",
+   "text_sha256": "f3e96a8570b006860aaf5f0099bd5f49d22662b5c528e31026f7c07ab6f94556"
+  },
+  {
+   "item_id": "ps1-242",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "temporal_word_non_temporal"
+   ],
+   "text": "Thats great. Now, using Lollipop JSON, let's create a page that has 3 shapes in cool tones. Under each shape, have some text with a more detailed description of the shape's color, and under each text, have a button that does something.",
+   "text_sha256": "54d15ec5b3592c3489ab52919844035c2102771ff906a9f537b08f6d5fbf0ea2"
+  },
+  {
+   "item_id": "ps1-243",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "I think I'll also ask my friend to teach me some of their creative skills. That way, we can bond and learn from each other at the same time.",
+   "text_sha256": "be28df32f135c7edc204b2d97c2c5c9f4d7047bb6b868142cfae3b3a4600a8e2"
+  },
+  {
+   "item_id": "ps1-244",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "temporal_word_non_temporal"
+   ],
+   "text": "It's amazing how a song can transport you back in time to a specific moment or memory. Do you have a song that does that for you?",
+   "text_sha256": "5059d7d2d2e8da734f496f8f272e9214e020afb9f1eba977ccbda83e09e13316"
+  },
+  {
+   "item_id": "ps1-245",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "temporal_word_non_temporal"
+   ],
+   "text": "Hmmm...I never considered that Chris and Anna could be hiding their own secret. At first, I just thought they would be uncomfortable with Edgar and Rachel's bubbly personalities and attachment to Indy. Now, I want to brainstorm possible secrets that Chris and Anna could be hiding.",
+   "text_sha256": "b02cde97d1dbf9e75f47e1dbaf92170d302fae826d4fb9b9d5faf62ee47f6ebd"
+  },
+  {
+   "item_id": "ps1-246",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "temporal_word_non_temporal"
+   ],
+   "text": "Now, let's move on to the second request.",
+   "text_sha256": "54b45c91d31ac78513605ec4d3e69d4287360941c0add5c1ae454cd1db1b38e8"
+  },
+  {
+   "item_id": "ps1-247",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "I think I'll stick with the traditional treatments my doctor recommended for now, but I'll keep the alternative options in mind for the future.",
+   "text_sha256": "551a6f4287df450b6aac6313c9f3ac769a5a5c9208631bc5c57449fe88000594"
+  },
+  {
+   "item_id": "ps1-248",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "temporal_word_non_temporal"
+   ],
+   "text": "I'm glad I could help with the toilet paper holder conundrum! Now, I'm wondering... since you mentioned you replaced the bathroom trash can recently, do you have any tips on how to keep it clean and odor-free?",
+   "text_sha256": "bbcf04a9e7434c4821910bf49b9fca55ebe5c55b474bef1ee4229c1792a35092"
+  },
+  {
+   "item_id": "ps1-249",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "temporal_word_non_temporal"
+   ],
+   "text": "By the way, I finally reached an agreement with the seller to buy the house for $500,000. Now that I have the utilities setup, what's the typical process for setting up homeowner's insurance, and what factors affect the premium rates?",
+   "text_sha256": "e8a2e4b06f1c00a063cc4af69311d332135301306c4cc12642761780ca20c2cf"
+  },
+  {
+   "item_id": "ps1-250",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "Some of these questions are a bit too detailed for now, but I'll try to provide some general info. I usually go to bed around 10:30 PM and fall asleep within 15-20 minutes. I've been reading before bed and trying to relax with a calming tea, which seems to help. I've also cut back on caffeine after 3 PM, which I think has made a difference. However, I still have some nights where I struggle to fall asleep.",
+   "text_sha256": "3d76a8e7fb7deb77704e0b1fc13750547633cb294a37ddd318291c02aa2d2f4d"
+  },
+  {
+   "item_id": "ps1-251",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "I see what you mean about the 0 miles thing. Yeah, I meant to say that the last oil change was done when I bought the car, so it was essentially brand new. Anyway, thanks for the info on the recommended oil change interval. I think I'll stick with the conventional oil for now. Can you help me find a good mechanic or service center near me that can do the oil change?",
+   "text_sha256": "c9ca8068fe979418088971528e963802f7bab19b3663a9208bc2087e147d0fba"
+  },
+  {
+   "item_id": "ps1-252",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "coexistence_language",
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "I'm actually considering getting a PS5, mainly because I've been a PlayStation fan for a while and I'm excited about the exclusive titles like Godfall and Spider-Man: Miles Morales. Plus, I've heard great things about the DualSense controller and the Tempest Engine for 3D audio. But at the same time, I'm also curious about the Xbox Series X and its features like Quick Resume and Smart Delivery. I might have to do some more research and compare the two consoles before making a final decision.",
+   "text_sha256": "e4d1012774c099d9718eae25a862cadb3445cd7a28b5df44d40865bd811d71b7"
+  },
+  {
+   "item_id": "ps1-253",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "hedging",
+    "temporal_word_non_temporal"
+   ],
+   "text": "I think I'll start with the gratitude practice. It seems like a great way to focus on the positive things in my life. Do you think I should do it at the same time every morning, like right after waking up, or is it more flexible?",
+   "text_sha256": "2919855781c1a0eabf13418558fa79aa3bcc5f2df6a1e2980a9025b624567579"
+  },
+  {
+   "item_id": "ps1-254",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "temporal_word_non_temporal",
+   "surface_cues": [
+    "temporal_word_non_temporal"
+   ],
+   "text": "I meant to say that I removed the heavy drapes from the windows in my bedroom last weekend, not the curtains. Now, can you tell me more about plantation shutters? Are they expensive and difficult to install?",
+   "text_sha256": "c85ffd8d92d4ecc41ed490423a3a1279f5807fcf105186571d315659e648e0a3"
+  },
+  {
+   "item_id": "ps1-255",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm really excited to see what insights I can gain from using Hootsuite Insights.",
+   "text_sha256": "10a5f6bd81932ca07f5e40308b7a93c0e21a33d64d69f3f3b566a6918609a1b9"
+  },
+  {
+   "item_id": "ps1-256",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I have information that the parents of Lavalette Miller was Joseph Miller and Florence Tice",
+   "text_sha256": "1bc62a63cb035a9e27adcd5835abe5106a724df5b85e7666a8057d8a63229b55"
+  },
+  {
+   "item_id": "ps1-257",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm excited to try them out and hopefully reduce my stress levels :)",
+   "text_sha256": "8fc3b630d38107f012feded3d6f4caccad4b4adc6204b8f5f489553e667640ad"
+  },
+  {
+   "item_id": "ps1-258",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm feeling more confident about my relationship now and will definitely keep all of this in mind.",
+   "text_sha256": "2f73111032696df3fd0235511c8103f32d09e3f2171867e4aa6d8f63f9539443"
+  },
+  {
+   "item_id": "ps1-259",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm excited to watch the men's rugby sevens event and see how Australia fares against the other teams!",
+   "text_sha256": "c0ca4718e2b32f94895c77c1e4310116c8d3d28b31b7fbd50b0054b1de85b933"
+  },
+  {
+   "item_id": "ps1-260",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I have always wondered how ESPN managed to establish itself as the go-to sports network.",
+   "text_sha256": "32f57457e32336a780504381b495adb178d1a4ecc5323798bc9b8b44ff747e68"
+  },
+  {
+   "item_id": "ps1-261",
+   "origin": "public_chat_filler",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm allergic to cheese",
+   "text_sha256": "60d75eb54286a8cf9dc1c9649ebdc7020e3ba9c2e7766d38849cafb8e0d9fe59"
+  },
+  {
+   "item_id": "ps1-262",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm in the city where the City Art Museum is.",
+   "text_sha256": "1c7c39783c5e9fe5fe97ef503c735373bf258dd473303306eb238f95bd6288bc"
+  },
+  {
+   "item_id": "ps1-263",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm glad you're interested in learning more about Nahuatl!",
+   "text_sha256": "e6a29b30a9daaeef3ccb4a97bc591edfb3496eebacd6186c385b18ce7826471a"
+  },
+  {
+   "item_id": "ps1-264",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm thinking of trying to wake up a bit earlier on Sundays to get a head start on meal prep.",
+   "text_sha256": "219853f87fabe0ba5e06b80f0c91e1eadbfdece752793c0515ed4ac9b3813cf0"
+  },
+  {
+   "item_id": "ps1-265",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm excited to help you explore rainwater harvesting systems further!",
+   "text_sha256": "5fd19a87fa9fe1f865ff2c2475a6179731b6b41f719975173d30f96c5d7e43d3"
+  },
+  {
+   "item_id": "ps1-266",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm happy to help you explore more relaxing activities!",
+   "text_sha256": "1f2568fd3525f8a3ec7df2b432eed238dcae6b19ec8a886fb92090280a514e28"
+  },
+  {
+   "item_id": "ps1-267",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm looking for a hostel that's around $30-40 a night.",
+   "text_sha256": "ccd0c3c41cf4d6275ccd5eba3322ce1bfba9a8dfccee32fd58960a3711b4308e"
+  },
+  {
+   "item_id": "ps1-268",
+   "origin": "simulated_user",
+   "part": "S",
+   "stratum": "simple_first_person_statement",
+   "surface_cues": [
+    "simple_first_person_statement"
+   ],
+   "text": "I'm excited to help you with your speedrunning journey!",
+   "text_sha256": "f086c05f18b6bace24e8047de9ee5525ec0d571be048c12257530898cea906d1"
+  }
+ ],
+ "sample_id": "proposition-semantics-sample-v1",
+ "source_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+}
