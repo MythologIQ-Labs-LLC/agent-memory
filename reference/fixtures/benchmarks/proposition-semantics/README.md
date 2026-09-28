@@ -1,6 +1,6 @@
 # Proposition-semantics qualification corpus (#594 Phase B)
 
-Status: **pre-gold package, draft v3, awaiting maintainer review.** Nothing in this directory is benchmark gold. No interpreter score exists or may be computed from these files. The interpreter has still not been run on any sampled item.
+Status: **pre-gold package, draft v4, awaiting maintainer review.** Nothing in this directory is benchmark gold. No interpreter score exists or may be computed from these files. The interpreter has still not been run on any sampled item.
 
 ## Why this exists
 
@@ -29,6 +29,8 @@ source corpus
   -> rubric v2 + draft v2 + change manifest annotation-rubric-v2.md, draft-annotations-v2.json, draft-v1-to-v2-change-manifest.json
   -> maintainer review 2                  PR #595 review 5338941285: ps1-010 and ps1-252 consistency defects; keep v2, make v3
   -> rubric v3 + draft v3 + change manifest annotation-rubric-v3.md, draft-annotations-v3.json, draft-v2-to-v3-change-manifest.json
+  -> maintainer review 3                  PR #595 review 5339238113: proposition-list boundary; 5 direct rulings
+  -> rubric v4 + draft v4 + change manifest annotation-rubric-v4.md, draft-annotations-v4.json, draft-v3-to-v4-change-manifest.json
   -> STOP FOR MAINTAINER REVIEW           <- this package stops here
   -> accepted gold later                  a new, separately versioned file with an acceptance record
   -> only then interpreter scoring        proposition_semantics_evaluator.py (refuses non-accepted gold)
@@ -60,6 +62,9 @@ The Phase A activation counts ran the interpreter over the whole corpus only *af
 | `draft-v1-to-v2-change-manifest.json` | every v1 → v2 change: old/new status, principal, cardinality, aspect, reason, ruling class; grouped by transition, reason, ruling class, part, and stratum |
 | `annotation-rubric-v3.md` | rubric v3: v2 plus attitudes/states as propositions, the coordinated-list rule limited to one governing predicate, and the second-pass rules (§10 lists every difference from v2) |
 | `draft-annotations-v3.json` | all 268 items under rubric v3; same four draft labels; pins v2 by hash; per-item `v3_change_reason` |
+| `annotation-rubric-v4.md` | rubric v4: `propositions` holds only asserted or legitimately presupposed propositions; a request may resolve a separate declarative; a different predicate does not by itself compete (§11) |
+| `draft-annotations-v4.json` | all 268 items under rubric v4; pins v3 by hash; per-item `v4_change_reason` and `maintainer_review_3` |
+| `draft-v3-to-v4-change-manifest.json` | every v3 → v4 change, separating the review's direct rulings from corpus-wide findings |
 | `draft-v2-to-v3-change-manifest.json` | every v2 → v3 change in the same shape, plus the outcome of re-reviewing each of the 77 v1 → v2 changes |
 | `build_change_manifest.py` | regenerates both manifests from the annotation files; a test pins that the committed manifests are current |
 
@@ -134,7 +139,7 @@ Rubric v2 applied the ruling that semantic interpretation must not decide retent
 
 An earlier revision of this branch (`bd50e0a`) edited v2 in place with a second review pass. That pass is now in v3, and v2 is back to exactly the content the second maintainer review read (`799e44c`), as that review asked.
 
-### Draft v3 (current)
+### Draft v3 (kept as the third review read it)
 
 The second maintainer review found two consistency defects:
 
@@ -187,12 +192,61 @@ Field changes: status 15, principal proposition 15, cardinality 12, temporal asp
 * ps1-180 and 267 are ruled items whose ruled status is kept;
 * the other 18 come from the corpus re-review.
 
+### Draft v4 (current)
+
+The third maintainer review found a proposition-list boundary defect. Some lists recorded question or request content as affirmed propositions even where the note said it was not asserted. In two cases, supporting context displaced a clear principal. Rubric v4 (§1, §3, §11) states the boundary:
+
+* `propositions` holds only asserted or legitimately presupposed propositions;
+* question or request content alone never becomes a proposition, property, or value;
+* a request may resolve the referent of a separate declarative in the same turn;
+* a different predicate does not by itself compete.
+
+**Direct rulings (5).**
+
+| item | ruling |
+| --- | --- |
+| ps1-063 | ambiguous → known: active hotel search in Seattle |
+| ps1-068 | ambiguous → known: sale goal; the owned items are supporting |
+| ps1-082 | known; the unasserted Mig proposition is removed |
+| ps1-086 | known; the request-only lens search is removed |
+| ps1-103 | ambiguous; the inferred Orlando destination is removed |
+
+**Bounded corpus-wide check (12 findings).** All 268 proposition lists were checked for the two named defect classes only, not relabelled in general. Presupposed content, such as "my trip to Osprey Reef", "my job search", and "my vintage cameras", is kept.
+
+* **Question or request content recorded as asserted (6):**
+  * ps1-065: Michelin was only "heard good things" about;
+  * ps1-067: literacy and education appear only in the request;
+  * ps1-097: "suitable for oily skin" appears only in the request;
+  * ps1-157 and 163: "wants" was inferred from "where can I find/buy";
+  * ps1-222: the cuisines appear only in the request.
+
+  All six stay `known`; only their values or properties change.
+* **False ambiguity from supporting context (6), ambiguous → known:**
+  * ps1-095: the car serves the road trip;
+  * ps1-124: the contest is "a nice bonus" to the IPMS plan;
+  * ps1-125: the ROAS plan is the only asserted plan, and the business is presupposed;
+  * ps1-154: "this recipe" is unresolved and supporting, as in ps1-203;
+  * ps1-156 and 209: "by the way" asides, as in ps1-042 and 222.
+
+  The v3 lists for ps1-124 and ps1-125 had omitted the principal plan.
+
+| | v3 | v4 | v4 Part R (100) | v4 Part S (168) |
+| --- | ---: | ---: | ---: | ---: |
+| known | 141 | 149 | 55 | 94 |
+| ambiguous | 42 | 34 | 12 | 22 |
+| unknown | 85 | 85 | 33 | 52 |
+
+17 items changed (`draft-v3-to-v4-change-manifest.json`): 8 of 100 in Part R and 9 of 168 in Part S.
+
+* Transitions: 8 ambiguous→known, 8 known with a changed proposition list, 1 ambiguous with a changed list.
+* Field changes: status 8, principal proposition 14, cardinality 3, temporal aspect 4.
+* Of the kept ambiguous items, ps1-014, 035, 039, 050, 109, 128, 131, 169, 178, 207, 237, and 250 have genuinely competing candidates. ps1-089 and 234 have hypothetical guesses about another party, which rubric §3 keeps as ambiguous.
+
 ### What the next review should sample first
 
-* **The attitude rule (7 items).** Did ps1-235 (a reaction at one exhibition) and ps1-046 (a state with its cause) go too far? ps1-131, 154, and 234 stay `ambiguous` because two determinate propositions of comparable standing compete, not because they are attitudes.
-* **The coordinated-list limit.** ps1-179 ("my vintage cameras, especially the Canon AE-1 and Polaroid") is kept as one predicate over an appositive list.
-* **"Principal with supporting context" (42 v1 → v2 items).** It is confirmed in the re-review and remains the least certain generalization. It now also covers ps1-203, where the unresolved restaurant plan is supporting.
-* **The §4 cardinality table,** which no maintainer has reviewed yet.
+* The six false-ambiguity findings (ps1-095, 124, 125, 154, 156, 209), especially ps1-095 and ps1-156, where the supporting reading is least certain.
+* The kept ambiguous items listed above, as the complement of the same check.
+* ps1-097, where the request resolves "their" (the ps1-063 pattern) but its "oily skin" constraint is not recorded.
 
 ### Items adjudicated in review 1 (v1 text kept for the record)
 
@@ -207,7 +261,7 @@ The drafting model had read `proposition_semantics.py` in earlier sessions (#550
 
 ## Evaluator
 
-`reference/proposition_semantics_evaluator.py` is the evaluator contract. `reference/tests/test_proposition_evaluator.py` holds 21 tests: evaluator tests on synthetic evaluator-only fixtures, plus integrity tests on the frozen files. They prove the evaluator detects each of these, each with its own counter and no aggregate:
+`reference/proposition_semantics_evaluator.py` is the evaluator contract. `reference/tests/test_proposition_evaluator.py` holds 23 tests: evaluator tests on synthetic evaluator-only fixtures, plus integrity tests on the frozen files. They prove the evaluator detects each of these, each with its own counter and no aggregate:
 
 * wrong proposition slot;
 * wrong value;
@@ -223,10 +277,10 @@ The tests also pin that:
 * only a set with an explicit acceptance record loads;
 * the frozen sample matches its manifest;
 * the drafts cover exactly the frozen sample and stay marked draft;
-* v2 pins v1 and v3 pins v2 by hash;
+* each draft pins its predecessor by hash (v2 → v1, v3 → v2, v4 → v3);
 * each change manifest lists exactly the changed items with every required field, and both regenerate byte-identically from the annotation files;
 * the v2 → v3 manifest accounts for every v1 → v2 change;
-* v3 labels are internally consistent, carry the 15 ruled statuses and the two second-review outcomes, and no note gives duration as a reason.
+* v4 labels are internally consistent, carry the 15 ruled statuses and every second- and third-review outcome, and no note gives duration as a reason.
 
 The fixtures are not Agent Memory performance evidence.
 

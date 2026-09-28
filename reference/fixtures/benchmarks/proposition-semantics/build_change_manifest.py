@@ -22,8 +22,11 @@ SAMPLE = HERE / "sample-v1.json"
 PAIRS = {
     "draft-v1-to-v2-change-manifest.json": ("v1", "v2"),
     "draft-v2-to-v3-change-manifest.json": ("v2", "v3"),
+    "draft-v3-to-v4-change-manifest.json": ("v3", "v4"),
 }
-RUBRICS = {"v1": "annotation-rubric.md", "v2": "annotation-rubric-v2.md", "v3": "annotation-rubric-v3.md"}
+# The maintainer review whose rulings a version applies; its items get their own ruling class.
+REVIEW_FIELDS = {"v3": ("maintainer_review_2", "maintainer_second_review"), "v4": ("maintainer_review_3", "maintainer_third_review")}
+RUBRICS = {"v1": "annotation-rubric.md", "v2": "annotation-rubric-v2.md", "v3": "annotation-rubric-v3.md", "v4": "annotation-rubric-v4.md"}
 STATUSES = ("known", "ambiguous", "unknown")
 LABEL_FIELDS = (
     "status", "propositions", "principal", "cardinality", "temporal_aspect", "aspect_explicit",
@@ -47,9 +50,10 @@ COMPARED = {
 }
 
 
-def _ruling_class(item: dict, reason: str) -> str:
-    if item.get("maintainer_review_2"):
-        return "maintainer_second_review"
+def _ruling_class(item: dict, reason: str, version: str) -> str:
+    field, name = REVIEW_FIELDS.get(version, (None, None))
+    if field and item.get(field):
+        return name
     if reason == "maintainer_boundary_ruling":
         return "maintainer_ruling_change"
     if item.get("maintainer_ruling"):
@@ -83,7 +87,7 @@ def build(old_version: str, new_version: str) -> dict:
             "fields_changed": fields,
             "reason": new[reason_field],
             "notes": new["notes"],
-            "ruling_class": _ruling_class(new, new[reason_field]),
+            "ruling_class": _ruling_class(new, new[reason_field], new_version),
         })
 
     def group(key) -> dict:

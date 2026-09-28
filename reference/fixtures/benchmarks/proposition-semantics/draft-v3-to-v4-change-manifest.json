@@ -1,0 +1,819 @@
+{
+ "by_part": {
+  "random": {
+   "items_changed": 8,
+   "items_in_part": 100,
+   "reasons": {
+    "question_or_request_content_is_not_an_asserted_proposition": 5,
+    "request_resolves_a_declarative_search": 1,
+    "supporting_context_under_a_different_predicate_does_not_compete": 2
+   },
+   "status_transitions": {
+    "ambiguous->known": 3,
+    "known->known": 5
+   }
+  },
+  "stratified": {
+   "items_changed": 9,
+   "items_in_part": 168,
+   "reasons": {
+    "question_or_request_content_is_not_an_asserted_proposition": 4,
+    "supporting_context_under_a_different_predicate_does_not_compete": 5
+   },
+   "status_transitions": {
+    "ambiguous->ambiguous": 1,
+    "ambiguous->known": 5,
+    "known->known": 3
+   }
+  }
+ },
+ "by_reason": {
+  "question_or_request_content_is_not_an_asserted_proposition": {
+   "count": 9,
+   "items": [
+    "ps1-065",
+    "ps1-067",
+    "ps1-082",
+    "ps1-086",
+    "ps1-097",
+    "ps1-103",
+    "ps1-157",
+    "ps1-163",
+    "ps1-222"
+   ]
+  },
+  "request_resolves_a_declarative_search": {
+   "count": 1,
+   "items": [
+    "ps1-063"
+   ]
+  },
+  "supporting_context_under_a_different_predicate_does_not_compete": {
+   "count": 7,
+   "items": [
+    "ps1-068",
+    "ps1-095",
+    "ps1-124",
+    "ps1-125",
+    "ps1-154",
+    "ps1-156",
+    "ps1-209"
+   ]
+  }
+ },
+ "by_ruling_class": {
+  "corpus_rereview": {
+   "count": 12,
+   "items": [
+    "ps1-065",
+    "ps1-067",
+    "ps1-095",
+    "ps1-097",
+    "ps1-124",
+    "ps1-125",
+    "ps1-154",
+    "ps1-156",
+    "ps1-157",
+    "ps1-163",
+    "ps1-209",
+    "ps1-222"
+   ]
+  },
+  "maintainer_third_review": {
+   "count": 5,
+   "items": [
+    "ps1-063",
+    "ps1-068",
+    "ps1-082",
+    "ps1-086",
+    "ps1-103"
+   ]
+  }
+ },
+ "by_status_transition": {
+  "ambiguous->ambiguous": {
+   "count": 1,
+   "items": [
+    "ps1-103"
+   ]
+  },
+  "ambiguous->known": {
+   "count": 8,
+   "items": [
+    "ps1-063",
+    "ps1-068",
+    "ps1-095",
+    "ps1-124",
+    "ps1-125",
+    "ps1-154",
+    "ps1-156",
+    "ps1-209"
+   ]
+  },
+  "known->known": {
+   "count": 8,
+   "items": [
+    "ps1-065",
+    "ps1-067",
+    "ps1-082",
+    "ps1-086",
+    "ps1-097",
+    "ps1-157",
+    "ps1-163",
+    "ps1-222"
+   ]
+  }
+ },
+ "by_stratum": {
+  "change_language": {
+   "items": [
+    "ps1-103"
+   ],
+   "items_changed": 1,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->ambiguous": 1
+   }
+  },
+  "coexistence_language": {
+   "items": [
+    "ps1-124",
+    "ps1-125"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 2
+   }
+  },
+  "employment": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "hedging": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "past_habitual": {
+   "items": [
+    "ps1-222"
+   ],
+   "items_changed": 1,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "known->known": 1
+   }
+  },
+  "preference": {
+   "items": [
+    "ps1-157",
+    "ps1-163"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "known->known": 2
+   }
+  },
+  "present_current": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "proper_noun_subject": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "prospective": {
+   "items": [
+    "ps1-209"
+   ],
+   "items_changed": 1,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 1
+   }
+  },
+  "residence_location": {
+   "items": [
+    "ps1-154",
+    "ps1-156"
+   ],
+   "items_changed": 2,
+   "items_in_stratum": 14,
+   "status_transitions": {
+    "ambiguous->known": 2
+   }
+  },
+  "simple_first_person_statement": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  },
+  "temporal_word_non_temporal": {
+   "items": [],
+   "items_changed": 0,
+   "items_in_stratum": 14,
+   "status_transitions": {}
+  }
+ },
+ "changes": [
+  {
+   "cardinality_v3": "unknown",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "hedged"
+   ],
+   "item_id": "ps1-063",
+   "notes": "principal: the declarative 'I'm looking for something close to the city center and not too expensive' asserts an active hotel search whose antecedent ('something' = a hotel in Seattle) the request in the same turn resolves. 'I think I'll book the ticket' is a supporting, unresolved intention; no trip-destination proposition is inferred from it. Hedging belongs to the ticket clause, not the search",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v3": null,
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "looking for",
+    "value": "a hotel in Seattle, close to the city center and not too expensive"
+   },
+   "reason": "request_resolves_a_declarative_search",
+   "ruling_class": "maintainer_third_review",
+   "status_v3": "ambiguous",
+   "status_v4": "known",
+   "stratum": null,
+   "temporal_aspect_v3": "prospective",
+   "temporal_aspect_v4": "present"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-065",
+   "notes": "asserted: considering upgrading to a different brand. The Michelin Pilot Sport Cup 2 R is only something the user has 'heard good things' about and then asks about, so it is not the considered value (same pattern as ps1-082); the BMW appears only in the question. The earlier purchase is supporting",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering tires",
+    "value": "Michelin Pilot Sport Cup 2 R (for a 2018 BMW M4)"
+   },
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering tires",
+    "value": "upgrading the track tires to a different brand"
+   },
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "known",
+   "status_v4": "known",
+   "stratum": null,
+   "temporal_aspect_v3": "prospective",
+   "temporal_aspect_v4": "prospective"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-067",
+   "notes": "the declarative asserts the interest; literacy and education appear only in the request ('connect volunteers with literacy programs or education-related causes') and are not part of the value. 'more' implies existing volunteering",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "interested in",
+    "value": "volunteer opportunities in literacy/education"
+   },
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "interested in",
+    "value": "more volunteer opportunities that align with the user's skills and interests"
+   },
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "known",
+   "status_v4": "known",
+   "stratum": null,
+   "temporal_aspect_v3": "present",
+   "temporal_aspect_v4": "present"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "status",
+    "principal"
+   ],
+   "item_id": "ps1-068",
+   "notes": "principal: the sale goal 'I'm looking to sell some of my vintage items'. 'I have a few rare items, including ...' is supporting ownership under a different predicate and does not compete; the text does not assert that every named item is to be sold, so the principal value stays 'some of my vintage items'",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v3": null,
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to sell",
+    "value": "some of my vintage items"
+   },
+   "reason": "supporting_context_under_a_different_predicate_does_not_compete",
+   "ruling_class": "maintainer_third_review",
+   "status_v3": "ambiguous",
+   "status_v4": "known",
+   "stratum": null,
+   "temporal_aspect_v3": "prospective",
+   "temporal_aspect_v4": "prospective"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-082",
+   "notes": "the asserted state is using Vallejo Model Color. The user has only 'heard good things' about Mig Productions' rust paints and asks whether they are worth trying, which asserts no proposition about considering them",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "uses paint (for the T-34 tank model)",
+    "value": "Vallejo Model Color"
+   },
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "uses paint (for the T-34 tank model)",
+    "value": "Vallejo Model Color"
+   },
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "maintainer_third_review",
+   "status_v3": "known",
+   "status_v4": "known",
+   "stratum": null,
+   "temporal_aspect_v3": "present",
+   "temporal_aspect_v4": "present"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-086",
+   "notes": "principal: the resumed hobby ('getting back into collecting vinyl records too'); the garage-sale find is supporting episodic context. The lens appears only inside the request ('Have you heard of ... stores ... that might carry ...') and is not recorded",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "hobby",
+    "value": "collecting vinyl records"
+   },
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "hobby",
+    "value": "collecting vinyl records"
+   },
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "maintainer_third_review",
+   "status_v3": "known",
+   "status_v4": "known",
+   "stratum": null,
+   "temporal_aspect_v3": "present",
+   "temporal_aspect_v4": "present"
+  },
+  {
+   "cardinality_v3": "single_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect",
+    "aspect_explicit"
+   ],
+   "item_id": "ps1-095",
+   "notes": "principal: the hedged plan ('thinking of planning a road trip soon'); the new car and its GPS serve that trip and are supporting context under a different predicate, not a competing candidate",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v3": null,
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans",
+    "value": "a road trip soon"
+   },
+   "reason": "supporting_context_under_a_different_predicate_does_not_compete",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "ambiguous",
+   "status_v4": "known",
+   "stratum": null,
+   "temporal_aspect_v3": "none_unknown",
+   "temporal_aspect_v4": "prospective"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-097",
+   "notes": "the declarative 'I'm particularly interested in their moisturizers and cleansers' is asserted, and the request resolves 'their' to Embryolisse (the ps1-063 pattern). 'Suitable for oily skin' appears only in the request, so neither the skin type nor that constraint is recorded",
+   "origin": "simulated_user",
+   "part": "random",
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "interested in",
+    "value": "Embryolisse moisturizers and cleansers for oily skin"
+   },
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "interested in",
+    "value": "Embryolisse moisturizers and cleansers"
+   },
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "known",
+   "status_v4": "known",
+   "stratum": null,
+   "temporal_aspect_v3": "present",
+   "temporal_aspect_v4": "present"
+  },
+  {
+   "cardinality_v3": "unknown",
+   "cardinality_v4": "unknown",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-103",
+   "notes": "the only asserted candidate is 'excited to take on this dessert adventure with my family', whose value is unresolved in the isolated turn. Orlando appears only in the request for recommendations and is not recorded as a trip destination",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v3": null,
+   "principal_v4": null,
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "maintainer_third_review",
+   "status_v3": "ambiguous",
+   "status_v4": "ambiguous",
+   "stratum": "change_language",
+   "temporal_aspect_v3": "prospective",
+   "temporal_aspect_v4": "prospective"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-124",
+   "notes": "principal: the hedged plan 'I think I'll check out the IPMS website and see if there's a local chapter near me'. The contest consideration is explicitly a supporting bonus ('so the contest eligibility is a nice bonus'), and the hobby is presupposed ('other modelers'); v3's list omitted the principal plan",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v3": null,
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to check",
+    "value": "the IPMS website for a local chapter"
+   },
+   "reason": "supporting_context_under_a_different_predicate_does_not_compete",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "ambiguous",
+   "status_v4": "known",
+   "stratum": "coexistence_language",
+   "temporal_aspect_v3": "prospective",
+   "temporal_aspect_v4": "prospective"
+  },
+  {
+   "cardinality_v3": "unknown",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal",
+    "cardinality",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-125",
+   "notes": "principal: 'I'll definitely consider using the ROAS bidding strategy to optimize my ad spend'. The business is presupposed supporting context; the followers question is only a request. v3's list omitted the principal",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v3": null,
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering using",
+    "value": "the ROAS bidding strategy for Facebook ads"
+   },
+   "reason": "supporting_context_under_a_different_predicate_does_not_compete",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "ambiguous",
+   "status_v4": "known",
+   "stratum": "coexistence_language",
+   "temporal_aspect_v3": "none_unknown",
+   "temporal_aspect_v4": "prospective"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "status",
+    "propositions",
+    "principal"
+   ],
+   "item_id": "ps1-154",
+   "notes": "principal: the asserted habit 'I've been indulging in a lot of sweet treats lately'. The bakery discovery is its supporting cause, and 'this recipe' is unresolved supporting context, as in ps1-203",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v3": null,
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "has been indulging in",
+    "value": "a lot of sweet treats (lately)"
+   },
+   "reason": "supporting_context_under_a_different_predicate_does_not_compete",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "ambiguous",
+   "status_v4": "known",
+   "stratum": "residence_location",
+   "temporal_aspect_v3": "present",
+   "temporal_aspect_v4": "present"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "status",
+    "principal",
+    "temporal_aspect"
+   ],
+   "item_id": "ps1-156",
+   "notes": "principal: considering a jewelry armoire ('thinking of getting one'), which the request targets; the building-security worry is its reason, and the 'by the way' necklace remark is supporting context (cf. ps1-042, ps1-222)",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v3": null,
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering buying",
+    "value": "a jewelry armoire"
+   },
+   "reason": "supporting_context_under_a_different_predicate_does_not_compete",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "ambiguous",
+   "status_v4": "known",
+   "stratum": "residence_location",
+   "temporal_aspect_v3": "present",
+   "temporal_aspect_v4": "prospective"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-157",
+   "notes": "asserted: 'I love the idea of a collar necklace'. The search ('Where would be the best place to find one?') is only a question, so 'wants' is not asserted",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "wants",
+    "value": "a collar necklace"
+   },
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "likes the idea of",
+    "value": "a collar necklace"
+   },
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "known",
+   "status_v4": "known",
+   "stratum": "preference",
+   "temporal_aspect_v3": "present",
+   "temporal_aspect_v4": "present"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-163",
+   "notes": "asserted: 'I love the idea of using beeswax wraps instead of plastic wrap'. 'Where can I buy them?' is only a question, so 'wants' is not asserted",
+   "origin": "public_chat_filler",
+   "part": "stratified",
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "wants",
+    "value": "beeswax wraps (instead of plastic wrap)"
+   },
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "likes the idea of",
+    "value": "using beeswax wraps instead of plastic wrap"
+   },
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "known",
+   "status_v4": "known",
+   "stratum": "preference",
+   "temporal_aspect_v3": "present",
+   "temporal_aspect_v4": "present"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "status",
+    "principal"
+   ],
+   "item_id": "ps1-209",
+   "notes": "principal: the hedged plan 'I think I'm going to order [a TV stand] online this week'; the replaced light bulb is a 'by the way' episodic aside and does not compete (cf. ps1-042, ps1-222). 'Also' marks another purchase considered alongside the desk",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v3": null,
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "plans to order",
+    "value": "a new TV stand online this week"
+   },
+   "reason": "supporting_context_under_a_different_predicate_does_not_compete",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "ambiguous",
+   "status_v4": "known",
+   "stratum": "prospective",
+   "temporal_aspect_v3": "prospective",
+   "temporal_aspect_v4": "prospective"
+  },
+  {
+   "cardinality_v3": "multi_valued",
+   "cardinality_v4": "multi_valued",
+   "fields_changed": [
+    "propositions"
+   ],
+   "item_id": "ps1-222",
+   "notes": "asserted: 'I'm thinking of taking a cooking class to improve my skills'. Korean, Indian, and Thai appear only in the request for a school and are not part of the value. The sushi habit is supporting context (cf. the ps1-197 ruling)",
+   "origin": "simulated_user",
+   "part": "stratified",
+   "principal_v3": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering",
+    "value": "a cooking class (Korean, Indian, Thai)"
+   },
+   "principal_v4": {
+    "entity": "user",
+    "polarity": "affirmed",
+    "property": "considering",
+    "value": "taking a cooking class to improve cooking skills"
+   },
+   "reason": "question_or_request_content_is_not_an_asserted_proposition",
+   "ruling_class": "corpus_rereview",
+   "status_v3": "known",
+   "status_v4": "known",
+   "stratum": "past_habitual",
+   "temporal_aspect_v3": "prospective",
+   "temporal_aspect_v4": "prospective"
+  }
+ ],
+ "field_change_counts": {
+  "cardinality": 3,
+  "principal_proposition": 14,
+  "status": 8,
+  "temporal_aspect": 4
+ },
+ "generated_by": "build_change_manifest.py",
+ "interpreter_output_consulted": false,
+ "items_changed": 17,
+ "items_reviewed": 268,
+ "items_unchanged": 251,
+ "maintainer_rulings": {
+  "change": [
+   "ps1-087",
+   "ps1-098",
+   "ps1-134",
+   "ps1-158",
+   "ps1-166",
+   "ps1-180",
+   "ps1-181",
+   "ps1-197",
+   "ps1-205",
+   "ps1-218",
+   "ps1-257"
+  ],
+  "keep": [
+   "ps1-006",
+   "ps1-051",
+   "ps1-150",
+   "ps1-267"
+  ],
+  "total": 15
+ },
+ "manifest": "proposition-semantics draft v3 -> draft v4 change manifest",
+ "new": {
+  "file": "draft-annotations-v4.json",
+  "rubric": "annotation-rubric-v4.md",
+  "rubric_sha256": "1b8fe1132986d2b8c1094a7844f5a55fac9e05aea2906d64954b428d4297e94d",
+  "sha256": "ce380f6de49d1276f0b03a810bea21091e3495d915c89bb40527badc96799939",
+  "version": "v4"
+ },
+ "old": {
+  "file": "draft-annotations-v3.json",
+  "rubric": "annotation-rubric-v3.md",
+  "rubric_sha256": "d8b9da4900c9996e0a9843587d827800a14b97b5ac8ee569d597d5b35bf249b7",
+  "sha256": "e9fe56ee6b15c6c7fce8e129a836046c4c25adf503e764aa9984cd1d66f32fa4",
+  "version": "v3"
+ },
+ "status_counts": {
+  "v3": {
+   "all": {
+    "ambiguous": 42,
+    "known": 141,
+    "unknown": 85
+   },
+   "random": {
+    "ambiguous": 15,
+    "known": 52,
+    "unknown": 33
+   },
+   "stratified": {
+    "ambiguous": 27,
+    "known": 89,
+    "unknown": 52
+   }
+  },
+  "v4": {
+   "all": {
+    "ambiguous": 34,
+    "known": 149,
+    "unknown": 85
+   },
+   "random": {
+    "ambiguous": 12,
+    "known": 55,
+    "unknown": 33
+   },
+   "stratified": {
+    "ambiguous": 22,
+    "known": 94,
+    "unknown": 52
+   }
+  }
+ },
+ "status_labels": [
+  "DRAFT",
+  "MODEL-ASSISTED",
+  "NOT ACCEPTED GOLD",
+  "NOT SCORED"
+ ],
+ "status_transition_matrix": {
+  "ambiguous": {
+   "ambiguous": 34,
+   "known": 8,
+   "unknown": 0
+  },
+  "known": {
+   "ambiguous": 0,
+   "known": 141,
+   "unknown": 0
+  },
+  "unknown": {
+   "ambiguous": 0,
+   "known": 0,
+   "unknown": 85
+  }
+ }
+}

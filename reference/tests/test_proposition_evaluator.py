@@ -126,7 +126,7 @@ class EvaluatorContractTests(unittest.TestCase):
 
 class GoldFreezeTests(unittest.TestCase):
     def test_draft_annotations_are_refused(self) -> None:
-        for name in ("draft-annotations-v1.json", "draft-annotations-v2.json", "draft-annotations-v3.json"):
+        for name in ("draft-annotations-v1.json", "draft-annotations-v2.json", "draft-annotations-v3.json", "draft-annotations-v4.json"):
             with self.assertRaises(E.GoldNotAccepted):
                 E.load_gold(FIXTURES / name)
 
@@ -166,7 +166,7 @@ class SampleIndependenceTests(unittest.TestCase):
     def test_draft_annotations_cover_the_sample_and_stay_marked_draft(self) -> None:
         sample = json.loads((FIXTURES / "sample-v1.json").read_text(encoding="utf-8"))
         for name, rubric in (("draft-annotations-v1.json", "annotation-rubric.md"), ("draft-annotations-v2.json", "annotation-rubric-v2.md"),
-                             ("draft-annotations-v3.json", "annotation-rubric-v3.md")):
+                             ("draft-annotations-v3.json", "annotation-rubric-v3.md"), ("draft-annotations-v4.json", "annotation-rubric-v4.md")):
             draft = json.loads((FIXTURES / name).read_text(encoding="utf-8"))
             self.assertEqual(set(draft["status_labels"]), {"DRAFT", "MODEL-ASSISTED", "NOT ACCEPTED GOLD", "NOT SCORED"})
             self.assertFalse(draft["provenance"]["interpreter_output_consulted"])
@@ -218,6 +218,11 @@ class SampleIndependenceTests(unittest.TestCase):
         self.assertEqual(set(rereview["outcomes"]), {c["item_id"] for c in v1_to_v2["changes"]})
         self.assertEqual(rereview["confirmed"] + rereview["revised"], v1_to_v2["items_changed"])
 
+    def test_v4_preserves_v3_and_its_change_manifest_is_complete(self) -> None:
+        manifest = self.assertManifestComplete("v3", "v4")
+        direct = set(manifest["by_ruling_class"]["maintainer_third_review"]["items"])
+        self.assertEqual(direct, {"ps1-063", "ps1-068", "ps1-082", "ps1-086", "ps1-103"})
+
     def test_change_manifests_are_regenerated_from_the_annotation_files(self) -> None:
         spec = importlib.util.spec_from_file_location("build_change_manifest", FIXTURES / "build_change_manifest.py")
         module = importlib.util.module_from_spec(spec)
@@ -225,14 +230,22 @@ class SampleIndependenceTests(unittest.TestCase):
         for name in module.PAIRS:
             self.assertEqual(module.render(name), (FIXTURES / name).read_text(encoding="utf-8"), name)
 
-    def test_v3_labels_are_internally_consistent(self) -> None:
-        v3 = json.loads((FIXTURES / "draft-annotations-v3.json").read_text(encoding="utf-8"))
+    def test_v4_labels_are_internally_consistent(self) -> None:
+        v4 = json.loads((FIXTURES / "draft-annotations-v4.json").read_text(encoding="utf-8"))
         rulings = {"ps1-006": "known", "ps1-051": "ambiguous", "ps1-087": "known", "ps1-098": "known", "ps1-134": "ambiguous",
                    "ps1-150": "known", "ps1-158": "ambiguous", "ps1-166": "known", "ps1-180": "known", "ps1-181": "known",
                    "ps1-197": "known", "ps1-205": "ambiguous", "ps1-218": "ambiguous", "ps1-257": "ambiguous", "ps1-267": "known",
                    # second maintainer review (PR #595 review 5338941285)
-                   "ps1-010": "known", "ps1-252": "ambiguous"}
-        for item in v3["items"]:
+                   "ps1-010": "known", "ps1-252": "ambiguous",
+                   # third maintainer review (PR #595 review 5339238113)
+                   "ps1-063": "known", "ps1-068": "known", "ps1-082": "known", "ps1-086": "known", "ps1-103": "ambiguous"}
+        by_id = {item["item_id"]: item for item in v4["items"]}
+        # Third review: request-only content is not recorded as an asserted proposition.
+        self.assertEqual([p["property"] for p in by_id["ps1-082"]["propositions"]], ["uses paint (for the T-34 tank model)"])
+        self.assertNotIn("looking for", [p["property"] for p in by_id["ps1-086"]["propositions"]])
+        self.assertNotIn("Orlando", json.dumps(by_id["ps1-103"]["propositions"]))
+        self.assertEqual(by_id["ps1-068"]["propositions"][by_id["ps1-068"]["principal"]]["value"], "some of my vintage items")
+        for item in v4["items"]:
             status = item["status"]
             self.assertIn(status, E.STATUSES)
             self.assertEqual(item["principal"] is not None, status == "known", item["item_id"])
