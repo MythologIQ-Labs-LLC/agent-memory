@@ -1,0 +1,93 @@
+{
+ "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+ "interpreter": {
+  "ref": "agent-memory-deterministic-write-semantics",
+  "version": "1.0.0"
+ },
+ "planes": {
+  "session": {
+   "canonical": {
+    "cardinality_multi_valued": 7428,
+    "cardinality_single_valued": 2,
+    "cardinality_unknown": 16437,
+    "interpreted_self_validity_expression_present": 42,
+    "interpreted_self_validity_resolved": 0,
+    "memories_ingested": 23867,
+    "memories_with_observed_at": 0,
+    "proposition_ambiguous": 17671,
+    "proposition_known": 1205,
+    "proposition_unknown": 4991,
+    "self_validity_status": {
+     "ambiguous": 4,
+     "hedged_not_resolved": 30,
+     "none": 23825,
+     "unanchored": 8
+    },
+    "temporal_aspect_any": 11265,
+    "temporal_aspect_only": 11265
+   },
+   "source_anchored": {
+    "cardinality_multi_valued": 7428,
+    "cardinality_single_valued": 2,
+    "cardinality_unknown": 16437,
+    "interpreted_self_validity_expression_present": 42,
+    "interpreted_self_validity_resolved": 8,
+    "memories_ingested": 23867,
+    "memories_with_observed_at": 23867,
+    "proposition_ambiguous": 17671,
+    "proposition_known": 1205,
+    "proposition_unknown": 4991,
+    "self_validity_status": {
+     "ambiguous": 4,
+     "hedged_not_resolved": 30,
+     "none": 23825,
+     "resolved": 8
+    },
+    "temporal_aspect_any": 11265,
+    "temporal_aspect_only": 11260
+   }
+  },
+  "turn": {
+   "canonical": {
+    "cardinality_multi_valued": 11129,
+    "cardinality_single_valued": 37,
+    "cardinality_unknown": 111250,
+    "interpreted_self_validity_expression_present": 48,
+    "interpreted_self_validity_resolved": 0,
+    "memories_ingested": 122416,
+    "memories_with_observed_at": 0,
+    "proposition_ambiguous": 58601,
+    "proposition_known": 17504,
+    "proposition_unknown": 46311,
+    "self_validity_status": {
+     "ambiguous": 2,
+     "hedged_not_resolved": 13,
+     "none": 122368,
+     "unanchored": 33
+    },
+    "temporal_aspect_any": 18114,
+    "temporal_aspect_only": 18114
+   },
+   "source_anchored": {
+    "cardinality_multi_valued": 11129,
+    "cardinality_single_valued": 37,
+    "cardinality_unknown": 111250,
+    "interpreted_self_validity_expression_present": 48,
+    "interpreted_self_validity_resolved": 33,
+    "memories_ingested": 122416,
+    "memories_with_observed_at": 122416,
+    "proposition_ambiguous": 58601,
+    "proposition_known": 17504,
+    "proposition_unknown": 46311,
+    "self_validity_status": {
+     "ambiguous": 2,
+     "hedged_not_resolved": 13,
+     "none": 122368,
+     "resolved": 33
+    },
+    "temporal_aspect_any": 18114,
+    "temporal_aspect_only": 18099
+   }
+  }
+ }
+}

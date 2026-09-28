@@ -1,0 +1,59 @@
+{
+ "canonical_reproduces": "canonical rows are identical (question order, ranked_top, all metrics) to the accepted f76c441 evidence reports/benchmarks/replays/591-identity-first-materialization-f76c441/longmemeval-s-full-f76c441-seed1.rows.json.gz; canonical rows are therefore not re-committed",
+ "commands": {
+  "C": "python reference/run_longmemeval.py --input longmemeval_s_cleaned.json --corpus-class external_frozen --agent-memory-temporal-metadata none",
+  "P1": "... --agent-memory-temporal-metadata source_observed_at",
+  "P2": "... --agent-memory-temporal-metadata host_declared",
+  "activation": "PYTHONPATH=reference python semantic_activation.py SOURCE OUT",
+  "audit": "PYTHONPATH=reference python null_mechanism_audit.py SOURCE OUT",
+  "compare": "python compare_profiles.py C.json P.json OUT.json",
+  "source_audit": "PYTHONPATH=reference python source_timestamp_audit.py SOURCE OUT"
+ },
+ "evidence_classification": {
+  "phase_A": "ADAPTED EXTERNAL EVIDENCE (not the upstream LongMemEval score; not independent validation of doctrine; canonical LongMemEval_S kept intact)",
+  "phase_A_efficacy_for_550_self_validity_demotion": "EVIDENCE GAP: the natural corpus offers 0 rows where a resolved interpreted window could demote under an ordering query",
+  "phase_A_outcome": "NO EFFECT: 0 changed rows on either plane in P1 or P2; fully attributed, 0 unexplained",
+  "phase_B": "pre-gold package; draft annotations are DRAFT / MODEL-ASSISTED / NOT ACCEPTED GOLD / NOT SCORED"
+ },
+ "execution_note": "C, P1, P2 and the activation count ran concurrently on 4 cores; wall times are not comparable and no timing claim is made",
+ "files_sha256": {
+  "README.md": "0e1ef9dac7be5613a700a40986d0d52c19764272fd5957453db4a44acc6b8932",
+  "compare_profiles.py": "935bd1fd480beef3da2c51182533391c4c024541e13e9660798c4efaf584d3a1",
+  "comparisons/compare-canonical-vs-P1.json": "7a560c2f79a1ba7bc4c1b92f7e93239446f32c7eb826c61b73dc9dae7f1fd7ed",
+  "comparisons/compare-canonical-vs-P2.json": "7523575563ccfb107a397b7d8793fb54e81c909591e1d91857a16fcf23cba5c1",
+  "longmemeval-s-canonical-9fc452f.json": "6bba2184c507ac4e91231ce362094aebe94969ac1a8b07fe8f02fb81652cb0dc",
+  "longmemeval-s-source-anchored-P1-9fc452f.json": "8591ac738407b14fb31c27590cfdc295bab979fb6d30b6a95bba91a43ed98506",
+  "longmemeval-s-source-anchored-P1-9fc452f.rows.json.gz": "0bf7b5afa8316af85caf3206beb084e580ba4c3643afa71705e18ea4e70b279f",
+  "longmemeval-s-source-anchored-reference-time-P2-9fc452f.json": "b1c1a93f2ce3aeed705d06f3b3b6ecf4b8fa5c1c91c1d58f912abb6df7ee9ace",
+  "longmemeval-s-source-anchored-reference-time-P2-9fc452f.rows.json.gz": "1c3600c0a9f0b7c11e36221edefc713024506623f48c6f6633822b79ada4fa85",
+  "null-mechanism-audit-9fc452f.json.gz": "7fee13d0cfee0f3a2446ffbfa1080649c5cb56be76e10c7a5ce95e27fb2bfffe",
+  "null_mechanism_audit.py": "5636623662d2d671d428fde0ab5df342ba7a01669498fc6e6b2c753a269d11e2",
+  "semantic-activation-9fc452f.json": "1e82ee9a741945e8e28ecd6c53b8419f467bbad849e7c062b90486b8b91f331e",
+  "semantic_activation.py": "6f70cf0ca1833229272552cd394cb5504ea7cbd6e4843e4c5b6947a5a7998a1e",
+  "source-anchor-manifest.json": "871bea66c3b1eac750fca99e918e90f239120829ee3feb8096844204ff5ed3d8",
+  "source-timestamp-audit.json": "1d44fcc44a2c6d6e8ef8f2ad12823d7cf21ff7610242795585401edd06976e5b",
+  "source_timestamp_audit.py": "443bf8a57646f9076aaa2ee4b87362759d3693f213c9abd1cf6a038deba377dc"
+ },
+ "freeze_order": {
+  "draft_annotations": "6fc1114",
+  "first_adapted_score_inspected": "after 6fc1114",
+  "phase_B_sample": "2119372",
+  "rubric": "1a4d012",
+  "source_anchor_manifest": "9fc452f"
+ },
+ "issue": "#594",
+ "runtime": {
+  "adr_039": "Proposed",
+  "ranking_policy": "3.1.0 (unchanged)",
+  "revision": "9fc452fc9efdb52af9d64646fe352b717538f2d1",
+  "runtime_equal_to": "691251ca27f5e8e87a7c259c1a47a7050f32291b (main; 9fc452f only adds the additive runner mode and tests)",
+  "worktree": "clean, SHA-named (git log -1 verified)"
+ },
+ "source": {
+  "committed": false,
+  "dataset": "xiaowu0162/longmemeval-cleaned",
+  "file": "longmemeval_s_cleaned.json",
+  "revision": "98d7416c24c778c2fee6e6f3006e7a073259d48f",
+  "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+ }
+}
