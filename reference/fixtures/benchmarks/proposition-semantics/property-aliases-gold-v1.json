@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "frozen_with": "gold-v1.json",
+  "policy": "pre-score, gold-side only; never fitted to interpreter output",
+  "aliases": {}
+}

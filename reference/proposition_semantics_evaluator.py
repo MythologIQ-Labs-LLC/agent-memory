@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Evaluator contract for write-time proposition interpretation against accepted gold (#594).
 
-Design only until the maintainer accepts gold. ``load_gold`` refuses any annotation
-set that is not explicitly accepted, so the draft annotations in
-``fixtures/benchmarks/proposition-semantics/draft-annotations-v1.json`` cannot be
-scored by accident. Nothing here imports or runs the Agent Memory runtime.
+Accepted gold is an immutable acceptance manifest over a byte-frozen draft source.
+``load_gold`` verifies that source by SHA-256 before materializing its items. Direct
+loading of draft annotation files remains refused.
 
 Predictions are compared field by field. There is no aggregate score. Each failure
 class the issue names has its own counter:
@@ -22,13 +21,14 @@ class the issue names has its own counter:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
-EVALUATOR_VERSION = "0.1.0"
+EVALUATOR_VERSION = "0.2.0"
 STATUSES = ("known", "ambiguous", "unknown")
 FIRST_PERSON = {"i", "me", "my", "myself", "user", "speaker", "the user"}
 _TOKEN = re.compile(r"[a-z0-9]+")
@@ -39,14 +39,50 @@ class GoldNotAccepted(ValueError):
     """Raised when an annotation set has not been accepted by the maintainer."""
 
 
-def load_gold(path: Path | str) -> dict[str, Any]:
-    """Load an annotation set and refuse it unless it is explicitly accepted gold."""
-
-    document = json.loads(Path(path).read_text(encoding="utf-8"))
+def _accepted(document: Mapping[str, Any]) -> bool:
     labels = set(document.get("status_labels", ()))
     acceptance = document.get("acceptance") or {}
-    if labels & {"DRAFT", "NOT ACCEPTED GOLD", "NOT SCORED"} or not acceptance.get("accepted_by") or not acceptance.get("accepted_at"):
-        raise GoldNotAccepted(f"{path}: annotation set is not accepted gold (labels={sorted(labels)})")
+    return not (labels & {"DRAFT", "NOT ACCEPTED GOLD", "NOT SCORED"}) and bool(
+        acceptance.get("accepted_by") and acceptance.get("accepted_at")
+    )
+
+
+def load_gold(path: Path | str) -> dict[str, Any]:
+    """Load accepted gold, verifying any immutable source manifest before use."""
+
+    path = Path(path)
+    document = json.loads(path.read_text(encoding="utf-8"))
+    if not _accepted(document):
+        labels = sorted(set(document.get("status_labels", ())))
+        raise GoldNotAccepted(f"{path}: annotation set is not accepted gold (labels={labels})")
+
+    source = document.get("source") or {}
+    if source:
+        source_path = path.parent / str(source.get("file") or "")
+        expected = str(source.get("sha256") or "")
+        if not expected or not source_path.is_file():
+            raise GoldNotAccepted(f"{path}: accepted source is missing or unpinned")
+        source_bytes = source_path.read_bytes()
+        actual = hashlib.sha256(source_bytes).hexdigest()
+        if actual != expected:
+            raise GoldNotAccepted(f"{path}: accepted source digest mismatch ({actual} != {expected})")
+        source_document = json.loads(source_bytes)
+        if source.get("annotation_set") and source_document.get("annotation_set") != source.get("annotation_set"):
+            raise GoldNotAccepted(f"{path}: accepted source annotation_set mismatch")
+        expected_count = (document.get("acceptance") or {}).get("item_count")
+        if expected_count is not None and len(source_document.get("items", ())) != int(expected_count):
+            raise GoldNotAccepted(f"{path}: accepted source item-count mismatch")
+        materialized = dict(document)
+        materialized["items"] = source_document.get("items", [])
+        materialized["accepted_source"] = {
+            "file": source_path.name,
+            "sha256": actual,
+            "annotation_set": source_document.get("annotation_set"),
+        }
+        return materialized
+
+    if "items" not in document:
+        raise GoldNotAccepted(f"{path}: accepted gold has no items or immutable source")
     return document
 
 
@@ -148,13 +184,7 @@ def evaluate(
 
 
 def normalize_runtime_prediction(interpretation: Mapping[str, Any], *, declared_observed_at: str | None = None) -> dict[str, Any]:
-    """Map one ``interpret_write`` result to the evaluator's prediction record.
-
-    Schema-only mapping of the documented output shape; it does not run the interpreter.
-    The principal clause of a known proposition is the proposition's own entity,
-    property, and value. A single aspect kind is kept; several kinds, or none,
-    become ``none_unknown`` or the first kind in sorted order, and the record keeps all of them.
-    """
+    """Map one ``interpret_write`` result to the evaluator's prediction record."""
 
     proposition = interpretation.get("proposition") or {}
     markers = interpretation.get("markers") or {}
