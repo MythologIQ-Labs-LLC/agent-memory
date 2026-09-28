@@ -1,0 +1,149 @@
+name: Independent AMB Competitive Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      dataset:
+        description: "AMB dataset"
+        required: true
+        default: "longmemeval"
+        type: choice
+        options:
+          - longmemeval
+          - locomo
+          - lifebench
+          - personamem
+          - precisionmembench
+      split:
+        description: "Exact AMB split (for example s, locomo10, en, 32k, single-turn)"
+        required: true
+        default: "s"
+        type: string
+      memory:
+        description: "AMB memory provider key"
+        required: true
+        default: "agent-memory"
+        type: choice
+        options:
+          - agent-memory
+          - bm25
+          - hindsight
+          - mem0
+          - cognee
+          - supermemory
+      mode:
+        description: "AMB evaluation mode"
+        required: true
+        default: "rag"
+        type: choice
+        options:
+          - rag
+          - retrieval
+      query_limit:
+        description: "Bounded query count; use 0 for the full split"
+        required: true
+        default: "20"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: amb-competitive-${{ github.ref }}-${{ inputs.dataset }}-${{ inputs.split }}-${{ inputs.memory }}
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      AMB_REVISION: 03c1d0f1d27da63034f0931121c858faba512383
+      GEMINI_API_KEY: ${{ secrets.AMB_GEMINI_API_KEY }}
+      GOOGLE_API_KEY: ${{ secrets.AMB_GEMINI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.AMB_OPENAI_API_KEY }}
+      SUPERMEMORY_API_KEY: ${{ secrets.AMB_SUPERMEMORY_API_KEY }}
+    steps:
+      - name: Checkout Agent Memory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Checkout frozen AMB
+        uses: actions/checkout@v4
+        with:
+          repository: vectorize-io/agent-memory-benchmark
+          ref: ${{ env.AMB_REVISION }}
+          path: .external/amb
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Require evaluation credential for AMB run lane
+        shell: bash
+        run: |
+          if [ -z "${GEMINI_API_KEY}" ]; then
+            echo "AMB_GEMINI_API_KEY is required for the frozen AMB run surface." >&2
+            echo "Missing credential is BLOCKED, never a numeric benchmark result." >&2
+            exit 2
+          fi
+
+      - name: Install Agent Memory and frozen AMB
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install -e .external/amb
+
+      - name: Verify frozen revisions
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          test "$(git -C .external/amb rev-parse HEAD)" = "${AMB_REVISION}"
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, "reference")
+          from amb_agent_memory_bridge import verify_amb_checkout
+          print(verify_amb_checkout(".external/amb"))
+          PY
+
+      - name: Run AMB profile
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/amb-output"
+          args=(run --dataset "${{ inputs.dataset }}" --split "${{ inputs.split }}" --memory "${{ inputs.memory }}" --mode "${{ inputs.mode }}" --output-dir "$RUNNER_TEMP/amb-output" --name "${{ inputs.memory }}-${GITHUB_SHA::12}")
+          if [ "${{ inputs.query_limit }}" != "0" ]; then
+            args+=(--query-limit "${{ inputs.query_limit }}")
+          fi
+          PYTHONPATH=reference python reference/run_amb_external.py --amb-root .external/amb -- "${args[@]}"
+
+      - name: Record execution identity
+        if: always()
+        shell: bash
+        run: |
+          cat > "$RUNNER_TEMP/amb-output/agent-memory-execution-identity.json" <<EOF
+          {
+            "evidence_class": "same_harness_external_candidate",
+            "agent_memory_revision": "${GITHUB_SHA}",
+            "amb_revision": "${AMB_REVISION}",
+            "dataset": "${{ inputs.dataset }}",
+            "split": "${{ inputs.split }}",
+            "memory": "${{ inputs.memory }}",
+            "mode": "${{ inputs.mode }}",
+            "query_limit": "${{ inputs.query_limit }}",
+            "workflow_run_id": "${GITHUB_RUN_ID}",
+            "authority_effect": "none"
+          }
+          EOF
+
+      - name: Upload raw AMB evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amb-${{ inputs.dataset }}-${{ inputs.split }}-${{ inputs.memory }}-${{ github.sha }}
+          path: ${{ runner.temp }}/amb-output/
+          if-no-files-found: warn
+          retention-days: 30
