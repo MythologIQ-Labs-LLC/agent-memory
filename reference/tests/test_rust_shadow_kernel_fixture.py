@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import struct
 from collections import defaultdict
 from pathlib import Path
 
 from agentmem_ref.runtime.ranking_policy import admitted_set_bm25, relevance_tokens
 
-FIXTURE = Path(__file__).resolve().parents[1] / "fixtures" / "runtime-kernel" / "bm25-v1.tsv"
+FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "fixtures" / "runtime-kernel"
+BM25_FIXTURE = FIXTURE_ROOT / "bm25-v1.tsv"
+SHA256_FIXTURE = FIXTURE_ROOT / "sha256-v1.tsv"
 
 
 def _bits(value: float) -> int:
@@ -15,7 +18,7 @@ def _bits(value: float) -> int:
 
 
 def _rows():
-    with FIXTURE.open("r", encoding="utf-8", newline="") as handle:
+    with BM25_FIXTURE.open("r", encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle, delimiter="\t"))
 
 
@@ -45,3 +48,12 @@ def test_near_tie_fixture_really_contains_an_exact_python_score_tie():
     scores = admitted_set_bm25(rows[0]["query"], {row["ref"]: row["text"] for row in rows})
     assert _bits(scores["a"]) == _bits(scores["b"])
     assert scores["a"] > scores["c"]
+
+
+def test_frozen_sha256_vectors_match_python_hashlib_exactly():
+    with SHA256_FIXTURE.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle, delimiter="\t"))
+    assert len(rows) == 5
+    for row in rows:
+        actual = hashlib.sha256(row["input"].encode("utf-8")).hexdigest()
+        assert actual == row["expected_sha256"], row["input"]
