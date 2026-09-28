@@ -1,0 +1,13 @@
+case	query	uuid	group_selected	identity_eligible	fact_text	expected_score_bits	expected_rank
+domain	Deploy key Mondays!	ref-0001	1	1	The deploy key rotates on Mondays.	4607182418800017408	1
+domain	Deploy key Mondays!	ref-0002	1	1	The deploy window opens on Mondays at noon.	4604180019048437077	2
+domain	Deploy key Mondays!	ref-0003	0	1	The deploy key rotates on Mondays.		
+domain	Deploy key Mondays!	ref-0004	1	0	The deploy key rotates on Mondays.		
+tie	user tool prefer	ref-0010	1	1	The user prefers tool 3.	4604180019048437077	2
+tie	user tool prefer	ref-0009	1	1	User tool choice.	4604180019048437077	1
+tie	user tool prefer	ref-0011	1	1	Tool only.	4599676419421066581	3
+punctuation	alpha beta	ref-0020	1	1	alpha,beta beta.	4602678819172646912	2
+punctuation	alpha beta	ref-0021	1	1	alpha beta	4607182418800017408	1
+empty	!!!	ref-0022	1	1	anything at all		
+set-query	tool tool user	ref-0030	1	1	tool user	4607182418800017408	1
+set-query	tool tool user	ref-0031	1	1	tool	4602678819172646912	2
