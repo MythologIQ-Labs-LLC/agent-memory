@@ -1,0 +1,83 @@
+name: Rust Candidate Prefilter Performance
+
+on:
+  pull_request:
+    paths:
+      - "reference/run_rust_shadow_prefilter_benchmark.py"
+      - "reference/compare_rust_shadow_prefilter_benchmark.py"
+      - "rust/agent-memory-kernel-shadow/src/candidate_prefilter.rs"
+      - "rust/agent-memory-kernel-shadow/src/bin/candidate_prefilter_bench.rs"
+      - ".github/workflows/rust-prefilter-performance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install Python reference runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . pytest
+
+      - name: Set up stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Prove candidate contract before timing
+        run: |
+          pytest -q reference/tests/test_rust_shadow_candidate_prefilter_fixture.py
+          cargo test --locked --manifest-path rust/agent-memory-kernel-shadow/Cargo.toml --test candidate_prefilter
+
+      - name: Build Rust benchmark outside timing window
+        run: cargo build --locked --release --manifest-path rust/agent-memory-kernel-shadow/Cargo.toml --bin candidate_prefilter_bench
+
+      - name: Record execution environment
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/rust-prefilter"
+          python --version > "$RUNNER_TEMP/rust-prefilter/python-version.txt" 2>&1
+          rustc --version > "$RUNNER_TEMP/rust-prefilter/rustc-version.txt" 2>&1
+          cargo --version > "$RUNNER_TEMP/rust-prefilter/cargo-version.txt" 2>&1
+          uname -a > "$RUNNER_TEMP/rust-prefilter/uname.txt"
+          lscpu > "$RUNNER_TEMP/rust-prefilter/lscpu.txt"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/rust-prefilter/agent-memory-revision.txt"
+
+      - name: Run matched workload in both execution orders
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="$RUNNER_TEMP/rust-prefilter"
+          RUST_BIN="rust/agent-memory-kernel-shadow/target/release/candidate_prefilter_bench"
+          python reference/run_rust_shadow_prefilter_benchmark.py --rows 20000 --iterations 8 --output "$OUT/python-first.json"
+          "$RUST_BIN" --rows 20000 --iterations 8 --output "$OUT/rust-second.json"
+          sleep 2
+          "$RUST_BIN" --rows 20000 --iterations 8 --output "$OUT/rust-first.json"
+          python reference/run_rust_shadow_prefilter_benchmark.py --rows 20000 --iterations 8 --output "$OUT/python-second.json"
+
+      - name: Require result parity before comparing timing
+        run: |
+          python reference/compare_rust_shadow_prefilter_benchmark.py \
+            --python "$RUNNER_TEMP/rust-prefilter/python-first.json" "$RUNNER_TEMP/rust-prefilter/python-second.json" \
+            --rust "$RUNNER_TEMP/rust-prefilter/rust-first.json" "$RUNNER_TEMP/rust-prefilter/rust-second.json" \
+            --output "$RUNNER_TEMP/rust-prefilter/comparison.json"
+
+      - name: Upload raw matched evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-prefilter-performance-${{ github.sha }}
+          path: ${{ runner.temp }}/rust-prefilter/
+          if-no-files-found: error
+          retention-days: 30
