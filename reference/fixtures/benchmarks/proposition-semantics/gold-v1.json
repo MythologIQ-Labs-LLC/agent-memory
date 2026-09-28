@@ -1,0 +1,24 @@
+{
+  "annotation_set": "proposition-semantics-accepted-gold-v1",
+  "status_labels": ["ACCEPTED GOLD"],
+  "acceptance": {
+    "accepted_by": "Knapp-Kevin",
+    "accepted_at": "2026-09-28T14:02:38Z",
+    "review_id": 5339771805,
+    "review_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/595#pullrequestreview-5339771805",
+    "source_head_sha": "6210ab5789de9246f9893a3f82cc44fb410e0ce8",
+    "item_count": 268,
+    "sample_file": "sample-v1.json",
+    "sample_sha256": "b1957ca4ff95c3b8a227b8b75f74327911172305cf770c927d56091e7fedd8d3",
+    "text_hash_list_sha256": "3dceb7cde08abf45af3ea1d4dc12d117c390a3441eed38b3ca2273e04f986b88",
+    "rubric_file": "annotation-rubric-v5.md",
+    "rubric_sha256": "94775c3c6b4f4bcc13f8b3455e7cfda7a90c8dfa54dade0937f89270ca1618ad"
+  },
+  "source": {
+    "file": "draft-annotations-v5.json",
+    "sha256": "bb336e72281b64dbdd090447194a67f0638b820a4adb18f1463d24c77859aec7",
+    "annotation_set": "proposition-semantics-draft-annotations-v5"
+  },
+  "property_aliases_file": "property-aliases-gold-v1.json",
+  "notes": "Accepted gold is an immutable acceptance manifest over the byte-frozen v5 annotations. Loading this file verifies the v5 source digest and materializes exactly those items. Direct loading of v1-v5 remains refused."
+}

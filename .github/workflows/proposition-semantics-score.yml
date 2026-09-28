@@ -1,0 +1,36 @@
+name: Proposition Semantics Qualification
+
+on:
+  pull_request:
+    paths:
+      - "reference/proposition_semantics_evaluator.py"
+      - "reference/run_proposition_semantics_score.py"
+      - "reference/fixtures/benchmarks/proposition-semantics/**"
+      - "reference/tests/test_proposition_gold_acceptance.py"
+      - ".github/workflows/proposition-semantics-score.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Agent Memory reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+      - name: Accepted-gold integrity
+        run: python -m unittest reference.tests.test_proposition_gold_acceptance
+      - name: Score accepted gold
+        run: python reference/run_proposition_semantics_score.py --output-dir proposition-score
+      - name: Upload score evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: proposition-semantics-score-v1
+          path: proposition-score/
+          if-no-files-found: error
+          retention-days: 30

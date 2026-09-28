@@ -1,0 +1,189 @@
+# Proposition-semantics annotation rubric v5 (#594)
+
+Status: **DRAFT rubric v5, awaiting maintainer review.** v2 applied the maintainer ruling of 2026-09-28 on PR #595 (interpretation vs retention). v3 and v4 resolved the second and third reviews' consistency defects. v5 applies the gold-freeze review's cardinality ruling (review 5339604740). v1–v4 stay unchanged as draft provenance, because their annotation files pin them by hash. §9–§12 list the differences between successive versions.
+
+Unit: one user turn from `sample-v1.json`, read on its own. Annotators see only the text, never any runtime output.
+
+## 1. What is being labelled
+
+**Semantic interpretation is not retention policy.** The interpreter's job is to identify the proposition that a text in the write path expresses. It does not decide whether that proposition deserves long-term retention; retention and lifecycle policy decide how long it survives. Duration therefore never disqualifies a proposition. A short-term plan, a momentary choice, or an active search constraint is labelled exactly like a lasting fact. **Short-lived is not non-proposition.** A note never gives duration ("transient", "not durable", "task-local") as the reason for a status.
+
+A **proposition** is an asserted state, relation, preference, goal, search constraint, plan, intention, choice, or bounded condition about an identifiable entity. Its entity, property, and value must all be determinable **from the turn alone**. The entity must be one of:
+
+* the speaker (`user`);
+* a person, pet, organization, place, or object in the speaker's life that the text identifies (`my sister`, `Max`, `my car`, `Acme`);
+* a named entity whose attribute is asserted (`Alex moved to Denver`).
+
+These are **not** memory propositions:
+
+* pure questions and pure requests;
+* instructions to the assistant;
+* hypotheticals;
+* fiction and role-play content;
+* quoted text, or text the user asks the assistant to process (an essay to edit, code, a prompt to rewrite);
+* general world knowledge ("Python is interpreted");
+* opinions about general topics without a subject in the speaker's life;
+* unresolved statements that do not identify any proposition.
+
+**Unresolved references.** The unit is one turn read on its own. `that`, `these`, `those teams`, `them`, `both of those apps` and similar cannot be filled from hidden conversation context. When an intention or state is asserted but its entity or value depends on such a reference, the item is `ambiguous`, not `unknown`; **an unresolved reference is never `known`**. The same holds when a proposition clearly exists but its value is left unspecified ("I have a good plan in place"). A value that appears only inside a question or request ("help me find a hotel in Seattle") is not asserted and cannot resolve the reference. A reference is resolved if its antecedent appears earlier in the same turn.
+
+**What `propositions` may contain.** The list holds only propositions the turn asserts, or legitimately presupposes (a definite possessive such as "my trip to Osprey Reef" or "my job search"). Content that appears only inside a question or request is never recorded as an affirmed proposition, and never supplies a proposition's property or value. Do not confuse "the request targets X" with "the user asserted X": "Can you recommend a cooking school with Korean classes?" does not assert an interest in Korean cooking, and "I've heard good things about X. Is it worth trying?" does not assert considering X. A question or request **can** resolve the referent of a separate declarative assertion in the same turn: in "Can you help me find a hotel in Seattle? I'm looking for something close to the city center", the declarative asserts an active hotel search whose antecedent ("something" = a hotel in Seattle) the request supplies (ps1-063).
+
+A proposition embedded in a request still counts. For example, "I just moved to Austin, what neighborhoods are good for families?" commits to `(user, residence, Austin)`.
+
+## 2. Fields
+
+| field | values | meaning |
+| --- | --- | --- |
+| `status` | `known` / `ambiguous` / `unknown` | see §3 |
+| `propositions` | list of `{entity, property, value, polarity}` | every memory proposition in the text, principal first; `polarity` is `affirmed`, `ended` (true before, no longer), or `negated` |
+| `principal` | index into `propositions`, or `null` | the one proposition the text is principally about; `null` unless `status = known` |
+| `cardinality` | `single_valued` / `multi_valued` / `hierarchical` / `unknown` | for the principal property, see §4 |
+| `cardinality_basis` | text, or `null` | required when `cardinality = single_valued`: the exclusive slot, in ordinary meaning and scope, that makes the property single-valued (§4) |
+| `temporal_aspect` | `present` / `prospective` / `past_habitual` / `none_unknown` | for the principal proposition, see §5 |
+| `aspect_explicit` | `yes` / `no` | whether the aspect is carried by explicit wording (`currently`, `planning to`, `used to`) rather than tense alone |
+| `change_marker` | `yes` / `no` / `ambiguous` | the text says a state changed: moved, switched, started, quit, no longer, used to … now |
+| `coexistence_marker` | `yes` / `no` / `ambiguous` | the text says a value is held alongside another: also, too, as well, in addition, both |
+| `hedged` | `yes` / `no` | the principal claim is uncertain: maybe, I think, probably, might |
+| `self_authority_claim` | `yes` / `no` | the text asserts authority about itself as memory: "this overrides what I said", "remember this as the truth", "ignore my earlier message" |
+| `temporal_language_non_temporal` | `yes` / `no` | the text contains temporal words used as discourse or content, not about when the proposition holds ("Now, write…", "for now", "at the same time") |
+| `notes` | text | rationale, especially for `ambiguous` |
+
+## 3. Status
+
+* **known**: the text commits to exactly one principal proposition, and its entity, property, and value are all determinable from the text alone.
+  * **Supporting context does not compete.** Episodic anecdotes (what happened last week), reasons, background ownership, and closing acknowledgements that serve the principal proposition are supporting context. The principal is usually the plan, goal, state, or preference the turn is about, often the one its request targets.
+  * **One predicate over a list is one proposition.** A single predicate applied to a coordinated list ("I'm considering UF and ASU", "packing shampoo, conditioner, and toothbrush") is one proposition whose value is the list. An explicit disjunction inside one value ("a glass or crystal paperweight") is also one value. The rule applies **only** when one predicate syntactically governs the list. Values that sit under different predicates or attitudes ("considering getting a PS5 … also curious about the Xbox Series X"; "looking to sell some of my vintage items … I have a guitar, a first edition, and a figure") are separate propositions. An undecided decision set across different predicates is not defined as one proposition; when such propositions compete, the item is `ambiguous`.
+  * **Attitudes and states are propositions like any other.** An asserted first-person attitude, feeling, worry, appreciation, or state ("I always worry that disagreements will lead to a toxic work environment", "I have a sweet tooth", "I've been feeling really overwhelmed") is `known` when its entity, property, and value are determinate and it is the principal. Being an attitude, a disposition, or a reaction to one event is never a reason for `ambiguous`. A guess about another person's attitude ("my mom would love…") remains hypothetical (§1).
+  * **Hedging does not change status.** A hedged claim can still be `known` (set `hedged = yes`); hedging concerns commitment, not identifiability.
+  * **A different predicate does not by itself compete.** Supporting context under a different predicate ("I'm looking to sell some of my vintage items … I have a few rare items, including …") does not compete with the principal merely because its predicate differs (ps1-068). Record it after the principal without extending the principal's value to it. Ambiguity requires genuinely competing principal candidates of comparable standing.
+  * **Several propositions do not by themselves make a turn ambiguous.** Supporting context may contain further propositions while one clearly dominates the turn. In the maintainer rulings, ps1-166's principal is the cooking plan and the liking is supporting; ps1-197's principal is the meal-planning goal and the leftovers are supporting episodic context. Record supporting propositions in `propositions` after the principal.
+* **ambiguous**: the text contains proposition(s), but the principal one cannot be determined uniquely. Use it only then, never merely because a turn contains more than one proposition. Reasons include:
+  * two or more independent propositions of comparable standing compete (for example, two unrelated current plans, or a plan and an unrelated current state);
+  * the entity or value depends on an unresolved reference (§1);
+  * the value is vague ("more sustainable practices");
+  * it is unclear whether the claim is about the speaker's own state, or it is a hypothetical guess about another person ("my mom would love…").
+
+  Record every candidate in `propositions` and the reason in `notes`.
+* **unknown**: the text asserts no proposition (§1). This is the correct outcome for pure questions, requests, task content, fiction, and general opinion, so an interpreter **abstaining** here is correct behavior.
+
+## 4. Cardinality (ordinary meaning of the principal property)
+
+Cardinality asks how many values the entity can hold at once for the principal property, in ordinary meaning. It is not about how many values this text mentions, and it is not about how long the proposition lasts.
+
+**Order of decisions.** Choose the principal proposition and its property first, from what the text supports. Only then classify cardinality. A cardinality decision never causes the property to be rewritten, narrowed, or widened; the class follows the property, not the other way round.
+
+* **single_valued** requires an exclusive slot inherent in the proposition's ordinary meaning and scope: age, marital status, a date, a count or amount, one graded level of one attribute (how confident, how interested), one explicit decision parameter ("I'll go with X" for one decision), one luggage mode for one trip, the one oil in one car, the one location of an object. Record the slot in `cardinality_basis`. Never infer `single_valued` because the turn states one value, and never create exclusivity with a label such as "overall state" where simultaneous values naturally coexist.
+* **multi_valued**: simultaneous values can coexist for the property: hobbies, likes, plans, searches, worries, pets, languages, employers, memberships, and states or attitudes that can hold together. A value that bundles more than one coexisting state or attitude ("struggling; overwhelmed", "a hassle; unsure it is worth it") is itself evidence of `multi_valued`.
+* **hierarchical**: values relate by containment, so a finer and a coarser value can both be true (Brooklyn and New York). Use this for residence and location, where different values at the *same level* conflict.
+* **unknown**: exclusivity cannot be determined defensibly from the isolated turn plus ordinary semantics, or there is no proposition at all. Uncertainty never defaults to `single_valued`.
+
+For an `ambiguous` item, `cardinality` records the ordinary-meaning cardinality of the first-listed candidate's property, or `unknown`. This makes no claim that the candidate is principal (the convention is unchanged from v1 and was written down in v2).
+
+Guidance for the property types most easily mislabelled:
+
+| property type | default | single_valued only when |
+| --- | --- | --- |
+| plans, intentions, goals | `multi_valued` (a person holds several at once) | the property is itself an exclusive slot, such as a move-in date |
+| searches and task constraints | `multi_valued` (several searches can run at once; a stated range is part of the search's value) | the property is one parameter of one identifiable task; if the task's object is unresolved, the item is not `known` (§1) |
+| choices | `multi_valued` or `unknown` | the text states one explicit selection for one decision ("I'll go with X", "I'll stick with X") |
+| preferences, likes | `multi_valued` | "favorite" |
+| states, feelings, attitudes | `multi_valued` (states and attitudes coexist) | one graded level of one attribute toward one object (degree of confidence, interest, or concern) |
+| habits and comparisons of behaviour | `multi_valued` or `unknown` | one measured quantity in a stated scope (a wake-up time, a spend over a period) |
+| employers, jobs, memberships | `multi_valued` | never inferred from a single stated employer |
+| residence, location | `hierarchical` | never: finer and coarser places coexist |
+| a list of objects under one predicate | follows the predicate, never the list length | as for the predicate |
+
+## 5. Temporal aspect (of the principal proposition)
+
+* **present**: asserted as holding at the time of speaking, whether by explicit wording ("currently", "these days") or by present stative tense ("I live in…"). Set `aspect_explicit` accordingly.
+* **prospective**: planned, intended, scheduled, or expected to hold later ("I'm going to start…", "next month I move…").
+* **past_habitual**: a former habitual or continuing state ("I used to live…", "back when I worked at…").
+* **none_unknown**: no aspect is determinable. This covers a single past event without a lasting state ("I went to Paris last year"), which is recorded in `notes`.
+
+## 6. Procedure
+
+1. Read only the text. Do not consult any Agent Memory output or code.
+2. List the memory propositions, then decide `status`, then fill the other fields for the principal proposition.
+3. Normalise lightly:
+   * entity `user` for first person;
+   * a property phrase in plain lower-case English (`residence`, `employer`, `likes`, `pet`, `favorite cuisine`);
+   * a value that is the minimal text span.
+4. When unsure between `known` and `ambiguous`, choose `ambiguous` and explain.
+5. Labels are never revised after seeing any interpreter output. A correction after maintainer review is a new, versioned revision with its own rationale and change manifest.
+
+## 7. How a future evaluator uses this (not scored now)
+
+A future scoring run, only after the maintainer accepts gold, compares interpreter output field by field. It never produces one aggregate score. Section 8 gives the planned evaluator contract.
+
+* proposition slot correctness: entity match **and** value match, where the value is normalized and matched by containment of tokens. The property is compatible through an alias table that is frozen *with* the accepted gold, not fitted afterwards.
+* cardinality precision per class;
+* aspect precision per class;
+* ambiguity and abstention appropriateness;
+* deterministic reproduction.
+
+## 8. Planned evaluator contract (design only)
+
+These rules are in the evaluator, pinned by synthetic evaluator-only tests (`test_proposition_evaluator.py`). The tests prove that the evaluator detects each failure class; they are not Agent Memory performance evidence.
+
+| failure class | detected as |
+| --- | --- |
+| wrong proposition slot | predicted known, gold known, and the entity or property alias differs |
+| wrong value | slot matches, value does not |
+| over-eager single-valued cardinality | predicted `single_valued` where gold is `multi_valued` or `hierarchical` |
+| coexistence misclassified as replacement | gold `coexistence_marker = yes`, and the prediction has a change or replacement signal or `single_valued` from a replacement |
+| temporal aspect over-classification | predicted aspect not `none_unknown` where gold is `none_unknown`, or a differing non-none aspect |
+| unknown incorrectly promoted to known | gold `unknown` or `ambiguous`, predicted `known` |
+| benchmark timestamp leakage | any gold or prediction field carries a value equal to a source session or question timestamp, or the prediction depends on an `observed_at` that the gold text does not contain |
+
+## 9. v1 → v2 differences
+
+| topic | v1 | v2 |
+| --- | --- | --- |
+| scope of a proposition | "a claim … about a **durable or lasting** state" | any asserted state, relation, preference, goal, search constraint, plan, choice, or bounded condition; duration never disqualifies (interpretation ≠ retention) |
+| momentary plans and choices | labelled `unknown` as not lasting | labelled like any other proposition |
+| unresolved references | implied | explicit: an asserted intention whose value is an unresolved reference is `ambiguous` |
+| supporting context | not defined; any second proposition could compete | episodic anecdotes, reasons, and background ownership do not compete with the principal proposition |
+| coordinated values | two values of one property were `ambiguous` | one predicate over a list is one proposition with a list value |
+
+Nothing else changed. §2's fields, §4 cardinality, §5 aspect, and §7–§8's evaluator contract are unchanged. The evaluator still refuses non-accepted gold, and Phase B predictions are produced without a declared `observed_at`. The timestamp-leakage assertion therefore stays a guard against benchmark metadata entering proposition scoring.
+
+## 10. v2 → v3 differences
+
+v2 is the file the second maintainer review read (`annotation-rubric-v2.md`, committed in `2f8afb7`). v3 adds these rules:
+
+| topic | v2 | v3 |
+| --- | --- | --- |
+| attitudes and states | not addressed; some determinate attitudes stayed `ambiguous` as "general disposition" or "preference only implied" | an asserted attitude or state with a determinate value is a proposition; being an attitude is never a reason for `ambiguous` |
+| coordinated values | one predicate over a list is one proposition | the same, but **only** when one predicate syntactically governs the list; values under different predicates are separate propositions, and an undecided set across predicates is not one proposition |
+| intention | not listed | listed as a proposition type |
+| exclusions | questions, requests, … | pure questions, pure requests, quoted or task content, and unresolved statements that identify no proposition |
+| duration | "duration never disqualifies" | also: no note may give duration as a reason |
+| unresolved references | `ambiguous`, not `unknown` | also: never `known`; a value stated only inside a question or request is not asserted |
+| several propositions | supporting context does not compete | also: `ambiguous` only when no principal is uniquely determinable (ps1-166, ps1-197) |
+| cardinality (§4) | definitions only | never `single_valued` from one stated value; guidance table by property type; the v1 convention for `ambiguous` items is written down |
+
+Rows 3–8 come from a second review pass made on the v2 draft before the second maintainer review arrived. They are folded into v3 so that v2 stays exactly the file that review read. Nothing else changed.
+
+## 11. v3 → v4 differences
+
+| topic | v3 | v4 |
+| --- | --- | --- |
+| contents of `propositions` | not defined; some lists recorded question or request content as affirmed propositions even where the note said it was not asserted | only asserted or legitimately presupposed propositions; question or request content alone never becomes a proposition, a property, or a value |
+| a request resolving a declarative | not addressed | a request can resolve the referent of a separate declarative in the same turn (ps1-063) |
+| supporting context under a different predicate | "several propositions do not by themselves make a turn ambiguous" | also: a different predicate does not by itself compete, and the principal's value is not extended to it (ps1-068) |
+
+Nothing else changed.
+
+## 12. v4 → v5 differences
+
+| topic | v4 | v5 |
+| --- | --- | --- |
+| order of decisions | not stated | the principal property is chosen first; a cardinality decision never rewrites the property |
+| `single_valued` | "one value at a time" with a guidance table | requires an exclusive slot inherent in ordinary meaning and scope, recorded in `cardinality_basis`; no artificial "overall state" slots |
+| coexisting states and attitudes | "one attitude toward one object" could be `single_valued` | states and attitudes coexist (`multi_valued`); `single_valued` only for one graded level of one attribute |
+| choices | `multi_valued` unless the slot holds one value | `single_valued` when the text states one explicit selection for one decision; otherwise `multi_valued` or `unknown` |
+| uncertainty | `unknown` when undeterminable | also: uncertainty never defaults to `single_valued` |
+| task constraints with an unresolved object | could be `known` | not `known`: the object must be identifiable from the turn (ps1-072) |
+
+Nothing else changed.

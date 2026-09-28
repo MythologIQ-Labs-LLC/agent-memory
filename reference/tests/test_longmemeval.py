@@ -189,6 +189,57 @@ class LongMemEvalProfileTests(unittest.TestCase):
                 self.assertEqual(len(row["ranked_top"]), min(row["admitted_count"], M.REPORTED_RANK_DEPTH))
             self.assertGreater(backend["aggregate"]["headline"]["recall_all@5"], 0.0)
 
+    def test_temporal_metadata_modes_declare_only_their_fields(self) -> None:
+        """#594: ``source_observed_at`` adds the session date as ``observed_at`` and nothing else."""
+        from agentmem_ref import AgentMemory
+
+        row = json.loads(FIXTURE.read_text(encoding="utf-8"))[0]
+        items, _ = M.corpus(row, "turn")
+        writes: list[dict] = []
+        recalls: list[dict] = []
+        original_remember, original_recall = AgentMemory.remember, AgentMemory.recall
+
+        def remember(self, target_reference, fact_text, **kwargs):
+            writes.append(kwargs)
+            return original_remember(self, target_reference, fact_text, **kwargs)
+
+        def recall(self, query, **kwargs):
+            recalls.append(kwargs)
+            return original_recall(self, query, **kwargs)
+
+        expected = {
+            "none": (False, None),
+            "source_observed_at": (True, None),
+            "host_declared": (True, M._iso_date(row["question_date"])),
+        }
+        try:
+            with mock.patch.object(AgentMemory, "remember", remember), mock.patch.object(AgentMemory, "recall", recall):
+                for mode, (observed, reference_time) in expected.items():
+                    writes.clear()
+                    recalls.clear()
+                    M.configure_agent_memory(temporal_metadata=mode)
+                    outcome = M._agent_memory(row["question"], items, 0, row)
+                    self.assertEqual(len(writes), len(items))
+                    for item, kwargs in zip(items, writes):
+                        self.assertEqual(kwargs, {"observed_at": M._iso_date(item["date"])} if observed else {})
+                    self.assertEqual(recalls, [{"reference_time": reference_time}])
+                    if observed:
+                        self.assertEqual(outcome["observed_at_mapped_count"], len(items))
+                        self.assertEqual(outcome["observed_at_unmapped_count"], 0)
+                    else:
+                        self.assertNotIn("observed_at_mapped_count", outcome)
+        finally:
+            M.configure_agent_memory()
+
+    def test_unparseable_session_date_is_unmapped_not_invented(self) -> None:
+        M.configure_agent_memory(temporal_metadata="source_observed_at")
+        try:
+            items = [{"id": "s_1", "text": "I live in Lisbon.", "date": "sometime in May"}]
+            outcome = M._agent_memory("Where do I live?", items, 0, {"question_date": "2023/05/30 (Tue) 23:40"})
+        finally:
+            M.configure_agent_memory()
+        self.assertEqual((outcome["observed_at_mapped_count"], outcome["observed_at_unmapped_count"]), (0, 1))
+
     def test_invalid_haystack_lengths_fail_closed(self) -> None:
         value = json.loads(FIXTURE.read_text(encoding="utf-8"))
         value[0]["haystack_dates"] = []

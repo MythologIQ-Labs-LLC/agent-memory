@@ -1,20 +1,14 @@
 # Agent Memory Benchmarks
 
-Benchmarking is now a first-class repository function, not an auxiliary test harness.
+Benchmarking is a first-class repository function, not an auxiliary test harness.
 
-Agent Memory keeps benchmark adapters, evaluator-integrity probes, frozen run evidence, normalized manifests, scorecards, and remediation links alongside the runtime so behavior can be reproduced against exact revisions and compared before and after product changes.
+Agent Memory keeps benchmark adapters, evaluator-integrity probes, frozen run evidence, normalized manifests, accepted qualification gold, current dashboards, and remediation links alongside the runtime so behavior can be tied to exact revisions and replayed after change.
 
 The governing repository relationship is documented in [`docs/REPOSITORY_OPERATING_MODEL.md`](docs/REPOSITORY_OPERATING_MODEL.md).
 
-## Why benchmarks live here
+The canonical current portfolio view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md). Historical generated scorecards remain revision-bound snapshots and are not the current-state dashboard.
 
-The benchmark program has three jobs:
-
-1. **Measure the runtime honestly.** External workloads should expose behavior the repository's own fixtures may have missed.
-2. **Falsify architecture assumptions.** Repeated benchmark failures may reveal an implementation defect, a product-contract gap, or a genuine architecture gap.
-3. **Prove remediation.** A benchmark-discovered defect should be replayed against the same frozen input after repair when the workload can validly exercise the fix.
-
-The goal is not to optimize one universal score.
+## Governing benchmark rules
 
 ```text
 benchmark score != authority
@@ -22,125 +16,162 @@ benchmark score != truth
 retrieval quality != answer-generation quality
 retrieval quality != production readiness
 harness validation != external benchmark comparability
+blocked != 0
+not_run != 0
+evidence_gap != 0
 ```
+
+The benchmark program has three jobs:
+
+1. measure the runtime honestly;
+2. falsify product/architecture assumptions;
+3. prove bounded remediation against the same frozen input when the workload can exercise the mechanism.
+
+There is no universal memory-health aggregate.
 
 ## Current portfolio
 
-### LongMemEval
+### LongMemEval_S
 
-Profile documentation: [`docs/profiles/longmemeval-retrieval-currentness-profile.md`](docs/profiles/longmemeval-retrieval-currentness-profile.md)
+Status: **complete frozen external run plus accepted remediation and #594 adapted-evidence replays**.
 
-Current status:
+Current accepted retrieval/currentness highlights:
 
-- **LongMemEval_S full:** complete frozen external run;
-- **LongMemEval_M:** held. It is not run merely because a remediation slice landed. The post-prefilter scale probe in [`docs/56`](docs/56-benchmark-gauntlet-remediation-evidence.md) shows per-commit persistence dominating at 5,000–10,000 facts (#562), so M is promoted only after #562 is bounded;
-- **upstream model-judged QA:** not run;
-- session and turn retrieval/currentness evidence is committed;
-- external run is revision/input bound;
-- no runtime, ingestion, out-of-corpus, or unmapped-admission failures occurred in the frozen S run;
-- the run exposed currentness/ranking and scaling weaknesses. These were remediated in bounded slices and replayed against the same frozen input; the pre-remediation `f73b872` artifacts stay immutable.
+- session recall_all@5: **0.823389**;
+- turn recall_all@10: **0.723**;
+- session latest-gold-ranked-first: **0.457**;
+- turn latest-gold-ranked-first: **0.557**;
+- no runtime, ingestion, out-of-corpus, or unmapped-admission failures on the accepted profile.
 
-The S run is a retrieval/currentness profile. It must not be presented as the upstream model-judged LongMemEval QA score.
+The pre-remediation `f73b872` artifacts remain immutable. Current evidence exceeds the lexical baseline on the accepted headline retrieval metrics, while currentness remains a deliberately separate weakness rather than being hidden inside one score.
+
+#594 Phase A created a source-anchored adapted-external profile using defensible session timestamps as caller-declared `observed_at`, plus a separate host-declared question-date reference-time diagnostic.
+
+Result: C, P1 and P2 are metric/rank identical. Interpreted self-validity resolves for only 8 session memories and 33 turn memories and reaches no metric-visible demotion case. The correct classification is **EVIDENCE GAP for #550 demotion efficacy on this corpus**, not failure.
+
+The S profile remains retrieval/currentness evidence. It is not the upstream model-judged LongMemEval QA score.
+
+### LongMemEval_M
+
+Status: **complete bounded external run**.
+
+Accepted recall_all@5:
+
+- session: **0.708831**;
+- turn: **0.532220**.
+
+The earlier hold caused by known ingest/per-commit scale cost is historical. M was promoted only after the blocking performance work was bounded; it is no longer `not_run` or `held` in the current portfolio.
 
 ### AgentMemBench / MemDialogue
 
-Current status:
+Status: **complete bounded external operational profile plus replayed remediation evidence**.
 
-- bounded external MemDialogue v2 operational profile complete;
-- deterministic retrieval, conflict/currentness, isolation, deletion, concurrency, and scale phases recorded;
-- upstream LLM-judged retrieval is not run;
-- M6 LLM portability is not run;
-- product defects exposed:
-  - #530, remediated;
-  - #531 class A, remediated through #538's ranking policy; class B is recorded as an explicit limitation;
-  - #522, with Part A (attestation) and Part B (domain-eligibility prefilter, #548) remediated and the remaining scale terms tracked.
-- The pre-remediation `03197cd` artifacts stay immutable.
+Current accepted highlights:
+
+- exact-source recall@5: **0.899**;
+- PERSONAL_FACT: **0.962**;
+- TASK_REQUEST: **0.836**;
+- conflict new-fact-first: **0.20**;
+- staleness: **0.80**;
+- cross-user leakage: **0**;
+- audited post-delete absence: **1.0**;
+- concurrency operation/materialization success after runtime-owned serialization: **1.0**.
+
+The pre-remediation `03197cd` evidence stays immutable.
+
+### Proposition-semantics natural qualification (#594 Phase B)
+
+Status: **accepted repository-owned conformance evidence**.
+
+A 268-turn natural-language sample was selected before scoring: 100 random Part R turns plus 168 stratified Part S turns. Five versioned annotation drafts were reviewed without consulting interpreter predictions. Maintainer review `5339771805` accepted v5 as the immutable source for `gold-v1.json`.
+
+First accepted score, unbiased Part R:
+
+| status | precision | recall |
+| --- | ---: | ---: |
+| known | **0.800** | **0.148** |
+| ambiguous | 0.210 | **1.000** |
+| unknown | **1.000** | 0.848 |
+
+The dominant defect is under-recognition / over-ambiguity: 46 of 54 gold-known Part R turns become `ambiguous`.
+
+The property-alias table was frozen empty before scoring. Therefore strict slot/value conformance is an exact-label diagnostic, not semantic synonym precision. #597 owns a pre-score canonicalization contract; aliases are not fitted after seeing failures.
+
+Follow-on defects are tracked as:
+
+- #596 proposition recognition / over-ambiguity;
+- #597 property/value boundary canonicalization;
+- #598 write-time temporal-aspect calibration.
+
+Full disposition: [`reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md`](reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md).
 
 ### SWE-ContextBench Lite
 
-Start here: [`docs/50-swe-contextbench-comparison-harness.md`](docs/50-swe-contextbench-comparison-harness.md)
+The synthetic smoke harness is executable and revision-bound but deliberately **non-comparable** to the external research result.
 
-The synthetic smoke harness is executable and revision-bound, but it is deliberately **non-comparable** to the external research result.
+The protocol-comparable external lane remains blocked on the exact frozen research-compatible past-task projection and provenance required by #467. Do not substitute the synthetic fixture and call it equivalent.
 
-The protocol-comparable external 99-query / 100-gold-edge lane remains blocked on the exact frozen research-compatible past-task projection and provenance required by #467.
+### Internal RC conformance fixtures
 
-Do not substitute the synthetic fixture for the external result.
+Repository-owned deterministic fixtures prove specific architecture behavior such as multi-route recovery, current-state vs historical-evidence admission, lifecycle/restart safety, and temporal/currentness invariants.
 
-### Internal RC retrieval fixture
+These are conformance/falsification evidence, not independent external efficacy.
 
-The repository also retains deterministic internal fixtures that prove specific architecture behavior, such as multi-route recall recovering relevant memories missed by lexical-only recall while preserving governed admission.
+### Orthogonal temporal gauntlets
 
-These fixtures are valuable conformance evidence. They are not external efficacy evidence.
+[`docs/59-orthogonal-temporal-gauntlet-qualification.md`](docs/59-orthogonal-temporal-gauntlet-qualification.md) qualifies candidate gauntlets:
 
-### Remediation replays
+- Ground Truth First remains blocked on artifact availability;
+- Microsoft RHELM is runnable but cannot falsify the targeted temporal claims.
 
-Every remediation slice under #537 is replayed against the same frozen input. It records improvements, regressions, and tradeoffs side by side, with artifacts under `reports/benchmarks/replays/`. The summary is in [`docs/56-benchmark-gauntlet-remediation-evidence.md`](docs/56-benchmark-gauntlet-remediation-evidence.md).
+#580 supplies the repository-owned temporal/currentness qualification surface. #594 adds adapted external natural-data evidence but does not manufacture an external demotion-efficacy case where the corpus has none.
 
-### Orthogonal temporal gauntlet (qualification only)
+## Current dashboard and historical scorecards
 
-LongMemEval_S and AgentMemBench barely exercise validity intervals, as-of, or prospective questions. Candidate gauntlets are qualified in [`docs/59-orthogonal-temporal-gauntlet-qualification.md`](docs/59-orthogonal-temporal-gauntlet-qualification.md):
+Canonical current dashboard:
 
-- **Ground Truth First** is blocked on artifact availability.
-- **Microsoft RHELM** is runnable, but cannot falsify the targeted temporal claims.
+- [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md)
+- `reports/benchmarks/dashboard/current.json`
 
-Any run keeps the protocol-faithful text-only lane separate from the explicit-temporal-metadata conformance lane. The metadata lane is never presented as published-comparable.
+It reports current accepted evidence, previous accepted evidence/deltas where available, exact provenance, evidence class, and non-numeric states.
 
-## Generated scorecards
+Historical generated scorecards remain at:
 
-Human-readable portfolio and side-by-side scorecards:
-
-- [`reports/benchmarks/scorecards/scorecards.md`](reports/benchmarks/scorecards/scorecards.md)
-
-Machine-readable scorecards:
-
+- `reports/benchmarks/scorecards/scorecards.md`
 - `reports/benchmarks/scorecards/scorecards.json`
 
-Normalized common-run evidence:
+Those artifacts are useful revision-bound history. They are not the current portfolio authority after #591/#594.
 
-- `reports/benchmarks/normalized/`
+## Remediation evidence
 
-Regeneration and interpretation rules:
+Benchmark-driven remediation evidence is preserved in [`docs/56-benchmark-gauntlet-remediation-evidence.md`](docs/56-benchmark-gauntlet-remediation-evidence.md) and `reports/benchmarks/replays/`.
 
-- [`docs/55-memory-evaluation-scorecards.md`](docs/55-memory-evaluation-scorecards.md)
+Important completed steps include:
 
-The scorecard system does not define an aggregate memory-health score. Retrieval, currentness, reasoning/QA, governance, efficiency, evaluator integrity, and reproducibility remain separate dimensions.
+- explicit ranking/currentness policy and admitted-set BM25;
+- runtime-owned serialization for shared handles;
+- incremental integrity attestation;
+- domain/identity candidate prefiltering;
+- deterministic BM25 summation (#576);
+- typed write-time semantic evidence (#550);
+- identity-first candidate materialization performance repair (#591);
+- natural semantic qualification (#594).
 
-## Benchmark CLI
-
-The Memory Evaluation CLI is documented in [`docs/54-memory-evaluation-cli.md`](docs/54-memory-evaluation-cli.md).
-
-Supported evaluation operations include listing registered benchmark profiles, validating normalized run evidence, and fail-closed comparison of compatible runs.
-
-Comparability depends on exact evidence identity. Two reports do not become comparable merely because their metric names look similar.
-
-## The gauntlet learning loop
-
-A benchmark result should normally flow through:
+## Active RC evaluation path
 
 ```text
-external workload
-    -> measured finding
-    -> classify finding
-    -> bounded issue / hypothesis
-    -> product, architecture, or evaluator remediation
-    -> exact frozen replay
-    -> before/after evidence
-    -> regression test / doctrine update / known limitation
+#591 complete
+#594 qualified
+canonical dashboard complete
+  -> #585 query-intent span calibration
+  -> #598 write-time temporal-aspect calibration
+  -> redesigned #583
+  -> final #580 replay
+  -> #584 policy ruling
+  -> RC1 declaration decision
 ```
 
-Useful finding classes are:
-
-- architecture validated;
-- implementation defect;
-- architecture gap;
-- runtime/product contract gap;
-- evaluation defect or gap;
-- benchmark mismatch / non-applicable assumption;
-- inconclusive.
-
-One benchmark finding is evidence. Independent convergence across different benchmark families is stronger evidence of a general weakness.
-
-The current benchmark-remediation architecture is tracked by #537.
+#596/#597 are high-priority interpreter-quality limitations and can be promoted onto the RC critical path if final evidence shows the declared RC contract cannot tolerate them. They are not automatically authority/safety blockers because the dominant current behavior is conservative ambiguity/abstention.
 
 ## Rules for benchmark-driven changes
 
@@ -148,27 +179,28 @@ Do not:
 
 - hardcode benchmark dataset IDs, phrases, or question classes into runtime behavior;
 - change frozen input or evaluator semantics while claiming a before/after product comparison;
-- collapse missing, blocked, or not-run evidence into numeric zero;
+- populate gold/property aliases after inspecting predictions simply to improve a score;
+- collapse missing, blocked, not-run, or evidence-gap states into numeric zero;
 - treat a benchmark score as recall admission or mutation authority;
-- weaken scope, tenant, currentness, deletion, or PAMA boundaries solely to improve recall;
-- close a benchmark-discovered defect only because unit tests pass when the original workload can directly replay the repaired path.
+- weaken scope, tenant, currentness, deletion, or PAMA boundaries solely to improve recall.
 
 Do:
 
-- preserve exact revision, dataset/input digest, configuration, sample/selection identity, and environment where material;
-- keep benchmark-native metrics available alongside normalized dimensions;
-- report regressions and tradeoffs as visibly as improvements;
+- preserve exact revision, input digest, sample/selection identity, configuration, and evidence class;
+- keep benchmark-native metrics alongside normalized portfolio dimensions;
+- report regressions/tradeoffs as visibly as improvements;
 - separate product defects from evaluator defects and external blockers;
-- keep pre-remediation evidence immutable.
+- keep pre-remediation and pre-gold evidence immutable;
+- use Part R and stratified Part S according to their actual statistical meaning.
 
 ## Evaluator integrity
 
-The repository treats evaluator correctness as its own evidence dimension.
+Evaluator correctness is its own evidence dimension.
 
-Mutation probes exist to verify that benchmark evaluators actually react to failures such as stale-over-current ordering, deletion failures, cross-scope leakage, dropped writes, identity corruption, or relevant-result suppression where the benchmark claims to measure those properties.
+Mutation probes verify that evaluators react to corruption/failure classes they claim to measure. #594 additionally proves that accepted gold cannot be loaded from draft annotations, verifies the accepted source hash before materializing items, and freezes property aliases before scoring.
 
 ```text
 evaluator-integrity pass != memory efficacy
 ```
 
-A trustworthy ruler does not imply the thing being measured is good. It merely prevents us from congratulating ourselves with a broken ruler, which is already progress by software standards.
+A trustworthy ruler does not imply the thing measured is good. It merely prevents us from congratulating ourselves with a broken ruler, which is already more discipline than software usually volunteers for.
