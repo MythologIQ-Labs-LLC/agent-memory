@@ -1,0 +1,41 @@
+name: Rust Shadow Kernel Qualification
+
+on:
+  pull_request:
+    paths:
+      - "rust/agent-memory-kernel-shadow/**"
+      - "reference/fixtures/runtime-kernel/**"
+      - "reference/tests/test_rust_shadow_kernel_fixture.py"
+      - ".github/workflows/rust-shadow-kernel.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install Python reference runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . pytest
+
+      - name: Verify frozen vectors against Python oracle
+        run: pytest -q reference/tests/test_rust_shadow_kernel_fixture.py
+
+      - name: Set up stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Verify frozen vectors against Rust shadow
+        working-directory: rust/agent-memory-kernel-shadow
+        run: cargo test --locked
