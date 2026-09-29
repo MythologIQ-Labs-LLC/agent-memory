@@ -1,0 +1,373 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+from typing import Any
+
+
+EXPECTED_SUBSTRATE_JSON = {
+    "facts.episode_uuids_json",
+    "facts.attributes_json",
+    "typed_relations.evidence_refs_json",
+    "typed_relations.attributes_json",
+}
+EXPECTED_GOVERNANCE_JSON = {
+    "governance_entries.value_json",
+    "governance_log.value_json",
+    "governance_residual.value_json",
+}
+EXPECTED_TRANSITION_JSON = {
+    "canonicalization_migration.payload_json",
+    "runtime_state.payload_json",
+    "runtime_journal.payload_json[candidate_generation]",
+}
+EXPECTED_DERIVED = {
+    "digest_rows",
+    "digest_buckets",
+    "governance_entries.entry_hash",
+    "governance_buckets",
+    "governance_log.chain",
+}
+EXPECTED_FAILURES = {
+    "before_transaction",
+    "after_persisted_byte_rewrite",
+    "after_derived_integrity_rebuild",
+    "after_provenance_write",
+    "before_envelope_and_journal",
+    "after_envelope_before_journal",
+    "before_commit",
+    "during_phase5_restart_verification",
+}
+EXPECTED_REFUSALS = {
+    "legacy_scheme_with_v2_bytes",
+    "v2_scheme_with_legacy_bytes",
+    "mixed_legacy_v2_derived_indexes",
+    "candidate_envelope_with_legacy_rows",
+    "candidate_rows_with_legacy_envelope",
+    "candidate_commitment_tamper",
+    "migration_provenance_tamper",
+    "provenance_present_but_commitment_invalid",
+    "mixed_source_candidate_generation",
+    "broken_candidate_journal_provenance_binding",
+    "logical_state_mismatch_with_self_consistent_provenance",
+}
+EXPECTED_INVARIANTS = {
+    "original_source_store_never_mutated",
+    "no_durable_write_before_phase4_transaction",
+    "all_phase4_changes_commit_or_roll_back_together",
+    "candidate_json_bytes_are_exact_v2_bytes_not_merely_parse_equivalent",
+    "candidate_commitments_match_phase3_preflight_exactly",
+    "pre_and_post_logical_state_digest_are_identical",
+    "candidate_generation_is_exactly_source_generation_plus_one",
+    "durable_provenance_is_integrity_bound_but_not_verification_authority",
+    "ordinary_production_recovery_refuses_qualification_envelope",
+    "phase5_final_outcome_requires_independent_restart_verification",
+    "phase5_performs_no_runtime_write",
+}
+EXPECTED_DURABLE_PROVENANCE_FIELDS = {
+    "source_runtime_generation",
+    "source_runtime_state_schema",
+    "source_substrate_binding_id",
+    "source_substrate_commitment",
+    "source_governance_binding_id",
+    "source_governance_commitment",
+    "target_substrate_binding_id",
+    "target_substrate_commitment",
+    "target_governance_binding_id",
+    "target_governance_commitment",
+    "accepted_canonical_vector_source",
+    "scheme_registry_source",
+    "migration_implementation_id",
+    "migration_transaction_generation",
+    "pre_migration_logical_state_digest",
+    "post_migration_logical_state_digest",
+    "transaction_outcome",
+}
+
+
+AMENDMENT_FIXTURE = "reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1-amendment-1.json"
+BASE_FIXTURE_SHA256 = "70cf50e3f137526c42c53dbf3806c8800217155c8ea96f765405fcf2734145c4"
+BASE_FIXTURE_FROZEN_AT = "b0b985c2e7a485a4cf1c185cb0945ed259644442"
+EXPECTED_ADDITIONAL_REFUSALS = {
+    "historical_journal_rewritten_with_self_consistent_legacy_chain",
+    "historical_journal_payload_reserialized_equal_value",
+    "runtime_profile_changed_with_consistent_rebuild",
+    "interpretation_digest_changed",
+    "substrate_identity_changed",
+    "candidate_envelope_unexpected_or_missing_field",
+    "candidate_journal_unexpected_or_missing_field",
+    "journal_sql_generation_payload_generation_mismatch",
+    "production_refusal_for_unexpected_reason",
+}
+EXPECTED_ADDITIONAL_INVARIANTS = {
+    "historical_journal_bytes_match_phase3_external_anchor",
+    "preserved_runtime_identity_matches_phase3_external_anchor",
+}
+EXPECTED_ANCHOR_FIELDS = {
+    "source_journal_tail_record_digest",
+    "historical_journal_row_count",
+    "historical_journal_digest",
+    "source_runtime_profile_digest",
+    "source_interpretation_digest",
+    "source_substrate_identity_digest",
+}
+EXACT_FIELD_POLICY = "exact_reject_missing_and_unexpected"
+# The amendment may only add these keys. Every other key would redefine the base.
+AMENDMENT_KEYS = {
+    "schema_version",
+    "fixture_id",
+    "status",
+    "authority_effect",
+    "parent_issue",
+    "owner_issue",
+    "amends",
+    "trigger",
+    "effect",
+    "relaxes_or_replaces_base_requirement",
+    "amendment_order_note",
+    "phase3_external_anchor",
+    "journal_sql_generation_must_equal_payload_generation",
+    "candidate_journal",
+    "candidate_runtime_state",
+    "production_refusal_proof",
+    "additional_adversarial_refusals",
+    "additional_success_invariants",
+}
+AMENDMENT_SECTION_KEYS = {
+    "candidate_journal": {"field_set_policy", "exact_fields_equal_base_required_fields"},
+    "candidate_runtime_state": {
+        "field_set_policy",
+        "exact_fields_equal_base_required_fields",
+        "preserved_from_phase3_anchor",
+    },
+}
+
+
+def _require(condition: bool, message: str) -> None:
+    if not condition:
+        raise ValueError(message)
+
+
+def _set(value: Any) -> set[str]:
+    return {str(item) for item in value or []}
+
+
+def _load(path: Path) -> dict[str, Any]:
+    payload = json.loads(path.read_bytes())
+    if not isinstance(payload, dict):
+        raise ValueError(f"expected object fixture: {path}")
+    return payload
+
+
+def validate(path: Path, repo_root: Path) -> dict[str, Any]:
+    payload = _load(path)
+    _require(payload.get("fixture_id") == "agent-memory-canonical-json-v2-transaction-qualification-v1", "fixture id changed")
+    _require(payload.get("status") == "FROZEN_PREIMPLEMENTATION_TRANSACTION_QUALIFICATION_CONTRACT", "fixture status changed")
+    _require(payload.get("owner_issue") == 625 and payload.get("parent_issue") == 622, "issue ownership changed")
+    _require(payload.get("qualification_only") is True, "contract must remain qualification-only")
+    _require(payload.get("production_activation") is False, "contract must not activate production v2")
+    _require(payload.get("production_recovery_support") is False, "contract must not add production recovery support")
+
+    target = payload.get("target", {})
+    _require(target.get("kind") == "disposable_verified_copy", "phase 4 must target only the disposable verified copy")
+    _require(target.get("source_store_read_only") is True, "source store must remain read-only")
+    _require(target.get("transaction_protocol") == "single_sqlite_begin_immediate", "transaction protocol changed")
+    _require(target.get("transaction_generation_delta") == 1, "migration must advance exactly one generation")
+    _require(target.get("phase5_runtime_write") is False, "phase 5 must perform no runtime write")
+
+    candidate = payload.get("candidate_identity", {})
+    _require(candidate.get("canonicalizer") == "agent-memory-canonical-json-v2", "candidate canonicalizer changed")
+    _require(candidate.get("substrate_scheme") == "bmerkle-v2", "candidate substrate scheme changed")
+    _require(candidate.get("governance_scheme") == "gsect-v2", "candidate governance scheme changed")
+    _require(candidate.get("runtime_state_schema") == "1.2.0-canonical-v2-qualification", "candidate runtime schema changed")
+    _require(candidate.get("journal_schema") == "1.1.0-canonical-v2-qualification", "candidate journal schema changed")
+    _require(candidate.get("registry_operation") == "inspect", "candidate registry operation must remain inspect-only")
+
+    surfaces = payload.get("persisted_json_byte_surfaces", {})
+    _require(_set(surfaces.get("substrate")) == EXPECTED_SUBSTRATE_JSON, "substrate JSON byte surface changed")
+    _require(_set(surfaces.get("governance")) == EXPECTED_GOVERNANCE_JSON, "governance JSON byte surface changed")
+    _require(_set(surfaces.get("transition")) == EXPECTED_TRANSITION_JSON, "transition JSON byte surface changed")
+    _require(_set(payload.get("derived_integrity_rebuild")) == EXPECTED_DERIVED, "derived integrity rebuild surface changed")
+
+    provenance = payload.get("provenance", {})
+    _require(provenance.get("table") == "canonicalization_migration", "provenance table changed")
+    _require(provenance.get("row_identity") == "singleton=1", "provenance row identity changed")
+    _require(provenance.get("payload_encoding") == "agent-memory-canonical-json-v2", "provenance encoding changed")
+    _require(_set(provenance.get("durable_fields")) == EXPECTED_DURABLE_PROVENANCE_FIELDS, "durable provenance field set changed")
+    _require(provenance.get("transaction_outcome") == "committed_pending_restart_verification", "phase-4 outcome changed")
+    _require(provenance.get("final_outcome_forbidden_in_runtime_state") is True, "runtime must not claim final migration success")
+    _require(
+        _set(provenance.get("bound_by"))
+        == {"candidate_journal.migration_provenance_digest", "candidate_runtime_state.migration_provenance_digest"},
+        "provenance integrity binding changed",
+    )
+
+    journal = payload.get("candidate_journal", {})
+    _require(journal.get("rewrites_historical_rows") is False, "historical journal bytes must not be rewritten")
+    _require(journal.get("record_digest_encoding") == "agent-memory-canonical-json-v2", "candidate journal digest encoding changed")
+    _require("migration_provenance_digest" in _set(journal.get("record_digest_material_fields")), "journal must bind provenance digest")
+
+    state = payload.get("candidate_runtime_state", {})
+    _require(state.get("ordinary_runtime_recovery_must_refuse") is True, "production recovery refusal boundary changed")
+    _require(state.get("encoding") == "agent-memory-canonical-json-v2", "candidate runtime-state encoding changed")
+    _require(state.get("durability_profile") == "sqlite_transactional_runtime_v1", "durability profile changed")
+    _require("migration_provenance_digest" in _set(state.get("required_fields")), "runtime state must bind provenance digest")
+
+    closeout = payload.get("phase5_closeout", {})
+    _require(_set(closeout.get("fields")) == {"restart_verified", "outcome"}, "phase-5 closeout fields changed")
+    _require(closeout.get("restart_verified") is True and closeout.get("outcome") == "committed", "phase-5 success semantics changed")
+    _require(closeout.get("durable_runtime_write") is False, "phase-5 closeout must not mutate runtime")
+    _require(closeout.get("authority_effect") == "none", "phase-5 closeout must not grant authority")
+
+    _require(_set(payload.get("failure_injections")) == EXPECTED_FAILURES, "failure-injection boundary changed")
+    _require(_set(payload.get("adversarial_refusals")) == EXPECTED_REFUSALS, "adversarial refusal set changed")
+    _require(_set(payload.get("success_invariants")) == EXPECTED_INVARIANTS, "success invariant set changed")
+
+    migration_contract = _load(repo_root / str(payload["preflight_contract"]))
+    _require(migration_contract.get("qualification_target", {}).get("source_store_read_only") is True, "#623 source-read-only boundary drifted")
+    _require(migration_contract.get("phases", [])[4].get("durable_writes_allowed") is False, "#623 phase-5 write boundary drifted")
+
+    registry = _load(repo_root / str(payload["scheme_registry_source"]))
+    bindings = {str(item.get("binding_id")): item for item in registry.get("bindings", [])}
+    for binding_id in ("substrate-bmerkle-v2-candidate", "governance-gsect-v2-candidate"):
+        binding = bindings.get(binding_id)
+        _require(binding is not None, f"missing frozen candidate registry binding {binding_id}")
+        _require(binding.get("runtime_state_schemas") == [], f"{binding_id} unexpectedly gained production runtime schema")
+        _require(binding.get("activation") == "candidate_not_emittable", f"{binding_id} unexpectedly became emittable")
+        _require(
+            binding.get("envelope_requirement") == "new_runtime_state_schema_required_before_activation",
+            f"{binding_id} candidate envelope requirement changed",
+        )
+
+    cases = {str(item.get("id")): item for item in registry.get("cases", [])}
+    emission_case = cases.get("candidate-bmerkle-v2-emission-refuses")
+    _require(emission_case is not None, "candidate emission refusal case disappeared")
+    _require(emission_case.get("expected_refusal") == "candidate_activation_forbidden", "candidate emission refusal changed")
+
+    sqlite_source = (repo_root / "reference/agentmem_ref/state/sqlite_substrate.py").read_text(encoding="utf-8")
+    for column in ("episode_uuids_json", "attributes_json", "evidence_refs_json", "value_json", "entry_hash", "chain"):
+        _require(column in sqlite_source, f"frozen persistence column disappeared: {column}")
+    for table in ("digest_rows", "digest_buckets", "governance_entries", "governance_buckets", "governance_log", "governance_residual"):
+        _require(table in sqlite_source, f"frozen derived table disappeared: {table}")
+
+    runtime_source = (repo_root / "reference/agentmem_ref/runtime/sqlite_runtime.py").read_text(encoding="utf-8")
+    _require(candidate["runtime_state_schema"] not in runtime_source, "qualification runtime schema leaked into production recovery")
+    _require(candidate["journal_schema"] not in runtime_source, "qualification journal schema leaked into production runtime")
+
+    return {
+        "fixture_id": payload["fixture_id"],
+        "qualification_only": True,
+        "source_store_read_only": True,
+        "phase4_transaction": "single_sqlite_begin_immediate",
+        "phase5_runtime_write": False,
+        "production_recovery_support": False,
+        "candidate_registry_operation": "inspect",
+        "candidate_registry_activation": "candidate_not_emittable",
+        "persisted_json_surfaces": len(EXPECTED_SUBSTRATE_JSON | EXPECTED_GOVERNANCE_JSON | EXPECTED_TRANSITION_JSON),
+        "failure_injections": len(EXPECTED_FAILURES),
+        "adversarial_refusals": len(EXPECTED_REFUSALS),
+    }
+
+
+def validate_amendment(path: Path, base_path: Path, repo_root: Path) -> dict[str, Any]:
+    """Validate amendment-1 as a narrowing-only addition to the untouched frozen base."""
+
+    base_bytes = base_path.read_bytes()
+    _require(hashlib.sha256(base_bytes).hexdigest() == BASE_FIXTURE_SHA256, "frozen base fixture bytes changed")
+    base = json.loads(base_bytes)
+    amendment = _load(path)
+
+    _require(set(amendment) <= AMENDMENT_KEYS, "amendment redefines keys outside its additive surface")
+    _require(amendment.get("fixture_id") == base["fixture_id"] + "-amendment-1", "amendment fixture id changed")
+    _require(amendment.get("status") == "POST_REVIEW_AMENDMENT_NARROWING_ONLY", "amendment must not claim a preimplementation freeze")
+    _require(amendment.get("authority_effect") == "none", "amendment must not grant authority")
+    _require((amendment.get("owner_issue"), amendment.get("parent_issue")) == (625, 622), "amendment issue ownership changed")
+    amends = amendment.get("amends", {})
+    _require(amends.get("fixture_id") == base["fixture_id"], "amendment must reference the base fixture")
+    _require(amends.get("status") == base["status"], "amendment must reference the base freeze status")
+    _require(amends.get("file_sha256") == BASE_FIXTURE_SHA256, "amendment must pin exact base bytes")
+    _require(amends.get("frozen_at_commit") == BASE_FIXTURE_FROZEN_AT, "amendment must pin the base freeze commit")
+    _require(amends.get("base_remains_byte_identical") is True, "base fixture must remain byte-identical")
+    trigger = amendment.get("trigger", {})
+    _require(trigger.get("kind") == "adversarial_review_findings" and trigger.get("pull_request") == 626, "amendment trigger changed")
+    _require(amendment.get("effect") == "narrow_acceptance_only", "amendment may only narrow acceptance")
+    _require(amendment.get("relaxes_or_replaces_base_requirement") is False, "amendment must not relax the base")
+
+    # Narrowing proof: additions are disjoint from the base, the effective sets are
+    # supersets of the base sets, and exact key sets equal the base required sets.
+    additional_refusals = _set(amendment.get("additional_adversarial_refusals"))
+    additional_invariants = _set(amendment.get("additional_success_invariants"))
+    _require(additional_refusals == EXPECTED_ADDITIONAL_REFUSALS, "amendment refusal set changed")
+    _require(additional_invariants == EXPECTED_ADDITIONAL_INVARIANTS, "amendment invariant set changed")
+    _require(not additional_refusals & _set(base.get("adversarial_refusals")), "amendment must only add refusals")
+    _require(not additional_invariants & _set(base.get("success_invariants")), "amendment must only add invariants")
+    for section, allowed in AMENDMENT_SECTION_KEYS.items():
+        extension = amendment.get(section, {})
+        _require(set(extension) <= allowed, f"amendment redefines base {section} fields")
+        _require(not set(extension) & set(base.get(section, {})), f"amendment overrides base {section} values")
+        _require(extension.get("field_set_policy") == EXACT_FIELD_POLICY, f"{section} key set must be exact")
+        _require(extension.get("exact_fields_equal_base_required_fields") is True, f"{section} exact set must equal base set")
+    _require(
+        _set(amendment["candidate_runtime_state"].get("preserved_from_phase3_anchor"))
+        == {"profile", "interpretation_digest", "substrate_identity"},
+        "preserved runtime identity set changed",
+    )
+
+    anchor = amendment.get("phase3_external_anchor", {})
+    _require(_set(anchor.get("fields")) == EXPECTED_ANCHOR_FIELDS, "phase-3 external anchor field set changed")
+    _require(
+        anchor.get("historical_journal_digest", {}).get("payload_bytes") == "raw_stored_bytes_never_parsed_or_reserialized",
+        "historical journal anchor must hash raw stored bytes",
+    )
+    _require(anchor.get("phase4_rechecks_inside_transaction") is True, "phase 4 must recheck the anchor in-transaction")
+    _require(
+        anchor.get("phase5_compares_against_anchor_not_candidate_derived_values") is True,
+        "phase 5 must verify history against the external anchor",
+    )
+    _require(amendment.get("journal_sql_generation_must_equal_payload_generation") is True, "journal generation binding changed")
+    refusal = amendment.get("production_refusal_proof", {})
+    _require(refusal.get("target") == "second_disposable_backup", "production refusal must run on a disposable backup")
+    _require(
+        refusal.get("expected_refusal_reason") == "unsupported SQLite runtime state schema",
+        "production refusal must require the unsupported-schema reason",
+    )
+    _require(refusal.get("low_level_candidate_verifier_production_route") is False, "low-level production route returned")
+
+    transaction_source = (repo_root / "reference/canonical_json_v2_transaction_qualification.py").read_text(encoding="utf-8")
+    _require("SQLiteRestartSafeRuntime" not in transaction_source, "low-level candidate verifier gained a production runtime route")
+    _require(".recover(" not in transaction_source, "low-level candidate verifier gained a production recovery route")
+    _require("prove_production_refusal" not in transaction_source, "low-level candidate verifier regained production refusal duty")
+    preflight_source = (repo_root / "reference/canonical_json_v2_sqlite_preflight.py").read_text(encoding="utf-8")
+    for field in EXPECTED_ANCHOR_FIELDS:
+        _require(f"    {field}:" in preflight_source, f"phase-3 evidence lost anchor field {field}")
+
+    return {
+        "amendment_fixture_id": amendment["fixture_id"],
+        "base_fixture_sha256": BASE_FIXTURE_SHA256,
+        "narrowing_only": True,
+        "effective_adversarial_refusals": len(_set(base.get("adversarial_refusals")) | additional_refusals),
+        "effective_success_invariants": len(_set(base.get("success_invariants")) | additional_invariants),
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--fixture",
+        type=Path,
+        default=Path("reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1.json"),
+    )
+    parser.add_argument("--amendment", type=Path, default=Path(AMENDMENT_FIXTURE))
+    parser.add_argument("--repo-root", type=Path, default=Path.cwd())
+    args = parser.parse_args()
+    repo_root = args.repo_root.resolve()
+    report = validate(args.fixture, repo_root)
+    report["amendment"] = validate_amendment(args.amendment, args.fixture, repo_root)
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

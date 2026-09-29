@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "fixture_id": "agent-memory-canonical-json-v2-transaction-qualification-v1",
+  "status": "FROZEN_PREIMPLEMENTATION_TRANSACTION_QUALIFICATION_CONTRACT",
+  "authority_effect": "none",
+  "parent_issue": 622,
+  "owner_issue": 625,
+  "source_main_sha": "4a22e8b3664d3b59889e3812a956d025ecb45e5c",
+  "preflight_contract": "reference/fixtures/runtime/canonical-json-v2-migration-v1.json",
+  "accepted_canonical_vector_source": "reference/fixtures/runtime/canonical-json-v2-vectors-accepted-v1.json",
+  "scheme_registry_source": "reference/fixtures/runtime/canonicalization-scheme-registry-v1.json",
+  "qualification_only": true,
+  "production_activation": false,
+  "production_recovery_support": false,
+  "target": {
+    "kind": "disposable_verified_copy",
+    "source_store_read_only": true,
+    "transaction_protocol": "single_sqlite_begin_immediate",
+    "transaction_generation_delta": 1,
+    "phase5_runtime_write": false
+  },
+  "candidate_identity": {
+    "canonicalizer": "agent-memory-canonical-json-v2",
+    "substrate_scheme": "bmerkle-v2",
+    "governance_scheme": "gsect-v2",
+    "runtime_state_schema": "1.2.0-canonical-v2-qualification",
+    "journal_schema": "1.1.0-canonical-v2-qualification",
+    "journal_transaction_protocol": "sqlite_begin_immediate_generation_v1",
+    "migration_implementation_id": "agent-memory-canonical-v2-qualification-migration-v1",
+    "registry_operation": "inspect"
+  },
+  "persisted_json_byte_surfaces": {
+    "substrate": [
+      "facts.episode_uuids_json",
+      "facts.attributes_json",
+      "typed_relations.evidence_refs_json",
+      "typed_relations.attributes_json"
+    ],
+    "governance": [
+      "governance_entries.value_json",
+      "governance_log.value_json",
+      "governance_residual.value_json"
+    ],
+    "transition": [
+      "canonicalization_migration.payload_json",
+      "runtime_state.payload_json",
+      "runtime_journal.payload_json[candidate_generation]"
+    ]
+  },
+  "historical_bytes": {
+    "runtime_journal_rows_before_candidate_generation": "verify_under_recorded_legacy_schema_and_do_not_rewrite"
+  },
+  "derived_integrity_rebuild": [
+    "digest_rows",
+    "digest_buckets",
+    "governance_entries.entry_hash",
+    "governance_buckets",
+    "governance_log.chain"
+  ],
+  "provenance": {
+    "table": "canonicalization_migration",
+    "row_identity": "singleton=1",
+    "payload_encoding": "agent-memory-canonical-json-v2",
+    "durable_fields": [
+      "source_runtime_generation",
+      "source_runtime_state_schema",
+      "source_substrate_binding_id",
+      "source_substrate_commitment",
+      "source_governance_binding_id",
+      "source_governance_commitment",
+      "target_substrate_binding_id",
+      "target_substrate_commitment",
+      "target_governance_binding_id",
+      "target_governance_commitment",
+      "accepted_canonical_vector_source",
+      "scheme_registry_source",
+      "migration_implementation_id",
+      "migration_transaction_generation",
+      "pre_migration_logical_state_digest",
+      "post_migration_logical_state_digest",
+      "transaction_outcome"
+    ],
+    "transaction_outcome": "committed_pending_restart_verification",
+    "final_outcome_forbidden_in_runtime_state": true,
+    "bound_by": [
+      "candidate_journal.migration_provenance_digest",
+      "candidate_runtime_state.migration_provenance_digest"
+    ]
+  },
+  "candidate_journal": {
+    "rewrites_historical_rows": false,
+    "required_fields": [
+      "schema_version",
+      "transaction_protocol",
+      "generation",
+      "substrate_digest",
+      "governance_digest",
+      "interpretation_digest",
+      "previous_record_digest",
+      "migration_provenance_digest",
+      "record_digest"
+    ],
+    "record_digest_material_fields": [
+      "schema_version",
+      "transaction_protocol",
+      "generation",
+      "substrate_digest",
+      "governance_digest",
+      "interpretation_digest",
+      "previous_record_digest",
+      "migration_provenance_digest"
+    ],
+    "record_digest_encoding": "agent-memory-canonical-json-v2"
+  },
+  "candidate_runtime_state": {
+    "required_fields": [
+      "schema_version",
+      "durability_profile",
+      "transaction_protocol",
+      "generation",
+      "profile",
+      "interpretation_digest",
+      "substrate_scheme",
+      "substrate_digest",
+      "governance_scheme",
+      "governance_digest",
+      "substrate_identity",
+      "migration_provenance_digest",
+      "journal_record_digest"
+    ],
+    "durability_profile": "sqlite_transactional_runtime_v1",
+    "encoding": "agent-memory-canonical-json-v2",
+    "ordinary_runtime_recovery_must_refuse": true
+  },
+  "phase4_order": [
+    "require_preflight_evidence",
+    "reverify_disposable_copy_under_recorded_old_scheme",
+    "begin_immediate",
+    "recheck_source_generation_and_commitments_inside_transaction",
+    "rewrite_affected_json_bytes_to_v2",
+    "rebuild_candidate_derived_integrity",
+    "recompute_candidate_roots_and_match_preflight",
+    "recompute_logical_state_digest_and_require_identity",
+    "write_durable_provenance",
+    "write_candidate_runtime_envelope_and_journal",
+    "verify_candidate_material_before_commit",
+    "commit_once"
+  ],
+  "phase5_order": [
+    "close_all_migration_handles",
+    "reopen_candidate_copy_independently",
+    "sqlite_integrity_check",
+    "resolve_candidate_bindings_by_registry_inspect",
+    "require_exact_v2_bytes_on_affected_persisted_json",
+    "recompute_substrate_commitment_from_rows",
+    "recompute_governance_commitment_from_rows",
+    "verify_derived_indexes_against_recomputation",
+    "verify_historical_and_candidate_journal_chain",
+    "verify_runtime_state_binds_journal_and_provenance",
+    "verify_provenance_as_evidence_not_authority",
+    "reconstruct_logical_state",
+    "require_pre_post_logical_state_digest_identity",
+    "require_generation_continuity",
+    "emit_non_authoritative_closeout_without_runtime_write"
+  ],
+  "phase5_closeout": {
+    "fields": ["restart_verified", "outcome"],
+    "restart_verified": true,
+    "outcome": "committed",
+    "durable_runtime_write": false,
+    "authority_effect": "none"
+  },
+  "failure_injections": [
+    "before_transaction",
+    "after_persisted_byte_rewrite",
+    "after_derived_integrity_rebuild",
+    "after_provenance_write",
+    "before_envelope_and_journal",
+    "after_envelope_before_journal",
+    "before_commit",
+    "during_phase5_restart_verification"
+  ],
+  "adversarial_refusals": [
+    "legacy_scheme_with_v2_bytes",
+    "v2_scheme_with_legacy_bytes",
+    "mixed_legacy_v2_derived_indexes",
+    "candidate_envelope_with_legacy_rows",
+    "candidate_rows_with_legacy_envelope",
+    "candidate_commitment_tamper",
+    "migration_provenance_tamper",
+    "provenance_present_but_commitment_invalid",
+    "mixed_source_candidate_generation",
+    "broken_candidate_journal_provenance_binding",
+    "logical_state_mismatch_with_self_consistent_provenance"
+  ],
+  "success_invariants": [
+    "original_source_store_never_mutated",
+    "no_durable_write_before_phase4_transaction",
+    "all_phase4_changes_commit_or_roll_back_together",
+    "candidate_json_bytes_are_exact_v2_bytes_not_merely_parse_equivalent",
+    "candidate_commitments_match_phase3_preflight_exactly",
+    "pre_and_post_logical_state_digest_are_identical",
+    "candidate_generation_is_exactly_source_generation_plus_one",
+    "durable_provenance_is_integrity_bound_but_not_verification_authority",
+    "ordinary_production_recovery_refuses_qualification_envelope",
+    "phase5_final_outcome_requires_independent_restart_verification",
+    "phase5_performs_no_runtime_write"
+  ],
+  "semantic_non_goals": [
+    "memory_identifier_rewrite",
+    "timestamp_rewrite",
+    "authority_change",
+    "lifecycle_change",
+    "ranking_change",
+    "currentness_change",
+    "scope_or_tenant_change",
+    "automatic_migration_on_recovery",
+    "candidate_scheme_production_activation",
+    "legacy_verifier_removal",
+    "production_cutover",
+    "rust_runtime_promotion",
+    "adr_040_acceptance"
+  ]
+}

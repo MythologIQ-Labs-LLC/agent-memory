@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import hashlib
 import json
 from pathlib import Path
 import sqlite3
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from agentmem_ref.restart_runtime import CapabilityBinding, RuntimeProfile, RuntimeRecoveryError
 from agentmem_ref.sqlite_runtime import SQLiteRestartSafeRuntime
@@ -13,6 +14,7 @@ from agentmem_ref.sqlite_substrate import (
 )
 from agentmem_ref.substrate import TYPED_RELATION_SCHEMA_VERSION
 
+from canonical_json_v2_candidate import CanonicalJsonV2Error, canonical_bytes_v2
 from canonical_json_v2_migration_preflight import (
     CandidateCommitments,
     MigrationPreflightError,
@@ -37,6 +39,12 @@ TARGET_ROOT_CONTRACTS = {
     "substrate_state": "substrate-bucketed-merkle-sha256-v2-candidate",
     "governance_state": "governance-sections-sha256-v2-candidate",
 }
+# Phase-3 external anchor domains (#625). Each digest is SHA-256 over a length-framed
+# domain tag followed by length-framed material, so no two distinct inputs share a
+# preimage and no anchor can be replayed as another.
+HISTORICAL_JOURNAL_ANCHOR_DOMAIN = "agent-memory/v2-qualification/historical-runtime-journal/v1"
+RUNTIME_PROFILE_ANCHOR_DOMAIN = "agent-memory/v2-qualification/runtime-profile/v1"
+SUBSTRATE_IDENTITY_ANCHOR_DOMAIN = "agent-memory/v2-qualification/substrate-identity/v1"
 
 
 @dataclass(frozen=True)
@@ -52,6 +60,12 @@ class SQLiteMigrationPreflightEvidence:
     target_governance_binding_id: str
     target_governance_commitment: str
     pre_migration_logical_state_digest: str
+    source_journal_tail_record_digest: str
+    historical_journal_row_count: int
+    historical_journal_digest: str
+    source_runtime_profile_digest: str
+    source_interpretation_digest: str
+    source_substrate_identity_digest: str
     snapshot_database: str
     source_open_mode: str = "sqlite_mode_ro"
     source_store_read_only: bool = True
@@ -121,6 +135,130 @@ def _binding_material(state: Mapping[str, Any]) -> tuple[int, str, str, str, str
     if generation < 1 or not state_schema or not substrate or not governance or not journal:
         raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "runtime binding is incomplete")
     return generation, state_schema, substrate, governance, journal
+
+
+def _frame(hasher: "hashlib._Hash", data: bytes) -> None:
+    hasher.update(len(data).to_bytes(8, "big"))
+    hasher.update(data)
+
+
+def _anchor_hasher(domain: str) -> "hashlib._Hash":
+    hasher = hashlib.sha256()
+    _frame(hasher, domain.encode("utf-8"))
+    return hasher
+
+
+def historical_journal_anchor_digest(rows: Sequence[tuple[int, bytes]]) -> str:
+    """Digest ordered ``runtime_journal`` rows as (SQL generation, raw payload bytes).
+
+    The payload is hashed exactly as stored, never parsed and re-serialized, so an
+    equal-value reserialization of any historical record changes the digest.
+    """
+
+    hasher = _anchor_hasher(HISTORICAL_JOURNAL_ANCHOR_DOMAIN)
+    hasher.update(len(rows).to_bytes(8, "big"))
+    for generation, payload in rows:
+        if type(generation) is not int or not isinstance(payload, bytes):
+            raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "journal row is malformed")
+        hasher.update(generation.to_bytes(8, "big", signed=True))
+        _frame(hasher, payload)
+    return "sha256:" + hasher.hexdigest()
+
+
+def structured_anchor_digest(domain: str, value: Any) -> str:
+    """Deterministic digest of a structured envelope value under a named domain."""
+
+    try:
+        encoded = canonical_bytes_v2(value)
+    except CanonicalJsonV2Error as exc:
+        raise MigrationPreflightError("source_journal_or_envelope_verification_failed", exc.reason) from exc
+    hasher = _anchor_hasher(domain)
+    _frame(hasher, encoded)
+    return "sha256:" + hasher.hexdigest()
+
+
+def read_raw_runtime_journal(connection: sqlite3.Connection) -> list[tuple[int, bytes, dict[str, Any]]]:
+    """Read journal rows with exact stored payload bytes and the decoded record.
+
+    Requires an INTEGER SQL generation, a TEXT payload holding a JSON object, and the
+    SQL generation column to equal the payload's own ``generation`` field.
+    """
+
+    rows: list[tuple[int, bytes, dict[str, Any]]] = []
+    for row in connection.execute(
+        "SELECT typeof(generation), generation, typeof(payload_json), CAST(payload_json AS BLOB) "
+        "FROM runtime_journal ORDER BY generation"
+    ).fetchall():
+        generation_type, generation, payload_type, payload = row[0], row[1], row[2], row[3]
+        if generation_type != "integer" or payload_type != "text" or not isinstance(payload, bytes):
+            raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "journal row type is malformed")
+        try:
+            value = json.loads(payload.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "journal row is malformed") from exc
+        if not isinstance(value, dict):
+            raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "journal row is malformed")
+        payload_generation = value.get("generation")
+        if type(payload_generation) is not int or payload_generation != generation:
+            raise MigrationPreflightError(
+                "journal_sql_generation_payload_mismatch",
+                f"runtime_journal generation {generation} does not equal its payload generation",
+            )
+        rows.append((int(generation), bytes(payload), value))
+    return rows
+
+
+@dataclass(frozen=True)
+class SourceIdentityAnchor:
+    source_journal_tail_record_digest: str
+    historical_journal_row_count: int
+    historical_journal_digest: str
+    source_runtime_profile_digest: str
+    source_interpretation_digest: str
+    source_substrate_identity_digest: str
+
+
+def compute_source_identity_anchor(connection: sqlite3.Connection, state: Mapping[str, Any]) -> SourceIdentityAnchor:
+    """Anchor the verified source journal and preserved runtime-envelope identity."""
+
+    generation, _, _, _, bound_tail = _binding_material(state)
+    rows = read_raw_runtime_journal(connection)
+    if [item[0] for item in rows] != list(range(1, len(rows) + 1)) or len(rows) != generation:
+        raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "journal is not contiguous to generation")
+    tail = rows[-1][2]
+    if tail.get("record_digest") != bound_tail:
+        raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "runtime state does not bind journal tail")
+    profile = state.get("profile")
+    interpretation = state.get("interpretation_digest")
+    substrate_identity = state.get("substrate_identity")
+    if not isinstance(profile, dict) or not isinstance(substrate_identity, dict):
+        raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "runtime identity is missing")
+    if not isinstance(interpretation, str) or not interpretation:
+        raise MigrationPreflightError("source_journal_or_envelope_verification_failed", "interpretation digest is missing")
+    return SourceIdentityAnchor(
+        source_journal_tail_record_digest=bound_tail,
+        historical_journal_row_count=len(rows),
+        historical_journal_digest=historical_journal_anchor_digest([(g, p) for g, p, _ in rows]),
+        source_runtime_profile_digest=structured_anchor_digest(RUNTIME_PROFILE_ANCHOR_DOMAIN, profile),
+        source_interpretation_digest=interpretation,
+        source_substrate_identity_digest=structured_anchor_digest(SUBSTRATE_IDENTITY_ANCHOR_DOMAIN, substrate_identity),
+    )
+
+
+def _read_snapshot_anchor(snapshot_db: Path, source_state: Mapping[str, Any]) -> SourceIdentityAnchor:
+    connection = _open_source_read_only(snapshot_db)
+    try:
+        state = _runtime_state(connection)
+        if state != dict(source_state):
+            raise MigrationPreflightError(
+                "source_generation_changed_during_snapshot",
+                "verified snapshot runtime envelope differs from the source envelope",
+            )
+        return compute_source_identity_anchor(connection, state)
+    except sqlite3.Error as exc:
+        raise MigrationPreflightError("source_journal_or_envelope_verification_failed", str(exc)) from exc
+    finally:
+        connection.close()
 
 
 def _profile_from_state(state: Mapping[str, Any]) -> RuntimeProfile:
@@ -311,6 +449,9 @@ def qualify_sqlite_migration_preflight(
         if runtime is not None:
             runtime.close()
 
+    # Anchored only after full recovery verification succeeded on the snapshot.
+    anchor = _read_snapshot_anchor(snapshot_db, source_state)
+
     target_substrate_binding = _resolve_target_binding(
         active_registry,
         domain="substrate_state",
@@ -334,6 +475,7 @@ def qualify_sqlite_migration_preflight(
         target_governance_binding_id=target_governance_binding.binding_id,
         target_governance_commitment=candidate.governance_commitment,
         pre_migration_logical_state_digest=candidate.logical_state_digest,
+        **asdict(anchor),
         snapshot_database=str(snapshot_db),
     )
     return SQLiteMigrationPreflightResult(evidence=evidence, candidate=candidate)

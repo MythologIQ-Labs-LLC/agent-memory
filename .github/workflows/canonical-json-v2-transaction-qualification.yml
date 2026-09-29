@@ -1,0 +1,49 @@
+name: Canonical JSON v2 Transaction Qualification
+
+on:
+  pull_request:
+    paths:
+      - "reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1.json"
+      - "reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1-amendment-1.json"
+      - "reference/validate_canonical_json_v2_transaction_qualification_contract.py"
+      - "reference/canonical_json_v2_transaction_qualification.py"
+      - "reference/canonical_json_v2_restart_qualification.py"
+      - "reference/tests/test_canonical_json_v2_transaction_qualification.py"
+      - "reference/tests/test_canonical_json_v2_transaction_refusals.py"
+      - "reference/tests/test_canonical_json_v2_anchor_refusals.py"
+      - "reference/canonical_json_v2_migration_preflight.py"
+      - "reference/canonical_json_v2_sqlite_preflight.py"
+      - "reference/canonical_scheme_registry_candidate.py"
+      - ".github/workflows/canonical-json-v2-transaction-qualification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install reference runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      - name: Validate frozen transaction qualification contract plus amendment-1
+        run: python reference/validate_canonical_json_v2_transaction_qualification_contract.py --repo-root .
+
+      - name: Execute transactional recommit, restart, and refusal tests
+        run: |
+          python -m unittest \
+            reference.tests.test_canonical_json_v2_transaction_qualification \
+            reference.tests.test_canonical_json_v2_transaction_refusals \
+            reference.tests.test_canonical_json_v2_anchor_refusals

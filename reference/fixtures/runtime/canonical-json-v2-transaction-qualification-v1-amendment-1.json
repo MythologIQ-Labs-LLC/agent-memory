@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "fixture_id": "agent-memory-canonical-json-v2-transaction-qualification-v1-amendment-1",
+  "status": "POST_REVIEW_AMENDMENT_NARROWING_ONLY",
+  "authority_effect": "none",
+  "parent_issue": 622,
+  "owner_issue": 625,
+  "amends": {
+    "fixture_id": "agent-memory-canonical-json-v2-transaction-qualification-v1",
+    "path": "reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1.json",
+    "status": "FROZEN_PREIMPLEMENTATION_TRANSACTION_QUALIFICATION_CONTRACT",
+    "frozen_at_commit": "b0b985c2e7a485a4cf1c185cb0945ed259644442",
+    "git_blob_sha1": "a0c1640b612a602408d976104133a06eb64cbba3",
+    "file_sha256": "70cf50e3f137526c42c53dbf3806c8800217155c8ea96f765405fcf2734145c4",
+    "base_remains_byte_identical": true
+  },
+  "trigger": {
+    "kind": "adversarial_review_findings",
+    "pull_request": 626,
+    "reviewed_head_before_amendment": "4638510c438484a89c74bc66db37f19ab2c36c5b",
+    "findings": [
+      "historical_journal_not_externally_anchored",
+      "preserved_runtime_identity_not_externally_anchored",
+      "candidate_envelope_and_journal_key_sets_not_exact",
+      "low_level_verifier_had_production_recovery_route",
+      "production_refusal_accepted_any_recovery_error",
+      "sql_journal_generation_not_bound_to_payload_generation"
+    ]
+  },
+  "effect": "narrow_acceptance_only",
+  "relaxes_or_replaces_base_requirement": false,
+  "amendment_order_note": "Recorded after implementation review; this is not a preimplementation freeze.",
+  "phase3_external_anchor": {
+    "evidence": "SQLiteMigrationPreflightEvidence",
+    "fields": [
+      "source_journal_tail_record_digest",
+      "historical_journal_row_count",
+      "historical_journal_digest",
+      "source_runtime_profile_digest",
+      "source_interpretation_digest",
+      "source_substrate_identity_digest"
+    ],
+    "historical_journal_digest": {
+      "domain": "agent-memory/v2-qualification/historical-runtime-journal/v1",
+      "construction": "sha256(u64be_len(domain) || domain || u64be(row_count) || for each row ordered by SQL generation: i64be(sql_generation) || u64be_len(payload) || raw payload_json UTF-8 bytes)",
+      "payload_bytes": "raw_stored_bytes_never_parsed_or_reserialized"
+    },
+    "structured_identity_digest": {
+      "runtime_profile_domain": "agent-memory/v2-qualification/runtime-profile/v1",
+      "substrate_identity_domain": "agent-memory/v2-qualification/substrate-identity/v1",
+      "construction": "sha256(u64be_len(domain) || domain || u64be_len(value) || agent-memory-canonical-json-v2(value))"
+    },
+    "phase4_rechecks_inside_transaction": true,
+    "phase5_compares_against_anchor_not_candidate_derived_values": true
+  },
+  "journal_sql_generation_must_equal_payload_generation": true,
+  "candidate_journal": {
+    "field_set_policy": "exact_reject_missing_and_unexpected",
+    "exact_fields_equal_base_required_fields": true
+  },
+  "candidate_runtime_state": {
+    "field_set_policy": "exact_reject_missing_and_unexpected",
+    "exact_fields_equal_base_required_fields": true,
+    "preserved_from_phase3_anchor": ["profile", "interpretation_digest", "substrate_identity"]
+  },
+  "production_refusal_proof": {
+    "owner": "canonical_json_v2_restart_qualification.prove_production_runtime_refusal",
+    "target": "second_disposable_backup",
+    "expected_refusal_reason": "unsupported SQLite runtime state schema",
+    "low_level_candidate_verifier_production_route": false
+  },
+  "additional_adversarial_refusals": [
+    "historical_journal_rewritten_with_self_consistent_legacy_chain",
+    "historical_journal_payload_reserialized_equal_value",
+    "runtime_profile_changed_with_consistent_rebuild",
+    "interpretation_digest_changed",
+    "substrate_identity_changed",
+    "candidate_envelope_unexpected_or_missing_field",
+    "candidate_journal_unexpected_or_missing_field",
+    "journal_sql_generation_payload_generation_mismatch",
+    "production_refusal_for_unexpected_reason"
+  ],
+  "additional_success_invariants": [
+    "historical_journal_bytes_match_phase3_external_anchor",
+    "preserved_runtime_identity_matches_phase3_external_anchor"
+  ]
+}
