@@ -2,17 +2,21 @@ from __future__ import annotations
 
 import json
 import struct
+import sys
 from pathlib import Path
 
 import pytest
 
-from agentmem_ref.canonical_json_v2 import (
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from canonical_json_v2_candidate import (  # noqa: E402
     CanonicalJsonV2Error,
     canonical_bytes_v2,
     canonicalize_json_text_v2,
 )
 
-ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "fixtures" / "runtime" / "canonical-json-v2-vectors-v1.json"
 ACCEPTANCE = ROOT / "fixtures" / "runtime" / "canonical-json-v2-vectors-accepted-v1.json"
 
