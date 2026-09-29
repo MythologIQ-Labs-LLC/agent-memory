@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "acceptance_id": "agent-memory-canonical-json-v2-vectors-accepted-v1",
+  "status": "ACCEPTED_IMPLEMENTATION_VECTOR_SOURCE",
+  "authority_effect": "implementation_conformance_only",
+  "source_fixture": "reference/fixtures/runtime/canonical-json-v2-vectors-v1.json",
+  "source_fixture_id": "agent-memory-canonical-json-v2-vectors-v1",
+  "source_fixture_git_blob_sha1": "27fe35f273230d0602f6e356eb42075485aafcf1",
+  "source_head_sha": "fcdba21ec8c0fb70d78d05dd42d22fc6a43c70e6",
+  "source_merge_sha": "a129896274539f979b996e6024b27c3bd579c073",
+  "case_count": 44,
+  "acceptance": {
+    "pr": 616,
+    "review_id": 5346919391,
+    "review_url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/pull/616#pullrequestreview-5346919391",
+    "accepted_at": "2026-09-29T02:17:59Z",
+    "workflow_run": 36511351315,
+    "workflow_name": "Canonical JSON v2 Vector Integrity",
+    "exact_head_full_validation": "success"
+  },
+  "scope": {
+    "accepted": [
+      "44 case identifiers",
+      "expected UTF-8 byte strings",
+      "expected refusal outcomes",
+      "candidate canonicalization rules represented by those cases"
+    ],
+    "not_accepted": [
+      "ADR-040 architecture decision",
+      "runtime serializer promotion",
+      "persistence migration",
+      "digest scheme transition",
+      "Rust runtime promotion"
+    ]
+  },
+  "immutability": "The source fixture remains byte-frozen. Corrections require a new versioned source and acceptance record; implementation output may not revise v1 in place."
+}
