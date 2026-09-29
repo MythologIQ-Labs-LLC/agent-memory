@@ -90,6 +90,10 @@ def _read_runtime_payload(path: Path) -> str:
         connection.close()
 
 
+def _json_text(value: object) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
 class CanonicalJsonV2SQLitePreflightTests(unittest.TestCase):
     def test_current_sqlite_state_verifies_from_read_only_source_and_computes_candidate(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -139,6 +143,54 @@ class CanonicalJsonV2SQLitePreflightTests(unittest.TestCase):
                 )
             self.assertEqual(caught.exception.reason, "source_substrate_verification_failed")
 
+    def test_tampered_governance_residual_refuses_during_existing_recovery_verification(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            source_db, _ = _create_source(base / "source")
+            connection = sqlite3.connect(str(source_db))
+            try:
+                connection.execute(
+                    "UPDATE governance_residual SET value_json = ? WHERE singleton = 1",
+                    (_json_text({"tampered": True}),),
+                )
+                connection.commit()
+            finally:
+                connection.close()
+
+            with self.assertRaises(MigrationPreflightError) as caught:
+                qualify_sqlite_migration_preflight(
+                    source_database=source_db,
+                    snapshot_root=base / "snapshot",
+                )
+            self.assertEqual(caught.exception.reason, "source_governance_verification_failed")
+
+    def test_broken_runtime_journal_chain_refuses_before_candidate_work(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            source_db, _ = _create_source(base / "source")
+            connection = sqlite3.connect(str(source_db))
+            try:
+                row = connection.execute(
+                    "SELECT generation, payload_json FROM runtime_journal ORDER BY generation DESC LIMIT 1"
+                ).fetchone()
+                assert row is not None
+                record = json.loads(row[1])
+                record["previous_record_digest"] = "broken-chain"
+                connection.execute(
+                    "UPDATE runtime_journal SET payload_json = ? WHERE generation = ?",
+                    (_json_text(record), int(row[0])),
+                )
+                connection.commit()
+            finally:
+                connection.close()
+
+            with self.assertRaises(MigrationPreflightError) as caught:
+                qualify_sqlite_migration_preflight(
+                    source_database=source_db,
+                    snapshot_root=base / "snapshot",
+                )
+            self.assertEqual(caught.exception.reason, "source_journal_or_envelope_verification_failed")
+
     def test_unknown_source_scheme_refuses_through_frozen_registry_before_candidate_work(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
@@ -151,7 +203,7 @@ class CanonicalJsonV2SQLitePreflightTests(unittest.TestCase):
                 state["substrate_digest"] = "mystery-v9:" + ("f" * 64)
                 connection.execute(
                     "UPDATE runtime_state SET payload_json = ? WHERE singleton = 1",
-                    (json.dumps(state, sort_keys=True, separators=(",", ":"), ensure_ascii=False),),
+                    (_json_text(state),),
                 )
                 connection.commit()
             finally:
