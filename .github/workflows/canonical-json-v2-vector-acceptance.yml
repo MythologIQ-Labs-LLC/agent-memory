@@ -1,0 +1,30 @@
+name: Canonical JSON v2 Vector Acceptance
+
+on:
+  pull_request:
+    paths:
+      - "reference/fixtures/runtime/canonical-json-v2-vectors-v1.json"
+      - "reference/fixtures/runtime/canonical-json-v2-vectors-accepted-v1.json"
+      - "reference/validate_canonical_json_v2_vectors.py"
+      - "reference/validate_canonical_json_v2_acceptance.py"
+      - ".github/workflows/canonical-json-v2-vector-acceptance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-acceptance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate accepted vector source
+        working-directory: reference
+        run: python validate_canonical_json_v2_acceptance.py --repo-root .. --record fixtures/runtime/canonical-json-v2-vectors-accepted-v1.json
