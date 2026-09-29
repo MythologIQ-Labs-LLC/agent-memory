@@ -1,12 +1,24 @@
-# ADR-040: Use a versioned language-neutral canonical JSON contract for integrity commitments
+# ADR-040: Use a versioned language-neutral canonical JSON contract for persisted integrity commitments
 
 - **Status:** Proposed
 - **Date:** 2026-09-28
-- **Related:** #609, #602, ADR-028, ADR-031, #522, #562
+- **Related:** #609, #602, PR #615, ADR-028, ADR-031, #522, #562
 
 ## Context
 
-Agent Memory currently computes multiple integrity and restart commitments from JSON bytes produced by repeated local helpers equivalent to:
+Agent Memory currently has more than one canonicalization family.
+
+The #609 inventory in PR #615 found **219** canonicalization candidates in the scanned Python roots:
+
+- **202** calls using Python sorted compact JSON;
+- **17** direct RFC 8785 / JCS calls;
+- **0** parse errors.
+
+This matters because canonicalization is already part of several distinct identity contracts. The repository is not merely repeating one accidental helper everywhere.
+
+### Python-sorted JSON family
+
+Several runtime and persistence surfaces use helpers equivalent to:
 
 ```python
 json.dumps(
@@ -17,13 +29,13 @@ json.dumps(
 ).encode("utf-8")
 ```
 
-That implementation is deterministic inside the qualified Python runtime, but it is not fully language-neutral.
+That implementation is deterministic inside the qualified Python runtime, but floating-number spelling is inherited from CPython's JSON encoder rather than an explicit Agent Memory cross-language contract.
 
-The #602 Rust qualification program exposed the boundary while attempting exact cross-language canonical-byte parity. Nulls, booleans, integers, strings, arrays, and ordinary string-keyed objects can be reproduced exactly from an explicit byte contract. Floating numbers are different: their spelling is inherited from CPython's JSON encoder rather than from Agent Memory doctrine.
+The #602 Rust qualification program exposed the boundary while attempting exact byte parity. Nulls, booleans, exact integers, strings, arrays, and ordinary string-keyed objects can already be reproduced exactly from an explicit byte contract. Floating values are the unresolved part.
 
-This is already persistence-significant rather than theoretical.
+This is persistence-significant rather than theoretical.
 
-`TypedRelation.retrieval_weight` is a finite `float` and SQLite canonical-state commitments hash `asdict(relation)` through the canonical-byte helper. Therefore number spelling can affect:
+`TypedRelation.retrieval_weight` is a finite `float`, and SQLite canonical-state commitments hash typed-relation rows through `sqlite_substrate.py::_row_hash(...)`. Therefore host-dependent number spelling can affect:
 
 - typed-relation row hashes;
 - bucket commitments;
@@ -32,52 +44,67 @@ This is already persistence-significant rather than theoretical.
 - tamper refusal;
 - cross-language persistence compatibility.
 
-The current helper also inherits Python's default handling of non-finite floats. `json.dumps` permits `NaN`, `Infinity`, and `-Infinity` unless explicitly configured otherwise. `TypedRelation.retrieval_weight` already rejects non-finite values, but generic attribute/state dictionaries can reach canonical serialization through other paths.
+PR #615 manually classified the seven Python-sorted-JSON call sites in the runtime/persistence risk bucket. The directly proven float-bearing persisted-integrity surface is `reference/agentmem_ref/state/sqlite_substrate.py`. Other runtime/restart helpers remain compatibility-significant, but several bind typed string/integer/boolean material and must not be declared float-bearing merely because they share a helper shape.
 
-The problem is larger than one Rust formatter:
+### Existing RFC 8785 / JCS family
+
+The same inventory found 17 direct `rfc8785.dumps(...)` call sites. They include identity or evidence surfaces for approvals, reusable grants, contextual recall, MCP/A2A interaction evidence, external evidence, enforcement evidence, runtime-trace correlation, temporal commitments, security findings, and related records.
+
+Those uses are already deliberate canonicalization contracts. They are **not** automatically migration targets for this ADR.
+
+The resulting architecture boundary is:
 
 ```text
-Python implementation behavior
-        !=
-explicit cross-language canonical byte contract
-        !=
-persisted digest scheme identity
+same JSON meaning
+    !=
+same canonicalization domain
+    !=
+same identity / compatibility contract
 ```
 
-ADR-028 requires the normative core to remain language-neutral. ADR-031 requires deterministic content commitments. A persisted integrity format that depends on unspecified CPython formatting behavior weakens both boundaries.
+ADR-028 requires the normative core to remain language-neutral. ADR-031 requires deterministic content commitments. A persisted integrity format that depends on unspecified CPython float formatting weakens both boundaries, but fixing that defect does not grant permission to rewrite unrelated JCS-bound identities.
 
 ## Considered standard: RFC 8785 / JCS
 
-RFC 8785, JSON Canonicalization Scheme (JCS), is valuable prior art. It defines deterministic JSON serialization for cryptographic use, including:
+RFC 8785, JSON Canonicalization Scheme (JCS), is strong prior art for deterministic cryptographic JSON, including finite IEEE-754 binary64 number serialization and invalid-number refusal.
 
-- deterministic string escaping;
-- finite IEEE-754 binary64 number serialization based on ECMAScript;
-- recursive object-property sorting;
-- rejection of invalid/non-I-JSON values.
+Agent Memory SHOULD reuse its proven finite-number serialization principles rather than inventing an unrelated floating-point algorithm.
 
-Agent Memory SHOULD reuse its proven number-serialization principles rather than inventing an unrelated floating-point algorithm.
+Agent Memory SHOULD NOT adopt JCS wholesale for the existing Python-sorted persistence domain because JCS changes semantics outside the discovered defect:
 
-Agent Memory SHOULD NOT adopt JCS wholesale for existing persisted state because JCS also changes semantics outside the discovered defect:
-
-1. JCS restricts JSON numbers to IEEE-754 binary64. Agent Memory/Python can carry exact integers beyond the binary64 exact-integer range.
-2. JCS sorts object-property names by UTF-16 code units. Current Python `sort_keys=True` semantics follow Python string ordering. These differ for some non-BMP Unicode keys.
-3. JCS intentionally canonicalizes numeric value rather than preserving Python's integer-vs-float spelling distinction. Existing Agent Memory hashes can distinguish `1` from `1.0`.
-
-Changing all three at once would create a broader compatibility migration than the evidence requires.
+1. JCS restricts numbers to IEEE-754 binary64, while Agent Memory/Python can carry exact integers beyond binary64's exact-integer range.
+2. JCS sorts object-property names by UTF-16 code units; current Python sorting follows Unicode code-point ordering, which differs for some non-BMP keys.
+3. JCS canonicalizes numeric value rather than preserving the current integer-versus-float byte distinction.
+4. Existing JCS-bound Agent Memory identities already have their own compatibility obligations and should not be conflated with a new persistence scheme.
 
 ## Decision candidate
 
-Agent Memory SHALL define a new versioned canonical serialization profile for integrity commitments, provisionally named:
+Agent Memory SHALL define a new versioned canonical serialization profile specifically for **persisted integrity and restart commitments whose identity is currently Python-shaped**, provisionally named:
 
 `agent-memory-canonical-json-v2`
 
-The profile is a deterministic JSON byte format for hashing/signing/commitment purposes. It is not a general wire-format requirement and does not redefine application-level JSON semantics.
+The profile is not the universal Agent Memory JSON format. It is not a requirement that all current JCS-bound evidence identities migrate to it.
 
-The profile SHALL preserve existing language-neutral behavior where possible and explicitly define the previously implementation-dependent numeric behavior.
+### 1. Canonicalization scheme is explicit identity
 
-### 1. Supported value domain
+Every cryptographic or persisted identity domain SHALL bind an explicit canonicalization scheme.
 
-The canonical domain contains:
+```text
+identity domain
+  -> recorded canonicalization scheme
+  -> canonical bytes
+  -> commitment/digest
+```
+
+Existing RFC 8785/JCS-bound domains remain JCS-bound unless a separate versioned migration explicitly changes their contract.
+
+Legacy Python-sorted persistence domains remain verifiable under their legacy byte rules for the supported migration window.
+
+A caller MUST NOT select a serializer merely by importing a convenience helper whose current output happens to match another domain.
+
+### 2. V2 supported value domain
+
+The v2 persistence profile contains:
 
 - `null`;
 - booleans;
@@ -96,13 +123,13 @@ Implementations MUST reject rather than silently coerce:
 - invalid Unicode scalar data;
 - integer values an implementation cannot preserve exactly.
 
-An implementation limitation MUST NOT become silent rounding.
+Implementation limits MUST NOT become silent rounding.
 
-### 2. Strings
+### 3. Strings
 
 Strings SHALL preserve Unicode data without normalization.
 
-String escaping SHALL remain compatible with the current Agent Memory/Python behavior and RFC 8785 string serialization:
+Escaping SHALL remain compatible with the current Python persistence bytes where those bytes are already language-neutral:
 
 - `"` -> `\"`;
 - `\\` -> `\\\\`;
@@ -110,17 +137,17 @@ String escaping SHALL remain compatible with the current Agent Memory/Python beh
 - other U+0000..U+001F controls -> lowercase `\u00xx` form;
 - other valid Unicode scalar values emitted as UTF-8 without ASCII forcing.
 
-No NFC/NFD or other Unicode normalization is performed.
+No Unicode normalization is performed.
 
-### 3. Object-key ordering
+### 4. Object-key ordering
 
-Object keys SHALL be ordered recursively by Unicode scalar/code-point lexicographic order, preserving the current Python ordering contract for valid Unicode strings.
+V2 object keys SHALL be ordered recursively by Unicode scalar/code-point lexicographic order, preserving the current Python persistence ordering for valid Unicode strings.
 
-This deliberately does **not** adopt JCS UTF-16 code-unit ordering because doing so would create an unrelated key-order migration.
+This deliberately does **not** adopt JCS UTF-16 code-unit ordering, because doing so would expand the migration beyond the numeric defect.
 
-The ordering rule is part of the canonical profile and MUST be tested with non-ASCII and non-BMP keys.
+The ordering rule MUST be tested with non-ASCII and non-BMP keys.
 
-### 4. Integers
+### 5. Integers
 
 Integers SHALL serialize as exact base-10 mathematical integers:
 
@@ -130,20 +157,20 @@ Integers SHALL serialize as exact base-10 mathematical integers:
 - no exponent notation;
 - no conversion through binary64.
 
-The normative contract is exact integer value, not a specific host integer width.
+The normative contract is exact integer value, not host integer width.
 
-A runtime that cannot preserve an integer exactly MUST refuse the value at the canonicalization boundary rather than round it.
+A runtime that cannot preserve an integer exactly MUST refuse it at the canonicalization boundary.
 
-### 5. Floating values
+### 6. Floating values
 
 Floating values SHALL be finite IEEE-754 binary64 values.
 
-The candidate number algorithm SHALL use RFC 8785 / ECMAScript shortest-roundtrip serialization as its base, with two Agent Memory type-preservation rules:
+The candidate algorithm SHALL use RFC 8785 / ECMAScript shortest-roundtrip binary64 formatting as prior art, with Agent Memory type-preservation rules that must be qualified before acceptance:
 
-1. negative zero SHALL serialize as `-0.0`;
-2. if the shortest-roundtrip token contains neither a decimal point nor exponent marker, append `.0` so a floating value remains distinguishable from an integer in canonical bytes.
+1. negative zero serializes distinctly as `-0.0`;
+2. a floating token with neither decimal point nor exponent receives `.0`, so float identity remains distinct from integer identity.
 
-Examples of the intended distinction:
+Examples:
 
 ```text
 integer 1   -> 1
@@ -151,222 +178,235 @@ float   1.0 -> 1.0
 float  -0.0 -> -0.0
 ```
 
-Exponent notation SHALL use lowercase `e` and the base shortest-roundtrip algorithm's normalized exponent form.
+Exponent notation SHALL use lowercase `e` and the frozen normalized exponent form.
 
-The exact floating vectors MUST be frozen before either Python or Rust implementation is accepted.
+The exact binary64 vectors MUST be frozen before either Python or Rust candidate implementation is accepted. If the type-preserving extension proves materially fragile or less interoperable than expected, this ADR returns for ruling rather than silently adopting host formatting.
 
-If qualification demonstrates that the type-preserving extension is materially harder or less interoperable than expected, ADR-040 MUST return for ruling rather than silently falling back to host formatting.
+### 7. Integrity scheme versioning
 
-### 6. Canonical profile identity
+Canonicalization version is part of persisted integrity identity.
 
-Canonicalization version is part of integrity identity.
+A commitment computed from v2 bytes MUST NOT carry a legacy scheme identifier.
 
-A digest computed from `agent-memory-canonical-json-v2` bytes MUST NOT be labeled as a legacy digest scheme.
-
-At minimum, SQLite commitment schemes SHALL advance explicitly, for example:
+At minimum, affected SQLite commitment schemes SHALL advance explicitly, for example:
 
 ```text
 bmerkle-v1  -> bmerkle-v2
-gsect-v1    -> gsect-v2
 ```
 
-The exact final names may differ, but version identity MUST be visible in the recorded commitment.
+Whether `gsect-v1` requires a new canonicalization-bearing version depends on the final reachability classification. A scheme MUST advance only when its committed byte domain actually changes; version numbers are not decorative confetti.
 
-The runtime MUST NOT interpret a legacy commitment under v2 canonical bytes or a v2 commitment under legacy bytes.
+The runtime MUST refuse scheme/canonicalizer confusion in both directions.
 
-### 7. Legacy verification remains supported
+### 8. Legacy verification remains supported
 
-Existing persisted state remains valid evidence if it verifies under the exact legacy canonicalization and digest scheme that originally committed it.
-
-Legacy verification SHALL remain read/verification-capable for the supported migration window.
+Existing persisted state remains valid evidence if it verifies under the exact serializer and commitment scheme that originally created it.
 
 ```text
 legacy bytes
-  -> legacy scheme verification
+  -> legacy verification
   -> verified logical state
   -> explicit migration eligibility
-  -> v2 canonical bytes
+  -> v2 bytes
   -> v2 commitment
 ```
 
-A v2 implementation MUST NOT recompute legacy state with v2 bytes and declare the legacy digest invalid.
+A v2 implementation MUST NOT recompute historical state with v2 bytes and then label the old commitment invalid.
 
-### 8. Migration is verify-before-recommit
+### 9. Migration is verify-before-recommit
 
-Migration SHALL follow this order:
+Migration SHALL:
 
-1. open state under the recorded legacy scheme;
-2. verify the full legacy commitment from canonical rows/state;
+1. open state under its recorded legacy scheme;
+2. verify the full legacy commitment;
 3. refuse migration if legacy verification fails;
-4. decode the verified logical state;
-5. validate that every value is representable under v2;
-6. compute v2 row hashes/indexes/roots from the logical state;
+4. decode only the verified logical state;
+5. validate every value against the v2 domain;
+6. compute v2 commitments from that logical state;
 7. commit the scheme transition transactionally;
-8. record migration provenance sufficient to distinguish migrated state from newly created v2 state;
-9. after restart, verify the v2 commitment independently from canonical rows.
+8. record migration provenance;
+9. restart and independently verify the new scheme.
 
-Migration MUST NOT be an opportunity to rewrite memory semantics, lifecycle state, identifiers, timestamps, ordering, authority, or user payloads.
+Migration MUST NOT rewrite memory semantics, lifecycle state, identifiers, timestamps, ordering, authority, or user payloads.
 
-### 9. Unsupported legacy values
+Interrupted or failed migration MUST leave the legacy state valid and unchanged.
+
+### 10. Unsupported legacy values
 
 If verified legacy state contains a value that cannot be represented by v2, migration MUST fail closed with an explicit compatibility result.
 
-Examples include:
+Examples include non-finite floats or values outside an implementation's exact supported domain.
 
-- non-finite floating values in generic attributes;
-- invalid Unicode data;
-- implementation-specific numeric values outside the receiving runtime's exact domain.
+Unsupported payload remediation is a separate governed operation, not an implicit side effect of canonicalization migration.
 
-The system MUST preserve the verified legacy state rather than partially migrating it.
+### 11. Canonicalizer registry, not universal serializer
 
-Remediation of unsupported legacy payloads is a separate governed operation.
+V2 SHOULD be implemented through an explicit versioned canonicalization API or registry.
 
-### 10. Shared canonicalizer
+The repository MUST NOT converge every identity surface onto v2 merely because centralization is convenient.
 
-The repository currently contains repeated private `_canonical_bytes` helpers across state, runtime, API, migration, and benchmark/evidence tooling.
+A conforming implementation should make scheme choice visible, for example conceptually:
 
-A v2 implementation SHOULD centralize canonical serialization behind one versioned module/API rather than copying the algorithm again.
+```text
+canonicalize(profile="legacy-python-json-v1", value=...)
+canonicalize(profile="agent-memory-canonical-json-v2", value=...)
+canonicalize(profile="rfc8785-jcs", value=...)
+```
 
-Callers SHALL request or bind a canonicalization profile explicitly where persisted or cryptographic identity depends on it.
-
-A local convenience serializer MUST NOT silently become a new canonical scheme.
+Exact API spelling is non-normative. The rule is that identity-bearing callers bind a named scheme and that a local convenience serializer cannot silently become a new canonical contract.
 
 ## Integrity-scheme consequences
 
-The current SQLite canonical-state verifier already distinguishes recorded digest schemes and verifies legacy/full-JSON versus bucketed commitments separately. That existing pattern is the migration precedent.
-
-V2 should preserve the same principle:
+The current SQLite verifier already distinguishes commitment schemes and verifies canonical state before trusting maintained indexes. That pattern remains the migration precedent:
 
 ```text
 recorded scheme
-  -> choose matching canonicalizer + root algorithm
-  -> full verification from canonical state
-  -> trust/rebuild maintained index only after verification
+  -> matching canonicalizer + root algorithm
+  -> verification from canonical state
+  -> maintained index trusted/rebuilt only after verification
 ```
 
-The maintained digest index remains derived data. Canonical rows/state remain the verification source.
+Canonical rows/state remain the verification source. Maintained indexes remain derived data.
 
 ## Rust qualification consequence
 
-#602 may continue qualifying deterministic primitives that do not depend on unresolved float-bearing persisted bytes.
+#602 may continue qualifying deterministic primitives and hot paths that do not depend on unresolved float-bearing persistence.
 
-Allowed while ADR-040/#609 is unresolved:
+Already admissible evidence includes:
 
 - tokenization/ranking primitives;
-- SHA-256 byte digest primitives;
-- non-floating canonical JSON subset;
-- identity-first candidate prefilter/index primitives;
-- matched performance work that does not claim persisted-state equivalence.
+- SHA-256 primitives;
+- non-floating canonical-byte parity;
+- identity-first candidate prefilter parity;
+- matched hot-path performance that does not claim persisted-state equivalence.
 
-Blocked from promotion until this decision is resolved:
+Blocked from promotion until #609 is resolved:
 
-- Rust persistence/integrity parity for float-bearing rows;
-- restart/checkpoint compatibility claims that rely on canonical float bytes;
-- cross-language tamper-verification claims over affected state;
-- migration of canonical SQLite state to a Rust-owned runtime.
+- Rust ownership of float-bearing persisted integrity;
+- restart/checkpoint compatibility claims over affected schemes;
+- cross-language tamper verification over affected state;
+- migration of canonical SQLite state to a Rust-owned state runtime.
 
 ## Evidence requirements for acceptance
 
-ADR-040 SHALL remain Proposed until all of the following exist:
+ADR-040 SHALL remain Proposed until all of the following exist.
 
-1. **Canonical-domain inventory**
-   - every persisted/cryptographic `_canonical_bytes` surface is inventoried;
-   - float reachability and arbitrary payload reachability are classified.
+### 1. Canonicalization-domain inventory
 
-2. **Frozen language-neutral vectors**
-   - strings/control escaping;
-   - Unicode/non-BMP key ordering;
-   - exact integers including values beyond binary64's exact integer range;
-   - representative binary64 values near exponent thresholds;
-   - integral floats;
-   - negative zero;
-   - subnormals and boundary values where practical;
-   - explicit NaN/Infinity refusal vectors.
+PR #615 establishes the repository-level family inventory and a first manual consequence map:
 
-3. **Independent Python and Rust implementations**
-   - both consume the same frozen vectors;
-   - byte identity and digest identity are exact;
-   - no tolerance or post-hoc fixture rewriting.
+- 202 Python-sorted-JSON candidates;
+- 17 direct RFC 8785/JCS candidates;
+- seven runtime/persistence-risk Python sites;
+- `sqlite_substrate.py` proven float-bearing.
 
-4. **Legacy migration evidence**
-   - valid legacy state verifies before migration;
-   - tampered legacy state refuses migration;
-   - v2 state verifies after migration and restart;
-   - interrupted/rolled-back migration leaves the legacy state valid and unchanged;
-   - unsupported legacy values fail closed without partial conversion.
+Still required before acceptance:
 
-5. **Digest-scheme versioning**
-   - old and new commitment identifiers cannot be confused;
-   - maintained indexes are rebuilt/validated under the correct scheme;
-   - no recorded digest silently changes meaning.
+- raw runtime-configuration float/non-finite reachability proof;
+- restart/checkpoint durable-envelope reachability classification;
+- explicit mapping of which commitment scheme binds which canonicalization profile.
 
-6. **Regression evidence**
-   - retain/correct/forget/history/currentness behavior unchanged;
-   - scope/tenant/isolation unchanged;
-   - candidate/admission/ranking unchanged;
-   - benchmark scores unchanged except for explicitly measured serialization/performance effects.
+### 2. Frozen language-neutral vectors
+
+Freeze before candidate implementation:
+
+- strings/control escaping;
+- Unicode/non-BMP key ordering;
+- exact integers including values beyond 2^53;
+- representative binary64 values around exponent thresholds;
+- integral floats;
+- negative zero;
+- subnormals and boundary values;
+- NaN/Infinity refusal.
+
+### 3. Independent Python and Rust implementations
+
+Both implementations consume the same frozen vectors and must reproduce exact bytes and digests. No tolerance and no post-hoc fixture rewriting.
+
+### 4. Legacy migration evidence
+
+Required cases include:
+
+- valid legacy state verifies before migration;
+- tampered legacy state refuses migration;
+- unsupported legacy values refuse without partial conversion;
+- interrupted migration preserves valid legacy state;
+- v2 state verifies after commit and restart;
+- rollback/scheme confusion fails safely.
+
+### 5. Scheme versioning
+
+Old and new commitments cannot be confused, and each recorded scheme resolves to exactly one canonicalization/root contract.
+
+### 6. Regression evidence
+
+Retain/correct/forget/history/currentness behavior, scope/tenant isolation, admission/ranking, and accepted benchmark outcomes remain unchanged except for explicitly measured serialization/performance effects.
 
 ## Rejected alternatives
 
-### Keep CPython JSON formatting as the cross-language doctrine
+### Keep CPython JSON formatting as cross-language doctrine
 
-Rejected as the target because implementation behavior would become architecture by accident and ADR-028 portability would be weakened.
+Rejected as the target because implementation behavior would become architecture by accident.
 
-A Rust formatter could be engineered to mimic CPython, but that would qualify one implementation emulation rather than establish an implementation-neutral contract.
+### Adopt RFC 8785/JCS wholesale for persistence
 
-### Adopt RFC 8785/JCS wholesale
+Rejected because it unnecessarily changes integer and key-order semantics. Existing JCS-bound domains remain legitimate and separate.
 
-Rejected as the default candidate because it unnecessarily changes integer-domain and object-key-order semantics in addition to fixing float serialization.
+### Replace all existing JCS identities with v2
 
-JCS remains normative prior art for finite binary64 shortest-roundtrip formatting and invalid-number refusal.
+Rejected. Existing JCS-bound evidence/security identities have their own compatibility contracts. #609 does not grant migration authority over them.
+
+### One universal canonical serializer for the repository
+
+Rejected. Different identity domains may legitimately use different explicit canonicalization schemes. Centralized implementation is useful only when scheme identity remains visible.
 
 ### Serialize all numbers as strings
 
-Rejected for the core profile because it changes ordinary JSON value types and would ripple into schemas and consumers.
+Rejected because it changes ordinary JSON types and would ripple through schemas/consumers.
 
-Tagged numeric strings may remain appropriate for optional domains that require decimal/bignum semantics beyond this profile.
+### Ignore float identity because hashes are implementation-local
 
-### Ignore float byte identity because hashes are implementation-local
+Rejected because persisted commitments participate in restart verification, tamper detection, migration, and cross-language conformance.
 
-Rejected because persisted commitments participate in restart verification, tamper detection, migration, and cross-language conformance. They are not ephemeral implementation details.
+### Recompute old commitments using v2 bytes
 
-### Recompute old commitments using the new canonicalizer
-
-Rejected because it would reinterpret historical evidence under a different byte contract and could misclassify valid state as tampered.
+Rejected because it would reinterpret historical evidence under a different byte contract.
 
 ## Consequences
 
 ### Positive
 
-- canonical bytes become explicit architecture rather than Python behavior;
+- persistence bytes become explicit architecture rather than CPython behavior;
 - Rust and future runtimes can qualify persistence honestly;
-- non-finite numeric behavior becomes fail-closed;
+- non-finite behavior becomes fail-closed;
 - migration is scheme-aware and evidence-preserving;
-- legacy state remains verifiable;
-- repeated serializer implementations can converge on one versioned module;
-- cryptographic/integrity claims become easier to audit and reproduce.
+- existing JCS evidence domains remain stable;
+- canonicalization-family boundaries become auditable rather than accidental.
 
 ### Costs
 
-- another explicit persistence migration must be implemented and tested;
-- legacy verification code must remain available for a compatibility window;
-- binary64 canonicalization requires careful cross-language test vectors;
-- exact arbitrary integers require runtimes to preserve values rather than casually passing through floating representations;
-- canonicalization becomes an API/versioning concern instead of a private helper.
+- an explicit persistence migration must be implemented and tested;
+- legacy verification code remains necessary for a compatibility window;
+- binary64 canonicalization requires careful cross-language vectors;
+- exact integers require receiving runtimes to preserve value rather than round;
+- the repository must maintain more than one named canonicalization profile where identity contracts legitimately differ.
 
 ## Non-goals
 
 ADR-040 does not:
 
 - make Rust the preferred runtime;
-- change memory authority, PAMA, lifecycle, ranking, or currentness semantics;
-- require JCS as the general Agent Memory wire format;
+- change memory authority, PAMA, lifecycle, ranking, or currentness;
+- require v2 or JCS as Agent Memory's general wire format;
 - normalize Unicode;
-- make digest equality equivalent to truth or authority;
-- migrate state merely because a new canonical profile exists.
+- equate digest equality with truth or authority;
+- migrate state merely because a new profile exists;
+- migrate existing JCS-bound identities without their own versioned decision.
 
 ## Decision status
 
 **Proposed.**
 
-#609 owns qualification and migration evidence. #602 consumes the result for cross-language runtime parity but cannot accept this ADR merely by reproducing candidate vectors.
+PR #615 materially narrows the scope, but #609 still owns the frozen numeric vectors, value-domain reachability proofs, scheme map, migration evidence, and independent Python/Rust parity required before a maintainer ruling.
+
+#602 consumes the result for state/runtime parity. It cannot accept this ADR merely by showing that Rust can reproduce candidate bytes.
