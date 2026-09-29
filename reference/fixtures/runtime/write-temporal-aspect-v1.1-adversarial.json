@@ -1,0 +1,499 @@
+{
+  "fixture_id": "agent-memory-write-temporal-aspect-v1.1-adversarial",
+  "status": "FROZEN_PREIMPLEMENTATION_CONTRACT",
+  "issue": 598,
+  "interpreter_ref": "agent-memory-deterministic-write-semantics",
+  "target_interpreter_version": "1.1.0",
+  "prior_interpreter_version": "1.0.0",
+  "authority_effect": "none",
+  "contract": {
+    "aspect": "regime recorded in markers.aspect (compatibility surface) or none_unknown when markers.aspect is empty",
+    "status": {
+      "resolved_principal": "the proposition is known and the regime comes only from the principal clause",
+      "resolved_write": "no known principal; exactly one regime among assertive clauses (write-level evidence)",
+      "mixed_regimes": "more than one regime in scope; aspect is none_unknown",
+      "none": "no temporal cue in scope"
+    },
+    "declined_reasons": [
+      "question_or_request",
+      "subordinate_clause",
+      "discourse_marker",
+      "passive_or_accustomed",
+      "motion_or_habitual",
+      "non_principal_clause"
+    ],
+    "declined": "exact [cue, reason] in source order",
+    "lexicon": "the 1.0.0 cue lexicon is unchanged; 1.1.0 changes cue scope only"
+  },
+  "cases": [
+    {
+      "id": "A1-currently",
+      "class": "A",
+      "text": "I currently work at Globex.",
+      "expect": {
+        "aspect": "present",
+        "status": "resolved_principal",
+        "declined": []
+      }
+    },
+    {
+      "id": "A2-used-to",
+      "class": "A",
+      "text": "I used to work at Globex.",
+      "expect": {
+        "aspect": "past_habitual",
+        "status": "resolved_write",
+        "declined": []
+      }
+    },
+    {
+      "id": "A3-planning-to",
+      "class": "A",
+      "text": "I'm planning to move to Denver.",
+      "expect": {
+        "aspect": "prospective",
+        "status": "resolved_principal",
+        "declined": []
+      }
+    },
+    {
+      "id": "A4-these-days",
+      "class": "A",
+      "text": "These days I work from home.",
+      "expect": {
+        "aspect": "present",
+        "status": "resolved_principal",
+        "declined": []
+      }
+    },
+    {
+      "id": "A5-no-longer",
+      "class": "A",
+      "text": "I no longer eat meat.",
+      "expect": {
+        "aspect": "past_habitual",
+        "status": "resolved_write",
+        "declined": []
+      }
+    },
+    {
+      "id": "B1-relative-now",
+      "class": "B",
+      "text": "I adopted a cat that I now take everywhere with me.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "now",
+            "subordinate_clause"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B2-because-no-longer",
+      "class": "B",
+      "text": "I work at Globex because my old job no longer paid enough.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "no longer",
+            "subordinate_clause"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B3-principal-cue-kept-relative-declined",
+      "class": "B",
+      "text": "I currently work at Globex, which I used to think was boring.",
+      "expect": {
+        "aspect": "present",
+        "status": "resolved_principal",
+        "declined": [
+          [
+            "used to",
+            "subordinate_clause"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B4-relative-plan",
+      "class": "B",
+      "text": "My sister, who is planning to move soon, lives in Austin.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "planning to",
+            "subordinate_clause"
+          ],
+          [
+            "soon",
+            "subordinate_clause"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B5-supporting-sentence",
+      "class": "B",
+      "text": "I have a sweet tooth. Tomorrow I'm going to try that new bakery, can't wait!",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "tomorrow",
+            "non_principal_clause"
+          ],
+          [
+            "going to",
+            "non_principal_clause"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C1-question-right-now",
+      "class": "C",
+      "text": "Can you tell me which bills are being debated right now?",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "right now",
+            "question_or_request"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C2-question-these-days",
+      "class": "C",
+      "text": "What gadgets are popular these days?",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "these days",
+            "question_or_request"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C3-request-currently",
+      "class": "C",
+      "text": "Please list the projects that are currently underway.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "currently",
+            "question_or_request"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C4-assertion-kept-question-ignored",
+      "class": "C",
+      "text": "I currently live in Denver. Can you suggest a gym nearby?",
+      "expect": {
+        "aspect": "present",
+        "status": "resolved_write",
+        "declined": []
+      }
+    },
+    {
+      "id": "C5-question-cues-declined-assertion-kept",
+      "class": "C",
+      "text": "Do you think it will rain tomorrow? I'm planning to hike.",
+      "expect": {
+        "aspect": "prospective",
+        "status": "resolved_principal",
+        "declined": [
+          [
+            "will",
+            "question_or_request"
+          ],
+          [
+            "tomorrow",
+            "question_or_request"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C6-question-presupposed-plan-abstains",
+      "class": "C",
+      "text": "What should I pack for my trip next week?",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "next week",
+            "question_or_request"
+          ]
+        ]
+      },
+      "note": "conservative: temporal language in a question may describe a presupposed proposition; 1.1.0 abstains rather than assert it"
+    },
+    {
+      "id": "D1-now-lets",
+      "class": "D",
+      "text": "Now, let's talk about my garden.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "now",
+            "discourse_marker"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "D2-now-comma",
+      "class": "D",
+      "text": "Now, I want to plan a trip.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "now",
+            "discourse_marker"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "D3-passive-used-to",
+      "class": "D",
+      "text": "The screws were used to attach the shelf.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "used to",
+            "passive_or_accustomed"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "D4-getting-used-to",
+      "class": "D",
+      "text": "I'm getting used to my new desk.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "used to",
+            "passive_or_accustomed"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "D5-be-used-to",
+      "class": "D",
+      "text": "I'm finally used to the cold weather.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "used to",
+            "passive_or_accustomed"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "E1-right-now-leading",
+      "class": "E",
+      "text": "Right now I'm reading Dune.",
+      "expect": {
+        "aspect": "present",
+        "status": "resolved_write",
+        "declined": []
+      }
+    },
+    {
+      "id": "E2-current-adjective-not-a-write-cue",
+      "class": "E",
+      "text": "My current job is at Globex.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": []
+      }
+    },
+    {
+      "id": "E3-currently-principal",
+      "class": "E",
+      "text": "I currently live in Denver.",
+      "expect": {
+        "aspect": "present",
+        "status": "resolved_principal",
+        "declined": []
+      }
+    },
+    {
+      "id": "F1-going-to-verb",
+      "class": "F",
+      "text": "I'm going to start therapy next month.",
+      "expect": {
+        "aspect": "prospective",
+        "status": "resolved_principal",
+        "declined": []
+      }
+    },
+    {
+      "id": "F2-been-going-to",
+      "class": "F",
+      "text": "I've been going to therapy every week.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "going to",
+            "motion_or_habitual"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "F3-going-to-destination",
+      "class": "F",
+      "text": "I'm going to the gym later.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "going to",
+            "motion_or_habitual"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "F4-will-next-week",
+      "class": "F",
+      "text": "I will start a new job next week.",
+      "expect": {
+        "aspect": "prospective",
+        "status": "resolved_principal",
+        "declined": []
+      }
+    },
+    {
+      "id": "F5-started-going-to",
+      "class": "F",
+      "text": "I started going to yoga class.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "going to",
+            "motion_or_habitual"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G1-formerly",
+      "class": "G",
+      "text": "I formerly lived in Boston.",
+      "expect": {
+        "aspect": "past_habitual",
+        "status": "resolved_principal",
+        "declined": []
+      }
+    },
+    {
+      "id": "G2-used-to-other-clause",
+      "class": "G",
+      "text": "I live in Denver, but I used to live in Boston.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "none",
+        "declined": [
+          [
+            "used to",
+            "non_principal_clause"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G3-no-longer",
+      "class": "G",
+      "text": "I no longer drink coffee.",
+      "expect": {
+        "aspect": "past_habitual",
+        "status": "resolved_write",
+        "declined": []
+      }
+    },
+    {
+      "id": "H1-three-regimes",
+      "class": "H",
+      "text": "I currently rent an apartment. I'm planning to buy a house soon. I used to live with my parents.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "mixed_regimes",
+        "declined": []
+      }
+    },
+    {
+      "id": "H2-two-regimes-one-clause",
+      "class": "H",
+      "text": "I will visit Rome and I currently live in Paris.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "mixed_regimes",
+        "declined": []
+      }
+    },
+    {
+      "id": "H3-unsplit-mixed",
+      "class": "H",
+      "text": "I used to live in Boston, and I'm planning to move to Denver next month.",
+      "expect": {
+        "aspect": "none_unknown",
+        "status": "mixed_regimes",
+        "declined": []
+      }
+    },
+    {
+      "id": "H4-single-regime-write-level",
+      "class": "H",
+      "text": "I love my new bike. I'm going to ride it to work tomorrow.",
+      "expect": {
+        "aspect": "prospective",
+        "status": "resolved_write",
+        "declined": []
+      },
+      "note": "no principal is determinable; one regime among assertive clauses is recorded as write-level evidence, not as the principal's aspect"
+    }
+  ]
+}
