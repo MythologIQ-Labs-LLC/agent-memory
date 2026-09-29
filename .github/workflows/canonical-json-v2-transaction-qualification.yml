@@ -6,6 +6,7 @@ on:
       - "reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1.json"
       - "reference/validate_canonical_json_v2_transaction_qualification_contract.py"
       - "reference/canonical_json_v2_transaction_qualification.py"
+      - "reference/canonical_json_v2_restart_qualification.py"
       - "reference/tests/test_canonical_json_v2_transaction_qualification.py"
       - "reference/canonical_json_v2_migration_preflight.py"
       - "reference/canonical_json_v2_sqlite_preflight.py"
@@ -38,5 +39,4 @@ jobs:
         run: python reference/validate_canonical_json_v2_transaction_qualification_contract.py --repo-root .
 
       - name: Execute transactional recommit and restart qualification tests
-        if: ${{ hashFiles('reference/tests/test_canonical_json_v2_transaction_qualification.py') != '' }}
         run: python -m unittest reference.tests.test_canonical_json_v2_transaction_qualification
