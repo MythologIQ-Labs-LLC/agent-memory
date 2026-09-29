@@ -1,0 +1,36 @@
+name: Canonical JSON v2 Candidate Parity
+
+on:
+  pull_request:
+    paths:
+      - "reference/agentmem_ref/canonical_json_v2.py"
+      - "reference/tests/test_canonical_json_v2_candidate.py"
+      - "reference/fixtures/runtime/canonical-json-v2-vectors-v1.json"
+      - "reference/fixtures/runtime/canonical-json-v2-vectors-accepted-v1.json"
+      - "rust/agent-memory-kernel-shadow/**"
+      - ".github/workflows/canonical-json-v2-parity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install reference runtime
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . pytest
+
+      - name: Verify accepted vectors against Python candidate
+        run: pytest -q reference/tests/test_canonical_json_v2_candidate.py
