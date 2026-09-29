@@ -62,26 +62,31 @@ query
 
 #### Interpreter 1.1.0 (#585)
 
-Interpreter `1.1.0` (was `1.0.0`) keeps every mode rule above and adds typed evidence and contextual cue classification. The adversarial oracle `reference/fixtures/runtime/temporal-query-intent-v1.1-adversarial.json` was frozen before the implementation.
+Interpreter `1.1.0` (was `1.0.0`) keeps every mode rule above and adds typed evidence and contextual cue classification. Two oracles were frozen before the code they judge:
+
+- the initial oracle, `reference/fixtures/runtime/temporal-query-intent-v1.1-adversarial.json`, preserved byte-identical;
+- the post-review oracle, `temporal-query-intent-v1.1-reviewed-oracle.json`, which records every expectation it supersedes.
 
 - **Typed spans.** `TemporalIntent.spans` lists every consumed cue as a `TemporalCueSpan(start, end, text, normalized_text, mode, confidence, basis, cue_id)`, where `query[start:end] == text`. `declined_spans` lists matches that were considered and deliberately not consumed, each with a `reason`. The query is never rewritten, and no token leaves lexical relevance. Spans are evidence for a later relevance seam (#583), not a relevance change.
-- **`intent_basis`** records where the intent came from:
-  - `caller_declared` is the only basis with `posture = explicit`.
-  - `query_language_explicit` covers current intent the query states unambiguously (`currently`, `current`, `right now`, `at the moment`, `at present`, `presently`, `as of now`, `as of today`, temporal `now`). It stays `posture = inferred` with `high` confidence, so it never gains caller authority. Historical-evidence admission (#549) checks the basis as well as the posture.
-  - `query_cue_inference` covers every other query-derived intent.
+- **`intent_basis`** records where the intent came from. Explicit posture has two distinct sources:
+  - `caller_declared` is the caller's declaration and the only source of caller authority.
+  - `query_language_explicit` covers current intent the query itself states unambiguously (`currently`, `current`, `right now`, `at the moment`, `at present`, `presently`, `as of now`, `as of today`, temporal `now`). It is `posture = explicit` with no estimator confidence. It never gains caller authority: historical-evidence admission (#549) requires `intent_basis = caller_declared`, not just explicit posture.
+  - `query_cue_inference` covers every other inferred query intent.
   - `none` means the intent is unspecified.
 - **Contextual `now`.**
   - Temporal, and explicit current language: clause-final `now` (`Where do I live now?`), or `now` after a form of *be* (`Who is now the CEO?`).
   - Declined as discourse: clause-leading `now` followed by a comma or a discourse verb (`Now, explain…`, `Now tell me…`).
   - Declined as idioms: `just now`, `until now`, `from now on`, `now that`, `now and then`, `now or never`.
   - Weak only: `for now`, `by now`, imperative clauses (`Show me now.`), and any other `now`, which keeps the 1.0.0 low-confidence cue.
+- **Referent `current`.** `current` modifying a noun after `before`, `after`, `since`, `until`, `till` or `prior to` in the same clause (`before I started my current job`) identifies a referent. It is declined as `referent_modifier` and creates no current intent. Interrogative `when` and `while` are not connectives.
+- **Cue scope.** A clause-leading `Right now,` in a query that asks about another mode is discourse urgency and is declined (`Right now, what was my address in the past?` is historical).
 - **Contextual `going to`.**
-  - Declined as motion or habitual language: after an aspectual or habitual verb (`started`, `began`, `continued`, `kept`, `been`, …), or before a determiner or destination (`the gym`, `my office`, `work`). This fixes LongMemEval_S `cf22b7bf` (`…since I started going to the gym…`), which 1.0.0 resolved as prospective/high.
+  - Declined as motion or habitual language: after an aspectual or habitual verb (`started`, `began`, `continued`, `kept`, `been`, …), or before a determiner or destination (`the gym`, `my office`, `work`). This fixes LongMemEval_S `cf22b7bf`.
   - The future auxiliary after a form of *be* (`am I going to stay`) stays high-confidence prospective.
   - Anything else is a low-confidence prospective cue.
 - **Mentions.** Cues inside double quotes (straight or curly), or after `word`/`term`/`phrase`, are declined.
 - **Composites win over nested cues.** `right now`, `as of now`, and `next week` do not also emit `now` or `next`.
-- **Stated-mode conflicts.** A query-language-explicit current cue that co-occurs with a cue of another mode preserves ambiguity. For example, `Where do I live now, and where did I live before?` resolves as `atemporal_or_unspecified`, low confidence.
+- **Stated-mode conflicts.** A query-language-explicit current cue that co-occurs with a cue of another mode preserves ambiguity (`Where do I live now, and where did I live before?`).
 
 ### Temporal evidence
 

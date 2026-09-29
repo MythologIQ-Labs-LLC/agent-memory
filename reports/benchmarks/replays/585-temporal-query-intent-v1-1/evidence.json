@@ -11,6 +11,227 @@
       {
         "changed": true,
         "declined": [],
+        "question": "What book am I currently reading?",
+        "question_id": "86f00804",
+        "question_type": "single-session-user",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "What brand of shampoo do I currently use?",
+        "question_id": "c14c00dd",
+        "question_type": "single-session-user",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many projects have I led or am currently leading?",
+        "question_id": "6d550036",
+        "question_type": "multi-session",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many tanks do I currently have, including the one I set up for my friend's kid?",
+        "question_id": "46a3abf7",
+        "question_type": "multi-session",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many musical instruments do I currently own?",
+        "question_id": "gpt4_194be4b3",
+        "question_type": "multi-session",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many magazine subscriptions do I currently have?",
+        "question_id": "1a8a66a6",
+        "question_type": "multi-session",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "Can you suggest some accessories that would complement my current photography setup?",
+        "question_id": "06878be2",
+        "question_type": "single-session-preference",
+        "spans": [
+          [
+            "current",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How long have I been working in my current role?",
+        "question_id": "92a0aa75",
+        "question_type": "multi-session",
+        "spans": [
+          [
+            "current",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [
+          [
+            "current",
+            "referent_modifier"
+          ]
+        ],
         "question": "How long have I been working before I started my current job at NovaTech?",
         "question_id": "gpt4_93159ced",
         "question_type": "temporal-reasoning",
@@ -19,11 +240,6 @@
             "before",
             "historical",
             "low"
-          ],
-          [
-            "current",
-            "current",
-            "high"
           ]
         ],
         "v100": {
@@ -34,7 +250,7 @@
         },
         "v110": {
           "confidence": "low",
-          "mode": "atemporal_or_unspecified",
+          "mode": "historical",
           "orders": false,
           "posture": "inferred"
         },
@@ -42,7 +258,12 @@
       },
       {
         "changed": true,
-        "declined": [],
+        "declined": [
+          [
+            "current",
+            "referent_modifier"
+          ]
+        ],
         "question": "How long have I been working before I started my current job at Google?",
         "question_id": "gpt4_93159ced_abs",
         "question_type": "temporal-reasoning",
@@ -51,9 +272,31 @@
             "before",
             "historical",
             "low"
-          ],
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": "low",
+          "mode": "historical",
+          "orders": false,
+          "posture": "inferred"
+        },
+        "v110_basis": "query_cue_inference"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many bikes do I currently own?",
+        "question_id": "89941a93",
+        "question_type": "knowledge-update",
+        "spans": [
           [
-            "current",
+            "currently",
             "current",
             "high"
           ]
@@ -65,12 +308,12 @@
           "posture": "inferred"
         },
         "v110": {
-          "confidence": "low",
-          "mode": "atemporal_or_unspecified",
-          "orders": false,
-          "posture": "inferred"
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
         },
-        "v110_basis": "query_cue_inference"
+        "v110_basis": "query_language_explicit"
       },
       {
         "changed": true,
@@ -92,25 +335,101 @@
           "posture": "inferred"
         },
         "v110": {
-          "confidence": "high",
+          "confidence": null,
           "mode": "current",
           "orders": true,
-          "posture": "inferred"
+          "posture": "explicit"
         },
         "v110_basis": "query_language_explicit"
       },
       {
         "changed": true,
         "declined": [],
-        "question": "What was my previous frequent flyer status on United Airlines before I got the current status?",
-        "question_id": "50635ada",
+        "question": "How many titles are currently on my to-watch list?",
+        "question_id": "4d6b87c8",
         "question_type": "knowledge-update",
         "spans": [
           [
-            "before",
-            "historical",
-            "low"
-          ],
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "What company is Rachel, an old colleague from my previous company, currently working at?",
+        "question_id": "5a4f22c0",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "Where is the painting 'Ethereal Dreams' by Emma Taylor currently hanging?",
+        "question_id": "e493bb7c",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How long have I been living in my current apartment in Harajuku?",
+        "question_id": "2133c1b5",
+        "question_type": "knowledge-update",
+        "spans": [
           [
             "current",
             "current",
@@ -124,8 +443,148 @@
           "posture": "inferred"
         },
         "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "What brand of BBQ sauce am I currently obsessed with?",
+        "question_id": "18bc8abd",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many Instagram followers do I currently have?",
+        "question_id": "1cea1afa",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many dozen eggs do we currently have stocked up in our refrigerator?",
+        "question_id": "ed4ddc30",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "What is my current highest score in Ticket to Ride?",
+        "question_id": "0e4e4c46",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "current",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [
+          [
+            "current",
+            "referent_modifier"
+          ]
+        ],
+        "question": "What was my previous frequent flyer status on United Airlines before I got the current status?",
+        "question_id": "50635ada",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "before",
+            "historical",
+            "low"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
           "confidence": "low",
-          "mode": "atemporal_or_unspecified",
+          "mode": "historical",
           "orders": false,
           "posture": "inferred"
         },
@@ -209,10 +668,118 @@
           "posture": "inferred"
         },
         "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "What is my current record in the recreational volleyball league?",
+        "question_id": "c7dc5443",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "current",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
           "confidence": "high",
           "mode": "current",
           "orders": true,
           "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "What type of vehicle model am I currently working on?",
+        "question_id": "3ba21379",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How long have I been living in my current apartment in Shinjuku?",
+        "question_id": "2133c1b5_abs",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "current",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "Where do I currently keep my old sneakers?",
+        "question_id": "07741c45",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "currently",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "current",
+          "orders": true,
+          "posture": "explicit"
         },
         "v110_basis": "query_language_explicit"
       }
@@ -224,113 +791,174 @@
       "query_cue_inference": 107,
       "query_language_explicit": 23
     },
-    "intent_changed": 7,
+    "intent_changed": 28,
     "questions": 500,
     "retrieval_replay_changed_questions": {
       "temporal_metadata_none": {
         "session": {
           "headline_585": {
-            "ndcg_any@10": 0.958333,
-            "ndcg_any@5": 0.958333,
-            "recall_all@10": 1.0,
-            "recall_all@5": 1.0
+            "ndcg_any@10": 0.851181,
+            "ndcg_any@5": 0.845526,
+            "recall_all@10": 0.846154,
+            "recall_all@5": 0.846154
           },
           "headline_main": {
-            "ndcg_any@10": 0.958333,
-            "ndcg_any@5": 0.958333,
-            "recall_all@10": 1.0,
-            "recall_all@5": 1.0
+            "ndcg_any@10": 0.851181,
+            "ndcg_any@5": 0.845526,
+            "recall_all@10": 0.846154,
+            "recall_all@5": 0.846154
           },
-          "top50_identical": {
-            "031748ae": true,
-            "50635ada": true,
-            "a2f3aa27": true,
-            "cf22b7bf": true,
-            "f685340e": true,
-            "gpt4_93159ced": true,
-            "gpt4_93159ced_abs": true
-          }
+          "questions": 28,
+          "top50_differences": []
         },
         "turn": {
           "headline_585": {
-            "ndcg_any@10": 0.72369,
-            "ndcg_any@5": 0.666945,
-            "ndcg_any@50": 0.739188,
-            "recall_all@10": 0.833333,
-            "recall_all@5": 0.666667,
-            "recall_all@50": 1.0
+            "ndcg_any@10": 0.614029,
+            "ndcg_any@5": 0.558762,
+            "ndcg_any@50": 0.644406,
+            "recall_all@10": 0.730769,
+            "recall_all@5": 0.538462,
+            "recall_all@50": 0.807692
           },
           "headline_main": {
-            "ndcg_any@10": 0.72369,
-            "ndcg_any@5": 0.666945,
-            "ndcg_any@50": 0.739188,
-            "recall_all@10": 0.833333,
-            "recall_all@5": 0.666667,
-            "recall_all@50": 1.0
+            "ndcg_any@10": 0.614029,
+            "ndcg_any@5": 0.558762,
+            "ndcg_any@50": 0.644406,
+            "recall_all@10": 0.730769,
+            "recall_all@5": 0.538462,
+            "recall_all@50": 0.807692
           },
-          "top50_identical": {
-            "031748ae": true,
-            "50635ada": true,
-            "a2f3aa27": true,
-            "cf22b7bf": true,
-            "f685340e": true,
-            "gpt4_93159ced": true,
-            "gpt4_93159ced_abs": true
-          }
+          "questions": 28,
+          "top50_differences": []
         }
       },
       "temporal_metadata_source_observed_at": {
         "session": {
           "headline_585": {
-            "ndcg_any@10": 0.958333,
-            "ndcg_any@5": 0.958333,
-            "recall_all@10": 1.0,
-            "recall_all@5": 1.0
+            "ndcg_any@10": 0.851181,
+            "ndcg_any@5": 0.845526,
+            "recall_all@10": 0.846154,
+            "recall_all@5": 0.846154
           },
           "headline_main": {
-            "ndcg_any@10": 0.958333,
-            "ndcg_any@5": 0.958333,
-            "recall_all@10": 1.0,
-            "recall_all@5": 1.0
+            "ndcg_any@10": 0.851181,
+            "ndcg_any@5": 0.845526,
+            "recall_all@10": 0.846154,
+            "recall_all@5": 0.846154
           },
-          "top50_identical": {
-            "031748ae": true,
-            "50635ada": true,
-            "a2f3aa27": true,
-            "cf22b7bf": true,
-            "f685340e": true,
-            "gpt4_93159ced": true,
-            "gpt4_93159ced_abs": true
-          }
+          "questions": 28,
+          "top50_differences": []
         },
         "turn": {
           "headline_585": {
-            "ndcg_any@10": 0.72369,
-            "ndcg_any@5": 0.666945,
-            "ndcg_any@50": 0.739188,
-            "recall_all@10": 0.833333,
-            "recall_all@5": 0.666667,
-            "recall_all@50": 1.0
+            "ndcg_any@10": 0.614029,
+            "ndcg_any@5": 0.558762,
+            "ndcg_any@50": 0.644406,
+            "recall_all@10": 0.730769,
+            "recall_all@5": 0.538462,
+            "recall_all@50": 0.807692
           },
           "headline_main": {
-            "ndcg_any@10": 0.72369,
-            "ndcg_any@5": 0.666945,
-            "ndcg_any@50": 0.739188,
-            "recall_all@10": 0.833333,
-            "recall_all@5": 0.666667,
-            "recall_all@50": 1.0
+            "ndcg_any@10": 0.614029,
+            "ndcg_any@5": 0.558762,
+            "ndcg_any@50": 0.644406,
+            "recall_all@10": 0.730769,
+            "recall_all@5": 0.538462,
+            "recall_all@50": 0.807692
           },
-          "top50_identical": {
-            "031748ae": true,
-            "50635ada": true,
-            "a2f3aa27": true,
-            "cf22b7bf": true,
-            "f685340e": true,
-            "gpt4_93159ced": true,
-            "gpt4_93159ced_abs": true
-          }
+          "questions": 28,
+          "top50_differences": []
         }
       }
+    },
+    "transitions": [
+      {
+        "count": 21,
+        "from": [
+          "current",
+          "inferred",
+          "high",
+          true
+        ],
+        "to": [
+          "current",
+          "explicit",
+          null,
+          true
+        ]
+      },
+      {
+        "count": 3,
+        "from": [
+          "current",
+          "inferred",
+          "high",
+          true
+        ],
+        "to": [
+          "historical",
+          "inferred",
+          "low",
+          false
+        ]
+      },
+      {
+        "count": 2,
+        "from": [
+          "current",
+          "inferred",
+          "low",
+          false
+        ],
+        "to": [
+          "current",
+          "explicit",
+          null,
+          true
+        ]
+      },
+      {
+        "count": 1,
+        "from": [
+          "historical",
+          "inferred",
+          "high",
+          false
+        ],
+        "to": [
+          "atemporal_or_unspecified",
+          "inferred",
+          "low",
+          false
+        ]
+      },
+      {
+        "count": 1,
+        "from": [
+          "prospective",
+          "inferred",
+          "high",
+          true
+        ],
+        "to": [
+          "atemporal_or_unspecified",
+          "unspecified",
+          null,
+          false
+        ]
+      }
+    ]
+  },
+  "oracles": {
+    "initial": {
+      "commit": "8a6f51744e9fa7c1cd496daf58a345f83ef3c636",
+      "path": "reference/fixtures/runtime/temporal-query-intent-v1.1-adversarial.json",
+      "status": "FROZEN_PREIMPLEMENTATION_ORACLE"
+    },
+    "reviewed": {
+      "commit": "090582dc5b985de4af9251f0c689ba165349d2b6",
+      "path": "reference/fixtures/runtime/temporal-query-intent-v1.1-reviewed-oracle.json",
+      "status": "FROZEN_POST_REVIEW_PRE_REMEDIATION_ORACLE"
     }
   },
   "temporal_currentness_gauntlet_580": {
@@ -338,26 +966,18 @@
     "assertions": 211,
     "changed_units": [
       {
-        "after": "pass",
-        "before": "fail",
-        "case": "A5-explicit-current-vs-ambiguous-cues",
+        "after": "fail",
+        "before": "pass",
+        "case": "A1-expired-exact-vs-current-weaker",
         "index": 0,
-        "level": "target",
-        "probe": "plain-now-inferred"
+        "level": "required",
+        "probe": "current-inferred"
       },
       {
         "after": "honest_unknown",
         "before": "fail",
         "case": "F28-used-to-prefer-now-prefer",
         "index": 5,
-        "level": "target",
-        "probe": "plain-now"
-      },
-      {
-        "after": "pass",
-        "before": "fail",
-        "case": "F28-used-to-prefer-now-prefer",
-        "index": 6,
         "level": "target",
         "probe": "plain-now"
       }
@@ -369,13 +989,12 @@
       "target:honest_unknown": 12,
       "target:pass": 9
     },
-    "required_regressions": [],
     "v1_1_0": {
-      "required:fail": 1,
-      "required:pass": 184,
-      "target:fail": 2,
+      "required:fail": 2,
+      "required:pass": 183,
+      "target:fail": 4,
       "target:honest_unknown": 13,
-      "target:pass": 11
+      "target:pass": 9
     }
   }
 }

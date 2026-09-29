@@ -37,9 +37,9 @@ class InterpreterIdentityTests(unittest.TestCase):
 
 
 class ExplicitSourceTests(unittest.TestCase):
-    def test_query_language_explicit_is_inferred_high_not_caller(self):
+    def test_query_language_explicit_is_explicit_posture_not_caller(self):
         intent = ti.interpret_query("Where am I currently living?")
-        self.assertEqual((intent.mode, intent.posture, intent.confidence), (ti.CURRENT, ti.INFERRED, ti.HIGH))
+        self.assertEqual((intent.mode, intent.posture, intent.confidence), (ti.CURRENT, ti.EXPLICIT, None))
         self.assertEqual(intent.intent_basis, ti.QUERY_LANGUAGE_EXPLICIT)
         self.assertFalse(intent.caller_declared)
         caller = ti.resolve_intent("Where does the user live?", {"mode": "current"})
@@ -52,12 +52,19 @@ class ExplicitSourceTests(unittest.TestCase):
         self.assertEqual((intent.mode, intent.intent_basis), (ti.HISTORICAL, ti.CALLER_DECLARED))
 
     def test_posture_basis_invariants(self):
-        with self.assertRaises(ValueError):
-            ti.TemporalIntent(mode=ti.CURRENT, posture=ti.EXPLICIT, intent_basis=ti.QUERY_LANGUAGE_EXPLICIT)
-        with self.assertRaises(ValueError):
-            ti.TemporalIntent(mode=ti.CURRENT, posture=ti.INFERRED, confidence=ti.HIGH, intent_basis=ti.CALLER_DECLARED)
-        with self.assertRaises(ValueError):
-            ti.TemporalIntent(mode=ti.CURRENT, posture=ti.INFERRED, confidence=ti.LOW, intent_basis=ti.QUERY_LANGUAGE_EXPLICIT)
+        # explicit <- {caller_declared, query_language_explicit}; inferred <- query_cue_inference;
+        # unspecified <- none.
+        ti.TemporalIntent(mode=ti.CURRENT, posture=ti.EXPLICIT, intent_basis=ti.QUERY_LANGUAGE_EXPLICIT)
+        for posture, confidence, basis in (
+            (ti.INFERRED, ti.HIGH, ti.CALLER_DECLARED),
+            (ti.INFERRED, ti.HIGH, ti.QUERY_LANGUAGE_EXPLICIT),
+            (ti.EXPLICIT, None, ti.QUERY_CUE_INFERENCE),
+            (ti.EXPLICIT, None, ti.NO_BASIS),
+            (ti.UNSPECIFIED, None, ti.QUERY_LANGUAGE_EXPLICIT),
+            (ti.UNSPECIFIED, None, ti.CALLER_DECLARED),
+        ):
+            with self.subTest(posture=posture, basis=basis), self.assertRaises(ValueError):
+                ti.TemporalIntent(mode=ti.CURRENT, posture=posture, confidence=confidence, intent_basis=basis)
         with self.assertRaises(ValueError):
             ti.TemporalIntent(intent_basis="authority_grant")
         # Pre-1.1.0 constructions keep working with a derived basis.
@@ -67,6 +74,15 @@ class ExplicitSourceTests(unittest.TestCase):
     def test_only_caller_declaration_widens_admission(self):
         declared = ti.resolve_intent("What was the release codename?", {"mode": "historical"})
         self.assertEqual(admission_mode_for_intent(declared)[0], HISTORICAL_EVIDENCE_ADMISSION)
+        # Explicit posture from query language never widens, whatever its mode: the gate
+        # reads intent_basis, not posture alone.
+        for mode, extra in ((ti.HISTORICAL, {}), (ti.AS_OF, {"target_start": "2019-01-01", "target_end": "2020-01-01"})):
+            with self.subTest(mode=mode):
+                stated = ti.TemporalIntent(mode=mode, posture=ti.EXPLICIT, intent_basis=ti.QUERY_LANGUAGE_EXPLICIT, **extra)
+                self.assertFalse(stated.caller_declared)
+                self.assertEqual(admission_mode_for_intent(stated)[0], CURRENT_STATE_ADMISSION)
+                caller = ti.TemporalIntent(mode=mode, posture=ti.EXPLICIT, intent_basis=ti.CALLER_DECLARED, **extra)
+                self.assertEqual(admission_mode_for_intent(caller)[0], HISTORICAL_EVIDENCE_ADMISSION)
         for query in ("What was the release codename previously?", "What was the codename in 2019?",
                       "What was the codename used to be, right now?"):
             with self.subTest(query=query):
@@ -107,6 +123,17 @@ class SpanContractTests(unittest.TestCase):
         self.assertFalse(intent.orders_temporally)
         self.assertEqual([(d.text, d.reason) for d in intent.declined_spans], [("going to", ti.HABITUAL_OR_MOTION)])
         self.assertNotIn("prospective:high:going to", intent.evidence)
+
+    def test_referent_current_only_after_temporal_connective(self):
+        # Interrogative "when" is not a connective: current stays the query's own intent.
+        for query in ("When does the current staging database password rotation happen?",
+                      "While I wait, what is my current address?", "What is my current job?"):
+            with self.subTest(query=query):
+                intent = ti.interpret_query(query)
+                self.assertEqual((intent.mode, intent.intent_basis), (ti.CURRENT, ti.QUERY_LANGUAGE_EXPLICIT))
+                self.assertEqual(intent.declined_spans, ())
+        intent = ti.interpret_query("What did I earn after I took my current job?")
+        self.assertEqual([(d.text, d.reason) for d in intent.declined_spans], [("current", ti.REFERENT_MODIFIER)])
 
     def test_ambiguous_uses_never_order_temporally(self):
         for query in ("Now where do I live?", "Where should I park for now?", "Where was I going home?",

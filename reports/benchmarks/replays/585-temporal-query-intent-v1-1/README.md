@@ -4,44 +4,56 @@ Evidence class: repository-owned conformance and targeted replay. It is not inde
 
 - Interpreter: `agent-memory-deterministic-temporal-cues` `1.0.0` → `1.1.0`
 - Base: `main` @ `187ab271006024eed311c697f903bfffd1930623`
-- Frozen adversarial oracle: `reference/fixtures/runtime/temporal-query-intent-v1.1-adversarial.json`, committed before the implementation
+- Oracles, both frozen before the code they judge:
+  - initial `FROZEN_PREIMPLEMENTATION_ORACLE`: `temporal-query-intent-v1.1-adversarial.json` @ `8a6f517`. It is preserved byte-identical and pinned by sha256.
+  - reviewed `FROZEN_POST_REVIEW_PRE_REMEDIATION_ORACLE`: `temporal-query-intent-v1.1-reviewed-oracle.json` @ `090582d`. It supersedes 23 field expectations in 10 initial cases, which the PR #630 review required, and adds 12 cases. A test asserts that the initial-vs-reviewed differences equal the recorded list exactly.
 - Machine-readable results: [`evidence.json`](evidence.json)
+
+## Posture contract
+
+| `intent_basis` | posture | caller authority / widens admission |
+|---|---|---|
+| `caller_declared` | `explicit` | yes |
+| `query_language_explicit` | `explicit` (confidence `None`) | **no** |
+| `query_cue_inference` | `inferred` | no |
+| `none` | `unspecified` | no |
 
 ## #580 temporal/currentness gauntlet (211 assertions)
 
 | | required pass | required fail | target pass | target honest_unknown | target fail |
 |---|---|---|---|---|---|
 | `main` (1.0.0) | 184 | 1 | 9 | 12 | 5 |
-| 1.1.0 | 184 | 1 | 11 | 13 | 2 |
+| 1.1.0 | 183 | 2 | 9 | 13 | 4 |
 
-- **No required regressions.** The one required failure is the pre-existing F30 `currently-live` lexical invariant, which belongs to #583. It is unchanged.
-- **Three target improvements, all for the intended reason.**
-  - `A5/plain-now-inferred` ("Where do I live now?") and `F28/plain-now` ("What does the user prefer to drink now?") intent: fail → pass. Clause-final temporal `now` is now query-language-explicit current, `inferred`/`high`, and orders temporally.
-  - `F28/plain-now` semantic: fail → honest_unknown. With current ordering active, the remaining gap is the memory's unknown temporal basis (#584), not interpretation.
-- **Admitted order changes: 0 of 50 probes.** Observation digests change only in interpreter-owned intent fields (`interpreter_version`, `evidence`, `intent_basis`, `spans`, `declined_spans`). The #580 monotonic comparator now exempts exactly that, and only when the interpreter version changed.
+- `A1/current-inferred` intent, required: pass → fail. **Superseded frozen gold.** The #580 gold encodes the 1.0.0 posture `inferred` for "Who is the current chief executive officer…?". 1.1.0 resolves it as `explicit`/`query_language_explicit` with the same mode and the same ordering. The #580 comparator enumerates this unit as the only permitted gold supersession.
+- `F28/plain-now` semantic, target: fail → honest_unknown. Temporal `now` now orders as current, so the remaining gap is the memory's unknown temporal basis (#584).
+- The two plain-`now` intent targets now resolve `current`/`explicit`/orders temporally. They still fail only because the frozen gold posture is `inferred`.
+- **Admitted order changes: 0 of 50 probes.**
+- Intent changes versus the frozen baseline are exactly two enumerated transitions:
+  - 24 probes: `inferred/high/query_cue_inference` → `explicit/None/query_language_explicit`, with identical admitted, candidate and per-key evidence;
+  - 2 plain-`now` probes: `inferred/low` → `explicit`, `orders_temporally` false → true. Only per-key evidence changes.
 
 ## LongMemEval_S (500 questions, cleaned release)
 
-Only 7 questions change resolved intent between 1.0.0 and 1.1.0:
+28 questions change resolved intent:
 
-| question | change | reason |
+| transition | count | cause |
 |---|---|---|
-| `cf22b7bf` "…since I started going to the gym consistently?" | prospective/high → unspecified | `going to` declined as `habitual_or_motion` (the known regression) |
-| `a2f3aa27` "How many followers do I have on Instagram now?" | current/low → current/high | clause-final temporal `now` is query-language-explicit |
-| `031748ae` "…How many engineers do I lead now?" | current/low → current/high | same |
-| `f685340e` "…previously? How often do I play now?" | historical/high → ambiguous | two stated modes: the conflict is preserved |
-| `50635ada` "…previous … status before I got the current status?" | current/high → ambiguous | `current` co-occurs with `before`, so the stated-mode conflict rule applies |
-| `gpt4_93159ced` and `_abs` "…before I started my current job…" | current/high → ambiguous | same |
+| current `inferred/high` → current `explicit` | 21 | query-language explicit posture; mode and ordering unchanged |
+| current `inferred/high` → historical `inferred/low` | 3 | `gpt4_93159ced`, `gpt4_93159ced_abs`, `50635ada`: `current` after `before` is declined as `referent_modifier` |
+| current `inferred/low` → current `explicit` | 2 | `a2f3aa27`, `031748ae`: clause-final temporal `now` |
+| historical `inferred/high` → ambiguous | 1 | `f685340e` "…previously? How often do I play now?": genuinely two stated modes |
+| prospective `inferred/high` → unspecified | 1 | `cf22b7bf` "…since I started going to the gym…": `going to` is declined as `habitual_or_motion` |
 
-The last three are side effects of the stated-mode conflict rule. In each, `current` names a referent ("my current job") rather than asking about present state, so losing current ordering there is conservative. No ambiguous result orders temporally.
+The three false ambiguities from the first revision are gone. Those questions now resolve as historical/low, because `current` names the referent (`my current job`, `the current status`).
 
-Retrieval replay of those 7 questions, `agent_memory` backend, turn and session granularity, with temporal metadata `none` and with `source_observed_at`: every top-50 ranking is identical to `main`, and the headline metrics are identical. So 1.1.0 corrects interpretation without moving LongMemEval_S ranking. The `cf22b7bf` rank change recorded on the #587 branch came from removing lexical cue tokens (#583), not from intent.
+Retrieval replay of all 28, `agent_memory` backend, turn and session granularity, with temporal metadata `none` and with `source_observed_at`: every top-50 ranking is identical to `main`, and the headline metrics are identical.
 
-Not rerun here: the full 500-question LongMemEval_S and M profiles, and AgentMemBench. Ranking is identical on every question whose intent changed, and unchanged interpretation cannot change ranking, so a full replay is left to the later #580 cycle.
+Not rerun here: the full LongMemEval_S/M profiles and AgentMemBench. Ranking is identical on every question whose intent changed, so a full replay is left to the later #580 cycle.
 
 ## Boundary
 
-- `ranking_policy.py` is unchanged. BM25 still scores every query token, including consumed cue words. A test asserts that a memory containing `currently` still outscores an otherwise identical one for "Where does the user currently live?".
+- `ranking_policy.py` is unchanged, and BM25 still scores consumed cue words. A test asserts this.
 - The query is never rewritten. Spans are evidence for a redesigned #583.
-- Query-language intent is never caller authority. Historical-evidence admission requires `intent_basis = caller_declared`.
-- PR #587 remains Draft/HOLD. It was not reused, merged or cherry-picked.
+- Historical-evidence admission requires `intent_basis = caller_declared`. A test asserts that explicit-posture query-language intent in `historical` and `as_of` modes does not widen admission.
+- PR #587 remains Draft/HOLD and was not reused.

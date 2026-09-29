@@ -15,7 +15,9 @@ Modes (ADR-039 first vocabulary)::
 
 Posture:
 
-* ``explicit``  - supplied by the caller or host; authoritative for this recall.
+* ``explicit``  - supplied by the caller or host (``intent_basis = caller_declared``;
+  authoritative for this recall), or stated unambiguously by the query's own language
+  (``intent_basis = query_language_explicit``, since 1.1.0; never caller authority).
 * ``inferred``  - produced by the deterministic cue interpreter below. It is estimator
   output with a ``high`` or ``low`` confidence and the matched cues as evidence.
 * ``unspecified`` - nothing established a temporal relationship. This is
@@ -38,13 +40,13 @@ Interpreter 1.1.0 (#585) keeps every 1.0.0 mode rule and adds:
   that were considered and deliberately not consumed are :class:`DeclinedCueSpan` with a
   reason. The query itself is never rewritten and no token is removed from relevance;
   spans are evidence for a later relevance seam (#583), not a relevance change.
-* ``intent_basis``. ``caller_declared`` is the only basis with ``posture = explicit``.
-  ``query_language_explicit`` marks current intent the query itself states unambiguously
-  (``currently``, ``right now``, ``current``, temporal ``now`` ...). It stays
-  ``posture = inferred`` with ``high`` confidence: the query stated it, but the caller
-  did not declare it, so it never gains caller authority (e.g. historical-evidence
-  admission, #549). ``query_cue_inference`` is every other query-derived intent and
-  ``none`` is unspecified intent.
+* ``intent_basis``. Explicit posture has two distinct sources. ``caller_declared`` is the
+  caller's declaration and the only source of caller authority. ``query_language_explicit``
+  is current intent the query itself states unambiguously (``currently``, ``right now``,
+  ``current``, temporal ``now`` ...): the query really did ask for that relationship, so
+  it is ``posture = explicit``, but it never gains caller authority and never widens
+  historical-evidence admission (#549). ``query_cue_inference`` is every other
+  query-derived (inferred) intent and ``none`` is unspecified intent.
 * contextual ``now``. Temporal ``now`` (clause-final, or after a form of *be*) is
   explicit current language unless its clause is imperative (``Show me now.``).
   Discourse ``now`` (clause-leading, followed by a comma or an imperative/discourse verb), quoted or metalinguistic mentions, and non-current idioms
@@ -58,6 +60,11 @@ Interpreter 1.1.0 (#585) keeps every 1.0.0 mode rule and adds:
   high-confidence prospective. Anything else is a low-confidence prospective cue.
 * quoted (``"..."``, curly double quotes) and metalinguistic (``the word now``) cue
   mentions are declined for every cue.
+* referent ``current``. ``current`` modifying a noun after a temporal connective in the
+  same clause (``before I started my current job``) identifies *which* thing is meant; it
+  does not ask for the present-time answer, so it is declined as ``referent_modifier``.
+* cue scope. A clause-leading ``Right now,`` in a query that also asks about another
+  mode is discourse urgency, not the temporal target, and is declined.
 * composite cues win over nested ones (``right now`` over ``now``, ``next week`` over
   ``next``), so no contradictory nested evidence is emitted.
 * a query-language-explicit current cue that co-occurs with a cue of another mode is a
@@ -111,7 +118,10 @@ METALINGUISTIC_MENTION = "metalinguistic_mention"
 DISCOURSE_MARKER = "discourse_marker"
 HABITUAL_OR_MOTION = "habitual_or_motion"
 NON_CURRENT_IDIOM = "non_current_idiom"
-DECLINE_REASONS = (QUOTED_MENTION, METALINGUISTIC_MENTION, DISCOURSE_MARKER, HABITUAL_OR_MOTION, NON_CURRENT_IDIOM)
+REFERENT_MODIFIER = "referent_modifier"
+DECLINE_REASONS = (
+    QUOTED_MENTION, METALINGUISTIC_MENTION, DISCOURSE_MARKER, HABITUAL_OR_MOTION, NON_CURRENT_IDIOM, REFERENT_MODIFIER,
+)
 
 
 @dataclass(frozen=True)
@@ -236,6 +246,13 @@ _DISCOURSE_VERBS = frozenset({
 })
 _BE_BEFORE_NOW = re.compile(r"(?:\b(?:is|are|am)(?:n't|n\u2019t)?|'s|'re|'m|\u2019s|\u2019re|\u2019m)\s+$", re.IGNORECASE)
 _CLAUSE_FINAL = re.compile(r"^\s*(?:[?.!,;:]|$)")
+# ``current`` after one of these connectives in the same clause names a referent.
+# ``when``/``while`` are excluded: they also open questions ("When does the current ...").
+_REFERENT_CONNECTIVE_BEFORE = re.compile(
+    r"\b(?:before|after|since|until|till|prior to)\b[^.!?;:,]*$", re.IGNORECASE
+)
+_CURRENT_ADJECTIVE = "current.high.current"
+_URGENCY_COMPOSITE = "current.high.right_now"
 _HABITUAL_BEFORE_GOING = frozenset({
     "start", "started", "starting", "starts", "begin", "began", "begun", "beginning", "begins",
     "continue", "continued", "continues", "continuing", "keep", "kept", "keeps", "keeping",
@@ -277,6 +294,7 @@ class TemporalIntent:
 
     def __post_init__(self) -> None:
         if self.intent_basis is None:
+            # Backward-compatible derivation for pre-1.1.0 constructions.
             default = {EXPLICIT: CALLER_DECLARED, INFERRED: QUERY_CUE_INFERENCE}.get(self.posture, NO_BASIS)
             object.__setattr__(self, "intent_basis", default)
         if self.mode not in MODES:
@@ -289,13 +307,12 @@ class TemporalIntent:
             raise ValueError("inferred temporal intent requires high or low confidence")
         if self.intent_basis not in INTENT_BASES:
             raise ValueError(f"unknown temporal intent basis {self.intent_basis!r}")
-        # Only the caller's declaration is explicit posture; query language never is.
-        if (self.posture == EXPLICIT) != (self.intent_basis == CALLER_DECLARED):
-            raise ValueError("explicit posture is reserved for caller-declared temporal intent")
-        if self.intent_basis == QUERY_LANGUAGE_EXPLICIT and (self.posture != INFERRED or self.confidence != HIGH):
-            raise ValueError("query-language explicit intent is inferred posture with high confidence")
-        if self.posture == UNSPECIFIED and self.intent_basis != NO_BASIS:
-            raise ValueError("unspecified temporal intent has no basis")
+        # Posture/basis invariant: explicit posture comes from the caller's declaration or
+        # from unambiguous query language, and the two stay distinguishable.
+        allowed = {EXPLICIT: {CALLER_DECLARED, QUERY_LANGUAGE_EXPLICIT}, INFERRED: {QUERY_CUE_INFERENCE},
+                   UNSPECIFIED: {NO_BASIS}}[self.posture]
+        if self.intent_basis not in allowed:
+            raise ValueError(f"temporal intent basis {self.intent_basis!r} is invalid for posture {self.posture!r}")
         for value in (self.reference_time, self.target_start, self.target_end):
             if value is not None and parse_time(value) is None:
                 raise ValueError(f"temporal intent time {value!r} is not ISO-8601")
@@ -326,7 +343,10 @@ class TemporalIntent:
 
     @property
     def caller_declared(self) -> bool:
-        """Whether the caller declared this intent (the only authoritative source)."""
+        """Whether the caller declared this intent: the only source of caller authority.
+
+        Query-language explicit intent is explicit posture but is never caller-declared.
+        """
 
         return self.intent_basis == CALLER_DECLARED
 
@@ -547,6 +567,9 @@ def interpret_query(query: str, *, reference_time: str | None = None) -> Tempora
                 contextual_id = contextual_id or "current.now.unresolved"
             else:
                 reason = outcome
+        elif reason is None and cue_id == _CURRENT_ADJECTIVE and _next_word(query, end) \
+                and _REFERENT_CONNECTIVE_BEFORE.search(query[:start]):
+            reason = REFERENT_MODIFIER
         elif reason is None and cue_id == _CONTEXTUAL_GOING_TO:
             outcome, contextual_id = _classify_going_to(query, start, end)
             if outcome in (HIGH, LOW):
@@ -557,6 +580,20 @@ def interpret_query(query: str, *, reference_time: str | None = None) -> Tempora
             declined.append(_declined(query, start, end, cue_id, reason))
             continue
         consumed.append((order, _span(query, start, end, mode, level, basis, contextual_id or cue_id)))
+
+    # Cue scope: a clause-leading "Right now," is discourse urgency when the query asks
+    # about another mode; the co-occurring mode is the temporal target.
+    other_modes = {span.mode for _, span in consumed if span.mode != CURRENT}
+    if other_modes:
+        for item in list(consumed):
+            span = item[1]
+            if (
+                span.cue_id == _URGENCY_COMPOSITE
+                and not _clause_prefix(query, span.start)
+                and re.match(r"^\s*,", query[span.end:])
+            ):
+                consumed.remove(item)
+                declined.append(_declined(query, span.start, span.end, span.cue_id, DISCOURSE_MARKER))
 
     matched: dict[str, dict[str, list[str]]] = {}
     for _, span in sorted(consumed, key=lambda item: (item[0], item[1].start)):
@@ -582,8 +619,12 @@ def interpret_query(query: str, *, reference_time: str | None = None) -> Tempora
     stated = {span.mode for span in spans_out if span.basis == SPAN_QUERY_LANGUAGE_EXPLICIT}
     if len(high_modes) == 1 and not (stated & set(high_modes) and len(all_modes) > 1):
         mode = high_modes[0]
-        basis = QUERY_LANGUAGE_EXPLICIT if mode in stated else QUERY_CUE_INFERENCE
-        return TemporalIntent(mode=mode, posture=INFERRED, confidence=HIGH, evidence=evidence, intent_basis=basis, **common)
+        if mode in stated:
+            # The query states this mode unambiguously: explicit posture, not caller authority.
+            return TemporalIntent(mode=mode, posture=EXPLICIT, confidence=None, evidence=evidence,
+                                  intent_basis=QUERY_LANGUAGE_EXPLICIT, **common)
+        return TemporalIntent(mode=mode, posture=INFERRED, confidence=HIGH, evidence=evidence,
+                              intent_basis=QUERY_CUE_INFERENCE, **common)
     if len(high_modes) >= 1 or len(all_modes) > 1:
         # Conflicting cues: preserve ambiguity rather than choose (ADR-039 C16). Since
         # 1.1.0 a mode the query states explicitly conflicts with any other mode's cue.
