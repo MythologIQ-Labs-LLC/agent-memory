@@ -1,6 +1,7 @@
 #[path = "../src/canonical_json_v2.rs"]
 mod canonical_json_v2;
 
+use agent_memory_kernel_shadow::sha256_bytes;
 use canonical_json_v2::{
     canonical_bytes_v2, canonicalize_json_text_v2, string_from_codepoints_v2,
     CanonicalJsonV2Error, CanonicalValueV2,
@@ -129,6 +130,11 @@ fn rust_candidate_matches_every_accepted_vector() {
         if let Some(expected) = case.get("expected_utf8").and_then(Value::as_str) {
             let actual = run_case(case).unwrap_or_else(|error| panic!("{id}: unexpected refusal {error}"));
             assert_eq!(actual, expected.as_bytes(), "{id}: canonical byte mismatch");
+            assert_eq!(
+                sha256_bytes(&actual),
+                sha256_bytes(expected.as_bytes()),
+                "{id}: SHA-256 digest mismatch"
+            );
         } else {
             let expected = case["expected_refusal"].as_str().expect("expected refusal");
             let error = run_case(case).expect_err("case must refuse before bytes");
