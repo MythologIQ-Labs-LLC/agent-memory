@@ -70,10 +70,31 @@ REQUIRED_SUCCESS_INVARIANTS = {
     "restart_verification_required_before_committed_outcome",
     "migration_provenance_is_evidence_not_verification",
 }
+SUBSTRATE_SOURCE_MARKERS = {
+    'def _row_hash(table: str, payload: dict) -> str:',
+    'def _bucket_digest(row_hashes: list[str]) -> str:',
+    'def _bucketed_root(self, bucket_digests: list[str]) -> str:',
+    '"scheme": BUCKETED_DIGEST_SCHEME,',
+    'return f"{BUCKETED_DIGEST_SCHEME}:" + hashlib.sha256(_canonical_bytes(material)).hexdigest()',
+}
+GOVERNANCE_SOURCE_MARKERS = {
+    'def _governance_entry_hash(section: str, key: str, value_json: str) -> str:',
+    'def _governance_chain(section: str, seq: int, previous: str, value_json: str) -> str:',
+    'def _governance_map_root(section: str, bucket_digests: list[str]) -> str:',
+    'def _governance_root(map_roots: dict[str, str], logs: dict[str, dict], residual_digest: str) -> str:',
+    '"scheme": GOVERNANCE_SCHEME,',
+    'return f"{GOVERNANCE_SCHEME}:" + hashlib.sha256(_canonical_bytes(material)).hexdigest()',
+}
 
 
 def _ids(rows: list[dict[str, Any]]) -> set[str]:
     return {str(row["id"]) for row in rows}
+
+
+def _require_source_markers(source: str, markers: set[str], label: str) -> None:
+    missing = sorted(marker for marker in markers if marker not in source)
+    if missing:
+        raise ValueError(f"{label} commitment construction drifted; re-qualify before migration: {missing}")
 
 
 def validate(path: Path, repo_root: Path) -> dict[str, Any]:
@@ -141,6 +162,30 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
         if contract.get("must_not_relabel_v1_root") is not True:
             raise ValueError(f"{name} allows relabeling v1 root")
 
+    substrate_layers = set(map(str, substrate.get("canonicalized_layers", [])))
+    if substrate_layers != {
+        "row_material",
+        "sorted_row_hash_lists_for_bucket_digest",
+        "final_bucket_root_material",
+    }:
+        raise ValueError("candidate bmerkle-v2 layer coverage changed")
+    governance_layers = set(map(str, governance.get("canonicalized_layers", [])))
+    if governance_layers != {
+        "map_entry_values",
+        "entry_hash_material",
+        "log_entry_values",
+        "log_chain_material",
+        "map_root_material",
+        "residual_material",
+        "final_governance_root_material",
+    }:
+        raise ValueError("candidate gsect-v2 layer coverage changed")
+
+    sqlite_source_path = repo_root / "reference" / "agentmem_ref" / "state" / "sqlite_substrate.py"
+    sqlite_source = sqlite_source_path.read_text(encoding="utf-8")
+    _require_source_markers(sqlite_source, SUBSTRATE_SOURCE_MARKERS, "substrate v1")
+    _require_source_markers(sqlite_source, GOVERNANCE_SOURCE_MARKERS, "governance v1")
+
     if set(map(str, payload.get("provenance_required_fields", []))) != REQUIRED_PROVENANCE_FIELDS:
         raise ValueError("migration provenance fields changed")
     if set(map(str, payload.get("success_invariants", []))) != REQUIRED_SUCCESS_INVARIANTS:
@@ -187,6 +232,7 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
         "refusal_case_count": len(refusals),
         "failure_injection_count": len(injections),
         "durable_write_phase": 4,
+        "v1_commitment_construction_tethered": True,
         "automatic_recovery_migration": False,
         "production_activation": False,
     }
