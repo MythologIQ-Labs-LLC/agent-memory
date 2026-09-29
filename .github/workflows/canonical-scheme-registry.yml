@@ -6,6 +6,7 @@ on:
       - "reference/fixtures/runtime/canonicalization-scheme-registry-v1.json"
       - "reference/canonical_scheme_registry_candidate.py"
       - "reference/tests/test_canonical_scheme_registry_candidate.py"
+      - "reference/tests/test_canonical_scheme_registry_envelope.py"
       - ".github/workflows/canonical-scheme-registry.yml"
   workflow_dispatch:
 
@@ -31,4 +32,7 @@ jobs:
           python -m pip install -e .
 
       - name: Execute frozen scheme registry contract
-        run: python -m unittest reference.tests.test_canonical_scheme_registry_candidate
+        run: |
+          python -m unittest \
+            reference.tests.test_canonical_scheme_registry_candidate \
+            reference.tests.test_canonical_scheme_registry_envelope
