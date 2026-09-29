@@ -8,6 +8,7 @@ on:
       - "reference/canonical_json_v2_transaction_qualification.py"
       - "reference/canonical_json_v2_restart_qualification.py"
       - "reference/tests/test_canonical_json_v2_transaction_qualification.py"
+      - "reference/tests/test_canonical_json_v2_transaction_refusals.py"
       - "reference/canonical_json_v2_migration_preflight.py"
       - "reference/canonical_json_v2_sqlite_preflight.py"
       - "reference/canonical_scheme_registry_candidate.py"
@@ -38,5 +39,8 @@ jobs:
       - name: Validate frozen transaction qualification contract
         run: python reference/validate_canonical_json_v2_transaction_qualification_contract.py --repo-root .
 
-      - name: Execute transactional recommit and restart qualification tests
-        run: python -m unittest reference.tests.test_canonical_json_v2_transaction_qualification
+      - name: Execute transactional recommit, restart, and refusal tests
+        run: |
+          python -m unittest \
+            reference.tests.test_canonical_json_v2_transaction_qualification \
+            reference.tests.test_canonical_json_v2_transaction_refusals
