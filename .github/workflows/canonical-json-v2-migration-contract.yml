@@ -5,6 +5,7 @@ on:
     paths:
       - "reference/fixtures/runtime/canonical-json-v2-migration-v1.json"
       - "reference/validate_canonical_json_v2_migration_contract.py"
+      - "reference/validate_canonical_json_v2_migration_outcome_boundary.py"
       - ".github/workflows/canonical-json-v2-migration-contract.yml"
   workflow_dispatch:
 
@@ -25,3 +26,6 @@ jobs:
 
       - name: Validate frozen migration contract
         run: python reference/validate_canonical_json_v2_migration_contract.py --repo-root .
+
+      - name: Validate transaction vs restart qualification boundary
+        run: python reference/validate_canonical_json_v2_migration_outcome_boundary.py --repo-root .
