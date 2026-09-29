@@ -1,0 +1,8 @@
+{
+ "issue": 598,
+ "benchmark": "AgentMemBench memdialogue_v2 (external_frozen), backend agent_memory, runner defaults",
+ "base_sha": "0103b9f3ba0ab90c4914837dcb98a9cdad7c4c2a",
+ "branch_revision": "3ab035f76ea81157692ac14ccc8cb6d93206fe4e",
+ "result": "IDENTICAL: every non-timing field equal (latency, throughput, 95% CI of timing, and execution metadata excluded)",
+ "identical_excluding_timing": true
+}

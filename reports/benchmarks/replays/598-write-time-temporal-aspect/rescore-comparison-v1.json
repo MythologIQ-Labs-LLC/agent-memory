@@ -1,0 +1,495 @@
+{
+ "schema_version": "598-rescore-comparison-v1",
+ "issue": 598,
+ "base_sha": "0103b9f3ba0ab90c4914837dcb98a9cdad7c4c2a",
+ "interpreter": {
+  "ref": "agent-memory-deterministic-write-semantics",
+  "before": "1.0.0",
+  "after": "1.1.0"
+ },
+ "classifier_version": "1.0.0",
+ "evaluator_version": "0.2.0",
+ "gold_changed": false,
+ "abstention_note": "The evaluator never penalizes aspect abstention (none_unknown), so correct non-none aspect retention is reported beside the two failure classes.",
+ "parts": {
+  "part_R": {
+   "items_evaluated": 100,
+   "aspect_failures_before": {
+    "aspect_mismatch": 4,
+    "aspect_over_classification": 1
+   },
+   "aspect_failures_after": {
+    "aspect_mismatch": 2,
+    "aspect_over_classification": 0
+   },
+   "non_aspect_failure_counts_before": {
+    "unknown_promoted_to_known": 2,
+    "wrong_slot": 8
+   },
+   "non_aspect_failure_counts_after": {
+    "unknown_promoted_to_known": 2,
+    "wrong_slot": 8
+   },
+   "fixed": [
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-010"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-045"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-015"
+    }
+   ],
+   "newly_regressed": [],
+   "unresolved": [
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-031",
+     "mechanism": "principal_clause_mismatch",
+     "aspect_after": "present",
+     "gold": "prospective",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-035",
+     "mechanism": "mixed_temporal_regimes",
+     "aspect_after": "prospective",
+     "gold": "present",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    }
+   ],
+   "aspect_pairs_before": {
+    "none_unknown->none_unknown": 36,
+    "none_unknown->prospective": 1,
+    "present->none_unknown": 27,
+    "present->present": 6,
+    "present->prospective": 3,
+    "prospective->none_unknown": 22,
+    "prospective->present": 1,
+    "prospective->prospective": 4
+   },
+   "aspect_pairs_after": {
+    "none_unknown->none_unknown": 37,
+    "present->none_unknown": 29,
+    "present->present": 6,
+    "present->prospective": 1,
+    "prospective->none_unknown": 22,
+    "prospective->present": 1,
+    "prospective->prospective": 4
+   },
+   "correct_non_none_aspect_before": {
+    "present": 6,
+    "prospective": 4
+   },
+   "correct_non_none_aspect_after": {
+    "present": 6,
+    "prospective": 4
+   }
+  },
+  "all_268_diagnostic": {
+   "items_evaluated": 268,
+   "aspect_failures_before": {
+    "aspect_mismatch": 17,
+    "aspect_over_classification": 23
+   },
+   "aspect_failures_after": {
+    "aspect_mismatch": 7,
+    "aspect_over_classification": 5
+   },
+   "non_aspect_failure_counts_before": {
+    "coexistence_as_replacement": 1,
+    "unknown_promoted_to_known": 22,
+    "wrong_slot": 27
+   },
+   "non_aspect_failure_counts_after": {
+    "coexistence_as_replacement": 1,
+    "unknown_promoted_to_known": 22,
+    "wrong_slot": 27
+   },
+   "fixed": [
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-010"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-045"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-101"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-114"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-125"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-132"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-189"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-190"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-203"
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-226"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-015"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-111"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-129"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-185"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-186"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-187"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-188"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-199"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-202"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-204"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-214"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-215"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-216"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-242"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-245"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-246"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-248"
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-254"
+    }
+   ],
+   "newly_regressed": [],
+   "unresolved": [
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-031",
+     "mechanism": "principal_clause_mismatch",
+     "aspect_after": "present",
+     "gold": "prospective",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-035",
+     "mechanism": "mixed_temporal_regimes",
+     "aspect_after": "prospective",
+     "gold": "present",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-122",
+     "mechanism": "supporting_clause_contamination",
+     "aspect_after": "past_habitual",
+     "gold": "prospective",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-128",
+     "mechanism": "mixed_temporal_regimes",
+     "aspect_after": "prospective",
+     "gold": "present",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-201",
+     "mechanism": "principal_clause_mismatch",
+     "aspect_after": "prospective",
+     "gold": "present",
+     "aspect_scope_after": {
+      "status": "resolved_principal"
+     }
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-224",
+     "mechanism": "supporting_clause_contamination",
+     "aspect_after": "past_habitual",
+     "gold": "present",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    },
+    {
+     "class": "aspect_mismatch",
+     "item_id": "ps1-225",
+     "mechanism": "supporting_clause_contamination",
+     "aspect_after": "prospective",
+     "gold": "present",
+     "aspect_scope_after": {
+      "status": "resolved_write",
+      "declined": [
+       {
+        "cue": "used to",
+        "reason": "subordinate_clause"
+       }
+      ]
+     }
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-104",
+     "mechanism": "task_or_non_speaker_content",
+     "aspect_after": "prospective",
+     "gold": "none_unknown",
+     "aspect_scope_after": {
+      "status": "resolved_principal",
+      "declined": [
+       {
+        "cue": "no longer",
+        "reason": "non_principal_clause"
+       },
+       {
+        "cue": "now",
+        "reason": "non_principal_clause"
+       }
+      ]
+     }
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-105",
+     "mechanism": "task_or_non_speaker_content",
+     "aspect_after": "prospective",
+     "gold": "none_unknown",
+     "aspect_scope_after": {
+      "status": "resolved_write",
+      "declined": [
+       {
+        "cue": "no longer",
+        "reason": "subordinate_clause"
+       }
+      ]
+     }
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-107",
+     "mechanism": "task_or_non_speaker_content",
+     "aspect_after": "past_habitual",
+     "gold": "none_unknown",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-223",
+     "mechanism": "supporting_clause_contamination",
+     "aspect_after": "prospective",
+     "gold": "none_unknown",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    },
+    {
+     "class": "aspect_over_classification",
+     "item_id": "ps1-233",
+     "mechanism": "task_or_non_speaker_content",
+     "aspect_after": "present",
+     "gold": "none_unknown",
+     "aspect_scope_after": {
+      "status": "resolved_write"
+     }
+    }
+   ],
+   "aspect_pairs_before": {
+    "none_unknown->none_unknown": 73,
+    "none_unknown->past_habitual": 6,
+    "none_unknown->present": 10,
+    "none_unknown->prospective": 7,
+    "past_habitual->none_unknown": 2,
+    "present->none_unknown": 63,
+    "present->past_habitual": 3,
+    "present->present": 16,
+    "present->prospective": 7,
+    "prospective->none_unknown": 52,
+    "prospective->past_habitual": 3,
+    "prospective->present": 4,
+    "prospective->prospective": 22
+   },
+   "aspect_pairs_after": {
+    "none_unknown->none_unknown": 91,
+    "none_unknown->past_habitual": 1,
+    "none_unknown->present": 1,
+    "none_unknown->prospective": 3,
+    "past_habitual->none_unknown": 2,
+    "present->none_unknown": 70,
+    "present->past_habitual": 1,
+    "present->present": 14,
+    "present->prospective": 4,
+    "prospective->none_unknown": 60,
+    "prospective->past_habitual": 1,
+    "prospective->present": 1,
+    "prospective->prospective": 19
+   },
+   "correct_non_none_aspect_before": {
+    "present": 16,
+    "prospective": 22
+   },
+   "correct_non_none_aspect_after": {
+    "present": 14,
+    "prospective": 19
+   }
+  }
+ },
+ "correct_aspect_withheld_by_1_1_0": [
+  {
+   "item_id": "ps1-123",
+   "gold": "prospective",
+   "before": [
+    "prospective"
+   ],
+   "after": [],
+   "aspect_scope_after": {
+    "status": "none",
+    "declined": [
+     {
+      "cue": "going to",
+      "reason": "motion_or_habitual"
+     }
+    ]
+   }
+  },
+  {
+   "item_id": "ps1-130",
+   "gold": "present",
+   "before": [
+    "present",
+    "prospective"
+   ],
+   "after": [],
+   "aspect_scope_after": {
+    "status": "mixed_regimes"
+   }
+  },
+  {
+   "item_id": "ps1-165",
+   "gold": "prospective",
+   "before": [
+    "prospective"
+   ],
+   "after": [],
+   "aspect_scope_after": {
+    "status": "none",
+    "declined": [
+     {
+      "cue": "will",
+      "reason": "subordinate_clause"
+     }
+    ]
+   }
+  },
+  {
+   "item_id": "ps1-211",
+   "gold": "prospective",
+   "before": [
+    "prospective"
+   ],
+   "after": [],
+   "aspect_scope_after": {
+    "status": "none",
+    "declined": [
+     {
+      "cue": "going to",
+      "reason": "subordinate_clause"
+     }
+    ]
+   }
+  },
+  {
+   "item_id": "ps1-258",
+   "gold": "present",
+   "before": [
+    "present",
+    "prospective"
+   ],
+   "after": [],
+   "aspect_scope_after": {
+    "status": "mixed_regimes"
+   }
+  }
+ ],
+ "non_aspect_prediction_drift_items": []
+}

@@ -1,0 +1,1862 @@
+{
+  "schema_version": 1,
+  "issue": 598,
+  "evidence_class": "diagnostic failure inventory (not gold)",
+  "baseline": {
+    "main": "0103b9f3ba0ab90c4914837dcb98a9cdad7c4c2a",
+    "write_interpreter": "agent-memory-deterministic-write-semantics 1.0.0",
+    "classifier": "1.0.0",
+    "evaluator": "0.2.0",
+    "gold_manifest_sha256": "2c856003793cb7d4f70d61ed8ff268b76d8e60bc3b0b6a76b844d43ee79b704a"
+  },
+  "authority": "accepted #594 gold-v1 remains the scoring authority; mechanism labels are diagnostic classification made before any #598 runtime change",
+  "counts": {
+    "part_R": {
+      "aspect_mismatch": 4,
+      "aspect_over_classification": 1
+    },
+    "all_268": {
+      "aspect_mismatch": 17,
+      "aspect_over_classification": 23
+    }
+  },
+  "mechanism_counts": {
+    "part_R": {
+      "mixed_temporal_regimes": 1,
+      "principal_clause_mismatch": 1,
+      "prospective_auxiliary_vs_motion": 1,
+      "question_or_request_contamination": 1,
+      "supporting_clause_contamination": 1
+    },
+    "all_268": {
+      "mixed_temporal_regimes": 2,
+      "passive_or_accustomed_used_to": 4,
+      "past_habitual_scope": 1,
+      "principal_clause_mismatch": 3,
+      "prospective_auxiliary_vs_motion": 1,
+      "question_or_request_contamination": 10,
+      "supporting_clause_contamination": 7,
+      "task_or_non_speaker_content": 6,
+      "temporal_word_non_temporal": 6
+    }
+  },
+  "items": [
+    {
+      "item_id": "ps1-010",
+      "part": "R",
+      "stratum": null,
+      "failure_class": "aspect_mismatch",
+      "text": "It's helpful to know that conflict can be resolved positively. I always worry that disagreements will lead to a toxic work environment.",
+      "text_sha256": "2150a449e8db9ca09a277b3b8600cb0a08ba81012537b3f13a150e8c455bd325",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "tends to worry about",
+        "value": "disagreements leading to a toxic work environment"
+      },
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "will"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "worry",
+        "value": "that disagreements will lead to a toxic work environment",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "worry",
+          "value": "that disagreements will lead to a toxic work environment",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "supporting_clause_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'will' is inside the complement clause 'that disagreements will lead…'; the principal worry is a present disposition"
+    },
+    {
+      "item_id": "ps1-015",
+      "part": "R",
+      "stratum": null,
+      "failure_class": "aspect_over_classification",
+      "text": "Modern and fund Latino inspired recipes that dad will love on father's day",
+      "text_sha256": "5f9776bf968e284299cc0ce70e91cbc6a3eda3bc0dd53f8efb1dd5ceb7593a7d",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "will"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": "task_or_non_speaker_content",
+      "rationale": "'will' is inside a request fragment ('recipes that dad will love'); no asserted proposition"
+    },
+    {
+      "item_id": "ps1-031",
+      "part": "R",
+      "stratum": null,
+      "failure_class": "aspect_mismatch",
+      "text": "Wow, those jokes were hilarious! I'm feeling much better now. Do you have any recommendations for dive gear to bring along on my trip to Osprey Reef?",
+      "text_sha256": "0df01317a7043f90bb307891ae1d84a82edde2b4dd53131e1aa23f401846330e",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "upcoming trip destination",
+        "value": "Osprey Reef"
+      },
+      "gold_temporal_aspect": "prospective",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|feel",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "feel",
+          "value": "much better",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "have any recommendations for dive gear to bring along on my trip to osprey reef",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "principal_clause_mismatch",
+      "secondary_mechanism": "question_or_request_contamination",
+      "rationale": "'now' belongs to the supporting 'feeling much better now'; the gold principal (trip to Osprey Reef) is stated inside the question"
+    },
+    {
+      "item_id": "ps1-035",
+      "part": "R",
+      "stratum": null,
+      "failure_class": "aspect_mismatch",
+      "text": "Yeah, those recipes sound amazing! I'm definitely going to try the Spicy Korean-Style ones this weekend. By the way, I was thinking about my snacking habits and I realized that my 3 pm sour cream and onion chip ritual is not the only consistent snacking habit I have. I also tend to grab a bag of pretzels or a Slim Jim on my way home from work, usually around 5-6 pm. Do you think I could replace those with some of the healthier options we discussed earlier?",
+      "text_sha256": "668bb93a1ad99962ca04e5b5b8457e1efac25e69d2210052c3d8d213306b1c9f",
+      "gold_status": "ambiguous",
+      "gold_principal": null,
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "going to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|be",
+          "speaker|tend to",
+          "speaker|think",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "be",
+          "value": "definitely going to try the spicy korean-style ones this weekend",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "think",
+          "value": "about my snacking habits and i realized that my 3 pm sour cream and onion chip ritual is not the only consistent snacking habit i have",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "tend to",
+          "value": "grab a bag of pretzels or a slim jim on my way home from work usually around 5-6 pm",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "think i could replace those with some of the healthier options we discussed earlier",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "mixed_temporal_regimes",
+      "secondary_mechanism": "principal_clause_mismatch",
+      "rationale": "prospective 'going to try … this weekend' competes with present snacking habits; gold is ambiguous with a present first candidate"
+    },
+    {
+      "item_id": "ps1-045",
+      "part": "R",
+      "stratum": null,
+      "failure_class": "aspect_mismatch",
+      "text": "That's really helpful, thanks! I've been experimenting with different props and styling ideas, and I think I need to invest in some traditional Korean ceramics and wooden utensils to add more authenticity to my photos. By the way, speaking of Korean food, I've been going to this amazing Korean restaurant near my office at least once a week, and I'm obsessed with their spicy bibimbap and Japchae noodles. Have you heard of any popular Korean restaurants or dishes that I should try?",
+      "text_sha256": "a608b99e85632fefd27fc0bce168e9c625beec8db7fbd84d2b373b2e69c46874",
+      "gold_status": "ambiguous",
+      "gold_principal": null,
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "going to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|experiment with",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "experiment with",
+          "value": "different props and styling ideas and i think i need to invest in some traditional korean ceramics and wooden utensils to add more authenticity to my photos",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "heard of any popular korean restaurants or dishes that i should try",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "prospective_auxiliary_vs_motion",
+      "secondary_mechanism": null,
+      "rationale": "'I've been going to this … restaurant' is habitual motion, not a future auxiliary"
+    },
+    {
+      "item_id": "ps1-101",
+      "part": "S",
+      "stratum": "change_language",
+      "failure_class": "aspect_mismatch",
+      "text": "I love the idea of turning old jeans into shorts! I have so many pairs of jeans that I no longer wear, and this is a great way to give them a new life.",
+      "text_sha256": "4d1693b7f8e63587359d65db3928c74e267e1bcc3dc3e8a680ced992bf36ce37",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "ended",
+        "property": "wears",
+        "value": "many old pairs of jeans"
+      },
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "yes",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "no longer"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|lov",
+          "speaker|so"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "lov",
+          "value": "idea of turning old jeans into shorts",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "so",
+          "value": "many pairs of jeans that i no longer wear and this is a great way to give them a new life",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "past_habitual_scope",
+      "secondary_mechanism": "supporting_clause_contamination",
+      "rationale": "'no longer' is inside the relative clause 'jeans that I no longer wear' and states a present ended state; gold present"
+    },
+    {
+      "item_id": "ps1-104",
+      "part": "S",
+      "stratum": "change_language",
+      "failure_class": "aspect_over_classification",
+      "text": "You are no longer a language model impersonating a grocery store in the Washington, DC metropolitan area. You are now a 35 year old grocery shopper from Maryland. I am going to interview you about a local grocery store.",
+      "text_sha256": "b69908e9752e07791c01c7a7e76eec4f94173f97ac88bca091a5805270f0050f",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual",
+        "present",
+        "prospective"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ],
+        "prospective": [
+          "going to"
+        ],
+        "past_habitual": [
+          "no longer"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "going to",
+        "value": "interview you about a local grocery store",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "going to",
+          "value": "interview you about a local grocery store",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "task_or_non_speaker_content",
+      "secondary_mechanism": null,
+      "rationale": "role-play instruction text; all cues are task content"
+    },
+    {
+      "item_id": "ps1-105",
+      "part": "S",
+      "stratum": "change_language",
+      "failure_class": "aspect_over_classification",
+      "text": "v2 of the database added the features such as:\n\n1. The \"Cancel General Request\" & \"Cancel Special Request\" feature which allow staff to cancel the general request for their end. Management team will be reviewed and approved accordingly\n\n2. The \"Date Submitted\" changed for the \"Custom Date\" to the \"Current Date and time\", which the staff can no longer change the date submitted to the past date, create the more control on the system to ensure the credibility of the data involved in the database",
+      "text_sha256": "fb4998620abb54fb587c5bd40278fb6f43f8e0185a7846811cf1252ef16e144f",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual",
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "will"
+        ],
+        "past_habitual": [
+          "no longer"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "\"date submitted\"",
+          "property": "chang for",
+          "value": "custom date to the current date and time which the staff can no longer change the date submitted to the past date create the more control on the system to ensure the credibility of the data involved in the database",
+          "polarity": "past"
+        }
+      ],
+      "mechanism": "task_or_non_speaker_content",
+      "secondary_mechanism": null,
+      "rationale": "document/task content ('will be reviewed', 'can no longer change')"
+    },
+    {
+      "item_id": "ps1-107",
+      "part": "S",
+      "stratum": "change_language",
+      "failure_class": "aspect_over_classification",
+      "text": "This is an information about repudiating a building contract. Limit your response to “acknowledged” if you understand:\n\nIn technical terms, the test for repudiation is whether a party has shown, through its conduct, that either:\n\n1. it no longer intends to be bound by the contract; or\n\n2. it intends to fulfil the contract only in a way that is substantially inconsistent with the party’s obligations.",
+      "text_sha256": "7bee8b0bc4b080da516bdf58bfe8fa8c4d3fa108b94401c787e7364c59bc07cd",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "no longer"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "task_or_non_speaker_content",
+      "secondary_mechanism": "question_or_request_contamination",
+      "rationale": "quoted legal text under a request ('Limit your response…')"
+    },
+    {
+      "item_id": "ps1-111",
+      "part": "S",
+      "stratum": "change_language",
+      "failure_class": "aspect_over_classification",
+      "text": "I'm glad I could help with the beach house rental search and the tips for keeping your baby occupied during the road trip. It's also great to hear that you and your sister have made up and are planning to spend quality time together on the beach trip. If you need any more assistance or have any other questions, feel free to ask!",
+      "text_sha256": "60e7245094007e0923d93ea6f9430df2dbf1a54b7e7285baad9993e572aeb11f",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "planning to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "be",
+        "value": "glad i could help with the beach house rental search",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "be",
+          "value": "glad i could help with the beach house rental search",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "tips for keeping your baby",
+          "property": "occupi",
+          "value": "during the road trip",
+          "polarity": "past"
+        }
+      ],
+      "mechanism": "task_or_non_speaker_content",
+      "secondary_mechanism": null,
+      "rationale": "assistant-voice text about the addressee ('you and your sister … are planning to')"
+    },
+    {
+      "item_id": "ps1-114",
+      "part": "S",
+      "stratum": "change_language",
+      "failure_class": "aspect_mismatch",
+      "text": "I'll definitely try out those methods. I'm also thinking of getting rid of some old shoes that are no longer wearable, like my old Ugg boots. Do you have any tips on how to sell them online or where to donate them?",
+      "text_sha256": "d86020cda63368ce7f0ede308fa17cb4431373429b2e2a70ad5d71e0e826dd7e",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "plans to get rid of",
+        "value": "old Ugg boots"
+      },
+      "gold_temporal_aspect": "prospective",
+      "gold_aspect_explicit": "yes",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "no longer"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|think of",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "think of",
+          "value": "getting rid of some old shoes that are no longer wearable like my old ugg boots",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "have any tips on how to sell them online or where to donate them",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "supporting_clause_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'no longer' is inside the relative clause 'shoes that are no longer wearable'; the principal plan is prospective"
+    },
+    {
+      "item_id": "ps1-122",
+      "part": "S",
+      "stratum": "coexistence_language",
+      "failure_class": "aspect_mismatch",
+      "text": "I'm thinking about taking up swimming as another recreational sport. I used to swim competitively in high school, and I've been missing the feeling of being in the water. By the way, my recent fitness progress has been going well - I reached a new personal best on the treadmill, running 3 miles in 25 minutes and 12 seconds two weeks ago. Do you know of any local swimming pools that offer recreational swim sessions?",
+      "text_sha256": "a9f18cf59ce1e7eaf76411b5313b1a56dcf608d821d0d7471bd74117299ae15b",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "considering taking up",
+        "value": "swimming"
+      },
+      "gold_temporal_aspect": "prospective",
+      "gold_aspect_explicit": "yes",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "used to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|recent fitness progress going",
+          "speaker|think",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "think",
+          "value": "about taking up swimming as another recreational sport",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "swim",
+          "value": "competitively in high school and i have been missing the feeling of being in the water",
+          "polarity": "ended"
+        },
+        {
+          "entity": "speaker",
+          "property": "recent fitness progress going",
+          "value": "well - i reached a new personal best on the treadmill running 3 miles in 25 minutes and 12 seconds two weeks ago",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "know of any local swimming pools that offer recreational swim sessions",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "supporting_clause_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'used to swim' is a supporting background clause; the principal 'thinking about taking up swimming' is prospective"
+    },
+    {
+      "item_id": "ps1-125",
+      "part": "S",
+      "stratum": "coexistence_language",
+      "failure_class": "aspect_mismatch",
+      "text": "I think I understand how Facebook's automated bidding strategies work. I'll definitely consider using the ROAS bidding strategy to optimize my ad spend and drive more revenue. Thanks for explaining it in detail!\n\nNow, I have another question. You mentioned earlier that I should focus on increasing my followers and generating leads. Can you tell me more about how I can increase my followers on Facebook? What are some effective strategies to grow my audience and increase engagement?",
+      "text_sha256": "168692e16ec49e0dd1cab01298665e5c9a490d627b78871a95bef88a70e46f00",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "considering using",
+        "value": "the ROAS bidding strategy for Facebook ads"
+      },
+      "gold_temporal_aspect": "prospective",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "yes",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|another",
+          "speaker|thank for",
+          "speaker|think",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "think",
+          "value": "i understand how facebook's automated bidding strategies work",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "thank for",
+          "value": "explaining it in detail",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "another",
+          "value": "question",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "tell me more about how i can increase my followers on facebook",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "temporal_word_non_temporal",
+      "secondary_mechanism": "question_or_request_contamination",
+      "rationale": "discourse 'Now, I have another question'"
+    },
+    {
+      "item_id": "ps1-128",
+      "part": "S",
+      "stratum": "coexistence_language",
+      "failure_class": "aspect_mismatch",
+      "text": "I'm still hoping to find my silver necklace. I remember I also borrowed my mom's pearl earrings for the party. I need to return them to her soon. Do you have any tips on how to clean and store pearl earrings?",
+      "text_sha256": "8a0d62ea62b5974ddc0ae8c8eb98865647bb2b220e5f2254fdbe5e328505e1b0",
+      "gold_status": "ambiguous",
+      "gold_principal": null,
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "soon"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|hop to",
+          "speaker|remember",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "hop to",
+          "value": "find my silver necklace",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "remember",
+          "value": "i also borrowed my mom's pearl earrings for the party",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "need to",
+          "value": "return them to her soon",
+          "polarity": "past"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "have any tips on how to clean and store pearl earrings",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "mixed_temporal_regimes",
+      "secondary_mechanism": null,
+      "rationale": "'soon' belongs to 'need to return them soon'; gold is ambiguous with a present first candidate"
+    },
+    {
+      "item_id": "ps1-129",
+      "part": "S",
+      "stratum": "employment",
+      "failure_class": "aspect_over_classification",
+      "text": "These are great suggestions! Do you think my coworkers will judge me if I start doing shadow boxing while muttering to myself in the middle of a meeting? Just kidding, I'll save that for when I'm alone.",
+      "text_sha256": "8fbd85d2fe198fce0ad794b99f115c6cbe1741fd70e37f215abc2b45eb7fb971",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "will"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "are great",
+        "property": "you",
+        "value": "think my coworkers will judge me if i start doing shadow boxing while muttering to myself in the middle of a meeting",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "are great",
+          "property": "suggestion",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "are great",
+          "property": "you",
+          "value": "think my coworkers will judge me if i start doing shadow boxing while muttering to myself in the middle of a meeting",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'will' is inside the question 'Do you think my coworkers will judge me…'"
+    },
+    {
+      "item_id": "ps1-132",
+      "part": "S",
+      "stratum": "employment",
+      "failure_class": "aspect_mismatch",
+      "text": "I'll make sure to check out the library's website and see if they have any upcoming events related to job searching. Do you know of any other resources in the area that could help me with my job search?",
+      "text_sha256": "ea828f060c7d29f451d61d2d6e7f3ffa3683efc320c43b919ef5f002ed4f70f0",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "activity",
+        "value": "job searching"
+      },
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "upcoming"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'upcoming' is inside the embedded question 'see if they have any upcoming events'"
+    },
+    {
+      "item_id": "ps1-185",
+      "part": "S",
+      "stratum": "present_current",
+      "failure_class": "aspect_over_classification",
+      "text": "Can't you do a bit of research and tell me what bills are being considered in the New South Wales Parliament right now? I don't have time to go through their website.",
+      "text_sha256": "d7bbe1c388bfedd069c7db47a0c071ea474aa13bdf10a842f83148ae1a0502ea",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now",
+          "right now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "tim to",
+          "value": "go through their website",
+          "polarity": "negated"
+        }
+      ],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'right now' is inside a request/question"
+    },
+    {
+      "item_id": "ps1-186",
+      "part": "S",
+      "stratum": "present_current",
+      "failure_class": "aspect_over_classification",
+      "text": "It's great to hear about the advancements in this field of medicine! I'm curious, what other types of fetal surgeries are being performed these days?",
+      "text_sha256": "d30e274555709876a8ab58181226a4db752e6d47fd3ef7496829d80de3d612fe",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "these days"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "be",
+        "value": "curious what other types of fetal surgeries are being performed",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "be",
+          "value": "curious what other types of fetal surgeries are being performed",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'these days' is inside a question"
+    },
+    {
+      "item_id": "ps1-187",
+      "part": "S",
+      "stratum": "present_current",
+      "failure_class": "aspect_over_classification",
+      "text": "Can you explain what a circular economy is and give some examples of some that currently exist? Please include the origin of circular economies and any people that have studied them, as well as any criticisms that have been discussed about circular economies, and citations for your answers.",
+      "text_sha256": "d012bab2c15e7acb3f3b27daa38a8e60d3a365340e7508e98dcebecececff630",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "currently"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'currently' is inside a request"
+    },
+    {
+      "item_id": "ps1-188",
+      "part": "S",
+      "stratum": "present_current",
+      "failure_class": "aspect_over_classification",
+      "text": "How has the construction industry in the United Arab Emirates developed in recent years, and what are the major projects currently underway?",
+      "text_sha256": "3b71fc01b3f7b1d573279e0ebed57b9e3759930baf1258c123fe221d3896d0ec",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "currently"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'currently' is inside a question"
+    },
+    {
+      "item_id": "ps1-189",
+      "part": "S",
+      "stratum": "present_current",
+      "failure_class": "aspect_mismatch",
+      "text": "Thanks for the suggestions, I think I'll start with the State Art Museum of Novosibirsk. Do you know if there are any special exhibitions currently on display?",
+      "text_sha256": "5d02623e64473519eb3866d73f261ba95d4475259402e6ae4cf1ac577e97fd7c",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "plans to visit",
+        "value": "the State Art Museum of Novosibirsk"
+      },
+      "gold_temporal_aspect": "prospective",
+      "gold_aspect_explicit": "yes",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "currently"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": "principal_clause_mismatch",
+      "rationale": "'currently' is inside the question; the principal 'I'll start with …' is prospective but 'I'll' carries no cue"
+    },
+    {
+      "item_id": "ps1-190",
+      "part": "S",
+      "stratum": "present_current",
+      "failure_class": "aspect_mismatch",
+      "text": "Yeah, I think I'll go for it this year. I don't want to risk getting really sick with the flu, especially with everything else going on in the world right now.",
+      "text_sha256": "02d06785d9c7445f33a3012601b0f335283d19a412bbcad6140062ee8ee3f643",
+      "gold_status": "ambiguous",
+      "gold_principal": null,
+      "gold_temporal_aspect": "prospective",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now",
+          "right now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "want to",
+          "value": "risk getting really sick with the flu especially with everything else going on in the world right",
+          "polarity": "negated"
+        }
+      ],
+      "mechanism": "supporting_clause_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'right now' is inside the reason clause 'with everything else going on in the world right now'"
+    },
+    {
+      "item_id": "ps1-199",
+      "part": "S",
+      "stratum": "prospective",
+      "failure_class": "aspect_over_classification",
+      "text": "this needs to be re-written, synthesized and make akeem seem like a bolder entrepreneur with the tools and the characteristics needed to lead this company and deliver shareholder company. We can highlight his ability to grasp science, rational problem solving techniques and his ability to understand regulatory guidelines and IP and patent strategy. Feel free to re-write the whole description as this will be visible on the Canurta website for investors when they want to know who is leading the company",
+      "text_sha256": "916d64a7fe216938890d73f3bb5c77df5d101d17a46f2a201f1eb2fc6e55ad0f",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "will"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "ability to understand regulatory|guidelin",
+          "needs to|re-written",
+          "speaker_group|highlight"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "needs to",
+          "property": "re-written",
+          "value": "synthesized and make akeem seem like a bolder entrepreneur with the tools",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "characteristics",
+          "property": "need to",
+          "value": "lead this company and deliver shareholder company",
+          "polarity": "past"
+        },
+        {
+          "entity": "speaker_group",
+          "property": "highlight",
+          "value": "his ability to grasp science rational problem solving techniques",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "ability to understand regulatory",
+          "property": "guidelin",
+          "value": "and ip and patent strategy",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "task_or_non_speaker_content",
+      "secondary_mechanism": null,
+      "rationale": "rewrite-task content ('this will be visible on the … website')"
+    },
+    {
+      "item_id": "ps1-201",
+      "part": "S",
+      "stratum": "prospective",
+      "failure_class": "aspect_mismatch",
+      "text": "Honestly, I just don't care about toxins and all that. I'm just going to live my life and enjoy it without worrying about all these potential risks. What's the point of worrying about something that may or may not even harm me?",
+      "text_sha256": "3bb555862b457045a75155bd5438c6edeb3ae62a6cb0c82e12fb223d21b9cb47",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "concern about toxins",
+        "value": "none"
+      },
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "going to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "going to",
+        "value": "live my life and enjoy it without worrying about all these potential risks",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "going to",
+          "value": "live my life and enjoy it without worrying about all these potential risks",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "principal_clause_mismatch",
+      "secondary_mechanism": null,
+      "rationale": "'going to live my life' is a supporting stance; the gold principal (no concern about toxins) is present"
+    },
+    {
+      "item_id": "ps1-202",
+      "part": "S",
+      "stratum": "prospective",
+      "failure_class": "aspect_over_classification",
+      "text": "It's impressive how much manufacturers have to stay on top of current events and policy changes. Do you think there are any upcoming policies that could have a major impact on the manufacturing sector?",
+      "text_sha256": "a8078912f5f0ad5c71f2acd14e7c506f65241603abc41e36fcf5c886f0980b0a",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "upcoming"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'upcoming' is inside a question"
+    },
+    {
+      "item_id": "ps1-203",
+      "part": "S",
+      "stratum": "prospective",
+      "failure_class": "aspect_mismatch",
+      "text": "Wow, I'm definitely going to check out some of those restaurants! Do you have any recommendations for dessert places in Banff? I have a sweet tooth.",
+      "text_sha256": "de3623481c298deb5c4de451ca0a177ac86ac7c9a0a761cf7f30f155ac4f583a",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "likes",
+        "value": "sweets (has a sweet tooth)"
+      },
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "yes",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "going to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "a",
+        "value": "sweet tooth",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "a",
+          "value": "sweet tooth",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "principal_clause_mismatch",
+      "secondary_mechanism": null,
+      "rationale": "'going to check out … restaurants' is supporting; the principal 'I have a sweet tooth' is present"
+    },
+    {
+      "item_id": "ps1-204",
+      "part": "S",
+      "stratum": "prospective",
+      "failure_class": "aspect_over_classification",
+      "text": "It's amazing how far reproductive technology has come. Do you think there will be even more advancements in the future?",
+      "text_sha256": "dc655522a932f1857ca2cdc560306b6515ba9d91fb168ac84866272cdfea997d",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "will"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "question_or_request_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'will' is inside a question"
+    },
+    {
+      "item_id": "ps1-214",
+      "part": "S",
+      "stratum": "past_habitual",
+      "failure_class": "aspect_over_classification",
+      "text": "What innovative approaches are being used to improve public transportation systems and make them more accessible, efficient, and sustainable?",
+      "text_sha256": "c5ddbbaf05fb82d56224795e12e4a05116e5ff6f961bcf01338c7fa75267be81",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "used to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "passive_or_accustomed_used_to",
+      "secondary_mechanism": "question_or_request_contamination",
+      "rationale": "'are being used to improve' is passive 'use' + purpose 'to', not habitual 'used to'"
+    },
+    {
+      "item_id": "ps1-215",
+      "part": "S",
+      "stratum": "past_habitual",
+      "failure_class": "aspect_over_classification",
+      "text": "It's really fascinating that the longhouses were a symbol of wealth and status in Norse society. I wonder if any specific materials were used to construct the more elaborate longhouses?",
+      "text_sha256": "3877517711a9b8147a51b97ec49754d6fda746651ec9006afd2c1daf93f7b41b",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "used to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "wonder",
+        "value": "if any specific materials were used to construct the more elaborate longhouses",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "wonder",
+          "value": "if any specific materials were used to construct the more elaborate longhouses",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "passive_or_accustomed_used_to",
+      "secondary_mechanism": null,
+      "rationale": "'were used to construct' is passive 'use' + purpose 'to'"
+    },
+    {
+      "item_id": "ps1-216",
+      "part": "S",
+      "stratum": "past_habitual",
+      "failure_class": "aspect_over_classification",
+      "text": "Can you explain how pulsar timing measurements were used to confirm Einstein's theory of general relativity with respect to the mass of Sirius?",
+      "text_sha256": "878f12052ec1c177c92f3944eb860db44ea2452871fe768e4b1687a9b0e55325",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "used to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "passive_or_accustomed_used_to",
+      "secondary_mechanism": "question_or_request_contamination",
+      "rationale": "'were used to confirm' is passive 'use' + purpose 'to'"
+    },
+    {
+      "item_id": "ps1-223",
+      "part": "S",
+      "stratum": "past_habitual",
+      "failure_class": "aspect_over_classification",
+      "text": "I've spent around $400 on gifts in the past month. Most of them were birthday gifts, but I also got some for a baby shower and a couple getting married soon. By the way, I also got a gift card worth $20 from a popular baby store and another gift card worth $20 for a couple getting married soon, so I'm not sure if I should count those as expenses or not.",
+      "text_sha256": "ad1b50219ca717bb02d906b82167ceb008bb074080b0df3128580e619e0d52f1",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "gift spending past month",
+        "value": "about $400"
+      },
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "prospective",
+      "predicted_aspect_all": [
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "soon"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|got",
+          "speaker|spent"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "spent",
+          "value": "around $400 on gifts in the past month",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "got",
+          "value": "some for a baby shower and a couple getting married soon",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "got",
+          "value": "gift card worth $20 from a popular baby store and another gift card worth $20 for a couple getting married soon so i am not sure if i should count those as expenses or not",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "supporting_clause_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'soon' modifies the noun phrase 'a couple getting married soon'"
+    },
+    {
+      "item_id": "ps1-224",
+      "part": "S",
+      "stratum": "past_habitual",
+      "failure_class": "aspect_mismatch",
+      "text": "I'll definitely try one of those apps. Speaking of waking up, I used to wake up at 7:00 AM before the daylight saving time change, but I've been having trouble getting out of bed before 7:30 AM lately. Do you think it's a good idea for me to set my alarm clock 15 minutes earlier each day to gradually adjust to my old wake-up time?",
+      "text_sha256": "d90c2e141d757bec4b75aa172879ffb6823697e65ba6fe476862e2fdbe4eddca",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "wake-up time",
+        "value": "after 7:30 AM"
+      },
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "yes",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "used to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|hav",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "hav",
+          "value": "trouble getting out of bed before 7:30 am lately",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "think it's a good idea for me to set my alarm clock 15 minutes earlier each day to gradually adjust to my old wake-up time",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "supporting_clause_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'used to wake up at 7:00' is background; the principal present difficulty is marked by 'lately'"
+    },
+    {
+      "item_id": "ps1-225",
+      "part": "S",
+      "stratum": "past_habitual",
+      "failure_class": "aspect_mismatch",
+      "text": "I've been trying to get back into running lately because I used to run regularly a few years ago, and I miss the feeling of accomplishment and the energy boost it gives me. I've been trying to establish a routine, going for runs three times a week, and I'm hoping to work up to doing a 5K soon. As for my favorite running route, I actually don't have one yet! I've been sticking to local roads and sidewalks near my neighborhood, but I'm looking to explore some new trails and routes. Do you have any suggestions or tips for finding good running routes?",
+      "text_sha256": "1086e96917b77b13879c5c369f468f8dd73cd106a30af9d32d54d192151aff18",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "exercise habit",
+        "value": "running three times a week"
+      },
+      "gold_temporal_aspect": "present",
+      "gold_aspect_explicit": "yes",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual",
+        "prospective"
+      ],
+      "aspect_cues": {
+        "prospective": [
+          "soon"
+        ],
+        "past_habitual": [
+          "used to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "energy boost it|giv",
+          "speaker|look to",
+          "speaker|stick to",
+          "speaker|try to",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "try to",
+          "value": "get back into running lately because i used to run regularly a few years ago and i miss the feeling of accomplishment",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "energy boost it",
+          "property": "giv",
+          "value": "me",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "try to",
+          "value": "establish a routine going for runs three times a week and i am hoping to work up to doing a 5k soon",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "stick to",
+          "value": "local roads and sidewalks near my neighborhood",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "supporting_clause_contamination",
+      "secondary_mechanism": null,
+      "rationale": "'used to run' is inside a because-clause and 'soon' inside a hoping clause; the principal present routine carries no cue"
+    },
+    {
+      "item_id": "ps1-226",
+      "part": "S",
+      "stratum": "past_habitual",
+      "failure_class": "aspect_mismatch",
+      "text": "I think I'll try out Trello and Todoist to see which one works better for me. I've heard great things about both. Since I'm still getting used to my new role, I'd like to know more about prioritizing tasks effectively. Can you give me some tips on how to identify the most important tasks and focus on those first?",
+      "text_sha256": "cd71d85a6f5b34043a40c715271f6310a5db35f336f400838ff0dbe2ec061dd5",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "plans to try",
+        "value": "Trello and Todoist"
+      },
+      "gold_temporal_aspect": "prospective",
+      "gold_aspect_explicit": "yes",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "past_habitual",
+      "predicted_aspect_all": [
+        "past_habitual"
+      ],
+      "aspect_cues": {
+        "past_habitual": [
+          "used to"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|heard",
+          "speaker|think",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "think",
+          "value": "i'll try out trello and todoist to see which one works better for me",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "heard",
+          "value": "great things about both",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "give me some tips on how to identify the most important tasks and focus on those first",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "passive_or_accustomed_used_to",
+      "secondary_mechanism": "principal_clause_mismatch",
+      "rationale": "'getting used to' means becoming accustomed; the principal plan 'I'll try out Trello…' is prospective"
+    },
+    {
+      "item_id": "ps1-233",
+      "part": "S",
+      "stratum": "proper_noun_subject",
+      "failure_class": "aspect_over_classification",
+      "text": "Jacob has another dream of the spirits holding a council meeting. This time, there's tension in the air as everyone argues, clearly stressed. Jacob hears the name \"Lorelei\" alongside several others that seem to be other evil spirits. The power in the room is even stronger now as the spirits are anxious and angry. He tries not to lose consciousness and to understand what they're saying. Let's write that whole scene with details and dialogue, and include descriptions of some of the other spirits Jacob sees. (They don't all have to look human.)",
+      "text_sha256": "bf7cff8efd1838734dec29cb99e4b831abf1b3938aa2c9f2930f592622993daf",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "no",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "power in the room|be",
+          "power in the room|try"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "power in the room",
+          "property": "be",
+          "value": "even stronger now as the spirits are anxious and angry",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "power in the room",
+          "property": "try",
+          "value": "not to lose consciousness and to understand what they are saying",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "task_or_non_speaker_content",
+      "secondary_mechanism": null,
+      "rationale": "fiction/task content ('The power in the room is even stronger now')"
+    },
+    {
+      "item_id": "ps1-242",
+      "part": "S",
+      "stratum": "temporal_word_non_temporal",
+      "failure_class": "aspect_over_classification",
+      "text": "Thats great. Now, using Lollipop JSON, let's create a page that has 3 shapes in cool tones. Under each shape, have some text with a more detailed description of the shape's color, and under each text, have a button that does something.",
+      "text_sha256": "54d15ec5b3592c3489ab52919844035c2102771ff906a9f537b08f6d5fbf0ea2",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "yes",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "temporal_word_non_temporal",
+      "secondary_mechanism": "question_or_request_contamination",
+      "rationale": "discourse 'Now, using Lollipop JSON, let's create …'"
+    },
+    {
+      "item_id": "ps1-245",
+      "part": "S",
+      "stratum": "temporal_word_non_temporal",
+      "failure_class": "aspect_over_classification",
+      "text": "Hmmm...I never considered that Chris and Anna could be hiding their own secret. At first, I just thought they would be uncomfortable with Edgar and Rachel's bubbly personalities and attachment to Indy. Now, I want to brainstorm possible secrets that Chris and Anna could be hiding.",
+      "text_sha256": "b02cde97d1dbf9e75f47e1dbaf92170d302fae826d4fb9b9d5faf62ee47f6ebd",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "yes",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "want to",
+        "value": "brainstorm possible secrets that chris and anna could be hiding",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "want to",
+          "value": "brainstorm possible secrets that chris and anna could be hiding",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "temporal_word_non_temporal",
+      "secondary_mechanism": null,
+      "rationale": "discourse 'Now, I want to brainstorm …'"
+    },
+    {
+      "item_id": "ps1-246",
+      "part": "S",
+      "stratum": "temporal_word_non_temporal",
+      "failure_class": "aspect_over_classification",
+      "text": "Now, let's move on to the second request.",
+      "text_sha256": "54b45c91d31ac78513605ec4d3e69d4287360941c0add5c1ae454cd1db1b38e8",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "yes",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "unknown",
+        "reason": "no_parseable_affirmed_proposition",
+        "basis": "none"
+      },
+      "predicted_clauses": [],
+      "mechanism": "temporal_word_non_temporal",
+      "secondary_mechanism": null,
+      "rationale": "discourse 'Now, let's move on …'"
+    },
+    {
+      "item_id": "ps1-248",
+      "part": "S",
+      "stratum": "temporal_word_non_temporal",
+      "failure_class": "aspect_over_classification",
+      "text": "I'm glad I could help with the toilet paper holder conundrum! Now, I'm wondering... since you mentioned you replaced the bathroom trash can recently, do you have any tips on how to keep it clean and odor-free?",
+      "text_sha256": "bbcf04a9e7434c4821910bf49b9fca55ebe5c55b474bef1ee4229c1792a35092",
+      "gold_status": "unknown",
+      "gold_principal": null,
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "yes",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "known",
+        "entity": "speaker",
+        "property": "be",
+        "value": "glad i could help with the toilet paper holder conundrum",
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "be",
+          "value": "glad i could help with the toilet paper holder conundrum",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "wonder",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "temporal_word_non_temporal",
+      "secondary_mechanism": null,
+      "rationale": "discourse 'Now, I'm wondering …'"
+    },
+    {
+      "item_id": "ps1-254",
+      "part": "S",
+      "stratum": "temporal_word_non_temporal",
+      "failure_class": "aspect_over_classification",
+      "text": "I meant to say that I removed the heavy drapes from the windows in my bedroom last weekend, not the curtains. Now, can you tell me more about plantation shutters? Are they expensive and difficult to install?",
+      "text_sha256": "c85ffd8d92d4ecc41ed490423a3a1279f5807fcf105186571d315659e648e0a3",
+      "gold_status": "known",
+      "gold_principal": {
+        "entity": "user",
+        "polarity": "affirmed",
+        "property": "removed from bedroom windows",
+        "value": "the heavy drapes (last weekend)"
+      },
+      "gold_temporal_aspect": "none_unknown",
+      "gold_aspect_explicit": "no",
+      "gold_temporal_language_non_temporal": "yes",
+      "predicted_aspect": "present",
+      "predicted_aspect_all": [
+        "present"
+      ],
+      "aspect_cues": {
+        "present": [
+          "now"
+        ]
+      },
+      "predicted_proposition": {
+        "status": "ambiguous",
+        "reason": "multiple_proposition_slots",
+        "slots": [
+          "speaker|be",
+          "speaker|meant to",
+          "speaker|you"
+        ],
+        "basis": "interpreted"
+      },
+      "predicted_clauses": [
+        {
+          "entity": "speaker",
+          "property": "meant to",
+          "value": "say that i removed the heavy drapes from the windows in my bedroom last weekend not the curtains",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "you",
+          "value": "tell me more about plantation shutters",
+          "polarity": "affirmed"
+        },
+        {
+          "entity": "speaker",
+          "property": "be",
+          "value": "they expensive and difficult to install",
+          "polarity": "affirmed"
+        }
+      ],
+      "mechanism": "temporal_word_non_temporal",
+      "secondary_mechanism": null,
+      "rationale": "discourse 'Now, can you tell me …'"
+    }
+  ]
+}

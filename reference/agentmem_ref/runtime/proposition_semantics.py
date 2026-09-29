@@ -8,6 +8,10 @@ typed *evidence*:
 * cardinality evidence: ``single_valued`` / ``multi_valued`` / ``hierarchical`` /
   ``unknown`` (``unknown`` by default; there is no property ontology);
 * change, coexistence, hedge, and self-claim markers found in the text;
+* temporal aspect (present / prospective / past habitual) scoped to the principal
+  proposition (1.1.0, #598): cues inside questions, requests, subordinate clauses,
+  discourse markers, passive or motion idioms, or clauses other than the known
+  proposition's are declined with a typed reason, and mixed regimes stay unknown;
 * anchored temporal self-description (``for the next two weeks``, ``starting next
   month``) resolved only against a caller-declared ``observed_at`` anchor.
 
@@ -48,7 +52,7 @@ from typing import Any, Iterable, Mapping, Sequence
 from .temporal_intent import parse_time
 
 INTERPRETER_REF = "agent-memory-deterministic-write-semantics"
-INTERPRETER_VERSION = "1.0.0"
+INTERPRETER_VERSION = "1.1.0"
 WRITE_SEMANTICS_KEY = "write_semantics"
 CLASSIFIER_VERSION = "1.0.0"
 MAX_CLAUSES = 4  # persisted clause evidence is bounded; clause_count records the total
@@ -113,6 +117,42 @@ _ASPECT_CUES = {
                     "next year", "tomorrow", "upcoming", "soon"),
     "past_habitual": ("used to", "no longer", "not anymore", "previously", "formerly"),
 }
+# Aspect scope (interpreter 1.1.0, #598). A cue describes the memory only when it sits in
+# asserted speaker content that belongs to the principal proposition. Bounded, deterministic
+# declines; when scope cannot be established the regime is left unknown rather than guessed.
+_ASPECT_CUE_RE = {cue: re.compile(r"(?<![a-z0-9])" + re.escape(cue) + r"(?![a-z0-9])")
+                  for cues in _ASPECT_CUES.values() for cue in cues}
+_ASPECT_REGIME = {cue: name for name, cues in _ASPECT_CUES.items() for cue in cues}
+_DISCOURSE_FILLERS = {"so", "ok", "okay", "well", "also", "and", "but", "then", "yes", "yeah", "wow", "great",
+                      "thanks", "hmm", "hmmm", "oh", "honestly", "actually"}
+_REQUEST_OPENERS = {"please", "let's", "lets", "tell", "explain", "give", "write", "create", "describe", "list",
+                    "limit", "include", "make", "show", "provide", "suggest", "summarize", "summarise", "rewrite",
+                    "re-write", "generate", "draft", "imagine", "feel", "help", "find", "compare", "recommend",
+                    "translate", "pretend", "continue", "what", "what's", "how", "how's", "why", "which"}
+_REQUEST_PAIRS = {("let", "us")} | {(aux, "you") for aux in ("can", "could", "would", "will", "do", "does", "did",
+                                                            "are", "should")} | {
+    (aux, "there") for aux in ("is", "are", "do", "does", "should")}
+# Indirect requests that open the interrogative part of a question sentence.
+_INDIRECT_REQUESTS = ("i was wondering", "i am wondering", "i wonder", "i was hoping", "i am hoping",
+                      "do you know", "any idea", "any ideas", "any suggestions", "any recommendations", "any tips")
+# Segment boundaries inside one clause piece: a comma, or a coordinating conjunction.
+_SEGMENT_BOUNDARY = re.compile(r",\s*|\s+(?:and|but|so)\s+")
+# Words that open a clause subordinate to the one the cue would otherwise describe
+# (relative, causal, conditional, concessive). "when"/"while" are deliberately absent.
+_SUBORDINATORS = {"that", "which", "who", "whom", "whose", "because", "since", "if", "whether", "although",
+                  "though", "unless", "whereas", "especially"}
+_PASSIVE_HEADS = {"is", "are", "was", "were", "be", "been", "being", "am", "get", "gets", "got", "getting",
+                  "become", "becomes", "became", "becoming"}
+_DEGREE_WORDS = {"really", "so", "very", "quite", "pretty", "still", "finally"}
+_HABITUAL_GOING = {"start", "started", "starting", "starts", "begin", "began", "begun", "beginning", "begins",
+                   "continue", "continued", "continues", "continuing", "keep", "kept", "keeps", "keeping", "stop",
+                   "stopped", "stopping", "stops", "quit", "quits", "quitting", "resume", "resumed", "resumes",
+                   "resuming", "enjoy", "enjoyed", "like", "liked", "love", "loved", "hate", "hated", "avoid",
+                   "avoided", "try", "tried", "trying", "miss", "missed", "finish", "finished", "been", "was",
+                   "were"}
+_MOTION_DESTINATIONS = {"the", "a", "an", "my", "your", "his", "her", "its", "our", "their", "this", "that",
+                        "these", "those", "some", "school", "church", "work", "bed", "class", "college", "therapy",
+                        "practice", "lunch", "dinner", "breakfast", "yoga", "gym"}
 _SELF_REFERENCE = re.compile(r"^(this|the) (memory|note|record|fact|entry)\b")
 
 _NUMBER_WORDS = {"a": 1, "an": 1, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
@@ -206,14 +246,21 @@ def _is_finite_verb(words: list[str], index: int) -> bool:
 # --------------------------------------------------------------------------- clauses
 
 
-def _split_clauses(text: str) -> list[str]:
-    parts: list[str] = []
-    for sentence in re.split(r"(?<=[.!?])\s+|;\s*|:\s+", text):
+def _clause_pieces(text: str) -> list[tuple[str, int, bool]]:
+    """Clause pieces with their sentence number and whether that sentence ends in ``?``."""
+
+    parts: list[tuple[str, int, bool]] = []
+    for number, sentence in enumerate(re.split(r"(?<=[.!?])\s+|;\s*|:\s+", text)):
+        question = sentence.rstrip().rstrip("\"')]}*\u201d\u2019").endswith("?")
         for piece in re.split(r",?\s+but\s+|,?\s+and\s+(?=(?:" + "|".join(sorted(_CLAUSE_OPENERS)) + r")\b)", sentence):
             piece = piece.strip(" ,.!?")
             if piece:
-                parts.append(piece)
+                parts.append((piece, number, question))
     return parts
+
+
+def _split_clauses(text: str) -> list[str]:
+    return [piece for piece, _, _ in _clause_pieces(text)]
 
 
 def _subject(words: list[str]) -> tuple[str | None, int, str]:
@@ -420,6 +467,129 @@ def _resolve_self_validity(lowered: str, anchor: Mapping[str, Any] | None, hedge
     }
 
 
+# --------------------------------------------------------------------------- aspect scope
+
+
+def _bare(word: str) -> str:
+    return word.strip(",.;:!?\"'()")
+
+
+def _opening(words: list[str]) -> list[str]:
+    """Piece words after leading discourse fillers ("so", "okay", "honestly", ...)."""
+
+    index = 0
+    while index < len(words) and _bare(words[index]) in _DISCOURSE_FILLERS:
+        index += 1
+    return words[index:]
+
+
+def _is_request(words: list[str]) -> bool:
+    opening = _opening(words)
+    if opening and opening[0].rstrip(",") == "now" and opening[0].endswith(","):
+        opening = _opening(opening[1:])
+    first = [_bare(w) for w in opening[:2]]
+    return bool(first) and (first[0] in _REQUEST_OPENERS or tuple(first) in _REQUEST_PAIRS)
+
+
+def _opens_question(words: list[str]) -> bool:
+    opening = " ".join(_bare(w) for w in _opening(words)[:4])
+    return _is_request(words) or any(re.match(re.escape(phrase) + r"\b", opening) for phrase in _INDIRECT_REQUESTS)
+
+
+def _question_starts(pieces: list[tuple[str, int, bool]]) -> dict[int, int]:
+    """For pieces of question sentences: the offset (in the normalized piece) where the
+    interrogative part begins. A declarative lead-in before the first segment that opens
+    a question or request ("I'm planning X next month, do you have tips?") stays asserted;
+    with no such segment the whole sentence is treated as the question."""
+
+    by_sentence: dict[int, list[int]] = {}
+    for index, (_, number, question) in enumerate(pieces):
+        if question:
+            by_sentence.setdefault(number, []).append(index)
+    starts: dict[int, int] = {}
+    for indexes in by_sentence.values():
+        first: tuple[int, int] | None = None
+        for index in indexes:
+            lowered = _norm(pieces[index][0])
+            offsets = [0] + [m.end() for m in _SEGMENT_BOUNDARY.finditer(lowered)]
+            offset = next((o for o in offsets if _opens_question(lowered[o:].split())), None)
+            if offset is not None:
+                first = (index, offset)
+                break
+        for index in indexes:
+            if first is None or index > first[0]:
+                starts[index] = 0
+            elif index == first[0]:
+                starts[index] = first[1]
+    return starts
+
+
+def _cue_matches(lowered: str) -> list[tuple[int, int, str]]:
+    """Leftmost-longest cue matches: "right now" is one cue, not also "now"."""
+
+    found = sorted(((m.start(), m.end(), cue) for cue, pattern in _ASPECT_CUE_RE.items()
+                    for m in pattern.finditer(lowered)), key=lambda item: (item[0], -(item[1] - item[0]), item[2]))
+    selected, last_end = [], -1
+    for start, end, cue in found:
+        if start >= last_end:
+            selected.append((start, end, cue))
+            last_end = end
+    return selected
+
+
+def _decline_reason(cue: str, lowered: str, start: int, end: int, words_before: list[str], question: bool,
+                    request: bool) -> str | None:
+    before = [_bare(w) for w in words_before]
+    after = [_bare(w) for w in lowered[end:].split()]
+    if cue == "now" and lowered[end:end + 1] == "," and not [w for w in before if w not in _DISCOURSE_FILLERS]:
+        return "discourse_marker"
+    if question or request:
+        return "question_or_request"
+    # A subordinator scopes over its own comma-delimited segment ("Speaking of which, I ...").
+    if any(_bare(w) in _SUBORDINATORS for w in lowered[:start].rpartition(",")[2].split()):
+        return "subordinate_clause"
+    if cue == "used to":
+        head = [w for w in before if not (w.endswith("ly") or w in _DEGREE_WORDS)]
+        if head and head[-1] in _PASSIVE_HEADS:
+            return "passive_or_accustomed"
+    if cue == "going to":
+        if (before and before[-1] in _HABITUAL_GOING) or (after and after[0] in _MOTION_DESTINATIONS):
+            return "motion_or_habitual"
+    return None
+
+
+def _scoped_aspect(pieces: list[tuple[str, int, bool]], principal: set[int] | None) -> tuple[dict[str, list[str]], dict]:
+    """Aspect evidence scoped to the principal proposition, plus the scope diagnostic.
+
+    ``principal`` is the set of piece indexes carrying the known proposition, or None
+    when the write has no single known proposition (the whole asserted write is scope).
+    """
+
+    accepted: dict[str, set[str]] = {}
+    declined: list[dict[str, str]] = []
+    question_starts = _question_starts(pieces)
+    for index, (piece, _, _) in enumerate(pieces):
+        lowered = _norm(piece)
+        request = _is_request(lowered.split())
+        for start, end, cue in _cue_matches(lowered):
+            question = index in question_starts and start >= question_starts[index]
+            reason = _decline_reason(cue, lowered, start, end, lowered[:start].split(), question, request)
+            if reason is None and principal is not None and index not in principal:
+                reason = "non_principal_clause"
+            if reason is None:
+                accepted.setdefault(_ASPECT_REGIME[cue], set()).add(cue)
+            else:
+                declined.append({"cue": cue, "reason": reason})
+    if len(accepted) > 1:
+        status = "mixed_regimes"
+    elif accepted:
+        status = "resolved_principal" if principal is not None else "resolved_write"
+    else:
+        status = "none"
+    aspect = {name: sorted(cues) for name, cues in accepted.items()} if len(accepted) == 1 else {}
+    return aspect, {"status": status, "declined": declined}
+
+
 # --------------------------------------------------------------------------- interpretation
 
 
@@ -434,14 +604,14 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
     month_free = re.sub(r"\bmay(?=\s+\d)", "maymonth", lowered)  # "May 3" is a date, not a hedge
     hedges = sorted(h for h in _HEDGES if _contains(month_free, h))
     self_claims = sorted(name for name, pattern in _SELF_CLAIMS.items() if re.search(pattern, lowered))
-    aspect = {name: sorted(cue for cue in cues if _contains(lowered, cue)) for name, cues in _ASPECT_CUES.items()}
-    aspect = {name: cues for name, cues in aspect.items() if cues}
+    pieces = _clause_pieces(text)
     clauses: list[dict[str, Any]] = []
     antecedent: str | None = None
-    for raw in _split_clauses(text):
+    for piece_index, (raw, _, _) in enumerate(pieces):
         clause = _parse_clause(raw, antecedent)
         if clause is None:
             continue
+        clause["piece"] = piece_index
         if _SELF_REFERENCE.match(_norm(raw)):
             clause["self_reference"] = True
         clauses.append(clause)
@@ -473,6 +643,10 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
     else:
         proposition = {"status": UNKNOWN, "reason": "no_parseable_affirmed_proposition"}
     proposition["basis"] = "interpreted" if proposition["status"] != UNKNOWN else "none"
+    # Aspect describes the principal proposition: with one known proposition, only cues in
+    # its own affirmed clauses count; otherwise cues anywhere in asserted speaker content.
+    principal = {c["piece"] for c in affirmed} if proposition["status"] == KNOWN else None
+    aspect, aspect_scope = _scoped_aspect(pieces, principal)
 
     ended = [{"entity": c["entity"], "property": c["property"], "value": c["value"], "marker": next(
         (m for m in c["markers"] if m in {"no longer", "used to", "not anymore"}), None)}
@@ -510,6 +684,7 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
         "cardinality": cardinality,
         "markers": {"change": change, "coexistence": coexistence, "hedge": hedges, "self_claims": self_claims,
                     "aspect": aspect},
+        "aspect_scope": aspect_scope,
         "self_validity": self_validity,
         "proposal_ineligible_reasons": ineligible,
     })

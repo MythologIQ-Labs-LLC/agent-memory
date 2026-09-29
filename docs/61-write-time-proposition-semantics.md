@@ -41,7 +41,7 @@ The native deterministic interpreter records:
 - proposition status (`known`, `ambiguous`, `unknown`) and candidate entity/property/value;
 - cardinality (`single_valued`, `multi_valued`, `hierarchical`, `unknown`);
 - change, coexistence, hedge, and self-claim markers;
-- temporal aspect (`present`, `prospective`, `past_habitual`);
+- temporal aspect (`present`, `prospective`, `past_habitual`), scoped to the principal proposition since interpreter 1.1.0 (§9a);
 - bounded interpreted self-validity when an explicit temporal expression can be anchored to caller-declared `observed_at`;
 - same-slot relation evidence and any governed state-change proposal.
 
@@ -182,6 +182,50 @@ Part R also records:
 
 Strict slot/value conformance is 0 with the frozen empty alias table. This is an exact-label diagnostic, not semantic synonym precision. Inspection contains both harmless synonym/normalization variation and real malformed property/value boundaries, so canonicalization must be defined independently before re-score.
 
+## 9a. Write interpreter 1.1.0: scoped temporal aspect (#598)
+
+Interpreter 1.0.0 matched aspect cues anywhere in a write, so questions, requests, relative
+clauses, discourse "Now,", passive "used to", and motion "going to" set the memory's aspect.
+Interpreter `agent-memory-deterministic-write-semantics` **1.1.0** keeps the cue lexicon unchanged
+and scopes each cue match (leftmost-longest, so "right now" is one cue) with bounded,
+deterministic declines, each recorded with a typed reason in the unpersisted `aspect_scope`
+diagnostic:
+
+| reason | rule |
+| --- | --- |
+| `discourse_marker` | "now," opening a clause (after fillers such as "so", "okay") |
+| `question_or_request` | cue in the interrogative part of a `?` sentence (a declarative lead-in before the first question/request segment stays asserted), or in a clause opened by a request ("please", "can you", imperative task verbs, "what/how/why/which") |
+| `subordinate_clause` | a relative/causal/conditional/concessive subordinator precedes the cue in its comma segment ("when"/"while" deliberately excluded) |
+| `passive_or_accustomed` | "used to" after a form of be/get/become ("were used to attach", "getting used to") |
+| `motion_or_habitual` | "going to" after an aspectual/habitual verb ("started going to") or before a destination ("going to the gym") |
+| `non_principal_clause` | with one known proposition, a cue outside that proposition's own affirmed clauses |
+
+With no single known proposition, the remaining asserted content is the scope
+(`resolved_write`). More than one surviving regime is `mixed_regimes` and `markers.aspect` is
+omitted: unknown is preferred to a guessed regime. `markers.aspect` therefore carries at most one
+regime. Compatibility: `markers.aspect` keeps its shape and has no ranking or admission reader;
+facts written under 1.0.0 keep their stored `1.0.0/1.0.0` interpretation and are never
+reinterpreted. `CLASSIFIER_VERSION` stays 1.0.0 because classification is unchanged.
+
+Re-score on the accepted #594 gold (evaluator 0.2.0, gold unchanged):
+
+| | aspect mismatch | aspect over-classification | correct non-none aspect |
+| --- | ---: | ---: | ---: |
+| Part R, 1.0.0 | 4 | 1 | 10 |
+| Part R, 1.1.0 | 2 | 0 | 10 |
+| all 268 (diagnostic), 1.0.0 | 17 | 23 | 38 |
+| all 268 (diagnostic), 1.1.0 | 7 | 5 | 33 |
+
+No item regressed into either failure class, and no field other than aspect changed on any of
+the 268 items. The five withheld correct aspects were each right for a reason 1.1.0 no longer
+accepts (a cue inside a subordinate clause or a habitual "going to", or mixed regimes). The 12
+unresolved failures need principal-proposition selection across multi-sentence writes or NP parsing
+(#596/#597), detection of non-speaker/task content, or reading a present-disposition "going to"; bounded
+rules cannot establish these safely. Evidence:
+`reports/benchmarks/replays/598-write-time-temporal-aspect/`.
+
+Aspect remains evidence only: it grants no currentness, authority, or validity window.
+
 ## 9. Active limitations and follow-ons
 
 The qualification created three bounded remediation issues:
@@ -210,7 +254,7 @@ Other unchanged limitations:
   -> #594 NATURAL QUALIFICATION COMPLETE / QUALIFIED
   -> current dashboard regenerated
   -> #585 query-intent span calibration
-  -> #598 memory-side aspect calibration
+  -> #598 memory-side aspect calibration (write interpreter 1.1.0, in review)
   -> redesigned #583
   -> final #580 replay
   -> #584 policy ruling

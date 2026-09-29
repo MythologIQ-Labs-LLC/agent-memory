@@ -1,0 +1,1650 @@
+{
+  "aggregate_score": "not_defined",
+  "all_items_diagnostic_not_population_estimate": {
+    "aggregate_score": "not_defined",
+    "aspect_pairs": {
+      "none_unknown->none_unknown": 73,
+      "none_unknown->past_habitual": 6,
+      "none_unknown->present": 10,
+      "none_unknown->prospective": 7,
+      "past_habitual->none_unknown": 2,
+      "present->none_unknown": 63,
+      "present->past_habitual": 3,
+      "present->present": 16,
+      "present->prospective": 7,
+      "prospective->none_unknown": 52,
+      "prospective->past_habitual": 3,
+      "prospective->present": 4,
+      "prospective->prospective": 22
+    },
+    "cardinality_pairs": {
+      "hierarchical->unknown": 3,
+      "multi_valued->multi_valued": 21,
+      "multi_valued->unknown": 124,
+      "single_valued->multi_valued": 2,
+      "single_valued->unknown": 15,
+      "unknown->multi_valued": 1,
+      "unknown->unknown": 102
+    },
+    "evaluator_version": "0.2.0",
+    "failure_counts": {
+      "aspect_mismatch": 17,
+      "aspect_over_classification": 23,
+      "coexistence_as_replacement": 1,
+      "unknown_promoted_to_known": 22,
+      "wrong_slot": 27
+    },
+    "findings": [
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-009"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-010"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-010"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-015"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-018"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-031"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-035"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-040"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-044"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-045"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-053"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-058"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-076"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-083"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-097"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-101"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-104"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-104"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-105"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-107"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-108"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-111"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-111"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-114"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-120"
+      },
+      {
+        "class": "coexistence_as_replacement",
+        "item_id": "ps1-122"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-122"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-125"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-128"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-129"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-129"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-132"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-133"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-134"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-138"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-148"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-155"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-157"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-161"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-163"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-180"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-185"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-186"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-186"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-187"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-188"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-189"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-190"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-199"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-201"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-201"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-202"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-203"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-203"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-204"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-214"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-215"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-215"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-216"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-221"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-223"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-224"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-225"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-226"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-228"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-230"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-233"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-239"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-242"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-245"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-245"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-246"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-247"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-248"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-248"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-254"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-255"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-256"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-257"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-258"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-259"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-260"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-261"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-262"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-263"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-264"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-265"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-266"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-267"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-268"
+      }
+    ],
+    "items_evaluated": 268,
+    "known_slot_value_precision": 0.0,
+    "missing_predictions": [],
+    "status_confusion": {
+      "ambiguous": {
+        "ambiguous": 26,
+        "known": 4,
+        "unknown": 5
+      },
+      "known": {
+        "ambiguous": 115,
+        "known": 27,
+        "unknown": 6
+      },
+      "unknown": {
+        "ambiguous": 6,
+        "known": 18,
+        "unknown": 61
+      }
+    },
+    "status_metrics": {
+      "ambiguous": {
+        "gold": 35,
+        "precision": 0.176871,
+        "predicted": 147,
+        "recall": 0.742857,
+        "true_positive": 26
+      },
+      "known": {
+        "gold": 148,
+        "precision": 0.55102,
+        "predicted": 49,
+        "recall": 0.182432,
+        "true_positive": 27
+      },
+      "unknown": {
+        "gold": 85,
+        "precision": 0.847222,
+        "predicted": 72,
+        "recall": 0.717647,
+        "true_positive": 61
+      }
+    }
+  },
+  "deterministic_replay_identical": true,
+  "evidence_class": "repository-owned conformance",
+  "gold": {
+    "accepted_at": "2026-09-28T14:02:38Z",
+    "accepted_by": "Knapp-Kevin",
+    "accepted_source": {
+      "annotation_set": "proposition-semantics-draft-annotations-v5",
+      "file": "draft-annotations-v5.json",
+      "sha256": "bb336e72281b64dbdd090447194a67f0638b820a4adb18f1463d24c77859aec7"
+    },
+    "item_count": 268,
+    "manifest": "reference/fixtures/benchmarks/proposition-semantics/gold-v1.json",
+    "manifest_sha256": "2c856003793cb7d4f70d61ed8ff268b76d8e60bc3b0b6a76b844d43ee79b704a",
+    "review_id": 5339771805
+  },
+  "issue": 594,
+  "prediction_status_counts": {
+    "ambiguous": 147,
+    "known": 49,
+    "unknown": 72
+  },
+  "property_aliases": {
+    "count": 0,
+    "file": "reference/fixtures/benchmarks/proposition-semantics/property-aliases-gold-v1.json",
+    "frozen_pre_score": true,
+    "sha256": "fbf9bb93e1f8bf6ca987b86823286e69137f40add938f77ddf1e7485e85fa913"
+  },
+  "random_part_R": {
+    "aggregate_score": "not_defined",
+    "aspect_pairs": {
+      "none_unknown->none_unknown": 36,
+      "none_unknown->prospective": 1,
+      "present->none_unknown": 27,
+      "present->present": 6,
+      "present->prospective": 3,
+      "prospective->none_unknown": 22,
+      "prospective->present": 1,
+      "prospective->prospective": 4
+    },
+    "cardinality_pairs": {
+      "hierarchical->unknown": 1,
+      "multi_valued->multi_valued": 11,
+      "multi_valued->unknown": 45,
+      "single_valued->unknown": 3,
+      "unknown->unknown": 40
+    },
+    "evaluator_version": "0.2.0",
+    "failure_counts": {
+      "aspect_mismatch": 4,
+      "aspect_over_classification": 1,
+      "unknown_promoted_to_known": 2,
+      "wrong_slot": 8
+    },
+    "findings": [
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-009"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-010"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-010"
+      },
+      {
+        "class": "aspect_over_classification",
+        "item_id": "ps1-015"
+      },
+      {
+        "class": "unknown_promoted_to_known",
+        "item_id": "ps1-018"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-031"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-035"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-040"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-044"
+      },
+      {
+        "class": "aspect_mismatch",
+        "item_id": "ps1-045"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-053"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-058"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-076"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-083"
+      },
+      {
+        "class": "wrong_slot",
+        "item_id": "ps1-097"
+      }
+    ],
+    "items_evaluated": 100,
+    "known_slot_value_precision": 0.0,
+    "missing_predictions": [],
+    "status_confusion": {
+      "ambiguous": {
+        "ambiguous": 13
+      },
+      "known": {
+        "ambiguous": 46,
+        "known": 8
+      },
+      "unknown": {
+        "ambiguous": 3,
+        "known": 2,
+        "unknown": 28
+      }
+    },
+    "status_metrics": {
+      "ambiguous": {
+        "gold": 13,
+        "precision": 0.209677,
+        "predicted": 62,
+        "recall": 1.0,
+        "true_positive": 13
+      },
+      "known": {
+        "gold": 54,
+        "precision": 0.8,
+        "predicted": 10,
+        "recall": 0.148148,
+        "true_positive": 8
+      },
+      "unknown": {
+        "gold": 33,
+        "precision": 1.0,
+        "predicted": 28,
+        "recall": 0.848485,
+        "true_positive": 28
+      }
+    }
+  },
+  "schema_version": 1,
+  "stratified_part_S": {
+    "change_language": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 2,
+        "none_unknown->past_habitual": 3,
+        "none_unknown->prospective": 1,
+        "present->none_unknown": 3,
+        "present->past_habitual": 1,
+        "prospective->none_unknown": 3,
+        "prospective->past_habitual": 1
+      },
+      "cardinality_pairs": {
+        "hierarchical->unknown": 1,
+        "multi_valued->multi_valued": 1,
+        "multi_valued->unknown": 5,
+        "unknown->unknown": 7
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "aspect_mismatch": 2,
+        "aspect_over_classification": 4,
+        "unknown_promoted_to_known": 3
+      },
+      "findings": [
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-101"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-104"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-104"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-105"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-107"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-108"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-111"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-111"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-114"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "ambiguous": 2
+        },
+        "known": {
+          "ambiguous": 6
+        },
+        "unknown": {
+          "known": 3,
+          "unknown": 3
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 2,
+          "precision": 0.25,
+          "predicted": 8,
+          "recall": 1.0,
+          "true_positive": 2
+        },
+        "known": {
+          "gold": 6,
+          "precision": 0.0,
+          "predicted": 3,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "unknown": {
+          "gold": 6,
+          "precision": 1.0,
+          "predicted": 3,
+          "recall": 0.5,
+          "true_positive": 3
+        }
+      }
+    },
+    "coexistence_language": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 5,
+        "present->none_unknown": 3,
+        "present->prospective": 1,
+        "prospective->none_unknown": 2,
+        "prospective->past_habitual": 1,
+        "prospective->present": 1,
+        "prospective->prospective": 1
+      },
+      "cardinality_pairs": {
+        "multi_valued->multi_valued": 4,
+        "multi_valued->unknown": 4,
+        "unknown->unknown": 6
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "aspect_mismatch": 3,
+        "coexistence_as_replacement": 1,
+        "wrong_slot": 1
+      },
+      "findings": [
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-120"
+        },
+        {
+          "class": "coexistence_as_replacement",
+          "item_id": "ps1-122"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-122"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-125"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-128"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "ambiguous": 1
+        },
+        "known": {
+          "ambiguous": 7,
+          "known": 1
+        },
+        "unknown": {
+          "unknown": 5
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 1,
+          "precision": 0.125,
+          "predicted": 8,
+          "recall": 1.0,
+          "true_positive": 1
+        },
+        "known": {
+          "gold": 8,
+          "precision": 1.0,
+          "predicted": 1,
+          "recall": 0.125,
+          "true_positive": 1
+        },
+        "unknown": {
+          "gold": 5,
+          "precision": 1.0,
+          "predicted": 5,
+          "recall": 1.0,
+          "true_positive": 5
+        }
+      }
+    },
+    "employment": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 1,
+        "none_unknown->prospective": 1,
+        "present->none_unknown": 5,
+        "present->present": 2,
+        "present->prospective": 1,
+        "prospective->none_unknown": 1,
+        "prospective->prospective": 3
+      },
+      "cardinality_pairs": {
+        "multi_valued->multi_valued": 1,
+        "multi_valued->unknown": 9,
+        "single_valued->unknown": 1,
+        "unknown->unknown": 3
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "aspect_mismatch": 1,
+        "aspect_over_classification": 1,
+        "unknown_promoted_to_known": 3,
+        "wrong_slot": 1
+      },
+      "findings": [
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-129"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-129"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-132"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-133"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-134"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-138"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "ambiguous": 1,
+          "known": 1
+        },
+        "known": {
+          "ambiguous": 7,
+          "known": 1,
+          "unknown": 2
+        },
+        "unknown": {
+          "known": 2
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 2,
+          "precision": 0.125,
+          "predicted": 8,
+          "recall": 0.5,
+          "true_positive": 1
+        },
+        "known": {
+          "gold": 10,
+          "precision": 0.25,
+          "predicted": 4,
+          "recall": 0.1,
+          "true_positive": 1
+        },
+        "unknown": {
+          "gold": 2,
+          "precision": 0.0,
+          "predicted": 2,
+          "recall": 0.0,
+          "true_positive": 0
+        }
+      }
+    },
+    "hedging": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 5,
+        "present->none_unknown": 1,
+        "present->present": 1,
+        "prospective->none_unknown": 6,
+        "prospective->prospective": 1
+      },
+      "cardinality_pairs": {
+        "multi_valued->unknown": 8,
+        "single_valued->unknown": 2,
+        "unknown->unknown": 4
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "wrong_slot": 1
+      },
+      "findings": [
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-180"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "unknown": 1
+        },
+        "known": {
+          "ambiguous": 8,
+          "known": 1
+        },
+        "unknown": {
+          "unknown": 4
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 1,
+          "precision": 0.0,
+          "predicted": 8,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "known": {
+          "gold": 9,
+          "precision": 1.0,
+          "predicted": 1,
+          "recall": 0.111111,
+          "true_positive": 1
+        },
+        "unknown": {
+          "gold": 4,
+          "precision": 0.8,
+          "predicted": 5,
+          "recall": 1.0,
+          "true_positive": 4
+        }
+      }
+    },
+    "past_habitual": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 3,
+        "none_unknown->past_habitual": 3,
+        "none_unknown->prospective": 1,
+        "past_habitual->none_unknown": 1,
+        "present->past_habitual": 2,
+        "prospective->none_unknown": 3,
+        "prospective->past_habitual": 1
+      },
+      "cardinality_pairs": {
+        "multi_valued->unknown": 5,
+        "single_valued->multi_valued": 1,
+        "single_valued->unknown": 1,
+        "unknown->unknown": 7
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "aspect_mismatch": 3,
+        "aspect_over_classification": 4,
+        "unknown_promoted_to_known": 1,
+        "wrong_slot": 1
+      },
+      "findings": [
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-214"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-215"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-215"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-216"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-221"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-223"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-224"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-225"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-226"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "unknown": 1
+        },
+        "known": {
+          "ambiguous": 6,
+          "known": 1
+        },
+        "unknown": {
+          "known": 1,
+          "unknown": 5
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 1,
+          "precision": 0.0,
+          "predicted": 6,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "known": {
+          "gold": 7,
+          "precision": 0.5,
+          "predicted": 2,
+          "recall": 0.142857,
+          "true_positive": 1
+        },
+        "unknown": {
+          "gold": 6,
+          "precision": 0.833333,
+          "predicted": 6,
+          "recall": 0.833333,
+          "true_positive": 5
+        }
+      }
+    },
+    "preference": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "past_habitual->none_unknown": 1,
+        "present->none_unknown": 7,
+        "present->present": 1,
+        "prospective->none_unknown": 4,
+        "prospective->prospective": 1
+      },
+      "cardinality_pairs": {
+        "multi_valued->unknown": 10,
+        "single_valued->unknown": 3,
+        "unknown->unknown": 1
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "wrong_slot": 3
+      },
+      "findings": [
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-157"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-161"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-163"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "ambiguous": 1,
+          "unknown": 1
+        },
+        "known": {
+          "ambiguous": 9,
+          "known": 3
+        },
+        "unknown": {}
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 2,
+          "precision": 0.1,
+          "predicted": 10,
+          "recall": 0.5,
+          "true_positive": 1
+        },
+        "known": {
+          "gold": 12,
+          "precision": 1.0,
+          "predicted": 3,
+          "recall": 0.25,
+          "true_positive": 3
+        },
+        "unknown": {
+          "gold": 0,
+          "precision": 0.0,
+          "predicted": 1,
+          "recall": null,
+          "true_positive": 0
+        }
+      }
+    },
+    "present_current": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 1,
+        "none_unknown->present": 4,
+        "present->none_unknown": 6,
+        "prospective->present": 2,
+        "prospective->prospective": 1
+      },
+      "cardinality_pairs": {
+        "multi_valued->unknown": 7,
+        "unknown->multi_valued": 1,
+        "unknown->unknown": 6
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "aspect_mismatch": 2,
+        "aspect_over_classification": 4,
+        "unknown_promoted_to_known": 1
+      },
+      "findings": [
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-185"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-186"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-186"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-187"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-188"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-189"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-190"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "unknown": 1
+        },
+        "known": {
+          "ambiguous": 7,
+          "unknown": 1
+        },
+        "unknown": {
+          "known": 1,
+          "unknown": 4
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 1,
+          "precision": 0.0,
+          "predicted": 7,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "known": {
+          "gold": 8,
+          "precision": 0.0,
+          "predicted": 1,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "unknown": {
+          "gold": 5,
+          "precision": 0.666667,
+          "predicted": 6,
+          "recall": 0.8,
+          "true_positive": 4
+        }
+      }
+    },
+    "proper_noun_subject": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 7,
+        "none_unknown->present": 1,
+        "present->none_unknown": 6
+      },
+      "cardinality_pairs": {
+        "multi_valued->multi_valued": 2,
+        "multi_valued->unknown": 6,
+        "single_valued->unknown": 1,
+        "unknown->unknown": 5
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "aspect_over_classification": 1,
+        "unknown_promoted_to_known": 2,
+        "wrong_slot": 1
+      },
+      "findings": [
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-228"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-230"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-233"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-239"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "ambiguous": 3,
+          "known": 1
+        },
+        "known": {
+          "ambiguous": 2,
+          "known": 1,
+          "unknown": 2
+        },
+        "unknown": {
+          "ambiguous": 2,
+          "known": 1,
+          "unknown": 2
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 4,
+          "precision": 0.428571,
+          "predicted": 7,
+          "recall": 0.75,
+          "true_positive": 3
+        },
+        "known": {
+          "gold": 5,
+          "precision": 0.333333,
+          "predicted": 3,
+          "recall": 0.2,
+          "true_positive": 1
+        },
+        "unknown": {
+          "gold": 5,
+          "precision": 0.5,
+          "predicted": 4,
+          "recall": 0.4,
+          "true_positive": 2
+        }
+      }
+    },
+    "prospective": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->prospective": 3,
+        "present->present": 1,
+        "present->prospective": 2,
+        "prospective->prospective": 8
+      },
+      "cardinality_pairs": {
+        "multi_valued->multi_valued": 2,
+        "multi_valued->unknown": 7,
+        "single_valued->unknown": 1,
+        "unknown->unknown": 4
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "aspect_mismatch": 2,
+        "aspect_over_classification": 3,
+        "wrong_slot": 2
+      },
+      "findings": [
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-199"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-201"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-201"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-202"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-203"
+        },
+        {
+          "class": "aspect_mismatch",
+          "item_id": "ps1-203"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-204"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "ambiguous": 1,
+          "unknown": 1
+        },
+        "known": {
+          "ambiguous": 6,
+          "known": 2,
+          "unknown": 1
+        },
+        "unknown": {
+          "ambiguous": 1,
+          "unknown": 2
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 2,
+          "precision": 0.125,
+          "predicted": 8,
+          "recall": 0.5,
+          "true_positive": 1
+        },
+        "known": {
+          "gold": 9,
+          "precision": 1.0,
+          "predicted": 2,
+          "recall": 0.222222,
+          "true_positive": 2
+        },
+        "unknown": {
+          "gold": 3,
+          "precision": 0.5,
+          "predicted": 4,
+          "recall": 0.666667,
+          "true_positive": 2
+        }
+      }
+    },
+    "residence_location": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 5,
+        "present->none_unknown": 2,
+        "prospective->none_unknown": 4,
+        "prospective->prospective": 3
+      },
+      "cardinality_pairs": {
+        "multi_valued->unknown": 7,
+        "single_valued->unknown": 1,
+        "unknown->unknown": 6
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "unknown_promoted_to_known": 1,
+        "wrong_slot": 1
+      },
+      "findings": [
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-148"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-155"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "ambiguous": 1
+        },
+        "known": {
+          "ambiguous": 7,
+          "known": 1
+        },
+        "unknown": {
+          "known": 1,
+          "unknown": 4
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 1,
+          "precision": 0.125,
+          "predicted": 8,
+          "recall": 1.0,
+          "true_positive": 1
+        },
+        "known": {
+          "gold": 8,
+          "precision": 0.5,
+          "predicted": 2,
+          "recall": 0.125,
+          "true_positive": 1
+        },
+        "unknown": {
+          "gold": 5,
+          "precision": 1.0,
+          "predicted": 4,
+          "recall": 0.8,
+          "true_positive": 4
+        }
+      }
+    },
+    "simple_first_person_statement": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 6,
+        "present->none_unknown": 3,
+        "present->present": 1,
+        "prospective->none_unknown": 4
+      },
+      "cardinality_pairs": {
+        "hierarchical->unknown": 1,
+        "multi_valued->unknown": 6,
+        "single_valued->unknown": 1,
+        "unknown->unknown": 6
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "unknown_promoted_to_known": 7,
+        "wrong_slot": 7
+      },
+      "findings": [
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-255"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-256"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-257"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-258"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-259"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-260"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-261"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-262"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-263"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-264"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-265"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-266"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-267"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-268"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "known": 2
+        },
+        "known": {
+          "known": 7
+        },
+        "unknown": {
+          "known": 5
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 2,
+          "precision": null,
+          "predicted": 0,
+          "recall": 0.0,
+          "true_positive": 0
+        },
+        "known": {
+          "gold": 7,
+          "precision": 0.5,
+          "predicted": 14,
+          "recall": 1.0,
+          "true_positive": 7
+        },
+        "unknown": {
+          "gold": 5,
+          "precision": null,
+          "predicted": 0,
+          "recall": 0.0,
+          "true_positive": 0
+        }
+      }
+    },
+    "temporal_word_non_temporal": {
+      "aggregate_score": "not_defined",
+      "aspect_pairs": {
+        "none_unknown->none_unknown": 2,
+        "none_unknown->present": 5,
+        "present->present": 4,
+        "prospective->none_unknown": 3
+      },
+      "cardinality_pairs": {
+        "multi_valued->unknown": 5,
+        "single_valued->multi_valued": 1,
+        "single_valued->unknown": 1,
+        "unknown->unknown": 7
+      },
+      "evaluator_version": "0.2.0",
+      "failure_counts": {
+        "aspect_over_classification": 5,
+        "unknown_promoted_to_known": 2,
+        "wrong_slot": 1
+      },
+      "findings": [
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-242"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-245"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-245"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-246"
+        },
+        {
+          "class": "wrong_slot",
+          "item_id": "ps1-247"
+        },
+        {
+          "class": "unknown_promoted_to_known",
+          "item_id": "ps1-248"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-248"
+        },
+        {
+          "class": "aspect_over_classification",
+          "item_id": "ps1-254"
+        }
+      ],
+      "items_evaluated": 14,
+      "known_slot_value_precision": 0.0,
+      "missing_predictions": [],
+      "status_confusion": {
+        "ambiguous": {
+          "ambiguous": 3
+        },
+        "known": {
+          "ambiguous": 4,
+          "known": 1
+        },
+        "unknown": {
+          "known": 2,
+          "unknown": 4
+        }
+      },
+      "status_metrics": {
+        "ambiguous": {
+          "gold": 3,
+          "precision": 0.428571,
+          "predicted": 7,
+          "recall": 1.0,
+          "true_positive": 3
+        },
+        "known": {
+          "gold": 5,
+          "precision": 0.333333,
+          "predicted": 3,
+          "recall": 0.2,
+          "true_positive": 1
+        },
+        "unknown": {
+          "gold": 6,
+          "precision": 1.0,
+          "predicted": 4,
+          "recall": 0.666667,
+          "true_positive": 4
+        }
+      }
+    }
+  }
+}
