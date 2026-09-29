@@ -21,12 +21,18 @@ from canonical_json_v2_transaction_qualification import (
 from canonical_scheme_registry_candidate import CandidateSchemeRegistry
 
 
+# The only refusal that proves ordinary production recovery excludes the
+# qualification-only envelope. A missing file, profile mismatch, corrupted database
+# or unrelated integrity failure is not that proof.
+EXPECTED_PRODUCTION_REFUSAL_REASON = "unsupported SQLite runtime state schema"
+
 @dataclass(frozen=True)
 class ProductionRecoveryRefusalEvidence:
     source_candidate_database: str
     tested_database_kind: str
     production_recovery_refused: bool
     refusal_type: str
+    refusal_reason: str
 
 
 def _read_candidate_state(path: Path) -> dict:
@@ -81,11 +87,14 @@ def prove_production_runtime_refusal(
         try:
             runtime = SQLiteRestartSafeRuntime.recover(refusal_root, profile=profile)
         except RuntimeRecoveryError as exc:
+            if str(exc) != EXPECTED_PRODUCTION_REFUSAL_REASON:
+                raise CandidateMigrationError("production_recovery_refused_for_unexpected_reason", str(exc)) from exc
             return ProductionRecoveryRefusalEvidence(
                 source_candidate_database=str(candidate_db),
                 tested_database_kind="disposable_backup",
                 production_recovery_refused=True,
                 refusal_type=type(exc).__name__,
+                refusal_reason=str(exc),
             )
         else:
             runtime.close()
@@ -106,14 +115,9 @@ def qualify_candidate_v2_restart(
     an additional disposable backup after candidate verification succeeds.
     """
 
-    qualification = _qualify_candidate_v2_restart(
-        preflight,
-        fault=fault,
-        registry=registry,
-        prove_production_refusal=False,
-    )
+    qualification = _qualify_candidate_v2_restart(preflight, fault=fault, registry=registry)
     if prove_production_refusal:
         evidence = prove_production_runtime_refusal(preflight)
-        if not evidence.production_recovery_refused:
-            raise CandidateMigrationError("production_recovery_accepted_qualification_envelope")
+        if not evidence.production_recovery_refused or evidence.refusal_reason != EXPECTED_PRODUCTION_REFUSAL_REASON:
+            raise CandidateMigrationError("production_recovery_refused_for_unexpected_reason")
     return qualification

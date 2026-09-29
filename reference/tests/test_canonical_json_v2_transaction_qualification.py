@@ -126,6 +126,20 @@ def _read_one(path: Path, query: str, parameters: tuple = ()) -> tuple:
         connection.close()
 
 
+def _table_dump(path: Path) -> dict[str, list[tuple]]:
+    connection = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+    try:
+        tables = [
+            str(row[0])
+            for row in connection.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+            )
+        ]
+        return {table: sorted(connection.execute(f'SELECT * FROM "{table}"').fetchall(), key=repr) for table in tables}
+    finally:
+        connection.close()
+
+
 def _runtime_state(path: Path) -> dict:
     return json.loads(_read_one(path, "SELECT payload_json FROM runtime_state WHERE singleton = 1")[0])
 
@@ -193,10 +207,20 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
                 _, source_state, preflight = _fresh_preflight(base)
                 candidate_db = Path(preflight.evidence.snapshot_database)
                 before_db_hash = _database_hash(candidate_db)
+                before_tables = _table_dump(candidate_db)
 
                 with self.assertRaises(InjectedMigrationFailure) as caught:
                     transactional_recommit_candidate_v2(preflight, fault=fault)
                 self.assertEqual(caught.exception.point, fault)
+
+                # Primary file identity; no pending WAL content; no provenance; all
+                # tables equal. WAL/SHM byte identity is not claimed.
+                self.assertEqual(_database_hash(candidate_db), before_db_hash)
+                wal = candidate_db.with_name(candidate_db.name + "-wal")
+                self.assertTrue(not wal.exists() or wal.stat().st_size == 0)
+                after_tables = _table_dump(candidate_db)
+                self.assertNotIn("canonicalization_migration", after_tables)
+                self.assertEqual(after_tables, before_tables)
 
                 repeated = qualify_sqlite_migration_preflight(
                     source_database=candidate_db,
@@ -246,6 +270,7 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
 
             self.assertTrue(evidence.production_recovery_refused)
             self.assertEqual(evidence.tested_database_kind, "disposable_backup")
+            self.assertEqual(evidence.refusal_reason, "unsupported SQLite runtime state schema")
             self.assertEqual(_database_hash(candidate_db), candidate_hash_before)
 
     def test_candidate_scheme_with_legacy_json_bytes_refuses_even_when_json_value_is_equal(self):

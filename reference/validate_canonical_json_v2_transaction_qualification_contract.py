@@ -51,6 +51,15 @@ EXPECTED_REFUSALS = {
     "mixed_source_candidate_generation",
     "broken_candidate_journal_provenance_binding",
     "logical_state_mismatch_with_self_consistent_provenance",
+    "historical_journal_rewritten_with_self_consistent_legacy_chain",
+    "historical_journal_payload_reserialized_equal_value",
+    "runtime_profile_changed_with_consistent_rebuild",
+    "interpretation_digest_changed",
+    "substrate_identity_changed",
+    "candidate_envelope_unexpected_or_missing_field",
+    "candidate_journal_unexpected_or_missing_field",
+    "journal_sql_generation_payload_generation_mismatch",
+    "production_refusal_for_unexpected_reason",
 }
 EXPECTED_INVARIANTS = {
     "original_source_store_never_mutated",
@@ -64,7 +73,19 @@ EXPECTED_INVARIANTS = {
     "ordinary_production_recovery_refuses_qualification_envelope",
     "phase5_final_outcome_requires_independent_restart_verification",
     "phase5_performs_no_runtime_write",
+    "historical_journal_bytes_match_phase3_external_anchor",
+    "preserved_runtime_identity_matches_phase3_external_anchor",
 }
+EXPECTED_ANCHOR_FIELDS = {
+    "source_journal_tail_record_digest",
+    "historical_journal_row_count",
+    "historical_journal_digest",
+    "source_runtime_profile_digest",
+    "source_interpretation_digest",
+    "source_substrate_identity_digest",
+}
+EXPECTED_PRODUCTION_REFUSAL_REASON = "unsupported SQLite runtime state schema"
+EXACT_FIELD_POLICY = "exact_reject_missing_and_unexpected"
 EXPECTED_DURABLE_PROVENANCE_FIELDS = {
     "source_runtime_generation",
     "source_runtime_state_schema",
@@ -149,12 +170,41 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
     _require(journal.get("rewrites_historical_rows") is False, "historical journal bytes must not be rewritten")
     _require(journal.get("record_digest_encoding") == "agent-memory-canonical-json-v2", "candidate journal digest encoding changed")
     _require("migration_provenance_digest" in _set(journal.get("record_digest_material_fields")), "journal must bind provenance digest")
+    _require(journal.get("field_set_policy") == EXACT_FIELD_POLICY, "candidate journal key set must be exact")
+    _require(
+        _set(journal.get("exact_fields")) == _set(journal.get("record_digest_material_fields")) | {"record_digest"},
+        "candidate journal exact fields must be digest material plus record_digest",
+    )
 
     state = payload.get("candidate_runtime_state", {})
     _require(state.get("ordinary_runtime_recovery_must_refuse") is True, "production recovery refusal boundary changed")
     _require(state.get("encoding") == "agent-memory-canonical-json-v2", "candidate runtime-state encoding changed")
     _require(state.get("durability_profile") == "sqlite_transactional_runtime_v1", "durability profile changed")
-    _require("migration_provenance_digest" in _set(state.get("required_fields")), "runtime state must bind provenance digest")
+    _require("migration_provenance_digest" in _set(state.get("exact_fields")), "runtime state must bind provenance digest")
+    _require(state.get("field_set_policy") == EXACT_FIELD_POLICY, "candidate runtime-state key set must be exact")
+    _require(
+        _set(state.get("preserved_from_phase3_anchor")) == {"profile", "interpretation_digest", "substrate_identity"},
+        "preserved runtime identity set changed",
+    )
+    refusal = state.get("production_refusal_proof", {})
+    _require(refusal.get("target") == "second_disposable_backup", "production refusal must run on a disposable backup")
+    _require(
+        refusal.get("expected_refusal_reason") == EXPECTED_PRODUCTION_REFUSAL_REASON,
+        "production refusal must require the unsupported-schema reason",
+    )
+
+    anchor = payload.get("phase3_external_anchor", {})
+    _require(_set(anchor.get("fields")) == EXPECTED_ANCHOR_FIELDS, "phase-3 external anchor field set changed")
+    _require(
+        anchor.get("historical_journal_digest", {}).get("payload_bytes") == "raw_stored_bytes_never_parsed_or_reserialized",
+        "historical journal anchor must hash raw stored bytes",
+    )
+    _require(anchor.get("phase4_rechecks_inside_transaction") is True, "phase 4 must recheck the anchor in-transaction")
+    _require(
+        anchor.get("phase5_compares_against_anchor_not_candidate_derived_values") is True,
+        "phase 5 must verify history against the external anchor",
+    )
+    _require(anchor.get("journal_sql_generation_must_equal_payload_generation") is True, "journal generation binding changed")
 
     closeout = payload.get("phase5_closeout", {})
     _require(_set(closeout.get("fields")) == {"restart_verified", "outcome"}, "phase-5 closeout fields changed")
@@ -196,6 +246,14 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
     runtime_source = (repo_root / "reference/agentmem_ref/runtime/sqlite_runtime.py").read_text(encoding="utf-8")
     _require(candidate["runtime_state_schema"] not in runtime_source, "qualification runtime schema leaked into production recovery")
     _require(candidate["journal_schema"] not in runtime_source, "qualification journal schema leaked into production runtime")
+
+    transaction_source = (repo_root / "reference/canonical_json_v2_transaction_qualification.py").read_text(encoding="utf-8")
+    _require("SQLiteRestartSafeRuntime" not in transaction_source, "low-level candidate verifier gained a production runtime route")
+    _require(".recover(" not in transaction_source, "low-level candidate verifier gained a production recovery route")
+    _require("prove_production_refusal" not in transaction_source, "low-level candidate verifier regained production refusal duty")
+    preflight_source = (repo_root / "reference/canonical_json_v2_sqlite_preflight.py").read_text(encoding="utf-8")
+    for field in EXPECTED_ANCHOR_FIELDS:
+        _require(f"    {field}:" in preflight_source, f"phase-3 evidence lost anchor field {field}")
 
     return {
         "fixture_id": payload["fixture_id"],

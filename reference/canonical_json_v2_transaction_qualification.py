@@ -12,7 +12,6 @@ from agentmem_ref.restart_runtime import RuntimeRecoveryError
 from agentmem_ref.sqlite_runtime import (
     SQLITE_DURABILITY_PROFILE,
     SQLITE_TRANSACTION_PROTOCOL,
-    SQLiteRestartSafeRuntime,
     _validate_journal,
 )
 from agentmem_ref.sqlite_substrate import SQLITE_SUBSTRATE_SCHEMA_VERSION
@@ -38,10 +37,15 @@ from canonical_json_v2_migration_preflight import (
     compute_candidate_commitments,
 )
 from canonical_json_v2_sqlite_preflight import (
+    RUNTIME_PROFILE_ANCHOR_DOMAIN,
+    SUBSTRATE_IDENTITY_ANCHOR_DOMAIN,
     SQLiteMigrationPreflightResult,
-    _profile_from_state,
     _resolve_target_binding,
+    compute_source_identity_anchor,
+    historical_journal_anchor_digest,
     qualify_sqlite_migration_preflight,
+    read_raw_runtime_journal,
+    structured_anchor_digest,
 )
 from canonical_scheme_registry_candidate import CandidateSchemeRegistry
 
@@ -53,6 +57,44 @@ ACCEPTED_VECTOR_SOURCE = "reference/fixtures/runtime/canonical-json-v2-vectors-a
 SCHEME_REGISTRY_SOURCE = "reference/fixtures/runtime/canonicalization-scheme-registry-v1.json"
 TRANSACTION_OUTCOME = "committed_pending_restart_verification"
 PROVENANCE_TABLE = "canonicalization_migration"
+# Exact key sets. Verification rejects missing and unexpected keys alike, so no extra
+# field can acquire significance by having integrity material rebuilt around it.
+CANDIDATE_RUNTIME_STATE_FIELDS = frozenset(
+    {
+        "schema_version",
+        "durability_profile",
+        "transaction_protocol",
+        "generation",
+        "profile",
+        "interpretation_digest",
+        "substrate_scheme",
+        "substrate_digest",
+        "governance_scheme",
+        "governance_digest",
+        "substrate_identity",
+        "migration_provenance_digest",
+        "journal_record_digest",
+    }
+)
+CANDIDATE_JOURNAL_MATERIAL_FIELDS = (
+    "schema_version",
+    "transaction_protocol",
+    "generation",
+    "substrate_digest",
+    "governance_digest",
+    "interpretation_digest",
+    "previous_record_digest",
+    "migration_provenance_digest",
+)
+CANDIDATE_JOURNAL_FIELDS = frozenset({*CANDIDATE_JOURNAL_MATERIAL_FIELDS, "record_digest"})
+ANCHOR_FIELDS = (
+    "source_journal_tail_record_digest",
+    "historical_journal_row_count",
+    "historical_journal_digest",
+    "source_runtime_profile_digest",
+    "source_interpretation_digest",
+    "source_substrate_identity_digest",
+)
 
 
 class CandidateMigrationError(ValueError):
@@ -527,60 +569,84 @@ def _candidate_journal_record(
     return {**material, "record_digest": _canonical_digest(material)}
 
 
-def _verify_candidate_journal(connection: sqlite3.Connection, state: Mapping[str, Any], provenance_digest: str) -> None:
-    rows = []
-    raw_rows = connection.execute("SELECT generation, payload_json FROM runtime_journal ORDER BY generation").fetchall()
-    if not raw_rows:
-        raise CandidateMigrationError("candidate_journal_missing")
-    for row in raw_rows[:-1]:
-        try:
-            value = json.loads(str(row["payload_json"]))
-        except json.JSONDecodeError as exc:
-            raise CandidateMigrationError("candidate_historical_journal_invalid") from exc
-        if not isinstance(value, dict):
-            raise CandidateMigrationError("candidate_historical_journal_invalid")
-        rows.append(value)
+def _raw_journal(connection: sqlite3.Connection) -> list[tuple[int, bytes, dict[str, Any]]]:
     try:
-        latest_legacy = _validate_journal(rows)
+        return read_raw_runtime_journal(connection)
+    except MigrationPreflightError as exc:
+        if exc.reason == "journal_sql_generation_payload_mismatch":
+            raise CandidateMigrationError("candidate_journal_generation_column_mismatch", str(exc)) from exc
+        raise CandidateMigrationError("candidate_journal_invalid", str(exc)) from exc
+
+
+def _verify_candidate_journal(
+    connection: sqlite3.Connection,
+    state: Mapping[str, Any],
+    provenance_digest: str,
+    preflight: SQLiteMigrationPreflightResult,
+) -> None:
+    evidence = preflight.evidence
+    rows = _raw_journal(connection)
+    if not rows:
+        raise CandidateMigrationError("candidate_journal_missing")
+    historical = rows[:-1]
+
+    # History is established against the external phase-3 anchor, never against
+    # values derived only from the candidate database.
+    if len(historical) != evidence.historical_journal_row_count:
+        raise CandidateMigrationError("candidate_historical_journal_anchor_mismatch")
+    if historical_journal_anchor_digest([(g, p) for g, p, _ in historical]) != evidence.historical_journal_digest:
+        raise CandidateMigrationError("candidate_historical_journal_anchor_mismatch")
+    try:
+        latest_legacy = _validate_journal([value for _, _, value in historical])
     except RuntimeRecoveryError as exc:
         raise CandidateMigrationError("candidate_historical_journal_invalid", str(exc)) from exc
+    if latest_legacy is None or latest_legacy.get("record_digest") != evidence.source_journal_tail_record_digest:
+        raise CandidateMigrationError("candidate_historical_journal_anchor_mismatch")
 
-    final_row = raw_rows[-1]
-    final_text = str(final_row["payload_json"])
-    final = _strict_json(final_text, exact_v2=True, surface="runtime_journal.payload_json[candidate_generation]")
-    if not isinstance(final, dict):
-        raise CandidateMigrationError("candidate_journal_invalid")
-    if final.get("schema_version") != QUALIFICATION_JOURNAL_SCHEMA:
+    final_generation, final_bytes, _ = rows[-1]
+    final = _strict_json(
+        final_bytes.decode("utf-8"), exact_v2=True, surface="runtime_journal.payload_json[candidate_generation]"
+    )
+    if not isinstance(final, dict) or set(final) != CANDIDATE_JOURNAL_FIELDS:
+        raise CandidateMigrationError("candidate_journal_shape_invalid")
+    if final["schema_version"] != QUALIFICATION_JOURNAL_SCHEMA:
         raise CandidateMigrationError("candidate_journal_schema_mismatch")
-    if final.get("transaction_protocol") != SQLITE_TRANSACTION_PROTOCOL:
+    if final["transaction_protocol"] != SQLITE_TRANSACTION_PROTOCOL:
         raise CandidateMigrationError("candidate_journal_protocol_mismatch")
-    if int(final.get("generation", 0)) != int(state.get("generation", 0)):
+    if final_generation != evidence.source_runtime_generation + 1 or final["generation"] != state.get("generation"):
         raise CandidateMigrationError("candidate_generation_mismatch")
-    previous_digest = "" if latest_legacy is None else str(latest_legacy["record_digest"])
-    if final.get("previous_record_digest") != previous_digest:
+    if final["previous_record_digest"] != evidence.source_journal_tail_record_digest:
         raise CandidateMigrationError("candidate_journal_chain_broken")
-    if final.get("migration_provenance_digest") != provenance_digest:
+    if final["interpretation_digest"] != evidence.source_interpretation_digest:
+        raise CandidateMigrationError("candidate_interpretation_digest_mismatch")
+    if final["migration_provenance_digest"] != provenance_digest:
         raise CandidateMigrationError("candidate_journal_provenance_binding_broken")
-    material = {
-        key: final[key]
-        for key in (
-            "schema_version",
-            "transaction_protocol",
-            "generation",
-            "substrate_digest",
-            "governance_digest",
-            "interpretation_digest",
-            "previous_record_digest",
-            "migration_provenance_digest",
-        )
-    }
-    if final.get("record_digest") != _canonical_digest(material):
+    material = {key: final[key] for key in CANDIDATE_JOURNAL_MATERIAL_FIELDS}
+    if final["record_digest"] != _canonical_digest(material):
         raise CandidateMigrationError("candidate_journal_digest_mismatch")
-    if final.get("record_digest") != state.get("journal_record_digest"):
+    if final["record_digest"] != state.get("journal_record_digest"):
         raise CandidateMigrationError("candidate_runtime_journal_binding_broken")
     for field in ("substrate_digest", "governance_digest", "interpretation_digest"):
-        if final.get(field) != state.get(field):
+        if final[field] != state.get(field):
             raise CandidateMigrationError("candidate_runtime_journal_binding_broken")
+
+
+def _verify_preserved_envelope_identity(
+    state: Mapping[str, Any],
+    preflight: SQLiteMigrationPreflightResult,
+    *,
+    reason_prefix: str,
+) -> None:
+    evidence = preflight.evidence
+    if structured_anchor_digest(RUNTIME_PROFILE_ANCHOR_DOMAIN, state.get("profile")) != evidence.source_runtime_profile_digest:
+        raise CandidateMigrationError(f"{reason_prefix}_runtime_profile_identity_mismatch")
+    if state.get("interpretation_digest") != evidence.source_interpretation_digest:
+        raise CandidateMigrationError(f"{reason_prefix}_interpretation_digest_mismatch")
+    if (
+        structured_anchor_digest(SUBSTRATE_IDENTITY_ANCHOR_DOMAIN, state.get("substrate_identity"))
+        != evidence.source_substrate_identity_digest
+    ):
+        raise CandidateMigrationError(f"{reason_prefix}_substrate_identity_mismatch")
 
 
 def _read_and_verify_provenance(
@@ -613,6 +679,8 @@ def _verify_candidate_connection(
     state_text, state = _read_runtime_state_raw(connection)
     _strict_json(state_text, exact_v2=True, surface="runtime_state.payload_json")
     evidence = preflight.evidence
+    if set(state) != CANDIDATE_RUNTIME_STATE_FIELDS:
+        raise CandidateMigrationError("candidate_runtime_state_shape_invalid")
     if state.get("schema_version") != QUALIFICATION_RUNTIME_STATE_SCHEMA:
         raise CandidateMigrationError("candidate_runtime_schema_mismatch")
     if state.get("durability_profile") != SQLITE_DURABILITY_PROFILE:
@@ -627,6 +695,10 @@ def _verify_candidate_connection(
         raise CandidateMigrationError("candidate_substrate_commitment_mismatch")
     if state.get("governance_digest") != evidence.target_governance_commitment:
         raise CandidateMigrationError("candidate_governance_commitment_mismatch")
+    try:
+        _verify_preserved_envelope_identity(state, preflight, reason_prefix="candidate")
+    except MigrationPreflightError as exc:
+        raise CandidateMigrationError("candidate_runtime_profile_identity_mismatch", str(exc)) from exc
 
     substrate_binding = _resolve_target_binding(
         registry,
@@ -664,7 +736,7 @@ def _verify_candidate_connection(
         raise CandidateMigrationError("candidate_migration_provenance_mismatch")
 
     _verify_derived_indexes(connection, substrate, maps, logs, residual)
-    _verify_candidate_journal(connection, state, provenance_digest)
+    _verify_candidate_journal(connection, state, provenance_digest, preflight)
     return state, provenance_digest
 
 
@@ -692,6 +764,34 @@ def _reverify_old_copy(preflight: SQLiteMigrationPreflightResult) -> None:
     )
     if any(getattr(a, field) != getattr(b, field) for field in fields):
         raise CandidateMigrationError("source_generation_changed_before_transaction")
+    if any(getattr(a, field) != getattr(b, field) for field in ANCHOR_FIELDS):
+        raise CandidateMigrationError("source_identity_anchor_changed_before_transaction")
+
+
+def _recheck_source_anchor_in_transaction(
+    connection: sqlite3.Connection,
+    old_state: Mapping[str, Any],
+    preflight: SQLiteMigrationPreflightResult,
+) -> None:
+    """Inside BEGIN IMMEDIATE: the copy must still carry the phase-3 anchored identity."""
+
+    try:
+        observed = compute_source_identity_anchor(connection, old_state)
+    except MigrationPreflightError as exc:
+        raise CandidateMigrationError("source_journal_or_envelope_verification_failed", str(exc)) from exc
+    evidence = preflight.evidence
+    if (
+        observed.source_journal_tail_record_digest != evidence.source_journal_tail_record_digest
+        or observed.historical_journal_row_count != evidence.historical_journal_row_count
+        or observed.historical_journal_digest != evidence.historical_journal_digest
+    ):
+        raise CandidateMigrationError("source_historical_journal_anchor_mismatch")
+    if observed.source_runtime_profile_digest != evidence.source_runtime_profile_digest:
+        raise CandidateMigrationError("source_runtime_profile_identity_mismatch")
+    if observed.source_interpretation_digest != evidence.source_interpretation_digest:
+        raise CandidateMigrationError("source_interpretation_digest_mismatch")
+    if observed.source_substrate_identity_digest != evidence.source_substrate_identity_digest:
+        raise CandidateMigrationError("source_substrate_identity_mismatch")
 
 
 def transactional_recommit_candidate_v2(
@@ -726,14 +826,7 @@ def transactional_recommit_candidate_v2(
                 or old_state.get("governance_digest") != evidence.source_governance_commitment
             ):
                 raise CandidateMigrationError("source_generation_changed_before_transaction")
-            old_tail = connection.execute(
-                "SELECT generation, payload_json FROM runtime_journal ORDER BY generation DESC LIMIT 1"
-            ).fetchone()
-            if old_tail is None or int(old_tail["generation"]) != evidence.source_runtime_generation:
-                raise CandidateMigrationError("source_journal_or_envelope_verification_failed")
-            old_tail_value = json.loads(str(old_tail["payload_json"]))
-            if not isinstance(old_tail_value, dict) or old_tail_value.get("record_digest") != old_state.get("journal_record_digest"):
-                raise CandidateMigrationError("source_journal_or_envelope_verification_failed")
+            _recheck_source_anchor_in_transaction(connection, old_state, preflight)
 
             _rewrite_persisted_json_bytes(connection)
             _inject(fault, "after_persisted_byte_rewrite")
@@ -774,8 +867,8 @@ def transactional_recommit_candidate_v2(
                 generation=generation,
                 substrate_digest=candidate.substrate_commitment,
                 governance_digest=candidate.governance_commitment,
-                interpretation_digest=str(old_state["interpretation_digest"]),
-                previous_record_digest=str(old_state["journal_record_digest"]),
+                interpretation_digest=evidence.source_interpretation_digest,
+                previous_record_digest=evidence.source_journal_tail_record_digest,
                 migration_provenance_digest=provenance_digest,
             )
             candidate_state = {
@@ -829,9 +922,14 @@ def qualify_candidate_v2_restart(
     *,
     fault: str | None = None,
     registry: CandidateSchemeRegistry | None = None,
-    prove_production_refusal: bool = True,
 ) -> CandidateRestartQualification:
-    """Independently verify the committed qualification copy without mutating it."""
+    """Independently verify the committed qualification copy without mutating it.
+
+    This is a read-only candidate verifier only. It never hands the candidate to
+    production recovery; the production-refusal proof lives in
+    ``canonical_json_v2_restart_qualification.prove_production_runtime_refusal`` and
+    runs on a second disposable backup.
+    """
 
     path = Path(preflight.evidence.snapshot_database)
     active_registry = registry or CandidateSchemeRegistry.from_frozen_fixture()
@@ -846,24 +944,6 @@ def qualify_candidate_v2_restart(
         )
     finally:
         connection.close()
-
-    if prove_production_refusal:
-        # The production runtime must not silently treat qualification evidence as
-        # an activated persistence schema. This handle may configure SQLite pragmas,
-        # but it must refuse before reconstructing or authorizing the candidate state.
-        state_connection = _connect(path, read_only=True)
-        try:
-            _, state_for_profile = _read_runtime_state_raw(state_connection)
-            profile = _profile_from_state(state_for_profile)
-        finally:
-            state_connection.close()
-        try:
-            runtime = SQLiteRestartSafeRuntime.recover(path.parent, profile=profile)
-        except RuntimeRecoveryError:
-            pass
-        else:
-            runtime.close()
-            raise CandidateMigrationError("production_recovery_accepted_qualification_envelope")
 
     return CandidateRestartQualification(
         database=str(path),

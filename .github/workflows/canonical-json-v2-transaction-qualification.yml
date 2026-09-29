@@ -9,6 +9,7 @@ on:
       - "reference/canonical_json_v2_restart_qualification.py"
       - "reference/tests/test_canonical_json_v2_transaction_qualification.py"
       - "reference/tests/test_canonical_json_v2_transaction_refusals.py"
+      - "reference/tests/test_canonical_json_v2_anchor_refusals.py"
       - "reference/canonical_json_v2_migration_preflight.py"
       - "reference/canonical_json_v2_sqlite_preflight.py"
       - "reference/canonical_scheme_registry_candidate.py"
@@ -43,4 +44,5 @@ jobs:
         run: |
           python -m unittest \
             reference.tests.test_canonical_json_v2_transaction_qualification \
-            reference.tests.test_canonical_json_v2_transaction_refusals
+            reference.tests.test_canonical_json_v2_transaction_refusals \
+            reference.tests.test_canonical_json_v2_anchor_refusals
