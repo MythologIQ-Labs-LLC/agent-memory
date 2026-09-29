@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import struct
 import sys
@@ -87,7 +88,10 @@ class CanonicalJsonV2CandidateTests(unittest.TestCase):
         for case in self.fixture["cases"]:
             with self.subTest(case=case["id"]):
                 if "expected_utf8" in case:
-                    self.assertEqual(_run_case(case), case["expected_utf8"].encode("utf-8"))
+                    actual = _run_case(case)
+                    expected = case["expected_utf8"].encode("utf-8")
+                    self.assertEqual(actual, expected)
+                    self.assertEqual(hashlib.sha256(actual).digest(), hashlib.sha256(expected).digest())
                     continue
 
                 with self.assertRaises(CanonicalJsonV2Error) as caught:
