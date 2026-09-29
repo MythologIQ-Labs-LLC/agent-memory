@@ -4,7 +4,11 @@ on:
   pull_request:
     paths:
       - "reference/canonical_json_v2_migration_preflight.py"
+      - "reference/run_canonical_json_v2_commitment_parity.py"
       - "reference/tests/test_canonical_json_v2_migration_preflight.py"
+      - "reference/fixtures/runtime/canonical-json-v2-commitment-parity-input-v1.json"
+      - "rust/agent-memory-kernel-shadow/examples/canonical_json_v2_commitment_parity.rs"
+      - "rust/agent-memory-kernel-shadow/**"
       - ".github/workflows/canonical-json-v2-migration-preflight.yml"
   workflow_dispatch:
 
@@ -31,3 +35,26 @@ jobs:
 
       - name: Execute side-effect-free candidate commitment preflight
         run: python -m unittest reference.tests.test_canonical_json_v2_migration_preflight
+
+      - name: Emit Python candidate commitments
+        run: python reference/run_canonical_json_v2_commitment_parity.py --output "$RUNNER_TEMP/python-commitments.json"
+
+      - name: Set up stable Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Emit independent Rust candidate commitments
+        working-directory: rust/agent-memory-kernel-shadow
+        run: cargo run --quiet --locked --example canonical_json_v2_commitment_parity > "$RUNNER_TEMP/rust-commitments.json"
+
+      - name: Require exact cross-language candidate commitment parity
+        run: diff -u "$RUNNER_TEMP/python-commitments.json" "$RUNNER_TEMP/rust-commitments.json"
+
+      - name: Upload parity outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-v2-commitment-parity-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/python-commitments.json
+            ${{ runner.temp }}/rust-commitments.json
+          if-no-files-found: error
+          retention-days: 30
