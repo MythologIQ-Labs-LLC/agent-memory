@@ -3,7 +3,7 @@ name: Canonical JSON v2 Candidate Parity
 on:
   pull_request:
     paths:
-      - "reference/agentmem_ref/canonical_json_v2.py"
+      - "reference/canonical_json_v2_candidate.py"
       - "reference/tests/test_canonical_json_v2_candidate.py"
       - "reference/fixtures/runtime/canonical-json-v2-vectors-v1.json"
       - "reference/fixtures/runtime/canonical-json-v2-vectors-accepted-v1.json"
@@ -35,7 +35,7 @@ jobs:
       - name: Verify accepted vectors against Python candidate
         run: pytest -q reference/tests/test_canonical_json_v2_candidate.py
 
-  rust-candidate-bootstrap:
+  rust-candidate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,22 +44,6 @@ jobs:
       - name: Set up stable Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Generate candidate lockfile
+      - name: Verify accepted vectors against locked Rust candidate
         working-directory: rust/agent-memory-kernel-shadow
-        run: cargo generate-lockfile
-
-      - name: Verify accepted vectors against Rust candidate
-        working-directory: rust/agent-memory-kernel-shadow
-        run: cargo test --test canonical_json_v2
-
-      - name: Emit generated lockfile for review
-        working-directory: rust/agent-memory-kernel-shadow
-        run: cat Cargo.lock
-
-      - name: Upload generated lockfile
-        uses: actions/upload-artifact@v4
-        with:
-          name: canonical-json-v2-rust-lock-${{ github.sha }}
-          path: rust/agent-memory-kernel-shadow/Cargo.lock
-          if-no-files-found: error
-          retention-days: 7
+        run: cargo test --locked --test canonical_json_v2
