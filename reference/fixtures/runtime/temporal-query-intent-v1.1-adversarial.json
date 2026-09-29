@@ -1,0 +1,1094 @@
+{
+  "fixture_id": "agent-memory-temporal-query-intent-v1.1-adversarial-oracle",
+  "status": "FROZEN_PREIMPLEMENTATION_ORACLE",
+  "issue": 585,
+  "interpreter_ref": "agent-memory-deterministic-temporal-cues",
+  "target_interpreter_version": "1.1.0",
+  "prior_interpreter_version": "1.0.0",
+  "authority_effect": "none",
+  "posture_contract": "query-language temporal intent stays posture=inferred/confidence=high; intent_basis=query_language_explicit distinguishes it. Only caller declaration has posture=explicit (intent_basis=caller_declared).",
+  "lexical_relevance_effect": "none: spans are evidence only; the query and its tokens are never altered (#583 boundary)",
+  "consumed_semantics": "consumed = exact [source text, mode] of spans the interpreter used, ordered by start offset; query[start:end] must equal text",
+  "declined_semantics": "declined = exact [source text, reason] of cue matches considered and deliberately not consumed",
+  "declined_reasons": [
+    "quoted_mention",
+    "metalinguistic_mention",
+    "discourse_marker",
+    "habitual_or_motion",
+    "non_current_idiom"
+  ],
+  "intent_bases": [
+    "caller_declared",
+    "query_language_explicit",
+    "query_cue_inference",
+    "none"
+  ],
+  "cases": [
+    {
+      "id": "A-now-final",
+      "class": "A",
+      "query": "Where do I live now?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "now",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "A-currently",
+      "class": "A",
+      "query": "Where am I currently living?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "currently",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "A-right-now",
+      "class": "A",
+      "query": "Where do I live right now?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "right now",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "A-current-adjective",
+      "class": "A",
+      "query": "What is my current address?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "current",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "A-as-of-now-leading",
+      "class": "A",
+      "query": "As of now, where do I live?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "As of now",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "A-be-now",
+      "class": "A",
+      "query": "Who is now the chief executive?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "now",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "A-580-drink-now",
+      "class": "A",
+      "query": "What does the user prefer to drink now?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "now",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "A-at-the-moment",
+      "class": "A",
+      "query": "Where am I living at the moment?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "at the moment",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "A-now-outside-quote",
+      "class": "A",
+      "query": "Where do I live now, per the note titled \"Moving\"?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_language_explicit",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "now",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "B-now-comma",
+      "class": "B",
+      "query": "Now, explain the migration plan.",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "Now",
+            "discourse_marker"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B-now-imperative",
+      "class": "B",
+      "query": "Now tell me what happened before that.",
+      "expect": {
+        "mode": "historical",
+        "posture": "inferred",
+        "confidence": "low",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "consumed": [
+          [
+            "before",
+            "historical"
+          ]
+        ],
+        "declined": [
+          [
+            "Now",
+            "discourse_marker"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B-now-comma-summarize",
+      "class": "B",
+      "query": "Now, summarize the document.",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "Now",
+            "discourse_marker"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B-lowercase",
+      "class": "B",
+      "query": "now, summarize the document",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "now",
+            "discourse_marker"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B-after-interjection",
+      "class": "B",
+      "query": "Okay, now summarize the document.",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "now",
+            "discourse_marker"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B-and-now-comma",
+      "class": "B",
+      "query": "And now, list the open tickets.",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "now",
+            "discourse_marker"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "B-leading-ambiguous",
+      "class": "B",
+      "query": "Now where do I live?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "low",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "consumed": [
+          [
+            "Now",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "C-quoted-now",
+      "class": "C",
+      "query": "What does the word \"now\" mean here?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "now",
+            "quoted_mention"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C-quoted-currently",
+      "class": "C",
+      "query": "Why did she say \"currently unavailable\"?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "currently",
+            "quoted_mention"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C-quoted-right-now",
+      "class": "C",
+      "query": "Find the message containing \"right now\".",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "right now",
+            "quoted_mention"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C-metalinguistic-unquoted",
+      "class": "C",
+      "query": "What does the word now mean in this sentence?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "now",
+            "metalinguistic_mention"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "C-curly-quoted-going-to",
+      "class": "C",
+      "query": "Find the note titled “going to Paris”.",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "going to",
+            "quoted_mention"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "D-am-i-going-to",
+      "class": "D",
+      "query": "Where am I going to stay next month?",
+      "expect": {
+        "mode": "prospective",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "going to",
+            "prospective"
+          ],
+          [
+            "next month",
+            "prospective"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "D-going-to-do-tomorrow",
+      "class": "D",
+      "query": "What am I going to do tomorrow?",
+      "expect": {
+        "mode": "prospective",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "going to",
+            "prospective"
+          ],
+          [
+            "tomorrow",
+            "prospective"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "D-np-subject",
+      "class": "D",
+      "query": "Is the team going to ship the release?",
+      "expect": {
+        "mode": "prospective",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "going to",
+            "prospective"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "D-contracted",
+      "class": "D",
+      "query": "I'm going to move to Denver; where will I live?",
+      "expect": {
+        "mode": "prospective",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "going to",
+            "prospective"
+          ],
+          [
+            "will",
+            "prospective"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "E-cf22b7bf",
+      "class": "E",
+      "query": "How much weight have I lost since I started going to the gym consistently?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "going to",
+            "habitual_or_motion"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "E-began",
+      "class": "E",
+      "query": "When I began going to the gym, what did I weigh?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "going to",
+            "habitual_or_motion"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "E-continued",
+      "class": "E",
+      "query": "Since I continued going to therapy, has my sleep improved?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "going to",
+            "habitual_or_motion"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "E-kept",
+      "class": "E",
+      "query": "I kept going to the office every day; which days did I skip?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "going to",
+            "habitual_or_motion"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "E-be-motion-determiner",
+      "class": "E",
+      "query": "Which days am I going to the gym?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "going to",
+            "habitual_or_motion"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "E-been-going",
+      "class": "E",
+      "query": "How often have I been going to yoga class?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "going to",
+            "habitual_or_motion"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "E-stopped",
+      "class": "E",
+      "query": "What happened when I stopped going to church?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "going to",
+            "habitual_or_motion"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "F-planning-to",
+      "class": "F",
+      "query": "Where am I planning to stay in Hawaii?",
+      "expect": {
+        "mode": "prospective",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "planning to",
+            "prospective"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "F-plan-to",
+      "class": "F",
+      "query": "What do I plan to cook for the party?",
+      "expect": {
+        "mode": "prospective",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "plan to",
+            "prospective"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "F-quoted-planning",
+      "class": "F",
+      "query": "What did I note under \"planning to travel\"?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "planning to",
+            "quoted_mention"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "G-580-now-and-before",
+      "class": "G",
+      "query": "Where do I live now, and where did I live before?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "inferred",
+        "confidence": "low",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "conflict": true,
+        "consumed": [
+          [
+            "now",
+            "current"
+          ],
+          [
+            "before",
+            "historical"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "G-currently-vs-used-to",
+      "class": "G",
+      "query": "Where do I currently live and where did I used to live?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "inferred",
+        "confidence": "low",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "conflict": true,
+        "consumed": [
+          [
+            "currently",
+            "current"
+          ],
+          [
+            "used to",
+            "historical"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "G-future-vs-previously",
+      "class": "G",
+      "query": "What am I going to do tomorrow, and what did I do previously?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "inferred",
+        "confidence": "low",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "conflict": true,
+        "consumed": [
+          [
+            "going to",
+            "prospective"
+          ],
+          [
+            "tomorrow",
+            "prospective"
+          ],
+          [
+            "previously",
+            "historical"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "G-right-now-vs-past",
+      "class": "G",
+      "query": "Right now, what was my address in the past?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "inferred",
+        "confidence": "low",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "conflict": true,
+        "consumed": [
+          [
+            "Right now",
+            "current"
+          ],
+          [
+            "in the past",
+            "historical"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "I-now-that",
+      "class": "I",
+      "query": "Now that I moved, where is my nearest gym?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "Now",
+            "non_current_idiom"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "I-just-now",
+      "class": "I",
+      "query": "What did I just now say about the budget?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "now",
+            "non_current_idiom"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "I-up-until-now",
+      "class": "I",
+      "query": "Up until now, where have I lived?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": [
+          [
+            "now",
+            "non_current_idiom"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "H-as-of-date",
+      "class": "H",
+      "query": "What was my address as of 2021-03-04?",
+      "expect": {
+        "mode": "as_of",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "target_start": "2021-03-04",
+        "target_end": "2021-03-05T00:00:00Z",
+        "consumed": [
+          [
+            "as of 2021-03-04",
+            "as_of"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-as-of-year",
+      "class": "H",
+      "query": "Where did I live in 2019?",
+      "expect": {
+        "mode": "as_of",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "target_start": "2019-01-01",
+        "target_end": "2020-01-01",
+        "consumed": [
+          [
+            "in 2019",
+            "as_of"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-historical",
+      "class": "H",
+      "query": "What was the user's role previously?",
+      "expect": {
+        "mode": "historical",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "consumed": [
+          [
+            "previously",
+            "historical"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-prospective",
+      "class": "H",
+      "query": "Which database migration is scheduled next week?",
+      "expect": {
+        "mode": "prospective",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "scheduled",
+            "prospective"
+          ],
+          [
+            "next week",
+            "prospective"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-timeline",
+      "class": "H",
+      "query": "How did my role change over time?",
+      "expect": {
+        "mode": "historical",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "expected_recall_shape": "timeline",
+        "consumed": [
+          [
+            "over time",
+            "historical"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-low-prospective",
+      "class": "H",
+      "query": "What will I do later?",
+      "expect": {
+        "mode": "prospective",
+        "posture": "inferred",
+        "confidence": "low",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "consumed": [
+          [
+            "will",
+            "prospective"
+          ],
+          [
+            "later",
+            "prospective"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-low-current-still",
+      "class": "H",
+      "query": "Is the build still failing?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "low",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": false,
+        "consumed": [
+          [
+            "still",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-latest-is-cue-not-language",
+      "class": "H",
+      "query": "What is the latest deployment plan?",
+      "expect": {
+        "mode": "current",
+        "posture": "inferred",
+        "confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true,
+        "consumed": [
+          [
+            "latest",
+            "current"
+          ]
+        ],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-unspecified-1",
+      "class": "H",
+      "query": "What did I write about memory half-life decay?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-unspecified-2",
+      "class": "H",
+      "query": "What does Kevin like in the morning?",
+      "expect": {
+        "mode": "atemporal_or_unspecified",
+        "posture": "unspecified",
+        "confidence": null,
+        "intent_basis": "none",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": []
+      }
+    },
+    {
+      "id": "H-caller-overrides-query-language",
+      "class": "H",
+      "query": "Where do I live now?",
+      "expect": {
+        "mode": "historical",
+        "posture": "explicit",
+        "confidence": null,
+        "intent_basis": "caller_declared",
+        "orders_temporally": false,
+        "consumed": [],
+        "declined": []
+      },
+      "temporal_intent": {
+        "mode": "historical"
+      }
+    },
+    {
+      "id": "H-caller-current",
+      "class": "H",
+      "query": "Where does the user live?",
+      "expect": {
+        "mode": "current",
+        "posture": "explicit",
+        "confidence": null,
+        "intent_basis": "caller_declared",
+        "orders_temporally": true,
+        "consumed": [],
+        "declined": []
+      },
+      "temporal_intent": {
+        "mode": "current"
+      }
+    }
+  ]
+}

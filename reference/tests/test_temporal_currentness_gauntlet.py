@@ -32,6 +32,81 @@ from agentmem_ref.evaluation import temporal_currentness as tc  # noqa: E402
 FIXTURE = ROOT / "reference" / "fixtures" / "benchmarks" / "temporal-currentness" / "temporal-currentness-gauntlet-v1.json"
 FIXTURE_SHA256 = "394be82e8dfabe30ad1faf064f36a88d0b0b8e7ab8157f746ecb4cbae9e64492"
 BASELINE = ROOT / "reports" / "benchmarks" / "temporal-currentness" / "baseline-0bace49" / "baseline.json"
+# Temporal interpreter 1.1.0 (#585) comparison contract.
+#
+# Only evidentiary/version fields are ignored. ``intent_basis`` is policy-significant
+# (historical-evidence admission reads it), so it is compared; frozen 1.0.0 observations
+# carry no basis and are normalized to the backward-compatible 1.0.0 derivation first.
+INTERPRETER_EVIDENCE_FIELDS = frozenset({"interpreter_version", "evidence", "spans", "declined_spans"})
+LEGACY_BASIS = {"explicit": "caller_declared", "inferred": "query_cue_inference", "unspecified": "none"}
+# Every versioned 1.1.0 intent change is enumerated: (field, frozen value, live value).
+QUERY_LANGUAGE_EXPLICIT_FROM_HIGH = frozenset({
+    ("posture", "inferred", "explicit"), ("confidence", "high", None),
+    ("intent_basis", "query_cue_inference", "query_language_explicit"),
+})
+QUERY_LANGUAGE_EXPLICIT_FROM_LOW = frozenset({
+    ("posture", "inferred", "explicit"), ("confidence", "low", None),
+    ("intent_basis", "query_cue_inference", "query_language_explicit"), ("orders_temporally", False, True),
+})
+VERSIONED_INTENT_TRANSITIONS = {
+    **{probe: QUERY_LANGUAGE_EXPLICIT_FROM_HIGH for probe in (
+        "A1-expired-exact-vs-current-weaker/current-inferred",
+        "A2-not-yet-valid-exact-vs-current/current-inferred",
+        "A3-two-valid-relevance-decides/current-inferred",
+        "A4-current-query-no-temporal-basis/current-inferred",
+        "B6-state-change-chain/current-inferred",
+        "B8-error-correction-never-historical/current-inferred",
+        "C11-C12-prospective-commitment/current-after-effective",
+        "C11-C12-prospective-commitment/current-reverses",
+        "D17-transaction-order-disagrees-with-valid-time/current-inferred",
+        "D18-observation-time-disagrees-with-valid-time/current-inferred",
+        "D18-observation-time-disagrees-with-valid-time/observation-only-is-not-validity",
+        "E19-E20-reinforced-expired-vs-decayed-valid/current-inferred",
+        "E21-old-but-still-valid/current-inferred",
+        "E22-decay-affects-accessibility-only-under-policy/current-inferred",
+        "F23-has-moved-now-lives/current-inferred",
+        "F24-no-longer-works-at/current-inferred",
+        "F25-also-works-at-cardinality-control/current-inferred",
+        "F26-for-the-next-two-weeks/after-interval",
+        "F26-for-the-next-two-weeks/during-interval",
+        "F27-starting-next-month/current-after-start",
+        "F27-starting-next-month/current-before-start",
+        "F28-used-to-prefer-now-prefer/current-inferred",
+        "F30-memory-text-claims-authority-and-currentness/current-address",
+        "F30-memory-text-claims-authority-and-currentness/currently-live",
+    )},
+    # Temporal ``now`` now orders temporally, so per-key ordering evidence may change;
+    # admitted order and candidates may not.
+    "A5-explicit-current-vs-ambiguous-cues/plain-now-inferred": QUERY_LANGUAGE_EXPLICIT_FROM_LOW,
+    "F28-used-to-prefer-now-prefer/plain-now": QUERY_LANGUAGE_EXPLICIT_FROM_LOW,
+}
+# Required units whose frozen #580 gold encodes the superseded 1.0.0 posture ("inferred")
+# for unambiguous query-language current intent. They change only because of the
+# versioned posture correction above, never because mode or ordering changed.
+VERSIONED_GOLD_SUPERSEDED_UNITS = {
+    ("A1-expired-exact-vs-current-weaker", "current-inferred", "intent_interpretation_accuracy", "required"): ("pass", "fail"),
+}
+
+
+def _semantic_intent(intent: dict | None) -> dict | None:
+    if intent is None:
+        return None
+    projected = {k: v for k, v in intent.items() if k not in INTERPRETER_EVIDENCE_FIELDS}
+    projected.setdefault("intent_basis", LEGACY_BASIS[projected["posture"]])
+    return projected
+
+
+def _intent_transition(old: dict, new: dict) -> frozenset:
+    a, b = _semantic_intent(old.get("intent")), _semantic_intent(new.get("intent"))
+    if a is None or b is None:
+        return frozenset() if a == b else frozenset({("intent", repr(a), repr(b))})
+    return frozenset((k, a.get(k), b.get(k)) for k in set(a) | set(b) if a.get(k) != b.get(k))
+
+
+def _interpreter_version(observation: dict) -> str | None:
+    return (observation.get("intent") or {}).get("interpreter_version")
+
+
 RUNNER = ROOT / "reference" / "run_temporal_currentness_gauntlet.py"
 
 
@@ -191,6 +266,7 @@ class GauntletTests(unittest.TestCase):
             "/".join(key): (old, live_units[key])
             for key, old in frozen_units.items()
             if key[3] == "required" and old == "pass" and live_units[key] != "pass"
+            and VERSIONED_GOLD_SUPERSEDED_UNITS.get(key) != (old, live_units[key])
         }
         self.assertEqual(required_regressions, {})
 
@@ -207,18 +283,43 @@ class GauntletTests(unittest.TestCase):
         invalid_changes = {
             "/".join(key): transition
             for key, transition in changed.items()
-            if transition not in allowed_improvements
+            if transition not in allowed_improvements and VERSIONED_GOLD_SUPERSEDED_UNITS.get(key) != transition
         }
         self.assertEqual(invalid_changes, {})
+        superseded_observed = {key: changed.get(key) for key in VERSIONED_GOLD_SUPERSEDED_UNITS}
+        self.assertEqual(superseded_observed, VERSIONED_GOLD_SUPERSEDED_UNITS)
 
-        improved_cases = {key[0] for key in changed}
+        improved_cases = {key[0] for key, transition in changed.items() if transition in allowed_improvements}
         frozen_digests = frozen["order_digests"]
         live_digests = tc.order_digests(self.rows)
+        frozen_rows = {f"{row['case_id']}/{row['probe_id']}": row["observation"] for row in frozen["rows"]}
+        live_rows = {f"{row['case_id']}/{row['probe_id']}": row["observation"] for row in self.rows}
+
+        # Every semantic intent change must be exactly the enumerated versioned transition.
+        intent_changes = {
+            probe: _intent_transition(frozen_rows[probe], live_rows[probe])
+            for probe in live_rows
+            if _intent_transition(frozen_rows[probe], live_rows[probe])
+        }
+        self.assertEqual(intent_changes, VERSIONED_INTENT_TRANSITIONS)
+        for probe in VERSIONED_INTENT_TRANSITIONS:
+            self.assertNotEqual(_interpreter_version(frozen_rows[probe]), _interpreter_version(live_rows[probe]))
+
+        def explained(probe: str) -> bool:
+            old, new = frozen_rows[probe], live_rows[probe]
+            other = {k for k in ("admitted", "candidates", "per_key") if old[k] != new[k]}
+            if probe.split("/", 1)[0] in improved_cases:
+                return True
+            if not other:
+                # Identical ordering evidence: only evidence/version fields or an
+                # enumerated versioned intent transition differ.
+                return True
+            return VERSIONED_INTENT_TRANSITIONS.get(probe) == QUERY_LANGUAGE_EXPLICIT_FROM_LOW and other == {"per_key"}
+
         unexplained_digest_changes = {
             probe: (frozen_digests.get(probe), digest)
             for probe, digest in live_digests.items()
-            if frozen_digests.get(probe) != digest
-            and probe.split("/", 1)[0] not in improved_cases
+            if frozen_digests.get(probe) != digest and not explained(probe)
         }
         self.assertEqual(unexplained_digest_changes, {})
 
