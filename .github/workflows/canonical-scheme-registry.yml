@@ -7,6 +7,7 @@ on:
       - "reference/canonical_scheme_registry_candidate.py"
       - "reference/tests/test_canonical_scheme_registry_candidate.py"
       - "reference/tests/test_canonical_scheme_registry_envelope.py"
+      - "reports/benchmarks/runtime/620-canonical-scheme-registry/QUALIFICATION.md"
       - ".github/workflows/canonical-scheme-registry.yml"
   workflow_dispatch:
 
