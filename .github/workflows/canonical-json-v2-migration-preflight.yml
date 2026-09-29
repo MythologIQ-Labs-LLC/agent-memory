@@ -4,9 +4,13 @@ on:
   pull_request:
     paths:
       - "reference/canonical_json_v2_migration_preflight.py"
+      - "reference/canonical_json_v2_sqlite_preflight.py"
+      - "reference/canonical_scheme_registry_candidate.py"
       - "reference/run_canonical_json_v2_commitment_parity.py"
       - "reference/tests/test_canonical_json_v2_migration_preflight.py"
+      - "reference/tests/test_canonical_json_v2_sqlite_preflight.py"
       - "reference/fixtures/runtime/canonical-json-v2-commitment-parity-input-v1.json"
+      - "reference/fixtures/runtime/canonicalization-scheme-registry-v1.json"
       - "rust/agent-memory-kernel-shadow/examples/canonical_json_v2_commitment_parity.rs"
       - "rust/agent-memory-kernel-shadow/**"
       - ".github/workflows/canonical-json-v2-migration-preflight.yml"
@@ -33,8 +37,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e .
 
-      - name: Execute side-effect-free candidate commitment preflight
+      - name: Execute candidate commitment preflight
         run: python -m unittest reference.tests.test_canonical_json_v2_migration_preflight
+
+      - name: Execute read-only SQLite source preflight
+        run: python -m unittest reference.tests.test_canonical_json_v2_sqlite_preflight
 
       - name: Emit Python candidate commitments
         run: python reference/run_canonical_json_v2_commitment_parity.py --output "$RUNNER_TEMP/python-commitments.json"
