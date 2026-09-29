@@ -1,0 +1,27 @@
+name: Canonical JSON v2 Vector Integrity
+
+on:
+  pull_request:
+    paths:
+      - "reference/fixtures/runtime/canonical-json-v2-vectors-v1.json"
+      - "reference/validate_canonical_json_v2_vectors.py"
+      - ".github/workflows/canonical-json-v2-vector-integrity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-vectors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate frozen candidate vectors
+        run: python reference/validate_canonical_json_v2_vectors.py
