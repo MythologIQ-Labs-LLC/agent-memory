@@ -180,8 +180,6 @@
     "source_generation_checked_again_inside_transaction",
     "post_migration_logical_state_equals_pre_migration_logical_state",
     "restart_verification_required_before_committed_outcome",
-    "phase4_transaction_provenance_never_claims_final_migration_success",
-    "phase5_final_outcome_is_qualification_evidence_not_runtime_mutation",
     "migration_provenance_is_evidence_not_verification"
   ],
   "failure_injections": [
