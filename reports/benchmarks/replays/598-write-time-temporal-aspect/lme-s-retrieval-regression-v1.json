@@ -1,0 +1,93 @@
+{
+ "issue": 598,
+ "dataset": "LongMemEval_S cleaned (xiaowu0162/longmemeval-cleaned @98d7416c, sha256 d6f21ea9...a442), 500 questions",
+ "corpus_class": "external_frozen",
+ "backend": "agent_memory",
+ "base_sha": "0103b9f3ba0ab90c4914837dcb98a9cdad7c4c2a",
+ "result": "IDENTICAL retrieval: every per-question row and every metric equal; only wall-clock timing fields differ",
+ "runs": {
+  "turn": {
+   "base_revision": "0103b9f3ba0ab90c4914837dcb98a9cdad7c4c2a",
+   "branch_revision": "3ab035f76ea81157692ac14ccc8cb6d93206fe4e",
+   "headline_base": {
+    "ndcg_any@10": 0.68156,
+    "ndcg_any@5": 0.648611,
+    "ndcg_any@50": 0.711426,
+    "recall_all@10": 0.72315,
+    "recall_all@5": 0.601432,
+    "recall_all@50": 0.859189
+   },
+   "headline_branch": {
+    "ndcg_any@10": 0.68156,
+    "ndcg_any@5": 0.648611,
+    "ndcg_any@50": 0.711426,
+    "recall_all@10": 0.72315,
+    "recall_all@5": 0.601432,
+    "recall_all@50": 0.859189
+   },
+   "headline_identical": true,
+   "per_question_rows_identical_excluding_timing": true,
+   "field_differences_total": 1011,
+   "field_differences_excluding_execution_and_timing": 3,
+   "remaining_differences": [
+    ".planes.turn.backends.agent_memory.timing.ingest_seconds_total",
+    ".planes.turn.backends.agent_memory.timing.recall_seconds_max",
+    ".planes.turn.backends.agent_memory.timing.recall_seconds_total"
+   ]
+  },
+  "session": {
+   "base_revision": "0103b9f3ba0ab90c4914837dcb98a9cdad7c4c2a",
+   "branch_revision": "3ab035f76ea81157692ac14ccc8cb6d93206fe4e",
+   "headline_base": {
+    "ndcg_any@10": 0.878274,
+    "ndcg_any@5": 0.863142,
+    "recall_all@10": 0.892601,
+    "recall_all@5": 0.823389
+   },
+   "headline_branch": {
+    "ndcg_any@10": 0.878274,
+    "ndcg_any@5": 0.863142,
+    "recall_all@10": 0.892601,
+    "recall_all@5": 0.823389
+   },
+   "headline_identical": true,
+   "per_question_rows_identical_excluding_timing": true,
+   "field_differences_total": 1011,
+   "field_differences_excluding_execution_and_timing": 3,
+   "remaining_differences": [
+    ".planes.session.backends.agent_memory.timing.ingest_seconds_total",
+    ".planes.session.backends.agent_memory.timing.recall_seconds_max",
+    ".planes.session.backends.agent_memory.timing.recall_seconds_total"
+   ]
+  },
+  "turn_source_observed_at": {
+   "base_revision": "0103b9f3ba0ab90c4914837dcb98a9cdad7c4c2a",
+   "branch_revision": "3ab035f76ea81157692ac14ccc8cb6d93206fe4e",
+   "headline_base": {
+    "ndcg_any@10": 0.68156,
+    "ndcg_any@5": 0.648611,
+    "ndcg_any@50": 0.711426,
+    "recall_all@10": 0.72315,
+    "recall_all@5": 0.601432,
+    "recall_all@50": 0.859189
+   },
+   "headline_branch": {
+    "ndcg_any@10": 0.68156,
+    "ndcg_any@5": 0.648611,
+    "ndcg_any@50": 0.711426,
+    "recall_all@10": 0.72315,
+    "recall_all@5": 0.601432,
+    "recall_all@50": 0.859189
+   },
+   "headline_identical": true,
+   "per_question_rows_identical_excluding_timing": true,
+   "field_differences_total": 1011,
+   "field_differences_excluding_execution_and_timing": 3,
+   "remaining_differences": [
+    ".planes.turn.backends.agent_memory.timing.ingest_seconds_total",
+    ".planes.turn.backends.agent_memory.timing.recall_seconds_max",
+    ".planes.turn.backends.agent_memory.timing.recall_seconds_total"
+   ]
+  }
+ }
+}

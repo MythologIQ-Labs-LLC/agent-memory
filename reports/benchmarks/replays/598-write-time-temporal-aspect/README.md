@@ -143,11 +143,25 @@ between 1.0.0 (loaded from `0103b9f` with `git show`) and 1.1.0:
 * #594 sample (268 writes): 0 interpretation drift, 0 persisted drift, 0 regimes introduced.
   `interpreter-drift-594-v1.0.0-vs-v1.1.0.json` pins per-item hashes of the 1.0.0 non-aspect
   interpretation, and `test_write_temporal_aspect_v1_1` asserts them.
-* LongMemEval_S unique haystack turns: see `interpreter-drift-lme-s-v1.0.0-vs-v1.1.0.json`.
+* LongMemEval_S, all 189,515 unique haystack turns (user and assistant): 0 interpretation drift,
+  0 persisted drift, 0 regimes introduced (`interpreter-drift-lme-s-v1.0.0-vs-v1.1.0.json`). 22,754 turns
+  change aspect, every one by withholding. 1.1.0 scope statuses: none 155,064; resolved_write 30,097;
+  resolved_principal 2,491; mixed_regimes 1,863. Declines: subordinate_clause 15,303; non_principal_clause
+  6,901; question_or_request 6,722; discourse_marker 4,579; passive_or_accustomed 3,690;
+  motion_or_habitual 402.
 
-## External retrieval regression (LongMemEval_S)
+## External retrieval regression
 
-See `lme-s-retrieval-regression-v1.json`.
+**LongMemEval_S**, 500 questions, external_frozen, agent_memory backend, base `0103b9f` vs branch
+(`lme-s-retrieval-regression-v1.json`): turn plane, session plane, and turn plane with
+`--agent-memory-temporal-metadata source_observed_at`. On all three runs every per-question row and every
+metric is identical; only wall-clock timing fields differ. Turn-plane headline for both: recall_all@5
+0.601432, recall_all@10 0.72315, ndcg_any@10 0.68156. This is expected because `markers.aspect` has
+no ranking or admission reader. LongMemEval_M was not run: nothing reads aspect at retrieval, and S is
+byte-identical.
+
+**AgentMemBench** memdialogue_v2, agent_memory backend, runner defaults
+(`agentmembench-regression-v1.json`): identical excluding timing.
 
 ## Reproduce
 

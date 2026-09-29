@@ -1,0 +1,48 @@
+{
+ "corpus": "LongMemEval_S unique haystack turns (user+assistant)",
+ "writes": 189515,
+ "seconds": 630.7,
+ "non_aspect_interpretation_drift": 0,
+ "drift_items": [],
+ "persisted_form_non_aspect_drift": 0,
+ "aspect_regime_introduced_by_1_1_0": 0,
+ "introduced_items": [],
+ "writes_with_changed_aspect_regimes": 22754,
+ "regime_transitions_v100_to_v110": {
+  "none->none": 137433,
+  "past_habitual->none": 2769,
+  "past_habitual->past_habitual": 956,
+  "past_habitual+present->none": 168,
+  "past_habitual+present->past_habitual": 39,
+  "past_habitual+present->present": 97,
+  "past_habitual+present+prospective->none": 167,
+  "past_habitual+present+prospective->past_habitual": 4,
+  "past_habitual+present+prospective->present": 18,
+  "past_habitual+present+prospective->prospective": 71,
+  "past_habitual+prospective->none": 597,
+  "past_habitual+prospective->past_habitual": 68,
+  "past_habitual+prospective->prospective": 734,
+  "present->none": 3557,
+  "present->present": 4517,
+  "present+prospective->none": 2083,
+  "present+prospective->present": 374,
+  "present+prospective->prospective": 1855,
+  "prospective->none": 10153,
+  "prospective->prospective": 23855
+ },
+ "aspect_scope_status_v110": {
+  "mixed_regimes": 1863,
+  "none": 155064,
+  "resolved_principal": 2491,
+  "resolved_write": 30097
+ },
+ "declined_reason_counts_v110": {
+  "discourse_marker": 4579,
+  "motion_or_habitual": 402,
+  "non_principal_clause": 6901,
+  "passive_or_accustomed": 3690,
+  "question_or_request": 6722,
+  "subordinate_clause": 15303
+ },
+ "base_sha": "0103b9f3ba0ab90c4914837dcb98a9cdad7c4c2a"
+}
