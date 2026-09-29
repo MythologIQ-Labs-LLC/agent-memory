@@ -1,8 +1,9 @@
 # ADR-040: Use a versioned language-neutral canonical JSON contract for persisted integrity commitments
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-28
 - **Reconciled candidate:** 2026-09-29
+- **Accepted:** 2026-09-29
 - **Related:** #609, #602, #615, #617, #618, #619, #620, #621, #622, #623, #624, #625, #626, #627, ADR-028, ADR-031, #522, #562
 
 ## Context
@@ -574,8 +575,6 @@ A production cutover must be authorized through a separate gate that defines sup
 
 ## Decision status
 
-**Proposed.**
+**Accepted.**
 
-The #627 reconciliation recommendation is **AMEND THEN ACCEPT**. The architecture evidence required by the original proposal is complete, but acceptance must occur only after this reconciled text is reviewed as the authoritative ADR candidate.
-
-Changing this status to `Accepted` is the maintainer ruling. It is not implied by the evidence merge, #626 completion, or this reconciliation branch.
+Accepted by maintainer ruling on 2026-09-29 after #627 reconciliation and exact-head review/CI of PR #628. This acceptance establishes the architecture only; the activation boundary above remains controlling.
