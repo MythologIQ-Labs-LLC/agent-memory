@@ -1,6 +1,9 @@
-"""Frozen adversarial oracle for query temporal intent interpreter 1.1.0 (#585).
+"""Frozen adversarial oracles for query temporal intent interpreter 1.1.0 (#585).
 
-The fixture was committed before the 1.1.0 implementation. Every case states the
+The initial oracle was committed before the 1.1.0 implementation and is preserved
+byte-identical as evidence of the first candidate contract. Review of PR #630
+superseded part of it; the reviewed oracle was frozen before the remediation and
+records every superseded expectation. Every case states the
 resolved mode/posture/confidence/intent basis and the exact source spans the
 interpreter must consume or deliberately decline. Offsets are checked against the
 original query string, so spans can never be reconstructed from evidence strings.
@@ -8,6 +11,7 @@ original query string, so spans can never be reconstructed from evidence strings
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import unittest
@@ -18,8 +22,10 @@ sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref.runtime import temporal_intent as ti  # noqa: E402
 
-FIXTURE = ROOT / "reference" / "fixtures" / "runtime" / "temporal-query-intent-v1.1-adversarial.json"
+INITIAL_FIXTURE = ROOT / "reference" / "fixtures" / "runtime" / "temporal-query-intent-v1.1-adversarial.json"
+FIXTURE = ROOT / "reference" / "fixtures" / "runtime" / "temporal-query-intent-v1.1-reviewed-oracle.json"
 ORACLE = json.loads(FIXTURE.read_text(encoding="utf-8"))
+INITIAL_ORACLE_SHA256 = "e7deca424a47359de114fede15e989290ec756897d19f6938ef9cdfba99b8e62"
 
 
 def _resolve(case: dict) -> ti.TemporalIntent:
@@ -30,6 +36,26 @@ class TemporalQueryIntentOracleTests(unittest.TestCase):
     def test_interpreter_identity(self):
         self.assertEqual(ti.INTERPRETER_REF, ORACLE["interpreter_ref"])
         self.assertEqual(ti.INTERPRETER_VERSION, ORACLE["target_interpreter_version"])
+
+    def test_initial_oracle_is_preserved_and_supersession_is_exact(self):
+        self.assertEqual(hashlib.sha256(INITIAL_FIXTURE.read_bytes()).hexdigest(), INITIAL_ORACLE_SHA256)
+        initial = json.loads(INITIAL_FIXTURE.read_text(encoding="utf-8"))
+        self.assertEqual(initial["status"], "FROZEN_PREIMPLEMENTATION_ORACLE")
+        self.assertEqual(ORACLE["supersedes"]["file_sha256"], INITIAL_ORACLE_SHA256)
+        self.assertEqual(ORACLE["status"], "FROZEN_POST_REVIEW_PRE_REMEDIATION_ORACLE")
+        reviewed = {case["id"]: case for case in ORACLE["cases"]}
+        observed = []
+        for case in initial["cases"]:
+            self.assertIn(case["id"], reviewed, "no initial case may be dropped")
+            self.assertEqual(reviewed[case["id"]]["query"], case["query"])
+            self.assertEqual(reviewed[case["id"]].get("temporal_intent"), case.get("temporal_intent"))
+            before, after = case["expect"], reviewed[case["id"]]["expect"]
+            for key in sorted(set(before) | set(after)):
+                if before.get(key) != after.get(key):
+                    observed.append((case["id"], key, before.get(key), after.get(key)))
+        recorded = [(c["case"], c["field"], c["before"], c["after"]) for c in ORACLE["superseded_case_changes"]]
+        self.assertEqual(sorted(observed, key=repr), sorted(recorded, key=repr))
+        self.assertEqual(set(reviewed) - {c["id"] for c in initial["cases"]}, set(ORACLE["added_cases"]))
 
     def test_every_frozen_case(self):
         for case in ORACLE["cases"]:
@@ -68,11 +94,12 @@ class TemporalQueryIntentOracleTests(unittest.TestCase):
         for case in ORACLE["cases"]:
             with self.subTest(case=case["id"]):
                 intent = _resolve(case)
-                if intent.intent_basis == ti.CALLER_DECLARED:
+                self.assertEqual(intent.caller_declared, "temporal_intent" in case)
+                if intent.posture == ti.EXPLICIT:
+                    self.assertIn(intent.intent_basis, (ti.CALLER_DECLARED, ti.QUERY_LANGUAGE_EXPLICIT))
+                if intent.intent_basis == ti.QUERY_LANGUAGE_EXPLICIT:
                     self.assertEqual(intent.posture, ti.EXPLICIT)
-                    self.assertIn("temporal_intent", case)
-                else:
-                    self.assertNotEqual(intent.posture, ti.EXPLICIT)
+                    self.assertFalse(intent.caller_declared)
 
     def test_serialization_is_stable(self):
         for case in ORACLE["cases"]:
