@@ -42,6 +42,10 @@ jobs:
       - name: Set up stable Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Bootstrap Rust dependency lock
+        working-directory: rust/agent-memory-kernel-shadow
+        run: cargo generate-lockfile
+
       - name: Verify frozen vectors against Rust shadow
         working-directory: rust/agent-memory-kernel-shadow
         run: cargo test --locked
