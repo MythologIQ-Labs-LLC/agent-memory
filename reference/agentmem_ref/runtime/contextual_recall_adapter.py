@@ -33,10 +33,16 @@ from ..core.contextual_recall import ADMITTING_OUTCOMES, fail_closed_decision
 def admission_mode_for_intent(intent) -> tuple[str, float | None]:
     """#549: historical-evidence admission only for EXPLICIT historical or as-of intent.
 
-    Inferred intent, however confident, never widens admission; it only orders.
+    Inferred intent, however confident, never widens admission; it only orders. Since
+    temporal interpreter 1.1.0 (#585) the source is checked as well as the posture: only
+    a caller-declared intent widens, never temporal language the query itself states.
     """
 
-    if getattr(intent, "posture", None) == "explicit" and getattr(intent, "mode", None) in ("historical", "as_of"):
+    if (
+        getattr(intent, "posture", None) == "explicit"
+        and getattr(intent, "intent_basis", "caller_declared") == "caller_declared"
+        and getattr(intent, "mode", None) in ("historical", "as_of")
+    ):
         target = intent.target_instant() if intent.mode == "as_of" else None
         return HISTORICAL_EVIDENCE_ADMISSION, target
     return CURRENT_STATE_ADMISSION, None

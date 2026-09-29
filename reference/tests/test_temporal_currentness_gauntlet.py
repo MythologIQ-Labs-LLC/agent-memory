@@ -32,6 +32,21 @@ from agentmem_ref.evaluation import temporal_currentness as tc  # noqa: E402
 FIXTURE = ROOT / "reference" / "fixtures" / "benchmarks" / "temporal-currentness" / "temporal-currentness-gauntlet-v1.json"
 FIXTURE_SHA256 = "394be82e8dfabe30ad1faf064f36a88d0b0b8e7ab8157f746ecb4cbae9e64492"
 BASELINE = ROOT / "reports" / "benchmarks" / "temporal-currentness" / "baseline-0bace49" / "baseline.json"
+# Interpreter-owned intent fields. A versioned temporal interpreter (#585, 1.1.0) may
+# change its identity, evidence strings and additive span/basis fields; every semantic
+# intent field and all ordering evidence must stay byte-identical in unrelated cases.
+INTERPRETER_EVIDENCE_FIELDS = frozenset({"interpreter_version", "evidence", "intent_basis", "spans", "declined_spans"})
+
+
+def _semantic_observation_digest(observation: dict) -> str:
+    intent = observation.get("intent")
+    projected = None if intent is None else {k: v for k, v in intent.items() if k not in INTERPRETER_EVIDENCE_FIELDS}
+    return tc._digest({"admitted": observation["admitted"], "candidates": observation["candidates"],
+                       "intent": projected, "per_key": observation["per_key"]})
+
+
+def _interpreter_version(observation: dict) -> str | None:
+    return (observation.get("intent") or {}).get("interpreter_version")
 RUNNER = ROOT / "reference" / "run_temporal_currentness_gauntlet.py"
 
 
@@ -214,11 +229,24 @@ class GauntletTests(unittest.TestCase):
         improved_cases = {key[0] for key in changed}
         frozen_digests = frozen["order_digests"]
         live_digests = tc.order_digests(self.rows)
+        frozen_rows = {f"{row['case_id']}/{row['probe_id']}": row["observation"] for row in frozen["rows"]}
+        live_rows = {f"{row['case_id']}/{row['probe_id']}": row["observation"] for row in self.rows}
+
+        def interpreter_identity_only(probe: str) -> bool:
+            # Allowed only when the interpreter version really changed and nothing but
+            # interpreter-owned intent fields differ.
+            old, new = frozen_rows[probe], live_rows[probe]
+            return (
+                _interpreter_version(old) != _interpreter_version(new)
+                and _semantic_observation_digest(old) == _semantic_observation_digest(new)
+            )
+
         unexplained_digest_changes = {
             probe: (frozen_digests.get(probe), digest)
             for probe, digest in live_digests.items()
             if frozen_digests.get(probe) != digest
             and probe.split("/", 1)[0] not in improved_cases
+            and not interpreter_identity_only(probe)
         }
         self.assertEqual(unexplained_digest_changes, {})
 
