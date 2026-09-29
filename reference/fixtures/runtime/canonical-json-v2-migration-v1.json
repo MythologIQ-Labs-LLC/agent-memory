@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "fixture_id": "agent-memory-canonical-json-v2-migration-v1",
+  "status": "FROZEN_PREIMPLEMENTATION_MIGRATION_CONTRACT",
+  "authority_effect": "none",
+  "parent_issue": 609,
+  "owner_issue": 622,
+  "source_main_sha": "1ec12e11df32b1bb178f1425adab51bacc290cea",
+  "accepted_canonical_vector_source": "reference/fixtures/runtime/canonical-json-v2-vectors-accepted-v1.json",
+  "scheme_registry_source": "reference/fixtures/runtime/canonicalization-scheme-registry-v1.json",
+  "migration_mode": "explicit_one_shot_qualification_only",
+  "automatic_recovery_migration": false,
+  "production_activation": false,
+  "qualification_target": {
+    "kind": "disposable_verified_copy",
+    "source_store_read_only": true,
+    "candidate_transaction_applies_only_to_copy": true,
+    "copy_identity_bound_to_source_generation": true,
+    "production_cutover": false
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "id": "verify_source",
+      "durable_writes_allowed": false,
+      "requires": [
+        "sqlite_integrity_ok",
+        "source_runtime_envelope_verified",
+        "source_substrate_binding_resolved",
+        "source_substrate_commitment_verified",
+        "source_governance_binding_resolved",
+        "source_governance_commitment_verified",
+        "source_journal_chain_verified"
+      ]
+    },
+    {
+      "phase": 2,
+      "id": "reconstruct_and_validate",
+      "durable_writes_allowed": false,
+      "requires": [
+        "verified_logical_state_reconstructed",
+        "all_candidate_v2_values_validated",
+        "memory_semantics_snapshot_frozen"
+      ]
+    },
+    {
+      "phase": 3,
+      "id": "compute_candidate_commitments",
+      "durable_writes_allowed": false,
+      "requires": [
+        "candidate_substrate_commitment_computed_in_memory",
+        "candidate_governance_commitment_computed_in_memory",
+        "candidate_runtime_envelope_computed_in_memory",
+        "candidate_migration_provenance_computed_in_memory"
+      ]
+    },
+    {
+      "phase": 4,
+      "id": "transactional_recommit",
+      "durable_writes_allowed": true,
+      "transaction": "single_sqlite_begin_immediate",
+      "requires": [
+        "all_prior_phases_passed",
+        "source_generation_still_current",
+        "candidate_transaction_targets_disposable_verified_copy",
+        "candidate_commitments_reverified_before_commit",
+        "candidate_state_and_provenance_written_in_same_transaction",
+        "transaction_provenance_marks_pending_restart_verification",
+        "candidate_runtime_envelope_and_journal_written_in_same_transaction"
+      ]
+    },
+    {
+      "phase": 5,
+      "id": "post_commit_restart_verification",
+      "durable_writes_allowed": false,
+      "requires": [
+        "database_closed",
+        "database_reopened",
+        "candidate_bindings_resolved_independently",
+        "candidate_substrate_commitment_verified",
+        "candidate_governance_commitment_verified",
+        "candidate_journal_chain_verified",
+        "logical_state_matches_pre_migration_snapshot",
+        "qualification_closeout_records_final_outcome_without_runtime_write"
+      ]
+    }
+  ],
+  "candidate_commitment_contracts": {
+    "bmerkle_v2_candidate": {
+      "scheme": "bmerkle-v2",
+      "canonicalizer": "agent-memory-canonical-json-v2",
+      "root_contract": "substrate-bucketed-merkle-sha256-v2-candidate",
+      "must_version_entire_commitment_construction": true,
+      "canonicalized_layers": [
+        "row_material",
+        "sorted_row_hash_lists_for_bucket_digest",
+        "final_bucket_root_material"
+      ],
+      "must_not_relabel_v1_root": true
+    },
+    "gsect_v2_candidate": {
+      "scheme": "gsect-v2",
+      "canonicalizer": "agent-memory-canonical-json-v2",
+      "root_contract": "governance-sections-sha256-v2-candidate",
+      "must_version_entire_commitment_construction": true,
+      "canonicalized_layers": [
+        "map_entry_values",
+        "entry_hash_material",
+        "log_entry_values",
+        "log_chain_material",
+        "map_root_material",
+        "residual_material",
+        "final_governance_root_material"
+      ],
+      "must_not_relabel_v1_root": true
+    }
+  },
+  "provenance_required_fields": [
+    "source_runtime_generation",
+    "source_runtime_state_schema",
+    "source_substrate_binding_id",
+    "source_substrate_commitment",
+    "source_governance_binding_id",
+    "source_governance_commitment",
+    "target_substrate_binding_id",
+    "target_substrate_commitment",
+    "target_governance_binding_id",
+    "target_governance_commitment",
+    "accepted_canonical_vector_source",
+    "scheme_registry_source",
+    "migration_implementation_id",
+    "migration_transaction_generation",
+    "pre_migration_logical_state_digest",
+    "post_migration_logical_state_digest",
+    "restart_verified",
+    "outcome"
+  ],
+  "provenance_partition": {
+    "durable_transaction_record": {
+      "written_in_phase": 4,
+      "durable_runtime_write": true,
+      "fields": [
+        "source_runtime_generation",
+        "source_runtime_state_schema",
+        "source_substrate_binding_id",
+        "source_substrate_commitment",
+        "source_governance_binding_id",
+        "source_governance_commitment",
+        "target_substrate_binding_id",
+        "target_substrate_commitment",
+        "target_governance_binding_id",
+        "target_governance_commitment",
+        "accepted_canonical_vector_source",
+        "scheme_registry_source",
+        "migration_implementation_id",
+        "migration_transaction_generation",
+        "pre_migration_logical_state_digest",
+        "post_migration_logical_state_digest"
+      ],
+      "transaction_outcome": "committed_pending_restart_verification",
+      "may_claim_final_migration_committed": false
+    },
+    "post_restart_qualification_closeout": {
+      "produced_in_phase": 5,
+      "durable_runtime_write": false,
+      "fields": [
+        "restart_verified",
+        "outcome"
+      ],
+      "committed_outcome": "committed",
+      "committed_requires_restart_verified": true,
+      "authority_effect": "none"
+    }
+  },
+  "success_invariants": [
+    "source_verified_before_candidate_computation",
+    "candidate_value_domain_validated_before_transaction",
+    "no_durable_writes_before_transaction",
+    "single_transaction_for_scheme_transition_state_provenance_envelope_and_journal",
+    "source_generation_checked_again_inside_transaction",
+    "post_migration_logical_state_equals_pre_migration_logical_state",
+    "restart_verification_required_before_committed_outcome",
+    "migration_provenance_is_evidence_not_verification"
+  ],
+  "failure_injections": [
+    {
+      "id": "fail_before_transaction",
+      "phase": 3,
+      "expected": "source_state_byte_and_logical_identity_unchanged"
+    },
+    {
+      "id": "fail_after_candidate_state_write",
+      "phase": 4,
+      "expected": "sqlite_transaction_rolls_back_all_candidate_state"
+    },
+    {
+      "id": "fail_before_envelope_and_journal",
+      "phase": 4,
+      "expected": "sqlite_transaction_rolls_back_all_candidate_state_and_provenance"
+    },
+    {
+      "id": "fail_before_commit",
+      "phase": 4,
+      "expected": "sqlite_transaction_rolls_back_and_source_scheme_remains_recoverable"
+    },
+    {
+      "id": "fail_post_commit_restart_verification",
+      "phase": 5,
+      "expected": "candidate_copy_is_rejected_and_final_migration_outcome_not_marked_committed"
+    }
+  ],
+  "refusal_cases": [
+    {
+      "id": "tampered_substrate_row",
+      "stop_before_phase": 2,
+      "expected_refusal": "source_substrate_verification_failed"
+    },
+    {
+      "id": "tampered_substrate_commitment",
+      "stop_before_phase": 2,
+      "expected_refusal": "source_substrate_verification_failed"
+    },
+    {
+      "id": "tampered_governance_state",
+      "stop_before_phase": 2,
+      "expected_refusal": "source_governance_verification_failed"
+    },
+    {
+      "id": "tampered_governance_commitment",
+      "stop_before_phase": 2,
+      "expected_refusal": "source_governance_verification_failed"
+    },
+    {
+      "id": "broken_journal_or_envelope_binding",
+      "stop_before_phase": 2,
+      "expected_refusal": "source_journal_or_envelope_verification_failed"
+    },
+    {
+      "id": "unknown_or_mixed_scheme_binding",
+      "stop_before_phase": 2,
+      "expected_refusal": "source_scheme_binding_failed"
+    },
+    {
+      "id": "nonfinite_fact_attribute",
+      "stop_before_phase": 3,
+      "expected_refusal": "candidate_value_domain_invalid"
+    },
+    {
+      "id": "nonfinite_relation_attribute",
+      "stop_before_phase": 3,
+      "expected_refusal": "candidate_value_domain_invalid"
+    },
+    {
+      "id": "nonfinite_extension_state",
+      "stop_before_phase": 3,
+      "expected_refusal": "candidate_value_domain_invalid"
+    },
+    {
+      "id": "invalid_unicode_scalar_or_object_key",
+      "stop_before_phase": 3,
+      "expected_refusal": "candidate_value_domain_invalid"
+    },
+    {
+      "id": "source_generation_changed_before_transaction",
+      "stop_before_phase": 4,
+      "expected_refusal": "source_generation_changed"
+    },
+    {
+      "id": "legacy_scheme_with_v2_bytes",
+      "stop_before_phase": 5,
+      "expected_refusal": "post_commit_scheme_byte_confusion"
+    },
+    {
+      "id": "v2_scheme_with_legacy_bytes",
+      "stop_before_phase": 5,
+      "expected_refusal": "post_commit_scheme_byte_confusion"
+    },
+    {
+      "id": "rollback_envelope_with_incompatible_rows",
+      "stop_before_phase": 5,
+      "expected_refusal": "post_commit_rollback_conflict"
+    },
+    {
+      "id": "mixed_candidate_and_legacy_generation",
+      "stop_before_phase": 5,
+      "expected_refusal": "post_commit_mixed_generation"
+    },
+    {
+      "id": "provenance_present_but_commitment_invalid",
+      "stop_before_phase": 5,
+      "expected_refusal": "post_commit_commitment_verification_failed"
+    }
+  ],
+  "semantic_non_goals": [
+    "memory_identifier_rewrite",
+    "timestamp_rewrite",
+    "authority_change",
+    "lifecycle_change",
+    "ranking_change",
+    "currentness_change",
+    "scope_or_tenant_change",
+    "automatic_migration_on_recovery",
+    "default_v2_scheme_activation",
+    "legacy_verifier_removal",
+    "production_cutover",
+    "rust_runtime_promotion",
+    "adr_040_acceptance"
+  ]
+}
