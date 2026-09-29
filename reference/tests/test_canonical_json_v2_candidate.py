@@ -3,9 +3,8 @@ from __future__ import annotations
 import json
 import struct
 import sys
+import unittest
 from pathlib import Path
-
-import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -67,30 +66,40 @@ def _run_case(case: dict) -> bytes:
     return canonical_bytes_v2(_valid_input(spec))
 
 
-def test_candidate_uses_the_accepted_vector_source_without_rewriting_it():
-    fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
-    acceptance = json.loads(ACCEPTANCE.read_text(encoding="utf-8"))
+class CanonicalJsonV2CandidateTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        cls.acceptance = json.loads(ACCEPTANCE.read_text(encoding="utf-8"))
 
-    assert acceptance["status"] == "ACCEPTED_IMPLEMENTATION_VECTOR_SOURCE"
-    assert acceptance["source_fixture"] == "reference/fixtures/runtime/canonical-json-v2-vectors-v1.json"
-    assert acceptance["source_fixture_id"] == fixture["fixture_id"]
-    assert acceptance["case_count"] == len(fixture["cases"]) == 44
-    assert "ADR-040 architecture decision" in acceptance["scope"]["not_accepted"]
+    def test_candidate_uses_the_accepted_vector_source_without_rewriting_it(self):
+        self.assertEqual(self.acceptance["status"], "ACCEPTED_IMPLEMENTATION_VECTOR_SOURCE")
+        self.assertEqual(
+            self.acceptance["source_fixture"],
+            "reference/fixtures/runtime/canonical-json-v2-vectors-v1.json",
+        )
+        self.assertEqual(self.acceptance["source_fixture_id"], self.fixture["fixture_id"])
+        self.assertEqual(self.acceptance["case_count"], len(self.fixture["cases"]))
+        self.assertEqual(len(self.fixture["cases"]), 44)
+        self.assertIn("ADR-040 architecture decision", self.acceptance["scope"]["not_accepted"])
+
+    def test_python_candidate_matches_every_accepted_vector(self):
+        for case in self.fixture["cases"]:
+            with self.subTest(case=case["id"]):
+                if "expected_utf8" in case:
+                    self.assertEqual(_run_case(case), case["expected_utf8"].encode("utf-8"))
+                    continue
+
+                with self.assertRaises(CanonicalJsonV2Error) as caught:
+                    _run_case(case)
+                self.assertEqual(caught.exception.reason, case["expected_refusal"])
+
+    def test_profile_keeps_integer_float_and_signed_zero_identity_distinct(self):
+        self.assertEqual(canonical_bytes_v2(1), b"1")
+        self.assertEqual(canonical_bytes_v2(1.0), b"1.0")
+        self.assertEqual(canonical_bytes_v2(0.0), b"0.0")
+        self.assertEqual(canonical_bytes_v2(-0.0), b"-0.0")
 
 
-@pytest.mark.parametrize("case", json.loads(FIXTURE.read_text(encoding="utf-8"))["cases"], ids=lambda row: row["id"])
-def test_python_candidate_matches_every_accepted_vector(case: dict):
-    if "expected_utf8" in case:
-        assert _run_case(case) == case["expected_utf8"].encode("utf-8")
-        return
-
-    with pytest.raises(CanonicalJsonV2Error) as caught:
-        _run_case(case)
-    assert caught.value.reason == case["expected_refusal"]
-
-
-def test_profile_keeps_integer_float_and_signed_zero_identity_distinct():
-    assert canonical_bytes_v2(1) == b"1"
-    assert canonical_bytes_v2(1.0) == b"1.0"
-    assert canonical_bytes_v2(0.0) == b"0.0"
-    assert canonical_bytes_v2(-0.0) == b"-0.0"
+if __name__ == "__main__":
+    unittest.main()
