@@ -12,17 +12,20 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from agentmem_ref.restart_runtime import CapabilityBinding, RuntimeProfile, RuntimeRecoveryError  # noqa: E402
+from agentmem_ref.restart_runtime import CapabilityBinding, RuntimeProfile  # noqa: E402
 from agentmem_ref.sqlite_runtime import SQLiteRestartSafeRuntime  # noqa: E402
 from agentmem_ref.substrate import Episode, Fact, TypedRelation  # noqa: E402
 from canonical_json_v2_candidate import canonical_bytes_v2  # noqa: E402
+from canonical_json_v2_restart_qualification import (  # noqa: E402
+    prove_production_runtime_refusal,
+    qualify_candidate_v2_restart,
+)
 from canonical_json_v2_sqlite_preflight import qualify_sqlite_migration_preflight  # noqa: E402
 from canonical_json_v2_transaction_qualification import (  # noqa: E402
     CandidateMigrationError,
     InjectedMigrationFailure,
     QUALIFICATION_RUNTIME_STATE_SCHEMA,
     TRANSACTION_OUTCOME,
-    qualify_candidate_v2_restart,
     transactional_recommit_candidate_v2,
 )
 
@@ -140,17 +143,6 @@ def _fresh_preflight(base: Path):
     return source_db, source_state, result
 
 
-def _backup_database_read_only(source: Path, destination: Path) -> None:
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    source_connection = sqlite3.connect(source.resolve().as_uri() + "?mode=ro", uri=True)
-    destination_connection = sqlite3.connect(str(destination))
-    try:
-        source_connection.backup(destination_connection)
-    finally:
-        destination_connection.close()
-        source_connection.close()
-
-
 class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
     def test_full_transaction_and_restart_qualification_preserve_source_and_logical_state(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -170,12 +162,15 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
             state_after_transaction = _runtime_state(candidate_db)
             provenance_after_transaction = _provenance(candidate_db)
             self.assertEqual(state_after_transaction["schema_version"], QUALIFICATION_RUNTIME_STATE_SCHEMA)
+            self.assertEqual(state_after_transaction["profile"], source_state["profile"])
+            self.assertEqual(state_after_transaction["interpretation_digest"], source_state["interpretation_digest"])
+            self.assertEqual(state_after_transaction["substrate_identity"], source_state["substrate_identity"])
             self.assertEqual(provenance_after_transaction["transaction_outcome"], TRANSACTION_OUTCOME)
             self.assertNotIn("restart_verified", provenance_after_transaction)
             self.assertNotIn("outcome", provenance_after_transaction)
 
             before_phase5_db_hash = _database_hash(candidate_db)
-            qualification = qualify_candidate_v2_restart(preflight, prove_production_refusal=False)
+            qualification = qualify_candidate_v2_restart(preflight)
             after_phase5_db_hash = _database_hash(candidate_db)
 
             self.assertTrue(qualification.restart_verified)
@@ -239,7 +234,7 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
             self.assertEqual(provenance_before["transaction_outcome"], TRANSACTION_OUTCOME)
             self.assertNotIn("committed", provenance_before.values())
 
-    def test_production_runtime_refuses_qualification_envelope_on_disposable_copy(self):
+    def test_production_runtime_refusal_is_proved_on_second_disposable_copy(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
             _, _, preflight = _fresh_preflight(base)
@@ -247,12 +242,10 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
             candidate_db = Path(preflight.evidence.snapshot_database)
             candidate_hash_before = _database_hash(candidate_db)
 
-            refusal_root = base / "production-refusal-copy"
-            refusal_db = refusal_root / "agent-memory.sqlite3"
-            _backup_database_read_only(candidate_db, refusal_db)
-            with self.assertRaises(RuntimeRecoveryError):
-                SQLiteRestartSafeRuntime.recover(refusal_root, profile=_profile())
+            evidence = prove_production_runtime_refusal(preflight)
 
+            self.assertTrue(evidence.production_recovery_refused)
+            self.assertEqual(evidence.tested_database_kind, "disposable_backup")
             self.assertEqual(_database_hash(candidate_db), candidate_hash_before)
 
     def test_candidate_scheme_with_legacy_json_bytes_refuses_even_when_json_value_is_equal(self):
