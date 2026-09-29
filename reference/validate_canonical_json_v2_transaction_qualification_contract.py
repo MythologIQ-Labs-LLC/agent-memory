@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -51,15 +52,6 @@ EXPECTED_REFUSALS = {
     "mixed_source_candidate_generation",
     "broken_candidate_journal_provenance_binding",
     "logical_state_mismatch_with_self_consistent_provenance",
-    "historical_journal_rewritten_with_self_consistent_legacy_chain",
-    "historical_journal_payload_reserialized_equal_value",
-    "runtime_profile_changed_with_consistent_rebuild",
-    "interpretation_digest_changed",
-    "substrate_identity_changed",
-    "candidate_envelope_unexpected_or_missing_field",
-    "candidate_journal_unexpected_or_missing_field",
-    "journal_sql_generation_payload_generation_mismatch",
-    "production_refusal_for_unexpected_reason",
 }
 EXPECTED_INVARIANTS = {
     "original_source_store_never_mutated",
@@ -73,19 +65,7 @@ EXPECTED_INVARIANTS = {
     "ordinary_production_recovery_refuses_qualification_envelope",
     "phase5_final_outcome_requires_independent_restart_verification",
     "phase5_performs_no_runtime_write",
-    "historical_journal_bytes_match_phase3_external_anchor",
-    "preserved_runtime_identity_matches_phase3_external_anchor",
 }
-EXPECTED_ANCHOR_FIELDS = {
-    "source_journal_tail_record_digest",
-    "historical_journal_row_count",
-    "historical_journal_digest",
-    "source_runtime_profile_digest",
-    "source_interpretation_digest",
-    "source_substrate_identity_digest",
-}
-EXPECTED_PRODUCTION_REFUSAL_REASON = "unsupported SQLite runtime state schema"
-EXACT_FIELD_POLICY = "exact_reject_missing_and_unexpected"
 EXPECTED_DURABLE_PROVENANCE_FIELDS = {
     "source_runtime_generation",
     "source_runtime_state_schema",
@@ -104,6 +84,64 @@ EXPECTED_DURABLE_PROVENANCE_FIELDS = {
     "pre_migration_logical_state_digest",
     "post_migration_logical_state_digest",
     "transaction_outcome",
+}
+
+
+AMENDMENT_FIXTURE = "reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1-amendment-1.json"
+BASE_FIXTURE_SHA256 = "70cf50e3f137526c42c53dbf3806c8800217155c8ea96f765405fcf2734145c4"
+BASE_FIXTURE_FROZEN_AT = "b0b985c2e7a485a4cf1c185cb0945ed259644442"
+EXPECTED_ADDITIONAL_REFUSALS = {
+    "historical_journal_rewritten_with_self_consistent_legacy_chain",
+    "historical_journal_payload_reserialized_equal_value",
+    "runtime_profile_changed_with_consistent_rebuild",
+    "interpretation_digest_changed",
+    "substrate_identity_changed",
+    "candidate_envelope_unexpected_or_missing_field",
+    "candidate_journal_unexpected_or_missing_field",
+    "journal_sql_generation_payload_generation_mismatch",
+    "production_refusal_for_unexpected_reason",
+}
+EXPECTED_ADDITIONAL_INVARIANTS = {
+    "historical_journal_bytes_match_phase3_external_anchor",
+    "preserved_runtime_identity_matches_phase3_external_anchor",
+}
+EXPECTED_ANCHOR_FIELDS = {
+    "source_journal_tail_record_digest",
+    "historical_journal_row_count",
+    "historical_journal_digest",
+    "source_runtime_profile_digest",
+    "source_interpretation_digest",
+    "source_substrate_identity_digest",
+}
+EXACT_FIELD_POLICY = "exact_reject_missing_and_unexpected"
+# The amendment may only add these keys. Every other key would redefine the base.
+AMENDMENT_KEYS = {
+    "schema_version",
+    "fixture_id",
+    "status",
+    "authority_effect",
+    "parent_issue",
+    "owner_issue",
+    "amends",
+    "trigger",
+    "effect",
+    "relaxes_or_replaces_base_requirement",
+    "amendment_order_note",
+    "phase3_external_anchor",
+    "journal_sql_generation_must_equal_payload_generation",
+    "candidate_journal",
+    "candidate_runtime_state",
+    "production_refusal_proof",
+    "additional_adversarial_refusals",
+    "additional_success_invariants",
+}
+AMENDMENT_SECTION_KEYS = {
+    "candidate_journal": {"field_set_policy", "exact_fields_equal_base_required_fields"},
+    "candidate_runtime_state": {
+        "field_set_policy",
+        "exact_fields_equal_base_required_fields",
+        "preserved_from_phase3_anchor",
+    },
 }
 
 
@@ -170,41 +208,12 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
     _require(journal.get("rewrites_historical_rows") is False, "historical journal bytes must not be rewritten")
     _require(journal.get("record_digest_encoding") == "agent-memory-canonical-json-v2", "candidate journal digest encoding changed")
     _require("migration_provenance_digest" in _set(journal.get("record_digest_material_fields")), "journal must bind provenance digest")
-    _require(journal.get("field_set_policy") == EXACT_FIELD_POLICY, "candidate journal key set must be exact")
-    _require(
-        _set(journal.get("exact_fields")) == _set(journal.get("record_digest_material_fields")) | {"record_digest"},
-        "candidate journal exact fields must be digest material plus record_digest",
-    )
 
     state = payload.get("candidate_runtime_state", {})
     _require(state.get("ordinary_runtime_recovery_must_refuse") is True, "production recovery refusal boundary changed")
     _require(state.get("encoding") == "agent-memory-canonical-json-v2", "candidate runtime-state encoding changed")
     _require(state.get("durability_profile") == "sqlite_transactional_runtime_v1", "durability profile changed")
-    _require("migration_provenance_digest" in _set(state.get("exact_fields")), "runtime state must bind provenance digest")
-    _require(state.get("field_set_policy") == EXACT_FIELD_POLICY, "candidate runtime-state key set must be exact")
-    _require(
-        _set(state.get("preserved_from_phase3_anchor")) == {"profile", "interpretation_digest", "substrate_identity"},
-        "preserved runtime identity set changed",
-    )
-    refusal = state.get("production_refusal_proof", {})
-    _require(refusal.get("target") == "second_disposable_backup", "production refusal must run on a disposable backup")
-    _require(
-        refusal.get("expected_refusal_reason") == EXPECTED_PRODUCTION_REFUSAL_REASON,
-        "production refusal must require the unsupported-schema reason",
-    )
-
-    anchor = payload.get("phase3_external_anchor", {})
-    _require(_set(anchor.get("fields")) == EXPECTED_ANCHOR_FIELDS, "phase-3 external anchor field set changed")
-    _require(
-        anchor.get("historical_journal_digest", {}).get("payload_bytes") == "raw_stored_bytes_never_parsed_or_reserialized",
-        "historical journal anchor must hash raw stored bytes",
-    )
-    _require(anchor.get("phase4_rechecks_inside_transaction") is True, "phase 4 must recheck the anchor in-transaction")
-    _require(
-        anchor.get("phase5_compares_against_anchor_not_candidate_derived_values") is True,
-        "phase 5 must verify history against the external anchor",
-    )
-    _require(anchor.get("journal_sql_generation_must_equal_payload_generation") is True, "journal generation binding changed")
+    _require("migration_provenance_digest" in _set(state.get("required_fields")), "runtime state must bind provenance digest")
 
     closeout = payload.get("phase5_closeout", {})
     _require(_set(closeout.get("fields")) == {"restart_verified", "outcome"}, "phase-5 closeout fields changed")
@@ -247,14 +256,6 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
     _require(candidate["runtime_state_schema"] not in runtime_source, "qualification runtime schema leaked into production recovery")
     _require(candidate["journal_schema"] not in runtime_source, "qualification journal schema leaked into production runtime")
 
-    transaction_source = (repo_root / "reference/canonical_json_v2_transaction_qualification.py").read_text(encoding="utf-8")
-    _require("SQLiteRestartSafeRuntime" not in transaction_source, "low-level candidate verifier gained a production runtime route")
-    _require(".recover(" not in transaction_source, "low-level candidate verifier gained a production recovery route")
-    _require("prove_production_refusal" not in transaction_source, "low-level candidate verifier regained production refusal duty")
-    preflight_source = (repo_root / "reference/canonical_json_v2_sqlite_preflight.py").read_text(encoding="utf-8")
-    for field in EXPECTED_ANCHOR_FIELDS:
-        _require(f"    {field}:" in preflight_source, f"phase-3 evidence lost anchor field {field}")
-
     return {
         "fixture_id": payload["fixture_id"],
         "qualification_only": True,
@@ -270,6 +271,87 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
     }
 
 
+def validate_amendment(path: Path, base_path: Path, repo_root: Path) -> dict[str, Any]:
+    """Validate amendment-1 as a narrowing-only addition to the untouched frozen base."""
+
+    base_bytes = base_path.read_bytes()
+    _require(hashlib.sha256(base_bytes).hexdigest() == BASE_FIXTURE_SHA256, "frozen base fixture bytes changed")
+    base = json.loads(base_bytes)
+    amendment = _load(path)
+
+    _require(set(amendment) <= AMENDMENT_KEYS, "amendment redefines keys outside its additive surface")
+    _require(amendment.get("fixture_id") == base["fixture_id"] + "-amendment-1", "amendment fixture id changed")
+    _require(amendment.get("status") == "POST_REVIEW_AMENDMENT_NARROWING_ONLY", "amendment must not claim a preimplementation freeze")
+    _require(amendment.get("authority_effect") == "none", "amendment must not grant authority")
+    _require((amendment.get("owner_issue"), amendment.get("parent_issue")) == (625, 622), "amendment issue ownership changed")
+    amends = amendment.get("amends", {})
+    _require(amends.get("fixture_id") == base["fixture_id"], "amendment must reference the base fixture")
+    _require(amends.get("status") == base["status"], "amendment must reference the base freeze status")
+    _require(amends.get("file_sha256") == BASE_FIXTURE_SHA256, "amendment must pin exact base bytes")
+    _require(amends.get("frozen_at_commit") == BASE_FIXTURE_FROZEN_AT, "amendment must pin the base freeze commit")
+    _require(amends.get("base_remains_byte_identical") is True, "base fixture must remain byte-identical")
+    trigger = amendment.get("trigger", {})
+    _require(trigger.get("kind") == "adversarial_review_findings" and trigger.get("pull_request") == 626, "amendment trigger changed")
+    _require(amendment.get("effect") == "narrow_acceptance_only", "amendment may only narrow acceptance")
+    _require(amendment.get("relaxes_or_replaces_base_requirement") is False, "amendment must not relax the base")
+
+    # Narrowing proof: additions are disjoint from the base, the effective sets are
+    # supersets of the base sets, and exact key sets equal the base required sets.
+    additional_refusals = _set(amendment.get("additional_adversarial_refusals"))
+    additional_invariants = _set(amendment.get("additional_success_invariants"))
+    _require(additional_refusals == EXPECTED_ADDITIONAL_REFUSALS, "amendment refusal set changed")
+    _require(additional_invariants == EXPECTED_ADDITIONAL_INVARIANTS, "amendment invariant set changed")
+    _require(not additional_refusals & _set(base.get("adversarial_refusals")), "amendment must only add refusals")
+    _require(not additional_invariants & _set(base.get("success_invariants")), "amendment must only add invariants")
+    for section, allowed in AMENDMENT_SECTION_KEYS.items():
+        extension = amendment.get(section, {})
+        _require(set(extension) <= allowed, f"amendment redefines base {section} fields")
+        _require(not set(extension) & set(base.get(section, {})), f"amendment overrides base {section} values")
+        _require(extension.get("field_set_policy") == EXACT_FIELD_POLICY, f"{section} key set must be exact")
+        _require(extension.get("exact_fields_equal_base_required_fields") is True, f"{section} exact set must equal base set")
+    _require(
+        _set(amendment["candidate_runtime_state"].get("preserved_from_phase3_anchor"))
+        == {"profile", "interpretation_digest", "substrate_identity"},
+        "preserved runtime identity set changed",
+    )
+
+    anchor = amendment.get("phase3_external_anchor", {})
+    _require(_set(anchor.get("fields")) == EXPECTED_ANCHOR_FIELDS, "phase-3 external anchor field set changed")
+    _require(
+        anchor.get("historical_journal_digest", {}).get("payload_bytes") == "raw_stored_bytes_never_parsed_or_reserialized",
+        "historical journal anchor must hash raw stored bytes",
+    )
+    _require(anchor.get("phase4_rechecks_inside_transaction") is True, "phase 4 must recheck the anchor in-transaction")
+    _require(
+        anchor.get("phase5_compares_against_anchor_not_candidate_derived_values") is True,
+        "phase 5 must verify history against the external anchor",
+    )
+    _require(amendment.get("journal_sql_generation_must_equal_payload_generation") is True, "journal generation binding changed")
+    refusal = amendment.get("production_refusal_proof", {})
+    _require(refusal.get("target") == "second_disposable_backup", "production refusal must run on a disposable backup")
+    _require(
+        refusal.get("expected_refusal_reason") == "unsupported SQLite runtime state schema",
+        "production refusal must require the unsupported-schema reason",
+    )
+    _require(refusal.get("low_level_candidate_verifier_production_route") is False, "low-level production route returned")
+
+    transaction_source = (repo_root / "reference/canonical_json_v2_transaction_qualification.py").read_text(encoding="utf-8")
+    _require("SQLiteRestartSafeRuntime" not in transaction_source, "low-level candidate verifier gained a production runtime route")
+    _require(".recover(" not in transaction_source, "low-level candidate verifier gained a production recovery route")
+    _require("prove_production_refusal" not in transaction_source, "low-level candidate verifier regained production refusal duty")
+    preflight_source = (repo_root / "reference/canonical_json_v2_sqlite_preflight.py").read_text(encoding="utf-8")
+    for field in EXPECTED_ANCHOR_FIELDS:
+        _require(f"    {field}:" in preflight_source, f"phase-3 evidence lost anchor field {field}")
+
+    return {
+        "amendment_fixture_id": amendment["fixture_id"],
+        "base_fixture_sha256": BASE_FIXTURE_SHA256,
+        "narrowing_only": True,
+        "effective_adversarial_refusals": len(_set(base.get("adversarial_refusals")) | additional_refusals),
+        "effective_success_invariants": len(_set(base.get("success_invariants")) | additional_invariants),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -277,9 +359,12 @@ def main() -> int:
         type=Path,
         default=Path("reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1.json"),
     )
+    parser.add_argument("--amendment", type=Path, default=Path(AMENDMENT_FIXTURE))
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     args = parser.parse_args()
-    report = validate(args.fixture, args.repo_root.resolve())
+    repo_root = args.repo_root.resolve()
+    report = validate(args.fixture, repo_root)
+    report["amendment"] = validate_amendment(args.amendment, args.fixture, repo_root)
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0
 

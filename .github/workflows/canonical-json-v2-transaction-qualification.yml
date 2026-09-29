@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1.json"
+      - "reference/fixtures/runtime/canonical-json-v2-transaction-qualification-v1-amendment-1.json"
       - "reference/validate_canonical_json_v2_transaction_qualification_contract.py"
       - "reference/canonical_json_v2_transaction_qualification.py"
       - "reference/canonical_json_v2_restart_qualification.py"
@@ -37,7 +38,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e .
 
-      - name: Validate frozen transaction qualification contract
+      - name: Validate frozen transaction qualification contract plus amendment-1
         run: python reference/validate_canonical_json_v2_transaction_qualification_contract.py --repo-root .
 
       - name: Execute transactional recommit, restart, and refusal tests

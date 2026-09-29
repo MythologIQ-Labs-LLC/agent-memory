@@ -16,6 +16,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import canonical_json_v2_restart_qualification as restart_module  # noqa: E402
+import validate_canonical_json_v2_transaction_qualification_contract as contract  # noqa: E402
 import canonical_json_v2_transaction_qualification as transaction_module  # noqa: E402
 from agentmem_ref.restart_runtime import CapabilityBinding, RuntimeProfile, RuntimeRecoveryError  # noqa: E402
 from agentmem_ref.sqlite_runtime import (  # noqa: E402
@@ -62,6 +63,7 @@ LEGACY_JOURNAL_MATERIAL_FIELDS = (
     "previous_record_digest",
 )
 FIXTURE = ROOT / "fixtures/runtime/canonical-json-v2-transaction-qualification-v1.json"
+AMENDMENT = ROOT / "fixtures/runtime/canonical-json-v2-transaction-qualification-v1-amendment-1.json"
 
 
 def _mutate(path: Path, change: Callable[[sqlite3.Connection], None]) -> None:
@@ -357,12 +359,72 @@ class ExactShapeTests(unittest.TestCase):
                 self.assertEqual(caught.exception.reason, "candidate_journal_shape_invalid")
 
     def test_frozen_fixture_field_sets_match_verifier(self):
+        # Amendment-1 makes the base contract's required sets exact; it adds no field.
         fixture = json.loads(FIXTURE.read_text(encoding="utf-8"))
-        self.assertEqual(set(fixture["candidate_runtime_state"]["exact_fields"]), set(CANDIDATE_RUNTIME_STATE_FIELDS))
-        self.assertEqual(set(fixture["candidate_journal"]["exact_fields"]), set(CANDIDATE_JOURNAL_FIELDS))
+        amendment = json.loads(AMENDMENT.read_text(encoding="utf-8"))
+        for section in ("candidate_runtime_state", "candidate_journal"):
+            self.assertTrue(amendment[section]["exact_fields_equal_base_required_fields"])
+        self.assertEqual(set(fixture["candidate_runtime_state"]["required_fields"]), set(CANDIDATE_RUNTIME_STATE_FIELDS))
+        self.assertEqual(set(fixture["candidate_journal"]["required_fields"]), set(CANDIDATE_JOURNAL_FIELDS))
         self.assertEqual(
             list(fixture["candidate_journal"]["record_digest_material_fields"]), list(CANDIDATE_JOURNAL_MATERIAL_FIELDS)
         )
+
+
+class ContractAmendmentProvenanceTests(unittest.TestCase):
+    REPO_ROOT = ROOT.parent
+
+    def _validate(self, amendment: dict | None = None, base: bytes | None = None) -> dict:
+        with tempfile.TemporaryDirectory() as temp:
+            amendment_path = Path(temp) / "amendment.json"
+            base_path = Path(temp) / "base.json"
+            amendment_path.write_text(json.dumps(amendment or json.loads(AMENDMENT.read_text(encoding="utf-8"))))
+            base_path.write_bytes(FIXTURE.read_bytes() if base is None else base)
+            return contract.validate_amendment(amendment_path, base_path, self.REPO_ROOT)
+
+    def _amended(self, edit) -> dict:
+        value = json.loads(AMENDMENT.read_text(encoding="utf-8"))
+        edit(value)
+        return value
+
+    def test_base_fixture_is_byte_identical_to_first_frozen_form(self):
+        self.assertEqual(hashlib.sha256(FIXTURE.read_bytes()).hexdigest(), contract.BASE_FIXTURE_SHA256)
+        amendment = json.loads(AMENDMENT.read_text(encoding="utf-8"))
+        self.assertEqual(amendment["amends"]["file_sha256"], contract.BASE_FIXTURE_SHA256)
+        self.assertEqual(amendment["amends"]["frozen_at_commit"], contract.BASE_FIXTURE_FROZEN_AT)
+        report = self._validate()
+        self.assertTrue(report["narrowing_only"])
+
+    def test_effective_contract_is_superset_of_base(self):
+        base = json.loads(FIXTURE.read_text(encoding="utf-8"))
+        amendment = json.loads(AMENDMENT.read_text(encoding="utf-8"))
+        effective_refusals = set(base["adversarial_refusals"]) | set(amendment["additional_adversarial_refusals"])
+        effective_invariants = set(base["success_invariants"]) | set(amendment["additional_success_invariants"])
+        self.assertTrue(set(base["adversarial_refusals"]) < effective_refusals)
+        self.assertTrue(set(base["success_invariants"]) < effective_invariants)
+        self.assertFalse(set(amendment) & (set(base) - contract.AMENDMENT_KEYS))
+
+    def test_amendment_cannot_relax_override_or_repoint_base(self):
+        cases = {
+            "rewritten_base_bytes": dict(base=FIXTURE.read_bytes() + b"\n"),
+            "claims_relaxation": dict(amendment=self._amended(lambda a: a.update(relaxes_or_replaces_base_requirement=True))),
+            "redefines_base_refusals": dict(amendment=self._amended(lambda a: a.update(adversarial_refusals=[]))),
+            "overrides_base_required_fields": dict(
+                amendment=self._amended(lambda a: a["candidate_journal"].update(required_fields=["schema_version"]))
+            ),
+            "re_adds_base_refusal": dict(
+                amendment=self._amended(lambda a: a["additional_adversarial_refusals"].append("migration_provenance_tamper"))
+            ),
+            "claims_preimplementation_freeze": dict(
+                amendment=self._amended(
+                    lambda a: a.update(status="FROZEN_PREIMPLEMENTATION_TRANSACTION_QUALIFICATION_CONTRACT")
+                )
+            ),
+            "wrong_base_identity": dict(amendment=self._amended(lambda a: a["amends"].update(file_sha256="0" * 64))),
+        }
+        for label, kwargs in cases.items():
+            with self.subTest(label), self.assertRaises(ValueError):
+                self._validate(**kwargs)
 
 
 class JournalGenerationColumnTests(unittest.TestCase):

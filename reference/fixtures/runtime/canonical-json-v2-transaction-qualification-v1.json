@@ -50,30 +50,6 @@
   "historical_bytes": {
     "runtime_journal_rows_before_candidate_generation": "verify_under_recorded_legacy_schema_and_do_not_rewrite"
   },
-  "phase3_external_anchor": {
-    "evidence": "SQLiteMigrationPreflightEvidence",
-    "fields": [
-      "source_journal_tail_record_digest",
-      "historical_journal_row_count",
-      "historical_journal_digest",
-      "source_runtime_profile_digest",
-      "source_interpretation_digest",
-      "source_substrate_identity_digest"
-    ],
-    "historical_journal_digest": {
-      "domain": "agent-memory/v2-qualification/historical-runtime-journal/v1",
-      "construction": "sha256(u64be_len(domain) || domain || u64be(row_count) || for each row ordered by SQL generation: i64be(sql_generation) || u64be_len(payload) || raw payload_json UTF-8 bytes)",
-      "payload_bytes": "raw_stored_bytes_never_parsed_or_reserialized"
-    },
-    "structured_identity_digest": {
-      "runtime_profile_domain": "agent-memory/v2-qualification/runtime-profile/v1",
-      "substrate_identity_domain": "agent-memory/v2-qualification/substrate-identity/v1",
-      "construction": "sha256(u64be_len(domain) || domain || u64be_len(value) || agent-memory-canonical-json-v2(value))"
-    },
-    "phase4_rechecks_inside_transaction": true,
-    "phase5_compares_against_anchor_not_candidate_derived_values": true,
-    "journal_sql_generation_must_equal_payload_generation": true
-  },
   "derived_integrity_rebuild": [
     "digest_rows",
     "digest_buckets",
@@ -113,8 +89,7 @@
   },
   "candidate_journal": {
     "rewrites_historical_rows": false,
-    "field_set_policy": "exact_reject_missing_and_unexpected",
-    "exact_fields": [
+    "required_fields": [
       "schema_version",
       "transaction_protocol",
       "generation",
@@ -138,9 +113,7 @@
     "record_digest_encoding": "agent-memory-canonical-json-v2"
   },
   "candidate_runtime_state": {
-    "field_set_policy": "exact_reject_missing_and_unexpected",
-    "preserved_from_phase3_anchor": ["profile", "interpretation_digest", "substrate_identity"],
-    "exact_fields": [
+    "required_fields": [
       "schema_version",
       "durability_profile",
       "transaction_protocol",
@@ -157,12 +130,7 @@
     ],
     "durability_profile": "sqlite_transactional_runtime_v1",
     "encoding": "agent-memory-canonical-json-v2",
-    "ordinary_runtime_recovery_must_refuse": true,
-    "production_refusal_proof": {
-      "owner": "canonical_json_v2_restart_qualification.prove_production_runtime_refusal",
-      "target": "second_disposable_backup",
-      "expected_refusal_reason": "unsupported SQLite runtime state schema"
-    }
+    "ordinary_runtime_recovery_must_refuse": true
   },
   "phase4_order": [
     "require_preflight_evidence",
@@ -223,16 +191,7 @@
     "provenance_present_but_commitment_invalid",
     "mixed_source_candidate_generation",
     "broken_candidate_journal_provenance_binding",
-    "logical_state_mismatch_with_self_consistent_provenance",
-    "historical_journal_rewritten_with_self_consistent_legacy_chain",
-    "historical_journal_payload_reserialized_equal_value",
-    "runtime_profile_changed_with_consistent_rebuild",
-    "interpretation_digest_changed",
-    "substrate_identity_changed",
-    "candidate_envelope_unexpected_or_missing_field",
-    "candidate_journal_unexpected_or_missing_field",
-    "journal_sql_generation_payload_generation_mismatch",
-    "production_refusal_for_unexpected_reason"
+    "logical_state_mismatch_with_self_consistent_provenance"
   ],
   "success_invariants": [
     "original_source_store_never_mutated",
@@ -245,9 +204,7 @@
     "durable_provenance_is_integrity_bound_but_not_verification_authority",
     "ordinary_production_recovery_refuses_qualification_envelope",
     "phase5_final_outcome_requires_independent_restart_verification",
-    "phase5_performs_no_runtime_write",
-    "historical_journal_bytes_match_phase3_external_anchor",
-    "preserved_runtime_identity_matches_phase3_external_anchor"
+    "phase5_performs_no_runtime_write"
   ],
   "semantic_non_goals": [
     "memory_identifier_rewrite",
