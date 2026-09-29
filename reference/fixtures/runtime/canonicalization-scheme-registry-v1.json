@@ -1,0 +1,244 @@
+{
+  "schema_version": 1,
+  "fixture_id": "agent-memory-canonicalization-scheme-registry-v1",
+  "status": "FROZEN_PREIMPLEMENTATION_QUALIFICATION_CONTRACT",
+  "authority_effect": "none",
+  "parent_issue": 609,
+  "owner_issue": 620,
+  "principles": [
+    "scheme_identity_is_domain_scoped",
+    "recorded_prefix_is_not_globally_unique_identity",
+    "canonicalizer_and_root_contract_are_independent_binding_axes",
+    "verification_success_does_not_grant_migration_permission",
+    "candidate_scheme_recognition_does_not_grant_emission_permission",
+    "existing_jcs_identity_domains_are_excluded"
+  ],
+  "canonicalizers": {
+    "legacy-python-sorted-json-v1": {
+      "status": "existing",
+      "meaning": "json.dumps(sort_keys=true,separators=compact,ensure_ascii=false) Python-shaped persisted bytes"
+    },
+    "agent-memory-canonical-json-v2": {
+      "status": "accepted_candidate_bytes_not_runtime_active",
+      "accepted_source": "reference/fixtures/runtime/canonical-json-v2-vectors-accepted-v1.json"
+    }
+  },
+  "bindings": [
+    {
+      "binding_id": "substrate-full-json-v1",
+      "domain": "substrate_state",
+      "recorded_scheme": "sha256",
+      "recorded_prefix": "sha256:",
+      "logical_scheme": "full-json-v1",
+      "canonicalizer": "legacy-python-sorted-json-v1",
+      "root_contract": "substrate-full-json-sha256-v1",
+      "runtime_state_schemas": ["1.0.0", "1.1.0"],
+      "activation": "legacy_verify_only"
+    },
+    {
+      "binding_id": "substrate-bmerkle-v1",
+      "domain": "substrate_state",
+      "recorded_scheme": "bmerkle-v1",
+      "recorded_prefix": "bmerkle-v1:",
+      "logical_scheme": "bmerkle-v1",
+      "canonicalizer": "legacy-python-sorted-json-v1",
+      "root_contract": "substrate-bucketed-merkle-sha256-v1",
+      "runtime_state_schemas": ["1.0.0", "1.1.0"],
+      "activation": "current"
+    },
+    {
+      "binding_id": "governance-full-json-v1",
+      "domain": "governance_state",
+      "recorded_scheme": "sha256",
+      "recorded_prefix": "sha256:",
+      "logical_scheme": "full-json-v1",
+      "canonicalizer": "legacy-python-sorted-json-v1",
+      "root_contract": "governance-full-json-sha256-v1",
+      "runtime_state_schemas": ["1.0.0"],
+      "activation": "legacy_verify_only"
+    },
+    {
+      "binding_id": "governance-gsect-v1",
+      "domain": "governance_state",
+      "recorded_scheme": "gsect-v1",
+      "recorded_prefix": "gsect-v1:",
+      "logical_scheme": "gsect-v1",
+      "canonicalizer": "legacy-python-sorted-json-v1",
+      "root_contract": "governance-sections-sha256-v1",
+      "runtime_state_schemas": ["1.1.0"],
+      "activation": "current"
+    },
+    {
+      "binding_id": "substrate-bmerkle-v2-candidate",
+      "domain": "substrate_state",
+      "recorded_scheme": "bmerkle-v2",
+      "recorded_prefix": "bmerkle-v2:",
+      "logical_scheme": "bmerkle-v2-candidate",
+      "canonicalizer": "agent-memory-canonical-json-v2",
+      "root_contract": "substrate-bucketed-merkle-sha256-v2-candidate",
+      "runtime_state_schemas": [],
+      "activation": "candidate_not_emittable",
+      "envelope_requirement": "new_runtime_state_schema_required_before_activation"
+    },
+    {
+      "binding_id": "governance-gsect-v2-candidate",
+      "domain": "governance_state",
+      "recorded_scheme": "gsect-v2",
+      "recorded_prefix": "gsect-v2:",
+      "logical_scheme": "gsect-v2-candidate",
+      "canonicalizer": "agent-memory-canonical-json-v2",
+      "root_contract": "governance-sections-sha256-v2-candidate",
+      "runtime_state_schemas": [],
+      "activation": "candidate_not_emittable",
+      "envelope_requirement": "new_runtime_state_schema_required_before_activation"
+    }
+  ],
+  "excluded_domains": [
+    {
+      "domain": "rfc8785_jcs_identity",
+      "reason": "existing evidence/security identities have separate explicit JCS contracts and are not persistence migration targets under #609/#620"
+    }
+  ],
+  "cases": [
+    {
+      "id": "resolve-current-bmerkle-v1",
+      "operation": "verify",
+      "domain": "substrate_state",
+      "runtime_state_schema": "1.1.0",
+      "recorded_commitment": "bmerkle-v1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "substrate-bucketed-merkle-sha256-v1",
+      "expected_binding": "substrate-bmerkle-v1"
+    },
+    {
+      "id": "resolve-legacy-substrate-sha256-by-domain",
+      "operation": "verify",
+      "domain": "substrate_state",
+      "runtime_state_schema": "1.0.0",
+      "recorded_commitment": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "substrate-full-json-sha256-v1",
+      "expected_binding": "substrate-full-json-v1"
+    },
+    {
+      "id": "resolve-legacy-governance-sha256-by-domain-and-schema",
+      "operation": "verify",
+      "domain": "governance_state",
+      "runtime_state_schema": "1.0.0",
+      "recorded_commitment": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "governance-full-json-sha256-v1",
+      "expected_binding": "governance-full-json-v1"
+    },
+    {
+      "id": "resolve-current-gsect-v1",
+      "operation": "verify",
+      "domain": "governance_state",
+      "runtime_state_schema": "1.1.0",
+      "recorded_commitment": "gsect-v1:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "governance-sections-sha256-v1",
+      "expected_binding": "governance-gsect-v1"
+    },
+    {
+      "id": "wrong-domain-does-not-reinterpret-bmerkle",
+      "operation": "verify",
+      "domain": "governance_state",
+      "runtime_state_schema": "1.1.0",
+      "recorded_commitment": "bmerkle-v1:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "substrate-bucketed-merkle-sha256-v1",
+      "expected_refusal": "unknown_scheme_for_domain"
+    },
+    {
+      "id": "unknown-scheme-refuses",
+      "operation": "verify",
+      "domain": "substrate_state",
+      "runtime_state_schema": "1.1.0",
+      "recorded_commitment": "mystery-v9:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "substrate-bucketed-merkle-sha256-v1",
+      "expected_refusal": "unknown_scheme_for_domain"
+    },
+    {
+      "id": "legacy-bmerkle-with-v2-canonicalizer-refuses",
+      "operation": "verify",
+      "domain": "substrate_state",
+      "runtime_state_schema": "1.1.0",
+      "recorded_commitment": "bmerkle-v1:1111111111111111111111111111111111111111111111111111111111111111",
+      "requested_canonicalizer": "agent-memory-canonical-json-v2",
+      "requested_root_contract": "substrate-bucketed-merkle-sha256-v1",
+      "expected_refusal": "canonicalizer_mismatch"
+    },
+    {
+      "id": "legacy-bmerkle-with-v2-root-refuses",
+      "operation": "verify",
+      "domain": "substrate_state",
+      "runtime_state_schema": "1.1.0",
+      "recorded_commitment": "bmerkle-v1:2222222222222222222222222222222222222222222222222222222222222222",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "substrate-bucketed-merkle-sha256-v2-candidate",
+      "expected_refusal": "root_contract_mismatch"
+    },
+    {
+      "id": "gsect-v1-under-legacy-runtime-schema-refuses",
+      "operation": "verify",
+      "domain": "governance_state",
+      "runtime_state_schema": "1.0.0",
+      "recorded_commitment": "gsect-v1:3333333333333333333333333333333333333333333333333333333333333333",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "governance-sections-sha256-v1",
+      "expected_refusal": "runtime_schema_binding_mismatch"
+    },
+    {
+      "id": "legacy-governance-sha256-under-current-schema-refuses",
+      "operation": "verify",
+      "domain": "governance_state",
+      "runtime_state_schema": "1.1.0",
+      "recorded_commitment": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "requested_canonicalizer": "legacy-python-sorted-json-v1",
+      "requested_root_contract": "governance-full-json-sha256-v1",
+      "expected_refusal": "runtime_schema_binding_mismatch"
+    },
+    {
+      "id": "candidate-bmerkle-v2-is-inspectable-but-not-emittable",
+      "operation": "inspect",
+      "domain": "substrate_state",
+      "runtime_state_schema": null,
+      "recorded_commitment": "bmerkle-v2:5555555555555555555555555555555555555555555555555555555555555555",
+      "requested_canonicalizer": "agent-memory-canonical-json-v2",
+      "requested_root_contract": "substrate-bucketed-merkle-sha256-v2-candidate",
+      "expected_binding": "substrate-bmerkle-v2-candidate"
+    },
+    {
+      "id": "candidate-bmerkle-v2-emission-refuses",
+      "operation": "emit",
+      "domain": "substrate_state",
+      "runtime_state_schema": null,
+      "recorded_commitment": "bmerkle-v2:6666666666666666666666666666666666666666666666666666666666666666",
+      "requested_canonicalizer": "agent-memory-canonical-json-v2",
+      "requested_root_contract": "substrate-bucketed-merkle-sha256-v2-candidate",
+      "expected_refusal": "candidate_activation_forbidden"
+    },
+    {
+      "id": "candidate-gsect-v2-verification-before-envelope-version-refuses",
+      "operation": "verify",
+      "domain": "governance_state",
+      "runtime_state_schema": "1.1.0",
+      "recorded_commitment": "gsect-v2:7777777777777777777777777777777777777777777777777777777777777777",
+      "requested_canonicalizer": "agent-memory-canonical-json-v2",
+      "requested_root_contract": "governance-sections-sha256-v2-candidate",
+      "expected_refusal": "runtime_schema_binding_mismatch"
+    },
+    {
+      "id": "existing-jcs-domain-is-not-persistence-registry-input",
+      "operation": "verify",
+      "domain": "rfc8785_jcs_identity",
+      "runtime_state_schema": null,
+      "recorded_commitment": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "requested_canonicalizer": "rfc8785-jcs",
+      "requested_root_contract": "identity-specific",
+      "expected_refusal": "excluded_identity_domain"
+    }
+  ]
+}
