@@ -23,7 +23,7 @@ from canonical_json_v2_transaction_qualification import (  # noqa: E402
     transactional_recommit_candidate_v2,
 )
 from canonical_scheme_registry_candidate import CandidateSchemeRegistry, SchemeRegistryError  # noqa: E402
-from reference.tests.test_canonical_json_v2_transaction_qualification import (  # noqa: E402
+from .test_canonical_json_v2_transaction_qualification import (  # noqa: E402
     _fresh_preflight,
     _runtime_state,
 )
