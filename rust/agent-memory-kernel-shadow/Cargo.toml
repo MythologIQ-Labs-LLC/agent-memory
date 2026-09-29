@@ -9,7 +9,7 @@ license = "Apache-2.0"
 [lib]
 path = "src/lib.rs"
 
-[dependencies]
+[dev-dependencies]
 ryu-js = "=1.0.3"
 serde = "1.0"
 serde_json = "1.0"
