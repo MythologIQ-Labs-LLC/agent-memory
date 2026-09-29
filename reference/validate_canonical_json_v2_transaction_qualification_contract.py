@@ -176,7 +176,16 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
         binding = bindings.get(binding_id)
         _require(binding is not None, f"missing frozen candidate registry binding {binding_id}")
         _require(binding.get("runtime_state_schemas") == [], f"{binding_id} unexpectedly gained production runtime schema")
-        _require(binding.get("emission_allowed") is False, f"{binding_id} unexpectedly became emittable")
+        _require(binding.get("activation") == "candidate_not_emittable", f"{binding_id} unexpectedly became emittable")
+        _require(
+            binding.get("envelope_requirement") == "new_runtime_state_schema_required_before_activation",
+            f"{binding_id} candidate envelope requirement changed",
+        )
+
+    cases = {str(item.get("id")): item for item in registry.get("cases", [])}
+    emission_case = cases.get("candidate-bmerkle-v2-emission-refuses")
+    _require(emission_case is not None, "candidate emission refusal case disappeared")
+    _require(emission_case.get("expected_refusal") == "candidate_activation_forbidden", "candidate emission refusal changed")
 
     sqlite_source = (repo_root / "reference/agentmem_ref/state/sqlite_substrate.py").read_text(encoding="utf-8")
     for column in ("episode_uuids_json", "attributes_json", "evidence_refs_json", "value_json", "entry_hash", "chain"):
@@ -196,6 +205,7 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
         "phase5_runtime_write": False,
         "production_recovery_support": False,
         "candidate_registry_operation": "inspect",
+        "candidate_registry_activation": "candidate_not_emittable",
         "persisted_json_surfaces": len(EXPECTED_SUBSTRATE_JSON | EXPECTED_GOVERNANCE_JSON | EXPECTED_TRANSITION_JSON),
         "failure_injections": len(EXPECTED_FAILURES),
         "adversarial_refusals": len(EXPECTED_REFUSALS),
