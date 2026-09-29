@@ -36,7 +36,7 @@ class CandidateSchemeRegistry:
 
     This registry is intentionally outside ``agentmem_ref``. Resolving a binding is
     evidence about compatibility identity only. It cannot verify a commitment, emit a
-    new scheme, migrate state, or grant any memory/runtime authority.
+    scheme, migrate state, or grant any memory/runtime authority.
     """
 
     def __init__(self, fixture: dict[str, Any]) -> None:
@@ -122,8 +122,12 @@ class CandidateSchemeRegistry:
         if binding.root_contract != requested_root_contract:
             raise SchemeRegistryError("root_contract_mismatch")
 
-        if operation == "emit" and binding.activation == "candidate_not_emittable":
-            raise SchemeRegistryError("candidate_activation_forbidden")
+        # #620 qualifies compatibility identity only. Registry resolution is never
+        # emission permission, for legacy/current schemes or candidate successors.
+        if operation == "emit":
+            if binding.activation == "candidate_not_emittable":
+                raise SchemeRegistryError("candidate_activation_forbidden")
+            raise SchemeRegistryError("registry_emission_forbidden")
 
         if operation == "verify":
             if runtime_state_schema is None or runtime_state_schema not in binding.runtime_state_schemas:
