@@ -219,8 +219,9 @@ Re-score on the accepted #594 gold (evaluator 0.2.0, gold unchanged):
 No item regressed into either failure class, and no field other than aspect changed on any of
 the 268 items. The five withheld correct aspects were each right for a reason 1.1.0 no longer
 accepts (a cue inside a subordinate clause or a habitual "going to", or mixed regimes). The 12
-unresolved failures need principal-proposition selection across multi-sentence writes (#596/#597)
-or detection of non-speaker/task content, which bounded rules cannot establish safely. Evidence:
+unresolved failures need principal-proposition selection across multi-sentence writes or NP parsing
+(#596/#597), detection of non-speaker/task content, or reading a present-disposition "going to"; bounded
+rules cannot establish these safely. Evidence:
 `reports/benchmarks/replays/598-write-time-temporal-aspect/`.
 
 Aspect remains evidence only: it grants no currentness, authority, or validity window.
