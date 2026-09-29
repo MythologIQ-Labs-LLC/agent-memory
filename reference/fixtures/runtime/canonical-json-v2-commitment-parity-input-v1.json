@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "fixture_id": "agent-memory-canonical-json-v2-commitment-parity-input-v1",
+  "status": "FROZEN_INPUT_ONLY_NO_EXPECTED_ROOTS",
+  "authority_effect": "none",
+  "owner_issue": 622,
+  "purpose": "independent Python/Rust candidate commitment comparison without treating either implementation as the oracle",
+  "cases": [
+    {
+      "id": "empty",
+      "substrate": {
+        "schema_version": "1.0.0",
+        "relation_schema_version": "1.0.0",
+        "id_counter": 0,
+        "episodes": [],
+        "facts": [],
+        "relations": []
+      },
+      "governance": {
+        "maps": {
+          "current_fact_by_memory": {},
+          "fact_memory": {},
+          "fact_scope": {},
+          "state_version": {},
+          "tombstones": {}
+        },
+        "logs": {
+          "events": []
+        },
+        "residual": {
+          "tenant": "tenant-empty",
+          "adapter": {
+            "extension_state": {}
+          },
+          "visibility_snapshots": {}
+        }
+      }
+    },
+    {
+      "id": "float-bearing",
+      "substrate": {
+        "schema_version": "1.0.0",
+        "relation_schema_version": "1.0.0",
+        "id_counter": 7,
+        "episodes": [
+          {
+            "uuid": "episode:1",
+            "content": "source observation",
+            "source_description": "qualification",
+            "valid_at": "2026-09-29T00:00:00Z",
+            "group_id": "tenant-acme"
+          }
+        ],
+        "facts": [
+          {
+            "uuid": "fact:1",
+            "fact_text": "deploy window is Thursday",
+            "group_id": "tenant-acme",
+            "episode_uuids": ["episode:1"],
+            "valid_at": null,
+            "invalid_at": null,
+            "created_at": null,
+            "expired_at": null,
+            "attributes": {
+              "priority": 1,
+              "ratio": 0.25,
+              "large_exact_integer": 9007199254740993
+            }
+          }
+        ],
+        "relations": [
+          {
+            "relation_id": "relation:1",
+            "source_uuid": "fact:1",
+            "target_uuid": "fact:1",
+            "relation_type": "supports",
+            "group_id": "tenant-acme",
+            "evidence_refs": ["episode:1"],
+            "retrieval_weight": 0.75,
+            "valid_at": null,
+            "invalid_at": null,
+            "created_at": null,
+            "expired_at": null,
+            "attributes": {
+              "route": "qualification",
+              "signed_zero": -0.0
+            }
+          }
+        ]
+      },
+      "governance": {
+        "maps": {
+          "current_fact_by_memory": {
+            "memory:deploy-window": "fact:1"
+          },
+          "fact_memory": {
+            "fact:1": "memory:deploy-window"
+          },
+          "fact_scope": {
+            "fact:1": "tenant-acme"
+          },
+          "state_version": {
+            "memory:deploy-window": 1
+          },
+          "tombstones": {}
+        },
+        "logs": {
+          "events": [
+            {
+              "event_type": "memory.retain",
+              "fact_uuid": "fact:1",
+              "authority_effect": "none"
+            }
+          ]
+        },
+        "residual": {
+          "tenant": "tenant-acme",
+          "adapter": {
+            "clock_tick": 2,
+            "id_counter": 7,
+            "extension_state": {
+              "qualification": {
+                "score": 0.5,
+                "status": "current"
+              }
+            }
+          },
+          "visibility_snapshots": {}
+        }
+      }
+    },
+    {
+      "id": "unicode-ordering",
+      "substrate": {
+        "schema_version": "1.0.0",
+        "relation_schema_version": "1.0.0",
+        "id_counter": 1,
+        "episodes": [],
+        "facts": [
+          {
+            "uuid": "fact:unicode",
+            "fact_text": "Unicode ordering remains code-point based",
+            "group_id": "tenant-unicode",
+            "episode_uuids": [],
+            "valid_at": null,
+            "invalid_at": null,
+            "created_at": null,
+            "expired_at": null,
+            "attributes": {
+              "𐀀": 2,
+              "": 1,
+              "café": "é"
+            }
+          }
+        ],
+        "relations": []
+      },
+      "governance": {
+        "maps": {
+          "current_fact_by_memory": {},
+          "fact_memory": {},
+          "fact_scope": {
+            "fact:unicode": "tenant-unicode"
+          },
+          "state_version": {},
+          "tombstones": {}
+        },
+        "logs": {
+          "events": []
+        },
+        "residual": {
+          "tenant": "tenant-unicode",
+          "adapter": {
+            "extension_state": {
+              "unicode": {
+                "𐀀": "non-bmp",
+                "": "private-use"
+              }
+            }
+          },
+          "visibility_snapshots": {}
+        }
+      }
+    }
+  ]
+}
