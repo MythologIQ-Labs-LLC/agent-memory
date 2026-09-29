@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import sys
 import unittest
@@ -16,6 +17,25 @@ from canonical_scheme_registry_candidate import (  # noqa: E402
 )
 
 FIXTURE = ROOT / "fixtures" / "runtime" / "canonicalization-scheme-registry-v1.json"
+SQLITE_SUBSTRATE = ROOT / "agentmem_ref" / "state" / "sqlite_substrate.py"
+SQLITE_RUNTIME = ROOT / "agentmem_ref" / "runtime" / "sqlite_runtime.py"
+
+
+def _literal_module_constants(path: Path) -> dict[str, object]:
+    source = path.read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    result: dict[str, object] = {}
+    for node in tree.body:
+        if not isinstance(node, ast.Assign) or len(node.targets) != 1:
+            continue
+        target = node.targets[0]
+        if not isinstance(target, ast.Name):
+            continue
+        try:
+            result[target.id] = ast.literal_eval(node.value)
+        except (ValueError, TypeError):
+            continue
+    return result
 
 
 class CanonicalSchemeRegistryCandidateTests(unittest.TestCase):
@@ -33,6 +53,31 @@ class CanonicalSchemeRegistryCandidateTests(unittest.TestCase):
         self.assertEqual(self.fixture["owner_issue"], 620)
         self.assertEqual(len(self.fixture["bindings"]), 6)
         self.assertIn("rfc8785_jcs_identity", {row["domain"] for row in self.fixture["excluded_domains"]})
+
+    def test_frozen_legacy_bindings_match_current_runtime_scheme_constants(self):
+        substrate_constants = _literal_module_constants(SQLITE_SUBSTRATE)
+        runtime_constants = _literal_module_constants(SQLITE_RUNTIME)
+
+        self.assertEqual(substrate_constants["LEGACY_DIGEST_PREFIX"], "sha256:")
+        self.assertEqual(substrate_constants["BUCKETED_DIGEST_SCHEME"], "bmerkle-v1")
+        self.assertEqual(substrate_constants["GOVERNANCE_SCHEME"], "gsect-v1")
+        self.assertEqual(substrate_constants["LEGACY_GOVERNANCE_SCHEME"], "full-json-v1")
+        self.assertEqual(runtime_constants["LEGACY_RUNTIME_STATE_SCHEMA_VERSION"], "1.0.0")
+        self.assertEqual(runtime_constants["SQLITE_RUNTIME_STATE_SCHEMA_VERSION"], "1.1.0")
+
+        by_id = {row["binding_id"]: row for row in self.fixture["bindings"]}
+        self.assertEqual(by_id["substrate-full-json-v1"]["recorded_prefix"], substrate_constants["LEGACY_DIGEST_PREFIX"])
+        self.assertEqual(by_id["substrate-bmerkle-v1"]["recorded_scheme"], substrate_constants["BUCKETED_DIGEST_SCHEME"])
+        self.assertEqual(by_id["governance-full-json-v1"]["logical_scheme"], substrate_constants["LEGACY_GOVERNANCE_SCHEME"])
+        self.assertEqual(by_id["governance-gsect-v1"]["recorded_scheme"], substrate_constants["GOVERNANCE_SCHEME"])
+        self.assertEqual(
+            by_id["governance-full-json-v1"]["runtime_state_schemas"],
+            [runtime_constants["LEGACY_RUNTIME_STATE_SCHEMA_VERSION"]],
+        )
+        self.assertEqual(
+            by_id["governance-gsect-v1"]["runtime_state_schemas"],
+            [runtime_constants["SQLITE_RUNTIME_STATE_SCHEMA_VERSION"]],
+        )
 
     def test_every_frozen_case_resolves_or_refuses_exactly_as_declared(self):
         for case in self.fixture["cases"]:
