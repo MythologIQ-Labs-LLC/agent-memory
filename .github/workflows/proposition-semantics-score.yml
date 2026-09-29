@@ -18,11 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # #631: the #594 runtime-independence interval is proven from history.
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Install Agent Memory reference dependencies
@@ -39,7 +39,7 @@ jobs:
       - name: Score accepted gold
         run: python reference/run_proposition_semantics_score.py --output-dir proposition-score
       - name: Upload score evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: proposition-semantics-score-v1
           path: proposition-score/
