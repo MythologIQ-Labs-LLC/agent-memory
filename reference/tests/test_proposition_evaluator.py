@@ -10,6 +10,7 @@ import copy
 import hashlib
 import importlib.util
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -24,6 +25,44 @@ if str(REFERENCE) not in sys.path:
 import proposition_semantics_evaluator as E  # noqa: E402
 
 FIXTURES = REFERENCE / "fixtures" / "benchmarks" / "proposition-semantics"
+
+# #594 runtime-independence interval (#631). The claim is historical: the runtime under
+# evaluation did not change while the Phase B sample was selected, annotated, reviewed
+# and accepted as gold. It is bounded by the #594 base and the accepted-gold source head
+# recorded in gold-v1.json, never by the current HEAD.
+HISTORY_594_START = "691251ca27f5e8e87a7c259c1a47a7050f32291b"  # #594 base; parent of 9fc452f
+HISTORY_594_END = "6210ab5789de9246f9893a3f82cc44fb410e0ce8"  # gold-v1.json acceptance.source_head_sha
+RUNTIME_TREE = "reference/agentmem_ref"
+REQUIRE_HISTORY_ENV = "AGENT_MEMORY_REQUIRE_594_HISTORY"
+
+
+class HistoryUnavailable(Exception):
+    """The historical commits are not present (for example a shallow clone)."""
+
+
+def runtime_unchanged_between(repo: Path, start: str, end: str, path: str = RUNTIME_TREE) -> bool:
+    """Whether ``path`` was untouched from ``start`` to ``end`` (``start`` an ancestor of ``end``).
+
+    Both the net tree diff and every commit in ``start..end`` are checked, so a change made
+    and reverted inside the interval is still detected.
+
+    Raises ``HistoryUnavailable`` when either commit is absent, and ``ValueError`` when the
+    interval is not a forward ancestry range. Independent of the working tree and HEAD.
+    """
+
+    for commit in (start, end):
+        probe = subprocess.run(["git", "-C", str(repo), "cat-file", "-e", f"{commit}^{{commit}}"], capture_output=True)
+        if probe.returncode != 0:
+            raise HistoryUnavailable(commit)
+    ancestry = subprocess.run(["git", "-C", str(repo), "merge-base", "--is-ancestor", start, end], capture_output=True)
+    if ancestry.returncode != 0:
+        raise ValueError(f"{start} is not an ancestor of {end}")
+    diff = subprocess.run(["git", "-C", str(repo), "diff", "--quiet", start, end, "--", path], capture_output=True)
+    if diff.returncode not in (0, 1):
+        raise RuntimeError(diff.stderr.decode("utf-8", "replace"))
+    touching = subprocess.run(["git", "-C", str(repo), "rev-list", f"{start}..{end}", "--", path],
+                              capture_output=True, text=True, check=True).stdout.split()
+    return diff.returncode == 0 and not touching
 
 
 def _gold(item_id, status, props=(), principal=None, cardinality="unknown", aspect="none_unknown", coexistence="no"):
@@ -273,12 +312,16 @@ class SampleIndependenceTests(unittest.TestCase):
         for name in names:
             if name.startswith("draft-annotations-"):
                 self.assertFalse(json.loads((FIXTURES / name).read_text(encoding="utf-8"))["provenance"]["interpreter_output_consulted"])
-        base = "691251ca27f5e8e87a7c259c1a47a7050f32291b"  # #594 base on main
-        probe = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", f"{base}^{{commit}}"], capture_output=True)
-        if probe.returncode != 0:
-            self.skipTest("base commit not available in this checkout (shallow clone)")
-        diff = subprocess.run(["git", "-C", str(ROOT), "diff", "--quiet", base, "HEAD", "--", "reference/agentmem_ref"], capture_output=True)
-        self.assertEqual(diff.returncode, 0, "runtime files under reference/agentmem_ref changed")
+        # The interval end is the accepted-gold source head recorded in the frozen artifact.
+        gold = json.loads((FIXTURES / "gold-v1.json").read_text(encoding="utf-8"))
+        self.assertEqual(gold["acceptance"]["source_head_sha"], HISTORY_594_END)
+        try:
+            unchanged = runtime_unchanged_between(ROOT, HISTORY_594_START, HISTORY_594_END)
+        except HistoryUnavailable as missing:
+            if os.environ.get(REQUIRE_HISTORY_ENV) == "1":
+                self.fail(f"#594 history required but commit {missing} is absent (use a full-history checkout)")
+            self.skipTest("#594 historical commits not available in this checkout (shallow clone)")
+        self.assertTrue(unchanged, "runtime files under reference/agentmem_ref changed during the #594 annotation interval")
 
     def test_v5_preserves_v4_and_its_change_manifest_is_complete(self) -> None:
         manifest = self.assertManifestComplete("v4", "v5")
@@ -358,3 +401,76 @@ class SampleIndependenceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HistoricalIndependenceBoundaryTests(unittest.TestCase):
+    """#631: the #594 independence check is bounded to its historical interval.
+
+    Synthetic repositories prove the check still detects contamination inside the
+    interval, ignores legitimate runtime development after it, and that the former
+    HEAD-relative check did not.
+    """
+
+    def setUp(self) -> None:
+        self._temp = tempfile.TemporaryDirectory()
+        self.repo = Path(self._temp.name)
+        self._git("init", "-q")
+
+    def tearDown(self) -> None:
+        self._temp.cleanup()
+
+    def _git(self, *args: str) -> str:
+        return subprocess.run(
+            ["git", "-C", str(self.repo), "-c", "user.name=t", "-c", "user.email=t@example.invalid", *args],
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+
+    def _commit(self, path: str, text: str) -> str:
+        target = self.repo / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(text, encoding="utf-8")
+        self._git("add", "-A")
+        self._git("commit", "-q", "-m", path)
+        return self._git("rev-parse", "HEAD")
+
+    def test_later_runtime_change_does_not_invalidate_historical_interval(self):
+        start = self._commit(f"{RUNTIME_TREE}/interpreter.py", "v1\n")
+        end = self._commit("fixtures/draft-annotations.json", "{}\n")
+        self._commit(f"{RUNTIME_TREE}/interpreter.py", "v2 later development\n")
+        self.assertTrue(runtime_unchanged_between(self.repo, start, end))
+        # The former check compared the base against HEAD and failed here.
+        head_relative = subprocess.run(["git", "-C", str(self.repo), "diff", "--quiet", start, "HEAD", "--", RUNTIME_TREE])
+        self.assertEqual(head_relative.returncode, 1)
+
+    def test_runtime_change_inside_interval_is_detected(self):
+        start = self._commit(f"{RUNTIME_TREE}/interpreter.py", "v1\n")
+        self._commit(f"{RUNTIME_TREE}/interpreter.py", "v1 changed during annotation\n")
+        end = self._commit("fixtures/draft-annotations.json", "{}\n")
+        self.assertFalse(runtime_unchanged_between(self.repo, start, end))
+
+    def test_runtime_file_added_inside_interval_is_detected(self):
+        start = self._commit("fixtures/sample.json", "{}\n")
+        self._commit(f"{RUNTIME_TREE}/new_module.py", "x = 1\n")
+        end = self._commit("fixtures/draft-annotations.json", "{}\n")
+        self.assertFalse(runtime_unchanged_between(self.repo, start, end))
+
+    def test_change_reverted_inside_interval_is_still_detected(self):
+        # Net tree identical at the boundary, but the runtime changed during annotation.
+        start = self._commit(f"{RUNTIME_TREE}/interpreter.py", "v1\n")
+        self._commit(f"{RUNTIME_TREE}/interpreter.py", "v1 tuned to the sample\n")
+        self._commit("fixtures/draft-annotations.json", "{}\n")
+        end = self._commit(f"{RUNTIME_TREE}/interpreter.py", "v1\n")
+        net = subprocess.run(["git", "-C", str(self.repo), "diff", "--quiet", start, end, "--", RUNTIME_TREE])
+        self.assertEqual(net.returncode, 0)
+        self.assertFalse(runtime_unchanged_between(self.repo, start, end))
+
+    def test_interval_must_be_forward_ancestry(self):
+        start = self._commit(f"{RUNTIME_TREE}/interpreter.py", "v1\n")
+        end = self._commit("fixtures/draft-annotations.json", "{}\n")
+        with self.assertRaises(ValueError):
+            runtime_unchanged_between(self.repo, end, start)
+
+    def test_missing_history_is_reported_not_passed(self):
+        start = self._commit(f"{RUNTIME_TREE}/interpreter.py", "v1\n")
+        with self.assertRaises(HistoryUnavailable):
+            runtime_unchanged_between(self.repo, start, "0" * 40)
