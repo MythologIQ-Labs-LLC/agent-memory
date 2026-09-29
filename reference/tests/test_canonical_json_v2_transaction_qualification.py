@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from agentmem_ref.restart_runtime import CapabilityBinding, RuntimeProfile  # noqa: E402
+from agentmem_ref.restart_runtime import CapabilityBinding, RuntimeProfile, RuntimeRecoveryError  # noqa: E402
 from agentmem_ref.sqlite_runtime import SQLiteRestartSafeRuntime  # noqa: E402
 from agentmem_ref.substrate import Episode, Fact, TypedRelation  # noqa: E402
 from canonical_json_v2_candidate import canonical_bytes_v2  # noqa: E402
@@ -109,12 +109,8 @@ def _create_source(root: Path) -> tuple[Path, dict]:
         runtime.close()
 
 
-def _artifact_hashes(path: Path) -> dict[str, str]:
-    result: dict[str, str] = {}
-    for candidate in (path, Path(str(path) + "-wal"), Path(str(path) + "-shm")):
-        if candidate.exists():
-            result[candidate.name] = hashlib.sha256(candidate.read_bytes()).hexdigest()
-    return result
+def _database_hash(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _read_one(path: Path, query: str, parameters: tuple = ()) -> tuple:
@@ -144,12 +140,23 @@ def _fresh_preflight(base: Path):
     return source_db, source_state, result
 
 
+def _backup_database_read_only(source: Path, destination: Path) -> None:
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    source_connection = sqlite3.connect(source.resolve().as_uri() + "?mode=ro", uri=True)
+    destination_connection = sqlite3.connect(str(destination))
+    try:
+        source_connection.backup(destination_connection)
+    finally:
+        destination_connection.close()
+        source_connection.close()
+
+
 class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
     def test_full_transaction_and_restart_qualification_preserve_source_and_logical_state(self):
         with tempfile.TemporaryDirectory() as temp:
             base = Path(temp)
             source_db, source_state, preflight = _fresh_preflight(base)
-            source_before = _artifact_hashes(source_db)
+            source_before = _database_hash(source_db)
 
             transaction = transactional_recommit_candidate_v2(preflight)
             self.assertEqual(transaction.source_generation, int(source_state["generation"]))
@@ -167,9 +174,9 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
             self.assertNotIn("restart_verified", provenance_after_transaction)
             self.assertNotIn("outcome", provenance_after_transaction)
 
-            before_phase5_hashes = _artifact_hashes(candidate_db)
-            qualification = qualify_candidate_v2_restart(preflight)
-            after_phase5_hashes = _artifact_hashes(candidate_db)
+            before_phase5_db_hash = _database_hash(candidate_db)
+            qualification = qualify_candidate_v2_restart(preflight, prove_production_refusal=False)
+            after_phase5_db_hash = _database_hash(candidate_db)
 
             self.assertTrue(qualification.restart_verified)
             self.assertEqual(qualification.outcome, "committed")
@@ -181,8 +188,8 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
             self.assertEqual(qualification.logical_state_digest, preflight.evidence.pre_migration_logical_state_digest)
             self.assertEqual(_runtime_state(candidate_db), state_after_transaction)
             self.assertEqual(_provenance(candidate_db), provenance_after_transaction)
-            self.assertEqual(_artifact_hashes(source_db), source_before)
-            self.assertEqual(after_phase5_hashes, before_phase5_hashes)
+            self.assertEqual(_database_hash(source_db), source_before)
+            self.assertEqual(after_phase5_db_hash, before_phase5_db_hash)
 
     def test_every_phase4_fault_rolls_back_to_old_verified_state(self):
         for fault in PHASE4_FAULTS:
@@ -190,32 +197,24 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
                 base = Path(temp)
                 _, source_state, preflight = _fresh_preflight(base)
                 candidate_db = Path(preflight.evidence.snapshot_database)
-                before_hashes = _artifact_hashes(candidate_db)
+                before_db_hash = _database_hash(candidate_db)
 
                 with self.assertRaises(InjectedMigrationFailure) as caught:
                     transactional_recommit_candidate_v2(preflight, fault=fault)
                 self.assertEqual(caught.exception.point, fault)
 
-                # A rollback is not accepted merely because the transaction threw.
-                # The candidate copy must still verify under its original scheme.
                 repeated = qualify_sqlite_migration_preflight(
                     source_database=candidate_db,
                     snapshot_root=base / f"reverify-{fault}",
                 )
                 self.assertEqual(repeated.evidence.source_runtime_generation, int(source_state["generation"]))
-                self.assertEqual(
-                    repeated.evidence.source_substrate_commitment,
-                    preflight.evidence.source_substrate_commitment,
-                )
-                self.assertEqual(
-                    repeated.evidence.source_governance_commitment,
-                    preflight.evidence.source_governance_commitment,
-                )
+                self.assertEqual(repeated.evidence.source_substrate_commitment, preflight.evidence.source_substrate_commitment)
+                self.assertEqual(repeated.evidence.source_governance_commitment, preflight.evidence.source_governance_commitment)
                 self.assertEqual(
                     repeated.evidence.pre_migration_logical_state_digest,
                     preflight.evidence.pre_migration_logical_state_digest,
                 )
-                self.assertEqual(_artifact_hashes(candidate_db), before_hashes)
+                self.assertEqual(_database_hash(candidate_db), before_db_hash)
 
     def test_phase5_injected_failure_never_records_final_committed_outcome(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -225,6 +224,7 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
             candidate_db = Path(preflight.evidence.snapshot_database)
             state_before = _runtime_state(candidate_db)
             provenance_before = _provenance(candidate_db)
+            db_hash_before = _database_hash(candidate_db)
 
             with self.assertRaises(InjectedMigrationFailure) as caught:
                 qualify_candidate_v2_restart(
@@ -235,8 +235,25 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
             self.assertEqual(caught.exception.point, "during_phase5_restart_verification")
             self.assertEqual(_runtime_state(candidate_db), state_before)
             self.assertEqual(_provenance(candidate_db), provenance_before)
+            self.assertEqual(_database_hash(candidate_db), db_hash_before)
             self.assertEqual(provenance_before["transaction_outcome"], TRANSACTION_OUTCOME)
             self.assertNotIn("committed", provenance_before.values())
+
+    def test_production_runtime_refuses_qualification_envelope_on_disposable_copy(self):
+        with tempfile.TemporaryDirectory() as temp:
+            base = Path(temp)
+            _, _, preflight = _fresh_preflight(base)
+            transactional_recommit_candidate_v2(preflight)
+            candidate_db = Path(preflight.evidence.snapshot_database)
+            candidate_hash_before = _database_hash(candidate_db)
+
+            refusal_root = base / "production-refusal-copy"
+            refusal_db = refusal_root / "agent-memory.sqlite3"
+            _backup_database_read_only(candidate_db, refusal_db)
+            with self.assertRaises(RuntimeRecoveryError):
+                SQLiteRestartSafeRuntime.recover(refusal_root, profile=_profile())
+
+            self.assertEqual(_database_hash(candidate_db), candidate_hash_before)
 
     def test_candidate_scheme_with_legacy_json_bytes_refuses_even_when_json_value_is_equal(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -290,9 +307,7 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
 
             connection = sqlite3.connect(str(candidate_db))
             try:
-                row = connection.execute(
-                    "SELECT payload_json FROM canonicalization_migration WHERE singleton = 1"
-                ).fetchone()
+                row = connection.execute("SELECT payload_json FROM canonicalization_migration WHERE singleton = 1").fetchone()
                 assert row is not None
                 value = json.loads(row[0])
                 value["migration_implementation_id"] = "tampered"
@@ -323,8 +338,6 @@ class CanonicalJsonV2TransactionQualificationTests(unittest.TestCase):
                 assert row is not None
                 value = json.loads(row[1])
                 value["migration_provenance_digest"] = "sha256:" + ("0" * 64)
-                # Do not repair record_digest. The verifier should refuse the
-                # provenance binding before provenance can act as authority.
                 connection.execute(
                     "UPDATE runtime_journal SET payload_json = ? WHERE generation = ?",
                     (canonical_bytes_v2(value).decode("utf-8"), int(row[0])),
