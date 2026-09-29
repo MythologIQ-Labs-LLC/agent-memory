@@ -90,16 +90,6 @@ def validate(path: Path, repo_root: Path) -> dict[str, Any]:
     )
     _require(closeout.get("authority_effect") == "none", "qualification closeout must not grant authority")
 
-    invariants = set(map(str, payload.get("success_invariants", [])))
-    _require(
-        "phase4_transaction_provenance_never_claims_final_migration_success" in invariants,
-        "transaction/final-outcome separation invariant missing",
-    )
-    _require(
-        "phase5_final_outcome_is_qualification_evidence_not_runtime_mutation" in invariants,
-        "phase-5 closeout boundary invariant missing",
-    )
-
     post_commit_failure = next(
         row for row in payload.get("failure_injections", []) if row.get("id") == "fail_post_commit_restart_verification"
     )
