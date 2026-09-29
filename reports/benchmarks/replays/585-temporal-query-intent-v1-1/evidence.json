@@ -1,0 +1,381 @@
+{
+  "base_main": "187ab271006024eed311c697f903bfffd1930623",
+  "interpreter": {
+    "after": "1.1.0",
+    "before": "1.0.0",
+    "ref": "agent-memory-deterministic-temporal-cues"
+  },
+  "issue": 585,
+  "longmemeval_s": {
+    "changed_questions": [
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How long have I been working before I started my current job at NovaTech?",
+        "question_id": "gpt4_93159ced",
+        "question_type": "temporal-reasoning",
+        "spans": [
+          [
+            "before",
+            "historical",
+            "low"
+          ],
+          [
+            "current",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": "low",
+          "mode": "atemporal_or_unspecified",
+          "orders": false,
+          "posture": "inferred"
+        },
+        "v110_basis": "query_cue_inference"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How long have I been working before I started my current job at Google?",
+        "question_id": "gpt4_93159ced_abs",
+        "question_type": "temporal-reasoning",
+        "spans": [
+          [
+            "before",
+            "historical",
+            "low"
+          ],
+          [
+            "current",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": "low",
+          "mode": "atemporal_or_unspecified",
+          "orders": false,
+          "posture": "inferred"
+        },
+        "v110_basis": "query_cue_inference"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many engineers do I lead when I just started my new role as Senior Software Engineer? How many engineers do I lead now?",
+        "question_id": "031748ae",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "now",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "low",
+          "mode": "current",
+          "orders": false,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110_basis": "query_language_explicit"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "What was my previous frequent flyer status on United Airlines before I got the current status?",
+        "question_id": "50635ada",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "before",
+            "historical",
+            "low"
+          ],
+          [
+            "current",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": "low",
+          "mode": "atemporal_or_unspecified",
+          "orders": false,
+          "posture": "inferred"
+        },
+        "v110_basis": "query_cue_inference"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How often do I play tennis with my friends at the local park previously? How often do I play now?",
+        "question_id": "f685340e",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "previously",
+            "historical",
+            "high"
+          ],
+          [
+            "now",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "high",
+          "mode": "historical",
+          "orders": false,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": "low",
+          "mode": "atemporal_or_unspecified",
+          "orders": false,
+          "posture": "inferred"
+        },
+        "v110_basis": "query_cue_inference"
+      },
+      {
+        "changed": true,
+        "declined": [
+          [
+            "going to",
+            "habitual_or_motion"
+          ]
+        ],
+        "question": "How much weight have I lost since I started going to the gym consistently?",
+        "question_id": "cf22b7bf",
+        "question_type": "knowledge-update",
+        "spans": [],
+        "v100": {
+          "confidence": "high",
+          "mode": "prospective",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": null,
+          "mode": "atemporal_or_unspecified",
+          "orders": false,
+          "posture": "unspecified"
+        },
+        "v110_basis": "none"
+      },
+      {
+        "changed": true,
+        "declined": [],
+        "question": "How many followers do I have on Instagram now?",
+        "question_id": "a2f3aa27",
+        "question_type": "knowledge-update",
+        "spans": [
+          [
+            "now",
+            "current",
+            "high"
+          ]
+        ],
+        "v100": {
+          "confidence": "low",
+          "mode": "current",
+          "orders": false,
+          "posture": "inferred"
+        },
+        "v110": {
+          "confidence": "high",
+          "mode": "current",
+          "orders": true,
+          "posture": "inferred"
+        },
+        "v110_basis": "query_language_explicit"
+      }
+    ],
+    "dataset": "huggingface.co/datasets/xiaowu0162/longmemeval-cleaned longmemeval_s_cleaned.json",
+    "dataset_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "intent_basis_after": {
+      "none": 370,
+      "query_cue_inference": 107,
+      "query_language_explicit": 23
+    },
+    "intent_changed": 7,
+    "questions": 500,
+    "retrieval_replay_changed_questions": {
+      "temporal_metadata_none": {
+        "session": {
+          "headline_585": {
+            "ndcg_any@10": 0.958333,
+            "ndcg_any@5": 0.958333,
+            "recall_all@10": 1.0,
+            "recall_all@5": 1.0
+          },
+          "headline_main": {
+            "ndcg_any@10": 0.958333,
+            "ndcg_any@5": 0.958333,
+            "recall_all@10": 1.0,
+            "recall_all@5": 1.0
+          },
+          "top50_identical": {
+            "031748ae": true,
+            "50635ada": true,
+            "a2f3aa27": true,
+            "cf22b7bf": true,
+            "f685340e": true,
+            "gpt4_93159ced": true,
+            "gpt4_93159ced_abs": true
+          }
+        },
+        "turn": {
+          "headline_585": {
+            "ndcg_any@10": 0.72369,
+            "ndcg_any@5": 0.666945,
+            "ndcg_any@50": 0.739188,
+            "recall_all@10": 0.833333,
+            "recall_all@5": 0.666667,
+            "recall_all@50": 1.0
+          },
+          "headline_main": {
+            "ndcg_any@10": 0.72369,
+            "ndcg_any@5": 0.666945,
+            "ndcg_any@50": 0.739188,
+            "recall_all@10": 0.833333,
+            "recall_all@5": 0.666667,
+            "recall_all@50": 1.0
+          },
+          "top50_identical": {
+            "031748ae": true,
+            "50635ada": true,
+            "a2f3aa27": true,
+            "cf22b7bf": true,
+            "f685340e": true,
+            "gpt4_93159ced": true,
+            "gpt4_93159ced_abs": true
+          }
+        }
+      },
+      "temporal_metadata_source_observed_at": {
+        "session": {
+          "headline_585": {
+            "ndcg_any@10": 0.958333,
+            "ndcg_any@5": 0.958333,
+            "recall_all@10": 1.0,
+            "recall_all@5": 1.0
+          },
+          "headline_main": {
+            "ndcg_any@10": 0.958333,
+            "ndcg_any@5": 0.958333,
+            "recall_all@10": 1.0,
+            "recall_all@5": 1.0
+          },
+          "top50_identical": {
+            "031748ae": true,
+            "50635ada": true,
+            "a2f3aa27": true,
+            "cf22b7bf": true,
+            "f685340e": true,
+            "gpt4_93159ced": true,
+            "gpt4_93159ced_abs": true
+          }
+        },
+        "turn": {
+          "headline_585": {
+            "ndcg_any@10": 0.72369,
+            "ndcg_any@5": 0.666945,
+            "ndcg_any@50": 0.739188,
+            "recall_all@10": 0.833333,
+            "recall_all@5": 0.666667,
+            "recall_all@50": 1.0
+          },
+          "headline_main": {
+            "ndcg_any@10": 0.72369,
+            "ndcg_any@5": 0.666945,
+            "ndcg_any@50": 0.739188,
+            "recall_all@10": 0.833333,
+            "recall_all@5": 0.666667,
+            "recall_all@50": 1.0
+          },
+          "top50_identical": {
+            "031748ae": true,
+            "50635ada": true,
+            "a2f3aa27": true,
+            "cf22b7bf": true,
+            "f685340e": true,
+            "gpt4_93159ced": true,
+            "gpt4_93159ced_abs": true
+          }
+        }
+      }
+    }
+  },
+  "temporal_currentness_gauntlet_580": {
+    "admitted_order_changes": 0,
+    "assertions": 211,
+    "changed_units": [
+      {
+        "after": "pass",
+        "before": "fail",
+        "case": "A5-explicit-current-vs-ambiguous-cues",
+        "index": 0,
+        "level": "target",
+        "probe": "plain-now-inferred"
+      },
+      {
+        "after": "honest_unknown",
+        "before": "fail",
+        "case": "F28-used-to-prefer-now-prefer",
+        "index": 5,
+        "level": "target",
+        "probe": "plain-now"
+      },
+      {
+        "after": "pass",
+        "before": "fail",
+        "case": "F28-used-to-prefer-now-prefer",
+        "index": 6,
+        "level": "target",
+        "probe": "plain-now"
+      }
+    ],
+    "main": {
+      "required:fail": 1,
+      "required:pass": 184,
+      "target:fail": 5,
+      "target:honest_unknown": 12,
+      "target:pass": 9
+    },
+    "required_regressions": [],
+    "v1_1_0": {
+      "required:fail": 1,
+      "required:pass": 184,
+      "target:fail": 2,
+      "target:honest_unknown": 13,
+      "target:pass": 11
+    }
+  }
+}
