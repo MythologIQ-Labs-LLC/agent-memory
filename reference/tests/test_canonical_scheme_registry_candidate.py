@@ -150,6 +150,36 @@ class CanonicalSchemeRegistryCandidateTests(unittest.TestCase):
             )
         self.assertEqual(caught.exception.reason, "candidate_activation_forbidden")
 
+    def test_current_and_legacy_bindings_are_not_emission_authority_either(self):
+        attempts = (
+            (
+                "substrate_state",
+                "1.1.0",
+                "bmerkle-v1:" + "e" * 64,
+                "legacy-python-sorted-json-v1",
+                "substrate-bucketed-merkle-sha256-v1",
+            ),
+            (
+                "governance_state",
+                "1.0.0",
+                "sha256:" + "f" * 64,
+                "legacy-python-sorted-json-v1",
+                "governance-full-json-sha256-v1",
+            ),
+        )
+        for domain, schema, commitment, canonicalizer, root in attempts:
+            with self.subTest(domain=domain, commitment=commitment[:12]):
+                with self.assertRaises(SchemeRegistryError) as caught:
+                    self.registry.resolve(
+                        operation="emit",
+                        domain=domain,
+                        runtime_state_schema=schema,
+                        recorded_commitment=commitment,
+                        requested_canonicalizer=canonicalizer,
+                        requested_root_contract=root,
+                    )
+                self.assertEqual(caught.exception.reason, "registry_emission_forbidden")
+
     def test_invalid_commitment_shape_refuses_after_known_binding_selection(self):
         with self.assertRaises(SchemeRegistryError) as caught:
             self.registry.resolve(
