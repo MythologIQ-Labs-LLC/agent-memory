@@ -104,14 +104,11 @@ class InterpreterContractTests(unittest.TestCase):
         self.assertEqual(len(slots), 1)
 
     def test_generic_clause_structure(self):
-        # Simple past ends the subject and is not a present-state proposition.
         changed = ps.interpret_write("The user changed jobs and now works as a pilot.")
         self.assertEqual((changed["proposition"]["entity"], changed["proposition"]["value"]), ("user", "pilot"))
         self.assertEqual(ps.interpret_write("I lived in Maryland.")["proposition"]["status"], ps.UNKNOWN)
-        # A pronoun after a possessive-subject clause resolves to the owner.
         pref = ps.interpret_write("The user's taste changed; they now prefer jazz.")
         self.assertEqual(ps.write_slot(pref), ps.write_slot(ps.interpret_write("The user prefers rock.")))
-        # A revision qualifier names the same slot and is change evidence, not a new entity.
         revised = ps.interpret_write("The revised launch date is May 3.")
         self.assertEqual(ps.write_slot(revised), ps.write_slot(ps.interpret_write("The launch date is April 1.")))
         self.assertEqual(revised["cardinality"]["class"], ps.SINGLE_VALUED)
@@ -120,7 +117,6 @@ class InterpreterContractTests(unittest.TestCase):
     def test_cardinality_comes_only_from_markers_never_from_the_property(self):
         self.assertEqual(ps.interpret_write("The user also works at Globex.")["cardinality"]["class"], ps.MULTI_VALUED)
         self.assertEqual(ps.interpret_write("The user has moved and now lives in Boston.")["cardinality"]["class"], ps.SINGLE_VALUED)
-        # The same property without a marker stays unknown: there is no ontology.
         self.assertEqual(ps.interpret_write("The user lives in Boston.")["cardinality"]["class"], ps.UNKNOWN)
         self.assertEqual(ps.interpret_write("The user works at Globex.")["cardinality"]["class"], ps.UNKNOWN)
         self.assertEqual(set(ps.CARDINALITIES), {"single_valued", "multi_valued", "hierarchical", "unknown"})
@@ -149,14 +145,11 @@ class InterpreterContractTests(unittest.TestCase):
         self.assertEqual(both["self_validity"]["status"], "ambiguous")
 
     def test_temporal_aspect_is_carried_by_type_even_without_a_proposition(self):
-        # The #583 lesson: a memory's own "currently" must survive as typed evidence even
-        # when the grammar cannot parse a proposition from the sentence.
         out = ps.interpret_write("Honestly, currently devouring a novel before bed, it's great.")
         self.assertEqual(out["markers"]["aspect"], {"present": ["currently"]})
         self.assertEqual(ps.interpret_write("I'm planning to stay on Oahu.")["markers"]["aspect"], {"prospective": ["planning to"]})
         self.assertEqual(ps.interpret_write("The user used to prefer tea.")["markers"]["aspect"], {"past_habitual": ["used to"]})
         self.assertNotIn("aspect", ps.interpret_write("The user lives in Denver.").get("markers", {}))
-        # Aspect is evidence only: it creates no validity window and no applicability basis.
         self.assertEqual(out["self_validity"]["status"], "none")
 
     def test_self_claims_are_recorded_as_data(self):
@@ -227,7 +220,6 @@ class ClassificationAndProposalTests(_MemoryCase):
         self.write("work:acme", "The user works at Acme Labs.")
         globex = self.write("work:globex", "The user works at Globex.")
         stored = self.memory.write_semantics(globex)
-        # Plain same-slot pairs with unknown cardinality are persisted as a count only.
         self.assertEqual(self.relations(globex), [])
         self.assertEqual((stored["relation_count"], stored["unresolved_cardinality_unknown_count"]), (1, 1))
         self.assertEqual(self.memory.semantic_proposals(), [])
@@ -286,7 +278,7 @@ class ClassificationAndProposalTests(_MemoryCase):
         self.memory = _open(self.root)
         self.assertEqual(len(self.memory.semantic_proposals()), 1)
         self.assertTrue(self.memory.forget("memory:home:boston")["committed"])
-        self.assertIsNone(self.memory.write_semantics(boston))  # deletion stays controlling
+        self.assertIsNone(self.memory.write_semantics(boston))
         self.assertEqual(self.memory.semantic_proposals(), [])
 
     def test_superseded_or_forgotten_facts_are_not_related(self):
@@ -307,10 +299,8 @@ class TemporalSelfDescriptionTests(_MemoryCase):
     def test_bounded_interval_limits_itself_after_its_anchored_window(self):
         default = self.write("deploy:default", "Use the production endpoint prod.example for deployments.", observed_at="2026-01-15")
         temporary = self.write("deploy:temporary", self.TEMPORARY, observed_at="2026-09-20")
-        # Inside the window the text would affirm itself: interpretation never does that.
         self.assertEqual(self._label(temporary, NOW), ("unknown_temporal_basis", None))
         self.assertEqual(self._label(temporary, "2026-10-10T12:00:00Z"), ("outside_target_interval", "interpreted"))
-        # No universal supersession: the standing rule is untouched and still admitted.
         self.assertEqual(self._label(default, "2026-10-10T12:00:00Z"), ("unknown_temporal_basis", None))
         self.assert_untouched("deploy:default", default)
 
@@ -319,7 +309,7 @@ class TemporalSelfDescriptionTests(_MemoryCase):
         recalled = self.memory.recall("Which endpoint?", temporal_intent=CURRENT, reference_time=NOW)
         temporal = self.evidence(recalled, temporary)["temporal_evidence"]
         self.assertEqual(sorted(temporal["clocks"]), ["declared_observed_at", "transaction_time"])
-        self.assertEqual(temporal["declared_basis"], "caller_declared")  # observed_at only
+        self.assertEqual(temporal["declared_basis"], "caller_declared")
         self.assertEqual(temporal["interpreted_validity"]["basis"], "interpreted")
 
     def test_without_an_anchor_the_basis_stays_unknown(self):
@@ -334,8 +324,6 @@ class TemporalSelfDescriptionTests(_MemoryCase):
         green = self.write("theme:green", "Starting next month, use the green theme for the dashboard.", observed_at="2026-09-10")
         recalled = self.memory.recall("Which dashboard theme?", temporal_intent=CURRENT, reference_time=NOW)
         self.assertEqual(self.evidence(recalled, green)["temporal_applicability"], "prospectively_applicable")
-        # Under prospective intent "prospectively_applicable" is the favoured label, so the
-        # memory's own text cannot award it; after the start it cannot affirm "applicable".
         recalled = self.memory.recall("Which dashboard theme?", temporal_intent={"mode": "prospective"}, reference_time=NOW)
         self.assertEqual(self.evidence(recalled, green)["temporal_applicability"], "unknown_temporal_basis")
         self.assertEqual(self._label(green, "2026-10-15T12:00:00Z"), ("unknown_temporal_basis", None))
@@ -367,7 +355,7 @@ class GovernedApplicationTests(_MemoryCase):
         self.assertTrue(applied["committed"], applied)
         self.assertEqual([p["status"] for p in self.memory.semantic_proposals()], ["applied"])
         replacement = self.memory.runtime.adapter.replacement_record(tea)
-        self.assertEqual(replacement["kind"], "state_change")  # #549: never error_correction
+        self.assertEqual(replacement["kind"], "state_change")
         self.assertIn(proposal_id, replacement["evidence_refs"])
 
         current = self.memory.recall("What does the user prefer?", temporal_intent=CURRENT, reference_time=NOW)
@@ -422,7 +410,6 @@ class PersistenceTests(_MemoryCase):
         again = self.memory.recall("Which endpoint?", temporal_intent=CURRENT, reference_time=NOW)
         self.assertEqual(again["admitted"], recall["admitted"])
         self.assertEqual(self.evidence(again, temporary), self.evidence(recall, temporary))
-        # The rebuilt slot index relates a post-restart write to pre-restart facts.
         austin = self.write("home:austin", "The user used to live in Denver, but now lives in Austin.")
         self.assertEqual({r["other_fact_uuid"] for r in self.relations(austin)}, {denver, boston})
 
@@ -433,7 +420,7 @@ class PersistenceTests(_MemoryCase):
         with mock.patch.object(type(runtime), "_persist_unlocked", side_effect=RuntimeError("injected")):
             with self.assertRaises(RuntimeError):
                 self.memory.remember("memory:home:ghost", "The user has moved and now lives in Ghosttown.")
-        self.assertIsNone(self.memory.runtime.adapter._semantic_slot_index)  # rebuilt, not trusted
+        self.assertIsNone(self.memory.runtime.adapter._semantic_slot_index)
         self.assertEqual(self.memory.semantic_proposals(), [])
         boston = self.write("home:boston", "The user has moved and now lives in Boston.")
         self.assertEqual([r["other_fact_uuid"] for r in self.relations(boston)], [denver])
@@ -447,11 +434,15 @@ class PersistenceTests(_MemoryCase):
 
 
 class PolicyIdentityTests(unittest.TestCase):
-    def test_policy_version_records_the_applicability_change_only(self):
-        self.assertEqual(ranking_policy.POLICY_VERSION, "3.1.0")
+    def test_policy_version_records_candidate_specific_anti_laundering(self):
+        self.assertEqual(ranking_policy.POLICY_VERSION, "3.1.1")
         self.assertEqual(ranking_policy.BM25_K1, 1.2)
         self.assertEqual(ranking_policy.BM25_B, 0.75)
-        self.assertFalse(hasattr(ranking_policy, "relevance_query_for_intent"))  # #583 stays out of #550
+        self.assertFalse(hasattr(ranking_policy, "relevance_query_for_intent"))
+        self.assertEqual(
+            ranking_policy.LEXICAL_ANTI_LAUNDERING_GUARD,
+            "candidate_specific_typed_temporal_self_claim_guard",
+        )
 
 
 if __name__ == "__main__":
