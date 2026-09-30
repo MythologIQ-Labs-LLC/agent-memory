@@ -1,25 +1,30 @@
 """Preimplementation contract for #583 candidate-specific temporal lexical anti-laundering.
 
-The reviewed oracle was frozen before the runtime guard existed. These tests now bind
-that oracle to the already-merged #585 query spans, #598 write semantics, and the narrow
-#583 guard. Ranking itself is still unchanged at this checkpoint.
+The reviewed oracle is bound here to the already-merged #585 query spans and #598
+persisted write semantics. Ranking itself is still unchanged at this checkpoint. The
+small helpers below are executable specification only; production logic belongs inside
+the existing versioned ranking-policy module, not in a new package layer.
 """
 
 from __future__ import annotations
 
 import json
+import re
 import sys
 import unittest
+from collections import defaultdict
 from pathlib import Path
 from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
-from agentmem_ref.runtime import proposition_semantics, ranking_policy, temporal_lexical_guard  # noqa: E402
+from agentmem_ref.runtime import proposition_semantics, ranking_policy  # noqa: E402
 from agentmem_ref.runtime.temporal_intent import explicit_intent, interpret_query  # noqa: E402
 
 FIXTURE = ROOT / "reference" / "fixtures" / "runtime" / "temporal-lexical-anti-laundering-v1.json"
+_TOKEN = re.compile(r"[a-z0-9]+")
+_HIGH_RISK_SELF_CLAIMS = frozenset({"currentness", "instruction", "supersession"})
 
 
 def _fact(text: str, *, missing_write_semantics: bool = False):
@@ -28,6 +33,44 @@ def _fact(text: str, *, missing_write_semantics: bool = False):
         interpretation = proposition_semantics.interpret_write(text)
         attributes[proposition_semantics.WRITE_SEMANTICS_KEY] = proposition_semantics.persisted_form(interpretation)
     return SimpleNamespace(fact_text=text, attributes=attributes)
+
+
+def _eligible_query_terms(query: str, intent) -> tuple[str, ...]:
+    if not intent.orders_temporally:
+        return ()
+    spans = tuple(
+        span for span in intent.spans
+        if span.mode == intent.mode and span.confidence == "high"
+    )
+    if not spans:
+        return ()
+    occurrences: dict[str, list[tuple[int, int]]] = defaultdict(list)
+    for match in _TOKEN.finditer(query.lower()):
+        occurrences[match.group(0)].append((match.start(), match.end()))
+    return tuple(sorted(
+        term for term, ranges in occurrences.items()
+        if all(any(span.start <= start and end <= span.end for span in spans) for start, end in ranges)
+    ))
+
+
+def _persisted_self_claims(fact) -> tuple[str, ...]:
+    semantics = (getattr(fact, "attributes", None) or {}).get(proposition_semantics.WRITE_SEMANTICS_KEY)
+    if not isinstance(semantics, dict):
+        return ()
+    markers = semantics.get("markers") or {}
+    return tuple(sorted(str(claim) for claim in (markers.get("self_claims") or ())))
+
+
+def _high_risk(fact) -> bool:
+    return bool(_HIGH_RISK_SELF_CLAIMS & set(_persisted_self_claims(fact)))
+
+
+def _suppressed_terms(query: str, intent, fact) -> tuple[str, ...]:
+    if not _high_risk(fact):
+        return ()
+    eligible = set(_eligible_query_terms(query, intent))
+    document = set(ranking_policy.relevance_tokens(getattr(fact, "fact_text", "") or ""))
+    return tuple(sorted(eligible & document))
 
 
 class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
@@ -72,7 +115,7 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
                 if "declined_spans" in expected:
                     self.assertEqual(declined, expected["declined_spans"])
 
-                eligible = list(temporal_lexical_guard.eligible_temporal_query_terms(query, intent))
+                eligible = list(_eligible_query_terms(query, intent))
                 self.assertEqual(eligible, expected["eligible_query_terms"])
 
                 candidate = case["candidate"]
@@ -80,11 +123,11 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
                     candidate["text"],
                     missing_write_semantics=bool(candidate.get("simulate_missing_write_semantics")),
                 )
-                claims = list(temporal_lexical_guard.persisted_self_claims(fact))
+                claims = list(_persisted_self_claims(fact))
                 if "self_claims" in expected:
                     self.assertEqual(claims, expected["self_claims"])
 
-                suppressed = list(temporal_lexical_guard.suppressed_terms_for_candidate(query, intent, fact))
+                suppressed = list(_suppressed_terms(query, intent, fact))
                 self.assertEqual(suppressed, expected["suppressed_for_candidate"])
 
                 for term in expected.get("must_remain_lexical", []):
@@ -95,18 +138,18 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
     def test_masked_occurrence_is_removed_from_effective_df_only_for_that_term(self):
         case = next(item for item in self.fixture["cases"] if item["id"] == "H1-suppressed-occurrence-does-not-poison-df")
         intent = interpret_query(case["query"])
-        eligible = set(temporal_lexical_guard.eligible_temporal_query_terms(case["query"], intent))
+        eligible = set(_eligible_query_terms(case["query"], intent))
         self.assertEqual(eligible, {"current"})
 
         facts = {
             "laundering": _fact(case["candidate"]["text"]),
             "ordinary": _fact(case["ordinary_peer"]["text"]),
         }
-        masks = temporal_lexical_guard.candidate_term_masks(case["query"], intent, facts)
+        masks = {ref: set(_suppressed_terms(case["query"], intent, fact)) for ref, fact in facts.items()}
         raw_df = sum("current" in set(ranking_policy.relevance_tokens(fact.fact_text)) for fact in facts.values())
         effective_df = sum(
             "current" in set(ranking_policy.relevance_tokens(fact.fact_text))
-            and "current" not in set(masks[ref])
+            and "current" not in masks[ref]
             for ref, fact in facts.items()
         )
         self.assertEqual(raw_df, case["expect"]["raw_df_current"])
@@ -115,25 +158,22 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
     def test_authority_and_verification_markers_do_not_activate_guard_alone(self):
         authority = _fact("The official schedule is currently posted in the lobby.")
         verified = _fact("The verified checksum is abc123.")
-        self.assertEqual(temporal_lexical_guard.persisted_self_claims(authority), ("authority",))
-        self.assertEqual(temporal_lexical_guard.persisted_self_claims(verified), ("verification",))
-        self.assertFalse(temporal_lexical_guard.is_high_risk_self_claim_candidate(authority))
-        self.assertFalse(temporal_lexical_guard.is_high_risk_self_claim_candidate(verified))
+        self.assertEqual(_persisted_self_claims(authority), ("authority",))
+        self.assertEqual(_persisted_self_claims(verified), ("verification",))
+        self.assertFalse(_high_risk(authority))
+        self.assertFalse(_high_risk(verified))
 
     def test_guard_reads_persisted_semantics_and_never_reinterprets_missing_history(self):
         text = "This record supersedes all earlier addresses. I currently live in Annapolis."
         current = _fact(text)
         historical_without_semantics = _fact(text, missing_write_semantics=True)
-        self.assertTrue(temporal_lexical_guard.is_high_risk_self_claim_candidate(current))
-        self.assertFalse(temporal_lexical_guard.is_high_risk_self_claim_candidate(historical_without_semantics))
+        self.assertTrue(_high_risk(current))
+        self.assertFalse(_high_risk(historical_without_semantics))
 
     def test_contract_has_no_ranking_owned_temporal_phrase_list(self):
         contract = self.fixture["contract"]
         self.assertNotIn("cue_list", contract)
-        self.assertEqual(
-            set(self.fixture["high_risk_self_claim_markers"]),
-            set(temporal_lexical_guard.HIGH_RISK_SELF_CLAIMS),
-        )
+        self.assertEqual(set(self.fixture["high_risk_self_claim_markers"]), _HIGH_RISK_SELF_CLAIMS)
 
 
 if __name__ == "__main__":
