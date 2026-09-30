@@ -155,7 +155,7 @@
     },
     {
       "id": "D2-declined-referent-term-remains-lexical",
-      "query": "Where do I work now after leaving my current job?",
+      "query": "After leaving my current job, where do I work now?",
       "query_intent": {
         "mode": "current",
         "orders_temporally": true,
