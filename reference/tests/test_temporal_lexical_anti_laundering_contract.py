@@ -1,66 +1,33 @@
 """Preimplementation contract for #583 candidate-specific temporal lexical anti-laundering.
 
-This test deliberately does not alter ranking. It proves that the reviewed #583 oracle can
-be derived from the already-merged #585 query spans and #598 persisted write semantics.
-The runtime implementation must consume this typed evidence rather than recreating a
-ranking-owned temporal phrase table.
+The reviewed oracle was frozen before the runtime guard existed. These tests now bind
+that oracle to the already-merged #585 query spans, #598 write semantics, and the narrow
+#583 guard. Ranking itself is still unchanged at this checkpoint.
 """
 
 from __future__ import annotations
 
 import json
-import re
 import sys
 import unittest
-from collections import defaultdict
 from pathlib import Path
+from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "reference"))
 
-from agentmem_ref.runtime import proposition_semantics, ranking_policy  # noqa: E402
+from agentmem_ref.runtime import proposition_semantics, ranking_policy, temporal_lexical_guard  # noqa: E402
 from agentmem_ref.runtime.temporal_intent import explicit_intent, interpret_query  # noqa: E402
 
 FIXTURE = ROOT / "reference" / "fixtures" / "runtime" / "temporal-lexical-anti-laundering-v1.json"
-_TOKEN = re.compile(r"[a-z0-9]+")
-_HIGH_RISK_SELF_CLAIMS = frozenset({"currentness", "instruction", "supersession"})
 
 
-def _eligible_query_terms(query: str, intent) -> list[str]:
-    """Terms whose every query occurrence is a high-confidence consumed span for the resolved mode."""
-
-    if not intent.orders_temporally:
-        return []
-    eligible_spans = [
-        span for span in intent.spans
-        if span.mode == intent.mode and span.confidence == "high"
-    ]
-    if not eligible_spans:
-        return []
-
-    occurrences: dict[str, list[tuple[int, int]]] = defaultdict(list)
-    for match in _TOKEN.finditer(query.lower()):
-        occurrences[match.group(0)].append((match.start(), match.end()))
-
-    eligible = []
-    for term, ranges in occurrences.items():
-        if all(
-            any(span.start <= start and end <= span.end for span in eligible_spans)
-            for start, end in ranges
-        ):
-            eligible.append(term)
-    return sorted(eligible)
-
-
-def _self_claims(text: str) -> list[str]:
-    return list(proposition_semantics.interpret_write(text)["markers"].get("self_claims") or ())
-
-
-def _suppressed_terms(text: str, self_claims: list[str] | None, eligible_terms: list[str]) -> list[str]:
-    if not self_claims or not (_HIGH_RISK_SELF_CLAIMS & set(self_claims)):
-        return []
-    document_terms = set(ranking_policy.relevance_tokens(text))
-    return sorted(term for term in eligible_terms if term in document_terms)
+def _fact(text: str, *, missing_write_semantics: bool = False):
+    attributes = {}
+    if not missing_write_semantics:
+        interpretation = proposition_semantics.interpret_write(text)
+        attributes[proposition_semantics.WRITE_SEMANTICS_KEY] = proposition_semantics.persisted_form(interpretation)
+    return SimpleNamespace(fact_text=text, attributes=attributes)
 
 
 class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
@@ -105,17 +72,19 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
                 if "declined_spans" in expected:
                     self.assertEqual(declined, expected["declined_spans"])
 
-                eligible = _eligible_query_terms(query, intent)
+                eligible = list(temporal_lexical_guard.eligible_temporal_query_terms(query, intent))
                 self.assertEqual(eligible, expected["eligible_query_terms"])
 
                 candidate = case["candidate"]
-                if candidate.get("simulate_missing_write_semantics"):
-                    claims = None
-                else:
-                    claims = _self_claims(candidate["text"])
-                    self.assertEqual(claims, expected.get("self_claims", []))
+                fact = _fact(
+                    candidate["text"],
+                    missing_write_semantics=bool(candidate.get("simulate_missing_write_semantics")),
+                )
+                claims = list(temporal_lexical_guard.persisted_self_claims(fact))
+                if "self_claims" in expected:
+                    self.assertEqual(claims, expected["self_claims"])
 
-                suppressed = _suppressed_terms(candidate["text"], claims, eligible)
+                suppressed = list(temporal_lexical_guard.suppressed_terms_for_candidate(query, intent, fact))
                 self.assertEqual(suppressed, expected["suppressed_for_candidate"])
 
                 for term in expected.get("must_remain_lexical", []):
@@ -126,33 +95,44 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
     def test_masked_occurrence_is_removed_from_effective_df_only_for_that_term(self):
         case = next(item for item in self.fixture["cases"] if item["id"] == "H1-suppressed-occurrence-does-not-poison-df")
         intent = interpret_query(case["query"])
-        eligible = set(_eligible_query_terms(case["query"], intent))
+        eligible = set(temporal_lexical_guard.eligible_temporal_query_terms(case["query"], intent))
         self.assertEqual(eligible, {"current"})
 
-        texts = {
-            "laundering": case["candidate"]["text"],
-            "ordinary": case["ordinary_peer"]["text"],
+        facts = {
+            "laundering": _fact(case["candidate"]["text"]),
+            "ordinary": _fact(case["ordinary_peer"]["text"]),
         }
-        masks = {
-            "laundering": set(_suppressed_terms(texts["laundering"], _self_claims(texts["laundering"]), sorted(eligible))),
-            "ordinary": set(),
-        }
-        raw_df = sum("current" in set(ranking_policy.relevance_tokens(text)) for text in texts.values())
+        masks = temporal_lexical_guard.candidate_term_masks(case["query"], intent, facts)
+        raw_df = sum("current" in set(ranking_policy.relevance_tokens(fact.fact_text)) for fact in facts.values())
         effective_df = sum(
-            "current" in set(ranking_policy.relevance_tokens(text)) and "current" not in masks[ref]
-            for ref, text in texts.items()
+            "current" in set(ranking_policy.relevance_tokens(fact.fact_text))
+            and "current" not in set(masks[ref])
+            for ref, fact in facts.items()
         )
         self.assertEqual(raw_df, case["expect"]["raw_df_current"])
         self.assertEqual(effective_df, case["expect"]["effective_df_current"])
 
+    def test_authority_and_verification_markers_do_not_activate_guard_alone(self):
+        authority = _fact("The official schedule is currently posted in the lobby.")
+        verified = _fact("The verified checksum is abc123.")
+        self.assertEqual(temporal_lexical_guard.persisted_self_claims(authority), ("authority",))
+        self.assertEqual(temporal_lexical_guard.persisted_self_claims(verified), ("verification",))
+        self.assertFalse(temporal_lexical_guard.is_high_risk_self_claim_candidate(authority))
+        self.assertFalse(temporal_lexical_guard.is_high_risk_self_claim_candidate(verified))
+
+    def test_guard_reads_persisted_semantics_and_never_reinterprets_missing_history(self):
+        text = "This record supersedes all earlier addresses. I currently live in Annapolis."
+        current = _fact(text)
+        historical_without_semantics = _fact(text, missing_write_semantics=True)
+        self.assertTrue(temporal_lexical_guard.is_high_risk_self_claim_candidate(current))
+        self.assertFalse(temporal_lexical_guard.is_high_risk_self_claim_candidate(historical_without_semantics))
+
     def test_contract_has_no_ranking_owned_temporal_phrase_list(self):
-        # The fixture may name expected surface spans in individual cases, but the policy
-        # itself is structural: source offsets + confidence + persisted self-claim class.
         contract = self.fixture["contract"]
         self.assertNotIn("cue_list", contract)
         self.assertEqual(
             set(self.fixture["high_risk_self_claim_markers"]),
-            _HIGH_RISK_SELF_CLAIMS,
+            set(temporal_lexical_guard.HIGH_RISK_SELF_CLAIMS),
         )
 
 
