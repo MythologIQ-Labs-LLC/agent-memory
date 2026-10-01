@@ -1,5 +1,6 @@
 name: Recall Validation External Replay
 
+# Temporary #583 branch-only trigger. Restore this workflow before merging PR #634.
 on:
   pull_request:
     paths:
@@ -73,7 +74,7 @@ jobs:
                   for key in sorted(set(expected) | set(observed)):
                       child = f'{path}.{key}' if path else key
                       if key not in expected or key not in observed:
-                          out.append((child, expected.get(key, '<missing>'), observed.get(key, '<missing>')))
+                          out.append((child, expected.get(key, '<missing>'), observed.get(key, '<missing>'))
                       else:
                           out.extend(differences(expected[key], observed[key], child))
                   return out
@@ -121,7 +122,7 @@ jobs:
           if-no-files-found: error
 
   longmemeval-s:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
