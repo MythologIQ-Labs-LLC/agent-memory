@@ -37,6 +37,16 @@ def _hit(route: str = "lexical"):
     return SimpleNamespace(route_id=route, raw_score=0.0)
 
 
+def _policy():
+    return ranking_policy.PostAdmissionRankingPolicy(
+        policy_id="583-test",
+        route_score_order=("lexical",),
+        exact_identity_route="identity",
+        lexical_route="lexical",
+        lexical_relevance="bm25_admitted_set",
+    )
+
+
 class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -125,14 +135,19 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
         self.assertLess(guarded["laundering"], unguarded["laundering"])
         self.assertNotEqual(guarded["ordinary"], unguarded["ordinary"])
 
+        hits = {ref: [_hit()] for ref in facts}
+        _, evidence = _policy().rank(facts, hits, facts.__getitem__, case["query"], intent)
+        self.assertEqual(evidence["laundering"]["lexical_temporal_guard"]["suppressed_terms"], ["current"])
+        self.assertEqual(evidence["ordinary"]["lexical_temporal_guard"]["suppressed_terms"], [])
+        for ref in facts:
+            self.assertEqual(
+                evidence[ref]["lexical_temporal_guard"]["effective_df_excluded_terms"],
+                ["current"],
+            )
+            self.assertEqual(evidence[ref]["lexical_temporal_guard"]["authority_effect"], "none")
+
     def test_guard_off_is_explicit_3_1_0_counterfactual(self):
-        policy = ranking_policy.PostAdmissionRankingPolicy(
-            policy_id="583-test",
-            route_score_order=("lexical",),
-            exact_identity_route="identity",
-            lexical_route="lexical",
-            lexical_relevance="bm25_admitted_set",
-        )
+        policy = _policy()
         legacy = replace(policy, lexical_anti_laundering="none", version="3.1.0")
         query = "Where does the user currently live?"
         facts = {
@@ -156,6 +171,10 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
             active_evidence["laundering"]["lexical_temporal_guard"]["suppressed_terms"],
             ["currently"],
         )
+        self.assertEqual(
+            active_evidence["ordinary"]["lexical_temporal_guard"]["effective_df_excluded_terms"],
+            ["currently"],
+        )
         self.assertNotIn("lexical_temporal_guard", legacy_evidence["laundering"])
         self.assertEqual(set(active_order), set(legacy_order))
 
@@ -175,6 +194,15 @@ class TemporalLexicalAntiLaunderingContractTests(unittest.TestCase):
             {ref: score.hex() for ref, score in baseline.items()},
             {ref: score.hex() for ref, score in guarded.items()},
         )
+
+    def test_calibrated_aspect_carrier_is_preserved_but_is_not_suppression_authority(self):
+        query = "What am I currently reading?"
+        fact = _fact("I'm currently devouring The Left Hand of Darkness.")
+        semantics = fact.attributes[proposition_semantics.WRITE_SEMANTICS_KEY]
+        self.assertTrue(semantics["markers"].get("aspect"))
+        self.assertEqual(ranking_policy.persisted_self_claims(fact), ())
+        masks = ranking_policy._candidate_term_masks(query, interpret_query(query), {"candidate": fact})
+        self.assertEqual(masks["candidate"], ())
 
     def test_authority_and_verification_markers_do_not_activate_guard_alone(self):
         authority = _fact("The official schedule is currently posted in the lobby.")
