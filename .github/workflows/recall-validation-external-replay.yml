@@ -74,7 +74,7 @@ jobs:
                   for key in sorted(set(expected) | set(observed)):
                       child = f'{path}.{key}' if path else key
                       if key not in expected or key not in observed:
-                          out.append((child, expected.get(key, '<missing>'), observed.get(key, '<missing>'))
+                          out.append((child, expected.get(key, '<missing>'), observed.get(key, '<missing>')))
                       else:
                           out.extend(differences(expected[key], observed[key], child))
                   return out
