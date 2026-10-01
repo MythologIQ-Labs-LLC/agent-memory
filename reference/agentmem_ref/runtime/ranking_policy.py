@@ -528,13 +528,16 @@ class PostAdmissionRankingPolicy:
                 and self.lexical_anti_laundering == LEXICAL_ANTI_LAUNDERING_GUARD
             )
             masks = _candidate_term_masks(query, intent, facts) if active_guard else {ref: () for ref in facts}
+            eligible_terms = list(eligible_temporal_query_terms(query, intent))
+            effective_df_excluded_terms = sorted({term for terms in masks.values() for term in terms})
             for ref, score in admitted_set_bm25(query, texts, masks).items():
                 evidence[ref]["lexical_relevance_score"] = score
-                if masks.get(ref):
+                if effective_df_excluded_terms:
                     evidence[ref]["lexical_temporal_guard"] = {
                         "guard": LEXICAL_ANTI_LAUNDERING_GUARD,
-                        "eligible_query_terms": list(eligible_temporal_query_terms(query, intent)),
+                        "eligible_query_terms": eligible_terms,
                         "suppressed_terms": list(masks[ref]),
+                        "effective_df_excluded_terms": effective_df_excluded_terms,
                         "authority_effect": "none",
                     }
         keyed = {ref: self.keyed_stages(evidence[ref], intent) for ref in evidence}
