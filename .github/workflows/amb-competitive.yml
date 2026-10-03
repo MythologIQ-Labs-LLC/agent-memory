@@ -68,12 +68,12 @@ jobs:
       OMB_JUDGE_MODEL: gemini-2.5-flash-lite
     steps:
       - name: Checkout Agent Memory
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
       - name: Checkout frozen AMB
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: vectorize-io/agent-memory-benchmark
           ref: ${{ env.AMB_REVISION }}
@@ -81,7 +81,7 @@ jobs:
           fetch-depth: 1
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip
@@ -172,7 +172,7 @@ jobs:
 
       - name: Upload raw AMB evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: amb-${{ inputs.dataset }}-${{ inputs.split }}-${{ inputs.memory }}-${{ github.sha }}
           path: ${{ runner.temp }}/amb-output/
