@@ -1,0 +1,50 @@
+{
+  "adapter": {
+    "id": "external-example-stdio-adapter",
+    "revision": "example-v1",
+    "version": "0.1.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "example process keeps only benchmark-owned in-memory state keyed by the Gauntlet namespace",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "describe": {
+      "support": "native"
+    },
+    "health": {
+      "support": "native"
+    },
+    "recall": {
+      "notes": "deterministic token-overlap retrieval implemented by the example system",
+      "support": "native"
+    },
+    "remember": {
+      "support": "native"
+    },
+    "reset": {
+      "support": "native"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "example": true,
+    "provenance_class": "baseline_or_probe",
+    "self_contained": true
+  },
+  "system": {
+    "id": "external-example-lexical-memory",
+    "kind": "external_memory",
+    "revision": "example-v1",
+    "version": "0.1.0"
+  },
+  "transport": {
+    "kind": "stdio",
+    "startup": [
+      "python",
+      "examples/gauntlet/minimal_stdio_adapter.py"
+    ]
+  }
+}
