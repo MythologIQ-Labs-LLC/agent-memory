@@ -1,5 +1,6 @@
 name: Recall Validation External Replay
 
+# Temporary #583 branch-only trigger. Restore this workflow before merging PR #634.
 on:
   pull_request:
     paths:
@@ -121,7 +122,7 @@ jobs:
           if-no-files-found: error
 
   longmemeval-s:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -153,26 +154,88 @@ jobs:
             --backend agent_memory \
             --output longmemeval-s-572.json
 
-      - name: Verify row-level semantic identity against frozen policy 3.0.1 evidence
+      - name: Validate LongMemEval_S stable semantics and inventory ranking changes
         run: |
           python - <<'PY'
           import gzip, json
+
           frozen_path = 'reports/benchmarks/replays/576-deterministic-bm25/longmemeval-s-full-8bd6c91-seed1.rows.json.gz'
-          after_path = 'longmemeval-s-572.rows.json.gz'
           frozen = json.load(gzip.open(frozen_path, 'rt', encoding='utf-8'))
-          after = json.load(gzip.open(after_path, 'rt', encoding='utf-8'))
+          after = json.load(open('longmemeval-s-572.json', encoding='utf-8'))
+
+          assert after['input']['sha256'] == 'd6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442'
+          assert after['input']['question_count'] == 500
+
+          stable_keys = (
+              'status',
+              'gold',
+              'runtime_error',
+              'ingestion_failures',
+              'out_of_corpus_returned_count',
+              'unmapped_admitted_count',
+          )
+          ranking_keys = ('ranked_top', 'metrics', 'latest_gold_first')
+          evidence = {
+              'frozen_revision': '8bd6c91',
+              'after_revision': after['execution']['agent_memory_revision'],
+              'input_sha256': after['input']['sha256'],
+              'planes': {},
+          }
+
           for plane in ('session', 'turn'):
               before_rows = {row['question_id']: row for row in frozen[plane]['agent_memory']}
-              after_rows = {row['question_id']: row for row in after[plane]['agent_memory']}
+              after_rows = {
+                  row['question_id']: row
+                  for row in after['planes'][plane]['backends']['agent_memory']['rows']
+              }
               assert before_rows.keys() == after_rows.keys(), (plane, 'question set differs')
+
+              stable_diffs = []
+              ranking_diffs = []
               for qid in before_rows:
-                  b, a = before_rows[qid], after_rows[qid]
-                  for key in ('status', 'gold', 'ranked_top', 'metrics', 'latest_gold_first',
-                              'runtime_error', 'ingestion_failures', 'out_of_corpus',
-                              'unmapped_admissions'):
-                      if key in b or key in a:
-                          assert b.get(key) == a.get(key), (plane, qid, key, b.get(key), a.get(key))
-          print('LongMemEval_S row-level rankings and scored semantics are identical to frozen policy 3.0.1 evidence.')
+                  before_row, after_row = before_rows[qid], after_rows[qid]
+                  for key in stable_keys:
+                      if key in before_row or key in after_row:
+                          if before_row.get(key) != after_row.get(key):
+                              stable_diffs.append({
+                                  'question_id': qid,
+                                  'key': key,
+                                  'before': before_row.get(key),
+                                  'after': after_row.get(key),
+                              })
+                  changed = {
+                      key: {'before': before_row.get(key), 'after': after_row.get(key)}
+                      for key in ranking_keys
+                      if before_row.get(key) != after_row.get(key)
+                  }
+                  if changed:
+                      ranking_diffs.append({'question_id': qid, 'changed': changed})
+
+              evidence['planes'][plane] = {
+                  'stable_difference_count': len(stable_diffs),
+                  'stable_differences': stable_diffs,
+                  'ranking_changed_question_count': len(ranking_diffs),
+                  'ranking_differences': ranking_diffs,
+              }
+
+              if stable_diffs:
+                  raise SystemExit(
+                      f'LongMemEval_S {plane} has {len(stable_diffs)} non-ranking semantic difference(s)'
+                  )
+
+          json.dump(
+              evidence,
+              open('longmemeval-s-572-row-differences.json', 'w', encoding='utf-8'),
+              indent=2,
+              sort_keys=True,
+          )
+          print(json.dumps({
+              plane: {
+                  'stable_difference_count': values['stable_difference_count'],
+                  'ranking_changed_question_count': values['ranking_changed_question_count'],
+              }
+              for plane, values in evidence['planes'].items()
+          }, indent=2, sort_keys=True))
           PY
 
       - name: Emit LongMemEval_S diagnostic comparison
@@ -180,7 +243,7 @@ jobs:
           python reference/compare_longmemeval_reports.py \
             reports/benchmarks/replays/576-deterministic-bm25/longmemeval-s-full-8bd6c91-seed1.json \
             reports/benchmarks/replays/576-deterministic-bm25/longmemeval-s-full-8bd6c91-seed1.rows.json.gz \
-            longmemeval-s-572.json longmemeval-s-572.rows.json.gz \
+            longmemeval-s-572.json \
             | tee longmemeval-s-572-comparison.txt
 
       - name: Upload LongMemEval_S replay
@@ -190,6 +253,6 @@ jobs:
           name: recall-validation-longmemeval-s
           path: |
             longmemeval-s-572.json
-            longmemeval-s-572.rows.json.gz
+            longmemeval-s-572-row-differences.json
             longmemeval-s-572-comparison.txt
           if-no-files-found: error

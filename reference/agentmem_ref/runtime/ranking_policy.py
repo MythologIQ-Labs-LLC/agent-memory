@@ -11,7 +11,7 @@ A policy is a documented, versioned sequence of lexicographic stages. Stage valu
 their own types; nothing is summed into one number, and the final order is not a claim
 that the contributing evidence shares a unit.
 
-Stages (policy version 3.1.0, ``temporal_regime = query_conditioned``):
+Stages (policy version 3.1.1, ``temporal_regime = query_conditioned``):
 
 1. temporal applicability tier. **Only** when the query's temporal intent is explicit or
    inferred with high confidence, and only for ``current``, ``as_of``, and
@@ -27,15 +27,20 @@ Stages (policy version 3.1.0, ``temporal_regime = query_conditioned``):
    current or as-of intent; ``outside_target_interval`` / ``applicable_not_prospective``
    under prospective intent). It never affirms applicability: a label that would not
    demote stays ``unknown_temporal_basis``. Caller-declared validity always wins, and
-   ``temporal_applicability_basis`` records the source of every label. Lexical
-   relevance is unchanged from 3.0.1.
+   ``temporal_applicability_basis`` records the source of every label.
 2. route corroboration: the number of distinct candidate routes that surfaced the fact;
 3. exact identity: surfaced by an exact logical-memory lookup;
 4. route-native relevance, one stage per route in declared order, never summed or
    cross-scaled. For the lexical route under ``bm25_admitted_set``, Okapi BM25
    (k1=1.2, b=0.75, untuned) with term statistics over the admitted set only, and
    per-term contributions accumulated in sorted term order so the score is identical
-   across processes;
+   across processes. Since 3.1.1 (#583), the query itself is never globally rewritten:
+   only a candidate carrying persisted high-risk self-claim evidence can have a query
+   term masked, and only when every occurrence of that normalized query term is wholly
+   inside a high-confidence #585 temporal-intent span for the resolved ordering mode.
+   Masked occurrences contribute neither candidate term frequency nor that candidate's
+   document-frequency membership for the masked term. Document length and every
+   unrelated term remain unchanged;
 5. temporal order within the query's regime, among candidates equal on every earlier
    stage, only when the intent orders temporally:
    ``current``: newest first; ``as_of``: latest evidence at or before the target first,
@@ -66,7 +71,7 @@ from __future__ import annotations
 import hashlib
 import math
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Callable, Iterable, Mapping, Sequence
@@ -75,10 +80,12 @@ from .proposition_semantics import WRITE_SEMANTICS_KEY, interpreted_validity
 from .temporal_intent import AS_OF, CURRENT, DECLARED_TEMPORAL_KEY, PROSPECTIVE, TIMELINE, TemporalIntent, parse_time
 
 POLICY_FAMILY = "agent-memory-post-admission-ranking"
-POLICY_VERSION = "3.1.0"
+POLICY_VERSION = "3.1.1"
 BM25_K1 = 1.2
 BM25_B = 0.75
 _TOKEN = re.compile(r"[a-z0-9]+")
+LEXICAL_ANTI_LAUNDERING_GUARD = "candidate_specific_typed_temporal_self_claim_guard"
+HIGH_RISK_SELF_CLAIMS = frozenset({"currentness", "instruction", "supersession"})
 
 
 def relevance_tokens(text: str) -> list[str]:
@@ -87,30 +94,110 @@ def relevance_tokens(text: str) -> list[str]:
     return _TOKEN.findall(text.lower())
 
 
-def admitted_set_bm25(query: str, texts: Mapping[str, str]) -> dict[str, float]:
+def _term_occurrences(text: str) -> tuple[tuple[str, int, int], ...]:
+    """BM25-normalized terms with exact source offsets."""
+
+    return tuple((match.group(0), match.start(), match.end()) for match in _TOKEN.finditer(text.lower()))
+
+
+def eligible_temporal_query_terms(query: str, intent: TemporalIntent) -> tuple[str, ...]:
+    """Terms whose every query occurrence is exclusively high-confidence temporal intent.
+
+    BM25 collapses query terms to a set. If the same normalized term occurs once as
+    temporal intent and once as content, occurrence-specific deletion cannot be
+    represented safely, so the whole term remains lexical.
+    """
+
+    if not intent.orders_temporally:
+        return ()
+    spans = tuple(
+        span for span in intent.spans
+        if span.mode == intent.mode and span.confidence == "high"
+    )
+    if not spans:
+        return ()
+    occurrences: dict[str, list[tuple[int, int]]] = defaultdict(list)
+    for term, start, end in _term_occurrences(query):
+        occurrences[term].append((start, end))
+    return tuple(sorted(
+        term for term, ranges in occurrences.items()
+        if all(any(span.start <= start and end <= span.end for span in spans) for start, end in ranges)
+    ))
+
+
+def persisted_self_claims(fact: Any) -> tuple[str, ...]:
+    """Read only self-claim classes persisted with a fact; never reinterpret historical text."""
+
+    attributes = getattr(fact, "attributes", None) or {}
+    semantics = attributes.get(WRITE_SEMANTICS_KEY) if isinstance(attributes, Mapping) else None
+    if not isinstance(semantics, Mapping):
+        return ()
+    markers = semantics.get("markers") or {}
+    if not isinstance(markers, Mapping):
+        return ()
+    return tuple(sorted(str(claim) for claim in (markers.get("self_claims") or ())))
+
+
+def _candidate_term_masks(query: str, intent: TemporalIntent, facts: Mapping[str, Any]) -> dict[str, tuple[str, ...]]:
+    """Deterministic per-candidate masks derived only from typed query and persisted write evidence."""
+
+    eligible = set(eligible_temporal_query_terms(query, intent))
+    masks: dict[str, tuple[str, ...]] = {}
+    for candidate_ref, fact in facts.items():
+        claims = set(persisted_self_claims(fact))
+        if not eligible or not (HIGH_RISK_SELF_CLAIMS & claims):
+            masks[candidate_ref] = ()
+            continue
+        document_terms = set(relevance_tokens(getattr(fact, "fact_text", "") or ""))
+        masks[candidate_ref] = tuple(sorted(eligible & document_terms))
+    return masks
+
+
+def admitted_set_bm25(
+    query: str,
+    texts: Mapping[str, str],
+    suppressed_terms_by_ref: Mapping[str, Iterable[str]] | None = None,
+) -> dict[str, float]:
     """Okapi BM25 (standard k1=1.2, b=0.75) of each admitted text against the query.
 
     Term statistics (document frequency, average length) are computed over the
     **admitted set only**. Refused candidates, other scopes, and other tenants never
     contribute statistics, so their vocabulary cannot influence how an authorized
     requester's memories are ordered.
+
+    ``suppressed_terms_by_ref`` is a narrow #583 anti-laundering mask. A masked term is
+    absent from that candidate's effective TF and DF membership, but the document and
+    its length remain in the admitted-set corpus. With no mask this function is the
+    bit-for-bit 3.1.0/#576 computation.
     """
 
     documents = {ref: relevance_tokens(text) for ref, text in texts.items()}
     count = len(documents)
     if not count:
         return {}
+    suppressed = {
+        ref: frozenset(str(term) for term in terms)
+        for ref, terms in (suppressed_terms_by_ref or {}).items()
+    }
     average = sum(len(tokens) for tokens in documents.values()) / count or 1.0
-    frequency = Counter(token for tokens in documents.values() for token in set(tokens))
+    frequency = Counter(
+        token
+        for ref, tokens in documents.items()
+        for token in set(tokens)
+        if token not in suppressed.get(ref, ())
+    )
     terms = set(relevance_tokens(query))
     scores: dict[str, float] = {}
     for ref, tokens in documents.items():
         term_counts = Counter(tokens)
+        mask = suppressed.get(ref, ())
         score = 0.0
         # Sorted, not set order: set iteration follows the per-process string hash, and
         # float addition is not associative, so set order made the score's last bits
         # (and true near-tie order) depend on PYTHONHASHSEED (#576, policy 3.0.1).
         for term in sorted(terms):
+            if term in mask:
+                continue
             tf = term_counts.get(term, 0)
             if not tf:
                 continue
@@ -269,6 +356,7 @@ class PostAdmissionRankingPolicy:
     temporal_regime: str = "query_conditioned"
     lexical_route: str | None = None
     lexical_relevance: str = "route_score"
+    lexical_anti_laundering: str = LEXICAL_ANTI_LAUNDERING_GUARD
     stable_fallback: str = "neutral_digest"
     unspecified_intent_order: str = "none"
     version: str = POLICY_VERSION
@@ -278,6 +366,8 @@ class PostAdmissionRankingPolicy:
             raise ValueError(f"unsupported temporal_regime: {self.temporal_regime}")
         if self.lexical_relevance not in {"route_score", "bm25_admitted_set"}:
             raise ValueError(f"unsupported lexical_relevance: {self.lexical_relevance}")
+        if self.lexical_anti_laundering not in {"none", LEXICAL_ANTI_LAUNDERING_GUARD}:
+            raise ValueError(f"unsupported lexical_anti_laundering: {self.lexical_anti_laundering}")
         if self.unspecified_intent_order not in {"none", "newer_first_among_ties"}:
             raise ValueError(f"unsupported unspecified_intent_order: {self.unspecified_intent_order}")
         if self.stable_fallback not in {"neutral_digest", "candidate_ref_asc"}:
@@ -310,6 +400,7 @@ class PostAdmissionRankingPolicy:
             "route_scores_cross_comparable": False,
             "lexical_relevance": self.lexical_relevance,
             "lexical_relevance_statistics_scope": "admitted_set" if self.lexical_relevance == "bm25_admitted_set" else None,
+            "lexical_anti_laundering": self.lexical_anti_laundering,
             "bm25_parameters": {"k1": BM25_K1, "b": BM25_B} if self.lexical_relevance == "bm25_admitted_set" else None,
             "stable_fallback": self.stable_fallback,
             "unspecified_intent_order": self.unspecified_intent_order,
@@ -432,8 +523,23 @@ class PostAdmissionRankingPolicy:
         }
         if self.lexical_relevance == "bm25_admitted_set":
             texts = {ref: getattr(fact, "fact_text", "") or "" for ref, fact in facts.items()}
-            for ref, score in admitted_set_bm25(query, texts).items():
+            active_guard = (
+                self.temporal_regime == "query_conditioned"
+                and self.lexical_anti_laundering == LEXICAL_ANTI_LAUNDERING_GUARD
+            )
+            masks = _candidate_term_masks(query, intent, facts) if active_guard else {ref: () for ref in facts}
+            eligible_terms = list(eligible_temporal_query_terms(query, intent))
+            effective_df_excluded_terms = sorted({term for terms in masks.values() for term in terms})
+            for ref, score in admitted_set_bm25(query, texts, masks).items():
                 evidence[ref]["lexical_relevance_score"] = score
+                if effective_df_excluded_terms:
+                    evidence[ref]["lexical_temporal_guard"] = {
+                        "guard": LEXICAL_ANTI_LAUNDERING_GUARD,
+                        "eligible_query_terms": eligible_terms,
+                        "suppressed_terms": list(masks[ref]),
+                        "effective_df_excluded_terms": effective_df_excluded_terms,
+                        "authority_effect": "none",
+                    }
         keyed = {ref: self.keyed_stages(evidence[ref], intent) for ref in evidence}
         ordered = sorted(evidence, key=lambda ref: tuple(value for _, value in keyed[ref]))
         identity = self.identity()

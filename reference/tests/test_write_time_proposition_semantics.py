@@ -447,11 +447,15 @@ class PersistenceTests(_MemoryCase):
 
 
 class PolicyIdentityTests(unittest.TestCase):
-    def test_policy_version_records_the_applicability_change_only(self):
-        self.assertEqual(ranking_policy.POLICY_VERSION, "3.1.0")
+    def test_policy_version_records_candidate_specific_anti_laundering(self):
+        self.assertEqual(ranking_policy.POLICY_VERSION, "3.1.1")
         self.assertEqual(ranking_policy.BM25_K1, 1.2)
         self.assertEqual(ranking_policy.BM25_B, 0.75)
-        self.assertFalse(hasattr(ranking_policy, "relevance_query_for_intent"))  # #583 stays out of #550
+        self.assertFalse(hasattr(ranking_policy, "relevance_query_for_intent"))
+        self.assertEqual(
+            ranking_policy.LEXICAL_ANTI_LAUNDERING_GUARD,
+            "candidate_specific_typed_temporal_self_claim_guard",
+        )
 
 
 if __name__ == "__main__":

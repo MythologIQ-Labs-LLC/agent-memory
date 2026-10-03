@@ -1,0 +1,112 @@
+{
+  "report_schema": "agent-memory-temporal-currentness-final-disposition@1",
+  "issue": "#580",
+  "evidence_class": "repository_owned_conformance",
+  "external_validation": false,
+  "run": {
+    "workflow_run_id": 37149865903,
+    "artifact_id": 11283382238,
+    "artifact_sha256": "e68c4ac382bb26f0b3c3d4943f4deeaaa8a5aae11a74475cd183630380d5104a"
+  },
+  "runtime": {
+    "revision": "92f0ab8666abf15b4e38630f3f0f5feb5b997359",
+    "ranking_policy": {
+      "policy_id": "multi-route-default",
+      "policy_version": "3.1.1",
+      "lexical_anti_laundering": "candidate_specific_typed_temporal_self_claim_guard",
+      "stable_fallback": "neutral_digest",
+      "authority_effect": "none"
+    },
+    "temporal_interpreter": {
+      "ref": "agent-memory-deterministic-temporal-cues",
+      "version": "1.1.0"
+    }
+  },
+  "fixture": {
+    "suite": "agent-memory-temporal-currentness-gauntlet",
+    "version": "1.0.0",
+    "sha256": "394be82e8dfabe30ad1faf064f36a88d0b0b8e7ab8157f746ecb4cbae9e64492",
+    "cases": 26,
+    "probes": 50,
+    "assertions": 211
+  },
+  "cross_process_order_reproduction": {
+    "seeds": ["0", "1"],
+    "probes": 50,
+    "reproduced": 50,
+    "rate": 1.0,
+    "not_reproduced": []
+  },
+  "required_metrics": {
+    "as_of_state_accuracy": 1.0,
+    "atemporal_relevance_preservation_rate": 1.0,
+    "authority_or_scope_violation_count": 0,
+    "clock_source_accuracy": 1.0,
+    "coexistence_preservation_rate": 1.0,
+    "corrected_false_as_historical_rate": 0.0,
+    "current_applicability_accuracy": 1.0,
+    "current_demoted_as_stale_rate": 0.0,
+    "historical_state_admission_accuracy": 1.0,
+    "intent_interpretation_accuracy_raw_frozen_gold": 0.8571,
+    "metabolism_validity_separation_rate": 1.0,
+    "prospective_applicability_accuracy": 1.0,
+    "restart_reproduction_rate": 1.0,
+    "stale_as_current_rate": 0.0,
+    "state_change_vs_error_correction_accuracy": 1.0,
+    "temporal_self_claim_rank_influence_count": 0,
+    "timeline_preservation_rate": 1.0,
+    "unknown_temporal_basis_honesty_rate": 1.0
+  },
+  "failure_classification": {
+    "query_intent_interpretation": {
+      "units": 3,
+      "levels": ["required", "target"],
+      "classification": "accepted_interpreter_version_transition_585",
+      "reason": "Frozen v1 gold expects unambiguous current/now language to remain inferred. Accepted #585 intentionally changed such language to explicit query_language_explicit under temporal interpreter 1.1.0. Actual applicability, clock, ordering, and governance assertions remain passing. Frozen v1 gold is preserved rather than rewritten post hoc."
+    },
+    "missing_proposition_identity_or_cardinality": {
+      "units": 19,
+      "levels": ["target"],
+      "classification": "retained_semantic_maturity_limitation_596_597"
+    },
+    "exception_precedence_unmodelled": {
+      "units": 2,
+      "levels": ["target"],
+      "classification": "deferred_586"
+    }
+  },
+  "decision_findings": {
+    "F30": {
+      "status": "PASS",
+      "temporal_self_claim_rank_influence_count_required": 0,
+      "classification": "fixed_by_redesigned_583",
+      "note": "Neutralizing self-claim wording no longer changes the required F30 ordering. Authority, mutation, and declared-basis guards remain intact."
+    },
+    "A4": {
+      "status": "policy_pressure",
+      "finding": "Two equally relevant unknown-basis candidates are currently ordered by transaction time. This is deterministic but not evidence of currentness and motivates #584's time-neutral unknown-vs-unknown fallback."
+    },
+    "D18": {
+      "status": "policy_pressure",
+      "finding": "A highly relevant unknown-basis build-cache fact correctly outranks unrelated affirmatively applicable on-call facts. This falsifies a global applicable-over-unknown tier and supports #584's pairwise exclusive-slot constraint model."
+    }
+  },
+  "disposition": {
+    "temporal_currentness_boundary": "accepted_for_580",
+    "required_correctness_regressions_after_accounting_for_585": 0,
+    "adr_039": "PROPOSED",
+    "next": "#584 follow-on adversarial contract and versioned ranking-policy experiment"
+  },
+  "raw_file_sha256": {
+    "temporal-currentness-final-decision-anchors.json": "5655bbc13cff6664357d6f23ee9e3073b20942bf463f39c272b203d0b65bc9b1",
+    "temporal-currentness-final/baseline-seed1.json": "2d40404e0dd6bbbeac7a96774429c1a44cdb51caf4e716d7809123819151411c",
+    "temporal-currentness-final/baseline.json": "ed98a3b8dcff54146cccd704f176407f9ed566cf059894987521b9c8471eace1",
+    "temporal-currentness-final/inferred_only.json": "f0e8d52efc82e454499484b190eb014a810ded1ed762685ffe18e412da8de02c",
+    "temporal-currentness-final/mutant-ignore_validity.json": "afba947ccb590ff4e5696484cb6a6d0636b08180bae7be08724993c9f0eeccfc",
+    "temporal-currentness-final/mutant-invent_currency.json": "f30dd6afacf2ea7faf85fa6fe5a3646dba165ffd9897f4a2dadaafc8661c110a",
+    "temporal-currentness-final/no_temporal_preference.json": "0d961ee71f2a3f8600b03210f94db59b0d7140ba8936042b8f07e407b6c26241",
+    "temporal-currentness-final/summary.json": "c0d5f81efd8a9af91813a84313ffee6857916d034a5eea11034bf627e00a48d0",
+    "temporal-currentness-final/transaction_only.json": "af502d97a3d4d415b41dc4b3a361db25a1921130dac184cf69e24191cfb45c2e",
+    "temporal-currentness-final/universal_newer_first.json": "d7f48e3dae8ad8b33f930a02d774690823c37ad221381ed52304c3897b54c1ea"
+  }
+}
