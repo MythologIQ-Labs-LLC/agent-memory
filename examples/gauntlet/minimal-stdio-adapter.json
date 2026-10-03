@@ -43,7 +43,7 @@
   "transport": {
     "kind": "stdio",
     "startup": [
-      "python3",
+      "python",
       "examples/gauntlet/minimal_stdio_adapter.py"
     ]
   }
