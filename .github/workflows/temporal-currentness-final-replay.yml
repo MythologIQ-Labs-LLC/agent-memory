@@ -1,0 +1,104 @@
+name: Temporal Currentness Final Replay
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/temporal-currentness-final-replay.yml'
+      - 'reference/run_temporal_currentness_gauntlet.py'
+      - 'reference/agentmem_ref/evaluation/temporal_currentness.py'
+      - 'reference/fixtures/benchmarks/temporal-currentness/**'
+      - 'reference/agentmem_ref/runtime/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  final-replay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact candidate revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install reference dependencies
+        run: python -m pip install --disable-pip-version-check -r reference/requirements.txt
+
+      - name: Verify frozen temporal/currentness corpus
+        run: |
+          test "$(sha256sum reference/fixtures/benchmarks/temporal-currentness/temporal-currentness-gauntlet-v1.json | awk '{print $1}')" = "394be82e8dfabe30ad1faf064f36a88d0b0b8e7ab8157f746ecb4cbae9e64492"
+
+      - name: Run frozen final matrix
+        env:
+          PYTHONPATH: reference
+        run: |
+          python reference/run_temporal_currentness_gauntlet.py \
+            --matrix temporal-currentness-final
+
+      - name: Verify evidence identity and emit decision anchors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path('temporal-currentness-final')
+          summary = json.loads((root / 'summary.json').read_text(encoding='utf-8'))
+          baseline = json.loads((root / 'baseline.json').read_text(encoding='utf-8'))
+
+          provenance = summary['baseline_provenance']
+          assert provenance['fixture_sha256'] == '394be82e8dfabe30ad1faf064f36a88d0b0b8e7ab8157f746ecb4cbae9e64492'
+          assert provenance['agent_memory_worktree_dirty'] is False
+          assert summary['cross_process_order_reproduction']['rate'] == 1.0
+          assert summary['cross_process_order_reproduction']['not_reproduced'] == []
+          assert baseline['counts'] == {'cases': 26, 'probes': 50, 'assertions': 211}
+
+          wanted = {
+              'A4-current-query-no-temporal-basis',
+              'A5-explicit-current-vs-ambiguous-cues',
+              'C13-unknown-future-basis',
+              'D18-observation-time-disagrees-with-valid-time',
+              'F30-adversarial-authority-currentness-claims',
+          }
+          anchors = {
+              'revision': provenance['agent_memory_revision'],
+              'ranking_policy': provenance['ranking_policy'],
+              'temporal_interpreter': provenance['temporal_interpreter'],
+              'fixture_sha256': provenance['fixture_sha256'],
+              'evaluator_version': provenance['evaluator_version'],
+              'runtime_changes_since_frozen_boundary': provenance['runtime_changes_since_boundary'],
+              'baseline_metrics': summary['baseline_metrics'],
+              'failure_classes': summary['baseline_failure_classes'],
+              'incidental_target_passes': summary['baseline_incidental_target_passes'],
+              'cross_process_order_reproduction': summary['cross_process_order_reproduction'],
+              'decision_rows': [row for row in baseline['rows'] if row['case_id'] in wanted],
+          }
+          Path('temporal-currentness-final-decision-anchors.json').write_text(
+              json.dumps(anchors, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps({
+              'revision': anchors['revision'],
+              'ranking_policy': anchors['ranking_policy'],
+              'temporal_interpreter': anchors['temporal_interpreter'],
+              'cross_process_rate': anchors['cross_process_order_reproduction']['rate'],
+              'failure_classes': anchors['failure_classes'],
+          }, indent=2, sort_keys=True))
+          PY
+
+      - name: Upload final #580 replay evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: temporal-currentness-final-replay
+          path: |
+            temporal-currentness-final/
+            temporal-currentness-final-decision-anchors.json
+          if-no-files-found: error
