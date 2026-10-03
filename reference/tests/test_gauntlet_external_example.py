@@ -6,8 +6,7 @@ from pathlib import Path
 
 from agentmem_ref._paths import REPO_ROOT
 from agentmem_ref.evaluation.contract import load_run
-from agentmem_ref.evaluation.gauntlet_contract import load_manifest
-from agentmem_ref.evaluation.gauntlet_orchestrator import run_gauntlet
+from agentmem_ref.evaluation.gauntlet_orchestrator import load_adapter_manifest, run_gauntlet
 from agentmem_ref.evaluation.gauntlet_profiles import ORCHESTRATION_PROBE_PROFILE_ID
 
 
@@ -18,7 +17,7 @@ ADAPTER = EXAMPLE_DIR / "minimal_stdio_adapter.py"
 
 class ExternalGauntletExampleTests(unittest.TestCase):
     def test_manifest_is_valid_and_example_is_runtime_independent(self):
-        manifest = load_manifest(MANIFEST)
+        manifest = load_adapter_manifest(MANIFEST)
         self.assertEqual(manifest["transport"]["kind"], "stdio")
         self.assertEqual(manifest["system"]["kind"], "external_memory")
         self.assertNotIn("trusted_fixture", manifest.get("metadata", {}))
