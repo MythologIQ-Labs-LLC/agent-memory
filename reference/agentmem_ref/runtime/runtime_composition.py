@@ -37,7 +37,7 @@ from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
 from .temporal_intent import resolve_intent
-from .ranking_policy import PostAdmissionRankingPolicy
+from .temporal_order_constraints import ExplicitCurrentConstrainedRankingPolicy
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.projections import (
     CURRENT,
@@ -116,7 +116,7 @@ class MultiRouteRecallResult:
         return tuple(self.route_hits.get(candidate_ref, ()))
 
 
-MULTI_ROUTE_RANKING_POLICY = PostAdmissionRankingPolicy(
+MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentConstrainedRankingPolicy(
     policy_id="multi-route-default",
     route_score_order=(SEMANTIC_VECTOR_ROUTE, SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
