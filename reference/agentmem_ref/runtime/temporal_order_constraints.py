@@ -14,7 +14,7 @@ admission.  Its purpose is deliberately narrower than a global temporal tier:
   unrelated propositions create no edge;
 * contradictory/cyclic edges refuse the whole #584 constraint set;
 * the caller supplies the ordinary base ranking and unconstrained order is preserved
-  as far as possible by promoting winners rather than globally tiering losers.
+  by a stable topological sort rather than a global temporal tier.
 
 The helpers are provider-neutral and authority-neutral.  They are separated from the
 ranking policy so the constrained-order contract can be falsified independently before
@@ -224,85 +224,52 @@ def build_explicit_current_constraints(
     return tuple(dedup[key] for key in sorted(dedup))
 
 
-def _has_cycle(nodes: Sequence[str], edges: Sequence[TemporalConstraintEdge]) -> bool:
-    adjacency: dict[str, set[str]] = {node: set() for node in nodes}
-    indegree = dict.fromkeys(nodes, 0)
-    for edge in edges:
-        if edge.winner not in adjacency or edge.loser not in adjacency:
-            continue
-        if edge.loser in adjacency[edge.winner]:
-            continue
-        adjacency[edge.winner].add(edge.loser)
-        indegree[edge.loser] += 1
-    ready = [node for node in nodes if indegree[node] == 0]
-    seen = 0
-    while ready:
-        node = ready.pop()
-        seen += 1
-        for target in adjacency[node]:
-            indegree[target] -= 1
-            if indegree[target] == 0:
-                ready.append(target)
-    return seen != len(nodes)
-
-
 def apply_pairwise_constraints(
     base_order: Iterable[str],
     edges: Sequence[TemporalConstraintEdge],
 ) -> ConstrainedOrderResult:
-    """Apply acyclic edges while preserving base order by promoting winners.
+    """Apply acyclic edges with a stable topological sort over the base ranking.
 
-    Unlike a global applicability tier, this algorithm never demotes every unknown
-    candidate.  When a required winner currently trails its paired loser, only the
-    winner is moved to immediately precede that loser.  Unrelated candidates therefore
-    retain the base order unless a winner must cross them to satisfy an explicit edge.
+    The base ranking is the priority order for every candidate not currently blocked by
+    a #584 edge.  A loser is delayed only until its required winner has been emitted;
+    unrelated candidates that were already ahead of that winner remain ahead.  This is
+    the minimal-order-disturbance interpretation of a pairwise constraint and avoids
+    turning one exclusive competition into a global temporal tier.
     """
 
-    ordered = list(dict.fromkeys(base_order))
+    base = list(dict.fromkeys(base_order))
     active = tuple(
         edge for edge in edges
-        if edge.winner in ordered and edge.loser in ordered and edge.winner != edge.loser
+        if edge.winner in base and edge.loser in base and edge.winner != edge.loser
     )
     if not active:
-        return ConstrainedOrderResult(tuple(ordered), (), False, "no_eligible_exclusive_competition")
-    if _has_cycle(ordered, active):
+        return ConstrainedOrderResult(tuple(base), (), False, "no_eligible_exclusive_competition")
+
+    position = {ref: index for index, ref in enumerate(base)}
+    adjacency: dict[str, set[str]] = {ref: set() for ref in base}
+    indegree = dict.fromkeys(base, 0)
+    for edge in active:
+        if edge.loser in adjacency[edge.winner]:
+            continue
+        adjacency[edge.winner].add(edge.loser)
+        indegree[edge.loser] += 1
+
+    ready = [ref for ref in base if indegree[ref] == 0]
+    ordered: list[str] = []
+    while ready:
+        ready.sort(key=lambda ref: position[ref])
+        ref = ready.pop(0)
+        ordered.append(ref)
+        for target in sorted(adjacency[ref], key=lambda item: position[item]):
+            indegree[target] -= 1
+            if indegree[target] == 0:
+                ready.append(target)
+
+    if len(ordered) != len(base):
         return ConstrainedOrderResult(
-            tuple(ordered), active, False, "cyclic_or_contradictory_competition_evidence"
+            tuple(base), active, False, "cyclic_or_contradictory_competition_evidence"
         )
-
-    # A DAG converges under repeated winner promotion.  Sort the edge scan by original
-    # base positions for deterministic minimal disturbance; repeat because promoting one
-    # winner may expose another previously satisfied dependency in a chain.
-    base_position = {ref: index for index, ref in enumerate(ordered)}
-    scan = sorted(active, key=lambda edge: (
-        base_position[edge.loser],
-        base_position[edge.winner],
-        edge.winner,
-        edge.loser,
-    ))
-    limit = max(1, len(ordered) * len(scan) + 1)
-    for _ in range(limit):
-        changed = False
-        for edge in scan:
-            winner_index = ordered.index(edge.winner)
-            loser_index = ordered.index(edge.loser)
-            if winner_index < loser_index:
-                continue
-            winner = ordered.pop(winner_index)
-            loser_index = ordered.index(edge.loser)
-            ordered.insert(loser_index, winner)
-            changed = True
-        if not changed:
-            return ConstrainedOrderResult(tuple(ordered), active, True, None)
-
-    # Defensive refusal.  The explicit cycle check above should make this unreachable,
-    # but preserving the base order is safer than inventing a recency/identifier escape.
-    return ConstrainedOrderResult(
-        tuple(dict.fromkeys(base_order)),
-        active,
-        False,
-        "constraint_application_did_not_converge",
-    )
+    return ConstrainedOrderResult(tuple(ordered), active, True, None)
 
 
 __all__ = [
