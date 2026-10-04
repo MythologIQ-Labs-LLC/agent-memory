@@ -1,7 +1,7 @@
 {
   "adapter": {
     "id": "external-example-stdio-adapter",
-    "revision": "example-v1",
+    "revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e",
     "version": "0.1.0"
   },
   "authority_effect": "none",
@@ -37,7 +37,7 @@
   "system": {
     "id": "external-example-lexical-memory",
     "kind": "external_memory",
-    "revision": "example-v1",
+    "revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e",
     "version": "0.1.0"
   },
   "transport": {

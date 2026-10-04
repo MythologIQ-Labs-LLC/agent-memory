@@ -1,0 +1,151 @@
+name: Gauntlet External Contestant Dogfood
+
+on:
+  pull_request:
+    paths:
+      - 'examples/gauntlet/**'
+      - 'docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md'
+      - 'reference/agentmem_ref/evaluation/gauntlet_*.py'
+      - 'reports/gauntlet/external-contestant-v1/**'
+      - 'scripts/validate_gauntlet_dogfood_equivalence.py'
+      - '.github/workflows/gauntlet-external-contestant-dogfood.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-quickstart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install exactly as documented
+        run: python -m pip install -e .
+
+      - name: Verify exact example source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_REVISION="git-blob:$(git hash-object examples/gauntlet/minimal_stdio_adapter.py)"
+          python - "$ADAPTER_REVISION" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          expected = sys.argv[1]
+          manifest = json.loads(Path("examples/gauntlet/minimal-stdio-adapter.json").read_text(encoding="utf-8"))
+          assert manifest["system"]["revision"] == expected, (manifest["system"]["revision"], expected)
+          assert manifest["adapter"]["revision"] == expected, (manifest["adapter"]["revision"], expected)
+          print(f"exact example source revision: {expected}")
+          PY
+
+      - name: Execute public quickstart commands
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dogfood gauntlet-runs/run1 gauntlet-runs/run2
+          SOURCE_SHA="$(git rev-parse HEAD)"
+          EXPECTED_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$SOURCE_SHA" = "$EXPECTED_SHA"
+          {
+            echo "# Agent Memory Gauntlet external-contestant dogfood"
+            echo "source_sha=${SOURCE_SHA}"
+            echo "workflow_event_sha=${GITHUB_SHA}"
+            echo "quickstart=docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md"
+            echo "python=$(python --version 2>&1)"
+            echo
+            echo '$ agent-memory gauntlet list'
+            agent-memory gauntlet list
+            echo
+            echo '$ agent-memory gauntlet validate-adapter examples/gauntlet/minimal-stdio-adapter.json'
+            agent-memory gauntlet validate-adapter examples/gauntlet/minimal-stdio-adapter.json
+            echo
+            echo '$ agent-memory gauntlet inspect gauntlet-orchestration-retrieval-probe-v1'
+            agent-memory gauntlet inspect gauntlet-orchestration-retrieval-probe-v1
+            echo
+            echo '$ agent-memory gauntlet run --system examples/gauntlet/minimal-stdio-adapter.json --profile gauntlet-orchestration-retrieval-probe-v1 --allow-external-process --allow-destructive-reset --output-dir ./gauntlet-runs/run1'
+            agent-memory gauntlet run \
+              --system examples/gauntlet/minimal-stdio-adapter.json \
+              --profile gauntlet-orchestration-retrieval-probe-v1 \
+              --allow-external-process \
+              --allow-destructive-reset \
+              --output-dir ./gauntlet-runs/run1
+            echo
+            echo '$ agent-memory gauntlet run [semantic replay] --output-dir ./gauntlet-runs/run2'
+            agent-memory gauntlet run \
+              --system examples/gauntlet/minimal-stdio-adapter.json \
+              --profile gauntlet-orchestration-retrieval-probe-v1 \
+              --allow-external-process \
+              --allow-destructive-reset \
+              --output-dir ./gauntlet-runs/run2
+          } 2>&1 | tee dogfood/transcript.txt
+
+      - name: Verify reconstructable semantic replay and golden sample
+        run: |
+          python scripts/validate_gauntlet_dogfood_equivalence.py \
+            gauntlet-runs/run1 \
+            gauntlet-runs/run2 \
+            --golden reports/gauntlet/external-contestant-v1/golden-evidence.json \
+            --output dogfood/equivalence.json
+
+      - name: Prove tampered evidence identity is rejected
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a gauntlet-runs/run2 dogfood/tampered-run2
+          RUN_DIR="$(find dogfood/tampered-run2 -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          test -n "$RUN_DIR"
+          python - "$RUN_DIR/qualification.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          path = Path(sys.argv[1])
+          value = json.loads(path.read_text(encoding="utf-8"))
+          value["run_id"] = "gauntlet-tampered-identity-000000000000"
+          value["profile"]["profile_id"] = "tampered-profile-v1"
+          value["system"]["id"] = "tampered-system"
+          path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+          if python scripts/validate_gauntlet_dogfood_equivalence.py \
+            gauntlet-runs/run1 \
+            dogfood/tampered-run2 \
+            --golden reports/gauntlet/external-contestant-v1/golden-evidence.json \
+            --output dogfood/tamper-rejection.json; then
+            echo "tampered evidence identity was incorrectly accepted" >&2
+            exit 1
+          fi
+          grep -q '"status": "fail"' dogfood/tamper-rejection.json
+
+      - name: Inventory generated evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          find gauntlet-runs -type f -print | sort | tee dogfood/files.txt
+          while IFS= read -r file; do sha256sum "$file"; done < dogfood/files.txt | tee dogfood/sha256.txt
+          test -s dogfood/transcript.txt
+          test -s dogfood/equivalence.json
+          test -s dogfood/tamper-rejection.json
+          test -s dogfood/files.txt
+          test -s dogfood/sha256.txt
+          test "$(wc -l < dogfood/files.txt)" -eq 8
+
+      - name: Upload dogfood evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gauntlet-external-contestant-dogfood
+          path: |
+            dogfood/
+            gauntlet-runs/
+          if-no-files-found: error
+          retention-days: 90
