@@ -31,6 +31,23 @@ jobs:
       - name: Install exactly as documented
         run: python -m pip install -e .
 
+      - name: Verify exact example source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_REVISION="git-blob:$(git hash-object examples/gauntlet/minimal_stdio_adapter.py)"
+          python - "$ADAPTER_REVISION" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          expected = sys.argv[1]
+          manifest = json.loads(Path("examples/gauntlet/minimal-stdio-adapter.json").read_text(encoding="utf-8"))
+          assert manifest["system"]["revision"] == expected, (manifest["system"]["revision"], expected)
+          assert manifest["adapter"]["revision"] == expected, (manifest["adapter"]["revision"], expected)
+          print(f"exact example source revision: {expected}")
+          PY
+
       - name: Execute public quickstart commands
         shell: bash
         run: |
