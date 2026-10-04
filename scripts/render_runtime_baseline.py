@@ -17,6 +17,7 @@ def render(data: dict) -> str:
     ranking = identity["ranking"]
     persistence = data["persistence_and_durability"]
     evidence = data["qualification_evidence"]
+    public_gauntlet = evidence["public_gauntlet_baseline_qualification"]
     dogfood = data["dogfood"]
     lines = [
         "# Agent Memory Runtime Baseline v1",
@@ -78,6 +79,7 @@ def render(data: dict) -> str:
         f"- #594 Part R known precision / recall: **{evidence['natural_semantics_594']['part_r_known_precision']:.3f} / {evidence['natural_semantics_594']['part_r_known_recall']:.6f}**",
         f"- #591 search p50 / p95: **{evidence['performance_591']['search_p50_ms']} / {evidence['performance_591']['search_p95_ms']} ms**",
         f"- Same-harness non-Agent-Memory systems accepted at freeze: **{evidence['same_harness_competitors']['accepted_non_agent_memory_systems']}** (`{evidence['same_harness_competitors']['status']}`)",
+        f"- Runtime Baseline public Gauntlet path: **{public_gauntlet['status']}** via `{public_gauntlet['transport']}` at head `{public_gauntlet['verified_head']}`; artifact `{public_gauntlet['artifact_digest']}`; probe exact-top1 **{public_gauntlet['exact_top1']:.1f}** (`baseline_or_probe`, not efficacy evidence)",
         "",
         "## Known limitations",
         "",
@@ -90,13 +92,13 @@ def render(data: dict) -> str:
         "## Completion boundary",
         "",
     ]
-    if dogfood["status"] == "completed":
+    if dogfood["status"] == "completed" and public_gauntlet["status"] == "complete":
         lines.append(
-            f"Public Gauntlet dogfood through #{dogfood['public_gauntlet_issue']} is `completed` and evidence-bound to PR #{dogfood['merge_pr']} / merge commit `{dogfood['merge_commit']}`. The #638 close gate is satisfied."
+            f"Public Gauntlet dogfood through #{dogfood['public_gauntlet_issue']} is `completed` and evidence-bound to PR #{dogfood['merge_pr']} / merge commit `{dogfood['merge_commit']}`. Runtime Baseline v1 itself also completed the public stdio contestant path in workflow `{public_gauntlet['workflow_run']}`. The #638 close gate is satisfied."
         )
     else:
         lines.append(
-            f"Public Gauntlet dogfood through #{dogfood['public_gauntlet_issue']} remains `{dogfood['status']}` and is required before #638 closes."
+            f"Public Gauntlet dogfood through #{dogfood['public_gauntlet_issue']} is `{dogfood['status']}` and Runtime Baseline public qualification is `{public_gauntlet['status']}`; both are required before #638 closes."
         )
     lines += [
         "",
@@ -120,6 +122,8 @@ def validate(data: dict) -> None:
         raise SystemExit("baseline authority_effect must remain none")
     if data["dogfood"]["required_before_issue_638_close"] is not True:
         raise SystemExit("public Gauntlet dogfood must remain a close gate")
+    if "public_gauntlet_baseline_qualification" not in data["qualification_evidence"]:
+        raise SystemExit("Runtime Baseline v1 must bind its public Gauntlet qualification evidence")
 
 
 def main() -> int:
