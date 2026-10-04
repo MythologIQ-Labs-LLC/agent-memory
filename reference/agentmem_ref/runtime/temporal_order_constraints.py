@@ -1,8 +1,8 @@
 """Bounded pairwise temporal-order constraints for explicit-current recall (#584).
 
-This module does not retrieve, admit, refuse, supersede, or mutate memories.  It
+This module does not retrieve, admit, refuse, supersede, or mutate memories. It
 operates only on candidates that have already crossed canonical governed recall
-admission.  Its purpose is deliberately narrower than a global temporal tier:
+admission. Its purpose is deliberately narrower than a global temporal tier:
 
 * only explicit ``current`` intent activates the profile;
 * only persisted #550 exclusive same-slot relation evidence can create a dominance
@@ -16,22 +16,24 @@ admission.  Its purpose is deliberately narrower than a global temporal tier:
 * the caller supplies the ordinary base ranking and unconstrained order is preserved
   by a stable topological sort rather than a global temporal tier.
 
-The helpers are provider-neutral and authority-neutral.  They are separated from the
-ranking policy so the constrained-order contract can be falsified independently before
-policy 3.1.2 integrates it.
+``ExplicitCurrentConstrainedRankingPolicy`` is policy 3.1.2's drop-in extension of
+the 3.1.1 post-admission ranker. It deliberately remains a frozen dataclass so the
+repository's benchmark variant machinery can continue using ``dataclasses.replace``
+across every active planner.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from .proposition_semantics import (
     CONFLICT,
     STATE_CHANGE_CANDIDATE,
     WRITE_SEMANTICS_KEY,
 )
+from .ranking_policy import PostAdmissionRankingPolicy
 from .temporal_intent import (
     CALLER_DECLARED,
     CURRENT,
@@ -42,6 +44,8 @@ from .temporal_intent import (
 
 UNKNOWN_TEMPORAL_BASIS = "unknown_temporal_basis"
 APPLICABLE = "applicable"
+POLICY_VERSION = "3.1.2"
+UNKNOWN_BASIS_POLICY = "explicit_current_exclusive_pairwise_v1"
 
 _ALLOWED_INTENT_BASES = frozenset({CALLER_DECLARED, QUERY_LANGUAGE_EXPLICIT})
 _EXCLUSIVE_RELATION_CLASSES = frozenset({STATE_CHANGE_CANDIDATE, CONFLICT})
@@ -113,7 +117,7 @@ def content_identity_digest(fact: Any) -> str:
     """Stable, time-neutral exact-content identity for a true residual tie.
 
     The digest intentionally does not use candidate/fact UUID because runtime UUIDs are
-    counter allocated and therefore encode write order.  Only deterministic presentation
+    counter allocated and therefore encode write order. Only deterministic presentation
     differences in case and whitespace are normalized; punctuation and word order remain
     significant, so this helper does not pretend to be semantic equivalence.
     """
@@ -126,7 +130,7 @@ def content_identity_digest(fact: Any) -> str:
 def explicit_current_residual_key(candidate_ref: str, fact: Any, intent: TemporalIntent) -> tuple[str, str] | None:
     """Time-neutral residual key for the explicit-current profile.
 
-    Candidate ref is only the second component.  It can distinguish truly identical
+    Candidate ref is only the second component. It can distinguish truly identical
     content, where either order is semantically equivalent, but cannot choose between
     distinguishable memories merely because one was written later.
     """
@@ -231,8 +235,8 @@ def apply_pairwise_constraints(
     """Apply acyclic edges with a stable topological sort over the base ranking.
 
     The base ranking is the priority order for every candidate not currently blocked by
-    a #584 edge.  A loser is delayed only until its required winner has been emitted;
-    unrelated candidates that were already ahead of that winner remain ahead.  This is
+    a #584 edge. A loser is delayed only until its required winner has been emitted;
+    unrelated candidates that were already ahead of that winner remain ahead. This is
     the minimal-order-disturbance interpretation of a pairwise constraint and avoids
     turning one exclusive competition into a global temporal tier.
     """
@@ -272,10 +276,192 @@ def apply_pairwise_constraints(
     return ConstrainedOrderResult(tuple(ordered), active, True, None)
 
 
+@dataclass(frozen=True)
+class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
+    """Policy 3.1.2: 3.1.1 ranking plus bounded explicit-current constraints.
+
+    Outside the explicit-current profile this class delegates entirely to the existing
+    post-admission ranker. Inside the profile it performs two post-order operations:
+
+    1. within groups tied on every pre-temporal stage, replace only the positions occupied
+       by unknown-temporal-basis candidates with a stable content-identity order so the
+       runtime transaction clock cannot decide unknown-vs-unknown currentness;
+    2. apply persisted typed exclusive same-slot applicable-over-unknown edges using the
+       stable topological policy above.
+
+    Neither operation changes admission, truth, lifecycle state, or authority.
+    """
+
+    version: str = POLICY_VERSION
+    unknown_basis_policy: str = UNKNOWN_BASIS_POLICY
+
+    def stage_names(self) -> list[str]:
+        return [
+            *super().stage_names(),
+            "explicit_current_unknown_tie_content_identity",
+            "explicit_current_exclusive_pairwise_constraints",
+        ]
+
+    def identity(self) -> dict[str, Any]:
+        identity = super().identity()
+        identity.update(
+            unknown_basis_policy=self.unknown_basis_policy,
+            explicit_current_constraint_profile="caller_declared_or_query_language_explicit",
+            exclusive_competition_evidence=(
+                "persisted_state_change_candidate",
+                "persisted_conflict",
+            ),
+            global_applicable_over_unknown_tier=False,
+            authority_effect="none",
+        )
+        return identity
+
+    def _pre_temporal_key(self, record: Mapping[str, Any], intent: TemporalIntent) -> tuple[Any, ...]:
+        """Return all ordinary stages before temporal tie ordering/fallback."""
+
+        values: list[Any] = []
+        for name, value in super().keyed_stages(record, intent):
+            if name in {"temporal_order_within_query_regime", "temporal_evidence:newer_first"}:
+                break
+            if name in {"candidate_ref_neutral_digest", "candidate_ref_asc"}:
+                break
+            values.append(value)
+        return tuple(values)
+
+    def _neutralize_unknown_ties(
+        self,
+        ordered: Sequence[str],
+        evidence: Mapping[str, Mapping[str, Any]],
+        facts: Mapping[str, Any],
+        intent: TemporalIntent,
+    ) -> tuple[list[str], set[str]]:
+        """Remove hidden write-clock preference only among genuine relevance ties."""
+
+        neutral = list(ordered)
+        groups: dict[tuple[Any, ...], list[str]] = {}
+        for ref in ordered:
+            groups.setdefault(self._pre_temporal_key(evidence[ref], intent), []).append(ref)
+
+        affected: set[str] = set()
+        for refs in groups.values():
+            unknown = [
+                ref for ref in refs
+                if evidence[ref].get("temporal_applicability") == UNKNOWN_TEMPORAL_BASIS
+            ]
+            if len(unknown) < 2:
+                continue
+            positions = sorted(neutral.index(ref) for ref in unknown)
+            stable = sorted(
+                unknown,
+                key=lambda ref: explicit_current_residual_key(ref, facts[ref], intent),
+            )
+            before = [neutral[position] for position in positions]
+            for position, ref in zip(positions, stable):
+                neutral[position] = ref
+            if before != stable:
+                affected.update(unknown)
+        return neutral, affected
+
+    @staticmethod
+    def _edge_map(edges: Sequence[TemporalConstraintEdge]) -> dict[str, list[TemporalConstraintEdge]]:
+        by_ref: dict[str, list[TemporalConstraintEdge]] = {}
+        for edge in edges:
+            by_ref.setdefault(edge.winner, []).append(edge)
+            by_ref.setdefault(edge.loser, []).append(edge)
+        return by_ref
+
+    def rank(
+        self,
+        admitted: Iterable[str],
+        hits_by_candidate: Mapping[str, Sequence[Any]],
+        fact_lookup: Callable[[str], Any],
+        query: str = "",
+        intent: TemporalIntent | None = None,
+    ) -> tuple[list[str], dict[str, dict[str, Any]]]:
+        intent = intent or TemporalIntent()
+        admitted = list(admitted)
+        base_order, evidence = super().rank(
+            admitted,
+            hits_by_candidate,
+            fact_lookup,
+            query=query,
+            intent=intent,
+        )
+        if not explicit_current_profile(intent):
+            return base_order, evidence
+
+        facts = {ref: fact_lookup(ref) for ref in admitted}
+        base_position = {ref: index + 1 for index, ref in enumerate(base_order)}
+        base_next = {
+            ref: base_order[index + 1] if index + 1 < len(base_order) else None
+            for index, ref in enumerate(base_order)
+        }
+        base_reason = {
+            ref: evidence[ref].get("ordered_before_next_by")
+            for ref in base_order
+        }
+
+        neutral_order, neutralized_refs = self._neutralize_unknown_ties(
+            base_order, evidence, facts, intent
+        )
+        edges = build_explicit_current_constraints(facts, evidence, intent)
+        constrained = apply_pairwise_constraints(neutral_order, edges)
+        final_order = list(constrained.ordered)
+        edge_by_ref = self._edge_map(edges)
+        direct_edges = {(edge.winner, edge.loser) for edge in edges}
+
+        for position, ref in enumerate(final_order, start=1):
+            record = evidence[ref]
+            record["base_rank_position"] = base_position[ref]
+            record["rank_position"] = position
+            record["unknown_basis_policy"] = self.unknown_basis_policy
+            record["query_intent_basis"] = intent.intent_basis
+            record["explicit_current_unknown_tie_fallback"] = (
+                "stable_content_digest" if ref in neutralized_refs else "not_exercised"
+            )
+            record["constraint_applied"] = bool(
+                constrained.constraint_applied and edge_by_ref.get(ref)
+            )
+            record["constraint_refusal_reason"] = (
+                constrained.constraint_refusal_reason
+                if not constrained.constraint_applied and edges
+                else None if edge_by_ref.get(ref)
+                else "not_in_exclusive_competition"
+            )
+            record["constraint_edges"] = [edge.to_dict() for edge in edge_by_ref.get(ref, ())]
+            if edge_by_ref.get(ref):
+                first = edge_by_ref[ref][0]
+                record["competition_slot"] = first.slot
+                record["competition_basis"] = first.basis
+                record["winner_temporal_applicability"] = first.winner_temporal_applicability
+                record["loser_temporal_applicability"] = first.loser_temporal_applicability
+                record["winner_applicability_basis"] = first.winner_applicability_basis
+            record["authority_effect"] = "none"
+            record.pop("ordered_before_next_by", None)
+
+        for index, ref in enumerate(final_order[:-1]):
+            successor = final_order[index + 1]
+            record = evidence[ref]
+            if (ref, successor) in direct_edges and constrained.constraint_applied:
+                reason = "explicit_current_exclusive_pairwise_constraint"
+            elif ref in neutralized_refs or successor in neutralized_refs:
+                reason = "explicit_current_unknown_tie_content_identity"
+            elif base_next.get(ref) == successor:
+                reason = base_reason.get(ref) or "base_ranking_preserved"
+            else:
+                reason = "stable_constraint_topology"
+            record["ordered_before_next_by"] = reason
+
+        return final_order, evidence
+
+
 __all__ = [
     "APPLICABLE",
     "ConstrainedOrderResult",
+    "ExplicitCurrentConstrainedRankingPolicy",
+    "POLICY_VERSION",
     "TemporalConstraintEdge",
+    "UNKNOWN_BASIS_POLICY",
     "UNKNOWN_TEMPORAL_BASIS",
     "apply_pairwise_constraints",
     "build_explicit_current_constraints",
