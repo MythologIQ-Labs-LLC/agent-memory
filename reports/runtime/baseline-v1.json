@@ -150,6 +150,17 @@
     {"id": "exception_override_precedence", "issue": 586, "status": "deferred_post_rc"},
     {"id": "adr_039", "status": "proposed_not_promoted"}
   ],
-  "dogfood": {"public_gauntlet_issue": 637, "required_before_issue_638_close": true, "status": "pending"},
+  "dogfood": {
+    "public_gauntlet_issue": 637,
+    "required_before_issue_638_close": true,
+    "status": "completed",
+    "merge_pr": 649,
+    "merge_commit": "10898c0edf4fa7093a0bbeda1b2cb8062469e843",
+    "verified_head": "90a55f31fec68e94a8486acca065c778801a01f4",
+    "workflow_run": 37218887168,
+    "golden_evidence": "reports/gauntlet/external-contestant-v1/golden-evidence.json",
+    "evidence_class": "baseline_or_probe",
+    "authority_effect": "none"
+  },
   "drift_policy": {"immutable_after_publication": true, "observable_behavior_changes_must_bind_new_revision": true, "future_636_ablations_must_name_this_baseline": true}
 }
