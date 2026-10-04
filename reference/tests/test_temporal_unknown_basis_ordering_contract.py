@@ -37,8 +37,14 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertEqual(deps["temporal_interpreter"], "agent-memory-deterministic-temporal-cues/1.1.0")
         self.assertEqual(deps["write_semantics"], "agent-memory-deterministic-write-semantics/1.1.0")
 
+        # The frozen oracle records the preimplementation 3.1.1 baseline above;
+        # successful implementation activates the bounded 3.1.2 policy without
+        # rewriting that historical dependency.
         policy = runtime_composition.MULTI_ROUTE_RANKING_POLICY.identity()
-        self.assertEqual(policy["policy_version"], "3.1.1")
+        self.assertEqual(policy["policy_version"], "3.1.2")
+        self.assertEqual(policy["unknown_basis_policy"], "explicit_current_exclusive_pairwise_v1")
+        self.assertFalse(policy["global_applicable_over_unknown_tier"])
+        self.assertEqual(policy["authority_effect"], "none")
         self.assertEqual(ti.INTERPRETER_VERSION, "1.1.0")
         self.assertEqual(ps.INTERPRETER_VERSION, "1.1.0")
 
