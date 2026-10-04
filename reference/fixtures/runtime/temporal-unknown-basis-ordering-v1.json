@@ -1,9 +1,14 @@
 {
   "fixture_id": "agent-memory-temporal-unknown-basis-ordering-v1",
-  "status": "FROZEN_PREIMPLEMENTATION_ORACLE",
+  "status": "FROZEN_PREIMPLEMENTATION_CONTRACT_REVIEWED",
   "issue": 584,
   "base_sha": "5f0e85e67a170cc633396a195a9bc4e6d2728bff",
   "authority_effect": "none",
+  "freeze_history": {
+    "draft_oracle_commit": "f270bb1f2023d37aab64169eac880d7e8ee2dd72",
+    "binding_test_commit": "f1effdcc142924585206d59f05bb6fb1d0079c75",
+    "preimplementation_review_correction": "The draft called the existing candidate_ref SHA-256 fallback time-neutral. Review established that candidate_ref is allocated by a deterministic counter, so hashing it obscures but does not remove write-order dependence. Before any #584 runtime implementation, M7 and the contract were corrected to require a stable content/semantic identity fallback for distinguishable memories. Candidate-ref digest may remain only as a final tie-break for byte/semantic-identical content where order has no semantic consequence."
+  },
   "dependencies": {
     "ranking_policy": "agent-memory-post-admission-ranking/3.1.1",
     "temporal_interpreter": "agent-memory-deterministic-temporal-cues/1.1.0",
@@ -30,7 +35,8 @@
       "same known proposition slot plus persisted state_change_candidate/conflict relation with an exclusive basis"
     ],
     "affirmed_over_unknown": "Within an established exclusive competition only, an affirmatively applicable candidate may dominate an unknown-temporal-basis alternative. The unknown remains admitted and labelled unknown.",
-    "unknown_vs_unknown": "No temporal dominance edge. Transaction time and observation time are forbidden as currentness tie-breaks. Preserve route-native/non-temporal ordering, then use the existing time-neutral deterministic digest only for a true residual tie.",
+    "unknown_vs_unknown": "No temporal dominance edge. Transaction time and observation time are forbidden as currentness tie-breaks. Preserve route-native/non-temporal ordering, then use a stable time-neutral content/semantic identity digest for a true residual tie. The current candidate_ref digest is insufficient for distinguishable memories because candidate_ref is counter-allocated in write order.",
+    "residual_fallback": "stable_content_semantic_digest_then_candidate_ref_only_for_identical_content",
     "known_incompatible": "Existing non-compensatory temporal demotion remains controlling under established current intent.",
     "two_applicable": "#584 adds no applicable-vs-applicable winner. Existing relevance/evidence ordering remains controlling unless another independently governed rule applies.",
     "atemporal": "No #584 edge or fallback change.",
@@ -49,6 +55,7 @@
       "unknown != current",
       "newer != current",
       "newer != superseding",
+      "write order != semantic preference",
       "interpretation != authority",
       "conflict detection != mutation"
     ],
@@ -221,7 +228,7 @@
     },
     {
       "id": "M7-both-unknown-true-tie-is-write-order-invariant",
-      "purpose": "A true unknown-vs-unknown tie must use time-neutral deterministic fallback, not newest-write preference.",
+      "purpose": "A true unknown-vs-unknown tie between distinguishable memories must use a stable time-neutral content/semantic identity fallback, not newest-write preference or a digest of counter-allocated candidate_ref.",
       "query": "Where does the user live?",
       "reference_time": "2026-10-03T12:00:00Z",
       "variants": [
@@ -240,11 +247,17 @@
           ]
         }
       ],
+      "preconditions": {
+        "candidate_ref_allocation": "counter_based_write_order",
+        "candidate_ref_digest_is_not_content_stable": true
+      },
       "expect": {
         "constraint_applied": false,
-        "same_order_across_write_order_variants": true,
+        "same_semantic_order_across_write_order_variants": true,
         "transaction_time_currentness_effect": "none",
-        "fallback": "neutral_digest"
+        "observation_time_currentness_effect": "none",
+        "fallback": "stable_content_semantic_digest",
+        "candidate_ref_digest_only_for_identical_content": true
       }
     },
     {
