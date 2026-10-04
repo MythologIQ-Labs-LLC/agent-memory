@@ -1,0 +1,398 @@
+{
+  "fixture_id": "agent-memory-temporal-unknown-basis-ordering-v1",
+  "status": "FROZEN_PREIMPLEMENTATION_ORACLE",
+  "issue": 584,
+  "base_sha": "5f0e85e67a170cc633396a195a9bc4e6d2728bff",
+  "authority_effect": "none",
+  "dependencies": {
+    "ranking_policy": "agent-memory-post-admission-ranking/3.1.1",
+    "temporal_interpreter": "agent-memory-deterministic-temporal-cues/1.1.0",
+    "write_semantics": "agent-memory-deterministic-write-semantics/1.1.0",
+    "final_temporal_replay": "#580 final-policy-3.1.1",
+    "ruling": "#584 evidence-gated pairwise currentness constraints"
+  },
+  "claim_boundary": "Repository-owned preimplementation conformance/falsification oracle for #584. It does not accept ADR-039, grant authority, mutate lifecycle state, or assert that unavailable proposition/cardinality evidence exists.",
+  "contract": {
+    "scope": "post-admission ordering only",
+    "activation": {
+      "mode": "current",
+      "posture": "explicit",
+      "intent_basis": [
+        "caller_declared",
+        "query_language_explicit"
+      ]
+    },
+    "pairwise_not_global": true,
+    "global_applicable_over_unknown_tier_forbidden": true,
+    "exclusive_competition_required": true,
+    "exclusive_competition_evidence": [
+      "same known proposition slot plus single_valued evidence without coexistence/hierarchical evidence",
+      "same known proposition slot plus persisted state_change_candidate/conflict relation with an exclusive basis"
+    ],
+    "affirmed_over_unknown": "Within an established exclusive competition only, an affirmatively applicable candidate may dominate an unknown-temporal-basis alternative. The unknown remains admitted and labelled unknown.",
+    "unknown_vs_unknown": "No temporal dominance edge. Transaction time and observation time are forbidden as currentness tie-breaks. Preserve route-native/non-temporal ordering, then use the existing time-neutral deterministic digest only for a true residual tie.",
+    "known_incompatible": "Existing non-compensatory temporal demotion remains controlling under established current intent.",
+    "two_applicable": "#584 adds no applicable-vs-applicable winner. Existing relevance/evidence ordering remains controlling unless another independently governed rule applies.",
+    "atemporal": "No #584 edge or fallback change.",
+    "inferred_current": "The first #584 profile does not apply affirmed-over-unknown dominance to query_cue_inference, even when the cue is high confidence and orders temporally.",
+    "cycle_or_contradiction": "Refuse the #584 dominance relation and preserve base order. Never break ambiguity with recency.",
+    "hierarchy_boundary": "Hierarchical/refinement compatibility must be positively established before it can be used as typed evidence. If the current interpreter cannot establish it, exclusivity is refused rather than guessed.",
+    "forbidden_currentness_clocks": [
+      "transaction_time",
+      "observation_time_without_validity_contract"
+    ],
+    "preserved_invariants": [
+      "ranking != admission",
+      "ranking != truth",
+      "relevance != currentness",
+      "unknown != stale",
+      "unknown != current",
+      "newer != current",
+      "newer != superseding",
+      "interpretation != authority",
+      "conflict detection != mutation"
+    ],
+    "explanation_fields": [
+      "unknown_basis_policy",
+      "query_intent_basis",
+      "competition_slot",
+      "competition_basis",
+      "winner_temporal_applicability",
+      "loser_temporal_applicability",
+      "winner_applicability_basis",
+      "constraint_applied",
+      "constraint_refusal_reason"
+    ]
+  },
+  "cases": [
+    {
+      "id": "M1-exclusive-slot-applicable-dominates-unknown",
+      "purpose": "Affirmed applicability is non-compensatory only inside a typed exclusive same-slot competition, even when the unknown candidate has stronger lexical current-language overlap.",
+      "query": "Where does the user currently live?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "unknown",
+          "text": "The user currently lives in Denver."
+        },
+        {
+          "key": "applicable",
+          "text": "The user has moved and now lives in Boston.",
+          "valid_from": "2026-08-15"
+        }
+      ],
+      "preconditions": {
+        "same_known_slot": true,
+        "exclusive_relation_expected": "state_change_candidate",
+        "winner_applicability": "applicable",
+        "loser_applicability": "unknown_temporal_basis"
+      },
+      "expect": {
+        "constraint_applied": true,
+        "precedes": ["applicable", "unknown"],
+        "unknown_label_preserved": true,
+        "authority_effect": "none"
+      }
+    },
+    {
+      "id": "M2-unrelated-propositions-no-global-temporal-authority",
+      "purpose": "An applicable but unrelated memory must not outrank a highly relevant unknown-basis memory merely because both were retrieved.",
+      "query": "What is the current build cache location?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "applicable_unrelated",
+          "text": "The user is on call this week.",
+          "valid_from": "2026-09-28",
+          "valid_until": "2026-10-05"
+        },
+        {
+          "key": "unknown_relevant",
+          "text": "The build cache location is /srv/build-cache."
+        }
+      ],
+      "expect": {
+        "constraint_applied": false,
+        "constraint_refusal_reason": "different_or_unestablished_proposition_slot",
+        "relevance_controls": true,
+        "precedes": ["unknown_relevant", "applicable_unrelated"]
+      }
+    },
+    {
+      "id": "M3-same-slot-cardinality-unknown-refuses-exclusivity",
+      "purpose": "Sharing a slot is insufficient when cardinality remains unknown.",
+      "query": "Where does the user currently work?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "unknown",
+          "text": "The user works at Acme Labs."
+        },
+        {
+          "key": "applicable",
+          "text": "The user works at Globex.",
+          "valid_from": "2026-09-01"
+        }
+      ],
+      "preconditions": {
+        "same_known_slot": true,
+        "cardinality": "unknown"
+      },
+      "expect": {
+        "constraint_applied": false,
+        "constraint_refusal_reason": "exclusive_cardinality_not_established",
+        "relevance_controls": true
+      }
+    },
+    {
+      "id": "M4-multivalued-coexistence-refuses-dominance",
+      "purpose": "Multi-valued/coexistence evidence forbids treating one same-slot value as the exclusive current answer.",
+      "query": "Where does the user currently work?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "unknown_existing",
+          "text": "The user works at Acme Labs."
+        },
+        {
+          "key": "applicable_also",
+          "text": "The user also works at Globex.",
+          "valid_from": "2026-09-01"
+        }
+      ],
+      "preconditions": {
+        "same_known_slot": true,
+        "new_cardinality": "multi_valued",
+        "relation_expected": "coexistence"
+      },
+      "expect": {
+        "constraint_applied": false,
+        "constraint_refusal_reason": "coexistence_or_multivalued",
+        "both_may_remain_current_candidates": true
+      }
+    },
+    {
+      "id": "M5-hierarchy-or-refinement-not-proven-refuses-exclusivity",
+      "purpose": "Do not infer exclusivity for refinement-compatible values when positive hierarchy evidence is unavailable.",
+      "query": "What is the user's current engineering role?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "broad",
+          "text": "The user's engineering role is software engineer."
+        },
+        {
+          "key": "refined",
+          "text": "The user's engineering role is senior software engineer.",
+          "valid_from": "2026-09-01"
+        }
+      ],
+      "preconditions": {
+        "positive_hierarchical_evidence_required": true,
+        "current_interpreter_positive_hierarchy_not_assumed": true
+      },
+      "expect": {
+        "constraint_applied": false,
+        "constraint_refusal_reason": "hierarchy_or_exclusivity_not_established",
+        "no_invented_single_valued_semantics": true
+      }
+    },
+    {
+      "id": "M6-both-unknown-relevance-decides",
+      "purpose": "When both candidates are unknown, ordinary relevance remains controlling and temporal clocks add no preference.",
+      "query": "Does the user work at Globex?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "acme",
+          "text": "The user works at Acme Labs."
+        },
+        {
+          "key": "globex",
+          "text": "The user works at Globex."
+        }
+      ],
+      "expect": {
+        "constraint_applied": false,
+        "precedes": ["globex", "acme"],
+        "transaction_time_currentness_effect": "none",
+        "observation_time_currentness_effect": "none"
+      }
+    },
+    {
+      "id": "M7-both-unknown-true-tie-is-write-order-invariant",
+      "purpose": "A true unknown-vs-unknown tie must use time-neutral deterministic fallback, not newest-write preference.",
+      "query": "Where does the user live?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "variants": [
+        {
+          "id": "denver_then_boston",
+          "memories": [
+            {"key": "denver", "text": "The user lives in Denver."},
+            {"key": "boston", "text": "The user lives in Boston."}
+          ]
+        },
+        {
+          "id": "boston_then_denver",
+          "memories": [
+            {"key": "boston", "text": "The user lives in Boston."},
+            {"key": "denver", "text": "The user lives in Denver."}
+          ]
+        }
+      ],
+      "expect": {
+        "constraint_applied": false,
+        "same_order_across_write_order_variants": true,
+        "transaction_time_currentness_effect": "none",
+        "fallback": "neutral_digest"
+      }
+    },
+    {
+      "id": "M8-known-incompatible-remains-noncompensatory",
+      "purpose": "#584 must not weaken the existing demotion of a candidate proven incompatible with the current target time.",
+      "query": "Where does the user currently live?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "expired",
+          "text": "The user currently lives in Denver.",
+          "valid_until": "2025-01-01"
+        },
+        {
+          "key": "unknown",
+          "text": "The user lives in Boston."
+        }
+      ],
+      "expect": {
+        "known_incompatible_noncompensatory": true,
+        "precedes": ["unknown", "expired"],
+        "unknown_label_preserved": true
+      }
+    },
+    {
+      "id": "M9-two-applicable-candidates-no-new-winner",
+      "purpose": "#584 does not manufacture an applicable-vs-applicable dominance edge.",
+      "query": "Which current support rotation note mentions database incidents?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "db",
+          "text": "The support rotation note covers database incidents.",
+          "valid_from": "2026-09-01",
+          "valid_until": "2026-10-31"
+        },
+        {
+          "key": "network",
+          "text": "The support rotation note covers network incidents.",
+          "valid_from": "2026-09-01",
+          "valid_until": "2026-10-31"
+        }
+      ],
+      "expect": {
+        "constraint_applied": false,
+        "applicable_vs_applicable_temporal_winner": "none",
+        "relevance_controls": true,
+        "precedes": ["db", "network"]
+      }
+    },
+    {
+      "id": "M10-atemporal-query-is-invariant",
+      "purpose": "The same facts as M1 under atemporal query semantics receive no #584 constraint or fallback change.",
+      "query": "Compare the user's Denver and Boston residence notes.",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "denver",
+          "text": "The user currently lives in Denver."
+        },
+        {
+          "key": "boston",
+          "text": "The user has moved and now lives in Boston.",
+          "valid_from": "2026-08-15"
+        }
+      ],
+      "expect": {
+        "query_mode": "atemporal_or_unspecified",
+        "constraint_applied": false,
+        "byte_identical_to_base_ranking_policy": true
+      }
+    },
+    {
+      "id": "M11-caller-and-query-language-explicit-share-ranking-semantics",
+      "purpose": "Caller-declared current and unambiguous query-language current may share #584 ranking semantics without sharing admission authority.",
+      "query_language_variant": {
+        "query": "Where does the user currently live?",
+        "temporal_intent": null,
+        "expected_intent_basis": "query_language_explicit"
+      },
+      "caller_declared_variant": {
+        "query": "Where does the user live?",
+        "temporal_intent": {"mode": "current"},
+        "expected_intent_basis": "caller_declared"
+      },
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "unknown",
+          "text": "The user currently lives in Denver."
+        },
+        {
+          "key": "applicable",
+          "text": "The user has moved and now lives in Boston.",
+          "valid_from": "2026-08-15"
+        }
+      ],
+      "expect": {
+        "same_pairwise_ranking_semantics": true,
+        "admission_authority_equivalence": false,
+        "constraint_applied_in_both": true
+      }
+    },
+    {
+      "id": "M12-inferred-current-does-not-activate-v1-dominance",
+      "purpose": "The first #584 profile stays narrower than all temporally-ordering current inference.",
+      "query": "What is the latest deployment plan?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {
+          "key": "unknown",
+          "text": "The latest deployment plan uses the blue environment."
+        },
+        {
+          "key": "applicable",
+          "text": "The deployment plan uses the green environment.",
+          "valid_from": "2026-09-01"
+        }
+      ],
+      "preconditions": {
+        "intent_mode": "current",
+        "intent_posture": "inferred",
+        "intent_confidence": "high",
+        "intent_basis": "query_cue_inference",
+        "orders_temporally": true
+      },
+      "expect": {
+        "constraint_applied": false,
+        "constraint_refusal_reason": "current_intent_not_explicit",
+        "ordinary_policy_controls": true
+      }
+    },
+    {
+      "id": "M13-contradictory-dominance-evidence-refuses-cycle",
+      "fixture_kind": "policy_graph_negative_control",
+      "purpose": "A constrained-order implementation must refuse contradictory/cyclic dominance evidence rather than break the cycle with recency.",
+      "base_order": ["a", "b", "c"],
+      "proposed_constraints": [
+        ["a", "b"],
+        ["b", "c"],
+        ["c", "a"]
+      ],
+      "expect": {
+        "constraint_applied": false,
+        "constraint_refusal_reason": "cyclic_or_contradictory_competition_evidence",
+        "preserve_base_order": true,
+        "recency_cycle_break_forbidden": true
+      }
+    }
+  ]
+}
