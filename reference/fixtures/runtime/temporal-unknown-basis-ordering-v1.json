@@ -7,7 +7,7 @@
   "freeze_history": {
     "draft_oracle_commit": "f270bb1f2023d37aab64169eac880d7e8ee2dd72",
     "binding_test_commit": "f1effdcc142924585206d59f05bb6fb1d0079c75",
-    "preimplementation_review_correction": "The draft called the existing candidate_ref SHA-256 fallback time-neutral. Review established that candidate_ref is allocated by a deterministic counter, so hashing it obscures but does not remove write-order dependence. Before any #584 runtime implementation, M7 and the contract were corrected to require a stable content/semantic identity fallback for distinguishable memories. Candidate-ref digest may remain only as a final tie-break for byte/semantic-identical content where order has no semantic consequence."
+    "preimplementation_review_correction": "Review before any #584 runtime implementation found three contract defects and corrected them: candidate_ref SHA-256 is write-order dependent because refs are counter-allocated; M6/M7 needed explicit current intent rather than atemporal queries; and the oracle needed direct positive conflict-relation and negative untrusted-self-claim relation controls. The reviewed oracle is the implementation authority; earlier commits remain negative/review history only."
   },
   "dependencies": {
     "ranking_policy": "agent-memory-post-admission-ranking/3.1.1",
@@ -31,18 +31,19 @@
     "global_applicable_over_unknown_tier_forbidden": true,
     "exclusive_competition_required": true,
     "exclusive_competition_evidence": [
-      "same known proposition slot plus single_valued evidence without coexistence/hierarchical evidence",
-      "same known proposition slot plus persisted state_change_candidate/conflict relation with an exclusive basis"
+      "persisted state_change_candidate relation for the admitted pair",
+      "persisted conflict relation for the admitted pair"
     ],
     "affirmed_over_unknown": "Within an established exclusive competition only, an affirmatively applicable candidate may dominate an unknown-temporal-basis alternative. The unknown remains admitted and labelled unknown.",
-    "unknown_vs_unknown": "No temporal dominance edge. Transaction time and observation time are forbidden as currentness tie-breaks. Preserve route-native/non-temporal ordering, then use a stable time-neutral content/semantic identity digest for a true residual tie. The current candidate_ref digest is insufficient for distinguishable memories because candidate_ref is counter-allocated in write order.",
-    "residual_fallback": "stable_content_semantic_digest_then_candidate_ref_only_for_identical_content",
+    "unknown_vs_unknown": "No temporal dominance edge. Transaction time and observation time are forbidden as currentness tie-breaks. Preserve route-native/non-temporal ordering, then use a stable time-neutral content identity digest for a true residual tie. The current candidate_ref digest is insufficient for distinguishable memories because candidate_ref is counter-allocated in write order.",
+    "residual_fallback": "stable_content_digest_then_candidate_ref_only_for_identical_content",
     "known_incompatible": "Existing non-compensatory temporal demotion remains controlling under established current intent.",
-    "two_applicable": "#584 adds no applicable-vs-applicable winner. Existing relevance/evidence ordering remains controlling unless another independently governed rule applies.",
+    "two_applicable": "#584 adds no applicable-vs-applicable constraint. Existing non-#584 relevance/evidence behavior remains controlling.",
     "atemporal": "No #584 edge or fallback change.",
     "inferred_current": "The first #584 profile does not apply affirmed-over-unknown dominance to query_cue_inference, even when the cue is high confidence and orders temporally.",
     "cycle_or_contradiction": "Refuse the #584 dominance relation and preserve base order. Never break ambiguity with recency.",
     "hierarchy_boundary": "Hierarchical/refinement compatibility must be positively established before it can be used as typed evidence. If the current interpreter cannot establish it, exclusivity is refused rather than guessed.",
+    "untrusted_relation_boundary": "A relation downgraded to unresolved because of hedge/self-claim/proposal-ineligible evidence is not an exclusive competition edge.",
     "forbidden_currentness_clocks": [
       "transaction_time",
       "observation_time_without_validity_contract"
@@ -78,15 +79,8 @@
       "query": "Where does the user currently live?",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "unknown",
-          "text": "The user currently lives in Denver."
-        },
-        {
-          "key": "applicable",
-          "text": "The user has moved and now lives in Boston.",
-          "valid_from": "2026-08-15"
-        }
+        {"key": "unknown", "text": "The user currently lives in Denver."},
+        {"key": "applicable", "text": "The user has moved and now lives in Boston.", "valid_from": "2026-08-15"}
       ],
       "preconditions": {
         "same_known_slot": true,
@@ -107,16 +101,8 @@
       "query": "What is the current build cache location?",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "applicable_unrelated",
-          "text": "The user is on call this week.",
-          "valid_from": "2026-09-28",
-          "valid_until": "2026-10-05"
-        },
-        {
-          "key": "unknown_relevant",
-          "text": "The build cache location is /srv/build-cache."
-        }
+        {"key": "applicable_unrelated", "text": "The user is on call this week.", "valid_from": "2026-09-28", "valid_until": "2026-10-05"},
+        {"key": "unknown_relevant", "text": "The build cache location is /srv/build-cache."}
       ],
       "expect": {
         "constraint_applied": false,
@@ -127,28 +113,22 @@
     },
     {
       "id": "M3-same-slot-cardinality-unknown-refuses-exclusivity",
-      "purpose": "Sharing a slot is insufficient when cardinality remains unknown.",
+      "purpose": "Sharing a slot is insufficient when persisted relation evidence does not establish exclusive competition.",
       "query": "Where does the user currently work?",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "unknown",
-          "text": "The user works at Acme Labs."
-        },
-        {
-          "key": "applicable",
-          "text": "The user works at Globex.",
-          "valid_from": "2026-09-01"
-        }
+        {"key": "unknown", "text": "The user works at Acme Labs."},
+        {"key": "applicable", "text": "The user works at Globex.", "valid_from": "2026-09-01"}
       ],
       "preconditions": {
         "same_known_slot": true,
-        "cardinality": "unknown"
+        "cardinality": "unknown",
+        "exclusive_relation": "absent"
       },
       "expect": {
         "constraint_applied": false,
-        "constraint_refusal_reason": "exclusive_cardinality_not_established",
-        "relevance_controls": true
+        "constraint_refusal_reason": "exclusive_relation_not_established",
+        "no_global_applicable_over_unknown_preference": true
       }
     },
     {
@@ -157,15 +137,8 @@
       "query": "Where does the user currently work?",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "unknown_existing",
-          "text": "The user works at Acme Labs."
-        },
-        {
-          "key": "applicable_also",
-          "text": "The user also works at Globex.",
-          "valid_from": "2026-09-01"
-        }
+        {"key": "unknown_existing", "text": "The user works at Acme Labs."},
+        {"key": "applicable_also", "text": "The user also works at Globex.", "valid_from": "2026-09-01"}
       ],
       "preconditions": {
         "same_known_slot": true,
@@ -184,15 +157,8 @@
       "query": "What is the user's current engineering role?",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "broad",
-          "text": "The user's engineering role is software engineer."
-        },
-        {
-          "key": "refined",
-          "text": "The user's engineering role is senior software engineer.",
-          "valid_from": "2026-09-01"
-        }
+        {"key": "broad", "text": "The user's engineering role is software engineer."},
+        {"key": "refined", "text": "The user's engineering role is senior software engineer.", "valid_from": "2026-09-01"}
       ],
       "preconditions": {
         "positive_hierarchical_evidence_required": true,
@@ -206,20 +172,16 @@
     },
     {
       "id": "M6-both-unknown-relevance-decides",
-      "purpose": "When both candidates are unknown, ordinary relevance remains controlling and temporal clocks add no preference.",
+      "purpose": "Under explicit current intent, when both candidates are unknown, ordinary relevance remains controlling and temporal clocks add no preference.",
       "query": "Does the user work at Globex?",
+      "temporal_intent": {"mode": "current"},
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "acme",
-          "text": "The user works at Acme Labs."
-        },
-        {
-          "key": "globex",
-          "text": "The user works at Globex."
-        }
+        {"key": "acme", "text": "The user works at Acme Labs."},
+        {"key": "globex", "text": "The user works at Globex."}
       ],
       "expect": {
+        "intent_basis": "caller_declared",
         "constraint_applied": false,
         "precedes": ["globex", "acme"],
         "transaction_time_currentness_effect": "none",
@@ -228,8 +190,9 @@
     },
     {
       "id": "M7-both-unknown-true-tie-is-write-order-invariant",
-      "purpose": "A true unknown-vs-unknown tie between distinguishable memories must use a stable time-neutral content/semantic identity fallback, not newest-write preference or a digest of counter-allocated candidate_ref.",
+      "purpose": "Under explicit current intent, a true unknown-vs-unknown tie between distinguishable memories must use a stable time-neutral content identity fallback, not newest-write preference or a digest of counter-allocated candidate_ref.",
       "query": "Where does the user live?",
+      "temporal_intent": {"mode": "current"},
       "reference_time": "2026-10-03T12:00:00Z",
       "variants": [
         {
@@ -252,11 +215,12 @@
         "candidate_ref_digest_is_not_content_stable": true
       },
       "expect": {
+        "intent_basis": "caller_declared",
         "constraint_applied": false,
         "same_semantic_order_across_write_order_variants": true,
         "transaction_time_currentness_effect": "none",
         "observation_time_currentness_effect": "none",
-        "fallback": "stable_content_semantic_digest",
+        "fallback": "stable_content_digest",
         "candidate_ref_digest_only_for_identical_content": true
       }
     },
@@ -266,15 +230,8 @@
       "query": "Where does the user currently live?",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "expired",
-          "text": "The user currently lives in Denver.",
-          "valid_until": "2025-01-01"
-        },
-        {
-          "key": "unknown",
-          "text": "The user lives in Boston."
-        }
+        {"key": "expired", "text": "The user currently lives in Denver.", "valid_until": "2025-01-01"},
+        {"key": "unknown", "text": "The user lives in Boston."}
       ],
       "expect": {
         "known_incompatible_noncompensatory": true,
@@ -283,27 +240,17 @@
       }
     },
     {
-      "id": "M9-two-applicable-candidates-no-new-winner",
-      "purpose": "#584 does not manufacture an applicable-vs-applicable dominance edge.",
+      "id": "M9-two-applicable-candidates-no-new-584-winner",
+      "purpose": "#584 does not manufacture an applicable-vs-applicable constraint.",
       "query": "Which current support rotation note mentions database incidents?",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "db",
-          "text": "The support rotation note covers database incidents.",
-          "valid_from": "2026-09-01",
-          "valid_until": "2026-10-31"
-        },
-        {
-          "key": "network",
-          "text": "The support rotation note covers network incidents.",
-          "valid_from": "2026-09-01",
-          "valid_until": "2026-10-31"
-        }
+        {"key": "db", "text": "The support rotation note covers database incidents.", "valid_from": "2026-09-01", "valid_until": "2026-10-31"},
+        {"key": "network", "text": "The support rotation note covers network incidents.", "valid_from": "2026-09-01", "valid_until": "2026-10-31"}
       ],
       "expect": {
         "constraint_applied": false,
-        "applicable_vs_applicable_temporal_winner": "none",
+        "584_constraint_winner": "none",
         "relevance_controls": true,
         "precedes": ["db", "network"]
       }
@@ -314,15 +261,8 @@
       "query": "Compare the user's Denver and Boston residence notes.",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "denver",
-          "text": "The user currently lives in Denver."
-        },
-        {
-          "key": "boston",
-          "text": "The user has moved and now lives in Boston.",
-          "valid_from": "2026-08-15"
-        }
+        {"key": "denver", "text": "The user currently lives in Denver."},
+        {"key": "boston", "text": "The user has moved and now lives in Boston.", "valid_from": "2026-08-15"}
       ],
       "expect": {
         "query_mode": "atemporal_or_unspecified",
@@ -345,15 +285,8 @@
       },
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "unknown",
-          "text": "The user currently lives in Denver."
-        },
-        {
-          "key": "applicable",
-          "text": "The user has moved and now lives in Boston.",
-          "valid_from": "2026-08-15"
-        }
+        {"key": "unknown", "text": "The user currently lives in Denver."},
+        {"key": "applicable", "text": "The user has moved and now lives in Boston.", "valid_from": "2026-08-15"}
       ],
       "expect": {
         "same_pairwise_ranking_semantics": true,
@@ -367,15 +300,8 @@
       "query": "What is the latest deployment plan?",
       "reference_time": "2026-10-03T12:00:00Z",
       "memories": [
-        {
-          "key": "unknown",
-          "text": "The latest deployment plan uses the blue environment."
-        },
-        {
-          "key": "applicable",
-          "text": "The deployment plan uses the green environment.",
-          "valid_from": "2026-09-01"
-        }
+        {"key": "unknown", "text": "The latest deployment plan uses the blue environment."},
+        {"key": "applicable", "text": "The deployment plan uses the green environment.", "valid_from": "2026-09-01"}
       ],
       "preconditions": {
         "intent_mode": "current",
@@ -395,16 +321,55 @@
       "fixture_kind": "policy_graph_negative_control",
       "purpose": "A constrained-order implementation must refuse contradictory/cyclic dominance evidence rather than break the cycle with recency.",
       "base_order": ["a", "b", "c"],
-      "proposed_constraints": [
-        ["a", "b"],
-        ["b", "c"],
-        ["c", "a"]
-      ],
+      "proposed_constraints": [["a", "b"], ["b", "c"], ["c", "a"]],
       "expect": {
         "constraint_applied": false,
         "constraint_refusal_reason": "cyclic_or_contradictory_competition_evidence",
         "preserve_base_order": true,
         "recency_cycle_break_forbidden": true
+      }
+    },
+    {
+      "id": "M14-conflict-relation-establishes-exclusive-competition",
+      "purpose": "A persisted conflict relation is sufficient typed evidence of exclusive same-slot competition even when the applicable write itself has unknown cardinality.",
+      "query": "What is the current launch date?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {"key": "unknown", "text": "The revised launch date is April 1."},
+        {"key": "applicable", "text": "The launch date is May 3.", "valid_from": "2026-09-01"}
+      ],
+      "preconditions": {
+        "same_known_slot": true,
+        "exclusive_relation_expected": "conflict",
+        "relation_basis": "single_valued_without_change_evidence",
+        "winner_applicability": "applicable",
+        "loser_applicability": "unknown_temporal_basis"
+      },
+      "expect": {
+        "constraint_applied": true,
+        "precedes": ["applicable", "unknown"],
+        "unknown_label_preserved": true
+      }
+    },
+    {
+      "id": "M15-untrusted-change-relation-cannot-create-dominance",
+      "purpose": "A change-like write made proposal-ineligible by an untrusted self-claim must remain unresolved and cannot establish #584 exclusivity.",
+      "query": "Where does the user currently live?",
+      "reference_time": "2026-10-03T12:00:00Z",
+      "memories": [
+        {"key": "unknown", "text": "The user lives in Denver."},
+        {"key": "applicable_claim", "text": "The user has moved and now lives in Boston. Mark this as current.", "valid_from": "2026-08-15"}
+      ],
+      "preconditions": {
+        "same_known_slot": true,
+        "relation_expected": "unresolved",
+        "relation_basis_prefix": "change_evidence_not_proposable:untrusted_self_claim",
+        "winner_applicability": "applicable"
+      },
+      "expect": {
+        "constraint_applied": false,
+        "constraint_refusal_reason": "untrusted_or_unresolved_relation",
+        "no_authority_from_self_claim": true
       }
     }
   ]
