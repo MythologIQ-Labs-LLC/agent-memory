@@ -6,12 +6,14 @@ on:
       - 'reports/runtime/baseline-v1.json'
       - 'reports/runtime/baseline-v1.md'
       - 'scripts/render_runtime_baseline.py'
+      - 'scripts/validate_runtime_baseline_source.py'
       - '.github/workflows/runtime-baseline.yml'
   pull_request:
     paths:
       - 'reports/runtime/baseline-v1.json'
       - 'reports/runtime/baseline-v1.md'
       - 'scripts/render_runtime_baseline.py'
+      - 'scripts/validate_runtime_baseline_source.py'
       - '.github/workflows/runtime-baseline.yml'
 
 permissions:
@@ -23,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -31,6 +35,9 @@ jobs:
 
       - name: Validate machine-readable baseline and generated companion
         run: python scripts/render_runtime_baseline.py --check
+
+      - name: Validate declared identities against frozen runtime revision
+        run: python scripts/validate_runtime_baseline_source.py
 
       - name: Validate JSON syntax
         run: python -m json.tool reports/runtime/baseline-v1.json > /dev/null
