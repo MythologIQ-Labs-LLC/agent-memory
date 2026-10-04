@@ -95,6 +95,6 @@ Policy `3.1.2` wraps lexical/base policy `3.1.1`. Its unknown-basis profile is `
 
 ## Completion boundary
 
-Public Gauntlet dogfood through #637 remains `pending` and is required before #638 closes.
+Public Gauntlet dogfood through #637 is `completed` and evidence-bound to PR #649 / merge commit `10898c0edf4fa7093a0bbeda1b2cb8062469e843`. The #638 close gate is satisfied.
 
 This baseline is an immutable RC1 runtime target, not a production 1.0 declaration and not permission to treat benchmark score, ranking, interpretation, or external verification as memory authority.
