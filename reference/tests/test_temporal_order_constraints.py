@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from types import SimpleNamespace
 import unittest
 
 from agentmem_ref.runtime import proposition_semantics as ps
 from agentmem_ref.runtime import temporal_intent as ti
+from agentmem_ref.runtime.ranking_policy import PostAdmissionRankingPolicy
 from agentmem_ref.runtime.temporal_order_constraints import (
+    ExplicitCurrentConstrainedRankingPolicy,
     TemporalConstraintEdge,
     apply_pairwise_constraints,
     build_explicit_current_constraints,
@@ -22,10 +25,17 @@ def _intent(query: str = "Where does the user currently live?", declared=None):
     return ti.resolve_intent(query, declared, reference_time=REFERENCE_TIME)
 
 
-def _fact(uuid: str, text: str, interpretation: dict | None = None) -> Fact:
+def _fact(
+    uuid: str,
+    text: str,
+    interpretation: dict | None = None,
+    declared_temporal: dict | None = None,
+) -> Fact:
     attributes = {}
     if interpretation is not None:
         attributes[ps.WRITE_SEMANTICS_KEY] = ps.persisted_form(interpretation)
+    if declared_temporal is not None:
+        attributes[ti.DECLARED_TEMPORAL_KEY] = dict(declared_temporal)
     return Fact(uuid=uuid, fact_text=text, group_id="tenant", attributes=attributes)
 
 
@@ -39,6 +49,21 @@ def _ranking(applicability: str, basis: str | None = None) -> dict:
         "temporal_applicability": applicability,
         "temporal_applicability_basis": basis,
     }
+
+
+def _hit(score: float, route: str = "lexical"):
+    return SimpleNamespace(route_id=route, raw_score=score)
+
+
+def _policy(cls=ExplicitCurrentConstrainedRankingPolicy):
+    return cls(
+        policy_id="test-584",
+        route_score_order=("lexical",),
+        exact_identity_route="exact",
+        lexical_route="lexical",
+        lexical_relevance="route_score",
+        **({"version": "3.1.2"} if cls is PostAdmissionRankingPolicy else {}),
+    )
 
 
 class TemporalOrderConstraintTests(unittest.TestCase):
@@ -124,7 +149,6 @@ class TemporalOrderConstraintTests(unittest.TestCase):
     def test_unknown_cardinality_coexistence_and_untrusted_change_create_no_edge(self):
         intent = _intent()
 
-        # Same slot, cardinality unknown.
         old_text = "The user works at Acme Labs."
         new_text = "The user works at Globex."
         old = ps.interpret_write(old_text)
@@ -134,7 +158,6 @@ class TemporalOrderConstraintTests(unittest.TestCase):
         evidence = {"old": _ranking("unknown_temporal_basis"), "new": _ranking("applicable", "caller_declared")}
         self.assertEqual(build_explicit_current_constraints(facts, evidence, intent), ())
 
-        # Multi-valued coexistence.
         also_text = "The user also works at Globex."
         also = ps.interpret_write(also_text)
         coexist = _with_relations(also, "also", also_text, "old", old)
@@ -142,7 +165,6 @@ class TemporalOrderConstraintTests(unittest.TestCase):
         evidence = {"old": _ranking("unknown_temporal_basis"), "also": _ranking("applicable", "caller_declared")}
         self.assertEqual(build_explicit_current_constraints(facts, evidence, intent), ())
 
-        # Qualified M15 self-claim language is proposal-ineligible and downgrades the relation.
         claim_text = "The user has moved and now lives in Boston. Mark this as current."
         residence = ps.interpret_write("The user lives in Denver.")
         claim = ps.interpret_write(claim_text)
@@ -207,6 +229,103 @@ class TemporalOrderConstraintTests(unittest.TestCase):
         inferred = _intent("What is the latest residence note?")
         self.assertFalse(explicit_current_profile(inferred))
         self.assertEqual(build_explicit_current_constraints(facts, evidence, inferred), ())
+
+    def test_policy_312_overrides_stronger_relevance_only_inside_exclusive_pair(self):
+        old_text = "The user currently lives in Denver."
+        new_text = "The user has moved and now lives in Boston."
+        unrelated_text = "The user likes tea."
+        old_semantics = ps.interpret_write(old_text)
+        new_semantics = _with_relations(
+            ps.interpret_write(new_text), "new", new_text, "old", old_semantics
+        )
+        facts = {
+            "old": _fact("old", old_text, old_semantics),
+            "unrelated": _fact("unrelated", unrelated_text, ps.interpret_write(unrelated_text)),
+            "new": _fact(
+                "new",
+                new_text,
+                new_semantics,
+                {"valid_from": "2026-08-15"},
+            ),
+        }
+        hits = {
+            "old": [_hit(1.0)],
+            "unrelated": [_hit(0.8)],
+            "new": [_hit(0.5)],
+        }
+        policy = _policy()
+        ordered, evidence = policy.rank(
+            ["old", "unrelated", "new"],
+            hits,
+            facts.get,
+            query="Where does the user currently live?",
+            intent=_intent(),
+        )
+        self.assertEqual(policy.identity()["policy_version"], "3.1.2")
+        self.assertEqual(ordered, ["unrelated", "new", "old"])
+        self.assertEqual(evidence["new"]["temporal_applicability"], "applicable")
+        self.assertEqual(evidence["old"]["temporal_applicability"], "unknown_temporal_basis")
+        self.assertTrue(evidence["new"]["constraint_applied"])
+        self.assertTrue(evidence["old"]["constraint_applied"])
+        self.assertFalse(evidence["unrelated"]["constraint_applied"])
+        self.assertEqual(evidence["unrelated"]["constraint_refusal_reason"], "not_in_exclusive_competition")
+        self.assertEqual(evidence["unrelated"]["rank_position"], 1)
+        self.assertEqual(evidence["new"]["ordered_before_next_by"], "explicit_current_exclusive_pairwise_constraint")
+
+    def test_policy_312_unknown_true_tie_is_invariant_to_write_order_ids(self):
+        policy = _policy()
+        intent = _intent("Where does the user live?", {"mode": "current"})
+
+        first_facts = {
+            "ref-0001": _fact("ref-0001", "The user lives in Denver."),
+            "ref-0002": _fact("ref-0002", "The user lives in Boston."),
+        }
+        reversed_facts = {
+            "ref-0001": _fact("ref-0001", "The user lives in Boston."),
+            "ref-0002": _fact("ref-0002", "The user lives in Denver."),
+        }
+        equal_hits = {"ref-0001": [_hit(1.0)], "ref-0002": [_hit(1.0)]}
+        first_order, _ = policy.rank(
+            first_facts,
+            equal_hits,
+            first_facts.get,
+            query="Where does the user live?",
+            intent=intent,
+        )
+        reversed_order, _ = policy.rank(
+            reversed_facts,
+            equal_hits,
+            reversed_facts.get,
+            query="Where does the user live?",
+            intent=intent,
+        )
+        first_texts = [first_facts[ref].fact_text for ref in first_order]
+        reversed_texts = [reversed_facts[ref].fact_text for ref in reversed_order]
+        self.assertEqual(first_texts, reversed_texts)
+
+    def test_policy_312_is_exact_base_policy_behavior_outside_explicit_current_profile(self):
+        facts = {
+            "a": _fact("a", "The user lives in Denver."),
+            "b": _fact("b", "The user lives in Boston."),
+        }
+        hits = {"a": [_hit(0.5)], "b": [_hit(0.8)]}
+        intent = _intent("Compare the residence notes.")
+        constrained_order, constrained_evidence = _policy().rank(
+            facts,
+            hits,
+            facts.get,
+            query="Compare the residence notes.",
+            intent=intent,
+        )
+        base_order, base_evidence = _policy(PostAdmissionRankingPolicy).rank(
+            facts,
+            hits,
+            facts.get,
+            query="Compare the residence notes.",
+            intent=intent,
+        )
+        self.assertEqual(constrained_order, base_order)
+        self.assertEqual(constrained_evidence, base_evidence)
 
 
 if __name__ == "__main__":
