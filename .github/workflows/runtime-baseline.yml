@@ -1,0 +1,36 @@
+name: Runtime Baseline Contract
+
+on:
+  push:
+    paths:
+      - 'reports/runtime/baseline-v1.json'
+      - 'reports/runtime/baseline-v1.md'
+      - 'scripts/render_runtime_baseline.py'
+      - '.github/workflows/runtime-baseline.yml'
+  pull_request:
+    paths:
+      - 'reports/runtime/baseline-v1.json'
+      - 'reports/runtime/baseline-v1.md'
+      - 'scripts/render_runtime_baseline.py'
+      - '.github/workflows/runtime-baseline.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Validate machine-readable baseline and generated companion
+        run: python scripts/render_runtime_baseline.py --check
+
+      - name: Validate JSON syntax
+        run: python -m json.tool reports/runtime/baseline-v1.json > /dev/null
