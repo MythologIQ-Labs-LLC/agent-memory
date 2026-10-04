@@ -63,6 +63,31 @@ def git_blob_sha(content: str) -> str:
     return hashlib.sha1(header + payload).hexdigest()
 
 
+def require_frozen_runtime_equivalence(frozen: str, candidate: str) -> None:
+    """Refuse a claimed baseline qualification if installed runtime/package code drifted."""
+
+    diff = subprocess.run(
+        [
+            "git",
+            "diff",
+            "--quiet",
+            frozen,
+            candidate,
+            "--",
+            "reference/agentmem_ref",
+            "pyproject.toml",
+        ],
+        cwd=ROOT,
+    )
+    if diff.returncode == 1:
+        raise SystemExit(
+            "qualified checkout differs from frozen Runtime Baseline v1 under "
+            "reference/agentmem_ref or pyproject.toml"
+        )
+    if diff.returncode != 0:
+        raise SystemExit("unable to compare qualified checkout to frozen runtime revision")
+
+
 def main() -> int:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     commit = data["runtime_revision"]["commit"]
@@ -162,6 +187,7 @@ def main() -> int:
     require_commit("Runtime Baseline public Gauntlet verified head", verified_head)
     if subprocess.run(["git", "merge-base", "--is-ancestor", commit, verified_head], cwd=ROOT).returncode:
         raise SystemExit("public Gauntlet verified head must descend from the frozen runtime revision")
+    require_frozen_runtime_equivalence(commit, verified_head)
 
     manifest_path = public_gauntlet["manifest"]
     adapter_path = public_gauntlet["adapter_source"]
