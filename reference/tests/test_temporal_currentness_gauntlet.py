@@ -86,6 +86,16 @@ VERSIONED_INTENT_TRANSITIONS = {
 VERSIONED_GOLD_SUPERSEDED_UNITS = {
     ("A1-expired-exact-vs-current-weaker", "current-inferred", "intent_interpretation_accuracy", "required"): ("pass", "fail"),
 }
+# Policy 3.1.2 (#584) changes only the explanation for this negative-control tie:
+# both coexisting facts remain admitted and unknown-basis in the same order, but the
+# transaction/observation clock no longer receives semantic preference. The comparator
+# names the one allowed per-key transition rather than weakening digest checks globally.
+VERSIONED_RANKING_TRANSITIONS = {
+    "F25-also-works-at-cardinality-control/current-inferred": {
+        "ordered_before_next_by": "explicit_current_unknown_tie_content_identity",
+        "applicability": "unknown_temporal_basis",
+    },
+}
 
 
 def _semantic_intent(intent: dict | None) -> dict | None:
@@ -305,6 +315,31 @@ class GauntletTests(unittest.TestCase):
         for probe in VERSIONED_INTENT_TRANSITIONS:
             self.assertNotEqual(_interpreter_version(frozen_rows[probe]), _interpreter_version(live_rows[probe]))
 
+        # #584's one frozen-baseline ordering transition is explicitly bounded. The
+        # coexistence negative control still has the same candidates and order; only the
+        # per-key explanation changes because transaction/observation time no longer
+        # decides a true unknown-basis tie.
+        for probe, transition in VERSIONED_RANKING_TRANSITIONS.items():
+            old, new = frozen_rows[probe], live_rows[probe]
+            self.assertEqual(new["admitted"], old["admitted"], probe)
+            self.assertEqual(new["candidates"], old["candidates"], probe)
+            self.assertEqual(set(new["per_key"]), set(old["per_key"]), probe)
+            self.assertEqual(
+                {record["applicability"] for record in new["per_key"].values()},
+                {transition["applicability"]},
+                probe,
+            )
+            self.assertTrue(
+                all(record["authority_effects"] == ["none"] for record in new["per_key"].values()),
+                probe,
+            )
+            first = new["admitted"][0]
+            self.assertEqual(
+                new["per_key"][first]["ordered_before_next_by"],
+                transition["ordered_before_next_by"],
+                probe,
+            )
+
         def explained(probe: str) -> bool:
             old, new = frozen_rows[probe], live_rows[probe]
             other = {k for k in ("admitted", "candidates", "per_key") if old[k] != new[k]}
@@ -314,6 +349,8 @@ class GauntletTests(unittest.TestCase):
                 # Identical ordering evidence: only evidence/version fields or an
                 # enumerated versioned intent transition differ.
                 return True
+            if probe in VERSIONED_RANKING_TRANSITIONS:
+                return other == {"per_key"}
             return VERSIONED_INTENT_TRANSITIONS.get(probe) == QUERY_LANGUAGE_EXPLICIT_FROM_LOW and other == {"per_key"}
 
         unexplained_digest_changes = {
