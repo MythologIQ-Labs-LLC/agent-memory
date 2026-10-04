@@ -82,6 +82,7 @@ Policy `3.1.2` wraps lexical/base policy `3.1.1`. Its unknown-basis profile is `
 - #594 Part R known precision / recall: **0.800 / 0.148148**
 - #591 search p50 / p95: **7.7 / 11.9 ms**
 - Same-harness non-Agent-Memory systems accepted at freeze: **0** (`evidence_gap`)
+- Runtime Baseline public Gauntlet path: **complete** via `stdio` at head `1e9fbadacd4a4eae7751ab16b82a8a5c2a591533`; artifact `sha256:0186dc65c3d8932fa1849e01799a4124f1fe7a9d505eeba2e066936447769d15`; probe exact-top1 **1.0** (`baseline_or_probe`, not efficacy evidence)
 
 ## Known limitations
 
@@ -95,6 +96,6 @@ Policy `3.1.2` wraps lexical/base policy `3.1.1`. Its unknown-basis profile is `
 
 ## Completion boundary
 
-Public Gauntlet dogfood through #637 is `completed` and evidence-bound to PR #649 / merge commit `10898c0edf4fa7093a0bbeda1b2cb8062469e843`. The #638 close gate is satisfied.
+Public Gauntlet dogfood through #637 is `completed` and evidence-bound to PR #649 / merge commit `10898c0edf4fa7093a0bbeda1b2cb8062469e843`. Runtime Baseline v1 itself also completed the public stdio contestant path in workflow `37219833377`. The #638 close gate is satisfied.
 
 This baseline is an immutable RC1 runtime target, not a production 1.0 declaration and not permission to treat benchmark score, ranking, interpretation, or external verification as memory authority.
