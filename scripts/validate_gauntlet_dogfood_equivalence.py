@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Compare two Gauntlet external-contestant dogfood runs for semantic equivalence.
+"""Compare Gauntlet external-contestant dogfood runs for semantic equivalence.
 
-Each Gauntlet execution intentionally receives a unique UUID-derived run id. Timing and
-artifact paths/hashes derived from that execution identity are measured evidence, so
-byte-identical artifacts are neither expected nor required. This checker canonicalizes
-only those explicitly volatile fields, preserves request correlation sequence, and then
-requires system, adapter, profile, negotiation, retrieval, coverage, and evaluator
-semantics to remain identical.
+Each execution intentionally receives a unique UUID-derived run id. Timing and artifact
+paths/hashes derived from execution identity are measured evidence, so byte-identical
+artifacts are neither expected nor required. This checker canonicalizes only those
+explicitly volatile fields, preserves request correlation sequence, and requires system,
+adapter, profile, negotiation, retrieval, coverage, and evaluator semantics to remain
+identical. An optional immutable golden package may also be checked against the first run.
 """
 
 from __future__ import annotations
@@ -54,8 +54,6 @@ def _run_id_valid(value: str | None, qualification: dict[str, Any]) -> bool:
 
 
 def _canonical_request_id(value: Any) -> Any:
-    """Preserve request sequence while removing only the per-execution run-id prefix."""
-
     if not isinstance(value, str):
         return value
     prefix, separator, sequence = value.rpartition(":")
@@ -110,10 +108,25 @@ def _stable_qualification(value: dict[str, Any]) -> dict[str, Any]:
     return {key: copy.deepcopy(value.get(key)) for key in keys}
 
 
+def _golden_checks(first: dict[str, Any], golden_path: Path | None) -> dict[str, bool]:
+    if golden_path is None:
+        return {}
+    golden = json.loads(golden_path.read_text(encoding="utf-8"))
+    return {
+        "golden_manifest_equal": first["manifest"] == golden.get("manifest"),
+        "golden_native_semantics_equal": _stable_native(first["native"]) == golden.get("native_results"),
+        "golden_normalized_semantics_equal": _stable_normalized(first["normalized"]) == golden.get("normalized_run"),
+        "golden_qualification_semantics_equal": _stable_qualification(first["qualification"]) == golden.get("qualification"),
+        "golden_authority_effect_none": golden.get("authority_effect") == "none",
+        "golden_evidence_class_probe": golden.get("evidence_class") == "baseline_or_probe",
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("first", type=Path)
     parser.add_argument("second", type=Path)
+    parser.add_argument("--golden", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
@@ -130,6 +143,7 @@ def main() -> int:
         "native_semantics_equal": _stable_native(first["native"]) == _stable_native(second["native"]),
         "normalized_semantics_equal": _stable_normalized(first["normalized"]) == _stable_normalized(second["normalized"]),
         "qualification_semantics_equal": _stable_qualification(first["qualification"]) == _stable_qualification(second["qualification"]),
+        **_golden_checks(first, args.golden),
     }
     passed = all(checks.values())
     report = {
@@ -138,6 +152,7 @@ def main() -> int:
         "status": "pass" if passed else "fail",
         "first_run_id": first_id,
         "second_run_id": second_id,
+        "golden_sample": None if args.golden is None else str(args.golden),
         "checks": checks,
         "canonicalized_as_execution_volatile": [
             "Gauntlet run_id (UUID-derived execution identity; required to differ)",
