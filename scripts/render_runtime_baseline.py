@@ -17,6 +17,7 @@ def render(data: dict) -> str:
     ranking = identity["ranking"]
     persistence = data["persistence_and_durability"]
     evidence = data["qualification_evidence"]
+    dogfood = data["dogfood"]
     lines = [
         "# Agent Memory Runtime Baseline v1",
         "",
@@ -88,7 +89,16 @@ def render(data: dict) -> str:
         "",
         "## Completion boundary",
         "",
-        f"Public Gauntlet dogfood through #{data['dogfood']['public_gauntlet_issue']} remains `{data['dogfood']['status']}` and is required before #638 closes.",
+    ]
+    if dogfood["status"] == "completed":
+        lines.append(
+            f"Public Gauntlet dogfood through #{dogfood['public_gauntlet_issue']} is `completed` and evidence-bound to PR #{dogfood['merge_pr']} / merge commit `{dogfood['merge_commit']}`. The #638 close gate is satisfied."
+        )
+    else:
+        lines.append(
+            f"Public Gauntlet dogfood through #{dogfood['public_gauntlet_issue']} remains `{dogfood['status']}` and is required before #638 closes."
+        )
+    lines += [
         "",
         "This baseline is an immutable RC1 runtime target, not a production 1.0 declaration and not permission to treat benchmark score, ranking, interpretation, or external verification as memory authority.",
         "",
