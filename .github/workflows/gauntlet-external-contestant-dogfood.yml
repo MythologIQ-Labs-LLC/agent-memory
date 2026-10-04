@@ -6,6 +6,7 @@ on:
       - 'examples/gauntlet/**'
       - 'docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md'
       - 'reference/agentmem_ref/evaluation/gauntlet_*.py'
+      - 'scripts/validate_gauntlet_dogfood_equivalence.py'
       - '.github/workflows/gauntlet-external-contestant-dogfood.yml'
   workflow_dispatch:
 
@@ -16,8 +17,11 @@ jobs:
   public-quickstart:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout exact source revision
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -31,10 +35,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p dogfood gauntlet-runs
+          mkdir -p dogfood gauntlet-runs/run1 gauntlet-runs/run2
+          SOURCE_SHA="$(git rev-parse HEAD)"
+          EXPECTED_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$SOURCE_SHA" = "$EXPECTED_SHA"
           {
             echo "# Agent Memory Gauntlet external-contestant dogfood"
-            echo "repository_sha=${GITHUB_SHA}"
+            echo "source_sha=${SOURCE_SHA}"
+            echo "workflow_event_sha=${GITHUB_SHA}"
             echo "quickstart=docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md"
             echo "python=$(python --version 2>&1)"
             echo
@@ -47,14 +55,29 @@ jobs:
             echo '$ agent-memory gauntlet inspect gauntlet-orchestration-retrieval-probe-v1'
             agent-memory gauntlet inspect gauntlet-orchestration-retrieval-probe-v1
             echo
-            echo '$ agent-memory gauntlet run --system examples/gauntlet/minimal-stdio-adapter.json --profile gauntlet-orchestration-retrieval-probe-v1 --allow-external-process --allow-destructive-reset --output-dir ./gauntlet-runs'
+            echo '$ agent-memory gauntlet run --system examples/gauntlet/minimal-stdio-adapter.json --profile gauntlet-orchestration-retrieval-probe-v1 --allow-external-process --allow-destructive-reset --output-dir ./gauntlet-runs/run1'
             agent-memory gauntlet run \
               --system examples/gauntlet/minimal-stdio-adapter.json \
               --profile gauntlet-orchestration-retrieval-probe-v1 \
               --allow-external-process \
               --allow-destructive-reset \
-              --output-dir ./gauntlet-runs
+              --output-dir ./gauntlet-runs/run1
+            echo
+            echo '$ agent-memory gauntlet run [semantic replay] --output-dir ./gauntlet-runs/run2'
+            agent-memory gauntlet run \
+              --system examples/gauntlet/minimal-stdio-adapter.json \
+              --profile gauntlet-orchestration-retrieval-probe-v1 \
+              --allow-external-process \
+              --allow-destructive-reset \
+              --output-dir ./gauntlet-runs/run2
           } 2>&1 | tee dogfood/transcript.txt
+
+      - name: Verify reconstructable semantic replay
+        run: |
+          python scripts/validate_gauntlet_dogfood_equivalence.py \
+            gauntlet-runs/run1 \
+            gauntlet-runs/run2 \
+            --output dogfood/equivalence.json
 
       - name: Inventory generated evidence
         shell: bash
@@ -63,9 +86,10 @@ jobs:
           find gauntlet-runs -type f -print | sort | tee dogfood/files.txt
           while IFS= read -r file; do sha256sum "$file"; done < dogfood/files.txt | tee dogfood/sha256.txt
           test -s dogfood/transcript.txt
+          test -s dogfood/equivalence.json
           test -s dogfood/files.txt
           test -s dogfood/sha256.txt
-          test "$(wc -l < dogfood/files.txt)" -ge 4
+          test "$(wc -l < dogfood/files.txt)" -eq 8
 
       - name: Upload dogfood evidence
         uses: actions/upload-artifact@v4
