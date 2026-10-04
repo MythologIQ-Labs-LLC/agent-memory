@@ -86,12 +86,14 @@ VERSIONED_INTENT_TRANSITIONS = {
 VERSIONED_GOLD_SUPERSEDED_UNITS = {
     ("A1-expired-exact-vs-current-weaker", "current-inferred", "intent_interpretation_accuracy", "required"): ("pass", "fail"),
 }
-# Policy 3.1.2 (#584) changes only the explanation for this negative-control tie:
-# both coexisting facts remain admitted and unknown-basis in the same order, but the
-# transaction/observation clock no longer receives semantic preference. The comparator
-# names the one allowed per-key transition rather than weakening digest checks globally.
+# Policy 3.1.2 (#584) removes a hidden clock preference from one frozen negative-control
+# tie. This is the exact permitted transition: the candidate set is unchanged, both
+# coexisting facts remain unknown-basis and authority-neutral, and only their ranked
+# order plus the corresponding per-key rank explanation changes.
 VERSIONED_RANKING_TRANSITIONS = {
     "F25-also-works-at-cardinality-control/current-inferred": {
+        "frozen_admitted": ["globex", "acme"],
+        "live_admitted": ["acme", "globex"],
         "ordered_before_next_by": "explicit_current_unknown_tie_content_identity",
         "applicability": "unknown_temporal_basis",
     },
@@ -315,13 +317,13 @@ class GauntletTests(unittest.TestCase):
         for probe in VERSIONED_INTENT_TRANSITIONS:
             self.assertNotEqual(_interpreter_version(frozen_rows[probe]), _interpreter_version(live_rows[probe]))
 
-        # #584's one frozen-baseline ordering transition is explicitly bounded. The
-        # coexistence negative control still has the same candidates and order; only the
-        # per-key explanation changes because transaction/observation time no longer
-        # decides a true unknown-basis tie.
+        # #584's one frozen-baseline ranking transition is explicitly bounded. The
+        # coexistence negative control still has the same candidate set; only the hidden
+        # clock-derived ordering and its corresponding per-key rank explanation change.
         for probe, transition in VERSIONED_RANKING_TRANSITIONS.items():
             old, new = frozen_rows[probe], live_rows[probe]
-            self.assertEqual(new["admitted"], old["admitted"], probe)
+            self.assertEqual(old["admitted"], transition["frozen_admitted"], probe)
+            self.assertEqual(new["admitted"], transition["live_admitted"], probe)
             self.assertEqual(new["candidates"], old["candidates"], probe)
             self.assertEqual(set(new["per_key"]), set(old["per_key"]), probe)
             self.assertEqual(
@@ -350,7 +352,7 @@ class GauntletTests(unittest.TestCase):
                 # enumerated versioned intent transition differ.
                 return True
             if probe in VERSIONED_RANKING_TRANSITIONS:
-                return other == {"per_key"}
+                return other == {"admitted", "per_key"}
             return VERSIONED_INTENT_TRANSITIONS.get(probe) == QUERY_LANGUAGE_EXPLICIT_FROM_LOW and other == {"per_key"}
 
         unexplained_digest_changes = {
