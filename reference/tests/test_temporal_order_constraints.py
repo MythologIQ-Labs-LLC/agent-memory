@@ -158,7 +158,7 @@ class TemporalOrderConstraintTests(unittest.TestCase):
         }
         self.assertEqual(build_explicit_current_constraints(facts, evidence, intent), ())
 
-    def test_constraints_promote_only_winner_instead_of_globally_tiering_unknowns(self):
+    def test_constraints_delay_only_blocked_loser_and_preserve_unrelated_priority(self):
         edge = TemporalConstraintEdge(
             winner="boston",
             loser="denver",
@@ -172,7 +172,7 @@ class TemporalOrderConstraintTests(unittest.TestCase):
         result = apply_pairwise_constraints(["denver", "unrelated", "boston", "other"], [edge])
         self.assertTrue(result.constraint_applied)
         self.assertIsNone(result.constraint_refusal_reason)
-        self.assertEqual(result.ordered, ("boston", "denver", "unrelated", "other"))
+        self.assertEqual(result.ordered, ("unrelated", "boston", "denver", "other"))
         self.assertEqual(result.authority_effect, "none")
 
     def test_acyclic_chain_converges_deterministically(self):
