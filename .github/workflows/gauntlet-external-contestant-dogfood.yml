@@ -6,6 +6,7 @@ on:
       - 'examples/gauntlet/**'
       - 'docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md'
       - 'reference/agentmem_ref/evaluation/gauntlet_*.py'
+      - 'reports/gauntlet/external-contestant-v1/**'
       - 'scripts/validate_gauntlet_dogfood_equivalence.py'
       - '.github/workflows/gauntlet-external-contestant-dogfood.yml'
   workflow_dispatch:
@@ -89,11 +90,12 @@ jobs:
               --output-dir ./gauntlet-runs/run2
           } 2>&1 | tee dogfood/transcript.txt
 
-      - name: Verify reconstructable semantic replay
+      - name: Verify reconstructable semantic replay and golden sample
         run: |
           python scripts/validate_gauntlet_dogfood_equivalence.py \
             gauntlet-runs/run1 \
             gauntlet-runs/run2 \
+            --golden reports/gauntlet/external-contestant-v1/golden-evidence.json \
             --output dogfood/equivalence.json
 
       - name: Inventory generated evidence

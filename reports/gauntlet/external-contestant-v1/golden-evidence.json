@@ -1,0 +1,204 @@
+{
+  "authority_effect": "none",
+  "evidence_class": "baseline_or_probe",
+  "manifest": {
+    "adapter": {
+      "id": "external-example-stdio-adapter",
+      "revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e",
+      "version": "0.1.0"
+    },
+    "authority_effect": "none",
+    "benchmark_isolation": {
+      "description": "example process keeps only benchmark-owned in-memory state keyed by the Gauntlet namespace",
+      "strategy": "disposable_instance"
+    },
+    "capabilities": {
+      "describe": {"support": "native"},
+      "health": {"support": "native"},
+      "recall": {
+        "notes": "deterministic token-overlap retrieval implemented by the example system",
+        "support": "native"
+      },
+      "remember": {"support": "native"},
+      "reset": {"support": "native"}
+    },
+    "contract_family": "agent-memory-gauntlet-system-adapter",
+    "contract_version": "0.1.0",
+    "metadata": {
+      "example": true,
+      "provenance_class": "baseline_or_probe",
+      "self_contained": true
+    },
+    "system": {
+      "id": "external-example-lexical-memory",
+      "kind": "external_memory",
+      "revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e",
+      "version": "0.1.0"
+    },
+    "transport": {
+      "kind": "stdio",
+      "startup": ["python", "examples/gauntlet/minimal_stdio_adapter.py"]
+    }
+  },
+  "native_results": {
+    "authority_effect": "none",
+    "correct_top1": 3,
+    "exact_top1": 1.0,
+    "fixture_sha256": "fb970e7877370d4897205a7e057d503d305171d04af28345f37bb01c5d629790",
+    "operation_count": 8,
+    "profile_kind": "baseline_or_probe",
+    "rows": [
+      {"exact_top1": true, "expected_id": "probe:cobalt", "query": "Which project uses the cobalt ledger?", "top_id": "probe:cobalt"},
+      {"exact_top1": true, "expected_id": "probe:amber", "query": "What uses the amber queue?", "top_id": "probe:amber"},
+      {"exact_top1": true, "expected_id": "probe:cedar", "query": "Where is the cedar cache used?", "top_id": "probe:cedar"}
+    ],
+    "sample_count": 3,
+    "transcript": [
+      {"error": null, "operation": "describe", "request_id": "<execution>:0001", "result": {"adapter": "minimal-stdio-example", "probe_only": true, "system": "standard-library-lexical-memory"}, "status": "ok"},
+      {"error": null, "operation": "reset", "request_id": "<execution>:0002", "result": {"reset": true}, "status": "ok"},
+      {"error": null, "operation": "remember", "request_id": "<execution>:0003", "result": {"accepted": true}, "status": "ok"},
+      {"error": null, "operation": "remember", "request_id": "<execution>:0004", "result": {"accepted": true}, "status": "ok"},
+      {"error": null, "operation": "remember", "request_id": "<execution>:0005", "result": {"accepted": true}, "status": "ok"},
+      {"error": null, "operation": "recall", "request_id": "<execution>:0006", "result": {"items": [{"id": "probe:cobalt", "score": 5.0}, {"id": "probe:amber", "score": 3.0}, {"id": "probe:cedar", "score": 3.0}]}, "status": "ok"},
+      {"error": null, "operation": "recall", "request_id": "<execution>:0007", "result": {"items": [{"id": "probe:amber", "score": 4.0}, {"id": "probe:cobalt", "score": 2.0}, {"id": "probe:cedar", "score": 2.0}]}, "status": "ok"},
+      {"error": null, "operation": "recall", "request_id": "<execution>:0008", "result": {"items": [{"id": "probe:cedar", "score": 3.0}, {"id": "probe:cobalt", "score": 1.0}, {"id": "probe:amber", "score": 1.0}]}, "status": "ok"}
+    ]
+  },
+  "normalized_run": {
+    "artifacts": [{"artifact_id": "gauntlet-native-results", "kind": "benchmark_native_results"}],
+    "authority_effect": "none",
+    "benchmark": {
+      "dataset_id": "gauntlet-orchestration-retrieval-probe-v1",
+      "dataset_revision": "0.1.0",
+      "id": "agent-memory-gauntlet-gauntlet-orchestration-retrieval-probe-v1",
+      "input_sha256": "fb970e7877370d4897205a7e057d503d305171d04af28345f37bb01c5d629790",
+      "source_revision": "0.1.0",
+      "task_profile": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    "dimensions": {
+      "currentness": {"metrics": [], "notes": [], "status": "not_applicable"},
+      "evaluator_integrity": {"metrics": [{"denominator": 8, "direction": "higher_better", "metric_id": "operation_contract_valid_rate", "note": "every response crossed the operation-envelope validator", "population": "operation responses", "state": "measured", "unit": "fraction", "value": 1.0}], "notes": [], "status": "measured"},
+      "governance": {"metrics": [], "notes": ["This orchestration probe does not exercise governance claims."], "status": "not_measured"},
+      "reasoning": {"metrics": [], "notes": [], "status": "not_applicable"},
+      "reproducibility": {"metrics": [{"direction": "descriptive", "metric_id": "fixture_sha256", "population": "probe fixture", "state": "measured", "value": "fb970e7877370d4897205a7e057d503d305171d04af28345f37bb01c5d629790"}, {"direction": "descriptive", "metric_id": "adapter_manifest_sha256", "population": "validated adapter manifest", "state": "measured", "value": "35d56a43bbe088103c0426bcb7c1078e9f669cfbc34e8913a2180f29b518a10c"}], "notes": [], "status": "measured"},
+      "retrieval": {"metrics": [{"denominator": 3, "direction": "higher_better", "metric_id": "exact_top1", "note": "baseline_or_probe metric; not independent efficacy evidence", "population": "gauntlet orchestration probe queries", "state": "measured", "unit": "fraction", "value": 1.0}], "notes": [], "status": "measured"}
+    },
+    "execution": {
+      "environment": {"platform": "linux", "python": "3.12.14"},
+      "sample_count": 3,
+      "seed": "none",
+      "selection_id": "all:fb970e7877370d48",
+      "selection_method": "full declared profile workload"
+    },
+    "limitations": [
+      "This is baseline_or_probe evidence for Gauntlet orchestration, not an independent memory-quality benchmark.",
+      "Only three deterministic retrieval queries are exercised."
+    ],
+    "native_results": {
+      "authority_effect": "none",
+      "correct_top1": 3,
+      "exact_top1": 1.0,
+      "fixture_sha256": "fb970e7877370d4897205a7e057d503d305171d04af28345f37bb01c5d629790",
+      "operation_count": 8,
+      "profile_kind": "baseline_or_probe",
+      "rows": [
+        {"exact_top1": true, "expected_id": "probe:cobalt", "query": "Which project uses the cobalt ledger?", "top_id": "probe:cobalt"},
+        {"exact_top1": true, "expected_id": "probe:amber", "query": "What uses the amber queue?", "top_id": "probe:amber"},
+        {"exact_top1": true, "expected_id": "probe:cedar", "query": "Where is the cedar cache used?", "top_id": "probe:cedar"}
+      ],
+      "sample_count": 3,
+      "transcript": [
+        {"error": null, "operation": "describe", "request_id": "<execution>:0001", "result": {"adapter": "minimal-stdio-example", "probe_only": true, "system": "standard-library-lexical-memory"}, "status": "ok"},
+        {"error": null, "operation": "reset", "request_id": "<execution>:0002", "result": {"reset": true}, "status": "ok"},
+        {"error": null, "operation": "remember", "request_id": "<execution>:0003", "result": {"accepted": true}, "status": "ok"},
+        {"error": null, "operation": "remember", "request_id": "<execution>:0004", "result": {"accepted": true}, "status": "ok"},
+        {"error": null, "operation": "remember", "request_id": "<execution>:0005", "result": {"accepted": true}, "status": "ok"},
+        {"error": null, "operation": "recall", "request_id": "<execution>:0006", "result": {"items": [{"id": "probe:cobalt", "score": 5.0}, {"id": "probe:amber", "score": 3.0}, {"id": "probe:cedar", "score": 3.0}]}, "status": "ok"},
+        {"error": null, "operation": "recall", "request_id": "<execution>:0007", "result": {"items": [{"id": "probe:amber", "score": 4.0}, {"id": "probe:cobalt", "score": 2.0}, {"id": "probe:cedar", "score": 2.0}]}, "status": "ok"},
+        {"error": null, "operation": "recall", "request_id": "<execution>:0008", "result": {"items": [{"id": "probe:cedar", "score": 3.0}, {"id": "probe:cobalt", "score": 1.0}, {"id": "probe:amber", "score": 1.0}]}, "status": "ok"}
+      ]
+    },
+    "schema_version": "1.0.0",
+    "status": "complete",
+    "system": {
+      "adapter_id": "external-example-stdio-adapter",
+      "adapter_revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e",
+      "id": "external-example-lexical-memory",
+      "kind": "external_memory",
+      "revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e"
+    }
+  },
+  "purpose": "Immutable semantic sample for the public Agent Memory Gauntlet external-contestant path; not an efficacy benchmark.",
+  "qualification": {
+    "adapter": {"id": "external-example-stdio-adapter", "revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e", "transport": "stdio", "version": "0.1.0"},
+    "authority_effect": "none",
+    "coverage": {"currentness": "not_applicable", "efficiency": "measured", "evaluator_integrity": "measured", "governance": "not_measured", "reasoning": "not_applicable", "reproducibility": "measured", "retrieval": "measured"},
+    "manifest_digest_sha256": "35d56a43bbe088103c0426bcb7c1078e9f669cfbc34e8913a2180f29b518a10c",
+    "negotiation": {
+      "adapter_id": "external-example-stdio-adapter",
+      "authority_effect": "none",
+      "contract_family": "agent-memory-gauntlet-capability-negotiation",
+      "contract_version": "0.1.0",
+      "manifest_digest": "35d56a43bbe088103c0426bcb7c1078e9f669cfbc34e8913a2180f29b518a10c",
+      "optional": [{"accepted_support": ["native", "mapped", "derived"], "capability": "health", "declared_support": "native", "state": "satisfied"}],
+      "outcome": "eligible",
+      "profile_id": "gauntlet-orchestration-retrieval-probe-v1",
+      "reason": "required and declared optional capabilities satisfy the profile",
+      "required": [
+        {"accepted_support": ["native", "mapped", "derived"], "capability": "describe", "declared_support": "native", "state": "satisfied"},
+        {"accepted_support": ["native", "mapped", "derived"], "capability": "recall", "declared_support": "native", "state": "satisfied"},
+        {"accepted_support": ["native", "mapped", "derived"], "capability": "remember", "declared_support": "native", "state": "satisfied"},
+        {"accepted_support": ["native", "mapped", "derived"], "capability": "reset", "declared_support": "native", "state": "satisfied"}
+      ],
+      "system_id": "external-example-lexical-memory"
+    },
+    "profile": {
+      "description": "Deterministic three-record retrieval probe used to qualify Gauntlet orchestration, adapter transport, evidence normalization, and failure attribution. It is not an external efficacy benchmark.",
+      "kind": "baseline_or_probe",
+      "profile_id": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    "schema_version": "0.1.0",
+    "status": "complete",
+    "system": {"id": "external-example-lexical-memory", "kind": "external_memory", "revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e"}
+  },
+  "replay_equivalence": {
+    "canonicalized_as_execution_volatile": [
+      "Gauntlet run_id (UUID-derived execution identity; required to differ)",
+      "native-results.transcript[*].request_id run-id prefix (sequence preserved)",
+      "native-results.elapsed_ms",
+      "native-results.operation_elapsed_ms_p50",
+      "normalized-run.run_id",
+      "normalized-run.execution.started_at",
+      "normalized-run.execution.elapsed_ms",
+      "normalized-run.dimensions.efficiency",
+      "normalized-run artifact sha256/uri values derived from timing or output root",
+      "qualification run_id and artifact paths/hashes derived from execution identity/timing"
+    ],
+    "checks": {"execution_ids_distinct": true, "first_execution_id_valid": true, "manifest_equal": true, "native_semantics_equal": true, "normalized_semantics_equal": true, "qualification_semantics_equal": true, "second_execution_id_valid": true},
+    "qualification": "gauntlet_external_contestant_semantic_replay",
+    "semantic_fields_required_equal": [
+      "adapter manifest",
+      "system and adapter identity/revision",
+      "profile identity and provenance class",
+      "capability negotiation",
+      "coverage states",
+      "retrieval rows and exact-top1 result",
+      "fixture and manifest digests",
+      "operation ordering/status/result payloads",
+      "normalized non-efficiency dimensions",
+      "authority effect"
+    ],
+    "status": "pass"
+  },
+  "schema_version": "1.0.0",
+  "source": {
+    "adapter_source_revision": "git-blob:ca41e1bb3ab249340f8d03dbd1738511ee3ce44e",
+    "artifact_digest": "sha256:82b1264401f2a42aec3b24241efcaff87875098cca32a76028a0a636bf0e02e3",
+    "artifact_id": 11305974770,
+    "python": "3.12.14",
+    "replay_execution_id": "gauntlet-gauntlet-orchestration-retrieval-probe-v1-external-example-lexical-memory-e0d95ada8b7e",
+    "repository_revision": "2b387a1bdbdc410196c5fa6d71406cc5303206f2",
+    "sample_execution_id": "gauntlet-gauntlet-orchestration-retrieval-probe-v1-external-example-lexical-memory-6ae89c8a51c7",
+    "workflow_run_id": 37211802764
+  }
+}
