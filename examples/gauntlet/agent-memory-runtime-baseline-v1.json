@@ -1,0 +1,56 @@
+{
+  "adapter": {
+    "id": "agent-memory-runtime-baseline-v1-stdio",
+    "revision": "git-blob:a1bd094c7a56a710de1b40ec44569d410bc0f495",
+    "version": "0.1.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "benchmark-owned disposable Agent Memory SQLite state keyed by the Gauntlet run namespace",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "describe": {
+      "notes": "translated public runtime identity only",
+      "support": "mapped"
+    },
+    "health": {
+      "notes": "public AgentMemory.posture() health projection",
+      "support": "mapped"
+    },
+    "recall": {
+      "notes": "public AgentMemory.recall() through fixed benchmark tenant/scope",
+      "support": "native"
+    },
+    "remember": {
+      "notes": "public AgentMemory.remember() through fixed benchmark tenant/scope",
+      "support": "native"
+    },
+    "reset": {
+      "notes": "adapter teardown of disposable benchmark state; not a native Agent Memory operation",
+      "support": "mapped"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "baseline_id": "agent-memory-runtime-baseline-v1",
+    "provenance_class": "baseline_or_probe",
+    "public_facade_only": true,
+    "runtime_profile": "rc1-local-sqlite-composition"
+  },
+  "system": {
+    "configuration_digest": "sha256:a998681c0a40513899d8329ebb864b17e2d986bfcea64c028fc5addf99cf2cc2",
+    "id": "agent-memory-runtime-baseline-v1",
+    "kind": "agent_memory",
+    "revision": "git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9",
+    "version": "0.2.0-rc1"
+  },
+  "transport": {
+    "kind": "stdio",
+    "startup": [
+      "python",
+      "examples/gauntlet/agent_memory_runtime_baseline_stdio.py"
+    ]
+  }
+}
