@@ -98,6 +98,35 @@ jobs:
             --golden reports/gauntlet/external-contestant-v1/golden-evidence.json \
             --output dogfood/equivalence.json
 
+      - name: Prove tampered evidence identity is rejected
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a gauntlet-runs/run2 dogfood/tampered-run2
+          RUN_DIR="$(find dogfood/tampered-run2 -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          test -n "$RUN_DIR"
+          python - "$RUN_DIR/qualification.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          path = Path(sys.argv[1])
+          value = json.loads(path.read_text(encoding="utf-8"))
+          value["run_id"] = "gauntlet-tampered-identity-000000000000"
+          value["profile"]["profile_id"] = "tampered-profile-v1"
+          value["system"]["id"] = "tampered-system"
+          path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          PY
+          if python scripts/validate_gauntlet_dogfood_equivalence.py \
+            gauntlet-runs/run1 \
+            dogfood/tampered-run2 \
+            --golden reports/gauntlet/external-contestant-v1/golden-evidence.json \
+            --output dogfood/tamper-rejection.json; then
+            echo "tampered evidence identity was incorrectly accepted" >&2
+            exit 1
+          fi
+          grep -q '"status": "fail"' dogfood/tamper-rejection.json
+
       - name: Inventory generated evidence
         shell: bash
         run: |
@@ -106,6 +135,7 @@ jobs:
           while IFS= read -r file; do sha256sum "$file"; done < dogfood/files.txt | tee dogfood/sha256.txt
           test -s dogfood/transcript.txt
           test -s dogfood/equivalence.json
+          test -s dogfood/tamper-rejection.json
           test -s dogfood/files.txt
           test -s dogfood/sha256.txt
           test "$(wc -l < dogfood/files.txt)" -eq 8
