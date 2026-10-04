@@ -7,6 +7,7 @@ from pathlib import Path
 from agentmem_ref.runtime import proposition_semantics as ps
 from agentmem_ref.runtime import runtime_composition
 from agentmem_ref.runtime import temporal_intent as ti
+from agentmem_ref.state.substrate import DeterministicIds
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,11 +22,15 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         cls.by_id = {case["id"].split("-", 1)[0]: case for case in cls.fixture["cases"]}
 
     def test_preimplementation_oracle_identity_and_boundary(self):
-        self.assertEqual(self.fixture["status"], "FROZEN_PREIMPLEMENTATION_ORACLE")
+        self.assertEqual(self.fixture["status"], "FROZEN_PREIMPLEMENTATION_CONTRACT_REVIEWED")
         self.assertEqual(self.fixture["issue"], 584)
         self.assertEqual(self.fixture["base_sha"], "5f0e85e67a170cc633396a195a9bc4e6d2728bff")
         self.assertEqual(list(self.by_id), EXPECTED_CASES)
         self.assertEqual(len(self.fixture["cases"]), 13)
+        self.assertEqual(
+            self.fixture["freeze_history"]["draft_oracle_commit"],
+            "f270bb1f2023d37aab64169eac880d7e8ee2dd72",
+        )
 
         deps = self.fixture["dependencies"]
         self.assertEqual(deps["ranking_policy"], "agent-memory-post-admission-ranking/3.1.1")
@@ -51,6 +56,10 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
             contract["forbidden_currentness_clocks"],
             ["transaction_time", "observation_time_without_validity_contract"],
         )
+        self.assertEqual(
+            contract["residual_fallback"],
+            "stable_content_semantic_digest_then_candidate_ref_only_for_identical_content",
+        )
         self.assertTrue(
             {
                 "ranking != admission",
@@ -60,6 +69,7 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
                 "unknown != current",
                 "newer != current",
                 "newer != superseding",
+                "write order != semantic preference",
                 "interpretation != authority",
                 "conflict detection != mutation",
             }
@@ -111,6 +121,24 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertFalse(case["expect"]["constraint_applied"])
         self.assertTrue(case["expect"]["no_invented_single_valued_semantics"])
         self.assertIn(ps.HIERARCHICAL, ps.CARDINALITIES)
+
+    def test_m7_proves_candidate_ref_digest_is_not_write_order_neutral(self):
+        case = self.by_id["M7"]
+        variants = case["variants"]
+
+        def allocated_by_key(memories: list[dict]) -> dict[str, str]:
+            ids = DeterministicIds("ref")
+            return {memory["key"]: ids.next() for memory in memories}
+
+        first = allocated_by_key(variants[0]["memories"])
+        reversed_order = allocated_by_key(variants[1]["memories"])
+        self.assertNotEqual(first["denver"], reversed_order["denver"])
+        self.assertNotEqual(first["boston"], reversed_order["boston"])
+        self.assertEqual(case["preconditions"]["candidate_ref_allocation"], "counter_based_write_order")
+        self.assertTrue(case["preconditions"]["candidate_ref_digest_is_not_content_stable"])
+        self.assertTrue(case["expect"]["same_semantic_order_across_write_order_variants"])
+        self.assertEqual(case["expect"]["fallback"], "stable_content_semantic_digest")
+        self.assertTrue(case["expect"]["candidate_ref_digest_only_for_identical_content"])
 
     def test_m10_is_atemporal_and_therefore_outside_584_activation(self):
         case = self.by_id["M10"]
