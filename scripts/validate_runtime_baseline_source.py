@@ -44,9 +44,15 @@ def expect(label: str, actual, expected) -> None:
         raise SystemExit(f"{label} mismatch: frozen source={actual!r}, manifest={expected!r}")
 
 
+def exact_sha(label: str, value: str) -> None:
+    if len(value) != 40 or any(ch not in "0123456789abcdef" for ch in value):
+        raise SystemExit(f"{label} must be an exact lowercase 40-hex SHA")
+
+
 def main() -> int:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     commit = data["runtime_revision"]["commit"]
+    exact_sha("runtime revision", commit)
     check = subprocess.run(["git", "cat-file", "-e", f"{commit}^{{commit}}"], cwd=ROOT)
     if check.returncode:
         raise SystemExit(f"frozen runtime revision is unavailable: {commit}")
@@ -105,9 +111,34 @@ def main() -> int:
 
     if data["production_1_0"]:
         raise SystemExit("baseline source may not claim production 1.0")
-    if data["dogfood"]["status"] != "pending":
-        raise SystemExit("first baseline slice must retain pending #637 dogfood status")
-    print(f"Runtime Baseline v1 identities match frozen revision {commit}")
+
+    dogfood = data["dogfood"]
+    if dogfood["status"] != "completed":
+        raise SystemExit("Runtime Baseline v1 cannot close before #637 dogfood is completed")
+    if dogfood["required_before_issue_638_close"] is not True:
+        raise SystemExit("#637 dogfood must remain recorded as a required #638 close gate")
+    if dogfood["authority_effect"] != "none":
+        raise SystemExit("dogfood evidence must have authority_effect none")
+    if dogfood["evidence_class"] != "baseline_or_probe":
+        raise SystemExit("#637 dogfood must remain baseline_or_probe usability evidence")
+    dogfood_commit = dogfood["merge_commit"]
+    exact_sha("dogfood merge commit", dogfood_commit)
+    dogfood_head = dogfood["verified_head"]
+    exact_sha("dogfood verified head", dogfood_head)
+    for revision in (dogfood_commit, dogfood_head):
+        exists = subprocess.run(["git", "cat-file", "-e", f"{revision}^{{commit}}"], cwd=ROOT)
+        if exists.returncode:
+            raise SystemExit(f"dogfood evidence revision is unavailable: {revision}")
+    ancestry = subprocess.run(["git", "merge-base", "--is-ancestor", commit, dogfood_commit], cwd=ROOT)
+    if ancestry.returncode:
+        raise SystemExit("dogfood merge commit must descend from the frozen runtime revision")
+    git_show(dogfood_commit, dogfood["golden_evidence"])
+    git_show(dogfood_commit, "docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md")
+
+    print(
+        f"Runtime Baseline v1 identities match frozen revision {commit}; "
+        f"#637 dogfood is evidence-bound at {dogfood_commit}"
+    )
     return 0
 
 
