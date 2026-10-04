@@ -12,7 +12,7 @@ from agentmem_ref.state.substrate import DeterministicIds
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "reference" / "fixtures" / "runtime" / "temporal-unknown-basis-ordering-v1.json"
-EXPECTED_CASES = [f"M{i}" for i in range(1, 14)]
+EXPECTED_CASES = [f"M{i}" for i in range(1, 16)]
 
 
 class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
@@ -26,7 +26,7 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertEqual(self.fixture["issue"], 584)
         self.assertEqual(self.fixture["base_sha"], "5f0e85e67a170cc633396a195a9bc4e6d2728bff")
         self.assertEqual(list(self.by_id), EXPECTED_CASES)
-        self.assertEqual(len(self.fixture["cases"]), 13)
+        self.assertEqual(len(self.fixture["cases"]), 15)
         self.assertEqual(
             self.fixture["freeze_history"]["draft_oracle_commit"],
             "f270bb1f2023d37aab64169eac880d7e8ee2dd72",
@@ -58,7 +58,7 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         )
         self.assertEqual(
             contract["residual_fallback"],
-            "stable_content_semantic_digest_then_candidate_ref_only_for_identical_content",
+            "stable_content_digest_then_candidate_ref_only_for_identical_content",
         )
         self.assertTrue(
             {
@@ -90,6 +90,13 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertEqual(applicable["proposition"]["status"], ps.KNOWN)
         self.assertEqual(ps.write_slot(unknown), ps.write_slot(applicable))
         self.assertEqual(applicable["cardinality"]["class"], ps.SINGLE_VALUED)
+        [relation] = ps.classify_write(
+            applicable,
+            "ref-new",
+            case["memories"][1]["text"],
+            [("ref-old", "memory:old", unknown)],
+        )
+        self.assertEqual(relation["classification"], ps.STATE_CHANGE_CANDIDATE)
         self.assertEqual(case["expect"]["precedes"], ["applicable", "unknown"])
         self.assertTrue(case["expect"]["unknown_label_preserved"])
 
@@ -102,8 +109,15 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertEqual(ps.write_slot(first), ps.write_slot(second))
         self.assertEqual(first["cardinality"]["class"], ps.UNKNOWN)
         self.assertEqual(second["cardinality"]["class"], ps.UNKNOWN)
+        [relation] = ps.classify_write(
+            second,
+            "ref-new",
+            case["memories"][1]["text"],
+            [("ref-old", "memory:old", first)],
+        )
+        self.assertEqual((relation["classification"], relation["basis"]), (ps.UNRESOLVED, "cardinality_unknown"))
         self.assertFalse(case["expect"]["constraint_applied"])
-        self.assertEqual(case["expect"]["constraint_refusal_reason"], "exclusive_cardinality_not_established")
+        self.assertEqual(case["expect"]["constraint_refusal_reason"], "exclusive_relation_not_established")
 
     def test_m4_multivalued_evidence_is_a_hard_negative_control(self):
         case = self.by_id["M4"]
@@ -111,6 +125,13 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         added = ps.interpret_write(case["memories"][1]["text"])
         self.assertEqual(ps.write_slot(existing), ps.write_slot(added))
         self.assertEqual(added["cardinality"]["class"], ps.MULTI_VALUED)
+        [relation] = ps.classify_write(
+            added,
+            "ref-new",
+            case["memories"][1]["text"],
+            [("ref-old", "memory:old", existing)],
+        )
+        self.assertEqual(relation["classification"], ps.COEXISTENCE)
         self.assertFalse(case["expect"]["constraint_applied"])
         self.assertEqual(case["expect"]["constraint_refusal_reason"], "coexistence_or_multivalued")
 
@@ -121,6 +142,21 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertFalse(case["expect"]["constraint_applied"])
         self.assertTrue(case["expect"]["no_invented_single_valued_semantics"])
         self.assertIn(ps.HIERARCHICAL, ps.CARDINALITIES)
+
+    def test_m6_and_m7_really_run_under_explicit_current_intent(self):
+        for name in ("M6", "M7"):
+            case = self.by_id[name]
+            intent = ti.resolve_intent(
+                case["query"],
+                case["temporal_intent"],
+                reference_time=case["reference_time"],
+            )
+            self.assertEqual(
+                (intent.mode, intent.posture, intent.intent_basis, intent.orders_temporally),
+                (ti.CURRENT, ti.EXPLICIT, ti.CALLER_DECLARED, True),
+                name,
+            )
+            self.assertEqual(case["expect"]["intent_basis"], ti.CALLER_DECLARED)
 
     def test_m7_proves_candidate_ref_digest_is_not_write_order_neutral(self):
         case = self.by_id["M7"]
@@ -137,7 +173,7 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertEqual(case["preconditions"]["candidate_ref_allocation"], "counter_based_write_order")
         self.assertTrue(case["preconditions"]["candidate_ref_digest_is_not_content_stable"])
         self.assertTrue(case["expect"]["same_semantic_order_across_write_order_variants"])
-        self.assertEqual(case["expect"]["fallback"], "stable_content_semantic_digest")
+        self.assertEqual(case["expect"]["fallback"], "stable_content_digest")
         self.assertTrue(case["expect"]["candidate_ref_digest_only_for_identical_content"])
 
     def test_m10_is_atemporal_and_therefore_outside_584_activation(self):
@@ -181,6 +217,41 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertFalse(case["expect"]["constraint_applied"])
         self.assertTrue(case["expect"]["preserve_base_order"])
         self.assertTrue(case["expect"]["recency_cycle_break_forbidden"])
+
+    def test_m14_conflict_relation_is_positive_exclusive_evidence(self):
+        case = self.by_id["M14"]
+        unknown = ps.interpret_write(case["memories"][0]["text"])
+        applicable = ps.interpret_write(case["memories"][1]["text"])
+        self.assertEqual(ps.write_slot(unknown), ps.write_slot(applicable))
+        self.assertEqual(unknown["cardinality"]["class"], ps.SINGLE_VALUED)
+        self.assertEqual(applicable["cardinality"]["class"], ps.UNKNOWN)
+        [relation] = ps.classify_write(
+            applicable,
+            "ref-new",
+            case["memories"][1]["text"],
+            [("ref-old", "memory:old", unknown)],
+        )
+        self.assertEqual(
+            (relation["classification"], relation["basis"]),
+            (ps.CONFLICT, "single_valued_without_change_evidence"),
+        )
+        self.assertTrue(case["expect"]["constraint_applied"])
+
+    def test_m15_untrusted_self_claim_downgrades_change_relation(self):
+        case = self.by_id["M15"]
+        unknown = ps.interpret_write(case["memories"][0]["text"])
+        claimed = ps.interpret_write(case["memories"][1]["text"])
+        self.assertIn("untrusted_self_claim", claimed["proposal_ineligible_reasons"])
+        [relation] = ps.classify_write(
+            claimed,
+            "ref-new",
+            case["memories"][1]["text"],
+            [("ref-old", "memory:old", unknown)],
+        )
+        self.assertEqual(relation["classification"], ps.UNRESOLVED)
+        self.assertTrue(relation["basis"].startswith("change_evidence_not_proposable:untrusted_self_claim"))
+        self.assertFalse(case["expect"]["constraint_applied"])
+        self.assertTrue(case["expect"]["no_authority_from_self_claim"])
 
 
 if __name__ == "__main__":
