@@ -5,6 +5,8 @@ import unittest
 from pathlib import Path
 
 from agentmem_ref.runtime import proposition_semantics as ps
+from agentmem_ref.runtime import query_driven_recall
+from agentmem_ref.runtime import recall_control
 from agentmem_ref.runtime import runtime_composition
 from agentmem_ref.runtime import temporal_intent as ti
 from agentmem_ref.state.substrate import DeterministicIds
@@ -37,10 +39,33 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertEqual(deps["temporal_interpreter"], "agent-memory-deterministic-temporal-cues/1.1.0")
         self.assertEqual(deps["write_semantics"], "agent-memory-deterministic-write-semantics/1.1.0")
 
+        # The frozen oracle records the preimplementation 3.1.1 baseline above;
+        # successful implementation activates the bounded 3.1.2 policy without
+        # rewriting that historical dependency.
         policy = runtime_composition.MULTI_ROUTE_RANKING_POLICY.identity()
-        self.assertEqual(policy["policy_version"], "3.1.1")
+        self.assertEqual(policy["policy_version"], "3.1.2")
+        self.assertEqual(policy["unknown_basis_policy"], "explicit_current_exclusive_pairwise_v1")
+        self.assertFalse(policy["global_applicable_over_unknown_tier"])
+        self.assertEqual(policy["authority_effect"], "none")
         self.assertEqual(ti.INTERPRETER_VERSION, "1.1.0")
         self.assertEqual(ps.INTERPRETER_VERSION, "1.1.0")
+
+    def test_all_active_recall_planners_share_policy_312_boundary(self):
+        policies = {
+            "multi_route": runtime_composition.MULTI_ROUTE_RANKING_POLICY,
+            "query_driven": query_driven_recall.QUERY_DRIVEN_RANKING_POLICY,
+            "controlled": recall_control.CONTROLLED_RECALL_RANKING_POLICY,
+        }
+        for name, policy in policies.items():
+            with self.subTest(planner=name):
+                identity = policy.identity()
+                self.assertEqual(identity["policy_version"], "3.1.2")
+                self.assertEqual(
+                    identity["unknown_basis_policy"],
+                    "explicit_current_exclusive_pairwise_v1",
+                )
+                self.assertFalse(identity["global_applicable_over_unknown_tier"])
+                self.assertEqual(identity["authority_effect"], "none")
 
     def test_ruling_invariants_are_explicit_and_non_authoritative(self):
         contract = self.fixture["contract"]
