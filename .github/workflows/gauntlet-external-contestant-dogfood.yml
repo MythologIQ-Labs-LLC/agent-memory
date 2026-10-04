@@ -1,0 +1,78 @@
+name: Gauntlet External Contestant Dogfood
+
+on:
+  pull_request:
+    paths:
+      - 'examples/gauntlet/**'
+      - 'docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md'
+      - 'reference/agentmem_ref/evaluation/gauntlet_*.py'
+      - '.github/workflows/gauntlet-external-contestant-dogfood.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-quickstart:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install exactly as documented
+        run: python -m pip install -e .
+
+      - name: Execute public quickstart commands
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dogfood gauntlet-runs
+          {
+            echo "# Agent Memory Gauntlet external-contestant dogfood"
+            echo "repository_sha=${GITHUB_SHA}"
+            echo "quickstart=docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md"
+            echo "python=$(python --version 2>&1)"
+            echo
+            echo '$ agent-memory gauntlet list'
+            agent-memory gauntlet list
+            echo
+            echo '$ agent-memory gauntlet validate-adapter examples/gauntlet/minimal-stdio-adapter.json'
+            agent-memory gauntlet validate-adapter examples/gauntlet/minimal-stdio-adapter.json
+            echo
+            echo '$ agent-memory gauntlet inspect gauntlet-orchestration-retrieval-probe-v1'
+            agent-memory gauntlet inspect gauntlet-orchestration-retrieval-probe-v1
+            echo
+            echo '$ agent-memory gauntlet run --system examples/gauntlet/minimal-stdio-adapter.json --profile gauntlet-orchestration-retrieval-probe-v1 --allow-external-process --allow-destructive-reset --output-dir ./gauntlet-runs'
+            agent-memory gauntlet run \
+              --system examples/gauntlet/minimal-stdio-adapter.json \
+              --profile gauntlet-orchestration-retrieval-probe-v1 \
+              --allow-external-process \
+              --allow-destructive-reset \
+              --output-dir ./gauntlet-runs
+          } 2>&1 | tee dogfood/transcript.txt
+
+      - name: Inventory generated evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          find gauntlet-runs -type f -print | sort | tee dogfood/files.txt
+          while IFS= read -r file; do sha256sum "$file"; done < dogfood/files.txt | tee dogfood/sha256.txt
+          test -s dogfood/transcript.txt
+          test -s dogfood/files.txt
+          test -s dogfood/sha256.txt
+          test "$(wc -l < dogfood/files.txt)" -ge 4
+
+      - name: Upload dogfood evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gauntlet-external-contestant-dogfood
+          path: |
+            dogfood/
+            gauntlet-runs/
+          if-no-files-found: error
+          retention-days: 90
