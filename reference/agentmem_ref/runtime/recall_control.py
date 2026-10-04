@@ -20,7 +20,7 @@ from typing import Protocol
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .temporal_intent import resolve_intent
-from .ranking_policy import PostAdmissionRankingPolicy
+from .temporal_order_constraints import ExplicitCurrentConstrainedRankingPolicy
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
     EXACT_IDENTITY_ROUTE,
@@ -46,7 +46,7 @@ GRAPH_BOTH = "both"
 MAX_GRAPH_SEED_REFS = 16
 
 # Pre-existing route precedence of the controlled planner, now declared rather than implicit.
-CONTROLLED_RECALL_RANKING_POLICY = PostAdmissionRankingPolicy(
+CONTROLLED_RECALL_RANKING_POLICY = ExplicitCurrentConstrainedRankingPolicy(
     policy_id="controlled-multi-route",
     route_score_order=(SEMANTIC_VECTOR_ROUTE, TYPED_GRAPH_ROUTE, LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
@@ -818,4 +818,3 @@ class ControlledRecallPlanner:
             )
             added += 1
         return added
-
