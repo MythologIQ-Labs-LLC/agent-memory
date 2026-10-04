@@ -47,6 +47,13 @@ jobs:
       - name: Validate declared identities against frozen runtime revision
         run: python scripts/validate_runtime_baseline_source.py
 
+      - name: Refuse runtime/package drift from frozen baseline revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          FROZEN="$(python -c 'import json; print(json.load(open("reports/runtime/baseline-v1.json"))["runtime_revision"]["commit"])')"
+          git diff --exit-code "$FROZEN" HEAD -- reference/agentmem_ref pyproject.toml
+
       - name: Validate JSON syntax
         run: python -m json.tool reports/runtime/baseline-v1.json > /dev/null
 
