@@ -114,11 +114,21 @@ class PolicyUnitTests(unittest.TestCase):
     def test_policy_identity_is_explicit_and_authority_neutral(self):
         identity = MULTI_ROUTE_RANKING_POLICY.identity()
         self.assertEqual(identity["policy_id"], "multi-route-default")
+        self.assertEqual(identity["policy_version"], "3.1.2")
         self.assertEqual(identity["authority_effect"], "none")
         self.assertFalse(identity["route_scores_cross_comparable"])
         self.assertEqual(identity["temporal_regime"], "query_conditioned")
         self.assertEqual(identity["stages"][0], "temporal_applicability_tier")
-        self.assertEqual(identity["stages"][-2:], ["temporal_order_within_query_regime", "candidate_ref_neutral_digest"])
+        self.assertEqual(
+            identity["stages"][-4:-2],
+            ["temporal_order_within_query_regime", "candidate_ref_neutral_digest"],
+        )
+        self.assertEqual(
+            identity["stages"][-2:],
+            ["explicit_current_unknown_tie_content_identity", "explicit_current_exclusive_pairwise_constraints"],
+        )
+        self.assertEqual(identity["unknown_basis_policy"], "explicit_current_exclusive_pairwise_v1")
+        self.assertFalse(identity["global_applicable_over_unknown_tier"])
         self.assertEqual(identity["metabolic_evidence"], "not_used")
         self.assertIn("lexical_relevance_desc:bm25_admitted_set:lexical", identity["stages"])
         self.assertEqual(identity["lexical_relevance_statistics_scope"], "admitted_set")
@@ -187,27 +197,38 @@ class FacadeRankingTests(unittest.TestCase):
     def _open(self, root: str, scope: str = SCOPE) -> AgentMemory:
         return AgentMemory.open(root, tenant=TENANT, actor_id="agent:ranking", scope=scope, purpose="ranking tests")
 
-    def test_equal_score_independent_writes_rank_newer_first_without_supersession(self):
+    def test_equal_score_independent_writes_use_neutral_fallback_without_supersession(self):
         with tempfile.TemporaryDirectory() as root, self._open(root) as memory:
             for index in range(120):  # push the deterministic clock past the old overflow points
                 memory.remember(f"memory:filler:{index}", f"unrelated filler observation {index}")
             old = memory.remember("memory:release:old", "The current release codename is Alder.")
             new = memory.remember("memory:release:new", "The current release codename is Birch.")
             recalled = memory.recall(QUERY)
-            self.assertEqual(recalled["admitted"][:2], [new["fact_uuid"], old["fact_uuid"]])
+            self.assertEqual(recalled["admitted"][:2], [old["fact_uuid"], new["fact_uuid"]])
             old_evidence = recalled["admissions"][old["fact_uuid"]]["ranking_evidence"]
             new_evidence = recalled["admissions"][new["fact_uuid"]]["ranking_evidence"]
             self.assertEqual(old_evidence["route_scores"], new_evidence["route_scores"])
-            # "current" is a high-confidence cue, so newer transaction time orders the tie.
             self.assertEqual(new_evidence["query_temporal_intent"]["mode"], "current")
-            self.assertEqual(new_evidence["temporal_ordering_clock"], "transaction_time")
+            self.assertEqual(new_evidence["query_temporal_intent"]["posture"], "explicit")
+            self.assertEqual(new_evidence["query_temporal_intent"]["intent_basis"], "query_language_explicit")
             self.assertEqual(old_evidence["temporal_applicability"], "unknown_temporal_basis")
+            self.assertEqual(new_evidence["temporal_applicability"], "unknown_temporal_basis")
+            # The transaction clock remains visible evidence but cannot decide currentness.
+            self.assertEqual(new_evidence["temporal_ordering_clock"], "transaction_time")
             self.assertEqual(
                 old_evidence["temporal_evidence"]["clocks"]["transaction_time"]["seconds"]
                 < new_evidence["temporal_evidence"]["clocks"]["transaction_time"]["seconds"],
                 True,
             )
+            self.assertEqual(old_evidence["explicit_current_unknown_tie_fallback"], "stable_content_digest")
+            self.assertEqual(new_evidence["explicit_current_unknown_tie_fallback"], "stable_content_digest")
+            self.assertEqual(old_evidence["ordered_before_next_by"], "explicit_current_unknown_tie_content_identity")
+            self.assertFalse(old_evidence["constraint_applied"])
+            self.assertFalse(new_evidence["constraint_applied"])
+            self.assertEqual(old_evidence["constraint_refusal_reason"], "not_in_exclusive_competition")
+            self.assertEqual(new_evidence["constraint_refusal_reason"], "not_in_exclusive_competition")
             self.assertEqual(new_evidence["policy_id"], "multi-route-default")
+            self.assertEqual(new_evidence["policy_version"], "3.1.2")
             self.assertEqual(new_evidence["authority_effect"], "none")
             # Ranking is not supersession: both facts stay current and admitted.
             self.assertEqual(memory.history("memory:release:old")["history"]["current_fact_uuid"], old["fact_uuid"])
