@@ -1,0 +1,317 @@
+{
+  "contract_id": "agent-memory-system-one-controller-v1",
+  "version": "1.0.0",
+  "status": "FROZEN_PREIMPLEMENTATION_CONTRACT",
+  "issue": 644,
+  "ancestry": {
+    "system": "Jev-Mem",
+    "repository": "libingzheren/Jev-Mem",
+    "revision": "7ab0c73c6d8f4f611ad252c1e6ba8083f8df0e44",
+    "license": "MIT",
+    "relationship": "implementation_ancestry_not_runtime_dependency"
+  },
+  "purpose": "Provider-neutral estimator/controller contract for typed memory-management and retrieval-planning evidence. Controller output can shape bounded discovery work but never owns Agent Memory authority or durable consequences.",
+  "authority_effect": "none",
+  "request": {
+    "required": [
+      "operation",
+      "query_or_observation",
+      "available_capabilities",
+      "budget",
+      "policy_context"
+    ],
+    "operation_enum": [
+      "memory_typing",
+      "relation_estimation",
+      "retrieval_planning",
+      "evidence_assessment",
+      "consolidation_estimation"
+    ],
+    "available_capabilities": {
+      "semantics": "Closed list supplied by the host for this request. A controller cannot activate a route or capability that the host did not expose.",
+      "examples": [
+        "exact_identity",
+        "lexical",
+        "vector",
+        "entity_graph",
+        "temporal_graph",
+        "causal_graph",
+        "procedural",
+        "episodic_history",
+        "semantic_state",
+        "file_document"
+      ]
+    },
+    "budget": {
+      "required": [
+        "maximum_controller_decisions",
+        "deadline_ms"
+      ],
+      "optional": [
+        "maximum_candidates",
+        "maximum_nodes",
+        "maximum_edges",
+        "maximum_depth",
+        "memory_package_tokens"
+      ],
+      "rule": "Provider retries, caches, traversal, and follow-up decisions are subordinate to the outer request budget. Budget exhaustion is observable and is never reported as evidence sufficiency."
+    },
+    "policy_context": {
+      "required": [
+        "tenant_scope_ref",
+        "recall_policy_ref",
+        "controller_contract_version"
+      ],
+      "rule": "Scope and policy references are inputs for containment and interpretation only. They do not delegate authority to the controller."
+    },
+    "consumer_profile": {
+      "status": "optional_v1_input_reserved_for_consumer_aware_delivery",
+      "fields": [
+        "nominal_context_tokens",
+        "available_context_tokens",
+        "memory_package_tokens",
+        "supported_representation_shapes",
+        "supports_progressive_expansion",
+        "effective_context_profile_ref"
+      ],
+      "invariants": [
+        "consumer capacity != truth",
+        "consumer budget != recall admission",
+        "omitted from package != forgotten",
+        "summary != canonical evidence"
+      ]
+    }
+  },
+  "response": {
+    "required": [
+      "controller_identity",
+      "operation",
+      "decision_status",
+      "evidence",
+      "usage",
+      "authority_effect"
+    ],
+    "decision_status_enum": [
+      "complete",
+      "partial",
+      "abstained",
+      "budget_exhausted",
+      "unavailable",
+      "invalid_response"
+    ],
+    "controller_identity": {
+      "required": [
+        "backend_ref",
+        "backend_version",
+        "model_or_policy_ref"
+      ],
+      "optional": [
+        "cache_key_ref",
+        "source_revision"
+      ]
+    },
+    "evidence": {
+      "memory_type_scores": {
+        "shape": "map<string, probability_0_to_1>",
+        "semantics": "Independent overlapping type evidence. Not retention authority."
+      },
+      "relation_estimates": {
+        "shape": "list<typed_relation_estimate>",
+        "required_per_item": [
+          "source_ref",
+          "target_ref",
+          "relation_type",
+          "probability",
+          "direction",
+          "basis"
+        ],
+        "semantics": "Estimator evidence only. Deterministic/native relation evidence may supersede estimator use at policy level, not by hidden controller precedence."
+      },
+      "route_needs": {
+        "shape": "map<available_capability, probability_0_to_1>",
+        "semantics": "Query-conditioned estimate of likely route usefulness. A score does not activate an unavailable route or admit its candidates."
+      },
+      "route_budgets": {
+        "shape": "map<available_capability, bounded_work_budget>",
+        "bounded_work_budget_fields": [
+          "candidate_limit",
+          "node_limit",
+          "edge_limit",
+          "depth_limit"
+        ],
+        "semantics": "A proposal inside the host-provided outer budget. The host clamps or refuses it."
+      },
+      "candidate_estimates": {
+        "shape": "list<candidate_estimate>",
+        "typed_factors": [
+          "relevance",
+          "relation_usefulness",
+          "novelty",
+          "corroboration",
+          "requirement_coverage"
+        ],
+        "forbidden_implicit_factor": "recency_as_currentness_or_authority",
+        "semantics": "Keep heterogeneous factors inspectable. No mandatory universal weighted scalar is defined by this contract."
+      },
+      "evidence_assessment": {
+        "fields": [
+          "evidence_sufficient",
+          "continue_useful",
+          "missing_evidence",
+          "contradiction"
+        ],
+        "shape": "probability_0_to_1_per_field",
+        "semantics": "Separate propositions, not one health score."
+      },
+      "stop_recommendation": {
+        "enum": [
+          "evidence_sufficient",
+          "further_retrieval_unhelpful",
+          "continue_retrieval",
+          "budget_exhausted",
+          "frontier_exhausted",
+          "controller_unavailable",
+          "abstain"
+        ],
+        "semantics": "Recommendation/evidence only. The host records the actual stop reason separately. `evidence_sufficient` must never be emitted merely because a resource limit was reached."
+      },
+      "consolidation_estimates": {
+        "pairwise_fields": [
+          "redundant",
+          "contradiction",
+          "obsolete_candidate",
+          "link_useful"
+        ],
+        "representation_choice_enum": [
+          "keep_separate",
+          "merge",
+          "promote",
+          "uncertain"
+        ],
+        "semantics": "Proposal evidence only. `obsolete_candidate` does not authorize supersession; merge/promote does not authorize destructive rewrite."
+      }
+    },
+    "usage": {
+      "required": [
+        "controller_decisions_used",
+        "cache_hits",
+        "elapsed_ms",
+        "fallback_events"
+      ],
+      "optional": [
+        "provider_tokens",
+        "provider_cost",
+        "nodes_examined",
+        "edges_examined"
+      ]
+    }
+  },
+  "actual_stop_record": {
+    "required": [
+      "actual_stop_reason",
+      "controller_recommendation",
+      "budget_state"
+    ],
+    "reason_classes": {
+      "quality": [
+        "evidence_sufficient",
+        "further_retrieval_unhelpful"
+      ],
+      "resource": [
+        "max_latency",
+        "max_controller_decisions",
+        "max_candidates",
+        "max_nodes",
+        "max_edges",
+        "max_depth",
+        "memory_package_budget_exhausted"
+      ],
+      "search_space": [
+        "frontier_exhausted",
+        "no_evidence"
+      ],
+      "controller_failure": [
+        "controller_unavailable",
+        "invalid_controller_response"
+      ]
+    },
+    "invariant": "Quality completion, resource exhaustion, search-space exhaustion, and controller failure remain distinct in evidence and reporting."
+  },
+  "host_enforcement": {
+    "controller_may_estimate_or_propose": [
+      "memory type",
+      "relationship likelihood",
+      "retrieval routes",
+      "search budget",
+      "candidate relevance and traversal value",
+      "evidence sufficiency",
+      "expected value of continued search",
+      "stop recommendation",
+      "consolidation representation posture"
+    ],
+    "controller_may_not_own": [
+      "tenant or scope authority",
+      "recall admission",
+      "PAMA outcome",
+      "certification",
+      "durable commit",
+      "supersession",
+      "deletion or tombstone authority",
+      "inheritance or cross-agent permission",
+      "truth",
+      "currentness authority"
+    ],
+    "fail_closed_rules": [
+      "Unknown output fields do not acquire consequence semantics.",
+      "Invalid probabilities or incomplete categorical distributions are invalid responses, not best-effort authority.",
+      "A controller-selected route still crosses ordinary canonical recall admission.",
+      "Controller failure may fall back only to an explicitly configured host planner whose authority is no greater than the failed controller's.",
+      "No controller fallback may bypass scope, admission, lifecycle, provenance, or currentness governance."
+    ]
+  },
+  "cache_identity": {
+    "must_bind": [
+      "operation",
+      "canonicalized request state",
+      "controller contract version",
+      "backend identity",
+      "model or policy identity",
+      "relevant host policy version",
+      "tenant or isolation namespace where state is scope-sensitive"
+    ],
+    "rule": "Cached estimator evidence is never authority and must not silently cross model, policy, contract, or isolation boundaries."
+  },
+  "evaluation": {
+    "mandatory_ablations": [
+      "controller_off",
+      "adaptive_routing_only",
+      "adaptive_budgeting_only",
+      "adaptive_stopping_only",
+      "combined_controller"
+    ],
+    "report_separately": [
+      "retrieval quality",
+      "downstream task quality",
+      "latency",
+      "controller decisions and provider usage",
+      "nodes and edges examined",
+      "storage or cache growth",
+      "governance violations or refusals"
+    ],
+    "forbidden_claim": "No single aggregate score may hide a governance regression or conflate retrieval success with downstream consumer utilization."
+  },
+  "invariants": [
+    "controller output != truth",
+    "controller confidence != permission",
+    "routing != recall admission",
+    "ranking != recall admission",
+    "memory type != lifecycle authority",
+    "relation likelihood != relationship truth",
+    "recency != currentness",
+    "stop recommendation != actual stop reason",
+    "stopping because sufficient != stopping because budget exhausted",
+    "consolidation estimate != mutation authority",
+    "consumer capacity != truth",
+    "benchmark score != authority"
+  ]
+}
