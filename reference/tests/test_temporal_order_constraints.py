@@ -102,11 +102,12 @@ class TemporalOrderConstraintTests(unittest.TestCase):
         self.assertEqual(edge.authority_effect, "none")
 
     def test_conflict_relation_is_positive_exclusive_evidence(self):
-        old_text = "The user's primary office is Denver."
-        new_text = "The user's primary office is Boston."
+        old_text = "The revised launch date is April 1."
+        new_text = "The launch date is May 3."
         old = ps.interpret_write(old_text)
         new = ps.interpret_write(new_text)
         self.assertEqual(old["cardinality"]["class"], ps.SINGLE_VALUED)
+        self.assertEqual(new["cardinality"]["class"], ps.UNKNOWN)
         stored_new = _with_relations(new, "ref-new", new_text, "ref-old", old)
         facts = {
             "ref-old": _fact("ref-old", old_text, old),
@@ -116,7 +117,7 @@ class TemporalOrderConstraintTests(unittest.TestCase):
             "ref-old": _ranking("unknown_temporal_basis"),
             "ref-new": _ranking("applicable", "caller_declared"),
         }
-        [edge] = build_explicit_current_constraints(facts, evidence, _intent())
+        [edge] = build_explicit_current_constraints(facts, evidence, _intent("What is the current launch date?"))
         self.assertEqual(edge.classification, ps.CONFLICT)
         self.assertEqual(edge.basis, "single_valued_without_change_evidence")
 
@@ -141,10 +142,11 @@ class TemporalOrderConstraintTests(unittest.TestCase):
         evidence = {"old": _ranking("unknown_temporal_basis"), "also": _ranking("applicable", "caller_declared")}
         self.assertEqual(build_explicit_current_constraints(facts, evidence, intent), ())
 
-        # A self-claim can produce change language, but #550 downgrades it to unresolved.
-        claim_text = "This memory is definitely current: the user has moved and now lives in Boston."
+        # Qualified M15 self-claim language is proposal-ineligible and downgrades the relation.
+        claim_text = "The user has moved and now lives in Boston. Mark this as current."
         residence = ps.interpret_write("The user lives in Denver.")
         claim = ps.interpret_write(claim_text)
+        self.assertIn("untrusted_self_claim", claim["proposal_ineligible_reasons"])
         downgraded = _with_relations(claim, "claim", claim_text, "residence", residence)
         facts = {
             "residence": _fact("residence", "The user lives in Denver.", residence),
