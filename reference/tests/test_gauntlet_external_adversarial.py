@@ -16,6 +16,7 @@ from agentmem_ref.evaluation.gauntlet_profiles import (
 
 
 EXAMPLE_MANIFEST = REPO_ROOT / "examples" / "gauntlet" / "minimal-stdio-adapter.json"
+EXAMPLE_ADAPTER = REPO_ROOT / "examples" / "gauntlet" / "minimal_stdio_adapter.py"
 FIXTURE_MANIFEST = REPO_ROOT / "fixtures" / "gauntlet" / "lexical-adapter.json"
 
 
@@ -55,6 +56,27 @@ class GauntletExternalAdversarialTests(unittest.TestCase):
             self.assertEqual(result["failure"]["source"], "system_adapter")
             self.assertEqual(result["failure"]["code"], "startup_failed")
 
+    def test_stdio_timeout_is_attributed_to_system_adapter(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            script = _write_script(
+                root,
+                "import sys\nimport time\nfor _line in sys.stdin:\n    time.sleep(60)\n",
+            )
+            manifest = _manifest()
+            manifest["transport"] = {"kind": "stdio", "startup": [sys.executable, str(script)]}
+            result = run_gauntlet(
+                _write_manifest(root, manifest),
+                ORCHESTRATION_PROBE_PROFILE_ID,
+                output_dir=root / "runs",
+                allow_external_process=True,
+                allow_destructive_reset=True,
+                timeout_seconds=0.05,
+            )
+            self.assertEqual(result["status"], "blocked")
+            self.assertEqual(result["failure"]["source"], "system_adapter")
+            self.assertEqual(result["failure"]["code"], "adapter_timeout")
+
     def test_invalid_stdio_json_is_attributed_to_system_adapter(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -74,6 +96,30 @@ class GauntletExternalAdversarialTests(unittest.TestCase):
             self.assertEqual(result["status"], "blocked")
             self.assertEqual(result["failure"]["source"], "system_adapter")
             self.assertEqual(result["failure"]["code"], "invalid_adapter_json")
+
+    def test_stderr_noise_does_not_corrupt_stdio_envelopes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            script = _write_script(
+                root,
+                (
+                    "import runpy\n"
+                    "import sys\n"
+                    "print('synthetic adapter diagnostic noise', file=sys.stderr, flush=True)\n"
+                    f"runpy.run_path({str(EXAMPLE_ADAPTER)!r}, run_name='__main__')\n"
+                ),
+            )
+            manifest = _manifest()
+            manifest["transport"] = {"kind": "stdio", "startup": [sys.executable, str(script)]}
+            result = run_gauntlet(
+                _write_manifest(root, manifest),
+                ORCHESTRATION_PROBE_PROFILE_ID,
+                output_dir=root / "runs",
+                allow_external_process=True,
+                allow_destructive_reset=True,
+            )
+            self.assertEqual(result["status"], "complete")
+            self.assertNotIn("failure", result)
 
     def test_valid_system_error_remains_attributed_to_system_under_test(self):
         with tempfile.TemporaryDirectory() as temporary:
