@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess
@@ -49,13 +50,23 @@ def exact_sha(label: str, value: str) -> None:
         raise SystemExit(f"{label} must be an exact lowercase 40-hex SHA")
 
 
+def require_commit(label: str, revision: str) -> None:
+    exact_sha(label, revision)
+    exists = subprocess.run(["git", "cat-file", "-e", f"{revision}^{{commit}}"], cwd=ROOT)
+    if exists.returncode:
+        raise SystemExit(f"{label} is unavailable: {revision}")
+
+
+def git_blob_sha(content: str) -> str:
+    payload = content.encode("utf-8")
+    header = f"blob {len(payload)}\0".encode("ascii")
+    return hashlib.sha1(header + payload).hexdigest()
+
+
 def main() -> int:
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     commit = data["runtime_revision"]["commit"]
-    exact_sha("runtime revision", commit)
-    check = subprocess.run(["git", "cat-file", "-e", f"{commit}^{{commit}}"], cwd=ROOT)
-    if check.returncode:
-        raise SystemExit(f"frozen runtime revision is unavailable: {commit}")
+    require_commit("runtime revision", commit)
 
     identity = data["identity"]
     ranking = identity["ranking"]
@@ -122,22 +133,57 @@ def main() -> int:
     if dogfood["evidence_class"] != "baseline_or_probe":
         raise SystemExit("#637 dogfood must remain baseline_or_probe usability evidence")
     dogfood_commit = dogfood["merge_commit"]
-    exact_sha("dogfood merge commit", dogfood_commit)
     dogfood_head = dogfood["verified_head"]
-    exact_sha("dogfood verified head", dogfood_head)
-    for revision in (dogfood_commit, dogfood_head):
-        exists = subprocess.run(["git", "cat-file", "-e", f"{revision}^{{commit}}"], cwd=ROOT)
-        if exists.returncode:
-            raise SystemExit(f"dogfood evidence revision is unavailable: {revision}")
+    require_commit("dogfood merge commit", dogfood_commit)
+    require_commit("dogfood verified head", dogfood_head)
     ancestry = subprocess.run(["git", "merge-base", "--is-ancestor", commit, dogfood_commit], cwd=ROOT)
     if ancestry.returncode:
         raise SystemExit("dogfood merge commit must descend from the frozen runtime revision")
     git_show(dogfood_commit, dogfood["golden_evidence"])
     git_show(dogfood_commit, "docs/GAUNTLET_EXTERNAL_CONTESTANT_QUICKSTART.md")
 
+    public_gauntlet = data["qualification_evidence"]["public_gauntlet_baseline_qualification"]
+    if public_gauntlet["status"] != "complete":
+        raise SystemExit("Runtime Baseline public Gauntlet qualification must be complete")
+    if public_gauntlet["transport"] != "stdio":
+        raise SystemExit("Runtime Baseline public Gauntlet qualification must use stdio")
+    if public_gauntlet["evidence_class"] != "baseline_or_probe":
+        raise SystemExit("Runtime Baseline public Gauntlet evidence must remain baseline_or_probe")
+    if public_gauntlet["authority_effect"] != "none":
+        raise SystemExit("Runtime Baseline public Gauntlet evidence must have authority_effect none")
+    if public_gauntlet["profile_id"] != "gauntlet-orchestration-retrieval-probe-v1":
+        raise SystemExit("unexpected Runtime Baseline public Gauntlet profile")
+    if int(public_gauntlet["workflow_run"]) <= 0 or int(public_gauntlet["artifact_id"]) <= 0:
+        raise SystemExit("Runtime Baseline public Gauntlet workflow/artifact IDs must be positive")
+    digest = str(public_gauntlet["artifact_digest"])
+    if not re.fullmatch(r"sha256:[0-9a-f]{64}", digest):
+        raise SystemExit("Runtime Baseline public Gauntlet artifact digest must be exact sha256")
+    verified_head = public_gauntlet["verified_head"]
+    require_commit("Runtime Baseline public Gauntlet verified head", verified_head)
+    if subprocess.run(["git", "merge-base", "--is-ancestor", commit, verified_head], cwd=ROOT).returncode:
+        raise SystemExit("public Gauntlet verified head must descend from the frozen runtime revision")
+
+    manifest_path = public_gauntlet["manifest"]
+    adapter_path = public_gauntlet["adapter_source"]
+    qualified_manifest = json.loads(git_show(verified_head, manifest_path))
+    adapter_source = git_show(verified_head, adapter_path)
+    expect("public Gauntlet system revision", qualified_manifest["system"]["revision"], public_gauntlet["system_revision"])
+    expect("public Gauntlet adapter revision", qualified_manifest["adapter"]["revision"], public_gauntlet["adapter_revision"])
+    expect("public Gauntlet transport", qualified_manifest["transport"]["kind"], public_gauntlet["transport"])
+    expect("public Gauntlet baseline id", qualified_manifest["metadata"]["baseline_id"], data["baseline_id"])
+    expected_system_revision = f"git-commit:{commit}"
+    expect("public Gauntlet frozen runtime binding", public_gauntlet["system_revision"], expected_system_revision)
+    actual_adapter_revision = f"git-blob:{git_blob_sha(adapter_source)}"
+    expect("public Gauntlet exact adapter blob", public_gauntlet["adapter_revision"], actual_adapter_revision)
+    if int(public_gauntlet["sample_count"]) != 3:
+        raise SystemExit("public Gauntlet orchestration probe must record its three-query sample count")
+    if not 0.0 <= float(public_gauntlet["exact_top1"]) <= 1.0:
+        raise SystemExit("public Gauntlet exact_top1 must be a bounded observed metric")
+
     print(
         f"Runtime Baseline v1 identities match frozen revision {commit}; "
-        f"#637 dogfood is evidence-bound at {dogfood_commit}"
+        f"#637 dogfood is evidence-bound at {dogfood_commit}; "
+        f"public baseline qualification is bound at workflow {public_gauntlet['workflow_run']}"
     )
     return 0
 
