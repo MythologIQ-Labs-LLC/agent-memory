@@ -188,9 +188,11 @@ class BM25HashSeedDeterminismTests(unittest.TestCase):
         self.assertEqual(a, math.nextafter(b, math.inf))
 
     def test_policy_version_records_the_patch(self):
-        # 3.0.1 introduced sorted accumulation; 3.1.0 (#550) changes only the applicability
-        # tier. The bit-for-bit sorted-order checks above pin that BM25 is unchanged.
-        self.assertEqual(ranking_policy.POLICY_VERSION, "3.1.0")
+        # 3.0.1 introduced sorted accumulation; 3.1.0 (#550) added the applicability
+        # change; 3.1.1 (#583) adds only a candidate-specific typed lexical mask.
+        # The bit-for-bit direct-BM25 checks above pin that the unmasked computation is
+        # still exactly the #576 sorted-order algorithm.
+        self.assertEqual(ranking_policy.POLICY_VERSION, "3.1.1")
 
 
 if __name__ == "__main__":

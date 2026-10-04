@@ -3,7 +3,9 @@
 Complements the frozen adversarial oracle with the contract properties it cannot
 express as cases: caller-declared vs query-language explicitness at the admission
 gate, typed-span invariants, cross-process determinism, and the #583 boundary that
-lexical relevance still scores every query token.
+ordinary memories keep consumed temporal terms as lexical relevance evidence while a
+candidate-specific anti-laundering guard may consume the typed spans without globally
+rewriting the query.
 """
 
 from __future__ import annotations
@@ -161,14 +163,19 @@ class CrossProcessDeterminismTests(unittest.TestCase):
 
 
 class LexicalRelevanceBoundaryTests(unittest.TestCase):
-    """#583 boundary: consumed temporal cues still count as lexical relevance evidence."""
+    """#583 boundary: typed spans may guard one candidate; ordinary lexical relevance is preserved."""
 
-    def test_ranking_policy_does_not_read_spans(self):
+    def test_ranking_uses_typed_spans_without_owning_a_temporal_cue_list_or_global_rewrite(self):
         source = (ROOT / "reference" / "agentmem_ref" / "runtime" / "ranking_policy.py").read_text(encoding="utf-8")
-        for token in ("spans", "declined_spans", "intent_basis", "normalized_text"):
-            self.assertNotIn(token, source)
+        self.assertIn("intent.spans", source)
+        self.assertIn('span.confidence == "high"', source)
+        self.assertIn("persisted_self_claims", source)
+        self.assertNotIn("relevance_query_for_intent", source)
+        self.assertNotIn("TEMPORAL_PHRASES", source)
+        self.assertNotIn("declined_spans", source)
+        self.assertNotIn("normalized_text", source)
 
-    def test_consumed_cue_word_still_scores_in_bm25(self):
+    def test_consumed_cue_word_still_scores_in_bm25_for_ordinary_memory(self):
         with tempfile.TemporaryDirectory() as temp:
             memory = AgentMemory.open(temp, tenant="tenant:585", actor_id="agent:585", scope="project:585",
                                       purpose="585 lexical boundary")
@@ -182,7 +189,8 @@ class LexicalRelevanceBoundaryTests(unittest.TestCase):
                 memory.close()
         self.assertEqual(intent["intent_basis"], ti.QUERY_LANGUAGE_EXPLICIT)
         self.assertEqual([span["text"] for span in intent["spans"]], ["currently"])
-        # The consumed cue is still lexical evidence: #585 does not implement #583.
+        # #583 does not globally remove the consumed cue. The ordinary memory still
+        # receives lexical credit for it because it carries no high-risk self-claim.
         self.assertGreater(score[cue], score[plain])
 
 
