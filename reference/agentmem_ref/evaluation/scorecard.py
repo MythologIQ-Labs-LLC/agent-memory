@@ -109,6 +109,9 @@ def portfolio(profiles: Iterable[Mapping[str, Any]], manifests: Iterable[Mapping
         by_benchmark.setdefault(validated["benchmark"]["id"], []).append(validated)
     rows = []
     for profile in sorted(profiles, key=lambda item: item["profile_id"]):
+        if profile.get("provenance_class") == "baseline_or_probe":
+            # Probes and contributor demonstrations are never portfolio evidence.
+            continue
         runs = by_benchmark.get(profile["benchmark_id"], [])
         measured = sorted(
             {

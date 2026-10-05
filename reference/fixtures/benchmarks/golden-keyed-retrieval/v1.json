@@ -1,0 +1,93 @@
+{
+  "fixture_id": "golden-keyed-retrieval-v1",
+  "description": "Deliberately small keyed-retrieval benchmark input for the benchmark-author golden path. Each query names exactly one gold record; sibling records share vocabulary so ranking, not mere presence, is exercised.",
+  "records": [
+    {
+      "id": "gkr:ledger-cobalt",
+      "text": "The cobalt ledger reconciles invoice totals for the finance team every Friday."
+    },
+    {
+      "id": "gkr:ledger-amber",
+      "text": "The amber ledger reconciles payroll totals for the finance team every Monday."
+    },
+    {
+      "id": "gkr:queue-cedar",
+      "text": "The cedar queue dispatches field technicians to outage tickets in the north region."
+    },
+    {
+      "id": "gkr:queue-ivory",
+      "text": "The ivory queue dispatches warehouse pickers to restock tickets in the south region."
+    },
+    {
+      "id": "gkr:cache-onyx",
+      "text": "The onyx cache keeps session tokens for the mobile client for twelve hours."
+    },
+    {
+      "id": "gkr:cache-jade",
+      "text": "The jade cache keeps rendered thumbnails for the web client for thirty days."
+    },
+    {
+      "id": "gkr:vault-slate",
+      "text": "The slate vault stores signing keys for release builds behind hardware attestation."
+    },
+    {
+      "id": "gkr:vault-coral",
+      "text": "The coral vault stores backup credentials for the archive cluster behind a two-person rule."
+    },
+    {
+      "id": "gkr:unrelated-weather",
+      "text": "Weather observations for the rooftop sensor are logged every ten minutes."
+    },
+    {
+      "id": "gkr:unrelated-menu",
+      "text": "The cafeteria menu rotates weekly and is posted on the intranet."
+    }
+  ],
+  "queries": [
+    {
+      "query_id": "q1",
+      "query": "Which ledger reconciles invoice totals for finance?",
+      "gold_id": "gkr:ledger-cobalt"
+    },
+    {
+      "query_id": "q2",
+      "query": "Which ledger reconciles payroll totals on Monday?",
+      "gold_id": "gkr:ledger-amber"
+    },
+    {
+      "query_id": "q3",
+      "query": "Which queue dispatches technicians to outage tickets?",
+      "gold_id": "gkr:queue-cedar"
+    },
+    {
+      "query_id": "q4",
+      "query": "Which queue dispatches warehouse pickers for restock tickets?",
+      "gold_id": "gkr:queue-ivory"
+    },
+    {
+      "query_id": "q5",
+      "query": "Which cache keeps session tokens for the mobile client?",
+      "gold_id": "gkr:cache-onyx"
+    },
+    {
+      "query_id": "q6",
+      "query": "Which cache keeps rendered thumbnails for the web client?",
+      "gold_id": "gkr:cache-jade"
+    },
+    {
+      "query_id": "q7",
+      "query": "Which vault stores signing keys for release builds?",
+      "gold_id": "gkr:vault-slate"
+    },
+    {
+      "query_id": "q8",
+      "query": "Which vault stores backup credentials for the archive cluster?",
+      "gold_id": "gkr:vault-coral"
+    }
+  ],
+  "metrics": {
+    "exact_top1": "fraction of queries whose rank-1 recalled id equals gold_id",
+    "recall_at_3": "fraction of queries whose gold_id appears within the first three recalled ids"
+  },
+  "authority_effect": "none"
+}

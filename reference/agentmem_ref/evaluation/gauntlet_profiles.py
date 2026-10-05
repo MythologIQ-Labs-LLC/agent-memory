@@ -3,6 +3,12 @@
 Profiles are explicit qualification workloads. Their provenance class is part of the
 public evidence semantics: an orchestration probe or Gauntlet-native gap suite must never
 masquerade as independent external benchmark evidence.
+
+Every profile declares ``benchmark_integration``: either ``None`` for a Gauntlet-native
+suite/probe, or the id of a committed benchmark integration descriptor whose
+``gauntlet.relationship`` is ``bound_profile``. ``registry.validate_registry_relationships``
+enforces that the binding is mutual and that ``kind`` equals the descriptor provenance
+class, so registration can never upgrade evidence class.
 """
 
 from __future__ import annotations
@@ -12,11 +18,13 @@ from copy import deepcopy
 ORCHESTRATION_PROBE_PROFILE_ID = "gauntlet-orchestration-retrieval-probe-v1"
 GOVERNANCE_ALPHA_PROFILE_ID = "governance-isolation-deletion-alpha-v1"
 DURABILITY_RECOVERY_PROFILE_ID = "durability-recovery-alpha-v1"
+GOLDEN_KEYED_RETRIEVAL_PROFILE_ID = "golden-keyed-retrieval-v1"
 
 _PROFILES = (
     {
         "profile_id": ORCHESTRATION_PROBE_PROFILE_ID,
         "kind": "baseline_or_probe",
+        "benchmark_integration": None,
         "description": (
             "Deterministic three-record retrieval probe used to qualify Gauntlet "
             "orchestration, adapter transport, evidence normalization, and failure attribution. "
@@ -50,6 +58,7 @@ _PROFILES = (
     {
         "profile_id": GOVERNANCE_ALPHA_PROFILE_ID,
         "kind": "gauntlet_native_gap",
+        "benchmark_integration": None,
         "description": (
             "Claim-driven synthetic Governance Gauntlet alpha for tenant/scope isolation, "
             "foreign-cardinality non-disclosure, deletion, and authority-laundering pressure. "
@@ -96,6 +105,7 @@ _PROFILES = (
     {
         "profile_id": DURABILITY_RECOVERY_PROFILE_ID,
         "kind": "gauntlet_native_gap",
+        "benchmark_integration": None,
         "description": (
             "Claim-driven durability/recovery alpha for public reopen recovery, durable "
             "correction/deletion, deterministic recovered observation, scope isolation, and "
@@ -152,6 +162,43 @@ _PROFILES = (
         "dimensions": ("governance", "evaluator_integrity", "reproducibility"),
         "authority_effect": "none",
     },
+    {
+        "profile_id": GOLDEN_KEYED_RETRIEVAL_PROFILE_ID,
+        "kind": "baseline_or_probe",
+        "benchmark_integration": GOLDEN_KEYED_RETRIEVAL_PROFILE_ID,
+        "description": (
+            "Benchmark-author golden path: a deliberately small keyed-retrieval benchmark "
+            "bound to a committed benchmark integration descriptor and a frozen input file. "
+            "It demonstrates exact input identity, native-result retention, descriptor-driven "
+            "normalization, and evaluator-integrity controls. It is not an external efficacy "
+            "benchmark."
+        ),
+        "runner": "agentmem_ref.evaluation.benchmark_golden_keyed_retrieval:run_golden_keyed_retrieval",
+        "operations": ("describe", "reset", "remember", "recall"),
+        "destructive_operations": {"reset": None},
+        "requirements": {
+            "contract_family": "agent-memory-gauntlet-profile-requirements",
+            "contract_version": "0.1.0",
+            "profile_id": GOLDEN_KEYED_RETRIEVAL_PROFILE_ID,
+            "requires": {
+                "describe": ["native", "mapped", "derived"],
+                "reset": ["native", "mapped", "derived"],
+                "remember": ["native", "mapped", "derived"],
+                "recall": ["native", "mapped", "derived"],
+            },
+            "optional": {
+                "health": ["native", "mapped", "derived"],
+            },
+            "notes": [
+                "baseline_or_probe provenance; bound to benchmark integration golden-keyed-retrieval-v1",
+                "frozen input identity is verified against the descriptor before any operation is issued",
+                "destructive reset requires a disposable-instance isolation claim and explicit caller consent for non-fixtures",
+            ],
+            "authority_effect": "none",
+        },
+        "dimensions": ("retrieval", "evaluator_integrity", "reproducibility"),
+        "authority_effect": "none",
+    },
 )
 
 
@@ -174,6 +221,7 @@ __all__ = [
     "ORCHESTRATION_PROBE_PROFILE_ID",
     "GOVERNANCE_ALPHA_PROFILE_ID",
     "DURABILITY_RECOVERY_PROFILE_ID",
+    "GOLDEN_KEYED_RETRIEVAL_PROFILE_ID",
     "list_gauntlet_profiles",
     "get_gauntlet_profile",
 ]

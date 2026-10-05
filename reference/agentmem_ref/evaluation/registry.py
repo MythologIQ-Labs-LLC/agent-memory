@@ -1,144 +1,254 @@
-"""Static registry of repository-owned memory benchmark profiles.
+"""Registry of repository-owned benchmark integrations.
 
-Registry metadata is descriptive only. It does not establish that an external run has
-occurred, that a score is comparable, or that any benchmark result has memory authority.
+The registry is backed by committed benchmark integration descriptors
+(``evaluation/integrations/*.json``) validated against
+``schemas/memory-benchmark-integration.schema.json``. It does not duplicate benchmark
+identities in Python. Registry metadata is descriptive only: it does not establish that
+an external run has occurred, that a score is comparable, or that any benchmark result
+has memory authority.
+
+The registry also makes the relationship between benchmark integrations and Gauntlet
+execution profiles explicit and mechanically checkable. The two registries describe
+different things (a benchmark integration versus a system-neutral qualification
+workload) and deliberately remain separate structures; this module only verifies that
+their cross-references are mutual and that registration never changes evidence class.
 """
 
 from __future__ import annotations
 
+import importlib.resources
 from copy import deepcopy
+from pathlib import Path
+from typing import Any
 
-
-_PROFILES = (
-    {
-        "profile_id": "swe-context-bench-lite-external-retrieval-v1",
-        "benchmark_id": "swe-context-bench-lite",
-        "owning_issue": 467,
-        "runner": "reference/run_swe_context_bench_harness.py",
-        "supporting_runners": (
-            "reference/run_swe_context_bench.py",
-            "reference/run_swe_context_bench_real_100.py",
-        ),
-        "implementation_status": "runner_ready",
-        "external_evidence_status": "blocked_on_exact_frozen_projection_and_selection_provenance",
-        "external_evidence": (
-            {
-                "variant": "lite_protocol_comparable_99_query_100_edge",
-                "status": "blocked",
-                "blocker": "exact redacted past-task projections and batch/distractor selection provenance (#467)",
-            },
-        ),
-        "dimensions": (
-            "retrieval",
-            "governance",
-            "efficiency",
-            "evaluator_integrity",
-            "reproducibility",
-        ),
-        "description": (
-            "SWE-ContextBench Lite prior-experience retrieval comparison with no-memory, "
-            "lexical-overlap, and governed Agent Memory arms."
-        ),
-    },
-    {
-        "profile_id": "agent-memory-longmemeval-retrieval-currentness-v1",
-        "benchmark_id": "longmemeval",
-        "owning_issue": 516,
-        "runner": "reference/run_longmemeval.py",
-        "supporting_runners": (),
-        "implementation_status": "implemented_bounded_profile",
-        "external_evidence_status": "longmemeval_s_and_m_full_complete_qa_not_run",
-        "external_evidence": (
-            {
-                "variant": "longmemeval_s_cleaned",
-                "status": "complete",
-                "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
-                "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
-                "agent_memory_revision": "f73b872c7f062d0b1e80b4812650b854e3bd2ac8",
-                "report": "reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json",
-                "evidence_pr": 536,
-            },
-            {
-                "variant": "longmemeval_m_cleaned",
-                "status": "complete",
-                "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
-                "input_sha256": "9d79e5524794a2e6900a3aa9cb7d9152c5a3e8319c9a87c25494ba1eacee495f",
-                "agent_memory_revision": "409098ffeec5105cfaa317f2210d54e37cae3a83",
-                "report": "reports/benchmarks/longmemeval/longmemeval-m-full-409098f.json",
-            },
-            {"variant": "upstream_model_judged_qa", "status": "not_run"},
-        ),
-        "product_findings": (
-            {"issue": 531, "summary": "currentness ordering: anti-recency exact ties and stale-higher-score cases"},
-            {"issue": 538, "summary": "default post-admission ranking below the lexical baseline"},
-            {"issue": 522, "summary": "commit and recall cost grow with store size"},
-        ),
-        "dimensions": (
-            "retrieval",
-            "currentness",
-            "governance",
-            "efficiency",
-            "evaluator_integrity",
-            "reproducibility",
-        ),
-        "description": (
-            "LongMemEval session/turn retrieval and knowledge-update currentness profile "
-            "with no-memory, lexical-overlap, and governed Agent Memory arms."
-        ),
-    },
-    {
-        "profile_id": "agent-memory-agentmembench-memdialogue-operational-v1",
-        "benchmark_id": "agentmembench-memdialogue",
-        "owning_issue": 517,
-        "runner": "reference/run_agentmembench.py",
-        "supporting_runners": (),
-        "implementation_status": "implemented_bounded_profile",
-        "external_evidence_status": "memdialogue_v2_upstream_defaults_complete_llm_judge_not_run",
-        "external_evidence": (
-            {
-                "variant": "memdialogue_v2_upstream_defaults",
-                "status": "complete",
-                "dataset_revision": "mazaiying/AgentMemBench@186c9a54edd47aae42d8b6990520f8e902b60303",
-                "input_sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
-                "agent_memory_revision": "03197cd5c866b890b1f9b4505eee3b6f93bcbe2b",
-                "report": "reports/benchmarks/agentmembench/memdialogue-v2-agent_memory-03197cd.json",
-                "evidence_pr": 533,
-            },
-            {"variant": "upstream_llm_judged_retrieval_recall", "status": "not_run"},
-            {"variant": "llm_portability_m6", "status": "not_run"},
-        ),
-        "product_findings": (
-            {"issue": 531, "summary": "independent newer writes lose to stale writes (staleness 1.00)"},
-            {"issue": 530, "summary": "public handle is thread-affine (concurrency success 0.0)"},
-            {"issue": 522, "summary": "write and recall latency grow with retained-state and tenant size"},
-        ),
-        "dimensions": (
-            "retrieval",
-            "currentness",
-            "governance",
-            "efficiency",
-            "evaluator_integrity",
-            "reproducibility",
-        ),
-        "description": (
-            "AgentMemBench MemDialogue operational phases (write, exact-source retrieval, "
-            "conflict/currentness, isolation, deletion, concurrency, scale) with no-memory, "
-            "lexical-overlap, and governed Agent Memory arms."
-        ),
-    },
+from .._paths import PACKAGE_NAME
+from .benchmark_integration import (
+    PROVENANCE_STRENGTH,
+    BenchmarkIntegrationError,
+    check_profile_binding,
+    load_integration,
+    resolve_native_path,
 )
 
+INTEGRATIONS_RESOURCE = "integrations"
+# Gauntlet profiles that bind no benchmark integration must declare one of these kinds:
+# Gauntlet-native suites and probes are never independent external evidence.
+GAUNTLET_NATIVE_KINDS = {"baseline_or_probe", "gauntlet_native_gap", "agent_memory_conformance"}
 
-def list_profiles() -> list[dict]:
-    """Return stable profile metadata sorted by profile id."""
 
-    return [deepcopy(profile) for profile in sorted(_PROFILES, key=lambda item: item["profile_id"])]
+def _integrations_root() -> Path:
+    resource = importlib.resources.files(f"{PACKAGE_NAME}.evaluation") / INTEGRATIONS_RESOURCE
+    root = Path(str(resource))
+    if not root.is_dir():
+        raise BenchmarkIntegrationError(f"benchmark integration directory unavailable: {root}")
+    return root
 
 
-def get_profile(profile_id: str) -> dict:
-    """Return one registered profile or raise KeyError."""
+def integration_paths() -> list[Path]:
+    """Committed descriptor files, sorted by file name."""
 
-    for profile in _PROFILES:
-        if profile["profile_id"] == profile_id:
-            return deepcopy(profile)
-    raise KeyError(profile_id)
+    return sorted(_integrations_root().glob("*.json"))
+
+
+def list_integrations() -> list[dict[str, Any]]:
+    """Return every committed, validated benchmark integration descriptor."""
+
+    descriptors = [load_integration(path) for path in integration_paths()]
+    seen: set[str] = set()
+    for descriptor in descriptors:
+        integration_id = descriptor["integration_id"]
+        if integration_id in seen:
+            raise BenchmarkIntegrationError(f"duplicate benchmark integration id: {integration_id}")
+        seen.add(integration_id)
+    return sorted(descriptors, key=lambda item: item["integration_id"])
+
+
+def get_integration(integration_id: str) -> dict[str, Any]:
+    """Return one committed descriptor or raise ``KeyError``."""
+
+    for descriptor in list_integrations():
+        if descriptor["integration_id"] == integration_id:
+            return descriptor
+    raise KeyError(integration_id)
+
+
+def _evidence_status(descriptor: dict[str, Any]) -> str:
+    counts: dict[str, int] = {}
+    for item in descriptor["evidence_history"]:
+        counts[item["status"]] = counts.get(item["status"], 0) + 1
+    if not counts:
+        return "no_evidence_recorded"
+    return ", ".join(f"{status}={count}" for status, count in sorted(counts.items()))
+
+
+def profile_view(descriptor: dict[str, Any]) -> dict[str, Any]:
+    """Project one descriptor into the compact profile shape used by ``benchmark list``.
+
+    The projection carries only descriptor facts. It adds nothing and upgrades nothing.
+    """
+
+    runner = descriptor["native_protocol"]["runner"]
+    return {
+        "profile_id": descriptor["integration_id"],
+        "benchmark_id": descriptor["benchmark"]["id"],
+        "provenance_class": descriptor["benchmark"]["provenance_class"],
+        "admission_state": descriptor["admission_state"],
+        "owning_issue": descriptor["owning_issue"],
+        "runner": runner["entry_point"],
+        "runner_kind": runner["kind"],
+        "supporting_runners": list(runner.get("supporting_entry_points", [])),
+        "invocation_surface": descriptor["system_requirements"]["invocation_surface"],
+        "external_system_entry": descriptor["system_requirements"]["external_system_entry"],
+        "credentials": descriptor["provider_requirements"]["credentials"],
+        "external_evidence_status": _evidence_status(descriptor),
+        "external_evidence": deepcopy(descriptor["evidence_history"]),
+        "product_findings": deepcopy(descriptor.get("product_findings", [])),
+        "dimensions": list(descriptor.get("dimensions", [])),
+        "gauntlet": deepcopy(descriptor["gauntlet"]),
+        "description": descriptor["description"],
+        "authority_effect": "none",
+    }
+
+
+def list_profiles() -> list[dict[str, Any]]:
+    """Return stable profile metadata sorted by profile id (descriptor projection)."""
+
+    return [profile_view(descriptor) for descriptor in list_integrations()]
+
+
+def get_profile(profile_id: str) -> dict[str, Any]:
+    """Return one registered profile projection or raise ``KeyError``."""
+
+    return profile_view(get_integration(profile_id))
+
+
+def resolve_gauntlet_relationship(descriptor: dict[str, Any]) -> dict[str, Any]:
+    """Resolve a descriptor's declared Gauntlet relationship against the profile registry."""
+
+    from .gauntlet_profiles import get_gauntlet_profile
+
+    gauntlet = descriptor["gauntlet"]
+    result: dict[str, Any] = {
+        "relationship": gauntlet["relationship"],
+        "profile_id": gauntlet["profile_id"],
+        "reason": gauntlet["reason"],
+    }
+    if gauntlet["relationship"] != "bound_profile":
+        result["status"] = gauntlet["relationship"]
+        return result
+    try:
+        profile = get_gauntlet_profile(gauntlet["profile_id"])
+    except KeyError:
+        result["status"] = "profile_missing"
+        return result
+    try:
+        binding = check_profile_binding(profile, descriptor)
+    except BenchmarkIntegrationError as exc:
+        result["status"] = "binding_invalid"
+        result["error"] = str(exc)
+        return result
+    result["status"] = "bound"
+    result["profile_kind"] = binding["profile_kind"]
+    return result
+
+
+def validate_registry_relationships() -> dict[str, Any]:
+    """Mechanically verify benchmark-integration <-> Gauntlet-profile cross-references.
+
+    Rules:
+
+    * a descriptor bound to a profile must name an existing profile that binds it back
+      with an identical evidence class and the same runner;
+    * a Gauntlet profile that binds a benchmark integration must pass the same check;
+    * a Gauntlet profile that binds nothing must declare a Gauntlet-native kind; it can
+      never present itself as external evidence by registration alone;
+    * every profile kind must be a known provenance class.
+    """
+
+    from .gauntlet_profiles import list_gauntlet_profiles
+
+    descriptors = {item["integration_id"]: item for item in list_integrations()}
+    profiles = {item["profile_id"]: item for item in list_gauntlet_profiles()}
+    bindings: list[dict[str, Any]] = []
+    for descriptor in descriptors.values():
+        relationship = resolve_gauntlet_relationship(descriptor)
+        if relationship["status"] in {"profile_missing", "binding_invalid"}:
+            raise BenchmarkIntegrationError(
+                f"benchmark integration {descriptor['integration_id']}: "
+                f"{relationship['status']}: {relationship.get('error', relationship['profile_id'])}"
+            )
+        if relationship["status"] == "bound":
+            bindings.append(
+                {
+                    "integration_id": descriptor["integration_id"],
+                    "profile_id": relationship["profile_id"],
+                    "provenance_class": descriptor["benchmark"]["provenance_class"],
+                }
+            )
+    for profile in profiles.values():
+        kind = profile["kind"]
+        if kind not in PROVENANCE_STRENGTH:
+            raise BenchmarkIntegrationError(f"Gauntlet profile {profile['profile_id']} declares unknown kind {kind!r}")
+        bound = profile.get("benchmark_integration")
+        if bound is None:
+            if kind not in GAUNTLET_NATIVE_KINDS:
+                raise BenchmarkIntegrationError(
+                    f"Gauntlet profile {profile['profile_id']} declares {kind} without a bound "
+                    "benchmark integration; registration cannot create external evidence"
+                )
+            continue
+        descriptor = descriptors.get(bound)
+        if descriptor is None:
+            raise BenchmarkIntegrationError(
+                f"Gauntlet profile {profile['profile_id']} binds unknown benchmark integration {bound}"
+            )
+        check_profile_binding(profile, descriptor)
+    return {
+        "integration_count": len(descriptors),
+        "gauntlet_profile_count": len(profiles),
+        "bindings": sorted(bindings, key=lambda item: item["integration_id"]),
+        "authority_effect": "none",
+    }
+
+
+def check_evidence_binding(descriptor: dict[str, Any], *, repo_root: Path) -> list[dict[str, Any]]:
+    """Check that each executed evidence row is bound to a committed report by exact identity."""
+
+    rows: list[dict[str, Any]] = []
+    for item in descriptor["evidence_history"]:
+        if item["status"] not in {"complete", "partial"}:
+            continue
+        path = repo_root / item["report"]
+        row = {"variant": item["variant"], "report": item["report"], "bound": False}
+        if not path.is_file():
+            row["error"] = "report missing"
+            rows.append(row)
+            continue
+        import json
+
+        report = json.loads(path.read_text(encoding="utf-8"))
+        binding = item["report_binding"]
+        present_sha, sha = resolve_native_path(report, binding["input_sha256_path"])
+        present_rev, revision = resolve_native_path(report, binding["system_revision_path"])
+        if not present_sha or sha != item["input_sha256"]:
+            row["error"] = f"report input digest {sha!r} != {item['input_sha256']!r}"
+        elif not present_rev or revision != item["system_revision"]:
+            row["error"] = f"report system revision {revision!r} != {item['system_revision']!r}"
+        else:
+            row["bound"] = True
+        rows.append(row)
+    return rows
+
+
+__all__ = [
+    "GAUNTLET_NATIVE_KINDS",
+    "integration_paths",
+    "list_integrations",
+    "get_integration",
+    "profile_view",
+    "list_profiles",
+    "get_profile",
+    "resolve_gauntlet_relationship",
+    "validate_registry_relationships",
+    "check_evidence_binding",
+]

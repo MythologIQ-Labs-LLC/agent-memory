@@ -1,0 +1,425 @@
+{
+  "contract_family": "agent-memory-benchmark-integration",
+  "contract_version": "1.0.0",
+  "integration_id": "agent-memory-longmemeval-retrieval-currentness-v1",
+  "admission_state": "evidence_partial",
+  "owning_issue": 516,
+  "description": "LongMemEval session/turn retrieval and knowledge-update currentness profile with no-memory, lexical-overlap, and governed Agent Memory arms. Retrieval and currentness evidence only; the upstream model-judged QA evaluator is not run.",
+  "benchmark": {
+    "id": "longmemeval",
+    "name": "LongMemEval",
+    "provenance_class": "external_adapted",
+    "upstream": {
+      "repository": "xiaowu0162/LongMemEval",
+      "url": "https://github.com/xiaowu0162/LongMemEval",
+      "paper_url": null
+    },
+    "source_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+    "source_revision_rule": "static_exact_revision"
+  },
+  "source_rights": {
+    "license_spdx": "MIT",
+    "license_url": "https://github.com/xiaowu0162/LongMemEval/blob/9e0b455f4ef0e2ab8f2e582289761153549043fc/LICENSE",
+    "data_license_spdx": null,
+    "code_redistribution": "linked_only",
+    "data_redistribution": "linked_only",
+    "attribution": "LongMemEval (Wu et al.); retrieval scoring semantics replicated from src/retrieval/run_retrieval.py and src/retrieval/eval_utils.py at the pinned revision",
+    "acquisition_notes": "Operators obtain the cleaned dataset from huggingface.co/datasets/xiaowu0162/longmemeval-cleaned at the recorded revision; the runner hashes the raw file bytes it reads. Without --input the runner uses the synthetic smoke fixture, which is not external evidence."
+  },
+  "input_contract": {
+    "dataset_id": "xiaowu0162/longmemeval-cleaned",
+    "dataset_revision_rule": "exact_revision_required",
+    "known_dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "input_digest_rule": "sha256_raw_file_bytes",
+    "known_input_sha256": null,
+    "committed_input_path": null,
+    "input_may_be_absent_before_execution": true,
+    "corpus_classes": [
+      "synthetic",
+      "external_frozen"
+    ],
+    "selection": {
+      "identity_rule": "input.selection.question_ids_sha256 = sha256 of newline-joined selected question ids, in source order",
+      "methods": [
+        "all",
+        "sha256(seed || NUL || question_id) ascending; first N; source order preserved",
+        "source-order prefix (debugging only)"
+      ]
+    }
+  },
+  "native_protocol": {
+    "task_type": "multi_session_retrieval_and_knowledge_update_currentness",
+    "native_metrics": [
+      {
+        "metric_id": "recall_any@k",
+        "description": "k in {1,3,5,10,30,50}: any gold session/turn within top-k",
+        "direction": "higher_better",
+        "upstream_defined": true
+      },
+      {
+        "metric_id": "recall_all@k",
+        "description": "k in {1,3,5,10,30,50}: all gold sessions/turns within top-k",
+        "direction": "higher_better",
+        "upstream_defined": true
+      },
+      {
+        "metric_id": "ndcg_any@k",
+        "description": "k in {1,3,5,10,30,50}: upstream DCG with ranks 1 and 2 weighted equally (known insensitivity)",
+        "direction": "higher_better",
+        "upstream_defined": true
+      },
+      {
+        "metric_id": "knowledge_update headline",
+        "description": "headline retrieval metrics restricted to knowledge-update questions",
+        "direction": "higher_better",
+        "upstream_defined": true
+      },
+      {
+        "metric_id": "latest_gold_ranked_first",
+        "description": "profile-local currentness diagnostic: latest-dated gold ranked first on multi-date knowledge-update questions",
+        "direction": "higher_better",
+        "upstream_defined": false
+      },
+      {
+        "metric_id": "failures",
+        "description": "runtime_error, ingestion refusal, out-of-corpus, and unmapped-admission counts",
+        "direction": "zero_target",
+        "upstream_defined": false
+      }
+    ],
+    "native_artifacts": [
+      {
+        "artifact_id": "native-report",
+        "kind": "benchmark_native_results",
+        "description": "planes[granularity].backends[backend] aggregates, by_question_type, currentness, failures, timing"
+      },
+      {
+        "artifact_id": "rows",
+        "kind": "row_level_rankings",
+        "description": "per-question rankings (.rows.json.gz)"
+      },
+      {
+        "artifact_id": "normalized-runs",
+        "kind": "memory_benchmark_run",
+        "description": "one common manifest per (plane, backend)"
+      }
+    ],
+    "runner": {
+      "kind": "repository_script",
+      "entry_point": "reference/run_longmemeval.py",
+      "supporting_entry_points": [
+        "reference/analyze_longmemeval_report.py",
+        "reference/compare_longmemeval_reports.py"
+      ],
+      "invocation_example": "python reference/run_longmemeval.py --input <longmemeval_s_cleaned.json> --corpus-class external_frozen --output report.json"
+    },
+    "budget": {
+      "retrieval_or_context_budget": "ranked candidate lists scored at k in {1,3,5,10,30,50}; no answer-generation context budget",
+      "parameters": {
+        "granularities": [
+          "session",
+          "turn"
+        ],
+        "backends": [
+          "no_memory",
+          "lexical_overlap",
+          "agent_memory"
+        ]
+      }
+    },
+    "failure_semantics": {
+      "per_item_error_capture": true,
+      "timeout": "none",
+      "description": "a question-level exception is recorded as runtime_error and scores as a miss with an empty ranking; ingestion refusals are counted, not raised; every pass re-hashes the input and fails closed on digest or order drift"
+    },
+    "concurrency": "sequential, single process"
+  },
+  "system_requirements": {
+    "invocation_surface": "agent_memory_public_facade",
+    "external_system_entry": "code_registration",
+    "required_operations": [
+      "remember",
+      "recall"
+    ],
+    "optional_operations": [
+      "observed_at temporal metadata",
+      "reference_time"
+    ],
+    "unsupported_semantics": "a backend that cannot rank returns an empty ranking and is scored by the native protocol; the governance dimension is not_applicable for arms without a governed admission path"
+  },
+  "provider_requirements": {
+    "credentials": "credential_free",
+    "model_dependency": "none",
+    "judge": {
+      "required": false,
+      "identity": null,
+      "note": "the upstream model-judged QA evaluator is intentionally not run; official_longmemeval_qa_score is not_computed"
+    },
+    "python_dependencies": []
+  },
+  "normalization": {
+    "normalizer": "agentmem_ref.evaluation.normalize:normalize_longmemeval",
+    "mappings": [
+      {
+        "dimension": "retrieval",
+        "metric_id": "recall_all@<k>",
+        "native_evidence": "planes.<plane>.backends.<backend>.aggregate.headline.recall_all@<k>",
+        "semantics": "headline k per plane (session: 5,10; turn: 5,10,50); scored questions with upstream exclusions applied",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "retrieval",
+        "metric_id": "ndcg_any@<k>",
+        "native_evidence": "planes.<plane>.backends.<backend>.aggregate.headline.ndcg_any@<k>",
+        "semantics": "headline k per plane; upstream DCG weighting",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "currentness",
+        "metric_id": "knowledge_update_recall_all@<k>",
+        "native_evidence": "planes.<plane>.backends.<backend>.currentness.knowledge_update.headline.recall_all@<k>",
+        "semantics": "scored knowledge-update questions",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "currentness",
+        "metric_id": "knowledge_update_ndcg_any@<k>",
+        "native_evidence": "planes.<plane>.backends.<backend>.currentness.knowledge_update.headline.ndcg_any@<k>",
+        "semantics": "scored knowledge-update questions",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "currentness",
+        "metric_id": "latest_gold_ranked_first",
+        "native_evidence": "planes.<plane>.backends.<backend>.currentness.latest_gold_ranked_first.rate",
+        "semantics": "profile-local diagnostic; not an upstream LongMemEval metric",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "governance",
+        "metric_id": "candidate_count_total",
+        "native_evidence": "planes.<plane>.backends.agent_memory.governance.candidate_count_total",
+        "semantics": "agent_memory arm only; one tenant and scope per question",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "governance",
+        "metric_id": "refused_candidate_count_total",
+        "native_evidence": "planes.<plane>.backends.agent_memory.governance.refused_candidate_count_total",
+        "semantics": "agent_memory arm only",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "governance",
+        "metric_id": "unmapped_admitted_count_total",
+        "native_evidence": "planes.<plane>.backends.agent_memory.governance.unmapped_admitted_count_total",
+        "semantics": "agent_memory arm only",
+        "direction": "zero_target"
+      },
+      {
+        "dimension": "efficiency",
+        "metric_id": "backend_wall_seconds",
+        "native_evidence": "planes.<plane>.backends.<backend>.timing.wall_seconds",
+        "semantics": "single-process local execution; denominator is question count",
+        "direction": "lower_better"
+      },
+      {
+        "dimension": "efficiency",
+        "metric_id": "ingest_seconds_total",
+        "native_evidence": "planes.<plane>.backends.agent_memory.timing.ingest_seconds_total",
+        "semantics": "agent_memory arm only",
+        "direction": "lower_better"
+      },
+      {
+        "dimension": "efficiency",
+        "metric_id": "recall_seconds_total",
+        "native_evidence": "planes.<plane>.backends.agent_memory.timing.recall_seconds_total",
+        "semantics": "agent_memory arm only",
+        "direction": "lower_better"
+      },
+      {
+        "dimension": "efficiency",
+        "metric_id": "recall_seconds_max",
+        "native_evidence": "planes.<plane>.backends.agent_memory.timing.recall_seconds_max",
+        "semantics": "agent_memory arm only",
+        "direction": "lower_better"
+      },
+      {
+        "dimension": "efficiency",
+        "metric_id": "peak_rss_mb",
+        "native_evidence": "execution.resource_consumption.peak_rss_mb",
+        "semantics": "declared not_measured: whole-process high-water mark is not attributable to one backend",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "efficiency",
+        "metric_id": "store_size_bytes",
+        "native_evidence": "execution.store_size_bytes",
+        "semantics": "declared not_measured: per-question stores were temporary",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "input_sha256_bound",
+        "native_evidence": "input.sha256",
+        "semantics": "exact raw-byte input digest present",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "agent_memory_worktree_clean",
+        "native_evidence": "execution.agent_memory_worktree_dirty",
+        "semantics": "false or unknown means the run cannot be bound to an exact committed tree",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "execution_<failure>_count",
+        "native_evidence": "planes.<plane>.backends.<backend>.failures.<failure>_count",
+        "semantics": "runtime_failure, ingestion_failure, out_of_corpus_returned counts",
+        "direction": "zero_target"
+      }
+    ],
+    "unmapped_dimensions": {
+      "reasoning": "not_measured: upstream model-judged QA was not run",
+      "evaluator_integrity": "not_measured: evaluator-integrity mutation probes run separately (reference/run_benchmark_integrity_mutants.py, #518) and are not bound to a run"
+    }
+  },
+  "evaluator_integrity": {
+    "negative_controls": [
+      {
+        "control_id": "missing_gold",
+        "description": "gold item removed from the ranking",
+        "expected_detection": true
+      },
+      {
+        "control_id": "irrelevant_ahead",
+        "description": "irrelevant items inserted ahead of gold",
+        "expected_detection": true
+      },
+      {
+        "control_id": "irrelevant_at_rank_one",
+        "description": "one irrelevant item at rank 1 only",
+        "expected_detection": false,
+        "note": "known upstream insensitivity: DCG weights ranks 1 and 2 equally; reported under known_insensitivities"
+      },
+      {
+        "control_id": "rank_below_cutoff",
+        "description": "gold pushed below the k cutoff",
+        "expected_detection": true
+      },
+      {
+        "control_id": "stale_over_current",
+        "description": "stale gold ranked above current gold; currentness diagnostic must move",
+        "expected_detection": true
+      },
+      {
+        "control_id": "suppressed_abstention",
+        "description": "abstention exclusion suppressed; denominator must change",
+        "expected_detection": true
+      },
+      {
+        "control_id": "identity_mapping_corruption",
+        "description": "item identity mapping corrupted",
+        "expected_detection": true
+      },
+      {
+        "control_id": "cross_scope_injection",
+        "description": "out-of-corpus items injected; out-of-corpus count must rise with recall unchanged",
+        "expected_detection": true
+      }
+    ],
+    "runner": "reference/run_benchmark_integrity_mutants.py",
+    "qualification_expectation": "all_detected must be true except declared known insensitivities, which must be confirmed as insensitive"
+  },
+  "reproducibility": {
+    "seed": {
+      "material": false,
+      "default": "agent-memory-longmemeval-subset-v1",
+      "note": "seed matters only for stable subset selection; full runs are seed-free"
+    },
+    "environment_requirements": [
+      "python>=3.11",
+      "no network access required once the dataset is present"
+    ],
+    "artifact_requirements": [
+      "native report JSON",
+      "rows.json.gz",
+      "normalized memory-benchmark-run manifests"
+    ],
+    "revision_binding": "execution.agent_memory_revision + execution.agent_memory_worktree_dirty + upstream.revision + input.sha256 + input.selection.question_ids_sha256"
+  },
+  "gauntlet": {
+    "relationship": "eligible",
+    "profile_id": null,
+    "reason": "the retrieval lane is expressible through remember/recall operation envelopes, but the runner currently invokes the Agent Memory facade directly; a system-neutral Gauntlet profile binding is deferred until the same-harness comparator work (#640) needs it"
+  },
+  "evidence_history": [
+    {
+      "variant": "longmemeval_s_cleaned",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "agent_memory",
+      "system_revision": "f73b872c7f062d0b1e80b4812650b854e3bd2ac8",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "execution.agent_memory_revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-session-agent_memory-f73b872c7f06.json",
+        "reports/benchmarks/normalized/longmemeval-turn-agent_memory-f73b872c7f06.json"
+      ],
+      "evidence_pr": 536
+    },
+    {
+      "variant": "longmemeval_m_cleaned",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "9d79e5524794a2e6900a3aa9cb7d9152c5a3e8319c9a87c25494ba1eacee495f",
+      "system_id": "agent_memory",
+      "system_revision": "409098ffeec5105cfaa317f2210d54e37cae3a83",
+      "report": "reports/benchmarks/longmemeval/longmemeval-m-full-409098f.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "execution.agent_memory_revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-session-agent_memory-409098ffeec5.json",
+        "reports/benchmarks/normalized/longmemeval-turn-agent_memory-409098ffeec5.json"
+      ]
+    },
+    {
+      "variant": "upstream_model_judged_qa",
+      "status": "not_run"
+    }
+  ],
+  "product_findings": [
+    {
+      "issue": 531,
+      "summary": "currentness ordering: anti-recency exact ties and stale-higher-score cases"
+    },
+    {
+      "issue": 538,
+      "summary": "default post-admission ranking below the lexical baseline"
+    },
+    {
+      "issue": 522,
+      "summary": "commit and recall cost grow with store size"
+    }
+  ],
+  "dimensions": [
+    "retrieval",
+    "currentness",
+    "governance",
+    "efficiency",
+    "reproducibility"
+  ],
+  "limitations": [
+    "retrieval/currentness only; not answer-generation quality",
+    "lexical_overlap is a profile-local baseline, not an upstream BM25/dense retriever",
+    "external systems enter only by code registration in the runner's RETRIEVERS table"
+  ],
+  "authority_effect": "none"
+}

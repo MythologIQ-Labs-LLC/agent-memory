@@ -1,0 +1,202 @@
+{
+  "contract_family": "agent-memory-benchmark-integration",
+  "contract_version": "1.0.0",
+  "integration_id": "swe-context-bench-lite-external-retrieval-v1",
+  "admission_state": "blocked",
+  "owning_issue": 467,
+  "description": "SWE-ContextBench Lite prior-experience retrieval comparison with no-memory, lexical-overlap, and governed Agent Memory arms. Protocol-comparable external evidence is blocked on the exact redacted past-task projections and batch/distractor selection provenance.",
+  "benchmark": {
+    "id": "swe-context-bench-lite",
+    "name": "SWE-ContextBench Lite",
+    "provenance_class": "external_adapted",
+    "upstream": {
+      "repository": "jiayuanz3/SWEContextBench",
+      "url": "https://github.com/jiayuanz3/SWEContextBench",
+      "paper_url": null
+    },
+    "source_revision": "unbound",
+    "source_revision_rule": "manifest_bound"
+  },
+  "source_rights": {
+    "license_spdx": null,
+    "license_url": null,
+    "data_license_spdx": null,
+    "code_redistribution": "linked_only",
+    "data_redistribution": "linked_only",
+    "attribution": "SWE-ContextBench (upstream repository jiayuanz3/SWEContextBench); the harness owns only the gold-edge/ranking comparison",
+    "acquisition_notes": "The committed manifests are synthetic or historical projections. The exact redacted past-task projections and batch/distractor selection provenance required for protocol-comparable evidence have not been obtained (#467)."
+  },
+  "input_contract": {
+    "dataset_id": "swe-context-bench-lite manifest-bound projection",
+    "dataset_revision_rule": "manifest_bound",
+    "known_dataset_revision": null,
+    "input_digest_rule": "sha256_per_input_file",
+    "known_input_sha256": null,
+    "committed_input_path": null,
+    "input_may_be_absent_before_execution": true,
+    "corpus_classes": [
+      "synthetic",
+      "historical_projection"
+    ],
+    "selection": {
+      "identity_rule": "manifest defines the cases; the harness hashes the manifest, runtime configuration, evidence profile, and every experience/query sidecar file (inputs.file_sha256)",
+      "methods": [
+        "manifest-declared case set"
+      ]
+    }
+  },
+  "native_protocol": {
+    "task_type": "prior_experience_retrieval_gold_edges",
+    "native_metrics": [
+      {
+        "metric_id": "candidate_recall",
+        "description": "gold edges among candidates",
+        "direction": "higher_better",
+        "upstream_defined": false
+      },
+      {
+        "metric_id": "final_admitted_recall / precision / f1",
+        "description": "gold edges among governed admitted results",
+        "direction": "higher_better",
+        "upstream_defined": false
+      },
+      {
+        "metric_id": "false_admission_count / false_refusal_count / candidate_noise_count",
+        "description": "admission error counts",
+        "direction": "zero_target",
+        "upstream_defined": false
+      },
+      {
+        "metric_id": "ndcg_at_1 / ndcg_at_3",
+        "description": "ranking quality over gold edges",
+        "direction": "higher_better",
+        "upstream_defined": false
+      }
+    ],
+    "native_artifacts": [
+      {
+        "artifact_id": "harness-report",
+        "kind": "benchmark_native_results",
+        "description": "backends{no_memory, lexical_overlap, agent_memory}, comparison deltas, comparability, claim_boundary"
+      }
+    ],
+    "runner": {
+      "kind": "repository_script",
+      "entry_point": "reference/run_swe_context_bench_harness.py",
+      "supporting_entry_points": [
+        "reference/run_swe_context_bench.py",
+        "reference/run_swe_context_bench_real_100.py"
+      ],
+      "invocation_example": "python reference/run_swe_context_bench_harness.py --manifest <manifest.json> --output report.json"
+    },
+    "budget": {
+      "retrieval_or_context_budget": "lexical top-k 3 with anchor limit 3; consistency repeat count 5",
+      "parameters": {
+        "lexical_top_k": 3,
+        "lexical_anchor_limit": 3,
+        "consistency_repeat_count": 5
+      }
+    },
+    "failure_semantics": {
+      "per_item_error_capture": false,
+      "timeout": "none",
+      "description": "any exception aborts the run; ValueError becomes a CLI error; missing manifest files fail closed"
+    },
+    "concurrency": "sequential, single process"
+  },
+  "system_requirements": {
+    "invocation_surface": "agent_memory_internal_runtime",
+    "external_system_entry": "not_available",
+    "required_operations": [],
+    "optional_operations": [],
+    "unsupported_semantics": "the Agent Memory arm binds internal runtime classes (ConfiguredCompositionRuntime, query_driven_recall); no external system can enter this runner without a new system-neutral runner"
+  },
+  "provider_requirements": {
+    "credentials": "credential_free",
+    "model_dependency": "none",
+    "judge": {
+      "required": false,
+      "identity": null,
+      "note": "no judge"
+    },
+    "python_dependencies": []
+  },
+  "normalization": {
+    "normalizer": null,
+    "mappings": [],
+    "unmapped_dimensions": {
+      "retrieval": "blocked: no protocol-comparable frozen external input exists (#467); the harness report is not normalized until it does",
+      "currentness": "not_applicable: no update or conflict protocol",
+      "reasoning": "not_applicable: no answer generation",
+      "governance": "blocked: governed admission counts exist natively but are not normalized while external evidence is blocked",
+      "efficiency": "blocked: not normalized while external evidence is blocked",
+      "evaluator_integrity": "not_measured: evaluator-integrity mutation probes run separately (reference/run_benchmark_integrity_mutants.py, #518) and are not bound to a run",
+      "reproducibility": "blocked: per-file digests exist natively but are not normalized while external evidence is blocked"
+    }
+  },
+  "evaluator_integrity": {
+    "negative_controls": [
+      {
+        "control_id": "admitted_noise",
+        "description": "noise admitted; precision must fall",
+        "expected_detection": true
+      },
+      {
+        "control_id": "missing_gold",
+        "description": "gold removed; recall must fall with denominator unchanged",
+        "expected_detection": true
+      },
+      {
+        "control_id": "candidate_admission_collapse",
+        "description": "all candidates refused; admitted recall must fall",
+        "expected_detection": true
+      },
+      {
+        "control_id": "rank_inversion",
+        "description": "ranks inverted; nDCG@1 must fall with recall equal",
+        "expected_detection": true
+      },
+      {
+        "control_id": "admission_refusal",
+        "description": "gold refused; false refusal count must rise",
+        "expected_detection": true
+      }
+    ],
+    "runner": "reference/run_benchmark_integrity_mutants.py",
+    "qualification_expectation": "all_detected must be true"
+  },
+  "reproducibility": {
+    "seed": {
+      "material": false,
+      "default": null,
+      "note": "deterministic manifest-driven cases"
+    },
+    "environment_requirements": [
+      "python>=3.11",
+      "AGENT_MEMORY_REVISION or a git checkout for revision binding"
+    ],
+    "artifact_requirements": [
+      "harness report JSON with inputs.file_sha256 for every input file"
+    ],
+    "revision_binding": "agent_memory_revision + manifest/runtime-config/evidence-profile/sidecar file digests"
+  },
+  "gauntlet": {
+    "relationship": "not_applicable",
+    "profile_id": null,
+    "reason": "the runner binds Agent Memory internal runtime classes and a manifest-bound projection; it cannot host a system-neutral profile and its external evidence is blocked"
+  },
+  "evidence_history": [
+    {
+      "variant": "lite_protocol_comparable_99_query_100_edge",
+      "status": "blocked",
+      "blocker": "exact redacted past-task projections and batch/distractor selection provenance (#467)"
+    }
+  ],
+  "product_findings": [],
+  "dimensions": [],
+  "limitations": [
+    "committed manifests are synthetic or historical projections, never protocol-comparable external evidence",
+    "the Agent Memory arm uses internal runtime classes rather than the public facade"
+  ],
+  "authority_effect": "none"
+}
