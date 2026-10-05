@@ -1,15 +1,13 @@
-"""Agent Memory public-facade adapter for neutral Gauntlet qualification.
+"""Agent Memory public-facade adapter for the Governance Gauntlet alpha.
 
 This adapter is intentionally thin. It translates the neutral Gauntlet operation
 contract into the public ``AgentMemory`` facade and does not implement isolation,
-admission, ranking, correction, deletion, or recovery policy itself.
+admission, ranking, or deletion policy itself.
 
 The qualified local runtime is single-tenant. This adapter therefore does not claim
-cross-tenant isolation. It can exercise scope isolation inside one tenant and uses
-``AgentMemory.open`` as the supported mapped recovery/reopen path. The public facade does
-not expose checkpoint creation, so this adapter must report checkpoint as unsupported
-instead of reaching through ``handle.runtime`` and laundering a private capability into a
-public product claim.
+cross-tenant isolation. It does exercise native scope isolation inside one tenant,
+caller-visible foreign-cardinality minimization, deletion, and restart-safe durable
+state through repeated ``AgentMemory.open`` recovery.
 """
 
 from __future__ import annotations
@@ -30,10 +28,10 @@ from .gauntlet_contract import CONTRACT_VERSION, validate_operation_envelope
 _BASE = Path(tempfile.gettempdir()) / "agent-memory-gauntlet-public-facade"
 _TENANT = "tenant:gauntlet-public-facade"
 _ACTOR = "agent:gauntlet"
-_PURPOSE = "Agent Memory Gauntlet public-facade qualification"
+_PURPOSE = "Agent Memory Governance Gauntlet synthetic qualification"
 
-# Translation-only metadata. Governance/lifecycle decisions are never made from this
-# map. The SUT returns fact UUIDs while neutral Gauntlet cases use stable record IDs.
+# Translation-only metadata. Governance decisions are never made from this map.
+# The SUT returns fact UUIDs while the neutral Gauntlet cases use stable record IDs.
 _RECORDS: dict[str, dict[str, dict[str, str]]] = defaultdict(dict)
 
 
@@ -53,13 +51,6 @@ def _handle(namespace: str, scope: str) -> AgentMemory:
         scope=scope,
         purpose=_PURPOSE,
     )
-
-
-def _drop_record_mapping(namespace: str, record_id: str) -> None:
-    records = _RECORDS.get(namespace, {})
-    for fact_uuid, record in list(records.items()):
-        if record.get("id") == record_id:
-            records.pop(fact_uuid, None)
 
 
 def _response(
@@ -85,8 +76,6 @@ def _response(
             "public_contract": "1.3.0",
             "translation_only": True,
             "tenant_model": "single_tenant_local_composition",
-            "recovery_surface": "AgentMemory.open",
-            "checkpoint_surface": "unsupported_on_public_facade",
         },
         "authority_effect": "none",
     }
@@ -98,17 +87,6 @@ def _invalid(request: Mapping[str, Any], code: str, message: str, *, started: fl
         request,
         status="invalid_request",
         error={"source": "system_adapter", "code": code, "message": message},
-        started=started,
-    )
-
-
-def _sut_refused(
-    request: Mapping[str, Any], code: str, message: str, *, started: float
-) -> dict[str, Any]:
-    return _response(
-        request,
-        status="refused",
-        error={"source": "system_under_test", "code": code, "message": message},
         started=started,
     )
 
@@ -131,8 +109,6 @@ def agent_memory_public_adapter(request: Mapping[str, Any]) -> dict[str, Any]:
                 "public_contract": "1.3.0",
                 "tenant_model": "single_tenant_local_composition",
                 "adapter_enforces_governance": False,
-                "recovery_surface": "AgentMemory.open",
-                "checkpoint_surface": "unsupported",
             },
             started=started,
         )
@@ -147,13 +123,13 @@ def agent_memory_public_adapter(request: Mapping[str, Any]) -> dict[str, Any]:
         )
 
     # The local public composition is single-tenant. Tenant routing is deliberately not
-    # manufactured here, and manifests truthfully leave cross-tenant isolation unsupported.
+    # manufactured here, and the manifest truthfully leaves tenant isolation unsupported.
     scope = str(payload.get("scope", ""))
     if not scope:
         return _invalid(
             request,
             "missing_scope",
-            "Agent Memory public adapter operations require scope",
+            "Agent Memory governance adapter operations require scope",
             started=started,
         )
 
@@ -171,14 +147,17 @@ def agent_memory_public_adapter(request: Mapping[str, Any]) -> dict[str, Any]:
         with _handle(namespace, scope) as memory:
             outcome = memory.remember(record_id, text)
         if not outcome.get("committed") or not outcome.get("fact_uuid"):
-            return _sut_refused(
+            return _response(
                 request,
-                "remember_refused",
-                str(outcome.get("refusal") or "remember was not committed"),
+                status="error",
+                error={
+                    "source": "system_under_test",
+                    "code": "remember_refused",
+                    "message": str(outcome.get("refusal") or "remember was not committed"),
+                },
                 started=started,
             )
         fact_uuid = str(outcome["fact_uuid"])
-        _drop_record_mapping(namespace, record_id)
         _RECORDS[namespace][fact_uuid] = {
             "id": record_id,
             "text": text,
@@ -187,48 +166,6 @@ def agent_memory_public_adapter(request: Mapping[str, Any]) -> dict[str, Any]:
         return _response(
             request,
             result={"accepted": True, "fact_uuid": fact_uuid},
-            started=started,
-        )
-
-    if operation == "correct":
-        record_id = str(payload.get("id", ""))
-        text = payload.get("text")
-        if not record_id or not isinstance(text, str):
-            return _invalid(
-                request,
-                "invalid_correction",
-                "correct requires id and text",
-                started=started,
-            )
-        replacement_kind = str(payload.get("replacement_kind", "error_correction"))
-        with _handle(namespace, scope) as memory:
-            outcome = memory.correct(
-                record_id,
-                text,
-                risk_class="low",
-                replacement_kind=replacement_kind,
-            )
-        if not outcome.get("committed") or not outcome.get("fact_uuid"):
-            return _sut_refused(
-                request,
-                "correct_refused",
-                str(outcome.get("refusal") or "correction was not committed"),
-                started=started,
-            )
-        fact_uuid = str(outcome["fact_uuid"])
-        _drop_record_mapping(namespace, record_id)
-        _RECORDS[namespace][fact_uuid] = {
-            "id": record_id,
-            "text": text,
-            "scope": scope,
-        }
-        return _response(
-            request,
-            result={
-                "corrected": True,
-                "fact_uuid": fact_uuid,
-                "replacement_kind": replacement_kind,
-            },
             started=started,
         )
 
@@ -276,50 +213,19 @@ def agent_memory_public_adapter(request: Mapping[str, Any]) -> dict[str, Any]:
         with _handle(namespace, scope) as memory:
             outcome = memory.forget(record_id)
         if not outcome.get("committed"):
-            return _sut_refused(
+            return _response(
                 request,
-                "forget_refused",
-                str(outcome.get("refusal") or "forget was not committed"),
+                status="error",
+                error={
+                    "source": "system_under_test",
+                    "code": "forget_refused",
+                    "message": str(outcome.get("refusal") or "forget was not committed"),
+                },
                 started=started,
             )
-        _drop_record_mapping(namespace, record_id)
         return _response(
             request,
             result={"deleted": True, "deletion_semantics": "governed_pruning"},
-            started=started,
-        )
-
-    if operation == "history":
-        record_id = str(payload.get("id", ""))
-        if not record_id:
-            return _invalid(
-                request,
-                "missing_memory_id",
-                "history requires id",
-                started=started,
-            )
-        with _handle(namespace, scope) as memory:
-            outcome = memory.history(record_id)
-        return _response(
-            request,
-            result={"history": outcome.get("history")},
-            started=started,
-        )
-
-    if operation == "recover":
-        # ``AgentMemory.open`` is the supported public create-or-recover boundary. Opening
-        # an existing namespace exercises the real recovery path; the handle is then closed
-        # normally so the adapter itself does not keep hidden state alive across the case.
-        with _handle(namespace, scope) as memory:
-            posture = memory.posture()
-        return _response(
-            request,
-            result={
-                "recovered": True,
-                "recovery_surface": "AgentMemory.open",
-                "namespace_identity": _namespace_key(namespace),
-                "posture_stage": posture.get("stage"),
-            },
             started=started,
         )
 
