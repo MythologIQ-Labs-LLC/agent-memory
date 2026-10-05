@@ -3102,8 +3102,523 @@
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium",
       "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/rust-prefilter-performance.yml",
+      "name": "Rust Candidate Prefilter Performance",
+      "capability": "Rust Candidate Prefilter Performance",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          30
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/rust-shadow-kernel.yml",
+      "name": "Rust Shadow Kernel Qualification",
+      "capability": "Rust Shadow Kernel Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/seal-anchors.yml",
+      "name": "Seal Anchors",
+      "capability": "Seal Anchors",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/sleeper-poisoning-evidence.yml",
+      "name": "Sleeper Poisoning Evidence",
+      "capability": "Sleeper Poisoning Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/sqlite-production-substrate.yml",
+      "name": "SQLite Production Substrate",
+      "capability": "SQLite Production Substrate",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/structural-mutation-governance.yml",
+      "name": "Structural Mutation Governance",
+      "capability": "Structural Mutation Governance",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/temporal-commitment-evidence.yml",
+      "name": "Temporal Commitment Evidence",
+      "capability": "Temporal Commitment Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/temporal-currentness-final-replay.yml",
+      "name": "Temporal Currentness Final Replay",
+      "capability": "Temporal Currentness Final Replay",
+      "ownerOrProgram": [
+        "agent-memory#580"
+      ],
+      "lifecycleClass": "one_time",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-24.04"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          30
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "RETIRE",
+      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/unsafe-composition-evidence.yml",
+      "name": "Unsafe Composition Evidence",
+      "capability": "Unsafe Composition Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/uor-addr-compatibility.yml",
+      "name": "UOR Addr Compatibility",
+      "capability": "UOR Addr Compatibility",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/validate-doctrine-evidence.yml",
+      "name": "Validate Doctrine Evidence",
+      "capability": "Validate Doctrine Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/write-readable-visibility.yml",
+      "name": "Write-to-Readable Visibility",
+      "capability": "Write-to-Readable Visibility",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
     }
   ],
   "lastUpdatedAt": "2026-10-05",
-  "processedWorkflowCount": 72
+  "processedWorkflowCount": 84
 }
