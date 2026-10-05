@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "qualification_id": "agmi-agent-memory-integrity-v1",
-  "status": "external_reproduction_pending",
+  "status": "accepted_partial_reuse",
   "authority_effect": "none",
-  "integration_ruling": "partial_reuse_candidate",
+  "integration_ruling": "partial_reuse",
   "external_evidence_class": "independent_external_benchmark",
   "local_integration_evidence_class": "gauntlet_external_integration",
   "agmi": {
@@ -89,6 +89,22 @@
     },
     "whole_state_snapshot_rollback": "older complete state directory opens as current and newest genuine memory is absent without an integrity error",
     "digest_posture": "current persisted row digests are unkeyed SHA-256; recomputation by an attacker is outside the frozen T1-T9 attack contract"
+  },
+  "accepted_evidence": {
+    "workflow_run": 37257944075,
+    "workflow_head": "34dc89b0c8ae7faf479faf1261e80224381f50b8",
+    "artifact_id": 11323860742,
+    "artifact_digest": "sha256:d87ab730447540cc5e25f3243aba900d1ea7fbdbabc43dce1936b092bb77e2b3",
+    "committed_result": "reports/gauntlet/agmi-agent-memory-v1/accepted-result.json",
+    "upstream_agent_memory_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "observed_summary": {
+      "t1_t8": "safe_read_detected",
+      "t9_snapshot_rollback": "VULNERABLE",
+      "evidence_sufficiency": "sufficient_all_nine_cells"
+    }
   },
   "coverage": [
     {
