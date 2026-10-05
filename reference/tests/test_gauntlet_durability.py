@@ -45,6 +45,7 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
                 REAL_MANIFEST,
                 DURABILITY_RECOVERY_PROFILE_ID,
                 output_dir=Path(temporary) / "runs",
+                allow_external_process=True,
                 allow_destructive_reset=True,
             )
             self.assertEqual(blocked["status"], "blocked")
@@ -61,6 +62,7 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
                 REAL_MANIFEST,
                 DURABILITY_RECOVERY_PROFILE_ID,
                 output_dir=Path(temporary) / "runs",
+                allow_external_process=True,
                 allow_destructive_operations=True,
             )
             self.assertEqual(result["status"], "complete", result)
