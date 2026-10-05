@@ -76,7 +76,7 @@
         "push",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -99,11 +99,11 @@
         "node"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/agmi-agent-memory-qualification.yml",
@@ -249,7 +249,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -273,11 +273,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
-      "classificationConfidence": "medium-high",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/atlas-research-intake.yml",
@@ -378,7 +378,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -402,11 +402,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/benchmark-integration-contract.yml",
@@ -464,7 +464,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -487,11 +487,11 @@
         "python"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
-      "classificationConfidence": "medium-high",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/canonical-json-v2-migration-preflight.yml",
@@ -505,7 +505,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -532,11 +532,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
-      "classificationConfidence": "medium-high",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/canonical-json-v2-parity.yml",
@@ -550,7 +550,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -576,11 +576,11 @@
         "cargo"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/canonical-json-v2-transaction-qualification.yml",
@@ -636,7 +636,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -659,11 +659,11 @@
         "python"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/canonical-json-v2-vector-integrity.yml",
@@ -718,7 +718,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -743,11 +743,11 @@
         "python"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/canonical-scheme-registry.yml",
@@ -803,7 +803,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -828,11 +828,11 @@
         "python"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/capability-behavior-contract.yml",
@@ -846,7 +846,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -870,11 +870,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/cedar-policy-comparator.yml",
@@ -888,7 +888,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -912,11 +912,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/cli-doctor.yml",
@@ -930,7 +930,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -956,11 +956,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/cmcp-external-evidence.yml",
@@ -974,7 +974,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -998,11 +998,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/codegenome-multicapability-profile.yml",
@@ -1016,7 +1016,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1042,11 +1042,11 @@
         "cargo"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/codegenome-reality-mesh-evidence.yml",
@@ -1060,7 +1060,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1086,11 +1086,11 @@
         "cargo"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/codegenome-scope-residue-closeout.yml",
@@ -1104,7 +1104,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1130,11 +1130,11 @@
         "cargo"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
-      "classificationConfidence": "medium-high",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/cognitive-mesh-evidence.yml",
@@ -1148,7 +1148,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1172,11 +1172,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/component-qualification-evidence.yml",
@@ -1188,6 +1188,7 @@
       "lifecycleClass": "async_assurance",
       "triggers": [
         "pull_request",
+        "release",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
@@ -1276,7 +1277,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1300,11 +1301,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/conditional-memory-influence.yml",
@@ -1318,7 +1319,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1342,11 +1343,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/config-bound-recovery.yml",
@@ -1357,12 +1358,12 @@
         "agent-memory#308",
         "agent-memory#300"
       ],
-      "lifecycleClass": "one_time",
+      "lifecycleClass": "required_hot_path",
       "triggers": [
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1386,11 +1387,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
-      "proposedDisposition": "RETIRE",
-      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
-      "classificationConfidence": "medium-high",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Ongoing configured-restart acceptance contract. Review only if the capability or authority contract is superseded.",
+      "classificationConfidence": "high",
+      "reviewNotes": "Corrected from one-time heuristic: this workflow continuously validates configuration-bound recovery behavior on push and pull request."
     },
     {
       "path": ".github/workflows/dashclaw-external-verdict.yml",
@@ -1402,9 +1403,10 @@
       "lifecycleClass": "conditional_hot_path",
       "triggers": [
         "pull_request",
+        "release",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1428,11 +1430,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/derivation-currentness-evidence.yml",
@@ -1488,7 +1490,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1512,11 +1514,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/domain-schema-discovery-evidence.yml",
@@ -1530,7 +1532,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1554,11 +1556,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/domain-schema-mutation-contract.yml",
@@ -1572,7 +1574,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1596,11 +1598,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/enforce-issue-labels.yml",
@@ -1610,8 +1612,10 @@
         "MythologIQ-Labs-LLC/agent-memory"
       ],
       "lifecycleClass": "async_assurance",
-      "triggers": [],
-      "consequenceClass": "review_required",
+      "triggers": [
+        "issues"
+      ],
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1631,11 +1635,11 @@
       },
       "repeatedSetupFamily": [],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/evolveai-cognitive-mesh-evidence.yml",
@@ -1649,7 +1653,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1677,11 +1681,11 @@
         "cargo"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/evolveai-multicapability-qualification.yml",
@@ -1742,7 +1746,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1766,11 +1770,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/federated-resource-exchange.yml",
@@ -1784,7 +1788,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1811,11 +1815,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/gauntlet-durability-recovery.yml",
@@ -1824,12 +1828,12 @@
       "ownerOrProgram": [
         "MythologIQ-Labs-LLC/agent-memory"
       ],
-      "lifecycleClass": "one_time",
+      "lifecycleClass": "conditional_hot_path",
       "triggers": [
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1855,11 +1859,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
-      "proposedDisposition": "RETIRE",
-      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
-      "classificationConfidence": "medium-high",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep path-scoped while durability/recovery behavior remains a supported acceptance boundary; review if the gauntlet authority moves or is superseded.",
+      "classificationConfidence": "high",
+      "reviewNotes": "Corrected from one-time heuristic: this is a path-scoped durability/recovery acceptance lane, not a disposable recovery procedure."
     },
     {
       "path": ".github/workflows/gauntlet-external-contestant-dogfood.yml",
@@ -1873,7 +1877,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1899,11 +1903,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/hermes-observe-govern-integration.yml",
@@ -1918,7 +1922,7 @@
         "push",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -1944,11 +1948,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/hermes-recursive-learning-research.yml",
@@ -2049,7 +2053,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2073,11 +2077,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/logical-state-algebra-pressure.yml",
@@ -2091,7 +2095,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2115,11 +2119,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/long-horizon-memory-benchmark.yml",
@@ -2175,7 +2179,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2199,11 +2203,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/maintenance-evidence.yml",
@@ -2217,7 +2221,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2241,11 +2245,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/memory-component-program-closeout.yml",
@@ -2260,7 +2264,7 @@
         "push",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2285,11 +2289,11 @@
         "python"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
-      "classificationConfidence": "medium-high",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/memory-metabolism-benchmark.yml",
@@ -2345,7 +2349,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2372,11 +2376,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/opa-policy-comparator.yml",
@@ -2390,7 +2394,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2414,11 +2418,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/operational-memory-benchmark.yml",
@@ -2474,7 +2478,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2498,11 +2502,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/policy-projection-compatibility.yml",
@@ -2601,7 +2605,7 @@
         "pull_request",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2625,11 +2629,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/proposition-semantics-score.yml",
@@ -2689,7 +2693,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2713,11 +2717,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/publish-wiki.yml",
@@ -2731,7 +2735,7 @@
         "push",
         "workflow_dispatch"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "paths",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2753,11 +2757,11 @@
         "checkout"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/recall-validation-characterization.yml",
@@ -2861,7 +2865,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -2885,11 +2889,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/retrieval-quality-benchmark.yml",
@@ -3031,7 +3035,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -3055,11 +3059,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/runtime-configuration.yml",
@@ -3073,7 +3077,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -3097,11 +3101,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/rust-prefilter-performance.yml",
@@ -3291,7 +3295,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -3315,11 +3319,11 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     },
     {
       "path": ".github/workflows/structural-mutation-governance.yml",
@@ -3501,7 +3505,8 @@
       "lifecycleClass": "required_hot_path",
       "triggers": [
         "pull_request",
-        "push"
+        "push",
+        "release"
       ],
       "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
@@ -3588,7 +3593,7 @@
         "pull_request",
         "push"
       ],
-      "consequenceClass": "review_required",
+      "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
@@ -3612,13 +3617,23 @@
         "python-deps"
       ],
       "reusableWorkflowCalls": [],
-      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
-      "classificationConfidence": "medium",
-      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
     }
   ],
   "lastUpdatedAt": "2026-10-05",
-  "processedWorkflowCount": 84
+  "processedWorkflowCount": 84,
+  "currentBranchTriggerReconciliation": {
+    "observedAt": "2026-10-05",
+    "note": "Current main-branch code search found no .github/workflows files containing schedule:. The earlier 2026-10-05 audit snapshot recorded 6 scheduled workflow files. Treat this as configuration drift between audit snapshots, not as equivalent observations.",
+    "currentScheduleFiles": [],
+    "priorAuditScheduleFileCount": 6
+  },
+  "classificationPolicy": {
+    "consequenceRule": "Binary protected/discretionary classification required by #662. Ambiguous lanes are conservatively protected until explicit evidence proves discretionary suppression is safe.",
+    "behaviorAuthority": "Inventory classification alone does not authorize disabling, deleting, or moving required checks."
+  }
 }
