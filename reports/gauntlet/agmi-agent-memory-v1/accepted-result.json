@@ -4,7 +4,7 @@
   "authority_effect": "none",
   "evidence_class": "independent_external_benchmark",
   "source_workflow": {
-    "run_id": 37257944075,
+    "workflow_run": 37257944075,
     "artifact_id": 11323860742,
     "artifact_digest": "sha256:d87ab730447540cc5e25f3243aba900d1ea7fbdbabc43dce1936b092bb77e2b3",
     "head_sha": "34dc89b0c8ae7faf479faf1261e80224381f50b8"
