@@ -1,0 +1,153 @@
+{
+  "authority_effect": "none",
+  "contract_family": "agent-memory-same-harness-lane-evidence",
+  "contract_version": "1.0.0",
+  "evidence_class": "same_harness_external_candidate",
+  "execution": {
+    "agent_memory_revision": "703be5ba1c7e558edb16ac38508508e5ef592595",
+    "amb_pmb_return_cap": null,
+    "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "answer_model": null,
+    "authority_effect": "none",
+    "bridge_blobs": {
+      "reference/amb_agent_memory_bridge.py": "f7b3845c9262b07cd9b9b78eea9de202480163f0",
+      "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228"
+    },
+    "dataset": "precisionmembench",
+    "evidence_class": "same_harness_external_candidate",
+    "full_selection": true,
+    "harness_constraints": {
+      "authority_effect": "none",
+      "constraint_count": 295,
+      "constraints_sha256": "8a7f4b9b110c3d5f971cfe6be5a41920e9cfc8de06517955678173ceb0f717c7",
+      "lifted_pins": {
+        "cryptography": {
+          "locked": "cryptography==46.0.5",
+          "reason": "pinned by this repository's pyproject.toml"
+        },
+        "jsonschema": {
+          "locked": "jsonschema==4.26.0",
+          "reason": "pinned by this repository's pyproject.toml"
+        },
+        "rfc8785": {
+          "locked": null,
+          "reason": "pinned by this repository's pyproject.toml"
+        }
+      },
+      "memory": "agent-memory",
+      "row_pins": [],
+      "source": "uv.lock of the frozen AMB checkout, exported with uv and installed as pip constraints",
+      "uv_lock_git_blob": "cbd392efbd2c81c8cebf493edd07fd160f39dcbd",
+      "uv_lock_sha256": "de4408d18088476169d62286e379417aac2bd52c97f1bdd868bf4f4a366bcad7",
+      "uv_version": "uv 0.8.17"
+    },
+    "judge_model": null,
+    "lane_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json",
+    "lane_id": "amb-precisionmembench-retrieval-v1",
+    "mem0_optional_components": {
+      "fastembed_installed": true,
+      "spacy_installed": false
+    },
+    "memory": "agent-memory",
+    "mode": "retrieval",
+    "query_limit": "0",
+    "resolved_packages": {
+      "hindsight-all": "0.4.17",
+      "hindsight-client": "0.9.2",
+      "mem0ai": "1.0.5",
+      "openai": "2.26.0",
+      "posthog": "7.9.10",
+      "qdrant-client": "1.17.0",
+      "rank-bm25": "0.2.2",
+      "sentence-transformers": "5.2.3",
+      "sqlalchemy": "2.0.48",
+      "torch": "2.10.0",
+      "uv": "0.8.17"
+    },
+    "split": "single-turn",
+    "workflow_run_id": "37349431401"
+  },
+  "files": {
+    "amb-constraints-provenance.json": "7a906f622f334644c69a6b9c502175c66a945dfeadf7736e735a663933f1ee1a",
+    "amb-constraints.txt": "8a7f4b9b110c3d5f971cfe6be5a41920e9cfc8de06517955678173ceb0f717c7",
+    "execution-identity.json": "e24c56445473461143caeddd35833fbc2339deb2b1639f148bc1bbfc243e4059",
+    "files.txt": "2d0f7fdd5a6b0701250b260a277865760fe24cfe6d18ff9bb9a94fa68e1c2bca",
+    "precisionmembench-selfcheck.txt": "e6153f7fa21ddb7af0abcef690abd268cdd73e89fb32592d4a869972b3bfe993",
+    "sha256.txt": "7320da7fa783b17a44c5d592e97c20687c7cd3ca103a95d05659330410df70b6",
+    "single-turn.json": "5e00508e081e79092f72a624c0ad8e0936c5c073067d757f66d4f1449ec325cd"
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+    "fixtures": {
+      "beliefs.seed.json": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98",
+      "retrieval.cases.json": "09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c"
+    },
+    "query_count": 77,
+    "selection_id": "all-77:09e99f0852280538",
+    "sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "verified_by": "re-hashed from the pinned fixture URLs at import"
+  },
+  "lane_digest_at_execution": "eeae0f8fe13260822467444abf94c7bd3a1a4c769bb6d3f8c96980d2548019d6",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json",
+  "lane_id": "amb-precisionmembench-retrieval-v1",
+  "native_summary": {
+    "accuracy": 0.19480519480519481,
+    "active_passes": 4,
+    "active_total": 43,
+    "answer_llm": null,
+    "correct": 15,
+    "id_resolution": {
+      "source_id": 686
+    },
+    "ingested_docs": 35,
+    "ingestion_time_ms": 302.4,
+    "judge_llm": null,
+    "mean_precision": 0.1806,
+    "mean_recall": 0.9535,
+    "mean_retrieve_ms": 26.6,
+    "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+    "structural_passes": 6,
+    "structural_total": 25,
+    "total_passes": 15,
+    "total_queries": 77,
+    "trivially_empty_passes": 5,
+    "trivially_empty_total": 9
+  },
+  "row": {
+    "display_name": "Agent Memory (public facade, Runtime Baseline v1 runtime surface)",
+    "inference_posture": "none",
+    "provider_key": "agent-memory",
+    "role": "control",
+    "row_id": "agent-memory-public-facade",
+    "system_id": "agent-memory"
+  },
+  "system": {
+    "id": "agent-memory",
+    "mem0_optional_components": {
+      "fastembed_installed": true,
+      "spacy_installed": false
+    },
+    "resolved_packages": {
+      "hindsight-all": "0.4.17",
+      "hindsight-client": "0.9.2",
+      "mem0ai": "1.0.5",
+      "openai": "2.26.0",
+      "posthog": "7.9.10",
+      "qdrant-client": "1.17.0",
+      "rank-bm25": "0.2.2",
+      "sentence-transformers": "5.2.3",
+      "sqlalchemy": "2.0.48",
+      "torch": "2.10.0",
+      "uv": "0.8.17"
+    },
+    "revision": "703be5ba1c7e558edb16ac38508508e5ef592595",
+    "revision_rule": "git rev-parse HEAD of the executing checkout; the protected runtime surface is frozen at Runtime Baseline v1 f2aef57293b516e065cad5d0afea26ac7e3c28a9 and checked by scripts/check_runtime_baseline_equivalence.py",
+    "source_kind": "repository_runtime"
+  },
+  "workflow_run": {
+    "artifact_directory": "amb-precisionmembench-single-turn-agent-memory-703be5ba1c7e558edb16ac38508508e5ef592595",
+    "id": "37349431401",
+    "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/37349431401"
+  }
+}

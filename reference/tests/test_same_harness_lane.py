@@ -48,28 +48,68 @@ def _score_keys(value, path: str = "$") -> list[str]:
 
 
 class SameHarnessLaneTests(unittest.TestCase):
-    def test_committed_lane_is_frozen_without_scores_and_resolves_to_an_external_integration(self):
+    def test_committed_lane_is_accepted_without_scores_and_resolves_to_an_external_integration(self):
         lanes = list_lanes()
         self.assertEqual(len(lanes), len(lane_paths()))
         lane = _lane()
-        self.assertEqual(lane["status"], "frozen")
+        self.assertEqual(lane["status"], "accepted")
         self.assertIs(lane["frozen_before_any_score"], True)
         self.assertEqual(lane["authority_effect"], "none")
         self.assertIs(lane["evaluator"]["llm_calls"], False)
         self.assertIsNone(lane["evaluator"]["answer_model"])
-        self.assertEqual(_score_keys(lane), [], "a frozen lane must carry no score-bearing keys")
+        self.assertEqual(_score_keys(lane), [], "a lane must carry no score-bearing keys, accepted or not")
         resolved = resolve_lane(lane)
         self.assertEqual(resolved["provenance_class"], "external_independent")
         self.assertEqual(resolved["harness_revision"], lane["harness"]["revision"])
         self.assertEqual(resolved["lane_digest_sha256"], lane_digest(lane))
         rows = {row["row_id"]: row for row in resolved["rows"]}
-        self.assertEqual(rows["mem0-oss-2.2.1-explicit-memory"]["status"], "frozen")
+        self.assertEqual(rows["agent-memory-public-facade"]["status"], "accepted")
+        self.assertEqual(rows["bm25-harness-baseline"]["status"], "accepted")
+        self.assertEqual(rows["mem0-oss-2.2.1-explicit-memory"]["status"], "accepted")
         self.assertEqual(rows["hindsight-0.10.2"]["status"], "deferred")
         integration = get_integration(lane["benchmark_integration"])
         self.assertEqual(integration["input_contract"]["known_input_sha256"], lane["dataset"]["input_sha256"])
-        statuses = {item["variant"]: item["status"] for item in integration["evidence_history"]}
-        self.assertEqual(statuses[f"lane:{LANE_ID}:mem0-explicit"], "not_run")
-        self.assertEqual(statuses[f"lane:{LANE_ID}:hindsight"], "blocked")
+        entries = {item["variant"]: item for item in integration["evidence_history"]}
+        for key in ("agent-memory", "bm25", "mem0-explicit"):
+            entry = entries[f"lane:{LANE_ID}:{key}"]
+            self.assertEqual(entry["status"], "complete")
+            self.assertEqual(entry["input_sha256"], lane["dataset"]["input_sha256"])
+            self.assertEqual(entry["report_binding"], {"input_sha256_path": "input.sha256", "system_revision_path": "system.revision"})
+            row = next(item for item in lane["systems"] if item["provider_key"] == key)
+            self.assertEqual(entry["system_id"], row["system_id"])
+            self.assertEqual(row["status"], "accepted")
+            self.assertIn(entry["report"].rsplit("/", 2)[-2], row["status_reason"])
+        self.assertEqual(entries[f"lane:{LANE_ID}:hindsight"]["status"], "blocked")
+
+    def test_accepted_rows_are_bound_to_committed_evidence_records(self):
+        from agentmem_ref.evaluation.registry import check_evidence_binding
+
+        lane = _lane()
+        integration = get_integration(lane["benchmark_integration"])
+        repo_root = Path(__file__).resolve().parents[2]
+        bindings = check_evidence_binding(integration, repo_root=repo_root)
+        self.assertEqual(len(bindings), 3)
+        for binding in bindings:
+            self.assertTrue(binding["bound"], binding)
+            record = json.loads((repo_root / binding["report"]).read_text(encoding="utf-8"))
+            self.assertEqual(record["lane_id"], LANE_ID)
+            self.assertEqual(record["authority_effect"], "none")
+            self.assertEqual(record["execution"]["amb_revision"], lane["harness"]["revision"])
+            self.assertIs(record["execution"]["full_selection"], True)
+            self.assertIsNone(record["execution"]["amb_pmb_return_cap"])
+            self.assertEqual(record["execution"]["harness_constraints"]["uv_lock_git_blob"], lane["execution"]["environment"]["harness_lock"]["git_blob"])
+            self.assertEqual(record["native_summary"]["total_queries"], lane["dataset"]["query_count"])
+            self.assertEqual(record["native_summary"]["active_total"], 43)
+            directory = (repo_root / binding["report"]).parent
+            for name in ("single-turn.json", "execution-identity.json", "sha256.txt"):
+                self.assertTrue((directory / name).is_file(), name)
+            raw = json.loads((directory / "single-turn.json").read_text(encoding="utf-8"))
+            self.assertEqual(raw["correct"], record["native_summary"]["total_passes"])
+            self.assertEqual(raw["mode"], "retrieval")
+            self.assertIsNone(raw["answer_llm"])
+            if record["row"]["provider_key"] == "mem0-explicit":
+                self.assertEqual(record["execution"]["resolved_packages"]["mem0ai"], "2.2.1")
+                self.assertIs(record["execution"]["mem0_optional_components"]["fastembed_installed"], False)
 
     def test_lane_binds_the_bridge_constants_it_freezes(self):
         import sys
@@ -101,8 +141,22 @@ class SameHarnessLaneTests(unittest.TestCase):
         with self.assertRaisesRegex(SameHarnessLaneError, "placeholder"):
             validate_lane(lane)
         lane = _lane()
-        lane["systems"][2]["status"] = "accepted"
+        lane["status"] = "frozen"
         with self.assertRaisesRegex(SameHarnessLaneError, "frozen lane may not carry an accepted row"):
+            validate_lane(lane)
+        lane = _lane()
+        lane["systems"][2]["status_reason"] = None
+        with self.assertRaisesRegex(SameHarnessLaneError, "accepted row .* requires a status_reason"):
+            validate_lane(lane)
+        lane = _lane()
+        for row in lane["systems"]:
+            if row["status"] == "accepted":
+                row["status"] = "executed"
+        with self.assertRaisesRegex(SameHarnessLaneError, "accepted lane must carry at least one accepted row"):
+            validate_lane(lane)
+        lane = _lane()
+        lane["status"] = "executed"
+        with self.assertRaisesRegex(SameHarnessLaneError, "accepted row requires an accepted lane"):
             validate_lane(lane)
         lane = _lane()
         lane["evaluator"]["answer_model"] = "gemini:gemini-2.5-flash-lite"
@@ -115,6 +169,10 @@ class SameHarnessLaneTests(unittest.TestCase):
         lane = _lane()
         lane["systems"][2]["dependency_pins"] = []
         with self.assertRaisesRegex(SameHarnessLaneError, "exact dependency_pins"):
+            validate_lane(lane)
+        lane = _lane()
+        del lane["systems"][2]["inference_posture"]
+        with self.assertRaisesRegex(SameHarnessLaneError, "must declare inference_posture"):
             validate_lane(lane)
         lane = _lane()
         lane["systems"] = [row for row in lane["systems"] if row["role"] != "comparator"]
@@ -166,7 +224,7 @@ class SameHarnessLaneTests(unittest.TestCase):
         self.assertEqual(report["command"], "benchmark_lanes")
         self.assertEqual(report["authority_effect"], "none")
         self.assertEqual([lane["lane_id"] for lane in report["lanes"]], [LANE_ID])
-        self.assertEqual(report["lanes"][0]["status"], "frozen")
+        self.assertEqual(report["lanes"][0]["status"], "accepted")
 
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
@@ -181,14 +239,13 @@ class SameHarnessLaneTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             bad = Path(temporary) / "lane.json"
             tampered = _lane()
-            tampered["status"] = "accepted"
+            tampered["budget"]["default_k"] = 50
             bad.write_text(json.dumps(tampered), encoding="utf-8")
             output = io.StringIO()
             with contextlib.redirect_stdout(output):
                 code = main(["benchmark", "validate-lane", str(bad), "--json"])
-            # An accepted lane whose rows are still frozen contradicts itself only through
-            # its integration evidence; the validator accepts the shape, so prove the
-            # digest moved and the resolution still reports the declared status.
+            # A changed frozen fact keeps a valid shape; prove the digest moved so the
+            # committed records (which carry the executing digest) no longer match it.
             self.assertEqual(code, 0)
             self.assertNotEqual(json.loads(output.getvalue())["lane_digest_sha256"], lane_digest(_lane()))
             bad.write_text("{}", encoding="utf-8")

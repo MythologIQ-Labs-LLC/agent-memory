@@ -92,7 +92,9 @@ The registry is the set of committed descriptors in `reference/agentmem_ref/eval
 | | | | upstream LLM-judged retrieval recall | not run |
 | | | | M6 LLM portability | not run |
 | `golden-keyed-retrieval-v1` (#652) | `baseline_or_probe` | evidence_complete | lexical baseline integrity controls | **complete** (contributor demonstration; excluded from the portfolio scorecard) |
-| `amb-precisionmembench-retrieval-v1` (#601 / #640) | `external_independent` | adapter_ready | lane rows agent-memory, bm25, mem0-explicit | not run (lane frozen, see `benchmark lanes`) |
+| `amb-precisionmembench-retrieval-v1` (#601 / #640) | `external_independent` | evidence_partial | lane row agent-memory (control) | **complete** (run 37349431401; Agent Memory `703be5b`; `reports/benchmarks/amb/…/agent-memory-703be5ba1c7e/`) |
+| | | | lane row bm25 (baseline) | **complete** (run 37349435243; AMB `03c1d0f`; `…/bm25-703be5ba1c7e/`) |
+| | | | lane row mem0-explicit (comparator, Mem0 OSS 2.2.1) | **complete** (run 37351804149; mem0 `94c3fe9`; `…/mem0-explicit-b38d91631169/`) |
 | | | | lane row hindsight | **blocked** on a benchmark-agnostic provider configuration |
 
 Registry metadata is descriptive. A `complete` entry is bound to a committed report: `check_evidence_binding()` resolves the entry's `report_binding` paths inside the report and refuses a mismatch, and the registry tests run that check for every committed descriptor. A listing never upgrades synthetic or probe evidence into external evidence; the provenance class travels with the row.

@@ -5332,15 +5332,42 @@
       ],
       "evidence": [
         {
-          "status": "not_run",
+          "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+          "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/agent-memory-703be5ba1c7e/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "agent-memory",
+          "system_revision": "703be5ba1c7e558edb16ac38508508e5ef592595",
           "variant": "lane:amb-precisionmembench-retrieval-v1:agent-memory"
         },
         {
-          "status": "not_run",
+          "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+          "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/bm25-703be5ba1c7e/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "bm25",
+          "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
           "variant": "lane:amb-precisionmembench-retrieval-v1:bm25"
         },
         {
-          "status": "not_run",
+          "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+          "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/mem0-explicit-b38d91631169/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
           "variant": "lane:amb-precisionmembench-retrieval-v1:mem0-explicit"
         },
         {

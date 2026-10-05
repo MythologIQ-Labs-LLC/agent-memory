@@ -36,6 +36,9 @@ SUPPORTED_MINOR = 0
 
 # Row statuses a lane may carry while its own status is still ``frozen``.
 _PRE_EXECUTION_ROW_STATUSES = {"frozen", "deferred", "blocked"}
+# Row statuses that must carry the full frozen declaration (an executed or accepted row
+# is a frozen row whose artifact exists; nothing about its identity may go missing).
+_DECLARED_ROW_STATUSES = {"frozen", "executed", "accepted"}
 _POSTURE_REQUIRES_CREDENTIALS = {"reflective_llm_extraction": {"provider_dependent"}}
 
 
@@ -118,9 +121,11 @@ def _semantic_validate(lane: Mapping[str, Any]) -> None:
         row_status = system["status"]
         if status == "frozen" and row_status not in _PRE_EXECUTION_ROW_STATUSES:
             _refuse(f"a frozen lane may not carry an {row_status} row: {row_id}")
-        if row_status in {"deferred", "blocked"} and not system.get("status_reason"):
+        if row_status in {"deferred", "blocked", "executed", "accepted"} and not system.get("status_reason"):
             _refuse(f"{row_status} row {row_id} requires a status_reason")
-        if row_status == "frozen":
+        if row_status == "accepted" and status != "accepted":
+            _refuse(f"an accepted row requires an accepted lane: {row_id}")
+        if row_status in _DECLARED_ROW_STATUSES:
             for field in ("inference_posture", "credentials"):
                 if field not in system:
                     _refuse(f"frozen row {row_id} must declare {field}")
@@ -133,11 +138,13 @@ def _semantic_validate(lane: Mapping[str, Any]) -> None:
             if not system["capability_posture"]:
                 _refuse(f"frozen row {row_id} must declare a capability_posture")
         source = system["source"]
-        if source["kind"] == "python_package" and row_status == "frozen":
+        if source["kind"] == "python_package" and row_status in _DECLARED_ROW_STATUSES:
             if not system.get("dependency_pins"):
                 _refuse(f"frozen python_package row {row_id} must carry exact dependency_pins")
             if source["revision"] == "unbound":
                 _refuse(f"frozen python_package row {row_id} must bind an exact source revision")
+    if status == "accepted" and not any(system["status"] == "accepted" for system in lane["systems"]):
+        _refuse("an accepted lane must carry at least one accepted row")
     if roles.get("comparator", 0) < 1:
         _refuse("a lane needs at least one comparator row")
     if roles.get("control", 0) + roles.get("baseline", 0) < 1:

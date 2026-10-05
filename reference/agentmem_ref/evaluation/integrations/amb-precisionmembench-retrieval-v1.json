@@ -2,7 +2,7 @@
   "contract_family": "agent-memory-benchmark-integration",
   "contract_version": "1.0.0",
   "integration_id": "amb-precisionmembench-retrieval-v1",
-  "admission_state": "adapter_ready",
+  "admission_state": "evidence_partial",
   "owning_issue": 601,
   "description": "PrecisionMemBench belief-ID retrieval executed by the independent, frozen vectorize-io/agent-memory-benchmark (AMB) harness in retrieval mode (no LLM). Agent Memory and Mem0 OSS enter through repository-owned provider bridges registered at runtime; AMB owns dataset loading, budgets, scoring and output. This is the first same-harness comparator integration (#640).",
   "benchmark": {
@@ -155,7 +155,7 @@
     "normalizer": null,
     "mappings": [],
     "unmapped_dimensions": {
-      "retrieval": "not_measured: AMB's raw EvalSummary is the native artifact; normalization into memory-benchmark-run manifests is defined when the first row is accepted (#640), never before",
+      "retrieval": "not_measured: AMB's raw EvalSummary is the native artifact; the first rows were accepted 2026-10-05 as native-only evidence and a normalization into memory-benchmark-run manifests is a separate reviewed change, so the portfolio scorecard carries no retrieval observation from this integration",
       "currentness": "not_applicable: single-version beliefs; supersession is a scope/exclusion assertion scored natively",
       "reasoning": "not_applicable: retrieval mode has no answer generation",
       "governance": "not_measured: the cross-user leak case is scored natively; no governance dimension is mapped",
@@ -209,15 +209,42 @@
   "evidence_history": [
     {
       "variant": "lane:amb-precisionmembench-retrieval-v1:agent-memory",
-      "status": "not_run"
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "agent-memory",
+      "system_revision": "703be5ba1c7e558edb16ac38508508e5ef592595",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/agent-memory-703be5ba1c7e/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
     },
     {
       "variant": "lane:amb-precisionmembench-retrieval-v1:bm25",
-      "status": "not_run"
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "bm25",
+      "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/bm25-703be5ba1c7e/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
     },
     {
       "variant": "lane:amb-precisionmembench-retrieval-v1:mem0-explicit",
-      "status": "not_run"
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/mem0-explicit-b38d91631169/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
     },
     {
       "variant": "lane:amb-precisionmembench-retrieval-v1:hindsight",
@@ -230,7 +257,7 @@
   "limitations": [
     "retrieval-only belief-id precision; not conversational QA and not comparable to LongMemEval recall_all@k",
     "35 documents and 77 cases: a precision/isolation probe, not a scale benchmark",
-    "no normalized memory-benchmark-run manifest exists until the first accepted row defines the mapping"
+    "no normalized memory-benchmark-run manifest exists yet: the three accepted rows are native-only evidence (raw EvalSummary plus bound evidence.json); a retrieval-dimension mapping is a separate reviewed change"
   ],
   "authority_effect": "none"
 }

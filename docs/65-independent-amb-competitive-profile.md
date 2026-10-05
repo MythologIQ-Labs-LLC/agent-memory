@@ -229,7 +229,41 @@ posture. Raw AMB `EvalSummary` artifacts are retained unmodified.
 
 A row becomes `same_harness_external` only after its raw artifact and execution identity
 are reviewed against the lane and an `evidence_history` entry is added to the integration
-descriptor. Until then every row is `not_run`, and the dashboard says so.
+descriptor. `scripts/import_amb_lane_evidence.py` (run by
+`.github/workflows/amb-evidence-import.yml` against a reviewer's branch, never `main`)
+copies the raw artifacts byte for byte into
+`reports/benchmarks/amb/<lane_id>/<provider>-<revision12>/`, re-verifies them against the
+run's own sha256 inventory, re-hashes the pinned fixtures, and writes `evidence.json`, the
+record an `evidence_history` entry binds through `input.sha256` and `system.revision`.
+
+### Accepted rows (lane v1, 2026-10-05)
+
+The lane's status is `accepted`; its record is never edited in place again (any changed
+frozen fact is a new lane id). The three executed rows were accepted from these runs,
+each on the lock-constrained install with the self-check reproducing the perfect-provider
+row first:
+
+| row | role | system revision | workflow run | evidence record |
+| --- | --- | --- | --- | --- |
+| agent-memory | control | Agent Memory `703be5ba1c7e558edb16ac38508508e5ef592595` | 37349431401 | `reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/agent-memory-703be5ba1c7e/evidence.json` |
+| bm25 | baseline | AMB `03c1d0f1d27da63034f0931121c858faba512383` | 37349435243 | `…/bm25-703be5ba1c7e/evidence.json` |
+| mem0-explicit | comparator | mem0ai 2.2.1 (`94c3fe9f238f3dbf29c9ce98643bd71eb13077cd`), fastembed and spaCy absent | 37351804149 | `…/mem0-explicit-b38d91631169/evidence.json` |
+
+Native PrecisionMemBench numbers, in the frozen harness's own shape (`active_passes/43` is
+the only number comparable to upstream's Active passes column; total passes include
+structural and trivially-empty cases that a provider returning nothing can satisfy):
+
+| row | total passes | active | structural | trivially-empty | mean precision | mean recall | ID resolution |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| agent-memory | 15/77 | 4/43 | 6/25 | 5/9 | 0.18 | 0.95 | source_id |
+| bm25 | 8/77 | 0/43 | 5/25 | 3/9 | 0.05 | 0.97 | doc_id |
+| mem0-explicit | 10/77 | 0/43 | 7/25 | 3/9 | 0.10 | 1.00 | source_id |
+
+These rows are `same_harness_external` evidence for this lane only. They produce no
+overall score, no retrieval-dimension observation on the portfolio scorecard (no
+normalization mapping is defined yet), and no market claim: BM25 is a baseline and Agent
+Memory is the control. Every row returned nearly everything relevant and failed on
+precision, which is what the active cases test. The Hindsight row stays deferred.
 
 ## Governance
 
