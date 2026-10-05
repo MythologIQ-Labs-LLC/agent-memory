@@ -114,6 +114,8 @@ class MemoryEvaluationCliTests(unittest.TestCase):
         self.assertEqual(statuses[(longmemeval, "longmemeval_s_cleaned")], "complete")
         self.assertEqual(statuses[(longmemeval, "longmemeval_m_cleaned")], "complete")
         self.assertEqual(statuses[(longmemeval, "upstream_model_judged_qa")], "not_run")
+        from agentmem_ref.evaluation.benchmark_integration import resolve_native_path
+
         for profile in profiles.values():
             for item in profile["external_evidence"]:
                 self.assertIn(item["status"], {"complete", "partial", "blocked", "not_run"})
@@ -121,9 +123,11 @@ class MemoryEvaluationCliTests(unittest.TestCase):
                     self.assertNotIn("report", item)
                     continue
                 report = json.loads((root / item["report"]).read_text(encoding="utf-8"))
-                self.assertEqual(report["input"]["sha256"], item["input_sha256"])
-                self.assertEqual(report["execution"]["agent_memory_revision"], item["agent_memory_revision"])
-                self.assertEqual(report["input"]["corpus_class"], "external_frozen")
+                binding = item["report_binding"]
+                self.assertEqual(resolve_native_path(report, binding["input_sha256_path"]), (True, item["input_sha256"]))
+                self.assertEqual(resolve_native_path(report, binding["system_revision_path"]), (True, item["system_revision"]))
+                if profile["provenance_class"] in {"external_independent", "external_adapted"}:
+                    self.assertEqual(report["input"]["corpus_class"], "external_frozen")
 
     def test_console_routes_runtime_commands_and_runtime_never_imports_evaluation(self):
         import ast
