@@ -5,6 +5,8 @@ on:
     paths:
       - 'reports/runtime/baseline-v1.json'
       - 'reports/runtime/baseline-v1.md'
+      - 'reports/runtime/baseline-v1-source-boundary.json'
+      - 'scripts/check_runtime_baseline_equivalence.py'
       - 'scripts/render_runtime_baseline.py'
       - 'scripts/validate_runtime_baseline_source.py'
       - 'examples/gauntlet/agent_memory_runtime_baseline_stdio.py'
@@ -14,6 +16,8 @@ on:
     paths:
       - 'reports/runtime/baseline-v1.json'
       - 'reports/runtime/baseline-v1.md'
+      - 'reports/runtime/baseline-v1-source-boundary.json'
+      - 'scripts/check_runtime_baseline_equivalence.py'
       - 'scripts/render_runtime_baseline.py'
       - 'scripts/validate_runtime_baseline_source.py'
       - 'examples/gauntlet/agent_memory_runtime_baseline_stdio.py'
@@ -48,14 +52,12 @@ jobs:
         run: python scripts/validate_runtime_baseline_source.py
 
       - name: Refuse runtime/package drift from frozen baseline revision
-        shell: bash
-        run: |
-          set -euo pipefail
-          FROZEN="$(python -c 'import json; print(json.load(open("reports/runtime/baseline-v1.json"))["runtime_revision"]["commit"])')"
-          git diff --exit-code "$FROZEN" HEAD -- reference/agentmem_ref pyproject.toml
+        run: python scripts/check_runtime_baseline_equivalence.py --candidate HEAD
 
       - name: Validate JSON syntax
-        run: python -m json.tool reports/runtime/baseline-v1.json > /dev/null
+        run: |
+          python -m json.tool reports/runtime/baseline-v1.json > /dev/null
+          python -m json.tool reports/runtime/baseline-v1-source-boundary.json > /dev/null
 
       - name: Verify exact public contestant identity
         shell: bash
@@ -69,8 +71,12 @@ jobs:
 
           expected_adapter = sys.argv[1]
           baseline = json.loads(Path("reports/runtime/baseline-v1.json").read_text(encoding="utf-8"))
+          boundary = json.loads(Path("reports/runtime/baseline-v1-source-boundary.json").read_text(encoding="utf-8"))
           manifest = json.loads(Path("examples/gauntlet/agent-memory-runtime-baseline-v1.json").read_text(encoding="utf-8"))
           expected_system = f"git-commit:{baseline['runtime_revision']['commit']}"
+          assert boundary["baseline_id"] == baseline["baseline_id"]
+          assert boundary["frozen_revision"] == baseline["runtime_revision"]["commit"]
+          assert boundary["baseline_mutation"] is False
           assert manifest["system"]["revision"] == expected_system, (manifest["system"]["revision"], expected_system)
           assert manifest["adapter"]["revision"] == expected_adapter, (manifest["adapter"]["revision"], expected_adapter)
           assert manifest["metadata"]["baseline_id"] == baseline["baseline_id"]

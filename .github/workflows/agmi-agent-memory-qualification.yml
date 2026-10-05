@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'reports/gauntlet/agmi-agent-memory-v1/**'
+      - 'reports/runtime/baseline-v1-source-boundary.json'
+      - 'scripts/check_runtime_baseline_equivalence.py'
       - 'scripts/run_agmi_agent_memory_qualification.py'
       - 'scripts/validate_agmi_agent_memory_qualification.py'
       - '.github/workflows/agmi-agent-memory-qualification.yml'
@@ -30,12 +32,7 @@ jobs:
           python-version: '3.12'
 
       - name: Refuse Agent Memory runtime drift from Baseline v1
-        shell: bash
-        run: |
-          set -euo pipefail
-          FROZEN="f2aef57293b516e065cad5d0afea26ac7e3c28a9"
-          git cat-file -e "${FROZEN}^{commit}"
-          git diff --exit-code "$FROZEN" -- reference/agentmem_ref pyproject.toml
+        run: python scripts/check_runtime_baseline_equivalence.py --candidate HEAD
 
       - name: Checkout exact agmi source
         shell: bash
@@ -61,6 +58,7 @@ jobs:
           {
             echo "agent_memory_checkout=$(git rev-parse HEAD)"
             echo "agent_memory_frozen_runtime=f2aef57293b516e065cad5d0afea26ac7e3c28a9"
+            echo "agent_memory_runtime_source_boundary=reports/runtime/baseline-v1-source-boundary.json"
             echo "agent_memory_baseline_merge=32783fad3c5cf50a9d712c8bcc0a023907ce9433"
             echo "agmi_revision=$(git -C external/agmi rev-parse HEAD)"
             python --version

@@ -1,0 +1,49 @@
+{
+  "adapter": {
+    "id": "durability-lossy-recovery-fixture",
+    "revision": "fixture-v1",
+    "version": "0.1.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "in-memory benchmark-owned fixture namespace",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "checkpoint": {"support": "unsupported"},
+    "correct": {"support": "unsupported"},
+    "describe": {"support": "mapped"},
+    "deterministic_recovery": {"support": "unsupported"},
+    "durable_correction": {"support": "unsupported"},
+    "durable_deletion": {"support": "unsupported"},
+    "forget": {"support": "unsupported"},
+    "health": {"support": "mapped"},
+    "history": {"support": "unsupported"},
+    "recall": {"support": "native"},
+    "recover": {"support": "mapped"},
+    "remember": {"support": "native"},
+    "reset": {"support": "mapped"},
+    "restart_recovery": {
+      "notes": "intentionally false claim used to prove evaluator detection",
+      "support": "native"
+    },
+    "scope_isolation": {"support": "unsupported"}
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "fixture_role": "durability_evaluator_negative_control",
+    "provenance_class": "gauntlet_native_gap",
+    "trusted_fixture": true
+  },
+  "system": {
+    "id": "durability-lossy-recovery-fixture-system",
+    "kind": "other",
+    "revision": "fixture-v1",
+    "version": "0.1.0"
+  },
+  "transport": {
+    "callable": "agentmem_ref.evaluation.gauntlet_durability_fixtures:lossy_recovery_adapter",
+    "kind": "in_process"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "boundary_id": "agent-memory-runtime-baseline-v1-source-boundary",
+  "baseline_id": "agent-memory-runtime-baseline-v1",
+  "frozen_revision": "f2aef57293b516e065cad5d0afea26ac7e3c28a9",
+  "classification": "post_publication_qualification_boundary",
+  "baseline_mutation": false,
+  "authority_effect": "none",
+  "protected_paths": [
+    "pyproject.toml",
+    "reference/agentmem_ref"
+  ],
+  "excluded_non_runtime_paths": [
+    {
+      "pathspec": ":(exclude)reference/agentmem_ref/evaluation/**",
+      "path": "reference/agentmem_ref/evaluation",
+      "classification": "memory_evaluation_and_gauntlet",
+      "reason": "The evaluation package consumes runtime surfaces but is not imported by the runtime layer. Evaluation and Gauntlet machinery may evolve without relabeling the frozen Runtime Baseline v1 implementation as changed."
+    }
+  ],
+  "policy": {
+    "default_inside_protected_paths": "runtime_bearing",
+    "exclusions_are_closed_and_explicit": true,
+    "new_package_subtrees_are_runtime_bearing_until_explicitly_classified": true,
+    "package_or_dependency_changes_outside_explicit_exclusions_are_runtime_drift": true,
+    "evaluation_changes_must_not_modify_runtime_authority_or_behavior": true
+  },
+  "notes": [
+    "This companion does not alter reports/runtime/baseline-v1.json or Runtime Baseline v1 claims.",
+    "The boundary exists so qualification workflows distinguish frozen runtime implementation from benchmark/evaluation machinery in the same installable package.",
+    "Only the evaluation package is excluded. Harness, API, core, memory, runtime, state, package metadata, profiles, schemas, aliases, and other package surfaces remain protected unless a future reviewed boundary revision explicitly classifies them otherwise."
+  ]
+}

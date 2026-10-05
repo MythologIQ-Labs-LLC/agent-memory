@@ -1,0 +1,136 @@
+name: Gauntlet Durability Recovery
+
+on:
+  pull_request:
+    paths:
+      - 'examples/gauntlet/agent_memory_durability_stdio.py'
+      - 'fixtures/gauntlet/agent-memory-public-durability-adapter.json'
+      - 'fixtures/gauntlet/durability-lossy-recovery-adapter.json'
+      - 'reference/agentmem_ref/evaluation/gauntlet_agent_memory_durability.py'
+      - 'reference/agentmem_ref/evaluation/gauntlet_durability.py'
+      - 'reference/agentmem_ref/evaluation/gauntlet_durability_fixtures.py'
+      - 'reference/agentmem_ref/evaluation/gauntlet_profiles.py'
+      - 'reference/tests/test_gauntlet_durability.py'
+      - '.github/workflows/gauntlet-durability-recovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  durability-recovery-alpha:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install package and test dependency
+        run: python -m pip install -e . pytest
+
+      - name: Verify exact Agent Memory durability adapter identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_REVISION="git-blob:$(git hash-object reference/agentmem_ref/evaluation/gauntlet_agent_memory_durability.py)"
+          GOVERNANCE_REVISION="$(git hash-object reference/agentmem_ref/evaluation/gauntlet_agent_memory.py)"
+          WRAPPER_REVISION="git-blob:$(git hash-object examples/gauntlet/agent_memory_durability_stdio.py)"
+          python - "$ADAPTER_REVISION" "$GOVERNANCE_REVISION" "$WRAPPER_REVISION" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          adapter_revision, governance_revision, wrapper_revision = sys.argv[1:4]
+          manifest = json.loads(Path("fixtures/gauntlet/agent-memory-public-durability-adapter.json").read_text(encoding="utf-8"))
+          assert manifest["adapter"]["revision"] == adapter_revision, (manifest["adapter"]["revision"], adapter_revision)
+          assert governance_revision == "2cfac37156add666c4494211ef861f6ba10af7c6", governance_revision
+          assert manifest["metadata"]["transport_wrapper_revision"] == wrapper_revision, (manifest["metadata"]["transport_wrapper_revision"], wrapper_revision)
+          assert manifest["system"]["revision"] == "git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9"
+          assert manifest["transport"]["kind"] == "stdio"
+          assert manifest["capabilities"]["checkpoint"]["support"] == "unsupported"
+          assert manifest["capabilities"]["durable_correction"]["support"] == "unsupported"
+          print(f"exact durability adapter revision: {adapter_revision}")
+          print(f"preserved governance adapter blob: {governance_revision}")
+          print(f"exact durability transport revision: {wrapper_revision}")
+          PY
+
+      - name: Run focused evaluator and real-contestant tests
+        run: python -m pytest -q reference/tests/test_gauntlet_durability.py
+
+      - name: Validate public durability contestant
+        run: agent-memory gauntlet validate-adapter fixtures/gauntlet/agent-memory-public-durability-adapter.json
+
+      - name: Inspect durability recovery profile
+        run: agent-memory gauntlet inspect durability-recovery-alpha-v1
+
+      - name: Run public-facade durability qualification
+        run: |
+          agent-memory gauntlet run \
+            --system fixtures/gauntlet/agent-memory-public-durability-adapter.json \
+            --profile durability-recovery-alpha-v1 \
+            --allow-external-process \
+            --allow-destructive-operations \
+            --output-dir ./durability-runs
+
+      - name: Validate generated native evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_DIR="$(find durability-runs -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          test -n "$RUN_DIR"
+          python - "$RUN_DIR/native-results.json" "$RUN_DIR/normalized-run.json" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          native = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+          normalized = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+          cases = {case["case_id"]: case for case in native["cases"]}
+          expected_pass = {"DUR-REC-001", "DUR-DEL-001", "DUR-DET-001", "DUR-ISO-001"}
+          expected_unsupported = {"DUR-COR-001", "DUR-CHK-001"}
+          assert set(cases) == expected_pass | expected_unsupported, sorted(cases)
+          for case_id in expected_pass:
+              assert cases[case_id]["behavioral_outcome"] == "pass", cases[case_id]
+              assert cases[case_id]["evidence_qualification"] == "sufficient", cases[case_id]
+              for key in ("pre_state", "transition", "expected_boundary", "post_state"):
+                  assert key in cases[case_id], (case_id, key)
+          for case_id in expected_unsupported:
+              assert cases[case_id]["behavioral_outcome"] == "unsupported", cases[case_id]
+              assert cases[case_id]["evidence_qualification"] == "sufficient", cases[case_id]
+              assert cases[case_id]["transition"]["operation_executed"] is False, cases[case_id]
+          assert normalized["authority_effect"] == "none"
+          assert normalized["dimensions"]["governance"]["status"] == "partial"
+          assert normalized["dimensions"]["evaluator_integrity"]["status"] == "measured"
+          print("durability recovery alpha evidence validated")
+          PY
+
+      - name: Inventory qualification evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p durability-evidence
+          find durability-runs -type f -print | sort | tee durability-evidence/files.txt
+          while IFS= read -r file; do sha256sum "$file"; done < durability-evidence/files.txt | tee durability-evidence/sha256.txt
+          {
+            echo "source_sha=$(git rev-parse HEAD)"
+            echo "profile=durability-recovery-alpha-v1"
+            echo "manifest=fixtures/gauntlet/agent-memory-public-durability-adapter.json"
+            python --version
+          } | tee durability-evidence/source-environment.txt
+
+      - name: Upload durability qualification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gauntlet-durability-recovery-alpha-v1
+          path: |
+            durability-runs/
+            durability-evidence/
+          if-no-files-found: error
+          retention-days: 90
