@@ -1,0 +1,236 @@
+{
+  "contract_family": "agent-memory-benchmark-integration",
+  "contract_version": "1.0.0",
+  "integration_id": "amb-precisionmembench-retrieval-v1",
+  "admission_state": "adapter_ready",
+  "owning_issue": 601,
+  "description": "PrecisionMemBench belief-ID retrieval executed by the independent, frozen vectorize-io/agent-memory-benchmark (AMB) harness in retrieval mode (no LLM). Agent Memory and Mem0 OSS enter through repository-owned provider bridges registered at runtime; AMB owns dataset loading, budgets, scoring and output. This is the first same-harness comparator integration (#640).",
+  "benchmark": {
+    "id": "amb-precisionmembench",
+    "name": "AMB / PrecisionMemBench (single-turn retrieval)",
+    "provenance_class": "external_independent",
+    "upstream": {
+      "repository": "vectorize-io/agent-memory-benchmark",
+      "url": "https://github.com/vectorize-io/agent-memory-benchmark",
+      "paper_url": "https://arxiv.org/abs/2605.11325"
+    },
+    "source_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "source_revision_rule": "static_exact_revision"
+  },
+  "source_rights": {
+    "license_spdx": null,
+    "license_url": null,
+    "data_license_spdx": "MIT",
+    "code_redistribution": "linked_only",
+    "data_redistribution": "linked_only",
+    "attribution": "AMB harness by vectorize-io (no LICENSE file at the frozen revision; executed from an external checkout, never redistributed). PrecisionMemBench fixtures by tenurehq (MIT) at commit b95d6abb471c0d591c440172283dd74e7af000df.",
+    "acquisition_notes": "The workflow checks out AMB at the exact revision and the harness downloads the two PrecisionMemBench fixtures from the pinned upstream commit; the lane freeze records their digests and the run refuses on mismatch."
+  },
+  "input_contract": {
+    "dataset_id": "tenurehq/precisionmembench:fixtures/{beliefs.seed.json,retrieval.cases.json}",
+    "dataset_revision_rule": "exact_revision_required",
+    "known_dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+    "input_digest_rule": "sha256_per_input_file",
+    "known_input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "committed_input_path": null,
+    "input_may_be_absent_before_execution": true,
+    "corpus_classes": [
+      "external_frozen"
+    ],
+    "selection": {
+      "identity_rule": "all-77:<first 16 hex of retrieval.cases.json sha256>; known_input_sha256 is sha256 over beliefs.seed.json bytes followed by retrieval.cases.json bytes",
+      "methods": [
+        "full single-turn case set"
+      ]
+    }
+  },
+  "native_protocol": {
+    "task_type": "belief_id_retrieval_precision",
+    "native_metrics": [
+      {
+        "metric_id": "active_passes",
+        "description": "cases passed among the 43 that require query-dependent belief ids (comparable to upstream's Active passes)",
+        "direction": "higher_better",
+        "upstream_defined": true
+      },
+      {
+        "metric_id": "total_passes",
+        "description": "passes over all 77 cases including structural and trivially-empty cases",
+        "direction": "higher_better",
+        "upstream_defined": true
+      },
+      {
+        "metric_id": "mean_precision",
+        "description": "mean retrieval precision over the relevantBeliefs tier",
+        "direction": "higher_better",
+        "upstream_defined": true
+      },
+      {
+        "metric_id": "mean_recall",
+        "description": "mean retrieval recall over the relevantBeliefs tier",
+        "direction": "higher_better",
+        "upstream_defined": true
+      },
+      {
+        "metric_id": "avg_retrieve_time_ms",
+        "description": "mean provider retrieve wall time",
+        "direction": "lower_better",
+        "upstream_defined": false
+      },
+      {
+        "metric_id": "resolution",
+        "description": "per-case count of belief-id resolution paths (source_id/doc_id/marker/lexical/unresolved)",
+        "direction": "descriptive",
+        "upstream_defined": false
+      }
+    ],
+    "native_artifacts": [
+      {
+        "artifact_id": "amb-eval-summary",
+        "kind": "benchmark_native_results",
+        "description": "AMB EvalSummary JSON with per-case results and meta"
+      },
+      {
+        "artifact_id": "execution-identity",
+        "kind": "execution_identity",
+        "description": "repository/AMB revisions, provider, resolved dependency versions, fixture digests"
+      }
+    ],
+    "runner": {
+      "kind": "repository_script",
+      "entry_point": "reference/run_amb_external.py",
+      "supporting_entry_points": [
+        "reference/amb_agent_memory_bridge.py",
+        "reference/amb_mem0_explicit_bridge.py",
+        ".github/workflows/amb-competitive.yml"
+      ],
+      "invocation_example": "PYTHONPATH=reference python reference/run_amb_external.py --amb-root .external/amb -- run --dataset precisionmembench --split single-turn --mode retrieval --memory mem0-explicit --output-dir ./amb-output"
+    },
+    "budget": {
+      "retrieval_or_context_budget": "per-case maxBeliefs (default 20) passed as k; scorer keeps the top maxBeliefs distinct resolved beliefs; AMB_PMB_RETURN_CAP must be unset",
+      "parameters": {
+        "maxBeliefs": 20,
+        "maxPinnedFacts": 10,
+        "maxQuestions": 15
+      }
+    },
+    "failure_semantics": {
+      "per_item_error_capture": false,
+      "timeout": "none in the harness; workflow job timeout bounds the run",
+      "description": "transient provider errors are retried up to 4 times; any other exception aborts the run, which is blocked execution rather than a score"
+    },
+    "concurrency": "provider attribute; repository bridges run at 1"
+  },
+  "system_requirements": {
+    "invocation_surface": "upstream_adapter_protocol",
+    "external_system_entry": "code_registration",
+    "required_operations": [
+      "prepare",
+      "ingest",
+      "retrieve"
+    ],
+    "optional_operations": [
+      "initialize",
+      "cleanup",
+      "retrieve_by_steps",
+      "direct_answer"
+    ],
+    "unsupported_semantics": "a provider that cannot scope by user_id leaks the cross-user case and is scored by the native protocol; providers that drop document ids are resolved through marker/lexical paths and the path is recorded"
+  },
+  "provider_requirements": {
+    "credentials": "credential_free",
+    "model_dependency": "embedding_model",
+    "judge": {
+      "required": false,
+      "identity": null,
+      "note": "retrieval mode makes no LLM calls; the frozen CLI still constructs an answer client, satisfied with an inert placeholder key"
+    },
+    "python_dependencies": [
+      "frozen AMB dependency set",
+      "mem0ai==2.2.1 for the mem0-explicit provider",
+      "sentence-transformers for the local embedder"
+    ]
+  },
+  "normalization": {
+    "normalizer": null,
+    "mappings": [],
+    "unmapped_dimensions": {
+      "retrieval": "not_measured: AMB's raw EvalSummary is the native artifact; normalization into memory-benchmark-run manifests is defined when the first row is accepted (#640), never before",
+      "currentness": "not_applicable: single-version beliefs; supersession is a scope/exclusion assertion scored natively",
+      "reasoning": "not_applicable: retrieval mode has no answer generation",
+      "governance": "not_measured: the cross-user leak case is scored natively; no governance dimension is mapped",
+      "efficiency": "not_measured: avg_retrieve_time_ms is native and environment-bound",
+      "evaluator_integrity": "not_measured: the harness self-check (scripts/precisionmembench_selfcheck.py) is run before contestants and recorded as an artifact",
+      "reproducibility": "not_measured: execution identity is recorded natively per run"
+    }
+  },
+  "evaluator_integrity": {
+    "negative_controls": [
+      {
+        "control_id": "perfect_provider_selfcheck",
+        "description": "a provider returning exactly the expected belief ids must reproduce 43/43 active, 77/77 total, precision/recall 1.00 and the 43/25/9 case split",
+        "expected_detection": false,
+        "note": "faithfulness check of the scorer port; a deviation disqualifies the harness revision"
+      },
+      {
+        "control_id": "empty_provider_structural_floor",
+        "description": "a provider returning nothing passes only structural and trivially-empty cases (34/77) and 0/43 active",
+        "expected_detection": true,
+        "note": "proves active_passes is the discriminating number"
+      }
+    ],
+    "runner": "scripts/precisionmembench_selfcheck.py (frozen AMB revision)",
+    "qualification_expectation": "self-check must pass at the frozen revision before any contestant row is accepted"
+  },
+  "reproducibility": {
+    "seed": {
+      "material": false,
+      "default": null,
+      "note": "deterministic fixtures and scorer; provider determinism is a per-row property recorded in notes"
+    },
+    "environment_requirements": [
+      "python>=3.11",
+      "frozen AMB checkout",
+      "network for fixture download and embedder weights only"
+    ],
+    "artifact_requirements": [
+      "AMB EvalSummary JSON",
+      "execution identity JSON",
+      "self-check output",
+      "sha256 inventory"
+    ],
+    "revision_binding": "repository revision + AMB revision + fixture digests + provider package pins + embedder revision + bridge blob ids"
+  },
+  "gauntlet": {
+    "relationship": "not_applicable",
+    "profile_id": null,
+    "reason": "the independent harness owns ingestion, budget, scoring and output; systems enter through AMB's MemoryProvider contract, not through Gauntlet operation envelopes"
+  },
+  "evidence_history": [
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v1:agent-memory",
+      "status": "not_run"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v1:bm25",
+      "status": "not_run"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v1:mem0-explicit",
+      "status": "not_run"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v1:hindsight",
+      "status": "blocked",
+      "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
+    }
+  ],
+  "product_findings": [],
+  "dimensions": [],
+  "limitations": [
+    "retrieval-only belief-id precision; not conversational QA and not comparable to LongMemEval recall_all@k",
+    "35 documents and 77 cases: a precision/isolation probe, not a scale benchmark",
+    "no normalized memory-benchmark-run manifest exists until the first accepted row defines the mapping"
+  ],
+  "authority_effect": "none"
+}

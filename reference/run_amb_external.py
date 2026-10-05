@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run pinned vectorize-io/agent-memory-benchmark with Agent Memory injected.
+"""Run pinned vectorize-io/agent-memory-benchmark with the repository-owned providers injected.
 
 Usage example::
 
@@ -20,6 +20,7 @@ import sys
 from pathlib import Path
 
 from amb_agent_memory_bridge import AMB_REVISION, install_amb_agent_memory_provider, verify_amb_checkout
+from amb_mem0_explicit_bridge import install_amb_mem0_explicit_provider
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -76,6 +77,9 @@ def main(argv: list[str] | None = None) -> int:
         amb_root,
         agent_memory_revision=agent_memory_revision,
     )
+    # The Mem0 explicit-memory comparator (#640) registers alongside; it imports mem0 only
+    # when prepared, so Agent Memory and BM25 runs never need the Mem0 package.
+    install_amb_mem0_explicit_provider(amb_root)
 
     # Import after registration so CLI help and provider lookup both see Agent Memory.
     from memory_bench import cli as amb_cli  # type: ignore[import-not-found]  # noqa: PLC0415

@@ -5319,6 +5319,43 @@
       ]
     },
     {
+      "benchmark_id": "amb-precisionmembench",
+      "dimensions_measured": [],
+      "dimensions_not_measured": [
+        "retrieval",
+        "currentness",
+        "reasoning",
+        "governance",
+        "efficiency",
+        "evaluator_integrity",
+        "reproducibility"
+      ],
+      "evidence": [
+        {
+          "status": "not_run",
+          "variant": "lane:amb-precisionmembench-retrieval-v1:agent-memory"
+        },
+        {
+          "status": "not_run",
+          "variant": "lane:amb-precisionmembench-retrieval-v1:bm25"
+        },
+        {
+          "status": "not_run",
+          "variant": "lane:amb-precisionmembench-retrieval-v1:mem0-explicit"
+        },
+        {
+          "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)",
+          "status": "blocked",
+          "variant": "lane:amb-precisionmembench-retrieval-v1:hindsight"
+        }
+      ],
+      "normalized_run_count": 0,
+      "owning_issue": 601,
+      "product_findings": [],
+      "profile_id": "amb-precisionmembench-retrieval-v1",
+      "systems_run": []
+    },
+    {
       "benchmark_id": "swe-context-bench-lite",
       "dimensions_measured": [],
       "dimensions_not_measured": [

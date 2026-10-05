@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/same-harness-lane.schema.json",
+  "title": "Agent Memory Evaluation: Same-Harness Lane Freeze",
+  "description": "A frozen comparator lane: one benchmark integration, one exact harness revision, one frozen input/selection/budget/evaluator, and the exact configuration of every system that will enter it, all decided before any score exists. Freezing is a declaration, not a result; a lane carries no scores and authority_effect none.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_family",
+    "contract_version",
+    "lane_id",
+    "status",
+    "owning_issue",
+    "frozen_on",
+    "frozen_before_any_score",
+    "description",
+    "freeze_rationale",
+    "benchmark_integration",
+    "harness",
+    "dataset",
+    "selection",
+    "budget",
+    "gold_identity",
+    "evaluator",
+    "execution",
+    "systems",
+    "comparability",
+    "change_rule",
+    "authority_effect"
+  ],
+  "properties": {
+    "contract_family": {"const": "agent-memory-same-harness-lane"},
+    "contract_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "lane_id": {"$ref": "#/$defs/identifier"},
+    "status": {
+      "description": "frozen: configuration fixed, nothing executed; executed: raw artifacts exist but are not accepted; accepted: rows reviewed and accepted; withdrawn: superseded by a new lane id.",
+      "enum": ["frozen", "executed", "accepted", "withdrawn"]
+    },
+    "owning_issue": {"type": "integer", "minimum": 1},
+    "frozen_on": {"type": "string", "format": "date"},
+    "frozen_before_any_score": {"const": true},
+    "description": {"type": "string", "minLength": 1},
+    "freeze_rationale": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "benchmark_integration": {"$ref": "#/$defs/identifier"},
+    "harness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "url", "revision", "package", "license_spdx", "entry"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "url": {"type": "string", "minLength": 1},
+        "revision": {"$ref": "#/$defs/git_sha"},
+        "package": {"type": "string", "minLength": 1},
+        "license_spdx": {"type": ["string", "null"], "minLength": 1},
+        "license_note": {"type": ["string", "null"]},
+        "entry": {"type": "string", "minLength": 1},
+        "source_blobs": {
+          "description": "git blob ids of the harness files that define the lane's protocol at the frozen revision.",
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/git_sha"}
+        }
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["harness_dataset", "split", "upstream", "fixtures", "input_sha256", "input_digest_rule", "document_count", "query_count"],
+      "properties": {
+        "harness_dataset": {"type": "string", "minLength": 1},
+        "split": {"type": "string", "minLength": 1},
+        "upstream": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repository", "revision", "license_spdx"],
+          "properties": {
+            "repository": {"type": "string", "minLength": 1},
+            "revision": {"$ref": "#/$defs/git_sha"},
+            "license_spdx": {"type": ["string", "null"], "minLength": 1},
+            "paper_url": {"type": ["string", "null"]}
+          }
+        },
+        "fixtures": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "url", "sha256"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "url": {"type": "string", "minLength": 1},
+              "sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        },
+        "input_sha256": {"$ref": "#/$defs/sha256"},
+        "input_digest_rule": {"type": "string", "minLength": 1},
+        "document_count": {"type": "integer", "minimum": 1},
+        "query_count": {"type": "integer", "minimum": 1},
+        "query_partition": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "notes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["query_limit", "category", "selection_id", "selection_method"],
+      "properties": {
+        "query_limit": {"type": ["integer", "null"], "minimum": 1},
+        "category": {"type": ["string", "null"]},
+        "selection_id": {"type": "string", "minLength": 1},
+        "selection_method": {"type": "string", "minLength": 1}
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["retrieval_k_rule", "default_k", "context_budget", "forbidden_overrides"],
+      "properties": {
+        "retrieval_k_rule": {"type": "string", "minLength": 1},
+        "default_k": {"type": "integer", "minimum": 0},
+        "context_budget": {"type": "object"},
+        "forbidden_overrides": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "gold_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "resolution_paths", "leakage_rule"],
+      "properties": {
+        "rule": {"type": "string", "minLength": 1},
+        "resolution_paths": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "leakage_rule": {"type": "string", "minLength": 1}
+      }
+    },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "llm_calls", "answer_model", "judge_model", "scorer", "headline_metrics", "integrity_check"],
+      "properties": {
+        "mode": {"type": "string", "minLength": 1},
+        "llm_calls": {"type": "boolean"},
+        "answer_model": {"type": ["string", "null"]},
+        "judge_model": {"type": ["string", "null"]},
+        "scorer": {"type": "string", "minLength": 1},
+        "headline_metrics": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "integrity_check": {"type": "string", "minLength": 1}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["concurrency", "timeout", "failure_handling", "environment", "artifact_requirements", "execution_identity_requirements"],
+      "properties": {
+        "concurrency": {"type": "integer", "minimum": 1},
+        "timeout": {"type": "string", "minLength": 1},
+        "failure_handling": {"type": "string", "minLength": 1},
+        "environment": {"type": "object"},
+        "artifact_requirements": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "execution_identity_requirements": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "systems": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["row_id", "system_id", "role", "status", "provider_key", "source", "adapter", "configuration", "capability_posture"],
+        "properties": {
+          "row_id": {"$ref": "#/$defs/identifier"},
+          "system_id": {"type": "string", "minLength": 1},
+          "display_name": {"type": "string", "minLength": 1},
+          "role": {"enum": ["control", "baseline", "comparator"]},
+          "status": {"enum": ["frozen", "deferred", "blocked", "executed", "accepted"]},
+          "status_reason": {"type": ["string", "null"]},
+          "provider_key": {"type": "string", "minLength": 1},
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "identity", "revision", "license_spdx"],
+            "properties": {
+              "kind": {"enum": ["repository_runtime", "harness_builtin", "python_package", "service"]},
+              "identity": {"type": "string", "minLength": 1},
+              "revision": {"type": "string", "minLength": 1},
+              "revision_rule": {"type": ["string", "null"]},
+              "license_spdx": {"type": ["string", "null"], "minLength": 1},
+              "url": {"type": ["string", "null"]}
+            }
+          },
+          "adapter": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["module", "revision_rule"],
+            "properties": {
+              "module": {"type": "string", "minLength": 1},
+              "revision_rule": {"type": "string", "minLength": 1},
+              "install_entry": {"type": ["string", "null"]}
+            }
+          },
+          "configuration": {"type": "object"},
+          "inference_posture": {
+            "enum": ["none", "explicit_memory_no_inference", "reflective_llm_extraction", "harness_builtin", "unknown"]
+          },
+          "credentials": {"enum": ["credential_free", "placeholder_for_client_construction_only", "provider_dependent"]},
+          "capability_posture": {
+            "type": "object",
+            "additionalProperties": {"enum": ["native", "mapped", "derived", "unsupported", "not_applicable"]}
+          },
+          "dependency_pins": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "dependencies_recorded_at_execution": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "notes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "comparability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_class_when_accepted", "not_comparable_to", "notes"],
+      "properties": {
+        "evidence_class_when_accepted": {"const": "same_harness_external"},
+        "not_comparable_to": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "notes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "deferred_lanes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["lane_id", "reason"],
+        "properties": {
+          "lane_id": {"$ref": "#/$defs/identifier"},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "findings": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "change_rule": {"type": "string", "minLength": 1},
+    "authority_effect": {"const": "none"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "git_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"}
+  }
+}
