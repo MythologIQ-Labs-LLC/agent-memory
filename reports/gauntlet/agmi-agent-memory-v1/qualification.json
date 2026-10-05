@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "qualification_id": "agmi-agent-memory-integrity-v1",
+  "status": "external_reproduction_pending",
+  "authority_effect": "none",
+  "integration_ruling": "partial_reuse_candidate",
+  "external_evidence_class": "independent_external_benchmark",
+  "local_integration_evidence_class": "gauntlet_external_integration",
+  "agmi": {
+    "repository": "tech4biz-yasha/agmi",
+    "revision": "76ddf21af25ce35e427e5614afb70d1fe96e32a2",
+    "package": "agent-memory-integrity",
+    "version": "0.6.2",
+    "license": "MIT",
+    "adapter_path": "agmi/adapters/agent_memory.py",
+    "upstream_test_path": "tests/test_agent_memory.py",
+    "attack_module": "agmi/attacks/at_rest.py",
+    "attack_set": "AT_REST_ATTACKS_WITH_SNAPSHOT"
+  },
+  "agent_memory": {
+    "repository": "MythologIQ-Labs-LLC/agent-memory",
+    "runtime_baseline_revision": "f2aef57293b516e065cad5d0afea26ac7e3c28a9",
+    "runtime_baseline_merge": "32783fad3c5cf50a9d712c8bcc0a023907ce9433",
+    "package": "agent-memory-reference",
+    "version": "0.2.0",
+    "runtime_profile": "rc1-local-sqlite-composition",
+    "public_contract_version": "1.3.0",
+    "runtime_equivalence_paths": [
+      "reference/agentmem_ref",
+      "pyproject.toml"
+    ]
+  },
+  "attacked_surface": {
+    "profile": "sqlite_single_host_v1",
+    "canonical_store": "agent-memory.sqlite3",
+    "canonical_table": "facts",
+    "row_identity": "uuid",
+    "tenant_owner_field": "group_id",
+    "metadata_fields_exercised": [
+      "created_at",
+      "valid_at"
+    ],
+    "t1_t8_boundary": "raw facts-table edits leave digest tables and configuration-binding sidecar unchanged",
+    "t9_boundary": "whole state directory, including SQLite store and configuration-binding sidecar, is restored from an older genuine snapshot"
+  },
+  "controls": {
+    "c1_clean_store_verifies": "required_per_attack",
+    "c2_noop_reload_verifies": "required_per_attack",
+    "c3_mutation_landed": "required_per_attack",
+    "control_failure_posture": "blocked_not_pass_or_fail"
+  },
+  "vocabulary_mapping": {
+    "agmi_safe_read_detection": {
+      "gauntlet_behavioral_outcome": "pass",
+      "gauntlet_evidence_qualification": "sufficient",
+      "detection_point": "read"
+    },
+    "agmi_reported_audit_detection": {
+      "gauntlet_behavioral_outcome": "pass",
+      "gauntlet_evidence_qualification": "sufficient",
+      "detection_point": "audit",
+      "note": "must remain distinct from read-time refusal"
+    },
+    "agmi_vulnerable_claimed_integrity": {
+      "gauntlet_behavioral_outcome": "fail",
+      "gauntlet_evidence_qualification": "sufficient"
+    },
+    "agmi_error_or_guard_failure": {
+      "gauntlet_behavioral_outcome": "blocked",
+      "gauntlet_evidence_qualification": "insufficient"
+    },
+    "no_integrity_claim": {
+      "gauntlet_claim_posture": "unsupported",
+      "measurement_posture": "descriptive_only"
+    }
+  },
+  "expected_external_observation": {
+    "detection_point": "read",
+    "attacks": {
+      "tamper": "safe",
+      "truncate": "safe",
+      "delete_middle": "safe",
+      "reorder": "safe",
+      "forge": "safe",
+      "cross_replay": "safe",
+      "rollback_replay": "safe",
+      "metadata_tamper": "safe",
+      "snapshot_rollback": "VULNERABLE"
+    },
+    "whole_state_snapshot_rollback": "older complete state directory opens as current and newest genuine memory is absent without an integrity error",
+    "digest_posture": "current persisted row digests are unkeyed SHA-256; recomputation by an attacker is outside the frozen T1-T9 attack contract"
+  },
+  "coverage": [
+    {
+      "capability": "tamper_detection",
+      "classification": "exact_external_coverage",
+      "scope": "T1-T8 raw storage tamper, truncation, deletion, reorder, forge, replay and metadata pressure"
+    },
+    {
+      "capability": "journal_integrity",
+      "classification": "compatible_external_coverage",
+      "scope": "integrity-bearing persisted representation is exercised, but agmi does not require a conceptual journal"
+    },
+    {
+      "capability": "snapshot_generation_binding",
+      "classification": "exact_external_coverage",
+      "scope": "T9 restores an older complete store after a newer genuine write and proves the move landed"
+    },
+    {
+      "capability": "restart_recovery",
+      "classification": "not_covered"
+    },
+    {
+      "capability": "checkpoint_recovery",
+      "classification": "not_covered"
+    },
+    {
+      "capability": "durable_deletion",
+      "classification": "not_covered"
+    },
+    {
+      "capability": "durable_correction",
+      "classification": "not_covered"
+    },
+    {
+      "capability": "concurrent_handle_safety",
+      "classification": "not_covered"
+    },
+    {
+      "capability": "stale_writer_rejection",
+      "classification": "not_covered"
+    },
+    {
+      "capability": "deterministic_recovery",
+      "classification": "not_covered"
+    },
+    {
+      "capability": "migration_compatibility",
+      "classification": "not_covered"
+    },
+    {
+      "capability": "mixed_version_recovery",
+      "classification": "not_covered"
+    }
+  ],
+  "stop_lines": [
+    "agmi is not a production runtime dependency",
+    "external benchmark results are not Agent Memory authority",
+    "T9 snapshot rollback vulnerability must remain visible in this evidence slice",
+    "runtime remediation is out of scope for the qualification slice",
+    "audit-only detection may not be relabeled as read-time rejection",
+    "uncovered durability, recovery, concurrency and migration claims remain owned by issue 571"
+  ]
+}
