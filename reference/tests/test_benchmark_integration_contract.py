@@ -7,6 +7,7 @@ import copy
 import hashlib
 import io
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -349,7 +350,13 @@ class BenchmarkIntegrationContractTests(unittest.TestCase):
             "assert not loaded, loaded\n"
             "print('independent')\n"
         )
-        result = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, cwd=REPO_ROOT)
+        # Run from the package root so the check holds whether or not the package is installed;
+        # CI runs discovery with -t reference and no editable install.
+        reference_root = REPO_ROOT / "reference"
+        env = {**os.environ, "PYTHONPATH": str(reference_root)}
+        result = subprocess.run(
+            [sys.executable, "-c", code], capture_output=True, text=True, cwd=reference_root, env=env
+        )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("independent", result.stdout)
 
