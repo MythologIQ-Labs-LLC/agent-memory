@@ -1,0 +1,111 @@
+name: agmi Agent Memory Integrity Qualification
+
+on:
+  pull_request:
+    paths:
+      - 'reports/gauntlet/agmi-agent-memory-v1/**'
+      - 'scripts/run_agmi_agent_memory_qualification.py'
+      - 'scripts/validate_agmi_agent_memory_qualification.py'
+      - '.github/workflows/agmi-agent-memory-qualification.yml'
+      - 'reference/agentmem_ref/**'
+      - 'pyproject.toml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce-external-row:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact Agent Memory source revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Refuse Agent Memory runtime drift from Baseline v1
+        shell: bash
+        run: |
+          set -euo pipefail
+          FROZEN="f2aef57293b516e065cad5d0afea26ac7e3c28a9"
+          git cat-file -e "${FROZEN}^{commit}"
+          git diff --exit-code "$FROZEN" -- reference/agentmem_ref pyproject.toml
+
+      - name: Checkout exact agmi source
+        shell: bash
+        run: |
+          set -euo pipefail
+          AGMI_REV="76ddf21af25ce35e427e5614afb70d1fe96e32a2"
+          git clone --quiet https://github.com/tech4biz-yasha/agmi.git external/agmi
+          git -C external/agmi checkout --quiet --detach "$AGMI_REV"
+          test "$(git -C external/agmi rev-parse HEAD)" = "$AGMI_REV"
+          grep -q '^version = "0.6.2"' external/agmi/pyproject.toml
+          grep -q '^MIT License$' external/agmi/LICENSE
+
+      - name: Install isolated qualification dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install -e ./external/agmi pytest
+
+      - name: Record exact source and environment identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p agmi-evidence
+          {
+            echo "agent_memory_checkout=$(git rev-parse HEAD)"
+            echo "agent_memory_frozen_runtime=f2aef57293b516e065cad5d0afea26ac7e3c28a9"
+            echo "agent_memory_baseline_merge=32783fad3c5cf50a9d712c8bcc0a023907ce9433"
+            echo "agmi_revision=$(git -C external/agmi rev-parse HEAD)"
+            python --version
+            python - <<'PY'
+          import importlib.metadata as md
+          print("agent-memory-reference=" + md.version("agent-memory-reference"))
+          print("agent-memory-integrity=" + md.version("agent-memory-integrity"))
+          PY
+          } | tee agmi-evidence/source-environment.txt
+
+      - name: Run upstream Agent Memory test unchanged
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m pytest -q external/agmi/tests/test_agent_memory.py \
+            --junitxml=agmi-evidence/upstream-agent-memory.xml \
+            2>&1 | tee agmi-evidence/upstream-agent-memory.txt
+
+      - name: Produce raw T1-T9 external evidence
+        run: |
+          python scripts/run_agmi_agent_memory_qualification.py \
+            --output agmi-evidence/raw-result.json
+
+      - name: Validate external observation and preserve T9 finding
+        run: |
+          python scripts/validate_agmi_agent_memory_qualification.py \
+            agmi-evidence/raw-result.json \
+            | tee agmi-evidence/validation.txt
+
+      - name: Inventory qualification evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          find agmi-evidence -type f -print | sort | tee agmi-evidence/files.txt
+          while IFS= read -r file; do sha256sum "$file"; done < agmi-evidence/files.txt | tee agmi-evidence/sha256.txt
+          test -s agmi-evidence/raw-result.json
+          test -s agmi-evidence/upstream-agent-memory.xml
+          test -s agmi-evidence/upstream-agent-memory.txt
+          test -s agmi-evidence/source-environment.txt
+          test -s agmi-evidence/validation.txt
+
+      - name: Upload agmi qualification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: agmi-agent-memory-integrity-v1
+          path: agmi-evidence/
+          if-no-files-found: error
+          retention-days: 90
