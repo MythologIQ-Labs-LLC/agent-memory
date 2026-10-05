@@ -96,7 +96,7 @@ Profiles a system can enter today (`agent-memory gauntlet list`):
 | `governance-isolation-deletion-alpha-v1` | `gauntlet_native_gap` | none | tenant/scope isolation, deletion, authority laundering |
 | `durability-recovery-alpha-v1` | `gauntlet_native_gap` | none | reopen recovery, durable deletion, deterministic recovery, scope isolation |
 
-Every profile carries `benchmark_integration` explicitly: `None` for a Gauntlet-native suite or probe, or the id of a committed descriptor. The registry test refuses a profile that presents itself as external evidence without a bound descriptor.
+Every profile carries `benchmark_integration` explicitly: `None` for a Gauntlet-native suite or probe, or the id of a committed descriptor; the value is also recorded as a top-level field of each run's `qualification.json`. The registry test refuses a profile that presents itself as external evidence without a bound descriptor.
 
 ## 4. Benchmark-author path
 

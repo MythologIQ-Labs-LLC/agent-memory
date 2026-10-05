@@ -21,7 +21,7 @@ The executable profiles are deliberately bounded:
 - `governance-isolation-deletion-alpha-v1` is `gauntlet_native_gap` evidence;
 - `durability-recovery-alpha-v1` is `gauntlet_native_gap` evidence.
 
-None is independent external efficacy evidence. Every profile declares `benchmark_integration` (`null` for Gauntlet-native suites and probes) and `kind`; `registry.validate_registry_relationships()` refuses a profile whose kind differs from the descriptor it binds and a profile that claims an external class without binding any descriptor. The orchestrator additionally refuses a runner whose returned `profile_kind` differs from the registered kind, and records `profile.benchmark_integration` in `qualification.json`.
+None is independent external efficacy evidence. Every profile declares `benchmark_integration` (`null` for Gauntlet-native suites and probes) and `kind`; `registry.validate_registry_relationships()` refuses a profile whose kind differs from the descriptor it binds and a profile that claims an external class without binding any descriptor. The orchestrator additionally refuses a runner whose returned `profile_kind` differs from the registered kind, and records the bound integration id as a top-level `benchmark_integration` field in `qualification.json` (`null` for Gauntlet-native suites).
 
 ## CLI
 

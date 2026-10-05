@@ -326,9 +326,11 @@ def _qualification_base(
         "profile": {
             "profile_id": profile["profile_id"],
             "kind": profile["kind"],
-            "benchmark_integration": profile.get("benchmark_integration"),
             "description": profile["description"],
         },
+        # Recorded beside the profile block, not inside it, so the immutable external-
+        # contestant golden sample (which compares the profile block) stays valid.
+        "benchmark_integration": profile.get("benchmark_integration"),
         "system": {
             "id": manifest["system"]["id"],
             "kind": manifest["system"]["kind"],

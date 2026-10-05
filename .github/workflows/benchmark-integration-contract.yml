@@ -61,7 +61,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip wheel --no-deps --no-build-isolation -w ./wheel-check . > /dev/null
+          python -m pip wheel --no-deps -w ./wheel-check . > /dev/null
           python - <<'PY'
           import glob, zipfile
           wheel = glob.glob("wheel-check/*.whl")[0]
@@ -150,7 +150,7 @@ jobs:
               n = json.loads((Path(root) / "normalized-run.json").read_text(encoding="utf-8"))
               assert q["status"] == "complete", q
               assert q["profile"]["kind"] == "baseline_or_probe"
-              assert q["profile"]["benchmark_integration"] == "golden-keyed-retrieval-v1"
+              assert q["benchmark_integration"] == "golden-keyed-retrieval-v1"
               assert n["native_results"]["profile_kind"] == "baseline_or_probe"
               assert n["benchmark"]["input_sha256"] == "f818915d393ed1a3fa9a31292835660e23543ca556537865e49cab96c41988c9"
               assert n["authority_effect"] == "none"

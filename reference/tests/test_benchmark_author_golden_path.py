@@ -85,7 +85,7 @@ class BenchmarkAuthorGoldenPathTests(unittest.TestCase):
             )
             for qualification in (lexical, no_memory, external):
                 self.assertEqual(qualification["status"], "complete", qualification.get("failure"))
-                self.assertEqual(qualification["profile"]["benchmark_integration"], INTEGRATION_ID)
+                self.assertEqual(qualification["benchmark_integration"], INTEGRATION_ID)
                 self.assertEqual(qualification["profile"]["kind"], "baseline_or_probe")
                 normalized = load_run(qualification["artifacts"]["normalized_run"]["path"])
                 native = json.loads(Path(qualification["artifacts"]["native_results"]["path"]).read_text(encoding="utf-8"))
