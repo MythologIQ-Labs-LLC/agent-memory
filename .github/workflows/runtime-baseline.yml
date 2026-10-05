@@ -1,0 +1,144 @@
+name: Runtime Baseline Contract
+
+on:
+  push:
+    paths:
+      - 'reports/runtime/baseline-v1.json'
+      - 'reports/runtime/baseline-v1.md'
+      - 'scripts/render_runtime_baseline.py'
+      - 'scripts/validate_runtime_baseline_source.py'
+      - 'examples/gauntlet/agent_memory_runtime_baseline_stdio.py'
+      - 'examples/gauntlet/agent-memory-runtime-baseline-v1.json'
+      - '.github/workflows/runtime-baseline.yml'
+  pull_request:
+    paths:
+      - 'reports/runtime/baseline-v1.json'
+      - 'reports/runtime/baseline-v1.md'
+      - 'scripts/render_runtime_baseline.py'
+      - 'scripts/validate_runtime_baseline_source.py'
+      - 'examples/gauntlet/agent_memory_runtime_baseline_stdio.py'
+      - 'examples/gauntlet/agent-memory-runtime-baseline-v1.json'
+      - '.github/workflows/runtime-baseline.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install package for public Gauntlet CLI
+        run: python -m pip install -e .
+
+      - name: Validate machine-readable baseline and generated companion
+        run: python scripts/render_runtime_baseline.py --check
+
+      - name: Validate declared identities against frozen runtime revision
+        run: python scripts/validate_runtime_baseline_source.py
+
+      - name: Refuse runtime/package drift from frozen baseline revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          FROZEN="$(python -c 'import json; print(json.load(open("reports/runtime/baseline-v1.json"))["runtime_revision"]["commit"])')"
+          git diff --exit-code "$FROZEN" HEAD -- reference/agentmem_ref pyproject.toml
+
+      - name: Validate JSON syntax
+        run: python -m json.tool reports/runtime/baseline-v1.json > /dev/null
+
+      - name: Verify exact public contestant identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_REVISION="git-blob:$(git hash-object examples/gauntlet/agent_memory_runtime_baseline_stdio.py)"
+          python - "$ADAPTER_REVISION" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          expected_adapter = sys.argv[1]
+          baseline = json.loads(Path("reports/runtime/baseline-v1.json").read_text(encoding="utf-8"))
+          manifest = json.loads(Path("examples/gauntlet/agent-memory-runtime-baseline-v1.json").read_text(encoding="utf-8"))
+          expected_system = f"git-commit:{baseline['runtime_revision']['commit']}"
+          assert manifest["system"]["revision"] == expected_system, (manifest["system"]["revision"], expected_system)
+          assert manifest["adapter"]["revision"] == expected_adapter, (manifest["adapter"]["revision"], expected_adapter)
+          assert manifest["metadata"]["baseline_id"] == baseline["baseline_id"]
+          assert manifest["metadata"]["provenance_class"] == "baseline_or_probe"
+          print(f"system revision: {expected_system}")
+          print(f"adapter revision: {expected_adapter}")
+          PY
+
+      - name: Validate public contestant manifest
+        run: agent-memory gauntlet validate-adapter examples/gauntlet/agent-memory-runtime-baseline-v1.json
+
+      - name: Run Runtime Baseline v1 through public Gauntlet path
+        run: |
+          agent-memory gauntlet run \
+            --system examples/gauntlet/agent-memory-runtime-baseline-v1.json \
+            --profile gauntlet-orchestration-retrieval-probe-v1 \
+            --allow-external-process \
+            --allow-destructive-reset \
+            --output-dir ./baseline-gauntlet
+
+      - name: Validate public-path qualification evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          RUN_DIR="$(find baseline-gauntlet -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          test -n "$RUN_DIR"
+          python - "$RUN_DIR" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          root = Path(sys.argv[1])
+          qualification = json.loads((root / "qualification.json").read_text(encoding="utf-8"))
+          normalized = json.loads((root / "normalized-run.json").read_text(encoding="utf-8"))
+          native = json.loads((root / "native-results.json").read_text(encoding="utf-8"))
+          manifest = json.loads((root / "adapter-manifest.json").read_text(encoding="utf-8"))
+
+          assert qualification["status"] == "complete", qualification
+          assert qualification["profile"]["profile_id"] == "gauntlet-orchestration-retrieval-probe-v1"
+          assert qualification["adapter"]["transport"] == "stdio"
+          assert manifest["metadata"]["baseline_id"] == "agent-memory-runtime-baseline-v1"
+          assert manifest["metadata"]["public_facade_only"] is True
+          assert normalized["status"] == "complete"
+          assert normalized["system"]["id"] == "agent-memory-runtime-baseline-v1"
+          assert normalized["system"]["revision"] == "git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9"
+          assert native["profile_kind"] == "baseline_or_probe"
+          assert native["sample_count"] == 3
+          assert native["exact_top1"] == 1.0, native["rows"]
+          assert normalized["authority_effect"] == "none"
+          print(f"run_id={qualification['run_id']}")
+          print("Runtime Baseline v1 public Gauntlet qualification: PASS")
+          PY
+
+      - name: Inventory baseline qualification evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          find baseline-gauntlet -type f -print | sort | tee baseline-gauntlet-files.txt
+          while IFS= read -r file; do sha256sum "$file"; done < baseline-gauntlet-files.txt | tee baseline-gauntlet-sha256.txt
+          test "$(wc -l < baseline-gauntlet-files.txt)" -eq 4
+
+      - name: Upload public Gauntlet qualification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-baseline-v1-public-gauntlet
+          path: |
+            baseline-gauntlet/
+            baseline-gauntlet-files.txt
+            baseline-gauntlet-sha256.txt
+          if-no-files-found: error
+          retention-days: 90
