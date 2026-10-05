@@ -1,0 +1,93 @@
+{
+  "adapter": {
+    "id": "agent-memory-public-durability-adapter",
+    "revision": "git-blob:6ca6f827bdafa16d31702bcf070dfed5fef8de4e",
+    "version": "0.1.0"
+  },
+  "authority_effect": "none",
+  "benchmark_isolation": {
+    "description": "repository-owned disposable Agent Memory SQLite state keyed by unique Gauntlet run namespace",
+    "strategy": "disposable_instance"
+  },
+  "capabilities": {
+    "checkpoint": {
+      "notes": "the public AgentMemory facade does not expose checkpoint creation; private runtime access is deliberately not used by this adapter",
+      "support": "unsupported"
+    },
+    "correct": {
+      "notes": "public AgentMemory.correct() with benchmark-owned low-risk synthetic state",
+      "support": "native"
+    },
+    "describe": {
+      "notes": "translated public runtime identity only",
+      "support": "mapped"
+    },
+    "deterministic_recovery": {
+      "notes": "claimed for the frozen single-host SQLite profile and tested by repeated public reopen/observation",
+      "support": "native"
+    },
+    "durable_correction": {
+      "notes": "public governed correction followed by AgentMemory.open() recovery",
+      "support": "native"
+    },
+    "durable_deletion": {
+      "notes": "public governed pruning followed by AgentMemory.open() recovery/non-resurrection check",
+      "support": "native"
+    },
+    "forget": {
+      "notes": "public AgentMemory.forget() governed pruning",
+      "support": "native"
+    },
+    "health": {
+      "notes": "public AgentMemory.posture() health projection",
+      "support": "mapped"
+    },
+    "history": {
+      "notes": "public AgentMemory.history() lifecycle evidence",
+      "support": "native"
+    },
+    "recall": {
+      "notes": "public AgentMemory.recall() under the requested benchmark scope",
+      "support": "native"
+    },
+    "recover": {
+      "notes": "neutral recover operation maps directly to supported AgentMemory.open() create-or-recover behavior",
+      "support": "mapped"
+    },
+    "remember": {
+      "notes": "public AgentMemory.remember() under the requested benchmark scope",
+      "support": "native"
+    },
+    "reset": {
+      "notes": "adapter teardown of disposable benchmark state; not a native Agent Memory operation",
+      "support": "mapped"
+    },
+    "restart_recovery": {
+      "notes": "native persisted-state recovery through public AgentMemory.open()",
+      "support": "native"
+    },
+    "scope_isolation": {
+      "notes": "native domain admission is rechecked after public reopen",
+      "support": "native"
+    }
+  },
+  "contract_family": "agent-memory-gauntlet-system-adapter",
+  "contract_version": "0.1.0",
+  "metadata": {
+    "baseline_id": "agent-memory-runtime-baseline-v1",
+    "provenance_class": "gauntlet_native_gap",
+    "public_facade_only": true,
+    "runtime_profile": "rc1-local-sqlite-composition"
+  },
+  "system": {
+    "configuration_digest": "sha256:a998681c0a40513899d8329ebb864b17e2d986bfcea64c028fc5addf99cf2cc2",
+    "id": "agent-memory-runtime-baseline-v1",
+    "kind": "agent_memory",
+    "revision": "git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9",
+    "version": "0.2.0-rc1"
+  },
+  "transport": {
+    "callable": "agentmem_ref.evaluation.gauntlet_agent_memory:agent_memory_public_adapter",
+    "kind": "in_process"
+  }
+}
