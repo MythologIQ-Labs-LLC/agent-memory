@@ -127,6 +127,7 @@ class ImportAmbLaneEvidenceTests(unittest.TestCase):
             record = json.loads((destination / "evidence.json").read_text(encoding="utf-8"))
             lane = _lane()
             self.assertEqual(record["input"]["sha256"], lane["dataset"]["input_sha256"])
+            self.assertEqual(record["input"]["corpus_class"], "external_frozen")
             self.assertEqual(record["system"]["id"], "mem0-oss")
             self.assertEqual(record["system"]["revision"], "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd")
             self.assertEqual(record["row"]["role"], "comparator")

@@ -36,6 +36,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "reference"))
 
+from agentmem_ref.evaluation.registry import get_integration  # noqa: E402
 from agentmem_ref.evaluation.same_harness_lane import lane_digest, validate_lane  # noqa: E402
 
 CONTRACT_FAMILY = "agent-memory-same-harness-lane-evidence"
@@ -205,6 +206,10 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
         system_revision = revision
     else:
         system_revision = row["source"]["revision"]
+    integration = get_integration(lane["benchmark_integration"])
+    corpus_classes = integration["input_contract"]["corpus_classes"]
+    if len(corpus_classes) != 1:
+        raise ImportError_(f"integration {lane['benchmark_integration']} declares {len(corpus_classes)} corpus classes; the evidence record needs exactly one")
     fixture_digests = verify_fixtures(lane) if fetch else {f["name"]: f["sha256"] for f in lane["dataset"]["fixtures"]}
 
     record = {
@@ -232,6 +237,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
         },
         "input": {
             "sha256": lane["dataset"]["input_sha256"],
+            "corpus_class": corpus_classes[0],
             "dataset_revision": f"{lane['dataset']['upstream']['repository']}@{lane['dataset']['upstream']['revision']}",
             "fixtures": fixture_digests,
             "verified_by": "re-hashed from the pinned fixture URLs at import" if fetch else "lane record only (import ran with --no-fetch)",
