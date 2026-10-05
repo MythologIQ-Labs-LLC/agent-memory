@@ -2078,8 +2078,518 @@
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium",
       "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/logical-state-algebra-pressure.yml",
+      "name": "Logical State Algebra Pressure",
+      "capability": "Logical State Algebra Pressure",
+      "ownerOrProgram": [
+        "agent-memory#276"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/long-horizon-memory-benchmark.yml",
+      "name": "Long Horizon Memory Benchmark",
+      "capability": "Long Horizon Memory Benchmark",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/maf-lifecycle-comparator.yml",
+      "name": "MAF Lifecycle Comparator",
+      "capability": "MAF Lifecycle Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/maintenance-evidence.yml",
+      "name": "Maintenance Evidence",
+      "capability": "Maintenance Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/memory-component-program-closeout.yml",
+      "name": "Memory Component Program Closeout",
+      "capability": "Memory Component Program Closeout",
+      "ownerOrProgram": [
+        "agent-memory#274"
+      ],
+      "lifecycleClass": "one_time",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "RETIRE",
+      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/memory-metabolism-benchmark.yml",
+      "name": "Memory Metabolism Benchmark",
+      "capability": "Memory Metabolism Benchmark",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/memos-v2017-substitution.yml",
+      "name": "MemOS v2.0.17 Provider Substitution",
+      "capability": "MemOS v2.0.17 Provider Substitution",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          35
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "node",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/opa-policy-comparator.yml",
+      "name": "OPA Policy Comparator",
+      "capability": "OPA Policy Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/operational-memory-benchmark.yml",
+      "name": "Operational Memory Benchmark",
+      "capability": "Operational Memory Benchmark",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/p9-systems-characterization.yml",
+      "name": "P9 Systems Characterization",
+      "capability": "P9 Systems Characterization",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/policy-projection-compatibility.yml",
+      "name": "Policy Projection Compatibility",
+      "capability": "Policy Projection Compatibility",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/precedent-candidate-retrieval.yml",
+      "name": "Precedent Candidate Retrieval",
+      "capability": "Precedent Candidate Retrieval",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
     }
   ],
   "lastUpdatedAt": "2026-10-05",
-  "processedWorkflowCount": 48
+  "processedWorkflowCount": 60
 }
