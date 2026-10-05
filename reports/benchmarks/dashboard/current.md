@@ -1,8 +1,8 @@
 # Canonical Agent Memory benchmark dashboard
 
-Status: **current accepted evidence through #594**, plus current pre-1.0 comparator/runtime-qualification state as of 2026-09-28.
+Status: **current accepted evidence through #594, plus the first accepted same-harness lane (#640)**, and current pre-1.0 comparator/runtime-qualification state as of 2026-10-05.
 
-Current merged `main`: `b50d6d1db35e21a87cf91de63c363104f8c77d87`.
+Current merged `main`: `b38d91631169f8f266bdfc23477c27c99b40977e`.
 
 No universal aggregate score exists. `blocked`, `not_run`, `unsupported`, and `evidence_gap` are states, never numeric zero.
 
@@ -39,7 +39,7 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 
 ## Competitive view — same-harness systems
 
-**Status: infrastructure merged, accepted competitive result pending.**
+**Status: first same-harness lane accepted (#640, 2026-10-05).**
 
 #601 now has executable independent-harness infrastructure:
 
@@ -47,7 +47,7 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 - frozen external harness revision `03c1d0f1d27da63034f0931121c858faba512383`;
 - credential-free AMB retrieval lane merged in PR #606;
 - manual competitive workflow at `.github/workflows/amb-competitive.yml`;
-- first same-harness lane **frozen before any score** (#640): `amb-precisionmembench-retrieval-v1` with Agent Memory (control), BM25 (baseline), and Mem0 OSS 2.2.1 explicit-memory (comparator, `reference/amb_mem0_explicit_bridge.py`); Hindsight deferred until a benchmark-agnostic provider configuration is frozen. Lane file: `reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json`; see `docs/65-independent-amb-competitive-profile.md`.
+- first same-harness lane `amb-precisionmembench-retrieval-v1` (#640), **frozen before any score and now accepted**: Agent Memory (control), BM25 (baseline), and Mem0 OSS 2.2.1 explicit-memory (comparator, `reference/amb_mem0_explicit_bridge.py`); Hindsight deferred until a benchmark-agnostic provider configuration is frozen. Lane file: `reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json`; see `docs/65-independent-amb-competitive-profile.md`.
 
 The first credential-free profile is:
 
@@ -55,12 +55,20 @@ The first credential-free profile is:
 dataset: precisionmembench
 split: single-turn
 mode: retrieval
-providers: agent-memory, bm25
+providers: agent-memory, bm25, mem0-explicit
 ```
 
 Frozen AMB `RetrievalMode` makes no LLM calls and scores returned belief/document IDs directly.
 
-**No same-harness competitive result is accepted into this dashboard yet.** The manual run must be deliberately executed and its raw artifact reviewed first. BM25 is a baseline comparator, not a market-position claim.
+**Accepted same-harness rows (lane v1, 2026-10-05).** Each row was executed deliberately with the full 77-case selection on the lock-constrained harness install, its raw AMB artifact and execution identity were imported byte for byte and bound under `reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/`, and an `evidence_history` entry binds it:
+
+| row | role | system revision | run | active passes | total passes | mean precision | mean recall |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| agent-memory | control | Agent Memory `703be5b` | 37349431401 | 4/43 | 15/77 | 0.18 | 0.95 |
+| bm25 | baseline | AMB `03c1d0f` built-in | 37349435243 | 0/43 | 8/77 | 0.05 | 0.97 |
+| mem0-explicit | comparator | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37351804149 | 0/43 | 10/77 | 0.10 | 1.00 |
+
+`active passes/43` is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy. These rows produce no overall score and no portfolio retrieval observation (no normalization mapping is defined yet). BM25 is a baseline comparator and Agent Memory the control, not a market-position claim; every row returned nearly everything relevant and failed on precision. Hindsight remains deferred.
 
 The LLM-judged AMB profile is frozen to `gemini:gemini-2.5-flash-lite` for answer and judge, but remains **blocked pending authorized evaluation credentials**.
 
@@ -172,7 +180,7 @@ Active state:
 - #591 complete;
 - #594 **QUALIFIED**;
 - #600 pre-1.0 maturity program active;
-- #601 competitive infrastructure merged, first accepted same-harness result pending;
+- #601 competitive infrastructure merged; #640 first same-harness lane accepted (three rows, 2026-10-05);
 - #602 Rust shadow deterministic primitive parity **PASS**, runtime not promoted;
 - ADR-028 **Accepted**;
 - ADR-039 **Proposed**;

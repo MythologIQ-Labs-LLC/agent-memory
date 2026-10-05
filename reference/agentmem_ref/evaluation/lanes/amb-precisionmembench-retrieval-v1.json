@@ -2,7 +2,7 @@
   "contract_family": "agent-memory-same-harness-lane",
   "contract_version": "1.0.0",
   "lane_id": "amb-precisionmembench-retrieval-v1",
-  "status": "frozen",
+  "status": "accepted",
   "owning_issue": 640,
   "frozen_on": "2026-10-05",
   "frozen_before_any_score": true,
@@ -153,8 +153,8 @@
       "system_id": "agent-memory",
       "display_name": "Agent Memory (public facade, Runtime Baseline v1 runtime surface)",
       "role": "control",
-      "status": "frozen",
-      "status_reason": null,
+      "status": "accepted",
+      "status_reason": "accepted 2026-10-05 from workflow run 37349431401 at repository revision 703be5ba1c7e558edb16ac38508508e5ef592595; raw artifact and execution identity committed under reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/agent-memory-703be5ba1c7e/ and bound by the integration's evidence_history entry lane:amb-precisionmembench-retrieval-v1:agent-memory",
       "provider_key": "agent-memory",
       "source": {
         "kind": "repository_runtime",
@@ -198,8 +198,8 @@
       "system_id": "bm25",
       "display_name": "BM25 keyword baseline (AMB built-in)",
       "role": "baseline",
-      "status": "frozen",
-      "status_reason": null,
+      "status": "accepted",
+      "status_reason": "accepted 2026-10-05 from workflow run 37349435243 at repository revision 703be5ba1c7e558edb16ac38508508e5ef592595; raw artifact and execution identity committed under reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/bm25-703be5ba1c7e/ and bound by the integration's evidence_history entry lane:amb-precisionmembench-retrieval-v1:bm25",
       "provider_key": "bm25",
       "source": {
         "kind": "harness_builtin",
@@ -239,8 +239,8 @@
       "system_id": "mem0-oss",
       "display_name": "Mem0 OSS 2.2.1 (explicit memory, no inference)",
       "role": "comparator",
-      "status": "frozen",
-      "status_reason": null,
+      "status": "accepted",
+      "status_reason": "accepted 2026-10-05 from workflow run 37351804149 at repository revision b38d91631169f8f266bdfc23477c27c99b40977e; raw artifact and execution identity committed under reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/mem0-explicit-b38d91631169/ and bound by the integration's evidence_history entry lane:amb-precisionmembench-retrieval-v1:mem0-explicit",
       "provider_key": "mem0-explicit",
       "source": {
         "kind": "python_package",
@@ -345,7 +345,8 @@
     "notes": [
       "active_passes/active_total is the number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases that a provider returning nothing can satisfy",
       "BM25 is a baseline, Agent Memory is the control; neither row is a market claim",
-      "each accepted row must retain the raw AMB artifact and its execution identity; no overall score is produced"
+      "each accepted row must retain the raw AMB artifact and its execution identity; no overall score is produced",
+      "accepted rows 2026-10-05: agent-memory (run 37349431401), bm25 (run 37349435243), mem0-explicit (run 37351804149); numbers live in the committed evidence records and the integration descriptor, never in this lane"
     ]
   },
   "deferred_lanes": [
