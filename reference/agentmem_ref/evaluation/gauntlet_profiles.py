@@ -11,6 +11,7 @@ from copy import deepcopy
 
 ORCHESTRATION_PROBE_PROFILE_ID = "gauntlet-orchestration-retrieval-probe-v1"
 GOVERNANCE_ALPHA_PROFILE_ID = "governance-isolation-deletion-alpha-v1"
+DURABILITY_RECOVERY_PROFILE_ID = "durability-recovery-alpha-v1"
 
 _PROFILES = (
     {
@@ -92,6 +93,65 @@ _PROFILES = (
         "dimensions": ("governance", "evaluator_integrity", "reproducibility"),
         "authority_effect": "none",
     },
+    {
+        "profile_id": DURABILITY_RECOVERY_PROFILE_ID,
+        "kind": "gauntlet_native_gap",
+        "description": (
+            "Claim-driven durability/recovery alpha for public reopen recovery, durable "
+            "correction/deletion, deterministic recovered observation, scope isolation, and "
+            "truthful checkpoint capability posture. Behavioral outcome and evidence "
+            "sufficiency are reported separately."
+        ),
+        "runner": "agentmem_ref.evaluation.gauntlet_durability:run_durability_recovery_alpha",
+        "operations": (
+            "describe",
+            "reset",
+            "remember",
+            "recall",
+            "correct",
+            "forget",
+            "history",
+            "recover",
+            "checkpoint",
+        ),
+        "destructive_operations": {
+            "reset": None,
+            "forget": "durable_deletion",
+        },
+        "requirements": {
+            "contract_family": "agent-memory-gauntlet-profile-requirements",
+            "contract_version": "0.1.0",
+            "profile_id": DURABILITY_RECOVERY_PROFILE_ID,
+            "requires": {
+                "describe": ["native", "mapped", "derived"],
+                "reset": ["native", "mapped", "derived"],
+                "remember": ["native", "mapped", "derived"],
+                "recall": ["native", "mapped", "derived"],
+                "recover": ["native", "mapped"],
+            },
+            "optional": {
+                "correct": ["native", "mapped", "derived"],
+                "forget": ["native", "mapped", "derived"],
+                "history": ["native", "mapped", "derived"],
+                "checkpoint": ["native", "mapped", "derived"],
+                "restart_recovery": ["native", "mapped", "derived"],
+                "durable_deletion": ["native", "mapped", "derived"],
+                "durable_correction": ["native", "mapped", "derived"],
+                "deterministic_recovery": ["native", "mapped", "derived"],
+                "scope_isolation": ["native", "mapped", "derived"],
+            },
+            "notes": [
+                "Gauntlet-native field-gap evidence; not independent external validation",
+                "recover qualifies the contestant's declared reopen/recovery surface, not an implied crash/kill guarantee",
+                "unsupported checkpoint remains not_applicable and must not be emulated through private implementation access",
+                "forget is destructive only when durable_deletion is positively claimed",
+                "case behavioral outcome and evaluator evidence sufficiency remain separate",
+            ],
+            "authority_effect": "none",
+        },
+        "dimensions": ("governance", "evaluator_integrity", "reproducibility"),
+        "authority_effect": "none",
+    },
 )
 
 
@@ -113,6 +173,7 @@ def get_gauntlet_profile(profile_id: str) -> dict:
 __all__ = [
     "ORCHESTRATION_PROBE_PROFILE_ID",
     "GOVERNANCE_ALPHA_PROFILE_ID",
+    "DURABILITY_RECOVERY_PROFILE_ID",
     "list_gauntlet_profiles",
     "get_gauntlet_profile",
 ]
