@@ -6,7 +6,9 @@ Commands:
 * ``inspect``              one committed integration with its resolved Gauntlet relationship;
 * ``validate-integration`` one descriptor file, without executing anything it names;
 * ``validate``             one common memory-benchmark run manifest;
-* ``compare``              two compatible run manifests, fail-closed.
+* ``compare``              two compatible run manifests, fail-closed;
+* ``lanes``                frozen same-harness comparator lanes;
+* ``validate-lane``        one lane freeze file, cross-checked against the registry, no execution.
 
 Every report retains ``authority_effect: none``.
 """
@@ -29,6 +31,7 @@ from .registry import (
     profile_view,
     resolve_gauntlet_relationship,
 )
+from .same_harness_lane import SameHarnessLaneError, lane_digest, list_lanes, load_lane, resolve_lane
 
 SCHEMA_VERSION = "1.1.0"
 
@@ -99,6 +102,58 @@ def validate_integration_report(path: str | Path) -> dict[str, Any]:
     return _integration_report("benchmark_validate_integration", descriptor, path=str(path))
 
 
+def _lane_summary(lane: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "lane_id": lane["lane_id"],
+        "status": lane["status"],
+        "owning_issue": lane["owning_issue"],
+        "frozen_on": lane["frozen_on"],
+        "benchmark_integration": lane["benchmark_integration"],
+        "harness_revision": lane["harness"]["revision"],
+        "dataset": f"{lane['dataset']['harness_dataset']}/{lane['dataset']['split']}",
+        "input_sha256": lane["dataset"]["input_sha256"],
+        "evaluator_mode": lane["evaluator"]["mode"],
+        "llm_calls": lane["evaluator"]["llm_calls"],
+        "rows": [
+            {"row_id": row["row_id"], "system_id": row["system_id"], "role": row["role"], "status": row["status"], "provider_key": row["provider_key"]}
+            for row in lane["systems"]
+        ],
+        "lane_digest_sha256": lane_digest(lane),
+    }
+
+
+def lanes_report() -> dict[str, Any]:
+    lanes = list_lanes()
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "command": "benchmark_lanes",
+        "lane_count": len(lanes),
+        "lanes": [_lane_summary(lane) for lane in lanes],
+        "executed": False,
+        "authority_effect": "none",
+    }
+
+
+def validate_lane_report(path: str | Path) -> dict[str, Any]:
+    lane = load_lane(path)
+    resolution = resolve_lane(lane)
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "command": "benchmark_validate_lane",
+        "valid": True,
+        "path": str(path),
+        "lane_id": lane["lane_id"],
+        "status": lane["status"],
+        "lane_digest_sha256": resolution["lane_digest_sha256"],
+        "resolution": resolution,
+        "summary": _lane_summary(lane),
+        "findings": list(lane.get("findings", [])),
+        "executed": False,
+        "lane": lane,
+        "authority_effect": "none",
+    }
+
+
 def validate_report(path: str | Path) -> dict[str, Any]:
     document = load_run(path)
     measured_dimensions = [
@@ -139,9 +194,16 @@ def execute(
     candidate: str | None = None,
     integration: str | None = None,
     manifest: str | None = None,
+    lane: str | None = None,
 ) -> dict[str, Any]:
     if command == "list":
         return list_report()
+    if command == "lanes":
+        return lanes_report()
+    if command == "validate-lane":
+        if not lane:
+            raise ValueError("benchmark validate-lane requires a lane path")
+        return validate_lane_report(lane)
     if command == "inspect":
         if not integration:
             raise ValueError("benchmark inspect requires an integration id")
@@ -220,6 +282,24 @@ def emit(value: dict[str, Any], *, json_output: bool) -> None:
         _emit_integration(value, title="Benchmark integration descriptor: valid")
         return
 
+    if command in {"benchmark_lanes", "benchmark_validate_lane"}:
+        lanes = value["lanes"] if command == "benchmark_lanes" else [value["summary"]]
+        print("Same-harness lanes: " + (str(value["lane_count"]) if command == "benchmark_lanes" else "valid"))
+        for lane in lanes:
+            print(f"- {lane['lane_id']} [{lane['status']}] issue #{lane['owning_issue']} frozen {lane['frozen_on']}")
+            print(f"  integration: {lane['benchmark_integration']} @ {lane['harness_revision']}")
+            print(f"  dataset: {lane['dataset']} input {lane['input_sha256']}")
+            print(f"  evaluator: {lane['evaluator_mode']} (llm_calls={str(lane['llm_calls']).lower()})")
+            for row in lane["rows"]:
+                print(f"    {row['role']:<10} {row['system_id']:<14} [{row['status']}] provider {row['provider_key']}")
+            print(f"  freeze digest: {lane['lane_digest_sha256']}")
+        if command == "benchmark_validate_lane":
+            for finding in value["findings"]:
+                print(f"  finding: {finding}")
+        print("Executed: no")
+        print("Authority effect: none")
+        return
+
     if command == "benchmark_validate":
         print("Benchmark report: valid")
         print(f"Run: {value['run_id']} ({value['run_status']})")
@@ -278,6 +358,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     validate_integration.add_argument("manifest", help="path to a memory-benchmark-integration JSON descriptor")
     validate_integration.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+    lanes = commands.add_parser("lanes", help="list frozen same-harness comparator lanes")
+    lanes.add_argument("--json", action="store_true", help="emit machine-readable JSON")
+    validate_lane = commands.add_parser("validate-lane", help="validate one same-harness lane freeze without executing it")
+    validate_lane.add_argument("lane", help="path to a same-harness-lane JSON file")
+    validate_lane.add_argument("--json", action="store_true", help="emit machine-readable JSON")
     validate = commands.add_parser("validate", help="validate one common memory-benchmark run manifest")
     validate.add_argument("report", help="path to a memory-benchmark run JSON report")
     validate.add_argument("--json", action="store_true", help="emit machine-readable JSON")
@@ -314,8 +399,9 @@ def main(argv: list[str] | None = None) -> int:
             candidate=getattr(args, "candidate", None),
             integration=getattr(args, "integration", None),
             manifest=getattr(args, "manifest", None),
+            lane=getattr(args, "lane", None),
         )
-    except (BenchmarkIntegrationError, KeyError, TypeError, ValueError) as exc:
+    except (BenchmarkIntegrationError, SameHarnessLaneError, KeyError, TypeError, ValueError) as exc:
         return _failure(args.benchmark_command, exc, json_output=args.json)
     emit(value, json_output=args.json)
     return 0

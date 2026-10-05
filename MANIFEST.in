@@ -1,2 +1,3 @@
 recursive-include schemas *.json
 recursive-include reference/agentmem_ref/evaluation/integrations *.json
+recursive-include reference/agentmem_ref/evaluation/lanes *.json
