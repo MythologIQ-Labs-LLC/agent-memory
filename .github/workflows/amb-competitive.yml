@@ -61,6 +61,7 @@ jobs:
       AMB_REVISION: 03c1d0f1d27da63034f0931121c858faba512383
       LANE_FILE: reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json
       MEM0_PIN: mem0ai==2.2.1
+      UV_PIN: uv==0.8.17
       MEM0_TELEMETRY: "false"
       HF_HOME: /tmp/amb-hf-home
       GEMINI_API_KEY: ${{ secrets.AMB_GEMINI_API_KEY }}
@@ -126,20 +127,34 @@ jobs:
             exit 2
           fi
 
-      - name: Install Agent Memory and frozen AMB
+      - name: Install Agent Memory and the frozen AMB harness under its own lock
+        shell: bash
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e .
-          python -m pip install -e .external/amb
+          set -euo pipefail
+          # The frozen AMB pyproject floats most of its dependency set (hindsight-all>=0.4,
+          # cognee>=0.5.4, mem0ai>=1.0.5, ...). Re-resolving that set from scratch exhausts
+          # pip's backtracking budget (resolution-too-deep, run 37343360127) before a single
+          # query runs. The checkout ships the exact resolution it was developed against in
+          # uv.lock; install under it as pip constraints. Only this repository's own pins and
+          # the lane row's declared pin (mem0ai==2.2.1, which lifts posthog) depart from the
+          # lock, and the derivation is recorded in the execution identity.
+          python -m pip install --upgrade pip "${UV_PIN}"
+          python scripts/amb_harness_constraints.py \
+            --amb-root .external/amb \
+            --memory '${{ inputs.memory }}' \
+            --output "$RUNNER_TEMP/amb-constraints.txt" \
+            --provenance "$RUNNER_TEMP/amb-constraints-provenance.json"
+          python -m pip install -c "$RUNNER_TEMP/amb-constraints.txt" -e . -e .external/amb
 
-      - name: Pin the frozen Mem0 OSS row (base package, no extras)
+      - name: Verify the frozen Mem0 OSS row (base package, no extras)
         if: ${{ inputs.memory == 'mem0-explicit' }}
         shell: bash
         run: |
           set -euo pipefail
-          # The frozen AMB dependency set floats mem0ai>=1.0.5; the #640 lane pins the exact
-          # release and the product-default install posture (no fastembed/spaCy extras).
-          python -m pip install "${MEM0_PIN}"
+          # The #640 lane pins the exact release and the product-default install posture
+          # (no fastembed/spaCy extras). The pin was applied as a constraint above; nothing
+          # is installed here, the posture is only verified.
+          python -m pip install --dry-run "${MEM0_PIN}" | tail -1
           python - <<'PY'
           import importlib.util, json, mem0
           assert mem0.__version__ == "2.2.1", mem0.__version__
@@ -212,6 +227,8 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/amb-output"
           [ -f "$RUNNER_TEMP/precisionmembench-selfcheck.txt" ] && cp "$RUNNER_TEMP/precisionmembench-selfcheck.txt" "$RUNNER_TEMP/amb-output/" || true
+          [ -f "$RUNNER_TEMP/amb-constraints.txt" ] && cp "$RUNNER_TEMP/amb-constraints.txt" "$RUNNER_TEMP/amb-output/" || true
+          [ -f "$RUNNER_TEMP/amb-constraints-provenance.json" ] && cp "$RUNNER_TEMP/amb-constraints-provenance.json" "$RUNNER_TEMP/amb-output/" || true
           python - <<'PY'
           import importlib.metadata as md
           import importlib.util
@@ -231,6 +248,8 @@ jobs:
 
           lane_file = os.environ["LANE_FILE"]
           lane = json.loads(Path(lane_file).read_text(encoding="utf-8"))
+          provenance_path = Path(os.environ["RUNNER_TEMP"], "amb-constraints-provenance.json")
+          harness_constraints = json.loads(provenance_path.read_text(encoding="utf-8")) if provenance_path.is_file() else None
           memory = "${{ inputs.memory }}"
           mode = "${{ inputs.mode }}"
           lane_applies = "${{ inputs.dataset }}" == "precisionmembench" and mode == "retrieval"
@@ -255,8 +274,9 @@ jobs:
               },
               "resolved_packages": {
                   name: version(name)
-                  for name in ("mem0ai", "qdrant-client", "sentence-transformers", "torch", "rank-bm25", "openai", "sqlalchemy", "hindsight-all", "hindsight-client")
+                  for name in ("mem0ai", "qdrant-client", "sentence-transformers", "torch", "rank-bm25", "openai", "sqlalchemy", "posthog", "hindsight-all", "hindsight-client", "uv")
               },
+              "harness_constraints": harness_constraints,
               "mem0_optional_components": {
                   "fastembed_installed": importlib.util.find_spec("fastembed") is not None,
                   "spacy_installed": importlib.util.find_spec("spacy") is not None,

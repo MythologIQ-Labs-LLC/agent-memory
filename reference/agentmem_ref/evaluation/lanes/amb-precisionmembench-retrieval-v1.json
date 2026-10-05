@@ -116,9 +116,18 @@
     "failure_handling": "the frozen runner retries a query up to 4 times only on transient-provider error codes (502/503/529/429/overloaded/quota); any other exception aborts the run, which is recorded as blocked/failed execution, never as a score",
     "environment": {
       "python": "3.12",
-      "harness_install": "pip install -e <frozen AMB checkout>",
+      "harness_install": "pip install -e <frozen AMB checkout> under pip constraints exported from the checkout's own uv.lock (scripts/amb_harness_constraints.py); the lock blob, the uv release, and every lifted pin are recorded in the execution identity",
       "placeholder_gemini_key": "the frozen CLI constructs its configured answer client before selecting retrieval mode; an inert GEMINI_API_KEY value is supplied solely for construction and can never produce a result",
-      "network": "fixture download from the pinned upstream commit and embedder weights from the pinned Hugging Face revision; no API calls"
+      "network": "fixture download from the pinned upstream commit and embedder weights from the pinned Hugging Face revision; no API calls",
+      "harness_lock": {
+        "file": "uv.lock at harness.revision",
+        "git_blob": "cbd392efbd2c81c8cebf493edd07fd160f39dcbd",
+        "sha256": "de4408d18088476169d62286e379417aac2bd52c97f1bdd868bf4f4a366bcad7",
+        "departures": [
+          "packages pinned by this repository's pyproject.toml (cryptography, jsonschema, rfc8785) follow the repository, not the lock",
+          "the mem0-explicit row replaces the lock's mem0ai 1.0.5 with mem0ai==2.2.1, which requires posthog>=7.14.0 and therefore lifts the lock's posthog 7.9.10 (telemetry client, MEM0_TELEMETRY=false); every other locked pin stays in force for every row"
+        ]
+      }
     },
     "artifact_requirements": [
       "AMB raw EvalSummary JSON per provider (outputs/precisionmembench/<run>/retrieval/single-turn.json) with per-case meta: pass_type, active_pass, relevant_beliefs, retrieval_precision, retrieval_recall, resolution, failures",
@@ -133,7 +142,8 @@
       "AMB_PMB_RETURN_CAP unset",
       "per-provider resolved package versions (mem0ai, qdrant-client, sentence-transformers, torch, rank-bm25)",
       "embedder model revision equal to the frozen Hugging Face revision",
-      "Mem0 optional-component posture (fastembed, spacy) equal to the frozen base-package install"
+      "Mem0 optional-component posture (fastembed, spacy) equal to the frozen base-package install",
+      "harness lock identity (uv.lock blob and sha256) and the complete list of lifted pins, each with its reason"
     ]
   },
   "systems": [
@@ -351,7 +361,8 @@
     "AMB's frozen mem0 provider calls Memory.search(query, user_id=..., limit=...); Mem0 2.2.1 rejects top-level entity parameters and requires filters={'user_id': ...} with top_k=, so that provider cannot execute at the #640 pin",
     "vectorize-io/agent-memory-benchmark carries no LICENSE file at the frozen revision; the harness is used from an external checkout only",
     "Mem0 2.2.1 constructs its LLM client eagerly even when infer=False is used for every add; the lane satisfies construction with an inert key and guards every LLM call",
-    "Mem0 2.2.1 changes retrieval behaviour depending on optional extras (fastembed keyword search, spaCy lemmatizer); the lane freezes the base-package install and records the absent components in the execution identity"
+    "Mem0 2.2.1 changes retrieval behaviour depending on optional extras (fastembed keyword search, spaCy lemmatizer); the lane freezes the base-package install and records the absent components in the execution identity",
+    "the frozen harness's pyproject dependency set does not resolve under pip's default backtracking budget (resolution-too-deep after ~26 minutes in workflow run 37343360127, before any query ran); the uv.lock shipped at the frozen revision resolves in seconds and is the harness environment the lane installs"
   ],
   "change_rule": "any change to harness revision, fixtures, selection, budget, gold identity, evaluator, execution semantics, or a frozen row's source/adapter/configuration after a score has been observed requires a new lane_id; this record is never edited in place once status leaves frozen",
   "authority_effect": "none"
