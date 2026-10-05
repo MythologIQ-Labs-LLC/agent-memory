@@ -1,0 +1,4142 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-05",
+  "repository": "MythologIQ-Labs-LLC/agent-memory",
+  "governingIssue": "#662",
+  "purpose": "Phase 1 GitHub Actions workflow inventory and provisional lifecycle/disposition classification. No workflow behavior changes in this inventory slice.",
+  "truthRules": [
+    "run count is not billing",
+    "classification does not authorize deletion or disabling",
+    "protected/discretionary classification must preserve repository evidence and authority contracts",
+    "provisional classifications may be tightened by semantic review before remediation"
+  ],
+  "startingAudit": {
+    "workflowFiles": 84,
+    "pullRequestFiles": 80,
+    "pushFiles": 49,
+    "pathScopedFiles": 41,
+    "timeoutFiles": 11,
+    "concurrencyFiles": 2,
+    "runsObserved20261001Through20261005": 2500,
+    "lifetimeRunsObserved": 40000
+  },
+  "records": [
+    {
+      "path": ".github/workflows/agent-manifest-external-evidence.yml",
+      "name": "Agent Manifest External Evidence Comparator",
+      "capability": "Agent Manifest External Evidence Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/agent-memory-runtime-adapter.yml",
+      "name": "Agent Memory Runtime Adapter",
+      "capability": "Agent Memory Runtime Adapter",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "node"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/agmi-agent-memory-qualification.yml",
+      "name": "agmi Agent Memory Integrity Qualification",
+      "capability": "agmi Agent Memory Integrity Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          90
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/amb-competitive.yml",
+      "name": "Independent AMB Competitive Run",
+      "capability": "Independent AMB Competitive Run",
+      "ownerOrProgram": [
+        "agent-memory#640"
+      ],
+      "lifecycleClass": "manual_exception",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          180
+        ]
+      },
+      "concurrencyState": {
+        "configured": true,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "MANUAL",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/amb-evidence-import.yml",
+      "name": "Import AMB lane evidence",
+      "capability": "Import AMB lane evidence",
+      "ownerOrProgram": [
+        "agent-memory#640"
+      ],
+      "lifecycleClass": "manual_exception",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          20
+        ]
+      },
+      "concurrencyState": {
+        "configured": true,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "MANUAL",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/architecture-family-closeout.yml",
+      "name": "Architecture Family Closeout",
+      "capability": "Architecture Family Closeout",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "one_time",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "RETIRE",
+      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/atlas-research-intake.yml",
+      "name": "Atlas Research Intake",
+      "capability": "Atlas Research Intake",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/authority-laundering-evidence.yml",
+      "name": "Authority Laundering Evidence",
+      "capability": "Authority Laundering Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/autonomous-maintenance-evidence.yml",
+      "name": "Autonomous Maintenance Evidence",
+      "capability": "Autonomous Maintenance Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/benchmark-integration-contract.yml",
+      "name": "Benchmark Integration Contract",
+      "capability": "Benchmark Integration Contract",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          90
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-migration-contract.yml",
+      "name": "Canonical JSON v2 Migration Contract",
+      "capability": "Canonical JSON v2 Migration Contract",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "one_time",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "RETIRE",
+      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-migration-preflight.yml",
+      "name": "Canonical JSON v2 Migration Preflight",
+      "capability": "Canonical JSON v2 Migration Preflight",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "one_time",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "RETIRE",
+      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-parity.yml",
+      "name": "Canonical JSON v2 Candidate Parity",
+      "capability": "Canonical JSON v2 Candidate Parity",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-transaction-qualification.yml",
+      "name": "Canonical JSON v2 Transaction Qualification",
+      "capability": "Canonical JSON v2 Transaction Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-vector-acceptance.yml",
+      "name": "Canonical JSON v2 Vector Acceptance",
+      "capability": "Canonical JSON v2 Vector Acceptance",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-vector-integrity.yml",
+      "name": "Canonical JSON v2 Vector Integrity",
+      "capability": "Canonical JSON v2 Vector Integrity",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/canonical-reachability.yml",
+      "name": "Canonicalization Reachability",
+      "capability": "Canonicalization Reachability",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/canonical-scheme-registry.yml",
+      "name": "Canonicalization Scheme Registry Qualification",
+      "capability": "Canonicalization Scheme Registry Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/canonical-surface-inventory.yml",
+      "name": "Canonical Serialization Surface Inventory",
+      "capability": "Canonical Serialization Surface Inventory",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/capability-behavior-contract.yml",
+      "name": "Capability Behavior Contract",
+      "capability": "Capability Behavior Contract",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/cedar-policy-comparator.yml",
+      "name": "Cedar Policy Comparator",
+      "capability": "Cedar Policy Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/cli-doctor.yml",
+      "name": "CLI Doctor Boundary",
+      "capability": "CLI Doctor Boundary",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          15
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/cmcp-external-evidence.yml",
+      "name": "cMCP External Evidence Comparator",
+      "capability": "cMCP External Evidence Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/codegenome-multicapability-profile.yml",
+      "name": "CodeGenome Multi-Capability Profile",
+      "capability": "CodeGenome Multi-Capability Profile",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/codegenome-reality-mesh-evidence.yml",
+      "name": "CodeGenome Reality Graph Evidence",
+      "capability": "CodeGenome Reality Graph Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/codegenome-scope-residue-closeout.yml",
+      "name": "CodeGenome Scope and Residue Closeout",
+      "capability": "CodeGenome Scope and Residue Closeout",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "one_time",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "RETIRE",
+      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/cognitive-mesh-evidence.yml",
+      "name": "Cognitive Mesh Evidence",
+      "capability": "Cognitive Mesh Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/component-qualification-evidence.yml",
+      "name": "Component Qualification Evidence",
+      "capability": "Component Qualification Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/component-qualification-foundation.yml",
+      "name": "Component Qualification Foundation",
+      "capability": "Component Qualification Foundation",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/conditional-memory-evidence.yml",
+      "name": "Conditional Memory Evidence",
+      "capability": "Conditional Memory Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/conditional-memory-influence.yml",
+      "name": "Conditional Memory Influence",
+      "capability": "Conditional Memory Influence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/config-bound-recovery.yml",
+      "name": "Configuration-Bound Recovery",
+      "capability": "Configuration-Bound Recovery",
+      "ownerOrProgram": [
+        "agent-memory#280",
+        "agent-memory#308",
+        "agent-memory#300"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Ongoing configured-restart acceptance contract. Review only if the capability or authority contract is superseded.",
+      "classificationConfidence": "high",
+      "reviewNotes": "Corrected from one-time heuristic: this workflow continuously validates configuration-bound recovery behavior on push and pull request.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/dashclaw-external-verdict.yml",
+      "name": "DashClaw External Verdict Provider",
+      "capability": "DashClaw External Verdict Provider",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/derivation-currentness-evidence.yml",
+      "name": "Derivation Currentness Evidence",
+      "capability": "Derivation Currentness Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/derivation-output-custody.yml",
+      "name": "Derivation Output Custody",
+      "capability": "Derivation Output Custody",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/domain-schema-discovery-evidence.yml",
+      "name": "Domain Schema Discovery Evidence",
+      "capability": "Domain Schema Discovery Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/domain-schema-mutation-contract.yml",
+      "name": "Domain Schema Mutation Contract",
+      "capability": "Domain Schema Mutation Contract",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/enforce-issue-labels.yml",
+      "name": "Enforce Issue Labels",
+      "capability": "Enforce Issue Labels",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "issues"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/evolveai-cognitive-mesh-evidence.yml",
+      "name": "EvolveAI Cognitive Mesh Evidence",
+      "capability": "EvolveAI Cognitive Mesh Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/evolveai-multicapability-qualification.yml",
+      "name": "EvolveAI Multi-Capability Qualification",
+      "capability": "EvolveAI Multi-Capability Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/external-evidence-contract.yml",
+      "name": "External Evidence Contract",
+      "capability": "External Evidence Contract",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/federated-resource-exchange.yml",
+      "name": "Federated Resource Exchange",
+      "capability": "Federated Resource Exchange",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          45
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "node",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/gauntlet-durability-recovery.yml",
+      "name": "Gauntlet Durability Recovery",
+      "capability": "Gauntlet Durability Recovery",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          90
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep path-scoped while durability/recovery behavior remains a supported acceptance boundary; review if the gauntlet authority moves or is superseded.",
+      "classificationConfidence": "high",
+      "reviewNotes": "Corrected from one-time heuristic: this is a path-scoped durability/recovery acceptance lane, not a disposable recovery procedure.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/gauntlet-external-contestant-dogfood.yml",
+      "name": "Gauntlet External Contestant Dogfood",
+      "capability": "Gauntlet External Contestant Dogfood",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          90
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/hermes-observe-govern-integration.yml",
+      "name": "Hermes Observe Govern Integration",
+      "capability": "Hermes Observe Govern Integration",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/hermes-recursive-learning-research.yml",
+      "name": "Hermes Recursive Learning Research",
+      "capability": "Hermes Recursive Learning Research",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/hindsight-v090-qualification.yml",
+      "name": "Hindsight v0.9.0 Qualification",
+      "capability": "Hindsight v0.9.0 Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          35
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/langgraph-lifecycle-comparator.yml",
+      "name": "LangGraph Lifecycle Comparator",
+      "capability": "LangGraph Lifecycle Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/logical-state-algebra-pressure.yml",
+      "name": "Logical State Algebra Pressure",
+      "capability": "Logical State Algebra Pressure",
+      "ownerOrProgram": [
+        "agent-memory#276"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/long-horizon-memory-benchmark.yml",
+      "name": "Long Horizon Memory Benchmark",
+      "capability": "Long Horizon Memory Benchmark",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/maf-lifecycle-comparator.yml",
+      "name": "MAF Lifecycle Comparator",
+      "capability": "MAF Lifecycle Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/maintenance-evidence.yml",
+      "name": "Maintenance Evidence",
+      "capability": "Maintenance Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/memory-component-program-closeout.yml",
+      "name": "Memory Component Program Closeout",
+      "capability": "Memory Component Program Closeout",
+      "ownerOrProgram": [
+        "agent-memory#274"
+      ],
+      "lifecycleClass": "one_time",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "RETIRE",
+      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/memory-metabolism-benchmark.yml",
+      "name": "Memory Metabolism Benchmark",
+      "capability": "Memory Metabolism Benchmark",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/memos-v2017-substitution.yml",
+      "name": "MemOS v2.0.17 Provider Substitution",
+      "capability": "MemOS v2.0.17 Provider Substitution",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          35
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "node",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/opa-policy-comparator.yml",
+      "name": "OPA Policy Comparator",
+      "capability": "OPA Policy Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/operational-memory-benchmark.yml",
+      "name": "Operational Memory Benchmark",
+      "capability": "Operational Memory Benchmark",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/p9-systems-characterization.yml",
+      "name": "P9 Systems Characterization",
+      "capability": "P9 Systems Characterization",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/policy-projection-compatibility.yml",
+      "name": "Policy Projection Compatibility",
+      "capability": "Policy Projection Compatibility",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/precedent-candidate-retrieval.yml",
+      "name": "Precedent Candidate Retrieval",
+      "capability": "Precedent Candidate Retrieval",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/procedural-memory-evidence.yml",
+      "name": "Procedural Memory Evidence",
+      "capability": "Procedural Memory Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/proposition-semantics-score.yml",
+      "name": "Proposition Semantics Qualification",
+      "capability": "Proposition Semantics Qualification",
+      "ownerOrProgram": [
+        "agent-memory#631",
+        "agent-memory#594"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/provider-discovery.yml",
+      "name": "Provider Discovery Evidence",
+      "capability": "Provider Discovery Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/publish-wiki.yml",
+      "name": "Publish GitHub Wiki",
+      "capability": "Publish GitHub Wiki",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/recall-validation-characterization.yml",
+      "name": "Recall Validation Characterization",
+      "capability": "Recall Validation Characterization",
+      "ownerOrProgram": [
+        "agent-memory#572"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-24.04"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          15
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/recall-validation-external-replay.yml",
+      "name": "Recall Validation External Replay",
+      "capability": "Recall Validation External Replay",
+      "ownerOrProgram": [
+        "agent-memory#583",
+        "agent-memory#634"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-24.04"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          15,
+          30
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/restart-safe-runtime.yml",
+      "name": "Restart-Safe Runtime",
+      "capability": "Restart-Safe Runtime",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/retrieval-quality-benchmark.yml",
+      "name": "Retrieval Quality Benchmark",
+      "capability": "Retrieval Quality Benchmark",
+      "ownerOrProgram": [
+        "agent-memory#548"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/reusable-grant-authority-transition.yml",
+      "name": "Reusable Grant Authority Transition",
+      "capability": "Reusable Grant Authority Transition",
+      "ownerOrProgram": [
+        "agent-memory#24"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/runtime-baseline.yml",
+      "name": "Runtime Baseline Contract",
+      "capability": "Runtime Baseline Contract",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          90
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/runtime-composition.yml",
+      "name": "Runtime Composition Evidence",
+      "capability": "Runtime Composition Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/runtime-configuration.yml",
+      "name": "Runtime Configuration Contract",
+      "capability": "Runtime Configuration Contract",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/rust-prefilter-performance.yml",
+      "name": "Rust Candidate Prefilter Performance",
+      "capability": "Rust Candidate Prefilter Performance",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          30
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/rust-shadow-kernel.yml",
+      "name": "Rust Shadow Kernel Qualification",
+      "capability": "Rust Shadow Kernel Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/seal-anchors.yml",
+      "name": "Seal Anchors",
+      "capability": "Seal Anchors",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/sleeper-poisoning-evidence.yml",
+      "name": "Sleeper Poisoning Evidence",
+      "capability": "Sleeper Poisoning Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/sqlite-production-substrate.yml",
+      "name": "SQLite Production Substrate",
+      "capability": "SQLite Production Substrate",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/structural-mutation-governance.yml",
+      "name": "Structural Mutation Governance",
+      "capability": "Structural Mutation Governance",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/temporal-commitment-evidence.yml",
+      "name": "Temporal Commitment Evidence",
+      "capability": "Temporal Commitment Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/temporal-currentness-final-replay.yml",
+      "name": "Temporal Currentness Final Replay",
+      "capability": "Temporal Currentness Final Replay",
+      "ownerOrProgram": [
+        "agent-memory#580"
+      ],
+      "lifecycleClass": "one_time",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-24.04"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          30
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "RETIRE",
+      "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/unsafe-composition-evidence.yml",
+      "name": "Unsafe Composition Evidence",
+      "capability": "Unsafe Composition Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/uor-addr-compatibility.yml",
+      "name": "UOR Addr Compatibility",
+      "capability": "UOR Addr Compatibility",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": null
+    },
+    {
+      "path": ".github/workflows/validate-doctrine-evidence.yml",
+      "name": "Validate Doctrine Evidence",
+      "capability": "Validate Doctrine Evidence",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/write-readable-visibility.yml",
+      "name": "Write-to-Readable Visibility",
+      "capability": "Write-to-Readable Visibility",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-low",
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    }
+  ],
+  "lastUpdatedAt": "2026-10-05",
+  "processedWorkflowCount": 84,
+  "currentBranchTriggerReconciliation": {
+    "observedAt": "2026-10-05",
+    "note": "Current main-branch code search found no .github/workflows files containing schedule:. The earlier 2026-10-05 audit snapshot recorded 6 scheduled workflow files. Treat this as configuration drift between audit snapshots, not as equivalent observations.",
+    "currentScheduleFiles": [],
+    "priorAuditScheduleFileCount": 6
+  },
+  "classificationPolicy": {
+    "consequenceRule": "Binary protected/discretionary classification required by #662. Ambiguous lanes are conservatively protected until explicit evidence proves discretionary suppression is safe.",
+    "behaviorAuthority": "Inventory classification alone does not authorize disabling, deleting, or moving required checks."
+  },
+  "inventorySummary": {
+    "workflowCount": 84,
+    "lifecycleCounts": {
+      "required_hot_path": 34,
+      "conditional_hot_path": 22,
+      "async_assurance": 20,
+      "manual_exception": 2,
+      "one_time": 6
+    },
+    "dispositionCounts": {
+      "KEEP": 34,
+      "CONDITIONAL": 22,
+      "ASYNC": 20,
+      "MANUAL": 2,
+      "RETIRE": 6
+    },
+    "consequenceCounts": {
+      "protected": 64,
+      "discretionary": 20
+    },
+    "triggerCounts": {
+      "pull_request": 80,
+      "push": 49,
+      "workflow_dispatch": 41,
+      "issues": 1
+    },
+    "missingExplicitTimeoutCount": 73,
+    "supersedablePrOrPushWithoutConcurrencyCount": 81,
+    "artifactUploadWithoutExplicitRetentionCount": 50,
+    "repeatedSetupFamilies": [
+      {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59
+      },
+      {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9
+      },
+      {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7
+      }
+    ]
+  }
+}
