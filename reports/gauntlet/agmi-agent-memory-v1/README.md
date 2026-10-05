@@ -15,15 +15,27 @@ This slice qualifies `tech4biz-yasha/agmi` as independent external integrity evi
 
 The CI qualification refuses to run if `reference/agentmem_ref` or `pyproject.toml` differs from the frozen runtime revision. That allows qualification work to evolve around the runtime without silently moving the measured system.
 
+## Accepted reproduction
+
+The first accepted exact-source reproduction ran on Agent Memory qualification head `34dc89b0c8ae7faf479faf1261e80224381f50b8`.
+
+- workflow run: `37257944075`
+- artifact: `11323860742`
+- artifact digest: `sha256:d87ab730447540cc5e25f3243aba900d1ea7fbdbabc43dce1936b092bb77e2b3`
+- upstream Agent Memory tests: 7 passed, 0 failed
+- committed durable result: `reports/gauntlet/agmi-agent-memory-v1/accepted-result.json`
+
+The accepted evidence is classified as `independent_external_benchmark`. The local workflow and normalization are `gauntlet_external_integration`. Both retain `authority_effect: none`.
+
 ## Attacked persisted surface
 
 The upstream adapter uses the public `AgentMemory` facade for normal seed/read lifecycle operations and direct SQLite access only for the attacker-side mutation. T1-T8 target the canonical `facts` table while deliberately leaving the integrity digest structures and `configuration-binding.json` sidecar untouched. T9 restores an older genuine copy of the complete state directory after a newer genuine write.
 
 The evaluator's ability to edit disposable storage is not treated as a native Agent Memory capability.
 
-## Expected external observation
+## Accepted external observation
 
-The frozen upstream result is intentionally mixed:
+The reproduced result is intentionally mixed:
 
 | Attack | agmi observation | Gauntlet behavioral outcome | Evidence qualification |
 | --- | --- | --- | --- |
@@ -37,9 +49,11 @@ The frozen upstream result is intentionally mixed:
 | metadata_tamper | `safe` | pass | sufficient |
 | snapshot_rollback | `VULNERABLE` | fail | sufficient |
 
-For the Agent Memory adapter, detection occurs on the read/open path. The eight raw row-level edits are refused by runtime recovery/integrity checks. T9 is different: rolling back the SQLite store and its colocated configuration-binding sidecar together restores a previously genuine state, so the older directory opens as current and the newest genuine memory is absent without an integrity error.
+For the Agent Memory adapter, detection occurs on the read/open path. Every T1-T8 cell reproduced the same refusal reason: `RuntimeRecoveryError: SQLite canonical substrate digest mismatch`.
 
-That T9 finding is part of the evidence contract. CI must preserve it. This qualification is successful when the external result is reproduced accurately, not when every security cell is green.
+T9 is different. Rolling back the SQLite store and its colocated configuration-binding sidecar together restores a previously genuine state. The older directory opens as current and the newest genuine memory is absent without an integrity error.
+
+That T9 finding is part of the accepted evidence contract. CI must preserve it. This qualification is successful because the external result is reproduced accurately, not because every security cell is green.
 
 The upstream pinned test also records that the current persisted row-digest scheme uses unkeyed SHA-256. Recomputing those digests after an edit is outside the frozen T1-T9 attack contract and remains an explicit limitation rather than an implied tested capability.
 
@@ -72,7 +86,7 @@ Accepted external coverage is intentionally narrower than the full durability pr
 | migration_compatibility | `not_covered` |
 | mixed_version_recovery | `not_covered` |
 
-The resulting integration ruling is **partial reuse** if the pinned reproduction succeeds: use agmi for independent storage-integrity/tamper evidence and keep #571 native for positive recovery, lifecycle durability, concurrency, stale-writer and migration qualification.
+The final integration ruling is **partial reuse**: use agmi for independent storage-integrity/tamper evidence and keep #571 native for positive recovery, lifecycle durability, concurrency, stale-writer and migration qualification.
 
 ## Evidence classes
 
