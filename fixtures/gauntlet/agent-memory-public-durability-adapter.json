@@ -77,7 +77,8 @@
     "baseline_id": "agent-memory-runtime-baseline-v1",
     "provenance_class": "gauntlet_native_gap",
     "public_facade_only": true,
-    "runtime_profile": "rc1-local-sqlite-composition"
+    "runtime_profile": "rc1-local-sqlite-composition",
+    "transport_wrapper_revision": "git-blob:ad683be86ee7e3f054e566ec90396bcccd2c4995"
   },
   "system": {
     "configuration_digest": "sha256:a998681c0a40513899d8329ebb864b17e2d986bfcea64c028fc5addf99cf2cc2",
@@ -87,7 +88,10 @@
     "version": "0.2.0-rc1"
   },
   "transport": {
-    "callable": "agentmem_ref.evaluation.gauntlet_agent_memory:agent_memory_public_adapter",
-    "kind": "in_process"
+    "kind": "stdio",
+    "startup": [
+      "python",
+      "examples/gauntlet/agent_memory_durability_stdio.py"
+    ]
   }
 }
