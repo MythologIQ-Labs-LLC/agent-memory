@@ -1,0 +1,84 @@
+name: Import AMB lane evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_ids:
+        description: "Comma-separated Independent AMB Competitive Run ids whose raw artifacts to import"
+        required: true
+        type: string
+      branch:
+        description: "Existing branch to commit the raw evidence records to (never main)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: amb-evidence-import-${{ inputs.branch }}
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Refuse to write to main
+        shell: bash
+        run: |
+          test "${{ inputs.branch }}" != "main"
+
+      - name: Checkout the evidence branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download the run artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/runs"
+          IFS=',' read -ra ids <<< "${{ inputs.run_ids }}"
+          for id in "${ids[@]}"; do
+            id="$(echo "$id" | tr -d '[:space:]')"
+            gh run download "$id" --repo "$GITHUB_REPOSITORY" --dir "$RUNNER_TEMP/runs/$id"
+            find "$RUNNER_TEMP/runs/$id" -type f | sort
+          done
+
+      - name: Write the evidence records
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -q jsonschema
+          python scripts/import_amb_lane_evidence.py --runs-dir "$RUNNER_TEMP/runs" | tee "$RUNNER_TEMP/import.json"
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/benchmarks/amb
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -F - <<EOF
+          evidence(#640): import raw AMB lane artifacts (runs ${{ inputs.run_ids }})
+
+          Raw EvalSummary JSON, execution identity, constraints provenance, self-check
+          output and sha256 inventory copied byte for byte from the workflow artifacts and
+          re-verified against each run's own inventory. evidence.json binds each row to the
+          frozen lane. authority_effect: none; acceptance is a separate reviewed change.
+          EOF
+          git push origin "HEAD:${{ inputs.branch }}"
