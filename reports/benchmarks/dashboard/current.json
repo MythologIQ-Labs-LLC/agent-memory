@@ -36,7 +36,7 @@
       "bm25 (baseline)",
       "mem0-oss 2.2.1 explicit-memory (comparator)"
     ],
-    "note": "The first same-harness lane (amb-precisionmembench-retrieval-v1) has three accepted rows from deliberate full-selection runs on 2026-10-05, each bound to its raw AMB artifact and execution identity under reports/benchmarks/amb/. The rows are same_harness_external evidence for that lane only: no overall score, no portfolio retrieval observation (no normalization mapping yet), no market claim.",
+    "note": "The first same-harness lane (amb-precisionmembench-retrieval-v1) has three accepted rows from deliberate full-selection runs on 2026-10-05, each bound to its raw AMB artifact and execution identity under reports/benchmarks/amb/ and normalized into reports/benchmarks/normalized/ (retrieval, efficiency, reproducibility mapped from the harness's own summary table; one scorecard with BM25 as the lexical baseline). The rows are same_harness_external evidence for that lane only: no overall score, no market claim.",
     "credential_free_profile": {
       "dataset": "precisionmembench",
       "split": "single-turn",
@@ -133,7 +133,12 @@
             }
           }
         ],
-        "reading_rule": "active_passes/43 is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy; BM25 is a baseline and Agent Memory the control, never a market claim"
+        "reading_rule": "active_passes/43 is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy; BM25 is a baseline and Agent Memory the control, never a market claim",
+        "normalized_runs": [
+          "reports/benchmarks/normalized/amb-precisionmembench-single-turn-agent-memory-703be5ba1c7e.json",
+          "reports/benchmarks/normalized/amb-precisionmembench-single-turn-bm25-03c1d0f1d27d.json",
+          "reports/benchmarks/normalized/amb-precisionmembench-single-turn-mem0-oss-94c3fe9f238f.json"
+        ]
       }
     ]
   },

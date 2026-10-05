@@ -152,16 +152,105 @@
     ]
   },
   "normalization": {
-    "normalizer": null,
-    "mappings": [],
+    "normalizer": "agentmem_ref.evaluation.normalize:normalize_amb_precisionmembench",
+    "mappings": [
+      {
+        "dimension": "retrieval",
+        "metric_id": "active_passes",
+        "native_evidence": "native_summary.active_passes",
+        "semantics": "cases passed among the 43 that require query-dependent belief ids; denominator native_summary.active_total; the only number comparable to upstream's Active passes column",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "retrieval",
+        "metric_id": "structural_passes",
+        "native_evidence": "native_summary.structural_passes",
+        "semantics": "cases passed among the 25 structural cases a provider returning nothing can satisfy; denominator native_summary.structural_total",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "retrieval",
+        "metric_id": "trivially_empty_passes",
+        "native_evidence": "native_summary.trivially_empty_passes",
+        "semantics": "cases passed among the 9 trivially-empty cases a provider returning nothing can satisfy; denominator native_summary.trivially_empty_total",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "retrieval",
+        "metric_id": "total_passes",
+        "native_evidence": "native_summary.total_passes",
+        "semantics": "passes over all 77 cases; includes structural and trivially-empty cases; denominator native_summary.total_queries",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "retrieval",
+        "metric_id": "mean_precision",
+        "native_evidence": "native_summary.mean_precision",
+        "semantics": "mean retrieval precision over cases with a relevantBeliefs tier, as the frozen harness computes it",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "retrieval",
+        "metric_id": "mean_recall",
+        "native_evidence": "native_summary.mean_recall",
+        "semantics": "mean retrieval recall over cases with a relevantBeliefs tier, as the frozen harness computes it",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "efficiency",
+        "metric_id": "mean_retrieve_ms",
+        "native_evidence": "native_summary.mean_retrieve_ms",
+        "semantics": "mean provider retrieve wall time per case on a GitHub-hosted runner; environment-bound",
+        "direction": "lower_better"
+      },
+      {
+        "dimension": "efficiency",
+        "metric_id": "ingestion_time_ms",
+        "native_evidence": "native_summary.ingestion_time_ms",
+        "semantics": "harness-measured memory.ingest wall time for the 35 beliefs; environment-bound",
+        "direction": "lower_better"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "input_sha256_bound",
+        "native_evidence": "input.sha256",
+        "semantics": "exact combined fixture digest present and re-hashed at import",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "full_selection",
+        "native_evidence": "execution.full_selection",
+        "semantics": "all 77 cases executed (query_limit=0)",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "return_cap_unset",
+        "native_evidence": "execution.amb_pmb_return_cap",
+        "semantics": "true when AMB_PMB_RETURN_CAP was unset so the per-case k budget applied",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "harness_lock_bound",
+        "native_evidence": "execution.harness_constraints.uv_lock_git_blob",
+        "semantics": "true when the harness was installed under its own uv.lock; lifted pins are recorded in the execution identity",
+        "direction": "descriptive"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "self_check_recorded",
+        "native_evidence": "files.precisionmembench-selfcheck.txt",
+        "semantics": "true when the perfect-provider self-check output is committed with the row",
+        "direction": "descriptive"
+      }
+    ],
     "unmapped_dimensions": {
-      "retrieval": "not_measured: AMB's raw EvalSummary is the native artifact; the first rows were accepted 2026-10-05 as native-only evidence and a normalization into memory-benchmark-run manifests is a separate reviewed change, so the portfolio scorecard carries no retrieval observation from this integration",
       "currentness": "not_applicable: single-version beliefs; supersession is a scope/exclusion assertion scored natively",
       "reasoning": "not_applicable: retrieval mode has no answer generation",
-      "governance": "not_measured: the cross-user leak case is scored natively; no governance dimension is mapped",
-      "efficiency": "not_measured: avg_retrieve_time_ms is native and environment-bound",
-      "evaluator_integrity": "not_measured: the harness self-check (scripts/precisionmembench_selfcheck.py) is run before contestants and recorded as an artifact",
-      "reproducibility": "not_measured: execution identity is recorded natively per run"
+      "governance": "not_measured: the cross-user leak case is scored natively inside the 77 cases; no governance dimension is mapped",
+      "evaluator_integrity": "not_measured: the perfect-provider self-check (scripts/precisionmembench_selfcheck.py) runs before each contestant and its output is committed as an artifact; it is not parsed into a metric"
     }
   },
   "evaluator_integrity": {
@@ -253,11 +342,15 @@
     }
   ],
   "product_findings": [],
-  "dimensions": [],
+  "dimensions": [
+    "retrieval",
+    "efficiency",
+    "reproducibility"
+  ],
   "limitations": [
     "retrieval-only belief-id precision; not conversational QA and not comparable to LongMemEval recall_all@k",
     "35 documents and 77 cases: a precision/isolation probe, not a scale benchmark",
-    "no normalized memory-benchmark-run manifest exists yet: the three accepted rows are native-only evidence (raw EvalSummary plus bound evidence.json); a retrieval-dimension mapping is a separate reviewed change"
+    "normalized manifests map only the harness's own summary table (active/structural/trivially-empty/total passes, mean precision and recall), retrieve and ingest wall time, and reproducibility facts; the raw per-case EvalSummary stays a referenced artifact"
   ],
   "authority_effect": "none"
 }

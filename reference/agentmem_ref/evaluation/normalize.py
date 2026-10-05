@@ -360,3 +360,122 @@ def normalize_agentmembench(report: Mapping[str, Any]) -> list[dict[str, Any]]:
             )
         )
     return manifests
+
+
+# AMB / PrecisionMemBench same-harness lane --------------------------------
+
+AMB_PRECISIONMEMBENCH_BENCHMARK_ID = "amb-precisionmembench"
+_AMB_SYSTEM_KINDS = {"repository_runtime": "agent_memory", "harness_builtin": "lexical", "python_package": "external_memory"}
+_AMB_ADAPTERS = {
+    "agent-memory": "reference/amb_agent_memory_bridge.py",
+    "mem0-explicit": "reference/amb_mem0_explicit_bridge.py",
+    "bm25": "memory_bench.memory.bm25.BM25MemoryProvider (frozen AMB revision)",
+}
+
+
+def _amb_evidence_directory(record: Mapping[str, Any]) -> str:
+    execution = record["execution"]
+    return f"reports/benchmarks/amb/{record['lane_id']}/{execution['memory']}-{execution['agent_memory_revision'][:12]}"
+
+
+def normalize_amb_precisionmembench(record: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """One manifest per accepted lane row, built from its committed ``evidence.json``.
+
+    The record is the bound evidence record ``scripts/import_amb_lane_evidence.py`` wrote
+    next to the raw AMB ``EvalSummary``; its ``native_summary`` is the harness's own
+    PrecisionMemBench table recomputed from the per-case results. Only that table, the
+    execution identity and the input identity are mapped; the record is kept whole under
+    ``native_results`` and the raw per-case artifact is referenced by digest, never
+    restated. Rows of one lane share the comparison identity (harness revision, fixture
+    digest, selection, sample count), so they land on one scorecard with the BM25 row as
+    the lexical baseline.
+    """
+
+    if record.get("contract_family") != "agent-memory-same-harness-lane-evidence":
+        raise ValueError("normalize_amb_precisionmembench expects a same-harness lane evidence record")
+    native = record["native_summary"]
+    execution = record["execution"]
+    input_block = record["input"]
+    row = record["row"]
+    system = record["system"]
+    constraints = execution.get("harness_constraints") or {}
+    directory = _amb_evidence_directory(record)
+    active_population = "active cases: query-dependent belief ids required (upstream-comparable)"
+    retrieval = [
+        metric_observation("active_passes", value=native["active_passes"], direction="higher_better", denominator=native["active_total"], unit="count", population=active_population, note="the only number comparable to upstream's Active passes column"),
+        metric_observation("structural_passes", value=native["structural_passes"], direction="higher_better", denominator=native["structural_total"], unit="count", population="structural cases: satisfiable by a provider returning nothing"),
+        metric_observation("trivially_empty_passes", value=native["trivially_empty_passes"], direction="higher_better", denominator=native["trivially_empty_total"], unit="count", population="trivially-empty cases: satisfiable by a provider returning nothing"),
+        metric_observation("total_passes", value=native["total_passes"], direction="higher_better", denominator=native["total_queries"], unit="count", population="all cases", note="includes structural and trivially-empty cases a provider returning nothing can satisfy"),
+        metric_observation("mean_precision", value=native["mean_precision"], direction="higher_better", unit="ratio", population="cases with a relevantBeliefs tier"),
+        metric_observation("mean_recall", value=native["mean_recall"], direction="higher_better", unit="ratio", population="cases with a relevantBeliefs tier"),
+    ]
+    efficiency = [
+        metric_observation("mean_retrieve_ms", value=native["mean_retrieve_ms"], direction="lower_better", unit="ms", population="all cases", note="provider retrieve wall time on a GitHub-hosted runner; environment-bound"),
+        metric_observation("ingestion_time_ms", value=native["ingestion_time_ms"], direction="lower_better", unit="ms", denominator=native["ingested_docs"], population="ingested beliefs", note="harness-measured memory.ingest wall time; environment-bound"),
+    ]
+    reproducibility = [
+        metric_observation("input_sha256_bound", value=bool(input_block.get("sha256")), note=input_block.get("verified_by")),
+        metric_observation("full_selection", value=execution.get("full_selection") is True),
+        metric_observation("return_cap_unset", value=execution.get("amb_pmb_return_cap") is None, note="AMB_PMB_RETURN_CAP must be unset for the frozen budget"),
+        metric_observation("harness_lock_bound", value=bool(constraints.get("uv_lock_git_blob")), note="harness installed under its own uv.lock as pip constraints; lifted pins recorded in native_results.execution.harness_constraints"),
+        metric_observation("self_check_recorded", value="precisionmembench-selfcheck.txt" in record.get("files", {}), note="perfect-provider self-check output committed with the row"),
+    ]
+    files = record.get("files", {})
+    artifacts = [
+        {"artifact_id": "amb-eval-summary", "kind": "benchmark_native_results", "uri": f"{directory}/single-turn.json", **({"sha256": files["single-turn.json"]} if "single-turn.json" in files else {})},
+        {"artifact_id": "execution-identity", "kind": "execution_identity", "uri": f"{directory}/execution-identity.json", **({"sha256": files["execution-identity.json"]} if "execution-identity.json" in files else {})},
+        {"artifact_id": "precisionmembench-selfcheck", "kind": "evaluator_integrity_selfcheck", "uri": f"{directory}/precisionmembench-selfcheck.txt", **({"sha256": files["precisionmembench-selfcheck.txt"]} if "precisionmembench-selfcheck.txt" in files else {})},
+        {"artifact_id": "lane-evidence-record", "kind": "same_harness_lane_evidence", "uri": f"{directory}/evidence.json"},
+    ]
+    manifest = {
+        "schema_version": "1.0.0",
+        "run_id": f"{AMB_PRECISIONMEMBENCH_BENCHMARK_ID}:{execution['split']}:{system['id']}:{system['revision'][:12]}",
+        "status": "complete",
+        "benchmark": {
+            "id": AMB_PRECISIONMEMBENCH_BENCHMARK_ID,
+            "source_url": "https://github.com/vectorize-io/agent-memory-benchmark",
+            "source_revision": execution["amb_revision"],
+            "dataset_id": "tenurehq/precisionmembench:fixtures/{beliefs.seed.json,retrieval.cases.json}",
+            "dataset_revision": input_block["dataset_revision"],
+            "input_sha256": input_block["sha256"],
+            "task_profile": f"{record['lane_id']}:{execution['split']}:{execution['mode']}",
+        },
+        "system": {
+            "id": system["id"],
+            "kind": _AMB_SYSTEM_KINDS[system["source_kind"]],
+            "revision": system["revision"],
+            "configuration_digest": _digest({"provider_key": row["provider_key"], "resolved_packages": system.get("resolved_packages"), "mem0_optional_components": system.get("mem0_optional_components"), "constraints_sha256": constraints.get("constraints_sha256")}),
+            "adapter_id": _AMB_ADAPTERS[row["provider_key"]],
+            "adapter_revision": execution["amb_revision"] if system["source_kind"] == "harness_builtin" else execution["agent_memory_revision"],
+        },
+        "execution": {
+            "selection_id": input_block["selection_id"],
+            "selection_method": "full single-turn case set",
+            "sample_count": int(input_block["query_count"]),
+            "environment": {
+                "runner": "github-hosted ubuntu-latest (Independent AMB Competitive Run)",
+                "harness_lock_git_blob": constraints.get("uv_lock_git_blob"),
+                "resolved_packages": system.get("resolved_packages"),
+                "mem0_optional_components": system.get("mem0_optional_components"),
+            },
+        },
+        "dimensions": {
+            "retrieval": _dimension(retrieval, ["active_passes/active_total is the upstream-comparable number; total passes include cases a provider returning nothing can satisfy"]),
+            "currentness": _absent("not_applicable", "single-version beliefs; supersession is a scope/exclusion assertion scored natively"),
+            "reasoning": _absent("not_applicable", "retrieval mode has no answer generation"),
+            "governance": _absent("not_measured", "the cross-user leak case is scored natively inside the 77 cases; no governance dimension is mapped"),
+            "efficiency": _dimension(efficiency, ["GitHub-hosted runner; environment-bound and comparable only within one lane execution class"]),
+            "evaluator_integrity": _absent("not_measured", "the perfect-provider self-check (scripts/precisionmembench_selfcheck.py) ran before the contestant and its output is committed as an artifact; it is not parsed into a metric"),
+            "reproducibility": _dimension(reproducibility),
+        },
+        "native_results": json.loads(json.dumps(record)),
+        "limitations": [
+            "retrieval-only belief-id precision; not conversational QA and not comparable to LongMemEval recall_all@k",
+            "35 documents and 77 cases: a precision/isolation probe, not a scale benchmark",
+            "BM25 is a baseline and Agent Memory the control; no row is a market claim",
+            "efficiency is environment-bound (GitHub-hosted runner)",
+        ],
+        "artifacts": artifacts,
+        "authority_effect": "none",
+    }
+    return [validate_run(manifest)]
