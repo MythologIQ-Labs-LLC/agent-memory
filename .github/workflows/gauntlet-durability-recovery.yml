@@ -3,6 +3,7 @@ name: Gauntlet Durability Recovery
 on:
   pull_request:
     paths:
+      - 'examples/gauntlet/agent_memory_durability_stdio.py'
       - 'fixtures/gauntlet/agent-memory-public-durability-adapter.json'
       - 'fixtures/gauntlet/durability-lossy-recovery-adapter.json'
       - 'reference/agentmem_ref/evaluation/gauntlet_agent_memory.py'
@@ -39,17 +40,21 @@ jobs:
         run: |
           set -euo pipefail
           ADAPTER_REVISION="git-blob:$(git hash-object reference/agentmem_ref/evaluation/gauntlet_agent_memory.py)"
-          python - "$ADAPTER_REVISION" <<'PY'
+          WRAPPER_REVISION="git-blob:$(git hash-object examples/gauntlet/agent_memory_durability_stdio.py)"
+          python - "$ADAPTER_REVISION" "$WRAPPER_REVISION" <<'PY'
           import json
           import sys
           from pathlib import Path
 
-          expected = sys.argv[1]
+          adapter_revision, wrapper_revision = sys.argv[1:3]
           manifest = json.loads(Path("fixtures/gauntlet/agent-memory-public-durability-adapter.json").read_text(encoding="utf-8"))
-          assert manifest["adapter"]["revision"] == expected, (manifest["adapter"]["revision"], expected)
+          assert manifest["adapter"]["revision"] == adapter_revision, (manifest["adapter"]["revision"], adapter_revision)
+          assert manifest["metadata"]["transport_wrapper_revision"] == wrapper_revision, (manifest["metadata"]["transport_wrapper_revision"], wrapper_revision)
           assert manifest["system"]["revision"] == "git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9"
+          assert manifest["transport"]["kind"] == "stdio"
           assert manifest["capabilities"]["checkpoint"]["support"] == "unsupported"
-          print(f"exact durability adapter revision: {expected}")
+          print(f"exact durability adapter revision: {adapter_revision}")
+          print(f"exact durability transport revision: {wrapper_revision}")
           PY
 
       - name: Run focused evaluator and real-contestant tests
@@ -66,6 +71,7 @@ jobs:
           agent-memory gauntlet run \
             --system fixtures/gauntlet/agent-memory-public-durability-adapter.json \
             --profile durability-recovery-alpha-v1 \
+            --allow-external-process \
             --allow-destructive-operations \
             --output-dir ./durability-runs
 
