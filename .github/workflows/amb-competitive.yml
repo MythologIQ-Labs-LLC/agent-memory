@@ -143,8 +143,17 @@ jobs:
             --amb-root .external/amb \
             --memory '${{ inputs.memory }}' \
             --output "$RUNNER_TEMP/amb-constraints.txt" \
-            --provenance "$RUNNER_TEMP/amb-constraints-provenance.json"
+            --provenance "$RUNNER_TEMP/amb-constraints-provenance.json" \
+            --removals "$RUNNER_TEMP/amb-row-removals.txt"
           python -m pip install -c "$RUNNER_TEMP/amb-constraints.txt" -e . -e .external/amb
+          # Locked packages that serve other providers only and would change this row's
+          # product behaviour (for mem0-explicit: fastembed, via cognee). Declared in the
+          # script, recorded in the provenance sidecar, removed here.
+          removals="$(tr -d '\n' < "$RUNNER_TEMP/amb-row-removals.txt")"
+          if [ -n "$removals" ]; then
+            # shellcheck disable=SC2086
+            python -m pip uninstall -y $removals
+          fi
 
       - name: Verify the frozen Mem0 OSS row (base package, no extras)
         if: ${{ inputs.memory == 'mem0-explicit' }}
