@@ -66,6 +66,65 @@ class NormalizationTests(unittest.TestCase):
         self.assertEqual(deletion["state"], "not_applicable")
 
 
+class AmbLaneNormalizationTests(unittest.TestCase):
+    LANE = ROOT / "reports" / "benchmarks" / "amb" / "amb-precisionmembench-retrieval-v1"
+    RECORDS = ("agent-memory-703be5ba1c7e", "bm25-703be5ba1c7e", "mem0-explicit-b38d91631169")
+
+    def _manifests(self):
+        from agentmem_ref.evaluation.normalize import normalize_amb_precisionmembench
+
+        manifests = []
+        for name in self.RECORDS:
+            manifests += normalize_amb_precisionmembench(json.loads((self.LANE / name / "evidence.json").read_text(encoding="utf-8")))
+        return manifests
+
+    def test_lane_rows_map_only_the_harness_summary_and_keep_the_record_whole(self):
+        manifests = self._manifests()
+        self.assertEqual([m["system"]["id"] for m in manifests], ["agent-memory", "bm25", "mem0-oss"])
+        self.assertEqual([m["system"]["kind"] for m in manifests], ["agent_memory", "lexical", "external_memory"])
+        for manifest, name in zip(manifests, self.RECORDS):
+            record = json.loads((self.LANE / name / "evidence.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["native_results"], record)
+            self.assertEqual(manifest["benchmark"]["input_sha256"], record["input"]["sha256"])
+            self.assertEqual(manifest["benchmark"]["source_revision"], record["execution"]["amb_revision"])
+            self.assertEqual(manifest["system"]["revision"], record["system"]["revision"])
+            self.assertEqual(manifest["execution"]["sample_count"], 77)
+            retrieval = {m["metric_id"]: m for m in manifest["dimensions"]["retrieval"]["metrics"]}
+            self.assertEqual(retrieval["active_passes"]["value"], record["native_summary"]["active_passes"])
+            self.assertEqual(retrieval["active_passes"]["denominator"], 43)
+            self.assertEqual(retrieval["total_passes"]["denominator"], 77)
+            self.assertEqual(manifest["dimensions"]["currentness"]["status"], "not_applicable")
+            self.assertEqual(manifest["dimensions"]["reasoning"]["status"], "not_applicable")
+            self.assertEqual(manifest["dimensions"]["governance"]["status"], "not_measured")
+            self.assertEqual(manifest["dimensions"]["evaluator_integrity"]["status"], "not_measured")
+            reproducibility = {m["metric_id"]: m["value"] for m in manifest["dimensions"]["reproducibility"]["metrics"]}
+            self.assertEqual(reproducibility, {"input_sha256_bound": True, "full_selection": True, "return_cap_unset": True, "harness_lock_bound": True, "self_check_recorded": True})
+            summary = next(a for a in manifest["artifacts"] if a["artifact_id"] == "amb-eval-summary")
+            self.assertEqual(summary["sha256"], record["files"]["single-turn.json"])
+            self.assertTrue((ROOT / summary["uri"]).is_file(), summary["uri"])
+            self.assertEqual(manifest["authority_effect"], "none")
+        active = {m["system"]["id"]: next(x for x in m["dimensions"]["retrieval"]["metrics"] if x["metric_id"] == "active_passes")["value"] for m in manifests}
+        self.assertEqual(active, {"agent-memory": 4, "bm25": 0, "mem0-oss": 0})
+
+    def test_lane_rows_share_one_card_with_bm25_as_the_lexical_baseline(self):
+        cards = benchmark_scorecards(self._manifests())
+        self.assertEqual(len(cards), 1)
+        card = cards[0]
+        self.assertEqual(card["baseline_system"], "bm25")
+        self.assertEqual([s["id"] for s in card["systems"]], ["bm25", "agent-memory", "mem0-oss"])
+        row = next(r for r in card["dimensions"]["retrieval"]["rows"] if r["metric_id"] == "active_passes")
+        self.assertEqual(row["vs_baseline"]["agent-memory"], {"comparison_state": "comparable", "delta_vs_baseline": 4.0, "outcome": "improved"})
+        self.assertEqual(row["vs_baseline"]["mem0-oss"]["delta_vs_baseline"], 0.0)
+        self.assertNotIn("score", card)
+        self.assertNotIn("aggregate", card)
+
+    def test_normalizer_refuses_a_record_that_is_not_lane_evidence(self):
+        from agentmem_ref.evaluation.normalize import normalize_amb_precisionmembench
+
+        with self.assertRaises(ValueError):
+            normalize_amb_precisionmembench({"native_summary": {}})
+
+
 class ScorecardTests(unittest.TestCase):
     def test_cards_group_only_comparable_runs_and_have_no_aggregate(self):
         document = build(list_profiles(), _lme() + _amb())

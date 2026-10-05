@@ -260,8 +260,10 @@ class SameHarnessLaneTests(unittest.TestCase):
         self.assertEqual(integration["benchmark"]["provenance_class"], "external_independent")
         self.assertEqual(integration["gauntlet"]["relationship"], "not_applicable")
         self.assertEqual(integration["provider_requirements"]["credentials"], "credential_free")
-        self.assertIsNone(integration["normalization"]["normalizer"])
-        self.assertEqual(integration["normalization"]["mappings"], [])
+        self.assertEqual(integration["normalization"]["normalizer"], "agentmem_ref.evaluation.normalize:normalize_amb_precisionmembench")
+        mapped = {mapping["dimension"] for mapping in integration["normalization"]["mappings"]}
+        self.assertEqual(mapped, {"retrieval", "efficiency", "reproducibility"})
+        self.assertEqual(set(integration["normalization"]["unmapped_dimensions"]), {"currentness", "reasoning", "governance", "evaluator_integrity"})
 
 
 if __name__ == "__main__":

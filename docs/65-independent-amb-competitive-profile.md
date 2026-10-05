@@ -260,10 +260,26 @@ structural and trivially-empty cases that a provider returning nothing can satis
 | mem0-explicit | 10/77 | 0/43 | 7/25 | 3/9 | 0.10 | 1.00 | source_id |
 
 These rows are `same_harness_external` evidence for this lane only. They produce no
-overall score, no retrieval-dimension observation on the portfolio scorecard (no
-normalization mapping is defined yet), and no market claim: BM25 is a baseline and Agent
-Memory is the control. Every row returned nearly everything relevant and failed on
-precision, which is what the active cases test. The Hindsight row stays deferred.
+overall score and no market claim: BM25 is a baseline and Agent Memory is the control.
+Every row returned nearly everything relevant and failed on precision, which is what the
+active cases test. The Hindsight row stays deferred.
+
+### Normalized manifests
+
+`normalize_amb_precisionmembench()` (`reference/agentmem_ref/evaluation/normalize.py`)
+turns each committed `evidence.json` into one `memory-benchmark-run` manifest under
+`reports/benchmarks/normalized/amb-precisionmembench-single-turn-<system>-<rev12>.json`.
+It maps only what the harness's own summary table states: `retrieval` carries
+`active_passes/43`, `structural_passes/25`, `trivially_empty_passes/9`,
+`total_passes/77`, `mean_precision` and `mean_recall`; `efficiency` carries
+`mean_retrieve_ms` and `ingestion_time_ms` (environment-bound, GitHub-hosted runner);
+`reproducibility` carries the input, selection, budget, harness-lock and self-check
+facts. `currentness` and `reasoning` are `not_applicable`, `governance` and
+`evaluator_integrity` are `not_measured` with their reasons. The whole evidence record
+stays under `native_results` and the raw per-case `EvalSummary` is referenced by digest,
+never restated. The three rows share one comparison identity, so they land on one
+scorecard with the BM25 row as the lexical baseline; the deltas it shows are
+per-metric, direction-aware and fail closed, and still no aggregate exists.
 
 ## Governance
 

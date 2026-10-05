@@ -68,7 +68,7 @@ Frozen AMB `RetrievalMode` makes no LLM calls and scores returned belief/documen
 | bm25 | baseline | AMB `03c1d0f` built-in | 37349435243 | 0/43 | 8/77 | 0.05 | 0.97 |
 | mem0-explicit | comparator | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37351804149 | 0/43 | 10/77 | 0.10 | 1.00 |
 
-`active passes/43` is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy. These rows produce no overall score and no portfolio retrieval observation (no normalization mapping is defined yet). BM25 is a baseline comparator and Agent Memory the control, not a market-position claim; every row returned nearly everything relevant and failed on precision. Hindsight remains deferred.
+`active passes/43` is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy. The three rows are normalized into `reports/benchmarks/normalized/amb-precisionmembench-single-turn-*.json` (retrieval, efficiency and reproducibility mapped; currentness and reasoning not applicable; governance and evaluator integrity not measured) and share one scorecard with BM25 as the lexical baseline. There is still no overall score. BM25 is a baseline comparator and Agent Memory the control, not a market-position claim; every row returned nearly everything relevant and failed on precision. Hindsight remains deferred.
 
 The LLM-judged AMB profile is frozen to `gemini:gemini-2.5-flash-lite` for answer and judge, but remains **blocked pending authorized evaluation credentials**.
 

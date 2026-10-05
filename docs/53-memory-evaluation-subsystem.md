@@ -153,7 +153,7 @@ For example, an upstream model-judged QA score can remain a native result even i
 
 ## Normalization is mapping, never invention
 
-A benchmark integration descriptor lists every mapping into a common dimension together with the native evidence path that supplies it, and lists every unmapped dimension with a reason. `mapped_metric_observations()` turns a mapping whose native evidence is absent into a `not_measured` observation; it never produces a value, and never a zero. Normalizers for the repository-owned integrations (`normalize.py` for LongMemEval and AgentMemBench, the golden runner for `golden-keyed-retrieval-v1`) keep the whole native report under `native_results`; a test asserts the native report is byte-for-byte unchanged by normalization.
+A benchmark integration descriptor lists every mapping into a common dimension together with the native evidence path that supplies it, and lists every unmapped dimension with a reason. `mapped_metric_observations()` turns a mapping whose native evidence is absent into a `not_measured` observation; it never produces a value, and never a zero. Normalizers for the repository-owned integrations (`normalize.py` for LongMemEval, AgentMemBench and the AMB PrecisionMemBench same-harness lane, the golden runner for `golden-keyed-retrieval-v1`) keep the whole native report under `native_results`; a test asserts the native report is byte-for-byte unchanged by normalization.
 
 ## Fail-closed comparison
 
@@ -233,7 +233,7 @@ Implemented and tested on `main`:
 
 1. the versioned run contract with explicit missingness and no aggregate score;
 2. validation, canonical persistence, digesting, and fail-closed comparison;
-3. normalization of LongMemEval and AgentMemBench into the common contract with native results preserved;
+3. normalization of LongMemEval, AgentMemBench and the accepted AMB PrecisionMemBench lane rows (#640) into the common contract with native results preserved;
 4. the separate `evaluator_integrity` dimension and the integrity-control runners;
 5. descriptor-backed profile discovery and the `benchmark` CLI (`list`, `inspect`, `validate-integration`, `validate`, `compare`);
 6. the system-adapter contract and the Gauntlet orchestration built on it;

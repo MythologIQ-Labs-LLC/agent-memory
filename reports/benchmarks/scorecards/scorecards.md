@@ -14,7 +14,7 @@ Reading rules: each Δ outcome applies one metric's own direction and says nothi
 | `agent-memory-longmemeval-retrieval-currentness-v1` | #516 | longmemeval_s_cleaned | complete | agent_memory, lexical_overlap, no_memory | currentness, efficiency, governance, reproducibility, retrieval | #531, #538, #522 |
 |  |  | longmemeval_m_cleaned | complete |  |  |  |
 |  |  | upstream_model_judged_qa | not_run |  |  |  |
-| `amb-precisionmembench-retrieval-v1` | #601 | lane:amb-precisionmembench-retrieval-v1:agent-memory | complete | none | none | none |
+| `amb-precisionmembench-retrieval-v1` | #601 | lane:amb-precisionmembench-retrieval-v1:agent-memory | complete | agent-memory, bm25, mem0-oss | efficiency, reproducibility, retrieval | none |
 |  |  | lane:amb-precisionmembench-retrieval-v1:bm25 | complete |  |  |  |
 |  |  | lane:amb-precisionmembench-retrieval-v1:mem0-explicit | complete |  |  |  |
 |  |  | lane:amb-precisionmembench-retrieval-v1:hindsight | blocked |  |  |  |
@@ -87,6 +87,62 @@ Input sha256 `33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6` 
 | agent_memory_worktree_clean | true | true | true | comparable_non_numeric | comparable_non_numeric |
 | input_matches_upstream_release | true | true | true | comparable_non_numeric | comparable_non_numeric |
 | input_sha256_bound | true | true | true | comparable_non_numeric | comparable_non_numeric |
+
+## amb-precisionmembench — amb-precisionmembench-retrieval-v1:single-turn:retrieval
+
+Input sha256 `caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd` · source `03c1d0f1d27da63034f0931121c858faba512383` · selection `full single-turn case set` (n=77) · baseline for deltas: `bm25`
+
+### retrieval (bm25=measured, agent-memory=measured, mem0-oss=measured)
+
+| metric | bm25 | agent-memory | mem0-oss | Δ agent-memory vs bm25 | Δ mem0-oss vs bm25 |
+| --- | ---: | ---: | ---: | --- | --- |
+| active_passes | 0 | 4 | 0 | +4.000 (improved) | +0.000 (unchanged) |
+| mean_precision | 0.054 | 0.181 | 0.105 | +0.127 (improved) | +0.051 (improved) |
+| mean_recall | 0.965 | 0.954 | 1.000 | -0.012 (regressed) | +0.035 (improved) |
+| structural_passes | 5 | 6 | 7 | +1.000 (improved) | +2.000 (improved) |
+| total_passes | 8 | 15 | 10 | +7.000 (improved) | +2.000 (improved) |
+| trivially_empty_passes | 3 | 5 | 3 | +2.000 (improved) | +0.000 (unchanged) |
+
+### currentness (bm25=not_applicable, agent-memory=not_applicable, mem0-oss=not_applicable)
+
+- agent-memory: single-version beliefs; supersession is a scope/exclusion assertion scored natively
+- bm25: single-version beliefs; supersession is a scope/exclusion assertion scored natively
+- mem0-oss: single-version beliefs; supersession is a scope/exclusion assertion scored natively
+
+### reasoning (bm25=not_applicable, agent-memory=not_applicable, mem0-oss=not_applicable)
+
+- agent-memory: retrieval mode has no answer generation
+- bm25: retrieval mode has no answer generation
+- mem0-oss: retrieval mode has no answer generation
+
+### governance (bm25=not_measured, agent-memory=not_measured, mem0-oss=not_measured)
+
+- agent-memory: the cross-user leak case is scored natively inside the 77 cases; no governance dimension is mapped
+- bm25: the cross-user leak case is scored natively inside the 77 cases; no governance dimension is mapped
+- mem0-oss: the cross-user leak case is scored natively inside the 77 cases; no governance dimension is mapped
+
+### efficiency (bm25=measured, agent-memory=measured, mem0-oss=measured)
+
+| metric | bm25 | agent-memory | mem0-oss | Δ agent-memory vs bm25 | Δ mem0-oss vs bm25 |
+| --- | ---: | ---: | ---: | --- | --- |
+| ingestion_time_ms | 326.700 | 302.400 | 693.700 | -24.300 (improved) | +367.000 (regressed) |
+| mean_retrieve_ms | 4.510 | 26.600 | 12.230 | +22.090 (regressed) | +7.720 (regressed) |
+
+### evaluator_integrity (bm25=not_measured, agent-memory=not_measured, mem0-oss=not_measured)
+
+- agent-memory: the perfect-provider self-check (scripts/precisionmembench_selfcheck.py) ran before the contestant and its output is committed as an artifact; it is not parsed into a metric
+- bm25: the perfect-provider self-check (scripts/precisionmembench_selfcheck.py) ran before the contestant and its output is committed as an artifact; it is not parsed into a metric
+- mem0-oss: the perfect-provider self-check (scripts/precisionmembench_selfcheck.py) ran before the contestant and its output is committed as an artifact; it is not parsed into a metric
+
+### reproducibility (bm25=measured, agent-memory=measured, mem0-oss=measured)
+
+| metric | bm25 | agent-memory | mem0-oss | Δ agent-memory vs bm25 | Δ mem0-oss vs bm25 |
+| --- | ---: | ---: | ---: | --- | --- |
+| full_selection | true | true | true | comparable_non_numeric | comparable_non_numeric |
+| harness_lock_bound | true | true | true | comparable_non_numeric | comparable_non_numeric |
+| input_sha256_bound | true | true | true | comparable_non_numeric | comparable_non_numeric |
+| return_cap_unset | true | true | true | comparable_non_numeric | comparable_non_numeric |
+| self_check_recorded | true | true | true | comparable_non_numeric | comparable_non_numeric |
 
 ## longmemeval — agent-memory-longmemeval-retrieval-currentness-v1:session
 
