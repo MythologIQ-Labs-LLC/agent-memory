@@ -37,7 +37,10 @@
       "dataset": "precisionmembench",
       "split": "single-turn",
       "mode": "retrieval",
-      "providers": ["agent-memory", "bm25"],
+      "providers": [
+        "agent-memory",
+        "bm25"
+      ],
       "llm_calls": false,
       "status": "runnable_not_yet_accepted"
     },
@@ -46,13 +49,38 @@
       "judge_model": "gemini:gemini-2.5-flash-lite",
       "status": "blocked_pending_authorized_evaluation_credential"
     },
-    "first_wave": ["Mem0 OSS", "Hindsight", "Zep / Graphiti", "Letta", "Cognee", "LangMem"],
+    "first_wave": [
+      "Mem0 OSS",
+      "Hindsight",
+      "Zep / Graphiti",
+      "Letta",
+      "Cognee",
+      "LangMem"
+    ],
     "required_lanes": [
       "independent credential-free retrieval profile",
       "LongMemEval_S retrieval parity",
       "LongMemEval end-to-end QA parity with one frozen answer model/judge/budget",
       "AgentMemBench / MemDialogue operational parity where semantically expressible",
       "matched latency/token/storage evidence where technically comparable"
+    ],
+    "frozen_lanes": [
+      {
+        "lane_id": "amb-precisionmembench-retrieval-v1",
+        "status": "frozen_not_executed",
+        "issue": 640,
+        "lane_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json",
+        "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+        "rows": {
+          "agent-memory": "frozen",
+          "bm25": "frozen",
+          "mem0-explicit": "frozen",
+          "hindsight": "deferred"
+        },
+        "llm_calls": false,
+        "note": "Frozen before any score; no row executed or accepted. Mem0 OSS 2.2.1 explicit-memory configuration; reflective Mem0 lane deferred."
+      }
     ]
   },
   "runtime_qualification": {
@@ -89,35 +117,53 @@
   "published_reference": [
     {
       "system": "Hindsight v0.4.19",
-      "signals": {"LongMemEval_accuracy": 0.946, "LoCoMo_accuracy": 0.92},
+      "signals": {
+        "LongMemEval_accuracy": 0.946,
+        "LoCoMo_accuracy": 0.92
+      },
       "methodology": "single-query end-to-end accuracy in the Hindsight Agent Memory Benchmark; open pluggable harness",
       "comparability": "published_reference",
       "source": "https://hindsight.vectorize.io/blog/2026/03/23/agent-memory-benchmark"
     },
     {
       "system": "Mem0 managed platform",
-      "signals": {"LongMemEval_accuracy": 0.944, "LoCoMo_accuracy": 0.925, "BEAM_1M_avg_score": 0.641},
+      "signals": {
+        "LongMemEval_accuracy": 0.944,
+        "LoCoMo_accuracy": 0.925,
+        "BEAM_1M_avg_score": 0.641
+      },
       "methodology": "managed end-to-end pipeline; published retrieval budgets include top-200/top-50; not Agent Memory recall_all@k",
       "comparability": "published_reference",
       "source": "https://github.com/mem0ai/mem0/blob/main/docs/core-concepts/memory-evaluation.mdx"
     },
     {
       "system": "Zep",
-      "signals": {"LongMemEval_accuracy": 0.902, "LoCoMo_accuracy": 0.947, "LongMemEval_retrieval_p50_ms": 104, "LongMemEval_retrieval_p95_ms": 162, "LongMemEval_median_context_tokens": 4408},
+      "signals": {
+        "LongMemEval_accuracy": 0.902,
+        "LoCoMo_accuracy": 0.947,
+        "LongMemEval_retrieval_p50_ms": 104,
+        "LongMemEval_retrieval_p95_ms": 162,
+        "LongMemEval_median_context_tokens": 4408
+      },
       "methodology": "end-to-end accuracy with published retrieval latency/context size; reader/judge differs from Agent Memory profiles",
       "comparability": "published_reference",
       "source": "https://www.getzep.com/research/"
     },
     {
       "system": "Supermemory",
-      "signals": {"LongMemEval_S_Recall_at_20_with_aggregation": 0.97},
+      "signals": {
+        "LongMemEval_S_Recall_at_20_with_aggregation": 0.97
+      },
       "methodology": "retrieval Recall@20 with aggregation; not end-to-end QA and not Agent Memory recall_all@5/@10",
       "comparability": "published_reference",
       "source": "https://supermemory.ai/research/"
     },
     {
       "system": "Cognee",
-      "signals": {"BEAM_100K": 0.79, "BEAM_10M": 0.67},
+      "signals": {
+        "BEAM_100K": 0.79,
+        "BEAM_10M": 0.67
+      },
       "methodology": "BEAM long-horizon evaluation; different benchmark family",
       "comparability": "published_reference",
       "source": "https://www.cognee.ai/research-and-evaluation-results"
@@ -125,52 +171,235 @@
   ],
   "tracks": {
     "retrieval": [
-      {"metric":"AgentMemBench exact_source_recall@5","current":0.899,"previous":0.889,"delta":0.01,"direction":"higher","evidence_class":"external efficacy","current_source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/","previous_source":"reports/benchmarks/agentmembench/*03197cd*"},
-      {"metric":"LongMemEval_S session recall_all@5","current":0.823389,"previous":0.675,"delta":0.148389,"direction":"higher","evidence_class":"external efficacy","current_source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/","previous_source":"reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json"},
-      {"metric":"LongMemEval_S turn recall_all@10","current":0.723,"previous":0.525,"delta":0.198,"direction":"higher","evidence_class":"external efficacy","current_source":"reports/benchmarks/replays/594-post-550-semantic-qualification/longmemeval-s-canonical-9fc452f.json","previous_source":"reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json"},
-      {"metric":"LongMemEval_M session recall_all@5","current":0.708831,"previous":"not_available","delta":"first_baseline","direction":"higher","evidence_class":"external efficacy","current_source":"reports/benchmarks/longmemeval/longmemeval-m-full-409098f.analysis.json"},
-      {"metric":"LongMemEval_M turn recall_all@5","current":0.53222,"previous":"not_available","delta":"first_baseline","direction":"higher","evidence_class":"external efficacy","current_source":"reports/benchmarks/longmemeval/longmemeval-m-full-409098f.analysis.json"}
+      {
+        "metric": "AgentMemBench exact_source_recall@5",
+        "current": 0.899,
+        "previous": 0.889,
+        "delta": 0.01,
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "current_source": "reports/benchmarks/replays/591-identity-first-materialization-f76c441/",
+        "previous_source": "reports/benchmarks/agentmembench/*03197cd*"
+      },
+      {
+        "metric": "LongMemEval_S session recall_all@5",
+        "current": 0.823389,
+        "previous": 0.675,
+        "delta": 0.148389,
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "current_source": "reports/benchmarks/replays/591-identity-first-materialization-f76c441/",
+        "previous_source": "reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json"
+      },
+      {
+        "metric": "LongMemEval_S turn recall_all@10",
+        "current": 0.723,
+        "previous": 0.525,
+        "delta": 0.198,
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "current_source": "reports/benchmarks/replays/594-post-550-semantic-qualification/longmemeval-s-canonical-9fc452f.json",
+        "previous_source": "reports/benchmarks/longmemeval/longmemeval-s-full-f73b872.json"
+      },
+      {
+        "metric": "LongMemEval_M session recall_all@5",
+        "current": 0.708831,
+        "previous": "not_available",
+        "delta": "first_baseline",
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "current_source": "reports/benchmarks/longmemeval/longmemeval-m-full-409098f.analysis.json"
+      },
+      {
+        "metric": "LongMemEval_M turn recall_all@5",
+        "current": 0.53222,
+        "previous": "not_available",
+        "delta": "first_baseline",
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "current_source": "reports/benchmarks/longmemeval/longmemeval-m-full-409098f.analysis.json"
+      }
     ],
     "currentness": [
-      {"metric":"AgentMemBench new-fact-first rate","current":0.2,"previous":0.0,"delta":0.2,"direction":"higher","evidence_class":"external efficacy","source":"docs/56-benchmark-gauntlet-remediation-evidence.md"},
-      {"metric":"AgentMemBench staleness rate","current":0.8,"previous":1.0,"delta":-0.2,"direction":"lower","evidence_class":"external efficacy","source":"docs/56-benchmark-gauntlet-remediation-evidence.md"},
-      {"metric":"LongMemEval_S session latest-gold-ranked-first","current":0.457,"previous":0.343,"delta":0.114,"direction":"higher","evidence_class":"external efficacy","source":"docs/56-benchmark-gauntlet-remediation-evidence.md"},
-      {"metric":"LongMemEval_S turn latest-gold-ranked-first","current":0.557,"previous":0.486,"delta":0.071,"direction":"higher","evidence_class":"external efficacy","source":"docs/56-benchmark-gauntlet-remediation-evidence.md"},
-      {"metric":"#580 self-description currentness target rate","current":0.273,"previous":0.091,"delta":0.182,"direction":"higher","evidence_class":"repository-owned conformance","source":"docs/61-write-time-proposition-semantics.md"},
-      {"metric":"#594 interpreted self-validity demotion on source-anchored LongMemEval_S","current":"evidence_gap","previous":"not_run","delta":"not_applicable","direction":"n/a","evidence_class":"adapted external evidence","source":"reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md"}
+      {
+        "metric": "AgentMemBench new-fact-first rate",
+        "current": 0.2,
+        "previous": 0.0,
+        "delta": 0.2,
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "source": "docs/56-benchmark-gauntlet-remediation-evidence.md"
+      },
+      {
+        "metric": "AgentMemBench staleness rate",
+        "current": 0.8,
+        "previous": 1.0,
+        "delta": -0.2,
+        "direction": "lower",
+        "evidence_class": "external efficacy",
+        "source": "docs/56-benchmark-gauntlet-remediation-evidence.md"
+      },
+      {
+        "metric": "LongMemEval_S session latest-gold-ranked-first",
+        "current": 0.457,
+        "previous": 0.343,
+        "delta": 0.114,
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "source": "docs/56-benchmark-gauntlet-remediation-evidence.md"
+      },
+      {
+        "metric": "LongMemEval_S turn latest-gold-ranked-first",
+        "current": 0.557,
+        "previous": 0.486,
+        "delta": 0.071,
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "source": "docs/56-benchmark-gauntlet-remediation-evidence.md"
+      },
+      {
+        "metric": "#580 self-description currentness target rate",
+        "current": 0.273,
+        "previous": 0.091,
+        "delta": 0.182,
+        "direction": "higher",
+        "evidence_class": "repository-owned conformance",
+        "source": "docs/61-write-time-proposition-semantics.md"
+      },
+      {
+        "metric": "#594 interpreted self-validity demotion on source-anchored LongMemEval_S",
+        "current": "evidence_gap",
+        "previous": "not_run",
+        "delta": "not_applicable",
+        "direction": "n/a",
+        "evidence_class": "adapted external evidence",
+        "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/CLOSEOUT.md"
+      }
     ],
     "performance": [
-      {"metric":"#591 AgentMemBench wall seconds","current":38.6,"previous":54.6,"delta":-16.0,"direction":"lower","evidence_class":"repository-owned performance evidence","source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/"},
-      {"metric":"#591 search latency p50 ms","current":7.7,"previous":17.9,"delta":-10.2,"direction":"lower","evidence_class":"repository-owned performance evidence","source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/"},
-      {"metric":"#591 search latency p95 ms","current":11.9,"previous":31.4,"delta":-19.5,"direction":"lower","evidence_class":"repository-owned performance evidence","source":"reports/benchmarks/replays/591-identity-first-materialization-f76c441/"}
+      {
+        "metric": "#591 AgentMemBench wall seconds",
+        "current": 38.6,
+        "previous": 54.6,
+        "delta": -16.0,
+        "direction": "lower",
+        "evidence_class": "repository-owned performance evidence",
+        "source": "reports/benchmarks/replays/591-identity-first-materialization-f76c441/"
+      },
+      {
+        "metric": "#591 search latency p50 ms",
+        "current": 7.7,
+        "previous": 17.9,
+        "delta": -10.2,
+        "direction": "lower",
+        "evidence_class": "repository-owned performance evidence",
+        "source": "reports/benchmarks/replays/591-identity-first-materialization-f76c441/"
+      },
+      {
+        "metric": "#591 search latency p95 ms",
+        "current": 11.9,
+        "previous": 31.4,
+        "delta": -19.5,
+        "direction": "lower",
+        "evidence_class": "repository-owned performance evidence",
+        "source": "reports/benchmarks/replays/591-identity-first-materialization-f76c441/"
+      }
     ],
     "semantic_interpretation": [
-      {"metric":"#594 Part R known precision","current":0.8,"previous":"not_run","delta":"first_baseline","direction":"higher","evidence_class":"repository-owned conformance","source":"reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"},
-      {"metric":"#594 Part R known recall","current":0.148148,"previous":"not_run","delta":"first_baseline","direction":"higher","evidence_class":"repository-owned conformance","source":"reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"},
-      {"metric":"#594 Part R unknown precision","current":1.0,"previous":"not_run","delta":"first_baseline","direction":"higher","evidence_class":"repository-owned conformance","source":"reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"},
-      {"metric":"#594 Part R unknown recall","current":0.848485,"previous":"not_run","delta":"first_baseline","direction":"higher","evidence_class":"repository-owned conformance","source":"reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"},
-      {"metric":"#594 strict known slot/value conformance","current":0.0,"previous":"not_run","delta":"first_baseline","direction":"diagnostic","evidence_class":"repository-owned conformance","qualification":"exact property labels only; zero aliases frozen pre-score; not semantic synonym precision","source":"reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"}
+      {
+        "metric": "#594 Part R known precision",
+        "current": 0.8,
+        "previous": "not_run",
+        "delta": "first_baseline",
+        "direction": "higher",
+        "evidence_class": "repository-owned conformance",
+        "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+      },
+      {
+        "metric": "#594 Part R known recall",
+        "current": 0.148148,
+        "previous": "not_run",
+        "delta": "first_baseline",
+        "direction": "higher",
+        "evidence_class": "repository-owned conformance",
+        "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+      },
+      {
+        "metric": "#594 Part R unknown precision",
+        "current": 1.0,
+        "previous": "not_run",
+        "delta": "first_baseline",
+        "direction": "higher",
+        "evidence_class": "repository-owned conformance",
+        "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+      },
+      {
+        "metric": "#594 Part R unknown recall",
+        "current": 0.848485,
+        "previous": "not_run",
+        "delta": "first_baseline",
+        "direction": "higher",
+        "evidence_class": "repository-owned conformance",
+        "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+      },
+      {
+        "metric": "#594 strict known slot/value conformance",
+        "current": 0.0,
+        "previous": "not_run",
+        "delta": "first_baseline",
+        "direction": "diagnostic",
+        "evidence_class": "repository-owned conformance",
+        "qualification": "exact property labels only; zero aliases frozen pre-score; not semantic synonym precision",
+        "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+      }
     ],
     "governance": [
-      {"metric":"cross-user leakage","current":0.0,"previous":0.0,"delta":0.0,"direction":"lower","evidence_class":"external efficacy","source":"docs/56-benchmark-gauntlet-remediation-evidence.md"},
-      {"metric":"post-delete absence / audited deletion","current":1.0,"previous":1.0,"delta":0.0,"direction":"higher","evidence_class":"external efficacy","source":"docs/56-benchmark-gauntlet-remediation-evidence.md"},
-      {"metric":"#594 deterministic proposition replay","current":1.0,"previous":"not_run","delta":"first_baseline","direction":"higher","evidence_class":"repository-owned conformance","source":"reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"}
+      {
+        "metric": "cross-user leakage",
+        "current": 0.0,
+        "previous": 0.0,
+        "delta": 0.0,
+        "direction": "lower",
+        "evidence_class": "external efficacy",
+        "source": "docs/56-benchmark-gauntlet-remediation-evidence.md"
+      },
+      {
+        "metric": "post-delete absence / audited deletion",
+        "current": 1.0,
+        "previous": 1.0,
+        "delta": 0.0,
+        "direction": "higher",
+        "evidence_class": "external efficacy",
+        "source": "docs/56-benchmark-gauntlet-remediation-evidence.md"
+      },
+      {
+        "metric": "#594 deterministic proposition replay",
+        "current": 1.0,
+        "previous": "not_run",
+        "delta": "first_baseline",
+        "direction": "higher",
+        "evidence_class": "repository-owned conformance",
+        "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+      }
     ]
   },
   "active_governance": {
-    "ADR-028":"ACCEPTED_LANGUAGE_NEUTRAL_CORE",
-    "ADR-039":"PROPOSED",
-    "583_PR_587":"DRAFT_HOLD",
-    "594":"QUALIFIED",
-    "591":"COMPLETE",
-    "maturity_program":600,
-    "competitive_comparator_program":601,
-    "competitive_infrastructure":"MERGED_604_606_RESULT_PENDING",
-    "rust_runtime_qualification":602,
-    "rust_shadow_status":"DETERMINISTIC_PRIMITIVES_PARITY_PASS_RUNTIME_NOT_PROMOTED",
-    "next_rc_step":585,
-    "temporal_dependency_added_by_594":598,
-    "high_priority_nonautomatic_rc_blockers":[596,597],
-    "post_rc_unless_pulled_forward":586
+    "ADR-028": "ACCEPTED_LANGUAGE_NEUTRAL_CORE",
+    "ADR-039": "PROPOSED",
+    "583_PR_587": "DRAFT_HOLD",
+    "594": "QUALIFIED",
+    "591": "COMPLETE",
+    "maturity_program": 600,
+    "competitive_comparator_program": 601,
+    "competitive_infrastructure": "MERGED_604_606_RESULT_PENDING",
+    "rust_runtime_qualification": 602,
+    "rust_shadow_status": "DETERMINISTIC_PRIMITIVES_PARITY_PASS_RUNTIME_NOT_PROMOTED",
+    "next_rc_step": 585,
+    "temporal_dependency_added_by_594": 598,
+    "high_priority_nonautomatic_rc_blockers": [
+      596,
+      597
+    ],
+    "post_rc_unless_pulled_forward": 586
   }
 }

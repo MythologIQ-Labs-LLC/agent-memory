@@ -20,13 +20,14 @@ on:
         default: "s"
         type: string
       memory:
-        description: "AMB memory provider key"
+        description: "AMB memory provider key (mem0-explicit is the #640 frozen Mem0 OSS row)"
         required: true
         default: "agent-memory"
         type: choice
         options:
           - agent-memory
           - bm25
+          - mem0-explicit
           - hindsight
           - mem0
           - cognee
@@ -58,6 +59,10 @@ jobs:
     timeout-minutes: 180
     env:
       AMB_REVISION: 03c1d0f1d27da63034f0931121c858faba512383
+      LANE_FILE: reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json
+      MEM0_PIN: mem0ai==2.2.1
+      MEM0_TELEMETRY: "false"
+      HF_HOME: /tmp/amb-hf-home
       GEMINI_API_KEY: ${{ secrets.AMB_GEMINI_API_KEY }}
       GOOGLE_API_KEY: ${{ secrets.AMB_GEMINI_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.AMB_OPENAI_API_KEY }}
@@ -93,7 +98,7 @@ jobs:
           mode='${{ inputs.mode }}'
           memory='${{ inputs.memory }}'
 
-          if [ "$mode" = "retrieval" ] && { [ "$memory" = "agent-memory" ] || [ "$memory" = "bm25" ]; }; then
+          if [ "$mode" = "retrieval" ] && { [ "$memory" = "agent-memory" ] || [ "$memory" = "bm25" ] || [ "$memory" = "mem0-explicit" ]; }; then
             # Frozen AMB constructs its configured answer client even though RetrievalMode
             # explicitly makes no LLM calls. Supply an inert value only to satisfy client
             # construction; this value is never valid benchmark-generation authority.
@@ -101,6 +106,8 @@ jobs:
               echo "GEMINI_API_KEY=retrieval-only-unused" >> "$GITHUB_ENV"
               echo "GOOGLE_API_KEY=retrieval-only-unused" >> "$GITHUB_ENV"
             fi
+            # The Mem0 explicit-memory row never reads OPENAI_API_KEY: its inert client key
+            # lives in the frozen configuration and every LLM call is guarded.
             echo "Credential-free retrieval profile admitted for $memory."
             exit 0
           fi
@@ -115,7 +122,7 @@ jobs:
             exit 2
           fi
           if [ "$memory" = "supermemory" ] && [ -z "${SUPERMEMORY_API_KEY}" ]; then
-            echo "AMB_SUPERMEMORY_API_KEY is required for the Supermemory provider." >&2
+            echo "SUPERMEMORY_API_KEY is required for the Supermemory provider." >&2
             exit 2
           fi
 
@@ -124,6 +131,27 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e .
           python -m pip install -e .external/amb
+
+      - name: Pin the frozen Mem0 OSS row (base package, no extras)
+        if: ${{ inputs.memory == 'mem0-explicit' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The frozen AMB dependency set floats mem0ai>=1.0.5; the #640 lane pins the exact
+          # release and the product-default install posture (no fastembed/spaCy extras).
+          python -m pip install "${MEM0_PIN}"
+          python - <<'PY'
+          import importlib.util, json, mem0
+          assert mem0.__version__ == "2.2.1", mem0.__version__
+          posture = {
+              "mem0ai": mem0.__version__,
+              "fastembed_installed": importlib.util.find_spec("fastembed") is not None,
+              "spacy_installed": importlib.util.find_spec("spacy") is not None,
+          }
+          assert posture["fastembed_installed"] is False, "frozen row forbids the fastembed extra"
+          assert posture["spacy_installed"] is False, "frozen row forbids the spaCy extra"
+          print(json.dumps(posture))
+          PY
 
       - name: Verify frozen revisions
         shell: bash
@@ -136,6 +164,36 @@ jobs:
           from amb_agent_memory_bridge import verify_amb_checkout
           print(verify_amb_checkout(".external/amb"))
           PY
+
+      - name: Verify the frozen lane preconditions (PrecisionMemBench retrieval)
+        if: ${{ inputs.dataset == 'precisionmembench' && inputs.mode == 'retrieval' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "${AMB_PMB_RETURN_CAP:-}"
+          agent-memory benchmark validate-lane "$LANE_FILE"
+          mkdir -p /tmp/pmb-fixtures
+          python - <<'PY'
+          import hashlib, json, os, urllib.request
+          from pathlib import Path
+          lane = json.loads(Path(os.environ["LANE_FILE"]).read_text(encoding="utf-8"))
+          assert lane["status"] == "frozen", lane["status"]
+          assert lane["harness"]["revision"] == os.environ["AMB_REVISION"]
+          combined = hashlib.sha256()
+          for fixture in lane["dataset"]["fixtures"]:
+              target = Path("/tmp/pmb-fixtures") / fixture["name"]
+              urllib.request.urlretrieve(fixture["url"], target)
+              payload = target.read_bytes()
+              digest = hashlib.sha256(payload).hexdigest()
+              assert digest == fixture["sha256"], (fixture["name"], digest, fixture["sha256"])
+              combined.update(payload)
+              print(f"fixture {fixture['name']} sha256 {digest}: frozen")
+          assert combined.hexdigest() == lane["dataset"]["input_sha256"], combined.hexdigest()
+          print(f"input_sha256 {combined.hexdigest()}: frozen")
+          PY
+          echo "PRECISIONMEMBENCH_DATA_PATH=/tmp/pmb-fixtures" >> "$GITHUB_ENV"
+          # The scorer must reproduce upstream's perfect-provider row before any contestant runs.
+          (cd .external/amb && PRECISIONMEMBENCH_DATA_PATH=/tmp/pmb-fixtures python scripts/precisionmembench_selfcheck.py) | tee "$RUNNER_TEMP/precisionmembench-selfcheck.txt"
 
       - name: Run AMB profile
         shell: bash
@@ -153,22 +211,68 @@ jobs:
         shell: bash
         run: |
           mkdir -p "$RUNNER_TEMP/amb-output"
-          cat > "$RUNNER_TEMP/amb-output/agent-memory-execution-identity.json" <<EOF
-          {
-            "evidence_class": "same_harness_external_candidate",
-            "agent_memory_revision": "${GITHUB_SHA}",
-            "amb_revision": "${AMB_REVISION}",
-            "dataset": "${{ inputs.dataset }}",
-            "split": "${{ inputs.split }}",
-            "memory": "${{ inputs.memory }}",
-            "mode": "${{ inputs.mode }}",
-            "query_limit": "${{ inputs.query_limit }}",
-            "answer_model": "${{ inputs.mode == 'retrieval' && 'none' || 'gemini:gemini-2.5-flash-lite' }}",
-            "judge_model": "${{ inputs.mode == 'retrieval' && 'none' || 'gemini:gemini-2.5-flash-lite' }}",
-            "workflow_run_id": "${GITHUB_RUN_ID}",
-            "authority_effect": "none"
+          [ -f "$RUNNER_TEMP/precisionmembench-selfcheck.txt" ] && cp "$RUNNER_TEMP/precisionmembench-selfcheck.txt" "$RUNNER_TEMP/amb-output/" || true
+          python - <<'PY'
+          import importlib.metadata as md
+          import importlib.util
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          def version(name):
+              try:
+                  return md.version(name)
+              except md.PackageNotFoundError:
+                  return None
+
+          def blob(path):
+              return subprocess.run(["git", "hash-object", path], capture_output=True, text=True, check=True).stdout.strip()
+
+          lane_file = os.environ["LANE_FILE"]
+          lane = json.loads(Path(lane_file).read_text(encoding="utf-8"))
+          memory = "${{ inputs.memory }}"
+          mode = "${{ inputs.mode }}"
+          lane_applies = "${{ inputs.dataset }}" == "precisionmembench" and mode == "retrieval"
+          identity = {
+              "evidence_class": "same_harness_external_candidate",
+              "agent_memory_revision": os.environ["GITHUB_SHA"],
+              "amb_revision": os.environ["AMB_REVISION"],
+              "dataset": "${{ inputs.dataset }}",
+              "split": "${{ inputs.split }}",
+              "memory": memory,
+              "mode": mode,
+              "query_limit": "${{ inputs.query_limit }}",
+              "answer_model": None if mode == "retrieval" else "gemini:gemini-2.5-flash-lite",
+              "judge_model": None if mode == "retrieval" else "gemini:gemini-2.5-flash-lite",
+              "lane_id": lane["lane_id"] if lane_applies else None,
+              "lane_file": lane_file if lane_applies else None,
+              "full_selection": "${{ inputs.query_limit }}" == "0",
+              "amb_pmb_return_cap": os.environ.get("AMB_PMB_RETURN_CAP"),
+              "bridge_blobs": {
+                  "reference/amb_agent_memory_bridge.py": blob("reference/amb_agent_memory_bridge.py"),
+                  "reference/amb_mem0_explicit_bridge.py": blob("reference/amb_mem0_explicit_bridge.py"),
+              },
+              "resolved_packages": {
+                  name: version(name)
+                  for name in ("mem0ai", "qdrant-client", "sentence-transformers", "torch", "rank-bm25", "openai", "sqlalchemy", "hindsight-all", "hindsight-client")
+              },
+              "mem0_optional_components": {
+                  "fastembed_installed": importlib.util.find_spec("fastembed") is not None,
+                  "spacy_installed": importlib.util.find_spec("spacy") is not None,
+              },
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+              "authority_effect": "none",
           }
-          EOF
+          Path(os.environ["RUNNER_TEMP"], "amb-output", "execution-identity.json").write_text(json.dumps(identity, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+          print(json.dumps(identity, indent=2, sort_keys=True))
+          PY
+
+      - name: Inventory raw evidence
+        if: always()
+        shell: bash
+        run: |
+          cd "$RUNNER_TEMP/amb-output" && find . -type f -print | sort | tee files.txt && while IFS= read -r file; do sha256sum "$file"; done < files.txt | tee sha256.txt
 
       - name: Upload raw AMB evidence
         if: always()

@@ -1,6 +1,6 @@
 # Independent AMB competitive profile
 
-Status: **IMPLEMENTED BRIDGE / RETRIEVAL LANE RUNNABLE / RAG SCORE NOT YET RUN**  
+Status: **IMPLEMENTED BRIDGES / FIRST SAME-HARNESS LANE FROZEN (#640) / NO ROW EXECUTED OR ACCEPTED**  
 Owner: #601  
 Parent maturity program: #600  
 External harness: `vectorize-io/agent-memory-benchmark` (AMB)  
@@ -156,6 +156,68 @@ This is an execution dependency, not a product result.
 9. repeat on additional AMB datasets only when they add a materially distinct pressure dimension.
 
 The native Agent Memory Gauntlet remains responsible for governance/currentness-specific pressure that AMB does not model.
+
+## Frozen same-harness lane v1 (#640)
+
+The first comparator lane is frozen, before any score exists, in
+`reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json`
+(schema `schemas/same-harness-lane.schema.json`, validated and cross-checked against the
+`amb-precisionmembench-retrieval-v1` benchmark integration by
+`agent-memory benchmark validate-lane`). The freeze digest printed by
+`agent-memory benchmark lanes` is the identity recorded on #640.
+
+```text
+lane:        amb-precisionmembench-retrieval-v1
+harness:     vectorize-io/agent-memory-benchmark @ 03c1d0f1d27da63034f0931121c858faba512383
+dataset:     precisionmembench / single-turn (tenurehq/precisionmembench @ b95d6ab, MIT)
+             beliefs.seed.json     35659b3b…3de98
+             retrieval.cases.json  09e99f08…b709c
+             input_sha256          caf5869b…682dd
+selection:   all 77 cases, no query limit, no category, AMB_PMB_RETURN_CAP unset
+budget:      per-case maxBeliefs (default 20) passed as k; scorer keeps top-20 distinct beliefs
+evaluator:   retrieval mode, no LLM, no answer/judge model; scorer blob 47432e9c
+rows:        agent-memory (control) · bm25 (baseline) · mem0-explicit (comparator, frozen)
+             hindsight (comparator, deferred)
+headline:    active_passes/43, total passes/77, mean precision, mean recall
+```
+
+### Mem0 OSS row
+
+`reference/amb_mem0_explicit_bridge.py` registers `mem0-explicit`:
+
+- `mem0ai==2.2.1` exactly (tag `v2.2.1`, commit `94c3fe9f…`, Apache-2.0), verified through
+  `mem0.__version__` before any memory is built; base package install, no extras, so Mem0's
+  optional fastembed keyword search and spaCy lemmatizer are absent by product default and
+  that posture is recorded in the execution identity;
+- explicit memory: `Memory.add([...document.content...], user_id=<AMB user_id>, metadata={'doc_id': ...}, infer=False)`;
+  the constructed LLM is replaced by a guard, so any inference call aborts the run;
+- local embeddings: `sentence-transformers/multi-qa-MiniLM-L6-cos-v1` at Hugging Face
+  revision `b2073673…`, 384 dimensions; local on-disk Qdrant, fresh per run;
+- retrieval: `Memory.search(query, top_k=<case k>, filters={'user_id': ...})`; Mem0's own
+  ranking, threshold, and entity boosts are product behaviour and are not altered;
+- belief identity returns through `metadata.doc_id` as `Document.source_ids`, so the
+  frozen resolver takes its `source_id` path and every result records which path fired.
+
+Why not AMB's own `mem0` provider at the frozen revision: it extracts through Gemini on
+every `add` (credentialed, model-dependent, a Mem0+Gemini composition), floats
+`mem0ai>=1.0.5`, and calls `Memory.search(query, user_id=..., limit=...)`, which Mem0
+2.2.1 rejects (`Top-level entity parameters ... are not supported in search()`). A
+reflective Mem0 lane is a different system composition and is listed as a deferred lane,
+to be frozen separately before any reflective score is seen.
+
+### Executing the lane
+
+`.github/workflows/amb-competitive.yml` with `dataset=precisionmembench`,
+`split=single-turn`, `mode=retrieval`, `query_limit=0`, once per provider
+(`agent-memory`, `bm25`, `mem0-explicit`). The workflow validates the lane file, downloads
+and digest-checks both fixtures against it, runs the harness self-check (a perfect provider
+must reproduce 43/43 active and 77/77 total), pins the Mem0 row, and writes an
+`execution-identity.json` with resolved package versions and the optional-component
+posture. Raw AMB `EvalSummary` artifacts are retained unmodified.
+
+A row becomes `same_harness_external` only after its raw artifact and execution identity
+are reviewed against the lane and an `evidence_history` entry is added to the integration
+descriptor. Until then every row is `not_run`, and the dashboard says so.
 
 ## Governance
 

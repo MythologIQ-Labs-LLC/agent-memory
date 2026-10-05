@@ -28,6 +28,13 @@ agent-memory benchmark validate-integration ./my-benchmark.json
 agent-memory benchmark validate-integration ./my-benchmark.json --json
 ```
 
+List frozen same-harness comparator lanes, and validate one lane file against its schema and the registered benchmark integration (no execution):
+
+```bash
+agent-memory benchmark lanes
+agent-memory benchmark validate-lane reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json --json
+```
+
 Validate one result against the common benchmark-run contract:
 
 ```bash
@@ -66,6 +73,8 @@ Every report carries `schema_version` (`1.1.0` for this CLI surface), `command`,
 | `validate-integration` | `benchmark_validate_integration` | `valid`, `path`, `integration_id`, `integration_digest_sha256`, `contract_version`, `admission_state`, `benchmark`, `provenance_class`, `invocation_surface`, `external_system_entry`, `credentials`, `runner`, `gauntlet` (`relationship`, `profile_id`, `status`), `evidence_binding[]`, `identity_findings[]`, `mapped_dimensions[]`, `unmapped_dimensions`, `negative_control_count`, `executed: false`, `descriptor` |
 | `validate` | `benchmark_validate` | `valid`, `run_id`, `run_status`, `benchmark`, `system`, `measured_dimensions[]`, `run_digest_sha256` |
 | `compare` | `benchmark_compare` | `comparison_status`, `comparison_identity`, `baseline`, `candidate`, `dimensions{}` |
+| `lanes` | `benchmark_lanes` | `lane_count`, `lanes[]` (`lane_id`, `status`, `owning_issue`, `frozen_on`, `benchmark_integration`, `harness_revision`, `dataset`, `input_sha256`, `evaluator_mode`, `llm_calls`, `rows[]`, `lane_digest_sha256`), `executed: false` |
+| `validate-lane` | `benchmark_validate_lane` | `valid`, `path`, `lane_id`, `status`, `lane_digest_sha256`, `resolution`, `summary`, `findings[]`, `executed: false`, `lane` |
 
 `gauntlet.status` for an integration is one of `not_applicable`, `eligible`, `bound`, `profile_missing`, or `binding_invalid`. `identity_findings` lists source/input identity facts an operator must know before treating a result as comparable (for example "no static input digest: comparability is established per run").
 
@@ -83,6 +92,8 @@ The registry is the set of committed descriptors in `reference/agentmem_ref/eval
 | | | | upstream LLM-judged retrieval recall | not run |
 | | | | M6 LLM portability | not run |
 | `golden-keyed-retrieval-v1` (#652) | `baseline_or_probe` | evidence_complete | lexical baseline integrity controls | **complete** (contributor demonstration; excluded from the portfolio scorecard) |
+| `amb-precisionmembench-retrieval-v1` (#601 / #640) | `external_independent` | adapter_ready | lane rows agent-memory, bm25, mem0-explicit | not run (lane frozen, see `benchmark lanes`) |
+| | | | lane row hindsight | **blocked** on a benchmark-agnostic provider configuration |
 
 Registry metadata is descriptive. A `complete` entry is bound to a committed report: `check_evidence_binding()` resolves the entry's `report_binding` paths inside the report and refuses a mismatch, and the registry tests run that check for every committed descriptor. A listing never upgrades synthetic or probe evidence into external evidence; the provenance class travels with the row.
 

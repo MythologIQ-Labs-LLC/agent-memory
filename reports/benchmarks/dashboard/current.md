@@ -46,7 +46,8 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 - AMB bridge merged in PR #604;
 - frozen external harness revision `03c1d0f1d27da63034f0931121c858faba512383`;
 - credential-free AMB retrieval lane merged in PR #606;
-- manual competitive workflow at `.github/workflows/amb-competitive.yml`.
+- manual competitive workflow at `.github/workflows/amb-competitive.yml`;
+- first same-harness lane **frozen before any score** (#640): `amb-precisionmembench-retrieval-v1` with Agent Memory (control), BM25 (baseline), and Mem0 OSS 2.2.1 explicit-memory (comparator, `reference/amb_mem0_explicit_bridge.py`); Hindsight deferred until a benchmark-agnostic provider configuration is frozen. Lane file: `reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json`; see `docs/65-independent-amb-competitive-profile.md`.
 
 The first credential-free profile is:
 
