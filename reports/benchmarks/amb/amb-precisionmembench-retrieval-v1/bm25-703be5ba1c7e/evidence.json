@@ -77,6 +77,7 @@
     "single-turn.json": "ea285ed1aaca8f62ef52fbc3be464dfd0e92d0aabb55688e51fd3e109e3e8d71"
   },
   "input": {
+    "corpus_class": "external_frozen",
     "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
     "fixtures": {
       "beliefs.seed.json": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98",
