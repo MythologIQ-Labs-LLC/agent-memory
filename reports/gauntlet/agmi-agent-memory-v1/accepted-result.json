@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "qualification_id": "agmi-agent-memory-integrity-v1",
+  "authority_effect": "none",
+  "evidence_class": "independent_external_benchmark",
+  "source_workflow": {
+    "run_id": 37257944075,
+    "artifact_id": 11323860742,
+    "artifact_digest": "sha256:d87ab730447540cc5e25f3243aba900d1ea7fbdbabc43dce1936b092bb77e2b3",
+    "head_sha": "34dc89b0c8ae7faf479faf1261e80224381f50b8"
+  },
+  "agent_memory": {
+    "checkout_revision": "34dc89b0c8ae7faf479faf1261e80224381f50b8",
+    "runtime_baseline_revision": "f2aef57293b516e065cad5d0afea26ac7e3c28a9",
+    "runtime_baseline_merge": "32783fad3c5cf50a9d712c8bcc0a023907ce9433",
+    "package": "agent-memory-reference",
+    "version": "0.2.0",
+    "runtime_profile": "rc1-local-sqlite-composition"
+  },
+  "agmi": {
+    "repository": "tech4biz-yasha/agmi",
+    "revision": "76ddf21af25ce35e427e5614afb70d1fe96e32a2",
+    "package": "agent-memory-integrity",
+    "version": "0.6.2",
+    "adapter": "AgentMemoryAdapter",
+    "attack_set": "AT_REST_ATTACKS_WITH_SNAPSHOT",
+    "detection_point": "read"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "implementation": "CPython",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+  },
+  "upstream_agent_memory_test": {
+    "status": "pass",
+    "tests_passed": 7,
+    "tests_failed": 0
+  },
+  "results": [
+    {
+      "attack": "tamper",
+      "attack_version": 1,
+      "native_status": "safe",
+      "behavioral_outcome": "pass",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "detected on reload (RuntimeRecoveryError: SQLite canonical substrate digest mismatch)"
+    },
+    {
+      "attack": "truncate",
+      "attack_version": 1,
+      "native_status": "safe",
+      "behavioral_outcome": "pass",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "detected on reload (RuntimeRecoveryError: SQLite canonical substrate digest mismatch)"
+    },
+    {
+      "attack": "delete_middle",
+      "attack_version": 1,
+      "native_status": "safe",
+      "behavioral_outcome": "pass",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "detected on reload (RuntimeRecoveryError: SQLite canonical substrate digest mismatch)"
+    },
+    {
+      "attack": "reorder",
+      "attack_version": 1,
+      "native_status": "safe",
+      "behavioral_outcome": "pass",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "detected on reload (RuntimeRecoveryError: SQLite canonical substrate digest mismatch)"
+    },
+    {
+      "attack": "forge",
+      "attack_version": 1,
+      "native_status": "safe",
+      "behavioral_outcome": "pass",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "detected on reload (RuntimeRecoveryError: SQLite canonical substrate digest mismatch)"
+    },
+    {
+      "attack": "cross_replay",
+      "attack_version": 1,
+      "native_status": "safe",
+      "behavioral_outcome": "pass",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "detected on reload (RuntimeRecoveryError: SQLite canonical substrate digest mismatch)"
+    },
+    {
+      "attack": "rollback_replay",
+      "attack_version": 1,
+      "native_status": "safe",
+      "behavioral_outcome": "pass",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "detected on reload (RuntimeRecoveryError: SQLite canonical substrate digest mismatch)"
+    },
+    {
+      "attack": "metadata_tamper",
+      "attack_version": 1,
+      "native_status": "safe",
+      "behavioral_outcome": "pass",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "detected on reload (RuntimeRecoveryError: SQLite canonical substrate digest mismatch)"
+    },
+    {
+      "attack": "snapshot_rollback",
+      "attack_version": 1,
+      "native_status": "VULNERABLE",
+      "behavioral_outcome": "fail",
+      "evidence_qualification": "sufficient",
+      "detection_point": "read",
+      "detail": "the older copy opened as current; the newest genuine record is gone without an error"
+    }
+  ],
+  "limitations": [
+    "whole-state snapshot rollback is not detected when the SQLite store and colocated configuration-binding sidecar are restored together",
+    "persisted row digests are unkeyed SHA-256; attacker recomputation is outside the frozen T1-T9 attack contract"
+  ]
+}
