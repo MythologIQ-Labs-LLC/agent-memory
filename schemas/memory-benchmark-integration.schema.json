@@ -1,0 +1,899 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/memory-benchmark-integration.schema.json",
+  "title": "Agent Memory Evaluation: Benchmark Integration Descriptor",
+  "description": "Machine-readable description of how one benchmark is integrated into the Memory Evaluation laboratory. It describes a benchmark INTEGRATION (identity, rights, input contract, native protocol, system requirements, normalization mappings, evaluator-integrity controls, Gauntlet relationship), not a benchmark RESULT. A descriptor never executes benchmark code, never upgrades evidence class, and carries authority_effect none.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_family",
+    "contract_version",
+    "integration_id",
+    "admission_state",
+    "owning_issue",
+    "description",
+    "benchmark",
+    "source_rights",
+    "input_contract",
+    "native_protocol",
+    "system_requirements",
+    "provider_requirements",
+    "normalization",
+    "evaluator_integrity",
+    "reproducibility",
+    "gauntlet",
+    "evidence_history",
+    "limitations",
+    "authority_effect"
+  ],
+  "properties": {
+    "contract_family": {
+      "const": "agent-memory-benchmark-integration"
+    },
+    "contract_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "integration_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "admission_state": {
+      "description": "Benchmark Coverage Atlas admission state for this integration.",
+      "enum": [
+        "discovered",
+        "qualification_pending",
+        "qualified",
+        "rejected",
+        "blocked",
+        "watchlist",
+        "adapter_ready",
+        "evidence_complete",
+        "evidence_partial"
+      ]
+    },
+    "owning_issue": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "provenance_class",
+        "upstream",
+        "source_revision"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance_class": {
+          "$ref": "#/$defs/provenance_class"
+        },
+        "upstream": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repository",
+            "url"
+          ],
+          "properties": {
+            "repository": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1
+            },
+            "paper_url": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "minLength": 1
+            }
+          }
+        },
+        "source_revision": {
+          "description": "Exact upstream revision reviewed/integrated, or the explicit word 'unbound' when the integration binds revision per manifest/run instead of statically. 'unbound' is only allowed with source_revision_rule=manifest_bound.",
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision_rule": {
+          "enum": [
+            "static_exact_revision",
+            "manifest_bound",
+            "repository_owned"
+          ]
+        }
+      }
+    },
+    "source_rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "license_spdx",
+        "code_redistribution",
+        "data_redistribution"
+      ],
+      "properties": {
+        "license_spdx": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "license_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "data_license_spdx": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "code_redistribution": {
+          "$ref": "#/$defs/redistribution_posture"
+        },
+        "data_redistribution": {
+          "$ref": "#/$defs/redistribution_posture"
+        },
+        "attribution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acquisition_notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "input_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_id",
+        "dataset_revision_rule",
+        "input_digest_rule",
+        "input_may_be_absent_before_execution",
+        "selection"
+      ],
+      "properties": {
+        "dataset_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataset_revision_rule": {
+          "enum": [
+            "exact_revision_required",
+            "manifest_bound",
+            "repository_owned",
+            "not_applicable"
+          ]
+        },
+        "known_dataset_revision": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "input_digest_rule": {
+          "description": "How the frozen input identity (benchmark.input_sha256 in results) is computed.",
+          "enum": [
+            "sha256_raw_file_bytes",
+            "sha256_per_input_file",
+            "sha256_canonical_json",
+            "sha256_inline_fixture"
+          ]
+        },
+        "known_input_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "committed_input_path": {
+          "description": "Repository-relative path of a committed frozen input, when the input is redistributed in this repository.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "input_may_be_absent_before_execution": {
+          "description": "true when the input must be acquired by the operator before execution (not redistributed here); false when the exact input is committed or generated deterministically in-repository.",
+          "type": "boolean"
+        },
+        "corpus_classes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "selection": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "identity_rule",
+            "methods"
+          ],
+          "properties": {
+            "identity_rule": {
+              "type": "string",
+              "minLength": 1
+            },
+            "methods": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "native_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_type",
+        "native_metrics",
+        "native_artifacts",
+        "runner",
+        "budget",
+        "failure_semantics",
+        "concurrency"
+      ],
+      "properties": {
+        "task_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "native_metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "metric_id",
+              "description"
+            ],
+            "properties": {
+              "metric_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "direction": {
+                "enum": [
+                  "higher_better",
+                  "lower_better",
+                  "zero_target",
+                  "descriptive"
+                ]
+              },
+              "upstream_defined": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "native_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "artifact_id",
+              "kind",
+              "description"
+            ],
+            "properties": {
+              "artifact_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "runner": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "entry_point"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "repository_script",
+                "module_callable",
+                "gauntlet_profile_runner"
+              ]
+            },
+            "entry_point": {
+              "type": "string",
+              "minLength": 1
+            },
+            "supporting_entry_points": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "invocation_example": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "retrieval_or_context_budget"
+          ],
+          "properties": {
+            "retrieval_or_context_budget": {
+              "type": "string",
+              "minLength": 1
+            },
+            "parameters": {
+              "type": "object"
+            }
+          }
+        },
+        "failure_semantics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "per_item_error_capture",
+            "timeout",
+            "description"
+          ],
+          "properties": {
+            "per_item_error_capture": {
+              "type": "boolean"
+            },
+            "timeout": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "concurrency": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "system_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "invocation_surface",
+        "external_system_entry",
+        "required_operations",
+        "optional_operations",
+        "unsupported_semantics"
+      ],
+      "properties": {
+        "invocation_surface": {
+          "description": "The surface through which a system under test is invoked. gauntlet_operation_envelope is the only system-neutral surface; the others bind the runner to a specific adapter protocol or to Agent Memory.",
+          "enum": [
+            "gauntlet_operation_envelope",
+            "upstream_adapter_protocol",
+            "agent_memory_public_facade",
+            "agent_memory_internal_runtime"
+          ]
+        },
+        "external_system_entry": {
+          "enum": [
+            "gauntlet_system_adapter",
+            "code_registration",
+            "not_available"
+          ]
+        },
+        "required_operations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "optional_operations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "unsupported_semantics": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "provider_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "credentials",
+        "model_dependency",
+        "judge",
+        "python_dependencies"
+      ],
+      "properties": {
+        "credentials": {
+          "enum": [
+            "credential_free",
+            "provider_dependent"
+          ]
+        },
+        "model_dependency": {
+          "enum": [
+            "none",
+            "embedding_model",
+            "answer_model",
+            "answer_and_judge_models"
+          ]
+        },
+        "judge": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required"
+          ],
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "identity": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "python_dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "normalizer",
+        "mappings",
+        "unmapped_dimensions"
+      ],
+      "properties": {
+        "normalizer": {
+          "description": "module:callable that maps the native report into memory-benchmark-run manifests, or null when no normalization exists.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z_][A-Za-z0-9_.]*:[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "mappings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dimension",
+              "metric_id",
+              "native_evidence",
+              "semantics"
+            ],
+            "properties": {
+              "dimension": {
+                "enum": [
+                  "retrieval",
+                  "currentness",
+                  "reasoning",
+                  "governance",
+                  "efficiency",
+                  "evaluator_integrity",
+                  "reproducibility"
+                ]
+              },
+              "metric_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "native_evidence": {
+                "description": "Path/expression in the native report that supplies this observation. A mapping without native evidence is an invented metric and is refused.",
+                "type": "string",
+                "minLength": 1
+              },
+              "semantics": {
+                "type": "string",
+                "minLength": 1
+              },
+              "direction": {
+                "enum": [
+                  "higher_better",
+                  "lower_better",
+                  "zero_target",
+                  "descriptive"
+                ]
+              }
+            }
+          }
+        },
+        "unmapped_dimensions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          },
+          "propertyNames": {
+            "enum": [
+              "retrieval",
+              "currentness",
+              "reasoning",
+              "governance",
+              "efficiency",
+              "evaluator_integrity",
+              "reproducibility"
+            ]
+          }
+        }
+      }
+    },
+    "evaluator_integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "negative_controls",
+        "runner",
+        "qualification_expectation"
+      ],
+      "properties": {
+        "negative_controls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "control_id",
+              "description",
+              "expected_detection"
+            ],
+            "properties": {
+              "control_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expected_detection": {
+                "type": "boolean"
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        },
+        "runner": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "qualification_expectation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "reproducibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seed",
+        "environment_requirements",
+        "artifact_requirements",
+        "revision_binding"
+      ],
+      "properties": {
+        "seed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "material"
+          ],
+          "properties": {
+            "material": {
+              "type": "boolean"
+            },
+            "default": {
+              "type": [
+                "string",
+                "integer",
+                "null"
+              ]
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "environment_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "artifact_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "revision_binding": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "gauntlet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relationship",
+        "profile_id",
+        "reason"
+      ],
+      "properties": {
+        "relationship": {
+          "enum": [
+            "not_applicable",
+            "eligible",
+            "bound_profile"
+          ]
+        },
+        "profile_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "evidence_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "variant",
+          "status"
+        ],
+        "properties": {
+          "variant": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "complete",
+              "partial",
+              "blocked",
+              "not_run"
+            ]
+          },
+          "blocker": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dataset_revision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "input_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "system_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "System the evidence row belongs to (default agent_memory when omitted)."
+          },
+          "system_revision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "report": {
+            "type": "string",
+            "minLength": 1
+          },
+          "normalized_reports": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "evidence_pr": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "report_binding": {
+            "description": "Dotted paths inside the committed report that carry the frozen input digest and the exact system revision, so the binding can be checked mechanically regardless of the report's native shape.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "input_sha256_path",
+              "system_revision_path"
+            ],
+            "properties": {
+              "input_sha256_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "system_revision_path": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "product_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue",
+          "summary"
+        ],
+        "properties": {
+          "issue": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "dimensions": {
+      "description": "Common dimensions this integration can populate. Presence here is descriptive; only normalization.mappings establish how.",
+      "type": "array",
+      "items": {
+        "enum": [
+          "retrieval",
+          "currentness",
+          "reasoning",
+          "governance",
+          "efficiency",
+          "evaluator_integrity",
+          "reproducibility"
+        ]
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "authority_effect": {
+      "const": "none"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "provenance_class": {
+      "enum": [
+        "external_independent",
+        "external_adapted",
+        "gauntlet_native_gap",
+        "agent_memory_conformance",
+        "baseline_or_probe"
+      ]
+    },
+    "redistribution_posture": {
+      "enum": [
+        "redistributed_in_repository",
+        "linked_only",
+        "same_owner",
+        "not_applicable"
+      ]
+    }
+  }
+}
