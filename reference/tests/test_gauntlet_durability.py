@@ -36,6 +36,7 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
         self.assertEqual(profile["destructive_operations"]["forget"], "durable_deletion")
         self.assertIn("recover", profile["requirements"]["requires"])
         self.assertIn("checkpoint", profile["requirements"]["optional"])
+        self.assertIn("durable_correction", profile["requirements"]["optional"])
         ids = {item["profile_id"] for item in list_gauntlet_profiles()}
         self.assertIn(DURABILITY_RECOVERY_PROFILE_ID, ids)
 
@@ -72,7 +73,6 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
             for case_id in (
                 "DUR-REC-001",
                 "DUR-DEL-001",
-                "DUR-COR-001",
                 "DUR-DET-001",
                 "DUR-ISO-001",
             ):
@@ -86,6 +86,12 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
                 self.assertIn("transition", cases[case_id])
                 self.assertIn("expected_boundary", cases[case_id])
                 self.assertIn("post_state", cases[case_id])
+
+            correction = cases["DUR-COR-001"]
+            self.assertEqual(correction["behavioral_outcome"], "unsupported")
+            self.assertEqual(correction["evidence_qualification"], "sufficient")
+            self.assertFalse(correction["transition"]["operation_executed"])
+            self.assertIn("qualified evidence", correction.get("note", ""))
 
             checkpoint = cases["DUR-CHK-001"]
             self.assertEqual(checkpoint["behavioral_outcome"], "unsupported")
@@ -102,6 +108,7 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
 
             behavior_metrics = _metric_map(run, "governance")
             self.assertEqual(behavior_metrics["dur_rec_001"]["value"], True)
+            self.assertEqual(behavior_metrics["dur_cor_001"]["state"], "not_applicable")
             self.assertEqual(behavior_metrics["dur_chk_001"]["state"], "not_applicable")
             evidence_metrics = _metric_map(run, "evaluator_integrity")
             for case_id in (
