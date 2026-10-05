@@ -537,8 +537,518 @@
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
       "classificationConfidence": "medium-high",
       "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-parity.yml",
+      "name": "Canonical JSON v2 Candidate Parity",
+      "capability": "Canonical JSON v2 Candidate Parity",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-transaction-qualification.yml",
+      "name": "Canonical JSON v2 Transaction Qualification",
+      "capability": "Canonical JSON v2 Transaction Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-vector-acceptance.yml",
+      "name": "Canonical JSON v2 Vector Acceptance",
+      "capability": "Canonical JSON v2 Vector Acceptance",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/canonical-json-v2-vector-integrity.yml",
+      "name": "Canonical JSON v2 Vector Integrity",
+      "capability": "Canonical JSON v2 Vector Integrity",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "likely-protected",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/canonical-reachability.yml",
+      "name": "Canonicalization Reachability",
+      "capability": "Canonicalization Reachability",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/canonical-scheme-registry.yml",
+      "name": "Canonicalization Scheme Registry Qualification",
+      "capability": "Canonicalization Scheme Registry Qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+    },
+    {
+      "path": ".github/workflows/canonical-surface-inventory.yml",
+      "name": "Canonical Serialization Surface Inventory",
+      "capability": "Canonical Serialization Surface Inventory",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/capability-behavior-contract.yml",
+      "name": "Capability Behavior Contract",
+      "capability": "Capability Behavior Contract",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/cedar-policy-comparator.yml",
+      "name": "Cedar Policy Comparator",
+      "capability": "Cedar Policy Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/cli-doctor.yml",
+      "name": "CLI Doctor Boundary",
+      "capability": "CLI Doctor Boundary",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          15
+        ]
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/cmcp-external-evidence.yml",
+      "name": "cMCP External Evidence Comparator",
+      "capability": "cMCP External Evidence Comparator",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "required_hot_path",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "KEEP",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
+    },
+    {
+      "path": ".github/workflows/codegenome-multicapability-profile.yml",
+      "name": "CodeGenome Multi-Capability Profile",
+      "capability": "CodeGenome Multi-Capability Profile",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "review_required",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": false,
+        "valuesMinutes": []
+      },
+      "concurrencyState": {
+        "configured": false,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "rust",
+        "python-deps",
+        "cargo"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "semantic-review-required",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
+      "classificationConfidence": "medium",
+      "reviewNotes": "Semantic consequence classification needs explicit repository-owner confirmation before behavior change."
     }
   ],
   "lastUpdatedAt": "2026-10-05",
-  "processedWorkflowCount": 12
+  "processedWorkflowCount": 24
 }
