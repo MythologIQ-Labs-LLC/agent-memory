@@ -209,9 +209,17 @@ to be frozen separately before any reflective score is seen.
 
 `.github/workflows/amb-competitive.yml` with `dataset=precisionmembench`,
 `split=single-turn`, `mode=retrieval`, `query_limit=0`, once per provider
-(`agent-memory`, `bm25`, `mem0-explicit`). The workflow validates the lane file, downloads
-and digest-checks both fixtures against it, runs the harness self-check (a perfect provider
-must reproduce 43/43 active and 77/77 total), pins the Mem0 row, and writes an
+(`agent-memory`, `bm25`, `mem0-explicit`). The workflow installs the frozen harness under
+pip constraints exported from the harness's own `uv.lock`
+(`scripts/amb_harness_constraints.py`): the frozen `pyproject.toml` floats most of its
+dependency set and re-resolving it from scratch exhausts pip's backtracking budget
+(`resolution-too-deep`, run 37343360127) before a single query runs, while the lock the
+harness authors shipped resolves in seconds. Only this repository's own pins and the Mem0
+row's `mem0ai==2.2.1` (which lifts the lock's `posthog`) depart from the lock, and the lock
+blob plus every lifted pin is written into the execution identity. The workflow then
+validates the lane file, downloads and digest-checks both fixtures against it, runs the
+harness self-check (a perfect provider must reproduce 43/43 active and 77/77 total),
+verifies the Mem0 row's version and extras posture, and writes an
 `execution-identity.json` with resolved package versions and the optional-component
 posture. Raw AMB `EvalSummary` artifacts are retained unmodified.
 
