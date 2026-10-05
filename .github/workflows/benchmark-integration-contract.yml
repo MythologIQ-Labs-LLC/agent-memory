@@ -1,0 +1,175 @@
+name: Benchmark Integration Contract
+
+on:
+  pull_request:
+    paths:
+      - 'schemas/memory-benchmark-integration.schema.json'
+      - 'schemas/memory-benchmark-run.schema.json'
+      - 'reference/agentmem_ref/evaluation/**'
+      - 'reference/fixtures/benchmarks/golden-keyed-retrieval/**'
+      - 'reference/run_golden_benchmark_integrity.py'
+      - 'reports/benchmarks/golden-keyed-retrieval/**'
+      - 'reference/tests/test_benchmark_integration_contract.py'
+      - 'reference/tests/test_benchmark_author_golden_path.py'
+      - 'reference/tests/test_memory_evaluation_cli.py'
+      - 'docs/CONTRIBUTOR_ARCHITECTURE.md'
+      - 'MANIFEST.in'
+      - '.github/workflows/benchmark-integration-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contributor-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact source revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install package exactly as documented
+        run: python -m pip install -e .
+
+      - name: Refuse runtime/package drift from the frozen Runtime Baseline v1 revision
+        run: python scripts/check_runtime_baseline_equivalence.py --candidate HEAD
+
+      - name: Validate JSON Schemas
+        run: |
+          python -m pip install -r reference/requirements.txt
+          python scripts/validate_schemas.py
+
+      - name: Run contributor-contract and golden-path tests
+        run: |
+          python -m unittest \
+            reference.tests.test_benchmark_integration_contract \
+            reference.tests.test_benchmark_author_golden_path \
+            reference.tests.test_memory_evaluation_cli \
+            reference.tests.test_memory_evaluation_contract \
+            reference.tests.test_memory_evaluation_scorecards \
+            reference.tests.test_gauntlet_external_example \
+            reference.tests.test_gauntlet_orchestration
+
+      - name: Verify the installed wheel carries the benchmark integration descriptors
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip wheel --no-deps --no-build-isolation -w ./wheel-check . > /dev/null
+          python - <<'PY'
+          import glob, zipfile
+          wheel = glob.glob("wheel-check/*.whl")[0]
+          names = zipfile.ZipFile(wheel).namelist()
+          descriptors = [n for n in names if n.startswith("agentmem_ref/evaluation/integrations/") and n.endswith(".json")]
+          assert len(descriptors) >= 4, names
+          assert "agentmem_ref/_schemas/memory-benchmark-integration.schema.json" in names
+          print("packaged descriptors:", *descriptors, sep="\n  ")
+          PY
+
+      - name: Exercise the contributor CLI without executing any benchmark
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p contributor-evidence
+          {
+            echo '$ agent-memory benchmark list'
+            agent-memory benchmark list
+            echo
+            for descriptor in reference/agentmem_ref/evaluation/integrations/*.json; do
+              echo "\$ agent-memory benchmark validate-integration ${descriptor}"
+              agent-memory benchmark validate-integration "${descriptor}"
+              echo
+            done
+            echo '$ agent-memory benchmark inspect golden-keyed-retrieval-v1'
+            agent-memory benchmark inspect golden-keyed-retrieval-v1
+            echo
+            echo '$ agent-memory gauntlet inspect golden-keyed-retrieval-v1'
+            agent-memory gauntlet inspect golden-keyed-retrieval-v1
+          } 2>&1 | tee contributor-evidence/cli-transcript.txt
+          agent-memory benchmark list --json > contributor-evidence/benchmark-list.json
+          agent-memory benchmark inspect golden-keyed-retrieval-v1 --json > contributor-evidence/golden-inspect.json
+
+      - name: Run the benchmark-author golden path through the public Gauntlet CLI
+        run: |
+          agent-memory gauntlet run \
+            --system fixtures/gauntlet/lexical-adapter.json \
+            --profile golden-keyed-retrieval-v1 \
+            --output-dir ./golden-runs/lexical
+          agent-memory gauntlet run \
+            --system examples/gauntlet/minimal-stdio-adapter.json \
+            --profile golden-keyed-retrieval-v1 \
+            --allow-external-process \
+            --allow-destructive-reset \
+            --output-dir ./golden-runs/external
+
+      - name: Prove the golden evaluator detects its deliberately broken control arms
+        shell: bash
+        run: |
+          set -euo pipefail
+          python reference/run_golden_benchmark_integrity.py --output contributor-evidence/integrity-controls.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          regenerated = json.loads(Path("contributor-evidence/integrity-controls.json").read_text(encoding="utf-8"))
+          committed = json.loads(Path("reports/benchmarks/golden-keyed-retrieval/integrity-controls-v1.json").read_text(encoding="utf-8"))
+          assert regenerated == committed, "committed integrity evidence drifted from the regenerated report"
+          assert regenerated["all_as_expected"] is True
+          detected = {c["control_id"]: c["detected"] for c in regenerated["controls"]}
+          assert detected == {"gold_omission": True, "rank_inversion": True, "identity_corruption": True, "unrelated_record_omission": False}, detected
+          print("golden evaluator-integrity controls: as declared")
+          PY
+          if python reference/run_golden_benchmark_integrity.py --system fixtures/gauntlet/no-memory-adapter.json --output contributor-evidence/integrity-no-memory.json; then
+            echo "a contestant with nothing to lose must not qualify the evaluator" >&2
+            exit 1
+          fi
+          grep -q '"all_as_expected": false' contributor-evidence/integrity-no-memory.json
+
+      - name: Validate generated golden evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          for run in ./golden-runs/lexical ./golden-runs/external; do
+            RUN_DIR="$(find "$run" -mindepth 1 -maxdepth 1 -type d -print -quit)"
+            test -n "$RUN_DIR"
+            agent-memory benchmark validate "$RUN_DIR/normalized-run.json"
+          done
+          LEX="$(find ./golden-runs/lexical -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          EXT="$(find ./golden-runs/external -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          agent-memory benchmark compare "$LEX/normalized-run.json" "$EXT/normalized-run.json"
+          python - "$LEX" "$EXT" <<'PY'
+          import json, sys
+          from pathlib import Path
+          for root in sys.argv[1:]:
+              q = json.loads((Path(root) / "qualification.json").read_text(encoding="utf-8"))
+              n = json.loads((Path(root) / "normalized-run.json").read_text(encoding="utf-8"))
+              assert q["status"] == "complete", q
+              assert q["profile"]["kind"] == "baseline_or_probe"
+              assert q["profile"]["benchmark_integration"] == "golden-keyed-retrieval-v1"
+              assert n["native_results"]["profile_kind"] == "baseline_or_probe"
+              assert n["benchmark"]["input_sha256"] == "f818915d393ed1a3fa9a31292835660e23543ca556537865e49cab96c41988c9"
+              assert n["authority_effect"] == "none"
+              print(f"{root}: {q['system']['id']} exact_top1={n['native_results']['metrics']['exact_top1']}")
+          PY
+
+      - name: Inventory contributor evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          find golden-runs contributor-evidence -type f -print | sort | tee contributor-evidence/files.txt
+          while IFS= read -r file; do sha256sum "$file"; done < contributor-evidence/files.txt | tee contributor-evidence/sha256.txt
+
+      - name: Upload contributor-contract evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-integration-contract
+          path: |
+            golden-runs/
+            contributor-evidence/
+          if-no-files-found: error
+          retention-days: 90

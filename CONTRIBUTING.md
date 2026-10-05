@@ -51,6 +51,7 @@ Useful contributions include:
 - schema and interoperability improvements
 - implementation mappings from real systems
 - calibration data or benchmark results
+- a memory system or a benchmark integrated through the contributor contracts in [`docs/CONTRIBUTOR_ARCHITECTURE.md`](docs/CONTRIBUTOR_ARCHITECTURE.md)
 - privacy/security threat cases
 - corrections to biological or cognitive analogies
 - documentation clarity and diagrams

@@ -1,6 +1,6 @@
 # Agent Memory Gauntlet System Adapter Contract
 
-**Status:** Proposed foundation specification under #554  
+**Status:** Implemented specification (#554 → #557/#558/#559/#571/#637); executable schemas, negotiation, orchestration, and CLI exist on `main`. Contributor entry point: [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md)  
 **Contract family:** `agent-memory-gauntlet-system-adapter`  
 **Initial contract version:** `0.1.0`  
 **Authority effect:** none
@@ -151,7 +151,7 @@ A benchmark-specific layer responsible for preserving the benchmark's native sem
 
 ### 3.4 Gauntlet orchestrator
 
-A future execution layer that:
+The execution layer (`agentmem_ref.evaluation.gauntlet_orchestrator`, documented in [`GAUNTLET_ORCHESTRATION.md`](GAUNTLET_ORCHESTRATION.md)) that:
 
 1. validates the system manifest;
 2. negotiates benchmark requirements against declared capabilities;
@@ -197,7 +197,7 @@ Conceptual shape:
 }
 ```
 
-The concrete schema should be implemented in a later code slice after this specification is reviewed.
+The concrete schema is `schemas/gauntlet-system-adapter.schema.json`; `agentmem_ref.evaluation.gauntlet_contract.validate_manifest` enforces it plus the semantic rule that `describe` must be available.
 
 ## 5. Capability support classes
 
@@ -559,7 +559,7 @@ The Gauntlet must never run destructive deletion/reset operations against an ada
 
 The system adapter is not trusted merely because it is installed.
 
-For community-facing execution, future implementations should consider:
+For community-facing execution, the alpha implements schema validation, identifier constraints against path traversal, explicit external-process and destructive-operation consent, and per-operation timeouts. Not implemented and not claimed: process sandboxing, resource ceilings, network policy, filesystem sandboxing, output size limits, and command allowlisting. Future hardening should consider:
 
 - process isolation;
 - resource ceilings;
@@ -672,30 +672,28 @@ This specification builds on, rather than replaces:
 - `reference/agentmem_ref/evaluation/`;
 - benchmark-native runners and adapters.
 
-The existing Memory Evaluation contract owns **evidence identity and comparison**.
+The Memory Evaluation contract owns **evidence identity and comparison**; the benchmark integration contract (`schemas/memory-benchmark-integration.schema.json`) owns **how a benchmark enters the laboratory and whether it binds a Gauntlet profile**.
 
 This adapter contract owns **how an arbitrary external memory system can participate in execution**.
 
-The future Gauntlet orchestrator composes the two.
+The Gauntlet orchestrator composes them: a profile executes either a Gauntlet-native suite (`benchmark_integration: null`) or a benchmark integration whose descriptor binds it (`gauntlet.relationship: bound_profile`), and the registry refuses a binding that would change the evidence class in either direction.
 
-## 20. Initial CLI target
+## 20. CLI
 
-The eventual user-facing surface should be shaped approximately as:
+The implemented surface is:
 
 ```bash
-agent-memory gauntlet adapter validate ./system.yaml
-agent-memory gauntlet adapter describe ./system.yaml
 agent-memory gauntlet list
 agent-memory gauntlet inspect <profile>
-agent-memory gauntlet run --system ./system.yaml --suite <suite>
-agent-memory gauntlet report <run-directory>
+agent-memory gauntlet validate-adapter ./system.json
+agent-memory gauntlet run --system ./system.json --profile <profile> [consent flags] --output-dir <dir>
 ```
 
-This is a product target, not an implementation commitment in this specification slice.
+Manifests are JSON. There is no separate `report` command: every run writes `qualification.json`, `native-results.json`, `normalized-run.json`, and `adapter-manifest.json` into its own directory, and `agent-memory benchmark validate` / `compare` operate on the normalized run.
 
-## 21. Acceptance criteria for the first executable adapter contract
+## 21. Acceptance criteria for contract `1.0.0`
 
-The contract may move from specification to executable `1.0.0` when:
+The executable contract is at `0.1.0`. Current status against the `1.0.0` criteria: the manifest schema, unsupported-vs-failure separation, visible derived behavior, adapter conformance tests, exact identity in normalized evidence, and a governance suite negotiated without Agent Memory APIs exist; Agent Memory, two baselines, and the external stdio example implement the contract; two distinct benchmark families through the common adapter without protocol loss remain open until the same-harness comparator lanes (#640) bind a benchmark integration. The contract may move to `1.0.0` when:
 
 - a machine-readable manifest schema exists;
 - at least three meaningfully different systems implement it, including Agent Memory, a simple baseline, and one external memory system;

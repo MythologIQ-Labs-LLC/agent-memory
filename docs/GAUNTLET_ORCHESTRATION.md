@@ -1,6 +1,7 @@
 # Agent Memory Gauntlet Orchestration Alpha
 
-Status: implementation guidance for issues #558 and #559  
+Status: executable orchestration layer (#558, #559, #571, #637, #652)  
+Contributor entry point: [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md)  
 Contract version: `0.1.0`  
 Authority effect: none
 
@@ -13,12 +14,14 @@ The alpha exists to prove that heterogeneous memory systems can enter a common
 qualification flow without pretending that all systems expose the same architecture,
 that all benchmarks share one metric, or that adapter translation creates capabilities.
 
-The first executable profiles are deliberately bounded:
+The executable profiles are deliberately bounded:
 
 - `gauntlet-orchestration-retrieval-probe-v1` is `baseline_or_probe` evidence;
-- `governance-isolation-deletion-alpha-v1` is `gauntlet_native_gap` evidence.
+- `golden-keyed-retrieval-v1` is `baseline_or_probe` evidence bound to the benchmark integration of the same id (the benchmark-author golden path);
+- `governance-isolation-deletion-alpha-v1` is `gauntlet_native_gap` evidence;
+- `durability-recovery-alpha-v1` is `gauntlet_native_gap` evidence.
 
-Neither is independent external efficacy evidence.
+None is independent external efficacy evidence. Every profile declares `benchmark_integration` (`null` for Gauntlet-native suites and probes) and `kind`; `registry.validate_registry_relationships()` refuses a profile whose kind differs from the descriptor it binds and a profile that claims an external class without binding any descriptor. The orchestrator additionally refuses a runner whose returned `profile_kind` differs from the registered kind, and records `profile.benchmark_integration` in `qualification.json`.
 
 ## CLI
 
@@ -254,15 +257,13 @@ The Agent Memory governance contestant is a bounded conformance adapter for the 
 public facade. It is not a precedent for binding future external adapters to Agent Memory
 internals.
 
-## Next slices
+## Open work
 
-Issue #559 can close only after the real-system governance candidate and evaluator controls
-are proven together by CI with reconstructable evidence.
+#559 (governance alpha), #571 (first durability/recovery slice), #637 (external contestant golden path), and #652 (contributor contracts) are closed with CI evidence.
 
-Issue #560 continues qualification of independent benchmark families against the
-Benchmark Coverage Atlas.
+Still open at the orchestration boundary:
 
-Future Governance Gauntlet slices should bind neutral restart/recovery and evidence-
-injection operations before claiming to test durable deletion, route-count laundering,
-classifier laundering, or verified provenance. Until then those claims remain visibly
-blocked rather than simulated.
+- a neutral evidence-bearing / review-gated mutation envelope, without which `DUR-COR-001` (durable correction) and the governance claims that need evidence injection remain visibly `unsupported` or `blocked` rather than simulated;
+- crash/process-kill recovery, checkpoint reconstruction, concurrency/stale-writer, and migration cases for durability;
+- `http` transport;
+- binding an external benchmark integration (LongMemEval or AgentMemBench) to a `gauntlet_profile_runner` for the same-harness comparator work (#640).

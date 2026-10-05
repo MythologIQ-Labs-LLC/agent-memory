@@ -126,6 +126,20 @@ These are conformance/falsification evidence, not independent external efficacy.
 
 #580 supplies the repository-owned temporal/currentness qualification surface. #594 adds adapted external natural-data evidence but does not manufacture an external demotion-efficacy case where the corpus has none.
 
+## Contributor contracts
+
+Two contributor paths are specified and executable; both are documented in [`docs/CONTRIBUTOR_ARCHITECTURE.md`](docs/CONTRIBUTOR_ARCHITECTURE.md):
+
+```text
+system author     adapter manifest -> operation envelopes -> capability negotiation
+                  -> Gauntlet profile -> native + normalized evidence
+benchmark author  integration descriptor -> benchmark-native runner -> native evidence
+                  -> optional common-dimension mappings -> evaluator-integrity controls
+                  -> optional Gauntlet profile binding
+```
+
+Every benchmark in this portfolio has a committed integration descriptor (`reference/agentmem_ref/evaluation/integrations/`, validated against `schemas/memory-benchmark-integration.schema.json`) that records its exact upstream revision, source rights, input-digest and selection rules, native metrics, runner, system invocation surface, provider requirements, normalization mappings, negative controls, and Gauntlet relationship. `agent-memory benchmark list | inspect | validate-integration` read them without executing anything. The `golden-keyed-retrieval-v1` integration is the executable demonstration of the benchmark-author path; it is `baseline_or_probe` evidence and is deliberately absent from the portfolio above.
+
 ## Current dashboard and historical scorecards
 
 Canonical current dashboard:

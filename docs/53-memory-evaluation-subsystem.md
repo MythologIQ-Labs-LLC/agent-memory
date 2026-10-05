@@ -1,20 +1,23 @@
 # Memory Evaluation Subsystem
 
-Status: common-contract implementation under #524 / #525, with blocked-input honesty clarified by #529.
+Status: implemented common result contract (#524 slices A–D) plus the benchmark integration contract (#652); blocked-input honesty from #529  
+Canonical contributor entry point: [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md)
 
 ## Purpose
 
-Agent Memory now has two deliberately separate repository responsibilities:
+Agent Memory has three deliberately separate repository responsibilities:
 
 ```text
 Agent Memory
 ├── Memory Runtime
-│   └── remember / retrieve / govern / correct / forget / recover
-└── Memory Evaluation
-    └── benchmark adapters / system adapters / evidence / comparison / evaluator integrity
+│   └── remember / recall / govern / correct / forget / recover
+├── Memory Evaluation
+│   └── benchmark integrations / common evidence / validation / comparison / evaluator integrity
+└── Agent Memory Gauntlet
+    └── system adapters / capability negotiation / qualification profiles / orchestration
 ```
 
-The evaluation subsystem exists so Agent Memory, simple baselines, and future external memory systems can be measured under one reconstructable evidence shape. It is not another memory runtime and it does not acquire memory authority.
+The evaluation subsystem exists so Agent Memory, simple baselines, and external memory systems can be measured under one reconstructable evidence shape. It is not another memory runtime and it does not acquire memory authority.
 
 ```text
 benchmark score != truth
@@ -29,15 +32,18 @@ Every common result therefore carries:
 authority_effect: none
 ```
 
+## Two contracts, two schemas
+
+| Contract | Schema | Describes | Loader |
+| --- | --- | --- | --- |
+| benchmark **integration** | `schemas/memory-benchmark-integration.schema.json` | how a benchmark enters the laboratory: identity, rights, input rules, native protocol, system invocation surface, mappings, integrity controls, Gauntlet relationship | `agentmem_ref.evaluation.benchmark_integration` |
+| benchmark **run** | `schemas/memory-benchmark-run.schema.json` | one executed (or blocked / not-run) result for one system | `agentmem_ref.evaluation.contract` |
+
+This document covers the run contract. The integration contract, the descriptor-backed registry, and the contributor paths are specified in [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md).
+
 ## Common run contract
 
-The canonical schema is:
-
-```text
-schemas/memory-benchmark-run.schema.json
-```
-
-The reusable Python utilities are:
+The reusable Python utilities live in:
 
 ```text
 reference/agentmem_ref/evaluation/
@@ -65,7 +71,7 @@ blocked / not_run  -> input SHA-256 may be null
 null input digest  -> comparison forbidden
 ```
 
-Where available the benchmark identity also records dataset identity/revision and a task profile. An adapter must not invent a dataset revision or digest when the upstream source does not expose one.
+Where available the benchmark identity also records dataset identity/revision and a task profile. An adapter must not invent a dataset revision or digest when the upstream source does not expose one. The benchmark integration descriptor records *how* each benchmark computes these identities (`input_contract.input_digest_rule`, `selection.identity_rule`), so a result can be checked against the rule its benchmark declares.
 
 ### System identity
 
@@ -93,7 +99,7 @@ Environment, elapsed time, and seed may be recorded when actually measured. Miss
 
 ### Evidence dimensions
 
-The first common vocabulary is:
+The common vocabulary is:
 
 ```text
 retrieval
@@ -124,7 +130,7 @@ not_applicable
 blocked
 ```
 
-A measured numeric zero is therefore not interchangeable with a missing measurement.
+A measured numeric zero is therefore not interchangeable with a missing measurement. The full decision tree, including `unsupported` and `failed` at the Gauntlet boundary, is in [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md#6-state-decision-tree).
 
 ## Metric semantics
 
@@ -144,6 +150,10 @@ note
 The contract does not claim that two metrics are semantically identical merely because their names resemble each other. Benchmark-native outputs are retained under `native_results` as opaque JSON so an adapter can preserve upstream evidence without laundering it into a supposedly universal metric.
 
 For example, an upstream model-judged QA score can remain a native result even if the common `reasoning` dimension is not populated because the adapter cannot establish a stable cross-system mapping.
+
+## Normalization is mapping, never invention
+
+A benchmark integration descriptor lists every mapping into a common dimension together with the native evidence path that supplies it, and lists every unmapped dimension with a reason. `mapped_metric_observations()` turns a mapping whose native evidence is absent into a `not_measured` observation; it never produces a value, and never a zero. Normalizers for the repository-owned integrations (`normalize.py` for LongMemEval and AgentMemBench, the golden runner for `golden-keyed-retrieval-v1`) keep the whole native report under `native_results`; a test asserts the native report is byte-for-byte unchanged by normalization.
 
 ## Fail-closed comparison
 
@@ -177,18 +187,17 @@ Otherwise the comparison records why the metric-level delta was refused.
 
 There is intentionally no `overall_score` in the comparison result.
 
-## Native benchmark adapters
+## Native benchmark integrations
 
-Existing and future adapters remain responsible for their actual benchmark semantics.
+Each integration remains responsible for its actual benchmark semantics:
 
-For example:
+- SWE-ContextBench owns its gold-edge and ranking protocol (external evidence blocked, #467).
+- LongMemEval owns its session/turn recall and nDCG semantics and its upstream exclusions.
+- AgentMemBench / MemDialogue owns its operational phases and upstream adapter protocol.
+- The golden keyed-retrieval integration owns a tiny exact-id protocol and exists to prove the contributor contract.
+- Gauntlet-native suites (governance, durability) own their claim-driven case semantics and are never external evidence.
 
-- SWE-ContextBench owns its gold-edge and ranking protocol.
-- LongMemEval owns its session/turn recall and nDCG semantics.
-- A currentness/forgetting benchmark may own stale-memory and update semantics.
-- An agent task benchmark may own end-task success.
-
-The common contract gives those results one evidence envelope. It does not rewrite their scoring rules.
+The common contract gives those results one evidence envelope. It does not rewrite their scoring rules, and the descriptor for each one records which runner, invocation surface, provider requirements, and evidence class apply.
 
 ## Evaluator integrity
 
@@ -203,7 +212,7 @@ It does not establish that:
 - the benchmark is externally comparable;
 - a memory result has authority.
 
-The current common vocabulary therefore gives `evaluator_integrity` its own dimension rather than folding mutation-probe results into retrieval.
+The common vocabulary therefore gives `evaluator_integrity` its own dimension rather than folding mutation-probe results into retrieval. Each integration descriptor declares its negative controls and the runner that executes them (`reference/run_benchmark_integrity_mutants.py` for the external profiles, `reference/run_golden_benchmark_integrity.py` for the golden path). A control that cannot fail is not a control.
 
 ## Runtime independence
 
@@ -216,14 +225,20 @@ Memory Evaluation -> may observe Agent Memory
 Agent Memory Runtime -> does not depend on Memory Evaluation
 ```
 
-## Intended next steps
+The Runtime Baseline v1 source boundary (`reports/runtime/baseline-v1-source-boundary.json`) encodes the same rule for CI: the evaluation package is the only subtree excluded from frozen-runtime equivalence checks, and evaluation changes must keep `python scripts/check_runtime_baseline_equivalence.py --candidate HEAD` green.
 
-Under #524, later slices should:
+## Current state against #524
 
-1. normalize at least two existing benchmark adapters into this common evidence contract;
-2. add profile discovery and lightweight CLI validation/comparison;
-3. define a minimal system-adapter contract for no-memory, simple retrieval, Agent Memory, and external systems;
-4. expand the benchmark portfolio only where a benchmark adds distinct pressure such as currentness/forgetting, implicit recall, dynamic state, or real agent task completion;
-5. keep benchmark-native results, common dimensions, governance, performance, and evaluator-integrity evidence separate.
+Implemented and tested on `main`:
+
+1. the versioned run contract with explicit missingness and no aggregate score;
+2. validation, canonical persistence, digesting, and fail-closed comparison;
+3. normalization of LongMemEval and AgentMemBench into the common contract with native results preserved;
+4. the separate `evaluator_integrity` dimension and the integrity-control runners;
+5. descriptor-backed profile discovery and the `benchmark` CLI (`list`, `inspect`, `validate-integration`, `validate`, `compare`);
+6. the system-adapter contract and the Gauntlet orchestration built on it;
+7. the benchmark integration contract that binds the two.
+
+Not implemented, by design: a universal execution command across heterogeneous benchmarks. Benchmark-native runners keep their own protocols; the descriptor says which one applies.
 
 The goal is a reusable memory-evaluation lab, not a leaderboard whose most important feature is that its author happens to win it.

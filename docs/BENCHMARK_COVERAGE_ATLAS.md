@@ -1,6 +1,6 @@
 # Agent Memory Benchmark Coverage Atlas
 
-**Status:** Proposed foundation artifact under #554  
+**Status:** Governance artifact under #554; admission states and provenance classes are the machine-readable vocabulary of `schemas/memory-benchmark-integration.schema.json` (#652)  
 **Purpose:** Map what the memory benchmark portfolio actually tests, expose blind spots, and govern admission of new benchmarks or creation of Gauntlet-native gap suites.  
 **Authority effect:** none
 
@@ -299,7 +299,7 @@ The common run schema may continue to normalize to high-level dimensions such as
 
 ## 8. Currently registered executable external profiles
 
-The repository's current evaluation registry contains these formal external profiles.
+The evaluation registry is the set of committed benchmark integration descriptors under `reference/agentmem_ref/evaluation/integrations/`; each declares its `admission_state` and `benchmark.provenance_class` from the vocabularies above, and `agent-memory benchmark list` projects them. The registry currently contains these formal external profiles (the `golden-keyed-retrieval-v1` contributor demonstration is `baseline_or_probe` and is listed, not counted, here).
 
 | Profile | Status | Primary pressure |
 | --- | --- | --- |
@@ -311,7 +311,7 @@ The repository's current evaluation registry contains these formal external prof
 | AgentMemBench upstream LLM-judged retrieval | not run | upstream judged retrieval protocol |
 | AgentMemBench M6 portability | not run | model portability |
 
-This table is registry truth, not a statement that no other internal benchmark harness exists.
+This table is registry truth, not a statement that no other internal benchmark harness exists. Gauntlet-native suites (`governance-isolation-deletion-alpha-v1`, `durability-recovery-alpha-v1`) are registered as Gauntlet profiles with `kind: gauntlet_native_gap` and no bound benchmark integration; they appear under `agent-memory gauntlet list`, never in this external table.
 
 ## 9. Current registered-profile coverage matrix
 
