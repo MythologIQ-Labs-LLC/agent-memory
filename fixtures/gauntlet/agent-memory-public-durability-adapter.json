@@ -1,7 +1,7 @@
 {
   "adapter": {
     "id": "agent-memory-public-durability-adapter",
-    "revision": "git-blob:6ca6f827bdafa16d31702bcf070dfed5fef8de4e",
+    "revision": "git-blob:76b58bafa04ea7e10d9cf3f7ec915393cd586a40",
     "version": "0.1.0"
   },
   "authority_effect": "none",
@@ -15,8 +15,8 @@
       "support": "unsupported"
     },
     "correct": {
-      "notes": "public AgentMemory.correct() with benchmark-owned low-risk synthetic state",
-      "support": "native"
+      "notes": "the public correction path requires qualified evidence or attestation that the current neutral Gauntlet operation contract cannot yet carry without Agent Memory-specific semantics",
+      "support": "unsupported"
     },
     "describe": {
       "notes": "translated public runtime identity only",
@@ -27,8 +27,8 @@
       "support": "native"
     },
     "durable_correction": {
-      "notes": "public governed correction followed by AgentMemory.open() recovery",
-      "support": "native"
+      "notes": "not qualified in this contestant configuration until a neutral evidence-bearing correction contract exists; refusal is preserved rather than bypassing PAMA",
+      "support": "unsupported"
     },
     "durable_deletion": {
       "notes": "public governed pruning followed by AgentMemory.open() recovery/non-resurrection check",
@@ -78,7 +78,7 @@
     "provenance_class": "gauntlet_native_gap",
     "public_facade_only": true,
     "runtime_profile": "rc1-local-sqlite-composition",
-    "transport_wrapper_revision": "git-blob:ad683be86ee7e3f054e566ec90396bcccd2c4995"
+    "transport_wrapper_revision": "git-blob:c0bdec68aee4ca23ae1ac8f9df18f02a37f56b3d"
   },
   "system": {
     "configuration_digest": "sha256:a998681c0a40513899d8329ebb864b17e2d986bfcea64c028fc5addf99cf2cc2",
