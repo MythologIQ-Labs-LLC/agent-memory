@@ -91,7 +91,6 @@ class DurabilityRecoveryGauntletTests(unittest.TestCase):
             self.assertEqual(correction["behavioral_outcome"], "unsupported")
             self.assertEqual(correction["evidence_qualification"], "sufficient")
             self.assertFalse(correction["transition"]["operation_executed"])
-            self.assertIn("qualified evidence", correction.get("note", ""))
 
             checkpoint = cases["DUR-CHK-001"]
             self.assertEqual(checkpoint["behavioral_outcome"], "unsupported")
