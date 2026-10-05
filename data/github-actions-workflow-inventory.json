@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-10-05",
+  "repository": "MythologIQ-Labs-LLC/agent-memory",
+  "governingIssue": "#662",
+  "purpose": "Phase 1 GitHub Actions workflow inventory and provisional lifecycle/disposition classification. No workflow behavior changes in this inventory slice.",
+  "truthRules": [
+    "run count is not billing",
+    "classification does not authorize deletion or disabling",
+    "protected/discretionary classification must preserve repository evidence and authority contracts",
+    "provisional classifications may be tightened by semantic review before remediation"
+  ],
+  "startingAudit": {
+    "workflowFiles": 84,
+    "pullRequestFiles": 80,
+    "pushFiles": 49,
+    "pathScopedFiles": 41,
+    "timeoutFiles": 11,
+    "concurrencyFiles": 2,
+    "runsObserved20261001Through20261005": 2500,
+    "lifetimeRunsObserved": 40000
+  },
+  "records": []
+}
