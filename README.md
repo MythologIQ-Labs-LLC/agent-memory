@@ -18,7 +18,7 @@ A usable governed memory runtime, a canonical architecture and doctrine corpus, 
 [![ADRs](https://img.shields.io/badge/ADRs-Canonical%20Index-2563eb)](docs/adr/README.md)
 [![License](https://img.shields.io/badge/License-Apache--2.0-0b7285)](LICENSE)
 
-**[Documentation](docs/README.md)** · **[Repository operating model](docs/REPOSITORY_OPERATING_MODEL.md)** · **[Benchmarks](BENCHMARKS.md)** · **[Current dashboard](reports/benchmarks/dashboard/current.md)** · **[RC1 tracker](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410)** · **[PAMA](docs/pama/README.md)** · **[Governance](GOVERNANCE.md)**
+**[Documentation](docs/README.md)** · **[Repository operating model](docs/REPOSITORY_OPERATING_MODEL.md)** · **[Benchmarks](BENCHMARKS.md)** · **[Bring a system or a benchmark](docs/CONTRIBUTOR_ARCHITECTURE.md)** · **[Current dashboard](reports/benchmarks/dashboard/current.md)** · **[RC1 tracker](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/410)** · **[PAMA](docs/pama/README.md)** · **[Governance](GOVERNANCE.md)**
 
 </div>
 

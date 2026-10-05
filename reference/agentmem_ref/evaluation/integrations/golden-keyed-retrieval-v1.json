@@ -1,0 +1,253 @@
+{
+  "contract_family": "agent-memory-benchmark-integration",
+  "contract_version": "1.0.0",
+  "integration_id": "golden-keyed-retrieval-v1",
+  "admission_state": "evidence_complete",
+  "owning_issue": 652,
+  "description": "Benchmark-author golden path: a deliberately small keyed-retrieval benchmark with a committed frozen input, a Gauntlet-bound runner, descriptor-driven normalization, and evaluator-integrity negative controls that can fail. It demonstrates the contributor contract; it is not independent evidence about any memory system.",
+  "benchmark": {
+    "id": "golden-keyed-retrieval",
+    "name": "Golden Keyed Retrieval (contributor demonstration)",
+    "provenance_class": "baseline_or_probe",
+    "upstream": {
+      "repository": null,
+      "url": null,
+      "paper_url": null
+    },
+    "source_revision": "1.0.0",
+    "source_revision_rule": "repository_owned"
+  },
+  "source_rights": {
+    "license_spdx": "Apache-2.0",
+    "license_url": null,
+    "data_license_spdx": "Apache-2.0",
+    "code_redistribution": "redistributed_in_repository",
+    "data_redistribution": "redistributed_in_repository",
+    "attribution": "Authored in this repository for #652.",
+    "acquisition_notes": "No acquisition step: the exact input is committed and digest-bound."
+  },
+  "input_contract": {
+    "dataset_id": "agent-memory/golden-keyed-retrieval:v1",
+    "dataset_revision_rule": "repository_owned",
+    "known_dataset_revision": "1.0.0",
+    "input_digest_rule": "sha256_raw_file_bytes",
+    "known_input_sha256": "f818915d393ed1a3fa9a31292835660e23543ca556537865e49cab96c41988c9",
+    "committed_input_path": "reference/fixtures/benchmarks/golden-keyed-retrieval/v1.json",
+    "input_may_be_absent_before_execution": false,
+    "corpus_classes": [
+      "repository_owned_synthetic"
+    ],
+    "selection": {
+      "identity_rule": "all:<first 16 hex of input sha256>; the full declared query set is always executed",
+      "methods": [
+        "full declared query set"
+      ]
+    }
+  },
+  "native_protocol": {
+    "task_type": "keyed_retrieval_probe",
+    "native_metrics": [
+      {
+        "metric_id": "exact_top1",
+        "description": "fraction of queries whose rank-1 recalled id equals gold_id",
+        "direction": "higher_better",
+        "upstream_defined": false
+      },
+      {
+        "metric_id": "recall_at_3",
+        "description": "fraction of queries whose gold_id appears within the first three recalled ids",
+        "direction": "higher_better",
+        "upstream_defined": false
+      },
+      {
+        "metric_id": "operation_count",
+        "description": "number of operation envelopes issued through the adapter",
+        "direction": "descriptive",
+        "upstream_defined": false
+      },
+      {
+        "metric_id": "operation_contract_valid_rate",
+        "description": "fraction of adapter responses that validated against the operation-envelope schema",
+        "direction": "higher_better",
+        "upstream_defined": false
+      }
+    ],
+    "native_artifacts": [
+      {
+        "artifact_id": "gauntlet-native-results",
+        "kind": "benchmark_native_results",
+        "description": "per-query rows, recalled ids, and the full operation transcript"
+      },
+      {
+        "artifact_id": "normalized-run",
+        "kind": "memory_benchmark_run",
+        "description": "common evidence manifest derived only from declared mappings"
+      },
+      {
+        "artifact_id": "qualification",
+        "kind": "gauntlet_qualification",
+        "description": "negotiation, coverage, failure attribution, and artifact digests"
+      }
+    ],
+    "runner": {
+      "kind": "gauntlet_profile_runner",
+      "entry_point": "agentmem_ref.evaluation.benchmark_golden_keyed_retrieval:run_golden_keyed_retrieval",
+      "supporting_entry_points": [
+        "reference/run_golden_benchmark_integrity.py"
+      ],
+      "invocation_example": "agent-memory gauntlet run --system fixtures/gauntlet/lexical-adapter.json --profile golden-keyed-retrieval-v1 --output-dir ./gauntlet-runs"
+    },
+    "budget": {
+      "retrieval_or_context_budget": "recall limit 3 per query; no answer-generation context budget",
+      "parameters": {
+        "recall_limit": 3
+      }
+    },
+    "failure_semantics": {
+      "per_item_error_capture": false,
+      "timeout": "orchestrator stdio timeout per operation (--timeout-seconds)",
+      "description": "the first non-ok operation response blocks the run with its attributed source; input digest mismatch is attributed to benchmark_input before any operation is issued"
+    },
+    "concurrency": "sequential, one adapter session"
+  },
+  "system_requirements": {
+    "invocation_surface": "gauntlet_operation_envelope",
+    "external_system_entry": "gauntlet_system_adapter",
+    "required_operations": [
+      "describe",
+      "reset",
+      "remember",
+      "recall"
+    ],
+    "optional_operations": [
+      "health"
+    ],
+    "unsupported_semantics": "systems need no lifecycle, governance, or durability capability; unsupported optional capabilities remain unsupported in the qualification output and never become numeric zero"
+  },
+  "provider_requirements": {
+    "credentials": "credential_free",
+    "model_dependency": "none",
+    "judge": {
+      "required": false,
+      "identity": null,
+      "note": "deterministic exact-id scoring; no judge"
+    },
+    "python_dependencies": []
+  },
+  "normalization": {
+    "normalizer": "agentmem_ref.evaluation.benchmark_golden_keyed_retrieval:normalize_golden_keyed_retrieval",
+    "mappings": [
+      {
+        "dimension": "retrieval",
+        "metric_id": "exact_top1",
+        "native_evidence": "metrics.exact_top1",
+        "semantics": "rank-1 exact gold id match over all queries; baseline_or_probe evidence",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "retrieval",
+        "metric_id": "recall_at_3",
+        "native_evidence": "metrics.recall_at_3",
+        "semantics": "gold id within the first three recalled ids; baseline_or_probe evidence",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "evaluator_integrity",
+        "metric_id": "operation_contract_valid_rate",
+        "native_evidence": "metrics.operation_contract_valid_rate",
+        "semantics": "every adapter response crossed the operation-envelope validator",
+        "direction": "higher_better"
+      },
+      {
+        "dimension": "reproducibility",
+        "metric_id": "input_sha256",
+        "native_evidence": "input_sha256",
+        "semantics": "exact frozen input digest verified against the descriptor",
+        "direction": "descriptive"
+      }
+    ],
+    "unmapped_dimensions": {
+      "currentness": "not_applicable: single-version records, no update or conflict protocol",
+      "reasoning": "not_applicable: no answer generation",
+      "governance": "not_applicable: one namespace, no isolation or admission claim is exercised",
+      "efficiency": "not_measured: timings are retained natively but are not mapped for a demonstration benchmark"
+    }
+  },
+  "evaluator_integrity": {
+    "negative_controls": [
+      {
+        "control_id": "gold_omission",
+        "description": "every gold record is dropped at the remember boundary; exact_top1 must fall",
+        "expected_detection": true
+      },
+      {
+        "control_id": "rank_inversion",
+        "description": "the top two recalled items are swapped; exact_top1 must fall while recall_at_3 is unaffected",
+        "expected_detection": true
+      },
+      {
+        "control_id": "identity_corruption",
+        "description": "recalled ids are rewritten; exact_top1 must fall because id mapping is part of the protocol",
+        "expected_detection": true
+      },
+      {
+        "control_id": "unrelated_record_omission",
+        "description": "records that are gold for no query are dropped; exact_top1 must not change, proving the evaluator reacts to the relevant defect only",
+        "expected_detection": false,
+        "note": "isolation control"
+      }
+    ],
+    "runner": "reference/run_golden_benchmark_integrity.py",
+    "qualification_expectation": "all_as_expected must be true against the repository lexical baseline; a control whose detection diverges from its declared expectation disqualifies the evaluator, not the system"
+  },
+  "reproducibility": {
+    "seed": {
+      "material": false,
+      "default": null,
+      "note": "deterministic fixture order and deterministic scoring; no sampling"
+    },
+    "environment_requirements": [
+      "python>=3.11",
+      "no network access required"
+    ],
+    "artifact_requirements": [
+      "adapter-manifest.json",
+      "native-results.json",
+      "normalized-run.json",
+      "qualification.json"
+    ],
+    "revision_binding": "descriptor digest + known_input_sha256 + adapter manifest digest + system/adapter revisions recorded in qualification.json"
+  },
+  "gauntlet": {
+    "relationship": "bound_profile",
+    "profile_id": "golden-keyed-retrieval-v1",
+    "reason": "the protocol is fully expressible through describe/reset/remember/recall operation envelopes, so any system adapter can enter without protocol loss"
+  },
+  "evidence_history": [
+    {
+      "variant": "lexical_baseline_integrity_controls",
+      "status": "complete",
+      "dataset_revision": "1.0.0",
+      "input_sha256": "f818915d393ed1a3fa9a31292835660e23543ca556537865e49cab96c41988c9",
+      "system_id": "gauntlet-lexical-baseline",
+      "system_revision": "builtin-lexical-v1",
+      "report": "reports/benchmarks/golden-keyed-retrieval/integrity-controls-v1.json",
+      "report_binding": {
+        "input_sha256_path": "input_sha256",
+        "system_revision_path": "system.revision"
+      }
+    }
+  ],
+  "product_findings": [],
+  "dimensions": [
+    "retrieval",
+    "evaluator_integrity",
+    "reproducibility"
+  ],
+  "limitations": [
+    "baseline_or_probe evidence for the contributor contract; not an external efficacy benchmark",
+    "ten records and eight queries exercise ranking among lexically similar siblings only",
+    "no currentness, governance, lifecycle, or efficiency claim is measured"
+  ],
+  "authority_effect": "none"
+}

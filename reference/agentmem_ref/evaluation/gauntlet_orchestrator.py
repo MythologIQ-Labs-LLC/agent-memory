@@ -292,6 +292,26 @@ def _normalized_run(
     return validate_run(document)
 
 
+def _bind_profile_kind(native: Any, profile: Mapping[str, Any]) -> dict[str, Any]:
+    """Bind the registry's provenance class to native results; a runner may not upgrade it."""
+
+    if not isinstance(native, Mapping):
+        raise GauntletExecutionError(
+            "benchmark_adapter", "invalid_native_results", "profile runner must return an object"
+        )
+    bound = dict(native)
+    declared = bound.get("profile_kind")
+    if declared is not None and declared != profile["kind"]:
+        raise GauntletExecutionError(
+            "benchmark_adapter",
+            "provenance_mismatch",
+            f"profile runner declared profile_kind={declared!r} but the registered profile "
+            f"kind is {profile['kind']!r}; a runner cannot change evidence class",
+        )
+    bound["profile_kind"] = profile["kind"]
+    return bound
+
+
 def _qualification_base(
     *,
     run_id: str,
@@ -308,6 +328,9 @@ def _qualification_base(
             "kind": profile["kind"],
             "description": profile["description"],
         },
+        # Recorded beside the profile block, not inside it, so the immutable external-
+        # contestant golden sample (which compares the profile block) stays valid.
+        "benchmark_integration": profile.get("benchmark_integration"),
         "system": {
             "id": manifest["system"]["id"],
             "kind": manifest["system"]["kind"],
@@ -493,6 +516,7 @@ def run_gauntlet(
                     "runner_exception",
                     f"profile runner raised {type(exc).__name__}: {exc}",
                 ) from exc
+            native = _bind_profile_kind(native, profile)
     except GauntletExecutionError as exc:
         normalized_status = "blocked"
         failure = {"source": exc.source, "code": exc.code, "message": str(exc)}

@@ -207,6 +207,20 @@ Do not add a vector index, tenant filter, correction ledger, temporal reranker, 
 
 The retrieval probe is transport/orchestration evidence, not a market-quality result.
 
+The same adapter can enter the benchmark-author golden path, a small benchmark bound to a committed integration descriptor with a frozen, digest-verified input:
+
+```bash
+agent-memory benchmark inspect golden-keyed-retrieval-v1
+agent-memory gauntlet run \
+  --system examples/gauntlet/minimal-stdio-adapter.json \
+  --profile golden-keyed-retrieval-v1 \
+  --allow-external-process \
+  --allow-destructive-reset \
+  --output-dir ./gauntlet-runs
+```
+
+It is still `baseline_or_probe` evidence. Its purpose is to show how a benchmark author's descriptor and a system author's adapter meet; see [`CONTRIBUTOR_ARCHITECTURE.md`](CONTRIBUTOR_ARCHITECTURE.md).
+
 Use `agent-memory gauntlet list` and `inspect` to identify profiles applicable to the system's real capabilities. Independent benchmark profiles retain their own protocol, inputs, metrics, and evidence class. Gauntlet-native profiles remain visibly different from independent external evidence.
 
 Before publishing a comparative result, bind:
@@ -224,6 +238,7 @@ There is intentionally no universal memory-health score.
 
 ## Related contracts
 
+- `docs/CONTRIBUTOR_ARCHITECTURE.md` (system-author and benchmark-author paths)
 - `docs/GAUNTLET_SYSTEM_ADAPTER_CONTRACT.md`
 - `docs/GAUNTLET_ORCHESTRATION.md`
 - `schemas/gauntlet-system-adapter.schema.json`

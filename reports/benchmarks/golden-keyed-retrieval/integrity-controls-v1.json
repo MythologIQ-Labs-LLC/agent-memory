@@ -1,0 +1,69 @@
+{
+  "all_as_expected": true,
+  "authority_effect": "none",
+  "claim_boundary": [
+    "evaluator-integrity evidence establishes evaluator sensitivity to controlled defects only",
+    "it is not evidence of memory efficacy, benchmark comparability, or authority"
+  ],
+  "controls": [
+    {
+      "as_expected": true,
+      "control_id": "gold_omission",
+      "control_value": 0.0,
+      "description": "every gold record is dropped at the remember boundary; exact_top1 must fall",
+      "detected": true,
+      "expected_detection": true,
+      "healthy_value": 1.0,
+      "metric_id": "exact_top1",
+      "recall_at_3": 0.0
+    },
+    {
+      "as_expected": true,
+      "control_id": "identity_corruption",
+      "control_value": 0.0,
+      "description": "recalled ids are rewritten; exact_top1 must fall because id mapping is part of the protocol",
+      "detected": true,
+      "expected_detection": true,
+      "healthy_value": 1.0,
+      "metric_id": "exact_top1",
+      "recall_at_3": 0.0
+    },
+    {
+      "as_expected": true,
+      "control_id": "rank_inversion",
+      "control_value": 0.0,
+      "description": "the top two recalled items are swapped; exact_top1 must fall while recall_at_3 is unaffected",
+      "detected": true,
+      "expected_detection": true,
+      "healthy_value": 1.0,
+      "metric_id": "exact_top1",
+      "recall_at_3": 1.0
+    },
+    {
+      "as_expected": true,
+      "control_id": "unrelated_record_omission",
+      "control_value": 1.0,
+      "description": "records that are gold for no query are dropped; exact_top1 must not change, proving the evaluator reacts to the relevant defect only",
+      "detected": false,
+      "expected_detection": false,
+      "healthy_value": 1.0,
+      "metric_id": "exact_top1",
+      "recall_at_3": 1.0
+    }
+  ],
+  "healthy": {
+    "exact_top1": 1.0,
+    "recall_at_3": 1.0,
+    "sample_count": 8
+  },
+  "input_sha256": "f818915d393ed1a3fa9a31292835660e23543ca556537865e49cab96c41988c9",
+  "integration_id": "golden-keyed-retrieval-v1",
+  "profile_kind": "baseline_or_probe",
+  "report_kind": "evaluator_integrity_controls",
+  "schema_version": "1.0.0",
+  "system": {
+    "id": "gauntlet-lexical-baseline",
+    "kind": "lexical",
+    "revision": "builtin-lexical-v1"
+  }
+}
