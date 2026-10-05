@@ -78,6 +78,7 @@ class AmbHarnessConstraintsTests(unittest.TestCase):
         row = self.module.ROW_PINS[bridge.AMB_PROVIDER_KEY]
         self.assertEqual(row["pins"], [f"mem0ai=={bridge.MEM0_VERSION}"])
         self.assertEqual(set(row["lift"]), {"mem0ai", "posthog"}, "only the pins mem0ai 2.2.1 contradicts are lifted")
+        self.assertEqual(set(row["remove"]), {"fastembed"}, "only the package that would switch Mem0 to hybrid retrieval is removed")
         lane = json.loads(LANE.read_text(encoding="utf-8"))
         mem0_row = next(item for item in lane["systems"] if item["provider_key"] == bridge.AMB_PROVIDER_KEY)
         self.assertIn(row["pins"][0], mem0_row["dependency_pins"])
@@ -85,6 +86,7 @@ class AmbHarnessConstraintsTests(unittest.TestCase):
         self.assertEqual(len(lock["git_blob"]), 40)
         self.assertEqual(len(lock["sha256"]), 64)
         self.assertTrue(any("posthog" in departure for departure in lock["departures"]))
+        self.assertTrue(any("fastembed" in departure for departure in lock["departures"]))
         self.assertIn("uv.lock", lane["execution"]["environment"]["harness_install"])
         self.assertEqual(set(self.module.ROW_PINS), {bridge.AMB_PROVIDER_KEY}, "no other row departs from the lock")
 

@@ -216,7 +216,11 @@ dependency set and re-resolving it from scratch exhausts pip's backtracking budg
 (`resolution-too-deep`, run 37343360127) before a single query runs, while the lock the
 harness authors shipped resolves in seconds. Only this repository's own pins and the Mem0
 row's `mem0ai==2.2.1` (which lifts the lock's `posthog`) depart from the lock, and the lock
-blob plus every lifted pin is written into the execution identity. The workflow then
+blob plus every lifted pin is written into the execution identity. The lock also carries
+`fastembed` for the harness's Cognee provider; because Mem0 2.2.1 silently switches to
+BM25 hybrid retrieval whenever that package imports, the Mem0 row removes it after the
+constrained install (a declared, recorded removal), and the posture check refuses to run
+the row if it is present. The workflow then
 validates the lane file, downloads and digest-checks both fixtures against it, runs the
 harness self-check (a perfect provider must reproduce 43/43 active and 77/77 total),
 verifies the Mem0 row's version and extras posture, and writes an

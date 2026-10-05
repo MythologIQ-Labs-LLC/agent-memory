@@ -18,6 +18,11 @@ than discovered at install time:
   OSS row) together with the locked pins that pin contradicts, each named with its
   reason. The resolver then fails loudly if anything else would have to move.
 
+A row may also declare packages to remove after the constrained install (``row_removals``
+in the sidecar): locked packages that serve other providers only and would change the
+row's product behaviour if present. The workflow uninstalls exactly those and the
+execution identity records them.
+
 Nothing here executes a benchmark or produces a score. The emitted provenance sidecar is
 copied into the run's execution identity so a result can be tied to the exact lock blob,
 the pins lifted, and the ``uv`` release that exported it.
@@ -48,6 +53,16 @@ ROW_PINS: dict[str, dict[str, object]] = {
         "lift": {
             "mem0ai": "replaced by the lane row pin mem0ai==2.2.1 (lock: 1.0.5)",
             "posthog": "mem0ai 2.2.1 requires posthog>=7.14.0; the lock carries 7.9.10 (telemetry client only; MEM0_TELEMETRY=false)",
+        },
+        # Packages the lock installs for other providers that would silently change this
+        # row's product behaviour if left in place. They are removed after the constrained
+        # install and the removal is recorded in the provenance sidecar. fastembed is in
+        # the lock only via cognee (a provider this row never loads: the harness imports
+        # cognee lazily inside its provider, and nothing on the Mem0 explicit path touches
+        # it); Mem0 2.2.1 lazily enables BM25 hybrid retrieval whenever fastembed imports,
+        # which the frozen row forbids (base-package install, product default).
+        "remove": {
+            "fastembed": "present in the lock only via cognee; Mem0 2.2.1 enables BM25 hybrid retrieval whenever it imports, which the frozen base-package row forbids",
         },
     },
 }
@@ -117,7 +132,7 @@ def build(amb_root: Path, memory: str | None, *, uv: str = "uv") -> tuple[list[s
     lock_path = amb_root / "uv.lock"
     if not lock_path.is_file():
         raise FileNotFoundError(f"frozen AMB checkout has no uv.lock: {lock_path}")
-    row = ROW_PINS.get(memory or "", {"pins": [], "lift": {}})
+    row = ROW_PINS.get(memory or "", {"pins": [], "lift": {}, "remove": {}})
     repo_pins = repository_pinned_packages()
     drop: dict[str, str] = {name: "pinned by this repository's pyproject.toml" for name in repo_pins}
     drop.update(row["lift"])  # type: ignore[arg-type]
@@ -132,6 +147,10 @@ def build(amb_root: Path, memory: str | None, *, uv: str = "uv") -> tuple[list[s
         "uv_version": uv_version,
         "memory": memory,
         "row_pins": list(row["pins"]),  # type: ignore[arg-type]
+        "row_removals": {
+            name: {"locked": next((line for line in kept if requirement_name(line) == canonical(name)), None), "reason": reason}
+            for name, reason in row.get("remove", {}).items()  # type: ignore[union-attr]
+        },
         "lifted_pins": {name: {"locked": dropped.get(name), "reason": reason} for name, reason in drop.items()},
         "constraint_count": len(kept),
         "authority_effect": "none",
@@ -146,9 +165,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output", required=True, type=Path, help="constraints file to write")
     parser.add_argument("--provenance", type=Path, default=None, help="JSON sidecar describing the derivation")
     parser.add_argument("--uv", default=shutil.which("uv") or "uv")
+    parser.add_argument("--removals", type=Path, default=None, help="write the space-separated row removals here (empty file when none)")
     args = parser.parse_args(argv)
     lines, provenance = build(args.amb_root.resolve(), args.memory, uv=args.uv)
     args.output.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    if args.removals:
+        args.removals.write_text(" ".join(provenance["row_removals"]) + "\n", encoding="utf-8")
     provenance["constraints_sha256"] = hashlib.sha256(args.output.read_bytes()).hexdigest()
     if args.provenance:
         args.provenance.write_text(json.dumps(provenance, indent=2, sort_keys=True) + "\n", encoding="utf-8")
