@@ -61,7 +61,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/agent-memory-runtime-adapter.yml",
@@ -103,7 +109,8 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/agmi-agent-memory-qualification.yml",
@@ -147,7 +154,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/amb-competitive.yml",
@@ -192,7 +205,13 @@
       "proposedDisposition": "MANUAL",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/amb-evidence-import.yml",
@@ -235,7 +254,13 @@
       "proposedDisposition": "MANUAL",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/architecture-family-closeout.yml",
@@ -277,7 +302,13 @@
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/atlas-research-intake.yml",
@@ -322,7 +353,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/authority-laundering-evidence.yml",
@@ -364,7 +401,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/autonomous-maintenance-evidence.yml",
@@ -406,7 +449,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/benchmark-integration-contract.yml",
@@ -450,7 +499,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/canonical-json-v2-migration-contract.yml",
@@ -491,7 +546,13 @@
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/canonical-json-v2-migration-preflight.yml",
@@ -536,7 +597,8 @@
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/canonical-json-v2-parity.yml",
@@ -580,7 +642,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/canonical-json-v2-transaction-qualification.yml",
@@ -622,7 +690,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/canonical-json-v2-vector-acceptance.yml",
@@ -663,7 +737,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/canonical-json-v2-vector-integrity.yml",
@@ -704,7 +784,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/canonical-reachability.yml",
@@ -747,7 +833,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/canonical-scheme-registry.yml",
@@ -789,7 +881,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/canonical-surface-inventory.yml",
@@ -832,7 +930,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/capability-behavior-contract.yml",
@@ -874,7 +978,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/cedar-policy-comparator.yml",
@@ -916,7 +1026,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/cli-doctor.yml",
@@ -960,7 +1076,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/cmcp-external-evidence.yml",
@@ -1002,7 +1124,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/codegenome-multicapability-profile.yml",
@@ -1046,7 +1174,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/codegenome-reality-mesh-evidence.yml",
@@ -1090,7 +1224,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/codegenome-scope-residue-closeout.yml",
@@ -1134,7 +1274,13 @@
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/cognitive-mesh-evidence.yml",
@@ -1176,7 +1322,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/component-qualification-evidence.yml",
@@ -1188,7 +1340,6 @@
       "lifecycleClass": "async_assurance",
       "triggers": [
         "pull_request",
-        "release",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
@@ -1221,7 +1372,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/component-qualification-foundation.yml",
@@ -1263,7 +1420,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/conditional-memory-evidence.yml",
@@ -1305,7 +1468,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/conditional-memory-influence.yml",
@@ -1347,7 +1516,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/config-bound-recovery.yml",
@@ -1391,7 +1566,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Ongoing configured-restart acceptance contract. Review only if the capability or authority contract is superseded.",
       "classificationConfidence": "high",
-      "reviewNotes": "Corrected from one-time heuristic: this workflow continuously validates configuration-bound recovery behavior on push and pull request."
+      "reviewNotes": "Corrected from one-time heuristic: this workflow continuously validates configuration-bound recovery behavior on push and pull request.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/dashclaw-external-verdict.yml",
@@ -1403,7 +1584,6 @@
       "lifecycleClass": "conditional_hot_path",
       "triggers": [
         "pull_request",
-        "release",
         "workflow_dispatch"
       ],
       "consequenceClass": "protected",
@@ -1434,7 +1614,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/derivation-currentness-evidence.yml",
@@ -1476,7 +1662,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/derivation-output-custody.yml",
@@ -1518,7 +1710,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/domain-schema-discovery-evidence.yml",
@@ -1560,7 +1758,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/domain-schema-mutation-contract.yml",
@@ -1602,7 +1806,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/enforce-issue-labels.yml",
@@ -1639,7 +1849,8 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/evolveai-cognitive-mesh-evidence.yml",
@@ -1685,7 +1896,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/evolveai-multicapability-qualification.yml",
@@ -1732,7 +1949,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/external-evidence-contract.yml",
@@ -1774,7 +1997,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/federated-resource-exchange.yml",
@@ -1819,7 +2048,8 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/gauntlet-durability-recovery.yml",
@@ -1863,7 +2093,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep path-scoped while durability/recovery behavior remains a supported acceptance boundary; review if the gauntlet authority moves or is superseded.",
       "classificationConfidence": "high",
-      "reviewNotes": "Corrected from one-time heuristic: this is a path-scoped durability/recovery acceptance lane, not a disposable recovery procedure."
+      "reviewNotes": "Corrected from one-time heuristic: this is a path-scoped durability/recovery acceptance lane, not a disposable recovery procedure.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/gauntlet-external-contestant-dogfood.yml",
@@ -1907,7 +2143,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/hermes-observe-govern-integration.yml",
@@ -1952,7 +2194,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/hermes-recursive-learning-research.yml",
@@ -1995,7 +2243,8 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/hindsight-v090-qualification.yml",
@@ -2039,7 +2288,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/langgraph-lifecycle-comparator.yml",
@@ -2081,7 +2336,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/logical-state-algebra-pressure.yml",
@@ -2123,7 +2384,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/long-horizon-memory-benchmark.yml",
@@ -2165,7 +2432,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/maf-lifecycle-comparator.yml",
@@ -2207,7 +2480,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/maintenance-evidence.yml",
@@ -2249,7 +2528,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/memory-component-program-closeout.yml",
@@ -2293,7 +2578,13 @@
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/memory-metabolism-benchmark.yml",
@@ -2335,7 +2626,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/memos-v2017-substitution.yml",
@@ -2380,7 +2677,8 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/opa-policy-comparator.yml",
@@ -2422,7 +2720,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/operational-memory-benchmark.yml",
@@ -2464,7 +2768,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/p9-systems-characterization.yml",
@@ -2506,7 +2816,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/policy-projection-compatibility.yml",
@@ -2549,7 +2865,8 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/precedent-candidate-retrieval.yml",
@@ -2591,7 +2908,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/procedural-memory-evidence.yml",
@@ -2633,7 +2956,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/proposition-semantics-score.yml",
@@ -2679,7 +3008,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/provider-discovery.yml",
@@ -2721,7 +3056,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/publish-wiki.yml",
@@ -2761,7 +3102,8 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/recall-validation-characterization.yml",
@@ -2805,7 +3147,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/recall-validation-external-replay.yml",
@@ -2851,7 +3199,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/restart-safe-runtime.yml",
@@ -2893,7 +3247,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/retrieval-quality-benchmark.yml",
@@ -2935,7 +3295,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/reusable-grant-authority-transition.yml",
@@ -2977,7 +3343,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/runtime-baseline.yml",
@@ -3021,7 +3393,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/runtime-composition.yml",
@@ -3063,7 +3441,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/runtime-configuration.yml",
@@ -3105,7 +3489,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/rust-prefilter-performance.yml",
@@ -3153,7 +3543,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/rust-shadow-kernel.yml",
@@ -3197,7 +3593,13 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/seal-anchors.yml",
@@ -3239,7 +3641,13 @@
       "proposedDisposition": "CONDITIONAL",
       "retirementOrReviewCondition": "Keep on critical path only for affected changes; verify dependency/change-scope completeness.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/sleeper-poisoning-evidence.yml",
@@ -3281,7 +3689,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/sqlite-production-substrate.yml",
@@ -3323,7 +3737,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/structural-mutation-governance.yml",
@@ -3365,7 +3785,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/temporal-commitment-evidence.yml",
@@ -3407,7 +3833,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/temporal-currentness-final-replay.yml",
@@ -3451,7 +3883,13 @@
       "proposedDisposition": "RETIRE",
       "retirementOrReviewCondition": "Retire only after bounded evidence/transition is accepted and durable procedure is preserved if needed.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/unsafe-composition-evidence.yml",
@@ -3493,7 +3931,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/uor-addr-compatibility.yml",
@@ -3505,8 +3949,7 @@
       "lifecycleClass": "required_hot_path",
       "triggers": [
         "pull_request",
-        "push",
-        "release"
+        "push"
       ],
       "consequenceClass": "protected",
       "pathScope": "repository-wide-or-unscoped",
@@ -3537,7 +3980,8 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": null
     },
     {
       "path": ".github/workflows/validate-doctrine-evidence.yml",
@@ -3579,7 +4023,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation."
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     },
     {
       "path": ".github/workflows/write-readable-visibility.yml",
@@ -3621,7 +4071,13 @@
       "proposedDisposition": "KEEP",
       "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
       "classificationConfidence": "medium-low",
-      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction."
+      "reviewNotes": "Conservatively classified as protected because no explicit evidence establishes safe discretionary suppression. Semantic owner confirmation is required before any behavior reduction.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
     }
   ],
   "lastUpdatedAt": "2026-10-05",
@@ -3635,5 +4091,52 @@
   "classificationPolicy": {
     "consequenceRule": "Binary protected/discretionary classification required by #662. Ambiguous lanes are conservatively protected until explicit evidence proves discretionary suppression is safe.",
     "behaviorAuthority": "Inventory classification alone does not authorize disabling, deleting, or moving required checks."
+  },
+  "inventorySummary": {
+    "workflowCount": 84,
+    "lifecycleCounts": {
+      "required_hot_path": 34,
+      "conditional_hot_path": 22,
+      "async_assurance": 20,
+      "manual_exception": 2,
+      "one_time": 6
+    },
+    "dispositionCounts": {
+      "KEEP": 34,
+      "CONDITIONAL": 22,
+      "ASYNC": 20,
+      "MANUAL": 2,
+      "RETIRE": 6
+    },
+    "consequenceCounts": {
+      "protected": 64,
+      "discretionary": 20
+    },
+    "triggerCounts": {
+      "pull_request": 80,
+      "push": 49,
+      "workflow_dispatch": 41,
+      "issues": 1
+    },
+    "missingExplicitTimeoutCount": 73,
+    "supersedablePrOrPushWithoutConcurrencyCount": 81,
+    "artifactUploadWithoutExplicitRetentionCount": 50,
+    "repeatedSetupFamilies": [
+      {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 59
+      },
+      {
+        "id": "setup-family-2",
+        "signature": "checkout+python+rust+python-deps+cargo",
+        "memberCount": 9
+      },
+      {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 7
+      }
+    ]
   }
 }
