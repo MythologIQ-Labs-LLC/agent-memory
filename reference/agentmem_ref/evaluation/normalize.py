@@ -288,8 +288,15 @@ def normalize_longmemeval_lane(record: Mapping[str, Any], *, repo_root: Path | N
     plane, backend = row["plane"], row["backend"]
     manifest = _longmemeval_manifest(report, plane, backend)
     system = manifest["system"]
-    if system["revision"] != record["system"]["revision"] or (backend == system["id"] and record["system"]["id"] != backend) and system["id"] != record["system"]["id"]:
-        raise ValueError(f"evidence record system {record['system']} does not match the report's system identity {system}")
+    if system["revision"] != record["system"]["revision"]:
+        raise ValueError(
+            f"evidence record system revision {record['system']['revision']} does not match the report's {system['revision']}"
+        )
+    if system["kind"] == "external_memory" and system["id"] != record["system"]["id"]:
+        raise ValueError(f"evidence record system id {record['system']['id']} does not match the report's external identity {system['id']}")
+    # The lane declares the system identity of every row; built-in backends keep their
+    # backend name in the run id but carry the lane's system id on the manifest.
+    system["id"] = record["system"]["id"]
     files = record.get("files", {})
     manifest["run_id"] = f"longmemeval:{record['lane_id']}:{plane}:{backend}:{system['revision'][:12]}"
     manifest["benchmark"]["task_profile"] = f"{record['lane_id']}:{plane}"
