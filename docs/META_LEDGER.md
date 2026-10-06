@@ -3163,3 +3163,35 @@ tests of `test_runtime_baseline_succession` and
 `git diff --quiet origin/main` over the six immutable v1 files,
 `reference/agentmem_ref` and `pyproject.toml` reports no change. The full
 suite result is recorded in the pull request.
+---
+
+### Entry #65: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T21:25:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: VETO
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-670-return-budget.md (iteration 1; plan content hash 0b1b92a64970a9856a3ea432b6f7c503a3a7844817ed743b1c547a2ae2b32258)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_670_attempt1.md) = 46d87b346c7ccd7d8bf97d699e31cbf5fd1e884ce441256a537505c1112ec584
+
+**Previous Hash**: `483dbc064b0f38f20e2753a1d49a1a08630e1091c69eaa9cb7e51747f8f52579`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 8ab0bab7fa96d6bd8a5f4f7895fc59824cda650b1e454d4499b09866640835c3
+
+**Decision**: VETO, attempt 1 of 5, independent reviewer in a fresh context;
+both grounds reproduced against the tree before this entry. V1 --
+`test_rc_cognitive_memory_scenario.py:17` asserts the `1.3.0` contract
+version from `memory.contract_version`, so the plan's "two version
+literals" and its full-suite claim were false. V2 -- the AMB bridge is
+recorded at execution, not byte-pinned by any lane or test (only
+`run_longmemeval.py` is pinned by the LongMemEval lane's `source_blobs`),
+so the plan's exclusion of #670's third scope item rested on a false pin.
+C1-C4 (state the merge-commit requirement; test the blocked and
+migration-required paths under a budget; add the third literal; rewrite the
+deferral honestly and say the PR does not close #670) and A1-A4 recorded.
+Required next action: Governor amends LD4, LD5, LD6 and the boundaries;
+re-run /qor-audit.
