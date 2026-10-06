@@ -60,6 +60,10 @@ class Repo:
         git(root, "config", "user.email", "test@example.invalid")
         git(root, "config", "user.name", "test")
         git(root, "config", "commit.gpgsign", "false")
+        # No background maintenance: an auto-gc spawned by a commit can still be writing under
+        # .git while the TemporaryDirectory is removed (observed as "Directory not empty" in CI).
+        git(root, "config", "gc.auto", "0")
+        git(root, "config", "maintenance.auto", "false")
 
     def write(self, path: str, content: str) -> None:
         target = self.root / path
@@ -217,7 +221,7 @@ class SuccessionTestCase(unittest.TestCase):
     """Build: frozen source -> published v1 (record/boundary committed) -> register pinned to that commit."""
 
     def setUp(self) -> None:
-        self.tmp = tempfile.TemporaryDirectory()
+        self.tmp = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
         self.addCleanup(self.tmp.cleanup)
         self.repo = Repo(Path(self.tmp.name))
         self.frozen = self.repo.freeze_source()
