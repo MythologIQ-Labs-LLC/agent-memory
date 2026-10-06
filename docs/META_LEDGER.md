@@ -3332,3 +3332,41 @@ condition applied before implementation: C6 the workflow reads the flat
 `configuration.budget`. Advisories applied: A5 `PASS` is not an open door
 once v2 is published; A9 the B2 wording names the inference. A6-A8
 acknowledged. Next: /qor-implement.
+---
+
+### Entry #70: IMPLEMENTATION
+
+**Timestamp**: 2026-10-06T23:45:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-640-lanes-v2-return-budget.md (iteration 2; Gate Tribunal PASS at Entry #69 with condition C6 and advisories A5, A9 applied)
+
+**Artifacts**: `.github/workflows/longmemeval-competitive.yml`, `.github/workflows/amb-competitive.yml`, `scripts/import_longmemeval_lane_evidence.py`, `scripts/import_amb_lane_evidence.py`, `reference/agentmem_ref/evaluation/normalize.py`, `reference/amb_agent_memory_bridge.py` (0.2.0), `reference/run_longmemeval.py`, `reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json` (new, frozen), `reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json` (new, frozen), `reports/benchmarks/normalized/amb-precisionmembench-amb-precisionmembench-retrieval-v1-*.json` (renamed derived manifests), `reports/benchmarks/dashboard/current.{json,md}`, `reference/tests/test_same_harness_lane.py`, `reference/tests/test_import_longmemeval_lane_evidence.py`, `reference/tests/test_import_amb_lane_evidence.py`, `reference/tests/test_longmemeval.py`, `reference/tests/test_amb_agent_memory_bridge.py`, `docs/CONTRIBUTOR_ARCHITECTURE.md`, `docs/65-independent-amb-competitive-profile.md`, `docs/67-runtime-baseline-succession.md`, `docs/GOVERNANCE_INDEX.md`, `.qor/roadmaps/north-star-best-in-class/events.jsonl`
+**Content Hash** (SHA256 over `git write-tree` of the staged index `a9489de1c659f69ab18c50f06625e610713d96b4`): `80ec9a15cf5911071f04da1b8559429414294af24d30269d61271260725cf62e`
+**Previous Hash**: `6429d76f914db20985e663b866d4db0a68e6b3fcc805e48690ca70d71f91ab1e`
+**Chain Hash**: `b11f7a0aa46a303cd84baf86afda711b6b470baac376706d086c1e4b31dbce62`
+
+**Decision**: Phases 1 and 2 of the plan implemented as locked. The lane
+workflows take the lane as an input, refuse an accepted lane, and record
+the Runtime Baseline checker state, line and declaration blob; the
+importers bind the control row's declared configuration (runner defaults
+overlaid with declared keys), the checker state and the declaration blob
+when the lane declares a posture, and (AMB) the pinned bridge blobs and
+lane digest, keyed on what the lane declares; the AMB normalizer names the
+lane in `run_id` and the v1 manifests are re-derived under their new
+names. The AMB bridge 0.2.0 asks the facade for the case budget and returns
+the facade's `returned` prefix; the LongMemEval runner declares
+`--agent-memory-budget` and ranks `returned` (an unbudgeted run calls the
+facade exactly as before). The two `-v2` lanes are frozen before any score:
+the control declares the budget and the transition posture under the open
+`configuration` object, the reference blobs are pinned at HEAD, every v1
+fact naming the old runner or bridge is re-pinned, and the v1 lanes and
+evidence trees are untouched. Verified before this entry: the checker
+prints `TRANSITION`; both lanes validate and resolve; the lane, importer,
+runner, bridge and scorecard modules pass (65 tests); the full suite runs
+2065 tests with only the known local shallow-clone ancestry error; the
+scorecard check is green; `governance-health` is green; the roadmap
+prerequisite `prereq-lane-v3-ids` is resolved by pointer to the two lane
+files. Phase 3 (execute, import, accept) follows the freeze merge.

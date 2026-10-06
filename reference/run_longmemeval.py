@@ -448,7 +448,7 @@ def _lexical_rank(question: str, items: Sequence[Mapping[str, str]]) -> list[str
 TEMPORAL_METADATA_MODES = ("none", "host_declared", "source_observed_at")
 RANKING_VARIANTS = tuple(VARIANTS)
 # Evaluation-only configuration of the Agent Memory adapter, recorded in every report.
-_AGENT_MEMORY_CONFIGURATION: dict[str, str] = {"temporal_metadata": "none", "ranking_variant": "default"}
+_AGENT_MEMORY_CONFIGURATION: dict[str, str] = {"temporal_metadata": "none", "ranking_variant": "default", "budget": "none"}
 _DATE = re.compile(r"^(\d{4})/(\d{2})/(\d{2})(?:\s*\([A-Za-z]{3}\))?\s*(\d{2}):(\d{2})")
 
 
@@ -462,7 +462,16 @@ def _iso_date(value: str) -> str | None:
     return f"{year}-{month}-{day}T{hour}:{minute}:00Z"
 
 
-def configure_agent_memory(*, temporal_metadata: str = "none", ranking_variant: str = "default") -> dict[str, str]:
+def _parse_budget(value: str | int | None) -> str:
+    if value is None or str(value) == "none":
+        return "none"
+    budget = int(value)
+    if budget < 1:
+        raise ValueError("agent memory budget must be none or an integer >= 1")
+    return str(budget)
+
+
+def configure_agent_memory(*, temporal_metadata: str = "none", ranking_variant: str = "default", budget: str | int | None = "none") -> dict[str, str]:
     """Select how the Agent Memory adapter uses the host-visible temporal information.
 
     ``temporal_metadata = none`` (default, frozen comparability): only question and
@@ -477,12 +486,18 @@ def configure_agent_memory(*, temporal_metadata: str = "none", ranking_variant: 
 
     ``ranking_variant`` selects an evaluated alternative of the post-admission policy
     for ablation only; ``default`` is the runtime's shipped policy.
+
+    ``budget`` (contract 1.4.0, #670) is the facade return budget ``k`` the adapter
+    declares on every recall, or ``none``: the adapter ranks ``returned``, which equals
+    ``admitted`` when unbudgeted, so an unbudgeted run is byte-for-byte the pre-1.4.0 run.
     """
 
     if temporal_metadata not in TEMPORAL_METADATA_MODES:
         raise ValueError(f"unknown temporal_metadata {temporal_metadata!r}")
     apply_ranking_variant(ranking_variant)
-    _AGENT_MEMORY_CONFIGURATION.update(temporal_metadata=temporal_metadata, ranking_variant=ranking_variant)
+    _AGENT_MEMORY_CONFIGURATION.update(
+        temporal_metadata=temporal_metadata, ranking_variant=ranking_variant, budget=_parse_budget(budget)
+    )
     return dict(_AGENT_MEMORY_CONFIGURATION)
 
 
@@ -531,7 +546,10 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
             ingest_seconds = time.perf_counter() - started
             started = time.perf_counter()
             reference_time = _iso_date(str((row or {}).get("question_date", ""))) if host_declared else None
-            recalled = memory.recall(question, reference_time=reference_time)
+            budget = _AGENT_MEMORY_CONFIGURATION["budget"]
+            # An unbudgeted run calls the facade exactly as before contract 1.4.0.
+            recall_kwargs = {} if budget == "none" else {"budget": int(budget)}
+            recalled = memory.recall(question, reference_time=reference_time, **recall_kwargs)
             recall_seconds = time.perf_counter() - started
     unmapped_admitted = [value for value in recalled["admitted"] if value not in uuid_to_item]
     refusals: dict[str, int] = {}
@@ -543,7 +561,8 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
     extra = {"observed_at_mapped_count": observed_mapped, "observed_at_unmapped_count": observed_unmapped} if declare_observed else {}
     return {
         **extra,
-        "ranked": [uuid_to_item[value] for value in recalled["admitted"] if value in uuid_to_item],
+        "ranked": [uuid_to_item[value] for value in recalled["returned"] if value in uuid_to_item],
+        "return_policy": dict(recalled.get("return_policy") or {}),
         "candidate_count": len(recalled["candidates"]),
         "admitted_count": len(recalled["admitted"]),
         "refusal_reasons": dict(sorted(refusals.items())),
@@ -771,6 +790,7 @@ def _evaluate_backend(dataset: Iterable[Mapping[str, Any]], granularity: str, ba
             "admitted_count_total": sum(row.get("admitted_count", 0) for row in rows),
             "refused_candidate_count_total": sum(sum(row.get("refusal_reasons", {}).values()) for row in rows),
             "unmapped_admitted_count_total": sum(row.get("unmapped_admitted_count", 0) for row in rows),
+            "return_budget_applied_total": sum(1 for row in rows if (row.get("return_policy") or {}).get("applied") is True),
         }
     elif backend in EXTERNAL_BACKENDS:
         identity = EXTERNAL_BACKENDS[backend]
@@ -965,12 +985,18 @@ def main() -> int:
     parser.add_argument("--omit-rows", action="store_true", help="drop per-question rows from the written report")
     parser.add_argument("--agent-memory-temporal-metadata", choices=TEMPORAL_METADATA_MODES, default="none")
     parser.add_argument("--agent-memory-ranking-variant", choices=RANKING_VARIANTS, default="default")
+    parser.add_argument(
+        "--agent-memory-budget",
+        default="none",
+        help="facade return budget k declared on every Agent Memory recall (contract 1.4.0), or none (default)",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     load_external_backends(args.external_backend)
     configure_agent_memory(
         temporal_metadata=args.agent_memory_temporal_metadata,
         ranking_variant=args.agent_memory_ranking_variant,
+        budget=args.agent_memory_budget,
     )
     report = run(
         args.input.resolve(),

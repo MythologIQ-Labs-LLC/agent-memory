@@ -189,6 +189,38 @@ class LongMemEvalProfileTests(unittest.TestCase):
                 self.assertEqual(len(row["ranked_top"]), min(row["admitted_count"], M.REPORTED_RANK_DEPTH))
             self.assertGreater(backend["aggregate"]["headline"]["recall_all@5"], 0.0)
 
+    def test_declared_budget_ranks_the_facade_prefix(self) -> None:
+        # Contract 1.4.0 (#670): budget=k ranks `returned`; unbudgeted runs are unchanged.
+        self.assertEqual(M._AGENT_MEMORY_CONFIGURATION["budget"], "none")
+        unbudgeted = M.run(FIXTURE, corpus_class="synthetic", backends=("agent_memory",))
+        try:
+            configuration = M.configure_agent_memory(budget=2)
+            self.assertEqual(configuration["budget"], "2")
+            budgeted = M.run(FIXTURE, corpus_class="synthetic", backends=("agent_memory",))
+        finally:
+            M.configure_agent_memory()
+        self.assertEqual(budgeted["execution"]["agent_memory_configuration"]["budget"], "2")
+        self.assertEqual(unbudgeted["execution"]["agent_memory_configuration"]["budget"], "none")
+        for granularity in ("session", "turn"):
+            free = unbudgeted["planes"][granularity]["backends"]["agent_memory"]
+            capped = budgeted["planes"][granularity]["backends"]["agent_memory"]
+            self.assertEqual(len(free["rows"]), len(capped["rows"]))
+            for row_free, row_capped in zip(free["rows"], capped["rows"]):
+                self.assertEqual(row_free["return_policy"]["applied"], False)
+                self.assertEqual(row_free["return_policy"]["requested_k"], None)
+                self.assertEqual(row_capped["return_policy"]["requested_k"], 2)
+                self.assertLessEqual(row_capped["returned_count"], 2)
+                self.assertEqual(row_capped["ranked_top"], row_free["ranked_top"][:2])
+                self.assertEqual(row_capped["admitted_count"], row_free["admitted_count"])
+            self.assertEqual(
+                capped["governance"]["return_budget_applied_total"],
+                sum(1 for row in free["rows"] if row["admitted_count"] > 2),
+            )
+            self.assertEqual(free["governance"]["return_budget_applied_total"], 0)
+        with self.assertRaises(ValueError):
+            M.configure_agent_memory(budget=0)
+        M.configure_agent_memory()
+
     def test_temporal_metadata_modes_declare_only_their_fields(self) -> None:
         """#594: ``source_observed_at`` adds the session date as ``observed_at`` and nothing else."""
         from agentmem_ref import AgentMemory

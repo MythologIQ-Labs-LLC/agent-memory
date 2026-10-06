@@ -26,12 +26,15 @@ def _sha(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def _lane() -> dict:
-    return json.loads((REPO_ROOT / LANE_FILE).read_text(encoding="utf-8"))
+V2_LANE_FILE = "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json"
 
 
-def _write_artifact(root: Path, run_id: str, memory: str, revision: str, *, results: list[dict], identity_overrides: dict | None = None) -> Path:
-    lane = _lane()
+def _lane(lane_file: str = LANE_FILE) -> dict:
+    return json.loads((REPO_ROOT / lane_file).read_text(encoding="utf-8"))
+
+
+def _write_artifact(root: Path, run_id: str, memory: str, revision: str, *, results: list[dict], identity_overrides: dict | None = None, lane_file: str = LANE_FILE) -> Path:
+    lane = _lane(lane_file)
     artifact = root / run_id / f"amb-precisionmembench-single-turn-{memory}-{revision}"
     (artifact / "precisionmembench" / f"{memory}-{revision[:12]}" / "retrieval").mkdir(parents=True)
     summary = {
@@ -65,7 +68,7 @@ def _write_artifact(root: Path, run_id: str, memory: str, revision: str, *, resu
         "query_limit": "0",
         "full_selection": True,
         "lane_id": lane["lane_id"],
-        "lane_file": LANE_FILE,
+        "lane_file": lane_file,
         "harness_constraints": {"uv_lock_git_blob": lane["execution"]["environment"]["harness_lock"]["git_blob"]},
         "resolved_packages": {"mem0ai": "2.2.1"},
         "mem0_optional_components": {"fastembed_installed": False, "spacy_installed": False},
@@ -151,6 +154,43 @@ class ImportAmbLaneEvidenceTests(unittest.TestCase):
             self.assertEqual(record["system"]["id"], "agent-memory")
             self.assertEqual(record["system"]["revision"], "c" * 40)
             self.assertEqual(record["row"]["role"], "control")
+
+    def test_v2_lane_binds_bridge_blobs_lane_digest_and_the_baseline_posture(self):
+        lane = _lane(V2_LANE_FILE)
+        control = next(row for row in lane["systems"] if row["role"] == "control")
+        posture = control["configuration"]["runtime_baseline_posture"]
+        pinned = {path: blob for path, blob in lane["harness"]["source_blobs"].items() if path.startswith("reference/")}
+        self.assertEqual(set(pinned), {"reference/amb_agent_memory_bridge.py", "reference/amb_mem0_explicit_bridge.py"})
+        digest = self.module.lane_digest(self.module.validate_lane(lane))
+        bound = {
+            "bridge_blobs": pinned,
+            "lane_digest_sha256": digest,
+            "runtime_baseline_state": "TRANSITION",
+            "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; ...",
+            "declaration_blob": posture["declaration_blob"],
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            runs = Path(temporary) / "runs"
+            out = Path(temporary) / "out"
+            _write_artifact(runs, "301", "agent-memory", "e" * 40, results=_results(3), identity_overrides=bound, lane_file=V2_LANE_FILE)
+            self.module.main(["--runs-dir", str(runs), "--output-root", str(out), "--no-fetch", "--lane-at-head"])
+            record = json.loads((out / "amb-precisionmembench-retrieval-v2" / f"agent-memory-{'e' * 12}" / "evidence.json").read_text())
+            self.assertEqual(record["system"]["runtime_baseline"]["state"], "TRANSITION")
+            self.assertEqual(record["system"]["runtime_baseline"]["declaration_blob"], posture["declaration_blob"])
+            self.assertEqual(record["lane_digest_at_execution"], digest)
+        cases = [
+            ({**bound, "bridge_blobs": {**pinned, "reference/amb_agent_memory_bridge.py": "0" * 40}}, "pinned blobs"),
+            ({**bound, "lane_digest_sha256": None}, "lane digest"),
+            ({**bound, "runtime_baseline_state": "FAIL"}, "not admitted by the lane's posture"),
+            ({**bound, "declaration_blob": "1" * 40}, "declaration blob"),
+            ({key: value for key, value in bound.items() if key != "runtime_baseline_state"}, "not admitted by the lane's posture"),
+        ]
+        for overrides, message in cases:
+            with self.subTest(message=message), tempfile.TemporaryDirectory() as temporary:
+                runs = Path(temporary) / "runs"
+                _write_artifact(runs, "302", "agent-memory", "e" * 40, results=_results(3), identity_overrides=overrides, lane_file=V2_LANE_FILE)
+                with self.assertRaisesRegex(self.module.ImportError_, message):
+                    self.module.main(["--runs-dir", str(runs), "--output-root", str(Path(temporary) / "out"), "--no-fetch", "--lane-at-head"])
 
     def test_import_refuses_tampered_or_off_lane_artifacts(self):
         cases = [

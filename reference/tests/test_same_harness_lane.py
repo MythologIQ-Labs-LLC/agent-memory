@@ -26,6 +26,9 @@ from agentmem_ref.evaluation.same_harness_lane import (
 
 LANE_ID = "amb-precisionmembench-retrieval-v1"
 LME_LANE_ID = "longmemeval-s-retrieval-parity-v1"
+AMB_V2_LANE_ID = "amb-precisionmembench-retrieval-v2"
+LME_V2_LANE_ID = "longmemeval-s-retrieval-parity-v2"
+V2_DECLARATION = "reports/runtime/baseline-v2-declaration.json"
 
 
 def _lane() -> dict:
@@ -224,9 +227,9 @@ class SameHarnessLaneTests(unittest.TestCase):
         report = json.loads(output.getvalue())
         self.assertEqual(report["command"], "benchmark_lanes")
         self.assertEqual(report["authority_effect"], "none")
-        self.assertEqual([lane["lane_id"] for lane in report["lanes"]], [LANE_ID, LME_LANE_ID])
-        self.assertEqual(report["lanes"][0]["status"], "accepted")
-        self.assertEqual(report["lanes"][1]["status"], "accepted")
+        # lanes list in sorted id order: the two accepted v1 lanes and the two frozen -v2 lanes
+        self.assertEqual([lane["lane_id"] for lane in report["lanes"]], [LANE_ID, AMB_V2_LANE_ID, LME_LANE_ID, LME_V2_LANE_ID])
+        self.assertEqual([lane["status"] for lane in report["lanes"]], ["accepted", "frozen", "accepted", "frozen"])
 
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
@@ -441,3 +444,104 @@ class LongMemEvalParityLaneTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def _hash_object(repo_root: Path, path: str) -> str:
+    import subprocess
+
+    return subprocess.run(["git", "hash-object", str(repo_root / path)], capture_output=True, text=True, check=True).stdout.strip()
+
+
+class _FrozenV2LaneMixin:
+    """What a frozen -v2 lane pins before any score exists: blobs at HEAD, the budgeted control, the transition posture."""
+
+    lane_id = ""
+    predecessor_id = ""
+    pinned_reference_paths: set[str] = set()
+
+    def _lane(self) -> dict:
+        return get_lane(self.lane_id)
+
+    def test_lane_is_frozen_without_scores_and_resolves(self):
+        lane = self._lane()
+        self.assertEqual(lane["status"], "frozen")
+        self.assertIs(lane["frozen_before_any_score"], True)
+        self.assertEqual(lane["authority_effect"], "none")
+        self.assertEqual(_score_keys(lane), [])
+        for row in lane["systems"]:
+            self.assertIn(row["status"], {"frozen", "deferred"}, row["row_id"])
+            if row["status"] == "frozen":
+                self.assertNotIn("status_reason", row)
+        self.assertEqual({row["role"] for row in lane["systems"]}, {"control", "baseline", "comparator"})
+        resolved = resolve_lane(lane)
+        self.assertEqual(resolved["lane_id"], self.lane_id)
+        self.assertIn(self.predecessor_id, " ".join(lane["comparability"]["not_comparable_to"]))
+        self.assertNotIn(self.lane_id, [item["lane_id"] for item in lane.get("deferred_lanes", [])])
+
+    def test_reference_blobs_are_pinned_at_head(self):
+        lane = self._lane()
+        repo_root = Path(__file__).resolve().parents[2]
+        bound = {path: blob for path, blob in lane["harness"]["source_blobs"].items() if path.startswith("reference/")}
+        self.assertEqual(set(bound), self.pinned_reference_paths)
+        for path, blob in bound.items():
+            self.assertEqual(_hash_object(repo_root, path), blob, f"{path} changed after the freeze; re-freeze the lane (new lane id once a score exists)")
+
+    def test_control_declares_the_budget_and_the_transition_posture(self):
+        lane = self._lane()
+        repo_root = Path(__file__).resolve().parents[2]
+        control = next(row for row in lane["systems"] if row["role"] == "control")
+        self.assertEqual(control["source"]["kind"], "repository_runtime")
+        self.assertIn("Runtime Baseline v2", control["display_name"])
+        posture = control["configuration"]["runtime_baseline_posture"]
+        self.assertEqual(posture["predecessor"], "agent-memory-runtime-baseline-v1")
+        self.assertEqual(posture["declared_successor"], "agent-memory-runtime-baseline-v2")
+        self.assertEqual(posture["declaration"], V2_DECLARATION)
+        self.assertEqual(posture["declaration_blob"], _hash_object(repo_root, V2_DECLARATION))
+        self.assertEqual(posture["checker_state_required"], ["PASS", "TRANSITION"])
+        self.assertIn("check_runtime_baseline_equivalence.py", control["source"]["revision_rule"])
+        self.assertIn("returned", control["configuration"]["recall"])
+        self.assertIn("contract 1.4.0", control["configuration"]["recall"])
+
+
+class AmbPrecisionMemBenchV2LaneTests(_FrozenV2LaneMixin, unittest.TestCase):
+    lane_id = AMB_V2_LANE_ID
+    predecessor_id = LANE_ID
+    pinned_reference_paths = {"reference/amb_agent_memory_bridge.py", "reference/amb_mem0_explicit_bridge.py"}
+
+    def test_bridge_0_2_0_is_the_pinned_adapter(self):
+        import sys
+
+        repo_root = Path(__file__).resolve().parents[2]
+        sys.path.insert(0, str(repo_root / "reference"))
+        import amb_agent_memory_bridge as bridge
+
+        lane = self._lane()
+        control = next(row for row in lane["systems"] if row["role"] == "control")
+        self.assertEqual(bridge.BRIDGE_VERSION, "0.2.0")
+        self.assertIn("bridge_version 0.2.0", control["adapter"]["revision_rule"])
+        self.assertIn(lane["harness"]["source_blobs"]["reference/amb_agent_memory_bridge.py"], control["adapter"]["revision_rule"])
+        self.assertIn("never a bridge-side cap", control["configuration"]["k"])
+
+
+class LongMemEvalParityV2LaneTests(_FrozenV2LaneMixin, unittest.TestCase):
+    lane_id = LME_V2_LANE_ID
+    predecessor_id = LME_LANE_ID
+    pinned_reference_paths = {
+        "reference/run_longmemeval.py",
+        "reference/longmemeval_mem0_explicit_bridge.py",
+        "reference/amb_mem0_explicit_bridge.py",
+    }
+
+    def test_control_budget_is_fifty_and_the_runner_blob_is_pinned_everywhere(self):
+        lane = self._lane()
+        control = next(row for row in lane["systems"] if row["role"] == "control")
+        self.assertEqual(control["configuration"]["budget"], "50")
+        self.assertEqual(control["configuration"]["temporal_metadata"], "none")
+        self.assertEqual(control["configuration"]["ranking_variant"], "default")
+        runner_blob = lane["harness"]["source_blobs"]["reference/run_longmemeval.py"]
+        self.assertIn(runner_blob, lane["evaluator"]["scorer"])
+        self.assertIn(runner_blob, control["adapter"]["revision_rule"])
+        baseline = next(row for row in lane["systems"] if row["role"] == "baseline")
+        self.assertEqual(baseline["source"]["revision"], runner_blob)
+        self.assertIn("budget=50", lane["budget"]["retrieval_k_rule"])
+        self.assertIn("--agent-memory-budget", lane["execution"]["environment"]["dispatch_unit"])

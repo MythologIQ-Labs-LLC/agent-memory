@@ -30,8 +30,18 @@ def _load_script():
 M = _load_script()
 
 
-def _lane() -> dict:
-    return json.loads((REPO_ROOT / LANE_FILE).read_text(encoding="utf-8"))
+V2_LANE_FILE = "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json"
+
+
+def _lane(lane_file: str = LANE_FILE) -> dict:
+    return json.loads((REPO_ROOT / lane_file).read_text(encoding="utf-8"))
+
+
+def _runner_defaults() -> dict:
+    import sys
+    sys.path.insert(0, str(REPO_ROOT / "reference"))
+    import run_longmemeval
+    return dict(run_longmemeval._AGENT_MEMORY_CONFIGURATION)
 
 
 def _blob(path: str) -> str:
@@ -100,8 +110,8 @@ def _mem0_external(lane: dict) -> dict:
     }
 
 
-def _write_artifact(root: Path, run_id: str, backend: str, plane: str, *, report: dict | None = None, identity_overrides: dict | None = None, tamper_inventory: bool = False) -> Path:
-    lane = _lane()
+def _write_artifact(root: Path, run_id: str, backend: str, plane: str, *, report: dict | None = None, identity_overrides: dict | None = None, tamper_inventory: bool = False, lane_file: str = LANE_FILE) -> Path:
+    lane = _lane(lane_file)
     external = _mem0_external(lane) if backend == "mem0_explicit" else None
     report = report if report is not None else _report(lane, backend, plane, external=external)
     artifact = root / run_id / f"longmemeval-lane-{backend}-{plane}-{REVISION}"
@@ -110,7 +120,7 @@ def _write_artifact(root: Path, run_id: str, backend: str, plane: str, *, report
         "evidence_class": "same_harness_external_candidate",
         "agent_memory_revision": REVISION,
         "lane_id": lane["lane_id"],
-        "lane_file": LANE_FILE,
+        "lane_file": lane_file,
         "lane_digest_sha256": M.lane_digest(M.validate_lane(lane)),
         "upstream_revision": lane["harness"]["revision"],
         "backend": backend,
@@ -147,10 +157,6 @@ class ImportLongMemEvalLaneEvidenceTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.runs = Path(self.temporary.name) / "runs"
         self.output = Path(self.temporary.name) / "out"
-        lane = _lane()
-        for path, blob in M.lane_reference_blobs(lane).items():
-            if _blob(path) != blob:
-                self.skipTest(f"{path} differs from the frozen lane blob; the lane test reports that")
 
     def tearDown(self) -> None:
         self.temporary.cleanup()
@@ -228,6 +234,45 @@ class ImportLongMemEvalLaneEvidenceTests(unittest.TestCase):
         _write_artifact(self.runs, "4001", "mem0_explicit", "session", identity_overrides={"resolved_packages": {"mem0ai": "2.2.1", "qdrant-client": "1.16.0", "sentence-transformers": "5.2.3", "torch": "2.10.0"}})
         with self.assertRaisesRegex(M.ImportError_, "frozen pin qdrant-client==1.17.0"):
             self._import("4001")
+
+    def test_v2_lane_binds_the_baseline_posture_and_the_declared_budget(self) -> None:
+        # The -v2 lane's control row declares a transition posture and budget 50; the importer
+        # binds the checker state and the declaration blob, and expects the declared budget.
+        lane = _lane(V2_LANE_FILE)
+        posture = next(row for row in lane["systems"] if row["role"] == "control")["configuration"]["runtime_baseline_posture"]
+        self.assertEqual(M.expected_agent_memory_configuration(lane), {"temporal_metadata": "none", "ranking_variant": "default", "budget": "50"})
+        self.assertEqual(M.RUNNER_CONFIGURATION_DEFAULTS, _runner_defaults())
+
+        def report_with_budget() -> dict:
+            report = _report(lane, "lexical_overlap", "session")
+            report["execution"]["agent_memory_configuration"] = {"temporal_metadata": "none", "ranking_variant": "default", "budget": "50"}
+            return report
+
+        bound = {"runtime_baseline_state": "TRANSITION", "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; ...", "declaration_blob": posture["declaration_blob"]}
+        _write_artifact(self.runs, "5001", "lexical_overlap", "session", report=report_with_budget(), identity_overrides=bound, lane_file=V2_LANE_FILE)
+        destination = self._import("5001")
+        record = json.loads((destination / "evidence.json").read_text(encoding="utf-8"))
+        self.assertEqual(record["lane_id"], "longmemeval-s-retrieval-parity-v2")
+        self.assertEqual(record["system"]["runtime_baseline"]["state"], "TRANSITION")
+        self.assertEqual(record["system"]["runtime_baseline"]["declaration_blob"], posture["declaration_blob"])
+        self.assertEqual(record["system"]["runtime_baseline"]["declared_successor"], "agent-memory-runtime-baseline-v2")
+
+        cases = [
+            ("5002", {**bound, "runtime_baseline_state": "FAIL"}, "not admitted by the lane's posture"),
+            ("5003", {"declaration_blob": posture["declaration_blob"]}, "not admitted by the lane's posture"),
+            ("5004", {**bound, "declaration_blob": "f" * 40}, "declaration blob"),
+        ]
+        for run_id, overrides, message in cases:
+            _write_artifact(self.runs, run_id, "lexical_overlap", "session", report=report_with_budget(), identity_overrides=overrides, lane_file=V2_LANE_FILE)
+            with self.assertRaisesRegex(M.ImportError_, message, msg=run_id):
+                self._import(run_id)
+        _write_artifact(self.runs, "5005", "lexical_overlap", "session", report=_report(lane, "lexical_overlap", "session"), identity_overrides=bound, lane_file=V2_LANE_FILE)
+        with self.assertRaisesRegex(M.ImportError_, "declared posture"):
+            self._import("5005")
+        # The v1 lane declares no posture: a v1 import binds nothing and records null.
+        _write_artifact(self.runs, "5006", "lexical_overlap", "session")
+        record = json.loads((self._import("5006") / "evidence.json").read_text(encoding="utf-8"))
+        self.assertIsNone(record["system"]["runtime_baseline"])
 
     def test_inventory_tamper_is_refused(self) -> None:
         _write_artifact(self.runs, "5001", "lexical_overlap", "turn", tamper_inventory=True)
