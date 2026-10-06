@@ -3298,3 +3298,37 @@ v1 fact the v2 lanes re-pin; state the plan-670 OQ3 reversal with the
 unmapped-count condition; reconcile with docs/67 B2) and A1-A4 recorded.
 Required next action: Governor amends LD3, LD4, LD6 and the boundaries;
 re-run /qor-audit.
+---
+
+### Entry #69: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T23:10:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-640-lanes-v2-return-budget.md (iteration 2; plan content hash 248b1f8b49ad2090ae63f1c7fc8ff3b37c82e6c6f4231a17d0aed871d491aea8)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_640lanes_attempt2.md) = 289c9e10744264e87247cde309c5c4e876b6979114ef4d84f3784bce4e8a5b31
+
+**Previous Hash**: `93c567af52b3a88261751e95a03d004588813b55f1f3f2161fd70100b67e7375`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 6429d76f914db20985e663b866d4db0a68e6b3fcc805e48690ca70d71f91ab1e
+
+**Decision**: PASS, attempt 2 of 5, independent reviewer in a fresh context.
+Every attempt-1 ground closed against the tree: the transition posture
+lives under the open `configuration` object and a scratch lane carrying it
+validates while the same field under `source` is refused; the lane listing
+order is stated as sorted; one configuration shape (runner defaults overlaid
+with the control row's declared keys) replaces the lane-id literal; the
+per-row `return_policy` avoids the `returned_count` collision; the
+declaration blob is bound at freeze, in the identity and at import; the AMB
+refusals are keyed on what the lane declares; every v1 fact the v2 lanes
+re-pin is named; the plan-670 OQ3 reversal is stated with the
+unmapped-count acceptance gate; docs/67 Step B2 is reconciled. Binding
+condition applied before implementation: C6 the workflow reads the flat
+`configuration.budget`. Advisories applied: A5 `PASS` is not an open door
+once v2 is published; A9 the B2 wording names the inference. A6-A8
+acknowledged. Next: /qor-implement.

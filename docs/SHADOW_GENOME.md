@@ -572,7 +572,7 @@ The plan placed a new field on a lane row's `source` object without reading the 
 
 | Status | Action Taken |
 |--------|--------------|
-| OPEN | Iteration 2 moves the posture under the open `configuration` object, corrects the listing order and the v1 configuration shape, renames the per-row key, and applies C1-C5; awaiting attempt 2. |
+| FIXED | Iteration 2 moved the posture under the open `configuration` object, corrected the listing order and the v1 configuration shape, renamed the per-row key and applied C1-C5; attempt 2 (Entry #69) PASSED with condition C6 applied. |
 
 #### Related Entries
 - Ledger Entry: #68 (GATE TRIBUNAL, VETO)
@@ -621,7 +621,7 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | CHAIN_BREAK | 0 | - |
 
 **Total Failures Recorded**: 16
-**Failures Resolved**: 12 (Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
+**Failures Resolved**: 13 (Failure #16 grounds closed by iteration 2; Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
 ---
