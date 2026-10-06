@@ -63,14 +63,48 @@ jobs:
           print(f"revision={boundary['frozen_revision']}")
           PY
 
+      - name: Classify the contestant against the register
+        id: contestant
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          register = json.loads(Path("reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
+          entries = register["baselines"]
+          revisions = {}
+          for item in entries:
+              boundary = json.loads(Path(item["source_boundary"]).read_text(encoding="utf-8"))
+              revisions[boundary["frozen_revision"]] = item["baseline_id"]
+          current = entries[-1]["baseline_id"]
+          pinned = json.loads(Path("fixtures/gauntlet/agent-memory-public-durability-adapter.json").read_text(encoding="utf-8"))["system"]["revision"].removeprefix("git-commit:")
+          if pinned == next(rev for rev, bid in revisions.items() if bid == current):
+              print("contestant=current")
+          elif pinned in revisions:
+              print("contestant=retired")
+              print(f"contestant_baseline={revisions[pinned]}")
+          else:
+              raise SystemExit(f"contestant pins {pinned}, which is no Runtime Baseline in the register")
+          print(f"contestant_revision={pinned}")
+          PY
+
       - name: Transition notice
         if: steps.classify.outputs.state == 'TRANSITION'
         run: |
           echo "The register declares a successor and the candidate is in a pinned transition."
           echo "The public durability contestant is not run: no evidence may claim ${{ steps.current.outputs.revision }} from this checkout."
 
+      - name: Retired contestant notice
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'retired'
+        run: |
+          echo "The public durability contestant fixtures/gauntlet/agent-memory-public-durability-adapter.json is retired: it pins a predecessor Runtime Baseline, so the durability contestant is not run from this checkout."
+          echo "It pins ${{ steps.contestant.outputs.contestant_revision }} (${{ steps.contestant.outputs.contestant_baseline }}); the current Runtime Baseline is ${{ steps.current.outputs.revision }} (${{ steps.current.outputs.baseline_id }})."
+          echo "Re-pinning it to the successor is a later two-step of its own (docs/67 Step B1); nothing here claims the current revision."
+
       - name: Verify exact Agent Memory durability adapter identity
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         shell: bash
         run: |
           set -euo pipefail
@@ -97,19 +131,19 @@ jobs:
           PY
 
       - name: Run focused evaluator and real-contestant tests
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         run: python -m pytest -q reference/tests/test_gauntlet_durability.py
 
       - name: Validate public durability contestant
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         run: agent-memory gauntlet validate-adapter fixtures/gauntlet/agent-memory-public-durability-adapter.json
 
       - name: Inspect durability recovery profile
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         run: agent-memory gauntlet inspect durability-recovery-alpha-v1
 
       - name: Run public-facade durability qualification
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         run: |
           agent-memory gauntlet run \
             --system fixtures/gauntlet/agent-memory-public-durability-adapter.json \
@@ -119,7 +153,7 @@ jobs:
             --output-dir ./durability-runs
 
       - name: Validate generated native evidence
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         shell: bash
         run: |
           set -euo pipefail
@@ -152,7 +186,7 @@ jobs:
           PY
 
       - name: Inventory qualification evidence
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         shell: bash
         run: |
           set -euo pipefail
@@ -167,7 +201,7 @@ jobs:
           } | tee durability-evidence/source-environment.txt
 
       - name: Upload durability qualification evidence
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         uses: actions/upload-artifact@v4
         with:
           name: gauntlet-durability-recovery-alpha-v1

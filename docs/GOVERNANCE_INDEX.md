@@ -44,7 +44,7 @@ Stable architectural rules. Changes require explicit doctrine/contract work.
 | Evidence/provenance doctrine | `docs/16-source-trust-and-reputation.md`, `docs/30-memory-observability-and-audit-events.md`, `docs/policies/EVIDENCE_PROMOTION.md` |
 | Lifecycle/correction/deletion doctrine | `docs/02-lifecycle-state-machine.md`, `docs/17-conflict-resolution-engine.md`, `docs/28-retention-deletion-and-tombstones.md`, `docs/31-recovery-rollback-and-replay.md` |
 | Schema contracts | `schemas/*.schema.json`, registry doctrine in `docs/27-schema-registry-and-type-evolution.md` |
-| Runtime Baseline succession | `docs/67-runtime-baseline-succession.md`, `reports/runtime/baseline-register.json`, `schemas/runtime-baseline-declaration.schema.json`, `scripts/check_runtime_baseline_equivalence.py` |
+| Runtime Baseline succession | `docs/67-runtime-baseline-succession.md`, `reports/runtime/baseline-register.json` (v1 pinned, v2 current), `reports/runtime/baseline-v2.json`, `schemas/runtime-baseline-declaration.schema.json`, `scripts/check_runtime_baseline_equivalence.py` |
 | Project governance | `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `.github/CODEOWNERS` |
 
 ## Tier 3: Active Initiatives
@@ -82,7 +82,7 @@ Only plans whose lifecycle is still active/held belong here. Completed plans are
 | Sprint 4b JS PAMA plan | `docs/plan-sprint4b-js-pama.md` | **HELD**; direct parity port remains inappropriate without a complete correction/remediation route |
 | Sprint 4b research brief | `docs/research-brief-sprint4b-js-pama-2026-09-07.md` | supporting research for the held plan |
 | RC1 implementation profile | `docs/45-agent-memory-rc1-implementation-profile.md` | **ACTIVE** under #410 |
-| #674 successor-baseline plan | `docs/plan-674-successor-baseline.md` | implemented (PR #676, Entry #64); historical evidence |
+| #674 successor-baseline plan | `docs/plan-674-successor-baseline.md` | implemented (PR #676, Entry #64); Step B1 publication of Runtime Baseline v2 at Entry #72; historical evidence |
 | #670 return-budget plan | `docs/plan-670-return-budget.md` | implemented (PR #678, Entry #67); the first declared transition under docs/67; historical evidence |
 | #640 lanes -v2 plan | `docs/plan-640-lanes-v2-return-budget.md` | **COMPLETE**; Gate Tribunal PASS at Entry #69 (iteration 2); Phases 1-2 at Entry #70 (PR #679), Phase 3 acceptance of nine rows at Entry #71 |
 | North Star research brief | `docs/research-brief-north-star-six-tranches-2026-10-06.md` | supporting research for the #668 roadmap and the #674 plan (Entry #60) |
