@@ -3059,3 +3059,37 @@ and the adapter constant; v1-only dogfood ancestry and renderer literals;
 Required next action: Governor amends the plan (declared blobs pin the
 window; two-step publication with a `pending` qualification; the test
 accepts both green states); re-run /qor-audit.
+---
+
+### Entry #62: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T20:45:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: VETO
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-674-successor-baseline.md (iteration 2; plan content hash 7bbbb53e44c8d9f0b5806306ef1f5a45e6a99d8612692c2d6ed9cf70e5617158)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_674_attempt2.md) = d0213d5ff433a8882c68eda5cbfd80cd020e213de3eca9112aab377453d932c1
+
+**Previous Hash**: `19b70f8262bb1cb11cc6636622322625341e554a42f2706e945642d4869705e4`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 50c3ccff3ef7ddca478359438b5883ce5c88113d2afb836c3b783688b85f36de
+
+**Decision**: VETO, attempt 2 of 5, independent reviewer in a fresh context.
+Every attempt-1 item closed against the tree; the transition is now a
+pinned identity (the candidate's protected tree is a function of the frozen
+revision and the declaration). V1 -- LD1 pinned v1's `published_commit` to
+`788ea6f` while LD1/LD5 require a first-parent ancestor; `788ea6f` is
+reachable only through the PR #651 side branch (`git rev-list
+--first-parent origin/main` does not contain it), so the plan's own
+validator, D1 and the v1 pin test could not all hold. The first-parent merge
+holding both pinned blobs is `c3a1bdf19bafca720a6513661cad3f08127659a5`.
+C1-C4 (the B2 qualification blob needs a register home; the LD4 breakdown
+must be derivable; B1's adapter path must come from the manifest, and the
+successor adapter needs a named convention; the agmi profile and the
+durability fixture pin `f2aef57` and must be asserted against the register
+and enumerated as re-pin items) and A1-A6 recorded in the report. Required
+next action: Governor amends LD1, LD4, LD5, LD7 and LD8; re-run /qor-audit.

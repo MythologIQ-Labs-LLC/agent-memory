@@ -470,11 +470,45 @@ The plan replaced the byte-diff guard with an identity-constant comparison durin
 
 | Status | Action Taken |
 |--------|--------------|
-| OPEN | Iteration 2 pins the window with declared blobs, splits publication into a `pending` qualification and an evidence-binding commit, and accepts both green states in the contract test; awaiting attempt 2. |
+| OPEN | Iteration 2 pinned the window with declared blobs, split publication into a `pending` qualification and an evidence-binding commit, and accepted both green states in the contract test; attempt 2 (Entry #62) closed every attempt-1 item but VETOed on a new history claim (Failure #14). Iteration 3 awaits attempt 3. |
 
 #### Related Entries
 - Ledger Entry: #61 (GATE TRIBUNAL, VETO)
 - Audit Report: `.agent/staging/AUDIT_REPORT_674_attempt1.md`
+
+---
+
+### Failure #14: #674 plan iteration 2 VETOed on a `published_commit` pinned to a side-branch commit under a first-parent rule
+
+**Date**: 2026-10-06
+**Iteration**: 2 (audit attempt 2 of 5)
+**Verdict ID**: AUDIT_REPORT_674_attempt2 2026-10-06T20:45 VETO (V1)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+The plan pinned Runtime Baseline v1's publication to `788ea6f`, the last commit that touched the record or boundary (`git log -1 -- <files>`), while locking a validator rule that the pinned commit be a first-parent ancestor of the candidate.
+
+#### Why It Failed
+
+- `git log -1 -- <path>` returns the authoring commit on the PR branch, not the merge that brought it onto `main`; the two differ whenever the repository merges with merge commits.
+- The rule and the pin were written from two different mental models of history and never run against `git rev-list --first-parent`.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: locking a history predicate (first-parent, ancestor, descends-from) and a concrete commit in the same plan without executing the predicate on that commit.
+
+**Correct Pattern**: when a plan pins a commit under a rule, run the rule against the pin in the plan's own grep-evidence (`git rev-list --first-parent <base> | grep -c <sha>`), and prefer the merge commit on the default branch when the rule is first-parent.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| OPEN | Iteration 3 pins `c3a1bdf` (the PR #651 merge, first-parent, holding both blobs) and adds the executed predicate as grep-evidence; awaiting attempt 3. |
+
+#### Related Entries
+- Ledger Entry: #62 (GATE TRIBUNAL, VETO)
+- Audit Report: `.agent/staging/AUDIT_REPORT_674_attempt2.md`
 
 ---
 
@@ -515,10 +549,10 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | GHOST_PATH | 0 | - |
 | HALLUCINATION | 2 | 2026-09-01 |
 | ORPHAN | 0 | - |
-| SPEC_DRIFT | 12 | 2026-10-06 |
+| SPEC_DRIFT | 13 | 2026-10-06 |
 | CHAIN_BREAK | 0 | - |
 
-**Total Failures Recorded**: 13
+**Total Failures Recorded**: 14
 **Failures Resolved**: 9 (Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
