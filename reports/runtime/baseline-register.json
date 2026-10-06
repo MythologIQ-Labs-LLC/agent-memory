@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "register_id": "agent-memory-runtime-baseline-register",
+  "baselines": [
+    {
+      "baseline_id": "agent-memory-runtime-baseline-v1",
+      "record": "reports/runtime/baseline-v1.json",
+      "record_blob": "c8acfa1d94856bb88c7b77f498d74a81913c10ca",
+      "source_boundary": "reports/runtime/baseline-v1-source-boundary.json",
+      "source_boundary_blob": "f0ffc998033939288c816698111983fa371c4e90",
+      "public_gauntlet_manifest": "examples/gauntlet/agent-memory-runtime-baseline-v1.json",
+      "qualification": {
+        "path": "reports/runtime/baseline-v1.json",
+        "pointer": "qualification_evidence.public_gauntlet_baseline_qualification",
+        "blob": "c8acfa1d94856bb88c7b77f498d74a81913c10ca"
+      },
+      "published_commit": "c3a1bdf19bafca720a6513661cad3f08127659a5"
+    }
+  ],
+  "declared_successor": null
+}

@@ -3129,3 +3129,37 @@ meaning. Advisories applied: A1 `classify` captures the checker under
 `set -euo pipefail`; A2 validator checks run through line 207; A3 the agmi
 profile re-pin is a later two-step, B1 retires by workflow condition; A4
 `published_commit` renders empty while `pending`. Next: /qor-implement.
+---
+
+### Entry #64: IMPLEMENTATION
+
+**Timestamp**: 2026-10-06T21:40:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-674-successor-baseline.md (iteration 3; Gate Tribunal PASS at Entry #63 with condition C1 and advisories A1-A4 applied)
+
+**Artifacts**: `reports/runtime/baseline-register.json` (new), `schemas/runtime-baseline-declaration.schema.json` (new), `scripts/runtime_baseline_identity.py` (new), `scripts/declare_runtime_baseline_changes.py` (new), `scripts/check_runtime_baseline_equivalence.py`, `scripts/validate_runtime_baseline_source.py`, `scripts/render_runtime_baseline.py`, `reference/tests/test_runtime_baseline_succession.py` (new), `reference/tests/test_benchmark_integration_contract.py`, `.github/workflows/runtime-baseline.yml`, `.github/workflows/agmi-agent-memory-qualification.yml`, `.github/workflows/gauntlet-durability-recovery.yml`, `docs/67-runtime-baseline-succession.md` (new), `docs/CONTRIBUTOR_ARCHITECTURE.md`, `docs/GOVERNANCE_INDEX.md`
+**Content Hash** (SHA256 over `git write-tree` of the staged index `29522b1c25df1e70efe9c446dcb8b2a6ea7811cb`): `8f19c6a522a15be7784c7ae02bc95a85ae450e78d18efc784264f89998c4d8e2`
+**Previous Hash**: `7af2996ea1db3f591bb55a5c0018cb6119e2e0ade2f7f9c8bd82f22d93aa3095`
+**Chain Hash**: `483dbc064b0f38f20e2753a1d49a1a08630e1091c69eaa9cb7e51747f8f52579`
+
+**Decision**: Phases 1-3 of the plan implemented as locked. The register
+names Runtime Baseline v1 as current and pins its record, boundary and
+qualification blobs to `c3a1bdf` on `main`'s first-parent history; the
+identity table holds the twenty-six values a record pins to source; the
+checker has three outcomes and honours a declaration only when the changed
+protected paths equal the declared paths, every declared blob matches, every
+declared identity delta holds at both ends and nothing undeclared moved; the
+validator checks every register entry, a two-state qualification, and any
+open declaration; the renderer derives its titles from the record and
+reproduces `baseline-v1.md` byte for byte; the three revision-claiming
+workflows classify first and skip their evidence steps on `TRANSITION`.
+Verified before this entry: the checker prints `PASS` on this tree; the
+validator and `render_runtime_baseline.py --check` exit 0; the forty-five
+tests of `test_runtime_baseline_succession` and
+`test_benchmark_integration_contract` pass; `governance-health` is green;
+`git diff --quiet origin/main` over the six immutable v1 files,
+`reference/agentmem_ref` and `pyproject.toml` reports no change. The full
+suite result is recorded in the pull request.

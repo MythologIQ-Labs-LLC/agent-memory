@@ -361,7 +361,8 @@ class BenchmarkIntegrationContractTests(unittest.TestCase):
         self.assertIn("independent", result.stdout)
 
     def test_evaluation_only_change_keeps_runtime_baseline_equivalence(self):
-        boundary = json.loads((REPO_ROOT / "reports" / "runtime" / "baseline-v1-source-boundary.json").read_text(encoding="utf-8"))
+        register = json.loads((REPO_ROOT / "reports" / "runtime" / "baseline-register.json").read_text(encoding="utf-8"))
+        boundary = json.loads((REPO_ROOT / register["baselines"][-1]["source_boundary"]).read_text(encoding="utf-8"))
         excluded = [item["path"] for item in boundary["excluded_non_runtime_paths"]]
         self.assertEqual(excluded, ["reference/agentmem_ref/evaluation"])
         self.assertIs(boundary["baseline_mutation"], False)
@@ -376,7 +377,7 @@ class BenchmarkIntegrationContractTests(unittest.TestCase):
             cwd=REPO_ROOT, capture_output=True, text=True, check=False,
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertIn("PASS", result.stdout)
+        self.assertRegex(result.stdout, r"Runtime Baseline equivalence: (PASS|TRANSITION)\b")
 
 
 if __name__ == "__main__":
