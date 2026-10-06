@@ -101,9 +101,14 @@ def recall(memory: GovernedMemoryAdapter, query: str, context_envelope: Mapping[
     if early is not None:
         return early
     admission = memory.governed_recall(query, contract.recall_context_from_envelope(validated))
+    # Contract 1.4.0 (#670): the adapter path has no ranking stage, so the prefix is taken in
+    # admission order; the budget is policy applied after admission, never authority.
+    returned, return_policy = contract.apply_return_budget(
+        admission.admitted, (validated.get("budget") or {}).get("k"))
     return contract.result("recall", compat, candidates=list(admission.candidates),
                            admitted=list(admission.admitted), admissions=dict(admission.decisions),
-                           candidate_policy=dict(admission.candidate_policy))
+                           candidate_policy=dict(admission.candidate_policy),
+                           returned=returned, return_policy=return_policy)
 
 
 def forget(memory: GovernedMemoryAdapter, envelope: Mapping[str, Any], *,
@@ -700,8 +705,14 @@ class AgentMemory:
         purpose: str | None = None,
         temporal_intent: Mapping[str, Any] | None = None,
         reference_time: str | None = None,
+        budget: int | None = None,
     ) -> dict:
         """Run composed candidate generation followed by one governed admission pass.
+
+        ``budget`` (contract 1.4.0, #670) is an optional return budget ``k``: ``returned``
+        carries at most ``k`` of the ranked admitted facts while ``admitted`` always carries
+        the full ranked admitted set; ``return_policy`` records what was returned and why.
+        The budget is applied after admission and after ranking and is never authority.
 
         ``temporal_intent`` optionally declares what time the query is about
         (``{"mode": "current"|"as_of"|"historical"|"atemporal_or_unspecified"|
@@ -723,6 +734,8 @@ class AgentMemory:
         }
         if task_ref is not None:
             envelope["task_ref"] = task_ref
+        if budget is not None:
+            envelope["budget"] = {"k": budget}
         validated = contract.validate_recall_context(envelope)
         context = contract.recall_context_from_envelope(validated)
         result = self.runtime.multi_route_recall(
@@ -747,6 +760,8 @@ class AgentMemory:
             if candidate in result.refusals:
                 decision["refusal"] = result.refusals[candidate]
             admissions[candidate] = decision
+        returned, return_policy = contract.apply_return_budget(
+            result.ranked_admitted, (validated.get("budget") or {}).get("k"))
         return contract.result(
             "recall",
             contract.CURRENT,
@@ -754,6 +769,8 @@ class AgentMemory:
             admitted=list(result.ranked_admitted),
             admissions=admissions,
             candidate_policy=dict(getattr(result, "candidate_policy", {}) or {}) or None,
+            returned=returned,
+            return_policy=return_policy,
         )
 
     @_serialized

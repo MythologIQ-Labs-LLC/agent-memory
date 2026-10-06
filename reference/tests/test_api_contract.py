@@ -41,14 +41,63 @@ class EnvelopeValidation(unittest.TestCase):
         # two inverted; this re-statement is the one existing-test edit of that cycle.
         cases = {
             "1.0.0": contract.CURRENT, "1.1.0": contract.CURRENT, "1.2.0": contract.CURRENT, "1.3.0": contract.CURRENT,
-            "1.4.0": contract.MIGRATION_REQUIRED,
+            "1.4.0": contract.CURRENT,
+            "1.5.0": contract.MIGRATION_REQUIRED,
             "0.9.0": contract.INCOMPATIBLE, "2.0.0": contract.INCOMPATIBLE, None: contract.UNKNOWN, "one.zero": contract.UNKNOWN,
         }
         for version, expected in cases.items():
             with self.subTest(version=version):
                 envelope = {} if version is None else {"contract_version": version}
                 self.assertEqual(contract.compatibility(envelope), expected)
-        self.assertEqual(contract.CONTRACT_VERSION, "1.3.0")
+        self.assertEqual(contract.CONTRACT_VERSION, "1.4.0")
+
+    def test_apply_return_budget(self):
+        # Contract 1.4.0 (#670): a pure ranked-prefix policy; applied means truncated.
+        ranked = ["fact-1", "fact-2", "fact-3"]
+        returned, unbudgeted = contract.apply_return_budget(ranked, None)
+        self.assertEqual(returned, ranked)
+        self.assertEqual((unbudgeted["requested_k"], unbudgeted["applied"]), (None, False))
+        self.assertEqual((unbudgeted["admitted_count"], unbudgeted["returned_count"]), (3, 3))
+        returned, truncated = contract.apply_return_budget(ranked, 2)
+        self.assertEqual(returned, ["fact-1", "fact-2"])
+        self.assertEqual((truncated["requested_k"], truncated["applied"]), (2, True))
+        self.assertEqual((truncated["admitted_count"], truncated["returned_count"]), (3, 2))
+        for k in (3, 4):
+            returned, wide = contract.apply_return_budget(ranked, k)
+            self.assertEqual(returned, ranked)
+            self.assertEqual((wide["requested_k"], wide["applied"], wide["returned_count"]), (k, False, 3))
+        for budget in (unbudgeted, truncated):
+            self.assertEqual(budget["policy_id"], contract.RETURN_POLICY_ID)
+            self.assertEqual(budget["policy_version"], contract.RETURN_POLICY_VERSION)
+            self.assertEqual(budget["basis"], contract.RETURN_POLICY_BASIS)
+            self.assertEqual(budget["authority_effect"], "none")
+        with self.assertRaises(ValueError):
+            contract.apply_return_budget(ranked, 0)
+
+    def test_recall_context_accepts_budget_and_refuses_zero(self):
+        recall = _example("recall-context.example.json")
+        self.assertEqual(contract.validate_recall_context({**recall, "budget": {"k": 1}})["budget"], {"k": 1})
+        with self.assertRaises(ValueError):
+            contract.validate_recall_context({**recall, "budget": {"k": 0}})
+        with self.assertRaises(ValueError):
+            contract.validate_recall_context({**recall, "budget": {"k": 1, "cutoff": 0.5}})
+
+    def test_result_envelope_carries_return_policy(self):
+        returned, return_policy = contract.apply_return_budget(["fact-1"], 1)
+        document = contract.result("recall", contract.CURRENT, candidates=["fact-1"], admitted=["fact-1"],
+                                   admissions={"fact-1": {"outcome": "admit"}}, returned=returned,
+                                   return_policy=return_policy)
+        self.assertEqual(set(document["return_policy"]), {
+            "policy_id", "policy_version", "requested_k", "applied", "admitted_count", "returned_count",
+            "basis", "authority_effect",
+        })
+        self.assertEqual(document["returned"], ["fact-1"])
+        with self.assertRaises(ValueError):
+            contract.result("recall", contract.CURRENT, returned=returned,
+                            return_policy={**return_policy, "extra": True})
+        with self.assertRaises(ValueError):
+            contract.result("recall", contract.CURRENT, returned=returned,
+                            return_policy={**return_policy, "authority_effect": "ranking"})
 
     def test_target_envelope_validates(self):
         example = _example("target-envelope.example.json")

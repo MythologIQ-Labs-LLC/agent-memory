@@ -51,7 +51,7 @@ class DeveloperFacade(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             memory = self._open(root)
-            self.assertEqual(memory.contract_version, "1.3.0")
+            self.assertEqual(memory.contract_version, "1.4.0")
             retained = memory.remember(TARGET, "release branch main")
             self.assertTrue(retained["committed"])
             self.assertEqual(retained["stage"], "commit")
@@ -116,6 +116,29 @@ class DeveloperFacade(unittest.TestCase):
             self.assertIn(current, recalled["admitted"])
             self.assertNotIn(seed["fact_uuid"], recalled["admitted"])
             recovered.close()
+
+    def test_recall_budget_is_a_facade_policy(self):
+        # Contract 1.4.0 (#670): the budget truncates `returned` after admission and ranking;
+        # admitted and admissions are identical to the unbudgeted call.
+        with tempfile.TemporaryDirectory() as temporary:
+            memory = self._open(Path(temporary))
+            memory.remember(TARGET, "release branch main")
+            memory.remember("memory:release-branch-second", "release branch second")
+            unbudgeted = memory.recall("release branch")
+            self.assertEqual(len(unbudgeted["admitted"]), 2)
+            self.assertEqual(unbudgeted["returned"], unbudgeted["admitted"])
+            self.assertFalse(unbudgeted["return_policy"]["applied"])
+            budgeted = memory.recall("release branch", budget=1)
+            self.assertEqual(budgeted["returned"], [budgeted["admitted"][0]])
+            self.assertEqual(budgeted["admitted"], unbudgeted["admitted"])
+            # decision records carry per-call event ids; outcomes and rank positions are equal
+            self.assertEqual({k: (v["outcome"], v.get("rank_position")) for k, v in budgeted["admissions"].items()},
+                             {k: (v["outcome"], v.get("rank_position")) for k, v in unbudgeted["admissions"].items()})
+            self.assertEqual((budgeted["return_policy"]["requested_k"], budgeted["return_policy"]["applied"]), (1, True))
+            self.assertEqual((budgeted["return_policy"]["admitted_count"], budgeted["return_policy"]["returned_count"]), (2, 1))
+            with self.assertRaises(ValueError):
+                memory.recall("release branch", budget=0)
+            memory.close()
 
     def test_wrong_scope_is_neither_a_candidate_nor_admitted(self):
         # Contract 1.3.0 (#548): a domain-ineligible match never becomes a caller-visible

@@ -12,13 +12,19 @@ contract and are rejected at validation, so no envelope can assert a review.
 from __future__ import annotations
 
 from dataclasses import asdict
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from ..core import policy, receipts
 from ..memory.procedural_memory import ActionProposal
 from ..runtime.adapter import RecallContext
 
-CONTRACT_VERSION = "1.3.0"
+CONTRACT_VERSION = "1.4.0"
+
+#: Return budget (contract 1.4.0, #670): a ranked-prefix policy applied after admission and
+#: after ranking; it reads only the ranked admitted list and is never authority.
+RETURN_POLICY_ID = "ranked-prefix-return-budget"
+RETURN_POLICY_VERSION = "1.0.0"
+RETURN_POLICY_BASIS = "post_admission_ranking_prefix"
 
 PROPOSAL_SCHEMA = "api-proposal-envelope.schema.json"
 RECALL_CONTEXT_SCHEMA = "api-recall-context.schema.json"
@@ -133,6 +139,30 @@ def decision_projection(decision: policy.Decision) -> dict:
     }
 
 
+def apply_return_budget(ranked_admitted: Sequence[str], k: int | None) -> tuple[list[str], dict]:
+    """The ranked admitted prefix under budget ``k`` and the ``return_policy`` that describes it.
+
+    ``k`` is ``None`` for an unbudgeted recall (everything is returned). ``applied`` means
+    truncated: a budget at or above the admitted count returns the full list and reports
+    ``applied: false``. The function sees only the ranked admitted list, so it cannot change
+    which facts are admissible, current, or visible.
+    """
+    admitted = list(ranked_admitted)
+    if k is not None and k < 1:
+        raise ValueError("return budget k must be at least 1")
+    returned = admitted if k is None else admitted[:k]
+    return returned, {
+        "policy_id": RETURN_POLICY_ID,
+        "policy_version": RETURN_POLICY_VERSION,
+        "requested_k": k,
+        "applied": k is not None and k < len(admitted),
+        "admitted_count": len(admitted),
+        "returned_count": len(returned),
+        "basis": RETURN_POLICY_BASIS,
+        "authority_effect": "none",
+    }
+
+
 def result(stage: str, compat: str, **fields: Any) -> dict:
     """A result envelope, validated against its schema before it is returned."""
     document = {"contract_version": CONTRACT_VERSION, "compatibility": compat, "stage": stage}
@@ -143,6 +173,7 @@ def result(stage: str, compat: str, **fields: Any) -> dict:
 
 __all__ = [
     "CONTRACT_VERSION", "CURRENT", "MIGRATION_REQUIRED", "INCOMPATIBLE", "UNKNOWN",
+    "RETURN_POLICY_ID", "RETURN_POLICY_VERSION", "RETURN_POLICY_BASIS", "apply_return_budget",
     "PUBLIC_PROPOSAL_FIELDS", "TARGET_SCHEMA", "POSTURE_SCHEMA", "ACTION_SCHEMA", "OBSERVATION_SCHEMA", "compatibility", "validate_proposal_envelope",
     "validate_action_envelope", "validate_observation_envelope", "action_from_envelope",
     "validate_recall_context", "validate_target_envelope", "validate_posture_report", "proposal_from_envelope", "recall_context_from_envelope",
