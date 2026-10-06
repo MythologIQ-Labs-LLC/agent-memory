@@ -3419,3 +3419,40 @@ modules pass; `build_benchmark_scorecards.py --check` is green;
 `governance-health` is green; `verify-ledger` through Entry #70. This
 closes the plan (GOVERNANCE_INDEX: COMPLETE) and supplies the lane evidence
 docs/67 Step B1 cites for Runtime Baseline v2.
+
+---
+
+### Entry #72: IMPLEMENTATION
+
+**Timestamp**: 2026-10-07T00:35:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-674-successor-baseline.md LD8 Step B1 (Gate Tribunal PASS at Entry #63; procedure implemented at Entry #64) executed for the successor declared by docs/plan-670-return-budget.md LD4 (PASS at Entry #66; tranche merged at Entry #67 as PR #678, merge commit 488d64a); acceptance evidence at Entry #71
+
+**Artifacts**: `reports/runtime/baseline-v2.json` (new record; `runtime_revision.commit` 488d64aadb16ba4b0c474af95d67e96e970e4dfc; `predecessor` block copied from the declaration with its blob 6a357463; `identity.public_contract_version` 1.4.0; `qualification_evidence.successor_lane_acceptance` citing the nine -v2 rows by evidence id and executing revision ca0f9a7; inherited replay evidence marked as such), `reports/runtime/baseline-v2-source-boundary.json` (frozen 488d64a; protected and excluded sets inherited), `reports/runtime/baseline-v2-qualification.json` (`pending`), `reports/runtime/baseline-v2.md` (rendered), `examples/gauntlet/agent-memory-runtime-baseline-v2.json`, `examples/gauntlet/agent_memory_runtime_baseline_v2_stdio.py` (constants updated to the successor; the v1 adapter untouched), `reports/runtime/baseline-register.json` (v2 appended as the current entry with its three blobs, `published_commit: null`; `declared_successor: null`), `.github/workflows/agmi-agent-memory-qualification.yml` and `gauntlet-durability-recovery.yml` (contestant classification: current / retired / unknown), `reference/tests/test_runtime_baseline_succession.py`, `docs/67-runtime-baseline-succession.md`, `docs/CONTRIBUTOR_ARCHITECTURE.md` §8, `docs/GOVERNANCE_INDEX.md`
+**Content Hash** (SHA256 over `git write-tree` of the staged index `bec2b71f7902b83c9a14fb458de9daad6142670a`): `ab5c0a5731785526567a2f530f12d32c9f63454c98f3105e53dc0313c84eef62`
+**Previous Hash**: `21faab6d0119002cb7544add5edea998bb5f0570a15f44cd7c60929629d285bb`
+**Chain Hash**: `2e9507f468837e6ee1527e5ed088f86ad0ddee01143d752d3622ee31b2752e55`
+
+**Decision**: Runtime Baseline v2 is published against the merge commit of
+its declared tranche (docs/67 Step B1), with no runtime change: the checker
+now prints `PASS` against baseline v2 (frozen 488d64a), the validator
+accepts the pending last entry beside the pinned v1 entry, and the renderer
+check is byte-identical for both records. The orchestration probe ran
+locally through the v2 manifest and adapter (`sample_count` 3, `exact_top1`
+1.0, system `git-commit:488d64a…`); the CI run of `runtime-baseline.yml` on
+the publication PR produces the artifact Step B2 binds. The two contestant
+files that pin v1 (`fixtures/gauntlet/agent-memory-public-durability-adapter.json`,
+`reports/gauntlet/agmi-agent-memory-v1/*`) are retired by their workflows'
+new contestant classification: a pin on a predecessor entry is skipped with
+a notice naming both revisions rather than failing every later run or
+claiming the current revision (docs/67 Step B1 reworded accordingly; a
+pin on no register entry still fails). Inherited replay evidence is carried
+with the reason the declared change cannot reach it (every unbudgeted call
+takes the 1.3.0 path; the -v2 lane controls reproduced the v1 controls
+exactly). The manifest's `configuration_digest` basis is stated in the
+record since the v1 derivation is not recorded anywhere. Nothing here is
+authority; `authority_effect` is `none` on every new file. Step B2
+(qualification binding and `published_commit`) follows the merge.

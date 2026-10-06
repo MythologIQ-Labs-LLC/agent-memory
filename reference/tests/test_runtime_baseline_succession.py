@@ -469,12 +469,19 @@ class RegisterValidator(SuccessionTestCase):
             record_value({"identity": {}}, "identity.missing")
 
 
+V2_FROZEN = "488d64aadb16ba4b0c474af95d67e96e970e4dfc"
+
+
 class RealRepository(unittest.TestCase):
-    """The committed register pins Runtime Baseline v1 exactly; the v1 rendering is byte-identical."""
+    """The committed register pins Runtime Baseline v1 exactly and carries v2 as the current entry; both renderings are byte-identical."""
+
+    @staticmethod
+    def _entry(register: dict, baseline_id: str) -> dict:
+        return next(item for item in register["baselines"] if item["baseline_id"] == baseline_id)
 
     def test_register_pins_v1_bytes(self) -> None:
         register = checker.load_register(REPO_ROOT, REGISTER)
-        entry = register["baselines"][-1]
+        entry = self._entry(register, V1)
         self.assertEqual(entry["baseline_id"], V1)
         self.assertEqual(blob(REPO_ROOT, entry["record"]), entry["record_blob"])
         self.assertEqual(blob(REPO_ROOT, entry["source_boundary"]), entry["source_boundary_blob"])
@@ -498,9 +505,69 @@ class RealRepository(unittest.TestCase):
 
     def test_v1_rendering_is_byte_identical(self) -> None:
         register = checker.load_register(REPO_ROOT, REGISTER)
-        output, rendered = renderer.render_entry(REPO_ROOT, register["baselines"][-1])
+        output, rendered = renderer.render_entry(REPO_ROOT, self._entry(register, V1))
         self.assertEqual(output, REPO_ROOT / "reports/runtime/baseline-v1.md")
         self.assertEqual(rendered, output.read_text(encoding="utf-8"))
+
+    def test_register_carries_v2_as_the_current_entry(self) -> None:
+        # docs/67 Step B1: the successor is the last entry, blob-pinned in the working tree, with
+        # a pending companion qualification and no publication commit yet; no successor is declared.
+        register = checker.load_register(REPO_ROOT, REGISTER)
+        self.assertEqual([item["baseline_id"] for item in register["baselines"]], [V1, V2])
+        self.assertIsNone(register["declared_successor"])
+        entry = register["baselines"][-1]
+        self.assertEqual(entry["record"], "reports/runtime/baseline-v2.json")
+        self.assertEqual(blob(REPO_ROOT, entry["record"]), entry["record_blob"])
+        self.assertEqual(blob(REPO_ROOT, entry["source_boundary"]), entry["source_boundary_blob"])
+        self.assertEqual(entry["qualification"]["path"], "reports/runtime/baseline-v2-qualification.json")
+        self.assertEqual(entry["qualification"]["pointer"], "")
+        self.assertEqual(blob(REPO_ROOT, entry["qualification"]["path"]), entry["qualification"]["blob"])
+        qualification = json.loads((REPO_ROOT / entry["qualification"]["path"]).read_text(encoding="utf-8"))
+        self.assertEqual(qualification["status"], "pending")
+        self.assertEqual(entry["published_commit"], None)
+        record = json.loads((REPO_ROOT / entry["record"]).read_text(encoding="utf-8"))
+        boundary = json.loads((REPO_ROOT / entry["source_boundary"]).read_text(encoding="utf-8"))
+        self.assertEqual(record["runtime_revision"]["commit"], V2_FROZEN)
+        self.assertEqual(boundary["frozen_revision"], V2_FROZEN)
+        self.assertEqual(record["identity"]["public_contract_version"], "1.4.0")
+        declaration = json.loads((REPO_ROOT / DECLARATION).read_text(encoding="utf-8"))
+        self.assertEqual(record["predecessor"]["baseline_id"], V1)
+        self.assertEqual(record["predecessor"]["identity_deltas"], declaration["identity_deltas"])
+        self.assertEqual(record["predecessor"]["declared_changes"], declaration["declared_changes"])
+        self.assertEqual(record["predecessor"]["declaration_blob"], blob(REPO_ROOT, DECLARATION))
+        self.assertNotIn("required_before_issue_638_close", record["dogfood"])
+        self.assertEqual(record["dogfood"]["merge_commit"], "10898c0edf4fa7093a0bbeda1b2cb8062469e843")
+        rows = record["qualification_evidence"]["successor_lane_acceptance"]["rows"]
+        self.assertEqual(len(rows), 9)
+        self.assertEqual({row["checker_state"] for row in rows}, {"TRANSITION"})
+        manifest = json.loads((REPO_ROOT / entry["public_gauntlet_manifest"]).read_text(encoding="utf-8"))
+        adapter = manifest["transport"]["startup"][-1]
+        self.assertEqual(adapter, "examples/gauntlet/agent_memory_runtime_baseline_v2_stdio.py")
+        self.assertEqual(manifest["system"]["revision"], f"git-commit:{V2_FROZEN}")
+        self.assertEqual(manifest["adapter"]["revision"], f"git-blob:{blob(REPO_ROOT, adapter)}")
+        self.assertEqual(manifest["metadata"]["baseline_id"], V2)
+        source = (REPO_ROOT / adapter).read_text(encoding="utf-8")
+        self.assertIn(f'FROZEN_RUNTIME_REVISION = "{V2_FROZEN}"', source)
+        self.assertIn('PUBLIC_CONTRACT_VERSION = "1.4.0"', source)
+        v1_source = (REPO_ROOT / "examples/gauntlet/agent_memory_runtime_baseline_stdio.py").read_text(encoding="utf-8")
+        self.assertIn('PUBLIC_CONTRACT_VERSION = "1.3.0"', v1_source, "the v1 adapter keeps its constants")
+
+    def test_v2_rendering_is_byte_identical(self) -> None:
+        register = checker.load_register(REPO_ROOT, REGISTER)
+        output, rendered = renderer.render_entry(REPO_ROOT, register["baselines"][-1])
+        self.assertEqual(output, REPO_ROOT / "reports/runtime/baseline-v2.md")
+        self.assertEqual(rendered, output.read_text(encoding="utf-8"))
+        self.assertIn("public Gauntlet path: **pending** via `stdio`", rendered)
+
+    def test_contestant_workflows_retire_a_predecessor_pin_truthfully(self) -> None:
+        # docs/67 Step B1: a contestant that pins a predecessor baseline is skipped with a notice,
+        # never run as evidence for the current revision and never red forever.
+        for workflow in (".github/workflows/agmi-agent-memory-qualification.yml", ".github/workflows/gauntlet-durability-recovery.yml"):
+            text = (REPO_ROOT / workflow).read_text(encoding="utf-8")
+            self.assertIn("id: contestant", text, workflow)
+            self.assertIn("Retired contestant notice", text, workflow)
+            self.assertIn("steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'", text, workflow)
+            self.assertNotIn("        if: steps.classify.outputs.state == 'PASS'\n", text, workflow)
 
     def test_workflows_carry_no_literal_v1_revision(self) -> None:
         workflows = [

@@ -64,14 +64,48 @@ jobs:
           print(f"published_commit={entry['published_commit'] or ''}")
           PY
 
+      - name: Classify the contestant against the register
+        id: contestant
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          register = json.loads(Path("reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
+          entries = register["baselines"]
+          revisions = {}
+          for item in entries:
+              boundary = json.loads(Path(item["source_boundary"]).read_text(encoding="utf-8"))
+              revisions[boundary["frozen_revision"]] = item["baseline_id"]
+          current = entries[-1]["baseline_id"]
+          pinned = json.loads(Path("reports/gauntlet/agmi-agent-memory-v1/qualification.json").read_text(encoding="utf-8"))["agent_memory"]["runtime_baseline_revision"]
+          if pinned == next(rev for rev, bid in revisions.items() if bid == current):
+              print("contestant=current")
+          elif pinned in revisions:
+              print("contestant=retired")
+              print(f"contestant_baseline={revisions[pinned]}")
+          else:
+              raise SystemExit(f"contestant pins {pinned}, which is no Runtime Baseline in the register")
+          print(f"contestant_revision={pinned}")
+          PY
+
       - name: Transition notice
         if: steps.classify.outputs.state == 'TRANSITION'
         run: |
           echo "The register declares a successor and the candidate is in a pinned transition."
           echo "agmi reproduction is skipped: no evidence may claim ${{ steps.current.outputs.revision }} from this checkout."
 
+      - name: Retired contestant notice
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'retired'
+        run: |
+          echo "The agmi profile reports/gauntlet/agmi-agent-memory-v1 is retired: it pins a predecessor Runtime Baseline, so no agmi evidence is reproduced or uploaded from this checkout."
+          echo "It pins ${{ steps.contestant.outputs.contestant_revision }} (${{ steps.contestant.outputs.contestant_baseline }}); the current Runtime Baseline is ${{ steps.current.outputs.revision }} (${{ steps.current.outputs.baseline_id }})."
+          echo "Re-pinning it to the successor is a later two-step of its own (docs/67 Step B1); nothing here claims the current revision."
+
       - name: Refuse a stale agmi profile
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         shell: bash
         run: |
           set -euo pipefail
@@ -88,7 +122,7 @@ jobs:
           PY
 
       - name: Checkout exact agmi source
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         shell: bash
         run: |
           set -euo pipefail
@@ -100,11 +134,11 @@ jobs:
           grep -q '^MIT License$' external/agmi/LICENSE
 
       - name: Install isolated qualification dependencies
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         run: python -m pip install -e ./external/agmi pytest
 
       - name: Record exact source and environment identity
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         shell: bash
         run: |
           set -euo pipefail
@@ -125,7 +159,7 @@ jobs:
           } | tee agmi-evidence/source-environment.txt
 
       - name: Run upstream Agent Memory test unchanged
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         shell: bash
         run: |
           set -o pipefail
@@ -134,20 +168,20 @@ jobs:
             2>&1 | tee agmi-evidence/upstream-agent-memory.txt
 
       - name: Produce raw T1-T9 external evidence
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         run: |
           python scripts/run_agmi_agent_memory_qualification.py \
             --output agmi-evidence/raw-result.json
 
       - name: Validate external observation and preserve T9 finding
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         run: |
           python scripts/validate_agmi_agent_memory_qualification.py \
             agmi-evidence/raw-result.json \
             | tee agmi-evidence/validation.txt
 
       - name: Inventory qualification evidence
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         shell: bash
         run: |
           set -euo pipefail
@@ -160,7 +194,7 @@ jobs:
           test -s agmi-evidence/validation.txt
 
       - name: Upload agmi qualification evidence
-        if: steps.classify.outputs.state == 'PASS'
+        if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
         uses: actions/upload-artifact@v4
         with:
           name: agmi-agent-memory-integrity-v1
