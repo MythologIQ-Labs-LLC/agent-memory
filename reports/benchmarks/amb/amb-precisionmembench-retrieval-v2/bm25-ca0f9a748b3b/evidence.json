@@ -1,0 +1,165 @@
+{
+  "authority_effect": "none",
+  "contract_family": "agent-memory-same-harness-lane-evidence",
+  "contract_version": "1.0.0",
+  "evidence_class": "same_harness_external_candidate",
+  "execution": {
+    "agent_memory_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+    "amb_pmb_return_cap": null,
+    "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "answer_model": null,
+    "authority_effect": "none",
+    "bridge_blobs": {
+      "reference/amb_agent_memory_bridge.py": "54e8afdf8b6f40e0eaa5fb3bc1557c030c75aea4",
+      "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228"
+    },
+    "dataset": "precisionmembench",
+    "declaration_blob": "6a35746396e52570c169ee61f99e6b50018f6e7c",
+    "evidence_class": "same_harness_external_candidate",
+    "full_selection": true,
+    "harness_constraints": {
+      "authority_effect": "none",
+      "constraint_count": 295,
+      "constraints_sha256": "8a7f4b9b110c3d5f971cfe6be5a41920e9cfc8de06517955678173ceb0f717c7",
+      "lifted_pins": {
+        "cryptography": {
+          "locked": "cryptography==46.0.5",
+          "reason": "pinned by this repository's pyproject.toml"
+        },
+        "jsonschema": {
+          "locked": "jsonschema==4.26.0",
+          "reason": "pinned by this repository's pyproject.toml"
+        },
+        "rfc8785": {
+          "locked": null,
+          "reason": "pinned by this repository's pyproject.toml"
+        }
+      },
+      "memory": "bm25",
+      "row_pins": [],
+      "row_removals": {},
+      "source": "uv.lock of the frozen AMB checkout, exported with uv and installed as pip constraints",
+      "uv_lock_git_blob": "cbd392efbd2c81c8cebf493edd07fd160f39dcbd",
+      "uv_lock_sha256": "de4408d18088476169d62286e379417aac2bd52c97f1bdd868bf4f4a366bcad7",
+      "uv_version": "uv 0.8.17"
+    },
+    "judge_model": null,
+    "lane_digest_sha256": "93cf8ded6dc2a74dc1344047d2c8e740786f39b04da19082ae44bd76257dacae",
+    "lane_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json",
+    "lane_id": "amb-precisionmembench-retrieval-v2",
+    "mem0_optional_components": {
+      "fastembed_installed": true,
+      "spacy_installed": false
+    },
+    "memory": "bm25",
+    "mode": "retrieval",
+    "query_limit": "0",
+    "resolved_packages": {
+      "hindsight-all": "0.4.17",
+      "hindsight-client": "0.9.2",
+      "mem0ai": "1.0.5",
+      "openai": "2.26.0",
+      "posthog": "7.9.10",
+      "qdrant-client": "1.17.0",
+      "rank-bm25": "0.2.2",
+      "sentence-transformers": "5.2.3",
+      "sqlalchemy": "2.0.48",
+      "torch": "2.10.0",
+      "uv": "0.8.17"
+    },
+    "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v1; declared_successor=agent-memory-runtime-baseline-v2 (issue #670); protected surface = frozen f2aef57293b516e065cad5d0afea26ac7e3c28a9 + 2 declared blobs; deltas=identity.public_contract_version 1.3.0->1.4.0; candidate=HEAD",
+    "runtime_baseline_state": "TRANSITION",
+    "split": "single-turn",
+    "workflow_run_id": "37543543416"
+  },
+  "files": {
+    "amb-constraints-provenance.json": "55ff052b91e88a64d87c561eb554df45de7f2ee510b0ba5c11880e404b592207",
+    "amb-constraints.txt": "8a7f4b9b110c3d5f971cfe6be5a41920e9cfc8de06517955678173ceb0f717c7",
+    "execution-identity.json": "8a445dbed893d13a8400165334b748eb2d04433e7e4d1e1e4039daa02cb2b087",
+    "files.txt": "29339b94170e2a8dbd5df3b773be042379d54c75dd71a6007a4a6a3e16234aed",
+    "precisionmembench-selfcheck.txt": "e6153f7fa21ddb7af0abcef690abd268cdd73e89fb32592d4a869972b3bfe993",
+    "sha256.txt": "2c3875ecf0a76d396c0c4401f03d6f33e90c01dcaf12fd7ebe0098b94e122776",
+    "single-turn.json": "4aa13dac736bb358ff7e6ca20ea5dfab5501c0033759ddb375ba8d60d3d05cf1"
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+    "fixtures": {
+      "beliefs.seed.json": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98",
+      "retrieval.cases.json": "09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c"
+    },
+    "query_count": 77,
+    "selection_id": "all-77:09e99f0852280538",
+    "sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "verified_by": "re-hashed from the pinned fixture URLs at import"
+  },
+  "lane_digest_at_execution": "93cf8ded6dc2a74dc1344047d2c8e740786f39b04da19082ae44bd76257dacae",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json",
+  "lane_id": "amb-precisionmembench-retrieval-v2",
+  "native_summary": {
+    "accuracy": 0.1038961038961039,
+    "active_passes": 0,
+    "active_total": 43,
+    "answer_llm": null,
+    "correct": 8,
+    "id_resolution": {
+      "doc_id": 1391
+    },
+    "ingested_docs": 35,
+    "ingestion_time_ms": 341.1,
+    "judge_llm": null,
+    "mean_precision": 0.0536,
+    "mean_recall": 0.9651,
+    "mean_retrieve_ms": 4.31,
+    "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+    "structural_passes": 5,
+    "structural_total": 25,
+    "total_passes": 8,
+    "total_queries": 77,
+    "trivially_empty_passes": 3,
+    "trivially_empty_total": 9
+  },
+  "row": {
+    "display_name": "BM25 keyword baseline (AMB built-in)",
+    "inference_posture": "harness_builtin",
+    "provider_key": "bm25",
+    "role": "baseline",
+    "row_id": "bm25-harness-baseline",
+    "system_id": "bm25"
+  },
+  "system": {
+    "id": "bm25",
+    "mem0_optional_components": {
+      "fastembed_installed": true,
+      "spacy_installed": false
+    },
+    "resolved_packages": {
+      "hindsight-all": "0.4.17",
+      "hindsight-client": "0.9.2",
+      "mem0ai": "1.0.5",
+      "openai": "2.26.0",
+      "posthog": "7.9.10",
+      "qdrant-client": "1.17.0",
+      "rank-bm25": "0.2.2",
+      "sentence-transformers": "5.2.3",
+      "sqlalchemy": "2.0.48",
+      "torch": "2.10.0",
+      "uv": "0.8.17"
+    },
+    "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "revision_rule": "AMB revision; provider blob 4c8f0f615bfc5935edb4e8d33d43b82fb663e83c",
+    "runtime_baseline": {
+      "declaration_blob": "6a35746396e52570c169ee61f99e6b50018f6e7c",
+      "declared_successor": "agent-memory-runtime-baseline-v2",
+      "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v1; declared_successor=agent-memory-runtime-baseline-v2 (issue #670); protected surface = frozen f2aef57293b516e065cad5d0afea26ac7e3c28a9 + 2 declared blobs; deltas=identity.public_contract_version 1.3.0->1.4.0; candidate=HEAD",
+      "predecessor": "agent-memory-runtime-baseline-v1",
+      "state": "TRANSITION"
+    },
+    "source_kind": "harness_builtin"
+  },
+  "workflow_run": {
+    "artifact_directory": "amb-amb-precisionmembench-retrieval-v2-precisionmembench-single-turn-bm25-ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+    "id": "37543543416",
+    "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/37543543416"
+  }
+}

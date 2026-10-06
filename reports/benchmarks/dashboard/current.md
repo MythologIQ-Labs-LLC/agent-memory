@@ -1,8 +1,8 @@
 # Canonical Agent Memory benchmark dashboard
 
-Status: **current accepted evidence through #594, plus two accepted same-harness lanes (#640)**, and current pre-1.0 comparator/runtime-qualification state as of 2026-10-06.
+Status: **current accepted evidence through #594, plus four accepted same-harness lanes (#640, two lane generations)**, and current pre-1.0 comparator/runtime-qualification state as of 2026-10-06.
 
-Current merged `main`: `0b0449a8aa2beca216563486dcbd2325673214e6`.
+Current merged `main`: `ca0f9a748b3b7296c5a99c7e81cca35a570609fd`.
 
 No universal aggregate score exists. `blocked`, `not_run`, `unsupported`, and `evidence_gap` are states, never numeric zero.
 
@@ -39,7 +39,7 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 
 ## Competitive view — same-harness systems
 
-**Status: two same-harness lanes accepted (#640, 2026-10-05 and 2026-10-06).**
+**Status: four same-harness lanes accepted (#640; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06).**
 
 #601 now has executable independent-harness infrastructure:
 
@@ -82,6 +82,25 @@ Frozen AMB `RetrievalMode` makes no LLM calls and scores returned belief/documen
 | mem0_explicit | comparator | turn | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37421255904 | 0.499 | 0.673 | 0.895 | 0.596 | 0.611 | 0.486 |
 
 Session and turn are separate planes (separate scorecards) and are never averaged. `recall_all@50` exists on the turn plane only. The Agent Memory control reproduces the accepted longitudinal LongMemEval_S numbers exactly at this revision (session `recall_all@5` 0.823389, turn `recall_all@10` 0.723). The Mem0 row is the lane v1 configuration (mem0ai 2.2.1 explicit memory, pinned local embedder, local Qdrant, no fastembed/spaCy) entering through the runner's external-backend seam with `top_k=50`; it is now accepted on two frozen benchmarks. `lexical_overlap` is the profile's token-overlap baseline, not upstream's BM25 or dense retrievers. The six rows are normalized into `reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v1-*.json` with the lane as task profile, so they share two cards (session, turn) with `lexical_overlap` as the lexical baseline and never a card with the longitudinal profile runs. There is still no overall score and no market claim. Hindsight remains deferred under both lanes.
+
+**Accepted same-harness rows (third lane generation, `amb-precisionmembench-retrieval-v2` and `longmemeval-s-retrieval-parity-v2`, 2026-10-06).** Both lanes were frozen before any score (PR #679) and re-execute every row of their predecessors with one change: the Agent Memory control runs under the declared transition to Runtime Baseline v2 (contract 1.4.0, PR #678) and reads the facade's `returned` prefix at a declared budget (the case budget under AMB through bridge 0.2.0; 50 under LongMemEval through `--agent-memory-budget`). Nine dispatches on `main` `ca0f9a7` (full selections; the checker recorded `TRANSITION` against declaration blob `6a35746` on every row, which the importers bound); raw artifacts under `reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/` and `reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/`, nine `evidence_history` entries. The BM25, lexical-overlap and Mem0 rows are unchanged compositions re-run under the new lane ids. A `-v2` row is not comparable row-for-row with its `-v1` row (the control's return shape and the executing runtime differ); the two generations are reported side by side, never merged.
+
+| row | role | system revision | run | active passes | total passes | mean precision | mean recall |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| agent-memory | control | Agent Memory `ca0f9a7` | 37543540355 | 4/43 | 15/77 | 0.18 | 0.95 |
+| bm25 | baseline | AMB `03c1d0f` built-in | 37543543416 | 0/43 | 8/77 | 0.05 | 0.97 |
+| mem0-explicit | comparator | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37543546255 | 0/43 | 10/77 | 0.10 | 1.00 |
+
+| row | role | plane | system revision | run | recall_all@5 | recall_all@10 | recall_all@50 | ndcg_any@10 | knowledge-update recall_all@5 | latest gold first |
+| --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| agent-memory | control | session | Agent Memory `ca0f9a7` | 37543549261 | 0.823 | 0.893 | n/a | 0.878 | 0.972 | 0.457 |
+| lexical_overlap | baseline | session | runner blob `757d593` built-in | 37543556285 | 0.730 | 0.826 | n/a | 0.793 | 0.917 | 0.457 |
+| mem0_explicit | comparator | session | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37543562462 | 0.809 | 0.883 | n/a | 0.841 | 0.903 | 0.443 |
+| agent-memory | control | turn | Agent Memory `ca0f9a7` | 37543552664 | 0.601 | 0.723 | 0.859 | 0.682 | 0.792 | 0.557 |
+| lexical_overlap | baseline | turn | runner blob `757d593` built-in | 37543559580 | 0.487 | 0.587 | 0.761 | 0.560 | 0.681 | 0.614 |
+| mem0_explicit | comparator | turn | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37543565695 | 0.499 | 0.673 | 0.895 | 0.596 | 0.611 | 0.486 |
+
+Reading the generation change: the LongMemEval control's `unmapped_admitted_count_total` is 0 on both planes and every scored metric equals the v1 control's at every k, with the return budget applied on 39 of 500 session questions and 500 of 500 turn questions (the ranked prefix at 50 is the full ranking's prefix, exactly as #670 predicted). The AMB control's active passes, total passes, mean precision and mean recall equal the v1 control's: the only difference between the generations, mapped-among-top-k instead of skip-then-count, changed no case on this 77-case split. Neither equality is authority; both are what the frozen harnesses measured. Same-plane rule, no overall score, no market claim; Hindsight remains deferred under all four lanes.
 
 The LLM-judged AMB profile is frozen to `gemini:gemini-2.5-flash-lite` for answer and judge, but remains **blocked pending authorized evaluation credentials**.
 

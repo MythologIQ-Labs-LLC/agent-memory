@@ -84,7 +84,7 @@ Only plans whose lifecycle is still active/held belong here. Completed plans are
 | RC1 implementation profile | `docs/45-agent-memory-rc1-implementation-profile.md` | **ACTIVE** under #410 |
 | #674 successor-baseline plan | `docs/plan-674-successor-baseline.md` | implemented (PR #676, Entry #64); historical evidence |
 | #670 return-budget plan | `docs/plan-670-return-budget.md` | implemented (PR #678, Entry #67); the first declared transition under docs/67; historical evidence |
-| #640 lanes -v2 plan | `docs/plan-640-lanes-v2-return-budget.md` | **ACTIVE**; Gate Tribunal PASS at Entry #69 (iteration 2); the budgeted control under the declared transition |
+| #640 lanes -v2 plan | `docs/plan-640-lanes-v2-return-budget.md` | **COMPLETE**; Gate Tribunal PASS at Entry #69 (iteration 2); Phases 1-2 at Entry #70 (PR #679), Phase 3 acceptance of nine rows at Entry #71 |
 | North Star research brief | `docs/research-brief-north-star-six-tranches-2026-10-06.md` | supporting research for the #668 roadmap and the #674 plan (Entry #60) |
 
 Implemented sprint plans remain in `docs/` as historical evidence. Their continued existence does not mean the work is pending.

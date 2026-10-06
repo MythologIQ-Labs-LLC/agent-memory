@@ -4,7 +4,7 @@
   "as_of": "2026-10-06",
   "authority_effect": "none",
   "aggregate_score": "not_defined",
-  "main_head": "0b0449a8aa2beca216563486dcbd2325673214e6",
+  "main_head": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
   "reading_rules": [
     "benchmark score != memory authority",
     "published vendor score != same-harness comparator",
@@ -21,7 +21,7 @@
     "external_cross_system_reference": "independent multi-system suite useful for triangulation but not a substitute for local same-harness reproduction"
   },
   "competitive_evidence": {
-    "status": "two_same_harness_lanes_accepted",
+    "status": "four_same_harness_lanes_accepted",
     "umbrella_issue": 600,
     "same_harness_issue": 601,
     "external_harness": {
@@ -32,12 +32,12 @@
       "manual_workflow": ".github/workflows/amb-competitive.yml"
     },
     "same_harness_accepted_systems": [
-      "agent-memory (control; AMB lane v1 and LongMemEval_S lane v2)",
-      "bm25 (baseline, AMB lane v1)",
-      "lexical_overlap (baseline, LongMemEval_S lane v2)",
-      "mem0-oss 2.2.1 explicit-memory (comparator; both lanes)"
+      "agent-memory (control; AMB lane v1, LongMemEval_S lane v2, and both -v2 lanes under the declared transition to Runtime Baseline v2)",
+      "bm25 (baseline, AMB lanes v1 and -v2)",
+      "lexical_overlap (baseline, LongMemEval_S lanes v2 and -v2)",
+      "mem0-oss 2.2.1 explicit-memory (comparator; all four lanes)"
     ],
-    "note": "The first same-harness lane (amb-precisionmembench-retrieval-v1) has three accepted rows from deliberate full-selection runs on 2026-10-05, each bound to its raw AMB artifact and execution identity under reports/benchmarks/amb/ and normalized into reports/benchmarks/normalized/ (retrieval, efficiency, reproducibility mapped from the harness's own summary table; one scorecard with BM25 as the lexical baseline). The rows are same_harness_external evidence for that lane only: no overall score, no market claim. The second lane (longmemeval-s-retrieval-parity-v1) has six accepted rows (three systems x two planes) from deliberate full-selection runs on 2026-10-06, each bound to its raw native report and execution identity under reports/benchmarks/longmemeval/ and normalized into reports/benchmarks/normalized/ (retrieval, currentness, efficiency and reproducibility mapped; one scorecard per plane with lexical_overlap as the lexical baseline). Mem0 OSS 2.2.1 explicit memory is now accepted on two frozen benchmarks; Hindsight remains the open second system under #640.",
+    "note": "The first same-harness lane (amb-precisionmembench-retrieval-v1) has three accepted rows from deliberate full-selection runs on 2026-10-05, each bound to its raw AMB artifact and execution identity under reports/benchmarks/amb/ and normalized into reports/benchmarks/normalized/ (retrieval, efficiency, reproducibility mapped from the harness's own summary table; one scorecard with BM25 as the lexical baseline). The rows are same_harness_external evidence for that lane only: no overall score, no market claim. The second lane (longmemeval-s-retrieval-parity-v1) has six accepted rows (three systems x two planes) from deliberate full-selection runs on 2026-10-06, each bound to its raw native report and execution identity under reports/benchmarks/longmemeval/ and normalized into reports/benchmarks/normalized/ (retrieval, currentness, efficiency and reproducibility mapped; one scorecard per plane with lexical_overlap as the lexical baseline). Mem0 OSS 2.2.1 explicit memory is now accepted on two frozen benchmarks; Hindsight remains the open second system under #640. The third lane generation (amb-precisionmembench-retrieval-v2, longmemeval-s-retrieval-parity-v2; accepted 2026-10-06) re-executes every row of its predecessors on main ca0f9a7 with the Agent Memory control under the declared transition to Runtime Baseline v2 (contract 1.4.0 return budget); nine rows bound under reports/benchmarks/amb/ and reports/benchmarks/longmemeval/, normalized under their own lane ids. A -v2 row is reported beside its -v1 row, never merged with it.",
     "credential_free_profile": {
       "dataset": "precisionmembench",
       "split": "single-turn",
@@ -281,6 +281,220 @@
           "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v1-turn-lexical_overlap-0b0449a8aa2b.json",
           "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v1-session-mem0_explicit-94c3fe9f238f.json",
           "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v1-turn-mem0_explicit-94c3fe9f238f.json"
+        ]
+      },
+      {
+        "lane_id": "amb-precisionmembench-retrieval-v2",
+        "status": "accepted",
+        "issue": 640,
+        "lane_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json",
+        "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+        "rows": {
+          "agent-memory": "accepted",
+          "bm25": "accepted",
+          "mem0-explicit": "accepted",
+          "hindsight": "deferred"
+        },
+        "llm_calls": false,
+        "note": "Third lane generation (frozen 2026-10-06 before any score, executed the same day): the AMB lane v1 rows re-executed with the Agent Memory control under the declared transition to Runtime Baseline v2 (contract 1.4.0 return budget; bridge 0.2.0 returns the facade's ranked prefix at the case budget instead of truncating). BM25 and Mem0 rows are unchanged compositions re-run under the new lane id; Hindsight deferred. Not comparable row-for-row with v1: the control's return shape differs.",
+        "accepted_on": "2026-10-06",
+        "accepted_rows": [
+          {
+            "provider": "agent-memory",
+            "role": "control",
+            "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+            "workflow_run_id": "37543540355",
+            "evidence": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/evidence.json",
+            "native": {
+              "active_passes": "4/43",
+              "total_passes": "15/77",
+              "structural_passes": "6/25",
+              "trivially_empty_passes": "5/9",
+              "mean_precision": 0.1806,
+              "mean_recall": 0.9535
+            }
+          },
+          {
+            "provider": "bm25",
+            "role": "baseline",
+            "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+            "workflow_run_id": "37543543416",
+            "evidence": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/bm25-ca0f9a748b3b/evidence.json",
+            "native": {
+              "active_passes": "0/43",
+              "total_passes": "8/77",
+              "structural_passes": "5/25",
+              "trivially_empty_passes": "3/9",
+              "mean_precision": 0.0536,
+              "mean_recall": 0.9651
+            }
+          },
+          {
+            "provider": "mem0-explicit",
+            "role": "comparator",
+            "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+            "workflow_run_id": "37543546255",
+            "evidence": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/mem0-explicit-ca0f9a748b3b/evidence.json",
+            "native": {
+              "active_passes": "0/43",
+              "total_passes": "10/77",
+              "structural_passes": "7/25",
+              "trivially_empty_passes": "3/9",
+              "mean_precision": 0.1049,
+              "mean_recall": 1.0
+            }
+          }
+        ],
+        "reading_rule": "active_passes/43 is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy; BM25 is a baseline and Agent Memory the control, never a market claim; the v2 control is reported against v1 with the return-shape change named as the only difference",
+        "normalized_runs": [
+          "reports/benchmarks/normalized/amb-precisionmembench-amb-precisionmembench-retrieval-v2-single-turn-agent-memory-ca0f9a748b3b.json",
+          "reports/benchmarks/normalized/amb-precisionmembench-amb-precisionmembench-retrieval-v2-single-turn-bm25-03c1d0f1d27d.json",
+          "reports/benchmarks/normalized/amb-precisionmembench-amb-precisionmembench-retrieval-v2-single-turn-mem0-oss-94c3fe9f238f.json"
+        ]
+      },
+      {
+        "lane_id": "longmemeval-s-retrieval-parity-v2",
+        "status": "accepted",
+        "issue": 640,
+        "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json",
+        "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+        "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+        "rows": {
+          "agent_memory": "accepted",
+          "lexical_overlap": "accepted",
+          "mem0_explicit": "accepted",
+          "hindsight": "deferred"
+        },
+        "llm_calls": false,
+        "note": "Third lane generation (frozen 2026-10-06 before any score, executed the same day): the LongMemEval_S parity rows re-executed with the Agent Memory control under the declared transition to Runtime Baseline v2 (contract 1.4.0; the runner asks the facade for budget 50 and ranks the returned prefix). Baseline and Mem0 rows are unchanged compositions re-run under the new lane id. Session and turn planes are separate cards and are never averaged; Hindsight deferred.",
+        "accepted_on": "2026-10-06",
+        "accepted_rows": [
+          {
+            "provider": "agent_memory",
+            "plane": "session",
+            "role": "control",
+            "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+            "workflow_run_id": "37543549261",
+            "evidence": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+            "native": {
+              "scored_questions": 419,
+              "recall_all@5": 0.823389,
+              "recall_all@10": 0.892601,
+              "ndcg_any@5": 0.863142,
+              "ndcg_any@10": 0.878274,
+              "knowledge_update_recall_all@5": 0.972222,
+              "latest_gold_ranked_first": 0.457143,
+              "runtime_failures": 0,
+              "return_budget_applied_total": 39
+            }
+          },
+          {
+            "provider": "agent_memory",
+            "plane": "turn",
+            "role": "control",
+            "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+            "workflow_run_id": "37543552664",
+            "evidence": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+            "native": {
+              "scored_questions": 419,
+              "recall_all@5": 0.601432,
+              "recall_all@10": 0.72315,
+              "recall_all@50": 0.859189,
+              "ndcg_any@5": 0.648611,
+              "ndcg_any@10": 0.68156,
+              "ndcg_any@50": 0.711426,
+              "knowledge_update_recall_all@5": 0.791667,
+              "latest_gold_ranked_first": 0.557143,
+              "runtime_failures": 0,
+              "return_budget_applied_total": 500
+            }
+          },
+          {
+            "provider": "lexical_overlap",
+            "plane": "session",
+            "role": "baseline",
+            "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+            "workflow_run_id": "37543556285",
+            "evidence": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+            "native": {
+              "scored_questions": 419,
+              "recall_all@5": 0.73031,
+              "recall_all@10": 0.825776,
+              "ndcg_any@5": 0.767471,
+              "ndcg_any@10": 0.792944,
+              "knowledge_update_recall_all@5": 0.916667,
+              "latest_gold_ranked_first": 0.457143,
+              "runtime_failures": 0
+            }
+          },
+          {
+            "provider": "lexical_overlap",
+            "plane": "turn",
+            "role": "baseline",
+            "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+            "workflow_run_id": "37543559580",
+            "evidence": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+            "native": {
+              "scored_questions": 419,
+              "recall_all@5": 0.486874,
+              "recall_all@10": 0.587112,
+              "recall_all@50": 0.761337,
+              "ndcg_any@5": 0.527168,
+              "ndcg_any@10": 0.559738,
+              "ndcg_any@50": 0.598419,
+              "knowledge_update_recall_all@5": 0.680556,
+              "latest_gold_ranked_first": 0.614286,
+              "runtime_failures": 0
+            }
+          },
+          {
+            "provider": "mem0_explicit",
+            "plane": "session",
+            "role": "comparator",
+            "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+            "workflow_run_id": "37543562462",
+            "evidence": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+            "native": {
+              "scored_questions": 419,
+              "recall_all@5": 0.809069,
+              "recall_all@10": 0.883055,
+              "ndcg_any@5": 0.825047,
+              "ndcg_any@10": 0.841054,
+              "knowledge_update_recall_all@5": 0.902778,
+              "latest_gold_ranked_first": 0.442857,
+              "runtime_failures": 0
+            }
+          },
+          {
+            "provider": "mem0_explicit",
+            "plane": "turn",
+            "role": "comparator",
+            "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+            "workflow_run_id": "37543565695",
+            "evidence": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+            "native": {
+              "scored_questions": 419,
+              "recall_all@5": 0.498807,
+              "recall_all@10": 0.673031,
+              "recall_all@50": 0.894988,
+              "ndcg_any@5": 0.547177,
+              "ndcg_any@10": 0.596012,
+              "ndcg_any@50": 0.635529,
+              "knowledge_update_recall_all@5": 0.611111,
+              "latest_gold_ranked_first": 0.485714,
+              "runtime_failures": 0
+            }
+          }
+        ],
+        "reading_rule": "session rows compare with session rows and turn rows with turn rows; recall_all@50 exists on the turn plane only; lexical_overlap is the profile's baseline and Agent Memory the control, never a market claim; the v2 control's scored metrics are reported against v1's",
+        "normalized_runs": [
+          "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-session-agent_memory-ca0f9a748b3b.json",
+          "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-turn-agent_memory-ca0f9a748b3b.json",
+          "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-session-lexical_overlap-ca0f9a748b3b.json",
+          "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-turn-lexical_overlap-ca0f9a748b3b.json",
+          "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-session-mem0_explicit-94c3fe9f238f.json",
+          "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-turn-mem0_explicit-94c3fe9f238f.json"
         ]
       }
     ]

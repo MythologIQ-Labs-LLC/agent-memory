@@ -3370,3 +3370,52 @@ runner, bridge and scorecard modules pass (65 tests); the full suite runs
 scorecard check is green; `governance-health` is green; the roadmap
 prerequisite `prereq-lane-v3-ids` is resolved by pointer to the two lane
 files. Phase 3 (execute, import, accept) follows the freeze merge.
+
+---
+
+### Entry #71: IMPLEMENTATION
+
+**Timestamp**: 2026-10-07T00:05:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-640-lanes-v2-return-budget.md (iteration 2; Gate Tribunal PASS at Entry #69; Phases 1-2 at Entry #70, merged as PR #679)
+
+**Artifacts**: `reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/{agent-memory,bm25,mem0-explicit}-ca0f9a748b3b/` (imported by workflow run 37543992726), `reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/{agent_memory,lexical_overlap,mem0_explicit}-{session,turn}-ca0f9a748b3b/` (imported by runs 37546490068 and 37546677321), `reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v2.json` (accepted), `reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json` (accepted), `reference/agentmem_ref/evaluation/integrations/amb-precisionmembench-retrieval-v1.json` and `agent-memory-longmemeval-retrieval-currentness-v1.json` (nine complete `evidence_history` entries, two blocked Hindsight entries), `scripts/build_benchmark_scorecards.py` (nine SOURCES), `reports/benchmarks/normalized/*-v2-*.json` (nine manifests), `reports/benchmarks/scorecards/scorecards.{json,md}`, `reports/benchmarks/dashboard/current.{json,md}`, `reference/tests/test_same_harness_lane.py`, `docs/CONTRIBUTOR_ARCHITECTURE.md`, `docs/65-independent-amb-competitive-profile.md`, `docs/GOVERNANCE_INDEX.md`; `.github/workflows/{amb,longmemeval}-competitive.yml` and `docs/SHADOW_GENOME.md` Failure #17 (PR #680, merged before the runs)
+**Content Hash** (SHA256 over `git write-tree` of the staged index `f42501258e86fc0e047b01db73faaacb7c054607`): `f85d723883845a3aa8c103d1e0287a3c4f46f7eceec22afa9264bf8cd29ac240`
+**Previous Hash**: `b11f7a0aa46a303cd84baf86afda711b6b470baac376706d086c1e4b31dbce62`
+**Chain Hash**: `21faab6d0119002cb7544add5edea998bb5f0570a15f44cd7c60929629d285bb`
+
+**Decision**: Phase 3 of the plan executed as locked (LD7). The first nine
+dispatches on `main` 15404ac failed before any query ran: the lane
+workflows checked out with depth 1 and the posture step's checker could
+not see the frozen revision (Shadow Genome Failure #17; fixed by PR #680,
+which makes both lane workflows fetch full history and adds the test that
+asserts it). The nine runs were re-dispatched on `main` ca0f9a7: AMB
+agent-memory 37543540355, bm25 37543543416, mem0-explicit 37543546255;
+LongMemEval agent_memory 37543549261 (session) and 37543552664 (turn),
+lexical_overlap 37543556285 and 37543559580, mem0_explicit 37543562462
+and 37543565695; full selections, zero failures. Every execution identity
+recorded checker state `TRANSITION` against declaration blob 6a357463, which
+both importers bound (`system.runtime_baseline`), together with the lane
+digest at execution, the bridge blobs (AMB) and the declared configuration
+(LongMemEval, `budget: "50"`). Acceptance mirrors 5b38458 and 55b2b1d: lane
+and row statuses `accepted` with `status_reason`s naming run, revision,
+evidence directory and `evidence_history` id; nine complete entries with
+`report_binding`; nine normalized manifests under the lane ids; scorecards
+regenerated; dashboard and docs updated. Gates from #670: the LongMemEval
+control's `unmapped_admitted_count_total` is 0 on both planes and every
+scored metric (recall_all@k, ndcg_any@k, knowledge-update, latest-gold-first)
+equals the v1 control's, with the return budget applied on 39 of 500 session
+questions and 500 of 500 turn questions; the AMB control's active passes
+4/43, total passes 15/77, mean precision 0.1806 and mean recall 0.9535
+equal the v1 control's, so the mapped-among-top-k change altered no case
+on this split. The baseline and Mem0 rows also reproduce v1 exactly. None
+of these equalities is authority; `authority_effect` is `none` throughout.
+Verified before this entry: the checker prints `TRANSITION`; both lanes
+validate; the lane, importer, scorecard, runner and integration-contract
+modules pass; `build_benchmark_scorecards.py --check` is green;
+`governance-health` is green; `verify-ledger` through Entry #70. This
+closes the plan (GOVERNANCE_INDEX: COMPLETE) and supplies the lane evidence
+docs/67 Step B1 cites for Runtime Baseline v2.

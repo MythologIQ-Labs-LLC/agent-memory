@@ -339,6 +339,50 @@
       "variant": "lane:amb-precisionmembench-retrieval-v1:hindsight",
       "status": "blocked",
       "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v2:agent-memory",
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "agent-memory",
+      "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v2:bm25",
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "bm25",
+      "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/bm25-ca0f9a748b3b/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v2:mem0-explicit",
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/mem0-explicit-ca0f9a748b3b/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v2:hindsight",
+      "status": "blocked",
+      "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
     }
   ],
   "product_findings": [],

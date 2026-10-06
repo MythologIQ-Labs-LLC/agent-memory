@@ -229,7 +229,7 @@ class SameHarnessLaneTests(unittest.TestCase):
         self.assertEqual(report["authority_effect"], "none")
         # lanes list in sorted id order: the two accepted v1 lanes and the two frozen -v2 lanes
         self.assertEqual([lane["lane_id"] for lane in report["lanes"]], [LANE_ID, AMB_V2_LANE_ID, LME_LANE_ID, LME_V2_LANE_ID])
-        self.assertEqual([lane["status"] for lane in report["lanes"]], ["accepted", "frozen", "accepted", "frozen"])
+        self.assertEqual([lane["status"] for lane in report["lanes"]], ["accepted", "accepted", "accepted", "accepted"])
 
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
@@ -452,40 +452,101 @@ def _hash_object(repo_root: Path, path: str) -> str:
     return subprocess.run(["git", "hash-object", str(repo_root / path)], capture_output=True, text=True, check=True).stdout.strip()
 
 
-class _FrozenV2LaneMixin:
-    """What a frozen -v2 lane pins before any score exists: blobs at HEAD, the budgeted control, the transition posture."""
+def _frozen_view(lane: dict) -> dict:
+    """The accepted lane as it was frozen: statuses back to frozen, status_reasons and the acceptance note removed."""
+
+    frozen = copy.deepcopy(lane)
+    frozen["status"] = "frozen"
+    for row in frozen["systems"]:
+        if row["status"] == "accepted":
+            row["status"] = "frozen"
+            del row["status_reason"]
+    assert frozen["findings"][-1].startswith("accepted rows "), frozen["findings"][-1]
+    frozen["findings"] = frozen["findings"][:-1]
+    return frozen
+
+
+class _AcceptedV2LaneMixin:
+    """What an accepted -v2 lane binds: the budgeted control under the declared transition, every row's evidence record, the pins those records carry."""
 
     lane_id = ""
     predecessor_id = ""
     workflow_path = ""
     pinned_reference_paths: set[str] = set()
+    planes: tuple[str, ...] = ()
+    evidence_blob_key = ""
 
     def _lane(self) -> dict:
         return get_lane(self.lane_id)
 
-    def test_lane_is_frozen_without_scores_and_resolves(self):
+    def _records(self) -> list[dict]:
+        from agentmem_ref.evaluation.registry import check_evidence_binding
+
         lane = self._lane()
-        self.assertEqual(lane["status"], "frozen")
+        integration = get_integration(lane["benchmark_integration"])
+        repo_root = Path(__file__).resolve().parents[2]
+        bindings = [item for item in check_evidence_binding(integration, repo_root=repo_root) if item["variant"].startswith(f"lane:{self.lane_id}:")]
+        self.assertEqual(len(bindings), 3 * max(1, len(self.planes)))
+        records = []
+        for binding in bindings:
+            self.assertTrue(binding["bound"], binding)
+            record = json.loads((repo_root / binding["report"]).read_text(encoding="utf-8"))
+            self.assertEqual(record["lane_id"], self.lane_id)
+            self.assertEqual(record["authority_effect"], "none")
+            # The digest the run executed is the frozen lane's. Acceptance adds exactly the
+            # statuses, the status_reasons and one findings note on top, so undoing those
+            # (no git history needed: CI checks out at depth 1) must give the executed digest.
+            self.assertEqual(record["lane_digest_at_execution"], lane_digest(_frozen_view(lane)))
+            self.assertEqual(record["lane_digest_at_execution"], record["execution"]["lane_digest_sha256"])
+            records.append(record)
+        return records
+
+    def test_lane_is_accepted_without_scores_and_resolves(self):
+        lane = self._lane()
+        self.assertEqual(lane["status"], "accepted")
         self.assertIs(lane["frozen_before_any_score"], True)
         self.assertEqual(lane["authority_effect"], "none")
         self.assertEqual(_score_keys(lane), [])
+        integration = get_integration(lane["benchmark_integration"])
+        entries = {item["variant"]: item for item in integration["evidence_history"]}
         for row in lane["systems"]:
-            self.assertIn(row["status"], {"frozen", "deferred"}, row["row_id"])
-            if row["status"] == "frozen":
-                self.assertNotIn("status_reason", row)
+            self.assertIn(row["status"], {"accepted", "deferred"}, row["row_id"])
+            if row["status"] == "deferred":
+                self.assertEqual(entries[f"lane:{self.lane_id}:{row['provider_key']}"]["status"], "blocked")
+                continue
+            self.assertIn(self.lane_id, row["status_reason"])
+            for suffix in [f":{plane}" for plane in self.planes] or [""]:
+                entry = entries[f"lane:{self.lane_id}:{row['provider_key']}{suffix}"]
+                self.assertEqual(entry["status"], "complete")
+                self.assertEqual(entry["input_sha256"], lane["dataset"]["input_sha256"])
+                self.assertEqual(entry["system_id"], row["system_id"])
+                self.assertEqual(entry["report_binding"], {"input_sha256_path": "input.sha256", "system_revision_path": "system.revision"})
+                self.assertIn(entry["report"].rsplit("/", 2)[-2], row["status_reason"])
         self.assertEqual({row["role"] for row in lane["systems"]}, {"control", "baseline", "comparator"})
         resolved = resolve_lane(lane)
         self.assertEqual(resolved["lane_id"], self.lane_id)
         self.assertIn(self.predecessor_id, " ".join(lane["comparability"]["not_comparable_to"]))
         self.assertNotIn(self.lane_id, [item["lane_id"] for item in lane.get("deferred_lanes", [])])
 
-    def test_reference_blobs_are_pinned_at_head(self):
+    def test_reference_blobs_are_the_ones_the_accepted_runs_executed(self):
+        # An accepted lane's pins are a fact about the runs it bound, not about HEAD: every
+        # evidence record carries the blobs its run hashed, and they equal the lane's pins.
         lane = self._lane()
-        repo_root = Path(__file__).resolve().parents[2]
         bound = {path: blob for path, blob in lane["harness"]["source_blobs"].items() if path.startswith("reference/")}
         self.assertEqual(set(bound), self.pinned_reference_paths)
-        for path, blob in bound.items():
-            self.assertEqual(_hash_object(repo_root, path), blob, f"{path} changed after the freeze; re-freeze the lane (new lane id once a score exists)")
+        for record in self._records():
+            self.assertEqual(record["execution"][self.evidence_blob_key], bound, record["row"]["row_id"])
+
+    def test_accepted_rows_executed_under_the_declared_transition(self):
+        lane = self._lane()
+        posture = next(row for row in lane["systems"] if row["role"] == "control")["configuration"]["runtime_baseline_posture"]
+        for record in self._records():
+            binding = record["system"]["runtime_baseline"]
+            self.assertEqual(binding["state"], "TRANSITION", record["row"]["row_id"])
+            self.assertEqual(binding["declaration_blob"], posture["declaration_blob"])
+            self.assertEqual(binding["declared_successor"], posture["declared_successor"])
+            self.assertIn("declared_successor=agent-memory-runtime-baseline-v2", binding["line"])
+            self.assertIs(record["execution"]["full_selection"], True)
 
     def test_lane_workflow_checks_out_the_history_the_checker_needs(self):
         # The posture step runs scripts/check_runtime_baseline_equivalence.py, which diffs the
@@ -518,10 +579,11 @@ class _FrozenV2LaneMixin:
         self.assertIn("contract 1.4.0", control["configuration"]["recall"])
 
 
-class AmbPrecisionMemBenchV2LaneTests(_FrozenV2LaneMixin, unittest.TestCase):
+class AmbPrecisionMemBenchV2LaneTests(_AcceptedV2LaneMixin, unittest.TestCase):
     lane_id = AMB_V2_LANE_ID
     predecessor_id = LANE_ID
     workflow_path = ".github/workflows/amb-competitive.yml"
+    evidence_blob_key = "bridge_blobs"
     pinned_reference_paths = {"reference/amb_agent_memory_bridge.py", "reference/amb_mem0_explicit_bridge.py"}
 
     def test_bridge_0_2_0_is_the_pinned_adapter(self):
@@ -539,10 +601,12 @@ class AmbPrecisionMemBenchV2LaneTests(_FrozenV2LaneMixin, unittest.TestCase):
         self.assertIn("never a bridge-side cap", control["configuration"]["k"])
 
 
-class LongMemEvalParityV2LaneTests(_FrozenV2LaneMixin, unittest.TestCase):
+class LongMemEvalParityV2LaneTests(_AcceptedV2LaneMixin, unittest.TestCase):
     lane_id = LME_V2_LANE_ID
     predecessor_id = LME_LANE_ID
     workflow_path = ".github/workflows/longmemeval-competitive.yml"
+    planes = ("session", "turn")
+    evidence_blob_key = "source_blobs"
     pinned_reference_paths = {
         "reference/run_longmemeval.py",
         "reference/longmemeval_mem0_explicit_bridge.py",
