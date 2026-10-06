@@ -3093,3 +3093,39 @@ successor adapter needs a named convention; the agmi profile and the
 durability fixture pin `f2aef57` and must be asserted against the register
 and enumerated as re-pin items) and A1-A6 recorded in the report. Required
 next action: Governor amends LD1, LD4, LD5, LD7 and LD8; re-run /qor-audit.
+---
+
+### Entry #63: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T21:05:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-674-successor-baseline.md (iteration 3; plan content hash aa2215fff2e254a4c0079451de98d97bc57af54896a2a7703f43e27d3d27a74a)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_674_attempt3.md) = b7950b7949a5d80980d3b2d6c3bec0540be139ccd6810470731ef557e0d76362
+
+**Previous Hash**: `50c3ccff3ef7ddca478359438b5883ce5c88113d2afb836c3b783688b85f36de`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 7af2996ea1db3f591bb55a5c0018cb6119e2e0ade2f7f9c8bd82f22d93aa3095
+
+**Decision**: PASS, attempt 3 of 5, independent reviewer in a fresh context.
+Every attempt-2 item closed against the tree and history: the v1
+`published_commit` `c3a1bdf` is on `main`'s first-parent history and is
+the earliest such commit holding both pinned blobs; the qualification file
+has a register home (`qualification.blob`, verified against the candidate
+tree only); the identity-table breakdown is derivable from the validator's
+twenty-three `expect` calls (twenty-six rows); the Gauntlet adapter path
+comes from the manifest and the successor adapter convention is named; the
+agmi profile's pinned revision is asserted against the register and the
+re-pin-or-retire files are enumerated. Binding condition applied before
+implementation: C1 the agmi evidence header prints
+`agent_memory_published_commit` from the register and no longer prints a
+baseline-merge value, so one artifact never carries two values under one
+meaning. Advisories applied: A1 `classify` captures the checker under
+`set -euo pipefail`; A2 validator checks run through line 207; A3 the agmi
+profile re-pin is a later two-step, B1 retires by workflow condition; A4
+`published_commit` renders empty while `pending`. Next: /qor-implement.

@@ -470,7 +470,7 @@ The plan replaced the byte-diff guard with an identity-constant comparison durin
 
 | Status | Action Taken |
 |--------|--------------|
-| OPEN | Iteration 2 pinned the window with declared blobs, split publication into a `pending` qualification and an evidence-binding commit, and accepted both green states in the contract test; attempt 2 (Entry #62) closed every attempt-1 item but VETOed on a new history claim (Failure #14). Iteration 3 awaits attempt 3. |
+| FIXED | Iteration 2 pinned the window with declared blobs, split publication into a `pending` qualification and an evidence-binding commit, and accepted both green states in the contract test; attempt 2 (Entry #62) closed every attempt-1 item but VETOed on a new history claim (Failure #14); attempt 3 (Entry #63) PASSED with condition C1 applied. |
 
 #### Related Entries
 - Ledger Entry: #61 (GATE TRIBUNAL, VETO)
@@ -504,7 +504,7 @@ The plan pinned Runtime Baseline v1's publication to `788ea6f`, the last commit 
 
 | Status | Action Taken |
 |--------|--------------|
-| OPEN | Iteration 3 pins `c3a1bdf` (the PR #651 merge, first-parent, holding both blobs) and adds the executed predicate as grep-evidence; awaiting attempt 3. |
+| FIXED | Iteration 3 pinned `c3a1bdf` (the PR #651 merge, first-parent, holding both blobs) with the executed predicate as grep-evidence; attempt 3 (Entry #63) verified the pin and PASSED. |
 
 #### Related Entries
 - Ledger Entry: #62 (GATE TRIBUNAL, VETO)
@@ -553,7 +553,7 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | CHAIN_BREAK | 0 | - |
 
 **Total Failures Recorded**: 14
-**Failures Resolved**: 9 (Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
+**Failures Resolved**: 11 (Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
 ---
