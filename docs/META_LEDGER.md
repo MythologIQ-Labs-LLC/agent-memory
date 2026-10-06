@@ -2992,3 +2992,33 @@ the layout check and the four adversarial mutations still pass; it refuses to
 write otherwise. `refs/seals/entry-58` still points at the sealed tree
 (`c09d0beadfad7f62dabe4a71e228256d7aea09f0`); the corrected tree is
 `3b3d81d970c5c9327a56e2e02e9d5e393d9faae1`. Chain integrity is unaffected.
+---
+
+### Entry #60: RESEARCH BRIEF
+
+**Timestamp**: 2026-10-06T18:40:00-04:00
+**Phase**: RESEARCH
+**Author**: Analyst
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+
+**Artifact**: `docs/research-brief-north-star-six-tranches-2026-10-06.md`
+**Content Hash**: `3fe9b42dbe21e7a105e9b1be31f63d79b30335c164fb8cadeeb75ef871ca4e59`
+**Previous Hash**: `3398ceba3b78c1c1755ecdddcca189b65aa958c37b5061d81fbdfcf0c612c022`
+**Chain Hash**: `97368db7ba36fb5473962febeb3c49ceb1385cbe648897dabe0f962fe044193f`
+
+**Decision**: Research phase for the North Star roadmap (#668, tranches
+#669-#674). Six fact nodes in `.qor/roadmaps/north-star-best-in-class` are
+resolved with file:line evidence: the vector route seam exists in the
+composition runtime but is unreachable from the `AgentMemory` facade; ranking
+policy is 3.1.2 and #583 is merged (PR #634), so #673/#674 bodies citing 3.0.1
+and a held draft are corrected; the recall result shape and contract 1.3.0
+closed schemas bound any return budget; the currentness path and the
+AgentMemBench 0.20/0.80 split are decided at the BM25 stage; the harvest rows
+closed at "absorbed/seam exists" without shipped runtime behaviour; Runtime
+Baseline v1 is enforced by a byte-diff checker with no versioned-change path,
+which is the P0 prerequisite for every runtime tranche. Nine DRIFT rows are
+recorded against the blueprint. Findings are advisory; the five owner
+decisions (embedding dependency, capacity split, Hindsight provider,
+evaluation credential, temporal posture) remain with the repository owner.
+No runtime code, `pyproject.toml` or Baseline v1 record is touched.

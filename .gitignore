@@ -30,6 +30,10 @@ reference/agentmem_ref/_schemas/
 .agent/
 # Qor-logic working state: development-time toolkit, never part of the package.
 .qor/
+# Roadmap decision topology is durable repository state (docs/ARCHITECTURE_PLAN.md names .qor/roadmaps/ as committed); everything else under .qor/ stays local.
+!.qor/
+.qor/*
+!.qor/roadmaps/
 .qor/gates/
 # qor:seed -- do not edit between markers
 .qor/session/
