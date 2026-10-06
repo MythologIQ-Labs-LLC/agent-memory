@@ -5928,6 +5928,23 @@
         {
           "status": "not_run",
           "variant": "upstream_model_judged_qa"
+        },
+        {
+          "status": "not_run",
+          "variant": "lane:longmemeval-s-retrieval-parity-v1:agent_memory"
+        },
+        {
+          "status": "not_run",
+          "variant": "lane:longmemeval-s-retrieval-parity-v1:lexical_overlap"
+        },
+        {
+          "status": "not_run",
+          "variant": "lane:longmemeval-s-retrieval-parity-v1:mem0_explicit"
+        },
+        {
+          "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)",
+          "status": "blocked",
+          "variant": "lane:longmemeval-s-retrieval-parity-v1:hindsight"
         }
       ],
       "normalized_run_count": 12,

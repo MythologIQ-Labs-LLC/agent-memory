@@ -65,10 +65,39 @@ def _environment(execution: Mapping[str, Any]) -> dict[str, Any]:
 # LongMemEval ---------------------------------------------------------------
 
 
+def _longmemeval_system(execution: Mapping[str, Any], backend: str) -> tuple[dict[str, Any], str]:
+    """System identity for one backend: built-in backends bind the repository revision,
+    externally registered backends (#640 lanes) bind the identity the runner recorded."""
+
+    external = (execution.get("external_backends") or {}).get(backend)
+    if external is not None:
+        system = {
+            "id": external["system_id"],
+            "kind": external["system_kind"],
+            "revision": external["system_revision"],
+            "configuration_digest": _digest(external["configuration"]),
+            "adapter_id": external["adapter_id"],
+            "adapter_revision": external["adapter_revision"],
+        }
+        return system, external["system_revision"]
+    if backend not in SYSTEM_KINDS:
+        raise ValueError(f"backend {backend!r} is neither built in nor recorded under execution.external_backends")
+    system = {
+        "id": backend,
+        "kind": SYSTEM_KINDS[backend],
+        "revision": execution["agent_memory_revision"],
+        "adapter_id": "reference/run_longmemeval.py",
+        "adapter_revision": execution["agent_memory_revision"],
+    }
+    return system, execution["agent_memory_revision"]
+
+
 def _longmemeval_manifest(report: Mapping[str, Any], plane: str, backend: str) -> dict[str, Any]:
     execution = report["execution"]
     input_block = report["input"]
     native = report["planes"][plane]["backends"][backend]
+    system, system_revision = _longmemeval_system(execution, backend)
+    external = (execution.get("external_backends") or {}).get(backend)
     aggregate = native["aggregate"]
     scored = aggregate["evaluated_question_count"]
     population = "scored questions (upstream _abs and no-user-target exclusions applied)"
@@ -134,6 +163,9 @@ def _longmemeval_manifest(report: Mapping[str, Any], plane: str, backend: str) -
             governance,
             ["one tenant and scope per question: admission is exercised but not a filter in this workload"],
         )
+    else:
+        governance_dimension = _absent("not_applicable", f"{backend} has no governed admission path")
+    if "ingest_seconds_total" in native["timing"]:
         efficiency.extend(
             [
                 metric_observation("ingest_seconds_total", value=native["timing"]["ingest_seconds_total"], direction="lower_better", unit="seconds"),
@@ -141,8 +173,6 @@ def _longmemeval_manifest(report: Mapping[str, Any], plane: str, backend: str) -
                 metric_observation("recall_seconds_max", value=native["timing"]["recall_seconds_max"], direction="lower_better", unit="seconds"),
             ]
         )
-    else:
-        governance_dimension = _absent("not_applicable", f"{backend} has no governed admission path")
     efficiency.append(
         metric_observation(
             "peak_rss_mb",
@@ -158,7 +188,7 @@ def _longmemeval_manifest(report: Mapping[str, Any], plane: str, backend: str) -
     ]
     return {
         "schema_version": "1.0.0",
-        "run_id": f"longmemeval:{plane}:{backend}:{execution['agent_memory_revision'][:12]}",
+        "run_id": f"longmemeval:{plane}:{backend}:{system_revision[:12]}",
         "status": "complete",
         "benchmark": {
             "id": "longmemeval",
@@ -169,13 +199,7 @@ def _longmemeval_manifest(report: Mapping[str, Any], plane: str, backend: str) -
             "input_sha256": input_block["sha256"],
             "task_profile": f"{report['profile_id']}:{plane}",
         },
-        "system": {
-            "id": backend,
-            "kind": SYSTEM_KINDS[backend],
-            "revision": execution["agent_memory_revision"],
-            "adapter_id": "reference/run_longmemeval.py",
-            "adapter_revision": execution["agent_memory_revision"],
-        },
+        "system": system,
         "execution": {
             "selection_id": input_block["selection"]["question_ids_sha256"],
             "selection_method": input_block["selection"]["method"],
@@ -203,12 +227,22 @@ def _longmemeval_manifest(report: Mapping[str, Any], plane: str, backend: str) -
             "failures": failures,
             "timing": native["timing"],
             **({"governance": native["governance"]} if "governance" in native else {}),
+            **({"external_system": native["external_system"]} if "external_system" in native else {}),
+            **({"external_backend_identity": external} if external is not None else {}),
             "comparability": report["comparability"],
             "input": dict(input_block),
         },
         "limitations": [
             "retrieval/currentness only; not answer-generation quality",
             "lexical_overlap is a profile-local baseline, not an upstream BM25/dense retriever",
+            *(
+                [
+                    f"{backend} is an externally registered system; its identity and configuration digest come from "
+                    "execution.external_backends, and it is comparable only within a frozen same-harness lane"
+                ]
+                if external is not None
+                else []
+            ),
         ],
         "artifacts": [],
         "authority_effect": "none",

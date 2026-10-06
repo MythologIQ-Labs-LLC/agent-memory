@@ -20,7 +20,9 @@ from __future__ import annotations
 
 import argparse
 import codecs
+import copy
 import hashlib
+import importlib
 import json
 import math
 import platform
@@ -558,6 +560,91 @@ RETRIEVERS: dict[str, Callable[[str, Sequence[Mapping[str, str]], int], dict[str
     "agent_memory": _agent_memory,
 }
 
+# System-neutral backend registration (#640 same-harness lanes). An external memory
+# system enters this profile through the same retriever contract the built-in backends
+# use: it receives the question text and the corpus items ``{id, text, date}`` of one
+# question, and returns a ranking of item ids. Its identity is recorded in every report
+# under ``execution.external_backends`` so a normalized manifest can bind the row to an
+# exact system revision and configuration instead of to this repository's revision.
+EXTERNAL_BACKENDS: dict[str, dict[str, Any]] = {}
+_BACKEND_NAME_RE = re.compile(r"[a-z][a-z0-9_]{1,62}")
+_EXTERNAL_IDENTITY_FIELDS = (
+    "system_id",
+    "system_kind",
+    "system_revision",
+    "adapter_id",
+    "adapter_revision",
+    "configuration",
+)
+EXTERNAL_SYSTEM_KINDS = ("external_memory", "vector", "other")
+
+
+def register_external_backend(
+    name: str,
+    retriever: Callable[..., dict[str, Any]],
+    *,
+    identity: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Register an external memory system as a backend of this profile.
+
+    ``retriever(question, items, row_index, row)`` must return at least ``{"ranked":
+    [item_id, ...]}``; any other keys are recorded verbatim on the question row.
+    ``identity`` binds the row: ``system_id``, ``system_kind`` (one of
+    ``EXTERNAL_SYSTEM_KINDS``), exact ``system_revision``, ``adapter_id``,
+    ``adapter_revision`` and the frozen ``configuration`` object. Built-in backend names
+    cannot be replaced, and a name cannot be registered twice. Registration carries no
+    authority: the external system's output is evidence scored by the frozen evaluator.
+    """
+
+    if not isinstance(name, str) or not _BACKEND_NAME_RE.fullmatch(name):
+        raise ValueError(f"external backend name must match {_BACKEND_NAME_RE.pattern!r}: {name!r}")
+    if name in RETRIEVERS:
+        raise ValueError(f"backend {name!r} is already registered")
+    if not callable(retriever):
+        raise TypeError(f"external backend {name!r} retriever must be callable")
+    missing = [field for field in _EXTERNAL_IDENTITY_FIELDS if field not in identity]
+    if missing:
+        raise ValueError(f"external backend {name!r} identity is missing {missing}")
+    if identity["system_kind"] not in EXTERNAL_SYSTEM_KINDS:
+        raise ValueError(f"external backend {name!r} system_kind must be one of {EXTERNAL_SYSTEM_KINDS}")
+    for field in ("system_id", "system_revision", "adapter_id", "adapter_revision"):
+        if not isinstance(identity[field], str) or not identity[field]:
+            raise ValueError(f"external backend {name!r} identity.{field} must be a non-empty string")
+    if not isinstance(identity["configuration"], Mapping):
+        raise ValueError(f"external backend {name!r} identity.configuration must be an object")
+    recorded = copy.deepcopy(dict(identity))
+    recorded["backend"] = name
+    recorded.setdefault("authority_effect", "none")
+    RETRIEVERS[name] = retriever
+    EXTERNAL_BACKENDS[name] = recorded
+    return copy.deepcopy(recorded)
+
+
+def load_external_backends(specs: Sequence[str]) -> list[str]:
+    """Import ``module:entry`` specs and call each entry with ``register_external_backend``.
+
+    The entry returns the backend name(s) it registered. Nothing is executed beyond
+    registration; the backend runs only when selected with ``--backend``.
+    """
+
+    registered: list[str] = []
+    for spec in specs:
+        module_name, separator, entry_name = spec.partition(":")
+        if not separator or not module_name or not entry_name:
+            raise ValueError(f"--external-backend expects MODULE:ENTRY, got {spec!r}")
+        module = importlib.import_module(module_name)
+        entry = getattr(module, entry_name, None)
+        if entry is None or not callable(entry):
+            raise ValueError(f"{spec!r} does not name a callable install entry")
+        names = entry(register_external_backend)
+        if isinstance(names, str):
+            names = [names]
+        for name in names or ():
+            if name not in EXTERNAL_BACKENDS:
+                raise ValueError(f"{spec!r} reported backend {name!r} but did not register it")
+            registered.append(name)
+    return registered
+
 
 def _mean(values: Sequence[float]) -> float:
     return round(sum(values) / len(values), 6) if values else 0.0
@@ -685,6 +772,15 @@ def _evaluate_backend(dataset: Iterable[Mapping[str, Any]], granularity: str, ba
             "refused_candidate_count_total": sum(sum(row.get("refusal_reasons", {}).values()) for row in rows),
             "unmapped_admitted_count_total": sum(row.get("unmapped_admitted_count", 0) for row in rows),
         }
+    elif backend in EXTERNAL_BACKENDS:
+        identity = EXTERNAL_BACKENDS[backend]
+        result["boundary"] = str(identity.get("boundary") or f"external system {identity['system_id']} through its own public surface")
+        result["external_system"] = {
+            "system_id": identity["system_id"],
+            "system_revision": identity["system_revision"],
+            "unmapped_result_count_total": sum(row.get("unmapped_result_count", 0) for row in rows),
+        }
+    if any("ingest_seconds" in row or "recall_seconds" in row for row in rows):
         result["timing"].update(
             {
                 "ingest_seconds_total": round(sum(row.get("ingest_seconds", 0.0) for row in rows), 3),
@@ -811,6 +907,9 @@ def run(
             "finished_at": finished_at.isoformat(),
             "wall_seconds": round((finished_at - started_at).total_seconds(), 3),
             "backends": selected_backends,
+            "external_backends": {
+                name: copy.deepcopy(EXTERNAL_BACKENDS[name]) for name in selected_backends if name in EXTERNAL_BACKENDS
+            },
             "granularities": list(granularities),
             "agent_memory_configuration": dict(_AGENT_MEMORY_CONFIGURATION),
             "resource_consumption": {
@@ -850,13 +949,25 @@ def main() -> int:
     parser.add_argument("--subset-size", type=int, help="deterministic hash-ordered subset")
     parser.add_argument("--subset-seed", default=DEFAULT_SUBSET_SEED)
     parser.add_argument("--granularity", choices=("session", "turn"), action="append")
-    parser.add_argument("--backend", choices=BACKENDS, action="append")
+    parser.add_argument(
+        "--backend",
+        action="append",
+        help=f"one of {', '.join(BACKENDS)} or a backend registered by --external-backend (repeatable)",
+    )
+    parser.add_argument(
+        "--external-backend",
+        action="append",
+        default=[],
+        metavar="MODULE:ENTRY",
+        help="register an external memory system before selection; ENTRY is called with register_external_backend (#640)",
+    )
     parser.add_argument("--without-agent-memory", action="store_true")
     parser.add_argument("--omit-rows", action="store_true", help="drop per-question rows from the written report")
     parser.add_argument("--agent-memory-temporal-metadata", choices=TEMPORAL_METADATA_MODES, default="none")
     parser.add_argument("--agent-memory-ranking-variant", choices=RANKING_VARIANTS, default="default")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    load_external_backends(args.external_backend)
     configure_agent_memory(
         temporal_metadata=args.agent_memory_temporal_metadata,
         ranking_variant=args.agent_memory_ranking_variant,
