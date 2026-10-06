@@ -65,7 +65,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -158,7 +158,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -209,14 +209,14 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
     {
       "path": ".github/workflows/amb-evidence-import.yml",
-      "name": "Import AMB lane evidence",
-      "capability": "Import AMB lane evidence",
+      "name": "Import same-harness lane evidence",
+      "capability": "Import same-harness lane evidence (AMB and LongMemEval lanes; selects the importer by input)",
       "ownerOrProgram": [
         "agent-memory#640"
       ],
@@ -258,7 +258,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -306,7 +306,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -357,7 +357,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -405,7 +405,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -453,7 +453,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -503,7 +503,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -694,7 +694,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -885,7 +885,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -982,7 +982,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1030,7 +1030,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1080,7 +1080,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1128,7 +1128,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1326,7 +1326,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1424,7 +1424,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1472,7 +1472,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1520,7 +1520,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1570,7 +1570,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1618,7 +1618,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1666,7 +1666,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1714,7 +1714,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1762,7 +1762,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1810,7 +1810,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2001,7 +2001,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2097,7 +2097,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2147,7 +2147,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2198,7 +2198,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2292,7 +2292,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2340,7 +2340,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2388,7 +2388,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2436,7 +2436,58 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/longmemeval-competitive.yml",
+      "name": "LongMemEval Same-Harness Lane Run",
+      "capability": "LongMemEval Same-Harness Lane Run (one dispatch per lane row and plane; #640 lane v2)",
+      "ownerOrProgram": [
+        "agent-memory#640"
+      ],
+      "lifecycleClass": "manual_exception",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-24.04"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          180
+        ]
+      },
+      "concurrencyState": {
+        "configured": true,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "MANUAL",
+      "retirementOrReviewCondition": "Review on lifecycle or authority change; preserve required check/evidence contract.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Added after the Phase 1 snapshot (PR #666) under the Phase 0 exception: a manual_exception evidence lane with its own inputs and artifact contract; justified in the PR. Classified like the AMB lane workflow it mirrors.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2484,7 +2535,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2532,7 +2583,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2630,7 +2681,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2724,7 +2775,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2772,7 +2823,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2820,7 +2871,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2912,7 +2963,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2960,7 +3011,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3012,7 +3063,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3060,7 +3111,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3151,7 +3202,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3203,7 +3254,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3251,7 +3302,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3299,7 +3350,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3347,7 +3398,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3397,7 +3448,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3445,7 +3496,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3493,7 +3544,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3693,7 +3744,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3741,7 +3792,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3789,7 +3840,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3837,7 +3888,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3887,7 +3938,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3935,7 +3986,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -4027,7 +4078,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -4075,13 +4126,13 @@
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59,
+        "memberCount": 60,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     }
   ],
-  "lastUpdatedAt": "2026-10-05",
-  "processedWorkflowCount": 84,
+  "lastUpdatedAt": "2026-10-06",
+  "processedWorkflowCount": 85,
   "currentBranchTriggerReconciliation": {
     "observedAt": "2026-10-05",
     "note": "Current main-branch code search found no .github/workflows files containing schedule:. The earlier 2026-10-05 audit snapshot recorded 6 scheduled workflow files. Treat this as configuration drift between audit snapshots, not as equivalent observations.",
@@ -4093,29 +4144,29 @@
     "behaviorAuthority": "Inventory classification alone does not authorize disabling, deleting, or moving required checks."
   },
   "inventorySummary": {
-    "workflowCount": 84,
+    "workflowCount": 85,
     "lifecycleCounts": {
       "required_hot_path": 34,
       "conditional_hot_path": 22,
       "async_assurance": 20,
-      "manual_exception": 2,
+      "manual_exception": 3,
       "one_time": 6
     },
     "dispositionCounts": {
       "KEEP": 34,
       "CONDITIONAL": 22,
       "ASYNC": 20,
-      "MANUAL": 2,
+      "MANUAL": 3,
       "RETIRE": 6
     },
     "consequenceCounts": {
       "protected": 64,
-      "discretionary": 20
+      "discretionary": 21
     },
     "triggerCounts": {
       "pull_request": 80,
       "push": 49,
-      "workflow_dispatch": 41,
+      "workflow_dispatch": 42,
       "issues": 1
     },
     "missingExplicitTimeoutCount": 73,
@@ -4125,7 +4176,7 @@
       {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
-        "memberCount": 59
+        "memberCount": 60
       },
       {
         "id": "setup-family-2",
@@ -4138,5 +4189,11 @@
         "memberCount": 7
       }
     ]
-  }
+  },
+  "postSnapshotChanges": [
+    {
+      "date": "2026-10-06",
+      "change": "added .github/workflows/longmemeval-competitive.yml (PR #666, #640 lane v2) under the Phase 0 exception; renamed amb-evidence-import.yml to 'Import same-harness lane evidence' with a lane input instead of a second import workflow"
+    }
+  ]
 }

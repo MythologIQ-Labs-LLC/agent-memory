@@ -242,3 +242,101 @@ class LongMemEvalExternalBackendNormalizationTests(unittest.TestCase):
         del report["execution"]["external_backends"]["ext_system"]
         with self.assertRaisesRegex(ValueError, "neither built in nor recorded"):
             normalize_longmemeval(report)
+
+
+class LongMemEvalLaneNormalizationTests(unittest.TestCase):
+    """Lane v2 evidence records normalize like profile runs but carry the lane as task profile."""
+
+    LANE_ID = "longmemeval-s-retrieval-parity-v1"
+
+    def _write_record(self, root: Path, backend: str, plane: str, *, external: dict | None = None) -> dict:
+        import gzip
+
+        report = json.loads(LME.read_text(encoding="utf-8"))
+        source_backend = "lexical_overlap"
+        native = copy.deepcopy(report["planes"][plane]["backends"][source_backend])
+        if external is not None:
+            native["external_system"] = {"system_id": external["system_id"], "system_revision": external["system_revision"], "unmapped_result_count_total": 0}
+            native["timing"].update({"ingest_seconds_total": 3.0, "recall_seconds_total": 0.5, "recall_seconds_max": 0.01})
+        report["planes"] = {plane: {"backends": {backend: native}}}
+        report["execution"]["backends"] = [backend]
+        report["execution"]["granularities"] = [plane]
+        report["execution"]["external_backends"] = {backend: external} if external is not None else {}
+        revision = report["execution"]["agent_memory_revision"]
+        system_revision = external["system_revision"] if external is not None else revision
+        directory = root / "reports" / "benchmarks" / "longmemeval" / self.LANE_ID / f"{backend}-{plane}-{revision[:12]}"
+        directory.mkdir(parents=True)
+        (directory / "report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        with gzip.open(directory / "report.rows.json.gz", "wb") as handle:
+            handle.write(json.dumps({plane: {backend: []}}).encode("utf-8"))
+        record = {
+            "contract_family": "agent-memory-same-harness-lane-evidence",
+            "contract_version": "1.0.0",
+            "lane_id": self.LANE_ID,
+            "lane_digest_at_execution": "ab" * 32,
+            "row": {"row_id": f"{backend}-row", "system_id": external["system_id"] if external else backend, "role": "comparator" if external else "baseline", "provider_key": backend, "backend": backend, "plane": plane},
+            "system": {"id": external["system_id"] if external else backend, "revision": system_revision, "source_kind": "python_package" if external else "harness_builtin"},
+            "input": {"sha256": report["input"]["sha256"], "corpus_class": "external_frozen"},
+            "execution": {"agent_memory_revision": revision, "workflow_run_id": "1"},
+            "files": {"report.json": "11" * 32, "report.rows.json.gz": "22" * 32, "execution-identity.json": "33" * 32},
+            "authority_effect": "none",
+        }
+        (directory / "evidence.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        return record
+
+    def test_lane_rows_share_a_lane_card_and_bind_external_identity(self):
+        import tempfile
+
+        from agentmem_ref.evaluation.normalize import normalize_longmemeval_lane
+
+        external = {
+            "backend": "mem0_explicit",
+            "system_id": "mem0-oss",
+            "system_kind": "external_memory",
+            "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+            "adapter_id": "reference/longmemeval_mem0_explicit_bridge.py",
+            "adapter_revision": "e" * 40,
+            "configuration": {"inference": "none"},
+            "authority_effect": "none",
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            baseline_record = self._write_record(root, "lexical_overlap", "session")
+            comparator_record = self._write_record(root, "mem0_explicit", "session", external=external)
+            (baseline,) = normalize_longmemeval_lane(baseline_record, repo_root=root)
+            (comparator,) = normalize_longmemeval_lane(comparator_record, repo_root=root)
+        for manifest in (baseline, comparator):
+            validate_run(manifest)
+            self.assertEqual(manifest["benchmark"]["task_profile"], f"{self.LANE_ID}:session")
+            self.assertEqual(manifest["native_results"]["lane_evidence"]["lane_id"], self.LANE_ID)
+            self.assertTrue(any(self.LANE_ID in item for item in manifest["limitations"]))
+            uris = {artifact["artifact_id"]: artifact for artifact in manifest["artifacts"]}
+            self.assertEqual(set(uris), {"native-report", "rows", "execution-identity", "lane-evidence-record"})
+            self.assertEqual(uris["native-report"]["sha256"], "11" * 32)
+            self.assertIn(f"/{self.LANE_ID}/", uris["rows"]["uri"])
+        self.assertEqual(baseline["run_id"], f"longmemeval:{self.LANE_ID}:session:lexical_overlap:{baseline['system']['revision'][:12]}")
+        self.assertEqual(baseline["system"]["kind"], "lexical")
+        self.assertEqual(comparator["run_id"], f"longmemeval:{self.LANE_ID}:session:mem0_explicit:94c3fe9f238f")
+        self.assertEqual(comparator["system"], {
+            "id": "mem0-oss",
+            "kind": "external_memory",
+            "revision": external["system_revision"],
+            "configuration_digest": comparator["system"]["configuration_digest"],
+            "adapter_id": external["adapter_id"],
+            "adapter_revision": "e" * 40,
+        })
+        # Lane rows form their own card; the longitudinal profile run on the same input stays separate.
+        profile_lexical = next(m for m in _lme() if m["run_id"].startswith("longmemeval:session:lexical_overlap"))
+        cards = benchmark_scorecards([baseline, comparator, profile_lexical])
+        self.assertEqual(len(cards), 2)
+        lane_card = next(card for card in cards if card["comparison_identity"]["task_profile"] == f"{self.LANE_ID}:session")
+        self.assertEqual(lane_card["baseline_system"], "lexical_overlap")
+        self.assertEqual([system["id"] for system in lane_card["systems"]], ["lexical_overlap", "mem0-oss"])
+
+    def test_non_lane_record_is_refused(self):
+        from agentmem_ref.evaluation.normalize import normalize_longmemeval_lane
+
+        with self.assertRaisesRegex(ValueError, "same-harness lane evidence record"):
+            normalize_longmemeval_lane({"contract_family": "other"})
+        with self.assertRaisesRegex(ValueError, "row.plane and row.backend"):
+            normalize_longmemeval_lane({"contract_family": "agent-memory-same-harness-lane-evidence", "row": {"provider_key": "bm25"}})
