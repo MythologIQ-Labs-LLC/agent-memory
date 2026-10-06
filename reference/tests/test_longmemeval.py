@@ -280,3 +280,138 @@ class LongMemEvalProfileTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ExternalBackendSeamTests(unittest.TestCase):
+    """System-neutral backend registration for same-harness lanes (#640)."""
+
+    def setUp(self) -> None:
+        self._retrievers = dict(M.RETRIEVERS)
+        self._external = dict(M.EXTERNAL_BACKENDS)
+
+    def tearDown(self) -> None:
+        M.RETRIEVERS.clear()
+        M.RETRIEVERS.update(self._retrievers)
+        M.EXTERNAL_BACKENDS.clear()
+        M.EXTERNAL_BACKENDS.update(self._external)
+
+    @staticmethod
+    def _identity(**overrides: object) -> dict:
+        identity = {
+            "system_id": "ext-system",
+            "system_kind": "external_memory",
+            "system_revision": "a" * 40,
+            "adapter_id": "reference/example_bridge.py",
+            "adapter_revision": "b" * 40,
+            "configuration": {"mode": "explicit"},
+        }
+        identity.update(overrides)
+        return identity
+
+    @staticmethod
+    def _echo_lexical(question, items, row_index, row=None):
+        return {
+            "ranked": M._lexical_rank(question, items),
+            "ingest_seconds": 0.01,
+            "recall_seconds": 0.002,
+            "unmapped_result_count": 1,
+            "ext_namespace": f"ns-{row_index}",
+        }
+
+    def test_registration_validates_name_identity_and_kind(self) -> None:
+        with self.assertRaisesRegex(ValueError, "already registered"):
+            M.register_external_backend("agent_memory", self._echo_lexical, identity=self._identity())
+        for bad in ("", "Ext", "ext system", "1ext", "x" * 70):
+            with self.assertRaisesRegex(ValueError, "name must match"):
+                M.register_external_backend(bad, self._echo_lexical, identity=self._identity())
+        with self.assertRaisesRegex(ValueError, "missing \\['system_revision'\\]"):
+            identity = self._identity()
+            del identity["system_revision"]
+            M.register_external_backend("ext_system", self._echo_lexical, identity=identity)
+        with self.assertRaisesRegex(ValueError, "system_kind must be one of"):
+            M.register_external_backend("ext_system", self._echo_lexical, identity=self._identity(system_kind="agent_memory"))
+        with self.assertRaisesRegex(ValueError, "identity.system_revision must be a non-empty string"):
+            M.register_external_backend("ext_system", self._echo_lexical, identity=self._identity(system_revision=""))
+        with self.assertRaisesRegex(ValueError, "configuration must be an object"):
+            M.register_external_backend("ext_system", self._echo_lexical, identity=self._identity(configuration="explicit"))
+        with self.assertRaises(TypeError):
+            M.register_external_backend("ext_system", "not-callable", identity=self._identity())
+        recorded = M.register_external_backend("ext_system", self._echo_lexical, identity=self._identity())
+        self.assertEqual(recorded["backend"], "ext_system")
+        self.assertEqual(recorded["authority_effect"], "none")
+        with self.assertRaisesRegex(ValueError, "already registered"):
+            M.register_external_backend("ext_system", self._echo_lexical, identity=self._identity())
+        self.assertNotIn("ext_system", M.BACKENDS, "built-in backend tuple is untouched")
+
+    def test_external_backend_is_scored_by_the_same_evaluator_and_bound_in_the_report(self) -> None:
+        identity = self._identity()
+        M.register_external_backend("ext_system", self._echo_lexical, identity=identity)
+        identity["configuration"]["mode"] = "mutated after registration"
+        report = M.run(FIXTURE, corpus_class="synthetic", backends=("lexical_overlap", "ext_system"), granularities=("session", "turn"))
+        self.assertEqual(report["execution"]["backends"], ["lexical_overlap", "ext_system"])
+        recorded = report["execution"]["external_backends"]
+        self.assertEqual(list(recorded), ["ext_system"])
+        self.assertEqual(recorded["ext_system"]["system_id"], "ext-system")
+        self.assertEqual(recorded["ext_system"]["configuration"], {"mode": "explicit"}, "identity is copied at registration")
+        self.assertEqual(recorded["ext_system"]["authority_effect"], "none")
+        for plane in ("session", "turn"):
+            backends = report["planes"][plane]["backends"]
+            external = backends["ext_system"]
+            self.assertEqual(external["aggregate"], backends["lexical_overlap"]["aggregate"], "same ranking, same evaluator, same numbers")
+            self.assertEqual(external["external_system"], {"system_id": "ext-system", "system_revision": "a" * 40, "unmapped_result_count_total": len(external["rows"])})
+            self.assertIn("external system ext-system", external["boundary"])
+            self.assertNotIn("governance", external, "no governed admission path is invented for an external system")
+            self.assertAlmostEqual(external["timing"]["ingest_seconds_total"], 0.01 * len(external["rows"]), places=6)
+            self.assertAlmostEqual(external["timing"]["recall_seconds_max"], 0.002, places=6)
+            self.assertNotIn("ingest_seconds_total", backends["lexical_overlap"]["timing"])
+            for index, row in enumerate(external["rows"]):
+                self.assertEqual(row["ext_namespace"], f"ns-{index}")
+                self.assertEqual(row["unmapped_result_count"], 1)
+        with self.assertRaisesRegex(ValueError, "unknown backend"):
+            M.run(FIXTURE, corpus_class="synthetic", backends=("never_registered",), granularities=("session",))
+
+    def test_load_external_backends_imports_module_entries(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            module_path = Path(temporary) / "seam_probe_bridge.py"
+            module_path.write_text(
+                "def install(register):\n"
+                "    register('probe_system', lambda q, items, i, row=None: {'ranked': [item['id'] for item in items]},\n"
+                "             identity={'system_id': 'probe', 'system_kind': 'other', 'system_revision': 'c' * 40,\n"
+                "                       'adapter_id': 'probe.py', 'adapter_revision': 'd' * 40, 'configuration': {}})\n"
+                "    return 'probe_system'\n"
+                "def liar(register):\n"
+                "    return ['never_registered']\n"
+                "not_callable = 1\n",
+                encoding="utf-8",
+            )
+            sys.path.insert(0, temporary)
+            try:
+                self.assertEqual(M.load_external_backends(["seam_probe_bridge:install"]), ["probe_system"])
+                self.assertIn("probe_system", M.EXTERNAL_BACKENDS)
+                with self.assertRaisesRegex(ValueError, "did not register it"):
+                    M.load_external_backends(["seam_probe_bridge:liar"])
+                with self.assertRaisesRegex(ValueError, "callable install entry"):
+                    M.load_external_backends(["seam_probe_bridge:not_callable"])
+                with self.assertRaisesRegex(ValueError, "MODULE:ENTRY"):
+                    M.load_external_backends(["seam_probe_bridge"])
+                output = Path(temporary) / "report.json"
+                M.RETRIEVERS.pop("probe_system")
+                M.EXTERNAL_BACKENDS.pop("probe_system")
+                argv = [
+                    "run_longmemeval.py",
+                    "--input", str(FIXTURE),
+                    "--external-backend", "seam_probe_bridge:install",
+                    "--backend", "probe_system",
+                    "--granularity", "session",
+                    "--omit-rows",
+                    "--output", str(output),
+                ]
+                with mock.patch.object(sys, "argv", argv):
+                    self.assertEqual(M.main(), 0)
+                report = json.loads(output.read_text(encoding="utf-8"))
+                self.assertEqual(report["execution"]["backends"], ["probe_system"])
+                self.assertEqual(report["execution"]["external_backends"]["probe_system"]["system_id"], "probe")
+                self.assertNotIn("rows", report["planes"]["session"]["backends"]["probe_system"])
+            finally:
+                sys.path.remove(temporary)
+                sys.modules.pop("seam_probe_bridge", None)

@@ -192,7 +192,7 @@ There is intentionally no `overall_score` in the comparison result.
 Each integration remains responsible for its actual benchmark semantics:
 
 - SWE-ContextBench owns its gold-edge and ranking protocol (external evidence blocked, #467).
-- LongMemEval owns its session/turn recall and nDCG semantics and its upstream exclusions.
+- LongMemEval owns its session/turn recall and nDCG semantics and its upstream exclusions; external systems enter it through `run_longmemeval.py --external-backend MODULE:ENTRY` and are scored by the same replica evaluator, with their identity recorded under `execution.external_backends` (#640 lane v2).
 - AgentMemBench / MemDialogue owns its operational phases and upstream adapter protocol.
 - The golden keyed-retrieval integration owns a tiny exact-id protocol and exists to prove the contributor contract.
 - Gauntlet-native suites (governance, durability) own their claim-driven case semantics and are never external evidence.

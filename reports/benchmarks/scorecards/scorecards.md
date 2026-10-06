@@ -14,6 +14,10 @@ Reading rules: each Δ outcome applies one metric's own direction and says nothi
 | `agent-memory-longmemeval-retrieval-currentness-v1` | #516 | longmemeval_s_cleaned | complete | agent_memory, lexical_overlap, no_memory | currentness, efficiency, governance, reproducibility, retrieval | #531, #538, #522 |
 |  |  | longmemeval_m_cleaned | complete |  |  |  |
 |  |  | upstream_model_judged_qa | not_run |  |  |  |
+|  |  | lane:longmemeval-s-retrieval-parity-v1:agent_memory | not_run |  |  |  |
+|  |  | lane:longmemeval-s-retrieval-parity-v1:lexical_overlap | not_run |  |  |  |
+|  |  | lane:longmemeval-s-retrieval-parity-v1:mem0_explicit | not_run |  |  |  |
+|  |  | lane:longmemeval-s-retrieval-parity-v1:hindsight | blocked |  |  |  |
 | `amb-precisionmembench-retrieval-v1` | #601 | lane:amb-precisionmembench-retrieval-v1:agent-memory | complete | agent-memory, bm25, mem0-oss | efficiency, reproducibility, retrieval | none |
 |  |  | lane:amb-precisionmembench-retrieval-v1:bm25 | complete |  |  |  |
 |  |  | lane:amb-precisionmembench-retrieval-v1:mem0-explicit | complete |  |  |  |

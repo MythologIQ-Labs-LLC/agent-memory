@@ -4,7 +4,7 @@
   "integration_id": "agent-memory-longmemeval-retrieval-currentness-v1",
   "admission_state": "evidence_partial",
   "owning_issue": 516,
-  "description": "LongMemEval session/turn retrieval and knowledge-update currentness profile with no-memory, lexical-overlap, and governed Agent Memory arms. Retrieval and currentness evidence only; the upstream model-judged QA evaluator is not run.",
+  "description": "LongMemEval session/turn retrieval and knowledge-update currentness profile with no-memory, lexical-overlap, and governed Agent Memory arms, plus externally registered memory systems scored by the same evaluator under a frozen same-harness lane (#640). Retrieval and currentness evidence only; the upstream model-judged QA evaluator is not run.",
   "benchmark": {
     "id": "longmemeval",
     "name": "LongMemEval",
@@ -109,9 +109,10 @@
       "entry_point": "reference/run_longmemeval.py",
       "supporting_entry_points": [
         "reference/analyze_longmemeval_report.py",
-        "reference/compare_longmemeval_reports.py"
+        "reference/compare_longmemeval_reports.py",
+        "reference/longmemeval_mem0_explicit_bridge.py"
       ],
-      "invocation_example": "python reference/run_longmemeval.py --input <longmemeval_s_cleaned.json> --corpus-class external_frozen --output report.json"
+      "invocation_example": "python reference/run_longmemeval.py --input <longmemeval_s_cleaned.json> --corpus-class external_frozen --output report.json; external system (lane longmemeval-s-retrieval-parity-v1): PYTHONPATH=reference python reference/run_longmemeval.py --input <longmemeval_s_cleaned.json> --corpus-class external_frozen --external-backend longmemeval_mem0_explicit_bridge:install_longmemeval_mem0_explicit_backend --backend mem0_explicit"
     },
     "budget": {
       "retrieval_or_context_budget": "ranked candidate lists scored at k in {1,3,5,10,30,50}; no answer-generation context budget",
@@ -124,7 +125,11 @@
           "no_memory",
           "lexical_overlap",
           "agent_memory"
-        ]
+        ],
+        "external_backends": {
+          "registration": "run_longmemeval.py --external-backend MODULE:ENTRY calls ENTRY(register_external_backend); the registered identity (system_id, system_kind, exact system_revision, adapter_id, adapter_revision, configuration) is recorded under execution.external_backends and bound by the normalizer",
+          "mem0_explicit": "Mem0 OSS 2.2.1 explicit memory (reference/longmemeval_mem0_explicit_bridge.py); comparator row of lane longmemeval-s-retrieval-parity-v1"
+        }
       }
     },
     "failure_semantics": {
@@ -145,7 +150,7 @@
       "observed_at temporal metadata",
       "reference_time"
     ],
-    "unsupported_semantics": "a backend that cannot rank returns an empty ranking and is scored by the native protocol; the governance dimension is not_applicable for arms without a governed admission path"
+    "unsupported_semantics": "a backend that cannot rank returns an empty ranking and is scored by the native protocol; the governance dimension is not_applicable for arms without a governed admission path, including externally registered systems"
   },
   "provider_requirements": {
     "credentials": "credential_free",
@@ -352,7 +357,7 @@
   "gauntlet": {
     "relationship": "eligible",
     "profile_id": null,
-    "reason": "the retrieval lane is expressible through remember/recall operation envelopes, but the runner currently invokes the Agent Memory facade directly; a system-neutral Gauntlet profile binding is deferred until the same-harness comparator work (#640) needs it"
+    "reason": "the retrieval lane is expressible through remember/recall operation envelopes, and external systems now enter the runner through its code-registration seam (#640 lane longmemeval-s-retrieval-parity-v1); a system-neutral Gauntlet profile binding through operation envelopes is still deferred until a same-harness lane needs orchestration rather than registration"
   },
   "evidence_history": [
     {
@@ -393,6 +398,23 @@
     {
       "variant": "upstream_model_judged_qa",
       "status": "not_run"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v1:agent_memory",
+      "status": "not_run"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v1:lexical_overlap",
+      "status": "not_run"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v1:mem0_explicit",
+      "status": "not_run"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v1:hindsight",
+      "status": "blocked",
+      "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
     }
   ],
   "product_findings": [

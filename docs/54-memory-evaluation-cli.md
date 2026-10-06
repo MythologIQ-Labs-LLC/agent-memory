@@ -33,6 +33,7 @@ List frozen same-harness comparator lanes, and validate one lane file against it
 ```bash
 agent-memory benchmark lanes
 agent-memory benchmark validate-lane reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v1.json --json
+agent-memory benchmark validate-lane reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json
 ```
 
 Validate one result against the common benchmark-run contract:

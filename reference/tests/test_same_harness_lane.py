@@ -25,6 +25,7 @@ from agentmem_ref.evaluation.same_harness_lane import (
 )
 
 LANE_ID = "amb-precisionmembench-retrieval-v1"
+LME_LANE_ID = "longmemeval-s-retrieval-parity-v1"
 
 
 def _lane() -> dict:
@@ -223,8 +224,9 @@ class SameHarnessLaneTests(unittest.TestCase):
         report = json.loads(output.getvalue())
         self.assertEqual(report["command"], "benchmark_lanes")
         self.assertEqual(report["authority_effect"], "none")
-        self.assertEqual([lane["lane_id"] for lane in report["lanes"]], [LANE_ID])
+        self.assertEqual([lane["lane_id"] for lane in report["lanes"]], [LANE_ID, LME_LANE_ID])
         self.assertEqual(report["lanes"][0]["status"], "accepted")
+        self.assertEqual(report["lanes"][1]["status"], "frozen")
 
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
@@ -264,6 +266,122 @@ class SameHarnessLaneTests(unittest.TestCase):
         mapped = {mapping["dimension"] for mapping in integration["normalization"]["mappings"]}
         self.assertEqual(mapped, {"retrieval", "efficiency", "reproducibility"})
         self.assertEqual(set(integration["normalization"]["unmapped_dimensions"]), {"currentness", "reasoning", "governance", "evaluator_integrity"})
+
+
+class LongMemEvalParityLaneTests(unittest.TestCase):
+    """Lane v2: frozen LongMemEval_S retrieval parity (#640), no score, bound to its evaluator and adapter blobs."""
+
+    def _lane(self) -> dict:
+        return get_lane(LME_LANE_ID)
+
+    def test_lane_is_frozen_without_scores_and_resolves_to_the_longmemeval_integration(self):
+        lane = self._lane()
+        self.assertEqual(lane["status"], "frozen")
+        self.assertIs(lane["frozen_before_any_score"], True)
+        self.assertEqual(lane["authority_effect"], "none")
+        self.assertIs(lane["evaluator"]["llm_calls"], False)
+        self.assertEqual(_score_keys(lane), [])
+        resolved = resolve_lane(lane)
+        self.assertEqual(resolved["integration_id"], "agent-memory-longmemeval-retrieval-currentness-v1")
+        self.assertEqual(resolved["provenance_class"], "external_adapted")
+        self.assertEqual(resolved["harness_revision"], "9e0b455f4ef0e2ab8f2e582289761153549043fc")
+        rows = {row["row_id"]: row for row in resolved["rows"]}
+        self.assertEqual({key: row["status"] for key, row in rows.items()}, {
+            "agent-memory-public-facade": "frozen",
+            "lexical-overlap-profile-baseline": "frozen",
+            "mem0-oss-2.2.1-explicit-memory": "frozen",
+            "hindsight-0.10.2": "deferred",
+        })
+        self.assertEqual({row["role"] for row in lane["systems"]}, {"control", "baseline", "comparator"})
+        self.assertEqual(sum(lane["dataset"]["query_partition"].values()), lane["dataset"]["query_count"])
+        integration = get_integration(lane["benchmark_integration"])
+        self.assertEqual(integration["input_contract"]["known_dataset_revision"].split("@")[1], "98d7416c24c778c2fee6e6f3006e7a073259d48f")
+        (fixture,) = lane["dataset"]["fixtures"]
+        self.assertIn("98d7416c24c778c2fee6e6f3006e7a073259d48f", fixture["url"])
+        self.assertEqual(fixture["sha256"], lane["dataset"]["input_sha256"])
+        accepted = next(item for item in integration["evidence_history"] if item["variant"] == "longmemeval_s_cleaned")
+        self.assertEqual(accepted["input_sha256"], lane["dataset"]["input_sha256"], "the lane freezes the input the accepted Agent Memory evidence used")
+        entries = {item["variant"]: item for item in integration["evidence_history"]}
+        for key in ("agent_memory", "lexical_overlap", "mem0_explicit"):
+            self.assertEqual(entries[f"lane:{LME_LANE_ID}:{key}"]["status"], "not_run")
+            self.assertTrue(any(row["provider_key"] == key for row in lane["systems"]))
+        self.assertEqual(entries[f"lane:{LME_LANE_ID}:hindsight"]["status"], "blocked")
+        self.assertEqual(integration["gauntlet"]["relationship"], "eligible")
+
+    def test_lane_binds_the_runner_and_bridge_blobs_it_freezes(self):
+        import subprocess
+        import sys
+
+        lane = self._lane()
+        repo_root = Path(__file__).resolve().parents[2]
+        blobs = lane["harness"]["source_blobs"]
+        bound = {path: blob for path, blob in blobs.items() if path.startswith("reference/")}
+        self.assertEqual(set(bound), {
+            "reference/run_longmemeval.py",
+            "reference/longmemeval_mem0_explicit_bridge.py",
+            "reference/amb_mem0_explicit_bridge.py",
+        })
+        for path, blob in bound.items():
+            actual = subprocess.run(["git", "hash-object", str(repo_root / path)], capture_output=True, text=True, check=True).stdout.strip()
+            self.assertEqual(actual, blob, f"{path} changed after the freeze; re-freeze the lane (new lane id once a score exists)")
+        for path in ("src/retrieval/run_retrieval.py", "src/retrieval/eval_utils.py", "LICENSE"):
+            self.assertRegex(blobs[path], r"^[0-9a-f]{40}$")
+        self.assertIn(blobs["reference/run_longmemeval.py"], lane["evaluator"]["scorer"])
+
+        sys.path.insert(0, str(repo_root / "reference"))
+        try:
+            import longmemeval_mem0_explicit_bridge as bridge
+        finally:
+            sys.path.pop(0)
+        row = next(item for item in lane["systems"] if item["provider_key"] == bridge.BACKEND_NAME)
+        self.assertEqual(row["system_id"], bridge.SYSTEM_ID)
+        self.assertEqual(row["source"]["revision"], bridge.MEM0_TAG_COMMIT)
+        self.assertEqual(row["dependency_pins"], list(bridge.DEPENDENCY_PINS))
+        self.assertEqual(row["adapter"]["module"], bridge.ADAPTER_ID)
+        self.assertEqual(row["adapter"]["install_entry"], f"longmemeval_mem0_explicit_bridge:{bridge.install_longmemeval_mem0_explicit_backend.__name__}")
+        frozen = bridge.frozen_configuration()
+        self.assertEqual(row["configuration"]["embedder"], frozen["embedder"])
+        self.assertEqual(row["configuration"]["vector_store"]["collection"], frozen["vector_store"]["collection"])
+        self.assertEqual(row["configuration"]["optional_components"], frozen["optional_components"])
+        self.assertIn(f"top_k={bridge.SEARCH_TOP_K}", row["configuration"]["search"])
+        self.assertEqual(lane["budget"]["default_k"], bridge.SEARCH_TOP_K)
+        self.assertEqual(row["inference_posture"], "explicit_memory_no_inference")
+        self.assertEqual(lane["execution"]["concurrency"], frozen["concurrency"])
+        self.assertEqual(lane["lane_id"], bridge.LANE_ID)
+        control = next(item for item in lane["systems"] if item["role"] == "control")
+        self.assertEqual(control["configuration"]["temporal_metadata"], "none")
+        self.assertEqual(control["configuration"]["ranking_variant"], "default")
+
+    def test_lane_workflow_executes_only_frozen_rows_of_this_lane(self):
+        repo_root = Path(__file__).resolve().parents[2]
+        workflow = (repo_root / ".github" / "workflows" / "longmemeval-competitive.yml").read_text(encoding="utf-8")
+        self.assertIn("workflow_dispatch", workflow)
+        self.assertNotIn("pull_request", workflow.split("permissions:")[0])
+        self.assertIn(f"lanes/{LME_LANE_ID}.json", workflow)
+        self.assertIn("validate-lane", workflow)
+        self.assertIn('lane["status"] == "frozen"', workflow)
+        self.assertIn('["git", "hash-object", path]', workflow)
+        self.assertIn("cancel-in-progress: false", workflow)
+        self.assertIn("timeout-minutes:", workflow)
+        self.assertIn("mem0ai==2.2.1 qdrant-client==1.17.0 sentence-transformers==5.2.3 torch==2.10.0", workflow)
+        self.assertIn("longmemeval_mem0_explicit_bridge:install_longmemeval_mem0_explicit_backend", workflow)
+        lane = self._lane()
+        self.assertEqual(lane["execution"]["environment"]["workflow"], ".github/workflows/longmemeval-competitive.yml")
+
+    def test_frozen_lane_refuses_executed_or_accepted_rows(self):
+        lane = self._lane()
+        lane["systems"][2]["status"] = "executed"
+        lane["systems"][2]["status_reason"] = "pretend"
+        with self.assertRaisesRegex(SameHarnessLaneError, "frozen lane may not carry an executed row"):
+            validate_lane(lane)
+        lane = self._lane()
+        lane["systems"][2]["dependency_pins"] = []
+        with self.assertRaisesRegex(SameHarnessLaneError, "exact dependency_pins"):
+            validate_lane(lane)
+        lane = self._lane()
+        lane["harness"]["revision"] = "f" * 40
+        with self.assertRaisesRegex(SameHarnessLaneError, "differs from the integration's source_revision"):
+            resolve_lane(lane)
 
 
 if __name__ == "__main__":

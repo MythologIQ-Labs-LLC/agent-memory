@@ -183,3 +183,62 @@ class ScorecardTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LongMemEvalExternalBackendNormalizationTests(unittest.TestCase):
+    """An externally registered backend (#640 lane v2) binds its own identity, never the repository's."""
+
+    IDENTITY = {
+        "backend": "ext_system",
+        "system_id": "mem0-oss",
+        "system_kind": "external_memory",
+        "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+        "adapter_id": "reference/longmemeval_mem0_explicit_bridge.py",
+        "adapter_revision": "e" * 40,
+        "configuration": {"inference": "none", "search": {"top_k": 50}},
+        "authority_effect": "none",
+    }
+
+    def _report(self):
+        report = json.loads(LME.read_text(encoding="utf-8"))
+        for plane in report["planes"].values():
+            external = copy.deepcopy(plane["backends"]["lexical_overlap"])
+            external["external_system"] = {"system_id": "mem0-oss", "system_revision": self.IDENTITY["system_revision"], "unmapped_result_count_total": 3}
+            external["timing"].update({"ingest_seconds_total": 12.5, "recall_seconds_total": 1.25, "recall_seconds_max": 0.2})
+            plane["backends"]["ext_system"] = external
+        report["execution"]["backends"] = list(report["execution"]["backends"]) + ["ext_system"]
+        report["execution"]["external_backends"] = {"ext_system": copy.deepcopy(self.IDENTITY)}
+        return report
+
+    def test_external_backend_manifest_binds_the_recorded_identity(self):
+        report = self._report()
+        manifests = normalize_longmemeval(report)
+        self.assertEqual(len(manifests), 8)
+        external = next(m for m in manifests if m["run_id"] == "longmemeval:session:ext_system:94c3fe9f238f")
+        validate_run(external)
+        self.assertEqual(external["system"]["id"], "mem0-oss")
+        self.assertEqual(external["system"]["kind"], "external_memory")
+        self.assertEqual(external["system"]["revision"], self.IDENTITY["system_revision"])
+        self.assertEqual(external["system"]["adapter_id"], self.IDENTITY["adapter_id"])
+        self.assertEqual(external["system"]["adapter_revision"], "e" * 40)
+        self.assertRegex(external["system"]["configuration_digest"], r"^[a-f0-9]{64}$")
+        self.assertEqual(external["dimensions"]["governance"]["status"], "not_applicable")
+        efficiency = {m["metric_id"]: m for m in external["dimensions"]["efficiency"]["metrics"]}
+        self.assertEqual(efficiency["ingest_seconds_total"]["value"], 12.5)
+        self.assertEqual(external["native_results"]["external_system"]["unmapped_result_count_total"], 3)
+        self.assertEqual(external["native_results"]["external_backend_identity"], self.IDENTITY)
+        self.assertTrue(any("externally registered" in item for item in external["limitations"]))
+        lexical = next(m for m in manifests if m["run_id"].startswith("longmemeval:session:lexical_overlap"))
+        self.assertEqual(lexical["system"]["revision"], report["execution"]["agent_memory_revision"])
+        self.assertNotIn("ingest_seconds_total", {m["metric_id"] for m in lexical["dimensions"]["efficiency"]["metrics"]})
+        # Same plane, same frozen input and selection: the external row lands on the same card.
+        cards = benchmark_scorecards([lexical, external])
+        self.assertEqual(len(cards), 1)
+        self.assertEqual(cards[0]["baseline_system"], "lexical_overlap")
+        self.assertIn("mem0-oss", cards[0]["dimensions"]["retrieval"]["rows"][0]["vs_baseline"])
+
+    def test_backend_without_any_identity_is_refused(self):
+        report = self._report()
+        del report["execution"]["external_backends"]["ext_system"]
+        with self.assertRaisesRegex(ValueError, "neither built in nor recorded"):
+            normalize_longmemeval(report)
