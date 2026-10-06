@@ -6,7 +6,6 @@ import contextlib
 import copy
 import io
 import json
-import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -453,6 +452,20 @@ def _hash_object(repo_root: Path, path: str) -> str:
     return subprocess.run(["git", "hash-object", str(repo_root / path)], capture_output=True, text=True, check=True).stdout.strip()
 
 
+def _frozen_view(lane: dict) -> dict:
+    """The accepted lane as it was frozen: statuses back to frozen, status_reasons and the acceptance note removed."""
+
+    frozen = copy.deepcopy(lane)
+    frozen["status"] = "frozen"
+    for row in frozen["systems"]:
+        if row["status"] == "accepted":
+            row["status"] = "frozen"
+            del row["status_reason"]
+    assert frozen["findings"][-1].startswith("accepted rows "), frozen["findings"][-1]
+    frozen["findings"] = frozen["findings"][:-1]
+    return frozen
+
+
 class _AcceptedV2LaneMixin:
     """What an accepted -v2 lane binds: the budgeted control under the declared transition, every row's evidence record, the pins those records carry."""
 
@@ -480,11 +493,10 @@ class _AcceptedV2LaneMixin:
             record = json.loads((repo_root / binding["report"]).read_text(encoding="utf-8"))
             self.assertEqual(record["lane_id"], self.lane_id)
             self.assertEqual(record["authority_effect"], "none")
-            # The digest the run executed is the frozen lane's at the executing revision; the
-            # accepted lane carries statuses and status_reasons on top, so its digest differs.
-            executing = record["execution"]["agent_memory_revision"]
-            frozen = json.loads(subprocess.run(["git", "show", f"{executing}:{record['lane_file']}"], cwd=repo_root, capture_output=True, text=True, check=True).stdout)
-            self.assertEqual(record["lane_digest_at_execution"], lane_digest(frozen))
+            # The digest the run executed is the frozen lane's. Acceptance adds exactly the
+            # statuses, the status_reasons and one findings note on top, so undoing those
+            # (no git history needed: CI checks out at depth 1) must give the executed digest.
+            self.assertEqual(record["lane_digest_at_execution"], lane_digest(_frozen_view(lane)))
             self.assertEqual(record["lane_digest_at_execution"], record["execution"]["lane_digest_sha256"])
             records.append(record)
         return records
