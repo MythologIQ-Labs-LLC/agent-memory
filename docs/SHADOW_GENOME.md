@@ -443,6 +443,41 @@ The plan described the audit-event shape from `_event` and assumed `_recall_even
 
 ---
 
+### Failure #13: #674 successor-baseline plan iteration 1 VETOed on an unpinned transition window and a self-referencing publication step
+
+**Date**: 2026-10-06
+**Iteration**: 1 (audit attempt 1 of 5)
+**Verdict ID**: AUDIT_REPORT_674_attempt1 2026-10-06T20:20 VETO (V1-V3)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+The plan replaced the byte-diff guard with an identity-constant comparison during a declared transition; required complete public-Gauntlet evidence inside a blob-pinned record that only the post-publication workflow can produce; and called an existing `PASS`-asserting test unchanged while accepting `TRANSITION` in the workflow that runs it with full history.
+
+#### Why It Failed
+
+- A pin on named identities was mistaken for a pin on the surface: everything the identity table did not name became free to drift.
+- The publication step was written from the record's shape, not walked end to end against the workflow that produces its evidence; v1's own three-commit publication history was not read.
+- A test was declared unchanged from its name, not from its assertion.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: declaring a weaker invariant "verified in both directions" because its named parts are checked both ways; locking a procedure whose evidence producer is gated on the procedure's own completion.
+
+**Correct Pattern**: when relaxing a guard, state exactly what the new guard pins (here: the frozen surface plus declared blobs, nothing else); walk every publication step against the workflow and git history that produce its inputs before locking it; re-read every assertion of a test the plan claims not to change.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| OPEN | Iteration 2 pins the window with declared blobs, splits publication into a `pending` qualification and an evidence-binding commit, and accepts both green states in the contract test; awaiting attempt 2. |
+
+#### Related Entries
+- Ledger Entry: #61 (GATE TRIBUNAL, VETO)
+- Audit Report: `.agent/staging/AUDIT_REPORT_674_attempt1.md`
+
+---
+
 ## Pattern Library (Extracted Lessons)
 
 Cross-cutting lessons from the temporal/currentness and evidence work (#538 through #550) are collected in [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md).
@@ -480,10 +515,10 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | GHOST_PATH | 0 | - |
 | HALLUCINATION | 2 | 2026-09-01 |
 | ORPHAN | 0 | - |
-| SPEC_DRIFT | 11 | 2026-09-07 |
+| SPEC_DRIFT | 12 | 2026-10-06 |
 | CHAIN_BREAK | 0 | - |
 
-**Total Failures Recorded**: 12
+**Total Failures Recorded**: 13
 **Failures Resolved**: 9 (Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 

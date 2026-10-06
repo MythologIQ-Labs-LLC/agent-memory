@@ -3022,3 +3022,40 @@ recorded against the blueprint. Findings are advisory; the five owner
 decisions (embedding dependency, capacity split, Hindsight provider,
 evaluation credential, temporal posture) remain with the repository owner.
 No runtime code, `pyproject.toml` or Baseline v1 record is touched.
+---
+
+### Entry #61: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T20:20:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: VETO
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-674-successor-baseline.md (iteration 1; plan content hash 2e3ac38f32974eb7928e213e3a262f922fbf621de39ffc8df332e610095e3028)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_674_attempt1.md) = bdd96309046d58099b5085f0315211969d454a385a1c75285d7451e2b2747350
+
+**Previous Hash**: `97368db7ba36fb5473962febeb3c49ceb1385cbe648897dabe0f962fe044193f`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 19b70f8262bb1cb11cc6636622322625341e554a42f2706e945642d4869705e4
+
+**Decision**: VETO, attempt 1 of 5, performed by an independent reviewer in a
+fresh context; the Judge's factual claims (29 `expect` calls, the agmi
+install order, the durability workflow's literal `f2aef57` assertion, the
+dogfood ancestry check, the v1 record's three publication commits) were
+reproduced against the tree before this entry. V1 -- LD3 compared identity
+constants only, so a declared transition left every other protected byte
+unguarded: a relaxation of the diff even though not a path allowlist. V2 --
+LD5 demanded complete public-Gauntlet evidence inside a blob-pinned record
+that can only be produced after the record names the successor current: a
+record cannot name a `verified_head` that contains itself. V3 -- the plan
+called `test_evaluation_only_change_keeps_runtime_baseline_equivalence`
+unchanged while accepting `TRANSITION` in the workflow that runs it with full
+history. C1-C4 (jsonschema before the agmi checker; the durability workflow
+and the adapter constant; v1-only dogfood ancestry and renderer literals;
+23 table rows plus six manifest checks) and A1-A4 recorded in the report.
+Required next action: Governor amends the plan (declared blobs pin the
+window; two-step publication with a `pending` qualification; the test
+accepts both green states); re-run /qor-audit.
