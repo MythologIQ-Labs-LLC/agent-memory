@@ -55,7 +55,7 @@ On this PR the checker prints `PASS` again (the candidate equals the new frozen 
 
 ### Step B2 — evidence binding
 
-A second PR makes the qualification file complete (workflow run, artifact id and digest, `verified_head` = B1's PR head, `system_revision`, adapter blob, the three-query sample and its bounded `exact_top1`), sets the register entry's `published_commit` to B1's merge commit (whose tree holds the record and boundary bytes B1 pinned; the qualification file is not checked there) and its `qualification.blob` to the new bytes. The record itself is untouched; from here on its blob never changes. `#674` closes the successor's lane acceptance against this revision.
+A second PR makes the qualification file complete (workflow run, artifact id and digest, `verified_head` = B1's PR head, `system_revision`, adapter blob, the three-query sample and its bounded `exact_top1`), sets the register entry's `published_commit` to B1's merge commit (whose tree holds the record and boundary bytes B1 pinned; the qualification file is not checked there) and its `qualification.blob` to the new bytes. The record itself is untouched; from here on its blob never changes. The successor's lane rows execute at a revision whose protected surface the checker reports as the frozen predecessor plus the same declaration blob that `runtime_revision.commit` carries (the inference of equivalence rests on that blob at both ends; the lane pins it and the importer binds it), and the publication cites them by evidence id and executing revision.
 
 ## Invariants
 

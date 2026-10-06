@@ -136,9 +136,9 @@
         ],
         "reading_rule": "active_passes/43 is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy; BM25 is a baseline and Agent Memory the control, never a market claim",
         "normalized_runs": [
-          "reports/benchmarks/normalized/amb-precisionmembench-single-turn-agent-memory-703be5ba1c7e.json",
-          "reports/benchmarks/normalized/amb-precisionmembench-single-turn-bm25-03c1d0f1d27d.json",
-          "reports/benchmarks/normalized/amb-precisionmembench-single-turn-mem0-oss-94c3fe9f238f.json"
+          "reports/benchmarks/normalized/amb-precisionmembench-amb-precisionmembench-retrieval-v1-single-turn-agent-memory-703be5ba1c7e.json",
+          "reports/benchmarks/normalized/amb-precisionmembench-amb-precisionmembench-retrieval-v1-single-turn-bm25-03c1d0f1d27d.json",
+          "reports/benchmarks/normalized/amb-precisionmembench-amb-precisionmembench-retrieval-v1-single-turn-mem0-oss-94c3fe9f238f.json"
         ]
       },
       {

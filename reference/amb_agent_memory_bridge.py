@@ -7,6 +7,11 @@ and output formatting. This module only translates AMB's neutral document/retrie
 surface into the public AgentMemory facade.
 
 External benchmark output remains evidence, never memory authority.
+
+Since bridge 0.2.0 (contract 1.4.0, #670) the bridge asks the facade for the case budget
+(``memory.recall(query, budget=k)``) and returns the facade's ``returned`` prefix: truncation
+is the runtime's ``ranked-prefix-return-budget`` policy, never a bridge-side cap. ``admitted``
+stays the full ranked admitted set and is counted in the raw response.
 """
 
 from __future__ import annotations
@@ -24,7 +29,7 @@ from agentmem_ref import AgentMemory
 AMB_REPOSITORY = "vectorize-io/agent-memory-benchmark"
 AMB_REVISION = "03c1d0f1d27da63034f0931121c858faba512383"
 AMB_PROVIDER_KEY = "agent-memory"
-BRIDGE_VERSION = "0.1.0"
+BRIDGE_VERSION = "0.2.0"
 
 _TENANT = "tenant:amb-competitive"
 _ACTOR = "agent:amb-competitive"
@@ -202,6 +207,9 @@ def install_amb_agent_memory_provider(
             query_timestamp: str | None = None,
         ) -> tuple[list[Document], dict | None]:
             root = self._require_prepared()
+            budget = int(k)
+            if budget < 1:
+                raise ValueError("AMB case budget must be at least 1")
             with AgentMemory.open(
                 root,
                 tenant=_TENANT,
@@ -209,12 +217,13 @@ def install_amb_agent_memory_provider(
                 scope=_scope(user_id),
                 purpose=_PURPOSE,
             ) as memory:
-                outcome = memory.recall(str(query))
+                outcome = memory.recall(str(query), budget=budget)
 
             admitted = [str(item) for item in outcome.get("admitted") or []]
+            returned = [str(item) for item in outcome.get("returned") or []]
             documents: list[Document] = []
             unmapped: list[str] = []
-            for fact_uuid in admitted:
+            for fact_uuid in returned:
                 record = self._by_fact.get(fact_uuid)
                 if record is None:
                     unmapped.append(fact_uuid)
@@ -230,8 +239,6 @@ def install_amb_agent_memory_provider(
                         tags=list(record["tags"]),
                     )
                 )
-                if len(documents) >= max(0, int(k)):
-                    break
 
             raw = {
                 "provider": AMB_PROVIDER_KEY,
@@ -241,6 +248,7 @@ def install_amb_agent_memory_provider(
                 "candidate_count": len(outcome.get("candidates") or []),
                 "admitted_count": len(admitted),
                 "returned_count": len(documents),
+                "return_policy": dict(outcome.get("return_policy") or {}),
                 "unmapped_admitted": unmapped,
                 "query_timestamp_received": query_timestamp,
                 "query_timestamp_used_as_memory_authority": False,

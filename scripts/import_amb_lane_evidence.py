@@ -41,6 +41,7 @@ from agentmem_ref.evaluation.same_harness_lane import lane_digest, validate_lane
 
 CONTRACT_FAMILY = "agent-memory-same-harness-lane-evidence"
 CONTRACT_VERSION = "1.0.0"
+RUNTIME_BASELINE_STATES = ("PASS", "TRANSITION")
 COPIED_FILES = (
     "execution-identity.json",
     "amb-constraints.txt",
@@ -57,6 +58,57 @@ class ImportError_(RuntimeError):
 
 def sha256_of(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def control_row(lane: dict) -> dict:
+    return next(item for item in lane["systems"] if item["role"] == "control")
+
+
+def lane_reference_blobs(lane: dict) -> dict[str, str]:
+    return {path: blob for path, blob in lane["harness"]["source_blobs"].items() if path.startswith("reference/")}
+
+
+def runtime_baseline_binding(identity: dict, lane: dict) -> dict | None:
+    """Bind the checker state the run recorded to the posture the lane's control row pins (docs/67)."""
+
+    posture = (control_row(lane).get("configuration") or {}).get("runtime_baseline_posture")
+    if posture is None:
+        return None
+    state = identity.get("runtime_baseline_state")
+    if state not in posture.get("checker_state_required", list(RUNTIME_BASELINE_STATES)):
+        raise ImportError_(f"runtime baseline state {state!r} is not admitted by the lane's posture")
+    if identity.get("declaration_blob") != posture["declaration_blob"]:
+        raise ImportError_(
+            f"executed declaration blob {identity.get('declaration_blob')} != lane-pinned {posture['declaration_blob']}"
+        )
+    return {
+        "state": state,
+        "line": identity.get("runtime_baseline_line"),
+        "declaration_blob": identity.get("declaration_blob"),
+        "declared_successor": posture["declared_successor"],
+        "predecessor": posture["predecessor"],
+    }
+
+
+def check_lane_pins(identity: dict, lane: dict) -> None:
+    """Refusals keyed on what the lane declares, never on which identity keys happen to exist.
+
+    A lane that pins ``reference/*`` blobs requires the run's ``bridge_blobs`` to equal them; a
+    lane whose control row declares a baseline posture requires the run's lane digest to equal
+    the digest of the lane as committed at the executing revision. The AMB v1 lane pins no
+    reference blob and declares no posture, so both refusals are inert for it.
+    """
+
+    pinned = lane_reference_blobs(lane)
+    if pinned:
+        recorded = identity.get("bridge_blobs")
+        if not isinstance(recorded, dict) or any(recorded.get(path) != blob for path, blob in pinned.items()):
+            raise ImportError_(f"executed bridge blobs {recorded} do not carry the lane's pinned blobs {pinned}")
+    if (control_row(lane).get("configuration") or {}).get("runtime_baseline_posture") is not None:
+        if identity.get("lane_digest_sha256") != lane_digest(lane):
+            raise ImportError_(
+                f"executed lane digest {identity.get('lane_digest_sha256')} != frozen {lane_digest(lane)}"
+            )
 
 
 def read_inventory(path: Path) -> dict[str, str]:
@@ -166,6 +218,8 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
         raise ImportError_(f"run {run_id} carries no harness lock provenance")
     if identity["harness_constraints"]["uv_lock_git_blob"] != lane["execution"]["environment"]["harness_lock"]["git_blob"]:
         raise ImportError_("executed harness lock blob differs from the lane's recorded lock")
+    check_lane_pins(identity, lane)
+    runtime_baseline = runtime_baseline_binding(identity, lane)
 
     inventory = read_inventory(artifact_dir / "sha256.txt")
     summaries = sorted(artifact_dir.glob("precisionmembench/*/retrieval/single-turn.json"))
@@ -234,6 +288,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
             "source_kind": row["source"]["kind"],
             "resolved_packages": identity.get("resolved_packages"),
             "mem0_optional_components": identity.get("mem0_optional_components"),
+            "runtime_baseline": runtime_baseline,
         },
         "input": {
             "sha256": lane["dataset"]["input_sha256"],

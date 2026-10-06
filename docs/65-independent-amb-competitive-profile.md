@@ -268,7 +268,7 @@ active cases test. The Hindsight row stays deferred.
 
 `normalize_amb_precisionmembench()` (`reference/agentmem_ref/evaluation/normalize.py`)
 turns each committed `evidence.json` into one `memory-benchmark-run` manifest under
-`reports/benchmarks/normalized/amb-precisionmembench-single-turn-<system>-<rev12>.json`.
+`reports/benchmarks/normalized/amb-precisionmembench-<lane_id>-single-turn-<system>-<rev12>.json` (the lane id entered the run id with the `-v2` lanes so a later lane generation can never overwrite an earlier manifest).
 It maps only what the harness's own summary table states: `retrieval` carries
 `active_passes/43`, `structural_passes/25`, `trivially_empty_passes/9`,
 `total_passes/77`, `mean_precision` and `mean_recall`; `efficiency` carries

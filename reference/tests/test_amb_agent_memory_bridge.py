@@ -73,6 +73,36 @@ def test_provider_registers_and_round_trips_through_public_agent_memory(tmp_path
     assert all(item.id != "doc:b" for item in isolated)
 
 
+def test_retrieve_returns_the_facade_prefix_under_the_case_budget(tmp_path, monkeypatch):
+    # Bridge 0.2.0 (contract 1.4.0, #670): truncation is the facade's ranked-prefix policy.
+    _install_fake_amb(monkeypatch)
+    provider_type = bridge.install_amb_agent_memory_provider(tmp_path, agent_memory_revision="b" * 40)
+    provider = provider_type()
+    provider.prepare(tmp_path / "store")
+    provider.ingest(
+        [
+            FakeDocument(id=f"doc:{index}", content=f"release branch note {index}", user_id="user:k")
+            for index in range(4)
+        ]
+    )
+    found, raw = provider.retrieve("release branch note", k=3, user_id="user:k")
+    assert bridge.BRIDGE_VERSION == "0.2.0"
+    assert raw["bridge_version"] == "0.2.0"
+    assert len(found) == 3
+    assert raw["admitted_count"] == 4
+    assert raw["returned_count"] == 3
+    assert raw["return_policy"]["requested_k"] == 3
+    assert raw["return_policy"]["applied"] is True
+    assert raw["return_policy"]["authority_effect"] == "none"
+    assert raw["return_policy"]["admitted_count"] == 4
+    try:
+        provider.retrieve("release branch note", k=0, user_id="user:k")
+    except ValueError:
+        pass
+    else:  # pragma: no cover - the refusal is the contract (#670)
+        raise AssertionError("k=0 must be refused before recall")
+
+
 def test_provider_resume_reuses_revision_bound_sidecar(tmp_path, monkeypatch):
     registry = _install_fake_amb(monkeypatch)
     provider_type = bridge.install_amb_agent_memory_provider(tmp_path, agent_memory_revision="b" * 40)

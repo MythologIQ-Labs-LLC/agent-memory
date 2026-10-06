@@ -51,7 +51,12 @@ CONTRACT_VERSION = "1.0.0"
 COPIED_FILES = ("execution-identity.json", "lane-validation.json", "files.txt", "sha256.txt")
 PLANES = ("session", "turn")
 _SHA256_RE = re.compile(r"\b[0-9a-f]{64}\b")
-FROZEN_AGENT_MEMORY_CONFIGURATION = {"temporal_metadata": "none", "ranking_variant": "default"}
+#: The runner's own defaults for the Agent Memory configuration it records
+#: (``run_longmemeval._AGENT_MEMORY_CONFIGURATION``). The importer never reads the runner at
+#: HEAD: a lane pins the runner blob that produced its evidence, and the expectation is the
+#: defaults overlaid with the keys the lane's control row declares.
+RUNNER_CONFIGURATION_DEFAULTS = {"temporal_metadata": "none", "ranking_variant": "default", "budget": "none"}
+RUNTIME_BASELINE_STATES = ("PASS", "TRANSITION")
 
 
 class ImportError_(RuntimeError):
@@ -104,6 +109,51 @@ def frozen_selection_digest(lane: dict) -> str:
     if len(found) != 1:
         raise ImportError_("lane selection_method must name exactly one frozen question_ids_sha256")
     return found[0]
+
+
+def control_row(lane: dict) -> dict:
+    return next(item for item in lane["systems"] if item["role"] == "control")
+
+
+def expected_agent_memory_configuration(lane: dict) -> dict[str, str]:
+    """The runner defaults overlaid with the control row's declared configuration keys."""
+
+    declared = control_row(lane).get("configuration") or {}
+    return {key: str(declared.get(key, default)) for key, default in RUNNER_CONFIGURATION_DEFAULTS.items()}
+
+
+def recorded_agent_memory_configuration(execution: dict) -> dict[str, str]:
+    recorded = execution.get("agent_memory_configuration") or {}
+    return {key: str(recorded.get(key, default)) for key, default in RUNNER_CONFIGURATION_DEFAULTS.items()}
+
+
+def runtime_baseline_binding(identity: dict, lane: dict) -> dict | None:
+    """Bind the checker state the run recorded to the posture the lane's control row pins.
+
+    A lane whose control row declares ``configuration.runtime_baseline_posture`` executes
+    during a declared baseline transition: the run must record a checker state the posture
+    admits and the declaration blob the posture pins, so a declaration amended between runs
+    (docs/67 Step A.6) is refused rather than silently accepted. A lane without a posture
+    (both v1 lanes) binds nothing here.
+    """
+
+    posture = (control_row(lane).get("configuration") or {}).get("runtime_baseline_posture")
+    if posture is None:
+        return None
+    state = identity.get("runtime_baseline_state")
+    if state not in posture.get("checker_state_required", list(RUNTIME_BASELINE_STATES)):
+        raise ImportError_(f"runtime baseline state {state!r} is not admitted by the lane's posture")
+    if identity.get("declaration_blob") != posture["declaration_blob"]:
+        raise ImportError_(
+            f"executed declaration blob {identity.get('declaration_blob')} != lane-pinned {posture['declaration_blob']}"
+        )
+    return {
+        "state": state,
+        "line": identity.get("runtime_baseline_line"),
+        "declaration_blob": identity.get("declaration_blob"),
+        "declared_successor": posture["declared_successor"],
+        "predecessor": posture["predecessor"],
+    }
 
 
 def lane_reference_blobs(lane: dict) -> dict[str, str]:
@@ -168,8 +218,11 @@ def _check_report(report: dict, *, identity: dict, lane: dict, row: dict) -> Non
         raise ImportError_("report was produced from a dirty or unknown worktree")
     if execution.get("backends") != [backend] or execution.get("granularities") != [plane]:
         raise ImportError_(f"report executed {execution.get('backends')} x {execution.get('granularities')}, expected [{backend}] x [{plane}]")
-    if execution.get("agent_memory_configuration") != FROZEN_AGENT_MEMORY_CONFIGURATION:
-        raise ImportError_(f"Agent Memory configuration {execution.get('agent_memory_configuration')} is not the frozen comparability posture")
+    expected_configuration = expected_agent_memory_configuration(lane)
+    if recorded_agent_memory_configuration(execution) != expected_configuration:
+        raise ImportError_(
+            f"Agent Memory configuration {execution.get('agent_memory_configuration')} is not the lane's declared posture {expected_configuration}"
+        )
     planes = report.get("planes") or {}
     if list(planes) != [plane] or list(planes[plane].get("backends") or {}) != [backend]:
         raise ImportError_("report planes/backends do not match the execution identity")
@@ -300,6 +353,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
             "resolved_packages": identity.get("resolved_packages"),
             "mem0_optional_components": identity.get("mem0_optional_components"),
             "external_backend_identity": (report["execution"].get("external_backends") or {}).get(backend),
+            "runtime_baseline": runtime_baseline_binding(identity, lane),
         },
         "input": {
             "sha256": lane["dataset"]["input_sha256"],
