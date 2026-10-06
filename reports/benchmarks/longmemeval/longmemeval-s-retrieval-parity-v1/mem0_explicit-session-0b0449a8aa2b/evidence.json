@@ -1,0 +1,219 @@
+{
+  "authority_effect": "none",
+  "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+  "contract_family": "agent-memory-same-harness-lane-evidence",
+  "contract_version": "1.0.0",
+  "evidence_class": "same_harness_external_candidate",
+  "execution": {
+    "agent_memory_revision": "0b0449a8aa2beca216563486dcbd2325673214e6",
+    "authority_effect": "none",
+    "backend": "mem0_explicit",
+    "evidence_class": "same_harness_external_candidate",
+    "full_selection": true,
+    "granularity": "session",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "lane_digest_sha256": "0e4dff28b805f7ee06945c20fe2152d894ec58c597664fb5ef10c6db5c9b25f3",
+    "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json",
+    "lane_id": "longmemeval-s-retrieval-parity-v1",
+    "mem0_optional_components": {
+      "fastembed_installed": false,
+      "spacy_installed": false
+    },
+    "resolved_packages": {
+      "agent-memory-reference": "0.2.0",
+      "mem0ai": "2.2.1",
+      "numpy": "2.5.3",
+      "openai": "3.24.0",
+      "posthog": "7.63.0",
+      "qdrant-client": "1.17.0",
+      "sentence-transformers": "5.2.3",
+      "torch": "2.10.0"
+    },
+    "runner": "ubuntu24",
+    "source_blobs": {
+      "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+      "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+      "reference/run_longmemeval.py": "4acdeccced3c309813a5b26ce9c0b5da948403a1"
+    },
+    "subset_size": "0",
+    "upstream_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+    "workflow_run_id": "37421253480"
+  },
+  "files": {
+    "execution-identity.json": "32f6e0e2c0f6e99c0cd3731d155dc6bfff7275347deccc9c4b990f248ac102ce",
+    "files.txt": "2de98a6ad1c4182957ff09f3f0e6e23a1cfb89017dbe539829b8fd86f27a7a93",
+    "lane-validation.json": "66faacbe15d12774b340283a4cea066fe2b10814a903e87da57adbde4e92257b",
+    "report.json": "1bc22b78a56ff415df395b7c52c1f3de5936d2d641d676048c9b73bc88569536",
+    "report.rows.json.gz": "6760218ddd0839034290f5d377ca2c2b7255da5f108cab4fba21ecf3513f0b1e",
+    "sha256.txt": "b6d3fa346007bc58f3e790a449605105aa9b48c8d7299832d13b43126ccfdc4b"
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "fixtures": {
+      "longmemeval_s_cleaned.json": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+    },
+    "query_count": 500,
+    "question_ids_sha256": "7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+    "selection_id": "all-500:7d738ae585fd4014",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "verified_by": "lane record only (import ran with --no-fetch)"
+  },
+  "lane_digest_at_execution": "0e4dff28b805f7ee06945c20fe2152d894ec58c597664fb5ef10c6db5c9b25f3",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json",
+  "lane_id": "longmemeval-s-retrieval-parity-v1",
+  "native_summary": {
+    "backend": "mem0_explicit",
+    "evaluated_question_count": 419,
+    "external_system": {
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "unmapped_result_count_total": 0
+    },
+    "failures": {
+      "ingestion_failure_count": 0,
+      "out_of_corpus_returned_count": 0,
+      "runtime_failure_count": 0
+    },
+    "headline": {
+      "ndcg_any@10": 0.841054,
+      "ndcg_any@5": 0.825047,
+      "recall_all@10": 0.883055,
+      "recall_all@5": 0.809069
+    },
+    "knowledge_update_headline": {
+      "ndcg_any@10": 0.89216,
+      "ndcg_any@5": 0.882595,
+      "recall_all@10": 0.958333,
+      "recall_all@5": 0.902778
+    },
+    "latest_gold_ranked_first": {
+      "applicable_question_count": 70,
+      "definition": "among scored knowledge-update questions with gold items on >=2 distinct dates, fraction where the most recently dated gold item is returned ahead of every older gold item",
+      "rate": 0.442857,
+      "upstream_metric": false
+    },
+    "plane": "session",
+    "shape_note": "copied from the runner's own aggregate for this plane and backend; the full native report is report.json",
+    "timing": {
+      "ingest_seconds_total": 1219.086,
+      "recall_seconds_max": 0.420802,
+      "recall_seconds_total": 89.25,
+      "wall_seconds": 1310.594
+    }
+  },
+  "raw_report": {
+    "name": "session-mem0_explicit.json",
+    "sha256": "bee626472dfa7e43e81a3fbaff2286b6fca3f4e856d8a19acdb8e1ea7d22b171",
+    "split_rule": "rows moved to report.rows.json.gz ({plane: {backend: rows}}); report.json is the remainder; recomposition verified byte for byte at import"
+  },
+  "row": {
+    "backend": "mem0_explicit",
+    "display_name": "Mem0 OSS 2.2.1 (explicit memory, no inference)",
+    "inference_posture": "explicit_memory_no_inference",
+    "plane": "session",
+    "provider_key": "mem0_explicit",
+    "role": "comparator",
+    "row_id": "mem0-oss-2.2.1-explicit-memory",
+    "system_id": "mem0-oss"
+  },
+  "system": {
+    "external_backend_identity": {
+      "adapter_id": "reference/longmemeval_mem0_explicit_bridge.py",
+      "adapter_revision": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+      "authority_effect": "none",
+      "backend": "mem0_explicit",
+      "boundary": "Mem0 OSS public Memory.add/Memory.search surface; explicit memory, no inference, no governed admission path",
+      "bridge_version": "0.1.0",
+      "configuration": {
+        "add": {
+          "call": "Memory.add([{'role': 'user', 'content': <item text>}], user_id=<namespace>, metadata={'doc_id': <item id>, 'source_date': <session date>}, infer=False)",
+          "content_rule": "item text verbatim (session: user turns joined by one space; turn: one user turn); ids, dates and gold never enter memory text"
+        },
+        "backend": "mem0_explicit",
+        "bridge_version": "0.1.0",
+        "concurrency": 1,
+        "dependency_pins": [
+          "mem0ai==2.2.1",
+          "qdrant-client==1.17.0",
+          "sentence-transformers==5.2.3",
+          "torch==2.10.0"
+        ],
+        "embedder": {
+          "dims": 384,
+          "model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+          "provider": "huggingface",
+          "revision": "b207367332321f8e44f96e224ef15bc607f4dbf0"
+        },
+        "identity_mapping": "benchmark item id stored as metadata.doc_id at ingest and read back from each result; results without doc_id are counted as unmapped and dropped from the ranking",
+        "inference": "infer=False on every add; LLM replaced by a fail-closed guard after construction",
+        "isolation": "one Mem0 user_id namespace per retriever call (per question and plane); search is filtered to that namespace",
+        "optional_components": {
+          "fastembed_bm25_keyword_search": "not installed; Mem0 logs 'BM25 keyword search disabled' and ranks by vector similarity only",
+          "graph_store": "not configured",
+          "install": "pip install mem0ai==2.2.1 (base package, no extras)",
+          "reranker": "not configured (rerank=False)",
+          "spacy_lemmatizer": "not installed; Mem0 skips text lemmatization"
+        },
+        "package": "mem0ai==2.2.1",
+        "search": {
+          "call": "Memory.search(question, top_k=50, filters={'user_id': <namespace>})",
+          "rerank": false,
+          "threshold": 0.1,
+          "top_k": 50,
+          "top_k_rule": "the deepest scored k; bounding the ranking there cannot change any scored metric"
+        },
+        "tag": "v2.2.1",
+        "tag_commit": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+        "telemetry": "MEM0_TELEMETRY=false; MEM0_DIR inside the disposable store",
+        "vector_store": {
+          "collection": "lme640_mem0_explicit",
+          "mode": "local path, on_disk=true, fresh per run, one collection for the whole run",
+          "provider": "qdrant"
+        }
+      },
+      "inference": "none",
+      "install_posture": {
+        "fastembed_installed": false,
+        "mem0ai": "2.2.1",
+        "spacy_installed": false
+      },
+      "lane_id": "longmemeval-s-retrieval-parity-v1",
+      "resolved_packages": {
+        "mem0ai": "2.2.1",
+        "openai": "3.24.0",
+        "posthog": "7.63.0",
+        "qdrant-client": "1.17.0",
+        "sentence-transformers": "5.2.3",
+        "torch": "2.10.0"
+      },
+      "system_id": "mem0-oss",
+      "system_identity": "mem0ai/mem0 v2.2.1 (mem0ai==2.2.1, Apache-2.0)",
+      "system_kind": "external_memory",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd"
+    },
+    "id": "mem0-oss",
+    "mem0_optional_components": {
+      "fastembed_installed": false,
+      "spacy_installed": false
+    },
+    "resolved_packages": {
+      "agent-memory-reference": "0.2.0",
+      "mem0ai": "2.2.1",
+      "numpy": "2.5.3",
+      "openai": "3.24.0",
+      "posthog": "7.63.0",
+      "qdrant-client": "1.17.0",
+      "sentence-transformers": "5.2.3",
+      "torch": "2.10.0"
+    },
+    "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+    "revision_rule": "release tag v2.2.1; pip pin mem0ai==2.2.1; mem0.__version__ verified before the store is opened",
+    "source_kind": "python_package"
+  },
+  "workflow_run": {
+    "artifact_directory": "longmemeval-lane-mem0_explicit-session-0b0449a8aa2beca216563486dcbd2325673214e6",
+    "id": "37421253480",
+    "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/37421253480"
+  }
+}

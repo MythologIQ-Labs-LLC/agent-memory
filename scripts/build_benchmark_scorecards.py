@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "reference"))
 
 from agentmem_ref.evaluation.contract import canonical_json_bytes  # noqa: E402
-from agentmem_ref.evaluation.normalize import normalize_agentmembench, normalize_amb_precisionmembench, normalize_longmemeval  # noqa: E402
+from agentmem_ref.evaluation.normalize import normalize_agentmembench, normalize_amb_precisionmembench, normalize_longmemeval, normalize_longmemeval_lane  # noqa: E402
 from agentmem_ref.evaluation.registry import list_profiles  # noqa: E402
 from agentmem_ref.evaluation.scorecard import build, render_markdown  # noqa: E402
 
@@ -34,6 +34,12 @@ SOURCES = (
     (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/agent-memory-703be5ba1c7e/evidence.json"),
     (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/bm25-703be5ba1c7e/evidence.json"),
     (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v1/mem0-explicit-b38d91631169/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json"),
 )
 NORMALIZED = ROOT / "reports" / "benchmarks" / "normalized"
 SCORECARDS = ROOT / "reports" / "benchmarks" / "scorecards"

@@ -11,8 +11,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 from typing import Any, Mapping
 
+from .._paths import REPO_ROOT
 from .contract import dimension_report, metric_observation, validate_run
 
 SYSTEM_KINDS = {"no_memory": "no_memory", "lexical_overlap": "lexical", "agent_memory": "agent_memory"}
@@ -257,6 +259,61 @@ def normalize_longmemeval(report: Mapping[str, Any]) -> list[dict[str, Any]]:
         for backend in sorted(report["planes"][plane]["backends"]):
             manifests.append(validate_run(_longmemeval_manifest(report, plane, backend)))
     return manifests
+
+
+def _longmemeval_lane_directory(record: Mapping[str, Any]) -> str:
+    row = record["row"]
+    return f"reports/benchmarks/longmemeval/{record['lane_id']}/{row['backend']}-{row['plane']}-{record['execution']['agent_memory_revision'][:12]}"
+
+
+def normalize_longmemeval_lane(record: Mapping[str, Any], *, repo_root: Path | None = None) -> list[dict[str, Any]]:
+    """One manifest per executed lane (row, plane), built from its committed evidence record.
+
+    The record is what ``scripts/import_longmemeval_lane_evidence.py`` wrote next to the
+    runner's native ``report.json`` (rows in ``report.rows.json.gz``). The native report is
+    normalized exactly as a profile run is (same metrics, same declared mappings); the lane
+    identity sets the task profile, so lane rows share one scorecard per plane and are never
+    grouped with the longitudinal Agent Memory profile runs on the same input, which the lane
+    declares not comparable (different executing revision, re-executed under the lane).
+    """
+
+    if record.get("contract_family") != "agent-memory-same-harness-lane-evidence":
+        raise ValueError("normalize_longmemeval_lane expects a same-harness lane evidence record")
+    row = record["row"]
+    if "plane" not in row or "backend" not in row:
+        raise ValueError("normalize_longmemeval_lane expects a LongMemEval lane record with row.plane and row.backend")
+    root = Path(repo_root) if repo_root is not None else REPO_ROOT
+    directory = _longmemeval_lane_directory(record)
+    report = json.loads((root / directory / "report.json").read_text(encoding="utf-8"))
+    plane, backend = row["plane"], row["backend"]
+    manifest = _longmemeval_manifest(report, plane, backend)
+    system = manifest["system"]
+    if system["revision"] != record["system"]["revision"]:
+        raise ValueError(
+            f"evidence record system revision {record['system']['revision']} does not match the report's {system['revision']}"
+        )
+    if system["kind"] == "external_memory" and system["id"] != record["system"]["id"]:
+        raise ValueError(f"evidence record system id {record['system']['id']} does not match the report's external identity {system['id']}")
+    # The lane declares the system identity of every row; built-in backends keep their
+    # backend name in the run id but carry the lane's system id on the manifest.
+    system["id"] = record["system"]["id"]
+    files = record.get("files", {})
+    manifest["run_id"] = f"longmemeval:{record['lane_id']}:{plane}:{backend}:{system['revision'][:12]}"
+    manifest["benchmark"]["task_profile"] = f"{record['lane_id']}:{plane}"
+    manifest["execution"]["environment"]["runner"] = "github-hosted ubuntu-24.04 (LongMemEval Same-Harness Lane Run)"
+    manifest["execution"]["environment"]["lane_digest_at_execution"] = record["lane_digest_at_execution"]
+    manifest["native_results"]["lane_evidence"] = json.loads(json.dumps(record))
+    manifest["limitations"] = [
+        *manifest["limitations"],
+        f"executed under same-harness lane {record['lane_id']}: comparable only with the other rows of that lane on the same plane, not with the longitudinal Agent Memory profile runs on this input",
+    ]
+    manifest["artifacts"] = [
+        {"artifact_id": "native-report", "kind": "benchmark_native_results", "uri": f"{directory}/report.json", **({"sha256": files["report.json"]} if "report.json" in files else {})},
+        {"artifact_id": "rows", "kind": "row_level_rankings", "uri": f"{directory}/report.rows.json.gz", **({"sha256": files["report.rows.json.gz"]} if "report.rows.json.gz" in files else {})},
+        {"artifact_id": "execution-identity", "kind": "execution_identity", "uri": f"{directory}/execution-identity.json", **({"sha256": files["execution-identity.json"]} if "execution-identity.json" in files else {})},
+        {"artifact_id": "lane-evidence-record", "kind": "same_harness_lane_evidence", "uri": f"{directory}/evidence.json"},
+    ]
+    return [validate_run(manifest)]
 
 
 # AgentMemBench / MemDialogue -----------------------------------------------

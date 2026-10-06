@@ -2,7 +2,7 @@
   "contract_family": "agent-memory-same-harness-lane",
   "contract_version": "1.0.0",
   "lane_id": "longmemeval-s-retrieval-parity-v1",
-  "status": "frozen",
+  "status": "accepted",
   "owning_issue": 640,
   "frozen_on": "2026-10-06",
   "frozen_before_any_score": true,
@@ -169,7 +169,7 @@
       "system_id": "agent-memory",
       "display_name": "Agent Memory (public facade, Runtime Baseline v1 runtime surface)",
       "role": "control",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "agent_memory",
       "source": {
         "kind": "repository_runtime",
@@ -208,14 +208,15 @@
       "notes": [
         "document_timestamp is unsupported under this lane by choice: the frozen comparability posture declares no session dates to Agent Memory, exactly as the accepted Agent Memory LongMemEval_S evidence was produced",
         "concurrency 1 until multi-handle semantics are independently qualified"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-06 at repository revision 0b0449a8aa2beca216563486dcbd2325673214e6: session plane from workflow run 37421243051 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-session-0b0449a8aa2b/); turn plane from workflow run 37421245382 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/agent_memory-turn-0b0449a8aa2b/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v1:agent_memory:session and lane:longmemeval-s-retrieval-parity-v1:agent_memory:turn"
     },
     {
       "row_id": "lexical-overlap-profile-baseline",
       "system_id": "lexical_overlap",
       "display_name": "Lexical-overlap baseline (profile built-in)",
       "role": "baseline",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "lexical_overlap",
       "source": {
         "kind": "harness_builtin",
@@ -248,14 +249,15 @@
       ],
       "notes": [
         "a profile-local baseline, not upstream's flat-bm25 or dense retrievers, and not a market-position claim; the no_memory floor is available from the runner but is not a lane row"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-06 at repository revision 0b0449a8aa2beca216563486dcbd2325673214e6: session plane from workflow run 37421248307 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-session-0b0449a8aa2b/); turn plane from workflow run 37421251326 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v1:lexical_overlap:session and lane:longmemeval-s-retrieval-parity-v1:lexical_overlap:turn"
     },
     {
       "row_id": "mem0-oss-2.2.1-explicit-memory",
       "system_id": "mem0-oss",
       "display_name": "Mem0 OSS 2.2.1 (explicit memory, no inference)",
       "role": "comparator",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "mem0_explicit",
       "source": {
         "kind": "python_package",
@@ -325,7 +327,8 @@
         "document_timestamp is unsupported for retrieval: the session date is stored as metadata only and Mem0 2.2.1 does not use it to rank",
         "the lane v1 Mem0 row resolved these exact stack releases under the AMB harness lock; without a harness lock here they are pinned explicitly so the retrieval stack is identical across the two lanes",
         "the smoke run on the synthetic fixture with the real 2.2.1 stack ingested at ~10 ms per item; the full turn plane (122,416 items) is expected to take well under the 180-minute job bound"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-06 at repository revision 0b0449a8aa2beca216563486dcbd2325673214e6: session plane from workflow run 37421253480 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/); turn plane from workflow run 37421255904 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v1:mem0_explicit:session and lane:longmemeval-s-retrieval-parity-v1:mem0_explicit:turn"
     },
     {
       "row_id": "hindsight-0.10.2",
@@ -366,7 +369,8 @@
       "rows compare only within one plane: session rows with session rows, turn rows with turn rows; the normalizer emits one manifest per (plane, backend) and the scorecard groups by task profile",
       "the baseline is the profile's lexical-overlap ranker and Agent Memory is the control; neither row is a market claim",
       "each accepted row must retain the raw report with rows and its execution identity; no overall score is produced",
-      "a Mem0 number from this lane and from lane v1 describe one frozen system composition on two benchmarks; they are reported side by side, never averaged"
+      "a Mem0 number from this lane and from lane v1 describe one frozen system composition on two benchmarks; they are reported side by side, never averaged",
+      "accepted rows 2026-10-06: agent-memory, lexical_overlap and mem0-oss on both planes (workflow runs 37421243051, 37421245382, 37421248307, 37421251326, 37421253480, 37421255904); numbers live in the committed evidence records, the native reports and the normalized manifests, never in this lane"
     ]
   },
   "deferred_lanes": [
