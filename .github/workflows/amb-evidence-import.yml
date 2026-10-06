@@ -1,10 +1,18 @@
-name: Import AMB lane evidence
+name: Import same-harness lane evidence
 
 on:
   workflow_dispatch:
     inputs:
+      lane:
+        description: "Which lane workflow produced the artifacts (selects the importer and the evidence root)"
+        required: true
+        default: "amb"
+        type: choice
+        options:
+          - amb
+          - longmemeval
       run_ids:
-        description: "Comma-separated Independent AMB Competitive Run ids whose raw artifacts to import"
+        description: "Comma-separated lane workflow run ids whose raw artifacts to import"
         required: true
         type: string
       branch:
@@ -17,7 +25,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: amb-evidence-import-${{ inputs.branch }}
+  group: lane-evidence-import-${{ inputs.branch }}
   cancel-in-progress: false
 
 jobs:
@@ -55,12 +63,33 @@ jobs:
             find "$RUNNER_TEMP/runs/$id" -type f | sort
           done
 
+      - name: Select the importer for the lane
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ inputs.lane }}" in
+            amb)
+              echo "IMPORTER=scripts/import_amb_lane_evidence.py" >> "$GITHUB_ENV"
+              echo "EVIDENCE_ROOT=reports/benchmarks/amb" >> "$GITHUB_ENV"
+              echo "LANE_LABEL=AMB" >> "$GITHUB_ENV"
+              ;;
+            longmemeval)
+              echo "IMPORTER=scripts/import_longmemeval_lane_evidence.py" >> "$GITHUB_ENV"
+              echo "EVIDENCE_ROOT=reports/benchmarks/longmemeval" >> "$GITHUB_ENV"
+              echo "LANE_LABEL=LongMemEval" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "unknown lane ${{ inputs.lane }}" >&2
+              exit 2
+              ;;
+          esac
+
       - name: Write the evidence records
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install -q jsonschema
-          python scripts/import_amb_lane_evidence.py --runs-dir "$RUNNER_TEMP/runs" | tee "$RUNNER_TEMP/import.json"
+          python "$IMPORTER" --runs-dir "$RUNNER_TEMP/runs" | tee "$RUNNER_TEMP/import.json"
 
       - name: Commit and push
         shell: bash
@@ -68,17 +97,18 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/benchmarks/amb
+          git add "$EVIDENCE_ROOT"
           if git diff --cached --quiet; then
             echo "nothing to commit"
             exit 0
           fi
           git commit -F - <<EOF
-          evidence(#640): import raw AMB lane artifacts (runs ${{ inputs.run_ids }})
+          evidence(#640): import raw ${LANE_LABEL} lane artifacts (runs ${{ inputs.run_ids }})
 
-          Raw EvalSummary JSON, execution identity, constraints provenance, self-check
-          output and sha256 inventory copied byte for byte from the workflow artifacts and
-          re-verified against each run's own inventory. evidence.json binds each row to the
-          frozen lane. authority_effect: none; acceptance is a separate reviewed change.
+          Raw native report, execution identity and sha256 inventory copied from the
+          workflow artifacts and re-verified against each run's own inventory (the
+          LongMemEval importer moves per-question rows to a gzip sidecar and proves the
+          raw bytes recompose). evidence.json binds each row to the frozen lane.
+          authority_effect: none; acceptance is a separate reviewed change.
           EOF
           git push origin "HEAD:${{ inputs.branch }}"
