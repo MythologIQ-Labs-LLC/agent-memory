@@ -4,8 +4,10 @@ on:
   pull_request:
     paths:
       - 'reports/gauntlet/agmi-agent-memory-v1/**'
-      - 'reports/runtime/baseline-v1-source-boundary.json'
+      - 'reports/runtime/baseline-register.json'
+      - 'reports/runtime/baseline-*.json'
       - 'scripts/check_runtime_baseline_equivalence.py'
+      - 'scripts/runtime_baseline_identity.py'
       - 'scripts/run_agmi_agent_memory_qualification.py'
       - 'scripts/validate_agmi_agent_memory_qualification.py'
       - '.github/workflows/agmi-agent-memory-qualification.yml'
@@ -31,10 +33,62 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Refuse Agent Memory runtime drift from Baseline v1
-        run: python scripts/check_runtime_baseline_equivalence.py --candidate HEAD
+      - name: Install Agent Memory package
+        run: python -m pip install -e .
+
+      - name: Classify the candidate against the current Runtime Baseline
+        id: classify
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$(python scripts/check_runtime_baseline_equivalence.py --candidate HEAD)"
+          echo "$out"
+          state="$(echo "$out" | grep -oE 'equivalence: [A-Z]+' | head -n1 | cut -d' ' -f2)"
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+
+      - name: Read the current baseline from the register
+        id: current
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          register = json.loads(Path("reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
+          entry = register["baselines"][-1]
+          boundary = json.loads(Path(entry["source_boundary"]).read_text(encoding="utf-8"))
+          print(f"baseline_id={entry['baseline_id']}")
+          print(f"boundary={entry['source_boundary']}")
+          print(f"revision={boundary['frozen_revision']}")
+          print(f"published_commit={entry['published_commit'] or ''}")
+          PY
+
+      - name: Transition notice
+        if: steps.classify.outputs.state == 'TRANSITION'
+        run: |
+          echo "The register declares a successor and the candidate is in a pinned transition."
+          echo "agmi reproduction is skipped: no evidence may claim ${{ steps.current.outputs.revision }} from this checkout."
+
+      - name: Refuse a stale agmi profile
+        if: steps.classify.outputs.state == 'PASS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - "${{ steps.current.outputs.revision }}" <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          revision = sys.argv[1]
+          profile = json.loads(Path("reports/gauntlet/agmi-agent-memory-v1/qualification.json").read_text(encoding="utf-8"))
+          pinned = profile["agent_memory"]["runtime_baseline_revision"]
+          assert pinned == revision, f"agmi profile pins {pinned}; the current Runtime Baseline is {revision}"
+          print(f"agmi profile pins the current Runtime Baseline {revision}")
+          PY
 
       - name: Checkout exact agmi source
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -euo pipefail
@@ -46,20 +100,21 @@ jobs:
           grep -q '^MIT License$' external/agmi/LICENSE
 
       - name: Install isolated qualification dependencies
-        run: |
-          python -m pip install -e .
-          python -m pip install -e ./external/agmi pytest
+        if: steps.classify.outputs.state == 'PASS'
+        run: python -m pip install -e ./external/agmi pytest
 
       - name: Record exact source and environment identity
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p agmi-evidence
           {
             echo "agent_memory_checkout=$(git rev-parse HEAD)"
-            echo "agent_memory_frozen_runtime=f2aef57293b516e065cad5d0afea26ac7e3c28a9"
-            echo "agent_memory_runtime_source_boundary=reports/runtime/baseline-v1-source-boundary.json"
-            echo "agent_memory_baseline_merge=32783fad3c5cf50a9d712c8bcc0a023907ce9433"
+            echo "agent_memory_baseline_id=${{ steps.current.outputs.baseline_id }}"
+            echo "agent_memory_frozen_runtime=${{ steps.current.outputs.revision }}"
+            echo "agent_memory_runtime_source_boundary=${{ steps.current.outputs.boundary }}"
+            echo "agent_memory_published_commit=${{ steps.current.outputs.published_commit }}"
             echo "agmi_revision=$(git -C external/agmi rev-parse HEAD)"
             python --version
             python - <<'PY'
@@ -70,6 +125,7 @@ jobs:
           } | tee agmi-evidence/source-environment.txt
 
       - name: Run upstream Agent Memory test unchanged
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -o pipefail
@@ -78,17 +134,20 @@ jobs:
             2>&1 | tee agmi-evidence/upstream-agent-memory.txt
 
       - name: Produce raw T1-T9 external evidence
+        if: steps.classify.outputs.state == 'PASS'
         run: |
           python scripts/run_agmi_agent_memory_qualification.py \
             --output agmi-evidence/raw-result.json
 
       - name: Validate external observation and preserve T9 finding
+        if: steps.classify.outputs.state == 'PASS'
         run: |
           python scripts/validate_agmi_agent_memory_qualification.py \
             agmi-evidence/raw-result.json \
             | tee agmi-evidence/validation.txt
 
       - name: Inventory qualification evidence
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -euo pipefail
@@ -101,6 +160,7 @@ jobs:
           test -s agmi-evidence/validation.txt
 
       - name: Upload agmi qualification evidence
+        if: steps.classify.outputs.state == 'PASS'
         uses: actions/upload-artifact@v4
         with:
           name: agmi-agent-memory-integrity-v1

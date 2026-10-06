@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-memory.mythologiq/schemas/runtime-baseline-declaration.schema.json",
+  "title": "Runtime Baseline successor declaration",
+  "description": "A runtime tranche declares its successor baseline before it merges. The declaration pins every protected path the tranche changes to the exact git blob the candidate carries, names the identity values that change, and names the acceptance evidence the successor's publication must bind. It is a claim scripts/check_runtime_baseline_equivalence.py verifies in both directions; it grants nothing by itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "baseline_id",
+    "predecessor_baseline_id",
+    "issue",
+    "declared_changes",
+    "identity_deltas",
+    "pyproject_change",
+    "acceptance_evidence_required"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "baseline_id": {"type": "string", "pattern": "^agent-memory-runtime-baseline-v[0-9]+$"},
+    "predecessor_baseline_id": {"type": "string", "pattern": "^agent-memory-runtime-baseline-v[0-9]+$"},
+    "issue": {"type": "integer", "minimum": 1},
+    "declared_changes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "blob"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "blob": {
+            "oneOf": [
+              {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+              {"type": "null"}
+            ]
+          }
+        }
+      }
+    },
+    "identity_deltas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["identity_path", "from", "to"],
+        "properties": {
+          "identity_path": {"type": "string", "minLength": 1},
+          "from": {"type": ["string", "number"]},
+          "to": {"type": ["string", "number"]}
+        }
+      }
+    },
+    "pyproject_change": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reason"],
+          "properties": {"reason": {"type": "string", "minLength": 1}}
+        }
+      ]
+    },
+    "acceptance_evidence_required": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "ref"],
+        "properties": {
+          "kind": {"enum": ["public_gauntlet", "replay", "lane"]},
+          "ref": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "schema_version": 1,
+      "baseline_id": "agent-memory-runtime-baseline-v2",
+      "predecessor_baseline_id": "agent-memory-runtime-baseline-v1",
+      "issue": 673,
+      "declared_changes": [
+        {"path": "reference/agentmem_ref/runtime/ranking_policy.py", "blob": "0123456789abcdef0123456789abcdef01234567"},
+        {"path": "reference/agentmem_ref/runtime/route_fusion.py", "blob": "89abcdef0123456789abcdef0123456789abcdef"}
+      ],
+      "identity_deltas": [
+        {"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}
+      ],
+      "pyproject_change": null,
+      "acceptance_evidence_required": [
+        {"kind": "public_gauntlet", "ref": "gauntlet-orchestration-retrieval-probe-v1"},
+        {"kind": "lane", "ref": "longmemeval-s-retrieval-parity-v2"}
+      ]
+    }
+  ]
+}

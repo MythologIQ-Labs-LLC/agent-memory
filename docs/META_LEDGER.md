@@ -3022,3 +3022,144 @@ recorded against the blueprint. Findings are advisory; the five owner
 decisions (embedding dependency, capacity split, Hindsight provider,
 evaluation credential, temporal posture) remain with the repository owner.
 No runtime code, `pyproject.toml` or Baseline v1 record is touched.
+---
+
+### Entry #61: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T20:20:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: VETO
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-674-successor-baseline.md (iteration 1; plan content hash 2e3ac38f32974eb7928e213e3a262f922fbf621de39ffc8df332e610095e3028)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_674_attempt1.md) = bdd96309046d58099b5085f0315211969d454a385a1c75285d7451e2b2747350
+
+**Previous Hash**: `97368db7ba36fb5473962febeb3c49ceb1385cbe648897dabe0f962fe044193f`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 19b70f8262bb1cb11cc6636622322625341e554a42f2706e945642d4869705e4
+
+**Decision**: VETO, attempt 1 of 5, performed by an independent reviewer in a
+fresh context; the Judge's factual claims (29 `expect` calls, the agmi
+install order, the durability workflow's literal `f2aef57` assertion, the
+dogfood ancestry check, the v1 record's three publication commits) were
+reproduced against the tree before this entry. V1 -- LD3 compared identity
+constants only, so a declared transition left every other protected byte
+unguarded: a relaxation of the diff even though not a path allowlist. V2 --
+LD5 demanded complete public-Gauntlet evidence inside a blob-pinned record
+that can only be produced after the record names the successor current: a
+record cannot name a `verified_head` that contains itself. V3 -- the plan
+called `test_evaluation_only_change_keeps_runtime_baseline_equivalence`
+unchanged while accepting `TRANSITION` in the workflow that runs it with full
+history. C1-C4 (jsonschema before the agmi checker; the durability workflow
+and the adapter constant; v1-only dogfood ancestry and renderer literals;
+23 table rows plus six manifest checks) and A1-A4 recorded in the report.
+Required next action: Governor amends the plan (declared blobs pin the
+window; two-step publication with a `pending` qualification; the test
+accepts both green states); re-run /qor-audit.
+---
+
+### Entry #62: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T20:45:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: VETO
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-674-successor-baseline.md (iteration 2; plan content hash 7bbbb53e44c8d9f0b5806306ef1f5a45e6a99d8612692c2d6ed9cf70e5617158)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_674_attempt2.md) = d0213d5ff433a8882c68eda5cbfd80cd020e213de3eca9112aab377453d932c1
+
+**Previous Hash**: `19b70f8262bb1cb11cc6636622322625341e554a42f2706e945642d4869705e4`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 50c3ccff3ef7ddca478359438b5883ce5c88113d2afb836c3b783688b85f36de
+
+**Decision**: VETO, attempt 2 of 5, independent reviewer in a fresh context.
+Every attempt-1 item closed against the tree; the transition is now a
+pinned identity (the candidate's protected tree is a function of the frozen
+revision and the declaration). V1 -- LD1 pinned v1's `published_commit` to
+`788ea6f` while LD1/LD5 require a first-parent ancestor; `788ea6f` is
+reachable only through the PR #651 side branch (`git rev-list
+--first-parent origin/main` does not contain it), so the plan's own
+validator, D1 and the v1 pin test could not all hold. The first-parent merge
+holding both pinned blobs is `c3a1bdf19bafca720a6513661cad3f08127659a5`.
+C1-C4 (the B2 qualification blob needs a register home; the LD4 breakdown
+must be derivable; B1's adapter path must come from the manifest, and the
+successor adapter needs a named convention; the agmi profile and the
+durability fixture pin `f2aef57` and must be asserted against the register
+and enumerated as re-pin items) and A1-A6 recorded in the report. Required
+next action: Governor amends LD1, LD4, LD5, LD7 and LD8; re-run /qor-audit.
+---
+
+### Entry #63: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T21:05:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-674-successor-baseline.md (iteration 3; plan content hash aa2215fff2e254a4c0079451de98d97bc57af54896a2a7703f43e27d3d27a74a)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_674_attempt3.md) = b7950b7949a5d80980d3b2d6c3bec0540be139ccd6810470731ef557e0d76362
+
+**Previous Hash**: `50c3ccff3ef7ddca478359438b5883ce5c88113d2afb836c3b783688b85f36de`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 7af2996ea1db3f591bb55a5c0018cb6119e2e0ade2f7f9c8bd82f22d93aa3095
+
+**Decision**: PASS, attempt 3 of 5, independent reviewer in a fresh context.
+Every attempt-2 item closed against the tree and history: the v1
+`published_commit` `c3a1bdf` is on `main`'s first-parent history and is
+the earliest such commit holding both pinned blobs; the qualification file
+has a register home (`qualification.blob`, verified against the candidate
+tree only); the identity-table breakdown is derivable from the validator's
+twenty-three `expect` calls (twenty-six rows); the Gauntlet adapter path
+comes from the manifest and the successor adapter convention is named; the
+agmi profile's pinned revision is asserted against the register and the
+re-pin-or-retire files are enumerated. Binding condition applied before
+implementation: C1 the agmi evidence header prints
+`agent_memory_published_commit` from the register and no longer prints a
+baseline-merge value, so one artifact never carries two values under one
+meaning. Advisories applied: A1 `classify` captures the checker under
+`set -euo pipefail`; A2 validator checks run through line 207; A3 the agmi
+profile re-pin is a later two-step, B1 retires by workflow condition; A4
+`published_commit` renders empty while `pending`. Next: /qor-implement.
+---
+
+### Entry #64: IMPLEMENTATION
+
+**Timestamp**: 2026-10-06T21:40:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-674-successor-baseline.md (iteration 3; Gate Tribunal PASS at Entry #63 with condition C1 and advisories A1-A4 applied)
+
+**Artifacts**: `reports/runtime/baseline-register.json` (new), `schemas/runtime-baseline-declaration.schema.json` (new), `scripts/runtime_baseline_identity.py` (new), `scripts/declare_runtime_baseline_changes.py` (new), `scripts/check_runtime_baseline_equivalence.py`, `scripts/validate_runtime_baseline_source.py`, `scripts/render_runtime_baseline.py`, `reference/tests/test_runtime_baseline_succession.py` (new), `reference/tests/test_benchmark_integration_contract.py`, `.github/workflows/runtime-baseline.yml`, `.github/workflows/agmi-agent-memory-qualification.yml`, `.github/workflows/gauntlet-durability-recovery.yml`, `docs/67-runtime-baseline-succession.md` (new), `docs/CONTRIBUTOR_ARCHITECTURE.md`, `docs/GOVERNANCE_INDEX.md`
+**Content Hash** (SHA256 over `git write-tree` of the staged index `29522b1c25df1e70efe9c446dcb8b2a6ea7811cb`): `8f19c6a522a15be7784c7ae02bc95a85ae450e78d18efc784264f89998c4d8e2`
+**Previous Hash**: `7af2996ea1db3f591bb55a5c0018cb6119e2e0ade2f7f9c8bd82f22d93aa3095`
+**Chain Hash**: `483dbc064b0f38f20e2753a1d49a1a08630e1091c69eaa9cb7e51747f8f52579`
+
+**Decision**: Phases 1-3 of the plan implemented as locked. The register
+names Runtime Baseline v1 as current and pins its record, boundary and
+qualification blobs to `c3a1bdf` on `main`'s first-parent history; the
+identity table holds the twenty-six values a record pins to source; the
+checker has three outcomes and honours a declaration only when the changed
+protected paths equal the declared paths, every declared blob matches, every
+declared identity delta holds at both ends and nothing undeclared moved; the
+validator checks every register entry, a two-state qualification, and any
+open declaration; the renderer derives its titles from the record and
+reproduces `baseline-v1.md` byte for byte; the three revision-claiming
+workflows classify first and skip their evidence steps on `TRANSITION`.
+Verified before this entry: the checker prints `PASS` on this tree; the
+validator and `render_runtime_baseline.py --check` exit 0; the forty-five
+tests of `test_runtime_baseline_succession` and
+`test_benchmark_integration_contract` pass; `governance-health` is green;
+`git diff --quiet origin/main` over the six immutable v1 files,
+`reference/agentmem_ref` and `pyproject.toml` reports no change. The full
+suite result is recorded in the pull request.

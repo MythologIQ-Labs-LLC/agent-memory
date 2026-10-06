@@ -3,25 +3,33 @@ name: Runtime Baseline Contract
 on:
   push:
     paths:
-      - 'reports/runtime/baseline-v1.json'
-      - 'reports/runtime/baseline-v1.md'
-      - 'reports/runtime/baseline-v1-source-boundary.json'
+      - 'reports/runtime/baseline-*.json'
+      - 'reports/runtime/baseline-*.md'
+      - 'reports/runtime/baseline-register.json'
+      - 'schemas/runtime-baseline-declaration.schema.json'
       - 'scripts/check_runtime_baseline_equivalence.py'
       - 'scripts/render_runtime_baseline.py'
       - 'scripts/validate_runtime_baseline_source.py'
-      - 'examples/gauntlet/agent_memory_runtime_baseline_stdio.py'
-      - 'examples/gauntlet/agent-memory-runtime-baseline-v1.json'
+      - 'scripts/runtime_baseline_identity.py'
+      - 'scripts/declare_runtime_baseline_changes.py'
+      - 'examples/gauntlet/agent_memory_runtime_baseline*_stdio.py'
+      - 'examples/gauntlet/agent-memory-runtime-baseline-*.json'
+      - 'reference/tests/test_runtime_baseline_succession.py'
       - '.github/workflows/runtime-baseline.yml'
   pull_request:
     paths:
-      - 'reports/runtime/baseline-v1.json'
-      - 'reports/runtime/baseline-v1.md'
-      - 'reports/runtime/baseline-v1-source-boundary.json'
+      - 'reports/runtime/baseline-*.json'
+      - 'reports/runtime/baseline-*.md'
+      - 'reports/runtime/baseline-register.json'
+      - 'schemas/runtime-baseline-declaration.schema.json'
       - 'scripts/check_runtime_baseline_equivalence.py'
       - 'scripts/render_runtime_baseline.py'
       - 'scripts/validate_runtime_baseline_source.py'
-      - 'examples/gauntlet/agent_memory_runtime_baseline_stdio.py'
-      - 'examples/gauntlet/agent-memory-runtime-baseline-v1.json'
+      - 'scripts/runtime_baseline_identity.py'
+      - 'scripts/declare_runtime_baseline_changes.py'
+      - 'examples/gauntlet/agent_memory_runtime_baseline*_stdio.py'
+      - 'examples/gauntlet/agent-memory-runtime-baseline-*.json'
+      - 'reference/tests/test_runtime_baseline_succession.py'
       - '.github/workflows/runtime-baseline.yml'
 
 permissions:
@@ -45,34 +53,71 @@ jobs:
       - name: Install package for public Gauntlet CLI
         run: python -m pip install -e .
 
-      - name: Validate machine-readable baseline and generated companion
+      - name: Validate machine-readable baselines and generated companions
         run: python scripts/render_runtime_baseline.py --check
 
-      - name: Validate declared identities against frozen runtime revision
+      - name: Validate the register, every record, and any open declaration
         run: python scripts/validate_runtime_baseline_source.py
 
-      - name: Refuse runtime/package drift from frozen baseline revision
-        run: python scripts/check_runtime_baseline_equivalence.py --candidate HEAD
-
-      - name: Validate JSON syntax
-        run: |
-          python -m json.tool reports/runtime/baseline-v1.json > /dev/null
-          python -m json.tool reports/runtime/baseline-v1-source-boundary.json > /dev/null
-
-      - name: Verify exact public contestant identity
+      - name: Classify the candidate against the current baseline
+        id: classify
         shell: bash
         run: |
           set -euo pipefail
-          ADAPTER_REVISION="git-blob:$(git hash-object examples/gauntlet/agent_memory_runtime_baseline_stdio.py)"
-          python - "$ADAPTER_REVISION" <<'PY'
+          out="$(python scripts/check_runtime_baseline_equivalence.py --candidate HEAD)"
+          echo "$out"
+          state="$(echo "$out" | grep -oE 'equivalence: [A-Z]+' | head -n1 | cut -d' ' -f2)"
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+
+      - name: Read the current baseline from the register
+        id: current
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          register = json.loads(Path("reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
+          entry = register["baselines"][-1]
+          boundary = json.loads(Path(entry["source_boundary"]).read_text(encoding="utf-8"))
+          manifest = json.loads(Path(entry["public_gauntlet_manifest"]).read_text(encoding="utf-8"))
+          print(f"baseline_id={entry['baseline_id']}")
+          print(f"record={entry['record']}")
+          print(f"boundary={entry['source_boundary']}")
+          print(f"manifest={entry['public_gauntlet_manifest']}")
+          print(f"adapter={manifest['transport']['startup'][-1]}")
+          print(f"revision={boundary['frozen_revision']}")
+          print(f"published_commit={entry['published_commit'] or ''}")
+          PY
+
+      - name: Validate JSON syntax
+        run: |
+          python -m json.tool reports/runtime/baseline-register.json > /dev/null
+          python -m json.tool "${{ steps.current.outputs.record }}" > /dev/null
+          python -m json.tool "${{ steps.current.outputs.boundary }}" > /dev/null
+
+      - name: Transition notice
+        if: steps.classify.outputs.state == 'TRANSITION'
+        run: |
+          echo "The register declares a successor and the candidate is in a pinned transition."
+          echo "Public Gauntlet qualification steps are skipped: no evidence may claim ${{ steps.current.outputs.revision }} from this checkout."
+
+      - name: Verify exact public contestant identity
+        if: steps.classify.outputs.state == 'PASS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADAPTER_REVISION="git-blob:$(git hash-object "${{ steps.current.outputs.adapter }}")"
+          python - "$ADAPTER_REVISION" "${{ steps.current.outputs.record }}" "${{ steps.current.outputs.boundary }}" "${{ steps.current.outputs.manifest }}" <<'PY'
           import json
           import sys
           from pathlib import Path
 
-          expected_adapter = sys.argv[1]
-          baseline = json.loads(Path("reports/runtime/baseline-v1.json").read_text(encoding="utf-8"))
-          boundary = json.loads(Path("reports/runtime/baseline-v1-source-boundary.json").read_text(encoding="utf-8"))
-          manifest = json.loads(Path("examples/gauntlet/agent-memory-runtime-baseline-v1.json").read_text(encoding="utf-8"))
+          expected_adapter, record_path, boundary_path, manifest_path = sys.argv[1:5]
+          baseline = json.loads(Path(record_path).read_text(encoding="utf-8"))
+          boundary = json.loads(Path(boundary_path).read_text(encoding="utf-8"))
+          manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
           expected_system = f"git-commit:{baseline['runtime_revision']['commit']}"
           assert boundary["baseline_id"] == baseline["baseline_id"]
           assert boundary["frozen_revision"] == baseline["runtime_revision"]["commit"]
@@ -86,29 +131,34 @@ jobs:
           PY
 
       - name: Validate public contestant manifest
-        run: agent-memory gauntlet validate-adapter examples/gauntlet/agent-memory-runtime-baseline-v1.json
+        if: steps.classify.outputs.state == 'PASS'
+        run: agent-memory gauntlet validate-adapter "${{ steps.current.outputs.manifest }}"
 
-      - name: Run Runtime Baseline v1 through public Gauntlet path
+      - name: Run the current Runtime Baseline through the public Gauntlet path
+        if: steps.classify.outputs.state == 'PASS'
         run: |
           agent-memory gauntlet run \
-            --system examples/gauntlet/agent-memory-runtime-baseline-v1.json \
+            --system "${{ steps.current.outputs.manifest }}" \
             --profile gauntlet-orchestration-retrieval-probe-v1 \
             --allow-external-process \
             --allow-destructive-reset \
             --output-dir ./baseline-gauntlet
 
       - name: Validate public-path qualification evidence
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -euo pipefail
           RUN_DIR="$(find baseline-gauntlet -mindepth 1 -maxdepth 1 -type d -print -quit)"
           test -n "$RUN_DIR"
-          python - "$RUN_DIR" <<'PY'
+          python - "$RUN_DIR" "${{ steps.current.outputs.baseline_id }}" "${{ steps.current.outputs.revision }}" <<'PY'
           import json
           import sys
           from pathlib import Path
 
           root = Path(sys.argv[1])
+          baseline_id = sys.argv[2]
+          revision = sys.argv[3]
           qualification = json.loads((root / "qualification.json").read_text(encoding="utf-8"))
           normalized = json.loads((root / "normalized-run.json").read_text(encoding="utf-8"))
           native = json.loads((root / "native-results.json").read_text(encoding="utf-8"))
@@ -117,20 +167,21 @@ jobs:
           assert qualification["status"] == "complete", qualification
           assert qualification["profile"]["profile_id"] == "gauntlet-orchestration-retrieval-probe-v1"
           assert qualification["adapter"]["transport"] == "stdio"
-          assert manifest["metadata"]["baseline_id"] == "agent-memory-runtime-baseline-v1"
+          assert manifest["metadata"]["baseline_id"] == baseline_id
           assert manifest["metadata"]["public_facade_only"] is True
           assert normalized["status"] == "complete"
-          assert normalized["system"]["id"] == "agent-memory-runtime-baseline-v1"
-          assert normalized["system"]["revision"] == "git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9"
+          assert normalized["system"]["id"] == baseline_id
+          assert normalized["system"]["revision"] == f"git-commit:{revision}"
           assert native["profile_kind"] == "baseline_or_probe"
           assert native["sample_count"] == 3
           assert native["exact_top1"] == 1.0, native["rows"]
           assert normalized["authority_effect"] == "none"
           print(f"run_id={qualification['run_id']}")
-          print("Runtime Baseline v1 public Gauntlet qualification: PASS")
+          print(f"{baseline_id} public Gauntlet qualification: PASS")
           PY
 
       - name: Inventory baseline qualification evidence
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -euo pipefail
@@ -139,9 +190,10 @@ jobs:
           test "$(wc -l < baseline-gauntlet-files.txt)" -eq 4
 
       - name: Upload public Gauntlet qualification evidence
+        if: steps.classify.outputs.state == 'PASS'
         uses: actions/upload-artifact@v4
         with:
-          name: runtime-baseline-v1-public-gauntlet
+          name: ${{ steps.current.outputs.baseline_id }}-public-gauntlet
           path: |
             baseline-gauntlet/
             baseline-gauntlet-files.txt

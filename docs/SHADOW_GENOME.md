@@ -443,6 +443,75 @@ The plan described the audit-event shape from `_event` and assumed `_recall_even
 
 ---
 
+### Failure #13: #674 successor-baseline plan iteration 1 VETOed on an unpinned transition window and a self-referencing publication step
+
+**Date**: 2026-10-06
+**Iteration**: 1 (audit attempt 1 of 5)
+**Verdict ID**: AUDIT_REPORT_674_attempt1 2026-10-06T20:20 VETO (V1-V3)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+The plan replaced the byte-diff guard with an identity-constant comparison during a declared transition; required complete public-Gauntlet evidence inside a blob-pinned record that only the post-publication workflow can produce; and called an existing `PASS`-asserting test unchanged while accepting `TRANSITION` in the workflow that runs it with full history.
+
+#### Why It Failed
+
+- A pin on named identities was mistaken for a pin on the surface: everything the identity table did not name became free to drift.
+- The publication step was written from the record's shape, not walked end to end against the workflow that produces its evidence; v1's own three-commit publication history was not read.
+- A test was declared unchanged from its name, not from its assertion.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: declaring a weaker invariant "verified in both directions" because its named parts are checked both ways; locking a procedure whose evidence producer is gated on the procedure's own completion.
+
+**Correct Pattern**: when relaxing a guard, state exactly what the new guard pins (here: the frozen surface plus declared blobs, nothing else); walk every publication step against the workflow and git history that produce its inputs before locking it; re-read every assertion of a test the plan claims not to change.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| FIXED | Iteration 2 pinned the window with declared blobs, split publication into a `pending` qualification and an evidence-binding commit, and accepted both green states in the contract test; attempt 2 (Entry #62) closed every attempt-1 item but VETOed on a new history claim (Failure #14); attempt 3 (Entry #63) PASSED with condition C1 applied. |
+
+#### Related Entries
+- Ledger Entry: #61 (GATE TRIBUNAL, VETO)
+- Audit Report: `.agent/staging/AUDIT_REPORT_674_attempt1.md`
+
+---
+
+### Failure #14: #674 plan iteration 2 VETOed on a `published_commit` pinned to a side-branch commit under a first-parent rule
+
+**Date**: 2026-10-06
+**Iteration**: 2 (audit attempt 2 of 5)
+**Verdict ID**: AUDIT_REPORT_674_attempt2 2026-10-06T20:45 VETO (V1)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+The plan pinned Runtime Baseline v1's publication to `788ea6f`, the last commit that touched the record or boundary (`git log -1 -- <files>`), while locking a validator rule that the pinned commit be a first-parent ancestor of the candidate.
+
+#### Why It Failed
+
+- `git log -1 -- <path>` returns the authoring commit on the PR branch, not the merge that brought it onto `main`; the two differ whenever the repository merges with merge commits.
+- The rule and the pin were written from two different mental models of history and never run against `git rev-list --first-parent`.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: locking a history predicate (first-parent, ancestor, descends-from) and a concrete commit in the same plan without executing the predicate on that commit.
+
+**Correct Pattern**: when a plan pins a commit under a rule, run the rule against the pin in the plan's own grep-evidence (`git rev-list --first-parent <base> | grep -c <sha>`), and prefer the merge commit on the default branch when the rule is first-parent.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| FIXED | Iteration 3 pinned `c3a1bdf` (the PR #651 merge, first-parent, holding both blobs) with the executed predicate as grep-evidence; attempt 3 (Entry #63) verified the pin and PASSED. |
+
+#### Related Entries
+- Ledger Entry: #62 (GATE TRIBUNAL, VETO)
+- Audit Report: `.agent/staging/AUDIT_REPORT_674_attempt2.md`
+
+---
+
 ## Pattern Library (Extracted Lessons)
 
 Cross-cutting lessons from the temporal/currentness and evidence work (#538 through #550) are collected in [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md).
@@ -480,11 +549,11 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | GHOST_PATH | 0 | - |
 | HALLUCINATION | 2 | 2026-09-01 |
 | ORPHAN | 0 | - |
-| SPEC_DRIFT | 11 | 2026-09-07 |
+| SPEC_DRIFT | 13 | 2026-10-06 |
 | CHAIN_BREAK | 0 | - |
 
-**Total Failures Recorded**: 12
-**Failures Resolved**: 9 (Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
+**Total Failures Recorded**: 14
+**Failures Resolved**: 11 (Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
 ---

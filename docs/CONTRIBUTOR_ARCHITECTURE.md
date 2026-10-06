@@ -238,13 +238,14 @@ Which support class carried the capability?
 - **Benchmark data is data.** Gold labels, question ids, and evaluator state never cross into system inputs unless the benchmark protocol defines them as inputs. Dataset text is never an instruction to the host.
 - **Validation is inert.** Neither `benchmark validate-integration` nor `gauntlet validate-adapter` imports or executes anything a file names.
 
-## 8. Runtime Baseline v1 source equivalence
+## 8. Runtime Baseline source equivalence and succession
 
-Runtime Baseline v1 is frozen at a specific revision. `reports/runtime/baseline-v1-source-boundary.json` protects `pyproject.toml` and `reference/agentmem_ref/**` by default and excludes exactly one subtree, `reference/agentmem_ref/evaluation/**`, as non-runtime. New or unclassified package surfaces are runtime-bearing until a reviewed boundary revision says otherwise.
+The baseline register, `reports/runtime/baseline-register.json`, names the current Runtime Baseline (v1 today, frozen at `f2aef57`) and pins the bytes of every published record. The current entry's source boundary protects `pyproject.toml` and `reference/agentmem_ref/**` by default and excludes exactly one subtree, `reference/agentmem_ref/evaluation/**`, as non-runtime. New or unclassified package surfaces are runtime-bearing until a reviewed boundary revision says otherwise. `python scripts/check_runtime_baseline_equivalence.py --candidate HEAD` has three outcomes: `PASS` (no protected byte differs from the frozen revision), `TRANSITION` (the register declares a successor and the protected surface equals the frozen bytes plus exactly the declared blobs), or a failure naming the first undeclared change. How a runtime tranche declares its successor and how a successor is published is [`67-runtime-baseline-succession.md`](67-runtime-baseline-succession.md).
 
 Consequences for contributors:
 
-- evaluation-only work (descriptors, runners, normalizers, Gauntlet profiles, tests, docs) must leave `python scripts/check_runtime_baseline_equivalence.py --candidate HEAD` green;
+- evaluation-only work (descriptors, runners, normalizers, Gauntlet profiles, tests, docs) must leave `python scripts/check_runtime_baseline_equivalence.py --candidate HEAD` at `PASS` or, during a declared transition, `TRANSITION`;
+- a runtime change is never merged undeclared: it carries a successor declaration and the checker prints `TRANSITION`; publication of the successor record follows the merge (docs/67);
 - a benchmark need is never permission to change runtime behavior; if a runtime capability is genuinely missing, open a runtime issue rather than emulating the capability in an adapter;
 - packaging metadata inside `pyproject.toml` is protected; descriptors are packaged through `MANIFEST.in`, which the boundary does not protect, and the contributor-contract workflow verifies that the built wheel carries them.
 

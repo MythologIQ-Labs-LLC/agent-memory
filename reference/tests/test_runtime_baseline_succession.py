@@ -1,0 +1,524 @@
+"""Runtime Baseline succession (#674): register, declaration, checker and validator on a throwaway repository."""
+
+from __future__ import annotations
+
+import json
+import shutil
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+from agentmem_ref._paths import REPO_ROOT
+
+sys.path.insert(0, str(REPO_ROOT / "scripts"))
+
+import check_runtime_baseline_equivalence as checker  # noqa: E402
+import declare_runtime_baseline_changes as declare  # noqa: E402
+import render_runtime_baseline as renderer  # noqa: E402
+import validate_runtime_baseline_source as validator  # noqa: E402
+from runtime_baseline_identity import (  # noqa: E402
+    IDENTITY_SOURCES,
+    IdentitySource,
+    read_identities,
+    record_value,
+)
+
+CONTRACT_FILE = "reference/agentmem_ref/api/contract.py"
+RANKING_FILE = "reference/agentmem_ref/runtime/temporal_order_constraints.py"
+OTHER_FILE = "reference/agentmem_ref/state/other.py"
+EVALUATION_FILE = "reference/agentmem_ref/evaluation/probe.py"
+SOURCES = (
+    IdentitySource("identity.public_contract_version", CONTRACT_FILE, "constant", "CONTRACT_VERSION"),
+    IdentitySource("identity.ranking.active_policy_version", RANKING_FILE, "constant", "POLICY_VERSION"),
+)
+V1 = "agent-memory-runtime-baseline-v1"
+V2 = "agent-memory-runtime-baseline-v2"
+REGISTER = "reports/runtime/baseline-register.json"
+DECLARATION = "reports/runtime/baseline-v2-declaration.json"
+SCHEMA = "schemas/runtime-baseline-declaration.schema.json"
+V1_REAL_PUBLISHED = "c3a1bdf19bafca720a6513661cad3f08127659a5"
+PENDING = {"status": "pending", "profile_id": "gauntlet-orchestration-retrieval-probe-v1", "transport": "stdio"}
+
+
+def git(root: Path, *args: str) -> str:
+    result = subprocess.run(["git", *args], cwd=root, check=True, capture_output=True, text=True)
+    return result.stdout.strip()
+
+
+def blob(root: Path, path: str) -> str:
+    return git(root, "hash-object", path)
+
+
+class Repo:
+    """A miniature repository with one protected surface and one published baseline."""
+
+    def __init__(self, root: Path) -> None:
+        self.root = root
+        git(root, "init", "-q")
+        git(root, "config", "user.email", "test@example.invalid")
+        git(root, "config", "user.name", "test")
+        git(root, "config", "commit.gpgsign", "false")
+
+    def write(self, path: str, content: str) -> None:
+        target = self.root / path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+
+    def write_json(self, path: str, data: dict) -> None:
+        self.write(path, json.dumps(data, indent=2) + "\n")
+
+    def read_json(self, path: str) -> dict:
+        return json.loads((self.root / path).read_text(encoding="utf-8"))
+
+    def commit(self, message: str) -> str:
+        git(self.root, "add", "-A")
+        git(self.root, "commit", "-q", "-m", message)
+        return git(self.root, "rev-parse", "HEAD")
+
+    def freeze_source(self, contract: str = "1.3.0", policy: str = "3.1.2") -> str:
+        self.write(CONTRACT_FILE, f'CONTRACT_VERSION = "{contract}"\n')
+        self.write(RANKING_FILE, f'POLICY_VERSION = "{policy}"\n')
+        self.write(OTHER_FILE, "STATE = 1\n")
+        self.write(EVALUATION_FILE, "PROBE = 1\n")
+        self.write("pyproject.toml", '[project]\nname = "mini"\nversion = "0.1.0"\n')
+        shutil.copy(REPO_ROOT / SCHEMA, self.root / SCHEMA) if (self.root / SCHEMA).parent.exists() else None
+        if not (self.root / SCHEMA).exists():
+            (self.root / SCHEMA).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(REPO_ROOT / SCHEMA, self.root / SCHEMA)
+        return self.commit("freeze source")
+
+    def record(self, baseline_id: str, frozen: str, *, contract: str = "1.3.0", policy: str = "3.1.2") -> dict:
+        return {
+            "schema_version": 1,
+            "baseline_id": baseline_id,
+            "status": "rc1_qualified_with_explicit_limitations",
+            "production_1_0": False,
+            "authority_effect": "none",
+            "runtime_revision": {"commit": frozen, "baseline_issue": 638},
+            "identity": {"public_contract_version": contract, "ranking": {"active_policy_version": policy}},
+            "dogfood": {
+                "public_gauntlet_issue": 637,
+                "status": "completed",
+                "merge_pr": 649,
+                "merge_commit": frozen,
+                "evidence_class": "baseline_or_probe",
+                "authority_effect": "none",
+            },
+        }
+
+    def boundary(self, baseline_id: str, frozen: str) -> dict:
+        return {
+            "schema_version": 1,
+            "boundary_id": f"{baseline_id}-source-boundary",
+            "baseline_id": baseline_id,
+            "frozen_revision": frozen,
+            "baseline_mutation": False,
+            "authority_effect": "none",
+            "protected_paths": ["pyproject.toml", "reference/agentmem_ref"],
+            "excluded_non_runtime_paths": [
+                {"pathspec": ":(exclude)reference/agentmem_ref/evaluation/**", "path": "reference/agentmem_ref/evaluation"}
+            ],
+        }
+
+    def publish(self, baseline_id: str, frozen: str, **record_kw) -> dict:
+        """Step B1: write record, boundary, pending qualification, manifest and adapter; return the entry."""
+
+        label = baseline_id.rsplit("-", 1)[1]
+        record_path = f"reports/runtime/baseline-{label}.json"
+        boundary_path = f"reports/runtime/baseline-{label}-source-boundary.json"
+        qualification_path = f"reports/runtime/baseline-{label}-qualification.json"
+        manifest_path = f"examples/gauntlet/{baseline_id}.json"
+        adapter_path = f"examples/gauntlet/{label}_stdio.py"
+        self.write_json(record_path, self.record(baseline_id, frozen, **record_kw))
+        self.write_json(boundary_path, self.boundary(baseline_id, frozen))
+        self.write_json(qualification_path, PENDING)
+        self.write(adapter_path, f'FROZEN_RUNTIME_REVISION = "{frozen}"\n')
+        self.write_json(
+            manifest_path,
+            {
+                "system": {"revision": f"git-commit:{frozen}"},
+                "adapter": {"revision": f"git-blob:{blob(self.root, adapter_path)}"},
+                "transport": {"kind": "stdio", "startup": ["python", adapter_path]},
+                "metadata": {"baseline_id": baseline_id},
+            },
+        )
+        return {
+            "baseline_id": baseline_id,
+            "record": record_path,
+            "record_blob": blob(self.root, record_path),
+            "source_boundary": boundary_path,
+            "source_boundary_blob": blob(self.root, boundary_path),
+            "public_gauntlet_manifest": manifest_path,
+            "qualification": {"path": qualification_path, "pointer": "", "blob": blob(self.root, qualification_path)},
+            "published_commit": None,
+        }
+
+    def bind_qualification(self, entry: dict, frozen: str, verified_head: str) -> dict:
+        """Step B2: the qualification file becomes complete; the entry pins its blob and the publication commit."""
+
+        manifest = self.read_json(entry["public_gauntlet_manifest"])
+        adapter_path = manifest["transport"]["startup"][-1]
+        self.write_json(
+            entry["qualification"]["path"],
+            {
+                **PENDING,
+                "status": "complete",
+                "evidence_class": "baseline_or_probe",
+                "authority_effect": "none",
+                "workflow_run": 1,
+                "artifact_id": 1,
+                "artifact_digest": "sha256:" + "0" * 64,
+                "verified_head": verified_head,
+                "manifest": entry["public_gauntlet_manifest"],
+                "adapter_source": adapter_path,
+                "system_revision": f"git-commit:{frozen}",
+                "adapter_revision": f"git-blob:{blob(self.root, adapter_path)}",
+                "sample_count": 3,
+                "exact_top1": 1.0,
+            },
+        )
+        bound = dict(entry, published_commit=verified_head)
+        bound["qualification"] = dict(entry["qualification"], blob=blob(self.root, entry["qualification"]["path"]))
+        return bound
+
+    def make_pending(self, entry: dict) -> dict:
+        self.write_json(entry["qualification"]["path"], PENDING)
+        pending = dict(entry)
+        pending["qualification"] = dict(entry["qualification"], blob=blob(self.root, entry["qualification"]["path"]))
+        return pending
+
+    def write_register(self, entries: list[dict], declared: dict | None = None) -> None:
+        self.write_json(
+            REGISTER,
+            {
+                "schema_version": 1,
+                "register_id": "mini-register",
+                "baselines": entries,
+                "declared_successor": declared,
+            },
+        )
+
+    def declaration(self, changes: list[dict], deltas: list[dict] | None = None, pyproject: dict | None = None) -> dict:
+        return {
+            "schema_version": 1,
+            "baseline_id": V2,
+            "predecessor_baseline_id": V1,
+            "issue": 673,
+            "declared_changes": changes,
+            "identity_deltas": deltas if deltas is not None else [],
+            "pyproject_change": pyproject,
+            "acceptance_evidence_required": [{"kind": "public_gauntlet", "ref": "gauntlet-orchestration-retrieval-probe-v1"}],
+        }
+
+
+class SuccessionTestCase(unittest.TestCase):
+    """Build: frozen source -> published v1 (record/boundary committed) -> register pinned to that commit."""
+
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.repo = Repo(Path(self.tmp.name))
+        self.frozen = self.repo.freeze_source()
+        pending_entry = self.repo.publish(V1, self.frozen)
+        self.repo.write_register([pending_entry])
+        self.published = self.repo.commit("publish v1 (B1, pending)")
+        self.entry = self.repo.bind_qualification(pending_entry, self.frozen, self.published)
+        self.repo.write_register([self.entry])
+        self.repo.commit("bind v1 qualification (B2)")
+
+    def check(self, candidate: str = "HEAD", **kw) -> checker.Outcome:
+        return checker.check(self.repo.root, REGISTER, candidate, identity_sources=SOURCES, **kw)
+
+    def validate(self) -> list[str]:
+        return validator.validate_register(self.repo.root, REGISTER, "HEAD", SOURCES)
+
+    def declare(self, changes: list[dict], **kw) -> None:
+        self.repo.write_json(DECLARATION, self.repo.declaration(changes, **kw))
+        self.repo.write_register([self.entry], {"baseline_id": V2, "declaration": DECLARATION})
+
+    def edit_policy(self, version: str = "3.2.0") -> None:
+        self.repo.write(RANKING_FILE, f'POLICY_VERSION = "{version}"\n')
+
+    def declared(self, *paths: str) -> list[dict]:
+        return [{"path": path, "blob": blob(self.repo.root, path)} for path in paths]
+
+
+class CheckerOutcomes(SuccessionTestCase):
+    def test_pass_when_only_evaluation_changes(self) -> None:
+        self.repo.write(EVALUATION_FILE, "PROBE = 2\n")
+        self.repo.commit("evaluation only")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_PASS)
+        self.assertTrue(outcome.message.startswith(f"Runtime Baseline equivalence: PASS; baseline={V1}; frozen={self.frozen}"))
+
+    def test_fail_without_declaration(self) -> None:
+        self.edit_policy()
+        self.repo.commit("undeclared runtime change")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertIn(self.frozen, outcome.message)
+        self.assertIn("declares no successor", outcome.message)
+        self.assertIn(RANKING_FILE, outcome.message)
+
+    def test_transition_with_honest_declaration(self) -> None:
+        self.edit_policy()
+        self.declare(self.declared(RANKING_FILE), deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        self.repo.commit("declared tranche")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_TRANSITION, outcome.message)
+        self.assertIn(f"declared_successor={V2} (issue #673)", outcome.message)
+        self.assertIn(f"protected surface = frozen {self.frozen} + 1 declared blobs", outcome.message)
+        self.assertIn("deltas=identity.ranking.active_policy_version 3.1.2->3.2.0", outcome.message)
+
+    def test_pinned_only_refuses_transition(self) -> None:
+        self.edit_policy()
+        self.declare(self.declared(RANKING_FILE), deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        self.repo.commit("declared tranche")
+        outcome = self.check(pinned_only=True)
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertEqual(outcome.message, f"candidate HEAD is in a declared transition to {V2}; this check requires a pinned baseline")
+
+    def test_fail_when_undeclared_protected_file_changes(self) -> None:
+        self.edit_policy()
+        self.repo.write(OTHER_FILE, "STATE = 2\n")
+        self.declare(self.declared(RANKING_FILE), deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        self.repo.commit("one file undeclared")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith(f"undeclared protected change: {OTHER_FILE}"), outcome.message)
+
+    def test_fail_when_declared_blob_differs(self) -> None:
+        self.edit_policy()
+        self.declare(self.declared(RANKING_FILE), deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        self.repo.write(RANKING_FILE, 'POLICY_VERSION = "3.2.0"\nEXTRA = True\n')
+        self.repo.commit("second edit after pinning")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith(f"declared blob mismatch for {RANKING_FILE}: declared "), outcome.message)
+
+    def test_fail_when_declared_change_is_absent(self) -> None:
+        self.edit_policy()
+        changes = self.declared(RANKING_FILE) + [{"path": OTHER_FILE, "blob": blob(self.repo.root, OTHER_FILE)}]
+        self.declare(changes, deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        self.repo.commit("declares an unchanged file")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith(f"declared change absent from candidate: {OTHER_FILE}"), outcome.message)
+
+    def test_fail_when_declared_to_is_not_in_candidate(self) -> None:
+        self.edit_policy("3.1.3")
+        self.declare(self.declared(RANKING_FILE), deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        self.repo.commit("declared to differs")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith("declared delta identity.ranking.active_policy_version: candidate value is '3.1.3', declaration says to='3.2.0'"), outcome.message)
+
+    def test_fail_when_declared_from_is_not_in_frozen(self) -> None:
+        self.edit_policy()
+        self.declare(self.declared(RANKING_FILE), deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.1", "to": "3.2.0"}])
+        self.repo.commit("declared from differs")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith("declared delta identity.ranking.active_policy_version: predecessor value is '3.1.2', declaration says from='3.1.1'"), outcome.message)
+
+    def test_fail_when_undeclared_identity_changes(self) -> None:
+        self.edit_policy()
+        self.repo.write(CONTRACT_FILE, 'CONTRACT_VERSION = "1.4.0"\n')
+        self.declare(self.declared(RANKING_FILE, CONTRACT_FILE), deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        self.repo.commit("contract bumped inside a declared blob")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith("undeclared identity identity.public_contract_version changed: frozen='1.3.0', candidate='1.4.0'"), outcome.message)
+
+    def test_fail_when_pyproject_declared_without_reason(self) -> None:
+        self.edit_policy()
+        self.repo.write("pyproject.toml", '[project]\nname = "mini"\nversion = "0.1.0"\ndependencies = ["x"]\n')
+        self.declare(self.declared(RANKING_FILE, "pyproject.toml"), deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        self.repo.commit("pyproject without reason")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith("pyproject.toml declared without pyproject_change"), outcome.message)
+
+    def test_transition_with_declared_pyproject_change(self) -> None:
+        self.edit_policy()
+        self.repo.write("pyproject.toml", '[project]\nname = "mini"\nversion = "0.1.0"\ndependencies = ["x"]\n')
+        self.declare(
+            self.declared(RANKING_FILE, "pyproject.toml"),
+            deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}],
+            pyproject={"reason": "embedding provider pin"},
+        )
+        self.repo.commit("pyproject with reason")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_TRANSITION, outcome.message)
+        self.assertIn("+ 2 declared blobs", outcome.message)
+
+    def test_fail_when_predecessor_is_not_current(self) -> None:
+        self.edit_policy()
+        declaration = self.repo.declaration(self.declared(RANKING_FILE), [{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        declaration["predecessor_baseline_id"] = "agent-memory-runtime-baseline-v0"
+        self.repo.write_json(DECLARATION, declaration)
+        self.repo.write_register([self.entry], {"baseline_id": V2, "declaration": DECLARATION})
+        self.repo.commit("wrong predecessor")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith(f"declared successor {V2} names predecessor agent-memory-runtime-baseline-v0 but the current baseline is {V1}"), outcome.message)
+
+    def test_fail_when_current_is_pending(self) -> None:
+        pending = dict(self.repo.make_pending(self.entry), published_commit=None)
+        self.edit_policy()
+        self.repo.write_json(DECLARATION, self.repo.declaration(self.declared(RANKING_FILE), [{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}]))
+        self.repo.write_register([pending], {"baseline_id": V2, "declaration": DECLARATION})
+        self.repo.commit("declaration while pending")
+        outcome = self.check()
+        self.assertEqual(outcome.state, checker.STATE_FAIL)
+        self.assertTrue(outcome.message.startswith(f"declared successor {V2} cannot open while {V1} qualification is pending or unpinned"), outcome.message)
+
+    def test_declare_script_writes_blobs(self) -> None:
+        self.edit_policy()
+        self.repo.write(OTHER_FILE, "STATE = 2\n")
+        self.declare([{"path": "placeholder", "blob": None}], deltas=[{"identity_path": "identity.ranking.active_policy_version", "from": "3.1.2", "to": "3.2.0"}])
+        changes = declare.rewrite(self.repo.root, DECLARATION, REGISTER)
+        self.assertEqual([item["path"] for item in changes], [RANKING_FILE, OTHER_FILE])
+        self.assertEqual(changes, self.declared(RANKING_FILE, OTHER_FILE))
+        self.assertEqual(declare.rewrite(self.repo.root, DECLARATION, REGISTER), changes)
+        self.repo.commit("declared by the helper")
+        self.assertEqual(self.check().state, checker.STATE_TRANSITION)
+
+    def test_main_prints_message_and_exit_code(self) -> None:
+        self.assertEqual(checker.main(["--root", str(self.repo.root), "--candidate", "HEAD"]), 0)
+        self.edit_policy()
+        self.repo.commit("undeclared")
+        with self.assertRaises(SystemExit) as caught:
+            checker.main(["--root", str(self.repo.root), "--candidate", "HEAD"])
+        self.assertIn("declares no successor", str(caught.exception))
+
+
+class RegisterValidator(SuccessionTestCase):
+    def test_complete_entry_validates(self) -> None:
+        summary = self.validate()[0]
+        self.assertEqual(summary.split(";")[0], f"{V1} identities match frozen revision {self.frozen}")
+        self.assertIn("public baseline qualification is bound at workflow 1", summary)
+
+    def test_register_refuses_record_blob_drift(self) -> None:
+        record = self.repo.read_json(self.entry["record"])
+        record["status"] = "edited"
+        self.repo.write_json(self.entry["record"], record)
+        with self.assertRaises(SystemExit) as caught:
+            self.validate()
+        self.assertIn(f"{V1} record blob mismatch", str(caught.exception))
+
+    def test_register_refuses_published_commit_with_other_bytes(self) -> None:
+        record = self.repo.read_json(self.entry["record"])
+        record["status"] = "edited after publication"
+        self.repo.write_json(self.entry["record"], record)
+        drifted = dict(self.entry, record_blob=blob(self.repo.root, self.entry["record"]))
+        self.repo.write_register([drifted])
+        with self.assertRaises(SystemExit) as caught:
+            self.validate()
+        self.assertIn(f"{V1} record blob at published commit mismatch", str(caught.exception))
+
+    def test_register_refuses_published_commit_off_first_parent(self) -> None:
+        git(self.repo.root, "checkout", "-q", "-b", "side")
+        self.repo.write(EVALUATION_FILE, "PROBE = 3\n")
+        side = self.repo.commit("side work")
+        git(self.repo.root, "checkout", "-q", "-")
+        git(self.repo.root, "merge", "-q", "--no-ff", "-m", "merge side", "side")
+        self.repo.write_register([dict(self.entry, published_commit=side)])
+        self.repo.commit("pin to side commit")
+        with self.assertRaises(SystemExit) as caught:
+            self.validate()
+        self.assertIn("is not on the first-parent history of HEAD", str(caught.exception))
+
+    def test_register_allows_pending_last_entry_without_published_commit(self) -> None:
+        pending = dict(self.repo.make_pending(self.entry), published_commit=None)
+        self.repo.write_register([pending])
+        self.assertIn("public baseline qualification is pending", self.validate()[0])
+
+    def test_register_refuses_pending_non_last_entry(self) -> None:
+        first = dict(self.repo.make_pending(self.entry), published_commit=None)
+        second = self.repo.publish(V2, self.frozen)
+        self.repo.write_register([first, second])
+        with self.assertRaises(SystemExit) as caught:
+            self.validate()
+        self.assertIn("only the last register entry may carry a pending qualification", str(caught.exception))
+
+    def test_register_refuses_complete_entry_without_published_commit(self) -> None:
+        self.repo.write_register([dict(self.entry, published_commit=None)])
+        with self.assertRaises(SystemExit) as caught:
+            self.validate()
+        self.assertIn("a complete qualification requires published_commit", str(caught.exception))
+
+    def test_register_refuses_open_declaration_with_wrong_from(self) -> None:
+        self.repo.write_json(DECLARATION, self.repo.declaration([{"path": RANKING_FILE, "blob": "0" * 40}], [{"identity_path": "identity.ranking.active_policy_version", "from": "9.9.9", "to": "3.2.0"}]))
+        self.repo.write_register([self.entry], {"baseline_id": V2, "declaration": DECLARATION})
+        with self.assertRaises(SystemExit) as caught:
+            self.validate()
+        self.assertIn("predecessor value is '3.1.2', declaration says from='9.9.9'", str(caught.exception))
+
+    def test_identity_helpers(self) -> None:
+        values = read_identities(self.repo.root, self.frozen, SOURCES)
+        self.assertEqual(values, {"identity.public_contract_version": "1.3.0", "identity.ranking.active_policy_version": "3.1.2"})
+        self.assertEqual(record_value({"read_semantics": {"candidate_routes": ["a", "b", "c", "d"]}}, "read_semantics.candidate_routes.3"), "d")
+        with self.assertRaises(SystemExit):
+            record_value({"identity": {}}, "identity.missing")
+
+
+class RealRepository(unittest.TestCase):
+    """The committed register pins Runtime Baseline v1 exactly; the v1 rendering is byte-identical."""
+
+    def test_register_pins_v1_bytes(self) -> None:
+        register = checker.load_register(REPO_ROOT, REGISTER)
+        entry = register["baselines"][-1]
+        self.assertEqual(entry["baseline_id"], V1)
+        self.assertEqual(blob(REPO_ROOT, entry["record"]), entry["record_blob"])
+        self.assertEqual(blob(REPO_ROOT, entry["source_boundary"]), entry["source_boundary_blob"])
+        self.assertEqual(entry["qualification"]["path"], entry["record"])
+        self.assertEqual(entry["qualification"]["blob"], entry["record_blob"])
+        self.assertEqual(entry["published_commit"], V1_REAL_PUBLISHED)
+        available = subprocess.run(
+            ["git", "cat-file", "-e", f"{V1_REAL_PUBLISHED}^{{commit}}"], cwd=REPO_ROOT, capture_output=True, text=True, check=False
+        )
+        if available.returncode != 0:
+            self.skipTest("the v1 publication commit is not available in this checkout")
+        self.assertEqual(git(REPO_ROOT, "rev-parse", f"{V1_REAL_PUBLISHED}:{entry['record']}"), entry["record_blob"])
+        self.assertEqual(git(REPO_ROOT, "rev-parse", f"{V1_REAL_PUBLISHED}:{entry['source_boundary']}"), entry["source_boundary_blob"])
+        self.assertTrue(validator.first_parent_ancestor(REPO_ROOT, "HEAD", V1_REAL_PUBLISHED))
+
+    def test_identity_table_covers_the_v1_record(self) -> None:
+        record = json.loads((REPO_ROOT / "reports/runtime/baseline-v1.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(IDENTITY_SOURCES), 26)
+        for source in IDENTITY_SOURCES:
+            record_value(record, source.identity_path)
+
+    def test_v1_rendering_is_byte_identical(self) -> None:
+        register = checker.load_register(REPO_ROOT, REGISTER)
+        output, rendered = renderer.render_entry(REPO_ROOT, register["baselines"][-1])
+        self.assertEqual(output, REPO_ROOT / "reports/runtime/baseline-v1.md")
+        self.assertEqual(rendered, output.read_text(encoding="utf-8"))
+
+    def test_workflows_carry_no_literal_v1_revision(self) -> None:
+        workflows = [
+            ".github/workflows/runtime-baseline.yml",
+            ".github/workflows/agmi-agent-memory-qualification.yml",
+            ".github/workflows/gauntlet-durability-recovery.yml",
+        ]
+        literals = ("f2aef57293b516e065cad5d0afea26ac7e3c28a9", "32783fad3c5cf50a9d712c8bcc0a023907ce9433", "agent-memory-runtime-baseline-v1")
+        for workflow in workflows:
+            text = (REPO_ROOT / workflow).read_text(encoding="utf-8")
+            for line in text.splitlines():
+                if line.lstrip().startswith("- '"):
+                    continue
+                for literal in literals:
+                    self.assertNotIn(literal, line, f"{workflow}: {line.strip()}")
+            self.assertEqual(text.count("--candidate HEAD"), 1, workflow)
+            lines = text.splitlines()
+            checker_line = next(i for i, line in enumerate(lines) if "--candidate HEAD" in line)
+            classify = next(i for i in range(checker_line, -1, -1) if lines[i].strip() == "id: classify")
+            install = next(i for i, line in enumerate(lines) if "pip install -e ." in line)
+            self.assertLess(install, classify, workflow)
+
+
+if __name__ == "__main__":
+    unittest.main()

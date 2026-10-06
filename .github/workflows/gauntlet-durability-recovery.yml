@@ -11,6 +11,8 @@ on:
       - 'reference/agentmem_ref/evaluation/gauntlet_durability_fixtures.py'
       - 'reference/agentmem_ref/evaluation/gauntlet_profiles.py'
       - 'reference/tests/test_gauntlet_durability.py'
+      - 'reports/runtime/baseline-register.json'
+      - 'scripts/check_runtime_baseline_equivalence.py'
       - '.github/workflows/gauntlet-durability-recovery.yml'
   workflow_dispatch:
 
@@ -35,24 +37,57 @@ jobs:
       - name: Install package and test dependency
         run: python -m pip install -e . pytest
 
+      - name: Classify the candidate against the current Runtime Baseline
+        id: classify
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$(python scripts/check_runtime_baseline_equivalence.py --candidate HEAD)"
+          echo "$out"
+          state="$(echo "$out" | grep -oE 'equivalence: [A-Z]+' | head -n1 | cut -d' ' -f2)"
+          echo "state=$state" >> "$GITHUB_OUTPUT"
+
+      - name: Read the current baseline from the register
+        id: current
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          from pathlib import Path
+
+          register = json.loads(Path("reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
+          entry = register["baselines"][-1]
+          boundary = json.loads(Path(entry["source_boundary"]).read_text(encoding="utf-8"))
+          print(f"baseline_id={entry['baseline_id']}")
+          print(f"revision={boundary['frozen_revision']}")
+          PY
+
+      - name: Transition notice
+        if: steps.classify.outputs.state == 'TRANSITION'
+        run: |
+          echo "The register declares a successor and the candidate is in a pinned transition."
+          echo "The public durability contestant is not run: no evidence may claim ${{ steps.current.outputs.revision }} from this checkout."
+
       - name: Verify exact Agent Memory durability adapter identity
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -euo pipefail
           ADAPTER_REVISION="git-blob:$(git hash-object reference/agentmem_ref/evaluation/gauntlet_agent_memory_durability.py)"
           GOVERNANCE_REVISION="$(git hash-object reference/agentmem_ref/evaluation/gauntlet_agent_memory.py)"
           WRAPPER_REVISION="git-blob:$(git hash-object examples/gauntlet/agent_memory_durability_stdio.py)"
-          python - "$ADAPTER_REVISION" "$GOVERNANCE_REVISION" "$WRAPPER_REVISION" <<'PY'
+          python - "$ADAPTER_REVISION" "$GOVERNANCE_REVISION" "$WRAPPER_REVISION" "${{ steps.current.outputs.revision }}" <<'PY'
           import json
           import sys
           from pathlib import Path
 
-          adapter_revision, governance_revision, wrapper_revision = sys.argv[1:4]
+          adapter_revision, governance_revision, wrapper_revision, baseline_revision = sys.argv[1:5]
           manifest = json.loads(Path("fixtures/gauntlet/agent-memory-public-durability-adapter.json").read_text(encoding="utf-8"))
           assert manifest["adapter"]["revision"] == adapter_revision, (manifest["adapter"]["revision"], adapter_revision)
           assert governance_revision == "2cfac37156add666c4494211ef861f6ba10af7c6", governance_revision
           assert manifest["metadata"]["transport_wrapper_revision"] == wrapper_revision, (manifest["metadata"]["transport_wrapper_revision"], wrapper_revision)
-          assert manifest["system"]["revision"] == "git-commit:f2aef57293b516e065cad5d0afea26ac7e3c28a9"
+          assert manifest["system"]["revision"] == f"git-commit:{baseline_revision}", (manifest["system"]["revision"], baseline_revision)
           assert manifest["transport"]["kind"] == "stdio"
           assert manifest["capabilities"]["checkpoint"]["support"] == "unsupported"
           assert manifest["capabilities"]["durable_correction"]["support"] == "unsupported"
@@ -62,15 +97,19 @@ jobs:
           PY
 
       - name: Run focused evaluator and real-contestant tests
+        if: steps.classify.outputs.state == 'PASS'
         run: python -m pytest -q reference/tests/test_gauntlet_durability.py
 
       - name: Validate public durability contestant
+        if: steps.classify.outputs.state == 'PASS'
         run: agent-memory gauntlet validate-adapter fixtures/gauntlet/agent-memory-public-durability-adapter.json
 
       - name: Inspect durability recovery profile
+        if: steps.classify.outputs.state == 'PASS'
         run: agent-memory gauntlet inspect durability-recovery-alpha-v1
 
       - name: Run public-facade durability qualification
+        if: steps.classify.outputs.state == 'PASS'
         run: |
           agent-memory gauntlet run \
             --system fixtures/gauntlet/agent-memory-public-durability-adapter.json \
@@ -80,6 +119,7 @@ jobs:
             --output-dir ./durability-runs
 
       - name: Validate generated native evidence
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -euo pipefail
@@ -112,6 +152,7 @@ jobs:
           PY
 
       - name: Inventory qualification evidence
+        if: steps.classify.outputs.state == 'PASS'
         shell: bash
         run: |
           set -euo pipefail
@@ -126,6 +167,7 @@ jobs:
           } | tee durability-evidence/source-environment.txt
 
       - name: Upload durability qualification evidence
+        if: steps.classify.outputs.state == 'PASS'
         uses: actions/upload-artifact@v4
         with:
           name: gauntlet-durability-recovery-alpha-v1
