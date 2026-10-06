@@ -457,6 +457,7 @@ class _FrozenV2LaneMixin:
 
     lane_id = ""
     predecessor_id = ""
+    workflow_path = ""
     pinned_reference_paths: set[str] = set()
 
     def _lane(self) -> dict:
@@ -486,6 +487,20 @@ class _FrozenV2LaneMixin:
         for path, blob in bound.items():
             self.assertEqual(_hash_object(repo_root, path), blob, f"{path} changed after the freeze; re-freeze the lane (new lane id once a score exists)")
 
+    def test_lane_workflow_checks_out_the_history_the_checker_needs(self):
+        # The posture step runs scripts/check_runtime_baseline_equivalence.py, which diffs the
+        # checkout against the frozen runtime revision: a depth-1 checkout aborts it (runs
+        # 37542447011-37542464528 on main 15404ac failed exactly there), so the Agent Memory
+        # checkout must fetch full history.
+        repo_root = Path(__file__).resolve().parents[2]
+        workflow = (repo_root / self.workflow_path).read_text(encoding="utf-8")
+        self.assertIn(f"- {self.lane_id}", workflow)
+        self.assertIn("check_runtime_baseline_equivalence.py --candidate HEAD", workflow)
+        first_checkout = workflow.index("uses: actions/checkout@")
+        checkout_block = workflow[first_checkout : workflow.index("- name:", first_checkout)]
+        self.assertNotIn("repository:", checkout_block, "the first checkout is the Agent Memory checkout")
+        self.assertIn("fetch-depth: 0", checkout_block)
+
     def test_control_declares_the_budget_and_the_transition_posture(self):
         lane = self._lane()
         repo_root = Path(__file__).resolve().parents[2]
@@ -506,6 +521,7 @@ class _FrozenV2LaneMixin:
 class AmbPrecisionMemBenchV2LaneTests(_FrozenV2LaneMixin, unittest.TestCase):
     lane_id = AMB_V2_LANE_ID
     predecessor_id = LANE_ID
+    workflow_path = ".github/workflows/amb-competitive.yml"
     pinned_reference_paths = {"reference/amb_agent_memory_bridge.py", "reference/amb_mem0_explicit_bridge.py"}
 
     def test_bridge_0_2_0_is_the_pinned_adapter(self):
@@ -526,6 +542,7 @@ class AmbPrecisionMemBenchV2LaneTests(_FrozenV2LaneMixin, unittest.TestCase):
 class LongMemEvalParityV2LaneTests(_FrozenV2LaneMixin, unittest.TestCase):
     lane_id = LME_V2_LANE_ID
     predecessor_id = LME_LANE_ID
+    workflow_path = ".github/workflows/longmemeval-competitive.yml"
     pinned_reference_paths = {
         "reference/run_longmemeval.py",
         "reference/longmemeval_mem0_explicit_bridge.py",

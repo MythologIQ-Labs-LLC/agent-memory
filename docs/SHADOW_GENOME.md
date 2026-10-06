@@ -580,6 +580,40 @@ The plan placed a new field on a lane row's `source` object without reading the 
 
 ---
 
+### Failure #17: lanes -v2 workflows ran the Runtime Baseline checker on a depth-1 checkout
+
+**Date**: 2026-10-06
+**Iteration**: implementation (Entry #70), discovered at Phase 3 execution
+**Verdict ID**: n/a (workflow runs 37542447011, 37542451366, 37542454188, 37542457565, 37542460612, 37542464528 on main 15404ac failed at "Record the Runtime Baseline posture of this checkout": `frozen runtime commit is unavailable: f2aef57…`)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+Plan LD1 added a posture step to both lane workflows that runs `scripts/check_runtime_baseline_equivalence.py --candidate HEAD` and records its state in the execution identity. The step was added to workflows whose Agent Memory checkout used `fetch-depth: 1`, while the checker's first act is `git cat-file -e <frozen>^{commit}` against Runtime Baseline v1's frozen revision.
+
+#### Why It Failed
+
+- The checker's precondition (the frozen revision is reachable in the checkout) was stated in `runtime-baseline.yml` and `agmi-agent-memory-qualification.yml` (`fetch-depth: 0`) but not carried into the plan's LD1 or the implementation; the workflow literal test asserted the step's presence, not the checkout it needs.
+- The posture step was validated locally on a full clone, where the precondition holds silently.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: porting a step that calls a git-history-reading script into a workflow without porting that workflow's checkout depth; testing workflow literals for the presence of a command but not for the environment the command requires.
+
+**Correct Pattern**: when a plan adds a script invocation to a workflow, cite the script's git preconditions (`require_commit`, `git diff <frozen>`) and the checkout configuration that satisfies them; assert the checkout block in the workflow-literal test.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| FIXED | Both lane workflows check out full history (`fetch-depth: 0`) and `_FrozenV2LaneMixin.test_lane_workflow_checks_out_the_history_the_checker_needs` asserts it; the nine runs were re-dispatched on the fixed `main`. |
+
+#### Related Entries
+
+- Entry #70 (IMPLEMENTATION, lanes -v2 Phases 1-2); Failure #16 (the same plan's audit iteration).
+
+---
+
 ## Pattern Library (Extracted Lessons)
 
 Cross-cutting lessons from the temporal/currentness and evidence work (#538 through #550) are collected in [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md).
@@ -617,11 +651,11 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | GHOST_PATH | 0 | - |
 | HALLUCINATION | 2 | 2026-09-01 |
 | ORPHAN | 0 | - |
-| SPEC_DRIFT | 15 | 2026-10-06 |
+| SPEC_DRIFT | 16 | 2026-10-06 |
 | CHAIN_BREAK | 0 | - |
 
-**Total Failures Recorded**: 16
-**Failures Resolved**: 13 (Failure #16 grounds closed by iteration 2; Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
+**Total Failures Recorded**: 17
+**Failures Resolved**: 14 (Failure #17 fixed by the lane-workflow checkout fix; Failure #16 grounds closed by iteration 2; Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
 ---
