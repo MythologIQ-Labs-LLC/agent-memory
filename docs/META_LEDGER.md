@@ -3195,3 +3195,35 @@ migration-required paths under a budget; add the third literal; rewrite the
 deferral honestly and say the PR does not close #670) and A1-A4 recorded.
 Required next action: Governor amends LD4, LD5, LD6 and the boundaries;
 re-run /qor-audit.
+---
+
+### Entry #66: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T21:45:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-670-return-budget.md (iteration 2; plan content hash 63afdfec1a87f59841503efb7bd48dc8c0a4c13f33ab392462a33a70e8a78996)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_670_attempt2.md) = 836e55c87b13df9442a18c8648d6d55a5a019f81d98e83fd5e523750f0b8ef8b
+
+**Previous Hash**: `8ab0bab7fa96d6bd8a5f4f7895fc59824cda650b1e454d4499b09866640835c3`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = f7919e2654aaf132ff2fb1f3330b0a54a700f040cb4c18fb5d5748176452dc26
+
+**Decision**: PASS, attempt 2 of 5, independent reviewer in a fresh context.
+Every attempt-1 ground closed against the tree: the third version literal
+is in the affected files, the bridge deferral states which file is
+lane-pinned and which are recorded at execution and that the PR does not
+close #670, the merge-commit requirement is stated, the blocked-under-budget
+and migration-required paths are tested, the packaged-copy identity is
+tested, `applied` means truncated. Binding condition applied before
+implementation: C1 the literal count is four, the fourth being the
+compatibility case at `test_api_contract.py:43` which stays and is
+extended. Advisories applied: A1 `run_agentmembench.py` is recorded by
+commit; A2 the RC report keeps a literal `1.4.0`. A3 (a second `basis`
+value for the admission-order path) deferred to a later minor. Next:
+/qor-implement.

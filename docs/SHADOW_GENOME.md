@@ -538,7 +538,7 @@ The plan listed the test modules that pin the recall result shape from the resea
 
 | Status | Action Taken |
 |--------|--------------|
-| OPEN | Iteration 2 adds the third literal, tests the blocked and migration-required paths, states the merge-commit requirement, and restates the bridge deferral honestly; awaiting attempt 2. |
+| FIXED | Iteration 2 added the third literal, tested the blocked and migration-required paths, stated the merge-commit requirement and restated the bridge deferral honestly; attempt 2 (Entry #66) PASSED with condition C1 applied. |
 
 #### Related Entries
 - Ledger Entry: #65 (GATE TRIBUNAL, VETO)
@@ -587,7 +587,7 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | CHAIN_BREAK | 0 | - |
 
 **Total Failures Recorded**: 15
-**Failures Resolved**: 11 (Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
+**Failures Resolved**: 12 (Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
 ---
