@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import pytest
-
 import sys
 import types
 from dataclasses import dataclass
@@ -97,8 +95,12 @@ def test_retrieve_returns_the_facade_prefix_under_the_case_budget(tmp_path, monk
     assert raw["return_policy"]["applied"] is True
     assert raw["return_policy"]["authority_effect"] == "none"
     assert raw["return_policy"]["admitted_count"] == 4
-    with pytest.raises(ValueError):
+    try:
         provider.retrieve("release branch note", k=0, user_id="user:k")
+    except ValueError:
+        pass
+    else:  # pragma: no cover - the refusal is the contract (#670)
+        raise AssertionError("k=0 must be refused before recall")
 
 
 def test_provider_resume_reuses_revision_bound_sidecar(tmp_path, monkeypatch):
