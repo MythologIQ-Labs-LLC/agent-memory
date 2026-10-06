@@ -186,6 +186,47 @@ class PublicSurface(unittest.TestCase):
         self.assertEqual(blocked["admissions"], {})
         self.assertEqual(blocked["admitted"], [])
 
+    def test_recall_budget_returns_ranked_prefix_and_keeps_admitted(self):
+        # Contract 1.4.0 (#670): the budget is policy after admission; admitted stays whole.
+        second = surface.commit(self.memory, {**EXAMPLE, "proposal_id": "proposal-second",
+                                              "target_reference": "memory:second-release-branch"},
+                                "release branch second")
+        self.assertTrue(second["committed"])
+        unbudgeted = surface.recall(self.memory, "release branch", RECALL)
+        self.assertEqual(len(unbudgeted["admitted"]), 2)
+        self.assertEqual(unbudgeted["returned"], unbudgeted["admitted"])
+        self.assertEqual((unbudgeted["return_policy"]["requested_k"], unbudgeted["return_policy"]["applied"]), (None, False))
+        budgeted = surface.recall(self.memory, "release branch", {**RECALL, "budget": {"k": 1}})
+        self.assertEqual(budgeted["returned"], [budgeted["admitted"][0]])
+        self.assertEqual(budgeted["admitted"], unbudgeted["admitted"])
+        # the adapter's decision records carry per-call event ids; the decisions themselves are equal
+        self.assertEqual({k: v["outcome"] for k, v in budgeted["admissions"].items()},
+                         {k: v["outcome"] for k, v in unbudgeted["admissions"].items()})
+        self.assertEqual(budgeted["candidates"], unbudgeted["candidates"])
+        policy_record = budgeted["return_policy"]
+        self.assertEqual((policy_record["requested_k"], policy_record["applied"]), (1, True))
+        self.assertEqual((policy_record["admitted_count"], policy_record["returned_count"]), (2, 1))
+        self.assertEqual(policy_record["authority_effect"], "none")
+
+    def test_blocked_recall_under_budget_is_empty_not_truncated(self):
+        blocked = surface.recall(self.memory, "release branch",
+                                 {**RECALL, "target_domain_refs": ["org:elsewhere"], "budget": {"k": 1}})
+        self.assertEqual(blocked["stage"], "recall")
+        self.assertEqual((blocked["candidates"], blocked["admissions"], blocked["admitted"]), ([], {}, []))
+        self.assertEqual(blocked["returned"], [])
+        self.assertEqual((blocked["return_policy"]["applied"], blocked["return_policy"]["admitted_count"],
+                          blocked["return_policy"]["returned_count"]), (False, 0, 0))
+
+    def test_migration_required_envelope_carries_no_return_fields(self):
+        newer = surface.recall(self.memory, "release branch", {**RECALL, "contract_version": "1.5.0", "budget": {"k": 1}})
+        self.assertEqual((newer["stage"], newer["compatibility"]), ("none", contract.MIGRATION_REQUIRED))
+        self.assertNotIn("returned", newer)
+        self.assertNotIn("return_policy", newer)
+        unknown = surface.recall(self.memory, "release branch", {k: v for k, v in RECALL.items() if k != "contract_version"})
+        self.assertEqual((unknown["stage"], unknown["compatibility"]), ("none", contract.UNKNOWN))
+        self.assertNotIn("returned", unknown)
+        self.assertNotIn("return_policy", unknown)
+
     def test_forget_forwards_and_refuses_unknown(self):
         unknown = surface.forget(self.memory, {**_correction(), "target_reference": "repo:example:nothing"})
         self.assertFalse(unknown["committed"]); self.assertEqual(unknown["refusal"], "fact_not_found")

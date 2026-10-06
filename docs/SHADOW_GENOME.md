@@ -512,6 +512,40 @@ The plan pinned Runtime Baseline v1's publication to `788ea6f`, the last commit 
 
 ---
 
+### Failure #15: #670 plan iteration 1 VETOed on an untested literal inventory and a byte-pin no test enforces
+
+**Date**: 2026-10-06
+**Iteration**: 1 (audit attempt 1 of 5)
+**Verdict ID**: AUDIT_REPORT_670_attempt1 2026-10-06T21:25 VETO (V1-V2)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+The plan listed the test modules that pin the recall result shape from the research brief's inventory and asserted that only two version literals change; it excluded the benchmark bridges from scope on the claim that the accepted lanes byte-pin them.
+
+#### Why It Failed
+
+- A literal inventory was copied from a brief written for a different question (shape, not version) and not re-grepped for the version string.
+- "Pinned by a lane" was asserted from the LongMemEval lane's `source_blobs` without reading the AMB lane, whose adapter row is recorded at execution.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: carrying a test inventory or a pin claim from a research artifact into a plan without re-running the grep that would prove it for the plan's own change.
+
+**Correct Pattern**: grep every literal the plan changes across `reference/` and `docs/` in the plan's own grep-evidence; cite the exact lane field and test lines that enforce any claimed pin.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| FIXED | Iteration 2 added the third literal, tested the blocked and migration-required paths, stated the merge-commit requirement and restated the bridge deferral honestly; attempt 2 (Entry #66) PASSED with condition C1 applied. |
+
+#### Related Entries
+- Ledger Entry: #65 (GATE TRIBUNAL, VETO)
+- Audit Report: `.agent/staging/AUDIT_REPORT_670_attempt1.md`
+
+---
+
 ## Pattern Library (Extracted Lessons)
 
 Cross-cutting lessons from the temporal/currentness and evidence work (#538 through #550) are collected in [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md).
@@ -549,11 +583,11 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | GHOST_PATH | 0 | - |
 | HALLUCINATION | 2 | 2026-09-01 |
 | ORPHAN | 0 | - |
-| SPEC_DRIFT | 13 | 2026-10-06 |
+| SPEC_DRIFT | 14 | 2026-10-06 |
 | CHAIN_BREAK | 0 | - |
 
-**Total Failures Recorded**: 14
-**Failures Resolved**: 11 (Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
+**Total Failures Recorded**: 15
+**Failures Resolved**: 12 (Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
 ---

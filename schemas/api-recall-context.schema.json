@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/api-recall-context.schema.json",
   "title": "Agent Memory Public API: Recall Context Envelope",
-  "description": "The public, versioned form of a recall context (Sprint 4a, contract 1.0.0). principal_ref is caller-asserted; the embedding host authenticates recall principals (#364).",
+  "description": "The public, versioned form of a recall context (Sprint 4a, contract 1.0.0). principal_ref is caller-asserted; the embedding host authenticates recall principals (#364). Contract 1.4.0 (#670) adds an optional budget: a return policy applied to the ranked admitted prefix after admission and after ranking, never authority.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -16,7 +16,8 @@
         "1.0.0",
         "1.1.0",
         "1.2.0",
-        "1.3.0"
+        "1.3.0",
+        "1.4.0"
       ]
     },
     "target_domain_refs": {
@@ -37,6 +38,20 @@
     },
     "purpose": {
       "type": "string"
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "k"
+      ],
+      "description": "Return budget (contract 1.4.0, #670): at most k of the ranked admitted facts are returned in `returned`; `admitted` always carries the full ranked admitted set.",
+      "properties": {
+        "k": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
     }
   }
 }

@@ -82,7 +82,8 @@ Only plans whose lifecycle is still active/held belong here. Completed plans are
 | Sprint 4b JS PAMA plan | `docs/plan-sprint4b-js-pama.md` | **HELD**; direct parity port remains inappropriate without a complete correction/remediation route |
 | Sprint 4b research brief | `docs/research-brief-sprint4b-js-pama-2026-09-07.md` | supporting research for the held plan |
 | RC1 implementation profile | `docs/45-agent-memory-rc1-implementation-profile.md` | **ACTIVE** under #410 |
-| #674 successor-baseline plan | `docs/plan-674-successor-baseline.md` | **ACTIVE**; Gate Tribunal PASS at Entry #63 (iteration 3) |
+| #674 successor-baseline plan | `docs/plan-674-successor-baseline.md` | implemented (PR #676, Entry #64); historical evidence |
+| #670 return-budget plan | `docs/plan-670-return-budget.md` | **ACTIVE**; Gate Tribunal PASS at Entry #66 (iteration 2); the first declared transition under docs/67 |
 | North Star research brief | `docs/research-brief-north-star-six-tranches-2026-10-06.md` | supporting research for the #668 roadmap and the #674 plan (Entry #60) |
 
 Implemented sprint plans remain in `docs/` as historical evidence. Their continued existence does not mean the work is pending.

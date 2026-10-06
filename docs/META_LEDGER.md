@@ -3163,3 +3163,104 @@ tests of `test_runtime_baseline_succession` and
 `git diff --quiet origin/main` over the six immutable v1 files,
 `reference/agentmem_ref` and `pyproject.toml` reports no change. The full
 suite result is recorded in the pull request.
+---
+
+### Entry #65: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T21:25:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: VETO
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-670-return-budget.md (iteration 1; plan content hash 0b1b92a64970a9856a3ea432b6f7c503a3a7844817ed743b1c547a2ae2b32258)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_670_attempt1.md) = 46d87b346c7ccd7d8bf97d699e31cbf5fd1e884ce441256a537505c1112ec584
+
+**Previous Hash**: `483dbc064b0f38f20e2753a1d49a1a08630e1091c69eaa9cb7e51747f8f52579`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 8ab0bab7fa96d6bd8a5f4f7895fc59824cda650b1e454d4499b09866640835c3
+
+**Decision**: VETO, attempt 1 of 5, independent reviewer in a fresh context;
+both grounds reproduced against the tree before this entry. V1 --
+`test_rc_cognitive_memory_scenario.py:17` asserts the `1.3.0` contract
+version from `memory.contract_version`, so the plan's "two version
+literals" and its full-suite claim were false. V2 -- the AMB bridge is
+recorded at execution, not byte-pinned by any lane or test (only
+`run_longmemeval.py` is pinned by the LongMemEval lane's `source_blobs`),
+so the plan's exclusion of #670's third scope item rested on a false pin.
+C1-C4 (state the merge-commit requirement; test the blocked and
+migration-required paths under a budget; add the third literal; rewrite the
+deferral honestly and say the PR does not close #670) and A1-A4 recorded.
+Required next action: Governor amends LD4, LD5, LD6 and the boundaries;
+re-run /qor-audit.
+---
+
+### Entry #66: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T21:45:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-670-return-budget.md (iteration 2; plan content hash 63afdfec1a87f59841503efb7bd48dc8c0a4c13f33ab392462a33a70e8a78996)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_670_attempt2.md) = 836e55c87b13df9442a18c8648d6d55a5a019f81d98e83fd5e523750f0b8ef8b
+
+**Previous Hash**: `8ab0bab7fa96d6bd8a5f4f7895fc59824cda650b1e454d4499b09866640835c3`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = f7919e2654aaf132ff2fb1f3330b0a54a700f040cb4c18fb5d5748176452dc26
+
+**Decision**: PASS, attempt 2 of 5, independent reviewer in a fresh context.
+Every attempt-1 ground closed against the tree: the third version literal
+is in the affected files, the bridge deferral states which file is
+lane-pinned and which are recorded at execution and that the PR does not
+close #670, the merge-commit requirement is stated, the blocked-under-budget
+and migration-required paths are tested, the packaged-copy identity is
+tested, `applied` means truncated. Binding condition applied before
+implementation: C1 the literal count is four, the fourth being the
+compatibility case at `test_api_contract.py:43` which stays and is
+extended. Advisories applied: A1 `run_agentmembench.py` is recorded by
+commit; A2 the RC report keeps a literal `1.4.0`. A3 (a second `basis`
+value for the admission-order path) deferred to a later minor. Next:
+/qor-implement.
+---
+
+### Entry #67: IMPLEMENTATION
+
+**Timestamp**: 2026-10-06T22:20:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-670-return-budget.md (iteration 2; Gate Tribunal PASS at Entry #66 with condition C1 and advisories A1-A2 applied; implementation amendments IA1 and IA2 recorded in the plan)
+
+**Artifacts**: `schemas/api-recall-context.schema.json`, `schemas/api-result-envelope.schema.json`, `schemas/api-proposal-envelope.schema.json`, `schemas/api-target-envelope.schema.json`, `schemas/api-action-envelope.schema.json`, `schemas/api-execution-observation.schema.json`, `reference/agentmem_ref/api/contract.py`, `reference/agentmem_ref/api/surface.py`, `reference/tests/test_api_contract.py`, `reference/tests/test_api_surface.py`, `reference/tests/test_developer_facade.py`, `reference/tests/test_rc_cognitive_memory_scenario.py`, `reference/tests/test_api_action_authority.py`, `reports/runtime/baseline-v2-declaration.json` (new), `reports/runtime/baseline-register.json`, `docs/44-public-api-contract.md`, `docs/FEATURE_INDEX.md`, `docs/GOVERNANCE_INDEX.md`
+**Content Hash** (SHA256 over `git write-tree` of the staged index `686e53c4dac90bad203aab0f74c89e09b0b6fd25`): `9e1e412dbb2b33ed14dd3ad6992e62d5ff5b3c45b57be9acaf895f70d5112747`
+**Previous Hash**: `f7919e2654aaf132ff2fb1f3330b0a54a700f040cb4c18fb5d5748176452dc26`
+**Chain Hash**: `7f95cff249123611d7147bd7876bcb3fc147cf41e6fe5bc07598a599c9fe18b9`
+
+**Decision**: Contract `1.4.0` implemented as the first declared transition
+under docs/67. The recall context accepts an optional `budget {k ≥ 1}`;
+the result envelope carries `returned` (the ranked admitted prefix) and a
+closed `return_policy` (policy identity, requested k, `applied` meaning
+truncated, both counts, `authority_effect: none`); `admitted` stays the
+full ranked admitted set, so nothing a `1.3.0` caller sees is removed. The
+policy is one pure function on the api layer; the runtime package, the
+audit event, the bridges and the runners are untouched. Two amendments
+found at implement time and recorded in the plan: IA1, every `api-*`
+schema enum closes at `1.3.0` and the packaged `_schemas/` copies are an
+untracked build artifact, so six source schemas change and the declaration
+pins exactly two blobs (`api/contract.py`, `api/surface.py`); IA2, one
+newer-minor example literal (`test_api_action_authority.py:93`) moves from
+`1.4.0` to `1.5.0`. Verified before this entry: the checker prints
+`TRANSITION … + 2 declared blobs; deltas=identity.public_contract_version
+1.3.0->1.4.0`; the validator reports the open declaration; the renderer is
+byte-identical; `validate_schemas.py` passes; the full suite runs 2054
+tests with only the known local shallow-clone ancestry error;
+`governance-health` is green. The register's `declared_successor` is set;
+publication of Runtime Baseline v2 (Steps B1/B2) and the lane evidence
+(`prereq-lane-v3-ids`) follow this merge. The PR merges with a merge commit.
