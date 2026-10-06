@@ -546,6 +546,40 @@ The plan listed the test modules that pin the recall result shape from the resea
 
 ---
 
+### Failure #16: lanes -v2 plan iteration 1 VETOed on a closed schema object and three unchecked facts about the lane pipeline
+
+**Date**: 2026-10-06
+**Iteration**: 1 (audit attempt 1 of 5)
+**Verdict ID**: AUDIT_REPORT_640lanes_attempt1 2026-10-06T22:50 VETO (V1-V4)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+The plan placed a new field on a lane row's `source` object without reading the schema's `additionalProperties` at that level, stated the lane listing order and the v1 control row's configuration shape from memory of a code map, and added a per-question key the runner already writes.
+
+#### Why It Failed
+
+- A code map was treated as a substitute for reading the schema at the exact object being extended.
+- Facts about ordering and shape were asserted without running the one command (`benchmark lanes --json`, `grep returned_count`) that would have shown them.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: extending a closed schema object from a plan without citing the `additionalProperties` ruling for that object; adding a record key without grepping the producer for the same name.
+
+**Correct Pattern**: for every new field a plan adds to a schema-validated document, cite the schema object and its openness; for every new key a plan adds to a report, cite the grep showing the key is unused.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| OPEN | Iteration 2 moves the posture under the open `configuration` object, corrects the listing order and the v1 configuration shape, renames the per-row key, and applies C1-C5; awaiting attempt 2. |
+
+#### Related Entries
+- Ledger Entry: #68 (GATE TRIBUNAL, VETO)
+- Audit Report: `.agent/staging/AUDIT_REPORT_640lanes_attempt1.md`
+
+---
+
 ## Pattern Library (Extracted Lessons)
 
 Cross-cutting lessons from the temporal/currentness and evidence work (#538 through #550) are collected in [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md).
@@ -583,10 +617,10 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | GHOST_PATH | 0 | - |
 | HALLUCINATION | 2 | 2026-09-01 |
 | ORPHAN | 0 | - |
-| SPEC_DRIFT | 14 | 2026-10-06 |
+| SPEC_DRIFT | 15 | 2026-10-06 |
 | CHAIN_BREAK | 0 | - |
 
-**Total Failures Recorded**: 15
+**Total Failures Recorded**: 16
 **Failures Resolved**: 12 (Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 

@@ -3264,3 +3264,37 @@ tests with only the known local shallow-clone ancestry error;
 `governance-health` is green. The register's `declared_successor` is set;
 publication of Runtime Baseline v2 (Steps B1/B2) and the lane evidence
 (`prereq-lane-v3-ids`) follow this merge. The PR merges with a merge commit.
+---
+
+### Entry #68: GATE TRIBUNAL
+
+**Timestamp**: 2026-10-06T22:50:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: VETO
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-640-lanes-v2-return-budget.md (iteration 1; plan content hash 7b05999f7cbadcb6fc837813a399ec98b224235f0da72ea066350e0ade783ce1)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_640lanes_attempt1.md) = af6342ba09e89edb7115b9f1bac23009aed7acbd15fda6918abb7ef2f9eea675
+
+**Previous Hash**: `7f95cff249123611d7147bd7876bcb3fc147cf41e6fe5bc07598a599c9fe18b9`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 93c567af52b3a88261751e95a03d004588813b55f1f3f2161fd70100b67e7375
+
+**Decision**: VETO, attempt 1 of 5, independent reviewer in a fresh context;
+the four grounds reproduced against the tree before this entry. V1 -- the
+lane schema closes `systems[].source`, so the planned
+`source.runtime_baseline_posture` fails `validate-lane` and every step
+after it; the open `configuration` object admits it. V2 -- lanes list in
+sorted id order, so the planned status sequence was wrong. V3 -- the v1
+control row carries its configuration as structured keys, so the
+lane-id-literal importer branch rested on a false "prose only" claim and
+would have introduced a second shape. V4 -- the runner already writes
+`returned_count` per question with a different meaning. C1-C5 (bind the
+declaration blob; key the AMB refusals on what the lane declares; name every
+v1 fact the v2 lanes re-pin; state the plan-670 OQ3 reversal with the
+unmapped-count condition; reconcile with docs/67 B2) and A1-A4 recorded.
+Required next action: Governor amends LD3, LD4, LD6 and the boundaries;
+re-run /qor-audit.
