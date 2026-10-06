@@ -226,7 +226,7 @@ class SameHarnessLaneTests(unittest.TestCase):
         self.assertEqual(report["authority_effect"], "none")
         self.assertEqual([lane["lane_id"] for lane in report["lanes"]], [LANE_ID, LME_LANE_ID])
         self.assertEqual(report["lanes"][0]["status"], "accepted")
-        self.assertEqual(report["lanes"][1]["status"], "frozen")
+        self.assertEqual(report["lanes"][1]["status"], "accepted")
 
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
@@ -274,9 +274,9 @@ class LongMemEvalParityLaneTests(unittest.TestCase):
     def _lane(self) -> dict:
         return get_lane(LME_LANE_ID)
 
-    def test_lane_is_frozen_without_scores_and_resolves_to_the_longmemeval_integration(self):
+    def test_lane_is_accepted_without_scores_and_resolves_to_the_longmemeval_integration(self):
         lane = self._lane()
-        self.assertEqual(lane["status"], "frozen")
+        self.assertEqual(lane["status"], "accepted")
         self.assertIs(lane["frozen_before_any_score"], True)
         self.assertEqual(lane["authority_effect"], "none")
         self.assertIs(lane["evaluator"]["llm_calls"], False)
@@ -287,9 +287,9 @@ class LongMemEvalParityLaneTests(unittest.TestCase):
         self.assertEqual(resolved["harness_revision"], "9e0b455f4ef0e2ab8f2e582289761153549043fc")
         rows = {row["row_id"]: row for row in resolved["rows"]}
         self.assertEqual({key: row["status"] for key, row in rows.items()}, {
-            "agent-memory-public-facade": "frozen",
-            "lexical-overlap-profile-baseline": "frozen",
-            "mem0-oss-2.2.1-explicit-memory": "frozen",
+            "agent-memory-public-facade": "accepted",
+            "lexical-overlap-profile-baseline": "accepted",
+            "mem0-oss-2.2.1-explicit-memory": "accepted",
             "hindsight-0.10.2": "deferred",
         })
         self.assertEqual({row["role"] for row in lane["systems"]}, {"control", "baseline", "comparator"})
@@ -303,10 +303,59 @@ class LongMemEvalParityLaneTests(unittest.TestCase):
         self.assertEqual(accepted["input_sha256"], lane["dataset"]["input_sha256"], "the lane freezes the input the accepted Agent Memory evidence used")
         entries = {item["variant"]: item for item in integration["evidence_history"]}
         for key in ("agent_memory", "lexical_overlap", "mem0_explicit"):
-            self.assertEqual(entries[f"lane:{LME_LANE_ID}:{key}"]["status"], "not_run")
-            self.assertTrue(any(row["provider_key"] == key for row in lane["systems"]))
+            row = next(item for item in lane["systems"] if item["provider_key"] == key)
+            self.assertEqual(row["status"], "accepted")
+            for plane in ("session", "turn"):
+                entry = entries[f"lane:{LME_LANE_ID}:{key}:{plane}"]
+                self.assertEqual(entry["status"], "complete")
+                self.assertEqual(entry["input_sha256"], lane["dataset"]["input_sha256"])
+                self.assertEqual(entry["system_id"], row["system_id"])
+                self.assertEqual(entry["report_binding"], {"input_sha256_path": "input.sha256", "system_revision_path": "system.revision"})
+                self.assertIn(entry["report"].rsplit("/", 2)[-2], row["status_reason"])
+                self.assertIn(f"{key}-{plane}-", entry["report"])
         self.assertEqual(entries[f"lane:{LME_LANE_ID}:hindsight"]["status"], "blocked")
         self.assertEqual(integration["gauntlet"]["relationship"], "eligible")
+
+    def test_accepted_rows_are_bound_to_committed_evidence_records(self):
+        import gzip
+
+        from agentmem_ref.evaluation.registry import check_evidence_binding
+
+        lane = self._lane()
+        integration = get_integration(lane["benchmark_integration"])
+        repo_root = Path(__file__).resolve().parents[2]
+        bindings = [item for item in check_evidence_binding(integration, repo_root=repo_root) if item["variant"].startswith(f"lane:{LME_LANE_ID}:")]
+        self.assertEqual(len(bindings), 6)
+        runner_blob = lane["harness"]["source_blobs"]["reference/run_longmemeval.py"]
+        frozen_selection = [token for token in lane["selection"]["selection_method"].split() if len(token) == 64][0]
+        for binding in bindings:
+            self.assertTrue(binding["bound"], binding)
+            directory = (repo_root / binding["report"]).parent
+            record = json.loads((repo_root / binding["report"]).read_text(encoding="utf-8"))
+            self.assertEqual(record["lane_id"], LME_LANE_ID)
+            self.assertEqual(record["authority_effect"], "none")
+            self.assertEqual(record["lane_digest_at_execution"], record["execution"]["lane_digest_sha256"])
+            self.assertIs(record["execution"]["full_selection"], True)
+            self.assertEqual(record["execution"]["source_blobs"]["reference/run_longmemeval.py"], runner_blob)
+            self.assertEqual(record["input"]["question_ids_sha256"], frozen_selection)
+            self.assertEqual(record["native_summary"]["evaluated_question_count"], 419)
+            self.assertEqual(record["native_summary"]["failures"]["runtime_failure_count"], 0)
+            report = json.loads((directory / "report.json").read_text(encoding="utf-8"))
+            plane, backend = record["row"]["plane"], record["row"]["backend"]
+            self.assertEqual(report["input"]["sha256"], lane["dataset"]["input_sha256"])
+            self.assertEqual(report["input"]["corpus_class"], "external_frozen")
+            self.assertEqual(report["execution"]["backends"], [backend])
+            self.assertEqual(report["execution"]["agent_memory_configuration"], {"temporal_metadata": "none", "ranking_variant": "default"})
+            self.assertNotIn("rows", report["planes"][plane]["backends"][backend])
+            rows = json.loads(gzip.open(directory / "report.rows.json.gz", "rt", encoding="utf-8").read())
+            self.assertEqual(len(rows[plane][backend]), lane["dataset"]["query_count"])
+            for name in ("execution-identity.json", "lane-validation.json", "sha256.txt"):
+                self.assertTrue((directory / name).is_file(), name)
+            if backend == "mem0_explicit":
+                external = report["execution"]["external_backends"]["mem0_explicit"]
+                self.assertEqual(external["system_revision"], record["system"]["revision"])
+                self.assertEqual(external["install_posture"], {"mem0ai": "2.2.1", "fastembed_installed": False, "spacy_installed": False})
+                self.assertEqual(record["execution"]["resolved_packages"]["torch"], "2.10.0")
 
     def test_lane_binds_the_runner_and_bridge_blobs_it_freezes(self):
         import subprocess
@@ -359,7 +408,7 @@ class LongMemEvalParityLaneTests(unittest.TestCase):
         self.assertNotIn("pull_request", workflow.split("permissions:")[0])
         self.assertIn(f"lanes/{LME_LANE_ID}.json", workflow)
         self.assertIn("validate-lane", workflow)
-        self.assertIn('lane["status"] == "frozen"', workflow)
+        self.assertIn('lane["status"] == "frozen"', workflow)  # the workflow executes frozen lanes only; accepted rows are re-run under a new lane id
         self.assertIn('["git", "hash-object", path]', workflow)
         self.assertIn("cancel-in-progress: false", workflow)
         self.assertIn("timeout-minutes:", workflow)
@@ -368,11 +417,10 @@ class LongMemEvalParityLaneTests(unittest.TestCase):
         lane = self._lane()
         self.assertEqual(lane["execution"]["environment"]["workflow"], ".github/workflows/longmemeval-competitive.yml")
 
-    def test_frozen_lane_refuses_executed_or_accepted_rows(self):
+    def test_lane_contradictions_refuse(self):
         lane = self._lane()
-        lane["systems"][2]["status"] = "executed"
-        lane["systems"][2]["status_reason"] = "pretend"
-        with self.assertRaisesRegex(SameHarnessLaneError, "frozen lane may not carry an executed row"):
+        lane["status"] = "frozen"
+        with self.assertRaisesRegex(SameHarnessLaneError, "frozen lane may not carry an accepted row"):
             validate_lane(lane)
         lane = self._lane()
         lane["systems"][2]["dependency_pins"] = []

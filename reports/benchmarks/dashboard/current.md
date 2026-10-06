@@ -1,8 +1,8 @@
 # Canonical Agent Memory benchmark dashboard
 
-Status: **current accepted evidence through #594, plus the first accepted same-harness lane (#640)**, and current pre-1.0 comparator/runtime-qualification state as of 2026-10-05.
+Status: **current accepted evidence through #594, plus two accepted same-harness lanes (#640)**, and current pre-1.0 comparator/runtime-qualification state as of 2026-10-06.
 
-Current merged `main`: `b38d91631169f8f266bdfc23477c27c99b40977e`.
+Current merged `main`: `0b0449a8aa2beca216563486dcbd2325673214e6`.
 
 No universal aggregate score exists. `blocked`, `not_run`, `unsupported`, and `evidence_gap` are states, never numeric zero.
 
@@ -39,7 +39,7 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 
 ## Competitive view — same-harness systems
 
-**Status: first same-harness lane accepted (#640, 2026-10-05).**
+**Status: two same-harness lanes accepted (#640, 2026-10-05 and 2026-10-06).**
 
 #601 now has executable independent-harness infrastructure:
 
@@ -69,6 +69,19 @@ Frozen AMB `RetrievalMode` makes no LLM calls and scores returned belief/documen
 | mem0-explicit | comparator | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37351804149 | 0/43 | 10/77 | 0.10 | 1.00 |
 
 `active passes/43` is the only number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases a provider returning nothing can satisfy. The three rows are normalized into `reports/benchmarks/normalized/amb-precisionmembench-single-turn-*.json` (retrieval, efficiency and reproducibility mapped; currentness and reasoning not applicable; governance and evaluator integrity not measured) and share one scorecard with BM25 as the lexical baseline. There is still no overall score. BM25 is a baseline comparator and Agent Memory the control, not a market-position claim; every row returned nearly everything relevant and failed on precision. Hindsight remains deferred.
+
+**Accepted same-harness rows (lane v2, `longmemeval-s-retrieval-parity-v1`, 2026-10-06).** Frozen before any score (PR #666) and executed the same day, one `.github/workflows/longmemeval-competitive.yml` dispatch per row and plane on `main` `0b0449a`, full 500-question selection of the frozen LongMemEval_S input (`d6f21ea9…a442`, the input the accepted longitudinal Agent Memory evidence used). Raw native reports and execution identities were imported by `scripts/import_longmemeval_lane_evidence.py` under `reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/` and bound by six `evidence_history` entries. 419 scored questions per row after the upstream abstention and no-user-target exclusions; zero runtime, ingestion or out-of-corpus failures on every row.
+
+| row | role | plane | system revision | run | recall_all@5 | recall_all@10 | recall_all@50 | ndcg_any@10 | knowledge-update recall_all@5 | latest gold first |
+| --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| agent-memory | control | session | Agent Memory `0b0449a` | 37421243051 | 0.823 | 0.893 | n/a | 0.878 | 0.972 | 0.457 |
+| lexical_overlap | baseline | session | runner blob `4acdecc` built-in | 37421248307 | 0.730 | 0.826 | n/a | 0.793 | 0.917 | 0.457 |
+| mem0_explicit | comparator | session | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37421253480 | 0.809 | 0.883 | n/a | 0.841 | 0.903 | 0.443 |
+| agent-memory | control | turn | Agent Memory `0b0449a` | 37421245382 | 0.601 | 0.723 | 0.859 | 0.682 | 0.792 | 0.557 |
+| lexical_overlap | baseline | turn | runner blob `4acdecc` built-in | 37421251326 | 0.487 | 0.587 | 0.761 | 0.560 | 0.681 | 0.614 |
+| mem0_explicit | comparator | turn | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37421255904 | 0.499 | 0.673 | 0.895 | 0.596 | 0.611 | 0.486 |
+
+Session and turn are separate planes (separate scorecards) and are never averaged. `recall_all@50` exists on the turn plane only. The Agent Memory control reproduces the accepted longitudinal LongMemEval_S numbers exactly at this revision (session `recall_all@5` 0.823389, turn `recall_all@10` 0.723). The Mem0 row is the lane v1 configuration (mem0ai 2.2.1 explicit memory, pinned local embedder, local Qdrant, no fastembed/spaCy) entering through the runner's external-backend seam with `top_k=50`; it is now accepted on two frozen benchmarks. `lexical_overlap` is the profile's token-overlap baseline, not upstream's BM25 or dense retrievers. The six rows are normalized into `reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v1-*.json` with the lane as task profile, so they share two cards (session, turn) with `lexical_overlap` as the lexical baseline and never a card with the longitudinal profile runs. There is still no overall score and no market claim. Hindsight remains deferred under both lanes.
 
 The LLM-judged AMB profile is frozen to `gemini:gemini-2.5-flash-lite` for answer and judge, but remains **blocked pending authorized evaluation credentials**.
 
