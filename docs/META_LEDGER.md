@@ -3227,3 +3227,40 @@ extended. Advisories applied: A1 `run_agentmembench.py` is recorded by
 commit; A2 the RC report keeps a literal `1.4.0`. A3 (a second `basis`
 value for the admission-order path) deferred to a later minor. Next:
 /qor-implement.
+---
+
+### Entry #67: IMPLEMENTATION
+
+**Timestamp**: 2026-10-06T22:20:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-670-return-budget.md (iteration 2; Gate Tribunal PASS at Entry #66 with condition C1 and advisories A1-A2 applied; implementation amendments IA1 and IA2 recorded in the plan)
+
+**Artifacts**: `schemas/api-recall-context.schema.json`, `schemas/api-result-envelope.schema.json`, `schemas/api-proposal-envelope.schema.json`, `schemas/api-target-envelope.schema.json`, `schemas/api-action-envelope.schema.json`, `schemas/api-execution-observation.schema.json`, `reference/agentmem_ref/api/contract.py`, `reference/agentmem_ref/api/surface.py`, `reference/tests/test_api_contract.py`, `reference/tests/test_api_surface.py`, `reference/tests/test_developer_facade.py`, `reference/tests/test_rc_cognitive_memory_scenario.py`, `reference/tests/test_api_action_authority.py`, `reports/runtime/baseline-v2-declaration.json` (new), `reports/runtime/baseline-register.json`, `docs/44-public-api-contract.md`, `docs/FEATURE_INDEX.md`, `docs/GOVERNANCE_INDEX.md`
+**Content Hash** (SHA256 over `git write-tree` of the staged index `686e53c4dac90bad203aab0f74c89e09b0b6fd25`): `9e1e412dbb2b33ed14dd3ad6992e62d5ff5b3c45b57be9acaf895f70d5112747`
+**Previous Hash**: `f7919e2654aaf132ff2fb1f3330b0a54a700f040cb4c18fb5d5748176452dc26`
+**Chain Hash**: `7f95cff249123611d7147bd7876bcb3fc147cf41e6fe5bc07598a599c9fe18b9`
+
+**Decision**: Contract `1.4.0` implemented as the first declared transition
+under docs/67. The recall context accepts an optional `budget {k ≥ 1}`;
+the result envelope carries `returned` (the ranked admitted prefix) and a
+closed `return_policy` (policy identity, requested k, `applied` meaning
+truncated, both counts, `authority_effect: none`); `admitted` stays the
+full ranked admitted set, so nothing a `1.3.0` caller sees is removed. The
+policy is one pure function on the api layer; the runtime package, the
+audit event, the bridges and the runners are untouched. Two amendments
+found at implement time and recorded in the plan: IA1, every `api-*`
+schema enum closes at `1.3.0` and the packaged `_schemas/` copies are an
+untracked build artifact, so six source schemas change and the declaration
+pins exactly two blobs (`api/contract.py`, `api/surface.py`); IA2, one
+newer-minor example literal (`test_api_action_authority.py:93`) moves from
+`1.4.0` to `1.5.0`. Verified before this entry: the checker prints
+`TRANSITION … + 2 declared blobs; deltas=identity.public_contract_version
+1.3.0->1.4.0`; the validator reports the open declaration; the renderer is
+byte-identical; `validate_schemas.py` passes; the full suite runs 2054
+tests with only the known local shallow-clone ancestry error;
+`governance-health` is green. The register's `declared_successor` is set;
+publication of Runtime Baseline v2 (Steps B1/B2) and the lane evidence
+(`prereq-lane-v3-ids`) follow this merge. The PR merges with a merge commit.
