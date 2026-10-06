@@ -520,7 +520,7 @@ def normalize_amb_precisionmembench(record: Mapping[str, Any]) -> list[dict[str,
     ]
     manifest = {
         "schema_version": "1.0.0",
-        "run_id": f"{AMB_PRECISIONMEMBENCH_BENCHMARK_ID}:{execution['split']}:{system['id']}:{system['revision'][:12]}",
+        "run_id": f"{AMB_PRECISIONMEMBENCH_BENCHMARK_ID}:{record['lane_id']}:{execution['split']}:{system['id']}:{system['revision'][:12]}",
         "status": "complete",
         "benchmark": {
             "id": AMB_PRECISIONMEMBENCH_BENCHMARK_ID,

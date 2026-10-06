@@ -1,7 +1,8 @@
 name: LongMemEval Same-Harness Lane Run
 
-# Manual, deliberate execution of one row of the frozen same-harness lane
-# longmemeval-s-retrieval-parity-v1 (#640): one workflow dispatch per (row, plane).
+# Manual, deliberate execution of one row of a frozen LongMemEval same-harness lane
+# (#640): one workflow dispatch per (lane, row, plane). The lane is an input; an accepted
+# lane refuses to run because only a frozen lane executes.
 # Every run re-verifies the lane file, the evaluator and adapter blobs the lane binds,
 # the frozen input digest, and (for the Mem0 row) the exact release and extras posture
 # before a single question is scored. Raw reports are retained as artifacts; a row
@@ -14,6 +15,14 @@ name: LongMemEval Same-Harness Lane Run
 on:
   workflow_dispatch:
     inputs:
+      lane_id:
+        description: "Frozen lane to execute (an accepted lane is refused)"
+        required: true
+        default: "longmemeval-s-retrieval-parity-v2"
+        type: choice
+        options:
+          - longmemeval-s-retrieval-parity-v1
+          - longmemeval-s-retrieval-parity-v2
       backend:
         description: "Lane row to execute"
         required: true
@@ -41,7 +50,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: longmemeval-lane-${{ github.ref }}-${{ inputs.backend }}-${{ inputs.granularity }}-${{ inputs.subset_size }}
+  group: longmemeval-lane-${{ github.ref }}-${{ inputs.lane_id }}-${{ inputs.backend }}-${{ inputs.granularity }}-${{ inputs.subset_size }}
   cancel-in-progress: false
 
 jobs:
@@ -51,7 +60,7 @@ jobs:
     # row ingests ~122k turn items at ~10 ms each locally, so 180 minutes bounds it with headroom.
     timeout-minutes: 180
     env:
-      LANE_FILE: reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v1.json
+      LANE_FILE: reference/agentmem_ref/evaluation/lanes/${{ inputs.lane_id }}.json
       MEM0_PINS: "mem0ai==2.2.1 qdrant-client==1.17.0 sentence-transformers==5.2.3 torch==2.10.0"
       MEM0_TELEMETRY: "false"
       HF_HOME: /tmp/lme-hf-home
@@ -72,6 +81,27 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check --upgrade pip
           python -m pip install --disable-pip-version-check -e . -r reference/requirements.txt
+
+      - name: Record the Runtime Baseline posture of this checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          line="$(python scripts/check_runtime_baseline_equivalence.py --candidate HEAD)"
+          echo "$line"
+          state="$(echo "$line" | grep -oE 'equivalence: [A-Z]+' | head -n1 | cut -d' ' -f2)"
+          declaration="$(python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          register = json.loads(Path("reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
+          declared = register.get("declared_successor")
+          print("" if declared is None else subprocess.run(["git", "hash-object", declared["declaration"]], capture_output=True, text=True, check=True).stdout.strip())
+          PY
+          )"
+          {
+            echo "RUNTIME_BASELINE_STATE=$state"
+            echo "RUNTIME_BASELINE_LINE=$line"
+            echo "DECLARATION_BLOB=$declaration"
+          } >> "$GITHUB_ENV"
 
       - name: Install the frozen Mem0 OSS row (exact pins, base package, no extras)
         if: ${{ inputs.backend == 'mem0_explicit' }}
@@ -97,7 +127,7 @@ jobs:
           from pathlib import Path
           lane = json.loads(Path(os.environ["LANE_FILE"]).read_text(encoding="utf-8"))
           assert lane["status"] == "frozen", lane["status"]
-          assert lane["lane_id"] == "longmemeval-s-retrieval-parity-v1"
+          assert lane["lane_id"] == "${{ inputs.lane_id }}"
           backend = "${{ inputs.backend }}"
           row = next(item for item in lane["systems"] if item["provider_key"] == backend)
           assert row["status"] == "frozen", (backend, row["status"], row.get("status_reason"))
@@ -147,6 +177,16 @@ jobs:
           if [ "${{ inputs.backend }}" = "mem0_explicit" ]; then
             args+=(--external-backend longmemeval_mem0_explicit_bridge:install_longmemeval_mem0_explicit_backend)
           fi
+          # The lane's control row decides the Agent Memory return budget (contract 1.4.0), never the dispatcher.
+          budget="$(python - <<'PY'
+          import json, os
+          from pathlib import Path
+          lane = json.loads(Path(os.environ["LANE_FILE"]).read_text(encoding="utf-8"))
+          control = next(item for item in lane["systems"] if item["role"] == "control")
+          print(str((control.get("configuration") or {}).get("budget", "none")))
+          PY
+          )"
+          args+=(--agent-memory-budget "$budget")
           if [ "${{ inputs.subset_size }}" != "0" ]; then
             args+=(--subset-size "${{ inputs.subset_size }}")
           fi
@@ -191,6 +231,9 @@ jobs:
               "subset_size": "${{ inputs.subset_size }}",
               "full_selection": "${{ inputs.subset_size }}" == "0",
               "input_sha256": os.environ.get("LME_INPUT_SHA256"),
+              "runtime_baseline_state": os.environ.get("RUNTIME_BASELINE_STATE"),
+              "runtime_baseline_line": os.environ.get("RUNTIME_BASELINE_LINE"),
+              "declaration_blob": os.environ.get("DECLARATION_BLOB") or None,
               "source_blobs": {
                   path: blob(path) for path in lane["harness"]["source_blobs"] if path.startswith("reference/")
               },
@@ -220,7 +263,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: longmemeval-lane-${{ inputs.backend }}-${{ inputs.granularity }}-${{ github.sha }}
+          name: longmemeval-lane-${{ inputs.lane_id }}-${{ inputs.backend }}-${{ inputs.granularity }}-${{ github.sha }}
           path: ${{ runner.temp }}/lme-output/
           if-no-files-found: warn
           retention-days: 30

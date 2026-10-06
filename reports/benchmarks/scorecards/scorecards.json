@@ -1772,21 +1772,21 @@
           "id": "bm25",
           "kind": "lexical",
           "revision": "03c1d0f1d27da63034f0931121c858faba512383",
-          "run_id": "amb-precisionmembench:single-turn:bm25:03c1d0f1d27d",
+          "run_id": "amb-precisionmembench:amb-precisionmembench-retrieval-v1:single-turn:bm25:03c1d0f1d27d",
           "run_status": "complete"
         },
         {
           "id": "agent-memory",
           "kind": "agent_memory",
           "revision": "703be5ba1c7e558edb16ac38508508e5ef592595",
-          "run_id": "amb-precisionmembench:single-turn:agent-memory:703be5ba1c7e",
+          "run_id": "amb-precisionmembench:amb-precisionmembench-retrieval-v1:single-turn:agent-memory:703be5ba1c7e",
           "run_status": "complete"
         },
         {
           "id": "mem0-oss",
           "kind": "external_memory",
           "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
-          "run_id": "amb-precisionmembench:single-turn:mem0-oss:94c3fe9f238f",
+          "run_id": "amb-precisionmembench:amb-precisionmembench-retrieval-v1:single-turn:mem0-oss:94c3fe9f238f",
           "run_status": "complete"
         }
       ]

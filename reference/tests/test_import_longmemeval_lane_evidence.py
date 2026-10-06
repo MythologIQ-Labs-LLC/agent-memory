@@ -218,7 +218,7 @@ class ImportLongMemEvalLaneEvidenceTests(unittest.TestCase):
         broken(lambda r: r["input"].__setitem__("corpus_class", "synthetic"), "not external_frozen", "3001")
         broken(lambda r: r["input"]["selection"].__setitem__("question_ids_sha256", "2" * 64), "frozen full selection", "3002")
         broken(lambda r: r["execution"].__setitem__("agent_memory_worktree_dirty", True), "dirty or unknown worktree", "3003")
-        broken(lambda r: r["execution"].__setitem__("agent_memory_configuration", {"temporal_metadata": "host_declared", "ranking_variant": "default"}), "frozen comparability posture", "3004")
+        broken(lambda r: r["execution"].__setitem__("agent_memory_configuration", {"temporal_metadata": "host_declared", "ranking_variant": "default"}), "declared posture", "3004")
         broken(lambda r: r["planes"]["session"]["backends"]["lexical_overlap"]["rows"].pop(), "one row per frozen question", "3005")
         broken(lambda r: r["execution"]["external_backends"]["mem0_explicit"]["install_posture"].__setitem__("fastembed_installed", True), "extras posture", "3006", "mem0_explicit", "turn")
         broken(lambda r: r["execution"]["external_backends"]["mem0_explicit"].__setitem__("adapter_revision", "d" * 40), "frozen bridge blob", "3007", "mem0_explicit", "turn")

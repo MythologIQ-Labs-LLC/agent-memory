@@ -88,7 +88,7 @@ class SameHarnessLaneTests(unittest.TestCase):
         lane = _lane()
         integration = get_integration(lane["benchmark_integration"])
         repo_root = Path(__file__).resolve().parents[2]
-        bindings = check_evidence_binding(integration, repo_root=repo_root)
+        bindings = [item for item in check_evidence_binding(integration, repo_root=repo_root) if item["variant"].startswith(f"lane:{LANE_ID}:")]
         self.assertEqual(len(bindings), 3)
         for binding in bindings:
             self.assertTrue(binding["bound"], binding)
@@ -370,9 +370,15 @@ class LongMemEvalParityLaneTests(unittest.TestCase):
             "reference/longmemeval_mem0_explicit_bridge.py",
             "reference/amb_mem0_explicit_bridge.py",
         })
-        for path, blob in bound.items():
-            actual = subprocess.run(["git", "hash-object", str(repo_root / path)], capture_output=True, text=True, check=True).stdout.strip()
-            self.assertEqual(actual, blob, f"{path} changed after the freeze; re-freeze the lane (new lane id once a score exists)")
+        # The lane is accepted: its pins are a fact about the runs it bound, so they are
+        # compared with the committed evidence records, not with HEAD (a later lane
+        # generation re-pins the runner under its own id).
+        evidence_root = repo_root / "reports" / "benchmarks" / "longmemeval" / LME_LANE_ID
+        records = sorted(evidence_root.glob("*/evidence.json"))
+        self.assertEqual(len(records), 6)
+        for record_path in records:
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            self.assertEqual(record["execution"]["source_blobs"], bound, record_path.name)
         for path in ("src/retrieval/run_retrieval.py", "src/retrieval/eval_utils.py", "LICENSE"):
             self.assertRegex(blobs[path], r"^[0-9a-f]{40}$")
         self.assertIn(blobs["reference/run_longmemeval.py"], lane["evaluator"]["scorer"])
@@ -406,7 +412,8 @@ class LongMemEvalParityLaneTests(unittest.TestCase):
         workflow = (repo_root / ".github" / "workflows" / "longmemeval-competitive.yml").read_text(encoding="utf-8")
         self.assertIn("workflow_dispatch", workflow)
         self.assertNotIn("pull_request", workflow.split("permissions:")[0])
-        self.assertIn(f"lanes/{LME_LANE_ID}.json", workflow)
+        self.assertIn("lanes/${{ inputs.lane_id }}.json", workflow)
+        self.assertIn(f"- {LME_LANE_ID}", workflow)
         self.assertIn("validate-lane", workflow)
         self.assertIn('lane["status"] == "frozen"', workflow)  # the workflow executes frozen lanes only; accepted rows are re-run under a new lane id
         self.assertIn('["git", "hash-object", path]', workflow)
