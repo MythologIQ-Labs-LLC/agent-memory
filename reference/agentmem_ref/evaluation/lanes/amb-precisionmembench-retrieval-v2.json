@@ -2,7 +2,7 @@
   "contract_family": "agent-memory-same-harness-lane",
   "contract_version": "1.0.0",
   "lane_id": "amb-precisionmembench-retrieval-v2",
-  "status": "frozen",
+  "status": "accepted",
   "owning_issue": 640,
   "frozen_on": "2026-10-06",
   "frozen_before_any_score": true,
@@ -161,7 +161,7 @@
       "system_id": "agent-memory",
       "display_name": "Agent Memory (public facade, declared transition to Runtime Baseline v2)",
       "role": "control",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "agent-memory",
       "source": {
         "kind": "repository_runtime",
@@ -208,14 +208,15 @@
       ],
       "notes": [
         "concurrency 1 until multi-handle semantics are independently qualified"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-06 from workflow run 37543540355 at repository revision ca0f9a748b3b7296c5a99c7e81cca35a570609fd; raw artifact and execution identity committed under reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/ and bound by the integration's evidence_history entry lane:amb-precisionmembench-retrieval-v2:agent-memory"
     },
     {
       "row_id": "bm25-harness-baseline",
       "system_id": "bm25",
       "display_name": "BM25 keyword baseline (AMB built-in)",
       "role": "baseline",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "bm25",
       "source": {
         "kind": "harness_builtin",
@@ -248,14 +249,15 @@
       ],
       "notes": [
         "a baseline comparator, not a market-position claim"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-06 from workflow run 37543543416 at repository revision ca0f9a748b3b7296c5a99c7e81cca35a570609fd; raw artifact and execution identity committed under reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/bm25-ca0f9a748b3b/ and bound by the integration's evidence_history entry lane:amb-precisionmembench-retrieval-v2:bm25"
     },
     {
       "row_id": "mem0-oss-2.2.1-explicit-memory",
       "system_id": "mem0-oss",
       "display_name": "Mem0 OSS 2.2.1 (explicit memory, no inference)",
       "role": "comparator",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "mem0-explicit",
       "source": {
         "kind": "python_package",
@@ -321,7 +323,8 @@
         "Mem0's own hybrid vector+keyword ranking, threshold, and entity boosts are product behaviour and are not altered",
         "no benchmark-specific prompt, mission, or dataset-name branch exists in the adapter",
         "optional components (fastembed keyword search, spaCy lemmatizer) are absent by product default; a row with extras installed is a different frozen row, never an in-place change"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-06 from workflow run 37543546255 at repository revision ca0f9a748b3b7296c5a99c7e81cca35a570609fd; raw artifact and execution identity committed under reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/mem0-explicit-ca0f9a748b3b/ and bound by the integration's evidence_history entry lane:amb-precisionmembench-retrieval-v2:mem0-explicit"
     },
     {
       "row_id": "hindsight-0.10.2",
@@ -377,7 +380,8 @@
     "Mem0 2.2.1 changes retrieval behaviour depending on optional extras (fastembed keyword search, spaCy lemmatizer); the lane freezes the base-package install and records the absent components in the execution identity",
     "the frozen harness's pyproject dependency set does not resolve under pip's default backtracking budget (resolution-too-deep after ~26 minutes in workflow run 37343360127, before any query ran); the uv.lock shipped at the frozen revision resolves in seconds and is the harness environment the lane installs",
     "the frozen harness lock installs fastembed 0.6.0 for its Cognee provider; run 37349426994 showed Mem0 2.2.1 would therefore have executed with hybrid BM25 retrieval, contradicting the frozen base-package row, so the row removes fastembed after install and the posture check refuses to run otherwise",
-    "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob and the lane digest, and the importer refuses a run whose state is not admitted by the posture, whose declaration blob differs from the one pinned here, or whose bridge blobs differ from harness.source_blobs"
+    "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob and the lane digest, and the importer refuses a run whose state is not admitted by the posture, whose declaration blob differs from the one pinned here, or whose bridge blobs differ from harness.source_blobs",
+    "accepted rows 2026-10-06: agent-memory (run 37543540355), bm25 (run 37543543416), mem0-explicit (run 37543546255); numbers live in the committed evidence records and the integration descriptor, never in this lane"
   ],
   "change_rule": "any change to harness revision, fixtures, selection, budget, gold identity, evaluator, execution semantics, or a frozen row's source/adapter/configuration after a score has been observed requires a new lane_id; this record is never edited in place once status leaves frozen",
   "authority_effect": "none"

@@ -264,6 +264,36 @@ overall score and no market claim: BM25 is a baseline and Agent Memory is the co
 Every row returned nearly everything relevant and failed on precision, which is what the
 active cases test. The Hindsight row stays deferred.
 
+### Accepted rows (lane `amb-precisionmembench-retrieval-v2`, 2026-10-06)
+
+The third lane generation re-executes the three v1 rows with one change: the Agent Memory
+control runs under the declared transition to Runtime Baseline v2 (contract 1.4.0, #670)
+through bridge 0.2.0, which asks the facade for the case budget (`memory.recall(query,
+budget=k)`) and returns the facade's `returned` prefix instead of truncating on its own.
+The control row pins the transition posture (`configuration.runtime_baseline_posture`,
+declaration blob `6a35746`), and every row's execution identity recorded checker state
+`TRANSITION` against that blob, which `scripts/import_amb_lane_evidence.py` bound. Three
+dispatches on `main` `ca0f9a748b3b7296c5a99c7e81cca35a570609fd`, full 77-case selection:
+
+| row | role | system revision | workflow run | evidence record |
+| --- | --- | --- | --- | --- |
+| agent-memory | control | Agent Memory `ca0f9a748b3b7296c5a99c7e81cca35a570609fd` (declared transition to v2) | 37543540355 | `reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/evidence.json` |
+| bm25 | baseline | AMB `03c1d0f1d27da63034f0931121c858faba512383` | 37543543416 | `…/bm25-ca0f9a748b3b/evidence.json` |
+| mem0-explicit | comparator | mem0ai 2.2.1 (`94c3fe9f238f3dbf29c9ce98643bd71eb13077cd`), fastembed and spaCy absent | 37543546255 | `…/mem0-explicit-ca0f9a748b3b/evidence.json` |
+
+| row | total passes | active | structural | trivially-empty | mean precision | mean recall | ID resolution |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| agent-memory | 15/77 | 4/43 | 6/25 | 5/9 | 0.18 | 0.95 | source_id |
+| bm25 | 8/77 | 0/43 | 5/25 | 3/9 | 0.05 | 0.97 | doc_id |
+| mem0-explicit | 10/77 | 0/43 | 7/25 | 3/9 | 0.10 | 1.00 | source_id |
+
+Every `-v2` number equals its `-v1` number. For the control, the only difference between
+the generations (mapped-among-top-k instead of skip-then-count) changed no case on this
+split; the BM25 and Mem0 rows are unchanged compositions re-run under the new lane id.
+Equality is what the frozen harness measured, not authority, and a `-v2` row is reported
+beside its `-v1` row rather than merged with it (`comparability.not_comparable_to`). The
+Hindsight row stays deferred.
+
 ### Normalized manifests
 
 `normalize_amb_precisionmembench()` (`reference/agentmem_ref/evaluation/normalize.py`)

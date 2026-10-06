@@ -6,6 +6,7 @@ import contextlib
 import copy
 import io
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -479,7 +480,12 @@ class _AcceptedV2LaneMixin:
             record = json.loads((repo_root / binding["report"]).read_text(encoding="utf-8"))
             self.assertEqual(record["lane_id"], self.lane_id)
             self.assertEqual(record["authority_effect"], "none")
-            self.assertEqual(record["lane_digest_at_execution"], lane_digest(lane))
+            # The digest the run executed is the frozen lane's at the executing revision; the
+            # accepted lane carries statuses and status_reasons on top, so its digest differs.
+            executing = record["execution"]["agent_memory_revision"]
+            frozen = json.loads(subprocess.run(["git", "show", f"{executing}:{record['lane_file']}"], cwd=repo_root, capture_output=True, text=True, check=True).stdout)
+            self.assertEqual(record["lane_digest_at_execution"], lane_digest(frozen))
+            self.assertEqual(record["lane_digest_at_execution"], record["execution"]["lane_digest_sha256"])
             records.append(record)
         return records
 

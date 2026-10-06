@@ -40,6 +40,15 @@ SOURCES = (
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/lexical_overlap-turn-0b0449a8aa2b/evidence.json"),
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-session-0b0449a8aa2b/evidence.json"),
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v1/mem0_explicit-turn-0b0449a8aa2b/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/bm25-ca0f9a748b3b/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/mem0-explicit-ca0f9a748b3b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json"),
 )
 NORMALIZED = ROOT / "reports" / "benchmarks" / "normalized"
 SCORECARDS = ROOT / "reports" / "benchmarks" / "scorecards"

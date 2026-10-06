@@ -1793,6 +1793,641 @@
     },
     {
       "authority_effect": "none",
+      "baseline_system": "bm25",
+      "comparison_identity": {
+        "benchmark_id": "amb-precisionmembench",
+        "dataset_id": "tenurehq/precisionmembench:fixtures/{beliefs.seed.json,retrieval.cases.json}",
+        "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+        "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+        "sample_count": 77,
+        "selection_id": "all-77:09e99f0852280538",
+        "selection_method": "full single-turn case set",
+        "source_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "task_profile": "amb-precisionmembench-retrieval-v2:single-turn:retrieval"
+      },
+      "dimensions": {
+        "currentness": {
+          "notes": {
+            "agent-memory": [
+              "single-version beliefs; supersession is a scope/exclusion assertion scored natively"
+            ],
+            "bm25": [
+              "single-version beliefs; supersession is a scope/exclusion assertion scored natively"
+            ],
+            "mem0-oss": [
+              "single-version beliefs; supersession is a scope/exclusion assertion scored natively"
+            ]
+          },
+          "rows": [],
+          "status": {
+            "agent-memory": "not_applicable",
+            "bm25": "not_applicable",
+            "mem0-oss": "not_applicable"
+          }
+        },
+        "efficiency": {
+          "notes": {
+            "agent-memory": [
+              "GitHub-hosted runner; environment-bound and comparable only within one lane execution class"
+            ],
+            "bm25": [
+              "GitHub-hosted runner; environment-bound and comparable only within one lane execution class"
+            ],
+            "mem0-oss": [
+              "GitHub-hosted runner; environment-bound and comparable only within one lane execution class"
+            ]
+          },
+          "rows": [
+            {
+              "metric_id": "ingestion_time_ms",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 35,
+                  "direction": "lower_better",
+                  "population": "ingested beliefs",
+                  "state": "measured",
+                  "unit": "ms",
+                  "value": 269.9
+                },
+                "bm25": {
+                  "denominator": 35,
+                  "direction": "lower_better",
+                  "population": "ingested beliefs",
+                  "state": "measured",
+                  "unit": "ms",
+                  "value": 341.1
+                },
+                "mem0-oss": {
+                  "denominator": 35,
+                  "direction": "lower_better",
+                  "population": "ingested beliefs",
+                  "state": "measured",
+                  "unit": "ms",
+                  "value": 722.3
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -71.2,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 381.2,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "mean_retrieve_ms",
+              "systems": {
+                "agent-memory": {
+                  "direction": "lower_better",
+                  "population": "all cases",
+                  "state": "measured",
+                  "unit": "ms",
+                  "value": 25.13
+                },
+                "bm25": {
+                  "direction": "lower_better",
+                  "population": "all cases",
+                  "state": "measured",
+                  "unit": "ms",
+                  "value": 4.31
+                },
+                "mem0-oss": {
+                  "direction": "lower_better",
+                  "population": "all cases",
+                  "state": "measured",
+                  "unit": "ms",
+                  "value": 12.47
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 20.82,
+                  "outcome": "regressed"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 8.16,
+                  "outcome": "regressed"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "bm25": "measured",
+            "mem0-oss": "measured"
+          }
+        },
+        "evaluator_integrity": {
+          "notes": {
+            "agent-memory": [
+              "the perfect-provider self-check (scripts/precisionmembench_selfcheck.py) ran before the contestant and its output is committed as an artifact; it is not parsed into a metric"
+            ],
+            "bm25": [
+              "the perfect-provider self-check (scripts/precisionmembench_selfcheck.py) ran before the contestant and its output is committed as an artifact; it is not parsed into a metric"
+            ],
+            "mem0-oss": [
+              "the perfect-provider self-check (scripts/precisionmembench_selfcheck.py) ran before the contestant and its output is committed as an artifact; it is not parsed into a metric"
+            ]
+          },
+          "rows": [],
+          "status": {
+            "agent-memory": "not_measured",
+            "bm25": "not_measured",
+            "mem0-oss": "not_measured"
+          }
+        },
+        "governance": {
+          "notes": {
+            "agent-memory": [
+              "the cross-user leak case is scored natively inside the 77 cases; no governance dimension is mapped"
+            ],
+            "bm25": [
+              "the cross-user leak case is scored natively inside the 77 cases; no governance dimension is mapped"
+            ],
+            "mem0-oss": [
+              "the cross-user leak case is scored natively inside the 77 cases; no governance dimension is mapped"
+            ]
+          },
+          "rows": [],
+          "status": {
+            "agent-memory": "not_measured",
+            "bm25": "not_measured",
+            "mem0-oss": "not_measured"
+          }
+        },
+        "reasoning": {
+          "notes": {
+            "agent-memory": [
+              "retrieval mode has no answer generation"
+            ],
+            "bm25": [
+              "retrieval mode has no answer generation"
+            ],
+            "mem0-oss": [
+              "retrieval mode has no answer generation"
+            ]
+          },
+          "rows": [],
+          "status": {
+            "agent-memory": "not_applicable",
+            "bm25": "not_applicable",
+            "mem0-oss": "not_applicable"
+          }
+        },
+        "reproducibility": {
+          "notes": {},
+          "rows": [
+            {
+              "metric_id": "full_selection",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "bm25": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "harness_lock_bound",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "bm25": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "input_sha256_bound",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "bm25": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "return_cap_unset",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "bm25": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "self_check_recorded",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "bm25": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "bm25": "measured",
+            "mem0-oss": "measured"
+          }
+        },
+        "retrieval": {
+          "notes": {
+            "agent-memory": [
+              "active_passes/active_total is the upstream-comparable number; total passes include cases a provider returning nothing can satisfy"
+            ],
+            "bm25": [
+              "active_passes/active_total is the upstream-comparable number; total passes include cases a provider returning nothing can satisfy"
+            ],
+            "mem0-oss": [
+              "active_passes/active_total is the upstream-comparable number; total passes include cases a provider returning nothing can satisfy"
+            ]
+          },
+          "rows": [
+            {
+              "metric_id": "active_passes",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 43,
+                  "direction": "higher_better",
+                  "population": "active cases: query-dependent belief ids required (upstream-comparable)",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 4
+                },
+                "bm25": {
+                  "denominator": 43,
+                  "direction": "higher_better",
+                  "population": "active cases: query-dependent belief ids required (upstream-comparable)",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "mem0-oss": {
+                  "denominator": 43,
+                  "direction": "higher_better",
+                  "population": "active cases: query-dependent belief ids required (upstream-comparable)",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 4.0,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "mean_precision",
+              "systems": {
+                "agent-memory": {
+                  "direction": "higher_better",
+                  "population": "cases with a relevantBeliefs tier",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.1806
+                },
+                "bm25": {
+                  "direction": "higher_better",
+                  "population": "cases with a relevantBeliefs tier",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.0536
+                },
+                "mem0-oss": {
+                  "direction": "higher_better",
+                  "population": "cases with a relevantBeliefs tier",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.1049
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.127,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0513,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "mean_recall",
+              "systems": {
+                "agent-memory": {
+                  "direction": "higher_better",
+                  "population": "cases with a relevantBeliefs tier",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.9535
+                },
+                "bm25": {
+                  "direction": "higher_better",
+                  "population": "cases with a relevantBeliefs tier",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.9651
+                },
+                "mem0-oss": {
+                  "direction": "higher_better",
+                  "population": "cases with a relevantBeliefs tier",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 1.0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.0116,
+                  "outcome": "regressed"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0349,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "structural_passes",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 25,
+                  "direction": "higher_better",
+                  "population": "structural cases: satisfiable by a provider returning nothing",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 6
+                },
+                "bm25": {
+                  "denominator": 25,
+                  "direction": "higher_better",
+                  "population": "structural cases: satisfiable by a provider returning nothing",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 5
+                },
+                "mem0-oss": {
+                  "denominator": 25,
+                  "direction": "higher_better",
+                  "population": "structural cases: satisfiable by a provider returning nothing",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 7
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 1.0,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 2.0,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "total_passes",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 77,
+                  "direction": "higher_better",
+                  "population": "all cases",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 15
+                },
+                "bm25": {
+                  "denominator": 77,
+                  "direction": "higher_better",
+                  "population": "all cases",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 8
+                },
+                "mem0-oss": {
+                  "denominator": 77,
+                  "direction": "higher_better",
+                  "population": "all cases",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 10
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 7.0,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 2.0,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "trivially_empty_passes",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 9,
+                  "direction": "higher_better",
+                  "population": "trivially-empty cases: satisfiable by a provider returning nothing",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 5
+                },
+                "bm25": {
+                  "denominator": 9,
+                  "direction": "higher_better",
+                  "population": "trivially-empty cases: satisfiable by a provider returning nothing",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 3
+                },
+                "mem0-oss": {
+                  "denominator": 9,
+                  "direction": "higher_better",
+                  "population": "trivially-empty cases: satisfiable by a provider returning nothing",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 3
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 2.0,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "bm25": "measured",
+            "mem0-oss": "measured"
+          }
+        }
+      },
+      "systems": [
+        {
+          "id": "bm25",
+          "kind": "lexical",
+          "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+          "run_id": "amb-precisionmembench:amb-precisionmembench-retrieval-v2:single-turn:bm25:03c1d0f1d27d",
+          "run_status": "complete"
+        },
+        {
+          "id": "agent-memory",
+          "kind": "agent_memory",
+          "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "run_id": "amb-precisionmembench:amb-precisionmembench-retrieval-v2:single-turn:agent-memory:ca0f9a748b3b",
+          "run_status": "complete"
+        },
+        {
+          "id": "mem0-oss",
+          "kind": "external_memory",
+          "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "run_id": "amb-precisionmembench:amb-precisionmembench-retrieval-v2:single-turn:mem0-oss:94c3fe9f238f",
+          "run_status": "complete"
+        }
+      ]
+    },
+    {
+      "authority_effect": "none",
       "baseline_system": "lexical_overlap",
       "comparison_identity": {
         "benchmark_id": "longmemeval",
@@ -5835,6 +6470,2034 @@
       "comparison_identity": {
         "benchmark_id": "longmemeval",
         "dataset_id": "xiaowu0162/longmemeval-cleaned:longmemeval_s_cleaned.json",
+        "dataset_revision": "unrecorded",
+        "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+        "sample_count": 500,
+        "selection_id": "7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+        "selection_method": "all",
+        "source_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+        "task_profile": "longmemeval-s-retrieval-parity-v2:session"
+      },
+      "dimensions": {
+        "currentness": {
+          "notes": {},
+          "rows": [
+            {
+              "metric_id": "knowledge_update_ndcg_any@10",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.973048
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.92337
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.89216
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.049678,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.03121,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "knowledge_update_ndcg_any@5",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.970733
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.916515
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.882595
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.054218,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.03392,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "knowledge_update_recall_all@10",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.986111
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.944444
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.958333
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.041667,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.013889,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "knowledge_update_recall_all@5",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.972222
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.916667
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.902778
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.055555,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.013889,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "latest_gold_ranked_first",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 70,
+                  "direction": "higher_better",
+                  "population": "knowledge-update questions with gold on >=2 distinct dates",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.457143
+                },
+                "lexical_overlap": {
+                  "denominator": 70,
+                  "direction": "higher_better",
+                  "population": "knowledge-update questions with gold on >=2 distinct dates",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.457143
+                },
+                "mem0-oss": {
+                  "denominator": 70,
+                  "direction": "higher_better",
+                  "population": "knowledge-update questions with gold on >=2 distinct dates",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.442857
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.014286,
+                  "outcome": "regressed"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "lexical_overlap": "measured",
+            "mem0-oss": "measured"
+          }
+        },
+        "efficiency": {
+          "notes": {
+            "agent-memory": [
+              "single-process local execution; Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+            ],
+            "lexical_overlap": [
+              "single-process local execution; Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+            ],
+            "mem0-oss": [
+              "single-process local execution; Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+            ]
+          },
+          "rows": [
+            {
+              "metric_id": "backend_wall_seconds",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 500,
+                  "direction": "lower_better",
+                  "population": "all questions",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 194.242
+                },
+                "lexical_overlap": {
+                  "denominator": 500,
+                  "direction": "lower_better",
+                  "population": "all questions",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 3.837
+                },
+                "mem0-oss": {
+                  "denominator": 500,
+                  "direction": "lower_better",
+                  "population": "all questions",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 1331.362
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 190.405,
+                  "outcome": "regressed"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 1327.525,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "ingest_seconds_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 169.09
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 1239.414
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "peak_rss_mb",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                },
+                "lexical_overlap": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "state_not_measured"
+                },
+                "mem0-oss": {
+                  "comparison_state": "state_not_measured"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_seconds_max",
+              "systems": {
+                "agent-memory": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 0.023701
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 0.403001
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_seconds_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 7.554
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 89.658
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "store_size_bytes",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                },
+                "lexical_overlap": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "state_not_measured"
+                },
+                "mem0-oss": {
+                  "comparison_state": "state_not_measured"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "partial",
+            "lexical_overlap": "partial",
+            "mem0-oss": "partial"
+          }
+        },
+        "evaluator_integrity": {
+          "notes": {
+            "agent-memory": [
+              "evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run"
+            ],
+            "lexical_overlap": [
+              "evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run"
+            ],
+            "mem0-oss": [
+              "evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run"
+            ]
+          },
+          "rows": [],
+          "status": {
+            "agent-memory": "not_measured",
+            "lexical_overlap": "not_measured",
+            "mem0-oss": "not_measured"
+          }
+        },
+        "governance": {
+          "notes": {
+            "agent-memory": [
+              "one tenant and scope per question: admission is exercised but not a filter in this workload"
+            ],
+            "lexical_overlap": [
+              "lexical_overlap has no governed admission path"
+            ],
+            "mem0-oss": [
+              "mem0_explicit has no governed admission path"
+            ]
+          },
+          "rows": [
+            {
+              "metric_id": "candidate_count_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 22631
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "state": "absent"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "refused_candidate_count_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "state": "absent"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "unmapped_admitted_count_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "state": "absent"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "lexical_overlap": "not_applicable",
+            "mem0-oss": "not_applicable"
+          }
+        },
+        "reasoning": {
+          "notes": {
+            "agent-memory": [
+              "upstream model-judged QA was not run"
+            ],
+            "lexical_overlap": [
+              "upstream model-judged QA was not run"
+            ],
+            "mem0-oss": [
+              "upstream model-judged QA was not run"
+            ]
+          },
+          "rows": [],
+          "status": {
+            "agent-memory": "not_measured",
+            "lexical_overlap": "not_measured",
+            "mem0-oss": "not_measured"
+          }
+        },
+        "reproducibility": {
+          "notes": {},
+          "rows": [
+            {
+              "metric_id": "agent_memory_worktree_clean",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "lexical_overlap": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "execution_ingestion_failure_count",
+              "systems": {
+                "agent-memory": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "mem0-oss": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "execution_out_of_corpus_returned_count",
+              "systems": {
+                "agent-memory": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "mem0-oss": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "execution_runtime_failure_count",
+              "systems": {
+                "agent-memory": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "mem0-oss": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "input_sha256_bound",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "lexical_overlap": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "lexical_overlap": "measured",
+            "mem0-oss": "measured"
+          }
+        },
+        "retrieval": {
+          "notes": {},
+          "rows": [
+            {
+              "metric_id": "ndcg_any@10",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.878274
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.792944
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.841054
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.08533,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.04811,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "ndcg_any@5",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.863142
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.767471
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.825047
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.095671,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.057576,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_all@10",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.892601
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.825776
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.883055
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.066825,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.057279,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_all@5",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.823389
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.73031
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.809069
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.093079,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.078759,
+                  "outcome": "improved"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "lexical_overlap": "measured",
+            "mem0-oss": "measured"
+          }
+        }
+      },
+      "systems": [
+        {
+          "id": "lexical_overlap",
+          "kind": "lexical",
+          "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:session:lexical_overlap:ca0f9a748b3b",
+          "run_status": "complete"
+        },
+        {
+          "id": "agent-memory",
+          "kind": "agent_memory",
+          "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:session:agent_memory:ca0f9a748b3b",
+          "run_status": "complete"
+        },
+        {
+          "id": "mem0-oss",
+          "kind": "external_memory",
+          "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:session:mem0_explicit:94c3fe9f238f",
+          "run_status": "complete"
+        }
+      ]
+    },
+    {
+      "authority_effect": "none",
+      "baseline_system": "lexical_overlap",
+      "comparison_identity": {
+        "benchmark_id": "longmemeval",
+        "dataset_id": "xiaowu0162/longmemeval-cleaned:longmemeval_s_cleaned.json",
+        "dataset_revision": "unrecorded",
+        "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+        "sample_count": 500,
+        "selection_id": "7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+        "selection_method": "all",
+        "source_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+        "task_profile": "longmemeval-s-retrieval-parity-v2:turn"
+      },
+      "dimensions": {
+        "currentness": {
+          "notes": {},
+          "rows": [
+            {
+              "metric_id": "knowledge_update_ndcg_any@10",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.790497
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.703945
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.646454
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.086552,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.057491,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "knowledge_update_ndcg_any@5",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.761275
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.672922
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.59445
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.088353,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.078472,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "knowledge_update_ndcg_any@50",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.797593
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.725493
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.667376
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0721,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.058117,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "knowledge_update_recall_all@10",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.930556
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.805556
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.847222
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.125,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.041666,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "knowledge_update_recall_all@5",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.791667
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.680556
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.611111
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.111111,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.069445,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "knowledge_update_recall_all@50",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.972222
+                },
+                "lexical_overlap": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.916667
+                },
+                "mem0-oss": {
+                  "denominator": 72,
+                  "direction": "higher_better",
+                  "population": "scored knowledge-update questions",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 1.0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.055555,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.083333,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "latest_gold_ranked_first",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 70,
+                  "direction": "higher_better",
+                  "population": "knowledge-update questions with gold on >=2 distinct dates",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.557143
+                },
+                "lexical_overlap": {
+                  "denominator": 70,
+                  "direction": "higher_better",
+                  "population": "knowledge-update questions with gold on >=2 distinct dates",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.614286
+                },
+                "mem0-oss": {
+                  "denominator": 70,
+                  "direction": "higher_better",
+                  "population": "knowledge-update questions with gold on >=2 distinct dates",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.485714
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.057143,
+                  "outcome": "regressed"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": -0.128572,
+                  "outcome": "regressed"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "lexical_overlap": "measured",
+            "mem0-oss": "measured"
+          }
+        },
+        "efficiency": {
+          "notes": {
+            "agent-memory": [
+              "single-process local execution; Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+            ],
+            "lexical_overlap": [
+              "single-process local execution; Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+            ],
+            "mem0-oss": [
+              "single-process local execution; Linux-6.17.0-1022-azure-x86_64-with-glibc2.39"
+            ]
+          },
+          "rows": [
+            {
+              "metric_id": "backend_wall_seconds",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 500,
+                  "direction": "lower_better",
+                  "population": "all questions",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 604.843
+                },
+                "lexical_overlap": {
+                  "denominator": 500,
+                  "direction": "lower_better",
+                  "population": "all questions",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 4.893
+                },
+                "mem0-oss": {
+                  "denominator": 500,
+                  "direction": "lower_better",
+                  "population": "all questions",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 1731.652
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 599.95,
+                  "outcome": "regressed"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 1726.759,
+                  "outcome": "regressed"
+                }
+              }
+            },
+            {
+              "metric_id": "ingest_seconds_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 570.323
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 1484.988
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "peak_rss_mb",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                },
+                "lexical_overlap": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "state_not_measured"
+                },
+                "mem0-oss": {
+                  "comparison_state": "state_not_measured"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_seconds_max",
+              "systems": {
+                "agent-memory": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 0.049073
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 1.19949
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_seconds_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 17.022
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "direction": "lower_better",
+                  "state": "measured",
+                  "unit": "seconds",
+                  "value": 244.277
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "store_size_bytes",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                },
+                "lexical_overlap": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "not_measured"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "state_not_measured"
+                },
+                "mem0-oss": {
+                  "comparison_state": "state_not_measured"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "partial",
+            "lexical_overlap": "partial",
+            "mem0-oss": "partial"
+          }
+        },
+        "evaluator_integrity": {
+          "notes": {
+            "agent-memory": [
+              "evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run"
+            ],
+            "lexical_overlap": [
+              "evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run"
+            ],
+            "mem0-oss": [
+              "evaluator-integrity mutation probes for this profile run separately (reference/run_benchmark_integrity_mutants.py, #518); they are not bound to this run"
+            ]
+          },
+          "rows": [],
+          "status": {
+            "agent-memory": "not_measured",
+            "lexical_overlap": "not_measured",
+            "mem0-oss": "not_measured"
+          }
+        },
+        "governance": {
+          "notes": {
+            "agent-memory": [
+              "one tenant and scope per question: admission is exercised but not a filter in this workload"
+            ],
+            "lexical_overlap": [
+              "lexical_overlap has no governed admission path"
+            ],
+            "mem0-oss": [
+              "mem0_explicit has no governed admission path"
+            ]
+          },
+          "rows": [
+            {
+              "metric_id": "candidate_count_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 103356
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "state": "absent"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "refused_candidate_count_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "state": "absent"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            },
+            {
+              "metric_id": "unmapped_admitted_count_total",
+              "systems": {
+                "agent-memory": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "state": "absent"
+                },
+                "mem0-oss": {
+                  "state": "absent"
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "metric_missing"
+                },
+                "mem0-oss": {
+                  "comparison_state": "metric_missing"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "lexical_overlap": "not_applicable",
+            "mem0-oss": "not_applicable"
+          }
+        },
+        "reasoning": {
+          "notes": {
+            "agent-memory": [
+              "upstream model-judged QA was not run"
+            ],
+            "lexical_overlap": [
+              "upstream model-judged QA was not run"
+            ],
+            "mem0-oss": [
+              "upstream model-judged QA was not run"
+            ]
+          },
+          "rows": [],
+          "status": {
+            "agent-memory": "not_measured",
+            "lexical_overlap": "not_measured",
+            "mem0-oss": "not_measured"
+          }
+        },
+        "reproducibility": {
+          "notes": {},
+          "rows": [
+            {
+              "metric_id": "agent_memory_worktree_clean",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "lexical_overlap": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "execution_ingestion_failure_count",
+              "systems": {
+                "agent-memory": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "mem0-oss": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "execution_out_of_corpus_returned_count",
+              "systems": {
+                "agent-memory": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "mem0-oss": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "execution_runtime_failure_count",
+              "systems": {
+                "agent-memory": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "lexical_overlap": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                },
+                "mem0-oss": {
+                  "direction": "zero_target",
+                  "state": "measured",
+                  "unit": "count",
+                  "value": 0
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.0,
+                  "outcome": "unchanged"
+                }
+              }
+            },
+            {
+              "metric_id": "input_sha256_bound",
+              "systems": {
+                "agent-memory": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "lexical_overlap": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                },
+                "mem0-oss": {
+                  "direction": "descriptive",
+                  "state": "measured",
+                  "value": true
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable_non_numeric",
+                  "outcome": "unchanged"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "lexical_overlap": "measured",
+            "mem0-oss": "measured"
+          }
+        },
+        "retrieval": {
+          "notes": {},
+          "rows": [
+            {
+              "metric_id": "ndcg_any@10",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.68156
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.559738
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.596012
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.121822,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.036274,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "ndcg_any@5",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.648611
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.527168
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.547177
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.121443,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.020009,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "ndcg_any@50",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.711426
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.598419
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.635529
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.113007,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.03711,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_all@10",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.72315
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.587112
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.673031
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.136038,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.085919,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_all@5",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.601432
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.486874
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.498807
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.114558,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.011933,
+                  "outcome": "improved"
+                }
+              }
+            },
+            {
+              "metric_id": "recall_all@50",
+              "systems": {
+                "agent-memory": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.859189
+                },
+                "lexical_overlap": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.761337
+                },
+                "mem0-oss": {
+                  "denominator": 419,
+                  "direction": "higher_better",
+                  "population": "scored questions (upstream _abs and no-user-target exclusions applied)",
+                  "state": "measured",
+                  "unit": "ratio",
+                  "value": 0.894988
+                }
+              },
+              "vs_baseline": {
+                "agent-memory": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.097852,
+                  "outcome": "improved"
+                },
+                "mem0-oss": {
+                  "comparison_state": "comparable",
+                  "delta_vs_baseline": 0.133651,
+                  "outcome": "improved"
+                }
+              }
+            }
+          ],
+          "status": {
+            "agent-memory": "measured",
+            "lexical_overlap": "measured",
+            "mem0-oss": "measured"
+          }
+        }
+      },
+      "systems": [
+        {
+          "id": "lexical_overlap",
+          "kind": "lexical",
+          "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:turn:lexical_overlap:ca0f9a748b3b",
+          "run_status": "complete"
+        },
+        {
+          "id": "agent-memory",
+          "kind": "agent_memory",
+          "revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:turn:agent_memory:ca0f9a748b3b",
+          "run_status": "complete"
+        },
+        {
+          "id": "mem0-oss",
+          "kind": "external_memory",
+          "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "run_id": "longmemeval:longmemeval-s-retrieval-parity-v2:turn:mem0_explicit:94c3fe9f238f",
+          "run_status": "complete"
+        }
+      ]
+    },
+    {
+      "authority_effect": "none",
+      "baseline_system": "lexical_overlap",
+      "comparison_identity": {
+        "benchmark_id": "longmemeval",
+        "dataset_id": "xiaowu0162/longmemeval-cleaned:longmemeval_s_cleaned.json",
         "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
         "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
         "sample_count": 500,
@@ -8057,9 +10720,110 @@
           "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)",
           "status": "blocked",
           "variant": "lane:longmemeval-s-retrieval-parity-v1:hindsight"
+        },
+        {
+          "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+          "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+          "normalized_reports": [
+            "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-session-agent_memory-ca0f9a748b3b.json"
+          ],
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-session-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "agent-memory",
+          "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:agent_memory:session"
+        },
+        {
+          "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+          "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+          "normalized_reports": [
+            "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-turn-agent_memory-ca0f9a748b3b.json"
+          ],
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/agent_memory-turn-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "agent-memory",
+          "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:agent_memory:turn"
+        },
+        {
+          "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+          "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+          "normalized_reports": [
+            "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-session-lexical_overlap-ca0f9a748b3b.json"
+          ],
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-session-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "lexical_overlap",
+          "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:lexical_overlap:session"
+        },
+        {
+          "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+          "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+          "normalized_reports": [
+            "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-turn-lexical_overlap-ca0f9a748b3b.json"
+          ],
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/lexical_overlap-turn-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "lexical_overlap",
+          "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:lexical_overlap:turn"
+        },
+        {
+          "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+          "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+          "normalized_reports": [
+            "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-session-mem0_explicit-94c3fe9f238f.json"
+          ],
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-session-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:mem0_explicit:session"
+        },
+        {
+          "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+          "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+          "normalized_reports": [
+            "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v2-turn-mem0_explicit-94c3fe9f238f.json"
+          ],
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v2/mem0_explicit-turn-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:mem0_explicit:turn"
+        },
+        {
+          "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)",
+          "status": "blocked",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:hindsight"
         }
       ],
-      "normalized_run_count": 18,
+      "normalized_run_count": 24,
       "owning_issue": 516,
       "product_findings": [
         {
@@ -8141,9 +10905,53 @@
           "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)",
           "status": "blocked",
           "variant": "lane:amb-precisionmembench-retrieval-v1:hindsight"
+        },
+        {
+          "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+          "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/agent-memory-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "agent-memory",
+          "system_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
+          "variant": "lane:amb-precisionmembench-retrieval-v2:agent-memory"
+        },
+        {
+          "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+          "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/bm25-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "bm25",
+          "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+          "variant": "lane:amb-precisionmembench-retrieval-v2:bm25"
+        },
+        {
+          "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+          "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v2/mem0-explicit-ca0f9a748b3b/evidence.json",
+          "report_binding": {
+            "input_sha256_path": "input.sha256",
+            "system_revision_path": "system.revision"
+          },
+          "status": "complete",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "variant": "lane:amb-precisionmembench-retrieval-v2:mem0-explicit"
+        },
+        {
+          "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)",
+          "status": "blocked",
+          "variant": "lane:amb-precisionmembench-retrieval-v2:hindsight"
         }
       ],
-      "normalized_run_count": 3,
+      "normalized_run_count": 6,
       "owning_issue": 601,
       "product_findings": [],
       "profile_id": "amb-precisionmembench-retrieval-v1",
