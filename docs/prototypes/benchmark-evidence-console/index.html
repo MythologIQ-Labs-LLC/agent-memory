@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Agent Memory Benchmark Evidence Console Prototype</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to evidence content</a>
+  <div id="app" class="app-shell" aria-live="polite">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Agent Memory</p>
+        <h1>Benchmark Evidence Console</h1>
+      </div>
+      <div id="snapshot-summary" class="snapshot-summary" aria-label="Evidence snapshot"></div>
+    </header>
+
+    <div id="stale-banner" class="notice notice-warning" hidden></div>
+
+    <nav class="primary-nav" aria-label="Prototype frames">
+      <button type="button" data-route="overview">Overview</button>
+      <button type="button" data-route="compare">Compare</button>
+      <button type="button" data-route="benchmarks">Benchmarks</button>
+      <button type="button" data-route="changes">Changes</button>
+      <button type="button" data-route="failures">Failures</button>
+      <button type="button" data-route="coverage">Coverage</button>
+      <button type="button" data-route="evidence">Evidence</button>
+      <button type="button" data-route="methodology">Methodology</button>
+    </nav>
+
+    <section class="prototype-controls" aria-label="Canonical wireframe controls">
+      <label>
+        Canonical frame
+        <select id="frame-select" aria-describedby="frame-help"></select>
+      </label>
+      <p id="frame-help">F00–F24 and R01–R04 map directly to PRD-002 wireframes. No measured values are mocked.</p>
+    </section>
+
+    <main id="main" tabindex="-1">
+      <div id="loading" class="state-panel">
+        <strong>Loading committed evidence catalog…</strong>
+        <span>Nothing is inferred until the catalog is available.</span>
+      </div>
+      <div id="frame-root" hidden></div>
+    </main>
+
+    <aside id="drawer" class="drawer" aria-labelledby="drawer-title" aria-hidden="true">
+      <div class="drawer-head">
+        <div>
+          <p class="eyebrow">Evidence inspector</p>
+          <h2 id="drawer-title">Details</h2>
+        </div>
+        <button id="drawer-close" type="button" class="button-secondary">Close</button>
+      </div>
+      <div id="drawer-body"></div>
+    </aside>
+    <div id="drawer-backdrop" class="backdrop" hidden></div>
+
+    <dialog id="modal">
+      <form method="dialog">
+        <div class="dialog-head">
+          <h2 id="modal-title">Snapshot</h2>
+          <button value="close" class="button-secondary">Close</button>
+        </div>
+        <div id="modal-body"></div>
+      </form>
+    </dialog>
+
+    <footer>
+      <span>Read-only prototype · benchmark evidence has no authority effect</span>
+      <span id="catalog-status"></span>
+    </footer>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
