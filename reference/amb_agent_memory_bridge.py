@@ -23,23 +23,28 @@ per ``retrieve()`` call to the sidecar named by ``AGENT_MEMORY_AMB_RECALL_CONTRO
 
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
 import os
 import shutil
 import subprocess
 import sys
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
 from agentmem_ref import AgentMemory
+from agentmem_ref.runtime import runtime_composition
+from agentmem_ref.runtime.temporal_order_constraints import ExplicitCurrentConstrainedRankingPolicy
 
 AMB_REPOSITORY = "vectorize-io/agent-memory-benchmark"
 AMB_REVISION = "03c1d0f1d27da63034f0931121c858faba512383"
 AMB_PROVIDER_KEY = "agent-memory"
 AMB_SHADOW_PROVIDER_KEY = "agent-memory-shadow"
-BRIDGE_VERSION = "0.3.0"
+BRIDGE_VERSION = "0.4.0"
 SIDECAR_ENV = "AGENT_MEMORY_AMB_RECALL_CONTROL_SIDECAR"
+CROSS_FACT_SIDECAR_ENV = "AGENT_MEMORY_AMB_CROSS_FACT_SIDECAR"
 
 _TENANT = "tenant:amb-competitive"
 _ACTOR = "agent:amb-competitive"
@@ -93,6 +98,36 @@ def _index_document(document: Any) -> dict[str, Any]:
         "tags": list(getattr(document, "tags", None) or []),
     }
 
+
+class _LegacyCrossFactOffPolicy:
+    def __init__(self, live) -> None:
+        names = {
+            item.name
+            for item in dataclasses.fields(ExplicitCurrentConstrainedRankingPolicy)
+            if item.init
+        } - {"version"}
+        self._policy = ExplicitCurrentConstrainedRankingPolicy(
+            **{name: getattr(live, name) for name in names}
+        )
+
+    def rank(self, *args, cross_fact=None, **kwargs):
+        return self._policy.rank(*args, **kwargs)
+
+    def identity(self):
+        return self._policy.identity()
+
+
+@contextmanager
+def cross_fact_mechanism(mode: str):
+    if mode not in {"on", "off"}:
+        raise ValueError("cross-fact mechanism mode must be on or off")
+    live = runtime_composition.MULTI_ROUTE_RANKING_POLICY
+    if mode == "off":
+        runtime_composition.MULTI_ROUTE_RANKING_POLICY = _LegacyCrossFactOffPolicy(live)
+    try:
+        yield
+    finally:
+        runtime_composition.MULTI_ROUTE_RANKING_POLICY = live
 
 def install_amb_agent_memory_provider(
     amb_root: str | Path,
@@ -164,6 +199,7 @@ def install_amb_agent_memory_provider(
                 self._by_fact = {str(key): dict(value) for key, value in records.items()}
 
         recall_control = "off"
+        cross_fact_sidecar = True
 
         def _sidecar_path(self) -> Path | None:
             if self.recall_control != "shadow":
@@ -173,6 +209,58 @@ def install_amb_agent_memory_provider(
                 raise RuntimeError(f"{AMB_SHADOW_PROVIDER_KEY} requires {SIDECAR_ENV}: shadow telemetry must reach evidence")
             return Path(value)
 
+        def _cross_fact_sidecar_path(self) -> Path | None:
+            if not self.cross_fact_sidecar:
+                return None
+            value = os.environ.get(CROSS_FACT_SIDECAR_ENV)
+            return Path(value) if value else None
+
+        def _cross_fact_record(self, outcome: dict) -> dict[str, Any]:
+            limited: list[str] = []
+            refusals: dict[str, int] = {}
+            for candidate in outcome.get("admitted") or ():
+                decision = (outcome.get("admissions") or {}).get(candidate) or {}
+                ranking = decision.get("ranking_evidence") or {}
+                if ranking.get("cross_fact_limitation"):
+                    record = self._by_fact.get(str(candidate))
+                    if record is not None:
+                        limited.append(str(record["id"]))
+                refusal = ranking.get("cross_fact_refusal_reason")
+                if refusal:
+                    key = str(refusal)
+                    refusals[key] = refusals.get(key, 0) + 1
+            returned = [
+                str(self._by_fact[str(candidate)]["id"])
+                for candidate in outcome.get("returned") or ()
+                if str(candidate) in self._by_fact
+            ]
+            return {
+                "limited_count": len(limited),
+                "limited_document_ids": limited,
+                "refusal_counts": dict(sorted(refusals.items())),
+                "returned_document_ids": returned,
+                "returned_document_ids_mechanism_off": None,
+            }
+
+        def _append_cross_fact_sidecar(
+            self,
+            path: Path,
+            query: str,
+            scope: str,
+            budget: int,
+            record: dict[str, Any],
+        ) -> None:
+            line = {
+                "call_index": self._call_index,
+                "scope": scope,
+                "query_sha256": hashlib.sha256(query.encode("utf-8")).hexdigest(),
+                "budget": budget,
+                **record,
+            }
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(line, sort_keys=True, separators=(",", ":")) + "\n")
+            self._call_index += 1
         def _append_sidecar(self, path: Path, query: str, scope: str, budget: int, outcome: dict) -> None:
             record = dict(outcome.get("recall_control") or {})
             usage = dict(record.get("usage") or {})
@@ -249,6 +337,7 @@ def install_amb_agent_memory_provider(
             if budget < 1:
                 raise ValueError("AMB case budget must be at least 1")
             sidecar = self._sidecar_path()
+            cross_fact_sidecar = self._cross_fact_sidecar_path()
             open_kwargs = {"recall_control": "shadow"} if self.recall_control == "shadow" else {}
             with AgentMemory.open(
                 root,
@@ -259,8 +348,21 @@ def install_amb_agent_memory_provider(
                 **open_kwargs,
             ) as memory:
                 outcome = memory.recall(str(query), budget=budget)
+                cross_fact = self._cross_fact_record(outcome)
+                if cross_fact_sidecar is not None and cross_fact["limited_count"] > 0:
+                    with cross_fact_mechanism("off"):
+                        outcome_off = memory.recall(str(query), budget=budget)
+                    cross_fact["returned_document_ids_mechanism_off"] = [
+                        str(self._by_fact[str(candidate)]["id"])
+                        for candidate in outcome_off.get("returned") or ()
+                        if str(candidate) in self._by_fact
+                    ]
             if sidecar is not None:
                 self._append_sidecar(sidecar, str(query), _scope(user_id), budget, outcome)
+            if cross_fact_sidecar is not None:
+                self._append_cross_fact_sidecar(
+                    cross_fact_sidecar, str(query), _scope(user_id), budget, cross_fact
+                )
 
             admitted = [str(item) for item in outcome.get("admitted") or []]
             returned = [str(item) for item in outcome.get("returned") or []]
@@ -308,6 +410,7 @@ def install_amb_agent_memory_provider(
         variant = "public-facade-shadow-recall-control"
         concurrency = 1
         recall_control = "shadow"
+        cross_fact_sidecar = False
 
     REGISTRY[AMB_PROVIDER_KEY] = AgentMemoryAMBProvider
     REGISTRY[AMB_SHADOW_PROVIDER_KEY] = AgentMemoryShadowAMBProvider
@@ -322,6 +425,7 @@ __all__ = [
     "AMB_SHADOW_PROVIDER_KEY",
     "BRIDGE_VERSION",
     "SIDECAR_ENV",
+    "CROSS_FACT_SIDECAR_ENV",
     "verify_amb_checkout",
     "install_amb_agent_memory_provider",
 ]
