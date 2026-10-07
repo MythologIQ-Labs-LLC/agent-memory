@@ -2,7 +2,7 @@
   "freeze_id": "agent-memory-agentmembench-mesa-formal-v1",
   "owning_issue": 694,
   "frozen_on": "2026-10-07",
-  "status": "frozen_before_score_inspection (gate iteration 2: audit VETO grounds 1-3 remediated)",
+  "status": "frozen_before_score_inspection (gate iteration 3: iteration-1 and iteration-2 VETO grounds remediated)",
   "run_id": "agent_memory_formal_s2027_9170",
   "upstream": {
     "repository": "mazaiying/AgentMemBench",
@@ -93,7 +93,7 @@
     "base_url": "unprovisioned",
     "credential_boundary": "decision-eval-credential (owner ruling 2026-10-07): one explicitly authorized, version-pinned judge; none is provisioned in this environment",
     "comparability_rule": "exact only with Qwen2.5-14B-Instruct under the upstream prompt/params; any other judge creates a new non-comparable score identity and must also re-judge the five published upstream detail files for a same-judge comparison",
-    "failure_rule": "judged recall is emitted only if every non-empty row received a parsed JSON verdict (parsed responses == non-empty rows); otherwise status blocked with the failure count; a preflight request and the served model ids are recorded; raw retrieved items must match the committed per-item sha256 before judging"
+    "failure_rule": "the judge path verifies arguments, runner, upstream and the committed report's freeze/runner digests; query and reference answer are rebuilt from the frozen selection (never read from the raw file) and checked per row; recall is emitted only if parsed verdicts == non-empty rows and no verdict lacks a boolean hit; any served model other than the frozen model yields judged_non_comparable_model with no comparable recall"
   },
   "deterministic_diagnostics": {
     "version": "mesa-m2-deterministic-diagnostics-1.0.0",
@@ -106,7 +106,7 @@
     "calibration": "agreement of answer_substring_hit with each upstream system's published judge hits is reported"
   },
   "m4_classifier": {
-    "version": "mesa-m4-stage-classifier-1.1.0",
+    "version": "mesa-m4-stage-classifier-1.2.0",
     "function": "reference/run_agentmembench_formal.py:classify_conflict_case",
     "stages_in_order": [
       "write_admission",
@@ -119,7 +119,7 @@
       "ranking_fusion"
     ],
     "primary_stage_rule": "first unmet necessary condition for a currentness-correct top-1; condition 7 = old fact demoted by temporal applicability tier or explicit-current constraint applied; a state_change_candidate relation (incl. explicit termination) satisfies conditions 4-5",
-    "win_basis_rule": "uncontested (old not admitted) | currentness_mechanism (demotion/constraint/applicability tier decisive) | temporal_order_tiebreak (newer-first among relevance ties) | lexical_ordering (relevance stage decisive) | undetermined",
+    "win_basis_rule": "uncontested (old not admitted) | currentness_mechanism (old demoted and new not, explicit-current pairwise constraint, or temporal_applicability_tier decisive) | content_identity_tiebreak (explicit-current profile, both unknown basis, tie on every relevance stage: ordered by time-neutral content digest) | temporal_order_tiebreak (newer-first among relevance ties outside that profile) | lexical_ordering (route/lexical/corroboration/exact-identity stage decisive) | undetermined; loss_basis uses the same mapping for stale cases",
     "evidence_class": "adapted/diagnostic attribution of the exact upstream M4 metric",
     "consistency_rule": "classifier top-1 outcome counts must equal upstream new_fact_rate and staleness_rate exactly; reported as upstream_consistency"
   },
@@ -174,7 +174,7 @@
   ],
   "runner": {
     "path": "reference/run_agentmembench_formal.py",
-    "sha256": "0d85eca40d5e648ed6c9082a63230b4cb255969402245a3d9f18a1ee9beabcff"
+    "sha256": "58b2fced97a82d762a3cb24325af31173248431837880cd9b19b0a70ae55540c"
   },
   "agent_memory": {
     "runtime_tree": "771447a41b66cf5f141a1045d2e36a302d9a685c",

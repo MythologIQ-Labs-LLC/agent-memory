@@ -42,7 +42,7 @@ Upstream `recall_at_k` is LLM-judged. The upstream judge maps every transport fa
 1. Execution stores, for every query, exactly what Agent Memory retrieved. Judge-derived fields are stripped, not zero-filled.
 2. `--judge` later applies the frozen judge through the upstream `judge_retrievals` to the uncommitted raw report.
 3. Until an authorized judge is provisioned (`decision-eval-credential`), judged recall is **blocked**.
-4. A judge run still refuses to emit a score unless every non-empty row received a parsed verdict. Upstream would silently score a failed row as a miss, so if the parsed-response count differs from the number of non-empty rows the status stays `blocked` and the failure count is reported. The run also records a preflight request and the served model ids, and verifies the raw retrieved items against the committed per-item digests.
+4. A judge run first re-verifies the arguments, the runner, the upstream checkout and the committed report's freeze and runner digests. It rebuilds each query and reference answer from the frozen selection, never from the raw file, and checks every row against the committed report. It refuses to emit a score unless every non-empty row received a parsed verdict with a boolean `hit`. If the endpoint serves any model other than the frozen one, the status is `judged_non_comparable_model` and no comparable recall is reported. Upstream would silently score a failed row as a miss, so if the parsed-response count differs from the number of non-empty rows the status stays `blocked` and the failure count is reported. The run also records a preflight request and the served model ids, and verifies the raw retrieved items against the committed per-item digests.
 
 A judge other than Qwen2.5-14B-Instruct creates a new, non-comparable score identity. For a same-judge comparison, the five published upstream detail files must also be re-judged with it.
 
@@ -56,7 +56,7 @@ The same seed and `load_records` must reproduce upstream's selection. The run re
 
 ## M4 failure-stage classification (frozen)
 
-Classifier `mesa-m4-stage-classifier-1.1.0` (`classify_conflict_case`; adapted/diagnostic attribution of the exact upstream metric) checks, for each of the 250 pairs, the conditions a currentness-correct top-1 requires, in pipeline order:
+Classifier `mesa-m4-stage-classifier-1.2.0` (`classify_conflict_case`; adapted/diagnostic attribution of the exact upstream metric) checks, for each of the 250 pairs, the conditions a currentness-correct top-1 requires, in pipeline order:
 
 ```text
 write_admission -> candidate_generation -> admission -> write_interpretation
@@ -66,7 +66,15 @@ write_admission -> candidate_generation -> admission -> write_interpretation
 
 - Every case records all unmet stages. For a miss, the primary stage is the first unmet one.
 - The currentness condition holds when the old fact falls in the demoted temporal-applicability tier for the query's intent mode, or when an explicit-current constraint applied to the pair. A `state_change_candidate` relation, including one reached by explicit termination, satisfies the interpretation and slot conditions.
-- `decisive_stage` is the first ranking stage that separated the two facts. `win_basis` for a hit is one of `uncontested` (old fact not admitted), `currentness_mechanism`, `temporal_order_tiebreak` (newer-first among relevance ties), `lexical_ordering` or `undetermined`. Correct for a non-currentness reason is not currentness capability.
+- `decisive_stage` is the first ranking stage that separated the two facts. `win_basis` for a hit, and `loss_basis` for a stale result, take one of these values:
+  - `uncontested`: the old fact was not admitted.
+  - `currentness_mechanism`: currentness separated the pair.
+  - `content_identity_tiebreak`: under explicit current intent, two unknown-basis facts that tie on every relevance stage are ordered by a time-neutral content digest (`temporal_order_constraints`). This applies even when that order happens to equal newer-first.
+  - `temporal_order_tiebreak`: newer-first among relevance ties, outside that profile.
+  - `lexical_ordering`: a relevance, route, corroboration or exact-identity stage decided.
+  - `undetermined`: the decisive stage is not in the mapping.
+
+  Correct for a non-currentness reason is not currentness capability.
 - The classifier's top-1 outcome counts must reproduce the upstream `new_fact_rate` and `staleness_rate` exactly (`upstream_consistency`).
 - Two #694 taxonomy stages cannot be exercised by this workload. The answer/evaluator layer cannot, because the evaluator is token containment. Unsupported semantics cannot be separated from extraction misses, so both are reported together under `write_interpretation`.
 
@@ -101,6 +109,13 @@ The independent pre-score audit, iteration 1, returned VETO on three grounds:
 3. the judge path could publish a deflated score.
 
 Each ground was remediated before any MESA workload ran.
+
+Iteration 2 returned VETO on two grounds:
+
+1. a time-neutral content-digest tiebreak could be credited as recency;
+2. the judge path did not re-verify the protocol or the gold inputs.
+
+Both were remediated.
 
 The deterministic diagnostics over the five published upstream files were computed before Agent Memory's run (`reports/benchmarks/agentmembench-mesa-formal/upstream-reference-diagnostics.json`). Upstream `load_records` reproduces the exact published selection for all five systems (`event_type` and `source_id` match on every row). The substring diagnostic is conservative: across the five systems, at most 0.2% of rows count as a hit when the published judge said miss.
 

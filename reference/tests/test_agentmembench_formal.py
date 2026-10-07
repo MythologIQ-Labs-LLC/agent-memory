@@ -76,27 +76,56 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(case["relation"]["classification"], "conflict")
 
     @staticmethod
-    def _ranked(first_by, mode="current", applicability="unknown_temporal_basis", constraint=False):
+    def _ranked(first_by, mode="current", applicability="unknown_temporal_basis", constraint=False,
+                lexical=1.0, posture="explicit"):
         return {"ranking": {"ordered_before_next_by": first_by, "constraint_applied": constraint,
-                            "temporal_applicability": applicability, "query_intent_mode": mode}}
+                            "temporal_applicability": applicability, "query_intent_mode": mode,
+                            "query_intent_posture": posture, "query_intent_basis": "query_language_explicit",
+                            "route_scores": {"lexical": lexical}, "route_corroboration_count": 1,
+                            "exact_identity": False, "lexical_relevance_score": lexical}}
 
     def test_lexical_win_is_not_credited_to_currentness(self):
         trace = _trace(WRITES, ["f-old", "f-new"], ["f-new", "f-old"], ["f-new"],
-                       {"f-new": self._ranked("lexical_relevance_desc:bm25_admitted_set:lexical"),
-                        "f-old": self._ranked(None)})
+                       {"f-new": self._ranked("lexical_relevance_desc:bm25_admitted_set:lexical", lexical=2.0),
+                        "f-old": self._ranked(None, lexical=1.0)})
         case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
         self.assertEqual(case["outcome"], "new_fact")
         self.assertIsNone(case["primary_stage"])
         self.assertEqual(case["win_basis"], "lexical_ordering")
 
-    def test_newer_first_tiebreak_is_reported_as_such(self):
-        # audit ground 1(b): a win decided by temporal_order_within_query_regime
+    def test_newer_first_tiebreak_outside_explicit_profile(self):
+        # audit iteration 1 ground 1(b): inferred (non-explicit) current intent keeps write-clock ties
+        trace = _trace(WRITES, ["f-old", "f-new"], ["f-new", "f-old"], ["f-new"],
+                       {"f-new": self._ranked("temporal_order_within_query_regime", posture="inferred"),
+                        "f-old": self._ranked(None, posture="inferred")})
+        case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
+        self.assertEqual(case["decisive_stage"], "temporal_order_within_query_regime")
+        self.assertEqual(case["win_basis"], "temporal_order_tiebreak")
+
+    def test_explicit_current_relevance_tie_is_content_identity_not_recency(self):
+        # audit iteration 2 ground 1: digest order that happens to equal newer-first
         trace = _trace(WRITES, ["f-old", "f-new"], ["f-new", "f-old"], ["f-new"],
                        {"f-new": self._ranked("temporal_order_within_query_regime"),
                         "f-old": self._ranked(None)})
         case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
-        self.assertEqual(case["decisive_stage"], "temporal_order_within_query_regime")
-        self.assertEqual(case["win_basis"], "temporal_order_tiebreak")
+        self.assertTrue(case["content_identity_tie"])
+        self.assertEqual(case["win_basis"], "content_identity_tiebreak")
+
+    def test_stale_by_content_identity_records_loss_basis(self):
+        trace = _trace(WRITES, ["f-old", "f-new"], ["f-old", "f-new"], ["f-old"],
+                       {"f-old": self._ranked("explicit_current_unknown_tie_content_identity"),
+                        "f-new": self._ranked(None)})
+        case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
+        self.assertEqual(case["outcome"], "stale")
+        self.assertEqual(case["loss_basis"], "content_identity_tiebreak")
+
+    def test_stage_vocabulary_mapping(self):
+        self.assertEqual(formal._order_basis("explicit_current_exclusive_pairwise_constraint", False),
+                         "currentness_mechanism")
+        for stage in ("stable_constraint_topology", "base_ranking_preserved", "indistinguishable", None):
+            self.assertEqual(formal._order_basis(stage, False), "undetermined")
+        for stage in ("route_score_desc:lexical", "route_corroboration_count_desc", "exact_identity_desc"):
+            self.assertEqual(formal._order_basis(stage, False), "lexical_ordering")
 
     def test_uncontested_win_is_not_currentness(self):
         # audit ground 1(a): old fact not admitted, new labelled not_evaluated
@@ -112,6 +141,14 @@ class ClassifierTests(unittest.TestCase):
                         "f-old": self._ranked(None, constraint=True)})
         case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
         self.assertEqual(case["win_basis"], "currentness_mechanism")
+
+    def test_both_demoted_is_not_currentness_separation(self):
+        demoted = sorted(formal._demoted_labels("current"))[0]
+        trace = _trace(WRITES, ["f-old", "f-new"], ["f-old", "f-new"], ["f-old"],
+                       {"f-old": self._ranked("lexical", applicability=demoted),
+                        "f-new": self._ranked(None, applicability=demoted)})
+        case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
+        self.assertFalse(case["conditions"]["temporal_applicability_currentness"])
 
     def test_demoted_old_fact_satisfies_currentness_condition(self):
         demoted = sorted(formal._demoted_labels("current"))[0]
@@ -208,6 +245,16 @@ class JudgeTests(unittest.TestCase):
         result = formal.judged_recall([True, False, False], self.ROWS, parsed_responses=2, request_failures=1)
         self.assertEqual(result["status"], "judged")
         self.assertAlmostEqual(result["recall_at_k"], 1 / 3)
+
+    def test_malformed_verdict_blocks(self):
+        result = formal.judged_recall([True, False, False], self.ROWS, 2, 0, malformed_verdicts=1)
+        self.assertEqual(result["status"], "blocked")
+
+    def test_other_served_model_is_non_comparable(self):
+        result = formal.judged_recall([True, False, False], self.ROWS, 2, 0, served_models=["llama"],
+                                      frozen_model="qwen2.5-14b-instruct")
+        self.assertEqual(result["status"], "judged_non_comparable_model")
+        self.assertIsNone(result["recall_at_k"])
 
     def test_any_exhausted_row_blocks_never_zero(self):
         result = formal.judged_recall([False, False, False], self.ROWS, parsed_responses=0, request_failures=6)
