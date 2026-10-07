@@ -3831,3 +3831,42 @@ the five owner decisions (`decision-embedding-dependency`,
 `decision-hindsight-provider`, `decision-eval-credential`), each
 requiring authority `repository-owner`; no runtime tranche starts
 without them.
+
+---
+
+### Entry #84: GOVERNANCE — five owner decisions resolved; backlog reconciled
+
+**Timestamp**: 2026-10-07T04:10:00-04:00
+**Phase**: GOVERNANCE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `.qor/roadmaps/north-star-best-in-class/events.jsonl` (seq 47-51), `docs/BACKLOG.md`, `docs/GOVERNANCE_INDEX.md`
+
+**Artifacts**: roadmap events seq 47-51 (`node_resolved` for `decision-capacity-split`, `decision-temporal-posture`, `decision-embedding-dependency`, `decision-hindsight-provider`, `decision-eval-credential`, each with authority `{actor: Knapp-Kevin, role: repository-owner}`); `docs/BACKLOG.md` rewritten against `main` 2d852d3; governance-index rows for the backlog and `docs/68`
+**Content Hash** (SHA256 over `git write-tree` of the staged index `08bec8217ee8b26e83e53a5d501d35fb2ee4784a`): `4ae36dd86e12e7ef5727dc6b692f7dfbb50a1bfc443646210e16df88ff3fdd2e`
+**Previous Hash**: `2910769f04d6b6ee9d8092737f9c23f58f69830afb758ed325e5dc73152f2fe4`
+**Chain Hash**: `94983a1e8caed1b420183a88fca11053ed575f24fced3f7adb53335fd7ea10a0`
+
+**Decision**: The five repository-owner decision nodes that Entry #83 left
+open on the frontier are resolved under the owner direction of 2026-10-07
+(`docs/68-baseline-first-complete-architecture-execution.md`, PR #695
+merged as 2d852d3). Capacity: evaluation-first only until the formal
+AgentMemBench/MESA baseline (#694) is frozen and analysed, then
+substantial capacity returns to the complete runtime architecture.
+Temporal posture: declare to none; primary lanes get benchmark inputs as
+provided, and any enrichment lane is separately frozen and labelled
+adapted/diagnostic. Embedding dependency: a pinned, versioned local
+provider behind the existing abstraction, shipped as an optional extra.
+Hindsight: one frozen, benchmark-agnostic configuration across lanes.
+Evaluation credential: one authorized, version-pinned reader/judge whose
+full identity is bound into results; any change creates a new
+non-comparable identity. The credential itself is not yet provisioned,
+so judged lanes stay blocked until it is. `docs/BACKLOG.md` (last
+reconciled 2026-09-23 against 3dc11b4) is replaced by a queue ordered as
+Phase A (#694, the comparator programme) then Phase B (every accepted
+runtime tranche). That meets two of the #674 gates (capacity split
+recorded, backlog reconciled); the third (the first runtime tranche
+merged with lane evidence) is still open. Superseded draft PR #587 was
+closed with a pointer to PR #634. No runtime file changed; Runtime
+Baseline v2 is untouched.

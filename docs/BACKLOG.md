@@ -1,149 +1,134 @@
 # Project Backlog
 
-This file is the current repository-level work queue. Historical sprint plans, research briefs, and ledger entries explain prior decisions; live GitHub issues/PRs carry detailed acceptance criteria for unresolved work.
+This file is the current repository-level work queue. Historical sprint plans, research briefs, and ledger entries explain prior decisions. Live GitHub issues and PRs carry the detailed acceptance criteria for unresolved work. The North Star roadmap event log (`.qor/roadmaps/north-star-best-in-class/events.jsonl`) carries decision and prerequisite state.
 
-The queue is intentionally small. Work that is blocked externally or merely interesting for later must not masquerade as active implementation.
+The queue is kept small on purpose. Work that is blocked externally, or only interesting for later, must not pose as active implementation.
 
-## RC1 Critical Path
+The previous RC1-era queue (reconciled 2026-09-23 against `3dc11b4`) is superseded by this file. Its RC1 critical path is closed: #427 (production canonical substrate) closed 2026-09-23, #440 (dependency pair re-qualification) closed 2026-09-24, and the developer facade (`AgentMemory.open/remember/recall/correct/forget/history/posture`) is shipped under public contract 1.4.0 with Runtime Baseline v2. That history stays in git and in `docs/META_LEDGER.md`.
 
-### 1. Production canonical substrate
+## Program posture (owner direction 2026-10-07)
 
-- [ ] **#427**: qualify one production-credible canonical substrate.
-- [ ] Preserve the existing `TemporalGraphPort` / governed-adapter semantics rather than reshaping Agent Memory around a provider.
-- [ ] Prove retain/correct/forget restart behavior, scope/currentness/history, stale-writer/interrupted-recovery safety, exact provider/version identity, and operational limitations.
-
-The original persistence audit issue #363 is closed. Its reference-runtime defects were remediated; #427 is the remaining production-qualification gate.
-
-### 2. Developer facade
-
-- [ ] Add the canonical small developer surface over public contract 1.2.0, conceptually:
-
-```python
-memory = AgentMemory.open(...)
-memory.remember(...)
-memory.recall(...)
-memory.correct(...)
-memory.forget(...)
-memory.history(...)
-memory.posture(...)
-```
-
-- [ ] Ordinary low-risk local use must not require callers to construct internal PAMA dataclasses manually.
-- [ ] The facade must return governed results/receipts and may not bypass scope, evidence, PAMA, currentness, or recall admission.
-
-### 3. End-to-end RC scenario
-
-- [ ] Add one scenario that proves the usable product path as a whole:
+Controlling document: `docs/68-baseline-first-complete-architecture-execution.md`. Program issue: #668. Ledger: Entry #84.
 
 ```text
-experience
-  -> stable identity + evidence
-  -> multiple typed memory consequences
-  -> persisted governed state
-  -> multi-route/query-driven candidate retrieval
-  -> governed admission
-  -> correction/supersession
-  -> restart
-  -> current recall + reconstructable history
-  -> forgetting/tombstone
+PHASE A - know where we are
+    formal external baseline (#694 AgentMemBench/MESA first)
+    -> classify deficits, strengths, evidence gaps, unimplemented architecture
+    -> freeze the pre-major-runtime baseline
+
+PHASE B - build the complete architecture
+    every accepted runtime tranche, prioritized with external evidence
+    -> internal conformance -> exact frozen external replay -> comparator delta
+    -> architecture interpretation -> next tranche
 ```
 
-- [ ] Include at least one highly relevant/confident but inadmissible candidate and prove it cannot influence active cognition.
+Benchmark deficits set priority and supply acceptance evidence. They do not define the roadmap. Accepted architecture that no benchmark scores is still work.
 
-### 4. Release evidence package
+### Owner rulings (roadmap decision nodes resolved, seq 47-51)
 
-- [ ] Execute the merged LoCoMo-compatible retrieval-evidence harness against an appropriately obtained external dataset and preserve exact dataset/revision/config bindings.
-- [ ] Keep retrieval quality, answer/task quality, latency/resource measurements, and governance/safety measurements separate.
-- [ ] Add answer-generation/evaluation only under an explicit protocol that makes cross-system comparison honest.
-- [ ] Add LongMemEval evidence only after its adapter and licensing/use boundary are explicitly defined.
-- [ ] Publish known limitations with the RC.
+| Node | Ruling |
+| --- | --- |
+| `decision-capacity-split` | Evaluation-first only long enough to freeze and execute the formal baseline (#694). After that baseline is captured and analysed, substantial capacity returns to the complete runtime architecture. This is not a mandate to implement only benchmark fixes. |
+| `decision-temporal-posture` | Primary competitive and currentness lanes use benchmark inputs as provided. No Agent-Memory-only session-date or temporal enrichment. A temporal-enrichment lane may run later only as a separately frozen adapted/diagnostic lane. |
+| `decision-embedding-dependency` | A pinned, versioned production local representation provider behind the existing provider abstraction, shipped as an optional extra rather than a base dependency. |
+| `decision-hindsight-provider` | One benchmark-agnostic, production-like, exactly pinned Hindsight configuration across all applicable lanes. No benchmark-specific tuning. |
+| `decision-eval-credential` | One explicitly authorized, version-pinned reader/judge configuration. The provider, model/version, prompts, evaluator version, budget, credential boundary and reproducibility metadata are bound into every result. Any change produces a new, non-comparable score identity. The credential itself still has to be provisioned. |
 
-The current LoCoMo harness is **retrieval-only**. It does not produce the official LoCoMo QA score and must not be presented as Jev-Mem answer-quality parity.
+### Capacity rule for this cycle
 
-## Implemented RC Foundations
+1. Until #694 completes, evaluation work is limited to the formal MESA baseline and the evidence import it needs.
+2. After #694, most merged tranches must be runtime tranches. Proposal carried from #674: at least two runtime tranches merged for every evaluation tranche. Exact replays of frozen lanes that a runtime tranche requires count as part of that runtime tranche, not as separate evaluation tranches.
+3. A runtime tranche is product-complete only when its behaviour is reachable through `AgentMemory.open()/recall()`, or through the documented public surface it targets. A module that exists somewhere in the repository is not enough.
 
-These are no longer blockers and should not be reopened by stale backlog prose.
+## Phase A - external baseline (active)
 
-- [x] ADR-035 status/top-level architecture reconciliation.
-- [x] #364 recall/crossing/shared-domain authority remediation.
-- [x] Reference checkpoint owner contracts; no restart-runtime private-field scraping as the checkpoint contract.
-- [x] Generation CAS, process locking, commit journal, stale-writer and torn-write safeguards.
-- [x] Governed checkpoint/profile migration and rollback evidence.
-- [x] Public transaction-support seam for persistence/migration.
-- [x] Projection/write-claim/telemetry owner restart contracts.
-- [x] Atomic auxiliary-state composition in the same checkpoint generation.
-- [x] Restart-safe semantic + epistemic composition slice.
-- [x] Candidate/admission separation for multi-route recall.
-- [x] Lexical + exact logical-identity retrieval routes.
-- [x] Agent Memory-native shared-evidence/provenance-neighbor retrieval.
-- [x] Opt-in query-driven relational expansion from natural-language lexical anchors.
-- [x] Content-bearing anchor selection that prevents stopword-only relational fan-out.
-- [x] Internal deterministic retrieval-quality benchmark and CI evidence artifact.
-- [x] LoCoMo-compatible external-input evidence-retrieval diagnostic (#437 / PR #449).
-- [x] Checkpoint behavioral conformance probes harvested into the current harness layer (#441 / PR #448).
-- [x] PR #389 reusable GitHub governance/memory efficacy operator skill.
+- [ ] **#694 (P0)**: untouched formal AgentMemBench/MESA baseline (M1-M6 executed, or classified unsupported/blocked/not comparable), adapter frozen before any score is inspected, per-case M4 currentness failures stage-classified, results imported into the evidence model and the dashboard.
+- [ ] **#574 / #600 / #601**: one coherent cross-system comparison programme with strict evidence classes (same-harness reproduced, published external reference, Agent Memory longitudinal, adapted/diagnostic, unsupported, blocked, not run, not comparable). Unavailable evidence is never zero. Retrieval metrics and end-to-end QA are never mixed. There is no universal memory score.
+- [ ] **#640**: Mem0 OSS and Hindsight same-harness. Hindsight runs under the frozen configuration from `decision-hindsight-provider`.
 
-Internal bounded benchmark evidence currently records:
+North Star comparison coverage:
+
+| Tier | Lane | State |
+| --- | --- | --- |
+| P0 | AgentMemBench / MESA (formal) | #694 in progress |
+| P0 | LongMemEval_S same-harness retrieval | lanes v2 frozen (`longmemeval-s-retrieval-parity-v2`) |
+| P0 | LongMemEval same-harness end-to-end QA | blocked on a provisioned judge/reader credential (`decision-eval-credential` posture set) |
+| P0 | BEAM scale tiers | not run |
+| P1 | SWE-ContextBench Lite (#467) | harness qualified; external run pending |
+| P1 | action-level memory (DolphinBench or equivalent) | not run |
+| P1 | PersonaMem | not run |
+| Reference | LoCoMo | retrieval-only harness; no external dataset result recorded |
+| Reference | longitudinal / field (#388, #408, #496, #501) | longitudinal gates |
+
+## Phase B - complete runtime architecture (follows #694)
+
+Ordering is provisional until the frozen #694 baseline is analysed. Any change to the order is recorded here with its reason.
+
+Retrieval and representation:
+
+- [ ] **#669**: semantic/vector route reachable through the facade. Pinned local provider as an optional extra, versioned representation identity, derived and rebuildable vector index, no per-query re-embedding, domain eligibility, provenance.
+- [ ] **#644**: native controlled recall from the Jev-Mem harvest (call/deadline budgets, stop reasons, route needs, sufficiency, allocation, bounded controller, telemetry).
+- [ ] **#688**: typed entity/causal relation vocabulary, bounded relation judgments, and typed graph traversal reachable through the facade.
+- [ ] **#673**: post-admission route fusion, then a separately versioned reranker if justified. Ranking orders admitted candidates and never admits.
+
+Temporal, currentness and semantics:
+
+- [ ] **#671**: currentness capability work, informed by the formal M4 failure taxonomy. Recency never becomes authority.
+- [ ] **#596**: natural proposition recognition without weakening abstention.
+- [ ] **#597**: canonical proposition slot/value boundaries.
+- [ ] **#586**: explicit bounded exception/override precedence.
+
+Lifecycle, cognition and composition:
+
+- [ ] **#689**: metabolism (consolidation/maintenance) in the runtime caller path, using the non-destructive proposal vocabulary.
+- [ ] **#690**: governed failure memory composed into recall admission evidence.
+- [ ] **#691**: consumer-aware memory package beyond a ranked k-prefix.
+- [ ] **#636**: heterogeneous memory composition as an executable runtime architecture.
+- [ ] **#410**: composition umbrella. Every mechanism described as native or qualified must be reachable through the public facade, or its record must say otherwise. This includes the baseline-v2 `native_qualified` drift for vector, typed-graph and metabolism.
+
+Implementation profile:
+
+- [ ] **#602**: Rust qualification where it earns its role through semantic parity, assurance, performance, lifecycle parity and reproducibility. It never outranks missing memory behaviour.
+
+Fundamental behaviours that every tranche must preserve: semantic, epistemic, procedural and predictive memory; correction; supersession; forgetting and tombstones; reconstructable history; provenance; identity; scope and isolation; authority; restart safety; governed admission; lifecycle; persistence; recovery; determinism; public developer usability.
+
+Load-bearing invariants:
 
 ```text
-lexical-only admitted recall = 3/7 (0.428571)
-composed admitted recall     = 7/7 (1.0)
-admitted precision           = 1.0
-governance failures          = 0
+relevance != currentness        ranking != admission
+newer != superseding            interpretation != authority
+inference != mutation authority benchmark score != truth
 ```
 
-This is synthetic internal evidence, not an official public benchmark result.
+## Platform and governance
 
-The LoCoMo-compatible harness is now implemented and exact-head green, but no external LoCoMo dataset result is recorded in the repository yet. The dataset remains external and is not vendored.
+- [ ] **#662**: Phases 2-4 landed (`prereq-ci-cost` resolved). Phase 1 workflow-estate budget work continues. Stale-run cancellation PR #665 is open.
+- [ ] **#635**: converge Gauntlet v1 and Runtime Baseline.
+- [ ] **#554 / #524**: system-neutral qualification and benchmark-neutral evaluation subsystem.
+- [ ] **#565 / #556**: project-model and commons/runtime boundary documentation.
+- [ ] **#674**: closes once this backlog is reconciled (done here), the capacity split is recorded (done here) and the first runtime tranche (#669 or the evidence-justified first tranche) has merged with lane evidence.
 
-## Dependency Qualification Queue
+## Dependency qualification
 
-These are evidence/interoperability dependencies, not routine version bumps:
+Bare Dependabot bumps of qualified interoperability dependencies cannot be merged one file at a time. The #375/#440 precedent applies. Open bumps #654 (`agentrust-trace` 0.11.0), #655 (`agent-manifest` 0.15.0) and #656 (`cryptography` 50.0.2, under `/reference`) need a version-exact qualification change before merge. #599 (actions group) follows the workflow-policy checks.
 
-- [ ] **#440**: re-qualify `agent-manifest` 0.12.0 and `agentrust-trace` 0.10.0 together as one version-exact interoperability change.
-- [ ] Re-enumerate all current package pins, source/tag/commit bindings, schemas/fixtures, comparator assertions, and qualification identities before editing.
-- [ ] Prove pin/version identity tests **execute** rather than silently skip under the new pair.
-- [ ] Validate the material fail-closed/security semantics from both releases at the Agent Memory boundary actually consumed.
-- [ ] Run the exact-head full reference/comparator matrix before merge.
+## External / longitudinal gates
 
-PRs #404 and #405 are closed as structurally incomplete bare Dependabot bumps. PR #375 is the precedent: these dependencies cannot be qualified safely one file at a time.
+- **#361, blocked external**: needs an authorized live Cloudflare/DashClaw traversal.
+- **#388 / #408 / #496 / #501, longitudinal**: need field evidence. No speculative implementation slices before that evidence exists.
+- **#495**: live cognitive-classification providers need provisioned providers.
+- **#696, future**: benchmark evidence console. Not active this cycle.
 
-## External / Longitudinal Gates
+## Repository hygiene rule
 
-These remain open only where an external or time-based evidence gate is real. They are not part of the active RC implementation critical path unless a reproduced Agent Memory defect emerges.
+Every open issue or PR must have one of:
 
-- **#361 — blocked external:** repository-side DashClaw provider work is merged; completion requires authorized live Cloudflare/DashClaw traversal and correlated evidence.
-- **#388 — longitudinal:** the efficacy procedure/tooling is merged via PR #389; completion requires T1/T2/T3 field evidence.
-- **#408 — longitudinal case study:** next executable gate is the frozen T0/source-system baseline and measured failure taxonomy; do not spawn speculative implementation slices before evidence exists.
-
-## Explicit Holds / Deferred Work
-
-- **Sprint 4b / JS PAMA parity:** held. Resume only with a complete correction/remediation route rather than a superficial evaluator port.
-- **#392:** closed `not_planned` until DashClaw makes the TransitionRuleCorpus authorship/ownership decision.
-- **#387:** closed `not_planned` for this cycle. Reopen when the Git/document-backed governed knowledge profile becomes an active implementation tranche.
-- **#332:** closed in Agent Memory. Remaining QOR proving-ground acceptance is live host execution, not standalone Agent Memory repository work.
-- **Historical checkpoint branch:** `implementation/332-checkpoint-behavioral-assessment` is deletion-eligible after #448 harvested its useful probes into current architecture; do not merge/revive it.
-
-## Recently Completed Retrieval Work
-
-- #431 / PR #432: deterministic multi-route candidate generation and one governed admission boundary.
-- #433 / PR #434: shared-evidence/provenance-neighbor recall.
-- #435 / PR #436: deterministic retrieval-quality benchmark and CI artifact.
-- #437 / PR #449: query-driven relational recall plus LoCoMo-compatible retrieval-evidence diagnostic.
-- PR #438: closed unmerged only because a temporary zero-diff branch reconciliation caused GitHub to auto-close it; #449 continued the same implementation branch and landed the corrected work.
-
-## Repository Hygiene Rule
-
-An open issue/PR must have one of the following:
-
-1. an executable next implementation/review step;
-2. an explicit external/longitudinal blocker that justifies remaining open;
+1. an executable next implementation or review step;
+2. an explicit external or longitudinal blocker that justifies keeping it open;
 3. a semantic dependency-qualification reason.
 
-Otherwise retire it from the active queue and reopen when it becomes executable. Age is not itself a reason to close work, but age without a next action is a backlog smell and must be reconciled.
-
-Historical branches must be compared against `main` for unique commits before deletion.
+Anything else leaves the active queue and is reopened when it becomes executable. Age alone is not a reason to close work, but age without a next action is a backlog smell and must be reconciled. Before a historical branch is deleted, it must be compared against `main` for unique commits.
 
 ---
 
-_Last reconciled against `main` `3dc11b4048e64aa7f6bf78103d664bc93d1cd1e7` on 2026-09-23._
+_Last reconciled against `main` `2d852d3814333a998aec40113c71f29b26ad8aa4` on 2026-10-07._
