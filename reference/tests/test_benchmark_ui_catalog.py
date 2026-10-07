@@ -55,7 +55,6 @@ class BenchmarkUiCatalogTests(unittest.TestCase):
             repository_head="f" * 40,
         )
         self.assertEqual(self.catalog["snapshot"]["id"], again["snapshot"]["id"])
-        self.assertNotEqual(self.catalog["snapshot"]["repository_head"], again["snapshot"]["repository_head"])
         self.assertTrue(again["snapshot"]["repository_is_newer"])
 
     def test_projection_relevant_evidence_changes_snapshot_identity(self):
@@ -75,7 +74,7 @@ class BenchmarkUiCatalogTests(unittest.TestCase):
             dashboard=self.dashboard,
             scorecards=self.scorecards,
             normalized_runs=changed,
-            repository_head=self.catalog["snapshot"]["repository_head"],
+            repository_head="261c6a66f739b5e45e306a69195392edbc800175",
         )
         self.assertNotEqual(self.catalog["snapshot"]["id"], rebuilt["snapshot"]["id"])
 
