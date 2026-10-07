@@ -41,12 +41,12 @@
         "evidence_revision",
         "repository_head",
         "repository_is_newer",
-        "source_digests"
+        "source_identity"
       ],
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^sha256:[0-9a-f]{64}$"
+          "minLength": 1
         },
         "as_of": {
           "type": [
@@ -75,26 +75,26 @@
         "repository_is_newer": {
           "type": "boolean"
         },
-        "source_digests": {
+        "source_identity": {
           "type": "object",
           "additionalProperties": false,
           "required": [
             "dashboard",
-            "scorecards",
-            "normalized_runs"
+            "normalized",
+            "scorecards"
           ],
           "properties": {
             "dashboard": {
               "type": "string",
-              "pattern": "^[0-9a-f]{64}$"
+              "minLength": 1
+            },
+            "normalized": {
+              "type": "string",
+              "minLength": 1
             },
             "scorecards": {
               "type": "string",
-              "pattern": "^[0-9a-f]{64}$"
-            },
-            "normalized_runs": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{64}$"
+              "minLength": 1
             }
           }
         }
