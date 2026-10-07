@@ -1,6 +1,9 @@
 name: Cross-Fact Currentness Evidence
 
 on:
+  push:
+    branches:
+      - "implementation/671-cross-fact-currentness"
   pull_request:
     paths:
       - "reference/agentmem_ref/**"
