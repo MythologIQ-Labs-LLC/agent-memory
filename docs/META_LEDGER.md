@@ -3674,3 +3674,35 @@ resolved. Verified before this entry: the two new test modules pass;
 8159c35; `check_runtime_baseline_equivalence.py --candidate HEAD`
 prints `PASS`; governance-health OK. PR #665 is subsumed by LD4
 (its five files are inside the 71 conditional blocks).
+
+---
+
+### Entry #79: IMPLEMENTATION — merge-commit measurement and roadmap resolution
+
+**Timestamp**: 2026-10-07T05:42:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-662-ci-cost-phases-2-4.md (Gate Tribunal PASS at Entry #77, condition C1; implementation at Entry #78, PR #685 merged as e9a46bd)
+
+**Artifacts**: `.qor/roadmaps/north-star-best-in-class/events.jsonl` (`prereq-ci-cost` resolved by pointer to e9a46bd), this entry
+**Content Hash** (SHA256 over `git write-tree` of the staged index `2d9af186cfd1ede204f4d9d95a0e569b7aadcf00`): `f85e1411787c78a011c6c434793585cdc860769fbec88087d9c7c42af8e90397`
+**Previous Hash**: `526cd907a9a94a7117bae5549fd46a760000bb95c3373363c8812b2512186bca`
+**Chain Hash**: `3aa7af1f63f26e0fd703a817229b8ba606675cf9b1dc4d1477f445f5065c157f`
+
+**Decision**: Condition C1 closed. PR #685 head d06b106 (Entry #78's
+head 8159c35 plus the ported #686 fix and the ledger entry): 90 check
+runs, 90 success, 81 workflow runs, zero push runs. Merge commit
+e9a46bd on `main`: 49 push runs + 2 CodeQL = 51 workflow runs, 57
+check runs; the previous merge commit 0d6c261 (PR #686, a two-file
+change on the pre-change YAML) triggered 41 push runs + 1 CodeQL = 42
+workflow runs, 48 check runs, so an ordinary merge still triggers its
+42 post-merge runs unchanged and e9a46bd's 8 further push runs are the
+path-filtered workflows whose own files this change edited. The
+`main` integration signal is kept (OQ1), the PR head no longer pays
+the push duplicate (LD2), and every PR/push run is now bounded and
+supersedable or complete-every-run by policy (LD4, LD5). Roadmap:
+`prereq-ci-cost` resolved; the frontier's remaining open nodes are
+the five owner decisions. PR #665 is subsumed by LD4 (OQ3), noted on
+that PR for its author to close.
