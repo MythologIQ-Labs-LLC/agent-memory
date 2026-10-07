@@ -3456,3 +3456,35 @@ exactly). The manifest's `configuration_digest` basis is stated in the
 record since the v1 derivation is not recorded anywhere. Nothing here is
 authority; `authority_effect` is `none` on every new file. Step B2
 (qualification binding and `published_commit`) follows the merge.
+
+---
+
+### Entry #73: IMPLEMENTATION
+
+**Timestamp**: 2026-10-07T00:55:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-674-successor-baseline.md LD8 Step B2 (Gate Tribunal PASS at Entry #63); Step B1 published at Entry #72 (PR #682, merge commit a5c6de316abb04f03ea1402c19d6b5c7fdf132e9)
+
+**Artifacts**: `reports/runtime/baseline-v2-qualification.json` (complete: workflow run 37548446965, artifact 11452165180, digest sha256:eb0fe7b3…eeb4c, `verified_head` 8e1211e0 (the B1 PR head), `system_revision` git-commit:488d64a…, adapter blob, `sample_count` 3, `exact_top1` 1.0, `baseline_or_probe`, `authority_effect` none), `reports/runtime/baseline-register.json` (v2 entry: `published_commit` a5c6de31…, `qualification.blob` re-pinned; the record and boundary blobs unchanged), `reports/runtime/baseline-v2.md` (re-rendered: public Gauntlet path complete), `reference/tests/test_runtime_baseline_succession.py` (the v2 entry test asserts the bound shape and the publication commit's tree)
+**Content Hash** (SHA256 over `git write-tree` of the staged index `93f256301f9eed1abf390a61e632902da8a358ec`): `872c2cac13354c12b1256465ff3255b092be7efe50f4bf1961e13c717aeb836e`
+**Previous Hash**: `2e9507f468837e6ee1527e5ed088f86ad0ddee01143d752d3622ee31b2752e55`
+**Chain Hash**: `0f0f94e9bdb8c5f3aae06c154b881c504898cd8eebdfae37092ec597aad2b4b2`
+
+**Decision**: Runtime Baseline v2 is evidence-bound (docs/67 Step B2). The
+orchestration probe run that `runtime-baseline.yml` produced on the B1 PR
+head (the pull_request run; a push run on the same head produced a second,
+equivalent artifact that is not cited) is bound into the companion
+qualification file; the register pins the publication commit, whose tree
+holds exactly the record and boundary bytes B1 pinned, and the new
+qualification blob. The record itself is untouched and its blob never
+changes from here. The validator now reports both entries bound (v1 at
+workflow 37219833377, v2 at 37548446965); the checker prints `PASS` against
+v2; both renderings check byte for byte. With this, the declared transition
+opened at Entry #67 is closed: the current Runtime Baseline is v2 at
+488d64a with public contract 1.4.0, its acceptance evidence is the nine
+accepted -v2 lane rows (Entry #71) and this probe, and no successor is
+declared. The probe gates publication, not the meaning of any memory
+operation; nothing here is authority.
