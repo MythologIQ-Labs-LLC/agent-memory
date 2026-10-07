@@ -495,7 +495,7 @@ class AgentMemory:
         if confidence is not None:
             envelope["confidence"] = confidence
         if overrides:
-            protected = {"contract_version", "proposal_id", "actor_id", "charter_version", "state_snapshot"}
+            protected = {"contract_version", "proposal_id", "actor_id", "charter_version", "state_snapshot", "source_ref"}
             attempted = protected.intersection(overrides)
             if attempted:
                 raise ValueError(f"facade proposal overrides may not replace protected fields: {sorted(attempted)}")
@@ -529,6 +529,7 @@ class AgentMemory:
         target_class: str = policy.M2,
         downstream_authority: str = policy.A1,
         purpose: str | None = None,
+        source_ref: str | None = None,
         overrides: Mapping[str, object] | None = None,
         valid_from: str | None = None,
         valid_until: str | None = None,
@@ -544,6 +545,10 @@ class AgentMemory:
         temporal = declared_temporal(
             {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
         )
+        if source_ref is not None:
+            if not isinstance(source_ref, str) or not source_ref.strip() or len(source_ref) > 256:
+                raise ValueError("source_ref must be a non-empty string of at most 256 characters")
+            source_ref = source_ref.strip()
         proposal = contract.proposal_from_envelope(
             self._proposal(
                 target_reference=target_reference,
@@ -564,6 +569,7 @@ class AgentMemory:
             evidence=list(evidence) or None,
             attestation=attestation,
             temporal=temporal,
+            source_ref=source_ref,
         )
         return self._commit_result(outcome)
 
