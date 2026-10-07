@@ -41,6 +41,7 @@ class BenchmarkUiCatalogTests(unittest.TestCase):
             dashboard=cls.dashboard,
             scorecards=cls.scorecards,
             normalized_runs=cls.normalized,
+            diagnostic_sources=cls.diagnostics,
             repository_head="261c6a66f739b5e45e306a69195392edbc800175",
         )
 
