@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0.0",
+  "generated_from": [
+    "docs/69-agentmembench-mesa-formal-baseline.md",
+    "reports/benchmarks/dashboard/current.json",
+    "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+  ],
+  "deficits": [
+    {
+      "deficit_id": "mesa-m4-currentness-2026-10-07",
+      "benchmark_profile": "AgentMemBench/MESA formal M4 temporal consistency",
+      "evidence_class": "exact workload; published external references",
+      "metric": "new_fact_rate",
+      "direction": "higher",
+      "agent_memory": 0.2,
+      "same_harness_frontier": null,
+      "published_frontier": {
+        "system": "Naive RAG",
+        "value": 1
+      },
+      "adequacy_target": ">=0.996 with wins attributable to currentness_mechanism",
+      "gap": "0.80 to published 1.0; mechanism gap is 250/250 temporal-applicability failures",
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "temporal_applicability_currentness",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "docs/69-agentmembench-mesa-formal-baseline.md",
+        "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_s2027_9170.json"
+      ],
+      "owning_issue": 671,
+      "architecture_tranche": "#671 Option A read-path currentness",
+      "remediation_hypothesis": "Use already-detected same-actor/source/scope state_change_candidate evidence as explicit-current read-path applicability without lifecycle mutation or recency authority.",
+      "negative_control_refs": [
+        "#580",
+        "#584",
+        "docs/plan-671-cross-fact-currentness.md"
+      ],
+      "replay_requirements": [
+        "formal MESA successor freeze",
+        "M4 win_basis must move to currentness_mechanism",
+        "no regression of frozen currentness guards"
+      ],
+      "state": "remediating",
+      "opened_at": "2026-10-07",
+      "closed_at": null,
+      "closure_evidence": [],
+      "remaining_gap": 0.8
+    },
+    {
+      "deficit_id": "longmemeval-s-turn-deep-recall-2026-10-07",
+      "benchmark_profile": "LongMemEval_S retrieval parity / turn",
+      "evidence_class": "same_harness_external",
+      "metric": "recall_all@50",
+      "direction": "higher",
+      "agent_memory": 0.859189,
+      "same_harness_frontier": {
+        "system": "Mem0 OSS 2.2.1 explicit",
+        "value": 0.894988
+      },
+      "published_frontier": null,
+      "adequacy_target": ">= same-harness frontier without currentness regression",
+      "gap": 0.035799,
+      "priority": "P1",
+      "posture": "competitive_deficit",
+      "primary_stage": "unclassified",
+      "secondary_stages": [
+        "ranking_fusion",
+        "candidate_generation_route_reachability"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/dashboard/current.json",
+        "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json"
+      ],
+      "owning_issue": 673,
+      "architecture_tranche": "#673 route fusion",
+      "remediation_hypothesis": "Root-cause #673 should determine whether the deep-recall gap comes from route reachability, candidate population, fusion/order, or another retrieval stage. The semantic route's current inability to affect scored ranks is relevant evidence, not yet a complete attribution.",
+      "negative_control_refs": [
+        "docs/plan-673-route-fusion.md",
+        "#671"
+      ],
+      "replay_requirements": [
+        "LongMemEval_S successor same-harness lane",
+        "currentness non-regression",
+        "no post-score tuning"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-07",
+      "closed_at": null,
+      "closure_evidence": [],
+      "remaining_gap": 0.035799
+    },
+    {
+      "deficit_id": "precisionmembench-active-precision-2026-10-07",
+      "benchmark_profile": "AMB PrecisionMemBench retrieval / single-turn",
+      "evidence_class": "same_harness_external",
+      "metric": "active_passes/43 and mean_precision",
+      "direction": "higher",
+      "agent_memory": {
+        "active_passes": "4/43",
+        "mean_precision": 0.18
+      },
+      "same_harness_frontier": {
+        "system": "Agent Memory",
+        "value": {
+          "active_passes": "4/43",
+          "mean_precision": 0.18
+        }
+      },
+      "published_frontier": null,
+      "adequacy_target": "Materially increase active passes and precision; same-harness leadership alone is insufficient",
+      "gap": "frontier but 39/43 active cases still fail",
+      "priority": "P1",
+      "posture": "frontier_but_inadequate",
+      "primary_stage": "unclassified",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/dashboard/current.json"
+      ],
+      "owning_issue": 719,
+      "architecture_tranche": null,
+      "remediation_hypothesis": "Root-cause attribution required before assigning a runtime tranche; do not assume retrieval-only ranking is the sole cause.",
+      "negative_control_refs": [],
+      "replay_requirements": [
+        "PrecisionMemBench same-harness replay",
+        "cross-benchmark retrieval/currentness regression replay"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-07",
+      "closed_at": null,
+      "closure_evidence": [],
+      "remaining_gap": "39/43 active cases not passing"
+    },
+    {
+      "deficit_id": "natural-proposition-known-recall-2026-10-07",
+      "benchmark_profile": "#594 Part R natural proposition semantics",
+      "evidence_class": "repository-owned conformance",
+      "metric": "known_recall",
+      "direction": "higher",
+      "agent_memory": 0.148148,
+      "same_harness_frontier": null,
+      "published_frontier": null,
+      "adequacy_target": "Materially improve known recall while preserving bounded known precision and abstention",
+      "gap": "0.851852 to perfect recall; adequacy threshold to be frozen by #596 plan",
+      "priority": "P2",
+      "posture": "implementation_defect",
+      "primary_stage": "write_interpretation_proposition_extraction",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+      ],
+      "owning_issue": 596,
+      "architecture_tranche": "#596 natural proposition recognition",
+      "remediation_hypothesis": "Reduce over-ambiguity on determinate natural propositions using general language semantics without benchmark-specific phrase rules.",
+      "negative_control_refs": [
+        "reference/fixtures/benchmarks/proposition-semantics/ACCEPTANCE.md"
+      ],
+      "replay_requirements": [
+        "immutable #594 accepted-gold replay",
+        "adversarial non-benchmark semantic tests"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-07",
+      "closed_at": null,
+      "closure_evidence": [],
+      "remaining_gap": "open"
+    }
+  ]
+}
