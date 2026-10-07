@@ -3622,3 +3622,55 @@ Macro-Level, Orphan and Evidence passes clean. Condition C1: the
 implementation ledger entry carries the measured check-run counts on the
 implementation PR's head and merge commit before `prereq-ci-cost` is
 resolved. Implementation may proceed under iteration 3.
+
+---
+
+### Entry #78: IMPLEMENTATION
+
+**Timestamp**: 2026-10-07T05:15:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-662-ci-cost-phases-2-4.md (iteration 3; Gate Tribunal PASS at Entry #77, condition C1)
+
+**Artifacts**: `data/github-actions-workflow-policy.json` (new; 85 entries), `scripts/sync_workflow_inventory.py` (new), `reference/tests/test_github_actions_workflow_policy.py` and `reference/tests/test_sync_workflow_inventory.py` (new), `reference/requirements.txt` (pyyaml 6.0.3), `.github/workflows/*.yml` (LD2: 41 push triggers restricted to `main`; LD3: nine full-suite steps deleted; LD4: 81 concurrency blocks, 71 conditional and 10 literal `false`; LD5: 77 timeouts), `data/github-actions-workflow-inventory.json` (mechanical fields re-synced; `postSnapshotChanges` entry), `docs/CONTRIBUTOR_ARCHITECTURE.md` §8a, `docs/GOVERNANCE_INDEX.md`; ported from PR #686: `scripts/validate_gauntlet_dogfood_equivalence.py` and `reference/tests/test_validate_gauntlet_dogfood_equivalence.py`
+**Content Hash** (SHA256 over `git write-tree` of the staged index `9988e5250750e2d0de1f5a71060f635a4952eedc`): `83ddcad0a5e95ef8092c72be1023ef5415ed9cace966ee2d26bcdafe51262f72`
+**Previous Hash**: `5b96d1947785e9d8ed0449440f47306f39ecb707821f59ad5e98a14fe23549ec`
+**Chain Hash**: `526cd907a9a94a7117bae5549fd46a760000bb95c3373363c8812b2512186bca`
+
+**Decision**: Phases 1–3 of the plan executed as locked (LD1–LD7), one
+commit per locked decision on PR #685. Phase 1 committed the policy
+emitted from the then-current YAML with the three invariants carried as
+an expected-failures list (41 push files, 77 untimed jobs, 81 workflows
+without concurrency, 9 extra full-suite jobs); Phase 2 emptied it, so
+invariants (i)–(iii) now hold unconditionally and the full-suite rule
+holds exactly once on the unconditional PR path (`validate-doctrine-
+evidence.yml`/`validate`, two passes) with the two path-filtered
+full-suite jobs of OQ5 declared. Inventory counts: missing explicit
+timeout 73 → 0, supersedable PR/push workflows without concurrency
+81 → 0; `pathScope` gains `"branches"` (40 records).
+
+Measured per condition C1, from the GitHub API. Before (PR #686 head
+70780dc, a two-file change on the pre-change YAML of `main`): 82
+workflow runs = 40 push + 41 pull_request + 1 CodeQL, 92 check runs.
+After (this PR's head 8159c35, which touches every workflow file and so
+matches every path filter): 81 workflow runs = 80 pull_request + 1
+CodeQL and **zero push runs**, 90 check runs, 85 pull_request jobs
+totalling 87.8 runner-minutes; the required check passed in 6.5 min
+against its 20-min timeout, and no job of LD5 exceeded a third of its
+value (highest ratio 0.28, `codegenome-multicapability-profile`
+7.0/25; `evolveai-multicapability-qualification` 2.6/10). The one
+failure on that head, `Gauntlet External Contestant Dogfood`, is not
+this change's: hosted runners now serve CPython 3.12.15 while the frozen
+golden sample records 3.12.14 and the comparator compared the field
+verbatim (also failed run 37543930072 on a dependabot branch); fixed in
+PR #686 (merged as 0d6c261: the replay treats the runner interpreter as
+execution-volatile, golden bytes untouched) and merged into this branch.
+The merge-commit count on `main` (expected 42 post-merge runs,
+unchanged) is recorded at the next entry, before `prereq-ci-cost` is
+resolved. Verified before this entry: the two new test modules pass;
+`sync --check` is clean; the full reference suite passes in CI on
+8159c35; `check_runtime_baseline_equivalence.py --candidate HEAD`
+prints `PASS`; governance-health OK. PR #665 is subsumed by LD4
+(its five files are inside the 71 conditional blocks).
