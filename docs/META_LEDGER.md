@@ -4872,3 +4872,43 @@ SHA256(content_hash + previous_hash) = 9ee249929c33ed122a166db913e7e32230943adba
 - **J2:** the freeze-PR dry-run transcript is committed with its sha256 as the evidence for the frozen wrapper strings.
 
 **Next:** authoring under G1, then the mechanical checks with replacement rounds, selection and variants, then the freeze PR (gated). #673 stays held.
+
+---
+
+### Entry #113: GATE TRIBUNAL — PASS (#732 gate plan amendment A1, attempt 2)
+
+**Timestamp**: 2026-10-07T21:00:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-732-generalization-gate.md (iteration 6, amendment A1) and its tooling at 5555504. Prompts: brief.md `4448a5e9…`, spawn.txt `bb9057ff…`, variants.txt `2e11b4e4…`, replace.txt `4741ab43…`.
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_732_gate_amendmentA1_attempt2.md) = 4a299352c3a1e5333d865ececa96141d6c539f4575e11d1496412508bc258dcd
+
+**Previous Hash**: `9ee249929c33ed122a166db913e7e32230943adba0cb2633f21176cb41463524`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 5be29cd9de870e16757f75558b7651d367201cca1680428a3c48766fbccc945a
+
+**Decision**: Amendment A1 passes.
+
+**Authoring attempt 1 (author732-1) is INVALID and discarded, per the plan's fail-closed rule (I3).**
+- **Transcript:** sha256 `8b682608…`.
+- **The one violation (record 26):** the author hit its output-token limit, and the harness injected an `isMeta` + `turnCompanion` continuation that the frozen rules did not classify.
+- **Variants:** they were also split across part files.
+- **Contamination:** none. No runtime was run, no outcome was seen and no case was edited. The tribunal reproduced the coordinator record byte for byte from the frozen prompt and the mechanical selection.
+
+**What A1 adds:**
+- **Rule (b)(2b):** that exact harness string on an origin-less, `turnCompanion` record is classified as a harness continuation.
+- **Split-file assembly:** an over-long array may be written as consecutive part files. The assembly fails closed with exit 2 when the base file is missing, a part follows a gap, or a part is not a JSON array. A selection with no variants reports every (base, type) pair missing.
+- **L1 allowlist:** unknown attachment types and `system` records carrying content fail closed. This closes the `task_reminder` channel, which carries the session task list.
+
+**Attempt 1 of the A1 gate** was a VETO on K1: the assembly failed open. That is fixed and verified by execution, with 32 tests passing. The checker reports PASS against v5.
+
+**Carried forward:**
+- **N1:** pre-flight before any author run. Clear the session task list and run no background tasks.
+- **N2 / L4:** the freeze PR commits the discarded-attempt replay evidence.
+
+**Next:** authoring attempt 2 (author732-2), with a fresh author and directory.
