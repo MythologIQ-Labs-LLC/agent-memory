@@ -3799,3 +3799,35 @@ record's `native_qualified` drift (finding D) is stated in §8 and left
 to the next successor. Verified before this entry: the two closeout
 test modules pass (12 tests); `validate_schemas.py` validates 19
 source-rights records; the equivalence checker prints `PASS`.
+
+---
+
+### Entry #83: IMPLEMENTATION — tranche 5 scope resolved
+
+**Timestamp**: 2026-10-07T06:55:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-672-tranche-5-harvests.md (Gate Tribunal PASS at Entry #81; implementation at Entry #82, PR #692 merged as 8325278)
+
+**Artifacts**: `.qor/roadmaps/north-star-best-in-class/events.jsonl` (node `fact-closeout-v2-record` added under scope `scope-tranche-5-harvests` and resolved by pointer to 8325278), this entry
+**Content Hash** (SHA256 over `git write-tree` of the staged index `9f1b12b5cec77f4319f7f8418c435eb9454985d1`): `7e96d6039f3deb8c23e284a15b840e5231dcf61840d3a23d64faf10b0b0a9ce5`
+**Previous Hash**: `4620501c4ccefd1e485ade5501de0aeb7ad99bf695d3ba8cd8a81a8d4900fbf8`
+**Chain Hash**: `2910769f04d6b6ee9d8092737f9c23f58f69830afb758ed325e5dc73152f2fe4`
+
+**Decision**: Tranche 5 closed. PR #692 merged green (50 check runs,
+50 success, 42 workflow runs on an ordinary PR head under the #662
+estate). The roadmap records the closeout as a resolved fact: every
+harvested mechanism is `shipped`, `tranche` or `declined` in
+`reference/fixtures/harvest-closeout-final-v2.json`, enforced by
+`reference/tests/test_harvest_closeout_v2.py`; the eight tranches are
+owned by #669, #644 (two), #673, #688, #689, #690 and #691. Resolved
+since Entry #60: `prereq-successor-baseline`, `prereq-lane-v3-ids`,
+`prereq-ci-cost`, `fact-harvest-dispositions`,
+`fact-closeout-v2-record`. The frontier's remaining open nodes are
+the five owner decisions (`decision-embedding-dependency`,
+`decision-temporal-posture`, `decision-capacity-split`,
+`decision-hindsight-provider`, `decision-eval-credential`), each
+requiring authority `repository-owner`; no runtime tranche starts
+without them.
