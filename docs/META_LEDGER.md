@@ -4396,3 +4396,63 @@ No runtime change.
 **Decision**: The `-v4` evidence lanes are frozen and executable, and no runtime file changed.
 - **Full suite:** 2,221 tests. The only failure is the pre-existing environmental `test_gauntlet_durability`.
 - **Next:** merge, then dispatch 12 runs on `main` (LongMemEval: 4 rows × 2 planes; AMB: 4 rows). Then import and accept per L1/L2/L9, then docs/67 Step B1/B2 for v4.
+
+---
+
+### Entry #99: GOVERNANCE — owner ruling: #671 "same source" = declared source_ref, actor default
+
+**Timestamp**: 2026-10-07T14:10:00-04:00
+**Phase**: GOVERNANCE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `.qor/roadmaps/north-star-best-in-class/events.jsonl` (seq 61-62)
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `3d88bd4c4ad769d94282e6c21929622fd345a316`): `3730a3b687ba24ed56eaf7801dc5c7341c5c70d331009e1aece98f2f06f59119`
+**Previous Hash**: `5bf73582fea68af99a7200ab15ef908cd0e5c9bc7ffa81485fa8c232d1409580`
+**Chain Hash**: `64e17bc276d751f8cce65ea93553148770904c2b73fb8da425ef807e6c3db47e`
+
+**Decision**: The repository owner answered the #671 same-source question on 2026-10-07: "Declared ref, actor default".
+- Same source means an equal caller-declared `source_ref`, defaulting to `actor:<actor_id>`.
+- Both facts must also share the tenant (`fact.group_id`) and purpose, and both must come through the direct caller-observation channel.
+- A mismatch refuses.
+
+No runtime file changed.
+
+---
+
+### Entry #100: GATE TRIBUNAL — PASS (#671 cross-fact currentness, Option A, attempt 7)
+
+**Timestamp**: 2026-10-07T14:25:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-671-cross-fact-currentness.md (iteration 7, 951f0a1; G12 version string corrected to 6.0.0)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_671_cross_fact.md) = 26a26dfcd89168b672ba901825c935fde178d1659619b2753e4680b4d8fa5154
+
+**Previous Hash**: `64e17bc276d751f8cce65ea93553148770904c2b73fb8da425ef807e6c3db47e`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 6ad12eb1889d7901685fbefe00f75ccb3b90b30ce1011f29dad9f09a38267f2f
+
+**Decision**: PASS at attempt 7, from an independent reviewer working in a fresh context with a full prototype. Attempts 1–6 were vetoed, and the reasons are listed in the audit report.
+
+**What the plan freezes.** Read-path currentness (Option A), under ranking policy 3.3.0 and Runtime Baseline v5:
+- an explicit-current query can limit the older fact (`limited_by_cross_fact_state_change`, basis `interpreted_cross_fact`) only through an open, unapplied `state_change_candidate`;
+- guards G1–G13 must all pass. They cover:
+  - the same actor, source and scope;
+  - liveness and dispute;
+  - the explicit-current profile;
+  - the assertive first-party structure (G12 6.0.0);
+  - declared clocks, which may refuse but never choose;
+- there is no mutation and no admission change.
+
+**Prototype evidence.**
+- MESA M4: 250/250 pairs become `currentness_mechanism` wins.
+- #584: unchanged.
+- #580: exactly the 12 pre-registered units and 3 label transitions.
+
+**Sequencing.** Implementation follows Runtime Baseline v4 publication.
