@@ -43,8 +43,8 @@ successor for #671. T-controller-2 changes the protected
 `reference/agentmem_ref/runtime/recall_control.py` blob beyond that declaration,
 so it cannot be merged under the v5 transition.
 
-PR #731's AGMI run `37683798859` proved this fail-closed boundary on its first
-2A head by reporting a declared-blob mismatch for `recall_control.py`.
+PR #731's AGMI run `37683798859` proved this fail-closed boundary by reporting
+a declared-blob mismatch for `recall_control.py`.
 
 Therefore:
 
