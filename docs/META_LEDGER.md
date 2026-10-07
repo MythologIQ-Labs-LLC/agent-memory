@@ -3870,3 +3870,41 @@ recorded, backlog reconciled); the third (the first runtime tranche
 merged with lane evidence) is still open. Superseded draft PR #587 was
 closed with a pointer to PR #634. No runtime file changed; Runtime
 Baseline v2 is untouched.
+
+---
+
+### Entry #85: GATE TRIBUNAL — PASS (#694 formal MESA freeze, iteration 3)
+
+**Timestamp**: 2026-10-07T04:45:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reference/run_agentmembench_formal.py` (runner sha256 recorded in the freeze), `reference/fixtures/benchmarks/agentmembench/mesa-formal-v1-freeze.json`, `docs/69-agentmembench-mesa-formal-baseline.md` at c261689
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_694_mesa_freeze.md) = 231ed6c598cd23883d1ceac427460b0491fc2bc76a0fdad22edd9d12dd176088
+
+**Previous Hash**: `94983a1e8caed1b420183a88fca11053ed575f24fced3f7adb53335fd7ea10a0`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 422445a8ce542337561a9a1ab22e51d0faf3140167e5e375eabc7b1328f435e8
+
+**Decision**: PASS at attempt 3 of 5. The reviewer was independent and
+worked in a fresh context. Attempt 1 (591e90f) was VETOed on three
+grounds. First, the M4 win attribution was wrong in both directions.
+Second, the Agent Memory runtime was neither bound nor enforced, and
+there was no deviations register. Third, the judge path could publish a
+deflated score. Attempt 2 (c2dd23d) was VETOed on two grounds. First,
+explicit-current relevance ties ordered by the time-neutral content
+digest were credited as recency. Second, the judge path verified neither
+the protocol nor the gold inputs. Attempt 3 (c261689) passed with no
+blocking ground: 31 tests pass; the argument, runner, upstream (pristine
+including ignored files) and Agent Memory (runtime tree
+771447a4…, policy multi-route-default 3.1.2, contract 1.4.0) checks
+pass; the tie and lexical probes were confirmed against the live runtime.
+Advisories recorded: the tie key is bound to policy 3.1.2; the served
+judge model name must be pinned when the judge is provisioned; the Agent
+Memory status check excludes ignored files (low risk). No MESA phase ran
+against Agent Memory during any attempt. Execution may proceed on the
+frozen identity.
