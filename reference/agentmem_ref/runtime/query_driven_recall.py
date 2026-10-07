@@ -30,7 +30,7 @@ import re
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .temporal_intent import resolve_intent
-from .temporal_order_constraints import ExplicitCurrentConstrainedRankingPolicy
+from .temporal_order_constraints import ExplicitCurrentCrossFactRankingPolicy
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
     EXACT_IDENTITY_ROUTE,
@@ -46,7 +46,7 @@ QUERY_ANCHOR_SOURCE = "query_lexical_anchor"
 EXPLICIT_ANCHOR_SOURCE = "explicit_logical_identity"
 
 # Pre-existing route precedence of this planner, now declared rather than implicit.
-QUERY_DRIVEN_RANKING_POLICY = ExplicitCurrentConstrainedRankingPolicy(
+QUERY_DRIVEN_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     policy_id="query-driven-relational",
     route_score_order=(LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
@@ -219,6 +219,8 @@ class DeterministicQueryDrivenRecallPlanner:
             substrate.get_fact,
             query=query,
             intent=intent,
+            # #671: guarded cross-fact currentness evidence (empty outside explicit-current intent)
+            cross_fact=self.adapter.cross_fact_applicability(admission.admitted, intent),
         )
         return MultiRouteRecallResult(
             query=query,

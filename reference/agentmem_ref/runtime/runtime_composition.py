@@ -37,7 +37,7 @@ from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
 from .temporal_intent import resolve_intent
-from .temporal_order_constraints import ExplicitCurrentConstrainedRankingPolicy
+from .temporal_order_constraints import ExplicitCurrentCrossFactRankingPolicy
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.projections import (
     CURRENT,
@@ -116,7 +116,7 @@ class MultiRouteRecallResult:
         return tuple(self.route_hits.get(candidate_ref, ()))
 
 
-MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentConstrainedRankingPolicy(
+MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     policy_id="multi-route-default",
     route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
     # #669: the semantic route widens candidates but never outranks relevance or
@@ -273,6 +273,8 @@ class DeterministicMultiRouteRecallPlanner:
             substrate.get_fact,
             query=query,
             intent=intent,
+            # #671: guarded cross-fact currentness evidence (empty outside explicit-current intent)
+            cross_fact=self.adapter.cross_fact_applicability(admission.admitted, intent),
         )
         return MultiRouteRecallResult(
             query=query,
@@ -435,7 +437,7 @@ class ConfiguredCompositionRuntime:
     def projection_id(self) -> str:
         return self._projection_id
 
-    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
+    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None, source_ref=None):
         """Commit canonical memory, then materialize the configured derived declaration.
 
         Forwards the qualified-evidence channel (ADR-037 step 4b-2, DoD 20).
@@ -443,7 +445,7 @@ class ConfiguredCompositionRuntime:
         mutation while making the remediation route unreachable.
         """
         result = self.durable_runtime.commit_proposal(
-            proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal
+            proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal, source_ref=source_ref
         )
         if result.committed and self._projection_component_enabled:
             if self.projections.store.get(self._projection_id) is None:

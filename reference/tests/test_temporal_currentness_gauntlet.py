@@ -100,6 +100,35 @@ VERSIONED_RANKING_TRANSITIONS = {
 }
 
 
+# Policy 3.3.0 (#671 Option A, Runtime Baseline v5) pre-registers the exact evaluator
+# units that explicit-current interpreted cross-fact limitation changes. Every other
+# unit must be unchanged by it.
+_CF_METRICS = ("current_applicability_accuracy", "self_description_currentness_rate", "stale_as_current_rate")
+VERSIONED_EVALUATOR_TRANSITIONS = {
+    **{("F23-has-moved-now-lives", probe, metric, "target"): ("honest_unknown", "pass")
+       for probe in ("current-explicit", "current-inferred") for metric in _CF_METRICS},
+    **{("F24-no-longer-works-at", "current-inferred", metric, "target"): ("honest_unknown", "pass")
+       for metric in _CF_METRICS[1:]},
+    **{("F28-used-to-prefer-now-prefer", "current-inferred", metric, "target"): ("honest_unknown", "pass")
+       for metric in _CF_METRICS[1:]},
+    **{("F28-used-to-prefer-now-prefer", "plain-now", metric, "target"): ("fail", "pass")
+       for metric in _CF_METRICS[1:]},
+}
+CROSS_FACT_LABEL = "limited_by_cross_fact_state_change"
+# Label-only digest changes: admitted order unchanged, one key relabelled.
+VERSIONED_LABEL_TRANSITIONS = {
+    ("F24-no-longer-works-at/current-inferred", "acme"): ("unknown_temporal_basis", CROSS_FACT_LABEL),
+    ("F28-used-to-prefer-now-prefer/current-inferred", "tea"): ("unknown_temporal_basis", CROSS_FACT_LABEL),
+    # Frozen at 1.0.0 intent, where plain ``now`` did not order temporally.
+    ("F28-used-to-prefer-now-prefer/plain-now", "tea"): ("not_evaluated", CROSS_FACT_LABEL),
+}
+# Reordering transitions: the limited source fact moves behind its successor.
+VERSIONED_CROSS_FACT_REORDERS = {
+    ("F23-has-moved-now-lives/current-explicit", "denver"),
+    ("F23-has-moved-now-lives/current-inferred", "denver"),
+}
+
+
 def _semantic_intent(intent: dict | None) -> dict | None:
     if intent is None:
         return None
@@ -361,6 +390,42 @@ class GauntletTests(unittest.TestCase):
             if frozen_digests.get(probe) != digest and not explained(probe)
         }
         self.assertEqual(unexplained_digest_changes, {})
+
+    def test_cross_fact_transitions_are_exactly_the_preregistered_671_set(self):
+        """#671 Option A changes only pre-registered units, labels and reorders.
+
+        Asserted explicitly rather than absorbed by ``improved_cases``: a cross-fact
+        label on any (case, probe, key) outside the tables fails.
+        """
+        frozen = json.loads(BASELINE.read_text(encoding="utf-8"))
+        frozen_units = tc.units(frozen["rows"])
+        live_units = tc.units(self.rows)
+        for key, transition in VERSIONED_EVALUATOR_TRANSITIONS.items():
+            self.assertEqual((frozen_units[key], live_units[key]), transition, key)
+        frozen_rows = {f"{row['case_id']}/{row['probe_id']}": row["observation"] for row in frozen["rows"]}
+        live_rows = {f"{row['case_id']}/{row['probe_id']}": row["observation"] for row in self.rows}
+        labelled = {
+            (probe, key)
+            for probe, observation in live_rows.items()
+            for key, record in observation["per_key"].items()
+            if record.get("applicability") == CROSS_FACT_LABEL
+        }
+        self.assertEqual(labelled, set(VERSIONED_LABEL_TRANSITIONS) | VERSIONED_CROSS_FACT_REORDERS)
+        for (probe, key), (old_label, new_label) in VERSIONED_LABEL_TRANSITIONS.items():
+            old, new = frozen_rows[probe], live_rows[probe]
+            self.assertEqual(old["per_key"][key]["applicability"], old_label, probe)
+            self.assertEqual(new["per_key"][key]["applicability"], new_label, probe)
+            self.assertEqual(new["admitted"], old["admitted"], probe)
+            self.assertEqual(new["candidates"], old["candidates"], probe)
+        for probe, key in VERSIONED_CROSS_FACT_REORDERS:
+            old, new = frozen_rows[probe], live_rows[probe]
+            self.assertEqual(new["candidates"], old["candidates"], probe)
+            self.assertEqual(sorted(new["admitted"]), sorted(old["admitted"]), probe)
+            self.assertEqual(new["admitted"][-1], key, probe)
+            self.assertNotEqual(old["admitted"][-1], key, probe)
+        for probe, observation in live_rows.items():
+            for record in observation["per_key"].values():
+                self.assertEqual(record["authority_effects"], ["none"], probe)
 
     def test_restart_reproduces_every_probe(self):
         self.assertEqual(tc.compute_metrics(self.rows)["restart_reproduction_rate"]["value"], 1.0)

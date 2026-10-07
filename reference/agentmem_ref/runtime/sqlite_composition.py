@@ -53,9 +53,10 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         """Runtime-owned lock serializing every operation on this handle (#530)."""
         return self.durable_runtime.base.serialization_lock
 
-    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None):
+    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None, source_ref=None):
         with self.serialization_lock:
-            return super().retain(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal)
+            return super().retain(proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal,
+                                  source_ref=source_ref)
 
     def correct(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None,
                 replacement_kind="error_correction"):

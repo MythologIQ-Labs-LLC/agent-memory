@@ -4541,3 +4541,34 @@ Step B2 binds the probe artifact.
 - **Checks:** the checker prints PASS against v4, and the validator binds v1–v4.
 
 #671 (Runtime Baseline v5) is next.
+
+---
+
+### Entry #104: IMPLEMENTATION — #671 read-path cross-fact currentness (Option A; ranking policy 3.3.0; Runtime Baseline v5 declared)
+
+**Timestamp**: 2026-10-07T16:05:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reference/agentmem_ref/runtime/cross_fact_currentness.py`, `adapter.py`, `temporal_order_constraints.py`, `ranking_policy.py`, the three planners, `api/surface.py`, `evaluation/temporal_currentness.py`, `reference/tests/test_cross_fact_currentness.py`, `reference/run_cross_fact_currentness_report.py`, `reports/runtime/cross-fact-currentness-671/`, `reports/runtime/baseline-v5-declaration.json`, the register, `docs/44`
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `51697341bb761b93fa34f554daae6bab3cffab2a`): `523122526bd36a7ca38002960a74663aa7038d007c6e68b800bd398a275ef44d`
+**Previous Hash**: `e46cd845a336990a62e62b87ac965ddd2abf1193d1251e1cac9835dfbd019fcc`
+**Chain Hash**: `ecb941811ce2e789b7086ceb90579b210abafa843d05ed67bda2fd04b17296c0`
+
+**Decision**: #671 Option A is implemented exactly as gated (docs/plan-671-cross-fact-currentness.md, Gate PASS attempt 7, Entry #100; same-source ruling Entry #99), on top of published Runtime Baseline v4. v4 is not amended.
+
+- **C1 write provenance.** Every fact committed through `_write` records immutable `write_provenance`. `remember(..., source_ref=)` defaults to `actor:<actor_id>`; it is not settable through `overrides`, because the closed envelope rejects it.
+- **C2 guards G1–G13.** `adapter.cross_fact_applicability` is a pure read. G12 is assertion filter `6.0.0`.
+- **C3 ranking policy 3.3.0.** `ExplicitCurrentCrossFactRankingPolicy` (`explicit_current_interpreted_cross_fact_v1`) labels `limited_by_cross_fact_state_change` / `interpreted_cross_fact`. The demotion goes through the existing `temporal_applicability_tier` via `_DEMOTED[CURRENT]`.
+- **C4 wiring.** All three planners share the 3.3.0 class.
+- **C5 non-mutation.** No write, application or lifecycle change; proposals stay open.
+- **C6 controls 1–17.** Covered on the facade, with every guard tested individually: 42 tests.
+- **C7 #584.** M1–M15 expectations are unchanged; only the identity pins moved.
+- **C7 #580.** `VERSIONED_EVALUATOR_TRANSITIONS` holds exactly the 12 pre-registered units; `VERSIONED_LABEL_TRANSITIONS` holds exactly the three label-only entries; the F23 reorders are asserted explicitly. Evaluator vocabulary moves 1.0.0 → 1.1.0; the fixture and gold are unchanged.
+- **Ordering-difference report** (on vs off): zero blockers. M4 limited 250/250; top-1 new 50 → 250, every change attributed to `cross_fact_limitation`. Controls behave as planned. The #550 pin is re-pinned under `decision-671-currentness-mechanism`.
+- **C8 v5 Step A.** `baseline-v5-declaration.json` (issue 671) declares 13 protected files and the delta `identity.ranking.active_policy_version` 3.2.0 → 3.3.0. Contract stays 1.5.0 and `pyproject_change` is null. Required evidence: the public Gauntlet probe, the `-v5` lanes, and `mesa-formal-v2`. The register declares the successor.
+- **Full suite:** 2280 tests. The only failure is the pre-existing environmental `test_gauntlet_durability`.
+
+The C9 evidence plan (`-v5` lanes with attribution fields; the `mesa-formal-v2` replay with its pre-registered prediction) is next, under its own gate. Option D is not implemented.

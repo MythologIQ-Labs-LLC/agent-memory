@@ -24,6 +24,7 @@ across every active planner.
 
 from __future__ import annotations
 
+from contextvars import ContextVar
 from dataclasses import dataclass
 import hashlib
 from typing import Any, Callable, Iterable, Mapping, Sequence
@@ -33,7 +34,8 @@ from .proposition_semantics import (
     STATE_CHANGE_CANDIDATE,
     WRITE_SEMANTICS_KEY,
 )
-from .ranking_policy import PostAdmissionRankingPolicy
+from .cross_fact_currentness import CROSS_FACT_BASIS, CROSS_FACT_LABEL
+from .ranking_policy import PostAdmissionRankingPolicy, temporal_applicability, typed_temporal_evidence
 from .temporal_intent import (
     CALLER_DECLARED,
     CURRENT,
@@ -44,8 +46,13 @@ from .temporal_intent import (
 
 UNKNOWN_TEMPORAL_BASIS = "unknown_temporal_basis"
 APPLICABLE = "applicable"
-POLICY_VERSION = "3.2.0"
+# The active multi-route policy version (identity.ranking.active_policy_version): 3.3.0 adds
+# #671 read-path cross-fact currentness. The 3.2.0 class keeps its own constant, so an
+# instance constructed without cross-fact evidence still reports 3.2.0.
+CONSTRAINED_POLICY_VERSION = "3.2.0"
+POLICY_VERSION = "3.3.0"
 UNKNOWN_BASIS_POLICY = "explicit_current_exclusive_pairwise_v1"
+CROSS_FACT_POLICY = "explicit_current_interpreted_cross_fact_v1"
 
 _ALLOWED_INTENT_BASES = frozenset({CALLER_DECLARED, QUERY_LANGUAGE_EXPLICIT})
 _EXCLUSIVE_RELATION_CLASSES = frozenset({STATE_CHANGE_CANDIDATE, CONFLICT})
@@ -297,7 +304,7 @@ class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
     Neither operation changes admission, truth, lifecycle state, or authority.
     """
 
-    version: str = POLICY_VERSION
+    version: str = CONSTRAINED_POLICY_VERSION
     unknown_basis_policy: str = UNKNOWN_BASIS_POLICY
 
     def stage_names(self) -> list[str]:
@@ -462,10 +469,82 @@ class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
         return final_order, evidence
 
 
+_CROSS_FACT_DECISIONS: ContextVar[dict[str, dict[str, Any]] | None] = ContextVar("cross_fact_decisions", default=None)
+
+
+@dataclass(frozen=True)
+class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPolicy):
+    """Policy 3.3.0 (#671 Option A): 3.2.0 plus read-path cross-fact currentness.
+
+    ``rank(..., cross_fact=...)`` takes the adapter's guarded evidence
+    (``GovernedMemoryAdapter.cross_fact_applicability``). A target T is limited only when its
+    own label is ``unknown_temporal_basis`` and at least one accepted source S is also unknown
+    (where S is applicable the #584 pairwise rule already governs). A limited T is labelled
+    ``limited_by_cross_fact_state_change`` (basis ``interpreted_cross_fact``), which the
+    existing ``temporal_applicability_tier`` stage demotes for current intent only. No stage
+    is added, admission is unchanged, and with no cross-fact evidence the ranking and every
+    evidence field equal 3.2.0's apart from the policy identity.
+    """
+
+    version: str = POLICY_VERSION
+    cross_fact_policy: str = CROSS_FACT_POLICY
+
+    def identity(self) -> dict[str, Any]:
+        identity = super().identity()
+        identity["cross_fact_policy"] = self.cross_fact_policy
+        return identity
+
+    def evidence(self, candidate_ref: str, hits: Sequence[Any], fact: Any, intent: TemporalIntent | None = None) -> dict[str, Any]:
+        record = super().evidence(candidate_ref, hits, fact, intent)
+        decision = (_CROSS_FACT_DECISIONS.get() or {}).get(candidate_ref)
+        if decision is not None:
+            if decision.get("limited"):
+                record["temporal_applicability"] = CROSS_FACT_LABEL
+                record["temporal_applicability_basis"] = CROSS_FACT_BASIS
+                record["cross_fact_limitation"] = [dict(item) for item in decision["limited"]]
+            else:
+                record["cross_fact_refusal_reason"] = decision["refusal"]
+        return record
+
+    def rank(
+        self,
+        admitted: Iterable[str],
+        hits_by_candidate: Mapping[str, Sequence[Any]],
+        fact_lookup: Callable[[str], Any],
+        query: str = "",
+        intent: TemporalIntent | None = None,
+        cross_fact: Mapping[str, Mapping[str, Any]] | None = None,
+    ) -> tuple[list[str], dict[str, dict[str, Any]]]:
+        intent = intent or TemporalIntent()
+        admitted = list(admitted)
+        decisions: dict[str, dict[str, Any]] = {}
+        if cross_fact:
+            labels = {ref: temporal_applicability(intent, typed_temporal_evidence(fact_lookup(ref))) for ref in admitted}
+            for target, record in cross_fact.items():
+                if target not in labels:
+                    continue
+                accepted = list(record.get("accepted") or ())
+                if not accepted:
+                    decisions[target] = {"refusal": record.get("refusal")}
+                elif labels[target] != UNKNOWN_TEMPORAL_BASIS:
+                    decisions[target] = {"refusal": "target_has_temporal_basis"}
+                else:
+                    # single pass: a source's own pre-cross-fact label decides its eligibility
+                    usable = [item for item in accepted if labels.get(item["source_fact_uuid"]) == UNKNOWN_TEMPORAL_BASIS]
+                    decisions[target] = {"limited": usable} if usable else {"refusal": "source_has_temporal_basis"}
+        token = _CROSS_FACT_DECISIONS.set(decisions)
+        try:
+            return super().rank(admitted, hits_by_candidate, fact_lookup, query=query, intent=intent)
+        finally:
+            _CROSS_FACT_DECISIONS.reset(token)
+
+
 __all__ = [
     "APPLICABLE",
     "ConstrainedOrderResult",
+    "CROSS_FACT_POLICY",
     "ExplicitCurrentConstrainedRankingPolicy",
+    "ExplicitCurrentCrossFactRankingPolicy",
     "POLICY_VERSION",
     "TemporalConstraintEdge",
     "UNKNOWN_BASIS_POLICY",
