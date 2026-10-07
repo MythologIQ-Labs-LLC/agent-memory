@@ -344,7 +344,7 @@ class AgentMemory:
         otherwise recall stays lexical and ``semantic_retrieval_posture()`` records why.
         ``required`` raises instead of degrading. The route only widens candidates:
         every candidate still crosses governed admission, and under ranking policy
-        3.2.0 similarity orders only after every relevance and temporal stage.
+        3.3.0 similarity orders only after every relevance and temporal stage.
 
         ``recall_control`` (contract 1.5.0, #644) is ``"off"`` (default) or ``"shadow"``.
         In shadow the deterministic System-One controller plans beside the unchanged
@@ -975,7 +975,7 @@ class AgentMemory:
             },
             "minimum_similarity": None if retriever is None else retriever.minimum_similarity,
             "candidate_limit": None if retriever is None else SEMANTIC_CANDIDATE_LIMIT,
-            "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.2.0)",
+            "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.3.0)",
             "store": None if store is None else store.posture(),
             "authority_effect": "none",
         }
