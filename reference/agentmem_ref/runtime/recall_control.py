@@ -349,10 +349,16 @@ class RecallRouteBudget:
     anchor_limit: int = 0
 
     def __post_init__(self) -> None:
-        if self.candidate_limit < 0:
-            raise ValueError("candidate_limit must be non-negative")
-        if self.anchor_limit < 0:
-            raise ValueError("anchor_limit must be non-negative")
+        if not self.route_id:
+            raise ValueError("route budget requires a route_id")
+        for name in ("candidate_limit", "anchor_limit"):
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise ValueError(f"{name} must be an integer")
+            if value < 0:
+                raise ValueError(f"{name} must be non-negative")
+        if self.anchor_limit > self.candidate_limit:
+            raise ValueError("anchor_limit cannot exceed candidate_limit")
 
 
 @dataclass(frozen=True)
@@ -554,6 +560,11 @@ class AdaptiveControlDecision:
         routes = [item.route_id for item in self.route_needs]
         if len(routes) != len(set(routes)):
             raise ValueError("adaptive control decision contains duplicate route needs")
+        budget_routes = [item.route_id for item in self.route_budgets]
+        if len(budget_routes) != len(set(budget_routes)):
+            raise ValueError("adaptive control decision contains duplicate route budgets")
+        if set(budget_routes) != set(routes):
+            raise ValueError("adaptive control decision route budgets must match route needs")
 
     def to_dict(self) -> dict[str, object]:
         return {
