@@ -60,6 +60,17 @@ SOURCES = (
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/lexical_overlap-turn-04bb286f90f1/evidence.json"),
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/mem0_explicit-session-04bb286f90f1/evidence.json"),
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/mem0_explicit-turn-04bb286f90f1/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-f5a79d230a31/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/bm25-f5a79d230a31/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/mem0-explicit-f5a79d230a31/evidence.json"),
+    # plan-644-lanes-v4 L4: the shadow recall-control rows are the control's system in another
+    # configuration; a scorecard holds one row per system, so they stay out.
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory-session-f5a79d230a31/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/agent_memory-turn-f5a79d230a31/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-session-f5a79d230a31/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-turn-f5a79d230a31/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-session-f5a79d230a31/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-turn-f5a79d230a31/evidence.json"),
 )
 NORMALIZED = ROOT / "reports" / "benchmarks" / "normalized"
 SCORECARDS = ROOT / "reports" / "benchmarks" / "scorecards"

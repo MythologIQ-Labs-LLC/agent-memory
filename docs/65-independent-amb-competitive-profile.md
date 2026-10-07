@@ -318,6 +318,26 @@ onnxruntime 1.22.1, tokenizers 0.22.2 and numpy 2.4.3, which conflict with the p
 semantic extra that the representation digest binds. The route is measured on
 LongMemEval_S only. The Hindsight row stays deferred.
 
+### Accepted rows (lane `amb-precisionmembench-retrieval-v4`, 2026-10-07)
+
+The fifth lane generation (#644, plan `docs/plan-644-lanes-v4.md`) re-executes the three `-v3` rows at a runtime in the declared transition to Runtime Baseline v4:
+- public contract 1.5.0, with opt-in shadow recall control;
+- bridge 0.3.0, whose `agent-memory` provider is unchanged.
+
+It adds one row, `agent-memory-shadow`, which opens the facade with `recall_control="shadow"`. The frozen runner keeps no provider raw response, so that row writes its controller telemetry to a sidecar, `recall-control.jsonl`. The importer joins the sidecar over the non-blank-query cases.
+
+Four dispatches ran on `main` `f5a79d230a315829b456b9eef1bf0e77df30a902`, each over the full 77-case selection, with checker state `TRANSITION` toward v4:
+- agent-memory, run 37661856397;
+- agent-memory-shadow, run 37661860248;
+- bm25, run 37661864946;
+- mem0-explicit, run 37661869364.
+
+**Results:**
+- **L1:** every `-v4` harness summary and every case's context and beliefs equal `-v3`.
+- **L2:** the shadow row equals the control exactly.
+- **L9:** the sidecar joined 73 records. 68 report `frontier_exhausted` and 5 report `no_evidence`; those 5 cases had zero candidates. All decisions are `complete` and carry no authority. The 4 blank-query cases execute no recall and are reported as `no_recall_executed`, never as zero.
+- **Scorecards:** the shadow row stays outside them, which hold one row per system.
+
 ### Normalized manifests
 
 `normalize_amb_precisionmembench()` (`reference/agentmem_ref/evaluation/normalize.py`)

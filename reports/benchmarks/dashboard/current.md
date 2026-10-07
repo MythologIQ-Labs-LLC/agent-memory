@@ -39,7 +39,7 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 
 ## Competitive view — same-harness systems
 
-**Status: six same-harness lanes accepted (#640, #669; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06, the `-v3` generation under the declared transition to Runtime Baseline v3 on 2026-10-07).**
+**Status: eight same-harness lanes accepted (#640, #669, #644; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06, the `-v3` generation under the declared transition to Runtime Baseline v3 and the `-v4` generation under the declared transition to Runtime Baseline v4 on 2026-10-07).**
 
 #601 now has executable independent-harness infrastructure:
 
@@ -101,6 +101,15 @@ Session and turn are separate planes (separate scorecards) and are never average
 | mem0_explicit | comparator | turn | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37543565695 | 0.499 | 0.673 | 0.895 | 0.596 | 0.611 | 0.486 |
 
 Reading the generation change: the LongMemEval control's `unmapped_admitted_count_total` is 0 on both planes and every scored metric equals the v1 control's at every k, with the return budget applied on 39 of 500 session questions and 500 of 500 turn questions (the ranked prefix at 50 is the full ranking's prefix, exactly as #670 predicted). The AMB control's active passes, total passes, mean precision and mean recall equal the v1 control's: the only difference between the generations, mapped-among-top-k instead of skip-then-count, changed no case on this 77-case split. Neither equality is authority; both are what the frozen harnesses measured. Same-plane rule, no overall score, no market claim; Hindsight remains deferred under all four lanes.
+
+**Accepted same-harness rows (fifth lane generation, `amb-precisionmembench-retrieval-v4` and `longmemeval-s-retrieval-parity-v4`, 2026-10-07).**
+- **Freeze.** Both lanes were frozen before any score (PR #716, plan `docs/plan-644-lanes-v4.md`). They re-execute every executed `-v3` row at a runtime in the declared transition to Runtime Baseline v4: public contract 1.5.0 and opt-in shadow recall control, with ranking policy 3.2.0 unchanged.
+- **Runs.** Twelve dispatches on `main` `f5a79d2`, all full selections. The checker recorded `TRANSITION` toward v4 on every row, and the importers bound it. The raw artifacts are under `reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/` and `reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/`.
+- **Default rows (L1).** With `recall_control` off, the control equals the `-v3` control on every scored metric. It also equals it on every LongMemEval question's ranked output, and on every AMB case's context and beliefs. The BM25, lexical-overlap and Mem0 rows equal `-v3` too, so every number in the `-v3` tables below holds for `-v4`.
+- **Shadow rows (L2).** Each lane adds `agent-memory` with `recall_control="shadow"`. It equals that lane's control exactly and stays outside the scorecards. Its controller telemetry is reported but carries no authority:
+  - LongMemEval: all 500 questions on each plane report `frontier_exhausted` with status `complete`, and lexical `would_truncate` on all 500, as stated before any score;
+  - AMB: 68 `frontier_exhausted` and 5 `no_evidence`, with the 4 blank-query cases reported as `no_recall_executed`.
+- **Mem0 environment finding.** The Mem0 turn row equals `-v3` on every metric. On 4 of 500 questions it reorders near-tied non-gold items within its own vector ranking, under the same package pins.
 
 **Accepted same-harness rows (fourth lane generation, `amb-precisionmembench-retrieval-v3` and `longmemeval-s-retrieval-parity-v3`, 2026-10-07).** Both lanes were frozen before any score (PR #709, plan `docs/plan-669-lanes-v3.md`) and re-execute every row of their `-v2` predecessors at a runtime in the declared transition to Runtime Baseline v3 (ranking policy 3.2.0: the semantic vector route is reachable and ordering-subordinate, default off). Eleven dispatches on `main` `04bb286` (full selections; the checker recorded `TRANSITION` toward v3 on every row, which the importers bound); raw artifacts under `reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/` and `reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/`, eleven complete `evidence_history` entries. LongMemEval_S adds one measured row, `agent_memory_semantic`: the same facade with `semantic_retrieval="required"` under the pinned local MiniLM ONNX representation (config digest `sha256:7447705…`). It is a variant of the control, not a separate system, so it stays outside the scorecards, which hold one row per system. Under AMB that row is deferred: the harness's own uv.lock conflicts with the pinned semantic numerics.
 

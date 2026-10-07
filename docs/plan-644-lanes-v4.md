@@ -266,3 +266,18 @@ Additional checks:
 ## Open Questions
 
 None blocking.
+
+## Results (accepted 2026-10-07, META_LEDGER Entry #101)
+
+All twelve dispatches ran on `main` `f5a79d2`, each a full selection with zero runtime failures. Every row recorded checker state TRANSITION toward v4 against declaration blob `ac1e498c`, and the importers bound it.
+
+**L1: holds.** Every scored metric equals `-v3` for the AMB control, BM25 and Mem0, and for the LongMemEval control, lexical overlap and Mem0 on both planes. So does every per-question `ranked_top` and `metrics` (LongMemEval) and every per-case context and belief field (AMB), with one environment finding:
+- the Mem0 turn row equals `-v3` on every aggregate and per-question metric;
+- 4 of its 500 questions (`d851d5ba`, `a1eacc2a`, `c6853660`, `eaca4986`) reorder near-tied non-gold items within Mem0's own vector ranking, under identical package pins;
+- this is a comparator tie-order effect, recorded and not blocking (L5).
+
+**L2: holds.** On both LongMemEval planes and on AMB, the shadow row equals that lane's control exactly.
+- **Telemetry, LongMemEval:** 500/500 questions per plane report `frontier_exhausted` (`search_space`) with status `complete`. `max_candidates` never appears. Lexical `would_truncate` occurs on 500/500 questions per plane, as stated before any score.
+- **Telemetry, AMB (L9 sidecar):** 73 records and 4 `no_recall_executed` cases. Of the records, 68 are `frontier_exhausted` and 5 `no_evidence`, and every `no_evidence` case had zero candidates. All 73 are `complete`, and lexical `would_truncate` occurs on 14.
+
+**L8:** `jh-14-telemetry` qualifies for `shipped`, because L2 held without a finding. The `harvest-closeout-final-v4` fixture is cut in the Runtime Baseline v4 publication PR.

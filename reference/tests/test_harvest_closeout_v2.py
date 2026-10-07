@@ -135,7 +135,7 @@ class HarvestCloseoutV2Tests(unittest.TestCase):
         self.assertEqual(harvest["issue"], self.fixture["issue"])
         # The manifest names the current closeout; v3 (#644 T-controller) superseded v2, which
         # stays published and must still hold (test_harvest_closeout_v3.py checks the successor).
-        self.assertEqual(harvest["artifact"], "reference/fixtures/harvest-closeout-final-v3.json")
+        self.assertEqual(harvest["artifact"], "reference/fixtures/harvest-closeout-final-v4.json")
 
     def test_blocked_evidence_fails(self) -> None:
         broken = copy.deepcopy(self.fixture)
