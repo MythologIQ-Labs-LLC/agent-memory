@@ -1,0 +1,141 @@
+{
+  "authority_effect": "none",
+  "blockers": {
+    "580_missing_versioned_transition_count": 0,
+    "580_unexpected_unit_transition_count": 0,
+    "580_unit_transition_count": 12,
+    "584_change_count": 0,
+    "unattributed_change_count": 0
+  },
+  "control": "same live tree with GovernedMemoryAdapter.cross_fact_applicability disabled",
+  "mesa_shaped_m4": {
+    "changed_pairs": 200,
+    "new_fact_top1_rate": {
+      "off": 0.2,
+      "on": 1
+    },
+    "pairs": 250,
+    "unattributed_changes": []
+  },
+  "note": "This summary binds the accepted C7 workflow artifact. The artifact is the full row-level report; this committed file preserves the acceptance-relevant values and exact transition set.",
+  "ranking_policy": "multi-route-default 3.3.0",
+  "report": "cross-fact-currentness-ordering-difference-671-accepted",
+  "schema_version": 1,
+  "source_report": {
+    "artifact_digest": "sha256:27bc36db454abd4fcfa396e305b32747cf7af4c5c3856dc045595db00e18448b",
+    "artifact_id": 11508061275,
+    "generator": "reference/run_cross_fact_currentness_report.py",
+    "head_sha": "78a49642c9d88dcaddb05ae67662fca8501309d8",
+    "report_version": "1.0.0",
+    "workflow_run": 37678354061
+  },
+  "temporal_580": {
+    "missing_versioned_transitions": {},
+    "order_change_count": 5,
+    "target_metrics": {
+      "current_applicability_accuracy": {
+        "off": {
+          "fail": 1,
+          "honest_unknown": 4,
+          "pass": 6,
+          "units": 11,
+          "value": 0.5455
+        },
+        "on": {
+          "fail": 1,
+          "honest_unknown": 2,
+          "pass": 8,
+          "units": 11,
+          "value": 0.7273
+        }
+      },
+      "self_description_currentness_rate": {
+        "off": {
+          "fail": 0,
+          "honest_unknown": 8,
+          "pass": 3,
+          "units": 11,
+          "value": 0.2727
+        },
+        "on": {
+          "fail": 0,
+          "honest_unknown": 3,
+          "pass": 8,
+          "units": 11,
+          "value": 0.7273
+        }
+      },
+      "stale_as_current_rate": {
+        "off": {
+          "fail": 1,
+          "honest_unknown": 6,
+          "pass": 3,
+          "units": 10,
+          "value": 0.1
+        },
+        "on": {
+          "fail": 1,
+          "honest_unknown": 1,
+          "pass": 8,
+          "units": 10,
+          "value": 0.1
+        }
+      }
+    },
+    "unexpected_unit_status_changes": {},
+    "unit_transition_count": 12,
+    "versioned_transitions": {
+      "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F23-has-moved-now-lives/current-inferred/current_applicability_accuracy/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F23-has-moved-now-lives/current-inferred/self_description_currentness_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F23-has-moved-now-lives/current-inferred/stale_as_current_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F24-no-longer-works-at/current-inferred/self_description_currentness_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F24-no-longer-works-at/current-inferred/stale_as_current_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F28-used-to-prefer-now-prefer/current-inferred/self_description_currentness_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F28-used-to-prefer-now-prefer/current-inferred/stale_as_current_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F28-used-to-prefer-now-prefer/plain-now/self_description_currentness_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      },
+      "F28-used-to-prefer-now-prefer/plain-now/stale_as_current_rate/target": {
+        "off": "honest_unknown",
+        "on": "pass"
+      }
+    }
+  },
+  "temporal_584": {
+    "change_count": 0
+  }
+}
