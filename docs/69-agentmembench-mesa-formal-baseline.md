@@ -193,6 +193,18 @@ The mechanism, read from the per-case evidence:
 
 This is #671's capability work. It must close the gap without making recency authoritative (newer != superseding) and without auto-applying proposals outside governance. Upstream M4 also rewards relevance accidents: Naive RAG scores 1.000 with no currentness machinery. So an M4 improvement only counts as currentness capability when the classifier attributes it to `currentness_mechanism`.
 
+### Determinism
+
+A second execution at the executed revision `7b041a7`, in a separate worktree on the same pristine upstream, reproduced the run exactly:
+
+- retrieval: every retrieved item's sha256;
+- M4: every case's outcome, primary stage, win basis and decisive stage;
+- conflict, isolation and deletion: every non-latency field;
+- scale: recall@3;
+- the M2 diagnostics.
+
+The raw report that the judge needs can therefore be regenerated deterministically. Regeneration must run at `7b041a7`. The runner refuses any later revision, because the evidence import added an integration record under `reference/agentmem_ref/evaluation`, which is inside the bound runtime tree.
+
 ### Classification summary (#694 completion terms)
 
 | Axis | Result class |
