@@ -641,7 +641,7 @@ The plan defined "the full suite runs once per trigger" as a policy invariant de
 
 | Status | Action Taken |
 |--------|--------------|
-| OPEN | Iteration 2 closed V1-V3 (token-level detection, 29 further jobs measured, PR-only cancellation) and was VETOed again at Entry #76 (V4): the complete-every-run set was written from memory instead of from the records the rule names; iteration 3 derives it by resolving every cited run id. |
+| FIXED | Iteration 2 closed V1-V3 (token-level detection, 29 further jobs measured, PR-only cancellation) and was VETOed again at Entry #76 (V4): the complete-every-run set was written from memory instead of from the records the rule names. Iteration 3 derived it by resolving every cited run id and PASSED at Entry #77. |
 
 #### Related Entries
 
@@ -691,7 +691,7 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | CHAIN_BREAK | 0 | - |
 
 **Total Failures Recorded**: 18
-**Failures Resolved**: 14 (Failure #17 fixed by the lane-workflow checkout fix; Failure #16 grounds closed by iteration 2; Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
+**Failures Resolved**: 15 (Failure #18 grounds closed by iterations 2-3; Failure #17 fixed by the lane-workflow checkout fix; Failure #16 grounds closed by iteration 2; Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
 ---
