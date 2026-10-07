@@ -10,6 +10,7 @@ from agentmem_ref.runtime.recall_control import (
     DeterministicAdaptiveRecallController,
     EvidenceAssessment,
     RecallOuterBudget,
+    RecallRouteBudget,
     RecallRouteNeed,
     adaptive_cache_key,
     allocate_route_budgets,
@@ -57,6 +58,39 @@ class AdaptiveRecallControlTests(unittest.TestCase):
                     RecallRouteNeed(LEXICAL_ROUTE, value)
         with self.assertRaises(ValueError):
             EvidenceAssessment(1.0, 0.0, 0.0, math.nan)
+
+
+    def test_route_budget_rejects_malformed_work_bounds(self) -> None:
+        for args in (
+            ("", 1, 0),
+            (LEXICAL_ROUTE, 1.5, 0),
+            (LEXICAL_ROUTE, 1, True),
+            (LEXICAL_ROUTE, 1, 2),
+        ):
+            with self.subTest(args=args):
+                with self.assertRaises(ValueError):
+                    RecallRouteBudget(*args)
+
+    def test_adaptive_decision_requires_one_budget_per_route_need(self) -> None:
+        need = RecallRouteNeed(LEXICAL_ROUTE, 1.0)
+        assessment = EvidenceAssessment(0.0, 1.0, 1.0, 0.0)
+        with self.assertRaisesRegex(ValueError, "match route needs"):
+            AdaptiveControlDecision(
+                route_needs=(need,),
+                route_budgets=(),
+                assessment=assessment,
+                stop_recommendation="continue_retrieval",
+            )
+        with self.assertRaisesRegex(ValueError, "duplicate route budgets"):
+            AdaptiveControlDecision(
+                route_needs=(need,),
+                route_budgets=(
+                    RecallRouteBudget(LEXICAL_ROUTE, 1),
+                    RecallRouteBudget(LEXICAL_ROUTE, 1),
+                ),
+                assessment=assessment,
+                stop_recommendation="continue_retrieval",
+            )
 
     def test_allocation_is_deterministic_across_need_input_order(self) -> None:
         needs = (
