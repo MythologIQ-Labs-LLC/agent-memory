@@ -340,6 +340,7 @@ def build_catalog(
     scorecards: Mapping[str, Any],
     normalized_runs: Mapping[str, Mapping[str, Any]],
     repository_head: str | None = None,
+    source_identity: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Build a deterministic, presentation-safe benchmark catalog.
 
@@ -352,7 +353,19 @@ def build_catalog(
     runs = [_run_projection(path, normalized_runs[path]) for path in sorted(normalized_runs)]
     published = _published_references(dashboard)
     material = _snapshot_material(dashboard, scorecards, normalized_runs)
-    snapshot_digest = _digest(material)
+    if source_identity is None:
+        source_identity = {
+            "dashboard": _digest(dashboard),
+            "scorecards": _digest(scorecards),
+            "normalized": _digest({path: normalized_runs[path] for path in sorted(normalized_runs)}),
+        }
+        snapshot_id = "semantic-evidence-v1:" + _digest(source_identity)
+    else:
+        required = {"dashboard", "scorecards", "normalized"}
+        if set(source_identity) != required:
+            raise ValueError(f"source_identity keys must be {sorted(required)}")
+        source_identity = {key: source_identity[key] for key in sorted(source_identity)}
+        snapshot_id = "git-evidence-v1:" + ":".join(source_identity[key] for key in ("dashboard", "scorecards", "normalized"))
     evidence_revision = dashboard.get("main_head")
     repository_is_newer = repository_head is not None and repository_head != evidence_revision
     catalog = {
@@ -360,17 +373,13 @@ def build_catalog(
         "authority_effect": "none",
         "aggregate_score": "not_defined",
         "snapshot": {
-            "id": f"sha256:{snapshot_digest}",
+            "id": snapshot_id,
             "as_of": dashboard.get("as_of"),
             "dashboard_id": dashboard.get("dashboard"),
             "evidence_revision": evidence_revision,
             "repository_head": repository_head,
             "repository_is_newer": repository_is_newer,
-            "source_digests": {
-                "dashboard": _digest(dashboard),
-                "scorecards": _digest(scorecards),
-                "normalized_runs": _digest({path: normalized_runs[path] for path in sorted(normalized_runs)}),
-            },
+            "source_identity": dict(source_identity),
         },
         "reading_rules": list(dashboard.get("reading_rules", [])),
         "comparison_classes": dict(dashboard.get("comparison_classes", {})),
