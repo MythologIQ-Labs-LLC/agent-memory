@@ -42,7 +42,7 @@ Benchmark deficits set priority and supply acceptance evidence. They do not defi
 
 ## Phase A - external baseline (active)
 
-- [ ] **#694 (P0)**: untouched formal AgentMemBench/MESA baseline (M1-M6 executed, or classified unsupported/blocked/not comparable), adapter frozen before any score is inspected, per-case M4 currentness failures stage-classified, results imported into the evidence model and the dashboard.
+- [x] **#694 (P0)**: untouched formal AgentMemBench/MESA baseline. Executed 2026-10-07 (`docs/69`); M2 judged recall blocked on the judge credential, tracked separately (M1-M6 executed, or classified unsupported/blocked/not comparable), adapter frozen before any score is inspected, per-case M4 currentness failures stage-classified, results imported into the evidence model and the dashboard.
 - [ ] **#574 / #600 / #601**: one coherent cross-system comparison programme with strict evidence classes (same-harness reproduced, published external reference, Agent Memory longitudinal, adapted/diagnostic, unsupported, blocked, not run, not comparable). Unavailable evidence is never zero. Retrieval metrics and end-to-end QA are never mixed. There is no universal memory score.
 - [ ] **#640**: Mem0 OSS and Hindsight same-harness. Hindsight runs under the frozen configuration from `decision-hindsight-provider`.
 
@@ -50,7 +50,7 @@ North Star comparison coverage:
 
 | Tier | Lane | State |
 | --- | --- | --- |
-| P0 | AgentMemBench / MESA (formal) | #694 in progress |
+| P0 | AgentMemBench / MESA (formal) | executed (#694); M2 judged recall blocked on credential |
 | P0 | LongMemEval_S same-harness retrieval | lanes v2 frozen (`longmemeval-s-retrieval-parity-v2`) |
 | P0 | LongMemEval same-harness end-to-end QA | blocked on a provisioned judge/reader credential (`decision-eval-credential` posture set) |
 | P0 | BEAM scale tiers | not run |
@@ -62,7 +62,15 @@ North Star comparison coverage:
 
 ## Phase B - complete runtime architecture (follows #694)
 
-Ordering is provisional until the frozen #694 baseline is analysed. Any change to the order is recorded here with its reason.
+The #694 formal baseline is frozen as the pre-major-runtime baseline (`docs/69`, Entry #86). Evidence-informed order, with reasons:
+
+1. **#671 currentness, first.** It is the only `below_standard` row measured on an exact protocol (MESA M4 0.200/0.800). The failure is fully localized: in 250/250 pairs, write-time interpretation, slot identity and the `state_change_candidate` proposal all succeed, and read-path currentness separates 0 pairs. The tranche must connect governed write-time change evidence to read-path currentness without making recency authoritative and without auto-applying proposals. It needs no new dependency.
+2. **#669 semantic vector route, second (may run in parallel).** The `decision-embedding-dependency` ruling unblocks it. The MESA M2 diagnostics (answer-substring 0.728 vs dense verbatim Naive RAG 0.794; source text 0.899 vs 0.971) and the LongMemEval lane gaps both point at missing semantic retrieval. Its M4 effect must be read through `win_basis`: a relevance accident is not currentness.
+3. **#673 ranking/fusion** after #669 (fusion needs a second scored route).
+4. **#644 controlled recall**, **#688 typed relations**, **#689 metabolism**, **#690 failure memory**, **#691 consumer package**, **#636 composition**. These are accepted architecture that MESA does not score, and they stay in scope.
+5. **#596 / #597** interpreter work. Not the M4 bottleneck (interpretation succeeded in 250/250 MESA pairs), but natural-data recognition (#580/#594) still needs it.
+
+Each material tranche replays the frozen MESA runner (successor freeze with only the `agent_memory` block changed) and the relevant lanes. It reports per-axis deltas and the M4 `win_basis` / `primary_stage` distributions.
 
 Retrieval and representation:
 

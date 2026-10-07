@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "dashboard": "agent-memory-canonical-current-v2",
-  "as_of": "2026-10-06",
+  "as_of": "2026-10-07",
   "authority_effect": "none",
   "aggregate_score": "not_defined",
   "main_head": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
@@ -817,5 +817,50 @@
       597
     ],
     "post_rc_unless_pulled_forward": 586
+  },
+  "formal_mesa_baseline": {
+    "issue": 694,
+    "doc": "docs/69-agentmembench-mesa-formal-baseline.md",
+    "report": "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_s2027_9170.json",
+    "upstream": "mazaiying/AgentMemBench@186c9a54edd47aae42d8b6990520f8e902b60303",
+    "agent_memory_revision": "7b041a741e80a29f6911794a4917b414c0dab032",
+    "runtime_tree": "771447a41b66cf5f141a1045d2e36a302d9a685c",
+    "role": "pre-major-runtime baseline",
+    "agent_memory": {
+      "M1_write_success": 1.0,
+      "M1_concurrency16_operation_success": 1.0,
+      "M2_recall_at_5_judged": "blocked",
+      "M2_answer_substring_hit_at_5_diagnostic": 0.728,
+      "M2_source_text_hit_at_5_diagnostic": 0.899,
+      "M3_recall_at_3_1000": 1.0,
+      "M4_new_fact_rate": 0.2,
+      "M4_staleness_rate": 0.8,
+      "M4_dual_version_rate": 0.0,
+      "M5_cross_user_leak_rate": 0.0,
+      "M5_audited_deletion_rate": 1.0,
+      "M6": "not_comparable"
+    },
+    "comparators": "reports/benchmarks/agentmembench-mesa-formal/upstream-published-reference.json",
+    "comparator_class": "published_external_reference_under_the_identical_frozen_protocol",
+    "m4_taxonomy": {
+      "state_change_detected": 250,
+      "currentness_separated": 0,
+      "decisive_stage_bm25": 250,
+      "win_basis": {
+        "lexical_ordering": 50
+      },
+      "primary_stage_of_stale": {
+        "temporal_applicability_currentness": 200
+      }
+    },
+    "deficits": [
+      "M4 currentness: write-time semantics not consumed by read-path currentness (#671)",
+      "M2 paraphrase retrieval: diagnostic gap vs verbatim dense retrieval (#669)"
+    ],
+    "evidence_gaps": [
+      "M2 judged recall (credential)",
+      "same-harness reproduction of the five comparators",
+      "latency in an equivalent environment"
+    ]
   }
 }

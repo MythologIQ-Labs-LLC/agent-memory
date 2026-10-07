@@ -3870,3 +3870,87 @@ recorded, backlog reconciled); the third (the first runtime tranche
 merged with lane evidence) is still open. Superseded draft PR #587 was
 closed with a pointer to PR #634. No runtime file changed; Runtime
 Baseline v2 is untouched.
+
+---
+
+### Entry #85: GATE TRIBUNAL — PASS (#694 formal MESA freeze, iteration 3)
+
+**Timestamp**: 2026-10-07T04:45:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reference/run_agentmembench_formal.py` (runner sha256 recorded in the freeze), `reference/fixtures/benchmarks/agentmembench/mesa-formal-v1-freeze.json`, `docs/69-agentmembench-mesa-formal-baseline.md` at c261689
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_694_mesa_freeze.md) = 231ed6c598cd23883d1ceac427460b0491fc2bc76a0fdad22edd9d12dd176088
+
+**Previous Hash**: `94983a1e8caed1b420183a88fca11053ed575f24fced3f7adb53335fd7ea10a0`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 422445a8ce542337561a9a1ab22e51d0faf3140167e5e375eabc7b1328f435e8
+
+**Decision**: PASS at attempt 3 of 5. The reviewer was independent and
+worked in a fresh context. Attempt 1 (591e90f) was VETOed on three
+grounds. First, the M4 win attribution was wrong in both directions.
+Second, the Agent Memory runtime was neither bound nor enforced, and
+there was no deviations register. Third, the judge path could publish a
+deflated score. Attempt 2 (c2dd23d) was VETOed on two grounds. First,
+explicit-current relevance ties ordered by the time-neutral content
+digest were credited as recency. Second, the judge path verified neither
+the protocol nor the gold inputs. Attempt 3 (c261689) passed with no
+blocking ground: 31 tests pass; the argument, runner, upstream (pristine
+including ignored files) and Agent Memory (runtime tree
+771447a4…, policy multi-route-default 3.1.2, contract 1.4.0) checks
+pass; the tie and lexical probes were confirmed against the live runtime.
+Advisories recorded: the tie key is bound to policy 3.1.2; the served
+judge model name must be pinned when the judge is provisioned; the Agent
+Memory status check excludes ignored files (low risk). No MESA phase ran
+against Agent Memory during any attempt. Execution may proceed on the
+frozen identity.
+
+---
+
+### Entry #86: IMPLEMENTATION — formal AgentMemBench/MESA baseline executed (#694)
+
+**Timestamp**: 2026-10-07T04:45:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Plan**: `docs/69-agentmembench-mesa-formal-baseline.md` (freeze; Gate Tribunal PASS at Entry #85)
+
+**Artifacts**: `reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_s2027_9170.json` (runner output sha256 `cbf48010…` before the import-time `input` annotation), `upstream-published-reference.json`, `upstream-reference-diagnostics.json`; `reference/agentmem_ref/evaluation/integrations/agent-memory-agentmembench-mesa-formal-v1.json`; regenerated scorecards; dashboard formal-MESA section; `reports/benchmarks/cross-system-posture.json` (#574 machine-readable backing, seeded); roadmap seq 52-54 (`fact-formal-mesa-baseline`, `scope-phase-a-formal-mesa`, `space-mesa-judged-recall`); docs/69 results
+**Content Hash** (SHA256 over `git write-tree` of the staged index `1a8fdb07e064d385e0acfe7aadf448f35f5f6f28`): `de8c11fc3708e7bc53d196ebaf28f0835fdd62b462011c1e0ff86c6ea773abe1`
+**Previous Hash**: `422445a8ce542337561a9a1ab22e51d0faf3140167e5e375eabc7b1328f435e8`
+**Chain Hash**: `8561cb066d44f8ff491df3f5bcabd10ae453c81f084737db76fe98b09a45f960`
+
+**Decision**: The formal baseline executed on the frozen identity:
+Agent Memory 7b041a7 with a clean, verified tree; runtime tree
+771447a4; policy 3.1.2; contract 1.4.0; upstream 186c9a5, pristine. The
+selection reproduces upstream's published selection.
+
+- M1: write success 1.000 and concurrency success 1.000 (exact);
+  latency is environment-bound.
+- M2: executed. Judged recall is **blocked** with no authorized judge.
+  The answer-substring diagnostic is 0.728, against 0.794 for Naive RAG,
+  the other verbatim store.
+- M3: recall@3 1.000 at both 100 and 1,000 facts.
+- M4: new-fact 0.200, staleness 0.800, dual 0.000 (exact).
+- M5: leak 0.000, audited deletion 1.000.
+- M6: not comparable.
+
+The M4 classifier reproduces the upstream rates exactly
+(`upstream_consistency: true`). Across all 250 pairs, the write-time
+interpreter resolved the same slot and attached a
+`state_change_candidate` proposal. The query intent was
+explicit-current. Read-path currentness separated 0 pairs, because the
+explicit-current constraint builds only applicable-over-unknown edges
+and both facts were `unknown_temporal_basis`. BM25 decided every pair,
+and all 50 new-fact wins are `lexical_ordering`.
+
+The deficit is therefore a runtime composition gap between write-time
+semantics and read-path currentness (#671), not interpretation,
+identity, candidate generation or admission. No runtime file changed,
+and Runtime Baseline v2 is untouched. This state is frozen as the
+pre-major-runtime baseline.
