@@ -8,7 +8,7 @@
 **owner rulings in force**: `decision-embedding-dependency` (pinned, versioned local provider behind the existing abstraction, shipped as an optional extra), `decision-capacity-split`, `decision-temporal-posture`
 **baseline**: Step A of docs/67 for Runtime Baseline **v3** (the register shows v2 published, `declared_successor: null`)
 **evidence that orders this tranche**: formal MESA (docs/69). M2 answer-substring 0.728 vs Naive RAG 0.794 and source text 0.899 vs 0.971, against dense verbatim retrieval. LongMemEval_S lane v2 turn-plane recall_all@50: 0.859 for Agent Memory vs 0.895 for Mem0 (dense MiniLM).
-**iteration**: 2 (attempt-1 VETO grounds 1-9 and advisories addressed below; see "Iteration 2 changes")
+**iteration**: 3 (attempt-1 VETO grounds 1-9 addressed in "Iteration 2 changes"; attempt-2 VETO grounds A2-1..A2-3 and advisories addressed in "Iteration 3 changes")
 
 ## Problem (verified on `main` 728d01d)
 
@@ -32,6 +32,46 @@
 | 7 tokenizer/numerics | **Fixed** (LD1/LD3). |
 | 8 CI never exercises the provider | **Fixed.** New workflow `semantic-representation.yml` (LD10). |
 | 9 store integrity | **Fixed** (LD3). |
+
+## Iteration 3 changes (gate attempt 2: VETO on three grounds)
+
+**A2-1 — BM25 statistics scope.**
+- `rank()` builds admitted-set BM25 statistics from every admitted fact (ranking_policy.py:524-534). Under 3.2.0 the statistics are computed only over admitted candidates with **at least one non-subordinate route hit**.
+- `identity()` reports `lexical_relevance_statistics_scope: "admitted_set_primary_routes"` when `subordinate_routes` is non-empty, and keeps `"admitted_set"` otherwise.
+- Test: adding semantic-only admitted candidates leaves every lexical candidate's `lexical_relevance_score` byte-identical, and the lexical order unchanged.
+
+**A2-2 — The MESA v1 freeze test.**
+- `reference/tests/test_agentmembench_formal.py:278-282` asserts that the live policy equals the v1 freeze. It is re-scoped to assert that the freeze's `agent_memory` block equals the **Runtime Baseline v2** values read from `reports/runtime/baseline-v2.json` (policy 3.1.2, contract 1.4.0). This is a deliberate historical-binding change.
+- From this PR on, the v1 freeze binds a historical runtime. `run_agentmembench_formal.py` refuses on the live tree by design, and replays run at `7b041a7` (docs/69 "Determinism").
+- The freeze file and the runner are not edited.
+
+**A2-3 — The exact re-pin list.**
+- Only these assertions change, and only version strings or stage names/positions:
+  - test_post_admission_ranking_policy.py:117, :120-128 (the stage slice positions shift by the subordinate stage), :133, :231;
+  - test_query_conditioned_applicability.py:268;
+  - test_temporal_order_constraints.py:65, :264;
+  - test_temporal_unknown_basis_ordering_contract.py:46, :62 (`test_all_active_recall_planners_share_policy_312_boundary` is renamed to `..._share_policy_boundary`, and its assertion becomes 3.2.0 for all three active planners);
+  - test_agentmembench_formal.py:278-282 (A2-2);
+  - docs/44:100 prose.
+- The #584 contract fixture's historical `ranking_policy` 3.1.1 dependency is unchanged.
+- **Re-pinning any other assertion, or any ordering assertion in these files, is a blocker.**
+
+**Advisories applied.**
+- Golden vectors: the CI check compares against pinned float32 vectors with `max |Δ| ≤ 1e-6`, plus identical top-k order on a fixed 12-sentence mini-corpus. A byte sha256 is recorded alongside as informational, with `platform.machine()` and the CPU flags.
+- `subordinate_routes=()` keeps `PostAdmissionRankingPolicy.identity()` byte-identical, so base 3.1.1 identities do not move. A test covers this.
+- The subordinate stage name is added to the `_pre_temporal_key` stop set (temporal_order_constraints.py:324-327).
+- The ordering-difference report explicitly covers two cases:
+  - an applicable semantic-only candidate outranking a demoted lexical candidate, because the tier stage comes first;
+  - #584 edges lifting a semantic-only winner.
+- Full manifest digests:
+  - `onnx/model.onnx` `826501e8460f6e1a83fa30a9b173f051100abda5559e1352efc0e3fe3136afc2`
+  - `tokenizer.json` `7fa9272f7ef1ebd1666bb3bfd9d4707660ff0076ca9d1671cd9a9c6e18e03331`
+  - `config.json` `953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41`
+  - `modules.json` `84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf`
+  - `1_Pooling/config.json` `4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23`
+  - `sentence_bert_config.json` `ec8e29d6dcb61b611b7d3fdd2982c4524e6ad985959fa7194eacfb655a8d0d51`
+- The extra pins `onnxruntime==1.30.0` and `tokenizers==0.23.2` with `numpy>=1.26,<3`. The exact `numpy==2.4.6` pin lives in `reference/requirements-semantic.txt` for CI. The numpy version is part of `config_digest`, so a different numpy is a different representation identity, not silent drift.
+- The declaration description states that `controlled-multi-route` and `query-driven-relational` report 3.2.0 with unchanged behaviour (class-level version).
 
 ## Locked Decisions
 
@@ -86,7 +126,7 @@
 - The doctor/posture schema is unchanged.
 
 **LD6 — Extra.**
-- `pyproject.toml` gains `semantic = ["onnxruntime==1.30.0", "tokenizers==0.23.2", "numpy==2.4.6"]`.
+- `pyproject.toml` gains `semantic = ["onnxruntime==1.30.0", "tokenizers==0.23.2", "numpy>=1.26,<3"]` (iteration 3; exact numpy pin in the CI constraints file).
 - Transitive dependencies of `onnxruntime` (`protobuf`, `flatbuffers`, `coloredlogs`, `sympy`, `packaging`) are pinned in the workflow constraints file `reference/requirements-semantic.txt`, not in the extra. The extra pins the three packages that determine numerics; the constraints file pins the CI environment.
 
 **LD7 — Ranking policy 3.2.0: the semantic route is ordering-subordinate.**
