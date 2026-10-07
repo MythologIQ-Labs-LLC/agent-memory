@@ -1,0 +1,369 @@
+{
+  "schema_version": 1,
+  "document": "PRD-002 Benchmark Evidence Console wireframe fixture registry",
+  "purpose": "Bind every canonical UI frame to real accepted evidence, real published-reference metadata, or an explicit missing/schema state. Canonical wireframes must not invent measured values.",
+  "canonical_dashboard": {
+    "path": "reports/benchmarks/dashboard/current.json",
+    "as_of": "2026-10-06",
+    "agent_memory_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd"
+  },
+  "allowed_seed_classes": [
+    "accepted_evidence",
+    "same_harness_evidence",
+    "published_reference",
+    "typed_missing_state",
+    "schema_only_placeholder"
+  ],
+  "frames": [
+    {
+      "id": "F00",
+      "name": "Application shell / current snapshot",
+      "seed_classes": [
+        "accepted_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "reports/benchmarks/dashboard/current.json",
+        "repository main revision"
+      ],
+      "notes": "Validates evidence snapshot identity separately from repository head."
+    },
+    {
+      "id": "F01",
+      "name": "Overview / North Star",
+      "seed_classes": [
+        "accepted_evidence",
+        "same_harness_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "reports/benchmarks/dashboard/current.json"
+      ],
+      "notes": "Uses LME retrieval, AgentMemBench currentness, #591 latency, governance, and explicit QA/BEAM missing states."
+    },
+    {
+      "id": "F02",
+      "name": "Capability posture inspector",
+      "seed_classes": [
+        "accepted_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "reports/benchmarks/dashboard/current.json"
+      ],
+      "notes": "Currentness seed uses new-fact/staleness/latest-first and self-validity evidence_gap."
+    },
+    {
+      "id": "F03",
+      "name": "Compare / valid same-harness set",
+      "seed_classes": [
+        "same_harness_evidence",
+        "published_reference"
+      ],
+      "sources": [
+        "reports/benchmarks/dashboard/current.json#same_harness",
+        "reports/benchmarks/dashboard/current.json#published_reference"
+      ],
+      "notes": "LongMemEval_S v2 session AM vs Mem0; published context isolated."
+    },
+    {
+      "id": "F04",
+      "name": "Compare / non-comparable selection",
+      "seed_classes": [
+        "same_harness_evidence",
+        "published_reference"
+      ],
+      "sources": [
+        "LongMemEval_S same-harness Agent Memory row",
+        "Hindsight v0.4.19 published reference"
+      ],
+      "notes": "Real mismatch: retrieval recall_all@5 vs end-to-end QA accuracy."
+    },
+    {
+      "id": "F05",
+      "name": "Benchmarks index",
+      "seed_classes": [
+        "accepted_evidence",
+        "same_harness_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "reports/benchmarks/dashboard/current.json"
+      ],
+      "notes": "LME, PrecisionMemBench, AgentMemBench currentness, BEAM not-run."
+    },
+    {
+      "id": "F06",
+      "name": "Benchmark profile detail",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "longmemeval-s-retrieval-parity-v2 session lane"
+      ],
+      "notes": "All metrics and identities are accepted v2 lane data."
+    },
+    {
+      "id": "F07",
+      "name": "Changes timeline",
+      "seed_classes": [
+        "accepted_evidence"
+      ],
+      "sources": [
+        "reports/benchmarks/dashboard/current.json#architecture_progression",
+        "reports/benchmarks/dashboard/current.json#tracks"
+      ],
+      "notes": "Uses actual pre-remediation and accepted later evidence."
+    },
+    {
+      "id": "F08",
+      "name": "Before/after revision comparison",
+      "seed_classes": [
+        "accepted_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "reports/benchmarks/dashboard/current.json#tracks"
+      ],
+      "notes": "Uses actual historical/current deltas and first_baseline/evidence_gap states."
+    },
+    {
+      "id": "F09",
+      "name": "Failure Explorer aggregate",
+      "seed_classes": [
+        "accepted_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "#594 Part R score/confusion evidence",
+        "reports/benchmarks/dashboard/current.json#semantic_interpretation"
+      ],
+      "notes": "Uses real proposition-recognition failure structure; MESA stage taxonomy remains explicitly unavailable until #694 evidence exists."
+    },
+    {
+      "id": "F10",
+      "name": "Failure case detail",
+      "seed_classes": [
+        "schema_only_placeholder"
+      ],
+      "sources": [
+        "future row-level index over accepted benchmark evidence"
+      ],
+      "notes": "No case id or text may be invented before the row-level catalog exposes it."
+    },
+    {
+      "id": "F11",
+      "name": "Coverage matrix",
+      "seed_classes": [
+        "accepted_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "reports/benchmarks/dashboard/current.json",
+        "docs/BENCHMARK_COVERAGE_ATLAS.md"
+      ],
+      "notes": "Measured/partial/not-run states only."
+    },
+    {
+      "id": "F12",
+      "name": "Coverage-gap inspector",
+      "seed_classes": [
+        "typed_missing_state",
+        "published_reference"
+      ],
+      "sources": [
+        "Agent Memory BEAM not-run state",
+        "Mem0/Cognee published BEAM references"
+      ],
+      "notes": "Shows missing AM scale evidence alongside clearly separated market context."
+    },
+    {
+      "id": "F13",
+      "name": "Evidence index / run browser",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "LongMemEval_S v2 lane",
+        "AMB PrecisionMemBench v2 lane"
+      ],
+      "notes": "Uses actual workflow ids and system revisions."
+    },
+    {
+      "id": "F14",
+      "name": "Run detail",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "longmemeval-s-retrieval-parity-v2 agent_memory session"
+      ],
+      "notes": "Single real accepted run."
+    },
+    {
+      "id": "F15",
+      "name": "Evidence / comparability inspector",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "LongMemEval_S v2 comparison identity"
+      ],
+      "notes": "Explains actual exact comparison."
+    },
+    {
+      "id": "F16",
+      "name": "Snapshot selector / history",
+      "seed_classes": [
+        "accepted_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "current dashboard snapshot",
+        "newer repository main"
+      ],
+      "notes": "Validates historical/current distinction."
+    },
+    {
+      "id": "F17",
+      "name": "Historical shared snapshot",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "LongMemEval_S v2 session comparison"
+      ],
+      "notes": "Uses revision-bound accepted evidence."
+    },
+    {
+      "id": "F18",
+      "name": "Share / export",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "LongMemEval_S v2 session comparison",
+        "future snapshot metadata schema"
+      ],
+      "notes": "Measured content is real; export control metadata is schema contract."
+    },
+    {
+      "id": "F19",
+      "name": "Methodology / metric glossary",
+      "seed_classes": [
+        "accepted_evidence"
+      ],
+      "sources": [
+        "docs/55-memory-evaluation-scorecards.md",
+        "LongMemEval lane reading_rule"
+      ],
+      "notes": "Uses actual metric names and definitions/reading rules."
+    },
+    {
+      "id": "F20",
+      "name": "No same-harness comparator",
+      "seed_classes": [
+        "typed_missing_state",
+        "published_reference"
+      ],
+      "sources": [
+        "Hindsight deferred in accepted lanes",
+        "Hindsight v0.4.19 published reference"
+      ],
+      "notes": "Real current evidence posture."
+    },
+    {
+      "id": "F21",
+      "name": "Blocked / unsupported evidence",
+      "seed_classes": [
+        "typed_missing_state"
+      ],
+      "sources": [
+        "current dashboard LLM-judged profile blocked state"
+      ],
+      "notes": "Must not render as zero."
+    },
+    {
+      "id": "F22",
+      "name": "Failed attempted run with previous accepted evidence",
+      "seed_classes": [
+        "accepted_evidence",
+        "schema_only_placeholder"
+      ],
+      "sources": [
+        "latest accepted LME session row",
+        "future failed-attempt evidence when present"
+      ],
+      "notes": "No synthetic failed score."
+    },
+    {
+      "id": "F23",
+      "name": "Catalog stale relative to repository",
+      "seed_classes": [
+        "accepted_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "dashboard main_head ca0f9a7",
+        "repository main newer than dashboard"
+      ],
+      "notes": "Real current stale-catalog condition."
+    },
+    {
+      "id": "F24",
+      "name": "Invalid or unavailable snapshot",
+      "seed_classes": [
+        "schema_only_placeholder"
+      ],
+      "sources": [
+        "snapshot routing contract"
+      ],
+      "notes": "No automatic substitution with current evidence."
+    },
+    {
+      "id": "R01",
+      "name": "Mobile Overview",
+      "seed_classes": [
+        "accepted_evidence",
+        "typed_missing_state"
+      ],
+      "sources": [
+        "same data as F01"
+      ],
+      "notes": "Responsive transformation only."
+    },
+    {
+      "id": "R02",
+      "name": "Mobile pair comparison",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "same data as F03"
+      ],
+      "notes": "Pair-only narrow-screen representation."
+    },
+    {
+      "id": "R03",
+      "name": "Mobile evidence/run detail",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "same data as F14"
+      ],
+      "notes": "Preserves run identity on narrow screens."
+    },
+    {
+      "id": "R04",
+      "name": "Tablet comparison matrix",
+      "seed_classes": [
+        "same_harness_evidence"
+      ],
+      "sources": [
+        "LongMemEval_S v2 session Agent Memory/Mem0/lexical"
+      ],
+      "notes": "Three-column medium-width validation."
+    }
+  ]
+}
