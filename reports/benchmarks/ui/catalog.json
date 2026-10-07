@@ -33471,13 +33471,13 @@
     "as_of": "2026-10-07",
     "dashboard_id": "agent-memory-canonical-current-v2",
     "evidence_revision": "ca0f9a748b3b7296c5a99c7e81cca35a570609fd",
-    "id": "git-evidence-v1:1f227b8667a4bae94b65cd262875ed95049f404b:f14b405374bcc41dd57b7a8fc4cf20c113715d61:36aea8f36e82f953efa23210fdb8e9636912cb66:bb0df8fa38141932075dd7f203c4e33fadef0897",
+    "id": "git-evidence-v1:cc76d8054f66d4369a347b48e07e7a3485af64a4:c56c911c183aec86c31176a1b8a2e6d43428f531:f918ec9cf57115af01c807f15c2090135f1c1583:bb0df8fa38141932075dd7f203c4e33fadef0897",
     "repository_is_newer": true,
     "source_identity": {
-      "dashboard": "1f227b8667a4bae94b65cd262875ed95049f404b",
+      "dashboard": "cc76d8054f66d4369a347b48e07e7a3485af64a4",
       "diagnostics": "bb0df8fa38141932075dd7f203c4e33fadef0897",
-      "normalized": "36aea8f36e82f953efa23210fdb8e9636912cb66",
-      "scorecards": "f14b405374bcc41dd57b7a8fc4cf20c113715d61"
+      "normalized": "f918ec9cf57115af01c807f15c2090135f1c1583",
+      "scorecards": "c56c911c183aec86c31176a1b8a2e6d43428f531"
     }
   },
   "systems": [
