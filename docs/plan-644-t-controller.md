@@ -6,7 +6,7 @@
 **owning issue**: #644, first Jev-Mem tranche (`docs/plan-672-tranche-5-harvests.md` LD5). This is #644's own "Phase 3 — shadow adaptive retrieval".
 **contracts**: `reference/fixtures/runtime/system-one-controller-contract-v1.json` (frozen); `reference/fixtures/harvest-closeout-final-v2.json` (published, never edited)
 **doctrine**: routing != recall admission; controller output != truth; stop recommendation != actual stop reason; stopping because sufficient != stopping because budget exhausted
-**iteration**: 3
+**iteration**: 3 (Gate Tribunal PASS at attempt 3, META_LEDGER Entry #94)
 
 Gate history:
 - **Attempt 1, VETO.** The controlled planner's candidate generation differs from the default planner's in three ways:
@@ -74,7 +74,7 @@ The redesign that iteration 2 introduced removes the controlled execution path f
 - Tested at planner level through an injected failing controller. The facade does not accept controller injection.
 
 **S5 — Public contract 1.5.0.**
-- The result envelope forbids unknown fields (`schemas/api-result-envelope.schema.json`, and the protected copy under `reference/agentmem_ref/_schemas/`).
+- The result envelope forbids unknown fields (`schemas/api-result-envelope.schema.json`; `reference/agentmem_ref/_schemas/` is gitignored build output).
 - Adding the optional `recall_control` field is a minor contract bump, following the precedent of 1.3.0 and 1.4.0.
 - Files:
   - the canonical `schemas/api-result-envelope.schema.json`, which adds the optional `recall_control` object;

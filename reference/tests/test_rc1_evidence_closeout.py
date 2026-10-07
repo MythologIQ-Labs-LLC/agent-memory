@@ -39,7 +39,7 @@ class RC1EvidenceCloseoutTests(unittest.TestCase):
         self.assertEqual(harvest["issue"], 672)
         self.assertEqual(harvest["supersedes_issue"], 470)
         self.assertEqual(harvest["status"], "complete_mechanism_closeout")
-        self.assertEqual(harvest["artifact"], "reference/fixtures/harvest-closeout-final-v2.json")
+        self.assertEqual(harvest["artifact"], "reference/fixtures/harvest-closeout-final-v3.json")
         self.assertFalse(harvest["external_dependency_required"])
         self.assertEqual(
             harvest["dependency_effect"],

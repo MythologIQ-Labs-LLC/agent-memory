@@ -609,6 +609,9 @@ class ControlledRecallPlanner:
                 query,
                 group_id=tenant,
                 candidate_limit=vector_budget.candidate_limit,
+                # The same domain-eligibility prefilter the lexical route receives
+                # (docs/44: "not optional per request"); #644 T-controller S6.
+                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
             )
             for vector_hit in vector_results:
                 hits.append(
@@ -818,3 +821,128 @@ class ControlledRecallPlanner:
             )
             added += 1
         return added
+
+
+# Shadow recall control (#644 T-controller, docs/plan-644-t-controller.md) ---------------
+#
+# The controller plans beside the unchanged default planner. Nothing here reaches candidate
+# generation, admission or ranking: the report describes what the controller *proposed* and
+# what the default planner *actually did*, in the frozen System-One controller contract's
+# vocabulary (reference/fixtures/runtime/system-one-controller-contract-v1.json).
+
+SYSTEM_ONE_CONTRACT_VERSION = "1.0.0"
+SHADOW_STOP_CLASSES = {
+    "no_evidence": "search_space",
+    "frontier_exhausted": "search_space",
+    "max_candidates": "resource",
+}
+
+
+def shadow_actual_stop(route_counts: dict[str, int], host_caps: dict[str, int], candidate_count: int) -> dict[str, object]:
+    """The default planner's actual stop, never the controller's (plan S3).
+
+    ``no_evidence`` when nothing was found; ``max_candidates`` when a host-capped route
+    returned exactly its cap (a bound that binds is a resource stop, conservatively also
+    when exactly ``cap`` facts qualified); ``frontier_exhausted`` otherwise. No quality
+    class is ever reported: nothing decided on quality.
+    """
+
+    if candidate_count == 0:
+        reason = "no_evidence"
+    elif any(route_counts.get(route, 0) >= cap for route, cap in host_caps.items()):
+        reason = "max_candidates"
+    else:
+        reason = "frontier_exhausted"
+    return {
+        "actual_stop_reason": reason,
+        "stop_class": SHADOW_STOP_CLASSES[reason],
+        "controller_recommendation": "abstain",
+        "budget_state": {"host_caps": dict(sorted(host_caps.items()))},
+    }
+
+
+def shadow_control_report(
+    *,
+    controller: RecallController,
+    query: str,
+    logical_memory_refs: tuple[str, ...],
+    available_routes: tuple[str, ...],
+    routes_executed: tuple[str, ...],
+    route_counts: dict[str, int],
+    host_caps: dict[str, int],
+    candidate_count: int,
+    policy_context: dict[str, str],
+    clock=None,
+) -> dict[str, object]:
+    """Plan once in shadow and report proposal beside execution (plan S2-S4).
+
+    A controller failure has no effect on recall: it is reported in ``decision_status``
+    and ``fallback_events`` only, and the stop record still describes the default planner.
+    """
+
+    import time
+
+    clock = clock or time.perf_counter
+    started = clock()
+    plan: RecallControlPlan | None = None
+    decision_status = "complete"
+    fallback_events: list[str] = []
+    try:
+        plan = controller.plan(query, logical_memory_refs=logical_memory_refs, available_routes=available_routes)
+        if not isinstance(plan, RecallControlPlan):
+            raise TypeError("controller returned a non-plan")
+        ControlledRecallPlanner._validate_plan(plan, available_routes)
+    except (RuntimeRecoveryError, ValueError, TypeError):
+        plan, decision_status = None, "invalid_response"
+        fallback_events.append("controller_failure_no_effect")
+    except Exception:  # noqa: BLE001 - any other controller fault is "unavailable", never a recall failure
+        plan, decision_status = None, "unavailable"
+        fallback_events.append("controller_failure_no_effect")
+    elapsed_ms = round((clock() - started) * 1000.0, 3)
+
+    identity = {
+        "backend_ref": getattr(plan, "controller_ref", None) or getattr(controller, "controller_ref", DETERMINISTIC_CONTROLLER_REF),
+        "backend_version": getattr(plan, "controller_version", None) or DETERMINISTIC_CONTROLLER_VERSION,
+        "model_or_policy_ref": "deterministic-rule-policy",
+    }
+    shadow_delta = {}
+    if plan is not None:
+        for route in available_routes:
+            budget = plan.budget_for(route)
+            actual = int(route_counts.get(route, 0))
+            shadow_delta[route] = {
+                "proposed_limit": budget.candidate_limit,
+                "actual_count": actual,
+                "would_truncate": actual > budget.candidate_limit,
+            }
+    return {
+        "mode": "shadow",
+        "controller_contract_version": SYSTEM_ONE_CONTRACT_VERSION,
+        "request": {
+            "operation": "retrieval_planning",
+            "available_capabilities": list(available_routes),
+            "budget": {"maximum_controller_decisions": 1, "deadline_ms": None},
+            "policy_context": dict(policy_context),
+        },
+        "response": {
+            "controller_identity": identity,
+            "operation": "retrieval_planning",
+            "decision_status": decision_status,
+            "evidence": {
+                "route_budgets": None if plan is None else plan.to_dict()["route_budgets"],
+                "stop_recommendation": "abstain",
+            },
+            "authority_effect": "none",
+        },
+        "usage": {
+            "controller_decisions_used": 1,
+            "cache_hits": 0,
+            "elapsed_ms": elapsed_ms,
+            "fallback_events": fallback_events,
+        },
+        "routes_executed": list(routes_executed),
+        "route_candidate_counts": {route: int(route_counts.get(route, 0)) for route in available_routes},
+        "shadow_delta": shadow_delta,
+        "actual_stop": shadow_actual_stop(route_counts, host_caps, candidate_count),
+        "authority_effect": "none",
+    }
