@@ -6,11 +6,12 @@
 **parent plan**: docs/plan-669-semantic-vector-route.md (Gate PASS at Entry #87; Step A merged as `aede8fd`; `main` prints TRANSITION to v3)
 **precedent**: docs/plan-640-lanes-v2-return-budget.md (LD1, LD5, LD6, LD7)
 **owner rulings in force**: `decision-temporal-posture`, `decision-embedding-dependency`
-**iteration**: 3
+**iteration**: 4
 
 Gate history:
 - Attempt 1 VETO: the AMB lock conflict; no AMB evidence channel for the mode; representation identity under-bound; the gate structurally decided; an incomplete re-pin list.
 - Attempt 2 VETO: no distinct identity for the D2 row; schema-invalid `role` and `status`; superseded text left in place.
+- Attempt 3 VETO: D5 was not exhaustive (row statuses, the control's `display_name`, `not_comparable_to[0]`).
 
 This iteration is a single normative list.
 
@@ -41,10 +42,16 @@ That gate therefore transfers to #673 (D4).
 **D2 — A measured semantic row on LongMemEval only.**
 - Row `row_id` / `provider_key` `agent_memory_semantic`, `role: "comparator"`.
 - `notes`: "measured semantic route row (#669 D2); not the v3 publication control; evidence for #673".
+- `source`, `adapter`, `inference_posture`, `credentials`, `capability_posture` and `dependency_pins` are copied from the control row. `dependency_pins` adds `reference/requirements-semantic.txt`.
 - Its `configuration` is the control's plus:
   - `semantic_retrieval: "required"`;
   - `semantic_representation`: `representation_ref` `sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367`, `representation_version` `onnx-mean-l2-f32/1.0.0`, `config_digest` `sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee`, `dimensions` 384, `minimum_similarity` 0.30, `candidate_limit` 16.
-- The importer requires the run's recorded `semantic_retrieval_posture()` to equal `semantic_representation` field for field.
+- The runner records `execution.agent_memory_semantic_posture`, a flattening of `semantic_retrieval_posture()`:
+  - `status` and `mode` from the top level;
+  - `representation_ref`, `representation_version`, `config_digest` and `dimensions` from `representation`;
+  - `minimum_similarity` and `candidate_limit` from the top level.
+- The importer requires `status == "enabled"` and `mode == "required"`, and requires the other six fields to equal `semantic_representation` field for field.
+- A report from the control row must carry no such posture.
 - **Pre-registered prediction (frozen before any score):**
   - turn recall_all@50 and session recall_all@5/@10 equal D1, or differ only by tie reordering;
   - session recall_all@30/@50 may rise, because semantic-only candidates can reach ranks 34–50 on the session plane;
@@ -58,6 +65,8 @@ That gate therefore transfers to #673 (D4).
 - AMB installs under its own uv.lock constraints (onnxruntime 1.22.1, tokenizers 0.22.2, numpy 2.4.3, protobuf 5.29.6, packaging 24.2). These conflict with the pinned `semantic` numerics.
 - The AMB `-v3` lane therefore carries the rows `agent-memory` (D1 control), `bm25` and `mem0-explicit`, each re-executed.
 - It records `agent_memory_semantic` with `status: "deferred"` and a `status_reason` naming the lock conflict.
+- It mirrors the Hindsight deferred row: `source`/`adapter` declare the intended identity, with `configuration` and `capability_posture` as `{}`.
+- The AMB lane's `freeze_rationale` names the deferred row, so the row that is not run is visible at freeze.
 - The AMB bridge stays at 0.2.0, unchanged; no bridge blob is re-pinned.
 
 **D4 — The #669 gate disposition.**
@@ -67,6 +76,9 @@ That gate therefore transfers to #673 (D4).
 
 **D5 — Lane-file differences from `-v2`, exhaustive.** The lane test asserts field-for-field equality with `-v2` except exactly these:
 - `lane_id`, `status: "frozen"`, `frozen_on`, `owning_issue: 669`, `description`, `freeze_rationale`, `comparability.notes`;
+- each row's `status` becomes `frozen` and its `status_reason` is removed; a `deferred` row (Hindsight) keeps its status and reason unchanged;
+- the control row's `display_name` names the declared transition to Runtime Baseline v3;
+- `comparability.not_comparable_to[0]` describes the `-v2` relation. Same-system rows are re-executed, never copied forward. The control is held to D1 equality, so the entry says it is not a comparability claim;
 - LongMemEval only:
   - `harness.source_blobs["reference/run_longmemeval.py"]`;
   - `evaluator.scorer`;
@@ -76,7 +88,12 @@ That gate therefore transfers to #673 (D4).
   - `execution.environment` notes the semantic install and model fetch for D2 only;
   - `execution_identity_requirements` gains the D2 posture;
 - AMB only: the D3 deferred row;
-- both lanes: `configuration.runtime_baseline_posture` pins the v3 declaration blob and its TRANSITION line;
+- both lanes: the control's `configuration.runtime_baseline_posture` object is replaced as a whole:
+  - `predecessor` becomes v2;
+  - `declared_successor` becomes v3;
+  - `declaration` becomes `reports/runtime/baseline-v3-declaration.json`;
+  - `declaration_blob` becomes that file's blob;
+  - `checker_state_required` is unchanged;
 - lexical and bm25 rows: `source.revision` follows the executing-revision rule.
 
 Additional acceptance checks:
