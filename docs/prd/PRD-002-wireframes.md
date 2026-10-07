@@ -1312,4 +1312,6 @@ PRD-002 becomes **wireframe-complete** when:
 - every frame identifies the catalog fields it requires or clearly delegates them to its parent frame contract;
 - #699's high-fidelity prototype can be evaluated against this inventory without inventing page structure.
 
+The machine-readable frame-to-evidence binding is maintained at `docs/prd/PRD-002-wireframe-fixtures.json`. #699 should use that registry to verify that no prototype frame is validated with invented benchmark data.
+
 This document is the structural source of truth for the future UI until a later accepted design artifact supersedes it.
