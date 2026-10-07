@@ -6,7 +6,7 @@
 **parent plan**: docs/plan-669-semantic-vector-route.md (Gate PASS at Entry #87; Step A merged as `aede8fd`; `main` prints TRANSITION to v3)
 **precedent**: docs/plan-640-lanes-v2-return-budget.md (LD1, LD5, LD6, LD7)
 **owner rulings in force**: `decision-temporal-posture` (lanes receive only question and item text), `decision-embedding-dependency`
-**iteration**: 1
+**iteration**: 2 (attempt-1 VETO grounds 1-5 and advisories addressed; see "Iteration 2 design" — supersedes L1-L6 where they conflict)
 
 ## Purpose
 
@@ -16,7 +16,73 @@
 - the AMB active passes must **not regress**;
 - in both lanes, the Mem0 row is re-run for parity.
 
-These lanes are frozen before any score. The Agent Memory control runs with `semantic_retrieval="required"`, the configuration whose effect v3 claims.
+These lanes are frozen before any score. Iteration 2 (below) supersedes iteration 1's control configuration.
+
+## Iteration 2 design (gate attempt 1: VETO on five grounds)
+
+Attempt 1 established a structural fact that changes the design (ground 4). Under policy 3.2.0, a candidate found only by the semantic route ranks after every lexical candidate. The v2 LongMemEval control admits at least 113 lexical candidates per turn question (median 211) and at least 33 per session question. With the scored k of 50 and 5, a semantic-only candidate therefore **cannot** enter the scored prefix, so the #669 gate ("turn recall_all@50 and session recall_all@5 must move") is unattainable under the subordinate policy by construction. On AMB the route would mostly fill empty or short responses. Those effects belong to fusion (#673), not to this tranche.
+
+**D1 — The control rows run the shipped default.**
+- In both `-v3` lanes the `agent_memory` control runs the v3 runtime with the facade default `semantic_retrieval: "off"`.
+- Its configuration is identical to the `-v2` control (LongMemEval budget 50; AMB case budget).
+- **Acceptance check:** every scored metric equals the accepted `-v2` control row's exactly. This makes "3.2.0 with the route off orders as 3.1.2" an observed fact on both external benchmarks (the attempt-1 advisory). Any difference is a blocker for v3 publication.
+
+**D2 — A measured semantic row on LongMemEval only: `agent_memory_semantic`.**
+- `semantic_retrieval: "required"`, otherwise the control's configuration.
+- `configuration.semantic_representation` (the control row's open configuration object, ground 3) pins `representation_ref`, `representation_version`, `config_digest` `sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee`, `dimensions` 384, `minimum_similarity` 0.30 and `candidate_limit` 16.
+- The importer requires the recorded `semantic_retrieval_posture()` to equal this block field for field.
+- **Pre-registered prediction (frozen before any score):**
+  - turn recall_all@50 and session recall_all@5 equal the D1 control, or differ only by tie reordering;
+  - "move" means a strict increase on the same 419 scored questions.
+- **Route diagnostics** recorded per question:
+  - the semantic-only admitted count;
+  - gold items found only by the semantic route;
+  - each gold item's rank in the full admitted list.
+
+  These diagnostics are the evidence #673 needs.
+- The row is evidence for the route. It is not the v3 publication's control.
+
+**D3 — No AMB semantic row in v3.**
+- AMB installs under its own lock (onnxruntime 1.22.1, tokenizers 0.22.2, numpy 2.4.3, protobuf 5.29.6, packaging 24.2), which conflicts with the pinned `semantic` numerics (ground 1).
+- Lifting those pins would change the representation identity and AMB's environment.
+- The AMB `-v3` lane therefore runs `agent-memory` (D1 control, off), `bm25` and `mem0-explicit` (the frozen row key). It records `agent_memory_semantic` as `not_run`, with the lock conflict stated.
+- Since the bridge is unchanged, ground 2 (no AMB evidence channel for the mode) does not arise. The bridge stays at 0.2.0, and the AMB `-v3` lane re-pins nothing on the bridge.
+
+**D4 — The #669 gate disposition, pre-registered.**
+- The "must move" gate is recorded as **not attainable under policy 3.2.0** and transfers to #673 (fusion), together with D2's diagnostics and the default-on question.
+- #669 closes when v3 is published (Step B1/B2) with D1 accepted and D2 measured.
+- An unmet gate is never answered by re-freezing or re-configuring this lane.
+
+**D5 — The complete re-pin list (ground 5).** In each `-v3` lane file relative to `-v2`:
+- `lane_id`, `status: frozen`, `frozen_on`, `owning_issue: 669`, `description`, `freeze_rationale` and `not_comparable_to`;
+- `harness.source_blobs` for the runner (LongMemEval; the AMB bridge blob is unchanged);
+- `evaluator.scorer` (it names the runner blob);
+- `adapter.revision_rule` strings that name runner blobs;
+- the lexical/baseline rows' `source.revision`, to the executing revision rule;
+- `budget.forbidden_overrides`, which gains "`--agent-memory-semantic-retrieval` only on `agent_memory_semantic`; `auto` refused";
+- `execution.environment` (the semantic install and model fetch for the D2 row only);
+- `execution_identity_requirements`, which gains the semantic posture for D2;
+- `configuration.runtime_baseline_posture`, pinning the v3 declaration blob and its TRANSITION line.
+
+The v2 rule "control scored metrics equal the previous lane's" is kept for D1 (now relative to `-v2`) and does not apply to D2.
+
+Added checks:
+- the lexical/bm25 rows must equal `-v2` exactly (the ranker is unchanged);
+- the Mem0 rows are expected to equal `-v2` (same pins), and any difference is recorded as an environment finding.
+
+The test is field-for-field equality to `-v2` except exactly the D5 list.
+
+**D6 — Runner, importer and workflow details.**
+- `run_longmemeval.py`:
+  - refuses `--agent-memory-semantic-retrieval` for any backend other than `agent_memory`, and refuses `auto`;
+  - emits D2's per-question route diagnostics only when the mode is `required`.
+- The `longmemeval-competitive.yml` backend choice gains `agent_memory_semantic`, which maps to `--backend agent_memory --agent-memory-semantic-retrieval required`. Only that row installs `reference/requirements-semantic.txt`, restores and fetches the pinned model, and sets `AGENT_MEMORY_REPRESENTATION_DIR`.
+- Both workflows' `lane_id` default becomes `-v3`.
+- Timeout: the measured cost is about 175 ms per 512-token embed. The session plane, about 23.9k sessions embedded once into the per-question derived store, could take about 70 minutes, so the LongMemEval job timeout is checked against the policy file and raised together with the policy and inventory if it is below 180 minutes.
+- **Re-dispatch:** a row may be re-dispatched only after an infrastructure failure that occurred before any score was produced, with identical inputs (plan-640 LD7).
+- The importer's `RUNNER_CONFIGURATION_DEFAULTS` gains `semantic_retrieval: off`.
+- The CLI lane-list test covers six lanes: four accepted (v1, v2) and two frozen (v3).
+- Docs/67 Step B1 also requires the public gauntlet probe, which is out of this plan's scope and done at B1.
 
 ## Locked Decisions
 
