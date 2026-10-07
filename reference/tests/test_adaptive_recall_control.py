@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 import math
+import tempfile
 import unittest
 
+from agentmem_ref import AgentMemory
 from agentmem_ref.runtime.recall_control import (
     ADAPTIVE_ABLATION_PROFILES,
     AdaptiveControlDecision,
@@ -295,6 +298,51 @@ class AdaptiveRecallControlTests(unittest.TestCase):
         other_scope["isolation_namespace"] = "tenant:b/project:a"
         self.assertIsNone(cache.get(**other_scope))
 
+
+    def test_cache_hits_do_not_mutate_canonical_memory(self) -> None:
+        with AgentMemory.open(tempfile.mkdtemp(), tenant="tenant:cache-proof") as memory:
+            committed = memory.remember(
+                "memory:cache-proof",
+                "The pottery class is on Thursday.",
+            )
+            substrate = memory.runtime.adapter.checkpoint_substrate()
+            before_facts = tuple(asdict(fact) for fact in substrate.all_facts())
+            before_state = memory.runtime.adapter.state_version("memory:cache-proof")
+
+            decision = DeterministicAdaptiveRecallController().decide(
+                "When is the pottery class?",
+                logical_memory_refs=("memory:cache-proof",),
+                available_routes=(LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE),
+                outer_budget=RecallOuterBudget(maximum_candidates=8),
+                host_caps={LEXICAL_ROUTE: 32, EXACT_IDENTITY_ROUTE: 16},
+                routes_remaining=2,
+            )
+            identity = {
+                "operation": "retrieval_planning",
+                "canonical_request_state": {
+                    "query": "When is the pottery class?",
+                    "logical_memory_refs": ["memory:cache-proof"],
+                },
+                "controller_contract_version": "1.0.0",
+                "backend_ref": decision.controller_ref,
+                "backend_version": decision.controller_version,
+                "model_or_policy_ref": "deterministic-adaptive-rule-policy",
+                "host_policy_version": "3.3.0",
+                "isolation_namespace": "tenant:cache-proof/default",
+            }
+            cache = ControllerDecisionCache()
+            cache.put(decision, **identity)
+            self.assertIs(cache.get(**identity), decision)
+
+            after_facts = tuple(asdict(fact) for fact in substrate.all_facts())
+            after_state = memory.runtime.adapter.state_version("memory:cache-proof")
+            self.assertEqual(after_facts, before_facts)
+            self.assertEqual(after_state, before_state)
+            self.assertEqual(
+                memory.runtime.adapter.current_fact_uuid("memory:cache-proof"),
+                committed["fact_uuid"],
+            )
+
     def test_all_mandatory_ablation_profiles_are_executable(self) -> None:
         controller = DeterministicAdaptiveRecallController()
         for profile in ADAPTIVE_ABLATION_PROFILES:
@@ -313,7 +361,7 @@ class AdaptiveRecallControlTests(unittest.TestCase):
                 if profile in ("controller_off", "adaptive_routing_only", "adaptive_budgeting_only"):
                     self.assertEqual(decision.stop_recommendation, "abstain")
 
-    def test_decision_projection_matches_frozen_contract_shape(self) -> None:
+    def test_decision_projection_preserves_frozen_evidence_vocabulary(self) -> None:
         decision = DeterministicAdaptiveRecallController().decide(
             "pottery class",
             logical_memory_refs=("memory:pottery",),
@@ -346,6 +394,10 @@ class AdaptiveRecallControlTests(unittest.TestCase):
             "controller_unavailable",
             "abstain",
         })
+        # Slice 2A is typed controller evidence, not the full System-One wire exchange.
+        self.assertNotIn("decision_status", projected)
+        self.assertNotIn("usage", projected)
+        self.assertNotIn("actual_stop", projected)
 
 
 if __name__ == "__main__":
