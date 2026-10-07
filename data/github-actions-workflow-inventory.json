@@ -4164,10 +4164,10 @@
       "discretionary": 21
     },
     "triggerCounts": {
+      "issues": 1,
       "pull_request": 80,
       "push": 49,
-      "workflow_dispatch": 42,
-      "issues": 1
+      "workflow_dispatch": 42
     },
     "missingExplicitTimeoutCount": 73,
     "supersedablePrOrPushWithoutConcurrencyCount": 81,

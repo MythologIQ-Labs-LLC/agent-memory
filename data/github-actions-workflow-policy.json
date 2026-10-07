@@ -1,0 +1,1133 @@
+{
+  "schema_version": 1,
+  "governing_issue": "#662",
+  "concurrency_group": "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}",
+  "workflows": {
+    "agent-manifest-external-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "agent-manifest-external-evidence": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "agent-memory-runtime-adapter.yml": {
+      "pull_request": "paths",
+      "push": "main_paths",
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "runtime-adapter": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "agmi-agent-memory-qualification.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "reproduce-external-row": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "amb-competitive.yml": {
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "complete_every_run",
+      "jobs": {
+        "evaluate": {
+          "timeout_minutes": 180,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "amb-evidence-import.yml": {
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "complete_every_run",
+      "jobs": {
+        "import": {
+          "timeout_minutes": 20,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "architecture-family-closeout.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "architecture-family-closeout": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "atlas-research-intake.yml": {
+      "pull_request": "paths",
+      "push": "main_paths",
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "pinned-atlas-intake": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "authority-laundering-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "authority-laundering": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "autonomous-maintenance-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "autonomous-maintenance": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "benchmark-integration-contract.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "contributor-contracts": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-json-v2-migration-contract.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "validate-contract": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-json-v2-migration-preflight.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "preflight": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-json-v2-parity.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "python-candidate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        },
+        "rust-candidate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-json-v2-transaction-qualification.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualify": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-json-v2-vector-acceptance.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "validate-acceptance": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-json-v2-vector-integrity.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "validate-vectors": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-reachability.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualify": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-scheme-registry.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualify": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "canonical-surface-inventory.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "inventory": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "capability-behavior-contract.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "cedar-policy-comparator.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "cedar-policy-comparator": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "cli-doctor.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        },
+        "wheel-install": {
+          "timeout_minutes": 15,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "cmcp-external-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "cmcp-external-evidence": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "codegenome-multicapability-profile.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "validate-profile": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "codegenome-reality-mesh-evidence.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "codegenome-reality-mesh": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "codegenome-scope-residue-closeout.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "closeout": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "cognitive-mesh-evidence.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "cognitive-mesh-evidence": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "component-qualification-evidence.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualify-code-graph": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "component-qualification-foundation.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualification-foundation": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "conditional-memory-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "conditional-memory": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "conditional-memory-influence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "config-bound-recovery.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "acceptance": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "dashclaw-external-verdict.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "provider-proof": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "derivation-currentness-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "derivation-currentness": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "derivation-output-custody.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "derivation-output-custody": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "domain-schema-discovery-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "domain-schema-discovery": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "domain-schema-mutation-contract.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "domain-schema-mutation": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "enforce-issue-labels.yml": {
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "issues"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "ensure-label": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "evolveai-cognitive-mesh-evidence.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "evolveai-cognitive-mesh": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "evolveai-multicapability-qualification.yml": {
+      "pull_request": "paths",
+      "push": "main_paths",
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualify-evolveai": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "external-evidence-contract.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "external-evidence-contract": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "federated-resource-exchange.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "federated-resource-exchange": {
+          "timeout_minutes": 45,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "gauntlet-durability-recovery.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "durability-recovery-alpha": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "gauntlet-external-contestant-dogfood.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "public-quickstart": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "hermes-observe-govern-integration.yml": {
+      "pull_request": "paths",
+      "push": "main_paths",
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "hermes-integration": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "hermes-recursive-learning-research.yml": {
+      "pull_request": "paths",
+      "push": "main_paths",
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "verify-hermes-research": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "hindsight-v090-qualification.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualify-hindsight-v090": {
+          "timeout_minutes": 35,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "langgraph-lifecycle-comparator.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "langgraph-lifecycle": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "logical-state-algebra-pressure.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "logical-state-algebra-pressure": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "long-horizon-memory-benchmark.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "local-representations": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        },
+        "vjepa2-1-frozen-representation": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "longmemeval-competitive.yml": {
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "complete_every_run",
+      "jobs": {
+        "evaluate": {
+          "timeout_minutes": 180,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "maf-lifecycle-comparator.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "maf-lifecycle": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "maintenance-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "memory-component-program-closeout.yml": {
+      "pull_request": "paths",
+      "push": "main_paths",
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "validate-closeout": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "memory-metabolism-benchmark.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "native-memory-metabolism": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "memos-v2017-substitution.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualify-and-substitute": {
+          "timeout_minutes": 35,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "opa-policy-comparator.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "opa-policy-comparator": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "operational-memory-benchmark.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "local-representations": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        },
+        "vjepa2-1-frozen-representation": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "p9-systems-characterization.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "characterize": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "policy-projection-compatibility.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "compatibility": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "precedent-candidate-retrieval.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "procedural-memory-evidence.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "procedural-memory-evidence": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "proposition-semantics-score.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "score": {
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "provider-discovery.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "publish-wiki.yml": {
+      "pull_request": null,
+      "push": "main_paths",
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "publish": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "recall-validation-characterization.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "characterize": {
+          "timeout_minutes": 15,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "recall-validation-external-replay.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "agentmembench": {
+          "timeout_minutes": 15,
+          "full_suite_passes": 0
+        },
+        "longmemeval-s": {
+          "timeout_minutes": 30,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "restart-safe-runtime.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "acceptance": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "retrieval-quality-benchmark.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "rc-retrieval-quality": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "reusable-grant-authority-transition.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "reusable-grant-authority-transition": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "runtime-baseline.yml": {
+      "pull_request": "paths",
+      "push": "unrestricted_paths",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "runtime-composition.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "compose": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "runtime-configuration.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "rust-prefilter-performance.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "compare": {
+          "timeout_minutes": 30,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "rust-shadow-kernel.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "qualify": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "seal-anchors.yml": {
+      "pull_request": "paths",
+      "push": "main",
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "verify": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "sleeper-poisoning-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "sleeper-poisoning": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "sqlite-production-substrate.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "qualification": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "structural-mutation-governance.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    },
+    "temporal-commitment-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "temporal-commitment": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "temporal-currentness-final-replay.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "none",
+      "jobs": {
+        "final-replay": {
+          "timeout_minutes": 30,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "unsafe-composition-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "unsafe-composition": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "uor-addr-compatibility.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "uor-addr-compatibility": {
+          "timeout_minutes": null,
+          "full_suite_passes": 0
+        }
+      }
+    },
+    "validate-doctrine-evidence.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "validate": {
+          "timeout_minutes": null,
+          "full_suite_passes": 2
+        }
+      }
+    },
+    "write-readable-visibility.yml": {
+      "pull_request": "unfiltered",
+      "push": "unrestricted",
+      "other_triggers": [],
+      "concurrency": "none",
+      "jobs": {
+        "characterize": {
+          "timeout_minutes": null,
+          "full_suite_passes": 1
+        }
+      }
+    }
+  }
+}
