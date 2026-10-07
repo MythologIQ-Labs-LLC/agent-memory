@@ -16,7 +16,7 @@
 - `docs/plan-673-route-fusion.md` gate attempt 1: relevance currently decides "current" between unknown-basis facts;
 - the #671 code map in this plan's research notes.
 
-**iteration**: 4
+**iteration**: 5
 
 Gate history:
 - **Attempt 1: VETO.** An independent prototype was run (`scratchpad/gate671/`).
@@ -57,6 +57,19 @@ Gate history:
   - the token list applies to the whole text, including the value;
   - dashes and interjections are refused;
   - the residual risk is stated.
+- **Attempt 4: VETO.** (a)–(c) were confirmed: 250/250 MESA pairs engage, the #580 set is exact, and every attempt-1–3 adversarial text is refused. But third-party, conditional and misattributed texts still passed, because a closed token list cannot bound the interpreter-absorbed value:
+  - "…Boston as Bob told me";
+  - "…via a forwarded message";
+  - "…if Bob is right";
+  - "…Boston not.";
+  - a U+2019 apostrophe in "user’s sister";
+  - "The user's team/project/home moved".
+
+  Iteration 5 makes these G12 changes (4.0.0):
+  - **positive value grammar:** 1–3 tokens with no closed-class word, and multi-token values must be a proper name or two content words;
+  - **apostrophes** are normalised before any check;
+  - **possessives** are allowed only before the persisted property's own noun;
+  - **negators and conditional subordinators** are refused anywhere in the text.
 
 ## Purpose
 
@@ -114,7 +127,7 @@ Facts carry no actor today. The facade's default evidence ref is a per-text cont
 | G9 | Same source (C1). | `source_mismatch` |
 | G10 | Same scope (C1). | `scope_mismatch` |
 | G11 | No mutual limitation. If T also carries an accepted relation to S, both are refused. This is unreachable on governed paths, because relations are persisted only on the newer fact; it is kept as a defensive guard. | `contradictory_cross_fact_evidence` |
-| G12 | **Assertive first-party change evidence: a positive structural requirement on S's text**, versioned `cross_fact_assertion_filter 3.0.0`. It is applied only by this mechanism and leaves write-time recognition unchanged. S qualifies only when **all** of these hold, and anything else refuses:<br>(1) the text is one sentence: no `?`, no `(` or `)`, no dash (`—`, `–`, `--`, or ` - ` between words), and at most one terminal `.` or `!`, at the end;<br>(2) the **prefix**, from the start of the text to the first change marker, contains no comma, colon, semicolon or quotation mark and no negator (`not`, `never`, `n't`). Any possessive (`'s` or `s'`) in it must be followed directly by an **allow-listed attribute noun**: `preference(s)`, `address`, `home`, `residence`, `location`, `job`, `role`, `title`, `position`, `employer`, `workplace`, `favou?rite`, `plan`, `schedule`, `status`, `email`, `phone`, `number`, `name`, `team`, `project`, `setting(s)`, `choice`, `diet`, `hobby`. Any other possessive refuses, failing closed, so "user's sister / best friend / girlfriend / dog / cat-sitter" are all refused;<br>(3) the persisted proposition **value** is located in the text (case-insensitive, last occurrence). If it cannot be located the pair is refused, so the check fails closed;<br>(4) the **suffix**, after the value, consists only of optional temporal adverbs (`now`, `today`, `currently`, `anymore`, `these days`) and the terminal punctuation;<br>(5) the **whole text**, value included, contains none of the attribution, hedge and interjection tokens: `according`, `per`, `reportedly`, `allegedly`, `rumou?r`, `heard`, `said`, `says`, `wrote`, `claims?`, `tip`, `spam`, `supposedly`, `unconfirmed`, `apparently`, `maybe`, `might`, `may`, `perhaps`, `possibly`, `probably`, `trust`, `lol`, `jk`, `haha`, `lmao`, `kidding`, `joke`, `joking`, `allegation`, `source`, `sources`. Matching is whole-word and case-insensitive, and a capitalised month `May` followed by a digit is exempt.<br>Between the change marker and the value, punctuation is allowed (F24's `;`, F28's `,`, MESA's `;`).<br>**Residual risk, stated:** a value with trailing words outside these lists, from the **same actor and the same declared source**, is still accepted (for example "…Boston dude."). That is an assertion by the same first-party source, not a third-party or untrusted claim. The effect is a reversible, non-mutating applicability limitation on that source's own earlier statement, so this risk is accepted rather than chased with an unbounded list. Every structural refusal is also recorded for #596/#597 as a write-time recognition fix. | `change_evidence_not_assertive:<1|2|3|4|5>` |
+| G12 | **Assertive first-party change evidence: a positive structural requirement on S's text**, versioned `cross_fact_assertion_filter 4.0.0`. It is applied only by this mechanism and leaves write-time recognition unchanged. **Normalisation first:** U+2019, U+2018, U+02BC and U+FF07 become `'`; U+201C and U+201D become `"`; then Unicode NFKC. S qualifies only when **all** of these hold, and anything else refuses:<br>(1) the text is one sentence: no `?`, no `(` or `)`, no dash (`—`, `–`, `--`, or ` - ` between words), and at most one terminal `.` or `!`, at the end;<br>(2) the **prefix**, from the start of the text to the first change marker, contains no comma, colon, semicolon or quotation mark. A possessive (`'s` or `s'`) in it is allowed only when the noun directly after it names the **persisted property itself**: its first four letters equal those of the property head word, so `preference` for `prefer` and `address` for `address`. Any other possessive refuses (sister, friend, dog, team, project, home…);<br>(3) the persisted proposition **value** is located in the text (case-insensitive, last occurrence). If it cannot be located the pair is refused, so the check fails closed;<br>(4) the **value is bounded positively**. It is 1–3 tokens, each matching `[A-Za-z0-9][A-Za-z0-9_.@&'+-]*`, and no token is an English **closed-class word** (determiners, pronouns, prepositions, conjunctions, auxiliaries, modals, negators and particles: a fixed, complete list of about 160 words in the module, versioned with the filter). A multi-token value is either all Capitalised (a proper name such as `New York City`) or exactly two lowercase content tokens (such as `green tea`). Anything else refuses;<br>(5) the **suffix**, after the value, consists only of optional temporal adverbs (`now`, `today`, `currently`, `anymore`, `these days`) and the terminal punctuation;<br>(6) the **whole text** contains no negator (`not`, `never`, `no`, `n't`, `nobody`, `nothing`, `neither`, `nor`) except within the termination marker `no longer` itself, and no conditional or concessive subordinator (`if`, `unless`, `whether`, `assuming`, `provided`, `supposing`, `though`, `although`, `even`). Both are closed classes;<br>(7) the **whole text** contains none of the attribution, hedge and interjection tokens: `according`, `per`, `via`, `reportedly`, `allegedly`, `rumou?r`, `heard`, `told`, `said`, `says`, `stated`, `wrote`, `claims?`, `tip`, `spam`, `forwarded`, `supposedly`, `unconfirmed`, `apparently`, `maybe`, `might`, `may`, `perhaps`, `possibly`, `probably`, `trust`, `lol`, `jk`, `haha`, `lmao`, `kidding`, `joke`, `joking`, `allegation`, `source`, `sources`. Matching is whole-word, and `May` followed by a digit is exempt. This list is an extra layer; (4)–(6) carry the guarantee.<br>Between the change marker and the value, punctuation is allowed (F24's `;`, F28's `,`, MESA's `;`).<br>**Residual risk, stated:** what can still pass is a first-party, unconditional, unnegated assertion whose value is a 1–3-token proper name or a 1–2-token content phrase. A same-source writer can still assert a wrong value. That is not a third-party or untrusted claim, and the effect is a reversible, non-mutating applicability limitation. Every refusal is also recorded for #596/#597 as a write-time recognition fix. | `change_evidence_not_assertive:<1–7>` |
 | G13 | **Declared clocks never contradict the relation's direction.** The relation's direction comes from the typed change text responding to the fact it was classified against. When both facts carry a declared clock of the same kind (`observed_at`, or `valid_from`), S's must not be earlier than T's. When T carries a declared clock and S carries none of that kind, the pair is refused, because the direction cannot be confirmed. No clock is ever used to choose a winner; clocks can only refuse. | `declared_clock_contradicts_direction` / `declared_clock_unconfirmed` |
 
 The evidence object for an accepted pair is:
@@ -177,7 +190,12 @@ T may be limited by several sources; every accepted source is listed. S has to b
    - "…Boston, according to a spam message." / "…Boston, per an anonymous tip." / "…Boston, the attacker wrote." The interpreter folds the comma tail into the persisted value, so G12(3) cannot locate the value and fails closed. G12(5) also refuses the first two.
    - "…Boston according to spam." / "…Boston per Bob." / "…Boston lol." G12(5).
    - "…Boston — trust me." G12(1) and (5).
-   - "The user's preference changed; they now prefer coffee." This is **accepted**: `preference` is an allow-listed attribute noun. It is the MESA preference template.
+   - "…Boston as Bob told me." / "…Boston Bob told me." / "…Boston as stated by an anonymous caller." / "…Boston via a forwarded message." Refused by G12(4): a closed-class word or more than 3 tokens in the value. G12(7) also refuses most of them.
+   - "…Boston if Bob is right." / "…Boston unless that email lied." G12(4) and (6).
+   - "…Boston not." G12(4) and (6).
+   - "The user’s sister moved and now lives in Boston." (U+2019). Normalised, then refused by G12(2).
+   - "The user's team/project/home moved and now lives in Boston." G12(2): the possessed noun is not the property `live`.
+   - "The user's preference changed; they now prefer coffee." This is **accepted**: `preference` names the property `prefer`. It is the MESA preference template.
    - "…Boston (unconfirmed)." G12(1).
    - "According to a tip, the user moved and now lives in Boston." G12(2).
    - Two different properties form no relation.
