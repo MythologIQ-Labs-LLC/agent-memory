@@ -14,7 +14,7 @@
 - The thresholds are owner-ratified (G5).
 
 **doctrine**: a benchmark identifies a gap but never defines the production grammar; a perfect benchmark score is not closure evidence; no tuning after any score
-**iteration**: 3
+**iteration**: 4
 
 **Gate history**:
 - **Attempt 1: VETO (B1–B6).**
@@ -32,16 +32,20 @@
   - C5: the structural families were not structurally constrained.
   - C6: the deficit row was schema-invalid.
 
-The owner's thresholds were never in question. Iteration 3 fixes C1–C6 and folds in advisories D1–D9.
+- **Attempt 3: VETO (E1–E2).**
+  - E1: the audit's byte-equality rule did not match the harness's wrapper on coordinator messages, and the hand-back tool was not addressed.
+  - E2: a missing must-change variant was a MIXED cause that no family carried.
+
+The owner's thresholds were never in question. Iteration 3 fixed C1–C6 and D1–D9. Iteration 4 fixes E1–E2 and folds in advisories F1–F6.
 
 **Frozen inputs.** Every text the orchestrator can send the author is committed under `reports/benchmarks/currentness-generalization/prompts/` (C1, D3). These files are canonical, and the appendices restate them. Their sha256 values are bound by the gate entry that passes this plan:
 
 | File | sha256 |
 |---|---|
-| `brief.md` | `34b2786b0b46f42b71df591502ba857d8328e4b1b2fb8e2c2c6ecddf41ad8a50` |
-| `spawn.txt` | `a80e2f4982ef322bd69ae133c24cc0f23542c980614b1bb4d9112eb941cad4ff` |
-| `variants.txt` | `8e2ba711c30ff4ccde100f2f3f94a079e727c17a73a789e61a1d320e258b72b2` |
-| `replace.txt` | `23c8454956cb4fb2cca974b2cb5ede70ddb3a1fad3299181d1f839a5a5e1a866` |
+| `brief.md` | `672cc56070b08441f0337f93f8ae2c83c5f7f30ee3a469db709b9fc9b2db6794` |
+| `spawn.txt` | `bb9057ff55ec2a6ea6354483d81f28e0d921a32f811bb49fdc7e6cf3db0cbab3` |
+| `variants.txt` | `52b3ca6b8129f2ba22e1cf2f3595750cd30033c3669a95f7e33e38c84a5493b7` |
+| `replace.txt` | `4741ab43f902e90250c0a3d4f3d5dcc17bf0aeac9ee0666b6d979ae77d146ac8` |
 
 ## Purpose
 
@@ -68,18 +72,25 @@ This plan:
   - `{CASE_IDS}` is the compact JSON output of `scripts/select_metamorphic_bases.py` (G3c).
   - `{REJECTIONS}` is the compact JSON output of `scripts/check_generalization_corpus.py`, a list of `{id, file, rule}` (G3).
 - **Tool rule.**
-  - The only permitted tool calls are `Write` and `Read` on paths under `{AUTHOR_DIR}`.
+  - The only permitted tool calls are:
+    - `Write` and `Read` on paths under `{AUTHOR_DIR}`;
+    - at most one hand-back call per pass (`SubagentHandback`) whose entire input is `{"message": "done"}`. It carries no information inward. Ending a pass in plain text is equally valid (E1).
   - Any other tool call invalidates the attempt. That covers Bash, Grep, Glob, any read outside the directory, web, GitHub or other MCP tools, and agents.
   - An invalidated attempt is discarded. A new subagent starts in `author732-<n+1>/`, and the discarded attempt is recorded.
 - **Audit** (`scripts/audit_authoring_transcript.py`, new). It runs over the subagent's `.jsonl` transcript and fails the attempt unless all of these hold:
   - (a) every assistant `tool_use` obeys the tool rule;
-  - (b) every `type:"user"` record is one of:
-    - a `tool_result`;
-    - a harness `<system-reminder>` block;
-    - a string byte-equal to a frozen prompt after interpolation, where the interpolated values equal the recorded script outputs and directory for that attempt.
+  - (b) every `type:"user"` record is exactly one of these (E1):
+    - (1) a `tool_result`;
+    - (2) a harness reminder: an `isMeta` record with no `origin.kind == "coordinator"`, whose entire content is one or more `<system-reminder>…</system-reminder>` blocks separated only by whitespace;
+    - (3) a coordinator message: a record with `origin.kind == "coordinator"`, whose content equals `PREFIX + P + SUFFIX` byte for byte. Here `P` is the interpolated `variants.txt` or `replace.txt`, and its interpolated values equal the recorded script outputs and directory for that attempt. The harness wrapper is frozen as observed in the attempt-2 and attempt-3 tribunal transcripts:
+      - `PREFIX` = `"The coordinator sent a message while you were working:\n"`;
+      - `SUFFIX` = `"\n\nAddress this before completing your current task."`;
+    - (4) the first record, as in (c).
 
-    Any other user content invalidates the attempt, so an unscripted orchestrator message is a failure by construction;
-  - (c) the first user record is the interpolated `spawn.txt`.
+    Anything else, including a coordinator record that does not match (3) and a reminder carrying a coordinator origin, invalidates the attempt.
+  - **Wrapper drift.** If the harness wrapper differs from the frozen strings, the audit fails closed. The attempt is discarded, and the observed wrapper is reported to a tribunal before any new attempt. The rule is never loosened silently.
+  - **Dry run.** The freeze PR includes a dry run of the audit on a throwaway subagent transcript. The throwaway subagent receives the frozen prompts interpolated with a dummy directory, and does no authoring.
+  - (c) the first `type:"user"` record that is not a harness reminder is the interpolated `spawn.txt`, as a plain string without a coordinator origin.
 - **Transcript binding (D2).**
   - The transcript is copied into the freeze PR under `reports/benchmarks/currentness-generalization/authoring/`, with its sha256.
   - The freeze tribunal runs in the same container. It hashes the live `~/.claude/projects/<session>/subagents/agent-<id>.jsonl` itself, compares the hash with the committed copy, and re-runs the audit.
@@ -117,7 +128,9 @@ This plan:
 - **`K2_expected`:** P and R cases give `engage` and N cases give `refrain`. Variant `expected` must match its kind (C4).
 - **`K3_order`:** `older_write < newer_write`.
 - **`K4_recall_as_wrote`:** `recall_as` equals the `(handle, scope)` of at least one write.
-- **`K5_structure_<family>`** (C5). "Same" means equal; for `source_ref`, null equals only null.
+- **`K5_structure_<family>`** (C5). This applies to base cases only (F3); variants are governed by K6.
+  - "Same" compares the **effective** `source_ref`, where null means `actor:<actor_id of that write's handle>` (F1).
+  - A non-null `source_ref` beginning with `actor:` fails `K1_fields` outright, so that an author cannot accidentally restate the implicit actor source.
   - **P, R, N1–N6, N11, N12:** older and newer have the same `handle`, `scope` and `source_ref`; `actions` is empty; `recall_as` is the older write's `(handle, scope)`.
   - **N7:** same `scope`; both `source_ref`s are non-null and different; `actions` is empty.
   - **N8:** same `handle` and `scope`; different `source_ref`; `actions` is empty.
@@ -149,7 +162,7 @@ This plan:
 - **Recall.** As `recall_as`: `recall(query, temporal_intent={"mode": "current"}, reference_time="2026-10-08T12:00:00Z")`.
 
 **G4 — Ordered stages, attributed to the newer write (B3, C3).**
-- **Timing.** Immediately after the last write and **before any action**, the runner reads `write_semantics(uuid)` for the newer write and for every write other than the older and newer ones.
+- **Timing.** Immediately after the last write and **before any action**, the runner reads `write_semantics(uuid)` for the newer write and for every write other than the older and newer ones. Each read goes through that write's own `(handle, scope)` facade handle (F2).
 - **Stages.** The first stage that applies is the case's stage:
   - **S0 `invalid_harness:<reason>`.** The reasons are:
     - `write_not_committed`;
@@ -208,13 +221,14 @@ This plan:
 - (ii) an `unsafe` N family: that family;
 - (iii) overall recall in [0.50, 0.80): every P and R family that is not `supported`;
 - (iv) M-inv < 0.95: every family with at least one invariance mismatch;
-- (v) an `insufficient` family: that family.
+- (v) an `insufficient` family: that family;
+- (vi) a missing must-change variant (G3: still failing after its replacement rounds): the family of its base case (E2).
 
 Each carried family is either **narrowed** or **remediated**:
 - **Narrowed:** an owner decision recorded per family, which removes it from the supported product contract.
 - **Remediated:** included in the next holdout.
 
-Generalization is **qualified after MIXED only** when a single G6 holdout run satisfies **every** PASS criterion over the non-narrowed families. No criterion is waived. Narrowing is the only way to shrink the claim, and it is per family. A cause carried by no family is impossible by construction, because (iii) and (iv) always name families.
+Generalization is **qualified after MIXED only** when a single G6 holdout run satisfies **every** PASS criterion over the non-narrowed families. No criterion is waived. Narrowing is the only way to shrink the claim, and it is per family. Every cause (i)–(vi) names its carrying families, so no cause can be left without a family. When a (vi) family is remediated rather than narrowed, the holdout's variant pass must produce every must-change variant for that family's selected bases.
 
 **G3b — MESA contamination check, frozen (B5, C4).**
 - **Tokens.** Text is lower-cased and tokenised with the regex `[a-z0-9]+`.
@@ -236,9 +250,9 @@ Generalization is **qualified after MIXED only** when a single G6 holdout run sa
 - **When it is written.** Only if a MIXED or FAIL outcome is followed by remediation or by a holdout re-measurement, and only after both of these:
   - every narrowing decision is recorded;
   - the remediation hypothesis is frozen. For an attempt that changes no runtime (a "null attempt"), the hypothesis is recorded as such.
-- **Null attempts.** A null attempt is allowed **once**, and only when every MIXED cause other than (v) has been narrowed. This prevents re-rolling an unchanged runtime.
+- **Null attempts.** A null attempt is allowed **once**, and only when every MIXED cause other than (v) and (vi) has been narrowed. This prevents re-rolling an unchanged runtime.
 - **Who writes it.** A new author under G1, using hash-identical frozen prompts. Its exact sizes cover only the non-narrowed families.
-- **Contamination.** It passes G3/G3b and its replacement rounds. In addition, any holdout record with trigram similarity ≥ 0.5 against any record of the measurement corpus **or any earlier burned holdout** fails `K8_holdout_overlap` and is replaced.
+- **Contamination.** It passes G3/G3b and its replacement rounds. In addition, any holdout record whose G3b similarity function (any write text or query, against any write text or query) is ≥ 0.5 against any record of the measurement corpus **or any earlier burned holdout** fails `K8_holdout_overlap` and is replaced.
 - **Single-use.** Each attempt is scored **once** on its own fresh holdout. A failed attempt's holdout is burned and never re-scored.
 - **Acceptance requires all of:**
   - every G5 PASS criterion over the non-narrowed families;
@@ -259,21 +273,27 @@ Generalization is **qualified after MIXED only** when a single G6 holdout run sa
 - **MIXED.** The causes and the families that carry them are recorded per G5. #673 stays held until G6 accepts a holdout run over the non-narrowed families.
 
 **G8 — Records and binding (C6, D8).**
-- **Deficit rows.** Each MIXED or FAIL cause family, and each `unsafe` family under PASS, adds one row to `reports/benchmarks/deficits/current.json`. Every value is pre-registered. The rows validate against `schemas/benchmark-deficit-ledger.schema.json` and pass `test_benchmark_deficit_ledger.py`.
+- **Deficit rows.** Each MIXED cause family (i)–(vi), each FAIL-only cause, and each `unsafe` family under PASS adds one row. The FAIL-only causes are:
+  - a structural false engagement: a `false_engagement` row for that N family;
+  - M-flip < 100%: a `must_change_flip` row per base family with a variant reaching S7;
+  - M-attr > 0: one `all:attribution` row;
+  - overall recall < 0.50: the `recall` rows of every non-`supported` P and R family.
+
+  The rows go to `reports/benchmarks/deficits/current.json`. Every value is pre-registered. The rows validate against `schemas/benchmark-deficit-ledger.schema.json` and pass `test_benchmark_deficit_ledger.py`.
 
 | Field | Value |
 |---|---|
-| `deficit_id` | `cross-fact-currentness-generalization-2026-10-07:<family>:<metric>`, where `<metric>` ∈ {`recall`, `false_engagement`, `invariance`, `insufficient`} |
+| `deficit_id` | `cross-fact-currentness-generalization-2026-10-07:<family>:<metric>`, where `<metric>` ∈ {`recall`, `false_engagement`, `invariance`, `insufficient`, `missing_variant`, `must_change_flip`}; the M-attr row uses `<family>` = `all` and `<metric>` = `attribution` |
 | `benchmark_profile` | `currentness-generalization-732 (corpus sha256 <first 12 hex>)` |
 | `evidence_class` | `independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged` |
-| `metric` | `engagement_recall`, `false_engagements`, `metamorphic_invariance` or `valid_case_count` |
-| `direction` | `higher` (recall, invariance, count) or `lower` (false engagements) |
+| `metric` | `engagement_recall`, `false_engagements`, `metamorphic_invariance`, `valid_case_count`, `must_change_variant_count`, `must_change_refrain_rate` or `unattributed_ranking_changes` |
+| `direction` | `higher` (recall, invariance, counts, refrain rate) or `lower` (false engagements, unattributed changes) |
 | `agent_memory` | the family rate rounded to 4 places, or the integer count |
 | `adequacy_target` | `>=0.80` (recall; `>=0.60` floor stated), `0` (false engagements), `>=0.95` (invariance), or the exact size (count) |
 | `gap` | null |
-| `priority` | `P1` for `deficient`, `unsafe` and the overall-recall cause; `P2` for `adequate`, `invariance` and `insufficient` |
-| `posture` | `architecture_gap`; `evaluator_protocol_defect` for `insufficient` |
-| `primary_stage` | the G4 stage most frequent among the family's non-S7 positive cases (or S7 for `unsafe`); ties go to the lower stage number |
+| `priority` | `P0` for a structural-guard false engagement and for `attribution`; `P1` for `deficient`, `unsafe`, `must_change_flip` and the overall-recall cause; `P2` for `adequate`, `invariance`, `insufficient` and `missing_variant` |
+| `posture` | `architecture_gap`; `implementation_defect` for `attribution`; `evaluator_protocol_defect` for `insufficient` and `missing_variant` |
+| `primary_stage` | the G4 stage most frequent among the family's non-S7 positive cases (or S7 for `unsafe`, structural false engagements and `must_change_flip`); for `insufficient`, `S0` when measurement-time S0 caused it, else null; for `missing_variant` and `attribution`, null; ties go to the lower stage number (F6) |
 | `secondary_stages` | the other stages present, sorted |
 | `evidence_refs` | `[<measurement report path>, "docs/plan-732-generalization-gate.md"]` |
 | `owning_issue` | 732 |

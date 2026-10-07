@@ -24,4 +24,4 @@ Must-change variants (kind "must_change", expected "refrain"). Every must-change
 - change_scope: write the later memory in the other scope. Everything else identical, including recall_as.
 - dispute: add the action {"action": "dispute", "write": <newer_write>}. Everything else identical.
 
-Full variant records have exactly these fields: variant_id (unique), base_case_id, variant_type, kind, expected, writes, older_write, newer_write, actions, recall_as, query, rationale. When variants.json is complete, reply with the single word: done.
+Full variant records have exactly these fields: variant_id (unique), base_case_id, variant_type, kind, expected, writes, older_write, newer_write, actions, recall_as, query, rationale. When variants.json is complete, finish by replying with the single word: done. If the harness requires a hand-back tool to finish, call it exactly once with the message done and nothing else; that is the only permitted tool other than Write and Read.
