@@ -4456,3 +4456,35 @@ SHA256(content_hash + previous_hash) = 6ad12eb1889d7901685fbefe00f75ccb3b90b30ce
 - #580: exactly the 12 pre-registered units and 3 label transitions.
 
 **Sequencing.** Implementation follows Runtime Baseline v4 publication.
+
+---
+
+### Entry #101: EVALUATION — #644 -v4 lanes accepted (twelve rows): Runtime Baseline v4 evidence
+
+**Timestamp**: 2026-10-07T15:05:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Plan**: docs/plan-644-lanes-v4.md (iteration 4; Gate PASS Entry #97; implementation Entry #98)
+
+**Artifacts**:
+- 12 raw artifacts imported by `amb-evidence-import.yml`. They were dispatched on `main` `f5a79d2`.
+- lane statuses and `status_reason`s, plus acceptance findings;
+- 12 complete and 4 blocked `evidence_history` entries;
+- 9 normalized manifests, with the shadow rows kept outside the scorecards;
+- scorecards, the UI catalog, the dashboard, docs/65 and the governance index;
+- `harvest-closeout-final-v4.json` (`jh-14-telemetry` shipped, facade), with its consumers;
+- the `-v4` lane tests in accepted form.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `75fb0450004971fc26ab8619534dc37a3e306d0e`): `0352954cb03a1466a15f5d0fcf0d595f1b0ab2180be07a87a41c689ce30407e9`
+**Previous Hash**: `6ad12eb1889d7901685fbefe00f75ccb3b90b30ce1011f29dad9f09a38267f2f`
+**Chain Hash**: `4f10b0474a09748edae9fdb59c84cd618cf1679c725e63952bd16c549d0e5608`
+
+**Decision**: Accepted. Every row recorded checker state TRANSITION toward v4 against declaration blob `ac1e498c`.
+
+- **L1 holds.** Every re-executed row equals `-v3` on every scored metric and every per-question or per-case ranked output: the control, BM25, lexical overlap and Mem0, on both benchmarks and both planes. One environment finding: the Mem0 turn row equals `-v3` on every metric, but 4 of 500 questions reorder near-tied non-gold items within Mem0's own ranking under identical pins. This is pre-registered as a finding, not a blocker.
+- **L2 holds.** The shadow row equals its lane's control exactly. On LongMemEval, all 500 questions per plane report `frontier_exhausted` with status `complete`, and lexical `would_truncate` occurs on 500/500 as pre-stated.
+- **L9 holds.** The AMB sidecar joined 73 records with 4 `no_recall_executed` cases. The stops are 68 `frontier_exhausted` and 5 `no_evidence` (each with zero candidates), all `complete`.
+
+Next: docs/67 Step B1 for Runtime Baseline v4.
