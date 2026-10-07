@@ -7,3 +7,4 @@ They do not redefine canonical doctrine and must remain subordinate to Accepted 
 | PRD | Status | Purpose |
 |---|---|---|
 | [`PRD-001-configurable-agent-memory-runtime.md`](PRD-001-configurable-agent-memory-runtime.md) | Draft | Define the smallest configurable, restart-safe Agent Memory runtime that composes memory modules, governed mutation/recall, and external governance peers while proving real cross-session memory behavior. |
+| [`PRD-002-benchmark-evidence-console.md`](PRD-002-benchmark-evidence-console.md) | Draft | Define the future read-only benchmark evidence console, user journeys, fail-closed comparison UX, longitudinal/failure workflows, and implementation-ready visual/reporting requirements. |
