@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v5",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v4",
+  "issue": 671,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/api/surface.py",
+      "blob": "d437ce37ef28b81bd249f1a7863e6c2c9c79aa2c"
+    },
+    {
+      "path": "reference/agentmem_ref/cross_fact_currentness.py",
+      "blob": "1fdbbe982d53eed20d225f0362d81fe1f71c83de"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/adapter.py",
+      "blob": "1d6c5cf87defa9ed297b45a39a1ce915ecb8f4a0"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/configured_restart.py",
+      "blob": "aafdb128f05d3a21704a7773626a2e07717bb386"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/cross_fact_currentness.py",
+      "blob": "8b3f804a3e715e3b37552fa2468f6f17bf328478"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/query_driven_recall.py",
+      "blob": "74b55e065eceb90ded720b72f6b851b3dd6303e5"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/ranking_policy.py",
+      "blob": "ff4671671adf3d4b2fa73bfcb34a01b096f9a702"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "779a772d0a2afbb67b0518cfdf92bed21368dd09"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/restart_runtime.py",
+      "blob": "b860e5549f0fd3d551fad1b2c54563b2f2483ce3"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "blob": "32eda65480883b78c322865518808af24422b5b7"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/sqlite_composition.py",
+      "blob": "736625384a06078e59ab6fcf2c5b9cc278e3ac11"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/sqlite_runtime.py",
+      "blob": "cd35b8d250928d31fde42589a2598fd37ff202dd"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/temporal_order_constraints.py",
+      "blob": "bcb8de248b4358dc5bfea05567eb40990687469e"
+    }
+  ],
+  "identity_deltas": [
+    {
+      "identity_path": "identity.ranking.active_policy_version",
+      "from": "3.2.0",
+      "to": "3.3.0"
+    }
+  ],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v5"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v5"
+    },
+    {
+      "kind": "replay",
+      "ref": "mesa-formal-v2"
+    }
+  ]
+}

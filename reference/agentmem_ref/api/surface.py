@@ -533,6 +533,7 @@ class AgentMemory:
         valid_from: str | None = None,
         valid_until: str | None = None,
         observed_at: str | None = None,
+        source_ref: str | None = None,
     ) -> dict:
         """Retain a low-risk observation through ordinary PAMA and durable commit.
 
@@ -540,7 +541,16 @@ class AgentMemory:
         evidence (ISO-8601). They are recorded as the caller's claim and used only as
         post-admission applicability evidence (ADR-039, proposed). They never refuse,
         supersede, or change currentness.
+
+        ``source_ref`` (#671) optionally names where the statement came from (for example
+        ``user:alice`` or ``tool:web-search``; at most 256 characters). It defaults to
+        ``actor:<actor_id>``, the acting agent's own observation, and is recorded in the
+        fact's write provenance. It grants nothing: read-path cross-fact currentness only
+        relates two facts that share it (owner ruling ``decision-671-same-source``).
         """
+        from ..runtime.cross_fact_currentness import validate_source_ref
+
+        source_ref = validate_source_ref(source_ref)
         temporal = declared_temporal(
             {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
         )
@@ -564,6 +574,7 @@ class AgentMemory:
             evidence=list(evidence) or None,
             attestation=attestation,
             temporal=temporal,
+            source_ref=source_ref,
         )
         return self._commit_result(outcome)
 

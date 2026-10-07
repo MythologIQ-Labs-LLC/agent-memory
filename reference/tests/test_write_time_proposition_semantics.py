@@ -201,7 +201,13 @@ class ClassificationAndProposalTests(_MemoryCase):
         recalled = self.memory.recall("Where does the user live?", temporal_intent=CURRENT, reference_time=NOW)
         self.assertIn(denver, recalled["admitted"])
         self.assertEqual(recalled["admissions"][denver]["admission_basis"]["currentness"], "current_state")
-        self.assertEqual(self.evidence(recalled, denver)["temporal_applicability"], "unknown_temporal_basis")
+        # #671 (owner ruling decision-671-currentness-mechanism, Option A): the open, guarded
+        # state-change proposal limits the older fact's applicability for explicit-current
+        # recall only; it is still admitted, unmutated, and the proposal stays open.
+        denver_evidence = self.evidence(recalled, denver)
+        self.assertEqual(denver_evidence["temporal_applicability"], "limited_by_cross_fact_state_change")
+        self.assertEqual(denver_evidence["temporal_applicability_basis"], "interpreted_cross_fact")
+        self.assertEqual(denver_evidence["cross_fact_limitation"][0]["source_fact_uuid"], boston)
         self.assertEqual([p["status"] for p in self.memory.semantic_proposals()], ["open"])
 
     def test_explicit_no_longer_names_the_ended_value(self):

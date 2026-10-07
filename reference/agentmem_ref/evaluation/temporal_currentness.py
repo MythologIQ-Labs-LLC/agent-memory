@@ -79,8 +79,12 @@ NOT_MEASURABLE = {
 
 TEMPORAL_STAGES = {"temporal_applicability_tier", "temporal_order_within_query_regime", "temporal_evidence:newer_first"}
 NOT_CURRENT_REFUSALS = {"superseded_not_current", "outside_historical_validity", "corrected_as_false"}
+# Evaluator vocabulary 1.1.0 (#671 plan C7): the runtime's read-path cross-fact label is a
+# not-current label for current intent; the fixture and its gold are unchanged.
+EVALUATOR_VOCABULARY_VERSION = "1.1.0"
+CROSS_FACT_LIMITED = "limited_by_cross_fact_state_change"
 DEMOTED_LABELS = {
-    "current": {"outside_target_interval", "prospectively_applicable"},
+    "current": {"outside_target_interval", "prospectively_applicable", CROSS_FACT_LIMITED},
     "as_of": {"outside_target_interval", "prospectively_applicable"},
     "prospective": {"outside_target_interval", "applicable_not_prospective"},
 }
@@ -369,7 +373,7 @@ def _role_holds(role: str, obs: Mapping[str, Any] | None, mode: str | None) -> b
     if role == "not_current":
         if not admitted:
             return obs["refusal"] in NOT_CURRENT_REFUSALS
-        return obs["currentness"] == "historical_evidence_not_current" or label in {"outside_target_interval", "prospectively_applicable"}
+        return obs["currentness"] == "historical_evidence_not_current" or label in {"outside_target_interval", "prospectively_applicable", CROSS_FACT_LIMITED}
     if role == "not_affirmed_current":
         return not (admitted and label == "applicable")
     if role == "prospective":

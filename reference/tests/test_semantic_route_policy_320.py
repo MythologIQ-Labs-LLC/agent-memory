@@ -110,7 +110,7 @@ class Policy320Tests(unittest.TestCase):
 
     def test_identity_records_subordinate_and_scope(self):
         identity = MULTI_ROUTE_RANKING_POLICY.identity()
-        self.assertEqual(identity["policy_version"], "3.2.0")
+        self.assertEqual(identity["policy_version"], "3.3.0")  # #671: 3.3.0 keeps 3.2.0 semantics here (identity only)
         self.assertEqual(identity["subordinate_routes"], [SEMANTIC_VECTOR_ROUTE])
         self.assertEqual(identity["lexical_relevance_statistics_scope"], "admitted_set_primary_routes")
         stages = identity["stages"]

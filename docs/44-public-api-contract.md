@@ -102,7 +102,7 @@ raw discovery matches
 - **Facade**: `AgentMemory.recall(query, ..., budget=None)`; `budget=0` fails schema validation before any runtime call.
 - **Semantic vector route (#669).** `AgentMemory.open(..., semantic_retrieval="off"|"auto"|"required", representation_dir=None)`. The default is `off`.
   - When enabled, the pinned ONNX provider (optional extra `semantic`) adds domain-eligible candidates through the same governed admission.
-  - Under ranking policy 3.2.0, similarity is ordering-subordinate: it never counts toward corroboration, never moves a lexical score, and orders only after every relevance and temporal stage.
+  - Under ranking policy 3.2.0 (and 3.3.0), similarity is ordering-subordinate: it never counts toward corroboration, never moves a lexical score, and orders only after every relevance and temporal stage.
   - Each semantic hit carries `representation_ref`, `representation_version` and `representation_config_digest` in `route_provenance`.
   - `AgentMemory.semantic_retrieval_posture()` reports the route's status, and `AgentMemory.verify_semantic_store(rebuild=False)` recomputes the derived vector store.
   - Similarity is retrieval evidence only: never currentness, truth, scope, permission or authority.
@@ -140,6 +140,24 @@ In `shadow`, the deterministic System-One controller (`runtime/recall_control.py
 Candidates, admissions, admitted, returned and ranking evidence are identical with and without `shadow` (tested byte for byte on store copies). A controller failure changes nothing: it appears only as `decision_status` and `fallback_events`. The controller never generates candidates, admits, ranks or returns. Enforced budgets and adaptive stopping are a later tranche (T-controller-2).
 
 **Compatibility.** Additive minor. `1.0.0`–`1.4.0` envelopes remain `current`. A facade opened without `recall_control` returns what it returned under `1.4.0`, under contract version `1.5.0`.
+
+## Declared source and cross-fact currentness (ranking policy `3.3.0`, #671; contract unchanged at `1.5.0`)
+
+`AgentMemory.remember(..., source_ref=None)` optionally names where a statement came from, for example `user:alice`, `conversation:42` or `tool:web-search`.
+
+- **Validation.** It must be a non-empty string of at most 256 characters, and it defaults to `actor:<actor_id>`, the acting agent's own observation.
+- **Where it is recorded.** It goes into the fact's immutable `write_provenance` (actor, tenant, purpose, channel, `source_ref`). That record is not settable through `overrides`, because the closed proposal envelope rejects it. It is not shown in `write_semantics`, and it is never ranking, admission or authority input.
+- **What it is used for.** Its only use is the read-path cross-fact guard set (docs/plan-671-cross-fact-currentness.md). Under an **explicit-current** recall (caller-declared or explicit query language), an older fact T may be labelled `temporal_applicability: limited_by_cross_fact_state_change` (basis `interpreted_cross_fact`, evidence `cross_fact_limitation`) when all of the following hold:
+  - a newer, admitted fact S carries an open, unapplied write-time `state_change_candidate` proposal against T;
+  - both facts come from the same actor and the same declared source, through direct observation;
+  - both share the same scope;
+  - S is an assertive first-party sentence, as defined by G12 (assertion filter `6.0.0`);
+  - no declared clock contradicts the relation's direction.
+- **What the label does.** It demotes T within the existing `temporal_applicability_tier` stage. T stays admitted and returned, nothing is mutated, and the proposal stays open.
+- **Refusals.** When the guards are evaluated and a pair is refused, the first failing reason is recorded as `cross_fact_refusal_reason`.
+- **Non-current intents.** Under historical, as-of, atemporal or inferred intent, no cross-fact field is written.
+
+**Compatibility.** No envelope changes: ranking evidence is free-form, so the contract stays `1.5.0`. Facts committed before Runtime Baseline v5 carry no `write_provenance`, never participate, and rank exactly as under `3.2.0`.
 
 ## Action authority and execution evidence (contract `1.2.0`, ADR-038)
 

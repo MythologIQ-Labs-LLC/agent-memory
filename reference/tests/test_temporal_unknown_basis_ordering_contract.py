@@ -44,7 +44,7 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         # forward unchanged in ordering by 3.2.0 (#669), without rewriting that
         # historical dependency.
         policy = runtime_composition.MULTI_ROUTE_RANKING_POLICY.identity()
-        self.assertEqual(policy["policy_version"], "3.2.0")
+        self.assertEqual(policy["policy_version"], "3.3.0")  # #671 identity re-pin; case expectations unchanged
         self.assertEqual(policy["unknown_basis_policy"], "explicit_current_exclusive_pairwise_v1")
         self.assertFalse(policy["global_applicable_over_unknown_tier"])
         self.assertEqual(policy["authority_effect"], "none")
@@ -60,7 +60,7 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         for name, policy in policies.items():
             with self.subTest(planner=name):
                 identity = policy.identity()
-                self.assertEqual(identity["policy_version"], "3.2.0")
+                self.assertEqual(identity["policy_version"], "3.3.0")  # #671 identity re-pin
                 self.assertEqual(
                     identity["unknown_basis_policy"],
                     "explicit_current_exclusive_pairwise_v1",

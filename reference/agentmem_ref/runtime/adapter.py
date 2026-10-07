@@ -30,6 +30,7 @@ from ..core.evidence_qualification import EvidenceItem
 from ..core.verification import VerifierRegistry
 from ..core.readmission import RejectedValueRegistry
 from ..state.substrate import DeterministicIds, Episode, Fact, TemporalGraphPort
+from . import cross_fact_currentness as cross_fact
 from . import proposition_semantics as semantics
 from .temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal, parse_time
 
@@ -290,6 +291,7 @@ class GovernedMemoryAdapter:
         attestation: policy.ExternalVerification | None = None,
         temporal: "Mapping[str, str] | None" = None,
         replacement_kind: str = ERROR_CORRECTION,
+        source_ref: str | None = None,
     ) -> CommitResult:
         """Commit a proposal through the governed path.
 
@@ -393,7 +395,7 @@ class GovernedMemoryAdapter:
                         attestation.authority_kind if attestation is not None else None
                     ),
                 )
-            fact_uuid = self._write(proposal, fact_text, temporal)
+            fact_uuid = self._write(proposal, fact_text, temporal, source_ref=source_ref)
             self._current_fact_by_memory[proposal.target_reference] = fact_uuid
             events.append(
                 self._event(
@@ -556,7 +558,14 @@ class GovernedMemoryAdapter:
             return "defer" if "defer" in permitted else permitted[0]
         return choice
 
-    def _write(self, proposal: policy.Proposal, fact_text: str, temporal: "Mapping[str, str] | None" = None) -> str:
+    def _write(
+        self,
+        proposal: policy.Proposal,
+        fact_text: str,
+        temporal: "Mapping[str, str] | None" = None,
+        *,
+        source_ref: str | None = None,
+    ) -> str:
         declared = declared_temporal(temporal)
         domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
         required_domains = tuple(dict.fromkeys(proposal.required_isolation_domain_refs))
@@ -572,6 +581,15 @@ class GovernedMemoryAdapter:
             "purpose": proposal.purpose,
         }
         attributes: dict = {DECLARED_TEMPORAL_KEY: declared} if declared else {}
+        # #671 C1: immutable write provenance (actor, adapter tenant, purpose, channel, source_ref);
+        # derived here from the governed proposal, never from caller overrides.
+        attributes[cross_fact.WRITE_PROVENANCE_KEY] = cross_fact.write_provenance(
+            actor_id=proposal.actor_id,
+            tenant=self._tenant,
+            purpose=proposal.purpose,
+            operation=proposal.operation,
+            source_ref=cross_fact.validate_source_ref(source_ref),
+        )
         attributes[semantics.WRITE_SEMANTICS_KEY] = semantics.persisted_form(
             self._interpret_write(uuid, proposal.target_reference, fact_text, declared, scope)
         )
@@ -703,6 +721,21 @@ class GovernedMemoryAdapter:
                                   "classification": relation["classification"], "basis": relation["basis"],
                                   "slot": relation["slot"]})
         return sorted(proposals, key=lambda item: item["proposal_id"])
+
+    def cross_fact_applicability(self, admitted, intent) -> dict:
+        """#671 C2: cross-fact currentness evidence for an explicit-current recall (pure read)."""
+
+        from .temporal_order_constraints import explicit_current_profile
+
+        return cross_fact.evaluate(
+            admitted,
+            intent,
+            fact_lookup=self._substrate.get_fact,
+            proposal_status=self._proposal_status,
+            fact_scope=self._fact_scope.get,
+            same_scope=self._same_semantic_scope,
+            explicit_current=explicit_current_profile,
+        )
 
     def _proposal_status(self, proposal: dict) -> str:
         target, source = proposal["target_fact_uuid"], proposal["source_fact_uuid"]
