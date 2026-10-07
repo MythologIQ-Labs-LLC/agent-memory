@@ -86,6 +86,7 @@ Only plans whose lifecycle is still active/held belong here. Completed plans are
 | #670 return-budget plan | `docs/plan-670-return-budget.md` | implemented (PR #678, Entry #67); the first declared transition under docs/67; historical evidence |
 | #640 lanes -v2 plan | `docs/plan-640-lanes-v2-return-budget.md` | **COMPLETE**; Gate Tribunal PASS at Entry #69 (iteration 2); Phases 1-2 at Entry #70 (PR #679), Phase 3 acceptance of nine rows at Entry #71 |
 | North Star research brief | `docs/research-brief-north-star-six-tranches-2026-10-06.md` | supporting research for the #668 roadmap and the #674 plan (Entry #60) |
+| Tranche 5 / CI-cost research brief | `docs/research-brief-tranche-5-harvests-and-ci-cost-2026-10-07.md` | supporting research for #672 (`scope-tranche-5-harvests`) and `prereq-ci-cost` (#662 Phases 2-4) (Entry #74) |
 
 Implemented sprint plans remain in `docs/` as historical evidence. Their continued existence does not mean the work is pending.
 
