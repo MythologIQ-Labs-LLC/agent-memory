@@ -114,14 +114,18 @@ class PolicyUnitTests(unittest.TestCase):
     def test_policy_identity_is_explicit_and_authority_neutral(self):
         identity = MULTI_ROUTE_RANKING_POLICY.identity()
         self.assertEqual(identity["policy_id"], "multi-route-default")
-        self.assertEqual(identity["policy_version"], "3.1.2")
+        self.assertEqual(identity["policy_version"], "3.2.0")
         self.assertEqual(identity["authority_effect"], "none")
         self.assertFalse(identity["route_scores_cross_comparable"])
         self.assertEqual(identity["temporal_regime"], "query_conditioned")
         self.assertEqual(identity["stages"][0], "temporal_applicability_tier")
         self.assertEqual(
-            identity["stages"][-4:-2],
-            ["temporal_order_within_query_regime", "candidate_ref_neutral_digest"],
+            identity["stages"][-5:-2],
+            [
+                "temporal_order_within_query_regime",
+                "route_score_desc_subordinate:semantic_vector",
+                "candidate_ref_neutral_digest",
+            ],
         )
         self.assertEqual(
             identity["stages"][-2:],
@@ -131,7 +135,7 @@ class PolicyUnitTests(unittest.TestCase):
         self.assertFalse(identity["global_applicable_over_unknown_tier"])
         self.assertEqual(identity["metabolic_evidence"], "not_used")
         self.assertIn("lexical_relevance_desc:bm25_admitted_set:lexical", identity["stages"])
-        self.assertEqual(identity["lexical_relevance_statistics_scope"], "admitted_set")
+        self.assertEqual(identity["lexical_relevance_statistics_scope"], "admitted_set_primary_routes")
         self.assertEqual(identity["bm25_parameters"], {"k1": 1.2, "b": 0.75})
 
     def test_clock_timestamps_are_valid_and_chronological_past_old_overflow(self):
@@ -228,7 +232,7 @@ class FacadeRankingTests(unittest.TestCase):
             self.assertEqual(old_evidence["constraint_refusal_reason"], "not_in_exclusive_competition")
             self.assertEqual(new_evidence["constraint_refusal_reason"], "not_in_exclusive_competition")
             self.assertEqual(new_evidence["policy_id"], "multi-route-default")
-            self.assertEqual(new_evidence["policy_version"], "3.1.2")
+            self.assertEqual(new_evidence["policy_version"], "3.2.0")
             self.assertEqual(new_evidence["authority_effect"], "none")
             # Ranking is not supersession: both facts stay current and admitted.
             self.assertEqual(memory.history("memory:release:old")["history"]["current_fact_uuid"], old["fact_uuid"])

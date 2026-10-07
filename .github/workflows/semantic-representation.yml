@@ -1,0 +1,48 @@
+name: Semantic Representation
+
+# #669: exercise the pinned ONNX representation provider for real. Model-dependent
+# tests skip elsewhere; here AGENT_MEMORY_REQUIRE_REPRESENTATION=1 turns any skip
+# into a failure, so the provider, the derived store and the facade route are
+# always qualified on CI.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-representation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      AGENT_MEMORY_REPRESENTATION_DIR: ${{ github.workspace }}/.representation/multi-qa-MiniLM-L6-cos-v1-b207367
+      AGENT_MEMORY_REQUIRE_REPRESENTATION: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Install reference and semantic dependencies
+        run: |
+          python -m pip install --disable-pip-version-check -r reference/requirements.txt
+          python -m pip install --disable-pip-version-check -r reference/requirements-semantic.txt
+      - name: Restore pinned model
+        uses: actions/cache@v4
+        with:
+          path: .representation
+          key: semantic-minilm-b207367-${{ hashFiles('reference/agentmem_ref/runtime/representation_onnx.py') }}
+      - name: Fetch and verify the pinned model by digest
+        run: PYTHONPATH=reference python -m agentmem_ref.runtime.representation_onnx fetch
+      - name: Run provider, store, policy and facade tests (skips fail)
+        run: |
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_representation_onnx.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_representation_cache.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_semantic_route_policy_320.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_native_vector_retrieval.py'

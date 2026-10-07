@@ -1,0 +1,769 @@
+{
+  "authority_effect": "none",
+  "comparison": {
+    "580_metrics": {
+      "off": {
+        "as_of_state_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 5,
+            "units": 5,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "atemporal_relevance_preservation_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 2,
+            "units": 2,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "authority_or_scope_violation_count": {
+          "kind": "count",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 18,
+            "units": 18,
+            "value": 0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": 0
+          }
+        },
+        "clock_source_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 4,
+            "units": 4,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "coexistence_preservation_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 15,
+            "units": 15,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "conflict_coexistence_classification_accuracy": {
+          "kind": "not_measurable",
+          "reason": "not measurable pre-#550: the runtime exposes no proposition/conflict classification; coexistence_preservation_rate records the safety half",
+          "status": "not_measurable_pre_550"
+        },
+        "corrected_false_as_historical_rate": {
+          "kind": "event_rate",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 2,
+            "units": 2,
+            "value": 0.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "current_applicability_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 13,
+            "units": 13,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 1,
+            "honest_unknown": 4,
+            "pass": 6,
+            "units": 11,
+            "value": 0.5455
+          }
+        },
+        "current_demoted_as_stale_rate": {
+          "kind": "event_rate",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 13,
+            "units": 13,
+            "value": 0.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "historical_state_admission_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 7,
+            "units": 7,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "intent_interpretation_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 1,
+            "honest_unknown": 0,
+            "pass": 6,
+            "units": 7,
+            "value": 0.8571
+          },
+          "target": {
+            "fail": 2,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 2,
+            "value": 0.0
+          }
+        },
+        "metabolism_validity_separation_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 3,
+            "units": 3,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "prospective_applicability_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 3,
+            "units": 3,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 1,
+            "pass": 0,
+            "units": 1,
+            "value": 0.0
+          }
+        },
+        "restart_reproduction_rate": {
+          "kind": "accuracy",
+          "not_reproduced": [],
+          "probes": 50,
+          "reproduced": 50,
+          "value": 1.0
+        },
+        "self_description_currentness_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 8,
+            "pass": 3,
+            "units": 11,
+            "value": 0.2727
+          }
+        },
+        "stale_as_current_rate": {
+          "kind": "event_rate",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 11,
+            "units": 11,
+            "value": 0.0
+          },
+          "target": {
+            "fail": 1,
+            "honest_unknown": 6,
+            "pass": 3,
+            "units": 10,
+            "value": 0.1
+          }
+        },
+        "state_change_vs_error_correction_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 4,
+            "units": 4,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "temporal_self_claim_rank_influence_count": {
+          "kind": "count",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 2,
+            "units": 2,
+            "value": 0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": 0
+          }
+        },
+        "timeline_preservation_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 2,
+            "units": 2,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "unknown_temporal_basis_honesty_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 3,
+            "units": 3,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        }
+      },
+      "on": {
+        "as_of_state_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 5,
+            "units": 5,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "atemporal_relevance_preservation_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 2,
+            "units": 2,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "authority_or_scope_violation_count": {
+          "kind": "count",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 18,
+            "units": 18,
+            "value": 0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": 0
+          }
+        },
+        "clock_source_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 4,
+            "units": 4,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "coexistence_preservation_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 15,
+            "units": 15,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "conflict_coexistence_classification_accuracy": {
+          "kind": "not_measurable",
+          "reason": "not measurable pre-#550: the runtime exposes no proposition/conflict classification; coexistence_preservation_rate records the safety half",
+          "status": "not_measurable_pre_550"
+        },
+        "corrected_false_as_historical_rate": {
+          "kind": "event_rate",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 2,
+            "units": 2,
+            "value": 0.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "current_applicability_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 13,
+            "units": 13,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 1,
+            "honest_unknown": 4,
+            "pass": 6,
+            "units": 11,
+            "value": 0.5455
+          }
+        },
+        "current_demoted_as_stale_rate": {
+          "kind": "event_rate",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 13,
+            "units": 13,
+            "value": 0.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "historical_state_admission_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 7,
+            "units": 7,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "intent_interpretation_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 1,
+            "honest_unknown": 0,
+            "pass": 6,
+            "units": 7,
+            "value": 0.8571
+          },
+          "target": {
+            "fail": 2,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 2,
+            "value": 0.0
+          }
+        },
+        "metabolism_validity_separation_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 3,
+            "units": 3,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "prospective_applicability_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 3,
+            "units": 3,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 1,
+            "pass": 0,
+            "units": 1,
+            "value": 0.0
+          }
+        },
+        "restart_reproduction_rate": {
+          "kind": "accuracy",
+          "not_reproduced": [],
+          "probes": 50,
+          "reproduced": 50,
+          "value": 1.0
+        },
+        "self_description_currentness_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 8,
+            "pass": 3,
+            "units": 11,
+            "value": 0.2727
+          }
+        },
+        "stale_as_current_rate": {
+          "kind": "event_rate",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 11,
+            "units": 11,
+            "value": 0.0
+          },
+          "target": {
+            "fail": 1,
+            "honest_unknown": 6,
+            "pass": 3,
+            "units": 10,
+            "value": 0.1
+          }
+        },
+        "state_change_vs_error_correction_accuracy": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 4,
+            "units": 4,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "temporal_self_claim_rank_influence_count": {
+          "kind": "count",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 2,
+            "units": 2,
+            "value": 0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": 0
+          }
+        },
+        "timeline_preservation_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 2,
+            "units": 2,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        },
+        "unknown_temporal_basis_honesty_rate": {
+          "kind": "accuracy",
+          "required": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 3,
+            "units": 3,
+            "value": 1.0
+          },
+          "target": {
+            "fail": 0,
+            "honest_unknown": 0,
+            "pass": 0,
+            "units": 0,
+            "value": null
+          }
+        }
+      }
+    },
+    "580_order_digest_changes": {
+      "B10-independent-timeline/timeline-inferred": {
+        "off": {
+          "admitted": [
+            "r3",
+            "r1",
+            "r2"
+          ],
+          "candidates": [
+            "r1",
+            "r2",
+            "r3"
+          ],
+          "ordered_before_next_by": {
+            "r1": "candidate_ref_neutral_digest",
+            "r2": null,
+            "r3": "candidate_ref_neutral_digest"
+          }
+        },
+        "on": {
+          "admitted": [
+            "r2",
+            "r1",
+            "r3"
+          ],
+          "candidates": [
+            "r1",
+            "r2",
+            "r3"
+          ],
+          "ordered_before_next_by": {
+            "r1": "route_score_desc_subordinate:semantic_vector",
+            "r2": "route_score_desc_subordinate:semantic_vector",
+            "r3": null
+          }
+        }
+      },
+      "B6-state-change-chain/explicit-historical-timeline": {
+        "off": {
+          "admitted": [
+            "engineer",
+            "intern",
+            "architect"
+          ],
+          "candidates": [
+            "architect",
+            "engineer",
+            "intern"
+          ],
+          "ordered_before_next_by": {
+            "architect": null,
+            "engineer": "candidate_ref_neutral_digest",
+            "intern": "candidate_ref_neutral_digest"
+          }
+        },
+        "on": {
+          "admitted": [
+            "engineer",
+            "architect",
+            "intern"
+          ],
+          "candidates": [
+            "architect",
+            "engineer",
+            "intern"
+          ],
+          "ordered_before_next_by": {
+            "architect": "route_score_desc_subordinate:semantic_vector",
+            "engineer": "route_score_desc_subordinate:semantic_vector",
+            "intern": null
+          }
+        }
+      },
+      "D16-no-validity-no-intent-recency-must-not-decide/atemporal": {
+        "off": {
+          "admitted": [
+            "tea",
+            "coffee"
+          ],
+          "candidates": [
+            "coffee",
+            "tea"
+          ],
+          "ordered_before_next_by": {
+            "coffee": null,
+            "tea": "candidate_ref_neutral_digest"
+          }
+        },
+        "on": {
+          "admitted": [
+            "tea",
+            "coffee"
+          ],
+          "candidates": [
+            "coffee",
+            "tea"
+          ],
+          "ordered_before_next_by": {
+            "coffee": null,
+            "tea": "route_score_desc_subordinate:semantic_vector"
+          }
+        }
+      }
+    },
+    "580_required_unit_status_changes": {},
+    "580_unit_status_changes": {},
+    "584_admitted_order_changes": {},
+    "m4_new_fact_rate": {
+      "off": 0.2,
+      "on": 0.2
+    },
+    "m4_top1_changes": {}
+  },
+  "minimum_similarity": 0.3,
+  "ranking_policy": "multi-route-default 3.2.0 (semantic_vector subordinate)",
+  "report": "semantic-route-ordering-difference-669",
+  "representation": {
+    "config_digest": "sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee",
+    "dimensions": 384,
+    "rebuild_posture": "deterministic_rebuild_from_canonical",
+    "representation_ref": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367",
+    "representation_version": "onnx-mean-l2-f32/1.0.0"
+  }
+}

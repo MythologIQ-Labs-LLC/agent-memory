@@ -275,11 +275,14 @@ class FreezeTests(unittest.TestCase):
         freeze = formal.load_freeze()
         self.assertEqual(formal.sha256_file(Path(formal.__file__)), freeze["runner"]["sha256"])
 
-    def test_freeze_binds_current_runtime_policy_and_contract(self):
-        binding = formal.observed_agent_memory_binding()
+    def test_freeze_binds_runtime_baseline_v2_policy_and_contract(self):
+        # Historical binding (#669): the v1 freeze binds the Runtime Baseline v2 runtime
+        # it executed against; replays run at 7b041a7 (docs/69 "Determinism").
+        baseline = json.loads((REFERENCE.parent / "reports" / "runtime" / "baseline-v2.json").read_text())
         frozen = formal.load_freeze()["agent_memory"]
-        for key in ("ranking_policy_id", "ranking_policy_version", "public_contract_version"):
-            self.assertEqual(binding[key], frozen[key])
+        self.assertEqual(frozen["ranking_policy_version"], baseline["identity"]["ranking"]["active_policy_version"])
+        self.assertEqual(frozen["public_contract_version"], baseline["identity"]["public_contract_version"])
+        self.assertEqual(frozen["ranking_policy_id"], formal.observed_agent_memory_binding()["ranking_policy_id"])
 
     def test_deviations_are_registered(self):
         ids = [item["id"] for item in formal.load_freeze()["deviations"]]

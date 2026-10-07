@@ -118,7 +118,10 @@ class MultiRouteRecallResult:
 
 MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentConstrainedRankingPolicy(
     policy_id="multi-route-default",
-    route_score_order=(SEMANTIC_VECTOR_ROUTE, SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
+    route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
+    # #669: the semantic route widens candidates but never outranks relevance or
+    # currentness stages; fusion is #673's decision.
+    subordinate_routes=(SEMANTIC_VECTOR_ROUTE,),
     exact_identity_route=EXACT_IDENTITY_ROUTE,
     lexical_route=LEXICAL_ROUTE,
     lexical_relevance="bm25_admitted_set",
@@ -208,6 +211,7 @@ class DeterministicMultiRouteRecallPlanner:
                 query,
                 group_id=tenant,
                 candidate_limit=self.vector_candidate_limit,
+                eligible=lambda fact: self.adapter.domain_eligible(fact, context),
             ):
                 hits.append(
                     RetrievalRouteHit(

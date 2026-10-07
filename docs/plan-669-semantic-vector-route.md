@@ -19,6 +19,8 @@
   - it re-embeds **every fact on every query**, which `decision-embedding-dependency` and #669 forbid;
   - it does not apply the domain-eligibility prefilter that the lexical route applies through `eligible_search` (adapter.py:150-170, runtime_composition.py:173-176). It filters only `group_id == tenant`, so domain-ineligible facts could appear in `candidates` (contract 1.3.0 declares candidates domain-eligible) before admission refuses them.
 
+**Implementation amendment IA1 (found at implement time).** The package layering test (`test_package_layout.py::test_no_layer_imports_a_later_layer`) forbids `runtime` importing `api`. So the store `verify`/`rebuild` operation is exposed as `AgentMemory.verify_semantic_store(rebuild=...)` on the facade, not as a `python -m agentmem_ref.runtime.representation_onnx verify` subcommand. That module keeps only `fetch`. Both new runtime modules are registered in `scripts/restructure_package.py`'s layer table, with the generated top-level compatibility aliases.
+
 ## Iteration 2 changes (gate attempt 1: VETO on nine grounds)
 
 | Ground | Disposition |

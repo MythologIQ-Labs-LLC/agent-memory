@@ -1019,6 +1019,18 @@
         }
       }
     },
+    "semantic-representation.yml": {
+      "pull_request": "unfiltered",
+      "push": "main",
+      "other_triggers": [],
+      "concurrency": "cancel_superseded",
+      "jobs": {
+        "semantic-representation": {
+          "timeout_minutes": 20,
+          "full_suite_passes": 0
+        }
+      }
+    },
     "sleeper-poisoning-evidence.yml": {
       "pull_request": "unfiltered",
       "push": "main",

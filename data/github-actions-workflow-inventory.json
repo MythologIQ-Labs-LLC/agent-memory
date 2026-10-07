@@ -3832,6 +3832,56 @@
       }
     },
     {
+      "path": ".github/workflows/semantic-representation.yml",
+      "name": "Semantic Representation",
+      "capability": "Semantic Representation (#669 pinned ONNX provider, derived vector store, subordinate semantic route)",
+      "ownerOrProgram": [
+        "agent-memory#669"
+      ],
+      "lifecycleClass": "async_assurance",
+      "triggers": [
+        "pull_request",
+        "push"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "branches",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          20
+        ]
+      },
+      "concurrencyState": {
+        "configured": true,
+        "cancelInProgress": true
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "ASYNC",
+      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Added 2026-10-07 for #669: the only CI job that exercises the real pinned representation provider (skips become failures).",
+      "sharedImplementationFamily": {
+        "id": "setup-family-1",
+        "signature": "checkout+python+python-deps",
+        "memberCount": 60,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
       "path": ".github/workflows/sleeper-poisoning-evidence.yml",
       "name": "Sleeper Poisoning Evidence",
       "capability": "Sleeper Poisoning Evidence",
@@ -4291,7 +4341,7 @@
     "behaviorAuthority": "Inventory classification alone does not authorize disabling, deleting, or moving required checks."
   },
   "inventorySummary": {
-    "workflowCount": 85,
+    "workflowCount": 86,
     "lifecycleCounts": {
       "required_hot_path": 34,
       "conditional_hot_path": 22,
@@ -4312,8 +4362,8 @@
     },
     "triggerCounts": {
       "issues": 1,
-      "pull_request": 80,
-      "push": 49,
+      "pull_request": 81,
+      "push": 50,
       "workflow_dispatch": 42
     },
     "missingExplicitTimeoutCount": 0,
@@ -4345,6 +4395,10 @@
     {
       "date": "2026-10-07",
       "change": "#662 Phases 2-4 landed (docs/plan-662-ci-cost-phases-2-4.md; merge commit recorded in META_LEDGER): push triggers restricted to branches: [main] in 41 workflows, the unpatterned full-suite step deleted from nine workflows, a concurrency block on all 81 PR/push workflows (71 cancel a superseded PR head, 10 complete every run), timeout-minutes on all 77 previously untimed jobs. The mechanical fields (triggers, pathScope, timeoutState, concurrencyState) and the summary counts are now re-synced from the YAML by scripts/sync_workflow_inventory.py; pathScope gains the value \"branches\" (push restricted to main without paths), which the Phase 1 snapshot did not use. The intended estate is data/github-actions-workflow-policy.json, enforced by reference/tests/test_github_actions_workflow_policy.py."
+    },
+    {
+      "date": "2026-10-07",
+      "change": "added .github/workflows/semantic-representation.yml (#669): installs the optional extra 'semantic', fetches the pinned model by digest and runs the provider/store/policy/facade tests with AGENT_MEMORY_REQUIRE_REPRESENTATION=1"
     }
   ]
 }
