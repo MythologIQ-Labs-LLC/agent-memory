@@ -1,0 +1,556 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v3",
+  "publication_date": "2026-10-07",
+  "status": "rc1_qualified_with_explicit_limitations",
+  "production_1_0": false,
+  "authority_effect": "none",
+  "runtime_revision": {
+    "repository": "MythologIQ-Labs-LLC/agent-memory",
+    "commit": "aede8fdec879121491ce06f31d475a4986b7a286",
+    "merge_pr": 707,
+    "tranche_issue": 669,
+    "procedure_issue": 674,
+    "rc_issue": 410,
+    "baseline_issue": 669
+  },
+  "identity": {
+    "runtime_id": "agent-memory-rc1-local",
+    "runtime_version": "0.2.0-rc1",
+    "runtime_profile_id": "rc1-local-sqlite-composition",
+    "runtime_profile_version": "1.0.0",
+    "public_contract_version": "1.4.0",
+    "sqlite_substrate_schema_version": "1.0.0",
+    "sqlite_substrate_profile": "sqlite_single_host_v1",
+    "typed_relation_schema_version": "1.0.0",
+    "query_temporal_interpreter": {
+      "ref": "agent-memory-deterministic-temporal-cues",
+      "version": "1.1.0"
+    },
+    "write_semantics_interpreter": {
+      "ref": "agent-memory-deterministic-write-semantics",
+      "version": "1.1.0",
+      "classifier_version": "1.0.0"
+    },
+    "ranking": {
+      "active_policy_version": "3.2.0",
+      "base_policy_family": "agent-memory-post-admission-ranking",
+      "base_lexical_policy_version": "3.1.1",
+      "unknown_basis_policy": "explicit_current_exclusive_pairwise_v1",
+      "lexical_anti_laundering_guard": "candidate_specific_typed_temporal_self_claim_guard",
+      "bm25": {
+        "k1": 1.2,
+        "b": 0.75,
+        "corpus": "admitted_set"
+      }
+    }
+  },
+  "public_runtime_contract": {
+    "facade": "AgentMemory",
+    "lifecycle": [
+      "open",
+      "remember",
+      "recall",
+      "correct",
+      "forget",
+      "history",
+      "posture",
+      "close"
+    ],
+    "inspection_and_governance": [
+      "write_semantics",
+      "semantic_proposals",
+      "apply_semantic_proposal",
+      "dispute"
+    ],
+    "threading": "one public handle is runtime-serialized; direct internal runtime access is not independently thread-safe",
+    "tenant_scope_isolation": "fail_closed"
+  },
+  "persistence_and_durability": {
+    "canonical_store": "SQLite",
+    "profile": "single_host_transactional",
+    "journal_mode": "WAL",
+    "synchronous": "FULL",
+    "foreign_keys": true,
+    "restart_recovery": "qualified",
+    "single_writer_generation": true,
+    "distributed_multi_host": "unsupported",
+    "canonical_state_commitment": {
+      "active_scheme": "bmerkle-v1",
+      "legacy_scheme": "sha256"
+    },
+    "governance_state_commitment": {
+      "active_scheme": "gsect-v1",
+      "legacy_scheme": "full-json-v1"
+    },
+    "canonical_json_v2": {
+      "adr": "ADR-040",
+      "status": "accepted_migration_candidate_not_live_commitment_scheme",
+      "migration_posture": "verify_before_recommit; side-effect-free preflight; transactional recommit only on verified disposable copy"
+    }
+  },
+  "write_semantics": {
+    "proposition_identity": [
+      "known",
+      "unknown",
+      "ambiguous"
+    ],
+    "cardinality": [
+      "single_valued",
+      "multi_valued",
+      "hierarchical",
+      "unknown"
+    ],
+    "temporal_aspect": "principal-proposition-scoped interpreted evidence only",
+    "self_validity": "bounded and anchored only by caller-declared observed_at; may limit, never affirm currentness",
+    "markers": [
+      "change",
+      "coexistence",
+      "hedge",
+      "self_claim"
+    ],
+    "same_slot_relations": [
+      "same_value",
+      "coexistence",
+      "state_change_candidate",
+      "conflict",
+      "unresolved"
+    ],
+    "proposal_application": "explicit caller action through governed lifecycle; never automatic",
+    "authority_effect": "none"
+  },
+  "read_semantics": {
+    "query_temporal_modes": [
+      "current",
+      "as_of",
+      "historical",
+      "atemporal_or_unspecified",
+      "prospective"
+    ],
+    "candidate_routes": [
+      "lexical",
+      "exact_logical_identity",
+      "shared_evidence_neighbor",
+      "semantic_vector"
+    ],
+    "canonical_admission": "single governed admission boundary after candidate union",
+    "contextual_admission": "purpose/scope/tenant constrained",
+    "temporal_applicability_precedence": [
+      "caller_declared_validity",
+      "interpreted_self_validity_as_limit_only",
+      "unknown_temporal_basis"
+    ],
+    "ranking_policy": "3.2.0",
+    "explicit_current_unknown_basis": "time-neutral normalized-content fallback for genuine relevance ties; applicable-over-unknown only inside persisted typed exclusive competition",
+    "lexical_anti_laundering": "candidate-specific masking only for high-risk persisted self-claims and high-confidence consumed temporal-intent spans",
+    "structured_recall_shapes": [
+      "ranked",
+      "timeline"
+    ],
+    "authority_effect": "none",
+    "return_budget": {
+      "contract_version": "1.4.0",
+      "request": "optional recall budget {k >= 1}",
+      "policy_id": "ranked-prefix-return-budget",
+      "policy_version": "1.0.0",
+      "basis": "post_admission_ranking_prefix",
+      "rule": "returned is the ranked prefix of the admitted set at k; admitted stays whole and is counted; a call without a budget returns exactly what contract 1.3.0 returned",
+      "authority_effect": "none"
+    },
+    "semantic_route": {
+      "route_id": "semantic_vector",
+      "facade_default": "off",
+      "modes": [
+        "off",
+        "auto",
+        "required"
+      ],
+      "ordering": "subordinate: semantic-only candidates order after every relevance and temporal stage; the route never counts toward corroboration and never moves a lexical score (ranking policy 3.2.0)",
+      "off_equivalence": "with no semantic hit, 3.2.0 orders exactly as 3.1.2 (reference/tests/test_semantic_route_policy_320.py); the facade default opens no representation provider and writes no derived store",
+      "representation": {
+        "provider": "pinned local ONNX export, optional extra 'semantic' (decision-embedding-dependency)",
+        "representation_ref": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367",
+        "representation_version": "onnx-mean-l2-f32/1.0.0",
+        "config_digest": "sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee",
+        "config_digest_scope": "binds every model file digest, the numerics settings and the onnxruntime, tokenizers and numpy versions pinned by reference/requirements-semantic.txt"
+      },
+      "eligibility": "the same domain-eligibility prefilter as the lexical route",
+      "authority_effect": "none"
+    }
+  },
+  "capabilities": {
+    "exact_canonical_fact_state": "native_qualified",
+    "lexical_retrieval": "native_qualified",
+    "semantic_vector_retrieval": "native_qualified",
+    "typed_relations_graph_traversal": "native_qualified",
+    "temporal_history_as_of": "native_qualified",
+    "episodes_session_like_state": "native_limited",
+    "memory_metabolism": "native_qualified",
+    "governed_correction_supersession": "native_qualified",
+    "governed_forgetting_tombstones": "native_qualified",
+    "scope_tenant_isolation": "native_qualified",
+    "provenance_evidence_surfaces": "native_qualified",
+    "distributed_multi_host_persistence": "unsupported",
+    "heterogeneous_projection_composition_program_636": "not_in_baseline"
+  },
+  "governance_invariants": [
+    "candidate retrieval != governed recall admission",
+    "classifier output != truth",
+    "classifier confidence != permission",
+    "ranking != recall admission",
+    "ranking != truth",
+    "ranking != authority",
+    "relevance != currentness",
+    "staleness != irrelevance",
+    "age != staleness",
+    "recency != authority",
+    "newer != superseding",
+    "metabolic stability != temporal validity",
+    "reinforcement != currentness",
+    "interpretation != authority",
+    "semantic interpretation != retention/lifecycle policy",
+    "conflict detection != mutation",
+    "proposal != application",
+    "external verification != Agent Memory authority",
+    "benchmark score != memory authority",
+    "published vendor score != same-harness comparator",
+    "implementation language != doctrine"
+  ],
+  "qualification_evidence": {
+    "agentmembench": {
+      "exact_source_recall_at_5": 0.899,
+      "source": "reports/benchmarks/replays/591-identity-first-materialization-f76c441/",
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2)",
+      "basis": "the declared change adds the semantic vector route as an ordering-subordinate candidate source behind ranking policy 3.2.0 and the optional extra 'semantic'; the facade default is semantic_retrieval='off', under which 3.2.0 orders exactly as 3.1.2 (tested), and the accepted -v3 lane controls equal the -v2 controls on every scored metric; these replays never open the semantic route and are not re-run"
+    },
+    "longmemeval_s": {
+      "session_recall_all_at_5": 0.823389,
+      "turn_recall_all_at_10": 0.72315,
+      "source": "lane longmemeval-s-retrieval-parity-v3 control rows (evidence ids lane:longmemeval-s-retrieval-parity-v3:agent_memory:session and :turn), executed at 04bb286f90f126c0dedcd78750ad67e4e1a8a57e under budget 50 with the semantic route off (the facade default); equal to the -v2 control at every scored k",
+      "return_budget_applied": {
+        "session": 39,
+        "turn": 500
+      },
+      "unmapped_admitted_count_total": {
+        "session": 0,
+        "turn": 0
+      },
+      "semantic_route_row": {
+        "evidence_ids": [
+          "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:session",
+          "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:turn"
+        ],
+        "result": "semantic_retrieval='required' changes no scored metric and no per-question recall_all@k on either plane (419 scored questions each), as pre-registered; the one gold item reached only through the route ranks 116 of 116 admitted",
+        "role": "measured variant, not the publication control; the movement gate transfers to #673"
+      }
+    },
+    "longmemeval_m": {
+      "session_recall_all_at_5": 0.708831,
+      "turn_recall_all_at_5": 0.53222,
+      "source": "reports/benchmarks/longmemeval/longmemeval-m-full-409098f.analysis.json",
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2)",
+      "basis": "the declared change adds the semantic vector route as an ordering-subordinate candidate source behind ranking policy 3.2.0 and the optional extra 'semantic'; the facade default is semantic_retrieval='off', under which 3.2.0 orders exactly as 3.1.2 (tested), and the accepted -v3 lane controls equal the -v2 controls on every scored metric; these replays never open the semantic route and are not re-run"
+    },
+    "natural_semantics_594": {
+      "part_r_known_precision": 0.8,
+      "part_r_known_recall": 0.148148,
+      "part_r_ambiguous_recall": 1.0,
+      "part_r_unknown_precision": 1.0,
+      "part_r_unknown_recall": 0.848485,
+      "strict_slot_value_exact_label_conformance": 0.0,
+      "strict_slot_value_note": "zero aliases frozen before scoring; not semantic synonym precision",
+      "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json",
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2)",
+      "basis": "the declared change adds the semantic vector route as an ordering-subordinate candidate source behind ranking policy 3.2.0 and the optional extra 'semantic'; the facade default is semantic_retrieval='off', under which 3.2.0 orders exactly as 3.1.2 (tested), and the accepted -v3 lane controls equal the -v2 controls on every scored metric; these replays never open the semantic route and are not re-run"
+    },
+    "temporal_currentness_580_584": {
+      "status": "qualified",
+      "final_runtime_policy": "3.1.2",
+      "merge_commit": "f2aef57293b516e065cad5d0afea26ac7e3c28a9",
+      "final_replay_artifact": {
+        "workflow_run": 37175525822,
+        "artifact_id": 11292814272,
+        "digest": "sha256:0b22e7283a14fc209b06e2b82567792ff47c222b9c2e09f899f8670ccd127cf4"
+      },
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2)",
+      "basis": "the declared change adds the semantic vector route as an ordering-subordinate candidate source behind ranking policy 3.2.0 and the optional extra 'semantic'; the facade default is semantic_retrieval='off', under which 3.2.0 orders exactly as 3.1.2 (tested), and the accepted -v3 lane controls equal the -v2 controls on every scored metric; these replays never open the semantic route and are not re-run",
+      "semantic_route_ordering_report": {
+        "source": "reports/runtime/semantic-route-669/ordering-difference-report.json",
+        "result": "route on vs off against the real pinned provider: 0 #584 admitted-order changes, 0 #580 unit status changes, identical #580 metrics; 3 #580 order digests changed, residual ties only"
+      }
+    },
+    "performance_591": {
+      "search_p50_ms": 7.7,
+      "search_p95_ms": 11.9,
+      "agentmembench_wall_seconds": 38.6,
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2)",
+      "basis": "the declared change adds the semantic vector route as an ordering-subordinate candidate source behind ranking policy 3.2.0 and the optional extra 'semantic'; the facade default is semantic_retrieval='off', under which 3.2.0 orders exactly as 3.1.2 (tested), and the accepted -v3 lane controls equal the -v2 controls on every scored metric; these replays never open the semantic route and are not re-run"
+    },
+    "rust_shadow": {
+      "status": "implementation_qualification_only",
+      "hot_path_speedup": 2.488,
+      "decision_effect": "does_not_select_runtime_profile",
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2)",
+      "basis": "the declared change adds the semantic vector route as an ordering-subordinate candidate source behind ranking policy 3.2.0 and the optional extra 'semantic'; the facade default is semantic_retrieval='off', under which 3.2.0 orders exactly as 3.1.2 (tested), and the accepted -v3 lane controls equal the -v2 controls on every scored metric; these replays never open the semantic route and are not re-run"
+    },
+    "same_harness_competitors": {
+      "accepted_non_agent_memory_systems": 1,
+      "systems": [
+        "mem0-oss 2.2.1 explicit memory (amb-precisionmembench-retrieval-v3; longmemeval-s-retrieval-parity-v3 session and turn)"
+      ],
+      "status": "accepted_bounded",
+      "tracking_issue": 640,
+      "note": "same-harness rows for one frozen comparator composition on two benchmarks; Hindsight deferred; no market claim and no overall score"
+    },
+    "provider_credential_dependent_lanes": {
+      "llm_judged_amb": "blocked_pending_authorized_evaluation_credential"
+    },
+    "public_gauntlet_baseline_qualification": {
+      "companion": "reports/runtime/baseline-v3-qualification.json",
+      "manifest": "examples/gauntlet/agent-memory-runtime-baseline-v3.json",
+      "adapter_source": "examples/gauntlet/agent_memory_runtime_baseline_v3_stdio.py",
+      "configuration_digest_basis": "sha256 over the canonical JSON (sorted keys, compact separators) of the adapter's frozen identity: runtime_profile, public_contract, frozen_runtime_revision, tenant, actor, scope, purpose",
+      "note": "the qualification block lives in the companion file so this record is never edited after publication (docs/67 Step B2)"
+    },
+    "amb_precisionmembench_retrieval": {
+      "active_passes": "4/43",
+      "total_passes": "15/77",
+      "mean_precision": 0.1806,
+      "mean_recall": 0.9535,
+      "source": "lane amb-precisionmembench-retrieval-v3 control row (evidence id lane:amb-precisionmembench-retrieval-v3:agent-memory), bridge 0.2.0 at the case budget, semantic route off, executed at 04bb286f90f126c0dedcd78750ad67e4e1a8a57e; equal to the -v2 control"
+    },
+    "successor_lane_acceptance": {
+      "declaration": "reports/runtime/baseline-v3-declaration.json",
+      "declaration_blob": "593fee135b8fbb8a99b619f59406484b0cb063a6",
+      "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "checker_state_at_execution": "TRANSITION",
+      "note": "every row executed at a revision whose protected surface the checker reported as frozen v2 plus the declared blobs this record names; the importers bound that state and blob; docs/67 Step B2",
+      "rows": [
+        {
+          "evidence_id": "lane:amb-precisionmembench-retrieval-v3:agent-memory",
+          "system_id": "agent-memory",
+          "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601531946",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/agent-memory-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:amb-precisionmembench-retrieval-v3:bm25",
+          "system_id": "bm25",
+          "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601535521",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/bm25-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:amb-precisionmembench-retrieval-v3:mem0-explicit",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601539010",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/mem0-explicit-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v3:agent_memory:session",
+          "system_id": "agent-memory",
+          "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601498295",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory-session-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v3:agent_memory:turn",
+          "system_id": "agent-memory",
+          "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601502623",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory-turn-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v3:lexical_overlap:session",
+          "system_id": "lexical_overlap",
+          "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601515167",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/lexical_overlap-session-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v3:lexical_overlap:turn",
+          "system_id": "lexical_overlap",
+          "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601519437",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/lexical_overlap-turn-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v3:mem0_explicit:session",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601522990",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/mem0_explicit-session-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v3:mem0_explicit:turn",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601527643",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/mem0_explicit-turn-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:session",
+          "system_id": "agent-memory",
+          "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601507396",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory_semantic-session-04bb286f90f1/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:turn",
+          "system_id": "agent-memory",
+          "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "executing_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37601511653",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory_semantic-turn-04bb286f90f1/evidence.json"
+        }
+      ]
+    }
+  },
+  "known_limitations": [
+    {
+      "id": "semantic_proposition_recognition",
+      "issue": 596,
+      "status": "open_bounded_baseline_limitation",
+      "evidence": "Part R known recall 0.148148 with precision 0.8; dominant failure mode is conservative ambiguity/under-recognition"
+    },
+    {
+      "id": "property_value_canonicalization",
+      "issue": 597,
+      "status": "open_bounded_baseline_limitation",
+      "evidence": "exact-label slot/value conformance 0.0 under zero-alias frozen scoring; genuine extraction defects remain"
+    },
+    {
+      "id": "distributed_persistence",
+      "status": "unsupported",
+      "evidence": "SQLite runtime is explicitly single-host"
+    },
+    {
+      "id": "competitive_same_harness",
+      "issue": 640,
+      "status": "accepted_bounded",
+      "evidence": "Mem0 OSS 2.2.1 explicit memory accepted on both -v3 lanes beside the control; Hindsight deferred; no market claim"
+    },
+    {
+      "id": "llm_judged_external_benchmark",
+      "status": "blocked",
+      "evidence": "authorized evaluation credential not present in accepted evidence"
+    },
+    {
+      "id": "exception_override_precedence",
+      "issue": 586,
+      "status": "deferred_post_rc"
+    },
+    {
+      "id": "adr_039",
+      "status": "proposed_not_promoted"
+    },
+    {
+      "id": "semantic_route_subordinate_ordering",
+      "issue": 673,
+      "status": "open_bounded_baseline_limitation",
+      "evidence": "under ranking policy 3.2.0 a semantic-only candidate ranks after every lexical candidate, so the opt-in route changes no LongMemEval_S scored metric (lane -v3 D2); fusion and default-on are #673"
+    }
+  ],
+  "dogfood": {
+    "public_gauntlet_issue": 637,
+    "status": "completed",
+    "merge_pr": 649,
+    "merge_commit": "10898c0edf4fa7093a0bbeda1b2cb8062469e843",
+    "verified_head": "90a55f31fec68e94a8486acca065c778801a01f4",
+    "workflow_run": 37218887168,
+    "golden_evidence": "reports/gauntlet/external-contestant-v1/golden-evidence.json",
+    "evidence_class": "baseline_or_probe",
+    "authority_effect": "none",
+    "inherited_from": "agent-memory-runtime-baseline-v1",
+    "note": "a successor names the same #637 evidence by pointer and does not re-run it (docs/67 Step B1)"
+  },
+  "drift_policy": {
+    "immutable_after_publication": true,
+    "observable_behavior_changes_must_bind_new_revision": true,
+    "future_636_ablations_must_name_this_baseline": true
+  },
+  "predecessor": {
+    "baseline_id": "agent-memory-runtime-baseline-v2",
+    "runtime_revision": "488d64aadb16ba4b0c474af95d67e96e970e4dfc",
+    "declaration": "reports/runtime/baseline-v3-declaration.json",
+    "declaration_blob": "593fee135b8fbb8a99b619f59406484b0cb063a6",
+    "identity_deltas": [
+      {
+        "identity_path": "identity.ranking.active_policy_version",
+        "from": "3.1.2",
+        "to": "3.2.0"
+      }
+    ],
+    "declared_changes": [
+      {
+        "path": "pyproject.toml",
+        "blob": "59e8f97cb9de3dfc92f583616b79b2ee54c6fa4d"
+      },
+      {
+        "path": "reference/agentmem_ref/api/surface.py",
+        "blob": "ecf722235aee7e22be27eadac780893b532c73d2"
+      },
+      {
+        "path": "reference/agentmem_ref/representation_cache.py",
+        "blob": "0c3bee5002affa86467d65dfe4e8bf79eebc881a"
+      },
+      {
+        "path": "reference/agentmem_ref/representation_onnx.py",
+        "blob": "c793d30691407a3bf8888d77499073a23110eebb"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/ranking_policy.py",
+        "blob": "e5eed998e40557ccd3864206ed14a5a372d5cb59"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/representation_cache.py",
+        "blob": "9bb0a899176ecd35eb06e1ec773b9641ecc34147"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/representation_onnx.py",
+        "blob": "ee404e99434d4280a88e5627f6e19598552528b3"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+        "blob": "b582ab3a5f6b919ecbd3c554e9ea4b47f14f383d"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/sqlite_composition.py",
+        "blob": "d5727201403bbb5a90e27729514936e903eb4baa"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/temporal_order_constraints.py",
+        "blob": "c6e1baa6efb096012162de7c5fff82f167345ec6"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/vector_retrieval.py",
+        "blob": "00e9547fc5700058f8d0887a43c2bc25c0e1116b"
+      }
+    ],
+    "pyproject_change": {
+      "reason": "optional extra 'semantic' for the pinned ONNX representation provider (decision-embedding-dependency); facade default semantic_retrieval='off', so existing stores keep 3.1.2-equivalent ordering on recover unless a caller opts in; controlled-multi-route and query-driven-relational report 3.2.0 with unchanged behaviour (class-level version)"
+    }
+  }
+}

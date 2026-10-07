@@ -4156,3 +4156,36 @@ D2 holds as pre-registered:
 - the single semantic-only gold item ranks 116 of 116, the subordinate ordering of policy 3.2.0.
 
 The movement gate transfers to #673. Next: Runtime Baseline v3 publication (docs/67 Step B1) against aede8fd, the merge of PR #707, citing these rows.
+
+---
+
+### Entry #92: PUBLICATION — Runtime Baseline v3 (docs/67 Step B1)
+
+**Timestamp**: 2026-10-07T12:00:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Procedure**: docs/67-runtime-baseline-succession.md Step B1 (no runtime change)
+
+**Artifacts**:
+- `reports/runtime/baseline-v3.json`, `-source-boundary.json`, `-qualification.json` (pending) and `.md` (rendered);
+- `examples/gauntlet/agent-memory-runtime-baseline-v3.json` and `agent_memory_runtime_baseline_v3_stdio.py`;
+- the register: v3 appended as the current entry (published_commit null), and `declared_successor` cleared;
+- tests: succession tests for v3 as the current entry and v2 as pinned; the `-v3` lane test is now agnostic to succession state;
+- docs: CONTRIBUTOR_ARCHITECTURE and the governance index.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `f1f29cc880a7c543839a82df6a7622ad9b4f5142`): `369d46e38ffcfc1a5d7afc0b75bf6d4e7ccf009f6f04b35b864031de22b6a4c1`
+**Previous Hash**: `a2725559c8221e08cddc221373ad47c063b82d26e5b8d284e795be27115f51a0`
+**Chain Hash**: `ab9ea5e60894a9a208219f9bae24c166f307cc6d4613f3929fb48c079fee6246`
+
+**Decision**: Runtime Baseline v3 is published against `aede8fd`, the merge of #707, which was the declared #669 tranche.
+- **Identity:** the identity delta is ranking policy 3.1.2→3.2.0; the public contract stays 1.4.0. `read_semantics.semantic_route` records the facade default (off), the subordinate ordering and the pinned representation (config_digest `sha256:7447705…`).
+- **Predecessor block:** copied from the v3 declaration, with its blob and its pyproject_change.
+- **Lane acceptance:** the eleven accepted `-v3` rows are cited by evidence id and executing revision (04bb286, TRANSITION).
+- **Inherited replays:** they are carried with the reason the declared change cannot reach them (the route is off by default; with no semantic hit, 3.2.0 orders exactly as 3.1.2).
+- **Checker and validator:** the checker prints PASS against v3; the validator accepts v1, v2 and a pending v3.
+- **Local probe:** the public Gauntlet probe through the v3 adapter gives sample_count 3 and exact_top1 1.0.
+- **Contestants:** the durability and agmi contestants pin v1 and remain retired.
+
+Step B2 binds this PR's runtime-baseline.yml probe artifact. #669 then closes, with the movement gate handed to #673.
