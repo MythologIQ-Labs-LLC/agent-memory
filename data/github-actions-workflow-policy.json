@@ -5,12 +5,12 @@
   "workflows": {
     "agent-manifest-external-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "agent-manifest-external-evidence": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -21,10 +21,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "runtime-adapter": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -35,10 +35,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "reproduce-external-row": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -73,12 +73,12 @@
     },
     "architecture-family-closeout.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "architecture-family-closeout": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -89,34 +89,34 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "pinned-atlas-intake": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "authority-laundering-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "authority-laundering": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "autonomous-maintenance-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "autonomous-maintenance": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -127,10 +127,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "contributor-contracts": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -141,10 +141,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate-contract": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -155,10 +155,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "preflight": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -169,14 +169,14 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "python-candidate": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         },
         "rust-candidate": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -187,10 +187,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "qualify": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -201,10 +201,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate-acceptance": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -215,10 +215,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "validate-vectors": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -229,10 +229,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "qualify": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -243,10 +243,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "qualify": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -257,47 +257,47 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "inventory": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "capability-behavior-contract.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         }
       }
     },
     "cedar-policy-comparator.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "cedar-policy-comparator": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "cli-doctor.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         },
         "wheel-install": {
           "timeout_minutes": 15,
@@ -307,12 +307,12 @@
     },
     "cmcp-external-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "cmcp-external-evidence": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -323,10 +323,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate-profile": {
-          "timeout_minutes": null,
+          "timeout_minutes": 25,
           "full_suite_passes": 0
         }
       }
@@ -337,10 +337,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "codegenome-reality-mesh": {
-          "timeout_minutes": null,
+          "timeout_minutes": 15,
           "full_suite_passes": 0
         }
       }
@@ -351,10 +351,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "closeout": {
-          "timeout_minutes": null,
+          "timeout_minutes": 15,
           "full_suite_passes": 0
         }
       }
@@ -365,10 +365,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "cognitive-mesh-evidence": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -379,10 +379,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "qualify-code-graph": {
-          "timeout_minutes": null,
+          "timeout_minutes": 15,
           "full_suite_passes": 0
         }
       }
@@ -393,47 +393,47 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "qualification-foundation": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "conditional-memory-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "conditional-memory": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "conditional-memory-influence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "config-bound-recovery.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "acceptance": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         }
       }
     },
@@ -443,58 +443,58 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "provider-proof": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "derivation-currentness-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "derivation-currentness": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "derivation-output-custody.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "derivation-output-custody": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "domain-schema-discovery-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "domain-schema-discovery": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "domain-schema-mutation-contract.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "domain-schema-mutation": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -508,7 +508,7 @@
       "concurrency": "none",
       "jobs": {
         "ensure-label": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -519,10 +519,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "evolveai-cognitive-mesh": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -533,22 +533,22 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "qualify-evolveai": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 1
         }
       }
     },
     "external-evidence-contract.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "external-evidence-contract": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -559,7 +559,7 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "federated-resource-exchange": {
           "timeout_minutes": 45,
@@ -573,10 +573,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "durability-recovery-alpha": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -587,10 +587,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "public-quickstart": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -601,10 +601,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "hermes-integration": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 1
         }
       }
@@ -615,10 +615,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "verify-hermes-research": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -629,7 +629,7 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "qualify-hindsight-v090": {
           "timeout_minutes": 35,
@@ -639,12 +639,12 @@
     },
     "langgraph-lifecycle-comparator.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "langgraph-lifecycle": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -655,26 +655,26 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "logical-state-algebra-pressure": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "long-horizon-memory-benchmark.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "local-representations": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         },
         "vjepa2-1-frozen-representation": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -695,24 +695,24 @@
     },
     "maf-lifecycle-comparator.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "maf-lifecycle": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "maintenance-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -723,22 +723,22 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate-closeout": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "memory-metabolism-benchmark.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "native-memory-metabolism": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -749,7 +749,7 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "qualify-and-substitute": {
           "timeout_minutes": 35,
@@ -759,64 +759,64 @@
     },
     "opa-policy-comparator.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "opa-policy-comparator": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "operational-memory-benchmark.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "local-representations": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         },
         "vjepa2-1-frozen-representation": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "p9-systems-characterization.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "characterize": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "policy-projection-compatibility.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "compatibility": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "precedent-candidate-retrieval.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -827,10 +827,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "procedural-memory-evidence": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -839,7 +839,7 @@
       "pull_request": "paths",
       "push": null,
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "score": {
           "timeout_minutes": 10,
@@ -849,13 +849,13 @@
     },
     "provider-discovery.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         }
       }
     },
@@ -865,10 +865,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "publish": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -879,7 +879,7 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "characterize": {
           "timeout_minutes": 15,
@@ -893,7 +893,7 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "agentmembench": {
           "timeout_minutes": 15,
@@ -907,73 +907,73 @@
     },
     "restart-safe-runtime.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "acceptance": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         }
       }
     },
     "retrieval-quality-benchmark.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "rc-retrieval-quality": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "reusable-grant-authority-transition.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "reusable-grant-authority-transition": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "runtime-baseline.yml": {
       "pull_request": "paths",
-      "push": "unrestricted_paths",
+      "push": "main_paths",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "runtime-composition.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "compose": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         }
       }
     },
     "runtime-configuration.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         }
       }
     },
@@ -983,7 +983,7 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "compare": {
           "timeout_minutes": 30,
@@ -997,10 +997,10 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "qualify": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -1011,58 +1011,58 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "verify": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "sleeper-poisoning-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "sleeper-poisoning": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "sqlite-production-substrate.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "qualification": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "structural-mutation-governance.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         }
       }
     },
     "temporal-commitment-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "temporal-commitment": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
@@ -1073,7 +1073,7 @@
       "other_triggers": [
         "workflow_dispatch"
       ],
-      "concurrency": "none",
+      "concurrency": "complete_every_run",
       "jobs": {
         "final-replay": {
           "timeout_minutes": 30,
@@ -1083,49 +1083,49 @@
     },
     "unsafe-composition-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "unsafe-composition": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "uor-addr-compatibility.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "uor-addr-compatibility": {
-          "timeout_minutes": null,
+          "timeout_minutes": 10,
           "full_suite_passes": 0
         }
       }
     },
     "validate-doctrine-evidence.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
-          "timeout_minutes": null,
+          "timeout_minutes": 20,
           "full_suite_passes": 2
         }
       }
     },
     "write-readable-visibility.yml": {
       "pull_request": "unfiltered",
-      "push": "unrestricted",
+      "push": "main",
       "other_triggers": [],
-      "concurrency": "none",
+      "concurrency": "cancel_superseded",
       "jobs": {
         "characterize": {
-          "timeout_minutes": null,
-          "full_suite_passes": 1
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
         }
       }
     }
