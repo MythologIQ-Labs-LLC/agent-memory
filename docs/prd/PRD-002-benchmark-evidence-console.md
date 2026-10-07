@@ -871,6 +871,8 @@ Invented benchmark scores are not permitted in canonical wireframes.
 
 The current seed set is bound to the committed canonical dashboard at `reports/benchmarks/dashboard/current.json` and includes real LongMemEval, PrecisionMemBench, AgentMemBench currentness, performance, semantic-interpretation, governance, and published-reference evidence.
 
+A machine-readable frame-to-evidence registry lives at `docs/prd/PRD-002-wireframe-fixtures.json`. Every canonical frame must have a registry entry before #699 can treat the design as complete.
+
 Where formal MESA failure-stage evidence does not yet exist, the wireframes show that absence explicitly instead of fabricating a plausible distribution.
 
 # Implementation issue map
