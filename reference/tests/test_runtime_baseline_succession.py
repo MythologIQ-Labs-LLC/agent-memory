@@ -513,11 +513,15 @@ class RealRepository(unittest.TestCase):
 
     def test_register_carries_v2_as_the_current_entry(self) -> None:
         # docs/67 Steps B1 and B2: the successor is the last entry, blob-pinned in the working
-        # tree, its companion qualification bound and its publication commit pinned; no successor
-        # is declared.
+        # tree, its companion qualification bound and its publication commit pinned. Step A of
+        # #669 declares v3 as the open successor (docs/67), so v2 stays the current entry.
         register = checker.load_register(REPO_ROOT, REGISTER)
         self.assertEqual([item["baseline_id"] for item in register["baselines"]], [V1, V2])
-        self.assertIsNone(register["declared_successor"])
+        self.assertEqual(
+            register["declared_successor"],
+            {"baseline_id": "agent-memory-runtime-baseline-v3",
+             "declaration": "reports/runtime/baseline-v3-declaration.json"},
+        )
         entry = register["baselines"][-1]
         self.assertEqual(entry["record"], "reports/runtime/baseline-v2.json")
         self.assertEqual(blob(REPO_ROOT, entry["record"]), entry["record_blob"])

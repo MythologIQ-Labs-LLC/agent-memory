@@ -21,6 +21,8 @@
 
 **Implementation amendment IA1 (found at implement time).** The package layering test (`test_package_layout.py::test_no_layer_imports_a_later_layer`) forbids `runtime` importing `api`. So the store `verify`/`rebuild` operation is exposed as `AgentMemory.verify_semantic_store(rebuild=...)` on the facade, not as a `python -m agentmem_ref.runtime.representation_onnx verify` subcommand. That module keeps only `fetch`. Both new runtime modules are registered in `scripts/restructure_package.py`'s layer table, with the generated top-level compatibility aliases.
 
+**Implementation amendment IA2.** `reference/tests/test_runtime_baseline_succession.py::test_register_carries_v2_as_the_current_entry` asserted `declared_successor is None`. docs/67 Step A requires the register to name the open successor, so that assertion now names the v3 declaration. v2 stays the current entry, and every v2 binding assertion is unchanged. This is a succession-state change that the procedure itself requires, not a ranking or ordering re-pin.
+
 ## Iteration 2 changes (gate attempt 1: VETO on nine grounds)
 
 | Ground | Disposition |
