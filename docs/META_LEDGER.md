@@ -3488,3 +3488,46 @@ opened at Entry #67 is closed: the current Runtime Baseline is v2 at
 accepted -v2 lane rows (Entry #71) and this probe, and no successor is
 declared. The probe gates publication, not the meaning of any memory
 operation; nothing here is authority.
+
+---
+
+### Entry #74: RESEARCH BRIEF
+
+**Timestamp**: 2026-10-07T01:40:00-04:00
+**Phase**: RESEARCH
+**Author**: Analyst
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+
+**Artifact**: `docs/research-brief-tranche-5-harvests-and-ci-cost-2026-10-07.md`
+**Content Hash**: `93c1982d2b3c36428a6fd5d1a80dd9270e55c91f55c0c711f1c3d2c235792ccd`
+**Previous Hash**: `0f0f94e9bdb8c5f3aae06c154b881c504898cd8eebdfae37092ec597aad2b4b2`
+**Chain Hash**: `68c1ef759d73ccb3fddca418ecabe8283caa0fde49b6ef51c45f52f6e1d4bcc9`
+
+**Decision**: Research for Tranche 5 (#672, roadmap scope
+`scope-tranche-5-harvests`) and the prerequisite `prereq-ci-cost` (#662
+Phases 2-4). Four read-only surveys, every claim re-cited to file:line.
+Harvest rows: of 21 mechanism rows, 5 shipped, 3 declined, 13 tranches; the
+facade reaches only the lexical, exact-identity and shared-evidence routes,
+ranking 3.1.2 and the return budget; the vector route, typed-graph route,
+controlled recall, metabolism and failure memory are library- or
+harness-only; JH-06, JH-12, JH-13 and JH-16 and the fixture's entity/causal
+traversal do not exist. UOR: no new tranche; the saturation-decay mechanism
+has no closeout row. Six DRIFTs recorded, two of which bear on published
+records: the RC1 evidence closeout still asserts the harvest `active_open`
+against the final fixture's `complete_exhaustive_closeout`, and the
+immutable Runtime Baseline records claim `semantic_vector_retrieval`,
+`typed_relations_graph_traversal` and `memory_metabolism` as
+`native_qualified` although none is reachable from the facade (to be
+corrected as declared identity deltas in the next successor, never in
+place). CI: none of #662 Phases 2-4 has landed; measured 84-88 workflow runs
+per PR head, 41 of them push duplicates of pull_request runs (42.3 of 85.8
+wall-minutes on a370285), 42 more runs per merge to main, 73 of 85 files
+without timeouts, no concurrency on any PR/push workflow, 22 full-suite
+passes per head; PR #665 open. Recommendations: a versioned closeout
+fixture with a closed shipped/tranche/declined enum and a reachability
+test; the standing closeout rule in CONTRIBUTOR_ARCHITECTURE; the Jev-Mem
+tranche order (reachable controller with JH-06 budget and the four stop
+classes first) behind a source-registry record and a notice convention;
+Phases 4-2-3 of #662 as one evaluation-only plan with a validating
+inventory test. Findings are advisory; no decision is taken here.
