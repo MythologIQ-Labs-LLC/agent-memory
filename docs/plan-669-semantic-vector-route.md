@@ -8,7 +8,7 @@
 **owner rulings in force**: `decision-embedding-dependency` (pinned, versioned local provider behind the existing abstraction, shipped as an optional extra), `decision-capacity-split`, `decision-temporal-posture`
 **baseline**: Step A of docs/67 for Runtime Baseline **v3** (the register shows v2 published, `declared_successor: null`)
 **evidence that orders this tranche**: formal MESA (docs/69). M2 answer-substring 0.728 vs Naive RAG 0.794 and source text 0.899 vs 0.971, against dense verbatim retrieval. LongMemEval_S lane v2 turn-plane recall_all@50: 0.859 for Agent Memory vs 0.895 for Mem0 (dense MiniLM).
-**iteration**: 1
+**iteration**: 2 (attempt-1 VETO grounds 1-9 and advisories addressed below; see "Iteration 2 changes")
 
 ## Problem (verified on `main` 728d01d)
 
@@ -17,83 +17,139 @@
 - The only providers are test fixtures (test_native_vector_retrieval.py:107; test_retrieval_quality_benchmark.py:39).
 - `NativeVectorCandidateRetriever.search` (vector_retrieval.py:158-195) has two defects that ship today:
   - it re-embeds **every fact on every query**, which `decision-embedding-dependency` and #669 forbid;
-  - it applies **no domain eligibility**: it filters only `group_id == tenant` and does not skip event-invalid or transaction-expired facts. Under contract 1.3.0 `candidates` are domain-eligible (docs/44), while the lexical route uses `eligible_search` (adapter.py:150-170).
+  - it does not apply the domain-eligibility prefilter that the lexical route applies through `eligible_search` (adapter.py:150-170, runtime_composition.py:173-176). It filters only `group_id == tenant`, so domain-ineligible facts could appear in `candidates` (contract 1.3.0 declares candidates domain-eligible) before admission refuses them.
+
+## Iteration 2 changes (gate attempt 1: VETO on nine grounds)
+
+| Ground | Disposition |
+| --- | --- |
+| 1 LD8 identity rows break the checker/validator | **Dropped.** No new `IDENTITY_SOURCES` rows in this tranche. The only identity delta is `identity.ranking.active_policy_version` 3.1.2 → 3.2.0, an existing row (test_runtime_baseline_succession.py:271 already models this delta). Representation identity is bound per candidate in `route_provenance` (representation_ref/version/config_digest) and by `semantic_retrieval_posture()`. An `introduced_in` mechanism for new identity rows is a follow-up. |
+| 2 LD4 eligibility | **Fixed.** The vector route receives exactly `adapter.domain_eligible` (the predicate `eligible_search` receives at runtime_composition.py:173-176). Validity is left to admission. A test proves explicit historical-intent vector candidates are admitted. The Problem statement is corrected. |
+| 3 `auto` default is environment-dependent | **Default is `off`.** `semantic_retrieval="off"` is the facade default in this tranche, so no installed file or environment variable changes recall for an unchanged caller. `"auto"` and `"required"` are explicit opt-ins. Evidence runs use `"required"`. Default-on is deferred to #673, after fusion is designed and analysed against #584. |
+| 4 cosine before temporal stages | **Policy 3.2.0: the semantic route is ordering-subordinate** (LD7). |
+| 5 MESA successor cannot run on the frozen runner | **Removed from acceptance.** A `mesa-formal-v2` runner/freeze is a separate evaluation item. Any local MESA run here is labelled diagnostic. |
+| 6 lane work under-specified | **Moved out.** The `-v3` lanes get their own plan (`prereq` for Step B1). This PR declares v3 with `acceptance_evidence_required` naming the public gauntlet probe and the lane ids the follow-up freezes. |
+| 7 tokenizer/numerics | **Fixed** (LD1/LD3). |
+| 8 CI never exercises the provider | **Fixed.** New workflow `semantic-representation.yml` (LD10). |
+| 9 store integrity | **Fixed** (LD3). |
 
 ## Locked Decisions
 
-**LD1 — One pinned ONNX representation provider, `runtime/representation_onnx.py`.**
-- `PINNED_MINILM_L6_COS_V1` is a frozen manifest:
-  - model `sentence-transformers/multi-qa-MiniLM-L6-cos-v1`, revision `b207367332321f8e44f96e224ef15bc607f4dbf0`, the same model and revision the Mem0 lane row uses (amb_mem0_explicit_bridge.py:43-45);
-  - files and sha256: `onnx/model.onnx` `826501e8…afc2`, `tokenizer.json` `7fa9272f…3331`, `config.json` `953f9c0d…8b41`;
-  - 384 dimensions; mean pooling over the attention mask, then L2 normalization (the upstream `modules.json` is Transformer → Pooling (mean) → Normalize); max sequence length 512.
-- `OnnxSentenceEmbeddingProvider(model_dir)`:
-  - imports `onnxruntime` and `tokenizers` lazily and raises `RepresentationUnavailable` if either is missing;
-  - verifies every file digest before loading, failing closed on a mismatch;
-  - runs one `InferenceSession` with `intra_op_num_threads = inter_op_num_threads = 1` on `CPUExecutionProvider` for determinism;
-  - `embed(text)` returns a 384-tuple of floats.
-- `spec`:
-  - `representation_ref = "sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367"`;
-  - `representation_version = "onnx-mean-l2/1.0.0"`;
-  - `config_digest` = sha256 of the canonical JSON of the manifest plus the `onnxruntime` and `tokenizers` versions, so a numerics-relevant library change is a new representation identity;
-  - `deterministic_rebuild = True`.
-- Similarity stays retrieval evidence (`authority_effect: none`).
+**LD1 — Pinned ONNX provider, `runtime/representation_onnx.py`.**
+- The manifest pins model `sentence-transformers/multi-qa-MiniLM-L6-cos-v1` at revision `b207367332321f8e44f96e224ef15bc607f4dbf0`, with these files and sha256:
+  - `onnx/model.onnx` `826501e8…afc2`
+  - `tokenizer.json` `7fa9272f…3331`
+  - `config.json` `953f9c0d…8b41`
+  - `modules.json`
+  - `1_Pooling/config.json` `4be450dd…`
+  - `sentence_bert_config.json` `ec8e29d6…`
+- Pooling (`pooling_mode_mean_tokens: true`) and Normalize are asserted from those files at load, not only in code.
+- Tokenization: `truncation max_length = 512` set explicitly, matching `sentence_bert_config.json` and the sentence-transformers behaviour of the Mem0 row. The pinned tokenizer.json's own `max_length 250` and fixed padding to 250 are overridden. No padding for single-text encoding.
+- ONNX Runtime: `CPUExecutionProvider`, `intra_op_num_threads = inter_op_num_threads = 1`, `graph_optimization_level = ORT_ENABLE_BASIC`, all set explicitly.
+- Outputs are mean-pooled over the attention mask, L2-normalized, then **canonicalised to float32**. Vectors are returned as float32-rounded Python floats on every path.
+- `config_digest` = sha256 of the canonical JSON of:
+  - the file digests;
+  - truncation, padding, pooling, normalize;
+  - the optimization level and thread counts;
+  - the `float32` canonicalisation flag;
+  - the `onnxruntime`, `tokenizers` and `numpy` versions.
+- Determinism is claimed per library versions and CPU instruction set. A golden test (LD10) pins the sha256 of the float32 vectors for fixed texts in the declared CI environment.
+- File digests are re-verified on every provider construction (every `open`).
 
-**LD2 — The model is never fetched implicitly.** `python -m agentmem_ref.runtime.representation_onnx fetch [--dir D]` downloads exactly the three pinned files from `https://huggingface.co/<model>/resolve/<revision>/<file>`. It verifies each sha256 before an atomic rename into `D`, which defaults to `$AGENT_MEMORY_REPRESENTATION_DIR` or `~/.cache/agent-memory/representations/multi-qa-MiniLM-L6-cos-v1-b207367`. Recall, open and restart perform no network I/O.
+**LD2 — Explicit fetch only.**
+- `python -m agentmem_ref.runtime.representation_onnx fetch [--dir D]` downloads exactly the pinned files at the pinned revision.
+- Each file goes to a temporary file in `D` and is renamed atomically after its sha256 verifies.
+- Downloads are capped at the manifest size plus 1%. Symlinked targets and existing non-regular files are refused.
+- `D` defaults to `$AGENT_MEMORY_REPRESENTATION_DIR`, else `~/.cache/agent-memory/representations/multi-qa-MiniLM-L6-cos-v1-b207367`.
+- No network I/O happens at open, recall or restart.
 
-**LD3 — A derived, rebuildable vector store, `runtime/representation_cache.py`.**
-- `DerivedVectorStore(path, spec)` lives in `<root>/derived/vectors-<config_digest[:16]>.sqlite`, a separate file outside the canonical SQLite generation.
-- Table `vectors(fact_uuid TEXT, content_sha256 TEXT, vector BLOB, PRIMARY KEY(fact_uuid, content_sha256))`, with float32 little-endian vectors and a `meta` row binding the full `config_digest`. On a meta mismatch or unreadable file, the store is discarded and rebuilt.
-- It is never canonical and never authority. Deleting it changes no recall result, only latency. Vectors are recomputed deterministically (LD1), and a test proves cached vectors equal freshly computed ones.
-- Lookup is by `(fact_uuid, sha256(fact_text))`. A corrected fact is a new uuid; a tombstoned or invalid fact is skipped by LD4 before lookup.
-- Rows are written only for missing keys. A query embeds the query text plus only the facts not yet cached; there is no per-query re-embedding of the corpus.
-- Writes happen under the handle's serialization lock, because recall already holds it (sqlite_composition.py:77-97).
+**LD3 — Derived vector store with integrity, `runtime/representation_cache.py`.**
+- Location: `<root>/derived/vectors-<config_digest[:16]>.sqlite`, created with mode 0600 inside the durable root's trust boundary (the same boundary as the canonical SQLite file). Backup, copy and restore may omit it; it is rebuilt on demand.
+- Rows: `(fact_uuid, content_sha256, vector BLOB, row_sha256)`, where `row_sha256` = sha256(config_digest ‖ fact_uuid ‖ content_sha256 ‖ vector bytes).
+- A row whose checksum fails is treated as a miss, recomputed and rewritten, and the event is counted.
+- A `meta` row binds the full `config_digest`. On mismatch the file is discarded and rebuilt.
+- `python -m agentmem_ref.runtime.representation_onnx verify --root R` recomputes every row and reports mismatches. `--rebuild` rewrites the store.
+- `semantic_retrieval_posture()` reports `store_rows`, `checksum_failures_since_open` and the last verify result.
+- The store is never canonical and never authority. Cached vectors equal recomputed vectors because of the float32 canonicalisation; a test covers this.
 
-**LD4 — The vector route applies the same domain eligibility as the lexical route.**
-- `NativeVectorCandidateRetriever.search` gains keyword-only `eligible: Callable[[Fact], bool] | None = None` and `store: DerivedVectorStore | None = None`.
-- It skips facts with `is_event_invalid` or `is_transaction_expired`, and facts for which `eligible(fact)` is False, **before** embedding.
-- `DeterministicMultiRouteRecallPlanner.recall` passes `eligible=lambda fact: self.adapter.domain_eligible(fact, context)`, the same predicate as `eligible_search` (runtime_composition.py:186-189).
-- Without `store`, the old O(N) embed path remains for direct callers (tests and the retrieval-quality fixture), so existing fixture tests keep passing.
-- Every candidate still crosses the single governed admission boundary.
+**LD4 — Eligibility.**
+- `NativeVectorCandidateRetriever.search(..., eligible=None, store=None)` skips facts where `eligible(fact)` is False before embedding.
+- The planner passes `lambda fact: self.adapter.domain_eligible(fact, context)`.
+- Validity, invalidity and expiry are not filtered in the route. Admission decides them, as it does for lexical candidates, including explicit historical and as-of intent.
+- Without `store`, the existing O(N) embed path remains for direct callers.
 
-**LD5 — The facade wiring: `AgentMemory.open(..., semantic_retrieval="auto", representation_dir=None)`.**
-- `"auto"`: if the extra is importable and a verified model directory resolves (argument, then environment, then default cache), build the provider, store and retriever and pass them to `SQLiteConfiguredCompositionRuntime.create/recover`, which gain a `vector_retriever` keyword forwarded to `ConfiguredCompositionRuntime`. Otherwise run lexical-only and record the reason.
-- `"off"`: never enabled.
-- `"required"`: raises `RepresentationUnavailable` instead of degrading.
-- `AgentMemory.semantic_retrieval_posture()` (new, read-only) returns `{"status": "enabled"|"disabled", "mode", "reason", "representation": spec fields | null, "store": path | null, "authority_effect": "none"}`. The doctor posture schema is unchanged; a closed-schema change is a separate contract decision.
-- The facade default becomes "on when installed and fetched". Base installs and CI without the extra keep today's exact behaviour (the reason is recorded as `extra_not_installed` or `model_not_present`).
+**LD5 — Facade wiring.**
+- `AgentMemory.open(..., semantic_retrieval="off", representation_dir=None)`, with values `"off"` (default) | `"auto"` | `"required"`.
+- `"auto"` enables the route when the extra imports and a verified model directory resolves; otherwise it stays off and records the reason. `"required"` raises `RepresentationUnavailable`.
+- `SQLiteConfiguredCompositionRuntime.create/recover` gain `vector_retriever` and forward it.
+- `AgentMemory.semantic_retrieval_posture()` (read-only) returns status, mode, reason, the spec fields, the store path and the integrity counters, with `authority_effect: none`.
+- The doctor/posture schema is unchanged.
 
-**LD6 — The optional extra.** `pyproject.toml` `[project.optional-dependencies]` gains `semantic = ["onnxruntime==1.30.0", "tokenizers==0.23.2", "numpy>=1.26,<3"]`, exact-pinned as in `comparators`. The base dependency list is unchanged.
+**LD6 — Extra.**
+- `pyproject.toml` gains `semantic = ["onnxruntime==1.30.0", "tokenizers==0.23.2", "numpy==2.4.6"]`.
+- Transitive dependencies of `onnxruntime` (`protobuf`, `flatbuffers`, `coloredlogs`, `sympy`, `packaging`) are pinned in the workflow constraints file `reference/requirements-semantic.txt`, not in the extra. The extra pins the three packages that determine numerics; the constraints file pins the CI environment.
 
-**LD7 — Ranking is unchanged in code; the change is declared as v3.**
-- `MULTI_ROUTE_RANKING_POLICY` already orders `route_score_order = (semantic_vector, shared_evidence, lexical)` after corroboration and exact identity (runtime_composition.py:119-125). Enabling the route therefore changes ordering wherever it runs.
-- No policy constant changes. Fusion and calibration are #673. The observable change is declared as Runtime Baseline v3:
-  - `reports/runtime/baseline-v3-declaration.json`: issue 669, predecessor v2;
-  - `identity_deltas` for the new identity rows (LD8);
-  - `pyproject_change: {"reason": "optional extra 'semantic' for the pinned ONNX representation provider (decision-embedding-dependency)"}`;
-  - `acceptance_evidence_required`: the public gauntlet probe, the `-v3` lanes (LD9) and the MESA successor replay;
-  - the register's `declared_successor` points at v3;
-  - `declared_changes` is produced by `scripts/declare_runtime_baseline_changes.py` after the last protected edit, and the checker must print `TRANSITION`.
-- Merge with a merge commit (docs/67 Step A.5).
+**LD7 — Ranking policy 3.2.0: the semantic route is ordering-subordinate.**
+- `PostAdmissionRankingPolicy` gains `subordinate_routes: tuple[str, ...] = ()`. A subordinate route:
+  - contributes candidates;
+  - is excluded from `route_corroboration_count` and from the primary `route_score_desc:*` stages;
+  - is recorded in `ranking_evidence.subordinate_route_scores`;
+  - orders only through a stage `route_score_desc_subordinate:<route>` placed **after** `temporal_order_within_query_regime` and before the stable fallback.
+- Consequences:
+  - The temporal applicability tier, lexical relevance and newer-first ordering keep exactly their 3.1.2 meaning and order.
+  - `_neutralize_unknown_ties` (temporal_order_constraints.py:319-363) groups on the unchanged pre-temporal key.
+  - Semantic-only candidates (lexical score 0) rank after lexical matches and are ordered among themselves by similarity.
+- `MULTI_ROUTE_RANKING_POLICY` becomes `route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE)` with `subordinate_routes=(SEMANTIC_VECTOR_ROUTE,)`. `POLICY_VERSION` becomes 3.2.0 (temporal_order_constraints.py:47, the existing identity row).
+- `query-driven-relational` is unchanged apart from the version string. `controlled-multi-route` (#644, not facade-reachable) keeps its stage order; its version string moves with the class. #644 owns that decision.
+- **With the route off, 3.2.0 orders identically to 3.1.2.** A test compares rankings over the #580/#584/M4 fixtures with the route off. With the fixture provider on, the same fixtures are run, and every ordering difference is listed in the PR. Any explicit-current expectation that flips is a blocker, not a re-pin.
+- `minimum_similarity` for the facade retriever is 0.30 with `vector_candidate_limit` 16. It is recorded in posture. The rationale: MiniLM cosine below about 0.3 is near-random relatedness. The value is a declared parameter, not tuning, and #673 re-examines it.
 
-**LD8 — Identity sources.** `scripts/runtime_baseline_identity.py` `IDENTITY_SOURCES` gains:
-- `identity.semantic_representation.ref`, `.revision` and `.version`, read from constants in `runtime/representation_onnx.py`;
-- `identity.semantic_retrieval.default_mode`, read from the facade default in `api/surface.py`.
+**LD8 — Succession (v3 declaration).**
+- `reports/runtime/baseline-v3-declaration.json`: issue 669, predecessor v2.
+- `identity_deltas`: `[identity.ranking.active_policy_version 3.1.2 → 3.2.0]`.
+- `pyproject_change`: `{"reason": "optional extra 'semantic' (decision-embedding-dependency)"}`.
+- `acceptance_evidence_required`: the public gauntlet probe, plus lanes `longmemeval-s-retrieval-parity-v3` and `amb-precisionmembench-retrieval-v3` (frozen by the follow-up lane plan before Step B1).
+- The declaration's description states that the facade default is `off`, so existing stores do not change ranking on recover unless a caller opts in.
+- New modules are `git add`ed before `declare_runtime_baseline_changes.py` runs, and the checker must print `TRANSITION`.
 
-The v3 record (Step B1) carries them, and they are validated by `validate_runtime_baseline_source.py`.
+**LD9 — Acceptance evidence in this PR.**
+- (a) LD10 tests.
+- (b) The retrieval-quality CI and the continuous-regression `vector_persistence_claimed False` (retrieval_regression.py:379) stay true: the default is off.
+- (c) The ordering-difference report from LD7.
+- (d) A local LongMemEval_S diagnostic run with `semantic_retrieval="required"`, if the dataset downloads at its pinned digest. It is labelled diagnostic.
+- Formal lane rows and MESA are follow-ups.
 
-**LD9 — Acceptance evidence.**
-- (a) Unit and conformance tests (LD10).
-- (b) Retrieval-quality CI is unchanged. It runs without the extra, and its frozen numbers and `vector_persistence_claimed False` stay true for the lexical profile.
-- (c) A local MESA successor replay. A successor freeze copies the v1 freeze with only the `agent_memory` block changed: new runtime tree, `semantic` packages and an `AGENT_MEMORY_REPRESENTATION_DIR` binding. It reports per-axis deltas and M4 `win_basis`. An M4 change is reported as whatever `win_basis` says, never as currentness capability.
-- (d) New lane ids `longmemeval-s-retrieval-parity-v3` and `amb-precisionmembench-retrieval-v3`, frozen in this PR per docs/plan-640 LD6, with workflows that install `.[semantic]` and fetch the pinned model by digest. They are dispatched after merge for Step B1, with the Mem0 row re-run for parity.
-- (e) A LongMemEval_S local run with the v3 runner configuration, if the dataset downloads at its pinned digest. It is diagnostic until the lane row is accepted.
-
-**LD10 — Tests.**
-- `test_representation_onnx.py`: manifest digests; refusal on a tampered file; determinism (the same text gives a byte-identical vector); dimension and norm; `RepresentationUnavailable` without the extra. Model-dependent cases are skipped only when the model directory is absent, and the skip reason is stated.
-- `test_representation_cache.py`: miss then hit; cached equals recomputed; config-digest mismatch triggers a rebuild; deleting the file changes no recall result.
-- `test_native_vector_retrieval.py` additions: ineligible, invalid and expired facts are never vector candidates; candidates are domain-eligible.
-- `test_developer_facade.py` additions: `semantic_retrieval="off"` behaves exactly as v2; `"required"` without the model raises; `"auto"` without the model records the reason and degrades to lexical; with the fixture provider injected, the vector route appears in `route_provenance`, every candidate is admitted or refused by the same admission, and nothing outside the domain appears.
-- The frozen #584, #580, MESA-formal and lane tests keep passing.
+**LD10 — Tests and CI.**
+- `test_representation_onnx.py`:
+  - manifest and pooling assertions;
+  - tamper refusal;
+  - truncation at 512;
+  - float32 canonicalisation;
+  - a golden sha256 of the vectors for three fixed texts;
+  - `RepresentationUnavailable` without the extra.
+- `test_representation_cache.py`:
+  - miss then hit;
+  - cached equals recomputed;
+  - checksum failure is recomputed;
+  - config mismatch rebuilds;
+  - the file is 0600;
+  - `verify` reports a tampered row.
+- `test_native_vector_retrieval.py`: domain-ineligible facts never become candidates; event-invalid facts are candidates admitted only under historical intent.
+- `test_post_admission_ranking_policy.py`: the 3.2.0 subordinate stage order; route-off equivalence with 3.1.2.
+- `test_developer_facade.py`:
+  - the default is off and identical to v2;
+  - `"required"` raises without a model;
+  - `"auto"` records the reason;
+  - with the fixture provider, the semantic route appears in `route_provenance` and admission is unchanged.
+- Model-dependent tests skip when the model is absent, **unless `AGENT_MEMORY_REQUIRE_REPRESENTATION=1`**, which turns skips into failures.
+- New workflow `.github/workflows/semantic-representation.yml`:
+  - runs on pull_request for the touched paths and on push to main;
+  - concurrency `cancel_superseded`, timeout 20 minutes, `full_suite_passes` 0;
+  - registered in `data/github-actions-workflow-policy.json` and the inventory;
+  - installs `.[semantic]` with `reference/requirements-semantic.txt`;
+  - fetches the model by digest with `actions/cache` keyed on the manifest digest;
+  - sets `AGENT_MEMORY_REQUIRE_REPRESENTATION=1`;
+  - runs the four test modules.
 
 ## Boundaries
 
@@ -117,13 +173,17 @@ The v3 record (Step B1) carries them, and they are validated by `validate_runtim
 
 None blocking. Two defaults are flagged:
 
-1. `auto` as the facade default. #669 asks for default-on with an explicit opt-out; the owner ruling makes the dependency optional. `auto` satisfies both.
+1. **Default `off`.** #669 asks for default-on. That is deferred to #673, because default-on ordering needs fusion analysed against #584. This tranche makes the route reachable and qualified, but opt-in.
 2. The doctor posture schema stays closed. Route status is exposed by a new read-only method, not inside the posture report.
 
 ## Steps
 
-1. LD1–LD6 and LD10, with the full suite green.
-2. LD7–LD8: declaration and register, `declared_changes`, `TRANSITION`.
-3. LD9 (c) and (e) locally; (d) frozen.
+1. LD1–LD7 and LD10, with the full suite green.
+2. LD8: declaration and register, `declared_changes`, `TRANSITION`.
+3. LD9 (c) and (d).
 4. Ledger entry, PR, merge commit.
-5. Step B1/B2 in a follow-up after lane dispatch.
+5. Follow-ups:
+   - a `-v3` lane plan, then Step B1/B2;
+   - a `mesa-formal-v2` runner and replay;
+   - an `introduced_in` identity mechanism;
+   - #673 default-on and fusion.
