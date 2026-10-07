@@ -290,6 +290,7 @@ class GovernedMemoryAdapter:
         attestation: policy.ExternalVerification | None = None,
         temporal: "Mapping[str, str] | None" = None,
         replacement_kind: str = ERROR_CORRECTION,
+        source_ref: str | None = None,
     ) -> CommitResult:
         """Commit a proposal through the governed path.
 
@@ -393,7 +394,7 @@ class GovernedMemoryAdapter:
                         attestation.authority_kind if attestation is not None else None
                     ),
                 )
-            fact_uuid = self._write(proposal, fact_text, temporal)
+            fact_uuid = self._write(proposal, fact_text, temporal, source_ref=source_ref)
             self._current_fact_by_memory[proposal.target_reference] = fact_uuid
             events.append(
                 self._event(
@@ -556,8 +557,20 @@ class GovernedMemoryAdapter:
             return "defer" if "defer" in permitted else permitted[0]
         return choice
 
-    def _write(self, proposal: policy.Proposal, fact_text: str, temporal: "Mapping[str, str] | None" = None) -> str:
+    def _write(
+        self,
+        proposal: policy.Proposal,
+        fact_text: str,
+        temporal: "Mapping[str, str] | None" = None,
+        *,
+        source_ref: str | None = None,
+    ) -> str:
         declared = declared_temporal(temporal)
+        if source_ref is None:
+            source_ref = f"actor:{proposal.actor_id}"
+        if not isinstance(source_ref, str) or not source_ref.strip() or len(source_ref) > 256:
+            raise ValueError("source_ref must be a non-empty string of at most 256 characters")
+        source_ref = source_ref.strip()
         domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
         required_domains = tuple(dict.fromkeys(proposal.required_isolation_domain_refs))
         if required_domains and not set(required_domains).issubset(set(domain_refs)):
@@ -572,6 +585,20 @@ class GovernedMemoryAdapter:
             "purpose": proposal.purpose,
         }
         attributes: dict = {DECLARED_TEMPORAL_KEY: declared} if declared else {}
+        attributes["write_provenance"] = {
+            "version": "1.0.0",
+            "actor_id": proposal.actor_id,
+            "tenant": self._tenant,
+            "purpose": proposal.purpose,
+            "channel": (
+                "caller_observation"
+                if proposal.operation == "promotion"
+                else "caller_correction"
+                if proposal.operation == "correction"
+                else f"other:{proposal.operation}"
+            ),
+            "source_ref": source_ref,
+        }
         attributes[semantics.WRITE_SEMANTICS_KEY] = semantics.persisted_form(
             self._interpret_write(uuid, proposal.target_reference, fact_text, declared, scope)
         )
