@@ -15,6 +15,7 @@ permissions:
 jobs:
   domain-schema-discovery:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v7

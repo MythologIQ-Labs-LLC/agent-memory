@@ -33,6 +33,7 @@ env:
 jobs:
   qualify-code-graph:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
       FIXTURE_ROOT: ${{ github.workspace }}/reference/fixtures/component-qualification

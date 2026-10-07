@@ -30,6 +30,7 @@ env:
 jobs:
   codegenome-reality-mesh:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout Agent Memory
         uses: actions/checkout@v7

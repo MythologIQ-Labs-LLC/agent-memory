@@ -15,6 +15,7 @@ permissions:
 jobs:
   external-evidence-contract:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Agent Memory
         uses: actions/checkout@v7

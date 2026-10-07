@@ -28,6 +28,7 @@ env:
 jobs:
   validate-profile:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     env:
       AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
       EVIDENCE_ROOT: /tmp/codegenome-multicapability-profile

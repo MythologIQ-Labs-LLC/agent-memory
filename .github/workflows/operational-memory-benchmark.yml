@@ -15,6 +15,7 @@ permissions:
 jobs:
   local-representations:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -104,6 +105,7 @@ jobs:
 
   vjepa2-1-frozen-representation:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Agent Memory
         uses: actions/checkout@v7

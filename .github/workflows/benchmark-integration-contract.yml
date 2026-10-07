@@ -27,6 +27,7 @@ permissions:
 jobs:
   contributor-contracts:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout exact source revision
         uses: actions/checkout@v7

@@ -15,6 +15,7 @@ permissions:
 jobs:
   uor-addr-compatibility:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       UOR_RELEASE: v0.2.0
       UOR_TAG_OBJECT: 4bdc4ec022bbc99b3c1ec01a67b40a7e25f30de4
