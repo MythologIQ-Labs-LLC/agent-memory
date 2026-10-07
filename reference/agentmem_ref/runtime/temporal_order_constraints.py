@@ -33,7 +33,7 @@ from .proposition_semantics import (
     STATE_CHANGE_CANDIDATE,
     WRITE_SEMANTICS_KEY,
 )
-from .ranking_policy import PostAdmissionRankingPolicy
+from .ranking_policy import PostAdmissionRankingPolicy, _DEMOTED
 from .temporal_intent import (
     CALLER_DECLARED,
     CURRENT,
@@ -45,6 +45,8 @@ from .temporal_intent import (
 UNKNOWN_TEMPORAL_BASIS = "unknown_temporal_basis"
 APPLICABLE = "applicable"
 POLICY_VERSION = "3.2.0"
+CROSS_FACT_POLICY_VERSION = "3.3.0"
+CROSS_FACT_POLICY = "explicit_current_interpreted_cross_fact_v1"
 UNKNOWN_BASIS_POLICY = "explicit_current_exclusive_pairwise_v1"
 
 _ALLOWED_INTENT_BASES = frozenset({CALLER_DECLARED, QUERY_LANGUAGE_EXPLICIT})
@@ -462,11 +464,142 @@ class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
         return final_order, evidence
 
 
+@dataclass(frozen=True)
+class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPolicy):
+    """Policy 3.3.0: bounded read-time cross-fact applicability over 3.2.0.
+
+    The cross-fact input is produced only after canonical admission. It can demote
+    an unknown-basis target for an explicit-current query, but it cannot remove a
+    candidate, mutate lifecycle state, or grant authority.
+    """
+
+    version: str = CROSS_FACT_POLICY_VERSION
+    cross_fact_policy: str = CROSS_FACT_POLICY
+
+    def identity(self) -> dict[str, Any]:
+        identity = super().identity()
+        identity["cross_fact_policy"] = self.cross_fact_policy
+        return identity
+
+    def rank(
+        self,
+        admitted: Iterable[str],
+        hits_by_candidate: Mapping[str, Sequence[Any]],
+        fact_lookup: Callable[[str], Any],
+        query: str = "",
+        intent: TemporalIntent | None = None,
+        cross_fact: Mapping[str, Mapping[str, Any]] | None = None,
+    ) -> tuple[list[str], dict[str, dict[str, Any]]]:
+        intent = intent or TemporalIntent()
+        base_order, evidence = super().rank(
+            admitted,
+            hits_by_candidate,
+            fact_lookup,
+            query=query,
+            intent=intent,
+        )
+        if not explicit_current_profile(intent) or not cross_fact:
+            return base_order, evidence
+
+        pre_labels = {
+            ref: evidence[ref].get("temporal_applicability")
+            for ref in base_order
+        }
+
+        for target_ref in base_order:
+            candidate = cross_fact.get(target_ref)
+            if not candidate:
+                continue
+            accepted = list(candidate.get("accepted") or ())
+            adapter_refusal = candidate.get("refusal_reason")
+            if not accepted:
+                if adapter_refusal:
+                    evidence[target_ref]["cross_fact_refusal_reason"] = adapter_refusal
+                continue
+
+            if pre_labels.get(target_ref) != UNKNOWN_TEMPORAL_BASIS:
+                evidence[target_ref]["cross_fact_refusal_reason"] = "target_has_temporal_basis"
+                continue
+
+            usable = []
+            refusal = None
+            for item in accepted:
+                source_ref = str(item.get("source_fact_uuid") or "")
+                if source_ref not in evidence:
+                    refusal = refusal or "source_not_admitted"
+                    continue
+                source_label = pre_labels.get(source_ref)
+                if source_label != UNKNOWN_TEMPORAL_BASIS:
+                    refusal = refusal or "source_has_temporal_basis"
+                    continue
+                if source_label in _DEMOTED.get(intent.mode, set()):
+                    refusal = refusal or "source_is_demoted"
+                    continue
+                usable.append(dict(item))
+
+            if not usable:
+                evidence[target_ref]["cross_fact_refusal_reason"] = refusal or adapter_refusal or "no_accepted_source"
+                continue
+
+            evidence[target_ref]["temporal_applicability"] = "limited_by_cross_fact_state_change"
+            evidence[target_ref]["temporal_applicability_basis"] = "interpreted_cross_fact"
+            evidence[target_ref]["cross_fact_limitation"] = sorted(
+                usable,
+                key=lambda item: (
+                    str(item.get("source_fact_uuid") or ""),
+                    str(item.get("proposal_id") or ""),
+                ),
+            )
+            evidence[target_ref].pop("cross_fact_refusal_reason", None)
+
+        # temporal_applicability_tier is the first 3.2.0 stage. A stable partition
+        # therefore reproduces exactly the order that re-evaluating that stage would
+        # produce while preserving every 3.2.0 order decision within a tier.
+        final_order = sorted(
+            base_order,
+            key=lambda ref: (
+                1
+                if evidence[ref].get("temporal_applicability") in _DEMOTED.get(intent.mode, set())
+                else 0
+            ),
+        )
+
+        base_next = {
+            ref: base_order[index + 1] if index + 1 < len(base_order) else None
+            for index, ref in enumerate(base_order)
+        }
+        base_reason = {
+            ref: evidence[ref].get("ordered_before_next_by")
+            for ref in base_order
+        }
+        for position, ref in enumerate(final_order, start=1):
+            evidence[ref]["rank_position"] = position
+            evidence[ref]["authority_effect"] = "none"
+            evidence[ref].pop("ordered_before_next_by", None)
+
+        for index, ref in enumerate(final_order[:-1]):
+            successor = final_order[index + 1]
+            mine_demoted = evidence[ref].get("temporal_applicability") in _DEMOTED.get(intent.mode, set())
+            theirs_demoted = evidence[successor].get("temporal_applicability") in _DEMOTED.get(intent.mode, set())
+            if mine_demoted != theirs_demoted:
+                reason = "temporal_applicability_tier"
+            elif base_next.get(ref) == successor:
+                reason = base_reason.get(ref) or "base_ranking_preserved"
+            else:
+                reason = "stable_cross_fact_tier"
+            evidence[ref]["ordered_before_next_by"] = reason
+
+        return final_order, evidence
+
+
 __all__ = [
     "APPLICABLE",
     "ConstrainedOrderResult",
     "ExplicitCurrentConstrainedRankingPolicy",
+    "ExplicitCurrentCrossFactRankingPolicy",
     "POLICY_VERSION",
+    "CROSS_FACT_POLICY_VERSION",
+    "CROSS_FACT_POLICY",
     "TemporalConstraintEdge",
     "UNKNOWN_BASIS_POLICY",
     "UNKNOWN_TEMPORAL_BASIS",
