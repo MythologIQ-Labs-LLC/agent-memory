@@ -839,6 +839,102 @@ Current RC/runtime work remains higher priority.
 The benchmark program must not wait for this UI. The UI must consume the evidence contracts established by that program rather than reshape benchmark design around frontend convenience.
 
 
+# Reference wireframes
+
+These are structural wireframes, not final visual design. They establish hierarchy and interaction density for #699.
+
+## Overview
+
+~~~text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Agent Memory Benchmark Evidence    CURRENT · snapshot 2026-10-07.4        │
+│ AM 2d852d3 · Runtime Baseline vN · Evidence through Oct 7       [Share]    │
+├──────────────┬──────────────────────────────────────────────────────────────┤
+│ Overview     │ North Star                                                   │
+│ Compare      │ ┌────────────┬────────────┬────────────┬───────────────┐    │
+│ Benchmarks   │ │ Retrieval  │ Currentness│ Scale      │ Reasoning / QA│    │
+│ Changes      │ │ Competitive│ Weak       │ Gap        │ Not measured  │    │
+│ Failures     │ │ LME .823   │ AMB .200   │ BEAM —     │ Same-harness —│    │
+│ Coverage     │ │ Same harness│ Diagnostic │ Evidence gap│ Not measured │    │
+│ Evidence     │ └────────────┴────────────┴────────────┴───────────────┘    │
+│              │                                                              │
+│              │ Material findings                                            │
+│              │ Currentness needs attention        [Why?] [Explore failures] │
+│              │ LME session retrieval competitive [Compare systems]          │
+│              │ BEAM scale not measured            [View coverage gap]        │
+│              │                                                              │
+│              │ Recent architecture/evidence changes                          │
+│              │ 2d852d3  Baseline-first posture                              │
+│              │ ca0f9a7  Runtime Baseline v2                                 │
+└──────────────┴──────────────────────────────────────────────────────────────┘
+~~~
+
+The overview prioritizes conclusions plus evidence state. It does not begin with a wall of benchmark names.
+
+## Compare
+
+~~~text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Compare systems                                                             │
+│ Systems [Agent Memory ×] [Mem0 ×]  Evidence [Same-harness only ▾]          │
+│ Benchmark [LongMemEval_S ▾] Profile [Retrieval parity ▾] Plane [Session ▾] │
+├──────────────┬───────────────────────────────────────────────┬──────────────┤
+│ Comparison   │ EXACT SAME-HARNESS                            │ Evidence     │
+│ sets         │ Why comparable? ✓                             │ inspector    │
+│              │                                               │              │
+│ LME Session  │ Metric             AM       Mem0     Δ         │ Input digest │
+│ LME Turn     │ Recall all @5      .823     .809    +.014     │ same ✓       │
+│ AMB Precision│ Recall all @10     .893     .883    +.010     │ Selection ✓  │
+│              │ nDCG any @10       .878     .841    +.037     │ Budget ✓     │
+│              │ Latest gold first  .457     .443    +.014     │ Metric ✓     │
+│              │                                               │ Revisions    │
+│              │ [Inspect run] [Share snapshot]                │ AM …         │
+│              │                                               │ Mem0 …       │
+│              ├───────────────────────────────────────────────┤              │
+│              │ PUBLISHED MARKET CONTEXT · NOT HEAD-TO-HEAD   │              │
+│              │ Hindsight LME QA 94.6%  [Why not comparable?] │              │
+└──────────────┴───────────────────────────────────────────────┴──────────────┘
+~~~
+
+The evidence inspector can remain open while the user changes metrics or comparison sets.
+
+## Changes to failures
+
+~~~text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Changes                                                                     │
+│ Before [Baseline v2 · ca0f9a7 ▾]   After [future baseline · abc1234 ▾]     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Comparable                                                                  │
+│ Currentness   .200 ───────────────────────────────▶ .760   +.560           │
+│ Recall @5     .823 ───────────────────────────────▶ .901   +.078           │
+│ Search p95    11.9ms ─────────────────────────────▶ 18.4ms  REGRESSION      │
+│                                                                             │
+│ New evidence: BEAM 1M first baseline                                       │
+│ Not comparable: LongMemEval QA evaluator changed                           │
+│                                                                             │
+│ Currentness +.560   [Architecture context] [Explore changed failures]       │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      v
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Failure Explorer · Currentness · After abc1234                              │
+│ Filters [Stage ▾] [Case type ▾] [Outcome ▾] [Search cases]                 │
+│                                                                             │
+│ Ranking/fusion          ███████████████████ 41%                             │
+│ Temporal applicability ████████████        27%                             │
+│ Identity/slot          ████████            18%                             │
+│ Candidate generation   ████                 9%                             │
+│ Unclassified           ██                   5%                             │
+│                                                                             │
+│ Cases                                                                       │
+│ MESA-00418  ranking/fusion     stale fact first   [Inspect evidence]        │
+│ MESA-00602  unclassified       wrong target       [Inspect evidence]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+~~~
+
+The key flow is aggregate change -> affected metric -> failure population -> individual evidence, without losing revision/filter context.
+
 # Implementation issue map
 
 The future work is decomposed as:
