@@ -81,6 +81,7 @@ def _stable_normalized(value: dict[str, Any]) -> dict[str, Any]:
     if isinstance(execution, dict):
         execution.pop("started_at", None)
         execution.pop("elapsed_ms", None)
+        execution.pop("environment", None)  # runner interpreter patch and platform, not probe semantics
     native = result.get("native_results")
     if isinstance(native, dict):
         result["native_results"] = _stable_native(native)
@@ -115,7 +116,7 @@ def _golden_checks(first: dict[str, Any], golden_path: Path | None) -> dict[str,
     return {
         "golden_manifest_equal": first["manifest"] == golden.get("manifest"),
         "golden_native_semantics_equal": _stable_native(first["native"]) == golden.get("native_results"),
-        "golden_normalized_semantics_equal": _stable_normalized(first["normalized"]) == golden.get("normalized_run"),
+        "golden_normalized_semantics_equal": _stable_normalized(first["normalized"]) == _stable_normalized(golden.get("normalized_run") or {}),
         "golden_qualification_semantics_equal": _stable_qualification(first["qualification"]) == golden.get("qualification"),
         "golden_authority_effect_none": golden.get("authority_effect") == "none",
         "golden_evidence_class_probe": golden.get("evidence_class") == "baseline_or_probe",
@@ -162,6 +163,7 @@ def main() -> int:
             "normalized-run.run_id",
             "normalized-run.execution.started_at",
             "normalized-run.execution.elapsed_ms",
+            "normalized-run.execution.environment (runner interpreter version and platform)",
             "normalized-run.dimensions.efficiency",
             "normalized-run artifact sha256/uri values derived from timing or output root",
             "qualification run_id and artifact paths/hashes derived from execution identity/timing",
