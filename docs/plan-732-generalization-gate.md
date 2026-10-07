@@ -14,7 +14,7 @@
 - The thresholds are owner-ratified (G5).
 
 **doctrine**: a benchmark identifies a gap but never defines the production grammar; a perfect benchmark score is not closure evidence; no tuning after any score
-**iteration**: 4
+**iteration**: 5
 
 **Gate history**:
 - **Attempt 1: VETO (B1–B6).**
@@ -32,11 +32,12 @@
   - C5: the structural families were not structurally constrained.
   - C6: the deficit row was schema-invalid.
 
+- **Attempt 4: VETO (H1).** The effective-source rule rejected the natural N9 case (two agents, both with null source), which follows the brief literally.
 - **Attempt 3: VETO (E1–E2).**
   - E1: the audit's byte-equality rule did not match the harness's wrapper on coordinator messages, and the hand-back tool was not addressed.
   - E2: a missing must-change variant was a MIXED cause that no family carried.
 
-The owner's thresholds were never in question. Iteration 3 fixed C1–C6 and D1–D9. Iteration 4 fixes E1–E2 and folds in advisories F1–F6.
+The owner's thresholds were never in question. Iteration 3 fixed C1–C6 and D1–D9. Iteration 4 fixed E1–E2 and F1–F6. Iteration 5 fixes H1 and folds in I1–I3, with no change to the prompt files.
 
 **Frozen inputs.** Every text the orchestrator can send the author is committed under `reports/benchmarks/currentness-generalization/prompts/` (C1, D3). These files are canonical, and the appendices restate them. Their sha256 values are bound by the gate entry that passes this plan:
 
@@ -74,7 +75,7 @@ This plan:
 - **Tool rule.**
   - The only permitted tool calls are:
     - `Write` and `Read` on paths under `{AUTHOR_DIR}`;
-    - at most one hand-back call per pass (`SubagentHandback`) whose entire input is `{"message": "done"}`. It carries no information inward. Ending a pass in plain text is equally valid (E1).
+    - at most one hand-back call per pass (`SubagentHandback`) whose `tool_use.input`, parsed as JSON, equals the object `{"message": "done"}` (I2). It carries no information inward. Ending a pass in plain text is equally valid (E1).
   - Any other tool call invalidates the attempt. That covers Bash, Grep, Glob, any read outside the directory, web, GitHub or other MCP tools, and agents.
   - An invalidated attempt is discarded. A new subagent starts in `author732-<n+1>/`, and the discarded attempt is recorded.
 - **Audit** (`scripts/audit_authoring_transcript.py`, new). It runs over the subagent's `.jsonl` transcript and fails the attempt unless all of these hold:
@@ -88,7 +89,10 @@ This plan:
     - (4) the first record, as in (c).
 
     Anything else, including a coordinator record that does not match (3) and a reminder carrying a coordinator origin, invalidates the attempt.
-  - **Wrapper drift.** If the harness wrapper differs from the frozen strings, the audit fails closed. The attempt is discarded, and the observed wrapper is reported to a tribunal before any new attempt. The rule is never loosened silently.
+  - **Wrapper or record-shape drift (I3).** The audit fails closed if:
+    - the harness wrapper differs from the frozen strings;
+    - a record lacks the fields these rules read (`type`, `isMeta`, `origin`, `content`);
+    - a record carries a shape the rules do not classify. The attempt is discarded, and the observed wrapper is reported to a tribunal before any new attempt. The rule is never loosened silently.
   - **Dry run.** The freeze PR includes a dry run of the audit on a throwaway subagent transcript. The throwaway subagent receives the frozen prompts interpolated with a dummy directory, and does no authoring.
   - (c) the first `type:"user"` record that is not a harness reminder is the interpolated `spawn.txt`, as a plain string without a coordinator origin.
 - **Transcript binding (D2).**
@@ -129,7 +133,9 @@ This plan:
 - **`K3_order`:** `older_write < newer_write`.
 - **`K4_recall_as_wrote`:** `recall_as` equals the `(handle, scope)` of at least one write.
 - **`K5_structure_<family>`** (C5). This applies to base cases only (F3); variants are governed by K6.
-  - "Same" compares the **effective** `source_ref`, where null means `actor:<actor_id of that write's handle>` (F1).
+  - **Source comparison.** "Same" compares the **effective** `source_ref`, where null means `actor:<actor_id of that write's handle>` (F1). The exception is N9, which compares the **declared** `source_ref`, with null equal to null (H1). This matches the brief's literal "same `source_ref`".
+    - For N9, the effective sources necessarily differ, and the runtime refuses at G8 `actor_mismatch` either way (attempt-4 audit, executed).
+    - In every other family both writes share a handle, so the effective and declared comparisons agree.
   - A non-null `source_ref` beginning with `actor:` fails `K1_fields` outright, so that an author cannot accidentally restate the implicit actor source.
   - **P, R, N1–N6, N11, N12:** older and newer have the same `handle`, `scope` and `source_ref`; `actions` is empty; `recall_as` is the older write's `(handle, scope)`.
   - **N7:** same `scope`; both `source_ref`s are non-null and different; `actions` is empty.
@@ -289,7 +295,7 @@ Generalization is **qualified after MIXED only** when a single G6 holdout run sa
 | `metric` | `engagement_recall`, `false_engagements`, `metamorphic_invariance`, `valid_case_count`, `must_change_variant_count`, `must_change_refrain_rate` or `unattributed_ranking_changes` |
 | `direction` | `higher` (recall, invariance, counts, refrain rate) or `lower` (false engagements, unattributed changes) |
 | `agent_memory` | the family rate rounded to 4 places, or the integer count |
-| `adequacy_target` | `>=0.80` (recall; `>=0.60` floor stated), `0` (false engagements), `>=0.95` (invariance), or the exact size (count) |
+| `adequacy_target` | `>=0.80` (recall; `>=0.60` floor stated), `0` (false engagements), `>=0.95` (invariance), the exact size (counts), `1.0` (`must_change_flip`) or `0` (`attribution`) (I1) |
 | `gap` | null |
 | `priority` | `P0` for a structural-guard false engagement and for `attribution`; `P1` for `deficient`, `unsafe`, `must_change_flip` and the overall-recall cause; `P2` for `adequate`, `invariance`, `insufficient` and `missing_variant` |
 | `posture` | `architecture_gap`; `implementation_defect` for `attribution`; `evaluator_protocol_defect` for `insufficient` and `missing_variant` |
