@@ -60,6 +60,7 @@ RUNNER_CONFIGURATION_DEFAULTS = {
     "ranking_variant": "default",
     "budget": "none",
     "semantic_retrieval": "off",
+    "recall_control": "off",
 }
 #: ``execution.agent_memory_semantic_posture`` fields a row's ``semantic_representation``
 #: pins (#669 D2); ``status`` must be ``enabled`` and ``mode`` must equal the row's mode.
@@ -179,6 +180,34 @@ def check_semantic_posture(execution: dict, row: dict) -> dict | None:
     return dict(recorded)
 
 
+def check_recall_control(native: dict, mode: str, row: dict) -> dict | None:
+    """Bind per-question shadow telemetry to the row's ``recall_control`` mode (plan-644-lanes-v4 L2).
+
+    A shadow row must carry the telemetry record (``authority_effect: none``) on every question
+    without a runtime error, plus the report aggregate; every other row must carry none. The
+    telemetry is evidence for T-controller-2, never benchmark authority.
+    """
+
+    rows = native.get("rows") or []
+    carrying = [item for item in rows if "recall_control" in item]
+    if mode != "shadow":
+        if carrying or "recall_control_summary" in native:
+            raise ImportError_(f"row {row['row_id']} runs recall_control {mode} but the report carries shadow telemetry")
+        return None
+    for item in rows:
+        if item.get("runtime_error") is not None:
+            continue
+        record = item.get("recall_control")
+        if not isinstance(record, dict) or record.get("authority_effect") != "none":
+            raise ImportError_(f"shadow row {row['row_id']} question {item.get('question_id')} lacks an authority-free telemetry record")
+        if "elapsed_ms" in (record.get("usage") or {}):
+            raise ImportError_(f"shadow row {row['row_id']} question {item.get('question_id')} records non-deterministic elapsed_ms")
+    summary = native.get("recall_control_summary")
+    if not isinstance(summary, dict) or summary.get("questions_with_telemetry") != len(carrying):
+        raise ImportError_(f"shadow row {row['row_id']} report lacks a recall_control_summary over its telemetry")
+    return summary
+
+
 def runtime_baseline_binding(identity: dict, lane: dict, row: dict | None = None) -> dict | None:
     """Bind the checker state the run recorded to the posture the lane's control row pins.
 
@@ -292,6 +321,7 @@ def _check_report(report: dict, *, identity: dict, lane: dict, row: dict) -> Non
     native = planes[plane]["backends"][backend]
     if len(native.get("rows") or []) != lane["dataset"]["query_count"]:
         raise ImportError_("report does not carry one row per frozen question")
+    check_recall_control(native, expected_configuration["recall_control"], row)
     external = (execution.get("external_backends") or {}).get(backend)
     if row["source"]["kind"] == "python_package":
         if external is None:
@@ -418,6 +448,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
             "external_backend_identity": (report["execution"].get("external_backends") or {}).get(backend),
             "runtime_baseline": runtime_baseline_binding(identity, lane, row),
             "semantic_route_posture": report["execution"].get("agent_memory_semantic_posture"),
+            "recall_control_summary": report["planes"][plane]["backends"][backend].get("recall_control_summary"),
         },
         "input": {
             "sha256": lane["dataset"]["input_sha256"],
