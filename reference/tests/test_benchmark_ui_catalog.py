@@ -17,6 +17,7 @@ SCORECARDS = ROOT / "reports" / "benchmarks" / "scorecards" / "scorecards.json"
 NORMALIZED = ROOT / "reports" / "benchmarks" / "normalized"
 SCHEMA = ROOT / "schemas" / "benchmark-ui-catalog.schema.json"
 FRAME_FIXTURES = ROOT / "docs" / "prd" / "PRD-002-wireframe-fixtures.json"
+PART_R = ROOT / "reports" / "benchmarks" / "replays" / "594-post-550-semantic-qualification" / "phase-b-score-v1.json"
 
 
 def _load(path: Path):
@@ -28,13 +29,14 @@ def _inputs():
         _load(DASHBOARD),
         _load(SCORECARDS),
         {str(path.relative_to(ROOT)): _load(path) for path in sorted(NORMALIZED.glob("*.json"))},
+        {str(PART_R.relative_to(ROOT)): _load(PART_R)},
     )
 
 
 class BenchmarkUiCatalogTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.dashboard, cls.scorecards, cls.normalized = _inputs()
+        cls.dashboard, cls.scorecards, cls.normalized, cls.diagnostics = _inputs()
         cls.catalog = build_catalog(
             dashboard=cls.dashboard,
             scorecards=cls.scorecards,
@@ -63,6 +65,7 @@ class BenchmarkUiCatalogTests(unittest.TestCase):
             dashboard=self.dashboard,
             scorecards=self.scorecards,
             normalized_runs=self.normalized,
+            diagnostic_sources=self.diagnostics,
             repository_head="f" * 40,
         )
         self.assertEqual(self.catalog["snapshot"]["id"], again["snapshot"]["id"])
@@ -85,6 +88,7 @@ class BenchmarkUiCatalogTests(unittest.TestCase):
             dashboard=self.dashboard,
             scorecards=self.scorecards,
             normalized_runs=changed,
+            diagnostic_sources=self.diagnostics,
             repository_head="261c6a66f739b5e45e306a69195392edbc800175",
         )
         self.assertNotEqual(self.catalog["snapshot"]["id"], rebuilt["snapshot"]["id"])
@@ -106,6 +110,21 @@ class BenchmarkUiCatalogTests(unittest.TestCase):
         recall = next(row for row in retrieval if row["metric_id"] == "recall_all@5")
         self.assertEqual(recall["systems"]["agent-memory"]["value"], 0.823389)
         self.assertEqual(recall["systems"]["mem0-oss"]["value"], 0.809069)
+
+    def test_failure_explorer_diagnostic_is_real_part_r_evidence(self):
+        diagnostic = next(
+            item for item in self.catalog["diagnostics"]
+            if item["diagnostic_id"] == "proposition-semantics-part-r-v1"
+        )
+        population = diagnostic["population"]
+        self.assertEqual(population["n"], 100)
+        self.assertEqual(population["gold_counts"], {"known": 54, "ambiguous": 13, "unknown": 33})
+        self.assertEqual(
+            population["status_confusion"]["known"],
+            {"known": 8, "ambiguous": 46, "unknown": 0},
+        )
+        self.assertEqual(population["failure_counts"]["wrong_slot"], 8)
+        self.assertEqual(diagnostic["source_uri"], str(PART_R.relative_to(ROOT)))
 
     def test_published_hindsight_is_context_not_numeric_comparison(self):
         hindsight = next(
