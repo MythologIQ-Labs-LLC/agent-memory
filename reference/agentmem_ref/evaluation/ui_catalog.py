@@ -35,7 +35,14 @@ def _digest(value: Any) -> str:
 
 
 def _comparison_set_id(identity: Mapping[str, Any]) -> str:
-    return "comparison:" + _digest(identity)[:20]
+    parts = (
+        identity.get("benchmark_id"),
+        identity.get("task_profile"),
+        identity.get("input_sha256"),
+        identity.get("selection_id"),
+        identity.get("sample_count"),
+    )
+    return "comparison:" + "|".join("" if value is None else str(value) for value in parts)
 
 
 def _profile_id(run: Mapping[str, Any]) -> str:
