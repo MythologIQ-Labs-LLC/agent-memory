@@ -2,7 +2,7 @@
   "freeze_id": "agent-memory-agentmembench-mesa-formal-v1",
   "owning_issue": 694,
   "frozen_on": "2026-10-07",
-  "status": "frozen_before_score_inspection",
+  "status": "frozen_before_score_inspection (gate iteration 2: audit VETO grounds 1-3 remediated)",
   "run_id": "agent_memory_formal_s2027_9170",
   "upstream": {
     "repository": "mazaiying/AgentMemBench",
@@ -29,7 +29,8 @@
       "graphiti": "results/formal/graphiti_graphiti_retrieval_s2027_9170.json",
       "letta": "results/formal/letta_letta_retrieval_s2027_9170.json"
     },
-    "formal_reference_environment": "Python 3.11.15; Qwen2.5-14B-Instruct (local OpenAI-compatible endpoint) for system LLMs and the retrieval judge; bge-m3 1024-d embeddings; per-file package versions; GPUs RTX 4080 + A100 80GB"
+    "formal_reference_environment": "Python 3.11.15; Qwen2.5-14B-Instruct (local OpenAI-compatible endpoint) for system LLMs and the retrieval judge; bge-m3 1024-d embeddings; per-file package versions; GPUs RTX 4080 + A100 80GB",
+    "dataset_meta_verified": true
   },
   "arguments": {
     "data": "data/memdialogue_v2.jsonl",
@@ -91,7 +92,8 @@
     "retries": 3,
     "base_url": "unprovisioned",
     "credential_boundary": "decision-eval-credential (owner ruling 2026-10-07): one explicitly authorized, version-pinned judge; none is provisioned in this environment",
-    "comparability_rule": "exact only with Qwen2.5-14B-Instruct under the upstream prompt/params; any other judge creates a new non-comparable score identity and must also re-judge the five published upstream detail files for a same-judge comparison"
+    "comparability_rule": "exact only with Qwen2.5-14B-Instruct under the upstream prompt/params; any other judge creates a new non-comparable score identity and must also re-judge the five published upstream detail files for a same-judge comparison",
+    "failure_rule": "judged recall is emitted only if every non-empty row received a parsed JSON verdict (parsed responses == non-empty rows); otherwise status blocked with the failure count; a preflight request and the served model ids are recorded; raw retrieved items must match the committed per-item sha256 before judging"
   },
   "deterministic_diagnostics": {
     "version": "mesa-m2-deterministic-diagnostics-1.0.0",
@@ -104,7 +106,7 @@
     "calibration": "agreement of answer_substring_hit with each upstream system's published judge hits is reported"
   },
   "m4_classifier": {
-    "version": "mesa-m4-stage-classifier-1.0.0",
+    "version": "mesa-m4-stage-classifier-1.1.0",
     "function": "reference/run_agentmembench_formal.py:classify_conflict_case",
     "stages_in_order": [
       "write_admission",
@@ -116,8 +118,10 @@
       "temporal_applicability_currentness",
       "ranking_fusion"
     ],
-    "primary_stage_rule": "first unmet necessary condition for a currentness-correct top-1",
-    "win_basis_rule": "a new-fact hit without a currentness separation is reported as lexical_ordering, not as currentness capability"
+    "primary_stage_rule": "first unmet necessary condition for a currentness-correct top-1; condition 7 = old fact demoted by temporal applicability tier or explicit-current constraint applied; a state_change_candidate relation (incl. explicit termination) satisfies conditions 4-5",
+    "win_basis_rule": "uncontested (old not admitted) | currentness_mechanism (demotion/constraint/applicability tier decisive) | temporal_order_tiebreak (newer-first among relevance ties) | lexical_ordering (relevance stage decisive) | undetermined",
+    "evidence_class": "adapted/diagnostic attribution of the exact upstream M4 metric",
+    "consistency_rule": "classifier top-1 outcome counts must equal upstream new_fact_rate and staleness_rate exactly; reported as upstream_consistency"
   },
   "axis_plan": {
     "M1_write_efficiency": {
@@ -145,7 +149,7 @@
     "M6_llm_portability": {
       "source": "none",
       "expected_class": "not_comparable",
-      "note": "upstream ships no executable M6 protocol; the published figure plots a constant Pass for all five systems; Agent Memory's write/read path has no LLM dependency"
+      "note": "upstream ships no executable M6 protocol; the published figure (gen_formal_figures.py) plots a constant value labelled backend compatibility for all five systems. No M6 result is claimed for any system, Agent Memory included."
     }
   },
   "runtime_environment": {
@@ -154,7 +158,10 @@
       "numpy": "2.4.6",
       "openai": "2.44.0",
       "qdrant-client": "1.18.0",
-      "httpx": "0.28.1"
+      "httpx": "0.28.1",
+      "jsonschema": "4.26.0",
+      "cryptography": "50.0.1",
+      "rfc8785": "0.1.4"
     },
     "note": "openai/qdrant-client are installed only because the upstream module imports them at module level; Agent Memory uses neither"
   },
@@ -167,6 +174,61 @@
   ],
   "runner": {
     "path": "reference/run_agentmembench_formal.py",
-    "sha256": "daf9127167d9515fa6d869e3b88a26a6630799a4333618fb7c77bcec2d512163"
-  }
+    "sha256": "0d85eca40d5e648ed6c9082a63230b4cb255969402245a3d9f18a1ee9beabcff"
+  },
+  "agent_memory": {
+    "runtime_tree": "771447a41b66cf5f141a1045d2e36a302d9a685c",
+    "runtime_tree_rule": "git tree id of reference/agentmem_ref at the executed revision (covers the runtime, ranking policy, interpreter, admission and the packaged rc1-local profile); the run refuses on mismatch or on any dirty/untracked file in the repository",
+    "ranking_policy_id": "multi-route-default",
+    "ranking_policy_version": "3.1.2",
+    "public_contract_version": "1.4.0",
+    "python_minor": "3.11",
+    "packages": {
+      "numpy": "2.4.6",
+      "openai": "2.44.0",
+      "qdrant-client": "1.18.0",
+      "httpx": "0.28.1",
+      "jsonschema": "4.26.0",
+      "cryptography": "50.0.1",
+      "rfc8785": "0.1.4"
+    }
+  },
+  "deviations": [
+    {
+      "id": "D1",
+      "what": "upstream judge_retrievals substituted by a capture during execution",
+      "why": "no authorized judge; an unprovisioned upstream judge returns hit=false for every row (fabricated 0.0)",
+      "effect": "recall_at_k, recall_at_k_95ci, omission_rate, recall_by_event_type absent; details[].hit null; judge_status recorded"
+    },
+    {
+      "id": "D2",
+      "what": "Config LLM/embedding/qdrant/neo4j/letta endpoints set to not_used / the frozen judge identity",
+      "why": "Agent Memory has no model, embedding or vector-store dependency on this path",
+      "effect": "none on workloads; recorded in config"
+    },
+    {
+      "id": "D3",
+      "what": "output adds an agent_memory block and arguments carries system/phases/run_id as upstream does",
+      "why": "evidence binding",
+      "effect": "upstream aggregate_unified.py is not run on this report"
+    },
+    {
+      "id": "D4",
+      "what": "committed retrieval details are a linked_only projection (selected_record_index + sha256 per retrieved item)",
+      "why": "repository redistribution posture for MemDialogue",
+      "effect": "raw text only in the uncommitted raw report"
+    },
+    {
+      "id": "D5",
+      "what": "observation inside timed add/search for conflict_* users (append of a write record and of a recall-result reference)",
+      "why": "per-case M4 attribution",
+      "effect": "conflict-phase write/read latency includes O(1) list appends; digesting happens at reset, outside timing; no other phase is traced"
+    },
+    {
+      "id": "D6",
+      "what": "Python 3.11.x (upstream 3.11.15) on a CPU-only container",
+      "why": "environment available",
+      "effect": "latency (M1, M3) environment-bound and not comparable to upstream GPU/service latency"
+    }
+  ]
 }

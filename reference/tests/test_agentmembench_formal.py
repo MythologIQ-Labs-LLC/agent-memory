@@ -75,21 +75,59 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(case["primary_stage"], "conflict_supersession_reasoning")
         self.assertEqual(case["relation"]["classification"], "conflict")
 
+    @staticmethod
+    def _ranked(first_by, mode="current", applicability="unknown_temporal_basis", constraint=False):
+        return {"ranking": {"ordered_before_next_by": first_by, "constraint_applied": constraint,
+                            "temporal_applicability": applicability, "query_intent_mode": mode}}
+
     def test_lexical_win_is_not_credited_to_currentness(self):
-        lexical = {"ranking": {"constraint_applied": False, "temporal_applicability": "unknown_temporal_basis"}}
         trace = _trace(WRITES, ["f-old", "f-new"], ["f-new", "f-old"], ["f-new"],
-                       {"f-old": lexical, "f-new": lexical})
+                       {"f-new": self._ranked("lexical_relevance_desc:bm25_admitted_set:lexical"),
+                        "f-old": self._ranked(None)})
         case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
         self.assertEqual(case["outcome"], "new_fact")
         self.assertIsNone(case["primary_stage"])
         self.assertEqual(case["win_basis"], "lexical_ordering")
 
-    def test_constraint_win_is_currentness(self):
-        constrained = {"ranking": {"constraint_applied": True}}
+    def test_newer_first_tiebreak_is_reported_as_such(self):
+        # audit ground 1(b): a win decided by temporal_order_within_query_regime
         trace = _trace(WRITES, ["f-old", "f-new"], ["f-new", "f-old"], ["f-new"],
-                       {"f-old": constrained, "f-new": constrained})
+                       {"f-new": self._ranked("temporal_order_within_query_regime"),
+                        "f-old": self._ranked(None)})
+        case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
+        self.assertEqual(case["decisive_stage"], "temporal_order_within_query_regime")
+        self.assertEqual(case["win_basis"], "temporal_order_tiebreak")
+
+    def test_uncontested_win_is_not_currentness(self):
+        # audit ground 1(a): old fact not admitted, new labelled not_evaluated
+        trace = _trace(WRITES, ["f-old", "f-new"], ["f-new"], ["f-new"],
+                       {"f-new": self._ranked(None, applicability="not_evaluated")})
+        case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
+        self.assertFalse(case["old_admitted"])
+        self.assertEqual(case["win_basis"], "uncontested")
+
+    def test_constraint_win_is_currentness(self):
+        trace = _trace(WRITES, ["f-old", "f-new"], ["f-new", "f-old"], ["f-new"],
+                       {"f-new": self._ranked("lexical_relevance_desc", constraint=True),
+                        "f-old": self._ranked(None, constraint=True)})
         case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
         self.assertEqual(case["win_basis"], "currentness_mechanism")
+
+    def test_demoted_old_fact_satisfies_currentness_condition(self):
+        demoted = sorted(formal._demoted_labels("current"))[0]
+        trace = _trace(WRITES, ["f-old", "f-new"], ["f-old", "f-new"], ["f-old"],
+                       {"f-old": self._ranked("lexical", applicability=demoted), "f-new": self._ranked(None)})
+        case = self.classify(trace, {"f-old": UNKNOWN, "f-new": UNKNOWN})
+        self.assertTrue(case["conditions"]["temporal_applicability_currentness"])
+
+    def test_explicit_termination_relation_satisfies_interpretation_and_slot(self):
+        rel = {"other_fact_uuid": "f-old", "classification": "state_change_candidate", "basis": "explicit_termination:no longer",
+               "proposal": {}}
+        trace = _trace(WRITES, ["f-old", "f-new"], ["f-old", "f-new"], ["f-old"],
+                       {"f-old": self._ranked("lexical"), "f-new": self._ranked(None)})
+        sems = {"f-old": _sem("user", "live in", "old"), "f-new": dict(UNKNOWN, relations=[rel])}
+        case = self.classify(trace, sems)
+        self.assertEqual(case["primary_stage"], "temporal_applicability_currentness")
 
     def test_stage_order_is_frozen(self):
         freeze = formal.load_freeze()
@@ -137,15 +175,17 @@ class AdapterTests(unittest.TestCase):
             adapter.add("An unrelated note about drinks.", "other_user")
             returned = adapter.search("What is the user's favourite drink?", "conflict_00000", 1)
             self.assertLessEqual(len(returned), 1)
+            self.assertEqual(adapter.traces, {})  # digesting is deferred out of the timed call
+            other = adapter.search("drinks", "other_user", 5)
+            self.assertNotIn("The user's favourite drink is tea.", other)
+            adapter.phase_label = "isolation"
+            adapter.reset()
             trace = adapter.traces["conflict"][0]
             self.assertEqual(trace["limit"], 1)
             self.assertEqual(len(trace["writes"]), 2)
             self.assertTrue(set(trace["returned"]) <= set(trace["admitted"]) <= set(trace["candidates"]))
-            other = adapter.search("drinks", "other_user", 5)
-            self.assertNotIn("The user's favourite drink is tea.", other)
             self.assertEqual(len(adapter.traces["conflict"]), 1)
-            adapter.phase_label = "isolation"
-            adapter.reset()
+            self.assertEqual(adapter.tallies["conflict"]["recall_calls"], 2)
             self.assertEqual(len([k for k in adapter.write_semantics if k.startswith("conflict:")]), 2)
         finally:
             adapter.close()
@@ -161,12 +201,46 @@ class AdapterTests(unittest.TestCase):
             adapter.close()
 
 
+class JudgeTests(unittest.TestCase):
+    ROWS = [{"retrieved": ["a"]}, {"retrieved": []}, {"retrieved": ["b"]}]
+
+    def test_every_non_empty_row_parsed_yields_recall(self):
+        result = formal.judged_recall([True, False, False], self.ROWS, parsed_responses=2, request_failures=1)
+        self.assertEqual(result["status"], "judged")
+        self.assertAlmostEqual(result["recall_at_k"], 1 / 3)
+
+    def test_any_exhausted_row_blocks_never_zero(self):
+        result = formal.judged_recall([False, False, False], self.ROWS, parsed_responses=0, request_failures=6)
+        self.assertEqual(result["status"], "blocked")
+        self.assertIsNone(result["recall_at_k"])
+
+    def test_raw_must_match_committed_digests(self):
+        raw = {"phases": {"retrieval": {"details": [{"index": 0, "retrieved": ["x"]}]}}}
+        good = {"phases": {"retrieval": {"details": [{"retrieved": [{"sha256": formal.sha256_text("x")}]}]}}}
+        bad = {"phases": {"retrieval": {"details": [{"retrieved": [{"sha256": formal.sha256_text("y")}]}]}}}
+        formal.verify_raw_against_committed(raw, good)
+        with self.assertRaises(SystemExit):
+            formal.verify_raw_against_committed(raw, bad)
+
+
 class FreezeTests(unittest.TestCase):
     def test_runner_digest_matches_freeze(self):
         freeze = formal.load_freeze()
         self.assertEqual(formal.sha256_file(Path(formal.__file__)), freeze["runner"]["sha256"])
 
+    def test_freeze_binds_current_runtime_policy_and_contract(self):
+        binding = formal.observed_agent_memory_binding()
+        frozen = formal.load_freeze()["agent_memory"]
+        for key in ("ranking_policy_id", "ranking_policy_version", "public_contract_version"):
+            self.assertEqual(binding[key], frozen[key])
+
+    def test_deviations_are_registered(self):
+        ids = [item["id"] for item in formal.load_freeze()["deviations"]]
+        self.assertEqual(ids, ["D1", "D2", "D3", "D4", "D5", "D6"])
+
     def test_arguments_are_upstream_defaults(self):
+        formal.verify_arguments(formal.load_freeze())
+        self.assertEqual(formal.UPSTREAM_DEFAULT_ARGUMENTS, formal.load_freeze()["arguments"])
         args = formal.load_freeze()["arguments"]
         self.assertEqual(
             args,

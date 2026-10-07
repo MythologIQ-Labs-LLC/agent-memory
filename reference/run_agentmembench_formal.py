@@ -44,7 +44,9 @@ import argparse
 import asyncio
 import hashlib
 import importlib
+import itertools
 import json
+import threading
 import os
 import platform
 import subprocess
@@ -69,7 +71,17 @@ from agentmem_ref.runtime import proposition_semantics  # noqa: E402
 FREEZE_PATH = REFERENCE_ROOT / "fixtures" / "benchmarks" / "agentmembench" / "mesa-formal-v1-freeze.json"
 PROFILE_ID = "agent-memory-agentmembench-mesa-formal-v1"
 REPORT_SCHEMA = "agent-memory-mesa-formal-report-1.0.0"
-CLASSIFIER_VERSION = "mesa-m4-stage-classifier-1.0.0"
+CLASSIFIER_VERSION = "mesa-m4-stage-classifier-1.1.0"
+# unified_benchmark.parse_args() defaults; bound by this file's digest and asserted equal to the freeze.
+UPSTREAM_DEFAULT_ARGUMENTS = {
+    "data": "data/memdialogue_v2.jsonl", "retrieval_records": 1000, "group_size": 10, "conflict_pairs": 250,
+    "isolation_users": 100, "isolation_facts": 5, "deletion_records": 200, "concurrency_records": 200,
+    "workers": "1,4,8,16", "scales": "100,1000", "scale_read_queries": 200, "top_k": 5, "seed": 2027,
+    "warmup_writes": 5,
+}
+UPSTREAM_PHASES = ("retrieval", "conflict", "isolation", "deletion", "concurrency", "scale")
+# Ranking stages that are currentness machinery rather than relevance.
+CURRENTNESS_STAGES = ("temporal_applicability_tier", "temporal_order_within_query_regime")
 DIAGNOSTICS_VERSION = "mesa-m2-deterministic-diagnostics-1.0.0"
 SYSTEM_NAME = "agent_memory"
 
@@ -122,21 +134,30 @@ def _git(cwd: Path, *args: str) -> str | None:
 
 
 def verify_upstream(freeze: Mapping[str, Any], upstream_root: Path) -> dict[str, Any]:
-    """Every upstream digest the freeze binds, recomputed. Any mismatch is fatal."""
+    """Every upstream digest the freeze binds, recomputed. Any mismatch is fatal.
+
+    The checkout is placed on ``sys.path``, so it must be pristine including
+    git-ignored files (a stray ``__pycache__`` or planted module would be imported).
+    """
 
     up = freeze["upstream"]
+    status = _git(upstream_root, "status", "--porcelain", "--ignored", "--untracked-files=all")
+    if status is None:
+        raise SystemExit("cannot read upstream git status; refusing to treat an unknown worktree as clean")
     observed = {
         "revision": _git(upstream_root, "rev-parse", "HEAD"),
-        "worktree_dirty": bool(_git(upstream_root, "status", "--porcelain")),
+        "worktree_dirty_including_ignored": bool(status),
         "harness_sha256": sha256_file(upstream_root / up["harness"]),
         "dataset_sha256": sha256_file(upstream_root / up["dataset"]),
+        "dataset_meta_sha256": sha256_file(upstream_root / "data" / "memdialogue_v2_meta.json"),
         "formal_results_sha256sums_sha256": sha256_file(upstream_root / up["formal_results_manifest"]),
     }
     expected = {
         "revision": up["revision"],
-        "worktree_dirty": False,
+        "worktree_dirty_including_ignored": False,
         "harness_sha256": up["harness_sha256"],
         "dataset_sha256": up["dataset_sha256"],
+        "dataset_meta_sha256": up["dataset_meta_sha256"],
         "formal_results_sha256sums_sha256": up["formal_results_sha256sums_sha256"],
     }
     mismatches = {key: {"expected": expected[key], "observed": observed[key]}
@@ -156,9 +177,56 @@ def verify_self(freeze: Mapping[str, Any]) -> str:
     return digest
 
 
+def verify_arguments(freeze: Mapping[str, Any]) -> None:
+    if dict(freeze["arguments"]) != UPSTREAM_DEFAULT_ARGUMENTS or tuple(freeze["phases"]) != UPSTREAM_PHASES:
+        raise SystemExit("freeze arguments/phases differ from the upstream defaults bound in this runner")
+
+
+def observed_agent_memory_binding() -> dict[str, Any]:
+    """The Agent Memory runtime identity as it is right now."""
+
+    from importlib import metadata
+
+    from agentmem_ref.runtime.runtime_composition import MULTI_ROUTE_RANKING_POLICY
+
+    identity = MULTI_ROUTE_RANKING_POLICY.identity()
+    packages = {}
+    for name in ("numpy", "openai", "qdrant-client", "httpx", "jsonschema", "cryptography", "rfc8785"):
+        try:
+            packages[name] = metadata.version(name)
+        except metadata.PackageNotFoundError:
+            packages[name] = None
+    return {
+        "runtime_tree": _git(REPO_ROOT, "rev-parse", "HEAD:reference/agentmem_ref"),
+        "ranking_policy_id": identity["policy_id"],
+        "ranking_policy_version": identity["policy_version"],
+        "public_contract_version": contract.CONTRACT_VERSION,
+        "python_minor": ".".join(platform.python_version_tuple()[:2]),
+        "packages": packages,
+    }
+
+
+def verify_agent_memory(freeze: Mapping[str, Any]) -> dict[str, Any]:
+    """Refuse to run unless the committed, clean runtime equals the frozen one."""
+
+    status = _git(REPO_ROOT, "status", "--porcelain", "--untracked-files=all")
+    if status is None:
+        raise SystemExit("cannot read Agent Memory git status; refusing to run on an unknown tree")
+    if status:
+        raise SystemExit(f"Agent Memory worktree is not clean (including untracked files):\n{status}")
+    observed = observed_agent_memory_binding()
+    expected = freeze["agent_memory"]
+    mismatches = {key: {"expected": expected[key], "observed": observed[key]}
+                  for key in expected if key in observed and observed[key] != expected[key]}
+    if mismatches:
+        raise SystemExit(f"Agent Memory runtime does not match the freeze: {json.dumps(mismatches, indent=2)}")
+    return {**observed, "revision": _git(REPO_ROOT, "rev-parse", "HEAD"), "worktree_clean": True}
+
+
 def import_upstream(upstream_root: Path):
     """Import the pinned upstream harness module by path, after digest verification."""
 
+    sys.dont_write_bytecode = True  # keep the verified checkout pristine
     root = str(upstream_root.resolve())
     if root not in sys.path:
         sys.path.insert(0, root)
@@ -196,7 +264,9 @@ class AgentMemoryFormalAdapter:
         self._targets: dict[str, tuple[str, str]] = {}
         self._texts: dict[str, str] = {}
         self._writes_by_user: dict[str, list[dict[str, Any]]] = {}
-        self._counter = 0
+        self._pending_traces: list[tuple[str, str, str, int, Mapping[str, Any], list[dict[str, Any]]]] = []
+        self._ids = itertools.count()
+        self._tally_lock = threading.Lock()
         self.reset()
 
     # upstream protocol --------------------------------------------------------
@@ -215,16 +285,15 @@ class AgentMemoryFormalAdapter:
         self._targets = {}
         self._texts = {}
         self._writes_by_user = {}
-        self._counter = 0
+        self._pending_traces = []
+        self._ids = itertools.count()
 
     def add(self, text: str, user_id: str) -> list[str]:
         assert self._memory is not None
-        target = f"memory:agentmembench:{self._counter}"
-        self._counter += 1
+        target = f"memory:agentmembench:{next(self._ids)}"  # count() is atomic under the GIL
         result = self._memory.remember(target, text, overrides=self._overrides(user_id))
         committed = bool(result.get("committed") and result.get("fact_uuid"))
-        tally = self._tally()
-        tally["remember_calls"] += 1
+        self._count("remember_calls")
         if self._traced(user_id):
             self._writes_by_user.setdefault(user_id, []).append({
                 "phase": self.phase_label,
@@ -235,9 +304,9 @@ class AgentMemoryFormalAdapter:
                 "refusal": None if committed else str(result.get("refusal") or result.get("outcome")),
             })
         if not committed:
-            tally["remember_refused:" + str(result.get("refusal") or result.get("outcome"))] += 1
+            self._count("remember_refused:" + str(result.get("refusal") or result.get("outcome")))
             return []
-        tally["remember_committed"] += 1
+        self._count("remember_committed")
         fact_uuid = str(result["fact_uuid"])
         self._targets[target] = (user_id, fact_uuid)
         self._texts[fact_uuid] = text
@@ -249,27 +318,21 @@ class AgentMemoryFormalAdapter:
         recalled = self._memory.recall(
             query, target_domain_refs=[self.tenant, scope], project_ref=scope, budget=limit
         )
-        tally = self._tally()
-        tally["recall_calls"] += 1
-        tally["candidates"] += len(recalled["candidates"])
-        tally["admitted"] += len(recalled["admitted"])
-        tally["returned"] += len(recalled["returned"])
-        for candidate in recalled["candidates"]:
-            if candidate not in recalled["admitted"]:
-                decision = recalled["admissions"].get(candidate, {})
-                tally["refused:" + str(decision.get("refusal") or decision.get("reason_code") or "not_admitted")] += 1
         if self._traced(user_id):
-            self.traces.setdefault(self.phase_label, []).append(self._trace(query, user_id, limit, recalled))
+            # Inside the timed call only a reference is kept; the digest is built at reset.
+            self._pending_traces.append((self.phase_label, query, user_id, limit, recalled,
+                                         list(self._writes_by_user.get(user_id, ()))))
+        else:
+            self._count_recall(recalled)
         return [self._texts[uuid] for uuid in recalled["returned"] if uuid in self._texts]
 
     def delete(self, memory_ids: list[str]) -> None:
         assert self._memory is not None
-        tally = self._tally()
         for target in memory_ids:
             user_id, _ = self._targets[target]
             result = self._memory.forget(target, overrides=self._overrides(user_id))
-            tally["forget_calls"] += 1
-            tally["forget_committed"] += int(bool(result.get("committed")))
+            self._count("forget_calls")
+            self._count("forget_committed", int(bool(result.get("committed"))))
 
     def close(self) -> None:
         if self._memory is not None:
@@ -297,8 +360,22 @@ class AgentMemoryFormalAdapter:
     def _traced(self, user_id: str) -> bool:
         return user_id.startswith(self.trace_user_prefixes)
 
-    def _tally(self) -> Counter:
-        return self.tallies.setdefault(self.phase_label, Counter())
+    def _count(self, key: str, amount: int = 1) -> None:
+        with self._tally_lock:
+            self.tallies.setdefault(self.phase_label, Counter())[key] += amount
+
+    def _count_recall(self, recalled: Mapping[str, Any], phase: str | None = None) -> None:
+        with self._tally_lock:
+            tally = self.tallies.setdefault(phase or self.phase_label, Counter())
+            tally["recall_calls"] += 1
+            tally["candidates"] += len(recalled["candidates"])
+            tally["admitted"] += len(recalled["admitted"])
+            tally["returned"] += len(recalled["returned"])
+            for candidate in recalled["candidates"]:
+                if candidate not in recalled["admitted"]:
+                    decision = recalled["admissions"].get(candidate, {})
+                    tally["refused:" + str(decision.get("refusal") or decision.get("reason_code")
+                                           or "not_admitted")] += 1
 
     @staticmethod
     def _ranking_digest(evidence: Mapping[str, Any] | None) -> dict[str, Any] | None:
@@ -322,7 +399,8 @@ class AgentMemoryFormalAdapter:
             "query_intent_evidence": intent.get("evidence"),
         }
 
-    def _trace(self, query: str, user_id: str, limit: int, recalled: Mapping[str, Any]) -> dict[str, Any]:
+    def _trace(self, query: str, user_id: str, limit: int, recalled: Mapping[str, Any],
+               writes: list[dict[str, Any]]) -> dict[str, Any]:
         admissions = recalled["admissions"]
         return {
             "user_id": user_id,
@@ -341,14 +419,23 @@ class AgentMemoryFormalAdapter:
                 }
                 for candidate, decision in admissions.items()
             },
-            "writes": list(self._writes_by_user.get(user_id, ())),
+            "writes": writes,
         }
 
     def _snapshot_write_semantics(self) -> None:
         """Read write-time interpretation of traced facts before the runtime is discarded."""
 
+        for phase, query, user_id, limit, recalled, writes in self._pending_traces:
+            self._count_recall(recalled, phase)
+            self.traces.setdefault(phase, []).append(self._trace(query, user_id, limit, recalled, writes))
+        self._pending_traces = []
         if self._memory is None:
             return
+        with self._memory.runtime.serialization_lock:
+            self._read_write_semantics()
+
+    def _read_write_semantics(self) -> None:
+        assert self._memory is not None
         for user_id, writes in self._writes_by_user.items():
             envelope = {
                 "contract_version": contract.CONTRACT_VERSION,
@@ -380,38 +467,46 @@ def classify_conflict_case(
     trace: Mapping[str, Any],
     semantics: Mapping[str, Mapping[str, Any] | None],
 ) -> dict[str, Any]:
-    """Stage-classify one upstream conflict pair (``CLASSIFIER_VERSION``).
+    """Stage-classify one upstream conflict pair (``CLASSIFIER_VERSION``; adapted/diagnostic).
 
-    The pipeline conditions a *currentness-correct* answer needs, in order:
+    The upstream metric (top-1 token containment) is exact; this attribution is ours.
+    Conditions a *currentness-correct* top-1 needs, in pipeline order:
 
     1. both writes committed (``write_admission``);
     2. the new fact is a candidate (``candidate_generation``);
     3. the new fact is admitted (``admission``);
     4. both writes have a known proposition (``write_interpretation``);
     5. both propositions share one slot (``identity_slot_resolution``);
-    6. the new write carries a state-change relation to the old fact
-       (``conflict_supersession_reasoning``);
-    7. temporal applicability or a currentness constraint separates the two facts
-       (``temporal_applicability_currentness``);
+    6. the new write carries a ``state_change_candidate`` relation to the old fact
+       (``conflict_supersession_reasoning``). A state-change relation reached by
+       explicit termination also satisfies 4 and 5, because it names the slot;
+    7. currentness machinery treats the old fact as not current: the old fact is in
+       the demoted temporal-applicability tier, or an explicit-current constraint
+       applied to the pair (``temporal_applicability_currentness``);
     8. the new fact is ranked first (``ranking_fusion``).
 
     ``unmet_stages`` lists every unmet condition. For a miss, ``primary_stage`` is the
-    first unmet one. A hit whose ranking did not rest on condition 7 is reported
-    as ``win_basis = lexical_ordering``, because it is correct for a reason that is
-    not currentness.
+    first unmet one. ``decisive_stage`` is the first ranking stage that separated the
+    two facts, read from the ``ordered_before_next_by`` of whichever is ranked first
+    when the other is directly behind it. ``win_basis`` for a hit is
+    ``uncontested`` (old fact not admitted), ``currentness_mechanism`` (condition 7),
+    ``temporal_order_tiebreak`` (decided by newer-first ordering among relevance
+    ties), ``lexical_ordering`` (decided by a relevance stage) or ``undetermined``.
     """
 
     writes = trace.get("writes", [])
-    by_text = {}
+    by_role: dict[str, Mapping[str, Any]] = {}
     for write in writes:
-        if old_token.casefold() in write["text"].casefold():
-            by_text["old"] = write
-        elif new_token.casefold() in write["text"].casefold():
-            by_text["new"] = write
-    old_w, new_w = by_text.get("old"), by_text.get("new")
+        text = write["text"].casefold()
+        if old_token.casefold() in text:
+            by_role["old"] = write
+        elif new_token.casefold() in text:
+            by_role["new"] = write
+    old_w, new_w = by_role.get("old"), by_role.get("new")
     old_uuid = old_w["fact_uuid"] if old_w else None
     new_uuid = new_w["fact_uuid"] if new_w else None
     returned = trace.get("returned", [])
+    admitted = list(trace.get("admitted", ()))
     top = returned[0] if returned else None
     if top is not None and top == new_uuid:
         outcome = "new_fact"
@@ -429,34 +524,61 @@ def classify_conflict_case(
         if item.get("other_fact_uuid") == old_uuid:
             relation = item
             break
+    state_change = bool(relation and relation.get("classification") == "state_change_candidate")
     old_known = ((old_sem or {}).get("proposition") or {}).get("status") == "known"
     new_known = ((new_sem or {}).get("proposition") or {}).get("status") == "known"
     same_slot = old_known and new_known and _slot(old_sem) is not None and _slot(old_sem) == _slot(new_sem)
-    currentness_separates = bool(
-        new_rank.get("constraint_applied") or old_rank.get("constraint_applied")
-        or (new_rank.get("temporal_applicability") not in (None, "unknown_temporal_basis")
-            and new_rank.get("temporal_applicability") != old_rank.get("temporal_applicability"))
-    )
+    old_admitted = old_uuid is not None and old_uuid in admitted
+    new_admitted = new_uuid is not None and new_uuid in admitted
+
+    decisive_stage = None
+    if old_admitted and new_admitted:
+        first, second = sorted((old_uuid, new_uuid), key=admitted.index)
+        if admitted.index(second) == admitted.index(first) + 1:
+            first_rank = (decisions.get(first) or {}).get("ranking") or {}
+            decisive_stage = first_rank.get("ordered_before_next_by")
+    intent_mode = old_rank.get("query_intent_mode") or new_rank.get("query_intent_mode")
+    old_demoted = old_rank.get("temporal_applicability") in _demoted_labels(intent_mode)
+    constraint = bool(old_rank.get("constraint_applied") or new_rank.get("constraint_applied"))
+    currentness_separates = old_admitted and (old_demoted or constraint)
+
     conditions = {
         "write_admission": bool(old_w and new_w and old_w["committed"] and new_w["committed"]),
         "candidate_generation": new_uuid is not None and new_uuid in trace.get("candidates", ()),
-        "admission": new_uuid is not None and new_uuid in trace.get("admitted", ()),
-        "write_interpretation": old_known and new_known,
-        "identity_slot_resolution": same_slot,
-        "conflict_supersession_reasoning": bool(relation and relation.get("classification") == "state_change_candidate"),
-        "temporal_applicability_currentness": currentness_separates,
+        "admission": new_admitted,
+        "write_interpretation": (old_known and new_known) or state_change,
+        "identity_slot_resolution": same_slot or state_change,
+        "conflict_supersession_reasoning": state_change,
+        "temporal_applicability_currentness": currentness_separates or (new_admitted and not old_admitted),
         "ranking_fusion": outcome == "new_fact",
     }
     unmet = [stage for stage in STAGES if not conditions[stage]]
-    record: dict[str, Any] = {
+    win_basis = None
+    if outcome == "new_fact":
+        if not old_admitted:
+            win_basis = "uncontested"
+        elif currentness_separates:
+            win_basis = "currentness_mechanism"
+        elif decisive_stage == "temporal_order_within_query_regime":
+            win_basis = "temporal_order_tiebreak"
+        elif decisive_stage == "temporal_applicability_tier":
+            win_basis = "currentness_mechanism"
+        elif decisive_stage:
+            win_basis = "lexical_ordering"
+        else:
+            win_basis = "undetermined"
+    return {
         "index": index,
         "outcome": outcome,
         "old_fact_uuid": old_uuid,
         "new_fact_uuid": new_uuid,
+        "old_admitted": old_admitted,
         "conditions": conditions,
         "unmet_stages": unmet,
         "primary_stage": None if outcome == "new_fact" else (unmet[0] if unmet else "unclassified"),
-        "win_basis": None,
+        "decisive_stage": decisive_stage,
+        "win_basis": win_basis,
+        "query_intent_mode": intent_mode,
         "relation": None if relation is None else {
             "classification": relation.get("classification"),
             "basis": relation.get("basis"),
@@ -469,16 +591,18 @@ def classify_conflict_case(
         "new_markers": (new_sem or {}).get("markers"),
         "old_ranking": old_rank or None,
         "new_ranking": new_rank or None,
-        "top_ordered_before_next_by": ((decisions.get(top) or {}).get("ranking") or {}).get("ordered_before_next_by")
-        if top else None,
     }
-    if outcome == "new_fact":
-        record["win_basis"] = "currentness_mechanism" if currentness_separates else "lexical_ordering"
-    return record
+
+
+def _demoted_labels(mode: str | None) -> set[str]:
+    from agentmem_ref.runtime import ranking_policy
+
+    return set(getattr(ranking_policy, "_DEMOTED", {}).get(mode, set()))
 
 
 def classify_conflict_phase(upstream, pairs: int, traces: Sequence[Mapping[str, Any]],
-                            semantics: Mapping[str, Mapping[str, Any] | None]) -> dict[str, Any]:
+                            semantics: Mapping[str, Mapping[str, Any] | None],
+                            upstream_result: Mapping[str, Any] | None = None) -> dict[str, Any]:
     by_user = {trace["user_id"]: trace for trace in traces}
     cases = []
     for index in range(pairs):
@@ -494,8 +618,24 @@ def classify_conflict_phase(upstream, pairs: int, traces: Sequence[Mapping[str, 
     by_category: dict[str, Counter] = {}
     for case in cases:
         by_category.setdefault(case["category"], Counter())[case["outcome"]] += 1
+    outcomes = Counter(case["outcome"] for case in cases)
+    consistency = None
+    if upstream_result is not None:
+        # The classifier's top-1 outcome must reproduce the upstream metric exactly.
+        consistency = {
+            "new_fact_rate_upstream": upstream_result["new_fact_rate"],
+            "new_fact_rate_classifier": outcomes["new_fact"] / pairs,
+            "staleness_rate_upstream": upstream_result["staleness_rate"],
+            "staleness_rate_classifier": outcomes["stale"] / pairs,
+        }
+        consistency["consistent"] = (
+            abs(consistency["new_fact_rate_upstream"] - consistency["new_fact_rate_classifier"]) < 1e-12
+            and abs(consistency["staleness_rate_upstream"] - consistency["staleness_rate_classifier"]) < 1e-12
+        )
     return {
         "classifier_version": CLASSIFIER_VERSION,
+        "evidence_class": "adapted_diagnostic_attribution_of_an_exact_metric",
+        "upstream_consistency": consistency,
         "stages": list(STAGES),
         "not_exercised_stages": NOT_EXERCISED_STAGES,
         "outcomes": dict(Counter(case["outcome"] for case in cases)),
@@ -559,20 +699,49 @@ def judge_agreement(details: Sequence[Mapping[str, Any]]) -> dict[str, Any] | No
 
 
 def upstream_reference_diagnostics(upstream_root: Path, freeze: Mapping[str, Any]) -> dict[str, Any]:
-    """The same diagnostics over the published seed-2027 retrieval details of each upstream system."""
+    """The same diagnostics over the published seed-2027 retrieval details of each upstream system.
 
-    out: dict[str, Any] = {}
+    The Naive RAG and Mem0 files predate the per-row ``memory``/``query``/
+    ``reference_answer``/``source_id`` fields. Those rows are reconstructed by index
+    from the upstream ``load_records`` selection (same seed, same dataset). The
+    reconstruction is accepted only when every row's ``event_type`` matches, and
+    for the files that do carry ``source_id``, every source id matches.
+    """
+
+    upstream = import_upstream(upstream_root)
+    args = freeze["arguments"]
+    selection = upstream.load_records(upstream_root / freeze["upstream"]["dataset"],
+                                      args["retrieval_records"], args["seed"])
+    selection_sha = sha256_text("\n".join(str(r["source_id"]) for r in selection))
+    out: dict[str, Any] = {"selection": {"records": len(selection), "source_ids_sha256": selection_sha}}
     for system, relpath in freeze["upstream"]["formal_retrieval_files"].items():
         data = json.loads((upstream_root / relpath).read_text(encoding="utf-8"))
-        details = data["phases"]["retrieval"]["details"]
+        details = [dict(row) for row in data["phases"]["retrieval"]["details"]]
+        reconstructed = False
+        mismatches = 0
+        for row in details:
+            record = selection[row["index"]]
+            if row.get("event_type") != record["event_type"]:
+                mismatches += 1
+            if "source_id" in row and row["source_id"] != record["source_id"]:
+                mismatches += 1
+            if "reference_answer" not in row:
+                reconstructed = True
+                row.update(memory=record["text"], query=record["query"], reference_answer=record["answer"],
+                           source_id=record["source_id"])
+        if mismatches:
+            out[system] = {"file": relpath, "status": "selection_mismatch", "mismatches": mismatches}
+            continue
         diag = retrieval_diagnostics(details)
         for row in details:
             answer = str(row.get("reference_answer", "")).casefold().strip()
             row["_answer_hit"] = bool(answer) and any(answer in str(i).casefold() for i in row.get("retrieved", ()))
         out[system] = {
             "file": relpath,
+            "status": "ok",
+            "fields_reconstructed_from_selection": reconstructed,
+            "selection_matches": True,
             "published_recall_at_k": data["phases"]["retrieval"]["recall_at_k"],
-            "source_ids_sha256": sha256_text("\n".join(str(row["source_id"]) for row in details)),
             "diagnostics": diag,
             "diagnostic_vs_published_judge": judge_agreement(details),
         }
@@ -678,8 +847,14 @@ def run_formal(upstream_root: Path, output_dir: Path, *, phases: Sequence[str] |
     """Execute the frozen protocol; returns (committed_report, raw_report)."""
 
     freeze = freeze or load_freeze()
-    upstream_obs = verify_upstream(freeze, upstream_root) if verify else {"verification": "skipped"}
-    runner_sha = verify_self(freeze) if verify else None
+    if verify:
+        verify_arguments(freeze)
+        runner_sha = verify_self(freeze)
+        upstream_obs = verify_upstream(freeze, upstream_root)
+        agent_memory_obs = verify_agent_memory(freeze)
+    else:  # unit tests only; a report built this way is never evidence
+        runner_sha, upstream_obs = None, {"verification": "skipped"}
+        agent_memory_obs = {**observed_agent_memory_binding(), "verification": "skipped"}
     upstream = import_upstream(upstream_root)
     args = dict(freeze["arguments"])
     phases = list(phases or freeze["phases"])
@@ -763,7 +938,9 @@ def run_formal(upstream_root: Path, output_dir: Path, *, phases: Sequence[str] |
             "runner_sha256": runner_sha,
         },
         "upstream_verification": upstream_obs,
+        "agent_memory_verification": agent_memory_obs,
         "identity": agent_memory_identity(),
+        "deviations": freeze.get("deviations", []),
         "hardware": hardware_snapshot(),
         "started_at": started.isoformat(),
         "finished_at": finished.isoformat(),
@@ -781,7 +958,8 @@ def run_formal(upstream_root: Path, output_dir: Path, *, phases: Sequence[str] |
         agent_memory_ext["retrieval_diagnostics"] = retrieval_diagnostics(details)
     if "conflict" in output["phases"]:
         agent_memory_ext["m4_failure_classification"] = classify_conflict_phase(
-            upstream, args["conflict_pairs"], adapter.traces.get("conflict", []), semantics)
+            upstream, args["conflict_pairs"], adapter.traces.get("conflict", []), semantics,
+            output["phases"]["conflict"])
     output["agent_memory"] = agent_memory_ext
     raw["agent_memory"] = agent_memory_ext
     committed = json.loads(json.dumps(output, default=str))
@@ -792,22 +970,85 @@ def run_formal(upstream_root: Path, output_dir: Path, *, phases: Sequence[str] |
     return committed, raw
 
 
-def judge_raw_report(upstream_root: Path, raw: dict, freeze: Mapping[str, Any], base_url: str) -> dict:
-    """Apply the frozen judge to a raw report's retrieval details via upstream ``judge_retrievals``."""
+def verify_raw_against_committed(raw: Mapping[str, Any], committed: Mapping[str, Any]) -> None:
+    """The raw retrieved text must hash to exactly what the committed report recorded."""
 
+    raw_details = raw["phases"]["retrieval"]["details"]
+    committed_details = committed["phases"]["retrieval"]["details"]
+    if len(raw_details) != len(committed_details):
+        raise SystemExit("raw and committed retrieval details differ in length")
+    for raw_row, committed_row in zip(raw_details, committed_details):
+        digests = [sha256_text(str(item)) for item in raw_row.get("retrieved", ())]
+        if digests != [item["sha256"] for item in committed_row["retrieved"]]:
+            raise SystemExit(f"raw retrieved items for index {raw_row['index']} do not match the committed digests")
+
+
+def judged_recall(hits: Sequence[bool], rows: Sequence[Mapping[str, Any]], parsed_responses: int,
+                  request_failures: int) -> dict[str, Any]:
+    """Judged recall only when every non-empty row received a parsed verdict; otherwise blocked.
+
+    Upstream ``judge_retrievals`` stops at a row's first parsed response and maps
+    exhausted retries to ``false``. So a parsed-response count equal to the number
+    of non-empty rows proves that no row took the exception path. Empty rows are
+    ``false`` by upstream definition, not by failure.
+    """
+
+    non_empty = sum(1 for row in rows if row["retrieved"])
+    if parsed_responses != non_empty:
+        return {"status": "blocked", "reason": "judge_failures", "non_empty_rows": non_empty,
+                "parsed_responses": parsed_responses, "request_failures": request_failures,
+                "recall_at_k": None}
+    return {"status": "judged", "non_empty_rows": non_empty, "parsed_responses": parsed_responses,
+            "request_failures": request_failures, "recall_at_k": sum(hits) / len(hits)}
+
+
+def judge_raw_report(upstream_root: Path, raw: dict, committed: dict, freeze: Mapping[str, Any],
+                     base_url: str) -> dict:
+    """Apply the frozen judge to a raw report via the unmodified upstream ``judge_retrievals``."""
+
+    verify_raw_against_committed(raw, committed)
     upstream = import_upstream(upstream_root)
-    config = _upstream_config(upstream, {**freeze, "judge": {**freeze["judge"], "base_url": base_url}},
-                              Path(tempfile.gettempdir()))
+    stats = {"parsed": 0, "failures": 0, "served_models": Counter()}
+
+    class CountingAsyncOpenAI(upstream.AsyncOpenAI):  # observes; never changes a verdict
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            create = self.chat.completions.create
+
+            async def counted(*a, **kw):
+                try:
+                    response = await create(*a, **kw)
+                except Exception:
+                    stats["failures"] += 1
+                    raise
+                stats["served_models"][str(getattr(response, "model", None))] += 1
+                try:
+                    if isinstance(json.loads(response.choices[0].message.content or ""), dict):
+                        stats["parsed"] += 1
+                except Exception:
+                    stats["failures"] += 1
+                return response
+
+            self.chat.completions.create = counted
+
+    upstream.AsyncOpenAI = CountingAsyncOpenAI
+    judge = {**freeze["judge"], "base_url": base_url}
+    config = _upstream_config(upstream, {**freeze, "judge": judge}, Path(tempfile.gettempdir()))
+    preflight = upstream.OpenAI(api_key="local", base_url=base_url).chat.completions.create(
+        model=judge["model"], messages=[{"role": "user", "content": 'Return JSON only: {"ok": true}'}],
+        temperature=0, max_tokens=8, response_format={"type": "json_object"})
     details = raw["phases"]["retrieval"]["details"]
     rows = [{"query": d["query"], "answer": d["reference_answer"], "retrieved": d["retrieved"]} for d in details]
     hits = asyncio.run(upstream.judge_retrievals(config, rows))
-    return {
-        "judge": {**freeze["judge"], "base_url": base_url},
-        "recall_at_k": sum(hits) / len(hits),
-        "recall_at_k_95ci": upstream.bootstrap_mean_ci(hits),
-        "hits": [bool(h) for h in hits],
-        "note": "upstream judge maps transport failure to false; verify endpoint health before accepting",
-    }
+    result = judged_recall(hits, rows, stats["parsed"], stats["failures"])
+    result.update({
+        "judge": judge,
+        "preflight_served_model": getattr(preflight, "model", None),
+        "served_models": dict(stats["served_models"]),
+        "recall_at_k_95ci": upstream.bootstrap_mean_ci(hits) if result["status"] == "judged" else None,
+        "hits": [bool(h) for h in hits] if result["status"] == "judged" else None,
+    })
+    return result
 
 
 def build_freeze_digest_fields(upstream_root: Path) -> dict[str, str]:
@@ -842,19 +1083,18 @@ def main() -> int:
         args.reference_diagnostics.write_text(json.dumps(diag, indent=2, sort_keys=True) + "\n")
         return 0
     if args.judge:
-        if not args.judge_base_url:
-            raise SystemExit("--judge requires --judge-base-url for the authorized, frozen judge endpoint")
-        result = judge_raw_report(args.upstream_root, json.loads(args.judge.read_text()), freeze, args.judge_base_url)
+        if not (args.judge_base_url and args.output):
+            raise SystemExit("--judge requires --judge-base-url (authorized frozen judge) and --output "
+                             "(the committed report whose digests the raw report must match)")
+        result = judge_raw_report(args.upstream_root, json.loads(args.judge.read_text()),
+                                  json.loads(args.output.read_text()), freeze, args.judge_base_url)
         print(json.dumps({k: v for k, v in result.items() if k != "hits"}, indent=2))
         return 0
-    committed, raw = run_formal(args.upstream_root, (args.output or Path("mesa-out.json")).parent)
-    if args.raw_output:
-        args.raw_output.write_text(json.dumps(raw, indent=2, sort_keys=True, default=str) + "\n")
-    rendered = json.dumps(committed, indent=2, sort_keys=True, default=str) + "\n"
-    if args.output:
-        args.output.write_text(rendered, encoding="utf-8")
-    else:
-        print(rendered, end="")
+    if not (args.output and args.raw_output):
+        raise SystemExit("an execution run requires --output and --raw-output (judging reads the raw report)")
+    committed, raw = run_formal(args.upstream_root, args.output.parent)
+    args.raw_output.write_text(json.dumps(raw, indent=2, sort_keys=True, default=str) + "\n")
+    args.output.write_text(json.dumps(committed, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
     return 0
 
 
