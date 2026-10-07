@@ -4643,3 +4643,35 @@ Advisories A1–A8 are folded into the plan as a binding section, among them:
 - **docs/69:** gains the successor-freeze section.
 
 The replay runs at this PR's merge commit.
+
+---
+
+### Entry #107: EXECUTION — mesa-formal-v2 replay (#671 C9, E7 step 3)
+
+**Timestamp**: 2026-10-07T16:25:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v2_s2027_9170.json`, `docs/69`
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `2ed68e3a749432c475098a1aa3e68dc10a3ec4f2`): `25549a3ebe9fd62aed7c8e698bd184a8c10f3e2ad7e324ee1d5f0c4d28cd7b12`
+**Previous Hash**: `9cf4e84d99a5e4ac3f4e3f5ce343de35c62bb60b5dbdacb141a2b225b74747e7`
+**Chain Hash**: `224b5428cf21c8b655d7d5128a46f33eac10e6507af54f370f003fc47a8dbde3`
+
+**Decision**: The `mesa-formal-v2` replay ran under the frozen v2 identity at `a9fa962`, the merge of #727. The runner verified the runtime tree `f508c63f`, policy 3.3.0, contract 1.5.0, the package pins, the pristine upstream `186c9a5`, and the runner and freeze sha256s.
+
+**Results against the frozen E6 confirmation:** all predictions hold.
+- **P1:** `outcomes` is `{new_fact: 250}`, and `dual_version_rate` is 0.0.
+- **P2:** `win_basis_counts` is `{currentness_mechanism: 250}`.
+- **P3:** `primary_stage_counts` and `unmet_stage_counts` are both `{}`.
+- **P5:** the classifier is consistent with upstream.
+- **P6:** retrieval, isolation, deletion, concurrency and scale are equal to v1 on every non-latency field, and the M2 diagnostics are equal.
+
+**M4:** new-fact 0.200 → 1.000; staleness 0.800 → 0.000. In v1, every win was `lexical_ordering`; in v2, every win is `currentness_mechanism`.
+
+**Determinism:** a second execution at `a9fa962` was identical except for the configured output directory.
+
+**Unchanged:** M2 judged recall stays blocked (#706). Nothing under `reference/agentmem_ref` changed, so regeneration runs at `a9fa962`.
+
+**Next:** acceptance, together with the `-v5` lanes (E7 step 6).

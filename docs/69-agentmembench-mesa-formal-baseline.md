@@ -259,3 +259,32 @@ The plan of record is docs/plan-671-evidence-v5.md (E5–E9, Gate PASS at attemp
   The upstream pins, arguments, phases, judge identity, deviations D1–D6, stop lines and classifier are unchanged.
 - **Replays of each version.** v1 replays still run at `7b041a7`. The v1 freeze pins that revision's runner sha256 (`58b2fced…`), so the current runner refuses it by design. The v2 replay runs at the merge commit of the PR that adds the v2 freeze, whose `reference/agentmem_ref` tree equals the freeze. It runs before any later commit writes into that tree.
 - **The judge.** It stays unprovisioned (#706). Deviation D1 holds for v2 as it does for v1.
+
+#### Results: `mesa-formal-v2` (executed 2026-10-07 at `a9fa962`, the merge of #727)
+
+The runner verified everything it binds before scoring:
+- the runtime tree `f508c63f…`;
+- policy 3.3.0 and contract 1.5.0;
+- the package pins;
+- the pristine upstream checkout `186c9a5`;
+- the runner sha256 `bc241592…`, with freeze sha256 `33f2a0ed…`.
+
+The committed report is `reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v2_s2027_9170.json` (sha256 `91ac8a24…`).
+
+| Frozen confirmation (E6) | Expected | Observed |
+|---|---|---|
+| P1 `outcomes` / `dual_version_rate` | `{"new_fact": 250}` / 0.0 | `{"new_fact": 250}` / 0.0 |
+| P2 `win_basis_counts` | `{"currentness_mechanism": 250}` | `{"currentness_mechanism": 250}` |
+| P3 `primary_stage_counts` / `unmet_stage_counts` | `{}` / `{}` | `{}` / `{}` |
+| P5 `upstream_consistency.consistent` | true | true; new-fact rate 1.000 for both the classifier and upstream |
+| P6 every phase except conflict, and the M2 diagnostics, equal to v1 (non-latency) | equal | retrieval, isolation, deletion, concurrency and scale are equal, and the diagnostics are equal (answer-substring 0.728) |
+
+**M4.** The new-fact rate goes from 0.200 to 1.000, and staleness from 0.800 to 0.000.
+- In v1, every win (50) was `lexical_ordering`. In v2, every win (250) is `currentness_mechanism`, decided at `temporal_applicability_tier`: the older fact is labelled `limited_by_cross_fact_state_change`.
+- No pair is unattributed, and no win comes from relevance, recency or the content-identity tie-break.
+
+**Determinism.** A second execution at the same revision reproduced every field except the configured output directory.
+
+**The judge.** M2 judged recall stays blocked (#706, D1).
+
+Acceptance of this evidence is recorded with the `-v5` lanes (docs/plan-671-evidence-v5.md E7 step 6).
