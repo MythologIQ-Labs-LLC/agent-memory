@@ -377,7 +377,6 @@ def build_catalog(
             "as_of": dashboard.get("as_of"),
             "dashboard_id": dashboard.get("dashboard"),
             "evidence_revision": evidence_revision,
-            "repository_head": repository_head,
             "repository_is_newer": repository_is_newer,
             "source_identity": dict(source_identity),
         },
