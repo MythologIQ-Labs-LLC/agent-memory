@@ -1,0 +1,154 @@
+{
+  "schema_version": "1",
+  "as_of": "2026-10-07",
+  "issue": 574,
+  "authority_effect": "none",
+  "aggregate_score": "not_defined",
+  "posture_vocabulary": [
+    "below_standard",
+    "approaching_standard",
+    "at_standard",
+    "above_reference",
+    "evidence_gap",
+    "field_gap",
+    "not_comparable",
+    "not_applicable"
+  ],
+  "comparability_vocabulary": [
+    "exact",
+    "compatible",
+    "related",
+    "non_comparable"
+  ],
+  "rules": [
+    "performance gap != evidence gap",
+    "benchmark score != authority",
+    "a row changes only with evidence; closeouts state before/after posture"
+  ],
+  "rows": [
+    {
+      "capability": "cross_user_isolation",
+      "standard": "AgentMemBench/MESA M5 cross-user leak (all five published systems 0.000)",
+      "agent_memory": "0.000",
+      "posture": "at_standard",
+      "comparability": "exact",
+      "evidence_class": "agent_memory_formal_run_vs_published_reference",
+      "evidence": [
+        "docs/69-agentmembench-mesa-formal-baseline.md",
+        "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_s2027_9170.json"
+      ],
+      "issue": 694
+    },
+    {
+      "capability": "audited_deletion",
+      "standard": "MESA M5 audited deletion (Naive RAG, Mem0, Graphiti, Letta 1.000; LangMem 0.500)",
+      "agent_memory": "1.000 (governed tombstone; pre-delete visibility 1.000)",
+      "posture": "at_standard",
+      "comparability": "exact",
+      "evidence_class": "agent_memory_formal_run_vs_published_reference",
+      "evidence": [
+        "docs/69-agentmembench-mesa-formal-baseline.md"
+      ],
+      "issue": 694
+    },
+    {
+      "capability": "independent_write_currentness",
+      "standard": "MESA M4 new-fact rate (Naive RAG 1.000, Letta 0.996, Mem0 0.900 incl. 0.876 dual-version)",
+      "agent_memory": "0.200 new-fact / 0.800 staleness; currentness separated 0/250 pairs",
+      "posture": "below_standard",
+      "comparability": "exact",
+      "evidence_class": "agent_memory_formal_run_vs_published_reference",
+      "evidence": [
+        "docs/69-agentmembench-mesa-formal-baseline.md"
+      ],
+      "issue": 671,
+      "note": "runtime composition gap: write-time state_change_candidate detected 250/250 but not consumed by read-path currentness"
+    },
+    {
+      "capability": "retrieval_quality_mesa",
+      "standard": "MESA M2 LLM-judged recall@5 (Letta 0.982, Naive RAG 0.966, Mem0 0.818)",
+      "agent_memory": "blocked (no authorized judge); diagnostic answer-substring 0.728 vs Naive RAG 0.794",
+      "posture": "evidence_gap",
+      "comparability": "exact once judged; diagnostic is adapted",
+      "evidence_class": "blocked",
+      "evidence": [
+        "docs/69-agentmembench-mesa-formal-baseline.md",
+        "reports/benchmarks/agentmembench-mesa-formal/upstream-reference-diagnostics.json"
+      ],
+      "issue": 694,
+      "note": "diagnostic indicates a likely gap to dense retrieval on paraphrased queries (#669)"
+    },
+    {
+      "capability": "scale_exact_canary_recall",
+      "standard": "MESA M3 recall@3 at 100/1,000 (all five 1.000)",
+      "agent_memory": "1.000 / 1.000",
+      "posture": "at_standard",
+      "comparability": "exact",
+      "evidence_class": "agent_memory_formal_run_vs_published_reference",
+      "evidence": [
+        "docs/69-agentmembench-mesa-formal-baseline.md"
+      ],
+      "issue": 694
+    },
+    {
+      "capability": "concurrent_write_success",
+      "standard": "MESA M1 concurrency operation success @16 (all five 1.000)",
+      "agent_memory": "1.000",
+      "posture": "at_standard",
+      "comparability": "exact",
+      "evidence_class": "agent_memory_formal_run_vs_published_reference",
+      "evidence": [
+        "docs/69-agentmembench-mesa-formal-baseline.md"
+      ],
+      "issue": 694
+    },
+    {
+      "capability": "write_read_latency",
+      "standard": "MESA M1/M3 latency",
+      "agent_memory": "write 6.2 ms, read 8.1 ms (CPU-only, in-process)",
+      "posture": "not_comparable",
+      "comparability": "non_comparable",
+      "evidence_class": "environment_bound",
+      "evidence": [
+        "docs/69-agentmembench-mesa-formal-baseline.md"
+      ],
+      "issue": 694
+    },
+    {
+      "capability": "llm_portability",
+      "standard": "MESA M6",
+      "agent_memory": "no executable upstream protocol",
+      "posture": "not_comparable",
+      "comparability": "non_comparable",
+      "evidence_class": "not_comparable",
+      "evidence": [
+        "docs/69-agentmembench-mesa-formal-baseline.md"
+      ],
+      "issue": 694
+    },
+    {
+      "capability": "longmemeval_retrieval",
+      "standard": "LongMemEval_S same-harness lanes v2 (Mem0 OSS explicit)",
+      "agent_memory": "see reports/benchmarks/dashboard/current.md same-harness section",
+      "posture": "evidence_gap",
+      "comparability": "exact within lane",
+      "evidence_class": "same_harness",
+      "evidence": [
+        "reports/benchmarks/dashboard/current.md"
+      ],
+      "issue": 640,
+      "note": "posture to be set from the lane rows when Hindsight joins (#640)"
+    },
+    {
+      "capability": "end_to_end_qa",
+      "standard": "LongMemEval/LoCoMo end-to-end QA",
+      "agent_memory": "not run",
+      "posture": "evidence_gap",
+      "comparability": "requires frozen reader/judge",
+      "evidence_class": "blocked",
+      "evidence": [],
+      "issue": 601,
+      "note": "decision-eval-credential posture set; credential not provisioned"
+    }
+  ]
+}

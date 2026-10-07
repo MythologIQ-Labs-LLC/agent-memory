@@ -1,6 +1,6 @@
 # Canonical Agent Memory benchmark dashboard
 
-Status: **current accepted evidence through #594, plus four accepted same-harness lanes (#640, two lane generations)**, and current pre-1.0 comparator/runtime-qualification state as of 2026-10-06.
+Status: **current accepted evidence through #594, plus four accepted same-harness lanes (#640, two lane generations), plus the formal AgentMemBench/MESA baseline (#694, 2026-10-07)**, and current pre-1.0 comparator/runtime-qualification state as of 2026-10-07.
 
 Current merged `main`: `ca0f9a748b3b7296c5a99c7e81cca35a570609fd`.
 
@@ -114,6 +114,30 @@ First-wave market targets remain:
 6. LangMem.
 
 Unsupported lifecycle or benchmark surfaces are `unsupported`, never zero.
+
+## Formal AgentMemBench / MESA baseline (#694) — pre-major-runtime baseline
+
+Protocol, gate history and full results: `docs/69-agentmembench-mesa-formal-baseline.md`. The run uses the upstream `mazaiying/AgentMemBench@186c9a5` harness's own phase functions at upstream defaults (seed 2027, MemDialogue v2). Agent Memory `7b041a7` takes part through the public facade with no temporal enrichment. Comparator values are **published reference under the identical frozen protocol**: they were not reproduced here, they come from a different environment, and their recall@5 is LLM-judged.
+
+| axis | Agent Memory | Naive RAG | Mem0 | LangMem | Graphiti | Letta | class |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| M2 recall@5 (judged) | **blocked** | 0.966 | 0.818 | 0.286 | 0.687 | 0.982 | blocked (no authorized judge) |
+| M2 answer-substring@5 (diagnostic) | 0.728 | 0.794 | 0.421 | 0.162 | 0.222 | 0.626 | adapted; favours verbatim stores |
+| M4 new-fact / staleness | **0.200 / 0.800** | 1.000 / 0.000 | 0.900 / 0.024 | 0.680 / 0.104 | 0.004 / 0.984 | 0.996 / 0.000 | exact |
+| M5 leak / audited deletion | **0.000 / 1.000** | 0.000 / 1.000 | 0.000 / 1.000 | 0.000 / 0.500 | 0.000 / 1.000 | 0.000 / 1.000 | exact |
+| M3 recall@3 @1,000 | **1.000** | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | exact |
+| M1 write success / concurrency@16 success | **1.000 / 1.000** | 1.000 / 1.000 | 0.797 / 1.000 | 0.475 / 1.000 | 0.841 / 1.000 | 1.000 / 1.000 | exact |
+| M1 write mean (ms) | 6.2 | 44.6 | 1,078.7 | 4,986.6 | 8,302.6 | 4,735.4 | environment-bound |
+| M6 LLM portability | not comparable | — | — | — | — | — | no executable upstream protocol |
+
+M4 failure taxonomy (250 pairs):
+
+- The write-time `state_change_candidate` relation was detected in all 250 pairs.
+- Read-path currentness separated **0** pairs.
+- BM25 decided all 250.
+- Of the 50 new-fact wins, every one is `lexical_ordering`.
+
+The adapted 0.20 / 0.80 signal is therefore confirmed under the formal protocol. It is a runtime composition gap between write-time semantics and read-path currentness (#671), not an interpretation or identity gap.
 
 ## Market context — published reference only
 

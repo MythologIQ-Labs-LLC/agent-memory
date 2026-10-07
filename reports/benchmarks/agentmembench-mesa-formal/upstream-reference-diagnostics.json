@@ -1,0 +1,126 @@
+{
+  "graphiti": {
+    "diagnostic_vs_published_judge": {
+      "agreement": 0.531,
+      "judged_hit_diag_miss": 0.467,
+      "judged_miss_diag_hit": 0.002,
+      "records": 1000
+    },
+    "diagnostics": {
+      "answer_substring_hit_rate": 0.222,
+      "answer_substring_hit_rate_by_event_type": {
+        "PERSONAL_FACT": 0.306,
+        "TASK_REQUEST": 0.138
+      },
+      "diagnostics_version": "mesa-m2-deterministic-diagnostics-1.0.0",
+      "empty_retrieval_rate": 0.0,
+      "records": 1000,
+      "source_text_hit_rate": 0.174
+    },
+    "fields_reconstructed_from_selection": false,
+    "file": "results/formal/graphiti_graphiti_retrieval_s2027_9170.json",
+    "published_recall_at_k": 0.687,
+    "selection_matches": true,
+    "status": "ok"
+  },
+  "langmem": {
+    "diagnostic_vs_published_judge": {
+      "agreement": 0.876,
+      "judged_hit_diag_miss": 0.124,
+      "judged_miss_diag_hit": 0.0,
+      "records": 1000
+    },
+    "diagnostics": {
+      "answer_substring_hit_rate": 0.162,
+      "answer_substring_hit_rate_by_event_type": {
+        "PERSONAL_FACT": 0.188,
+        "TASK_REQUEST": 0.136
+      },
+      "diagnostics_version": "mesa-m2-deterministic-diagnostics-1.0.0",
+      "empty_retrieval_rate": 0.0,
+      "records": 1000,
+      "source_text_hit_rate": 0.102
+    },
+    "fields_reconstructed_from_selection": false,
+    "file": "results/formal/langmem_langmem_retrieval_s2027_9170.json",
+    "published_recall_at_k": 0.286,
+    "selection_matches": true,
+    "status": "ok"
+  },
+  "letta": {
+    "diagnostic_vs_published_judge": {
+      "agreement": 0.644,
+      "judged_hit_diag_miss": 0.356,
+      "judged_miss_diag_hit": 0.0,
+      "records": 1000
+    },
+    "diagnostics": {
+      "answer_substring_hit_rate": 0.626,
+      "answer_substring_hit_rate_by_event_type": {
+        "PERSONAL_FACT": 0.582,
+        "TASK_REQUEST": 0.67
+      },
+      "diagnostics_version": "mesa-m2-deterministic-diagnostics-1.0.0",
+      "empty_retrieval_rate": 0.0,
+      "records": 1000,
+      "source_text_hit_rate": 0.423
+    },
+    "fields_reconstructed_from_selection": false,
+    "file": "results/formal/letta_letta_retrieval_s2027_9170.json",
+    "published_recall_at_k": 0.982,
+    "selection_matches": true,
+    "status": "ok"
+  },
+  "mem0": {
+    "diagnostic_vs_published_judge": {
+      "agreement": 0.601,
+      "judged_hit_diag_miss": 0.398,
+      "judged_miss_diag_hit": 0.001,
+      "records": 1000
+    },
+    "diagnostics": {
+      "answer_substring_hit_rate": 0.421,
+      "answer_substring_hit_rate_by_event_type": {
+        "PERSONAL_FACT": 0.38,
+        "TASK_REQUEST": 0.462
+      },
+      "diagnostics_version": "mesa-m2-deterministic-diagnostics-1.0.0",
+      "empty_retrieval_rate": 0.0,
+      "records": 1000,
+      "source_text_hit_rate": 0.0
+    },
+    "fields_reconstructed_from_selection": true,
+    "file": "results/formal/mem0_mem0_retrieval_s2027_9170.json",
+    "published_recall_at_k": 0.818,
+    "selection_matches": true,
+    "status": "ok"
+  },
+  "naive_rag": {
+    "diagnostic_vs_published_judge": {
+      "agreement": 0.826,
+      "judged_hit_diag_miss": 0.173,
+      "judged_miss_diag_hit": 0.001,
+      "records": 1000
+    },
+    "diagnostics": {
+      "answer_substring_hit_rate": 0.794,
+      "answer_substring_hit_rate_by_event_type": {
+        "PERSONAL_FACT": 0.64,
+        "TASK_REQUEST": 0.948
+      },
+      "diagnostics_version": "mesa-m2-deterministic-diagnostics-1.0.0",
+      "empty_retrieval_rate": 0.0,
+      "records": 1000,
+      "source_text_hit_rate": 0.971
+    },
+    "fields_reconstructed_from_selection": true,
+    "file": "results/formal/naive_rag_naive_full_s2027_9170.json",
+    "published_recall_at_k": 0.966,
+    "selection_matches": true,
+    "status": "ok"
+  },
+  "selection": {
+    "records": 1000,
+    "source_ids_sha256": "db563c1fc4251384577f698eda1efbad1e18ba119f6a9ed847c42e0d56261afa"
+  }
+}
