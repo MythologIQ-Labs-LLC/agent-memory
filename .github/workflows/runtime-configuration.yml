@@ -2,7 +2,12 @@ name: Runtime Configuration Contract
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -10,6 +15,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -24,9 +30,6 @@ jobs:
 
       - name: Execute targeted runtime configuration tests
         run: python -m unittest discover -s reference/tests -t reference -p 'test_runtime_config.py'
-
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
 
       - name: Emit exact-head runtime configuration evidence
         env:

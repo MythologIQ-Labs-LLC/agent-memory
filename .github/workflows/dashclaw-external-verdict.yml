@@ -19,6 +19,10 @@ on:
       - ".github/workflows/dashclaw-external-verdict.yml"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
@@ -29,6 +33,7 @@ env:
 jobs:
   provider-proof:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
       EVIDENCE_DIR: /tmp/dashclaw-external-verdict

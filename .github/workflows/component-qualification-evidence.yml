@@ -18,6 +18,10 @@ on:
       - ".github/workflows/component-qualification-evidence.yml"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
@@ -29,6 +33,7 @@ env:
 jobs:
   qualify-code-graph:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
       FIXTURE_ROOT: ${{ github.workspace }}/reference/fixtures/component-qualification

@@ -2,7 +2,12 @@ name: Temporal Commitment Evidence
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -10,6 +15,7 @@ permissions:
 jobs:
   temporal-commitment:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Agent Memory
         uses: actions/checkout@v7

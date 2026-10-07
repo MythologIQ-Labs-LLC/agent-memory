@@ -2,7 +2,12 @@ name: Structural Mutation Governance
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -10,6 +15,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -27,9 +33,6 @@ jobs:
 
       - name: Execute PAMA 1.2 compatibility regressions
         run: python -m unittest discover -s reference/tests -t reference -p 'test_domain_schema_mutation_*.py'
-
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
 
       - name: Emit exact-head structural mutation evidence
         env:

@@ -10,6 +10,10 @@ on:
       - "reference/tests/test_proposition_evaluator.py"
       - ".github/workflows/proposition-semantics-score.yml"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 

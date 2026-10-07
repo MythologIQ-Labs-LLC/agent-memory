@@ -11,12 +11,17 @@ on:
       - ".github/workflows/logical-state-algebra-pressure.yml"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
 jobs:
   logical-state-algebra-pressure:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:

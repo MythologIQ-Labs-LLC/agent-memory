@@ -19,12 +19,17 @@ on:
       - '.github/workflows/atlas-research-intake.yml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
 jobs:
   pinned-atlas-intake:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Agent Memory
         uses: actions/checkout@v7

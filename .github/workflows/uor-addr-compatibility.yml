@@ -2,7 +2,12 @@ name: UOR Addr Compatibility
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -10,6 +15,7 @@ permissions:
 jobs:
   uor-addr-compatibility:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       UOR_RELEASE: v0.2.0
       UOR_TAG_OBJECT: 4bdc4ec022bbc99b3c1ec01a67b40a7e25f30de4

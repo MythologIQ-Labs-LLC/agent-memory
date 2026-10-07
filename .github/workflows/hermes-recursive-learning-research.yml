@@ -14,12 +14,17 @@ on:
       - '.github/workflows/hermes-recursive-learning-research.yml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
 jobs:
   verify-hermes-research:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout Agent Memory
         uses: actions/checkout@v7

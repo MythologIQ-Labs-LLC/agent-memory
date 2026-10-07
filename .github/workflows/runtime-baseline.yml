@@ -2,6 +2,7 @@ name: Runtime Baseline Contract
 
 on:
   push:
+    branches: [main]
     paths:
       - 'reports/runtime/baseline-*.json'
       - 'reports/runtime/baseline-*.md'
@@ -32,12 +33,17 @@ on:
       - 'reference/tests/test_runtime_baseline_succession.py'
       - '.github/workflows/runtime-baseline.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout exact source revision
         uses: actions/checkout@v7

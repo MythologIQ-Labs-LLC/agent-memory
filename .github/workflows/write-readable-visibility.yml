@@ -2,7 +2,12 @@ name: Write-to-Readable Visibility
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -10,6 +15,7 @@ permissions:
 jobs:
   characterize:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -24,9 +30,6 @@ jobs:
 
       - name: Execute targeted visibility tests
         run: python -m unittest reference.tests.test_write_readable_visibility
-
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
 
       - name: Emit exact-head visibility characterization
         env:

@@ -15,12 +15,17 @@ on:
       - 'pyproject.toml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
 jobs:
   reproduce-external-row:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout exact Agent Memory source revision
         uses: actions/checkout@v7

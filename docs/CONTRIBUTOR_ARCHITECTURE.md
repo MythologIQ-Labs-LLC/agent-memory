@@ -249,6 +249,10 @@ Consequences for contributors:
 - a benchmark need is never permission to change runtime behavior; if a runtime capability is genuinely missing, open a runtime issue rather than emulating the capability in an adapter;
 - packaging metadata inside `pyproject.toml` is protected; descriptors are packaged through `MANIFEST.in`, which the boundary does not protect, and the contributor-contract workflow verifies that the built wheel carries them.
 
+## 8a. CI estate
+
+The intended GitHub Actions estate is data: `data/github-actions-workflow-policy.json` holds, for every file under `.github/workflows/`, its trigger shape, its concurrency kind and each job's timeout and full-suite passes, and `reference/tests/test_github_actions_workflow_policy.py` derives the same shape from the YAML and refuses any drift (#662, `docs/plan-662-ci-cost-phases-2-4.md`). The rules the test enforces: a PR head triggers `pull_request` runs only (every `push` trigger is restricted to `branches: [main]`, so `main` keeps its post-merge runs as the integration signal for each merge); every PR/push workflow carries one concurrency block that cancels a superseded PR head's run and lets `main` runs queue, except the workflows whose runs committed records cite by run id, which complete every run; every hosted job has a measured `timeout-minutes`; and the full reference suite runs on every PR in the required check `Validate Doctrine Evidence` only (a path-filtered workflow may run it too; a targeted lane runs its own tests). A new workflow file needs a policy entry, so the test fails on a file the policy does not know; `python scripts/sync_workflow_inventory.py --emit-policy` prints the policy the YAML implies, `--write` re-syncs the mechanical fields of `data/github-actions-workflow-inventory.json`, and `--check` is the drift gate.
+
 ## 9. When does a benchmark get a Gauntlet profile?
 
 `descriptor.gauntlet.relationship` is one of:

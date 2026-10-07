@@ -34,17 +34,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -88,12 +90,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -130,11 +134,13 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -275,17 +281,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -329,12 +337,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -374,17 +384,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -422,17 +434,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -475,12 +489,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -525,12 +541,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -572,12 +590,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -618,12 +638,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -668,12 +690,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -716,12 +740,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -763,11 +789,13 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -810,12 +838,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -859,12 +889,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -907,12 +939,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -951,17 +985,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -999,17 +1035,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1047,19 +1085,20 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
         "explicit": true,
         "valuesMinutes": [
+          10,
           15
         ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1097,17 +1136,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1150,12 +1191,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          25
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1200,12 +1243,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          15
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1250,12 +1295,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          15
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1300,12 +1347,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1348,12 +1397,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          15
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1398,12 +1449,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1441,17 +1494,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1489,17 +1544,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1539,17 +1596,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1592,12 +1651,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1635,17 +1696,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1683,17 +1746,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1731,17 +1796,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1779,17 +1846,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1831,8 +1900,10 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
         "configured": false,
@@ -1870,12 +1941,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1923,12 +1996,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -1970,17 +2045,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2029,8 +2106,8 @@
         ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2069,12 +2146,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2119,11 +2198,13 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -2170,12 +2251,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2221,12 +2304,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2270,7 +2355,7 @@
         ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -2309,17 +2394,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2362,12 +2449,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2405,17 +2494,19 @@
         "push"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2504,17 +2595,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2552,17 +2645,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2606,12 +2701,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2650,17 +2747,19 @@
         "push"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2709,7 +2808,7 @@
         ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -2744,17 +2843,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2792,17 +2893,19 @@
         "push"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2840,17 +2943,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2888,17 +2993,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2932,17 +3039,19 @@
         "push"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -2985,12 +3094,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3039,7 +3150,7 @@
         ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -3080,17 +3191,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3133,11 +3246,13 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -3180,8 +3295,8 @@
         ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3232,8 +3347,8 @@
         ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3271,17 +3386,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3319,17 +3436,19 @@
         "push"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3367,17 +3486,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3420,11 +3541,13 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -3465,17 +3588,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3513,17 +3638,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3572,8 +3699,8 @@
         ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3620,11 +3747,13 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -3671,12 +3800,14 @@
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3713,17 +3844,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3761,17 +3894,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3809,17 +3944,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3857,17 +3994,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -3916,7 +4055,7 @@
         ]
       },
       "concurrencyState": {
-        "configured": false,
+        "configured": true,
         "cancelInProgress": false
       },
       "permissionsExplicit": true,
@@ -3955,17 +4094,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -4003,17 +4144,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -4047,17 +4190,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          20
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -4095,17 +4240,19 @@
         "push"
       ],
       "consequenceClass": "protected",
-      "pathScope": "repository-wide-or-unscoped",
+      "pathScope": "branches",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
       "timeoutState": {
-        "explicit": false,
-        "valuesMinutes": []
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
       },
       "concurrencyState": {
-        "configured": false,
-        "cancelInProgress": false
+        "configured": true,
+        "cancelInProgress": true
       },
       "permissionsExplicit": true,
       "artifactState": {
@@ -4164,13 +4311,13 @@
       "discretionary": 21
     },
     "triggerCounts": {
+      "issues": 1,
       "pull_request": 80,
       "push": 49,
-      "workflow_dispatch": 42,
-      "issues": 1
+      "workflow_dispatch": 42
     },
-    "missingExplicitTimeoutCount": 73,
-    "supersedablePrOrPushWithoutConcurrencyCount": 81,
+    "missingExplicitTimeoutCount": 0,
+    "supersedablePrOrPushWithoutConcurrencyCount": 0,
     "artifactUploadWithoutExplicitRetentionCount": 50,
     "repeatedSetupFamilies": [
       {
@@ -4194,6 +4341,10 @@
     {
       "date": "2026-10-06",
       "change": "added .github/workflows/longmemeval-competitive.yml (PR #666, #640 lane v2) under the Phase 0 exception; renamed amb-evidence-import.yml to 'Import same-harness lane evidence' with a lane input instead of a second import workflow"
+    },
+    {
+      "date": "2026-10-07",
+      "change": "#662 Phases 2-4 landed (docs/plan-662-ci-cost-phases-2-4.md; merge commit recorded in META_LEDGER): push triggers restricted to branches: [main] in 41 workflows, the unpatterned full-suite step deleted from nine workflows, a concurrency block on all 81 PR/push workflows (71 cancel a superseded PR head, 10 complete every run), timeout-minutes on all 77 previously untimed jobs. The mechanical fields (triggers, pathScope, timeoutState, concurrencyState) and the summary counts are now re-synced from the YAML by scripts/sync_workflow_inventory.py; pathScope gains the value \"branches\" (push restricted to main without paths), which the Phase 1 snapshot did not use. The intended estate is data/github-actions-workflow-policy.json, enforced by reference/tests/test_github_actions_workflow_policy.py."
     }
   ]
 }

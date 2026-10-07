@@ -11,12 +11,17 @@ on:
       - '.github/workflows/gauntlet-external-contestant-dogfood.yml'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
 jobs:
   public-quickstart:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout exact source revision
         uses: actions/checkout@v7
