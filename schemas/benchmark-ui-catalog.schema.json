@@ -19,6 +19,7 @@
     "longitudinal_tracks",
     "coverage",
     "published_references",
+    "diagnostics",
     "evidence_index"
   ],
   "properties": {
@@ -73,6 +74,7 @@
           "additionalProperties": false,
           "required": [
             "dashboard",
+            "diagnostics",
             "normalized",
             "scorecards"
           ],
@@ -86,6 +88,10 @@
               "minLength": 1
             },
             "scorecards": {
+              "type": "string",
+              "minLength": 1
+            },
+            "diagnostics": {
               "type": "string",
               "minLength": 1
             }
@@ -157,6 +163,54 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/evidenceIndex"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "diagnostic_id",
+          "source_uri",
+          "issue",
+          "disposition",
+          "evidence_class",
+          "population",
+          "interpretation",
+          "authority_effect"
+        ],
+        "properties": {
+          "diagnostic_id": {
+            "type": "string"
+          },
+          "source_uri": {
+            "type": "string"
+          },
+          "issue": {
+            "type": "integer"
+          },
+          "disposition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence_class": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "population": {
+            "type": "object"
+          },
+          "interpretation": {
+            "type": "object"
+          },
+          "authority_effect": {
+            "const": "none"
+          }
+        }
       }
     }
   },
