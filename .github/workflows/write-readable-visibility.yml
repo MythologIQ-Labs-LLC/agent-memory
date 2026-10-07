@@ -2,6 +2,7 @@ name: Write-to-Readable Visibility
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

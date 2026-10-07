@@ -2,6 +2,7 @@ name: Architecture Family Closeout
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

@@ -2,6 +2,7 @@ name: LangGraph Lifecycle Comparator
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

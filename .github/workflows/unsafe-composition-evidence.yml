@@ -2,6 +2,7 @@ name: Unsafe Composition Evidence
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

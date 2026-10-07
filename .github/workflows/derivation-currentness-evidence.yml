@@ -2,6 +2,7 @@ name: Derivation Currentness Evidence
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

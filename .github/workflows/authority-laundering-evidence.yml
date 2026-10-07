@@ -2,6 +2,7 @@ name: Authority Laundering Evidence
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

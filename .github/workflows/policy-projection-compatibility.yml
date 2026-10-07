@@ -2,6 +2,7 @@ name: Policy Projection Compatibility
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

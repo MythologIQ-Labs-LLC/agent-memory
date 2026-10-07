@@ -2,6 +2,7 @@ name: Domain Schema Discovery Evidence
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

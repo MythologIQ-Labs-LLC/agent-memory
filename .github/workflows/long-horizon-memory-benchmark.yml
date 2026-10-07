@@ -2,6 +2,7 @@ name: Long Horizon Memory Benchmark
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

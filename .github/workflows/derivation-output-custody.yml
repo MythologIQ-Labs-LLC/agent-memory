@@ -2,6 +2,7 @@ name: Derivation Output Custody
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

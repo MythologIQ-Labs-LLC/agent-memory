@@ -2,6 +2,7 @@ name: P9 Systems Characterization
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

@@ -2,6 +2,7 @@ name: Precedent Candidate Retrieval
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

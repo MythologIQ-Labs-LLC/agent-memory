@@ -2,6 +2,7 @@ name: CLI Doctor Boundary
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

@@ -2,6 +2,7 @@ name: SQLite Production Substrate
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

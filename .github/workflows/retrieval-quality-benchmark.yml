@@ -2,6 +2,7 @@ name: Retrieval Quality Benchmark
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

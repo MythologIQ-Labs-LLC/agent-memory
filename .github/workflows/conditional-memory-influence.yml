@@ -2,6 +2,7 @@ name: Conditional Memory Influence
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

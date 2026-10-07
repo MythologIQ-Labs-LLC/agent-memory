@@ -2,6 +2,7 @@ name: Sleeper Poisoning Evidence
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

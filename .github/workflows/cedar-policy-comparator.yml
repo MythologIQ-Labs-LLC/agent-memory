@@ -2,6 +2,7 @@ name: Cedar Policy Comparator
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

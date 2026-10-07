@@ -2,6 +2,7 @@ name: Autonomous Maintenance Evidence
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

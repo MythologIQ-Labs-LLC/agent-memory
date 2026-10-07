@@ -2,6 +2,7 @@ name: Runtime Baseline Contract
 
 on:
   push:
+    branches: [main]
     paths:
       - 'reports/runtime/baseline-*.json'
       - 'reports/runtime/baseline-*.md'

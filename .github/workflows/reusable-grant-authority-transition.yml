@@ -2,6 +2,7 @@ name: Reusable Grant Authority Transition
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

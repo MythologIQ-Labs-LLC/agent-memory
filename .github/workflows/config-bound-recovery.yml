@@ -2,6 +2,7 @@ name: Configuration-Bound Recovery
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

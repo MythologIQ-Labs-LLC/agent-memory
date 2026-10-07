@@ -2,6 +2,7 @@ name: UOR Addr Compatibility
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

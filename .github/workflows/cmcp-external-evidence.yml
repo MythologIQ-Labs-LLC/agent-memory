@@ -2,6 +2,7 @@ name: cMCP External Evidence Comparator
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:
