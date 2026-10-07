@@ -34,10 +34,12 @@ class RC1EvidenceCloseoutTests(unittest.TestCase):
         self.assertEqual(external["comparability"], "not_yet_protocol_comparable")
         self.assertEqual(external["issue"], 467)
 
-    def test_harvest_closeout_remains_active_and_independent(self) -> None:
+    def test_harvest_closeout_is_complete_and_independent(self) -> None:
         harvest = self.manifest["harvest_closeout"]
-        self.assertEqual(harvest["issue"], 470)
-        self.assertEqual(harvest["status"], "active_open")
+        self.assertEqual(harvest["issue"], 672)
+        self.assertEqual(harvest["supersedes_issue"], 470)
+        self.assertEqual(harvest["status"], "complete_mechanism_closeout")
+        self.assertEqual(harvest["artifact"], "reference/fixtures/harvest-closeout-final-v2.json")
         self.assertFalse(harvest["external_dependency_required"])
         self.assertEqual(
             harvest["dependency_effect"],

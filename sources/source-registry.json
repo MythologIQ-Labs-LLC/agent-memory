@@ -382,6 +382,27 @@
       "provenance_note": "Qualified under #499/#517. Required ODC-By attribution: 'MemDialogue is derived from WildChat-4.8M by the Allen Institute for AI.' WildChat-4.8M source revision c827c6df8fcf008219ffaffa4d1dd77491099367.",
       "limitations": "Mixed licensing (MIT code, ODC-By 1.0 data) is intentionally not flattened into one SPDX identifier. Any future redistribution of MemDialogue records must carry the ODC-By attribution. Do not attempt to identify users or infer sensitive data.",
       "verified_at": "2026-09-25"
+    },
+    {
+      "source_id": "jev-mem",
+      "title": "Jev-Mem (System-One memory control, MAGMA-derived)",
+      "source_type": "external_research_implementation_ancestry",
+      "public_url": "https://github.com/libingzheren/Jev-Mem",
+      "repository": "libingzheren/Jev-Mem",
+      "access": "public",
+      "copyright_owner_or_originator": "Jev-Mem contributors (MAGMA upstream notice preserved by the source)",
+      "license_spdx": "MIT",
+      "license_url": "https://github.com/libingzheren/Jev-Mem/blob/7ab0c73c6d8f4f611ad252c1e6ba8083f8df0e44/LICENSE",
+      "rights_status": "verified_open_license",
+      "reuse_mode": "citation_only",
+      "reuse_basis": "Repository MIT license verified at the frozen revision 7ab0c73c6d8f4f611ad252c1e6ba8083f8df0e44 (docs/research-jev-mem-harvest.md); nothing is adapted yet; the harvest is implementation ancestry, not a runtime dependency.",
+      "material_reused": "None registered. Mechanism characterization only.",
+      "attribution_required": true,
+      "notice_required": true,
+      "modification_notice_required": false,
+      "provenance_note": "Frozen upstream revision 7ab0c73c6d8f4f611ad252c1e6ba8083f8df0e44; Jev / TypeSafe / Laya / model weights / datasets carry separate terms and are out of scope. Tranches T-controller, T-controller-2 and T-consumer-package of reference/fixtures/harvest-closeout-final-v2.json name this source.",
+      "limitations": "Direct or substantial adaptation must preserve the MIT copyright and permission notice per the adapted-code notice convention (docs/SOURCE_RIGHTS_POLICY.md); a record with reuse_mode licensed_reuse replaces this one when code lands.",
+      "verified_at": "2026-10-07"
     }
   ]
 }

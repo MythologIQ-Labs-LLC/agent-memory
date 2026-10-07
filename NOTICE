@@ -30,5 +30,6 @@ Material external sources and reuse-rights determinations are tracked in:
 
 - docs/SOURCE_RIGHTS_POLICY.md
 - sources/source-registry.json
+- THIRD_PARTY_NOTICES.md (created by the first pull request that adapts third-party code; see the adapted-code notice convention in docs/SOURCE_RIGHTS_POLICY.md)
 
 No trademark rights are granted except as provided by the Apache License, Version 2.0.

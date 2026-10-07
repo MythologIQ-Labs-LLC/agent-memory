@@ -248,6 +248,7 @@ Consequences for contributors:
 - a runtime change is never merged undeclared: it carries a successor declaration and the checker prints `TRANSITION`; publication of the successor record follows the merge (docs/67);
 - a benchmark need is never permission to change runtime behavior; if a runtime capability is genuinely missing, open a runtime issue rather than emulating the capability in an adapter;
 - packaging metadata inside `pyproject.toml` is protected; descriptors are packaged through `MANIFEST.in`, which the boundary does not protect, and the contributor-contract workflow verifies that the built wheel carries them.
+- the current record's `native_qualified` statuses for `semantic_vector_retrieval`, `typed_relations_graph_traversal` and `memory_metabolism` describe library capability that the public facade does not reach (closeout v2 rows `evolveai-vector-retrieval`, `codegenome-graph-propagation`, `evolveai-metabolism`); the next successor declares the corrected statuses as identity deltas rather than inheriting them.
 
 ## 8a. CI estate
 
@@ -274,6 +275,10 @@ The second lane, `longmemeval-s-retrieval-parity-v1` (frozen 2026-10-06 before a
 ## 11. Governed correction gap (from #571)
 
 `DUR-COR-001` remains `unsupported` because the neutral operation contract cannot express review-gated, evidence-bearing mutation without embedding one system's governance model. The benchmark integration contract does not solve that; it records heterogeneous protocols truthfully and leaves the evidence-bearing operation envelope as a separate, system-neutral design question. Nothing on this page should be read as permission to supply Agent Memory-specific governance objects from an adapter.
+
+## 11a. Harvest closeout rule
+
+A harvest closes only when every mechanism it brought in is one of three things: **shipped** (a module on the facade or the evaluation path, plus evidence that resolves: a complete lane row in an integration's `evidence_history`, a workflow in the policy, or a committed test or report), **tranche** (an issue, a lane gate and a tranche order) or **declined** (a technical reason). `absorbed` is not a terminal state. The record is the latest `reference/fixtures/harvest-closeout-final-v*.json` (v2 since 2026-10-07, superseding v1 by pointer), enforced by `reference/tests/test_harvest_closeout_v2.py`, which fails on a missing module, an unresolved evidence item, a tranche without an issue, or a mechanism of the previous version or of the Jev-Mem characterization that the record does not place. A new mechanism or a changed disposition is a new fixture version, never an edit of a published one. A tranche that adapts third-party code needs its `sources/source-registry.json` record and the adapted-code notice convention of `docs/SOURCE_RIGHTS_POLICY.md` before the first adapted line lands.
 
 ## 12. Where the other documents fit
 

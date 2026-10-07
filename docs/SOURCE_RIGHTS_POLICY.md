@@ -206,6 +206,16 @@ verified_at
 
 Machine-readable external/material-reuse and same-owner ancestry records live in `sources/source-registry.json` and are validated against `schemas/source-record.schema.json`.
 
+## Adapted-code notice convention
+
+When a registry record has `notice_required: true` and code is directly or substantially adapted from that source:
+
+- the adapting module's docstring opens with one line, `Adapted from <source_id> at <revision> (<SPDX>); notice in THIRD_PARTY_NOTICES.md`, naming the registry `source_id` and the frozen upstream revision;
+- the repository root `THIRD_PARTY_NOTICES.md` is created by the first adapting pull request and holds, per source, the verbatim copyright and permission notice from the frozen revision; later adaptations append to it;
+- the registry record moves to `reuse_mode: licensed_reuse` with `material_reused` naming the adapted files in the same pull request.
+
+Nothing is adapted while a record stays at `reuse_mode: citation_only`; the record's `notice_required` is the trigger, not the presence of the file.
+
 ## Hard gates
 
 A source record must not use `licensed_reuse`, `permission_granted`, or `same_owner_adoption` unless it records a non-empty `reuse_basis`.

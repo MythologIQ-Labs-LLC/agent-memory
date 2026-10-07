@@ -85,6 +85,7 @@ Only plans whose lifecycle is still active/held belong here. Completed plans are
 | #674 successor-baseline plan | `docs/plan-674-successor-baseline.md` | implemented (PR #676, Entry #64); Step B1 publication of Runtime Baseline v2 at Entry #72; historical evidence |
 | #670 return-budget plan | `docs/plan-670-return-budget.md` | implemented (PR #678, Entry #67); the first declared transition under docs/67; historical evidence |
 | #640 lanes -v2 plan | `docs/plan-640-lanes-v2-return-budget.md` | **COMPLETE**; Gate Tribunal PASS at Entry #69 (iteration 2); Phases 1-2 at Entry #70 (PR #679), Phase 3 acceptance of nine rows at Entry #71 |
+| #672 tranche 5 plan (harvests into tranches) | `docs/plan-672-tranche-5-harvests.md` | implemented (Entry #82); the closeout as data in `reference/fixtures/harvest-closeout-final-v2.json`, enforced by `reference/tests/test_harvest_closeout_v2.py`; historical evidence |
 | #662 CI-cost plan (Phases 2-4) | `docs/plan-662-ci-cost-phases-2-4.md` | implemented (Entry #78); the estate as data in `data/github-actions-workflow-policy.json`, enforced by `reference/tests/test_github_actions_workflow_policy.py`; historical evidence |
 | North Star research brief | `docs/research-brief-north-star-six-tranches-2026-10-06.md` | supporting research for the #668 roadmap and the #674 plan (Entry #60) |
 | Tranche 5 / CI-cost research brief | `docs/research-brief-tranche-5-harvests-and-ci-cost-2026-10-07.md` | supporting research for #672 (`scope-tranche-5-harvests`) and `prereq-ci-cost` (#662 Phases 2-4) (Entry #74) |
