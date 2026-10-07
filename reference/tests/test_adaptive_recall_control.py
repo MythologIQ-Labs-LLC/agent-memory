@@ -103,6 +103,31 @@ class AdaptiveRecallControlTests(unittest.TestCase):
         )
         self.assertEqual(budgets[0].candidate_limit, 0)
 
+
+    def test_zero_controller_decisions_is_a_valid_disabled_outer_budget(self) -> None:
+        budget = RecallOuterBudget(maximum_controller_decisions=0, maximum_candidates=0)
+        self.assertEqual(budget.maximum_controller_decisions, 0)
+        self.assertEqual(budget.maximum_candidates, 0)
+
+    def test_outer_and_host_work_budgets_require_integers(self) -> None:
+        invalid_outer = (
+            {"maximum_controller_decisions": 1.5},
+            {"maximum_candidates": 1.5},
+            {"deadline_ms": 1.5},
+            {"maximum_nodes": True},
+        )
+        for kwargs in invalid_outer:
+            with self.subTest(kwargs=kwargs):
+                with self.assertRaisesRegex(ValueError, "integer"):
+                    RecallOuterBudget(**kwargs)
+
+        with self.assertRaisesRegex(ValueError, "integer"):
+            allocate_route_budgets(
+                (RecallRouteNeed(LEXICAL_ROUTE, 1.0),),
+                outer_budget=RecallOuterBudget(maximum_candidates=4),
+                host_caps={LEXICAL_ROUTE: 2.5},
+            )
+
     def test_host_cap_is_required_for_every_route_need(self) -> None:
         with self.assertRaisesRegex(ValueError, "no host cap"):
             allocate_route_budgets(
