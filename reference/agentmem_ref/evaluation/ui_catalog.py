@@ -329,15 +329,37 @@ def _evidence_index(runs: list[dict[str, Any]], published: list[dict[str, Any]])
     return sorted(result, key=lambda item: item["evidence_id"])
 
 
+def _diagnostics_projection(diagnostic_sources: Mapping[str, Mapping[str, Any]]) -> list[dict[str, Any]]:
+    result = []
+    for path in sorted(diagnostic_sources):
+        document = diagnostic_sources[path]
+        if document.get("issue") == 594 and "part_R_population_sample" in document:
+            result.append(
+                {
+                    "diagnostic_id": "proposition-semantics-part-r-v1",
+                    "source_uri": path,
+                    "issue": 594,
+                    "disposition": document.get("disposition"),
+                    "evidence_class": document.get("evidence_class"),
+                    "population": dict(document["part_R_population_sample"]),
+                    "interpretation": dict(document.get("interpretation", {})),
+                    "authority_effect": "none",
+                }
+            )
+    return result
+
+
 def _snapshot_material(
     dashboard: Mapping[str, Any],
     scorecards: Mapping[str, Any],
     normalized_runs: Mapping[str, Mapping[str, Any]],
+    diagnostic_sources: Mapping[str, Mapping[str, Any]],
 ) -> dict[str, Any]:
     return {
         "dashboard": dashboard,
         "scorecards": scorecards,
         "normalized_runs": {path: normalized_runs[path] for path in sorted(normalized_runs)},
+        "diagnostic_sources": {path: diagnostic_sources[path] for path in sorted(diagnostic_sources)},
     }
 
 
@@ -346,6 +368,7 @@ def build_catalog(
     dashboard: Mapping[str, Any],
     scorecards: Mapping[str, Any],
     normalized_runs: Mapping[str, Mapping[str, Any]],
+    diagnostic_sources: Mapping[str, Mapping[str, Any]] | None = None,
     repository_head: str | None = None,
     source_identity: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
@@ -356,23 +379,26 @@ def build_catalog(
     unrelated repository commits do not create a false benchmark snapshot.
     """
 
+    diagnostic_sources = dict(diagnostic_sources or {})
     run_docs = [normalized_runs[path] for path in sorted(normalized_runs)]
     runs = [_run_projection(path, normalized_runs[path]) for path in sorted(normalized_runs)]
     published = _published_references(dashboard)
-    material = _snapshot_material(dashboard, scorecards, normalized_runs)
+    diagnostics = _diagnostics_projection(diagnostic_sources)
+    material = _snapshot_material(dashboard, scorecards, normalized_runs, diagnostic_sources)
     if source_identity is None:
         source_identity = {
             "dashboard": _digest(dashboard),
+            "diagnostics": _digest({path: diagnostic_sources[path] for path in sorted(diagnostic_sources)}),
             "scorecards": _digest(scorecards),
             "normalized": _digest({path: normalized_runs[path] for path in sorted(normalized_runs)}),
         }
         snapshot_id = "semantic-evidence-v1:" + _digest(source_identity)
     else:
-        required = {"dashboard", "scorecards", "normalized"}
+        required = {"dashboard", "diagnostics", "scorecards", "normalized"}
         if set(source_identity) != required:
             raise ValueError(f"source_identity keys must be {sorted(required)}")
         source_identity = {key: source_identity[key] for key in sorted(source_identity)}
-        snapshot_id = "git-evidence-v1:" + ":".join(source_identity[key] for key in ("dashboard", "scorecards", "normalized"))
+        snapshot_id = "git-evidence-v1:" + ":".join(source_identity[key] for key in ("dashboard", "scorecards", "normalized", "diagnostics"))
     evidence_revision = dashboard.get("main_head")
     repository_is_newer = repository_head is not None and repository_head != evidence_revision
     catalog = {
@@ -400,6 +426,7 @@ def build_catalog(
         },
         "coverage": _coverage(scorecards, dashboard),
         "published_references": published,
+        "diagnostics": diagnostics,
         "evidence_index": _evidence_index(runs, published),
     }
     return catalog
