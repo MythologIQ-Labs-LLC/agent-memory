@@ -839,101 +839,39 @@ Current RC/runtime work remains higher priority.
 The benchmark program must not wait for this UI. The UI must consume the evidence contracts established by that program rather than reshape benchmark design around frontend convenience.
 
 
-# Reference wireframes
+# Canonical wireframe specification
 
-These are structural wireframes, not final visual design. They establish hierarchy and interaction density for #699.
+The complete structural wireframe inventory is maintained in:
 
-## Overview
+`docs/prd/PRD-002-wireframes.md`
 
-~~~text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ Agent Memory Benchmark Evidence    CURRENT · snapshot 2026-10-07.4        │
-│ AM 2d852d3 · Runtime Baseline vN · Evidence through Oct 7       [Share]    │
-├──────────────┬──────────────────────────────────────────────────────────────┤
-│ Overview     │ North Star                                                   │
-│ Compare      │ ┌────────────┬────────────┬────────────┬───────────────┐    │
-│ Benchmarks   │ │ Retrieval  │ Currentness│ Scale      │ Reasoning / QA│    │
-│ Changes      │ │ Competitive│ Weak       │ Gap        │ Not measured  │    │
-│ Failures     │ │ LME .823   │ AMB .200   │ BEAM —     │ Same-harness —│    │
-│ Coverage     │ │ Same harness│ Diagnostic │ Evidence gap│ Not measured │    │
-│ Evidence     │ └────────────┴────────────┴────────────┴───────────────┘    │
-│              │                                                              │
-│              │ Material findings                                            │
-│              │ Currentness needs attention        [Why?] [Explore failures] │
-│              │ LME session retrieval competitive [Compare systems]          │
-│              │ BEAM scale not measured            [View coverage gap]        │
-│              │                                                              │
-│              │ Recent architecture/evidence changes                          │
-│              │ 2d852d3  Baseline-first posture                              │
-│              │ ca0f9a7  Runtime Baseline v2                                 │
-└──────────────┴──────────────────────────────────────────────────────────────┘
-~~~
+That document is the structural source of truth for the future Benchmark Evidence Console.
 
-The overview prioritizes conclusions plus evidence state. It does not begin with a wall of benchmark names.
+It defines:
 
-## Compare
+- F00-F24 canonical application frames and material route states;
+- R01-R04 responsive canonical frames;
+- navigation and drill-down coverage;
+- empty, blocked, unsupported, non-comparable, failed-run, stale-catalog, and unavailable-snapshot states;
+- evidence/data fields required by each frame;
+- responsive disposition;
+- interaction and exit paths;
+- a wireframe-completeness gate for #699.
 
-~~~text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ Compare systems                                                             │
-│ Systems [Agent Memory ×] [Mem0 ×]  Evidence [Same-harness only ▾]          │
-│ Benchmark [LongMemEval_S ▾] Profile [Retrieval parity ▾] Plane [Session ▾] │
-├──────────────┬───────────────────────────────────────────────┬──────────────┤
-│ Comparison   │ EXACT SAME-HARNESS                            │ Evidence     │
-│ sets         │ Why comparable? ✓                             │ inspector    │
-│              │                                               │              │
-│ LME Session  │ Metric             AM       Mem0     Δ         │ Input digest │
-│ LME Turn     │ Recall all @5      .823     .809    +.014     │ same ✓       │
-│ AMB Precision│ Recall all @10     .893     .883    +.010     │ Selection ✓  │
-│              │ nDCG any @10       .878     .841    +.037     │ Budget ✓     │
-│              │ Latest gold first  .457     .443    +.014     │ Metric ✓     │
-│              │                                               │ Revisions    │
-│              │ [Inspect run] [Share snapshot]                │ AM …         │
-│              │                                               │ Mem0 …       │
-│              ├───────────────────────────────────────────────┤              │
-│              │ PUBLISHED MARKET CONTEXT · NOT HEAD-TO-HEAD   │              │
-│              │ Hindsight LME QA 94.6%  [Why not comparable?] │              │
-└──────────────┴───────────────────────────────────────────────┴──────────────┘
-~~~
+## Data authenticity rule
 
-The evidence inspector can remain open while the user changes metrics or comparison sets.
+Wireframe validation must use one of only four data classes:
 
-## Changes to failures
+1. committed accepted Agent Memory benchmark evidence;
+2. committed accepted same-harness comparator evidence;
+3. committed published-reference metadata clearly labeled as such;
+4. explicit typed missing states or clearly marked schema-only placeholders where real evidence does not yet exist.
 
-~~~text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ Changes                                                                     │
-│ Before [Baseline v2 · ca0f9a7 ▾]   After [future baseline · abc1234 ▾]     │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ Comparable                                                                  │
-│ Currentness   .200 ───────────────────────────────▶ .760   +.560           │
-│ Recall @5     .823 ───────────────────────────────▶ .901   +.078           │
-│ Search p95    11.9ms ─────────────────────────────▶ 18.4ms  REGRESSION      │
-│                                                                             │
-│ New evidence: BEAM 1M first baseline                                       │
-│ Not comparable: LongMemEval QA evaluator changed                           │
-│                                                                             │
-│ Currentness +.560   [Architecture context] [Explore changed failures]       │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      v
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ Failure Explorer · Currentness · After abc1234                              │
-│ Filters [Stage ▾] [Case type ▾] [Outcome ▾] [Search cases]                 │
-│                                                                             │
-│ Ranking/fusion          ███████████████████ 41%                             │
-│ Temporal applicability ████████████        27%                             │
-│ Identity/slot          ████████            18%                             │
-│ Candidate generation   ████                 9%                             │
-│ Unclassified           ██                   5%                             │
-│                                                                             │
-│ Cases                                                                       │
-│ MESA-00418  ranking/fusion     stale fact first   [Inspect evidence]        │
-│ MESA-00602  unclassified       wrong target       [Inspect evidence]        │
-└─────────────────────────────────────────────────────────────────────────────┘
-~~~
+Invented benchmark scores are not permitted in canonical wireframes.
 
-The key flow is aggregate change -> affected metric -> failure population -> individual evidence, without losing revision/filter context.
+The current seed set is bound to the committed canonical dashboard at `reports/benchmarks/dashboard/current.json` and includes real LongMemEval, PrecisionMemBench, AgentMemBench currentness, performance, semantic-interpretation, governance, and published-reference evidence.
+
+Where formal MESA failure-stage evidence does not yet exist, the wireframes show that absence explicitly instead of fabricating a plausible distribution.
 
 # Implementation issue map
 
