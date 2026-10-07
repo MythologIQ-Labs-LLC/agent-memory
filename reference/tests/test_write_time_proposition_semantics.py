@@ -201,7 +201,16 @@ class ClassificationAndProposalTests(_MemoryCase):
         recalled = self.memory.recall("Where does the user live?", temporal_intent=CURRENT, reference_time=NOW)
         self.assertIn(denver, recalled["admitted"])
         self.assertEqual(recalled["admissions"][denver]["admission_basis"]["currentness"], "current_state")
-        self.assertEqual(self.evidence(recalled, denver)["temporal_applicability"], "unknown_temporal_basis")
+        denver_evidence = self.evidence(recalled, denver)
+        self.assertEqual(
+            denver_evidence["temporal_applicability"],
+            "limited_by_cross_fact_state_change",
+        )
+        self.assertEqual(denver_evidence["temporal_applicability_basis"], "interpreted_cross_fact")
+        self.assertTrue(denver_evidence["cross_fact_limitation"])
+        # #671 changes explicit-current applicability only. The write-time proposal remains open,
+        # and the old logical memory remains the current fact of its own memory.
+        self.assert_untouched("home:denver", denver)
         self.assertEqual([p["status"] for p in self.memory.semantic_proposals()], ["open"])
 
     def test_explicit_no_longer_names_the_ended_value(self):
