@@ -26,6 +26,25 @@ from agentmem_ref.runtime.adapter import GovernedMemoryAdapter  # noqa: E402
 
 CONTRACT_584 = REFERENCE / "fixtures" / "runtime" / "temporal-unknown-basis-ordering-v1.json"
 SUITE_580 = REFERENCE / "fixtures" / "benchmarks" / "temporal-currentness" / "temporal-currentness-gauntlet-v1.json"
+VERSIONED_EVALUATOR_TRANSITIONS = {
+    "evaluator_version": {"from": "1.1.0", "to": "1.2.0"},
+    "reason": "not_current role recognizes the versioned demotion set, including #671 cross-fact limitation",
+}
+VERSIONED_LABEL_TRANSITIONS = {
+    "F23-has-moved-now-lives/current-explicit/current_applicability_accuracy/target": ("honest_unknown", "pass"),
+    "F23-has-moved-now-lives/current-explicit/self_description_currentness_rate/target": ("honest_unknown", "pass"),
+    "F23-has-moved-now-lives/current-explicit/stale_as_current_rate/target": ("honest_unknown", "pass"),
+    "F23-has-moved-now-lives/current-inferred/current_applicability_accuracy/target": ("honest_unknown", "pass"),
+    "F23-has-moved-now-lives/current-inferred/self_description_currentness_rate/target": ("honest_unknown", "pass"),
+    "F23-has-moved-now-lives/current-inferred/stale_as_current_rate/target": ("honest_unknown", "pass"),
+    "F24-no-longer-works-at/current-inferred/self_description_currentness_rate/target": ("honest_unknown", "pass"),
+    "F24-no-longer-works-at/current-inferred/stale_as_current_rate/target": ("honest_unknown", "pass"),
+    "F28-used-to-prefer-now-prefer/current-inferred/self_description_currentness_rate/target": ("honest_unknown", "pass"),
+    "F28-used-to-prefer-now-prefer/current-inferred/stale_as_current_rate/target": ("honest_unknown", "pass"),
+    "F28-used-to-prefer-now-prefer/plain-now/self_description_currentness_rate/target": ("honest_unknown", "pass"),
+    "F28-used-to-prefer-now-prefer/plain-now/stale_as_current_rate/target": ("honest_unknown", "pass"),
+}
+
 CONFLICT_TEMPLATES = (
     ("location", "The user currently lives in {old}.", "The user has moved and now lives in {new}.", "Where does the user currently live?"),
     ("role", "The user works as a {old}.", "The user changed jobs and now works as a {new}.", "What is the user's current job?"),
@@ -260,9 +279,22 @@ def compare(off: dict, on: dict) -> dict:
             if not _has_limitation(after):
                 unattributed.append(f"m4:{key}")
 
+    unexpected_unit_changes = {
+        key: change
+        for key, change in unit_changes.items()
+        if VERSIONED_LABEL_TRANSITIONS.get(key) != (change["off"], change["on"])
+    }
+    missing_versioned_transitions = {
+        key: {"expected": list(expected), "observed": unit_changes.get(key)}
+        for key, expected in VERSIONED_LABEL_TRANSITIONS.items()
+        if key not in unit_changes
+    }
+
     return {
         "584_changes": changes_584,
         "580_unit_status_changes": unit_changes,
+        "580_unexpected_unit_status_changes": unexpected_unit_changes,
+        "580_missing_versioned_transitions": missing_versioned_transitions,
         "580_order_changes": order_changes_580,
         "m4_changes": changes_m4,
         "m4_new_fact_rate": {
@@ -297,10 +329,14 @@ def main() -> int:
         "ranking_policy": "multi-route-default 3.3.0",
         "control": "same live tree with GovernedMemoryAdapter.cross_fact_applicability disabled",
         "comparison": comparison,
+        "versioned_evaluator_transitions": VERSIONED_EVALUATOR_TRANSITIONS,
+        "versioned_label_transitions": {key: list(value) for key, value in VERSIONED_LABEL_TRANSITIONS.items()},
         "blockers": {
             "unattributed_change_count": len(comparison["unattributed_changes"]),
             "584_change_count": len(comparison["584_changes"]),
             "580_unit_transition_count": len(comparison["580_unit_status_changes"]),
+            "580_unexpected_unit_transition_count": len(comparison["580_unexpected_unit_status_changes"]),
+            "580_missing_versioned_transition_count": len(comparison["580_missing_versioned_transitions"]),
         },
         "authority_effect": "none",
     }
@@ -311,7 +347,12 @@ def main() -> int:
     # Unattributed differences are always invalid. #584 or #580 changes are
     # emitted for owner/reviewer adjudication and explicit versioned transition
     # pinning before acceptance, rather than silently accepted here.
-    return 2 if comparison["unattributed_changes"] else 0
+    return 2 if (
+        comparison["unattributed_changes"]
+        or comparison["584_changes"]
+        or comparison["580_unexpected_unit_status_changes"]
+        or comparison["580_missing_versioned_transitions"]
+    ) else 0
 
 
 if __name__ == "__main__":
