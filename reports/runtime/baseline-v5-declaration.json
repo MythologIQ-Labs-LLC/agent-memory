@@ -79,7 +79,7 @@
       "ref": "longmemeval-s-retrieval-parity-v5"
     },
     {
-      "kind": "formal_benchmark",
+      "kind": "replay",
       "ref": "mesa-formal-v2"
     }
   ]
