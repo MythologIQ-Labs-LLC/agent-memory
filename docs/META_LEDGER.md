@@ -4798,3 +4798,31 @@ The replay runs at this PR's merge commit.
 - **Tests:** the full suite has 2329 tests. The only failure is the pre-existing `test_gauntlet_durability`.
 
 Step B2 binds the probe artifact. After B2, the next step is the #732 independent generalization gate against this unchanged runtime. #673 stays held.
+
+---
+
+### Entry #111: PUBLICATION — Runtime Baseline v5 evidence binding (docs/67 Step B2)
+
+**Timestamp**: 2026-10-07T18:15:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reports/runtime/baseline-v5-qualification.json`, the register (v5 `qualification.blob` and `published_commit`), `reports/runtime/baseline-v5.md`, docs/BACKLOG
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `d7217995d0722caad2f31e1b2cf3bc6f4093f625`): `fb5507ddd88c840d85aec90610c1bc69ecf66c721b760ed5f021accdd9715b95`
+**Previous Hash**: `9f8b72fdecb248e0a973937d14e450209623151c520469c780b0aa1747ce1d7f`
+**Chain Hash**: `23418aaac7b41c4b70339bc75811698e55e5435f44a28315db849647a884cf6e`
+
+**Decision**: Runtime Baseline v5's public Gauntlet evidence is bound, and v5 is fully published.
+
+- **Probe run:** workflow run 37692139650 on B1 head `ee5578b` (PR #735).
+- **Artifact:** `agent-memory-runtime-baseline-v5-public-gauntlet`, id 11514120883, digest `sha256:ae8c4a43…`.
+- **Probe result:** `sample_count` 3, `exact_top1` 1.0, `system_revision` `74c8683`, adapter blob `15ec25a`.
+- **Published commit:** `0110f8e`, the merge of #735.
+- **Unchanged:** the record and boundary blobs.
+- **Checks:** the checker prints PASS against v5, and the validator binds v1–v5.
+
+**#671 stays open**, per the owner posture: MESA M4 is a regression floor, and general currentness semantics are not measured.
+
+**Next queue item:** the #732/#733 independent generalization decision gate, against this unchanged runtime. #673 stays held until that gate, and any #732 remediation it requires, is accepted.

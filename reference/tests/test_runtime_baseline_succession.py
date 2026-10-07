@@ -485,6 +485,8 @@ V4_PUBLISHED = "2501f0ff76dda65b626f22e6905c06fa1bd504a7"
 V5 = "agent-memory-runtime-baseline-v5"
 V5_FROZEN = "74c8683e33f2b716577138e5b4c750a9ae670966"
 V5_DECLARATION = "reports/runtime/baseline-v5-declaration.json"
+V5_B1_HEAD = "ee5578b37c547a1a98e4fe6f49f2e4276ad239c8"
+V5_PUBLISHED = "0110f8efdb6a6d577aaf8630c17721b3813479b0"
 
 
 class RealRepository(unittest.TestCase):
@@ -718,8 +720,8 @@ class RealRepository(unittest.TestCase):
         self.assertIn("public Gauntlet path: **complete** via `stdio`", rendered)
 
     def test_register_carries_v5_as_the_current_entry(self) -> None:
-        # docs/67 Step B1 for #671: v5 is the last entry, blob-pinned in the working tree, with
-        # a pending companion qualification and no publication commit yet; no successor is declared.
+        # docs/67 Steps B1 and B2 for #671: v5 is the last entry, blob-pinned in the working tree,
+        # its companion qualification bound and its publication commit pinned; no successor declared.
         register = checker.load_register(REPO_ROOT, REGISTER)
         self.assertEqual([item["baseline_id"] for item in register["baselines"]], [V1, V2, V3, V4, V5])
         self.assertIsNone(register["declared_successor"])
@@ -731,8 +733,18 @@ class RealRepository(unittest.TestCase):
         self.assertEqual(entry["qualification"]["pointer"], "")
         self.assertEqual(blob(REPO_ROOT, entry["qualification"]["path"]), entry["qualification"]["blob"])
         qualification = json.loads((REPO_ROOT / entry["qualification"]["path"]).read_text(encoding="utf-8"))
-        self.assertEqual(qualification["status"], "pending")
-        self.assertIsNone(entry["published_commit"])
+        self.assertEqual(qualification["status"], "complete")
+        self.assertEqual(qualification["verified_head"], V5_B1_HEAD)
+        self.assertEqual(qualification["workflow_run"], 37692139650)
+        self.assertEqual(qualification["system_revision"], f"git-commit:{V5_FROZEN}")
+        self.assertEqual(qualification["sample_count"], 3)
+        self.assertEqual(qualification["exact_top1"], 1.0)
+        self.assertEqual(entry["published_commit"], V5_PUBLISHED)
+        available = subprocess.run(["git", "cat-file", "-e", f"{V5_PUBLISHED}^{{commit}}"], cwd=REPO_ROOT, capture_output=True, text=True, check=False)
+        if available.returncode == 0:
+            self.assertEqual(git(REPO_ROOT, "rev-parse", f"{V5_PUBLISHED}:{entry['record']}"), entry["record_blob"])
+            self.assertEqual(git(REPO_ROOT, "rev-parse", f"{V5_PUBLISHED}:{entry['source_boundary']}"), entry["source_boundary_blob"])
+            self.assertTrue(validator.first_parent_ancestor(REPO_ROOT, "HEAD", V5_PUBLISHED))
         record = json.loads((REPO_ROOT / entry["record"]).read_text(encoding="utf-8"))
         boundary = json.loads((REPO_ROOT / entry["source_boundary"]).read_text(encoding="utf-8"))
         self.assertEqual(record["runtime_revision"]["commit"], V5_FROZEN)
@@ -779,7 +791,7 @@ class RealRepository(unittest.TestCase):
         output, rendered = renderer.render_entry(REPO_ROOT, register["baselines"][-1])
         self.assertEqual(output, REPO_ROOT / "reports/runtime/baseline-v5.md")
         self.assertEqual(rendered, output.read_text(encoding="utf-8"))
-        self.assertIn("public Gauntlet path: **pending** via `stdio`", rendered)
+        self.assertIn("public Gauntlet path: **complete** via `stdio`", rendered)
 
     def test_contestant_workflows_retire_a_predecessor_pin_truthfully(self) -> None:
         # docs/67 Step B1: a contestant that pins a predecessor baseline is skipped with a notice,
