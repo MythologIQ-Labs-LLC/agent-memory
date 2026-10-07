@@ -39,7 +39,6 @@
         "as_of",
         "dashboard_id",
         "evidence_revision",
-        "repository_head",
         "repository_is_newer",
         "source_identity"
       ],
@@ -61,12 +60,6 @@
           ]
         },
         "evidence_revision": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "repository_head": {
           "type": [
             "string",
             "null"
