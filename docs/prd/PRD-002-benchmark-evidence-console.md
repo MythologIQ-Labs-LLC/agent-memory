@@ -837,3 +837,17 @@ This feature is downstream of the benchmark/evidence program.
 Current RC/runtime work remains higher priority.
 
 The benchmark program must not wait for this UI. The UI must consume the evidence contracts established by that program rather than reshape benchmark design around frontend convenience.
+
+
+# Implementation issue map
+
+The future work is decomposed as:
+
+- #698 — F1 versioned evidence-console catalog and projection contract
+- #699 — UX visual system and interaction prototype
+- #700 — F2 core static evidence console
+- #701 — F2 immutable snapshot sharing and evidence-safe export
+- #702 — F3 longitudinal architecture-impact and regression workflow
+- #703 — F4 row-level failure explorer and case diagnostics
+
+These issues remain future/post-RC work. Their existence does not promote #696 onto the active RC/runtime critical path.
