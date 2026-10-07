@@ -66,7 +66,7 @@ The #694 formal baseline is frozen as the pre-major-runtime baseline (`docs/69`,
 
 1. **#671 currentness, first.** It is the only `below_standard` row measured on an exact protocol (MESA M4 0.200/0.800). The failure is fully localized: in 250/250 pairs, write-time interpretation, slot identity and the `state_change_candidate` proposal all succeed, and read-path currentness separates 0 pairs. The tranche must connect governed write-time change evidence to read-path currentness without making recency authoritative and without auto-applying proposals. It needs no new dependency.
 2. **#669 semantic vector route, second (may run in parallel).** The `decision-embedding-dependency` ruling unblocks it. The MESA M2 diagnostics (answer-substring 0.728 vs dense verbatim Naive RAG 0.794; source text 0.899 vs 0.971) and the LongMemEval lane gaps both point at missing semantic retrieval. Its M4 effect must be read through `win_basis`: a relevance accident is not currentness.
-3. **#673 ranking/fusion** after #669 (fusion needs a second scored route).
+3. **#673 ranking/fusion** after #669 (fusion needs a second scored route). It now owns #669's movement gate, because under policy 3.2.0 the semantic-only candidates rank after every lexical candidate (`-v3` lane D2).
 4. **#644 controlled recall**, **#688 typed relations**, **#689 metabolism**, **#690 failure memory**, **#691 consumer package**, **#636 composition**. These are accepted architecture that MESA does not score, and they stay in scope.
 5. **#596 / #597** interpreter work. Not the M4 bottleneck (interpretation succeeded in 250/250 MESA pairs), but natural-data recognition (#580/#594) still needs it.
 
@@ -74,7 +74,12 @@ Each material tranche replays the frozen MESA runner (successor freeze with only
 
 Retrieval and representation:
 
-- [ ] **#669**: semantic/vector route reachable through the facade. Pinned local provider as an optional extra, versioned representation identity, derived and rebuildable vector index, no per-query re-embedding, domain eligibility, provenance.
+- [x] **#669**: semantic/vector route reachable through the facade. Pinned local provider as an optional extra, versioned representation identity, derived and rebuildable vector index, no per-query re-embedding, domain eligibility, provenance.
+  Done 2026-10-07:
+  - #707 shipped the route, default `off`, under ranking policy 3.2.0.
+  - #709 and #711 froze and accepted the `-v3` lanes. D1: the default equals `-v2` exactly. D2: the opt-in route moves no LongMemEval_S metric, as pre-registered.
+  - #712 and #713 published and bound Runtime Baseline v3.
+  - The movement gate transferred to #673, because the subordinate ordering cannot reach the scored k.
 - [ ] **#644**: native controlled recall from the Jev-Mem harvest (call/deadline budgets, stop reasons, route needs, sufficiency, allocation, bounded controller, telemetry).
 - [ ] **#688**: typed entity/causal relation vocabulary, bounded relation judgments, and typed graph traversal reachable through the facade.
 - [ ] **#673**: post-admission route fusion, then a separately versioned reranker if justified. Ranking orders admitted candidates and never admits.
