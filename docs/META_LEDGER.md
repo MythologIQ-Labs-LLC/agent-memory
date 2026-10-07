@@ -4285,3 +4285,40 @@ No retrieval or ranking change.
 - **Full suite:** the only failure is the pre-existing environmental `test_gauntlet_durability`.
 
 Next: a gated `-v4` lanes plan (D1 off equals `-v3`; the shadow row equals the control), then dispatch, acceptance, and Step B1/B2 for v4.
+
+---
+
+### Entry #96: GOVERNANCE — owner rulings: #671 option A (then D), baseline sequencing v4/v5, semantic default off
+
+**Timestamp**: 2026-10-07T13:40:00-04:00
+**Phase**: GOVERNANCE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `.qor/roadmaps/north-star-best-in-class/events.jsonl` (seq 55-60), `docs/BACKLOG.md`
+
+**Artifacts**: roadmap events seq 55-60 (`node_added` + `node_resolved` for `decision-671-currentness-mechanism`, `decision-baseline-sequencing-v4-v5`, `decision-semantic-default`, each with authority `{actor: Knapp-Kevin, role: repository-owner}`); `docs/BACKLOG.md` Phase B execution sequence
+**Content Hash** (SHA256 over `git write-tree` of the staged index `59ca37d772407f3354b1df8d837def57231bc522`): `29133278ddb6c8dd4cdf2838ec2d40b85ba2e5efde819f6206d5aee4a1bdcaea`
+**Previous Hash**: `1dc3954f4c2adc90cf68998270d6c3a7601c390c7d295ff13dff0839a5c92e9d`
+**Chain Hash**: `cfeafd0077b6c821f5752933c8464b6f34cb60582a96f0bd5f6f3472e1a43ace`
+
+**Decision**: Three owner rulings were given on 2026-10-07, after #715 merged as 729a6c8.
+
+**#671: option A now, option D next.**
+- Currentness becomes a read-path applicability mechanism with an explicit `interpreted_cross_fact` evidence basis.
+- A typed, open, unapplied `state_change_candidate` limits the older fact for explicit-current recall only when all of these hold:
+  - the two facts share actor, source and scope;
+  - the change is unhedged and untrusted-claim-free;
+  - the newer fact is live and undisputed at read time.
+- There is no lifecycle mutation and no automatic correction. Historical and non-current recall are preserved.
+- Recency is never a substitute for typed change evidence.
+- Option D (governed auto-application into durable supersession with receipts) is a later, separately reviewed ADR and is not part of A.
+
+**Sequencing.**
+- Runtime Baseline v4 is the #644 shadow-controller transition alone and is qualified and published first.
+- #671 is the next transition (v5).
+- #673 is re-planned only on accepted currentness.
+
+**Semantic default.** `semantic_retrieval` stays `off`. `auto` is deferred until currentness and fusion are independently qualified.
+
+No runtime file changed.
