@@ -6,13 +6,14 @@ on:
       lane_id:
         description: "Frozen PrecisionMemBench retrieval lane this run executes when dataset=precisionmembench and mode=retrieval (an accepted lane is refused)"
         required: true
-        default: "amb-precisionmembench-retrieval-v4"
+        default: "amb-precisionmembench-retrieval-v5"
         type: choice
         options:
           - amb-precisionmembench-retrieval-v1
           - amb-precisionmembench-retrieval-v2
           - amb-precisionmembench-retrieval-v3
           - amb-precisionmembench-retrieval-v4
+          - amb-precisionmembench-retrieval-v5
       dataset:
         description: "AMB dataset"
         required: true
@@ -272,9 +273,12 @@ jobs:
             args+=(--query-limit "${{ inputs.query_limit }}")
           fi
           if [ "${{ inputs.memory }}" = "agent-memory-shadow" ]; then
-            # Bridge 0.3.0 writes one shadow telemetry line per retrieve() call (plan-644-lanes-v4 L9):
-            # the frozen runner keeps no provider raw response, so this sidecar is the only carrier.
+            # Historical v4 shadow rows retain the bridge-0.3.0 recall-control sidecar contract.
             export AGENT_MEMORY_AMB_RECALL_CONTROL_SIDECAR="$RUNNER_TEMP/amb-output/recall-control.jsonl"
+          fi
+          if [ "${{ inputs.lane_id }}" = "amb-precisionmembench-retrieval-v5" ] && [ "${{ inputs.memory }}" = "agent-memory" ]; then
+            # Bridge 0.4.0 C9 E2: causal attribution for the v5 control only.
+            export AGENT_MEMORY_AMB_CROSS_FACT_SIDECAR="$RUNNER_TEMP/amb-output/cross-fact.jsonl"
           fi
           PYTHONPATH=reference python reference/run_amb_external.py --amb-root .external/amb -- "${args[@]}"
 
