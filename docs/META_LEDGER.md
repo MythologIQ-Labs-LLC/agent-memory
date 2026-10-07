@@ -3762,3 +3762,40 @@ issues of OQ1 are opened in Phase 3 and their numbers land in the
 fixture, the test's `EXPECTED_UNASSIGNED` list is emptied, and the
 implementation ledger entry names them before `scope-tranche-5-harvests`
 is resolved. Implementation may proceed under iteration 2.
+
+---
+
+### Entry #82: IMPLEMENTATION
+
+**Timestamp**: 2026-10-07T06:40:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Plan**: docs/plan-672-tranche-5-harvests.md (iteration 2; Gate Tribunal PASS at Entry #81, condition C1)
+
+**Artifacts**: `reference/fixtures/harvest-closeout-final-v2.json` (new; 28 rows, 16 out-of-scope references, evaluated against `main` dd03a870), `reference/tests/test_harvest_closeout_v2.py` (new), `reference/run_rc1_evidence_closeout.py` and `reference/tests/test_rc1_evidence_closeout.py` (`complete_mechanism_closeout`), `sources/source-registry.json` (`jev-mem` record), `docs/CONTRIBUTOR_ARCHITECTURE.md` §11a and §8, `docs/SOURCE_RIGHTS_POLICY.md` (adapted-code notice convention), `NOTICE`, `docs/GOVERNANCE_INDEX.md`; issues #688 (T-typed-relations), #689 (T-metabolism), #690 (T-failure-memory), #691 (T-consumer-package) opened as sub-issues of #672
+**Content Hash** (SHA256 over `git write-tree` of the staged index `ba9ca9b557420346948995b96b031d5a78e5d9fc`): `7c4337420b9486aae5edfbb2e0816e798a148ef51136a2413fdd802b545619fb`
+**Previous Hash**: `95f4e2eb80ab3a47164907e8be195e39298e43c10d912620e034af58124d361a`
+**Chain Hash**: `4620501c4ccefd1e485ade5501de0aeb7ad99bf695d3ba8cd8a81a8d4900fbf8`
+
+**Decision**: Phases 1–3 of the plan executed as locked (LD1–LD6).
+The closeout is data with a closed vocabulary: of the 28 rows, 7 are
+`shipped` (temporal behaviour, keyed rebinding and context assembly on
+the facade with complete v2 lane rows as evidence; regression pressure
+and the two mutation-integrity rows on the evaluation path), 17 are
+`tranche` (T-vector #669; T-controller and T-controller-2 #644;
+T-ranking #673; T-typed-relations #688; T-metabolism #689;
+T-failure-memory #690; T-consumer-package #691, one shared lane gate),
+and 4 are `declined` (noisy-OR fusion, the uor-r4 geometric model, UOR
+saturation-based decay per OQ2, the Jev-Mem explicit rejections). The
+16 out-of-scope references cover the 13 identity/authority/interop
+mechanisms of v1 and JH-01/JH-11/JH-15. Every v1 mechanism (23) and
+every Jev-Mem id (16) is placed exactly once; every cited module exists;
+every evidence item resolves. #672 item 3 closes with no new UOR
+tranche. Condition C1 of Entry #81 is met: the four issues exist, the
+fixture cites them and `EXPECTED_UNASSIGNED` is empty. The baseline
+record's `native_qualified` drift (finding D) is stated in §8 and left
+to the next successor. Verified before this entry: the two closeout
+test modules pass (12 tests); `validate_schemas.py` validates 19
+source-rights records; the equivalence checker prints `PASS`.
