@@ -644,11 +644,17 @@ class RealRepository(unittest.TestCase):
         self.assertIn("public Gauntlet path: **complete** via `stdio`", rendered)
 
     def test_register_carries_v4_as_the_current_entry(self) -> None:
-        # docs/67 Steps B1 and B2 for #644: v4 is the last entry, blob-pinned in the working tree,
-        # its companion qualification bound and its publication commit pinned; no successor declared.
+        # docs/67 Steps B1 and B2 for #644: v4 remains the last published baseline.
+        # #671 has opened the declared v5 successor transition; publication still stays v4 until v5 B1/B2.
         register = checker.load_register(REPO_ROOT, REGISTER)
         self.assertEqual([item["baseline_id"] for item in register["baselines"]], [V1, V2, V3, V4])
-        self.assertIsNone(register["declared_successor"])
+        self.assertEqual(
+            register["declared_successor"],
+            {
+                "baseline_id": "agent-memory-runtime-baseline-v5",
+                "declaration": "reports/runtime/baseline-v5-declaration.json",
+            },
+        )
         entry = register["baselines"][-1]
         self.assertEqual(entry["record"], "reports/runtime/baseline-v4.json")
         self.assertEqual(blob(REPO_ROOT, entry["record"]), entry["record_blob"])
