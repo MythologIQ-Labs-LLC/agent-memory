@@ -336,7 +336,7 @@ def _applicability_label(intent: TemporalIntent, temporal: Mapping[str, Any]) ->
 
 
 _DEMOTED = {
-    CURRENT: {"prospectively_applicable", "outside_target_interval"},
+    CURRENT: {"prospectively_applicable", "outside_target_interval", "limited_by_cross_fact_state_change"},
     AS_OF: {"prospectively_applicable", "outside_target_interval"},
     PROSPECTIVE: {"outside_target_interval", "applicable_not_prospective"},
 }
