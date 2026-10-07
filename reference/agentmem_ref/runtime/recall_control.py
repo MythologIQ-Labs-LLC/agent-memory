@@ -836,20 +836,90 @@ def adaptive_cache_key(
 
 
 class ControllerDecisionCache:
-    """Process-local cache of non-authoritative controller evidence."""
+    """Process-local cache of non-authoritative controller evidence.
+
+    Callers provide the identity fields, never a raw cache key. The cache derives
+    the canonical digest itself so contract/backend/policy/isolation binding cannot
+    be bypassed by a convenient caller-supplied string.
+    """
 
     def __init__(self) -> None:
         self._values: dict[str, AdaptiveControlDecision] = {}
 
-    def get(self, key: str) -> AdaptiveControlDecision | None:
+    @staticmethod
+    def _key(
+        *,
+        operation: str,
+        canonical_request_state: Mapping[str, Any],
+        controller_contract_version: str,
+        backend_ref: str,
+        backend_version: str,
+        model_or_policy_ref: str,
+        host_policy_version: str,
+        isolation_namespace: str,
+    ) -> str:
+        return adaptive_cache_key(
+            operation=operation,
+            canonical_request_state=canonical_request_state,
+            controller_contract_version=controller_contract_version,
+            backend_ref=backend_ref,
+            backend_version=backend_version,
+            model_or_policy_ref=model_or_policy_ref,
+            host_policy_version=host_policy_version,
+            isolation_namespace=isolation_namespace,
+        )
+
+    def get(
+        self,
+        *,
+        operation: str,
+        canonical_request_state: Mapping[str, Any],
+        controller_contract_version: str,
+        backend_ref: str,
+        backend_version: str,
+        model_or_policy_ref: str,
+        host_policy_version: str,
+        isolation_namespace: str,
+    ) -> AdaptiveControlDecision | None:
+        key = self._key(
+            operation=operation,
+            canonical_request_state=canonical_request_state,
+            controller_contract_version=controller_contract_version,
+            backend_ref=backend_ref,
+            backend_version=backend_version,
+            model_or_policy_ref=model_or_policy_ref,
+            host_policy_version=host_policy_version,
+            isolation_namespace=isolation_namespace,
+        )
         return self._values.get(key)
 
-    def put(self, key: str, decision: AdaptiveControlDecision) -> None:
-        if not key:
-            raise ValueError("controller cache key is required")
+    def put(
+        self,
+        decision: AdaptiveControlDecision,
+        *,
+        operation: str,
+        canonical_request_state: Mapping[str, Any],
+        controller_contract_version: str,
+        backend_ref: str,
+        backend_version: str,
+        model_or_policy_ref: str,
+        host_policy_version: str,
+        isolation_namespace: str,
+    ) -> str:
         if decision.authority_effect != "none":
             raise ValueError("controller cache cannot store authoritative decisions")
+        key = self._key(
+            operation=operation,
+            canonical_request_state=canonical_request_state,
+            controller_contract_version=controller_contract_version,
+            backend_ref=backend_ref,
+            backend_version=backend_version,
+            model_or_policy_ref=model_or_policy_ref,
+            host_policy_version=host_policy_version,
+            isolation_namespace=isolation_namespace,
+        )
         self._values[key] = decision
+        return key
 
     def __len__(self) -> int:
         return len(self._values)
@@ -883,6 +953,8 @@ class DeterministicAdaptiveRecallController:
     ) -> AdaptiveControlDecision:
         if ablation_profile not in ADAPTIVE_ABLATION_PROFILES:
             raise ValueError("unsupported controller ablation profile")
+        if outer_budget.maximum_controller_decisions == 0:
+            raise ValueError("controller decision budget exhausted")
         needs = estimate_route_needs(
             query,
             logical_memory_refs=logical_memory_refs,
