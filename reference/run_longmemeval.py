@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import codecs
 import copy
+import dataclasses
 import hashlib
 import importlib
 import json
@@ -31,12 +32,15 @@ import subprocess
 import sys
 import tempfile
 import time
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
 from benchmark_ranking_variants import VARIANTS, apply_ranking_variant
 from agentmem_ref import AgentMemory
+from agentmem_ref.runtime import runtime_composition
+from agentmem_ref.runtime.temporal_order_constraints import ExplicitCurrentConstrainedRankingPolicy
 
 
 UPSTREAM_REPOSITORY = "xiaowu0162/LongMemEval"
@@ -540,6 +544,66 @@ def configure_agent_memory(
     return dict(_AGENT_MEMORY_CONFIGURATION)
 
 
+class _LegacyCrossFactOffPolicy:
+    """Policy 3.2.0 reconstructed from the live 3.3.0 fields (C9 E2)."""
+
+    def __init__(self, live) -> None:
+        names = {
+            item.name
+            for item in dataclasses.fields(ExplicitCurrentConstrainedRankingPolicy)
+            if item.init
+        } - {"version"}
+        self._policy = ExplicitCurrentConstrainedRankingPolicy(
+            **{name: getattr(live, name) for name in names}
+        )
+
+    def rank(self, *args, cross_fact=None, **kwargs):
+        return self._policy.rank(*args, **kwargs)
+
+    def identity(self):
+        return self._policy.identity()
+
+
+@contextmanager
+def cross_fact_mechanism(mode: str):
+    """Temporarily disable only #671 cross-fact applicability for a read replay."""
+
+    if mode not in {"on", "off"}:
+        raise ValueError("cross-fact mechanism mode must be on or off")
+    live = runtime_composition.MULTI_ROUTE_RANKING_POLICY
+    if mode == "off":
+        runtime_composition.MULTI_ROUTE_RANKING_POLICY = _LegacyCrossFactOffPolicy(live)
+    try:
+        yield
+    finally:
+        runtime_composition.MULTI_ROUTE_RANKING_POLICY = live
+
+
+def _cross_fact_record(
+    recalled: Mapping[str, Any],
+    uuid_to_item: Mapping[str, str],
+) -> dict[str, Any]:
+    limited: list[str] = []
+    refusals: dict[str, int] = {}
+    for candidate in recalled.get("admitted") or ():
+        decision = (recalled.get("admissions") or {}).get(candidate) or {}
+        ranking = decision.get("ranking_evidence") or {}
+        if ranking.get("cross_fact_limitation"):
+            item_id = uuid_to_item.get(str(candidate))
+            if item_id is not None:
+                limited.append(item_id)
+        refusal = ranking.get("cross_fact_refusal_reason")
+        if refusal:
+            key = str(refusal)
+            refusals[key] = refusals.get(key, 0) + 1
+    return {
+        "limited_count": len(limited),
+        "limited_item_ids": limited,
+        "refusal_counts": dict(sorted(refusals.items())),
+        "ranked_top_mechanism_off": None,
+    }
+
+
 def _no_memory(question: str, items: Sequence[Mapping[str, str]], row_index: int, row: Mapping[str, Any] | None = None) -> dict[str, Any]:
     return {"ranked": []}
 
@@ -598,6 +662,17 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
             recall_kwargs = {} if budget == "none" else {"budget": int(budget)}
             recalled = memory.recall(question, reference_time=reference_time, **recall_kwargs)
             recall_seconds = time.perf_counter() - started
+            cross_fact = _cross_fact_record(recalled, uuid_to_item)
+            if cross_fact["limited_count"] > 0:
+                # C9 E2/A4: a read-only mechanism-off replay outside the timed span.
+                # The context manager restores the live policy even on failure.
+                with cross_fact_mechanism("off"):
+                    recalled_off = memory.recall(question, reference_time=reference_time, **recall_kwargs)
+                cross_fact["ranked_top_mechanism_off"] = [
+                    uuid_to_item[value]
+                    for value in recalled_off["returned"]
+                    if value in uuid_to_item
+                ]
             if semantic != "off" and not _SEMANTIC_POSTURE:
                 _SEMANTIC_POSTURE.update(_recorded_semantic_posture(memory.semantic_retrieval_posture()))
     unmapped_admitted = [value for value in recalled["admitted"] if value not in uuid_to_item]
@@ -608,6 +683,7 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
         reason = str(decision.get("refusal") or "not_admitted")
         refusals[reason] = refusals.get(reason, 0) + 1
     extra = {"observed_at_mapped_count": observed_mapped, "observed_at_unmapped_count": observed_unmapped} if declare_observed else {}
+    extra["cross_fact"] = cross_fact
     if shadow:
         extra["recall_control"] = recorded_recall_control(recalled.get("recall_control"))
     if semantic != "off":
@@ -934,6 +1010,18 @@ def _evaluate_backend(dataset: Iterable[Mapping[str, Any]], granularity: str, ba
             result["recall_control_summary"] = recall_control_summary(
                 [row["recall_control"] for row in rows if "recall_control" in row]
             )
+        if any("cross_fact" in row for row in rows):
+            records = [row["cross_fact"] for row in rows if "cross_fact" in row]
+            refusal_counts: dict[str, int] = {}
+            for record in records:
+                for reason, count in (record.get("refusal_counts") or {}).items():
+                    refusal_counts[str(reason)] = refusal_counts.get(str(reason), 0) + int(count)
+            result["cross_fact_summary"] = {
+                "questions_with_limitation": sum(1 for record in records if record.get("limited_count", 0) > 0),
+                "limited_count_total": sum(int(record.get("limited_count", 0)) for record in records),
+                "refusal_counts": dict(sorted(refusal_counts.items())),
+                "authority_effect": "none",
+            }
         if any("semantic_route" in row for row in rows):
             traced = [row["semantic_route"] for row in rows if "semantic_route" in row]
             result["semantic_route"] = {
