@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MythologIQ-Labs-LLC/agent-memory/schemas/benchmark-deficit-ledger.schema.json",
+  "title": "Benchmark deficit ledger",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_from",
+    "deficits"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "generated_from": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "deficits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "deficit_id",
+          "benchmark_profile",
+          "evidence_class",
+          "metric",
+          "direction",
+          "agent_memory",
+          "priority",
+          "posture",
+          "state",
+          "evidence_refs",
+          "owning_issue",
+          "opened_at"
+        ],
+        "properties": {
+          "deficit_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmark_profile": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_class": {
+            "type": "string",
+            "minLength": 1
+          },
+          "metric": {
+            "type": "string",
+            "minLength": 1
+          },
+          "direction": {
+            "enum": [
+              "higher",
+              "lower",
+              "diagnostic",
+              "mixed"
+            ]
+          },
+          "agent_memory": {},
+          "same_harness_frontier": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "published_frontier": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "adequacy_target": {},
+          "gap": {
+            "type": [
+              "number",
+              "string",
+              "null"
+            ]
+          },
+          "priority": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2",
+              "P3",
+              "P4"
+            ]
+          },
+          "posture": {
+            "enum": [
+              "frontier",
+              "frontier_but_inadequate",
+              "competitive_deficit",
+              "self_regression",
+              "architecture_gap",
+              "implementation_defect",
+              "evaluator_protocol_defect",
+              "published_reference_gap",
+              "unsupported_deliberate_non_goal",
+              "blocked"
+            ]
+          },
+          "primary_stage": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "secondary_stages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "owning_issue": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "architecture_tranche": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "remediation_hypothesis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "negative_control_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "replay_requirements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "state": {
+            "enum": [
+              "open",
+              "remediating",
+              "blocked",
+              "awaiting_replay",
+              "improved_not_frontier",
+              "frontier",
+              "accepted_tradeoff",
+              "deliberate_non_goal",
+              "invalidated_evidence"
+            ]
+          },
+          "opened_at": {
+            "type": "string"
+          },
+          "closed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "closure_evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "remaining_gap": {
+            "type": [
+              "number",
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
