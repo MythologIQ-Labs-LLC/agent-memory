@@ -1,0 +1,177 @@
+{
+  "authority_effect": "none",
+  "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+  "contract_family": "agent-memory-same-harness-lane-evidence",
+  "contract_version": "1.0.0",
+  "evidence_class": "same_harness_external_candidate",
+  "execution": {
+    "agent_memory_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+    "authority_effect": "none",
+    "backend": "agent_memory_semantic",
+    "declaration_blob": "593fee135b8fbb8a99b619f59406484b0cb063a6",
+    "evidence_class": "same_harness_external_candidate",
+    "full_selection": true,
+    "granularity": "turn",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "lane_digest_sha256": "9cf28fefd8d9d268dd8ffd1c35bcb707b50c99e51915d73a25719e6de3edccca",
+    "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json",
+    "lane_id": "longmemeval-s-retrieval-parity-v3",
+    "mem0_optional_components": {
+      "fastembed_installed": false,
+      "spacy_installed": false
+    },
+    "resolved_packages": {
+      "agent-memory-reference": "0.2.0",
+      "mem0ai": null,
+      "numpy": "2.4.6",
+      "onnxruntime": "1.30.0",
+      "openai": null,
+      "posthog": null,
+      "qdrant-client": null,
+      "sentence-transformers": null,
+      "tokenizers": "0.23.2",
+      "torch": null
+    },
+    "runner": "ubuntu24",
+    "runner_backend": "agent_memory",
+    "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v2; declared_successor=agent-memory-runtime-baseline-v3 (issue #669); protected surface = frozen 488d64aadb16ba4b0c474af95d67e96e970e4dfc + 11 declared blobs; deltas=identity.ranking.active_policy_version 3.1.2->3.2.0; candidate=HEAD",
+    "runtime_baseline_state": "TRANSITION",
+    "source_blobs": {
+      "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+      "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+      "reference/run_longmemeval.py": "eaa7ca96bc68cec23eab904ca9fed76db82faafc"
+    },
+    "subset_size": "0",
+    "upstream_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+    "workflow_run_id": "37601511653"
+  },
+  "files": {
+    "execution-identity.json": "b84c36ecbdb84f115b9234995a67d3b5f93a51b9823c0ae8768eb70779ffd8e3",
+    "files.txt": "f0e93687ba81eeae081fac78fa253601fe3a73d6903c179dc57633dec25db08b",
+    "lane-validation.json": "e37945bc68dca5bf74f871070346e455320e38a6798816263fd0b6e2a9d6ae92",
+    "report.json": "da28290506eb520e6a79e1e7bf57cb5dec55b57a689654cbaf6b87bca0e4ad8f",
+    "report.rows.json.gz": "4b483ac8bd4b394a96e0ae762a7b0347338a6ed62d2b94823ecc8ebf3aa2ecb3",
+    "sha256.txt": "1df43a51193f9efed92b8d7250e55c015c1c77b7378ea329ca274ca8bab8b81c"
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "fixtures": {
+      "longmemeval_s_cleaned.json": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+    },
+    "query_count": 500,
+    "question_ids_sha256": "7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+    "selection_id": "all-500:7d738ae585fd4014",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "verified_by": "lane record only (import ran with --no-fetch)"
+  },
+  "lane_digest_at_execution": "9cf28fefd8d9d268dd8ffd1c35bcb707b50c99e51915d73a25719e6de3edccca",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json",
+  "lane_id": "longmemeval-s-retrieval-parity-v3",
+  "native_summary": {
+    "backend": "agent_memory",
+    "evaluated_question_count": 419,
+    "failures": {
+      "ingestion_failure_count": 0,
+      "out_of_corpus_returned_count": 0,
+      "runtime_failure_count": 0
+    },
+    "governance": {
+      "admitted_count_total": 103479,
+      "candidate_count_total": 103479,
+      "refused_candidate_count_total": 0,
+      "return_budget_applied_total": 500,
+      "unmapped_admitted_count_total": 0
+    },
+    "headline": {
+      "ndcg_any@10": 0.68156,
+      "ndcg_any@5": 0.648611,
+      "ndcg_any@50": 0.711426,
+      "recall_all@10": 0.72315,
+      "recall_all@5": 0.601432,
+      "recall_all@50": 0.859189
+    },
+    "knowledge_update_headline": {
+      "ndcg_any@10": 0.790497,
+      "ndcg_any@5": 0.761275,
+      "ndcg_any@50": 0.797593,
+      "recall_all@10": 0.930556,
+      "recall_all@5": 0.791667,
+      "recall_all@50": 0.972222
+    },
+    "latest_gold_ranked_first": {
+      "applicable_question_count": 70,
+      "definition": "among scored knowledge-update questions with gold items on >=2 distinct dates, fraction where the most recently dated gold item is returned ahead of every older gold item",
+      "rate": 0.557143,
+      "upstream_metric": false
+    },
+    "plane": "turn",
+    "shape_note": "copied from the runner's own aggregate for this plane and backend; the full native report is report.json",
+    "timing": {
+      "ingest_seconds_total": 614.261,
+      "recall_seconds_max": 5.550224,
+      "recall_seconds_total": 2178.982,
+      "wall_seconds": 2915.468
+    }
+  },
+  "raw_report": {
+    "name": "turn-agent_memory_semantic.json",
+    "sha256": "d13fea4ca52d10f60b0253540177a141ad0454fb4deb49252ba766d1e1b7fd17",
+    "split_rule": "rows moved to report.rows.json.gz ({plane: {backend: rows}}); report.json is the remainder; recomposition verified byte for byte at import"
+  },
+  "row": {
+    "backend": "agent_memory",
+    "display_name": "Agent Memory (public facade, semantic route required, declared transition to Runtime Baseline v3)",
+    "inference_posture": "none",
+    "plane": "turn",
+    "provider_key": "agent_memory_semantic",
+    "role": "comparator",
+    "row_id": "agent-memory-semantic-route",
+    "system_id": "agent-memory"
+  },
+  "system": {
+    "external_backend_identity": null,
+    "id": "agent-memory",
+    "mem0_optional_components": {
+      "fastembed_installed": false,
+      "spacy_installed": false
+    },
+    "resolved_packages": {
+      "agent-memory-reference": "0.2.0",
+      "mem0ai": null,
+      "numpy": "2.4.6",
+      "onnxruntime": "1.30.0",
+      "openai": null,
+      "posthog": null,
+      "qdrant-client": null,
+      "sentence-transformers": null,
+      "tokenizers": "0.23.2",
+      "torch": null
+    },
+    "revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+    "revision_rule": "git rev-parse HEAD of the executing checkout; the protected runtime surface is pinned by scripts/check_runtime_baseline_equivalence.py, which must print PASS or TRANSITION against the declaration blob this row pins (configuration.runtime_baseline_posture) for the run to be importable; the state, line and declaration blob are recorded in the execution identity",
+    "runtime_baseline": {
+      "declaration_blob": "593fee135b8fbb8a99b619f59406484b0cb063a6",
+      "declared_successor": "agent-memory-runtime-baseline-v3",
+      "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v2; declared_successor=agent-memory-runtime-baseline-v3 (issue #669); protected surface = frozen 488d64aadb16ba4b0c474af95d67e96e970e4dfc + 11 declared blobs; deltas=identity.ranking.active_policy_version 3.1.2->3.2.0; candidate=HEAD",
+      "predecessor": "agent-memory-runtime-baseline-v2",
+      "state": "TRANSITION"
+    },
+    "semantic_route_posture": {
+      "candidate_limit": 16,
+      "config_digest": "sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee",
+      "dimensions": 384,
+      "minimum_similarity": 0.3,
+      "mode": "required",
+      "representation_ref": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367",
+      "representation_version": "onnx-mean-l2-f32/1.0.0",
+      "status": "enabled"
+    },
+    "source_kind": "repository_runtime"
+  },
+  "workflow_run": {
+    "artifact_directory": "longmemeval-lane-longmemeval-s-retrieval-parity-v3-agent_memory_semantic-turn-04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+    "id": "37601511653",
+    "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/37601511653"
+  }
+}
