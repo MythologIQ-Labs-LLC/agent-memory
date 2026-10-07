@@ -1,0 +1,27 @@
+Second pass. The same tool rule applies: only Write and Read, only inside {AUTHOR_DIR}; any other tool call invalidates your work.
+
+For each case_id in this JSON list, write variants of that case:
+{CASE_IDS}
+
+Write one record per (case_id, variant_type) for all 14 variant types below, as one JSON array in {AUTHOR_DIR}/variants.json.
+
+Invariance variants (kind "invariance", expected "same_as_base"). Keep every field of the base case identical except the text of the writes and the query, and keep the meaning unchanged:
+- punctuation: change only punctuation.
+- apostrophe: switch between straight and typographic apostrophes or quotation marks.
+- adverb_placement: move an adverb or time phrase to another natural position in the later memory.
+- subject_wording: refer to the same subject with different words.
+- value_case: change the capitalization of the value where that does not change its meaning.
+- unit_spelling: write a number or unit in a different form with the same meaning.
+If an invariance type cannot apply to the case, write {"variant_id", "base_case_id", "variant_type", "kind", "na_reason"} with a one-sentence na_reason and no other fields.
+
+Must-change variants (kind "must_change", expected "refrain"). Every must-change type applies to every case; n/a is not allowed:
+- hedge: rewrite the later memory's text so the change is uncertain. Everything else identical.
+- attribution: rewrite the later memory's text so the change is someone else's claim, not the agent's own assertion. Everything else identical.
+- conditional: rewrite the later memory's text so the change only holds under a condition. Everything else identical.
+- coexistent: rewrite the later memory's text so the new value holds in addition to the earlier value. Everything else identical.
+- change_source_ref: give the later memory a source_ref different from the earlier memory's. Everything else identical.
+- change_actor: write the later memory with the other handle. Everything else identical, including recall_as.
+- change_scope: write the later memory in the other scope. Everything else identical, including recall_as.
+- dispute: add the action {"action": "dispute", "write": <newer_write>}. Everything else identical.
+
+Full variant records have exactly these fields: variant_id (unique), base_case_id, variant_type, kind, expected, writes, older_write, newer_write, actions, recall_as, query, rationale. When variants.json is complete, reply with the single word: done.
