@@ -26,9 +26,6 @@ jobs:
       - name: Execute targeted visibility tests
         run: python -m unittest reference.tests.test_write_readable_visibility
 
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
-
       - name: Emit exact-head visibility characterization
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}

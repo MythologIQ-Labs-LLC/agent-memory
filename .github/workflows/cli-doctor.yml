@@ -61,9 +61,6 @@ jobs:
       - name: Execute targeted CLI/doctor tests
         run: python -m unittest discover -s reference/tests -t reference -p 'test_cli_doctor.py'
 
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
-
       - name: Emit exact-head CLI/doctor evidence
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}

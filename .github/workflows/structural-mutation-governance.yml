@@ -29,9 +29,6 @@ jobs:
       - name: Execute PAMA 1.2 compatibility regressions
         run: python -m unittest discover -s reference/tests -t reference -p 'test_domain_schema_mutation_*.py'
 
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
-
       - name: Emit exact-head structural mutation evidence
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}

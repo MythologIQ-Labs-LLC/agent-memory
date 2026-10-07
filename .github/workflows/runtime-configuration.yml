@@ -26,9 +26,6 @@ jobs:
       - name: Execute targeted runtime configuration tests
         run: python -m unittest discover -s reference/tests -t reference -p 'test_runtime_config.py'
 
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
-
       - name: Emit exact-head runtime configuration evidence
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}

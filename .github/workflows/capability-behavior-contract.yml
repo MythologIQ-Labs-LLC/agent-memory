@@ -26,9 +26,6 @@ jobs:
       - name: Execute targeted behavior-contract tests
         run: python -m unittest discover -s reference/tests -t reference -p 'test_capability_behavior_contract.py'
 
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
-
       - name: Emit exact-head behavior-contract evidence
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}

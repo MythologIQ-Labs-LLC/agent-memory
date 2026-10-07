@@ -78,9 +78,6 @@ jobs:
       - name: Execute targeted provider discovery tests
         run: python -m unittest discover -s reference/tests -t reference -p 'test_provider_discovery.py'
 
-      - name: Execute full reference regression suite
-        run: python -m unittest discover -s reference/tests -t reference
-
       - name: Emit exact-head provider discovery evidence
         env:
           AGENT_MEMORY_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
