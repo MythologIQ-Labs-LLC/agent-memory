@@ -1,0 +1,172 @@
+{
+  "freeze_id": "agent-memory-agentmembench-mesa-formal-v1",
+  "owning_issue": 694,
+  "frozen_on": "2026-10-07",
+  "status": "frozen_before_score_inspection",
+  "run_id": "agent_memory_formal_s2027_9170",
+  "upstream": {
+    "repository": "mazaiying/AgentMemBench",
+    "url": "https://github.com/mazaiying/AgentMemBench",
+    "revision": "186c9a54edd47aae42d8b6990520f8e902b60303",
+    "revision_note": "upstream default-branch HEAD on 2026-10-07; identical to the revision pinned by the adapted operational profile (#517/#533)",
+    "code_license": "MIT",
+    "harness": "agentmembench/evaluation/unified_benchmark.py",
+    "harness_sha256": "d0d407129aa506f6eacbf6df19a26c1a9ddd000aa0bfb931cb4e4ae984e594df",
+    "dataset": "data/memdialogue_v2.jsonl",
+    "dataset_sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+    "dataset_records": 9170,
+    "dataset_meta_sha256": "4f8e769641e1dafba52850f5954caf6f2ecfbead64af1965357aac25fdec23db",
+    "data_license": "ODC-By-1.0",
+    "data_attribution": "MemDialogue is derived from WildChat-4.8M by the Allen Institute for AI.",
+    "data_redistribution": "linked_only",
+    "formal_results_manifest": "results/formal/SHA256SUMS",
+    "formal_results_sha256sums_sha256": "8322f56dc196c09889a216cbde5f8a86980066ca494012c251510f94ff23c68e",
+    "upstream_artifact_validation": "python -m agentmembench.evaluation.validate_artifact -> 'artifact validation passed: 29 result files, 9170 dataset records' (2026-10-07)",
+    "formal_retrieval_files": {
+      "naive_rag": "results/formal/naive_rag_naive_full_s2027_9170.json",
+      "mem0": "results/formal/mem0_mem0_retrieval_s2027_9170.json",
+      "langmem": "results/formal/langmem_langmem_retrieval_s2027_9170.json",
+      "graphiti": "results/formal/graphiti_graphiti_retrieval_s2027_9170.json",
+      "letta": "results/formal/letta_letta_retrieval_s2027_9170.json"
+    },
+    "formal_reference_environment": "Python 3.11.15; Qwen2.5-14B-Instruct (local OpenAI-compatible endpoint) for system LLMs and the retrieval judge; bge-m3 1024-d embeddings; per-file package versions; GPUs RTX 4080 + A100 80GB"
+  },
+  "arguments": {
+    "data": "data/memdialogue_v2.jsonl",
+    "retrieval_records": 1000,
+    "group_size": 10,
+    "conflict_pairs": 250,
+    "isolation_users": 100,
+    "isolation_facts": 5,
+    "deletion_records": 200,
+    "concurrency_records": 200,
+    "workers": "1,4,8,16",
+    "scales": "100,1000",
+    "scale_read_queries": 200,
+    "top_k": 5,
+    "seed": 2027,
+    "warmup_writes": 5
+  },
+  "arguments_rule": "equal to unified_benchmark.parse_args() defaults and to the arguments recorded in every published seed-2027 formal file; no Agent-Memory-specific argument",
+  "phases": [
+    "retrieval",
+    "conflict",
+    "isolation",
+    "deletion",
+    "concurrency",
+    "scale"
+  ],
+  "execution_rule": "the upstream module's own phase functions are imported from the verified checkout and called unmodified; only judge_retrievals is substituted by a capture (judging deferred to the frozen judge)",
+  "adapter": {
+    "class": "reference/run_agentmembench_formal.py:AgentMemoryFormalAdapter",
+    "surface": "public AgentMemory facade (contract 1.4.0): open / remember / recall(budget=limit) / forget / close",
+    "user_mapping": "one tenant (tenant:agentmembench); each upstream user_id is governed scope user:<id> with isolation domains [tenant, scope] required; recall targets exactly [tenant, user scope]",
+    "search_mapping": "recall(query, target_domain_refs=[tenant, user scope], project_ref=user scope, budget=limit); returns stored text of the 'returned' ranked admitted prefix",
+    "delete_mapping": "facade forget (governed tombstone) per returned memory id",
+    "supplied_to_runtime": "benchmark text and query only",
+    "withheld": [
+      "temporal metadata",
+      "reference_time",
+      "temporal_intent",
+      "session dates",
+      "logical memory refs",
+      "answer or gold data",
+      "benchmark-specific ranking variant"
+    ],
+    "ranking_policy": "runtime default (multi-route-default 3.1.2 at freeze time); no variant",
+    "observation": "per-search trace for conflict_* users; post-phase read of write-time semantics via the runtime adapter read path; neither changes stored/admitted/ranked/returned state"
+  },
+  "judge": {
+    "role": "M2 recall_at_k reader/judge",
+    "protocol_identity": "upstream JUDGE_PROMPT via upstream judge_retrievals",
+    "provider": "OpenAI-compatible chat-completions endpoint",
+    "model": "qwen2.5-14b-instruct",
+    "model_revision": "Qwen/Qwen2.5-14B-Instruct (exact weights revision to be bound when provisioned)",
+    "prompt_sha256": "a1865149a442b4674a6f392f5e595f198306f9bc4d221f98b29696d241c36081",
+    "judge_function_source_sha256": "ec3d058145f741bcf3c5bb8652ddcf0d3027000b1b5435e7e452ec07c254c788",
+    "temperature": 0,
+    "max_tokens": 32,
+    "response_format": "json_object",
+    "concurrency": 32,
+    "retries": 3,
+    "base_url": "unprovisioned",
+    "credential_boundary": "decision-eval-credential (owner ruling 2026-10-07): one explicitly authorized, version-pinned judge; none is provisioned in this environment",
+    "comparability_rule": "exact only with Qwen2.5-14B-Instruct under the upstream prompt/params; any other judge creates a new non-comparable score identity and must also re-judge the five published upstream detail files for a same-judge comparison"
+  },
+  "deterministic_diagnostics": {
+    "version": "mesa-m2-deterministic-diagnostics-1.0.0",
+    "metrics": {
+      "answer_substring_hit_rate": "casefolded reference answer contained in any top-k retrieved item; computed identically for Agent Memory and for the five published upstream detail files",
+      "source_text_hit_rate": "record's own memory text retrieved verbatim; not cross-system comparable (LLM-extracting systems rewrite memories)",
+      "empty_retrieval_rate": "fraction of queries with no retrieved item"
+    },
+    "evidence_class": "adapted/diagnostic; never substituted for the judged recall_at_k",
+    "calibration": "agreement of answer_substring_hit with each upstream system's published judge hits is reported"
+  },
+  "m4_classifier": {
+    "version": "mesa-m4-stage-classifier-1.0.0",
+    "function": "reference/run_agentmembench_formal.py:classify_conflict_case",
+    "stages_in_order": [
+      "write_admission",
+      "candidate_generation",
+      "admission",
+      "write_interpretation",
+      "identity_slot_resolution",
+      "conflict_supersession_reasoning",
+      "temporal_applicability_currentness",
+      "ranking_fusion"
+    ],
+    "primary_stage_rule": "first unmet necessary condition for a currentness-correct top-1",
+    "win_basis_rule": "a new-fact hit without a currentness separation is reported as lexical_ordering, not as currentness capability"
+  },
+  "axis_plan": {
+    "M1_write_efficiency": {
+      "source": "retrieval-phase write latency and materialization; concurrency throughput",
+      "expected_class": "exact_workload_environment_bound",
+      "note": "CPU-only in-process runtime vs upstream GPU-hosted, LLM-coupled services; latency is not comparable across environments"
+    },
+    "M2_retrieval_quality": {
+      "source": "retrieval phase",
+      "expected_class": "executed; judged recall blocked pending authorized judge; deterministic diagnostics adapted"
+    },
+    "M3_scalability": {
+      "source": "scale phase recall_at_3 and latency at 100/1000",
+      "expected_class": "exact (recall) / environment_bound (latency)"
+    },
+    "M4_temporal_consistency": {
+      "source": "conflict phase",
+      "expected_class": "exact"
+    },
+    "M5_isolation_privacy": {
+      "source": "isolation and deletion phases",
+      "expected_class": "exact",
+      "note": "deletion is a governed tombstone; the upstream metric is search visibility"
+    },
+    "M6_llm_portability": {
+      "source": "none",
+      "expected_class": "not_comparable",
+      "note": "upstream ships no executable M6 protocol; the published figure plots a constant Pass for all five systems; Agent Memory's write/read path has no LLM dependency"
+    }
+  },
+  "runtime_environment": {
+    "python": "3.11 (upstream formal: 3.11.15)",
+    "pinned_packages": {
+      "numpy": "2.4.6",
+      "openai": "2.44.0",
+      "qdrant-client": "1.18.0",
+      "httpx": "0.28.1"
+    },
+    "note": "openai/qdrant-client are installed only because the upstream module imports them at module level; Agent Memory uses neither"
+  },
+  "stop_lines": [
+    "no adapter or runtime change after score inspection",
+    "no temporal enrichment in this lane",
+    "no gold-aware transformation",
+    "no change of retrieval budget",
+    "unsupported or blocked operations are never recorded as zero"
+  ],
+  "runner": {
+    "path": "reference/run_agentmembench_formal.py",
+    "sha256": "daf9127167d9515fa6d869e3b88a26a6630799a4333618fb7c77bcec2d512163"
+  }
+}
