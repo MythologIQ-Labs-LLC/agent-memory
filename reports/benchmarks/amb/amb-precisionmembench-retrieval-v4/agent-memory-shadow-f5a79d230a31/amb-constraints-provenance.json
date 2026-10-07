@@ -1,0 +1,26 @@
+{
+  "authority_effect": "none",
+  "constraint_count": 295,
+  "constraints_sha256": "8a7f4b9b110c3d5f971cfe6be5a41920e9cfc8de06517955678173ceb0f717c7",
+  "lifted_pins": {
+    "cryptography": {
+      "locked": "cryptography==46.0.5",
+      "reason": "pinned by this repository's pyproject.toml"
+    },
+    "jsonschema": {
+      "locked": "jsonschema==4.26.0",
+      "reason": "pinned by this repository's pyproject.toml"
+    },
+    "rfc8785": {
+      "locked": null,
+      "reason": "pinned by this repository's pyproject.toml"
+    }
+  },
+  "memory": "agent-memory-shadow",
+  "row_pins": [],
+  "row_removals": {},
+  "source": "uv.lock of the frozen AMB checkout, exported with uv and installed as pip constraints",
+  "uv_lock_git_blob": "cbd392efbd2c81c8cebf493edd07fd160f39dcbd",
+  "uv_lock_sha256": "de4408d18088476169d62286e379417aac2bd52c97f1bdd868bf4f4a366bcad7",
+  "uv_version": "uv 0.8.17"
+}

@@ -1,0 +1,69 @@
+{
+  "agent_memory_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+  "amb_pmb_return_cap": null,
+  "amb_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+  "answer_model": null,
+  "authority_effect": "none",
+  "bridge_blobs": {
+    "reference/amb_agent_memory_bridge.py": "8aad08951fa0f36aaad2057a06e8262a873a94c8",
+    "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228"
+  },
+  "dataset": "precisionmembench",
+  "declaration_blob": "ac1e498c6690cc6345647c671dd8c18f0a562aac",
+  "evidence_class": "same_harness_external_candidate",
+  "full_selection": true,
+  "harness_constraints": {
+    "authority_effect": "none",
+    "constraint_count": 295,
+    "constraints_sha256": "8a7f4b9b110c3d5f971cfe6be5a41920e9cfc8de06517955678173ceb0f717c7",
+    "lifted_pins": {
+      "cryptography": {
+        "locked": "cryptography==46.0.5",
+        "reason": "pinned by this repository's pyproject.toml"
+      },
+      "jsonschema": {
+        "locked": "jsonschema==4.26.0",
+        "reason": "pinned by this repository's pyproject.toml"
+      },
+      "rfc8785": {
+        "locked": null,
+        "reason": "pinned by this repository's pyproject.toml"
+      }
+    },
+    "memory": "agent-memory",
+    "row_pins": [],
+    "row_removals": {},
+    "source": "uv.lock of the frozen AMB checkout, exported with uv and installed as pip constraints",
+    "uv_lock_git_blob": "cbd392efbd2c81c8cebf493edd07fd160f39dcbd",
+    "uv_lock_sha256": "de4408d18088476169d62286e379417aac2bd52c97f1bdd868bf4f4a366bcad7",
+    "uv_version": "uv 0.8.17"
+  },
+  "judge_model": null,
+  "lane_digest_sha256": "d5fa4f519bba156552766c8652781aa3e93c1b78e0203fe70d1f1f520c1ea5ec",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v4.json",
+  "lane_id": "amb-precisionmembench-retrieval-v4",
+  "mem0_optional_components": {
+    "fastembed_installed": true,
+    "spacy_installed": false
+  },
+  "memory": "agent-memory",
+  "mode": "retrieval",
+  "query_limit": "0",
+  "resolved_packages": {
+    "hindsight-all": "0.4.17",
+    "hindsight-client": "0.9.2",
+    "mem0ai": "1.0.5",
+    "openai": "2.26.0",
+    "posthog": "7.9.10",
+    "qdrant-client": "1.17.0",
+    "rank-bm25": "0.2.2",
+    "sentence-transformers": "5.2.3",
+    "sqlalchemy": "2.0.48",
+    "torch": "2.10.0",
+    "uv": "0.8.17"
+  },
+  "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v3; declared_successor=agent-memory-runtime-baseline-v4 (issue #644); protected surface = frozen aede8fdec879121491ce06f31d475a4986b7a286 + 3 declared blobs; deltas=identity.public_contract_version 1.4.0->1.5.0; candidate=HEAD",
+  "runtime_baseline_state": "TRANSITION",
+  "split": "single-turn",
+  "workflow_run_id": "37661856397"
+}
