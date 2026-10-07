@@ -5,6 +5,7 @@ on:
     paths:
       - 'schemas/memory-benchmark-integration.schema.json'
       - 'schemas/memory-benchmark-run.schema.json'
+      - 'schemas/benchmark-ui-catalog.schema.json'
       - 'reference/agentmem_ref/evaluation/**'
       - 'reference/fixtures/benchmarks/golden-keyed-retrieval/**'
       - 'reference/run_golden_benchmark_integrity.py'
@@ -12,6 +13,10 @@ on:
       - 'reference/tests/test_benchmark_integration_contract.py'
       - 'reference/tests/test_benchmark_author_golden_path.py'
       - 'reference/tests/test_memory_evaluation_cli.py'
+      - 'reference/tests/test_benchmark_ui_catalog.py'
+      - 'scripts/build_benchmark_ui_catalog.py'
+      - 'reports/benchmarks/ui/**'
+      - 'docs/benchmark-evidence-console-catalog.md'
       - 'docs/CONTRIBUTOR_ARCHITECTURE.md'
       - 'MANIFEST.in'
       - '.github/workflows/benchmark-integration-contract.yml'
@@ -59,6 +64,7 @@ jobs:
             reference.tests.test_memory_evaluation_cli \
             reference.tests.test_memory_evaluation_contract \
             reference.tests.test_memory_evaluation_scorecards \
+            reference.tests.test_benchmark_ui_catalog \
             reference.tests.test_gauntlet_external_example \
             reference.tests.test_gauntlet_orchestration
 

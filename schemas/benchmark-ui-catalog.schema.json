@@ -1,0 +1,658 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mythologiq.dev/schemas/benchmark-ui-catalog.schema.json",
+  "title": "Agent Memory Benchmark UI Catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "authority_effect",
+    "aggregate_score",
+    "snapshot",
+    "reading_rules",
+    "comparison_classes",
+    "benchmarks",
+    "metrics",
+    "systems",
+    "runs",
+    "comparison_sets",
+    "longitudinal_tracks",
+    "coverage",
+    "published_references",
+    "diagnostics",
+    "evidence_index"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "authority_effect": {
+      "const": "none"
+    },
+    "aggregate_score": {
+      "const": "not_defined"
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "as_of",
+        "dashboard_id",
+        "evidence_revision",
+        "repository_is_newer",
+        "source_identity"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "as_of": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dashboard_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_revision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "repository_is_newer": {
+          "type": "boolean"
+        },
+        "source_identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dashboard",
+            "diagnostics",
+            "normalized",
+            "scorecards"
+          ],
+          "properties": {
+            "dashboard": {
+              "type": "string",
+              "minLength": 1
+            },
+            "normalized": {
+              "type": "string",
+              "minLength": 1
+            },
+            "scorecards": {
+              "type": "string",
+              "minLength": 1
+            },
+            "diagnostics": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "reading_rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "comparison_classes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "benchmarks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/benchmarkProfile"
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/metricDefinition"
+      }
+    },
+    "systems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/systemDefinition"
+      }
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/run"
+      }
+    },
+    "comparison_sets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/comparisonSet"
+      }
+    },
+    "longitudinal_tracks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    },
+    "coverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "published_references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/publishedReference"
+      }
+    },
+    "evidence_index": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidenceIndex"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "diagnostic_id",
+          "source_uri",
+          "issue",
+          "disposition",
+          "evidence_class",
+          "population",
+          "interpretation",
+          "authority_effect"
+        ],
+        "properties": {
+          "diagnostic_id": {
+            "type": "string"
+          },
+          "source_uri": {
+            "type": "string"
+          },
+          "issue": {
+            "type": "integer"
+          },
+          "disposition": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence_class": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "population": {
+            "type": "object"
+          },
+          "interpretation": {
+            "type": "object"
+          },
+          "authority_effect": {
+            "const": "none"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "benchmarkProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "benchmark_profile_id",
+        "benchmark_id",
+        "task_profile",
+        "source_url",
+        "source_revisions",
+        "dataset_ids",
+        "dataset_revisions",
+        "input_sha256",
+        "run_ids",
+        "system_ids"
+      ],
+      "properties": {
+        "benchmark_profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "benchmark_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "task_profile": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_revisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dataset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dataset_revisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "input_sha256": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "run_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "system_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "metricDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_key",
+        "metric_id",
+        "native_label",
+        "benchmark_profile_id",
+        "dimension",
+        "directions",
+        "units",
+        "states_seen",
+        "notes"
+      ],
+      "properties": {
+        "metric_key": {
+          "type": "string"
+        },
+        "metric_id": {
+          "type": "string"
+        },
+        "native_label": {
+          "type": "string"
+        },
+        "benchmark_profile_id": {
+          "type": "string"
+        },
+        "dimension": {
+          "type": "string"
+        },
+        "directions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "units": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "states_seen": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "systemDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "system_id",
+        "kinds",
+        "revisions",
+        "adapter_ids",
+        "adapter_revisions",
+        "run_ids"
+      ],
+      "properties": {
+        "system_id": {
+          "type": "string"
+        },
+        "kinds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "revisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "adapter_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "adapter_revisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "run_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "metricObservation": {
+      "type": "object",
+      "required": [
+        "metric_key",
+        "metric_id",
+        "dimension",
+        "state",
+        "direction"
+      ],
+      "properties": {
+        "metric_key": {
+          "type": "string"
+        },
+        "metric_id": {
+          "type": "string"
+        },
+        "dimension": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "direction": {
+          "type": "string"
+        },
+        "value": {},
+        "unit": {
+          "type": "string"
+        },
+        "denominator": {
+          "type": [
+            "number",
+            "integer"
+          ]
+        },
+        "population": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "status",
+        "benchmark_profile_id",
+        "benchmark",
+        "system",
+        "execution",
+        "dimensions",
+        "metrics",
+        "limitations",
+        "evidence",
+        "authority_effect"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "benchmark_profile_id": {
+          "type": "string"
+        },
+        "benchmark": {
+          "type": "object"
+        },
+        "system": {
+          "type": "object"
+        },
+        "execution": {
+          "type": "object"
+        },
+        "dimensions": {
+          "type": "object"
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/metricObservation"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "authority_effect": {
+          "const": "none"
+        }
+      }
+    },
+    "comparisonSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "comparison_set_id",
+        "comparison_state",
+        "evidence_class",
+        "comparison_identity",
+        "systems",
+        "baseline_system",
+        "dimensions",
+        "eligible_for_numeric_delta",
+        "authority_effect"
+      ],
+      "properties": {
+        "comparison_set_id": {
+          "type": "string"
+        },
+        "comparison_state": {
+          "const": "exact"
+        },
+        "evidence_class": {
+          "enum": [
+            "same_harness",
+            "same_profile"
+          ]
+        },
+        "comparison_identity": {
+          "type": "object"
+        },
+        "systems": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "baseline_system": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dimensions": {
+          "type": "object"
+        },
+        "eligible_for_numeric_delta": {
+          "const": true
+        },
+        "authority_effect": {
+          "const": "none"
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profiles",
+        "explicit_states",
+        "missing_state_vocabulary"
+      ],
+      "properties": {
+        "profiles": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "explicit_states": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "missing_state_vocabulary": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "publishedReference": {
+      "type": "object",
+      "required": [
+        "system",
+        "signals",
+        "methodology",
+        "comparability",
+        "source",
+        "evidence_class",
+        "comparison_state",
+        "eligible_for_numeric_delta",
+        "authority_effect"
+      ],
+      "properties": {
+        "system": {
+          "type": "string"
+        },
+        "signals": {
+          "type": "object"
+        },
+        "methodology": {
+          "type": "string"
+        },
+        "comparability": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "evidence_class": {
+          "const": "published_reference"
+        },
+        "comparison_state": {
+          "const": "published_reference"
+        },
+        "eligible_for_numeric_delta": {
+          "const": false
+        },
+        "authority_effect": {
+          "const": "none"
+        }
+      }
+    },
+    "evidenceIndex": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "kind",
+        "pointers"
+      ],
+      "properties": {
+        "evidence_id": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "run",
+            "published_reference"
+          ]
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "system": {
+          "type": "string"
+        },
+        "pointers": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
