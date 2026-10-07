@@ -103,7 +103,7 @@ def build_manifest(agent_memory_revision: str) -> dict:
         "harvest_closeout": {
             "status": "complete_mechanism_closeout",
             "issue": 672,
-            "artifact": "reference/fixtures/harvest-closeout-final-v2.json",
+            "artifact": "reference/fixtures/harvest-closeout-final-v3.json",
             "supersedes_issue": 470,
             "claim": "every harvested mechanism is shipped with evidence, assigned to an implementation tranche with an issue and a lane gate, or declined with a reason",
             "dependency_effect": "does_not_block_repository_owned_rc_evidence_packaging",

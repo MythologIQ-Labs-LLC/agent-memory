@@ -46,3 +46,4 @@ jobs:
           PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_representation_cache.py'
           PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_semantic_route_policy_320.py'
           PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_native_vector_retrieval.py'
+          PYTHONPATH=reference python -m unittest discover -s reference/tests -t reference -p 'test_facade_recall_control.py'

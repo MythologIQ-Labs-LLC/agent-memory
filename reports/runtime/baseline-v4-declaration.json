@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v4",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v3",
+  "issue": 644,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/api/contract.py",
+      "blob": "f3ad0abd9313de6b0bf41fc6970bfc53a2cf8fb0"
+    },
+    {
+      "path": "reference/agentmem_ref/api/surface.py",
+      "blob": "f8b5d0d76e5f0f66f37bcdb239d0e289e8b648c2"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "c27b6bfe18d9dd23781e448a6f0f8cc2f033cd56"
+    }
+  ],
+  "identity_deltas": [
+    {
+      "identity_path": "identity.public_contract_version",
+      "from": "1.4.0",
+      "to": "1.5.0"
+    }
+  ],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v4"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v4"
+    }
+  ]
+}

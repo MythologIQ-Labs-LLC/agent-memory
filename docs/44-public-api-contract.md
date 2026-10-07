@@ -1,6 +1,6 @@
 # Public API Contract
 
-**Status**: contract version `1.4.0`. `1.0.0` (Sprint 4a, plan `docs/plan-sprint4a-public-api-contract.md`, ledger Entry #45) implemented PRD-001 R1's proposal, decision, approval, commit, retrieval-candidate and recall-admission stages; `1.1.0` (Sprint 4c-1, plan `docs/plan-sprint4c1-history-posture.md`, Entry #51) added the history/provenance and posture inspection operations; `1.2.0` (Sprint 4c-2, plan `docs/plan-sprint4c2-action-authority.md`, ADR-038) adds the action-authority and execution-evidence stages; `1.3.0` (#548, #522 Part B) redefines recall `candidates` as **domain-eligible candidates** and adds `candidate_policy` to recall results (see "Recall candidates" below); `1.4.0` (#670, plan `docs/plan-670-return-budget.md`, Entries #65-#67) adds an optional return budget to the recall context and `returned` plus `return_policy` to recall results (see "Return budget" below). The JS runtime's conformance is Sprint 4b, held (Entry #47).
+**Status**: contract version `1.5.0`. `1.0.0` (Sprint 4a, plan `docs/plan-sprint4a-public-api-contract.md`, ledger Entry #45) implemented PRD-001 R1's proposal, decision, approval, commit, retrieval-candidate and recall-admission stages; `1.1.0` (Sprint 4c-1, plan `docs/plan-sprint4c1-history-posture.md`, Entry #51) added the history/provenance and posture inspection operations; `1.2.0` (Sprint 4c-2, plan `docs/plan-sprint4c2-action-authority.md`, ADR-038) adds the action-authority and execution-evidence stages; `1.3.0` (#548, #522 Part B) redefines recall `candidates` as **domain-eligible candidates** and adds `candidate_policy` to recall results (see "Recall candidates" below); `1.4.0` (#670, plan `docs/plan-670-return-budget.md`, Entries #65-#67) adds an optional return budget to the recall context and `returned` plus `return_policy` to recall results (see "Return budget" below); `1.5.0` (#644, plan `docs/plan-644-t-controller.md`, Entry #94) adds the optional `recall_control` field to recall results from a facade opened with `recall_control="shadow"` (see "Shadow recall control" below). The JS runtime's conformance is Sprint 4b, held (Entry #47).
 
 ## What the contract is
 
@@ -109,6 +109,37 @@ raw discovery matches
 - `candidate_policy` keeps its `1.3.0` meaning (candidate formation; no identifiers, no counts); the return budget is recorded beside it, not inside it. The `memory.recall` audit event records admission and is unchanged.
 
 **Compatibility.** Additive minor: `1.0.0`–`1.3.0` envelopes remain `current` and receive a `1.4.0` result with `returned` and `return_policy` present; the budget is opt-in per request, and an unbudgeted call returns what it returned under `1.3.0` plus the two fields. The benchmark bridges still truncate benchmark-side until the next lane ids read `returned` under the case budget (roadmap `prereq-lane-v3-ids`).
+
+## Shadow recall control (contract `1.5.0`, #644)
+
+`AgentMemory.open(..., recall_control="off"|"shadow")`. The default is `off`, under which a recall result has no `recall_control` field.
+
+In `shadow`, the deterministic System-One controller (`runtime/recall_control.py`, contract `reference/fixtures/runtime/system-one-controller-contract-v1.json`) plans beside the default planner, which executes unchanged. Every recall result then carries `recall_control`:
+
+- **`request`:** what the controller was asked:
+  - `operation: retrieval_planning`;
+  - `available_capabilities`: the routes available by capability;
+  - `budget`: one decision, no deadline;
+  - `policy_context`.
+- **`response`:** what it proposed:
+  - controller identity;
+  - `decision_status`;
+  - `evidence.route_budgets`;
+  - `stop_recommendation: abstain`;
+  - `authority_effect: none`.
+- **`usage`:** `controller_decisions_used`, `cache_hits`, `elapsed_ms` and `fallback_events`. `elapsed_ms` is not deterministic.
+- **`routes_executed` and `route_candidate_counts`:** what the default planner did. Counts cover caller-visible candidates only, never pre-admission route output.
+- **`shadow_delta`:** per route, `proposed_limit`, `actual_count` and `would_truncate`. It states what the proposal *would* bound, never what the result would be.
+- **`actual_stop`:** the default planner's stop, never the controller's:
+  - `no_evidence` (search space) when nothing was found;
+  - `max_candidates` (resource) when a host-capped route (the semantic route's 16) returned its cap. This is conservative when exactly the cap qualified;
+  - `frontier_exhausted` (search space) otherwise.
+
+  No quality stop is ever reported.
+
+Candidates, admissions, admitted, returned and ranking evidence are identical with and without `shadow` (tested byte for byte on store copies). A controller failure changes nothing: it appears only as `decision_status` and `fallback_events`. The controller never generates candidates, admits, ranks or returns. Enforced budgets and adaptive stopping are a later tranche (T-controller-2).
+
+**Compatibility.** Additive minor. `1.0.0`–`1.4.0` envelopes remain `current`. A facade opened without `recall_control` returns what it returned under `1.4.0`, under contract version `1.5.0`.
 
 ## Action authority and execution evidence (contract `1.2.0`, ADR-038)
 

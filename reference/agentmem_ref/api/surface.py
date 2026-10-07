@@ -243,6 +243,10 @@ SEMANTIC_RETRIEVAL_DEFAULT = "off"
 SEMANTIC_RETRIEVAL_MODES = ("off", "auto", "required")
 SEMANTIC_MINIMUM_SIMILARITY = 0.30
 SEMANTIC_CANDIDATE_LIMIT = 16
+#: Shadow recall control (contract 1.5.0, #644 T-controller): the controller plans beside the
+#: unchanged default planner; retrieval, admission and ranking are identical in both modes.
+RECALL_CONTROL_DEFAULT = "off"
+RECALL_CONTROL_MODES = ("off", "shadow")
 
 
 def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None) -> dict:
@@ -296,6 +300,7 @@ class AgentMemory:
         purpose: str,
         runtime: Any,
         semantic: dict | None = None,
+        recall_control: str = RECALL_CONTROL_DEFAULT,
     ) -> None:
         self.root = root
         self.config_path = config_path
@@ -310,6 +315,9 @@ class AgentMemory:
         self._serialization_lock = getattr(runtime, "serialization_lock", None) or threading.RLock()
         self._semantic = semantic or {"status": "disabled", "mode": SEMANTIC_RETRIEVAL_DEFAULT,
                                       "reason": "off", "retriever": None}
+        if recall_control not in RECALL_CONTROL_MODES:
+            raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
+        self._recall_control = recall_control
 
     @classmethod
     def open(
@@ -326,6 +334,7 @@ class AgentMemory:
         verifier_registry=None,
         semantic_retrieval: str = SEMANTIC_RETRIEVAL_DEFAULT,
         representation_dir: str | Path | None = None,
+        recall_control: str = RECALL_CONTROL_DEFAULT,
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
 
@@ -336,6 +345,12 @@ class AgentMemory:
         ``required`` raises instead of degrading. The route only widens candidates:
         every candidate still crosses governed admission, and under ranking policy
         3.2.0 similarity orders only after every relevance and temporal stage.
+
+        ``recall_control`` (contract 1.5.0, #644) is ``"off"`` (default) or ``"shadow"``.
+        In shadow the deterministic System-One controller plans beside the unchanged
+        default planner and ``recall()`` adds a ``recall_control`` report: the proposal,
+        the actual per-route counts and the actual stop. Candidates, admission, ranking
+        and returned facts are identical in both modes; the controller owns nothing.
 
         Existing durable state is never replaced by a fresh runtime. A partial
         state marker fails closed so a damaged or incomplete runtime cannot be
@@ -349,6 +364,8 @@ class AgentMemory:
         root.mkdir(parents=True, exist_ok=True)
         if not tenant or not actor_id or not charter_version or not scope:
             raise ValueError("tenant, actor_id, charter_version, and scope must be non-empty")
+        if recall_control not in RECALL_CONTROL_MODES:
+            raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
 
         if config_path is None:
             resolved_config = root / _DEFAULT_CONFIG_NAME
@@ -402,6 +419,7 @@ class AgentMemory:
             purpose=purpose,
             runtime=runtime,
             semantic=semantic,
+            recall_control=recall_control,
         )
 
     @property
@@ -809,6 +827,9 @@ class AgentMemory:
             admissions[candidate] = decision
         returned, return_policy = contract.apply_return_budget(
             result.ranked_admitted, (validated.get("budget") or {}).get("k"))
+        recall_control = None
+        if self._recall_control == "shadow":
+            recall_control = self._shadow_recall_control(query, tuple(logical_memory_refs), result, validated)
         return contract.result(
             "recall",
             contract.CURRENT,
@@ -818,6 +839,48 @@ class AgentMemory:
             candidate_policy=dict(getattr(result, "candidate_policy", {}) or {}) or None,
             returned=returned,
             return_policy=return_policy,
+            recall_control=recall_control,
+        )
+
+    def _shadow_recall_control(self, query: str, logical_memory_refs: tuple[str, ...], result, envelope) -> dict:
+        """Plan in shadow beside the executed recall (#644 T-controller S2-S4).
+
+        Runs after ``multi_route_recall`` returned; reads only the result and the route
+        capabilities, so it cannot change what was retrieved, admitted or ranked. Route
+        counts are over caller-visible candidates only (``result.candidates``).
+        """
+        from ..runtime.recall_control import DeterministicRecallController, shadow_control_report
+        from ..runtime.runtime_composition import EXACT_IDENTITY_ROUTE, LEXICAL_ROUTE, SHARED_EVIDENCE_ROUTE
+        from ..runtime.vector_retrieval import SEMANTIC_VECTOR_ROUTE
+        from ..state.substrate import EvidenceNeighborTemporalGraphPort
+
+        substrate = self.runtime.adapter.checkpoint_substrate()
+        available = [LEXICAL_ROUTE, EXACT_IDENTITY_ROUTE]
+        host_caps: dict[str, int] = {}
+        retriever = self._semantic.get("retriever")
+        if retriever is not None and retriever.available_for(substrate):
+            available.append(SEMANTIC_VECTOR_ROUTE)
+            host_caps[SEMANTIC_VECTOR_ROUTE] = SEMANTIC_CANDIDATE_LIMIT
+        if isinstance(substrate, EvidenceNeighborTemporalGraphPort):
+            available.append(SHARED_EVIDENCE_ROUTE)
+        counts: dict[str, int] = {}
+        for candidate in result.candidates:
+            for route in {hit.route_id for hit in result.provenance_for(candidate)}:
+                counts[route] = counts.get(route, 0) + 1
+        return shadow_control_report(
+            controller=DeterministicRecallController(),
+            query=query,
+            logical_memory_refs=logical_memory_refs,
+            available_routes=tuple(available),
+            routes_executed=tuple(result.routes_executed),
+            route_counts=counts,
+            host_caps=host_caps,
+            candidate_count=len(result.candidates),
+            policy_context={
+                "tenant_scope_ref": f"{self.tenant}#{envelope.get('project_ref') or self.scope}",
+                "recall_policy_ref": str(result.policy_version),
+                "controller_contract_version": "1.0.0",
+            },
         )
 
     @_serialized

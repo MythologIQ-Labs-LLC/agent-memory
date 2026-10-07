@@ -1,0 +1,732 @@
+{
+  "schema_version": "2.0.0",
+  "artifact_id": "agent-memory-harvest-closeout-final-v3",
+  "issue": 672,
+  "status": "complete_mechanism_closeout",
+  "supersedes": {
+    "artifact_id": "agent-memory-harvest-closeout-final-v2",
+    "path": "reference/fixtures/harvest-closeout-final-v2.json"
+  },
+  "evaluated_against_agent_memory_revision": "d32341afd205a1ff1d9ade5996867038489d7d99",
+  "research": "docs/research-brief-tranche-5-harvests-and-ci-cost-2026-10-07.md",
+  "plan": "docs/plan-644-t-controller.md",
+  "dispositions": [
+    "shipped",
+    "tranche",
+    "declined"
+  ],
+  "reachability": [
+    "facade",
+    "evaluation_only",
+    "library_only",
+    "harness_only",
+    "absent"
+  ],
+  "rule": "a harvest closes only when every mechanism is shipped (a module on the facade or evaluation path plus resolving evidence), tranche (an issue, a lane gate and an order) or declined (a reason); absorbed is not a terminal state",
+  "rows": [
+    {
+      "row_id": "evolveai-vector-retrieval",
+      "v1_ref": {
+        "source": "MythologIQ-Labs-LLC/EvolveAI",
+        "mechanism": "semantic/vector retrieval, temporal behavior, lifecycle/metabolism, consolidation and prune pressure"
+      },
+      "mechanism": "semantic/vector retrieval route",
+      "disposition": "shipped",
+      "reachability": "facade",
+      "modules": [
+        "reference/agentmem_ref/runtime/vector_retrieval.py",
+        "reference/agentmem_ref/runtime/representation_onnx.py",
+        "reference/agentmem_ref/api/surface.py"
+      ],
+      "evidence": [
+        {
+          "integration": "agent-memory-longmemeval-retrieval-currentness-v1.json",
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:session"
+        },
+        {
+          "integration": "agent-memory-longmemeval-retrieval-currentness-v1.json",
+          "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:turn"
+        }
+      ],
+      "reason": "shipped by #669: AgentMemory.open(semantic_retrieval=...) with the pinned local ONNX provider (optional extra), derived vector store and ordering-subordinate route (ranking policy 3.2.0); accepted -v3 lane rows; Runtime Baseline v3",
+      "notes": "finding A row 1; owner decision decision-embedding-dependency gates the tranche"
+    },
+    {
+      "row_id": "evolveai-temporal-behaviour",
+      "v1_ref": {
+        "source": "MythologIQ-Labs-LLC/EvolveAI",
+        "mechanism": "semantic/vector retrieval, temporal behavior, lifecycle/metabolism, consolidation and prune pressure"
+      },
+      "mechanism": "temporal behaviour: ranking 3.1.2, temporal applicability, intent resolution",
+      "disposition": "shipped",
+      "reachability": "facade",
+      "modules": [
+        "reference/agentmem_ref/runtime/temporal_order_constraints.py",
+        "reference/agentmem_ref/runtime/ranking_policy.py"
+      ],
+      "evidence": [
+        {
+          "integration": "agent-memory-longmemeval-retrieval-currentness-v1.json",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:agent_memory:session"
+        },
+        {
+          "integration": "agent-memory-longmemeval-retrieval-currentness-v1.json",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:agent_memory:turn"
+        }
+      ],
+      "v1_ref_shared": true,
+      "notes": "finding A row 2; on the facade path, exercised by the LongMemEval_S v2 lane"
+    },
+    {
+      "row_id": "evolveai-metabolism",
+      "v1_ref": {
+        "source": "MythologIQ-Labs-LLC/EvolveAI",
+        "mechanism": "semantic/vector retrieval, temporal behavior, lifecycle/metabolism, consolidation and prune pressure"
+      },
+      "mechanism": "lifecycle/metabolism, consolidation and prune pressure",
+      "disposition": "tranche",
+      "reachability": "library_only",
+      "modules": [
+        "reference/agentmem_ref/memory/metabolism.py",
+        "reference/agentmem_ref/memory/maintenance_run.py"
+      ],
+      "evidence": [],
+      "v1_ref_shared": true,
+      "tranche": {
+        "order": "T-metabolism",
+        "issue": 689,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "NativeMetabolismEstimator, propose_consolidation and plan_metabolism_maintenance have no facade or composition caller; ranking records metabolic_evidence not_used",
+      "notes": "finding A row 4; UOR saturation-based decay is research pressure for this tranche only (row uor-saturation-decay)"
+    },
+    {
+      "row_id": "evolveai-typed-traversal-claim",
+      "v1_ref": null,
+      "mechanism": "typed temporal/entity/causal traversal (claimed by v1 as the EvolveAI equivalent)",
+      "disposition": "tranche",
+      "reachability": "absent",
+      "modules": [],
+      "evidence": [],
+      "tranche": {
+        "order": "T-typed-relations",
+        "issue": 688,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "no entity/causal vocabulary exists; graph relation types are caller-supplied strings (runtime/recall_control.py GraphTraversalSpec)",
+      "notes": "finding A row 3; DRIFT carried from the 2026-10-06 brief; v1 names this in current_agent_memory_equivalent, not as a mechanism"
+    },
+    {
+      "row_id": "evolveai-failure-memory",
+      "v1_ref": {
+        "source": "MythologIQ-Labs-LLC/EvolveAI",
+        "mechanism": "ShadowGenome typed failure identity, recurrence evidence and bounded persistence"
+      },
+      "mechanism": "governed negative/failure memory",
+      "disposition": "tranche",
+      "reachability": "library_only",
+      "modules": [
+        "reference/agentmem_ref/memory/failure_memory.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-failure-memory",
+        "issue": 690,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "FailureMemory is not referenced by api, composition or adapter; only the failure-memory benchmark runner constructs it",
+      "notes": "finding A row 5"
+    },
+    {
+      "row_id": "codegenome-graph-propagation",
+      "v1_ref": {
+        "source": "MythologIQ-Labs-LLC/CodeGenome",
+        "mechanism": "generic weighted directional relation propagation and traversal"
+      },
+      "mechanism": "typed graph traversal route with bounded propagation",
+      "disposition": "tranche",
+      "reachability": "harness_only",
+      "modules": [
+        "reference/agentmem_ref/runtime/recall_control.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-typed-relations",
+        "issue": 688,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "NativeTypedGraphCandidateRetriever is composed only by ControlledRecallPlanner, which no facade path builds; no impact-propagation module exists | v3: moved to #688 — making typed-graph hits facade-reachable would change ranking's route-corroboration inputs; it needs #688's relation vocabulary and its own ordering evidence",
+      "notes": "finding A row 6; the baseline record's native_qualified claim is corrected by the next successor (finding D)"
+    },
+    {
+      "row_id": "codegenome-regression-pressure",
+      "v1_ref": {
+        "source": "MythologIQ-Labs-LLC/CodeGenome",
+        "mechanism": "continuous experiment and regression pressure"
+      },
+      "mechanism": "revision-bound retrieval regression tooling",
+      "disposition": "shipped",
+      "reachability": "evaluation_only",
+      "modules": [
+        "reference/retrieval_regression.py"
+      ],
+      "evidence": [
+        {
+          "workflow": "retrieval-quality-benchmark.yml"
+        }
+      ],
+      "notes": "finding A row 7; a process lesson, no runtime part"
+    },
+    {
+      "row_id": "codegenome-noisy-or",
+      "v1_ref": {
+        "source": "MythologIQ-Labs-LLC/CodeGenome",
+        "mechanism": "noisy-OR numerical confidence fusion as generic evidence qualification"
+      },
+      "mechanism": "noisy-OR confidence fusion",
+      "disposition": "declined",
+      "reachability": "absent",
+      "modules": [],
+      "evidence": [],
+      "reason": "ADR-037: ranking is lexicographic with route_scores_cross_comparable false; a numeric fusion cannot stand in for authority",
+      "notes": "finding A row 8"
+    },
+    {
+      "row_id": "uor-r4-geometric-model",
+      "v1_ref": {
+        "source": "UOR-Foundation/uor-r4",
+        "mechanism": "geometric predictive memory model"
+      },
+      "mechanism": "geometric predictive memory model",
+      "disposition": "declined",
+      "reachability": "absent",
+      "modules": [],
+      "evidence": [],
+      "reason": "the source does not establish superiority over matched controls; retained as research pressure only",
+      "notes": "finding A row 9"
+    },
+    {
+      "row_id": "uor-r4-keyed-rebinding",
+      "v1_ref": {
+        "source": "UOR-Foundation/uor-r4",
+        "mechanism": "repeated exact-key rebinding, matched controls, stale-value measurement and negative-result discipline"
+      },
+      "mechanism": "keyed rebinding supersession and stale-value measurement",
+      "disposition": "shipped",
+      "reachability": "facade",
+      "modules": [
+        "reference/agentmem_ref/runtime/adapter.py",
+        "reference/run_keyed_rebinding_benchmark.py"
+      ],
+      "evidence": [
+        {
+          "workflow": "long-horizon-memory-benchmark.yml"
+        },
+        {
+          "integration": "agent-memory-longmemeval-retrieval-currentness-v1.json",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:agent_memory:session"
+        },
+        {
+          "integration": "agent-memory-longmemeval-retrieval-currentness-v1.json",
+          "variant": "lane:longmemeval-s-retrieval-parity-v2:agent_memory:turn"
+        }
+      ],
+      "notes": "finding A row 10; supersession and superseded_not_current refusal are on the facade path; the harvested lesson was benchmark discipline"
+    },
+    {
+      "row_id": "uor-saturation-decay",
+      "v1_ref": null,
+      "mechanism": "UOR saturation-based decay (fiber saturation, T_ctx)",
+      "disposition": "declined",
+      "reachability": "absent",
+      "modules": [],
+      "evidence": [],
+      "reason": "lineage only: no saturation/T_ctx code exists and the runtime decay formula is cmhl-bounded-v1 (memory/metabolism.py); a saturation model would be a metabolism-tranche proposal, not a harvest",
+      "notes": "finding B; OQ2 of the plan; no new UOR tranche"
+    },
+    {
+      "row_id": "uor-jcs-nfc-mutation-sensitivity",
+      "v1_ref": {
+        "source": "UOR-Foundation/uor-jcs-nfc",
+        "mechanism": "mutation sensitivity for conformance and benchmark checks"
+      },
+      "mechanism": "benchmark evaluator mutation-integrity probes",
+      "disposition": "shipped",
+      "reachability": "evaluation_only",
+      "modules": [
+        "reference/run_benchmark_integrity_mutants.py"
+      ],
+      "evidence": [
+        {
+          "path": "reference/tests/test_benchmark_integrity_mutants.py"
+        }
+      ],
+      "notes": "finding A row 11; evaluator self-check, not an efficacy claim"
+    },
+    {
+      "row_id": "prismpm-mutation-pressure",
+      "v1_ref": {
+        "source": "UOR-Foundation/PrismPM",
+        "mechanism": "positive/negative corpora and mutation pressure against stale, bypassed or trivially passing verification"
+      },
+      "mechanism": "mutation pressure against trivially passing verification",
+      "disposition": "shipped",
+      "reachability": "evaluation_only",
+      "modules": [
+        "reference/run_benchmark_integrity_mutants.py"
+      ],
+      "evidence": [
+        {
+          "path": "reference/tests/test_benchmark_integrity_mutants.py"
+        }
+      ],
+      "notes": "finding A row 11; same probes as uor-jcs-nfc-mutation-sensitivity"
+    },
+    {
+      "row_id": "coreforge-context-assembly",
+      "v1_ref": {
+        "source": "MythologIQ-Labs-LLC/COREFORGE",
+        "mechanism": "generic Vault/Neurospace provider ownership boundary and generic mutation/lineage authority"
+      },
+      "mechanism": "generic context assembly: facade recall plus the contract 1.4.0 return budget",
+      "disposition": "shipped",
+      "reachability": "facade",
+      "modules": [
+        "reference/agentmem_ref/api/surface.py",
+        "reference/agentmem_ref/api/contract.py"
+      ],
+      "evidence": [
+        {
+          "integration": "amb-precisionmembench-retrieval-v1.json",
+          "variant": "lane:amb-precisionmembench-retrieval-v2:agent-memory"
+        }
+      ],
+      "notes": "finding A row 12; product packaging and redaction stay out (declined as product concerns, not memory mechanisms)"
+    },
+    {
+      "row_id": "jh-02-write-time-candidate-search",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-02"
+      },
+      "mechanism": "bounded write-time relation candidate search",
+      "disposition": "tranche",
+      "reachability": "library_only",
+      "modules": [
+        "reference/agentmem_ref/runtime/adapter.py",
+        "reference/agentmem_ref/runtime/proposition_semantics.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller-2",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "identity-first slot discovery only (MAX_RELATIONS = 8); the four-way comparison was never run",
+      "notes": "finding A row 13; the facade reaches identity-first discovery only, so recorded as library_only"
+    },
+    {
+      "row_id": "jh-03-typed-relation-judgments",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-03"
+      },
+      "mechanism": "typed semantic/causal/entity relation judgments",
+      "disposition": "tranche",
+      "reachability": "absent",
+      "modules": [
+        "reference/agentmem_ref/state/substrate.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-typed-relations",
+        "issue": 688,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "same-slot classes only; TypedRelation.relation_type is a free string written only by the harness",
+      "notes": "finding A row 14"
+    },
+    {
+      "row_id": "jh-04-route-needs",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-04"
+      },
+      "mechanism": "query-conditioned route needs",
+      "disposition": "tranche",
+      "reachability": "harness_only",
+      "modules": [
+        "reference/agentmem_ref/runtime/recall_control.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller-2",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "DeterministicRecallController.plan term-count heuristic is harness-only; no typed route-need evidence | v3: moved to T-controller-2 with JH-12 — the frozen contract types route needs as probabilities and the deterministic controller has no calibrated estimate",
+      "notes": "finding A row 15"
+    },
+    {
+      "row_id": "jh-05-budget-allocator",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-05"
+      },
+      "mechanism": "bounded graph-budget allocator",
+      "disposition": "tranche",
+      "reachability": "harness_only",
+      "modules": [
+        "reference/agentmem_ref/runtime/recall_control.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller-2",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "per-route constant clamps only; no total budget, threshold or proportional allocation",
+      "notes": "finding A row 16"
+    },
+    {
+      "row_id": "jh-06-call-deadline-budget",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-06"
+      },
+      "mechanism": "retrieval call/deadline budget",
+      "disposition": "tranche",
+      "reachability": "absent",
+      "modules": [
+        "reference/agentmem_ref/runtime/recall_control.py",
+        "reference/fixtures/runtime/system-one-controller-contract-v1.json"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller-2",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "not implemented: controller_calls is a constant 1 and plan() is called once; the fixture requires maximum_controller_decisions and deadline_ms | v3: moved to T-controller-2 — T-controller ships shadow control, which enforces no budget",
+      "notes": "finding A row 17; the facade budget is a post-ranking prefix, not a call budget"
+    },
+    {
+      "row_id": "jh-07-sufficiency-stopping",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-07"
+      },
+      "mechanism": "evidence-sufficiency adaptive stopping",
+      "disposition": "tranche",
+      "reachability": "harness_only",
+      "modules": [
+        "reference/agentmem_ref/runtime/recall_control.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller-2",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "post-hoc len(ranked) >= target with two stop strings, neither in the fixture's four reason classes; harness-only",
+      "notes": "finding A row 18"
+    },
+    {
+      "row_id": "jh-08-traversal-value",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-08"
+      },
+      "mechanism": "traversal-value decomposition",
+      "disposition": "tranche",
+      "reachability": "library_only",
+      "modules": [
+        "reference/agentmem_ref/runtime/ranking_policy.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-ranking",
+        "issue": 673,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "only the corroboration stage of five factors exists",
+      "notes": "finding A row 19; the one factor is on the facade via ranking 3.1.2, so recorded as library_only for the remaining four"
+    },
+    {
+      "row_id": "jh-09-bounded-traversal",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-09"
+      },
+      "mechanism": "beam/depth/node/edge bounded traversal",
+      "disposition": "tranche",
+      "reachability": "harness_only",
+      "modules": [
+        "reference/agentmem_ref/runtime/recall_control.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller-2",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "GraphTraversalSpec bounds depth and fanout only, on the unreachable route; no node/edge/latency cap | v3: moved to T-controller-2 — node/edge/depth bounds belong to bounded traversal, not to shadow control",
+      "notes": "finding A row 20"
+    },
+    {
+      "row_id": "jh-10-consolidation-vocabulary",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-10"
+      },
+      "mechanism": "non-destructive consolidation vocabulary",
+      "disposition": "tranche",
+      "reachability": "library_only",
+      "modules": [
+        "reference/agentmem_ref/memory/metabolism.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-metabolism",
+        "issue": 689,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "propose_consolidation returns eligible/scope_mismatch/non_current_source/disputed_source only; no redundant/contradiction/obsolete/link or keep_separate/merge/promote/uncertain; no runtime caller",
+      "notes": "finding A row 21"
+    },
+    {
+      "row_id": "jh-12-typed-probabilities",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-12"
+      },
+      "mechanism": "typed probabilities on controller outputs",
+      "disposition": "tranche",
+      "reachability": "absent",
+      "modules": [
+        "reference/agentmem_ref/contracts/cognitive_classification.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller-2",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "RecallControlPlan carries no probabilities; the classification contract checks finite [0,1] only",
+      "notes": "finding A row 22"
+    },
+    {
+      "row_id": "jh-13-decision-cache",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-13"
+      },
+      "mechanism": "decision cache keyed by operation/state/question/backend",
+      "disposition": "tranche",
+      "reachability": "absent",
+      "modules": [
+        "reference/agentmem_ref/contracts/cognitive_classification.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller-2",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "not implemented; only digest helpers exist",
+      "notes": "finding A row 23"
+    },
+    {
+      "row_id": "jh-14-telemetry",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-14"
+      },
+      "mechanism": "routing/budget/stopping telemetry",
+      "disposition": "tranche",
+      "reachability": "harness_only",
+      "modules": [
+        "reference/agentmem_ref/runtime/recall_control.py",
+        "reference/agentmem_ref/api/surface.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-controller",
+        "issue": 644,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "route counts and stop_reason are harness-only; the facade emits ranking_evidence, candidate_policy and return_policy but no routes_executed, budget-used or decision fields | v3: shadow recall-control telemetry is facade-reachable (contract 1.5.0, AgentMemory.open(recall_control='shadow'), reference/tests/test_facade_recall_control.py); the controlled path itself stays harness-only and the row's lane gate (-v4 lanes) is not yet met, so the row stays tranche",
+      "notes": "finding A row 24"
+    },
+    {
+      "row_id": "jh-16-consumer-package",
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-16"
+      },
+      "mechanism": "consumer-aware memory package",
+      "disposition": "tranche",
+      "reachability": "library_only",
+      "modules": [
+        "reference/agentmem_ref/api/contract.py"
+      ],
+      "evidence": [],
+      "tranche": {
+        "order": "T-consumer-package",
+        "issue": 691,
+        "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
+      },
+      "reason": "only the return-budget k-prefix exists; consumer_profile is reserved in the fixture only",
+      "notes": "finding A row 25; after T-controller"
+    },
+    {
+      "row_id": "jev-mem-explicit-rejections",
+      "v1_ref": null,
+      "mechanism": "Jev-Mem explicit rejections: admission authority, recency-as-currentness, benchmark QA heuristics, best-of-N, MAGMA fallback",
+      "disposition": "declined",
+      "reachability": "absent",
+      "modules": [],
+      "evidence": [],
+      "reason": "explicit upstream do-not-import list (docs/research-jev-mem-harvest.md 'Explicit rejection / caution list'); recency is not a ranking stage",
+      "notes": "finding A row 26"
+    }
+  ],
+  "out_of_mechanism_scope": [
+    {
+      "v1_ref": {
+        "source": "UOR-Foundation/UOR-Framework",
+        "mechanism": "deterministic identity and conformance lineage"
+      },
+      "class": "identity",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "UOR-Foundation/uor-addr",
+        "mechanism": "exact content references"
+      },
+      "class": "identity",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "UOR-Foundation/uor-foundry",
+        "mechanism": "scoped authority, replayable acceptance and evidence-honesty discipline"
+      },
+      "class": "authority",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "UOR-Foundation/uor-foundry",
+        "mechanism": "producer/artifact release identity and supply-chain closure"
+      },
+      "class": "interop",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "UOR-Foundation/uor-jcs-nfc",
+        "mechanism": "pinned JCS/NFC canonicalization context and Unicode-version-bound digest profile"
+      },
+      "class": "identity",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "UOR-Foundation/uor-matmul",
+        "mechanism": "exact arithmetic and conformance methodology"
+      },
+      "class": "identity",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "UOR-Foundation/PrismPM",
+        "mechanism": "typed authority binding distinct from executable oracle plus locked drift refusal"
+      },
+      "class": "authority",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "UOR-Foundation/PrismPM",
+        "mechanism": "complete OCI release graph, self-rebuild and deployment/publication closure"
+      },
+      "class": "interop",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "microsoft/agent-governance-toolkit",
+        "mechanism": "identity, external policy/enforcement and audit boundary"
+      },
+      "class": "authority",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "AgentTrust TRACE",
+        "mechanism": "portable action/trust evidence and revocation/security semantics"
+      },
+      "class": "interop",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "Agent Manifest",
+        "mechanism": "deployment identity and checkpoint/delta evidence"
+      },
+      "class": "interop",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "agentrust-io/cmcp",
+        "mechanism": "gateway claim and field-level external evidence normalization"
+      },
+      "class": "interop",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "source": "agentrust-io/cmcp",
+        "mechanism": "field-level external evidence, regulated-domain crossing, RFC8785 policy hashing, certificate-pinned rotation and extensible compliance domains"
+      },
+      "class": "interop",
+      "notes": ""
+    },
+    {
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-01"
+      },
+      "class": "evaluation_discipline",
+      "notes": "overlapping memory-type scores: estimator discipline; joins the first tranche that makes the controller reachable"
+    },
+    {
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-11"
+      },
+      "class": "evaluation_discipline",
+      "notes": "backend-neutral controller shape: the RecallController protocol is the seam shadow control calls (T-controller); facade injection of other backends joins T-controller-2"
+    },
+    {
+      "v1_ref": {
+        "doc": "docs/research-jev-mem-harvest.md",
+        "id": "JH-15"
+      },
+      "class": "evaluation_discipline",
+      "notes": "controller ablations: T-controller measures controller_off vs shadow only (-v4 lanes); adaptive_routing_only, adaptive_budgeting_only, adaptive_stopping_only and combined_controller join T-controller-2"
+    }
+  ],
+  "revision_notes": [
+    "v3 (#644 T-controller, plan docs/plan-644-t-controller.md S8) changes only the rows below; v2 stays published unchanged (docs/CONTRIBUTOR_ARCHITECTURE.md §11a)",
+    "evolveai-vector-retrieval: tranche -> shipped (#669; facade semantic_retrieval, accepted -v3 lane rows)",
+    "jh-04, jh-06, jh-09: T-controller -> T-controller-2 (shadow control enforces no budget; route needs need calibrated probabilities; node/edge/depth bounds belong to traversal)",
+    "codegenome-graph-propagation: T-controller (#644) -> T-typed-relations (#688): facade typed-graph hits would change ranking's corroboration inputs",
+    "jh-14: stays tranche; shadow telemetry is facade-reachable under contract 1.5.0 but the row's lane gate (-v4 lanes) is not yet met",
+    "JH-11, JH-15 notes updated in out_of_mechanism_scope"
+  ]
+}

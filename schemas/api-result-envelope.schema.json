@@ -18,7 +18,8 @@
         "1.1.0",
         "1.2.0",
         "1.3.0",
-        "1.4.0"
+        "1.4.0",
+        "1.5.0"
       ]
     },
     "compatibility": {
@@ -317,6 +318,117 @@
         },
         "basis": {
           "const": "post_admission_ranking_prefix"
+        },
+        "authority_effect": {
+          "const": "none"
+        }
+      }
+    },
+    "recall_control": {
+      "type": "object",
+      "description": "Shadow recall control (contract 1.5.0, #644 T-controller): the deterministic System-One controller's plan reported beside the unchanged default planner's execution, in the frozen controller contract's vocabulary. Present only when the facade was opened with recall_control=\"shadow\". Retrieval, admission and ranking are identical with or without it. `actual_stop` describes the default planner (no_evidence, frontier_exhausted, or max_candidates when a host-capped route returned its cap; max_candidates is conservative when exactly the cap qualified). `usage.elapsed_ms` is not deterministic. Never authority.",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "controller_contract_version",
+        "request",
+        "response",
+        "usage",
+        "routes_executed",
+        "route_candidate_counts",
+        "shadow_delta",
+        "actual_stop",
+        "authority_effect"
+      ],
+      "properties": {
+        "mode": {
+          "const": "shadow"
+        },
+        "controller_contract_version": {
+          "type": "string"
+        },
+        "request": {
+          "type": "object",
+          "required": [
+            "operation",
+            "available_capabilities",
+            "budget",
+            "policy_context"
+          ]
+        },
+        "response": {
+          "type": "object",
+          "required": [
+            "controller_identity",
+            "operation",
+            "decision_status",
+            "evidence",
+            "authority_effect"
+          ],
+          "properties": {
+            "decision_status": {
+              "enum": [
+                "complete",
+                "partial",
+                "abstained",
+                "budget_exhausted",
+                "unavailable",
+                "invalid_response"
+              ]
+            },
+            "authority_effect": {
+              "const": "none"
+            }
+          }
+        },
+        "usage": {
+          "type": "object",
+          "required": [
+            "controller_decisions_used",
+            "cache_hits",
+            "elapsed_ms",
+            "fallback_events"
+          ]
+        },
+        "routes_executed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "route_candidate_counts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "shadow_delta": {
+          "type": "object"
+        },
+        "actual_stop": {
+          "type": "object",
+          "required": [
+            "actual_stop_reason",
+            "stop_class",
+            "controller_recommendation",
+            "budget_state"
+          ],
+          "properties": {
+            "actual_stop_reason": {
+              "enum": [
+                "no_evidence",
+                "frontier_exhausted",
+                "max_candidates"
+              ]
+            },
+            "stop_class": {
+              "enum": [
+                "search_space",
+                "resource"
+              ]
+            }
+          }
         },
         "authority_effect": {
           "const": "none"

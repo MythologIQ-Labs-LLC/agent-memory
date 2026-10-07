@@ -146,7 +146,7 @@ class _V3LaneMixin:
         # published v3 record names the same declaration as its predecessor block (docs/67).
         register = json.loads((REPO_ROOT / "reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
         declared = register["declared_successor"]
-        if declared is not None:
+        if declared is not None and declared["baseline_id"] == "agent-memory-runtime-baseline-v3":
             self.assertEqual(declared["declaration"], V3_DECLARATION)
         else:
             entry = next(item for item in register["baselines"] if item["baseline_id"] == "agent-memory-runtime-baseline-v3")
