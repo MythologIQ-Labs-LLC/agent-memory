@@ -133,3 +133,97 @@ PYTHONPATH=reference .venv/bin/python reference/run_agentmembench_formal.py --up
 PYTHONPATH=reference .venv/bin/python reference/run_agentmembench_formal.py --upstream-root AgentMemBench \
   --reference-diagnostics upstream-reference-diagnostics.json
 ```
+
+## Results (executed 2026-10-07, after the gate PASS)
+
+Status of this section: **formal baseline executed; M2 judged recall blocked**. Everything above this section is the frozen protocol and is unchanged by the run.
+
+Run identity: Agent Memory `7b041a741e80a29f6911794a4917b414c0dab032` (clean worktree, verified), runtime tree `771447a4…`, ranking policy `multi-route-default` 3.1.2, contract 1.4.0, Python 3.11.17 with every pinned package verified, upstream `186c9a5` (pristine including ignored files), freeze runner sha256 `58b2fced…`. Wall time about 42 s on a CPU-only container. Report: `reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_s2027_9170.json` (linked-only; verified to contain none of the 2,699 distinct MemDialogue strings of the run). The selection digest `db563c1f…` equals the selection that upstream `load_records` reproduces for all five published systems.
+
+Comparison columns are **published external reference under the identical frozen protocol** (`upstream-published-reference.json`). They are not reproduced here, they run in a different environment, and their recall@5 is LLM-judged.
+
+| Axis / metric | Agent Memory | Naive RAG | Mem0 | LangMem | Graphiti | Letta | Class |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| M1 write success (materialization) | **1.000** | 1.000 | 0.797 | 0.475 | 0.841 | 1.000 | exact workload |
+| M1 write mean latency (ms) | **6.2** | 44.6 | 1,078.7 | 4,986.6 | 8,302.6 | 4,735.4 | environment-bound |
+| M1 read mean latency (ms) | **8.1** | 43.3 | 41.5 | 39.7 | 83.6 | 2,205.1 | environment-bound |
+| M1 concurrency op success @16 | **1.000** | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | exact |
+| M1 throughput @16 (ops/s) | **151.7** | 15.6 | 6.3 | 4.5 | 1.3 | 1.2 | environment-bound |
+| M2 recall@5 (LLM-judged) | **blocked** | 0.966 | 0.818 | 0.286 | 0.687 | 0.982 | blocked: no authorized judge |
+| M2 answer-substring hit@5 (diagnostic) | **0.728** | 0.794 | 0.421 | 0.162 | 0.222 | 0.626 | adapted/diagnostic |
+| M2 source-text hit@5 (diagnostic, verbatim stores only) | **0.899** | 0.971 | n/c | n/c | n/c | n/c | adapted/diagnostic |
+| M3 recall@3 at 100 / 1,000 facts | **1.000 / 1.000** | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 | exact |
+| M3 read mean latency @1,000 (ms) | **7.8** | 44.6 | 40.7 | 58.4 | 45.5 | 1,981.6 | environment-bound |
+| M4 new-fact rate | **0.200** | 1.000 | 0.900 | 0.680 | 0.004 | 0.996 | exact |
+| M4 staleness rate | **0.800** | 0.000 | 0.024 | 0.104 | 0.984 | 0.000 | exact |
+| M4 dual-version rate | **0.000** | 0.000 | 0.876 | 0.024 | 0.000 | 0.000 | exact |
+| M5 cross-user leak rate | **0.000** | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | exact |
+| M5 audited deletion | **1.000** (pre-delete visibility 1.000) | 1.000 | 1.000 | 0.500 | 1.000 | 1.000 | exact (governed tombstone) |
+| M6 LLM portability | **not comparable** | — | — | — | — | — | no executable upstream protocol |
+
+`n/c`: not comparable, because LLM-extracting systems rewrite memory text. The answer-substring diagnostic only counts verbatim answer strings, so it favours systems that store text verbatim (Agent Memory, Naive RAG) over systems that paraphrase it. It is a lower bound on judged recall: on the published files it reports a judged miss as a hit for at most 0.2% of rows. It is not a ranking of the systems. The fair diagnostic contrast is Agent Memory against Naive RAG, the two verbatim stores: 0.728 vs 0.794 on answer substring and 0.899 vs 0.971 on source text. Agent Memory's lexical-only retrieval trails bge-m3 dense retrieval on paraphrased queries.
+
+### M4 failure taxonomy (250 pairs, classifier 1.2.0, `upstream_consistency: true`)
+
+| Stage condition | Met | Unmet |
+| --- | ---: | ---: |
+| write admission (both writes committed) | 250 | 0 |
+| candidate generation (new fact is a candidate) | 250 | 0 |
+| admission (new fact admitted) | 250 | 0 |
+| write interpretation (both propositions known) | 250 | 0 |
+| identity / slot resolution (same slot) | 250 | 0 |
+| conflict / supersession reasoning (`state_change_candidate` with proposal, basis `single_valued_replacement_marker`) | 250 | 0 |
+| temporal applicability / currentness separates the pair | **0** | **250** |
+| ranking puts the new fact first | 50 | 200 |
+
+- Every one of the 200 stale results has the primary stage `temporal_applicability_currentness`.
+- The decisive ranking stage is `lexical_relevance_desc:bm25_admitted_set:lexical` in all 250 pairs.
+- All 50 new-fact wins are the `preference` template, with `win_basis = lexical_ordering`. Not one is a currentness win.
+- The other four templates (`location`, `role`, `status`, `numeric`) are stale in 50 of 50 pairs each.
+
+The mechanism, read from the per-case evidence:
+
+1. Every query resolves to explicit current intent (`query_language_explicit`, cue "current"/"currently").
+2. Every new write is interpreted as the same slot as the old one, and the write-time classifier attaches an explicit, unhedged `state_change_candidate` relation with a correction proposal.
+3. Both facts carry `temporal_applicability = unknown_temporal_basis`. The new write's "now" is recorded as an aspect marker but yields no interpreted self-validity.
+4. The explicit-current pairwise constraint (`temporal_order_constraints.build_explicit_current_constraints`) only builds applicable-over-unknown edges, so it reports `not_in_exclusive_competition`. The open proposal is never applied: proposals apply only through governed `AgentMemory.correct(...)`.
+5. Ordering therefore falls to BM25 relevance, which favours the old template in four of the five categories.
+
+**Interpretation for the architecture.** The 0.20 / 0.80 adapted signal persists unchanged under the formal protocol. The failure is not interpretation, identity, candidate generation or admission: Agent Memory already detects the state change at write time in every case. The gap is the step between the write-time semantics and read-path currentness. A detected, explicit, unhedged state change by the subject's own new statement does not change the old fact's currentness status, and it does not produce an applicability basis the read path can use.
+
+This is #671's capability work. It must close the gap without making recency authoritative (newer != superseding) and without auto-applying proposals outside governance. Upstream M4 also rewards relevance accidents: Naive RAG scores 1.000 with no currentness machinery. So an M4 improvement only counts as currentness capability when the classifier attributes it to `currentness_mechanism`.
+
+### Classification summary (#694 completion terms)
+
+| Axis | Result class |
+| --- | --- |
+| M1 | executed; write success, concurrency success exact; latency/throughput environment-bound |
+| M2 | executed; judged recall **blocked** (credential); diagnostics adapted |
+| M3 | executed; exact recall; latency environment-bound |
+| M4 | executed; exact; per-case failures retained and stage-classified |
+| M5 | executed; exact |
+| M6 | not comparable (no upstream protocol) |
+
+Actual performance deficits:
+
+- **M4 currentness**, a runtime composition gap between write-time semantics and read-path currentness (#671);
+- **M2 retrieval breadth on paraphrased queries**: diagnostic only until judged, and consistent with the unreachable semantic vector route (#669).
+
+Evidence gaps:
+
+- M2 judged recall (no authorized judge);
+- same-harness reproduction of the five comparators (published reference only);
+- latency in an equivalent environment.
+
+Not comparable:
+
+- M6.
+
+### Replay plan for post-runtime milestones
+
+Re-run the same frozen runner, unchanged, after every material runtime tranche that touches retrieval, ranking, interpretation or currentness. The runtime tree and policy binding in the freeze then differ, and that difference is the point: a new freeze with only the `agent_memory` block updated is a successor identity. Report:
+
+- the delta for each axis against this baseline;
+- the M4 `win_basis` and `primary_stage` distributions, not only the rate.
+
+Judged M2 runs once an authorized Qwen2.5-14B-Instruct judge exists. It re-judges this baseline's raw report and the five published upstream detail files with the same judge.

@@ -10568,6 +10568,59 @@
       ]
     },
     {
+      "benchmark_id": "agentmembench-mesa-formal",
+      "dimensions_measured": [],
+      "dimensions_not_measured": [
+        "retrieval",
+        "currentness",
+        "reasoning",
+        "governance",
+        "efficiency",
+        "evaluator_integrity",
+        "reproducibility"
+      ],
+      "evidence": [
+        {
+          "dataset_revision": "mazaiying/AgentMemBench@186c9a54edd47aae42d8b6990520f8e902b60303",
+          "evidence_pr": 705,
+          "input_sha256": "33632710ae6495b95724df455ff6f9947d231ee68ebc0ef10eb8291fd55ca2a6",
+          "normalized_reports": [],
+          "report": "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_s2027_9170.json",
+          "report_binding": {
+            "input_sha256_path": "agent_memory.upstream_verification.dataset_sha256",
+            "system_revision_path": "agent_memory.agent_memory_verification.revision"
+          },
+          "status": "complete",
+          "system_id": "agent_memory",
+          "system_revision": "7b041a741e80a29f6911794a4917b414c0dab032",
+          "variant": "mesa_formal_seed2027_upstream_defaults"
+        },
+        {
+          "blocker": "no explicitly authorized, version-pinned Qwen2.5-14B-Instruct judge endpoint is provisioned (decision-eval-credential)",
+          "status": "blocked",
+          "variant": "upstream_llm_judged_retrieval_recall"
+        },
+        {
+          "status": "not_run",
+          "variant": "llm_portability_m6"
+        }
+      ],
+      "normalized_run_count": 0,
+      "owning_issue": 694,
+      "product_findings": [
+        {
+          "issue": 671,
+          "summary": "formal M4 new-fact 0.20 / staleness 0.80: write-time state_change_candidate detected in 250/250 pairs but never reaches read-path currentness; BM25 decides every pair"
+        },
+        {
+          "issue": 669,
+          "summary": "M2 diagnostics trail verbatim dense retrieval (answer-substring 0.728 vs Naive RAG 0.794): semantic vector route unreachable through the facade"
+        }
+      ],
+      "profile_id": "agent-memory-agentmembench-mesa-formal-v1",
+      "systems_run": []
+    },
+    {
       "benchmark_id": "longmemeval",
       "dimensions_measured": [
         "currentness",

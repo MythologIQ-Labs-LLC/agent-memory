@@ -11,6 +11,9 @@ Reading rules: each Δ outcome applies one metric's own direction and says nothi
 | `agent-memory-agentmembench-memdialogue-operational-v1` | #517 | memdialogue_v2_upstream_defaults | complete | agent_memory, lexical_overlap, no_memory | currentness, efficiency, governance, reproducibility, retrieval | #531, #530, #522 |
 |  |  | upstream_llm_judged_retrieval_recall | not_run |  |  |  |
 |  |  | llm_portability_m6 | not_run |  |  |  |
+| `agent-memory-agentmembench-mesa-formal-v1` | #694 | mesa_formal_seed2027_upstream_defaults | complete | none | none | #671, #669 |
+|  |  | upstream_llm_judged_retrieval_recall | blocked |  |  |  |
+|  |  | llm_portability_m6 | not_run |  |  |  |
 | `agent-memory-longmemeval-retrieval-currentness-v1` | #516 | longmemeval_s_cleaned | complete | agent-memory, agent_memory, lexical_overlap, mem0-oss, no_memory | currentness, efficiency, governance, reproducibility, retrieval | #531, #538, #522 |
 |  |  | longmemeval_m_cleaned | complete |  |  |  |
 |  |  | upstream_model_judged_qa | not_run |  |  |  |
