@@ -1,0 +1,41 @@
+{
+  "agent_memory_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+  "authority_effect": "none",
+  "backend": "mem0_explicit",
+  "declaration_blob": "ac1e498c6690cc6345647c671dd8c18f0a562aac",
+  "evidence_class": "same_harness_external_candidate",
+  "full_selection": true,
+  "granularity": "turn",
+  "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "lane_digest_sha256": "340c368ea7fa662b3cd7306e9a09efb8ecd7432019e25316b61eb672a8f2fe94",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v4.json",
+  "lane_id": "longmemeval-s-retrieval-parity-v4",
+  "mem0_optional_components": {
+    "fastembed_installed": false,
+    "spacy_installed": false
+  },
+  "resolved_packages": {
+    "agent-memory-reference": "0.2.0",
+    "mem0ai": "2.2.1",
+    "numpy": "2.5.3",
+    "onnxruntime": null,
+    "openai": "3.26.0",
+    "posthog": "7.64.1",
+    "qdrant-client": "1.17.0",
+    "sentence-transformers": "5.2.3",
+    "tokenizers": "0.23.2",
+    "torch": "2.10.0"
+  },
+  "runner": "ubuntu24",
+  "runner_backend": "mem0_explicit",
+  "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v3; declared_successor=agent-memory-runtime-baseline-v4 (issue #644); protected surface = frozen aede8fdec879121491ce06f31d475a4986b7a286 + 3 declared blobs; deltas=identity.public_contract_version 1.4.0->1.5.0; candidate=HEAD",
+  "runtime_baseline_state": "TRANSITION",
+  "source_blobs": {
+    "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+    "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+    "reference/run_longmemeval.py": "592fc2073fc740e42b5783da6b67a29544027657"
+  },
+  "subset_size": "0",
+  "upstream_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+  "workflow_run_id": "37661851657"
+}
