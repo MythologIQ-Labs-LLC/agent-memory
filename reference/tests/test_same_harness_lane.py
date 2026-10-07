@@ -227,15 +227,17 @@ class SameHarnessLaneTests(unittest.TestCase):
         report = json.loads(output.getvalue())
         self.assertEqual(report["command"], "benchmark_lanes")
         self.assertEqual(report["authority_effect"], "none")
-        # lanes list in sorted id order: the accepted v1, -v2 and -v3 lanes (#669) and the -v4
-        # lanes (#644 plan-644-lanes-v4), frozen until their rows are accepted
+        # lanes list in sorted id order: the accepted v1, -v2, -v3 (#669) and -v4 (#644) lanes and
+        # the -v5 lanes (#671 plan-671-evidence-v5 A1), frozen until their rows are accepted
         ids = [lane["lane_id"] for lane in report["lanes"]]
         self.assertEqual(ids, [
             LANE_ID, AMB_V2_LANE_ID, "amb-precisionmembench-retrieval-v3", "amb-precisionmembench-retrieval-v4",
+            "amb-precisionmembench-retrieval-v5",
             LME_LANE_ID, LME_V2_LANE_ID, "longmemeval-s-retrieval-parity-v3", "longmemeval-s-retrieval-parity-v4",
+            "longmemeval-s-retrieval-parity-v5",
         ])
         for lane in report["lanes"]:
-            expected = {"frozen", "accepted"} if lane["lane_id"].endswith("-v4") else {"accepted"}
+            expected = {"frozen", "accepted"} if lane["lane_id"].endswith("-v5") else {"accepted"}
             self.assertIn(lane["status"], expected, lane["lane_id"])
 
         output = io.StringIO()
@@ -602,8 +604,9 @@ class AmbPrecisionMemBenchV2LaneTests(_AcceptedV2LaneMixin, unittest.TestCase):
 
         lane = self._lane()
         control = next(row for row in lane["systems"] if row["role"] == "control")
-        # The live bridge moved to 0.3.0 (plan-644-lanes-v4 L6); this accepted lane keeps its frozen 0.2.0 pin.
-        self.assertEqual(bridge.BRIDGE_VERSION, "0.3.0")
+        # The live bridge moved to 0.3.0 (plan-644-lanes-v4 L6) and then 0.4.0 (plan-671-evidence-v5 E2);
+        # this accepted lane keeps its frozen 0.2.0 pin.
+        self.assertEqual(bridge.BRIDGE_VERSION, "0.4.0")
         self.assertIn("bridge_version 0.2.0", control["adapter"]["revision_rule"])
         self.assertIn(lane["harness"]["source_blobs"]["reference/amb_agent_memory_bridge.py"], control["adapter"]["revision_rule"])
         self.assertIn("never a bridge-side cap", control["configuration"]["k"])

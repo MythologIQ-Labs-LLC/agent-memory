@@ -86,9 +86,10 @@ def test_retrieve_returns_the_facade_prefix_under_the_case_budget(tmp_path, monk
         ]
     )
     found, raw = provider.retrieve("release branch note", k=3, user_id="user:k")
-    # Bridge 0.3.0 (plan-644-lanes-v4 L6) leaves this provider's behaviour unchanged.
-    assert bridge.BRIDGE_VERSION == "0.3.0"
-    assert raw["bridge_version"] == "0.3.0"
+    # Bridges 0.3.0 (plan-644-lanes-v4 L6) and 0.4.0 (plan-671-evidence-v5 E2, sidecar unset here)
+    # leave this provider's behaviour unchanged.
+    assert bridge.BRIDGE_VERSION == "0.4.0"
+    assert raw["bridge_version"] == "0.4.0"
     assert len(found) == 3
     assert raw["admitted_count"] == 4
     assert raw["returned_count"] == 3

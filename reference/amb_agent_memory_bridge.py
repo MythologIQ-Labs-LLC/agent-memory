@@ -19,6 +19,18 @@ frozen AMB runner stores no provider raw response, so the shadow provider append
 per ``retrieve()`` call to the sidecar named by ``AGENT_MEMORY_AMB_RECALL_CONTROL_SIDECAR``
 (refusing to retrieve when it is unset). Shadow telemetry is evidence, never authority; the
 ``agent-memory`` provider is unchanged and writes no sidecar.
+
+Since bridge 0.4.0 (ranking policy 3.3.0, #671 plan-671-evidence-v5 E2) the ``agent-memory``
+provider, when ``AGENT_MEMORY_AMB_CROSS_FACT_SIDECAR`` is set, appends one JSON line per
+``retrieve()`` call to that file: the cross-fact limitation the facade's ``ranking_evidence``
+reports, the returned document ids, and, only when a candidate was limited, the document ids
+the same recall returns with the mechanism off (policy 3.2.0 for that one read, after the
+on recall). Unset, it retrieves exactly as before and writes nothing. The
+``agent-memory-shadow`` provider keeps its 0.3.0 behaviour and never writes this sidecar.
+The returned documents are always the mechanism-on recall's; the sidecar is evidence, never
+authority. The bridge times nothing itself; the frozen harness times the whole ``retrieve()``
+call, so a limited case's ``retrieve_time_ms`` includes the off read (timing is excluded from the
+E1 comparison and never gated).
 """
 
 from __future__ import annotations
@@ -33,13 +45,15 @@ from pathlib import Path
 from typing import Any
 
 from agentmem_ref import AgentMemory
+from cross_fact_mechanism_off import limited_refs, mechanism, refusal_counts
 
 AMB_REPOSITORY = "vectorize-io/agent-memory-benchmark"
 AMB_REVISION = "03c1d0f1d27da63034f0931121c858faba512383"
 AMB_PROVIDER_KEY = "agent-memory"
 AMB_SHADOW_PROVIDER_KEY = "agent-memory-shadow"
-BRIDGE_VERSION = "0.3.0"
+BRIDGE_VERSION = "0.4.0"
 SIDECAR_ENV = "AGENT_MEMORY_AMB_RECALL_CONTROL_SIDECAR"
+CROSS_FACT_SIDECAR_ENV = "AGENT_MEMORY_AMB_CROSS_FACT_SIDECAR"
 
 _TENANT = "tenant:amb-competitive"
 _ACTOR = "agent:amb-competitive"
@@ -142,6 +156,7 @@ def install_amb_agent_memory_provider(
             self._index_path: Path | None = None
             self._by_fact: dict[str, dict[str, Any]] = {}
             self._call_index = 0
+            self._cross_fact_call_index = 0
 
         def prepare(self, store_dir: Path, unit_ids: set[str] | None = None, reset: bool = True) -> None:
             self._store_dir = Path(store_dir)
@@ -189,6 +204,31 @@ def install_amb_agent_memory_provider(
             with path.open("a", encoding="utf-8") as handle:
                 handle.write(json.dumps(line, sort_keys=True, separators=(",", ":")) + "\n")
             self._call_index += 1
+
+        def _document_ids(self, fact_uuids: list[str]) -> list[str]:
+            return [self._by_fact[value]["id"] for value in fact_uuids if value in self._by_fact]
+
+        def _append_cross_fact_sidecar(
+            self, path: Path, query: str, scope: str, budget: int, outcome: dict, off_outcome: dict | None
+        ) -> None:
+            limited = limited_refs(outcome)
+            line = {
+                "call_index": self._cross_fact_call_index,
+                "scope": scope,
+                "query_sha256": hashlib.sha256(query.encode("utf-8")).hexdigest(),
+                "budget": budget,
+                "limited_count": len(limited),
+                "limited_document_ids": self._document_ids(limited),
+                "refusal_counts": refusal_counts(outcome),
+                "returned_document_ids": self._document_ids([str(item) for item in outcome.get("returned") or []]),
+                "returned_document_ids_mechanism_off": None
+                if off_outcome is None
+                else self._document_ids([str(item) for item in off_outcome.get("returned") or []]),
+            }
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(line, sort_keys=True, separators=(",", ":")) + "\n")
+            self._cross_fact_call_index += 1
 
         def _require_prepared(self) -> Path:
             if self._runtime_root is None or self._index_path is None:
@@ -244,12 +284,28 @@ def install_amb_agent_memory_provider(
             user_id: str | None = None,
             query_timestamp: str | None = None,
         ) -> tuple[list[Document], dict | None]:
+            return self._retrieve(query, k, user_id, query_timestamp, cross_fact=True)
+
+        def _retrieve(
+            self,
+            query: str,
+            k: int,
+            user_id: str | None,
+            query_timestamp: str | None,
+            *,
+            cross_fact: bool,
+        ) -> tuple[list[Document], dict | None]:
             root = self._require_prepared()
             budget = int(k)
             if budget < 1:
                 raise ValueError("AMB case budget must be at least 1")
             sidecar = self._sidecar_path()
+            # plan-671-evidence-v5 E2: only a provider that asks for it (cross_fact=True) and a
+            # run that names the file write the cross-fact sidecar; unset, nothing changes.
+            cross_fact_value = os.environ.get(CROSS_FACT_SIDECAR_ENV) if cross_fact else None
+            cross_fact_sidecar = Path(cross_fact_value) if cross_fact_value else None
             open_kwargs = {"recall_control": "shadow"} if self.recall_control == "shadow" else {}
+            off_outcome = None
             with AgentMemory.open(
                 root,
                 tenant=_TENANT,
@@ -259,8 +315,14 @@ def install_amb_agent_memory_provider(
                 **open_kwargs,
             ) as memory:
                 outcome = memory.recall(str(query), budget=budget)
+                if cross_fact_sidecar is not None and limited_refs(outcome):
+                    # One extra read with the mechanism off, after the on recall (A4).
+                    with mechanism("off"):
+                        off_outcome = memory.recall(str(query), budget=budget)
             if sidecar is not None:
                 self._append_sidecar(sidecar, str(query), _scope(user_id), budget, outcome)
+            if cross_fact_sidecar is not None:
+                self._append_cross_fact_sidecar(cross_fact_sidecar, str(query), _scope(user_id), budget, outcome, off_outcome)
 
             admitted = [str(item) for item in outcome.get("admitted") or []]
             returned = [str(item) for item in outcome.get("returned") or []]
@@ -309,6 +371,16 @@ def install_amb_agent_memory_provider(
         concurrency = 1
         recall_control = "shadow"
 
+        def retrieve(
+            self,
+            query: str,
+            k: int = 10,
+            user_id: str | None = None,
+            query_timestamp: str | None = None,
+        ) -> tuple[list[Document], dict | None]:
+            # Bridge 0.4.0 keeps this provider's 0.3.0 behaviour: never the cross-fact sidecar.
+            return self._retrieve(query, k, user_id, query_timestamp, cross_fact=False)
+
     REGISTRY[AMB_PROVIDER_KEY] = AgentMemoryAMBProvider
     REGISTRY[AMB_SHADOW_PROVIDER_KEY] = AgentMemoryShadowAMBProvider
     # The control class stays the single return value (run_amb_external.py and the tests use it).
@@ -322,6 +394,7 @@ __all__ = [
     "AMB_SHADOW_PROVIDER_KEY",
     "BRIDGE_VERSION",
     "SIDECAR_ENV",
+    "CROSS_FACT_SIDECAR_ENV",
     "verify_amb_checkout",
     "install_amb_agent_memory_provider",
 ]
