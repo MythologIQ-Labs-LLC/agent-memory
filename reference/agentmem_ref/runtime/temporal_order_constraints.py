@@ -44,8 +44,9 @@ from .temporal_intent import (
 
 UNKNOWN_TEMPORAL_BASIS = "unknown_temporal_basis"
 APPLICABLE = "applicable"
-POLICY_VERSION = "3.2.0"
-CROSS_FACT_POLICY_VERSION = "3.3.0"
+CONSTRAINED_POLICY_VERSION = "3.2.0"
+POLICY_VERSION = "3.3.0"
+CROSS_FACT_POLICY_VERSION = POLICY_VERSION
 CROSS_FACT_POLICY = "explicit_current_interpreted_cross_fact_v1"
 UNKNOWN_BASIS_POLICY = "explicit_current_exclusive_pairwise_v1"
 
@@ -299,7 +300,7 @@ class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
     Neither operation changes admission, truth, lifecycle state, or authority.
     """
 
-    version: str = POLICY_VERSION
+    version: str = CONSTRAINED_POLICY_VERSION
     unknown_basis_policy: str = UNKNOWN_BASIS_POLICY
 
     def stage_names(self) -> list[str]:
@@ -599,6 +600,7 @@ __all__ = [
     "ExplicitCurrentCrossFactRankingPolicy",
     "POLICY_VERSION",
     "CROSS_FACT_POLICY_VERSION",
+    "CONSTRAINED_POLICY_VERSION",
     "CROSS_FACT_POLICY",
     "TemporalConstraintEdge",
     "UNKNOWN_BASIS_POLICY",
