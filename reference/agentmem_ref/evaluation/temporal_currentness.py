@@ -80,7 +80,7 @@ NOT_MEASURABLE = {
 TEMPORAL_STAGES = {"temporal_applicability_tier", "temporal_order_within_query_regime", "temporal_evidence:newer_first"}
 NOT_CURRENT_REFUSALS = {"superseded_not_current", "outside_historical_validity", "corrected_as_false"}
 DEMOTED_LABELS = {
-    "current": {"outside_target_interval", "prospectively_applicable"},
+    "current": {"outside_target_interval", "prospectively_applicable", "limited_by_cross_fact_state_change"},
     "as_of": {"outside_target_interval", "prospectively_applicable"},
     "prospective": {"outside_target_interval", "applicable_not_prospective"},
 }
