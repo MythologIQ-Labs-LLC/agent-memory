@@ -85,6 +85,138 @@ A benchmark may reveal additional remediation work or reorder these tranches. It
 
 The canonical roadmap/decision mechanism should record these rulings; this document states the execution posture they govern.
 
+## Closed-loop strengthening model
+
+The North Star program is not a one-way sequence from architecture to implementation to evaluation.
+
+It is a deliberately **self-correcting engineering loop**:
+
+```text
+        accepted architecture
+          /           \
+         v             v
+runtime implementation -> benchmark pressure
+         ^                  |
+         |                  v
+         +---- remediation / deficit analysis
+                    |
+                    v
+          stronger runtime evidence
+             /             \
+            v               v
+  architecture refinement   benchmark refinement
+```
+
+A second way to read the same loop is:
+
+```text
+architecture
+  -> defines intended capability and invariants
+  -> runtime makes that architecture executable
+  -> benchmarks attempt to falsify the runtime
+  -> deficits become explicit engineering obligations
+  -> remediation strengthens the runtime
+  -> new evidence may expose missing architecture
+  -> new architecture may require new benchmark pressure
+  -> repeat
+```
+
+No edge is one-directional in practice.
+
+### Architecture strengthens evaluation
+
+Architecture tells the evidence program what meaningful capabilities, invariants and failure modes must be tested even when external benchmarks do not yet cover them.
+
+Accepted architecture without benchmark coverage remains implementation work.
+
+Where no adequate external benchmark exists, the Coverage Atlas may justify a neutral Gauntlet-native gap suite under its existing anti-marketing rules.
+
+### Evaluation strengthens architecture
+
+A trustworthy benchmark may falsify an architectural assumption.
+
+If a result shows that the existing architecture cannot plausibly reach the required capability frontier without violating invariants, the correct outcome is a new or revised architecture tranche.
+
+The benchmark does not dictate the design.
+
+It is allowed to prove that the current design is incomplete.
+
+### Remediation strengthens both
+
+The deficit-remediation loop is the bridge between evidence and architecture.
+
+A material deficit must become:
+
+- an owned runtime/architecture hypothesis;
+- a bounded implementation tranche;
+- a frozen replay obligation;
+- a regression obligation once fixed.
+
+If remediation reveals that the original failure attribution was wrong, the deficit returns to analysis rather than being forced closed.
+
+### Failure must be loud and useful
+
+The desired system behavior is not "never fail."
+
+The desired engineering behavior is:
+
+```text
+fail visibly
+  -> preserve enough evidence to explain the failure
+  -> classify what is known and unknown
+  -> make the deficit durable and owned
+  -> remediate the general mechanism
+  -> prove the improvement
+  -> retain the proof as a future regression floor
+```
+
+Silent degradation is therefore worse than an explicit unsupported, blocked, evidence-gap or failed state.
+
+The repository SHOULD prefer a loud, typed failure over a plausible-looking fabricated success.
+
+### This is not yet autonomous runtime self-healing
+
+The runtime itself is not granted open-ended authority to rewrite its own implementation or policy when a benchmark fails.
+
+"Self-correcting" here describes the repository's governed engineering loop.
+
+Runtime self-adaptation remains separately constrained by PAMA, lifecycle authority, versioned policy and accepted architecture such as ADR-042.
+
+This distinction prevents an evaluation result from becoming mutation authority.
+
+### Each pass should leave the system stronger
+
+A successful cycle should produce at least one durable improvement:
+
+- new runtime capability;
+- stronger correctness or governance invariant;
+- better competitive/adequacy metric;
+- sharper failure taxonomy;
+- better evidence coverage;
+- a new regression floor;
+- corrected dependency/architecture assumptions;
+- an explicit product boundary.
+
+If a full cycle produces none of these, it was activity rather than progress.
+
+### Convergence target
+
+The long-run target is not a repository with no open deficits.
+
+New benchmarks, harder workloads and broader capabilities should continue finding weaknesses.
+
+The target is a system where:
+
+- important failures become visible quickly;
+- root cause becomes increasingly localizable;
+- remediation is increasingly bounded;
+- accepted wins do not regress casually;
+- architecture and evidence stay synchronized;
+- the number of unexplained or ownerless failures trends toward zero;
+- the runtime occupies an increasingly broad best-in-class capability frontier.
+
+This loop is a core mechanism for making Agent Memory more defensible with every evidence/remediation pass.
+
 ## Evidence discipline for runtime tranches
 
 Material runtime tranches should close with evidence for:
