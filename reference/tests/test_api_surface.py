@@ -218,7 +218,7 @@ class PublicSurface(unittest.TestCase):
                           blocked["return_policy"]["returned_count"]), (False, 0, 0))
 
     def test_migration_required_envelope_carries_no_return_fields(self):
-        newer = surface.recall(self.memory, "release branch", {**RECALL, "contract_version": "1.5.0", "budget": {"k": 1}})
+        newer = surface.recall(self.memory, "release branch", {**RECALL, "contract_version": "1.6.0", "budget": {"k": 1}})
         self.assertEqual((newer["stage"], newer["compatibility"]), ("none", contract.MIGRATION_REQUIRED))
         self.assertNotIn("returned", newer)
         self.assertNotIn("return_policy", newer)

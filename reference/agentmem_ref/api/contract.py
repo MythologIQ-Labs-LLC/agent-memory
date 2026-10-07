@@ -18,7 +18,7 @@ from ..core import policy, receipts
 from ..memory.procedural_memory import ActionProposal
 from ..runtime.adapter import RecallContext
 
-CONTRACT_VERSION = "1.4.0"
+CONTRACT_VERSION = "1.5.0"
 
 #: Return budget (contract 1.4.0, #670): a ranked-prefix policy applied after admission and
 #: after ranking; it reads only the ranked admitted list and is never authority.

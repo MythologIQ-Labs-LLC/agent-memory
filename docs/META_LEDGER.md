@@ -4216,3 +4216,72 @@ Step B2 binds this PR's runtime-baseline.yml probe artifact. #669 then closes, w
 The register entry pins published_commit 2e73375, the B1 merge, whose tree holds the record and boundary bytes B1 pinned, together with the new qualification blob. The record itself is untouched. The validator binds v1, v2 and v3, and the checker prints PASS against v3.
 
 This closes the declared transition opened by PR #707. #669 closes with its movement gate transferred to #673.
+
+---
+
+### Entry #94: GATE TRIBUNAL — PASS (#644 T-controller, shadow recall control, attempt 3)
+
+**Timestamp**: 2026-10-07T13:20:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-644-t-controller.md (iteration 3, 1286ab8)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_644_t_controller.md) = dc5a4d93ff780f1c9b9cf6bc751842bf6a658696ea6675afbe3fba911db2c438
+
+**Previous Hash**: `05609c2d934e0b0da0d234d6262b38dd42869f1761365097afb19a617059308a`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = f04e0fd443183eb7486a9fc15fb836933928f3bf8d28239a82d94535ef7bc192
+
+**Decision**: PASS at attempt 3, from an independent reviewer working in a fresh context.
+
+- **Attempt 1 VETO.** The harness controlled planner's candidate generation differs from the facade's. A prototype showed that truncation drops the current fact while reporting "sufficient".
+- **Attempt 2 VETO.** The stop record ignored the semantic host cap.
+
+The plan freezes shadow recall control: the default planner executes unchanged, and the controller's plan is reported as a contract-conformant telemetry block. The stop record is derived from the planner's actual execution. Other parts:
+- public contract 1.5.0;
+- a fix for the harness vector prefilter;
+- closeout fixture v3;
+- Runtime Baseline v4 declared, with identity delta public_contract_version 1.4.0→1.5.0.
+
+No retrieval or ranking change.
+
+---
+
+### Entry #95: IMPLEMENTATION — #644 T-controller: shadow recall control on the facade (contract 1.5.0); Runtime Baseline v4 declared
+
+**Timestamp**: 2026-10-07T14:10:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Plan**: docs/plan-644-t-controller.md (iteration 3; Gate Tribunal PASS at Entry #94)
+
+**Artifacts**:
+- `api/surface.py`: `recall_control="off"|"shadow"`, and a shadow report built after `multi_route_recall`;
+- `runtime/recall_control.py`: the S6 vector prefilter fix, plus `shadow_actual_stop` and `shadow_control_report`;
+- `api/contract.py` 1.5.0, with the `contract_version` enum of all six `schemas/api-*` schemas and the `recall_control` result object;
+- docs/44;
+- `reference/fixtures/harvest-closeout-final-v3.json` (supersedes v2, which is unedited), with its consumers;
+- `reports/runtime/baseline-v4-declaration.json` and the register's `declared_successor`;
+- tests: `test_facade_recall_control.py` (11, one requires the pinned model and is listed in semantic-representation.yml), `test_harvest_closeout_v3.py`, and the contract re-pins.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `b35403155887245c22f3eaac47560ef7d7f8d26c`): `1eb7e0c8eb070c6e9a41d7eb403f37310a1381cd3194c8c2ac1017fa8d4e29fb`
+**Previous Hash**: `f04e0fd443183eb7486a9fc15fb836933928f3bf8d28239a82d94535ef7bc192`
+**Chain Hash**: `1dc3954f4c2adc90cf68998270d6c3a7601c390c7d295ff13dff0839a5c92e9d`
+
+**Decision**: Shadow recall control is reachable through `AgentMemory.open(recall_control="shadow")`.
+- **Equivalence:** retrieval, admission, ranking and returned output are byte-identical to `off`, tested on store copies over an adversarial corpus. That corpus has more than 32 lexical hits, a newer fact among older matches, a foreign-domain fact and a binding semantic cap.
+- **Report contents:** the report maps the frozen System-One contract. Its actual stop describes the default planner:
+  - `no_evidence`;
+  - `frontier_exhausted`;
+  - `max_candidates` when the semantic host cap of 16 binds.
+
+  A controller failure has no effect beyond `decision_status` and `fallback_events`.
+- **Checker:** prints TRANSITION, declaring v4 (issue #644) with 3 declared blobs and the delta `public_contract_version` 1.4.0→1.5.0.
+- **Full suite:** the only failure is the pre-existing environmental `test_gauntlet_durability`.
+
+Next: a gated `-v4` lanes plan (D1 off equals `-v3`; the shadow row equals the control), then dispatch, acceptance, and Step B1/B2 for v4.
