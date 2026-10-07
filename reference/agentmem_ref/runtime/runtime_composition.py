@@ -37,7 +37,7 @@ from .configured_restart import ConfigBoundRestartRuntime
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .projection_governance import ProjectionGovernor
 from .temporal_intent import resolve_intent
-from .temporal_order_constraints import ExplicitCurrentConstrainedRankingPolicy
+from .temporal_order_constraints import ExplicitCurrentCrossFactRankingPolicy
 from .vector_retrieval import NativeVectorCandidateRetriever, SEMANTIC_VECTOR_ROUTE
 from ..state.projections import (
     CURRENT,
@@ -116,7 +116,7 @@ class MultiRouteRecallResult:
         return tuple(self.route_hits.get(candidate_ref, ()))
 
 
-MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentConstrainedRankingPolicy(
+MULTI_ROUTE_RANKING_POLICY = ExplicitCurrentCrossFactRankingPolicy(
     policy_id="multi-route-default",
     route_score_order=(SHARED_EVIDENCE_ROUTE, LEXICAL_ROUTE),
     # #669: the semantic route widens candidates but never outranks relevance or
@@ -267,12 +267,14 @@ class DeterministicMultiRouteRecallPlanner:
             historical_target_seconds=historical_target,
         )
 
+        cross_fact = self.adapter.cross_fact_applicability(admission.admitted, context, intent)
         ranked, ranking_evidence = MULTI_ROUTE_RANKING_POLICY.rank(
             admission.admitted,
             by_candidate,
             substrate.get_fact,
             query=query,
             intent=intent,
+            cross_fact=cross_fact,
         )
         return MultiRouteRecallResult(
             query=query,
