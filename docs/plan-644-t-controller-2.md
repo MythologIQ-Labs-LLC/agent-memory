@@ -3,7 +3,7 @@
 **change_class**: runtime
 **doc_tier**: standard
 **risk_grade**: L2
-**status**: WIP / HOLD until #671 mesa-formal-v2 replay is captured
+**status**: WIP / HOLD until Runtime Baseline v5 is fully published (docs/67 B1+B2)
 **owning issue**: #644
 **predecessor**: docs/plan-644-t-controller.md
 **frozen contract**: reference/fixtures/runtime/system-one-controller-contract-v1.json
@@ -29,13 +29,33 @@ admission.
 
 ## Sequencing hold
 
-The branch is based on the exact merge of the frozen #671 MESA v2 protocol.
+The branch was opened from the exact merge of the frozen #671 MESA v2 protocol.
 
-No change from this branch may merge to main until the mesa-formal-v2 replay
-required by docs/plan-671-evidence-v5.md E7 step 3 has executed against the
-frozen runtime tree.
+The original hold was the MESA v2 replay required by
+`docs/plan-671-evidence-v5.md` E7 step 3. That hold is satisfied:
 
-Development and CI on this branch are allowed. Main remains frozen.
+- PR #727 froze the MESA v2 protocol;
+- PR #728 merged the replay with M4 `new_fact = 1.000` and 250/250 wins
+  attributed to `currentness_mechanism`.
+
+A stricter docs/67 hold remains. Runtime Baseline v5 is already the declared
+successor for #671. T-controller-2 changes the protected
+`reference/agentmem_ref/runtime/recall_control.py` blob beyond that declaration,
+so it cannot be merged under the v5 transition.
+
+PR #731's AGMI run `37683798859` proved this fail-closed boundary on its first
+2A head by reporting a declared-blob mismatch for `recall_control.py`.
+
+Therefore:
+
+1. development, focused tests, and broad CI may continue on this branch;
+2. no T-controller-2 runtime commit may merge before #671 completes its E7
+   acceptance and Runtime Baseline v5 docs/67 B1+B2 publication;
+3. after v5 is published, T-controller-2 must declare a new Runtime Baseline
+   successor before merge;
+4. the v5 declaration must not be edited or widened to absorb this tranche.
+
+This is a baseline-sequencing hold, not a controller-quality failure.
 
 ## Design
 
