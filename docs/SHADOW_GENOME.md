@@ -650,6 +650,42 @@ The plan defined "the full suite runs once per trigger" as a policy invariant de
 
 ---
 
+### Failure #19: Tranche 5 plan iteration 1 VETOed on two unresolved module paths
+
+**Date**: 2026-10-07
+**Iteration**: 1 (audit attempt 1 of 5)
+**Verdict ID**: AUDIT_REPORT_672_attempt1 2026-10-07T06:05 VETO (V1-V2)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+The plan turned the harvest closeout into a fixture whose every `modules` path must exist, and wrote the row table's paths from the research brief's abbreviated citations (`proposition_semantics.py:826`, `fixtures/runtime/system-one-controller-contract-v1.json`) by guessing their directories.
+
+#### Why It Failed
+
+- `proposition_semantics.py` lives under `runtime/`, not `memory/`; a 4-line shim at the package root made the guess look plausible.
+- The controller-contract fixture lives under `reference/fixtures/`, not a top-level `fixtures/`.
+- A plan whose enforcement is path existence cannot carry a single unresolved path: the implementation would fail its own test on the first run.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: carrying a brief's shortened citation into a plan as if it were a repository path; stating an existence invariant without running it over the plan's own table first.
+
+**Correct Pattern**: resolve every path a plan cites with `find`/`ls` before writing it; when a plan's deliverable is data with an existence check, run the check over the plan's own rows before the audit.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| FIXED | Iteration 2 cites the resolved paths and states that fixture paths are repository-relative and resolved before a row is written; PASSED at Entry #81. |
+
+#### Related Entries
+
+- Entry #80 (GATE TRIBUNAL VETO); Entry #74 (research brief, finding A).
+- Audit Report: `.agent/staging/AUDIT_REPORT_672_attempt1.md`
+
+---
+
 ## Pattern Library (Extracted Lessons)
 
 Cross-cutting lessons from the temporal/currentness and evidence work (#538 through #550) are collected in [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md).
@@ -687,11 +723,11 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | GHOST_PATH | 0 | - |
 | HALLUCINATION | 2 | 2026-09-01 |
 | ORPHAN | 0 | - |
-| SPEC_DRIFT | 17 | 2026-10-07 |
+| SPEC_DRIFT | 18 | 2026-10-07 |
 | CHAIN_BREAK | 0 | - |
 
-**Total Failures Recorded**: 18
-**Failures Resolved**: 15 (Failure #18 grounds closed by iterations 2-3; Failure #17 fixed by the lane-workflow checkout fix; Failure #16 grounds closed by iteration 2; Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
+**Total Failures Recorded**: 19
+**Failures Resolved**: 16 (Failure #19 grounds closed by iteration 2; Failure #18 grounds closed by iterations 2-3; Failure #17 fixed by the lane-workflow checkout fix; Failure #16 grounds closed by iteration 2; Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 
 ---

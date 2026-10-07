@@ -3706,3 +3706,59 @@ supersedable or complete-every-run by policy (LD4, LD5). Roadmap:
 `prereq-ci-cost` resolved; the frontier's remaining open nodes are
 the five owner decisions. PR #665 is subsumed by LD4 (OQ3), noted on
 that PR for its author to close.
+
+---
+
+### Entry #80: GATE TRIBUNAL — VETO
+
+**Timestamp**: 2026-10-07T06:05:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-672-tranche-5-harvests.md (iteration 1; plan gate `plan-iter11.json`)
+
+**Artifact**: `.agent/staging/AUDIT_REPORT_672_attempt1.md` (gitignored staging; hashed here)
+**Content Hash**: `ad8bacd4469e4e365755cd22c6f145b2601d2d0766968e75a4435252436fc72c`
+**Previous Hash**: `3aa7af1f63f26e0fd703a817229b8ba606675cf9b1dc4d1477f445f5065c157f`
+**Chain Hash**: `6585b5d0ddde856fefb06839d7b06f562ff4e0006875c4a54e9c560cba551e7f`
+
+**Decision**: VETO (V1, V2). The plan's deliverable is a closeout record
+enforced by path existence, and two module paths in its LD1 row table
+do not exist: `reference/agentmem_ref/memory/proposition_semantics.py`
+(the module is `runtime/proposition_semantics.py`) and
+`fixtures/runtime/system-one-controller-contract-v1.json` (the file is
+under `reference/fixtures/`). Both were copied from the brief's
+abbreviated citations without resolution. Security, Ghost UI, Razor,
+Dependency, Macro-Level and Orphan passes clean; 21 of 23 paths, every
+line citation, the three evidence variants, the v1 pair count (23) and
+the Jev-Mem id count (16) verified. Iteration 2 must cite the resolved
+paths and state that fixture paths are repository-relative and resolved
+before a row is written.
+
+---
+
+### Entry #81: GATE TRIBUNAL — PASS
+
+**Timestamp**: 2026-10-07T06:15:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-672-tranche-5-harvests.md (iteration 2; plan gate `plan-iter12.json`)
+
+**Artifact**: `.agent/staging/AUDIT_REPORT_672_attempt2.md` (gitignored staging; hashed here)
+**Content Hash**: `add97a10bf32279b4ebd7dcc2c48707f7e56eb94a24a950d4e30b775f01fe1b1`
+**Previous Hash**: `6585b5d0ddde856fefb06839d7b06f562ff4e0006875c4a54e9c560cba551e7f`
+**Chain Hash**: `95f4e2eb80ab3a47164907e8be195e39298e43c10d912620e034af58124d361a`
+
+**Decision**: PASS. V1 and V2 of Entry #80 are remediated: the two
+rows cite `reference/agentmem_ref/runtime/proposition_semantics.py`
+and `reference/fixtures/runtime/system-one-controller-contract-v1.json`,
+verified to exist, and LD1 states that fixture paths are resolved
+before a row is written; all 23 cited paths resolve. Every other pass
+stands as verified at attempt 1. Condition C1: the four new tranche
+issues of OQ1 are opened in Phase 3 and their numbers land in the
+fixture, the test's `EXPECTED_UNASSIGNED` list is emptied, and the
+implementation ledger entry names them before `scope-tranche-5-harvests`
+is resolved. Implementation may proceed under iteration 2.
