@@ -31,7 +31,7 @@ from typing import Any, Callable, Mapping
 
 SUITE_SCHEMA_VERSION = "1.0.0"
 REPORT_SCHEMA_VERSION = "1.0.0"
-EVALUATOR_VERSION = "1.1.0"
+EVALUATOR_VERSION = "1.2.0"
 
 TENANT = "tenant:temporal-gauntlet"
 SCOPE = "project:temporal-gauntlet"
@@ -369,7 +369,10 @@ def _role_holds(role: str, obs: Mapping[str, Any] | None, mode: str | None) -> b
     if role == "not_current":
         if not admitted:
             return obs["refusal"] in NOT_CURRENT_REFUSALS
-        return obs["currentness"] == "historical_evidence_not_current" or label in {"outside_target_interval", "prospectively_applicable"}
+        return (
+            obs["currentness"] == "historical_evidence_not_current"
+            or label in DEMOTED_LABELS.get(mode or "", set())
+        )
     if role == "not_affirmed_current":
         return not (admitted and label == "applicable")
     if role == "prospective":
