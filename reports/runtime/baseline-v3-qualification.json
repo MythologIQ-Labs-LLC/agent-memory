@@ -1,5 +1,17 @@
 {
-  "status": "pending",
+  "status": "complete",
   "profile_id": "gauntlet-orchestration-retrieval-probe-v1",
-  "transport": "stdio"
+  "transport": "stdio",
+  "manifest": "examples/gauntlet/agent-memory-runtime-baseline-v3.json",
+  "adapter_source": "examples/gauntlet/agent_memory_runtime_baseline_v3_stdio.py",
+  "system_revision": "git-commit:aede8fdec879121491ce06f31d475a4986b7a286",
+  "adapter_revision": "git-blob:19fdd0692b8b400d5a4305a7907e9b606eb7eefc",
+  "verified_head": "57ad872868683ba6ce73574c3eb90bc1f95063d2",
+  "workflow_run": 37615387248,
+  "artifact_id": 11478848842,
+  "artifact_digest": "sha256:b1ca7414a503d2a75eef98a48149618f3b321f0892a4436fb04cc7bcbefcb2a9",
+  "sample_count": 3,
+  "exact_top1": 1.0,
+  "evidence_class": "baseline_or_probe",
+  "authority_effect": "none"
 }
