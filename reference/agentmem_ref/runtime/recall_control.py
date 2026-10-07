@@ -431,6 +431,14 @@ def _probability(value: float, *, field_name: str) -> float:
     return value
 
 
+def _non_negative_int(value: int, *, field_name: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{field_name} must be an integer")
+    if value < 0:
+        raise ValueError(f"{field_name} must be non-negative")
+    return value
+
+
 @dataclass(frozen=True)
 class RecallOuterBudget:
     """Host-owned outer budget for one controller request (#644 T-controller-2)."""
@@ -443,14 +451,12 @@ class RecallOuterBudget:
     maximum_depth: int | None = None
 
     def __post_init__(self) -> None:
-        if self.maximum_controller_decisions < 1:
-            raise ValueError("maximum_controller_decisions must be >= 1")
-        if self.maximum_candidates < 0:
-            raise ValueError("maximum_candidates must be non-negative")
+        _non_negative_int(self.maximum_controller_decisions, field_name="maximum_controller_decisions")
+        _non_negative_int(self.maximum_candidates, field_name="maximum_candidates")
         for name in ("deadline_ms", "maximum_nodes", "maximum_edges", "maximum_depth"):
             value = getattr(self, name)
-            if value is not None and value < 0:
-                raise ValueError(f"{name} must be non-negative when supplied")
+            if value is not None:
+                _non_negative_int(value, field_name=name)
 
     def to_dict(self) -> dict[str, int | None]:
         return {
@@ -632,8 +638,7 @@ def allocate_route_budgets(
     if unsupported:
         raise ValueError("route need has no host cap: " + ", ".join(sorted(unsupported)))
     for route, cap in host_caps.items():
-        if cap < 0:
-            raise ValueError(f"host cap for {route} must be non-negative")
+        _non_negative_int(cap, field_name=f"host cap for {route}")
 
     active = [
         route
