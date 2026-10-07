@@ -393,3 +393,9 @@ The canonical bytes are in `reports/benchmarks/currentness-generalization/prompt
 | `change_evidence_not_assertive:*` | G12 |
 | `declared_clock_contradicts_direction`, `declared_clock_unconfirmed` | G13 |
 | `target_has_temporal_basis`, `source_has_temporal_basis` | policy (C3) |
+
+## Gate result
+
+The plan passed at attempt 5 (META_LEDGER Entry #112, audit sha256 `9cbfe521…`). Two non-normative advisories are carried into the freeze PR:
+- **J1:** `audit_authoring_transcript.py` requires `type` and `message.content`. It treats an absent `isMeta` as false and an absent `origin` as no coordinator origin, and it fails closed only on an unknown content shape or `origin.kind`.
+- **J2:** the freeze PR commits the dry-run transcript, with its sha256, as the evidence for the frozen wrapper strings.
