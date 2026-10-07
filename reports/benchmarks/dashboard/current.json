@@ -21,7 +21,7 @@
     "external_cross_system_reference": "independent multi-system suite useful for triangulation but not a substitute for local same-harness reproduction"
   },
   "competitive_evidence": {
-    "status": "four_same_harness_lanes_accepted",
+    "status": "six_same_harness_lanes_accepted",
     "umbrella_issue": 600,
     "same_harness_issue": 601,
     "external_harness": {
@@ -32,12 +32,13 @@
       "manual_workflow": ".github/workflows/amb-competitive.yml"
     },
     "same_harness_accepted_systems": [
-      "agent-memory (control; AMB lane v1, LongMemEval_S lane v2, and both -v2 lanes under the declared transition to Runtime Baseline v2)",
-      "bm25 (baseline, AMB lanes v1 and -v2)",
-      "lexical_overlap (baseline, LongMemEval_S lanes v2 and -v2)",
-      "mem0-oss 2.2.1 explicit-memory (comparator; all four lanes)"
+      "agent-memory (control; AMB lane v1, LongMemEval_S lane v1, both -v2 lanes under the declared transition to Runtime Baseline v2, and both -v3 lanes under the declared transition to Runtime Baseline v3)",
+      "agent-memory with semantic_retrieval=required (measured comparator variant; LongMemEval_S lane -v3 only; outside the scorecards, which hold one row per system)",
+      "bm25 (baseline, AMB lanes v1, -v2 and -v3)",
+      "lexical_overlap (baseline, LongMemEval_S lanes v1, -v2 and -v3)",
+      "mem0-oss 2.2.1 explicit-memory (comparator; all six lanes)"
     ],
-    "note": "The first same-harness lane (amb-precisionmembench-retrieval-v1) has three accepted rows from deliberate full-selection runs on 2026-10-05, each bound to its raw AMB artifact and execution identity under reports/benchmarks/amb/ and normalized into reports/benchmarks/normalized/ (retrieval, efficiency, reproducibility mapped from the harness's own summary table; one scorecard with BM25 as the lexical baseline). The rows are same_harness_external evidence for that lane only: no overall score, no market claim. The second lane (longmemeval-s-retrieval-parity-v1) has six accepted rows (three systems x two planes) from deliberate full-selection runs on 2026-10-06, each bound to its raw native report and execution identity under reports/benchmarks/longmemeval/ and normalized into reports/benchmarks/normalized/ (retrieval, currentness, efficiency and reproducibility mapped; one scorecard per plane with lexical_overlap as the lexical baseline). Mem0 OSS 2.2.1 explicit memory is now accepted on two frozen benchmarks; Hindsight remains the open second system under #640. The third lane generation (amb-precisionmembench-retrieval-v2, longmemeval-s-retrieval-parity-v2; accepted 2026-10-06) re-executes every row of its predecessors on main ca0f9a7 with the Agent Memory control under the declared transition to Runtime Baseline v2 (contract 1.4.0 return budget); nine rows bound under reports/benchmarks/amb/ and reports/benchmarks/longmemeval/, normalized under their own lane ids. A -v2 row is reported beside its -v1 row, never merged with it.",
+    "note": "The first same-harness lane (amb-precisionmembench-retrieval-v1) has three accepted rows from deliberate full-selection runs on 2026-10-05, each bound to its raw AMB artifact and execution identity under reports/benchmarks/amb/ and normalized into reports/benchmarks/normalized/ (retrieval, efficiency, reproducibility mapped from the harness's own summary table; one scorecard with BM25 as the lexical baseline). The rows are same_harness_external evidence for that lane only: no overall score, no market claim. The second lane (longmemeval-s-retrieval-parity-v1) has six accepted rows (three systems x two planes) from deliberate full-selection runs on 2026-10-06, each bound to its raw native report and execution identity under reports/benchmarks/longmemeval/ and normalized into reports/benchmarks/normalized/ (retrieval, currentness, efficiency and reproducibility mapped; one scorecard per plane with lexical_overlap as the lexical baseline). Mem0 OSS 2.2.1 explicit memory is now accepted on two frozen benchmarks; Hindsight remains the open second system under #640. The third lane generation (amb-precisionmembench-retrieval-v2, longmemeval-s-retrieval-parity-v2; accepted 2026-10-06) re-executes every row of its predecessors on main ca0f9a7 with the Agent Memory control under the declared transition to Runtime Baseline v2 (contract 1.4.0 return budget); nine rows bound under reports/benchmarks/amb/ and reports/benchmarks/longmemeval/, normalized under their own lane ids. A -v2 row is reported beside its -v1 row, never merged with it. The fourth lane generation (amb-precisionmembench-retrieval-v3, longmemeval-s-retrieval-parity-v3; frozen before any score, accepted 2026-10-07) re-executes every row on main 04bb286 under the declared transition to Runtime Baseline v3 (ranking policy 3.2.0, semantic route reachable, default off): eleven rows, every scored metric of every re-executed row equal to its -v2 row; the LongMemEval_S agent_memory_semantic row (pinned MiniLM ONNX representation) changes no scored metric on either plane and no per-question recall_all, matching its pre-registered prediction (#669 D2); its single semantic-only gold item ranks last of 116 admitted, the subordinate ordering of policy 3.2.0, and the movement gate transfers to #673.",
     "credential_free_profile": {
       "dataset": "precisionmembench",
       "split": "single-turn",

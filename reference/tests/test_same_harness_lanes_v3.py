@@ -14,7 +14,8 @@ import subprocess
 import unittest
 from pathlib import Path
 
-from agentmem_ref.evaluation.same_harness_lane import get_lane, resolve_lane, validate_lane
+from agentmem_ref.evaluation.registry import get_integration
+from agentmem_ref.evaluation.same_harness_lane import get_lane, lane_digest, resolve_lane, validate_lane
 from agentmem_ref.runtime import representation_onnx
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -52,7 +53,7 @@ def _as_frozen(lane: dict) -> dict:
     for row in frozen["systems"]:
         if row["status"] in {"executed", "accepted"}:
             row["status"] = "frozen"
-            row.pop("status_reason", None)
+            del row["status_reason"]
     frozen["findings"] = [item for item in frozen["findings"] if not item.startswith("accepted rows ")]
     return frozen
 
@@ -72,16 +73,46 @@ class _V3LaneMixin:
     def _lane(self) -> dict:
         return get_lane(self.lane_id)
 
-    def test_lane_is_frozen_without_scores_and_resolves(self):
+    def test_lane_is_accepted_without_scores_and_resolves(self):
         lane = validate_lane(self._lane())
-        self.assertEqual(lane["status"], "frozen")
+        self.assertEqual(lane["status"], "accepted")
         self.assertIs(lane["frozen_before_any_score"], True)
         self.assertEqual(lane["owning_issue"], 669)
         resolve_lane(lane)
         for row in lane["systems"]:
-            self.assertIn(row["status"], {"frozen", "deferred"}, row["row_id"])
-            if row["status"] == "frozen":
-                self.assertNotIn("status_reason", row)
+            self.assertIn(row["status"], {"accepted", "deferred"}, row["row_id"])
+            self.assertTrue(row["status_reason"], row["row_id"])
+        self.assertTrue(lane["findings"][-1].startswith("accepted rows 2026-10-07"))
+
+    def test_accepted_rows_are_bound_to_evidence_executed_under_the_v3_transition(self):
+        lane = self._lane()
+        integration = get_integration(lane["benchmark_integration"])
+        history = {entry["variant"]: entry for entry in integration["evidence_history"]}
+        for row in lane["systems"]:
+            prefix = f"lane:{self.lane_id}:{row['provider_key']}"
+            variants = [variant for variant in history if variant == prefix or variant.startswith(prefix + ":")]
+            if row["status"] == "deferred":
+                self.assertEqual([history[v]["status"] for v in variants], ["blocked"], row["row_id"])
+                continue
+            self.assertEqual(len(variants), self.planes_per_row, row["row_id"])
+            for variant in variants:
+                entry = history[variant]
+                self.assertEqual(entry["status"], "complete")
+                self.assertIn(variant, row["status_reason"])
+                record = json.loads((REPO_ROOT / entry["report"]).read_text(encoding="utf-8"))
+                self.assertEqual(record["row"]["provider_key"], row["provider_key"])
+                self.assertEqual(record["input"]["sha256"], entry["input_sha256"])
+                self.assertEqual(record["system"]["revision"], entry["system_revision"])
+                binding = record["system"]["runtime_baseline"]
+                self.assertEqual(binding["state"], "TRANSITION")
+                self.assertEqual(binding["declared_successor"], "agent-memory-runtime-baseline-v3")
+                self.assertIn("declared_successor=agent-memory-runtime-baseline-v3", binding["line"])
+                # Acceptance adds only statuses, status_reasons and one findings note; undoing them
+                # (no git history: CI checks out at depth 1) must give the digest the run executed.
+                self.assertEqual(record["lane_digest_at_execution"], lane_digest(_as_frozen(lane)))
+                self.assertEqual(record["lane_digest_at_execution"], record["execution"]["lane_digest_sha256"])
+                for path in entry.get("normalized_reports", []):
+                    self.assertTrue((REPO_ROOT / path).is_file(), path)
 
     def test_differs_from_v2_by_exactly_the_d5_list(self):
         v2, v3 = _flat(_as_frozen(get_lane(self.v2_id))), _flat(_as_frozen(self._lane()))
@@ -92,11 +123,10 @@ class _V3LaneMixin:
         allowed = (LANE_LEVEL - {"/findings", "/status"}) | {f"/systems/{self.control_key}{suffix}" for suffix in POSTURE | {"/display_name"}} | self.extra_differences
         self.assertEqual(changed, allowed)
         self.assertTrue(new_row)
-        # every row the -v2 lane froze is still here, and still frozen (or still deferred)
+        # every row of the -v2 lane is here with the same status (accepted, or still deferred)
         v2_rows = {row["provider_key"]: row["status"] for row in get_lane(self.v2_id)["systems"]}
         v3_rows = {row["provider_key"]: row["status"] for row in self._lane()["systems"]}
-        self.assertEqual({key: ("deferred" if status == "deferred" else "frozen") for key, status in v2_rows.items()},
-                         {key: status for key, status in v3_rows.items() if key != SEMANTIC_KEY})
+        self.assertEqual(v2_rows, {key: status for key, status in v3_rows.items() if key != SEMANTIC_KEY})
 
     def test_control_runs_the_shipped_default_under_the_v3_transition(self):
         control = next(row for row in self._lane()["systems"] if row["role"] == "control")
@@ -115,22 +145,29 @@ class _V3LaneMixin:
         register = json.loads((REPO_ROOT / "reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
         self.assertEqual(register["declared_successor"]["declaration"], V3_DECLARATION)
 
-    def test_reference_blobs_are_the_files_at_head(self):
+    def test_reference_blobs_are_the_ones_the_accepted_runs_executed(self):
         lane = self._lane()
-        for path, blob in lane["harness"]["source_blobs"].items():
-            if path.startswith("reference/"):
-                self.assertEqual(_blob(path), blob, path)
+        integration = get_integration(lane["benchmark_integration"])
+        reports = [entry["report"] for entry in integration["evidence_history"]
+                   if entry["variant"].startswith(f"lane:{self.lane_id}:") and entry["status"] == "complete"]
+        self.assertTrue(reports)
+        expected = {path: blob for path, blob in lane["harness"]["source_blobs"].items() if path.startswith("reference/")}
+        for report in reports:
+            execution = json.loads((REPO_ROOT / report).read_text(encoding="utf-8"))["execution"]
+            self.assertEqual(execution.get("source_blobs") or execution.get("bridge_blobs"), expected, report)
 
     def test_workflow_offers_and_defaults_to_this_lane(self):
         workflow = (REPO_ROOT / self.workflow_path).read_text(encoding="utf-8")
         self.assertIn(f"- {self.lane_id}", workflow)
         self.assertIn(f'default: "{self.lane_id}"', workflow)
+        self.assertIn('lane["status"] == "frozen"', workflow)  # an accepted lane is refused
 
 
 class LongMemEvalParityV3LaneTests(_V3LaneMixin, unittest.TestCase):
     lane_id = "longmemeval-s-retrieval-parity-v3"
     v2_id = "longmemeval-s-retrieval-parity-v2"
     control_key = "agent_memory"
+    planes_per_row = 2
     workflow_path = ".github/workflows/longmemeval-competitive.yml"
     extra_differences = {
         "/harness/source_blobs/reference/run_longmemeval.py",
@@ -158,7 +195,7 @@ class LongMemEvalParityV3LaneTests(_V3LaneMixin, unittest.TestCase):
         lane = self._lane()
         control = next(row for row in lane["systems"] if row["role"] == "control")
         row = next(row for row in lane["systems"] if row["provider_key"] == SEMANTIC_KEY)
-        self.assertEqual((row["role"], row["status"], row["row_id"]), ("comparator", "frozen", "agent-memory-semantic-route"))
+        self.assertEqual((row["role"], row["status"], row["row_id"]), ("comparator", "accepted", "agent-memory-semantic-route"))
         self.assertEqual(row["system_id"], control["system_id"])
         for key in ("source", "adapter", "inference_posture", "credentials", "capability_posture"):
             self.assertEqual(row[key], control[key], key)
@@ -200,6 +237,7 @@ class AmbPrecisionMemBenchV3LaneTests(_V3LaneMixin, unittest.TestCase):
     lane_id = "amb-precisionmembench-retrieval-v3"
     v2_id = "amb-precisionmembench-retrieval-v2"
     control_key = "agent-memory"
+    planes_per_row = 1
     workflow_path = ".github/workflows/amb-competitive.yml"
     extra_differences = {"/execution/execution_identity_requirements"}  # IA1: names the deferred row
 

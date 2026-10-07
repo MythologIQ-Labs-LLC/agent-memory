@@ -4121,3 +4121,38 @@ The plan freezes:
 Full suite: 2,180 tests; the only failure is the pre-existing environmental `test_gauntlet_durability` failure, identical on main.
 
 Next (D7, after merge): dispatch 8 LongMemEval and 3 AMB runs from `main`, import, accept per D1/D2, then docs/67 Step B1/B2.
+
+---
+
+### Entry #91: ACCEPTANCE — #669 `-v3` same-harness lanes (eleven rows); D1 holds, D2 prediction holds
+
+**Timestamp**: 2026-10-07T11:45:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Plan**: docs/plan-669-lanes-v3.md (Gate PASS Entry #89; implementation Entry #90; IA1, IA2)
+
+**Artifacts**:
+- raw evidence imported by `amb-evidence-import.yml` (commits 0350722, d2397ea, aa24b25):
+  - `reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/` (3 rows);
+  - `reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/` (8 row-planes);
+- lane files accepted;
+- evidence_history entries: 11 complete, plus 3 blocked (Hindsight in both lanes, and the AMB semantic row);
+- nine normalized manifests, regenerated scorecards and the UI catalog; the semantic row is excluded (IA2);
+- the dashboard, docs/65, the governance index and the `-v3` lane tests in their accepted form.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `ad324e0d38c3d957ba2ed5c45d382516427f9b4d`): `6bd415835e53bf36b23ac76324f1d48033348f090114f1ad0a0d78b08919539e`
+**Previous Hash**: `0b4899c26d395eeb2870983ca43be263e8a7a1a8237d97a47ed27959a5d4259d`
+**Chain Hash**: `a2725559c8221e08cddc221373ad47c063b82d26e5b8d284e795be27115f51a0`
+
+**Decision**: Both `-v3` lanes are accepted. Eleven dispatches ran on main 04bb286, all full selections with zero failures, and every row is bound to TRANSITION toward v3 at declaration blob 593fee1.
+
+D1 holds: every scored metric of every re-executed row equals its `-v2` row, on both benchmarks and both planes.
+
+D2 holds as pre-registered:
+- the semantic row changes no aggregate metric and no per-question recall_all on 419 questions per plane;
+- 2 and 123 semantic-only candidates were admitted (session and turn planes);
+- the single semantic-only gold item ranks 116 of 116, the subordinate ordering of policy 3.2.0.
+
+The movement gate transfers to #673. Next: Runtime Baseline v3 publication (docs/67 Step B1) against aede8fd, the merge of PR #707, citing these rows.

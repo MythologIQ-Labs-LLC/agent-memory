@@ -227,12 +227,12 @@ class SameHarnessLaneTests(unittest.TestCase):
         report = json.loads(output.getvalue())
         self.assertEqual(report["command"], "benchmark_lanes")
         self.assertEqual(report["authority_effect"], "none")
-        # lanes list in sorted id order: the accepted v1 and -v2 lanes and the two frozen -v3 lanes (#669)
+        # lanes list in sorted id order: the accepted v1, -v2 and -v3 lanes (#669)
         self.assertEqual(
             [lane["lane_id"] for lane in report["lanes"]],
             [LANE_ID, AMB_V2_LANE_ID, "amb-precisionmembench-retrieval-v3", LME_LANE_ID, LME_V2_LANE_ID, "longmemeval-s-retrieval-parity-v3"],
         )
-        self.assertEqual([lane["status"] for lane in report["lanes"]], ["accepted", "accepted", "frozen", "accepted", "accepted", "frozen"])
+        self.assertEqual([lane["status"] for lane in report["lanes"]], ["accepted"] * 6)
 
         output = io.StringIO()
         with contextlib.redirect_stdout(output):
