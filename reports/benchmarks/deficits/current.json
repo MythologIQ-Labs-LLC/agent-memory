@@ -12,21 +12,22 @@
       "evidence_class": "exact workload; published external references",
       "metric": "new_fact_rate",
       "direction": "higher",
-      "agent_memory": 0.2,
+      "agent_memory": 1.0,
       "same_harness_frontier": null,
       "published_frontier": {
         "system": "Naive RAG",
         "value": 1
       },
       "adequacy_target": ">=0.996 with wins attributable to currentness_mechanism",
-      "gap": "0.80 to published 1.0; mechanism gap is 250/250 temporal-applicability failures",
+      "gap": 0,
       "priority": "P1",
-      "posture": "architecture_gap",
+      "posture": "frontier",
       "primary_stage": "temporal_applicability_currentness",
       "secondary_stages": [],
       "evidence_refs": [
         "docs/69-agentmembench-mesa-formal-baseline.md",
-        "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_s2027_9170.json"
+        "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_s2027_9170.json",
+        "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v2_s2027_9170.json"
       ],
       "owning_issue": 671,
       "architecture_tranche": "#671 Option A read-path currentness",
@@ -41,11 +42,15 @@
         "M4 win_basis must move to currentness_mechanism",
         "no regression of frozen currentness guards"
       ],
-      "state": "remediating",
+      "state": "frontier",
       "opened_at": "2026-10-07",
-      "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": 0.8
+      "closed_at": "2026-10-07",
+      "closure_evidence": [
+        "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v2_s2027_9170.json (mesa-formal-v2 at a9fa962: new_fact 250/250, win_basis currentness_mechanism 250)",
+        "docs/META_LEDGER.md Entry #109 (-v5 acceptance: LongMemEval 1000/1000 and AMB 77/77 EQUAL to -v4, 0 UNATTRIBUTED; #580/#584 guards held)",
+        "scope: M4 under this frozen protocol only, kept as a regression floor; general currentness semantics are not measured (deficit cross-fact-currentness-generalization-2026-10-07, #732/#733)"
+      ],
+      "remaining_gap": 0
     },
     {
       "deficit_id": "longmemeval-s-turn-deep-recall-2026-10-07",

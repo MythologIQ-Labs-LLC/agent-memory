@@ -71,6 +71,16 @@ SOURCES = (
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/lexical_overlap-turn-f5a79d230a31/evidence.json"),
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-session-f5a79d230a31/evidence.json"),
     (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v4/mem0_explicit-turn-f5a79d230a31/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/agent-memory-e6f9db7f1db5/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/bm25-e6f9db7f1db5/evidence.json"),
+    (normalize_amb_precisionmembench, "reports/benchmarks/amb/amb-precisionmembench-retrieval-v5/mem0-explicit-e6f9db7f1db5/evidence.json"),
+    # plan-671-evidence-v5 E3: -v5 sources appended; the list only grows.
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/agent_memory-session-e6f9db7f1db5/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/agent_memory-turn-e6f9db7f1db5/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/lexical_overlap-session-e6f9db7f1db5/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/lexical_overlap-turn-e6f9db7f1db5/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/mem0_explicit-session-e6f9db7f1db5/evidence.json"),
+    (normalize_longmemeval_lane, "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v5/mem0_explicit-turn-e6f9db7f1db5/evidence.json"),
 )
 NORMALIZED = ROOT / "reports" / "benchmarks" / "normalized"
 SCORECARDS = ROOT / "reports" / "benchmarks" / "scorecards"

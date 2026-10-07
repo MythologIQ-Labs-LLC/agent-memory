@@ -4714,3 +4714,47 @@ The replay runs at this PR's merge commit.
 4. **Generation detection.** The importers detect the `-v5` generation from the lane-id suffix, because E4 allows no new lane field.
 
 **Next:** dispatch 6 LongMemEval and 3 AMB runs after merge, then acceptance (E7 step 6).
+
+---
+
+### Entry #109: ACCEPTANCE — `-v5` lanes and `mesa-formal-v2` (#671 C9, E7 step 6)
+
+**Timestamp**: 2026-10-07T17:45:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**: lane statuses, `evidence_history` entries, normalized manifests, scorecards, UI catalog, dashboard, docs/65, GOVERNANCE_INDEX, the deficit `mesa-m4-currentness-2026-10-07`, and the results section of docs/plan-671-evidence-v5.md
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `ccfe7642682e7cdb3918934c911ea79e19bdb6f3`): `b4ac506a19b3e315c9547226322322ca5e0dad7e960820b6ac9b2baf99f6e244`
+**Previous Hash**: `060e033b1480a0da0de3ba9bb0e5bfba76b09a22078fc9e844067b2fa7101ba7`
+**Chain Hash**: `41e93c53d2c5d4bd05d4daebf34f55cb1ff8d335ad67d45aebd45f9359b34c69`
+
+**Decision**: The `-v5` lanes and the `mesa-formal-v2` replay are accepted as Runtime Baseline v5 acceptance evidence.
+
+**Runs.** Nine runs on `e6f9db7` (LongMemEval 37683131261–37683151594; AMB 37683155424, 37683159251, 37683163020), imported onto this branch.
+
+**E1 causal attribution.**
+- LongMemEval: 1000 of 1000 questions are EQUAL to `-v4`.
+- AMB: 77 of 77 cases are EQUAL.
+- 0 candidates limited and 0 UNATTRIBUTED.
+- On the turn plane the mechanism evaluated 57 pairs and refused all of them: 55 `relation_not_state_change` and 2 `change_evidence_not_assertive:1`. This is recorded as observation only, never as G12 tuning input.
+
+**E3 comparators.**
+- Lexical overlap and BM25 equal `-v4` exactly.
+- Mem0 equals `-v4` on every metric. Its turn row reorders near-tied non-gold items on 45 of 500 questions (an environment finding; 4 at `-v4`).
+
+**E6 (MESA).** Accepted from Entry #107.
+
+**Guards.** Regenerated at the execution revision:
+- the C7 report is identical, with 0 blockers;
+- #584 M1–M15 and the #580 transition tables pass;
+- the full suite has 2329 tests, and the only failure is the pre-existing `test_gauntlet_durability`.
+
+**Deficit.** `mesa-m4-currentness-2026-10-07` moves to `frontier` (`agent_memory` 1.0, `remaining_gap` 0, `closed_at` 2026-10-07). Its closure is scoped to M4 under the frozen protocol, which is kept as a regression floor.
+
+**Owner posture (2026-10-07).**
+- General currentness semantics are **not measured**; that is `cross-fact-currentness-generalization-2026-10-07` (#732/#733).
+- #671 stays open.
+- G12 is frozen until the first independent generalization run.
+- The queue is v5 B1/B2 as pre-registered, then the #732 independent generalization decision gate against the unchanged v5 runtime, then the #673 re-plan. #673 is held until that gate is accepted, and until any remediation it requires is accepted too.

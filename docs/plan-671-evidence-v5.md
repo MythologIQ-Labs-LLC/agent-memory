@@ -262,3 +262,31 @@ The evidence has to show two things:
 ## Open Questions
 
 None.
+
+## Results (accepted 2026-10-07, META_LEDGER Entry #109)
+
+**MESA (E5/E6), Entry #107.** `mesa-formal-v2` was executed at `a9fa962`.
+- P1–P3 and P5 hold exactly: `outcomes {"new_fact": 250}` and `win_basis_counts {"currentness_mechanism": 250}`, with no unmet stage.
+- P6: every other phase, and the M2 diagnostics, equal v1.
+- The run is deterministic on re-execution.
+
+**Lanes (E1), nine runs on `e6f9db7`.**
+- LongMemEval: 1000 of 1000 questions are EQUAL to `-v4` across both planes.
+- AMB: 77 of 77 cases are EQUAL.
+- There are 0 limited candidates and 0 UNATTRIBUTED results.
+- On the LongMemEval turn plane the mechanism evaluated 57 pairs under explicit-current intent and refused all of them: 55 `relation_not_state_change` and 2 `change_evidence_not_assertive:1`.
+- This is recorded as observation only. It is never tuning input for G12, which stays frozen until the first independent generalization run (#732).
+
+**Comparators (E3).**
+- Lexical overlap and BM25 equal `-v4` exactly.
+- Mem0 equals `-v4` on every metric. Its LongMemEval turn row reorders near-tied non-gold items on 45 of 500 questions under the same pins. This is an environment finding, as at `-v4`.
+
+**Guards.**
+- The #584 M1–M15 tests and the #580 transition tables pass at the execution revision.
+- The C7 ordering-difference report, regenerated, has 0 blockers.
+
+**Interpretation (owner posture, 2026-10-07).**
+- MESA M4 is solved under this frozen protocol and kept as a regression floor.
+- General currentness semantics are **not measured**. The deficit `cross-fact-currentness-generalization-2026-10-07` (#733) tracks it.
+- G12 is a temporary safety envelope; #732 owns its replacement by typed write-time semantics.
+- #671 stays open. Perfect MESA is not sufficient closure evidence.
