@@ -44,11 +44,12 @@ The writer itself is deterministic: unchanged repository inputs produce the same
 
 ## Snapshot identity
 
-The snapshot identity is bound to the Git object identities of exactly three projection inputs:
+The snapshot identity is bound to the Git object identities of the projection inputs:
 
 - `reports/benchmarks/dashboard/current.json`;
 - `reports/benchmarks/scorecards/scorecards.json`;
-- the `reports/benchmarks/normalized/` Git tree.
+- the `reports/benchmarks/normalized/` Git tree;
+- `reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json`, the current accepted row-level diagnostic seed for the Failure Explorer.
 
 Conceptually:
 
@@ -56,7 +57,8 @@ Conceptually:
 git-evidence-v1:
   <dashboard blob>:
   <scorecards blob>:
-  <normalized tree>
+  <normalized tree>:
+  <diagnostic evidence blob>
 ~~~
 
 Unrelated repository commits do not create a new benchmark snapshot.
@@ -175,6 +177,21 @@ The missing-state vocabulary is:
 
 These states are never numeric zero.
 
+### diagnostics
+
+Row-level or aggregate diagnostic structures that are required by canonical engineering frames but are not part of the common normalized-run contract are projected explicitly rather than invented by the frontend.
+
+The first diagnostic is the accepted #594 Part R proposition-semantics population sample used by F09/F10:
+
+- n=100;
+- gold counts known=54, ambiguous=13, unknown=33;
+- known gold -> known=8, ambiguous=46, unknown=0;
+- accepted failure counters including wrong-slot, unknown-promoted-to-known, aspect mismatch, and aspect over-classification.
+
+This domain is evidence-bound and has `authority_effect: none`.
+
+A future formal MESA failure taxonomy may add another diagnostic only after its row-level evidence is accepted. The UI must not synthesize such a taxonomy early.
+
 ### evidence_index
 
 Every projected measured run resolves to its normalized manifest and any committed artifact pointers carried by that manifest.
@@ -254,6 +271,7 @@ The F1 contract tests cover:
 - evidence pointers for measured runs;
 - native metric identity;
 - coverage for every canonical PRD-002 wireframe seed class;
+- real #594 Part R failure-explorer diagnostic structure;
 - committed catalog freshness.
 
 This is the boundary that lets #699 and #700 proceed without inventing benchmark semantics in the frontend.
