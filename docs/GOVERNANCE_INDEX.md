@@ -16,7 +16,7 @@ These surfaces MUST describe current repository reality. A wrong version, stale 
 | Meta Ledger | `docs/META_LEDGER.md` | append-only historical decision/session evidence; artifact content is authoritative for ledger state |
 | System State | `docs/SYSTEM_STATE.md` | current state is carried by `main` plus live issue/PR evidence; production substrate qualification remains open |
 | Concept | `docs/CONCEPT.md` | current objective must point to live Backlog/System State/issues rather than retired plans |
-| Backlog | `docs/BACKLOG.md` | active RC queue centered on #410 and #427 plus developer-facade/end-to-end/release-evidence gates; external/longitudinal work separated |
+| Backlog | `docs/BACKLOG.md` | current queue under the 2026-10-07 owner direction (docs/68): Phase A formal external baseline (#694), then Phase B complete runtime architecture; five owner rulings recorded (roadmap seq 47-51, Entry #84) |
 | Feature Index | `docs/FEATURE_INDEX.md` | feature inventory; lifecycle state must be reconciled when implementation changes materially |
 | ADR index | `docs/adr/README.md` | ADR-001 through ADR-038; artifact status is authoritative |
 | Package contract | `pyproject.toml` | `agent-memory-reference` 0.2.0; #440 candidate pair is `agent-manifest==0.12.0` + `agentrust-trace==0.10.0`, subject to exact-head qualification before merge |
@@ -45,6 +45,7 @@ Stable architectural rules. Changes require explicit doctrine/contract work.
 | Lifecycle/correction/deletion doctrine | `docs/02-lifecycle-state-machine.md`, `docs/17-conflict-resolution-engine.md`, `docs/28-retention-deletion-and-tombstones.md`, `docs/31-recovery-rollback-and-replay.md` |
 | Schema contracts | `schemas/*.schema.json`, registry doctrine in `docs/27-schema-registry-and-type-evolution.md` |
 | Runtime Baseline succession | `docs/67-runtime-baseline-succession.md`, `reports/runtime/baseline-register.json` (v1 pinned, v2 current), `reports/runtime/baseline-v2.json`, `schemas/runtime-baseline-declaration.schema.json`, `scripts/check_runtime_baseline_equivalence.py` |
+| Baseline-first execution posture | `docs/68-baseline-first-complete-architecture-execution.md`, `docs/BACKLOG.md`, `.qor/roadmaps/north-star-best-in-class/events.jsonl` (owner rulings seq 47-51) |
 | Project governance | `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `.github/CODEOWNERS` |
 
 ## Tier 3: Active Initiatives
