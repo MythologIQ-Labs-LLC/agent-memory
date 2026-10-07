@@ -338,6 +338,19 @@ Four dispatches ran on `main` `f5a79d230a315829b456b9eef1bf0e77df30a902`, each o
 - **L9:** the sidecar joined 73 records. 68 report `frontier_exhausted` and 5 report `no_evidence`; those 5 cases had zero candidates. All decisions are `complete` and carry no authority. The 4 blank-query cases execute no recall and are reported as `no_recall_executed`, never as zero.
 - **Scorecards:** the shadow row stays outside them, which hold one row per system.
 
+### Accepted rows (lane `amb-precisionmembench-retrieval-v5`, 2026-10-07)
+
+The sixth lane generation (#671, plan `docs/plan-671-evidence-v5.md`) re-executes the `-v4` control and comparator rows at a runtime in the declared transition to Runtime Baseline v5: ranking policy 3.3.0, and bridge 0.4.0. The `agent-memory` row writes a cross-fact sidecar, `cross-fact.jsonl`, and the shadow row is deferred.
+
+Three dispatches ran on `main` `e6f9db7f1db571e56d81511c20c93768987b35d7`, each over the full 77-case selection, with checker state `TRANSITION` toward v5:
+- agent-memory, run 37683155424;
+- bm25, run 37683159251;
+- mem0-explicit, run 37683163020.
+
+**Results:**
+- **E1:** all 77 cases are EQUAL to the `-v4` control. The sidecar joined 73 records with 0 limited, and the 4 blank-query cases are `no_recall_executed`.
+- **E3:** BM25 and Mem0 equal `-v4` on the summary and on every case.
+
 ### Normalized manifests
 
 `normalize_amb_precisionmembench()` (`reference/agentmem_ref/evaluation/normalize.py`)

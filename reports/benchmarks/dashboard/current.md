@@ -39,7 +39,7 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 
 ## Competitive view — same-harness systems
 
-**Status: eight same-harness lanes accepted (#640, #669, #644; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06, the `-v3` generation under the declared transition to Runtime Baseline v3 and the `-v4` generation under the declared transition to Runtime Baseline v4 on 2026-10-07).**
+**Status: ten same-harness lanes accepted (#640, #669, #644, #671; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06, and the `-v3`, `-v4` and `-v5` generations under the declared transitions to Runtime Baselines v3, v4 and v5 on 2026-10-07).**
 
 #601 now has executable independent-harness infrastructure:
 
@@ -101,6 +101,18 @@ Session and turn are separate planes (separate scorecards) and are never average
 | mem0_explicit | comparator | turn | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37543565695 | 0.499 | 0.673 | 0.895 | 0.596 | 0.611 | 0.486 |
 
 Reading the generation change: the LongMemEval control's `unmapped_admitted_count_total` is 0 on both planes and every scored metric equals the v1 control's at every k, with the return budget applied on 39 of 500 session questions and 500 of 500 turn questions (the ranked prefix at 50 is the full ranking's prefix, exactly as #670 predicted). The AMB control's active passes, total passes, mean precision and mean recall equal the v1 control's: the only difference between the generations, mapped-among-top-k instead of skip-then-count, changed no case on this 77-case split. Neither equality is authority; both are what the frozen harnesses measured. Same-plane rule, no overall score, no market claim; Hindsight remains deferred under all four lanes.
+
+**Accepted same-harness rows (sixth lane generation, `amb-precisionmembench-retrieval-v5` and `longmemeval-s-retrieval-parity-v5`, 2026-10-07).**
+- **Freeze.** Both lanes were frozen before any score (PR #729, plan `docs/plan-671-evidence-v5.md`). They re-execute the control and comparator rows at a runtime in the declared transition to Runtime Baseline v5: ranking policy 3.3.0, with read-path cross-fact currentness under explicit-current recall.
+- **Runs.** Nine dispatches on `main` `e6f9db7`, all full selections. The checker recorded `TRANSITION` toward v5 on every row. The shadow rows are deferred (measured at `-v4`).
+- **Causal attribution (E1).**
+  - LongMemEval: all 1000 questions across both planes are EQUAL to `-v4`.
+  - AMB: all 77 cases are EQUAL.
+  - No candidate was limited on either lane, and none is UNATTRIBUTED.
+  - On the LongMemEval turn plane, the mechanism evaluated 57 pairs under explicit-current intent and refused all of them. 55 had no state-change relation, and 2 failed the G12 assertion filter.
+  - Every number in the `-v4` tables below therefore holds for `-v5`.
+- **Comparators (E3).** Lexical overlap and BM25 equal `-v4` exactly. Mem0 equals `-v4` on every metric. Its turn row reorders near-tied non-gold items on 45 of 500 questions (4 at `-v4`) under the same pins, which is an environment finding.
+- **Reading.** The `mesa-formal-v2` M4 result (new-fact 1.000, all wins credited to `currentness_mechanism`) holds under that frozen protocol only. On these natural-language lanes the mechanism is inert. Generalization of currentness semantics is not measured; it is tracked as `cross-fact-currentness-generalization-2026-10-07` (#732/#733).
 
 **Accepted same-harness rows (fifth lane generation, `amb-precisionmembench-retrieval-v4` and `longmemeval-s-retrieval-parity-v4`, 2026-10-07).**
 - **Freeze.** Both lanes were frozen before any score (PR #716, plan `docs/plan-644-lanes-v4.md`). They re-execute every executed `-v3` row at a runtime in the declared transition to Runtime Baseline v4: public contract 1.5.0 and opt-in shadow recall control, with ranking policy 3.2.0 unchanged.

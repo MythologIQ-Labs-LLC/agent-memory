@@ -30,6 +30,7 @@ from pathlib import Path
 from unittest import mock
 
 from agentmem_ref import AgentMemory
+from agentmem_ref.evaluation.registry import get_integration
 from agentmem_ref.evaluation.same_harness_lane import get_lane, lane_digest, resolve_lane, validate_lane
 from agentmem_ref.runtime import runtime_composition
 
@@ -96,13 +97,13 @@ class _V5LaneMixin:
     def test_lane_validates_resolves_and_is_frozen_before_any_score(self):
         lane = validate_lane(self._lane())
         resolve_lane(lane)
-        self.assertEqual(lane["status"], "frozen")
+        self.assertEqual(lane["status"], "accepted")  # accepted at META_LEDGER Entry #109
         self.assertIs(lane["frozen_before_any_score"], True)
         self.assertEqual(lane["owning_issue"], 671)
         self.assertEqual(lane["frozen_on"], "2026-10-07")
 
     def test_differs_from_v4_by_exactly_the_e4_list(self):
-        v4, v5 = _flat(_as_frozen(self._v4())), _flat(self._lane())
+        v4, v5 = _flat(_as_frozen(self._v4())), _flat(_as_frozen(self._lane()))
         changed = {path for path in set(v4) | set(v5) if v4.get(path, "<absent>") != v5.get(path, "<absent>")}
         allowed = (
             LANE_LEVEL
@@ -113,7 +114,7 @@ class _V5LaneMixin:
         self.assertEqual(changed, allowed)
 
     def test_rows_findings_and_statuses_follow_e4(self):
-        v4, lane = self._v4(), self._lane()
+        v4, lane = self._v4(), _as_frozen(self._lane())
         self.assertEqual(lane["findings"], [item for item in v4["findings"] if not item.startswith("accepted rows ")])  # IA1
         self.assertEqual(len(lane["findings"]), len(v4["findings"]) - 1)
         before = {row["provider_key"]: row for row in v4["systems"]}
@@ -127,6 +128,39 @@ class _V5LaneMixin:
                 self.assertNotIn("status_reason", row)
             else:
                 self.assertEqual(row["status"], "deferred", key)
+
+    def test_accepted_rows_are_bound_to_evidence_executed_under_the_v5_transition(self):
+        # plan-671-evidence-v5 E7 step 6: every executed row is accepted and bound by its
+        # evidence_history entries; deferred rows are recorded as blocked. Acceptance adds only
+        # statuses, status_reasons and one findings note, so undoing them gives the executed digest.
+        lane = self._lane()
+        self.assertEqual(lane["status"], "accepted")
+        integration = get_integration(lane["benchmark_integration"])
+        history = {entry["variant"]: entry for entry in integration["evidence_history"]}
+        for row in lane["systems"]:
+            prefix = f"lane:{self.lane_id}:{row['provider_key']}"
+            variants = [variant for variant in history if variant == prefix or variant.startswith(prefix + ":")]
+            if row["status"] == "deferred":
+                self.assertEqual([history[v]["status"] for v in variants], ["blocked"], row["row_id"])
+                continue
+            self.assertEqual(row["status"], "accepted", row["row_id"])
+            self.assertEqual(len(variants), self.planes_per_row, row["row_id"])
+            for variant in variants:
+                entry = history[variant]
+                self.assertEqual(entry["status"], "complete")
+                self.assertIn(variant, row["status_reason"])
+                record = json.loads((REPO_ROOT / entry["report"]).read_text(encoding="utf-8"))
+                self.assertEqual(record["row"]["provider_key"], row["provider_key"])
+                binding = record["system"]["runtime_baseline"]
+                self.assertEqual(binding["state"], "TRANSITION")
+                self.assertEqual(binding["declared_successor"], "agent-memory-runtime-baseline-v5")
+                self.assertEqual(record["lane_digest_at_execution"], lane_digest(_as_frozen(lane)))
+                self.assertEqual(record["lane_digest_at_execution"], record["execution"]["lane_digest_sha256"])
+                # as at -v4: the LongMemEval entries name their normalized manifests; AMB entries do not
+                self.assertEqual(bool(entry.get("normalized_reports")), self.planes_per_row == 2, variant)
+                for path in entry.get("normalized_reports", []):
+                    self.assertTrue((REPO_ROOT / path).is_file(), path)
+        self.assertTrue(any("0 UNATTRIBUTED" in item for item in lane["findings"]))
 
     def test_control_runs_the_facade_default_under_the_v5_transition(self):
         lane = self._lane()
@@ -185,6 +219,7 @@ class _V5LaneMixin:
 
 
 class LongMemEvalParityV5LaneTests(_V5LaneMixin, unittest.TestCase):
+    planes_per_row = 2
     lane_id = "longmemeval-s-retrieval-parity-v5"
     v4_id = "longmemeval-s-retrieval-parity-v4"
     control_key = "agent_memory"
@@ -245,6 +280,7 @@ class LongMemEvalParityV5LaneTests(_V5LaneMixin, unittest.TestCase):
 
 
 class AmbPrecisionMemBenchV5LaneTests(_V5LaneMixin, unittest.TestCase):
+    planes_per_row = 1
     lane_id = "amb-precisionmembench-retrieval-v5"
     v4_id = "amb-precisionmembench-retrieval-v4"
     control_key = "agent-memory"
