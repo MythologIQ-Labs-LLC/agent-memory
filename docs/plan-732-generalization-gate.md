@@ -135,7 +135,7 @@ This plan:
 - **`K5_structure_<family>`** (C5). This applies to base cases only (F3); variants are governed by K6.
   - **Source comparison.** "Same" compares the **effective** `source_ref`, where null means `actor:<actor_id of that write's handle>` (F1). The exception is N9, which compares the **declared** `source_ref`, with null equal to null (H1). This matches the brief's literal "same `source_ref`".
     - For N9, the effective sources necessarily differ, and the runtime refuses at G8 `actor_mismatch` either way (attempt-4 audit, executed).
-    - In every other family both writes share a handle, so the effective and declared comparisons agree.
+    - In every other family the two comparisons agree. Either both writes share a handle, or (N7) both sources are non-null, and K1 rules out `actor:` values.
   - A non-null `source_ref` beginning with `actor:` fails `K1_fields` outright, so that an author cannot accidentally restate the implicit actor source.
   - **P, R, N1–N6, N11, N12:** older and newer have the same `handle`, `scope` and `source_ref`; `actions` is empty; `recall_as` is the older write's `(handle, scope)`.
   - **N7:** same `scope`; both `source_ref`s are non-null and different; `actions` is empty.
