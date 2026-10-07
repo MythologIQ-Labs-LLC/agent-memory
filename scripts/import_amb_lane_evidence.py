@@ -184,6 +184,7 @@ def native_summary(summary: dict) -> dict:
 
 
 SIDECAR_NAME = "recall-control.jsonl"
+CROSS_FACT_SIDECAR_NAME = "cross-fact.jsonl"
 BLANK_QUERY_CONTEXT = "## Retrieved memories (0)"
 
 
@@ -240,6 +241,49 @@ def join_recall_control_sidecar(lines: list[str], results: list[dict]) -> dict:
         "actual_stop_reason_counts": dict(sorted(stops.items())),
         "decision_status_counts": dict(sorted(statuses.items())),
         "would_truncate_case_counts": dict(sorted(truncating.items())),
+        "authority_effect": "none",
+    }
+
+
+def join_cross_fact_sidecar(lines: list[str], results: list[dict]) -> dict:
+    """Join #671 bridge-0.4.0 attribution to non-blank AMB cases in source order."""
+
+    records = [json.loads(line) for line in lines if line.strip()]
+    if [record.get("call_index") for record in records] != list(range(len(records))):
+        raise ImportError_("cross-fact sidecar call_index is not contiguous from 0")
+    asked = [case for case in results if (case.get("query") or "").strip()]
+    blank = [case for case in results if not (case.get("query") or "").strip()]
+    if len(records) != len(asked):
+        raise ImportError_(
+            f"cross-fact sidecar has {len(records)} records for {len(asked)} non-blank-query cases"
+        )
+    for record, case in zip(records, asked):
+        digest = hashlib.sha256(str(case["query"]).encode("utf-8")).hexdigest()
+        if record.get("query_sha256") != digest:
+            raise ImportError_(
+                f"cross-fact record {record.get('call_index')} does not match case {case.get('query_id')}"
+            )
+        limited = record.get("limited_document_ids")
+        if not isinstance(limited, list) or record.get("limited_count") != len(limited):
+            raise ImportError_("cross-fact limited_document_ids does not match limited_count")
+        if not isinstance(record.get("returned_document_ids"), list):
+            raise ImportError_("cross-fact record lacks returned_document_ids")
+        off = record.get("returned_document_ids_mechanism_off")
+        if record.get("limited_count", 0) > 0 and not isinstance(off, list):
+            raise ImportError_(
+                f"limited case {case.get('query_id')} lacks mechanism-off document order"
+            )
+        if record.get("limited_count", 0) == 0 and off is not None:
+            raise ImportError_(
+                f"unlimited case {case.get('query_id')} unexpectedly ran mechanism-off"
+            )
+        if not isinstance(record.get("refusal_counts"), dict):
+            raise ImportError_("cross-fact refusal_counts must be a mapping")
+    return {
+        "records": len(records),
+        "no_recall_executed_cases": len(blank),
+        "cases_with_limitation": sum(1 for record in records if record.get("limited_count", 0) > 0),
+        "limited_count_total": sum(int(record.get("limited_count", 0)) for record in records),
         "authority_effect": "none",
     }
 
@@ -327,6 +371,35 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
         recall_control_sidecar = {"file": SIDECAR_NAME, "sha256": files[SIDECAR_NAME], **joined}
     elif sidecar_source.exists():
         raise ImportError_(f"row {row['row_id']} runs recall_control off but the artifact carries {SIDECAR_NAME}")
+
+    cross_fact_source = artifact_dir / CROSS_FACT_SIDECAR_NAME
+    cross_fact_sidecar = None
+    v5 = lane.get("lane_id") == "amb-precisionmembench-retrieval-v5"
+    v5_control = v5 and row.get("provider_key") == "agent-memory"
+    if v5_control:
+        if not cross_fact_source.is_file():
+            raise ImportError_(f"v5 Agent Memory control artifact lacks {CROSS_FACT_SIDECAR_NAME}")
+        shutil.copyfile(cross_fact_source, destination / CROSS_FACT_SIDECAR_NAME)
+        files[CROSS_FACT_SIDECAR_NAME] = sha256_of(destination / CROSS_FACT_SIDECAR_NAME)
+        if inventory.get(CROSS_FACT_SIDECAR_NAME) != files[CROSS_FACT_SIDECAR_NAME]:
+            raise ImportError_(
+                f"{CROSS_FACT_SIDECAR_NAME}: copied digest {files[CROSS_FACT_SIDECAR_NAME]} "
+                f"!= inventory {inventory.get(CROSS_FACT_SIDECAR_NAME)}"
+            )
+        joined = join_cross_fact_sidecar(
+            (destination / CROSS_FACT_SIDECAR_NAME).read_text(encoding="utf-8").splitlines(),
+            summary.get("results") or [],
+        )
+        cross_fact_sidecar = {
+            "file": CROSS_FACT_SIDECAR_NAME,
+            "sha256": files[CROSS_FACT_SIDECAR_NAME],
+            **joined,
+        }
+    elif v5 and cross_fact_source.exists():
+        raise ImportError_(
+            f"v5 non-control row {row['row_id']} must not carry {CROSS_FACT_SIDECAR_NAME}"
+        )
+
     if summary.get("memory_provider") != identity["memory"] or summary.get("mode") != "retrieval":
         raise ImportError_("EvalSummary provider/mode do not match the execution identity")
     if summary.get("total_queries") != lane["dataset"]["query_count"]:
@@ -383,6 +456,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
         },
         "native_summary": native_summary(summary),
         "recall_control_sidecar": recall_control_sidecar,
+        "cross_fact_sidecar": cross_fact_sidecar,
         "files": files,
         "authority_effect": "none",
     }
