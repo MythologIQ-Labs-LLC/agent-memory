@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -244,6 +245,87 @@ def join_recall_control_sidecar(lines: list[str], results: list[dict]) -> dict:
     }
 
 
+CROSS_FACT_SIDECAR_NAME = "cross-fact.jsonl"
+#: The first lane generation whose ``agent-memory`` row must carry the cross-fact sidecar
+#: (plan-671-evidence-v5 E2): ``amb-precisionmembench-retrieval-v5`` and later.
+CROSS_FACT_FIRST_GENERATION = 5
+CROSS_FACT_PROVIDER_KEY = "agent-memory"
+CROSS_FACT_RECORD_FIELDS = (
+    "call_index",
+    "scope",
+    "query_sha256",
+    "budget",
+    "limited_count",
+    "limited_document_ids",
+    "refusal_counts",
+    "returned_document_ids",
+    "returned_document_ids_mechanism_off",
+)
+_GENERATION_RE = re.compile(r"-v(\d+)$")
+
+
+def lane_generation(lane: dict) -> int:
+    """The lane generation its id names (``...-v5`` is 5; the unsuffixed v1 id is 1)."""
+
+    found = _GENERATION_RE.search(str(lane["lane_id"]))
+    return int(found.group(1)) if found else 1
+
+
+def requires_cross_fact_sidecar(lane: dict, row: dict) -> bool:
+    return lane_generation(lane) >= CROSS_FACT_FIRST_GENERATION and row["provider_key"] == CROSS_FACT_PROVIDER_KEY
+
+
+def join_cross_fact_sidecar(lines: list[str], results: list[dict]) -> dict:
+    """Join the bridge 0.4.0 cross-fact sidecar to the EvalSummary cases (plan-671-evidence-v5 E2).
+
+    The join rules are L9's: concurrency 1, ``call_index`` contiguous from 0, no adjacent
+    duplicate ``(scope, query_sha256)``, exactly one record per non-blank-query case in
+    ``results[]`` order, each ``query_sha256`` the sha256 of its case's query, and none for a
+    blank-query case (``retrieved_count == 0``, ``resolution == {}``, the empty context). Any
+    mismatch refuses the import. The records are evidence for the E1 attribution check, never
+    benchmark authority.
+    """
+
+    records = [json.loads(line) for line in lines if line.strip()]
+    if [record.get("call_index") for record in records] != list(range(len(records))):
+        raise ImportError_("cross-fact sidecar call_index is not contiguous from 0")
+    for previous, current in zip(records, records[1:]):
+        if (previous.get("scope"), previous.get("query_sha256")) == (current.get("scope"), current.get("query_sha256")):
+            raise ImportError_(f"cross-fact sidecar has adjacent duplicate records at call_index {current['call_index']}")
+    asked = [case for case in results if (case.get("query") or "").strip()]
+    blank = [case for case in results if not (case.get("query") or "").strip()]
+    if len(records) != len(asked):
+        raise ImportError_(f"cross-fact sidecar has {len(records)} records for {len(asked)} non-blank-query cases")
+    for case in blank:
+        meta = case.get("meta") or {}
+        if meta.get("retrieved_count") != 0 or meta.get("resolution") != {} or case.get("context") != BLANK_QUERY_CONTEXT:
+            raise ImportError_(f"blank-query case {case.get('query_id')} shows a retrieval")
+    refusals: dict[str, int] = {}
+    for record, case in zip(records, asked):
+        if set(record) != set(CROSS_FACT_RECORD_FIELDS):
+            raise ImportError_(f"cross-fact record {record.get('call_index')} does not carry exactly the bridge 0.4.0 fields")
+        digest = hashlib.sha256(str(case["query"]).encode("utf-8")).hexdigest()
+        if record["query_sha256"] != digest:
+            raise ImportError_(f"cross-fact record {record['call_index']} does not match case {case.get('query_id')}")
+        limited = record["limited_count"]
+        if not isinstance(limited, int) or limited < 0 or len(record["limited_document_ids"] or []) != limited:
+            raise ImportError_(f"cross-fact record {record['call_index']} limited_count is malformed")
+        if (record["returned_document_ids_mechanism_off"] is None) != (limited == 0):
+            raise ImportError_(
+                f"cross-fact record {record['call_index']} returned_document_ids_mechanism_off must be null exactly when limited_count is 0"
+            )
+        for reason, count in (record["refusal_counts"] or {}).items():
+            refusals[str(reason)] = refusals.get(str(reason), 0) + int(count)
+    return {
+        "records": len(records),
+        "no_recall_executed_cases": len(blank),
+        "cases_with_limited": sum(1 for record in records if record["limited_count"] > 0),
+        "limited_total": sum(record["limited_count"] for record in records),
+        "refusal_counts": dict(sorted(refusals.items())),
+        "authority_effect": "none",
+    }
+
+
 def find_artifact_dirs(runs_dir: Path) -> list[tuple[str, Path]]:
     found: list[tuple[str, Path]] = []
     for identity in sorted(runs_dir.rglob("execution-identity.json")):
@@ -327,6 +409,23 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
         recall_control_sidecar = {"file": SIDECAR_NAME, "sha256": files[SIDECAR_NAME], **joined}
     elif sidecar_source.exists():
         raise ImportError_(f"row {row['row_id']} runs recall_control off but the artifact carries {SIDECAR_NAME}")
+    cross_fact_source = artifact_dir / CROSS_FACT_SIDECAR_NAME
+    cross_fact_sidecar = None
+    if requires_cross_fact_sidecar(lane, row):
+        if not cross_fact_source.is_file():
+            raise ImportError_(f"row {row['row_id']} of {lane['lane_id']} artifact lacks {CROSS_FACT_SIDECAR_NAME}")
+        shutil.copyfile(cross_fact_source, destination / CROSS_FACT_SIDECAR_NAME)
+        files[CROSS_FACT_SIDECAR_NAME] = sha256_of(destination / CROSS_FACT_SIDECAR_NAME)
+        if inventory.get(CROSS_FACT_SIDECAR_NAME) != files[CROSS_FACT_SIDECAR_NAME]:
+            raise ImportError_(
+                f"{CROSS_FACT_SIDECAR_NAME}: copied digest {files[CROSS_FACT_SIDECAR_NAME]} != inventory {inventory.get(CROSS_FACT_SIDECAR_NAME)}"
+            )
+        joined = join_cross_fact_sidecar(
+            (destination / CROSS_FACT_SIDECAR_NAME).read_text(encoding="utf-8").splitlines(), summary.get("results") or []
+        )
+        cross_fact_sidecar = {"file": CROSS_FACT_SIDECAR_NAME, "sha256": files[CROSS_FACT_SIDECAR_NAME], **joined}
+    elif cross_fact_source.exists():
+        raise ImportError_(f"row {row['row_id']} of {lane['lane_id']} does not declare {CROSS_FACT_SIDECAR_NAME} but the artifact carries it")
     if summary.get("memory_provider") != identity["memory"] or summary.get("mode") != "retrieval":
         raise ImportError_("EvalSummary provider/mode do not match the execution identity")
     if summary.get("total_queries") != lane["dataset"]["query_count"]:
@@ -383,6 +482,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
         },
         "native_summary": native_summary(summary),
         "recall_control_sidecar": recall_control_sidecar,
+        "cross_fact_sidecar": cross_fact_sidecar,
         "files": files,
         "authority_effect": "none",
     }

@@ -6,13 +6,14 @@ on:
       lane_id:
         description: "Frozen PrecisionMemBench retrieval lane this run executes when dataset=precisionmembench and mode=retrieval (an accepted lane is refused)"
         required: true
-        default: "amb-precisionmembench-retrieval-v4"
+        default: "amb-precisionmembench-retrieval-v5"
         type: choice
         options:
           - amb-precisionmembench-retrieval-v1
           - amb-precisionmembench-retrieval-v2
           - amb-precisionmembench-retrieval-v3
           - amb-precisionmembench-retrieval-v4
+          - amb-precisionmembench-retrieval-v5
       dataset:
         description: "AMB dataset"
         required: true
@@ -275,6 +276,12 @@ jobs:
             # Bridge 0.3.0 writes one shadow telemetry line per retrieve() call (plan-644-lanes-v4 L9):
             # the frozen runner keeps no provider raw response, so this sidecar is the only carrier.
             export AGENT_MEMORY_AMB_RECALL_CONTROL_SIDECAR="$RUNNER_TEMP/amb-output/recall-control.jsonl"
+          fi
+          if [ "${{ inputs.memory }}" = "agent-memory" ]; then
+            # Bridge 0.4.0 writes one cross-fact line per retrieve() call (plan-671-evidence-v5 E2): the
+            # limitation the facade reports and, when a candidate is limited, the mechanism-off document
+            # order the E1 attribution check needs. The -v5 importer refuses an agent-memory artifact without it.
+            export AGENT_MEMORY_AMB_CROSS_FACT_SIDECAR="$RUNNER_TEMP/amb-output/cross-fact.jsonl"
           fi
           PYTHONPATH=reference python reference/run_amb_external.py --amb-root .external/amb -- "${args[@]}"
 

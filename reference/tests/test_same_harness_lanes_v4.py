@@ -134,7 +134,8 @@ class _V4LaneMixin:
     def test_workflow_offers_and_defaults_to_this_lane_and_the_shadow_row(self):
         workflow = (REPO_ROOT / self.workflow_path).read_text(encoding="utf-8")
         self.assertIn(f"- {self.lane_id}", workflow)
-        self.assertIn(f'default: "{self.lane_id}"', workflow)
+        # The default moved to the -v5 lane (plan-671-evidence-v5 E4/E8); this accepted lane stays offered.
+        self.assertRegex(workflow, r'default: "' + self.lane_id.rsplit("-v", 1)[0] + r'-v[45]"')
         self.assertIn(f"- {self.shadow_key}", workflow)
         self.assertIn('python-version: "3.12"', workflow)  # the AMB join relies on 3.12's FIFO semaphore
 
@@ -164,7 +165,13 @@ class LongMemEvalParityV4LaneTests(_V4LaneMixin, unittest.TestCase):
     def test_runner_blob_is_pinned_everywhere(self):
         lane = self._lane()
         runner_blob = lane["harness"]["source_blobs"]["reference/run_longmemeval.py"]
-        self.assertEqual(runner_blob, _blob("reference/run_longmemeval.py"))
+        # The lane is accepted: its runner pin is a fact about the runs it bound, compared with the
+        # committed evidence records, not HEAD (the -v5 lanes re-pin the runner; plan-671-evidence-v5 E8).
+        records = sorted((REPO_ROOT / "reports/benchmarks/longmemeval" / self.lane_id).glob("*/evidence.json"))
+        self.assertEqual(len(records), 8)
+        for record_path in records:
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            self.assertEqual(record["execution"]["source_blobs"]["reference/run_longmemeval.py"], runner_blob, record_path.parent.name)
         self.assertIn(runner_blob, lane["evaluator"]["scorer"])
         v3_blob = get_lane(self.v3_id)["harness"]["source_blobs"]["reference/run_longmemeval.py"]
         self.assertNotIn(v3_blob, json.dumps(lane))  # every text naming the runner blob was updated
@@ -205,8 +212,14 @@ class AmbPrecisionMemBenchV4LaneTests(_V4LaneMixin, unittest.TestCase):
         lane = self._lane()
         control = next(row for row in lane["systems"] if row["role"] == "control")
         blob = lane["harness"]["source_blobs"]["reference/amb_agent_memory_bridge.py"]
-        self.assertEqual(blob, _blob("reference/amb_agent_memory_bridge.py"))
-        self.assertEqual(bridge.BRIDGE_VERSION, "0.3.0")
+        # The lane is accepted (plan-671-evidence-v5 E8, A6): the bridge blob is compared with the
+        # committed evidence records, not HEAD, and bridge_version 0.3.0 with the lane's own
+        # revision_rule; the live bridge moved to 0.4.0 under the -v5 lane.
+        records = sorted((REPO_ROOT / "reports/benchmarks/amb" / self.lane_id).glob("*/evidence.json"))
+        self.assertEqual(len(records), 4)
+        for record_path in records:
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            self.assertEqual(record["execution"]["bridge_blobs"]["reference/amb_agent_memory_bridge.py"], blob, record_path.parent.name)
         self.assertIn("bridge_version 0.3.0", control["adapter"]["revision_rule"])
         self.assertIn(blob, control["adapter"]["revision_rule"])
         self.assertEqual(bridge.AMB_SHADOW_PROVIDER_KEY, self.shadow_key)

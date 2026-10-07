@@ -20,11 +20,9 @@ new fields. Blockers (exit status 1): a #580 change outside the pre-registered t
 from __future__ import annotations
 
 import argparse
-import dataclasses
 import json
 import sys
 import tempfile
-from contextlib import contextmanager
 from pathlib import Path
 
 REFERENCE = Path(__file__).resolve().parent
@@ -33,12 +31,8 @@ sys.path.insert(0, str(REFERENCE / "tests"))
 
 from agentmem_ref import AgentMemory  # noqa: E402
 from agentmem_ref.runtime import cross_fact_currentness as cf  # noqa: E402
-from agentmem_ref.runtime import runtime_composition  # noqa: E402
-from agentmem_ref.runtime.temporal_order_constraints import (  # noqa: E402
-    CROSS_FACT_POLICY,
-    POLICY_VERSION,
-    ExplicitCurrentConstrainedRankingPolicy,
-)
+from agentmem_ref.runtime.temporal_order_constraints import CROSS_FACT_POLICY, POLICY_VERSION  # noqa: E402
+from cross_fact_mechanism_off import mechanism  # noqa: E402 - the single harness definition (plan-671-evidence-v5 E2)
 from run_semantic_route_ordering_report import CONFLICT_TEMPLATES, run_580, run_584  # noqa: E402
 from test_temporal_currentness_gauntlet import (  # noqa: E402
     VERSIONED_CROSS_FACT_REORDERS,
@@ -66,29 +60,6 @@ CONTROLS = {
     "two-lowercase": ("The user prefers coffee.", "The user now prefers green tea."),
     "no-marker": (DENVER, "The user lives in Boston."),
 }
-
-
-class _LegacyPolicy:
-    def __init__(self, live):
-        names = {f.name for f in dataclasses.fields(ExplicitCurrentConstrainedRankingPolicy) if f.init} - {"version"}
-        self._policy = ExplicitCurrentConstrainedRankingPolicy(**{name: getattr(live, name) for name in names})
-
-    def rank(self, *args, cross_fact=None, **kwargs):
-        return self._policy.rank(*args, **kwargs)
-
-    def identity(self):
-        return self._policy.identity()
-
-
-@contextmanager
-def mechanism(mode: str):
-    live = runtime_composition.MULTI_ROUTE_RANKING_POLICY
-    if mode == "off":
-        runtime_composition.MULTI_ROUTE_RANKING_POLICY = _LegacyPolicy(live)
-    try:
-        yield
-    finally:
-        runtime_composition.MULTI_ROUTE_RANKING_POLICY = live
 
 
 def _cross_fact_view(recall: dict, ref: str) -> dict:

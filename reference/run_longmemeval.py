@@ -37,6 +37,7 @@ from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
 from benchmark_ranking_variants import VARIANTS, apply_ranking_variant
 from agentmem_ref import AgentMemory
+from cross_fact_mechanism_off import limited_refs, mechanism, refusal_counts
 
 
 UPSTREAM_REPOSITORY = "xiaowu0162/LongMemEval"
@@ -598,6 +599,14 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
             recall_kwargs = {} if budget == "none" else {"budget": int(budget)}
             recalled = memory.recall(question, reference_time=reference_time, **recall_kwargs)
             recall_seconds = time.perf_counter() - started
+            # plan-671-evidence-v5 E2/A4: the mechanism-off recompute is one more read of the
+            # same store, after the on recall and outside every timed span; it runs only when
+            # the on recall limited a candidate (otherwise off equals on by C3 off-equivalence).
+            limited = limited_refs(recalled)
+            recalled_off = None
+            if limited:
+                with mechanism("off"):
+                    recalled_off = memory.recall(question, reference_time=reference_time, **recall_kwargs)
             if semantic != "off" and not _SEMANTIC_POSTURE:
                 _SEMANTIC_POSTURE.update(_recorded_semantic_posture(memory.semantic_retrieval_posture()))
     unmapped_admitted = [value for value in recalled["admitted"] if value not in uuid_to_item]
@@ -610,6 +619,14 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
     extra = {"observed_at_mapped_count": observed_mapped, "observed_at_unmapped_count": observed_unmapped} if declare_observed else {}
     if shadow:
         extra["recall_control"] = recorded_recall_control(recalled.get("recall_control"))
+    extra["cross_fact"] = {
+        "limited_count": len(limited),
+        "limited_item_ids": [uuid_to_item.get(value) for value in limited],
+        "refusal_counts": refusal_counts(recalled),
+        "ranked_top_mechanism_off": None
+        if recalled_off is None
+        else [uuid_to_item[value] for value in recalled_off["returned"] if value in uuid_to_item][:REPORTED_RANK_DEPTH],
+    }
     if semantic != "off":
         # Gold-blind trace: item ids only. Gold is joined after scoring (_semantic_route_diagnostics).
         extra["_semantic_trace"] = {
@@ -666,6 +683,22 @@ def recall_control_summary(records: Sequence[Mapping[str, Any]]) -> dict[str, An
         "actual_stop_reason_counts": dict(sorted(stops.items())),
         "decision_status_counts": dict(sorted(statuses.items())),
         "would_truncate_question_counts": dict(sorted(truncating.items())),
+        "authority_effect": "none",
+    }
+
+
+def cross_fact_summary(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Aggregate the per-question ``cross_fact`` records (plan-671-evidence-v5 E2): counts only."""
+
+    refusals: dict[str, int] = {}
+    for record in records:
+        for reason, count in (record.get("refusal_counts") or {}).items():
+            refusals[str(reason)] = refusals.get(str(reason), 0) + int(count)
+    return {
+        "questions_with_record": len(records),
+        "questions_with_limited": sum(1 for record in records if record.get("limited_count", 0) > 0),
+        "limited_total": sum(int(record.get("limited_count", 0)) for record in records),
+        "refusal_counts": dict(sorted(refusals.items())),
         "authority_effect": "none",
     }
 
@@ -930,6 +963,8 @@ def _evaluate_backend(dataset: Iterable[Mapping[str, Any]], granularity: str, ba
             "unmapped_admitted_count_total": sum(row.get("unmapped_admitted_count", 0) for row in rows),
             "return_budget_applied_total": sum(1 for row in rows if (row.get("return_policy") or {}).get("applied") is True),
         }
+        # Every error-free agent_memory question carries a cross_fact record; an error row none.
+        result["cross_fact_summary"] = cross_fact_summary([row["cross_fact"] for row in rows if "cross_fact" in row])
         if any("recall_control" in row for row in rows):
             result["recall_control_summary"] = recall_control_summary(
                 [row["recall_control"] for row in rows if "recall_control" in row]

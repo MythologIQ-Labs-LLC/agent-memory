@@ -73,6 +73,12 @@ SEMANTIC_POSTURE_FIELDS = (
     "candidate_limit",
 )
 RUNTIME_BASELINE_STATES = ("PASS", "TRANSITION")
+#: The first lane generation whose ``agent_memory`` row must carry the per-question cross-fact
+#: record (plan-671-evidence-v5 E2): ``longmemeval-s-retrieval-parity-v5`` and later.
+CROSS_FACT_FIRST_GENERATION = 5
+CROSS_FACT_PROVIDER_KEY = "agent_memory"
+CROSS_FACT_RECORD_FIELDS = ("limited_count", "limited_item_ids", "refusal_counts", "ranked_top_mechanism_off")
+_GENERATION_RE = re.compile(r"-v(\d+)$")
 
 
 class ImportError_(RuntimeError):
@@ -208,6 +214,55 @@ def check_recall_control(native: dict, mode: str, row: dict) -> dict | None:
     return summary
 
 
+def lane_generation(lane: dict) -> int:
+    """The lane generation its id names (``...-v5`` is 5; the unsuffixed v1 id is 1)."""
+
+    found = _GENERATION_RE.search(str(lane["lane_id"]))
+    return int(found.group(1)) if found else 1
+
+
+def check_cross_fact(native: dict, lane: dict, row: dict) -> dict | None:
+    """Bind the per-question cross-fact records to the row (plan-671-evidence-v5 E2).
+
+    From the ``-v5`` generation on, the ``agent_memory`` row must carry a well-formed
+    ``cross_fact`` record on every question without a runtime error (an error row carries
+    none) and the report's ``cross_fact_summary`` over them; every other row, and every row of
+    an earlier generation, must carry neither. The records are evidence for the E1 attribution
+    check, never benchmark authority.
+    """
+
+    rows = native.get("rows") or []
+    carrying = [item for item in rows if "cross_fact" in item]
+    required = lane_generation(lane) >= CROSS_FACT_FIRST_GENERATION and row["provider_key"] == CROSS_FACT_PROVIDER_KEY
+    if not required:
+        if carrying or "cross_fact_summary" in native:
+            raise ImportError_(f"row {row['row_id']} of {lane['lane_id']} carries cross_fact records it does not declare")
+        return None
+    for item in rows:
+        record = item.get("cross_fact")
+        if item.get("runtime_error") is not None:
+            if record is not None:
+                raise ImportError_(f"row {row['row_id']} question {item.get('question_id')} has a runtime error and a cross_fact record")
+            continue
+        if not isinstance(record, dict) or set(record) != set(CROSS_FACT_RECORD_FIELDS):
+            raise ImportError_(f"row {row['row_id']} question {item.get('question_id')} lacks a cross_fact record")
+        limited = record["limited_count"]
+        if not isinstance(limited, int) or limited < 0 or len(record["limited_item_ids"] or []) != limited:
+            raise ImportError_(f"row {row['row_id']} question {item.get('question_id')} cross_fact limited_count is malformed")
+        if (record["ranked_top_mechanism_off"] is None) != (limited == 0):
+            raise ImportError_(
+                f"row {row['row_id']} question {item.get('question_id')} cross_fact ranked_top_mechanism_off must be null exactly when limited_count is 0"
+            )
+    summary = native.get("cross_fact_summary")
+    if (
+        not isinstance(summary, dict)
+        or summary.get("questions_with_record") != len(carrying)
+        or summary.get("limited_total") != sum(item["cross_fact"]["limited_count"] for item in carrying)
+    ):
+        raise ImportError_(f"row {row['row_id']} report lacks a cross_fact_summary over its records")
+    return summary
+
+
 def runtime_baseline_binding(identity: dict, lane: dict, row: dict | None = None) -> dict | None:
     """Bind the checker state the run recorded to the posture the lane's control row pins.
 
@@ -322,6 +377,7 @@ def _check_report(report: dict, *, identity: dict, lane: dict, row: dict) -> Non
     if len(native.get("rows") or []) != lane["dataset"]["query_count"]:
         raise ImportError_("report does not carry one row per frozen question")
     check_recall_control(native, expected_configuration["recall_control"], row)
+    check_cross_fact(native, lane, row)
     external = (execution.get("external_backends") or {}).get(backend)
     if row["source"]["kind"] == "python_package":
         if external is None:
@@ -449,6 +505,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
             "runtime_baseline": runtime_baseline_binding(identity, lane, row),
             "semantic_route_posture": report["execution"].get("agent_memory_semantic_posture"),
             "recall_control_summary": report["planes"][plane]["backends"][backend].get("recall_control_summary"),
+            "cross_fact_summary": report["planes"][plane]["backends"][backend].get("cross_fact_summary"),
         },
         "input": {
             "sha256": lane["dataset"]["input_sha256"],

@@ -4675,3 +4675,42 @@ The replay runs at this PR's merge commit.
 **Unchanged:** M2 judged recall stays blocked (#706). Nothing under `reference/agentmem_ref` changed, so regeneration runs at `a9fa962`.
 
 **Next:** acceptance, together with the `-v5` lanes (E7 step 6).
+
+---
+
+### Entry #108: IMPLEMENTATION — `-v5` same-harness lanes (#671 C9, E7 step 4)
+
+**Timestamp**: 2026-10-07T16:55:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**:
+- the `-v5` lane files;
+- `reference/run_longmemeval.py`, `reference/amb_agent_memory_bridge.py` (0.4.0) and `reference/cross_fact_mechanism_off.py`;
+- both importers and `scripts/check_cross_fact_attribution.py`;
+- both competitive workflows;
+- the E8 re-pins and `test_same_harness_lanes_v5.py`.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `b05c0331aa24e03198a4e81b166eee0912fc35d2`): `875df3e399c02ff9fe7a5eda9d82d628ab5d1c0ce8381cc9db7dbd7a5c80487f`
+**Previous Hash**: `224b5428cf21c8b655d7d5128a46f33eac10e6507af54f370f003fc47a8dbde3`
+**Chain Hash**: `060e033b1480a0da0de3ba9bb0e5bfba76b09a22078fc9e844067b2fa7101ba7`
+
+**Decision**: E7 step 4 of docs/plan-671-evidence-v5.md is implemented, after the `mesa-formal-v2` replay (Entry #107). The work covers E2, E3, E4, E8 and advisories A1, A4, A5, A6 and A7.
+
+- **Harness fields:**
+  - each LongMemEval question carries a `cross_fact` record, with a `ranked_top_mechanism_off` recompute run only when a candidate is limited, after the timed recall;
+  - the AMB `agent-memory` provider writes the `cross-fact.jsonl` sidecar, but only when its env var is set;
+  - the shadow provider keeps its `-v4` behaviour.
+- **Importers:** both enforce the records for the `-v5` generation and refuse them on any other generation.
+- **Attribution checker:** `check_cross_fact_attribution.py` reports EQUAL, ATTRIBUTED or UNATTRIBUTED per question. Its AMB renderer, copied verbatim from `modes/retrieval.py:50-54` at `03c1d0f`, re-renders all 1001 committed AMB contexts byte for byte.
+- **Lane files:** the field-for-field difference from `-v4` is exactly the E4 list. No `-v4` runner blob, bridge blob or `0.3.0` string remains.
+- **Tests:** the full suite has 2329 tests, and the only failure is the pre-existing `test_gauntlet_durability`. The bridge's pytest suite passes 6/6, and the checker still reports TRANSITION.
+
+**Implementation amendments (recorded, not re-gated):**
+1. **AMB timing.** The frozen AMB harness times the whole `retrieve()` call. On a limited case, the off recompute therefore falls inside `retrieve_time_ms`. Timing is never gated, so A4's "outside any timed span" is met only on LongMemEval.
+2. **Helper not pinned.** `reference/cross_fact_mechanism_off.py` is not among the lanes' `source_blobs`, because E4's list is exhaustive. It affects only the off recompute, and a wrong recompute surfaces as UNATTRIBUTED.
+3. **Display names.** Only the control row's `display_name` names v5, following E4 literally. The shadow and semantic rows keep their `-v4` names, and their posture objects point at v5.
+4. **Generation detection.** The importers detect the `-v5` generation from the lane-id suffix, because E4 allows no new lane field.
+
+**Next:** dispatch 6 LongMemEval and 3 AMB runs after merge, then acceptance (E7 step 6).
