@@ -18,11 +18,12 @@ on:
       lane_id:
         description: "Frozen lane to execute (an accepted lane is refused)"
         required: true
-        default: "longmemeval-s-retrieval-parity-v2"
+        default: "longmemeval-s-retrieval-parity-v3"
         type: choice
         options:
           - longmemeval-s-retrieval-parity-v1
           - longmemeval-s-retrieval-parity-v2
+          - longmemeval-s-retrieval-parity-v3
       backend:
         description: "Lane row to execute"
         required: true
@@ -30,6 +31,7 @@ on:
         type: choice
         options:
           - agent_memory
+          - agent_memory_semantic
           - lexical_overlap
           - mem0_explicit
       granularity:
@@ -57,13 +59,16 @@ jobs:
   evaluate:
     runs-on: ubuntu-24.04
     # Measured: the Agent Memory turn plane takes ~15 minutes on this runner class; the Mem0
-    # row ingests ~122k turn items at ~10 ms each locally, so 180 minutes bounds it with headroom.
-    timeout-minutes: 180
+    # row ingests ~122k turn items at ~10 ms each locally. The agent_memory_semantic row
+    # (#669) embeds every item through the pinned ONNX provider: ~80 minutes expected on the
+    # session plane, ~2 hours on a slower runner, so 240 minutes bounds it with headroom.
+    timeout-minutes: 240
     env:
       LANE_FILE: reference/agentmem_ref/evaluation/lanes/${{ inputs.lane_id }}.json
       MEM0_PINS: "mem0ai==2.2.1 qdrant-client==1.17.0 sentence-transformers==5.2.3 torch==2.10.0"
       MEM0_TELEMETRY: "false"
       HF_HOME: /tmp/lme-hf-home
+      AGENT_MEMORY_REPRESENTATION_DIR: ${{ github.workspace }}/.representation/multi-qa-MiniLM-L6-cos-v1-b207367
       PYTHONPATH: reference
     steps:
       - name: Checkout exact revision
@@ -104,6 +109,21 @@ jobs:
             echo "DECLARATION_BLOB=$declaration"
           } >> "$GITHUB_ENV"
 
+      - name: Install the semantic extra under its pinned constraints (agent_memory_semantic row only)
+        if: ${{ inputs.backend == 'agent_memory_semantic' }}
+        run: python -m pip install --disable-pip-version-check -e '.[semantic]' -c reference/requirements-semantic.txt
+
+      - name: Restore the pinned representation model (agent_memory_semantic row only)
+        if: ${{ inputs.backend == 'agent_memory_semantic' }}
+        uses: actions/cache@v4
+        with:
+          path: .representation
+          key: semantic-minilm-b207367-${{ hashFiles('reference/agentmem_ref/runtime/representation_onnx.py') }}
+
+      - name: Fetch and verify the pinned representation model by digest (agent_memory_semantic row only)
+        if: ${{ inputs.backend == 'agent_memory_semantic' }}
+        run: python -m agentmem_ref.runtime.representation_onnx fetch
+
       - name: Install the frozen Mem0 OSS row (exact pins, base package, no extras)
         if: ${{ inputs.backend == 'mem0_explicit' }}
         shell: bash
@@ -130,7 +150,8 @@ jobs:
           assert lane["status"] == "frozen", lane["status"]
           assert lane["lane_id"] == "${{ inputs.lane_id }}"
           backend = "${{ inputs.backend }}"
-          row = next(item for item in lane["systems"] if item["provider_key"] == backend)
+          row = next((item for item in lane["systems"] if item["provider_key"] == backend), None)
+          assert row is not None, f"lane {lane['lane_id']} has no {backend} row"
           assert row["status"] == "frozen", (backend, row["status"], row.get("status_reason"))
           for path, blob in lane["harness"]["source_blobs"].items():
               if not path.startswith("reference/"):
@@ -172,9 +193,26 @@ jobs:
             --input /tmp/longmemeval_s_cleaned.json
             --corpus-class external_frozen
             --granularity "${{ inputs.granularity }}"
-            --backend "${{ inputs.backend }}"
             --output "$RUNNER_TEMP/lme-output/${{ inputs.granularity }}-${{ inputs.backend }}.json"
           )
+          # A row may run a built-in backend under its own identity (#669 D2): the row's
+          # configuration.backend names the runner backend, and its semantic_retrieval mode
+          # (absent: off) is read from the selected row, never from the dispatcher.
+          row_posture="$(python - <<'PY'
+          import json, os
+          from pathlib import Path
+          lane = json.loads(Path(os.environ["LANE_FILE"]).read_text(encoding="utf-8"))
+          row = next(item for item in lane["systems"] if item["provider_key"] == "${{ inputs.backend }}")
+          configuration = row.get("configuration") or {}
+          print(configuration.get("backend", row["provider_key"]), configuration.get("semantic_retrieval", "off"))
+          PY
+          )"
+          read -r runner_backend semantic <<< "$row_posture"
+          args+=(--backend "$runner_backend")
+          if [ "$semantic" != "off" ]; then
+            args+=(--agent-memory-semantic-retrieval "$semantic")
+          fi
+          echo "RUNNER_BACKEND=$runner_backend" >> "$GITHUB_ENV"
           if [ "${{ inputs.backend }}" = "mem0_explicit" ]; then
             args+=(--external-backend longmemeval_mem0_explicit_bridge:install_longmemeval_mem0_explicit_backend)
           fi
@@ -228,6 +266,7 @@ jobs:
               "lane_digest_sha256": None if validation is None else validation.get("lane_digest_sha256"),
               "upstream_revision": lane["harness"]["revision"],
               "backend": "${{ inputs.backend }}",
+              "runner_backend": os.environ.get("RUNNER_BACKEND") or "${{ inputs.backend }}",
               "granularity": "${{ inputs.granularity }}",
               "subset_size": "${{ inputs.subset_size }}",
               "full_selection": "${{ inputs.subset_size }}" == "0",
@@ -240,7 +279,7 @@ jobs:
               },
               "resolved_packages": {
                   name: version(name)
-                  for name in ("agent-memory-reference", "mem0ai", "qdrant-client", "sentence-transformers", "torch", "openai", "posthog", "numpy")
+                  for name in ("agent-memory-reference", "mem0ai", "qdrant-client", "sentence-transformers", "torch", "openai", "posthog", "numpy", "onnxruntime", "tokenizers")
               },
               "mem0_optional_components": {
                   "fastembed_installed": importlib.util.find_spec("fastembed") is not None,

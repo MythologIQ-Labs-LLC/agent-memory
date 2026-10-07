@@ -55,7 +55,22 @@ _SHA256_RE = re.compile(r"\b[0-9a-f]{64}\b")
 #: (``run_longmemeval._AGENT_MEMORY_CONFIGURATION``). The importer never reads the runner at
 #: HEAD: a lane pins the runner blob that produced its evidence, and the expectation is the
 #: defaults overlaid with the keys the lane's control row declares.
-RUNNER_CONFIGURATION_DEFAULTS = {"temporal_metadata": "none", "ranking_variant": "default", "budget": "none"}
+RUNNER_CONFIGURATION_DEFAULTS = {
+    "temporal_metadata": "none",
+    "ranking_variant": "default",
+    "budget": "none",
+    "semantic_retrieval": "off",
+}
+#: ``execution.agent_memory_semantic_posture`` fields a row's ``semantic_representation``
+#: pins (#669 D2); ``status`` must be ``enabled`` and ``mode`` must equal the row's mode.
+SEMANTIC_POSTURE_FIELDS = (
+    "representation_ref",
+    "representation_version",
+    "config_digest",
+    "dimensions",
+    "minimum_similarity",
+    "candidate_limit",
+)
 RUNTIME_BASELINE_STATES = ("PASS", "TRANSITION")
 
 
@@ -115,10 +130,24 @@ def control_row(lane: dict) -> dict:
     return next(item for item in lane["systems"] if item["role"] == "control")
 
 
-def expected_agent_memory_configuration(lane: dict) -> dict[str, str]:
-    """The runner defaults overlaid with the control row's declared configuration keys."""
+def agent_memory_row(lane: dict, row: dict | None = None) -> dict:
+    """The row whose configuration the run's recorded Agent Memory configuration must match.
 
-    declared = control_row(lane).get("configuration") or {}
+    A row that runs the ``agent_memory`` backend (the control, or a measured variant such as
+    #669 D2's ``agent_memory_semantic``) is matched against its own declaration, never the
+    control's, so a semantic-route run checked against the control is refused. Every other
+    row records the control's Agent Memory configuration (the workflow passes it unchanged).
+    """
+
+    if row is not None and (row.get("configuration") or {}).get("backend", row["provider_key"]) == "agent_memory":
+        return row
+    return control_row(lane)
+
+
+def expected_agent_memory_configuration(lane: dict, row: dict | None = None) -> dict[str, str]:
+    """The runner defaults overlaid with the declared configuration of ``agent_memory_row``."""
+
+    declared = agent_memory_row(lane, row).get("configuration") or {}
     return {key: str(declared.get(key, default)) for key, default in RUNNER_CONFIGURATION_DEFAULTS.items()}
 
 
@@ -127,7 +156,30 @@ def recorded_agent_memory_configuration(execution: dict) -> dict[str, str]:
     return {key: str(recorded.get(key, default)) for key, default in RUNNER_CONFIGURATION_DEFAULTS.items()}
 
 
-def runtime_baseline_binding(identity: dict, lane: dict) -> dict | None:
+def check_semantic_posture(execution: dict, row: dict) -> dict | None:
+    """Bind the run's recorded semantic-route posture to the row's pinned representation (#669 D2)."""
+
+    recorded = execution.get("agent_memory_semantic_posture")
+    configuration = row.get("configuration") or {}
+    mode = str(configuration.get("semantic_retrieval", "off"))
+    pinned = configuration.get("semantic_representation")
+    if mode == "off":
+        if recorded is not None or pinned is not None:
+            raise ImportError_(f"row {row['row_id']} declares no semantic route but the run or row carries a posture")
+        return None
+    if not isinstance(pinned, dict):
+        raise ImportError_(f"row {row['row_id']} declares semantic_retrieval {mode} without a semantic_representation pin")
+    if not isinstance(recorded, dict):
+        raise ImportError_("the run recorded no agent_memory_semantic_posture")
+    if recorded.get("status") != "enabled" or recorded.get("mode") != mode:
+        raise ImportError_(f"semantic route was {recorded.get('status')}/{recorded.get('mode')}, not enabled/{mode}")
+    mismatched = [field for field in SEMANTIC_POSTURE_FIELDS if recorded.get(field) != pinned.get(field)]
+    if mismatched:
+        raise ImportError_(f"semantic posture differs from the row's pin in {mismatched}")
+    return dict(recorded)
+
+
+def runtime_baseline_binding(identity: dict, lane: dict, row: dict | None = None) -> dict | None:
     """Bind the checker state the run recorded to the posture the lane's control row pins.
 
     A lane whose control row declares ``configuration.runtime_baseline_posture`` executes
@@ -137,7 +189,7 @@ def runtime_baseline_binding(identity: dict, lane: dict) -> dict | None:
     (both v1 lanes) binds nothing here.
     """
 
-    posture = (control_row(lane).get("configuration") or {}).get("runtime_baseline_posture")
+    posture = (agent_memory_row(lane, row).get("configuration") or {}).get("runtime_baseline_posture")
     if posture is None:
         return None
     state = identity.get("runtime_baseline_state")
@@ -192,13 +244,23 @@ def _check_identity(run_id: str, identity: dict, lane: dict) -> dict:
     row = next((item for item in lane["systems"] if item["provider_key"] == identity.get("backend")), None)
     if row is None:
         raise ImportError_(f"lane has no row for backend {identity.get('backend')!r}")
+    # A row may run a built-in backend under its own identity (#669 D2); the identity then
+    # records the backend the runner executed. Absent, the runner backend is the row key.
+    runner_backend = identity.get("runner_backend", identity.get("backend"))
+    declared_backend = (row.get("configuration") or {}).get("backend", row["provider_key"])
+    if runner_backend != declared_backend:
+        raise ImportError_(f"row {row['row_id']} runs backend {declared_backend!r}, but the run executed {runner_backend!r}")
     if row["status"] not in {"frozen", "executed", "accepted"}:
         raise ImportError_(f"row {row['row_id']} is {row['status']}; only a declared row can be executed")
     return row
 
 
+def runner_backend_of(identity: dict) -> str:
+    return identity.get("runner_backend", identity["backend"])
+
+
 def _check_report(report: dict, *, identity: dict, lane: dict, row: dict) -> None:
-    backend, plane = identity["backend"], identity["granularity"]
+    backend, plane = runner_backend_of(identity), identity["granularity"]
     input_block = report["input"]
     if input_block.get("sha256") != lane["dataset"]["input_sha256"]:
         raise ImportError_("report input digest differs from the lane's input_sha256")
@@ -218,11 +280,12 @@ def _check_report(report: dict, *, identity: dict, lane: dict, row: dict) -> Non
         raise ImportError_("report was produced from a dirty or unknown worktree")
     if execution.get("backends") != [backend] or execution.get("granularities") != [plane]:
         raise ImportError_(f"report executed {execution.get('backends')} x {execution.get('granularities')}, expected [{backend}] x [{plane}]")
-    expected_configuration = expected_agent_memory_configuration(lane)
+    expected_configuration = expected_agent_memory_configuration(lane, row)
     if recorded_agent_memory_configuration(execution) != expected_configuration:
         raise ImportError_(
-            f"Agent Memory configuration {execution.get('agent_memory_configuration')} is not the lane's declared posture {expected_configuration}"
+            f"Agent Memory configuration {execution.get('agent_memory_configuration')} is not row {row['row_id']}'s declared posture {expected_configuration}"
         )
+    check_semantic_posture(execution, agent_memory_row(lane, row))
     planes = report.get("planes") or {}
     if list(planes) != [plane] or list(planes[plane].get("backends") or {}) != [backend]:
         raise ImportError_("report planes/backends do not match the execution identity")
@@ -278,10 +341,10 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
     revision = identity["agent_memory_revision"]
     lane = lane_at_revision(repo_root, identity["lane_file"], revision, at_head=lane_at_head)
     row = _check_identity(run_id, identity, lane)
-    backend, plane = identity["backend"], identity["granularity"]
+    key, backend, plane = row["provider_key"], runner_backend_of(identity), identity["granularity"]
 
     inventory = read_inventory(artifact_dir / "sha256.txt")
-    raw_name = f"{plane}-{backend}.json"
+    raw_name = f"{plane}-{key}.json"
     raw_path = artifact_dir / raw_name
     if not raw_path.is_file():
         raise ImportError_(f"artifact {artifact_dir} lacks {raw_name}")
@@ -292,7 +355,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
     report = json.loads(raw_bytes.decode("utf-8"))
     _check_report(report, identity=identity, lane=lane, row=row)
 
-    destination = output_root / lane["lane_id"] / f"{backend}-{plane}-{revision[:12]}"
+    destination = output_root / lane["lane_id"] / f"{key}-{plane}-{revision[:12]}"
     destination.mkdir(parents=True, exist_ok=True)
     files: dict[str, str] = {}
     for name in COPIED_FILES:
@@ -353,7 +416,8 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
             "resolved_packages": identity.get("resolved_packages"),
             "mem0_optional_components": identity.get("mem0_optional_components"),
             "external_backend_identity": (report["execution"].get("external_backends") or {}).get(backend),
-            "runtime_baseline": runtime_baseline_binding(identity, lane),
+            "runtime_baseline": runtime_baseline_binding(identity, lane, row),
+            "semantic_route_posture": report["execution"].get("agent_memory_semantic_posture"),
         },
         "input": {
             "sha256": lane["dataset"]["input_sha256"],

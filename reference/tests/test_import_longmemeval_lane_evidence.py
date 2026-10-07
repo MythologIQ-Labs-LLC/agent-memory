@@ -31,6 +31,7 @@ M = _load_script()
 
 
 V2_LANE_FILE = "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json"
+V3_LANE_FILE = "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json"
 
 
 def _lane(lane_file: str = LANE_FILE) -> dict:
@@ -240,7 +241,7 @@ class ImportLongMemEvalLaneEvidenceTests(unittest.TestCase):
         # binds the checker state and the declaration blob, and expects the declared budget.
         lane = _lane(V2_LANE_FILE)
         posture = next(row for row in lane["systems"] if row["role"] == "control")["configuration"]["runtime_baseline_posture"]
-        self.assertEqual(M.expected_agent_memory_configuration(lane), {"temporal_metadata": "none", "ranking_variant": "default", "budget": "50"})
+        self.assertEqual(M.expected_agent_memory_configuration(lane), {"temporal_metadata": "none", "ranking_variant": "default", "budget": "50", "semantic_retrieval": "off"})
         self.assertEqual(M.RUNNER_CONFIGURATION_DEFAULTS, _runner_defaults())
 
         def report_with_budget() -> dict:
@@ -273,6 +274,75 @@ class ImportLongMemEvalLaneEvidenceTests(unittest.TestCase):
         _write_artifact(self.runs, "5006", "lexical_overlap", "session")
         record = json.loads((self._import("5006") / "evidence.json").read_text(encoding="utf-8"))
         self.assertIsNone(record["system"]["runtime_baseline"])
+
+    def test_v3_semantic_row_imports_beside_the_control_under_its_own_identity(self) -> None:
+        # #669 D2/D6: agent_memory_semantic runs the agent_memory backend under its own row
+        # identity; the importer selects the row by identity.backend, checks the report against
+        # identity.runner_backend, and expects the matched row's configuration and posture.
+        lane = _lane(V3_LANE_FILE)
+        control = next(row for row in lane["systems"] if row["role"] == "control")
+        semantic_row = next(row for row in lane["systems"] if row["provider_key"] == "agent_memory_semantic")
+        bound = {"runtime_baseline_state": "TRANSITION", "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; ...",
+                 "declaration_blob": control["configuration"]["runtime_baseline_posture"]["declaration_blob"]}
+        default_configuration = {"temporal_metadata": "none", "ranking_variant": "default", "budget": "50", "semantic_retrieval": "off"}
+        posture = {"status": "enabled", "mode": "required", **semantic_row["configuration"]["semantic_representation"]}
+
+        def agent_memory_report(*, semantic: bool) -> dict:
+            report = _report(lane, "agent_memory", "session")
+            report["execution"]["agent_memory_configuration"] = {**default_configuration, "semantic_retrieval": "required" if semantic else "off"}
+            if semantic:
+                report["execution"]["agent_memory_semantic_posture"] = dict(posture)
+            return report
+
+        semantic_identity = {**bound, "runner_backend": "agent_memory"}
+        _write_artifact(self.runs, "6001", "agent_memory", "session", report=agent_memory_report(semantic=False), identity_overrides=bound, lane_file=V3_LANE_FILE)
+        _write_artifact(self.runs, "6002", "agent_memory_semantic", "session", report=agent_memory_report(semantic=True), identity_overrides=semantic_identity, lane_file=V3_LANE_FILE)
+        control_destination, semantic_destination = self._import("6001"), self._import("6002")
+        self.assertEqual(control_destination.name, f"agent_memory-session-{REVISION[:12]}")
+        self.assertEqual(semantic_destination.name, f"agent_memory_semantic-session-{REVISION[:12]}")
+        control_record = json.loads((control_destination / "evidence.json").read_text(encoding="utf-8"))
+        semantic_record = json.loads((semantic_destination / "evidence.json").read_text(encoding="utf-8"))
+        self.assertEqual((control_record["row"]["provider_key"], control_record["row"]["role"]), ("agent_memory", "control"))
+        self.assertEqual((semantic_record["row"]["provider_key"], semantic_record["row"]["role"]), ("agent_memory_semantic", "comparator"))
+        self.assertEqual(semantic_record["row"]["backend"], "agent_memory")
+        self.assertEqual(semantic_record["raw_report"]["name"], "session-agent_memory_semantic.json")
+        self.assertIsNone(control_record["system"]["semantic_route_posture"])
+        self.assertEqual(semantic_record["system"]["semantic_route_posture"], posture)
+        self.assertEqual(semantic_record["system"]["runtime_baseline"]["declared_successor"], "agent-memory-runtime-baseline-v3")
+
+        from agentmem_ref.evaluation.normalize import _longmemeval_lane_directory
+        for destination, record in ((control_destination, control_record), (semantic_destination, semantic_record)):
+            self.assertEqual(Path(_longmemeval_lane_directory(record)).name, destination.name)
+
+        refusals = [
+            # a semantic report presented as the control row
+            ("6101", "agent_memory", agent_memory_report(semantic=True), bound, "declared posture"),
+            # a control report presented as the semantic row
+            ("6102", "agent_memory_semantic", agent_memory_report(semantic=False), semantic_identity, "declared posture"),
+            # the semantic row executed by a backend other than the one it declares
+            ("6103", "agent_memory_semantic", agent_memory_report(semantic=True), {**bound, "runner_backend": "lexical_overlap"}, "runs backend 'agent_memory'"),
+        ]
+        mismatched = agent_memory_report(semantic=True)
+        mismatched["execution"]["agent_memory_semantic_posture"]["config_digest"] = "sha256:" + "0" * 64
+        refusals.append(("6104", "agent_memory_semantic", mismatched, semantic_identity, r"differs from the row's pin in \['config_digest'\]"))
+        disabled = agent_memory_report(semantic=True)
+        disabled["execution"]["agent_memory_semantic_posture"]["status"] = "disabled"
+        refusals.append(("6105", "agent_memory_semantic", disabled, semantic_identity, "not enabled/required"))
+        missing = agent_memory_report(semantic=True)
+        del missing["execution"]["agent_memory_semantic_posture"]
+        refusals.append(("6106", "agent_memory_semantic", missing, semantic_identity, "no agent_memory_semantic_posture"))
+        smuggled = agent_memory_report(semantic=False)
+        smuggled["execution"]["agent_memory_semantic_posture"] = dict(posture)
+        refusals.append(("6107", "agent_memory", smuggled, bound, "declares no semantic route"))
+        for run_id, key, report, identity, message in refusals:
+            _write_artifact(self.runs, run_id, key, "session", report=report, identity_overrides=identity, lane_file=V3_LANE_FILE)
+            with self.assertRaisesRegex(M.ImportError_, message, msg=run_id):
+                self._import(run_id)
+
+        # the v2 lane has no semantic row: such a run is refused there
+        _write_artifact(self.runs, "6201", "agent_memory_semantic", "session", report=agent_memory_report(semantic=True), identity_overrides=semantic_identity, lane_file=V2_LANE_FILE)
+        with self.assertRaisesRegex(M.ImportError_, "no row for backend 'agent_memory_semantic'"):
+            self._import("6201")
 
     def test_inventory_tamper_is_refused(self) -> None:
         _write_artifact(self.runs, "5001", "lexical_overlap", "turn", tamper_inventory=True)

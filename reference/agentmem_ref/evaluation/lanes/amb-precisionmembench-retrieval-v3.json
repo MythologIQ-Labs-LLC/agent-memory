@@ -1,0 +1,407 @@
+{
+  "contract_family": "agent-memory-same-harness-lane",
+  "contract_version": "1.0.0",
+  "lane_id": "amb-precisionmembench-retrieval-v3",
+  "status": "frozen",
+  "owning_issue": 669,
+  "frozen_on": "2026-10-07",
+  "frozen_before_any_score": true,
+  "description": "Fourth lane generation (#669): PrecisionMemBench single-turn belief-ID retrieval under the frozen independent AMB harness, retrieval mode, no LLM anywhere, re-executing every row of amb-precisionmembench-retrieval-v2 at a runtime revision in the declared transition to Runtime Baseline v3 (ranking policy 3.2.0; semantic vector route reachable, default off). The Agent Memory control runs the shipped default through the unchanged bridge 0.2.0 and must reproduce the -v2 control's harness summary exactly; this lane is acceptance evidence reports/runtime/baseline-v3-declaration.json names for the successor publication. The semantic-route row and Hindsight are deferred.",
+  "freeze_rationale": [
+    "the -v2 lane is accepted and its control executed the declared transition to Runtime Baseline v2; the #669 tranche (PR #707) changed ranking policy to 3.2.0 and opened a declared transition to v3, so the executing runtime is new and needs a new lane id (change_rule)",
+    "the control runs the shipped default (semantic route off) through bridge 0.2.0, unchanged; its harness summary (active_passes, mean_precision, mean_recall, correct, accuracy) must equal the accepted -v2 control's exactly, timing excluded; any difference blocks v3 publication",
+    "the agent_memory_semantic row is deferred, not run: AMB installs under its own uv.lock constraints (onnxruntime 1.22.1, tokenizers 0.22.2, numpy 2.4.3, protobuf 5.29.6, packaging 24.2), which conflict with the pinned semantic numerics (reference/requirements-semantic.txt), and the representation config_digest binds those library versions",
+    "the baseline and comparator rows are re-executed unchanged so every row shares one executing posture; accepted -v2 rows are never copied forward"
+  ],
+  "benchmark_integration": "amb-precisionmembench-retrieval-v1",
+  "harness": {
+    "repository": "vectorize-io/agent-memory-benchmark",
+    "url": "https://github.com/vectorize-io/agent-memory-benchmark",
+    "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+    "package": "amb 0.1.0 (src/memory_bench)",
+    "license_spdx": null,
+    "license_note": "no LICENSE file exists at the frozen revision and neither README nor pyproject declares one; the harness is executed from an external checkout and is never redistributed by this repository",
+    "entry": "amb run --dataset precisionmembench --split single-turn --mode retrieval --memory <provider_key>",
+    "source_blobs": {
+      "src/memory_bench/dataset/precisionmembench.py": "47432e9c1bc8119cfc11f00c68620314c6692f9c",
+      "src/memory_bench/modes/retrieval.py": "416dd4df21709da7b9a04f26260f244baf20b6e7",
+      "src/memory_bench/runner.py": "190bb2b5d98c697859e534ac5fd8c34038ad9146",
+      "src/memory_bench/memory/bm25.py": "4c8f0f615bfc5935edb4e8d33d43b82fb663e83c",
+      "src/memory_bench/memory/mem0.py": "b4e0661631fbb8c2e127391764526f5172e0acc4",
+      "reference/amb_agent_memory_bridge.py": "54e8afdf8b6f40e0eaa5fb3bc1557c030c75aea4",
+      "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228"
+    }
+  },
+  "dataset": {
+    "harness_dataset": "precisionmembench",
+    "split": "single-turn",
+    "upstream": {
+      "repository": "tenurehq/precisionmembench",
+      "revision": "b95d6abb471c0d591c440172283dd74e7af000df",
+      "license_spdx": "MIT",
+      "paper_url": "https://arxiv.org/abs/2605.11325"
+    },
+    "fixtures": [
+      {
+        "name": "beliefs.seed.json",
+        "url": "https://raw.githubusercontent.com/tenurehq/precisionmembench/b95d6abb471c0d591c440172283dd74e7af000df/fixtures/beliefs.seed.json",
+        "sha256": "35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98"
+      },
+      {
+        "name": "retrieval.cases.json",
+        "url": "https://raw.githubusercontent.com/tenurehq/precisionmembench/b95d6abb471c0d591c440172283dd74e7af000df/fixtures/retrieval.cases.json",
+        "sha256": "09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c"
+      }
+    ],
+    "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+    "input_digest_rule": "sha256 over the raw bytes of beliefs.seed.json followed by retrieval.cases.json; each fixture file is also digest-bound individually and the run refuses on any mismatch before ingestion",
+    "document_count": 35,
+    "query_count": 77,
+    "query_partition": {
+      "active": 43,
+      "structural": 25,
+      "trivially-empty": 9
+    },
+    "notes": [
+      "34 beliefs belong to test-user and 1 to other-user; the cross-user case is a leak fixture, so per-user scoping is part of the measured behaviour",
+      "document content is upstream beliefToText(): canonical_name + aliases + content + why_it_matters, byte-identical for every provider",
+      "13 query categories; categories partition queries, not documents"
+    ]
+  },
+  "selection": {
+    "query_limit": null,
+    "category": null,
+    "selection_id": "all-77:09e99f0852280538",
+    "selection_method": "full single-turn case set in fixture order; no --query-limit, --category, --query-id, --unit, --oracle, --doc-limit"
+  },
+  "budget": {
+    "retrieval_k_rule": "k passed to the provider is the case's maxBeliefs budget (case.budget.maxBeliefs, default 20); the Agent Memory control declares that k as the facade return budget (contract 1.4.0) and returns the facade's `returned` prefix; the scorer then keeps the top maxBeliefs distinct resolved beliefs after excluding pinned facts",
+    "default_k": 20,
+    "context_budget": {
+      "maxBeliefs": 20,
+      "maxPinnedFacts": 10,
+      "maxQuestions": 15
+    },
+    "forbidden_overrides": [
+      "AMB_PMB_RETURN_CAP must be unset",
+      "no provider may read case metadata, gold ids, or expect blocks"
+    ]
+  },
+  "gold_identity": {
+    "rule": "per case: expect.relevantBeliefs.shouldOnlyInclude or mustInclude plus pinnedFacts.mustInclude; mustExclude, maxCount/minCount, orderedBefore, openQuestions and personaPrelude assertions are scored by the frozen harness exactly as upstream",
+    "resolution_paths": [
+      "source_id",
+      "doc_id",
+      "marker",
+      "lexical"
+    ],
+    "leakage_rule": "providers receive Document(id, content, user_id, timestamp, context, tags) only; the context field carries beliefId= for the resolver's marker path exactly as the frozen harness supplies it to every provider; queries, gold ids, budgets and expect blocks never reach ingestion; each result records which resolution path fired"
+  },
+  "evaluator": {
+    "mode": "retrieval",
+    "llm_calls": false,
+    "answer_model": null,
+    "judge_model": null,
+    "scorer": "memory_bench.dataset.precisionmembench.PrecisionMemBenchDataset.score_retrieval @ blob 47432e9c1bc8119cfc11f00c68620314c6692f9c (port of upstream scoreCases)",
+    "headline_metrics": [
+      "active_passes/active_total",
+      "total passes/77",
+      "mean_precision",
+      "mean_recall",
+      "avg_retrieve_time_ms"
+    ],
+    "integrity_check": "scripts/precisionmembench_selfcheck.py at the frozen revision: a perfect provider must reproduce 43/43 active, 77/77 total, precision/recall 1.00; run before any contestant"
+  },
+  "execution": {
+    "concurrency": 1,
+    "timeout": "none in the frozen harness; the workflow job timeout (180 min) bounds the run",
+    "failure_handling": "the frozen runner retries a query up to 4 times only on transient-provider error codes (502/503/529/429/overloaded/quota); any other exception aborts the run, which is recorded as blocked/failed execution, never as a score",
+    "environment": {
+      "python": "3.12",
+      "harness_install": "pip install -e <frozen AMB checkout> under pip constraints exported from the checkout's own uv.lock (scripts/amb_harness_constraints.py); the lock blob, the uv release, and every lifted pin are recorded in the execution identity",
+      "placeholder_gemini_key": "the frozen CLI constructs its configured answer client before selecting retrieval mode; an inert GEMINI_API_KEY value is supplied solely for construction and can never produce a result",
+      "network": "fixture download from the pinned upstream commit and embedder weights from the pinned Hugging Face revision; no API calls",
+      "harness_lock": {
+        "file": "uv.lock at harness.revision",
+        "git_blob": "cbd392efbd2c81c8cebf493edd07fd160f39dcbd",
+        "sha256": "de4408d18088476169d62286e379417aac2bd52c97f1bdd868bf4f4a366bcad7",
+        "departures": [
+          "packages pinned by this repository's pyproject.toml (cryptography, jsonschema, rfc8785) follow the repository, not the lock",
+          "the mem0-explicit row replaces the lock's mem0ai 1.0.5 with mem0ai==2.2.1, which requires posthog>=7.14.0 and therefore lifts the lock's posthog 7.9.10 (telemetry client, MEM0_TELEMETRY=false); every other locked pin stays in force for every row",
+          "the mem0-explicit row removes fastembed 0.6.0 after the constrained install: the lock carries it only via cognee (a provider that row never loads) and Mem0 2.2.1 lazily enables BM25 hybrid retrieval whenever fastembed imports, which the frozen base-package row forbids; the removal is recorded in the execution identity"
+        ]
+      }
+    },
+    "artifact_requirements": [
+      "AMB raw EvalSummary JSON per provider (outputs/precisionmembench/<run>/retrieval/single-turn.json) with per-case meta: pass_type, active_pass, relevant_beliefs, retrieval_precision, retrieval_recall, resolution, failures",
+      "execution identity JSON: repository revision, AMB revision, provider key, resolved dependency versions, embedder revision, fixture digests, workflow run id",
+      "self-check output",
+      "sha256 inventory of every artifact"
+    ],
+    "execution_identity_requirements": [
+      "exact Agent Memory repository revision (40-hex)",
+      "exact AMB revision equal to harness.revision",
+      "fixture digests equal to dataset.fixtures",
+      "AMB_PMB_RETURN_CAP unset",
+      "per-provider resolved package versions (mem0ai, qdrant-client, sentence-transformers, torch, rank-bm25)",
+      "embedder model revision equal to the frozen Hugging Face revision",
+      "Mem0 optional-component posture (fastembed, spacy) equal to the frozen base-package install",
+      "harness lock identity (uv.lock blob and sha256) and the complete list of lifted pins, each with its reason",
+      "bridge_blobs == harness.source_blobs for every reference/* path (the Agent Memory and Mem0 AMB bridges)",
+      "lane_digest_sha256 at execution == the digest of this file as committed",
+      "runtime_baseline_state in {PASS, TRANSITION} and declaration_blob == the control row's configuration.runtime_baseline_posture.declaration_blob",
+      "no agent_memory_semantic run is importable under this lane: the row is deferred (uv.lock conflict with the pinned semantic numerics)"
+    ]
+  },
+  "systems": [
+    {
+      "row_id": "agent-memory-public-facade",
+      "system_id": "agent-memory",
+      "display_name": "Agent Memory (public facade, declared transition to Runtime Baseline v3)",
+      "role": "control",
+      "status": "frozen",
+      "provider_key": "agent-memory",
+      "source": {
+        "kind": "repository_runtime",
+        "identity": "MythologIQ-Labs-LLC/agent-memory reference runtime through the public AgentMemory facade",
+        "revision": "exact 40-hex repository revision at execution",
+        "revision_rule": "git rev-parse HEAD of the executing checkout; the protected runtime surface is pinned by scripts/check_runtime_baseline_equivalence.py, which must print PASS or TRANSITION against the declaration blob this row pins (configuration.runtime_baseline_posture) for the run to be importable; the state, line and declaration blob are recorded in the execution identity",
+        "license_spdx": "Apache-2.0",
+        "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory"
+      },
+      "adapter": {
+        "module": "reference/amb_agent_memory_bridge.py",
+        "revision_rule": "git blob of the module at execution must equal harness.source_blobs[reference/amb_agent_memory_bridge.py] = 54e8afdf8b6f40e0eaa5fb3bc1557c030c75aea4; bridge_version 0.2.0 recorded in raw responses",
+        "install_entry": "amb_agent_memory_bridge.install_amb_agent_memory_provider"
+      },
+      "configuration": {
+        "scope": "one Agent Memory scope per AMB user_id (sha256-derived)",
+        "memory_id": "deterministic logical id per (user_id, document id)",
+        "observed_at": "document timestamp passed as caller-declared observed_at",
+        "query_timestamp": "recorded, never used as memory authority",
+        "recall": "memory.recall(query, budget=k) where k is the case's maxBeliefs budget; `returned` is the facade's ranked-prefix policy (contract 1.4.0); admitted stays whole and is counted; returned facts mapped back to AMB document ids through a revision-bound sidecar",
+        "k": "the facade's return budget, never a bridge-side cap: the bridge returns the mapped documents among the top-k returned facts, so a response holds fewer than k documents when an unmapped id sits in the prefix (v1 skipped unmapped ids before counting to k); a case budget below 1 is refused",
+        "runtime_baseline_posture": {
+          "predecessor": "agent-memory-runtime-baseline-v2",
+          "declared_successor": "agent-memory-runtime-baseline-v3",
+          "declaration": "reports/runtime/baseline-v3-declaration.json",
+          "declaration_blob": "593fee135b8fbb8a99b619f59406484b0cb063a6",
+          "checker_state_required": [
+            "PASS",
+            "TRANSITION"
+          ]
+        }
+      },
+      "inference_posture": "none",
+      "credentials": "credential_free",
+      "capability_posture": {
+        "user_scoping": "native",
+        "verbatim_document_retention": "native",
+        "document_timestamp": "native",
+        "tags_filter": "unsupported"
+      },
+      "dependency_pins": [
+        "agent-memory-reference @ executing revision",
+        "reference/requirements.txt"
+      ],
+      "notes": [
+        "concurrency 1 until multi-handle semantics are independently qualified"
+      ]
+    },
+    {
+      "row_id": "bm25-harness-baseline",
+      "system_id": "bm25",
+      "display_name": "BM25 keyword baseline (AMB built-in)",
+      "role": "baseline",
+      "status": "frozen",
+      "provider_key": "bm25",
+      "source": {
+        "kind": "harness_builtin",
+        "identity": "memory_bench.memory.bm25.BM25MemoryProvider at the frozen AMB revision",
+        "revision": "03c1d0f1d27da63034f0931121c858faba512383",
+        "revision_rule": "AMB revision; provider blob 4c8f0f615bfc5935edb4e8d33d43b82fb663e83c",
+        "license_spdx": null,
+        "url": "https://github.com/vectorize-io/agent-memory-benchmark"
+      },
+      "adapter": {
+        "module": "memory_bench.memory.bm25",
+        "revision_rule": "frozen AMB revision",
+        "install_entry": null
+      },
+      "configuration": {
+        "chunking": "memory_bench.utils.chunk_text",
+        "ranking": "rank-bm25 BM25Okapi over lowercase whitespace tokens",
+        "user_scoping": "chunks filtered by user_id before ranking when any exist"
+      },
+      "inference_posture": "harness_builtin",
+      "credentials": "credential_free",
+      "capability_posture": {
+        "user_scoping": "native",
+        "verbatim_document_retention": "native",
+        "document_timestamp": "unsupported",
+        "tags_filter": "unsupported"
+      },
+      "dependency_pins": [
+        "rank-bm25 as resolved by the frozen AMB dependency set, recorded at execution"
+      ],
+      "notes": [
+        "a baseline comparator, not a market-position claim"
+      ]
+    },
+    {
+      "row_id": "mem0-oss-2.2.1-explicit-memory",
+      "system_id": "mem0-oss",
+      "display_name": "Mem0 OSS 2.2.1 (explicit memory, no inference)",
+      "role": "comparator",
+      "status": "frozen",
+      "provider_key": "mem0-explicit",
+      "source": {
+        "kind": "python_package",
+        "identity": "mem0ai (mem0ai/mem0 Python SDK)",
+        "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+        "revision_rule": "release tag v2.2.1; pip pin mem0ai==2.2.1; mem0.__version__ verified before the provider is prepared",
+        "license_spdx": "Apache-2.0",
+        "url": "https://github.com/mem0ai/mem0/releases/tag/v2.2.1"
+      },
+      "adapter": {
+        "module": "reference/amb_mem0_explicit_bridge.py",
+        "revision_rule": "git blob of the module at the executing revision; bridge_version 0.1.0 recorded in raw responses; git blob of the module at execution must equal harness.source_blobs[reference/amb_mem0_explicit_bridge.py] = ce41b1f5766b99cb968b798be3ad6d37c3283228",
+        "install_entry": "amb_mem0_explicit_bridge.install_amb_mem0_explicit_provider"
+      },
+      "configuration": {
+        "inference": "infer=False on every add; the constructed LLM is replaced by a fail-closed guard, so any inference call aborts the run",
+        "llm_config": "provider openai with an inert api_key used solely to satisfy Mem0's eager client construction; never a credential",
+        "embedder": {
+          "provider": "huggingface",
+          "model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+          "revision": "b207367332321f8e44f96e224ef15bc607f4dbf0",
+          "dims": 384
+        },
+        "vector_store": {
+          "provider": "qdrant",
+          "mode": "local path, on_disk=true, fresh per run",
+          "collection": "amb640_mem0_explicit"
+        },
+        "history_db": "<store>/history.db; MEM0_DIR=<store>/mem0-home; MEM0_TELEMETRY=false",
+        "add": "Memory.add([{'role': 'user', 'content': document.content}], user_id=<AMB user_id>, metadata={'doc_id': <document id>, 'source_timestamp': <timestamp>}, infer=False); a result without an ADD event aborts the run",
+        "search": "Memory.search(query, top_k=<case k>, filters={'user_id': <AMB user_id>}); threshold 0.1 and rerank=false are Mem0 2.2.1 defaults, recorded not tuned",
+        "identity_mapping": "metadata.doc_id returned as Document.id and Document.source_ids so the scorer resolves through the source_id path; results without doc_id are counted as unmapped",
+        "content_rule": "document.content verbatim; structured messages, timestamps and tags are not supplied to Mem0's memory text",
+        "optional_components": {
+          "install": "pip install mem0ai==2.2.1 (base package, no extras); product-default posture",
+          "fastembed_bm25_keyword_search": "not installed: hybrid keyword scoring disabled, vector similarity only (Mem0 logs the condition at construction)",
+          "spacy_lemmatizer": "not installed: no text lemmatization",
+          "graph_store": "not configured",
+          "reranker": "not configured (rerank=false)"
+        }
+      },
+      "inference_posture": "explicit_memory_no_inference",
+      "credentials": "placeholder_for_client_construction_only",
+      "capability_posture": {
+        "user_scoping": "native",
+        "verbatim_document_retention": "native",
+        "document_timestamp": "unsupported",
+        "tags_filter": "unsupported",
+        "reflective_extraction": "not_applicable"
+      },
+      "dependency_pins": [
+        "mem0ai==2.2.1",
+        "sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367332321f8e44f96e224ef15bc607f4dbf0"
+      ],
+      "dependencies_recorded_at_execution": [
+        "qdrant-client",
+        "sentence-transformers",
+        "torch",
+        "openai",
+        "sqlalchemy"
+      ],
+      "notes": [
+        "Mem0's own hybrid vector+keyword ranking, threshold, and entity boosts are product behaviour and are not altered",
+        "no benchmark-specific prompt, mission, or dataset-name branch exists in the adapter",
+        "optional components (fastembed keyword search, spaCy lemmatizer) are absent by product default; a row with extras installed is a different frozen row, never an in-place change"
+      ]
+    },
+    {
+      "row_id": "agent-memory-semantic-route",
+      "system_id": "agent-memory",
+      "display_name": "Agent Memory (public facade, semantic route required)",
+      "role": "comparator",
+      "status": "deferred",
+      "status_reason": "deferred at freeze (plan-669-lanes-v3 D3): the AMB harness installs under its own uv.lock constraints (onnxruntime 1.22.1, tokenizers 0.22.2, numpy 2.4.3, protobuf 5.29.6, packaging 24.2), which conflict with the pinned semantic extra (reference/requirements-semantic.txt) whose versions the representation config_digest binds; the semantic route is measured on LongMemEval only (longmemeval-s-retrieval-parity-v3)",
+      "provider_key": "agent_memory_semantic",
+      "source": {
+        "kind": "repository_runtime",
+        "identity": "MythologIQ-Labs-LLC/agent-memory reference runtime through the public AgentMemory facade with semantic_retrieval=required",
+        "revision": "unbound",
+        "revision_rule": "exact repository revision at execution, once a lock-compatible semantic install exists",
+        "license_spdx": "Apache-2.0",
+        "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory"
+      },
+      "adapter": {
+        "module": "reference/amb_agent_memory_bridge.py (a semantic-mode bridge is not written)",
+        "revision_rule": "git blob of the module at execution",
+        "install_entry": null
+      },
+      "configuration": {},
+      "capability_posture": {}
+    },
+    {
+      "row_id": "hindsight-0.10.2",
+      "system_id": "hindsight",
+      "display_name": "Hindsight v0.10.2",
+      "role": "comparator",
+      "status": "deferred",
+      "status_reason": "AMB's frozen Hindsight provider installs a PrecisionMemBench-specific retain mission and floats package versions; a benchmark-agnostic, exactly pinned provider configuration must be frozen before this row can run (#640 ruling 2026-10-03)",
+      "provider_key": "hindsight",
+      "source": {
+        "kind": "python_package",
+        "identity": "hindsight-all (vectorize-io/hindsight)",
+        "revision": "5fc4ce20917b916240cef27c212c387a177f115b",
+        "revision_rule": "release v0.10.2 commit; wheel digest sha256:aca96d60b10fb4d4111acea26311660372ffbbc166fad066c943f4982e1b73c3",
+        "license_spdx": "MIT",
+        "url": "https://github.com/vectorize-io/hindsight/releases/tag/v0.10.2"
+      },
+      "adapter": {
+        "module": "memory_bench.memory.hindsight (not acceptable as frozen)",
+        "revision_rule": "to be replaced by a repository-owned benchmark-agnostic bridge",
+        "install_entry": null
+      },
+      "configuration": {},
+      "capability_posture": {},
+      "notes": []
+    }
+  ],
+  "comparability": {
+    "evidence_class_when_accepted": "same_harness_external",
+    "not_comparable_to": [
+      "amb-precisionmembench-retrieval-v2 rows for the same system: the executing runtime (declared transition to Runtime Baseline v3, ranking policy 3.2.0) differs, so rows are re-executed under this lane, never copied forward; the control is held to exact equality with the -v2 control as an acceptance check, which is not a comparability claim",
+      "Agent Memory LongMemEval recall_all@k (different benchmark, different gold semantics)",
+      "AMB RAG/agent accuracy on any dataset (end-to-end answer quality, model-judged)",
+      "published_reference rows (vendor or managed-service numbers)",
+      "a future reflective Mem0 lane (different system composition)"
+    ],
+    "notes": [
+      "active_passes/active_total is the number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases that a provider returning nothing can satisfy",
+      "BM25 is a baseline, Agent Memory is the control; neither row is a market claim",
+      "each accepted row must retain the raw AMB artifact and its execution identity; no overall score is produced",
+      "the control row is held to exact harness-summary equality with the accepted -v2 control (plan-669-lanes-v3 D1); a difference blocks Runtime Baseline v3 publication"
+    ]
+  },
+  "deferred_lanes": [
+    {
+      "lane_id": "amb-precisionmembench-retrieval-mem0-reflective-v1",
+      "reason": "Mem0 reflective extraction through a frozen LLM identity is a Mem0+LLM composition; it needs provider-dependent credentials and a separately frozen answer-model identity, and must be frozen before any reflective score is seen"
+    }
+  ],
+  "findings": [
+    "AMB's frozen mem0 provider calls Memory.search(query, user_id=..., limit=...); Mem0 2.2.1 rejects top-level entity parameters and requires filters={'user_id': ...} with top_k=, so that provider cannot execute at the #640 pin",
+    "vectorize-io/agent-memory-benchmark carries no LICENSE file at the frozen revision; the harness is used from an external checkout only",
+    "Mem0 2.2.1 constructs its LLM client eagerly even when infer=False is used for every add; the lane satisfies construction with an inert key and guards every LLM call",
+    "Mem0 2.2.1 changes retrieval behaviour depending on optional extras (fastembed keyword search, spaCy lemmatizer); the lane freezes the base-package install and records the absent components in the execution identity",
+    "the frozen harness's pyproject dependency set does not resolve under pip's default backtracking budget (resolution-too-deep after ~26 minutes in workflow run 37343360127, before any query ran); the uv.lock shipped at the frozen revision resolves in seconds and is the harness environment the lane installs",
+    "the frozen harness lock installs fastembed 0.6.0 for its Cognee provider; run 37349426994 showed Mem0 2.2.1 would therefore have executed with hybrid BM25 retrieval, contradicting the frozen base-package row, so the row removes fastembed after install and the posture check refuses to run otherwise",
+    "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob and the lane digest, and the importer refuses a run whose state is not admitted by the posture, whose declaration blob differs from the one pinned here, or whose bridge blobs differ from harness.source_blobs"
+  ],
+  "change_rule": "any change to harness revision, fixtures, selection, budget, gold identity, evaluator, execution semantics, or a frozen row's source/adapter/configuration after a score has been observed requires a new lane_id; this record is never edited in place once status leaves frozen",
+  "authority_effect": "none"
+}

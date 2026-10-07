@@ -4058,3 +4058,66 @@ on main.
 Step B1/B2 is still open: the `-v3` lane plan, the lane dispatch, and
 publishing v3. M4 is unchanged by design: currentness is #671 and fusion
 is #673.
+
+---
+
+### Entry #89: GATE TRIBUNAL — PASS (#669 Step B `-v3` lanes plan, attempt 4)
+
+**Timestamp**: 2026-10-07T07:10:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-669-lanes-v3.md (iteration 4, d6e9e7d)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_669_lanes_v3.md) = 4c02f9731a32e2c39ec106e03071604b3d083ad0614c7f24f23ec213ac88f00b
+
+**Previous Hash**: `6e285fc1891ee7a0f9c4c1b02138dde789ec0441c3d0047fae71f9c0672de686`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 86d46da61aa2de4302e9234573395e1c6715a9d37e9d95fac41f8631a747b3f5
+
+**Decision**: PASS at attempt 4. The reviewer was independent and worked in a fresh context.
+
+Earlier VETOs:
+- Attempt 1: the AMB lock conflict; the representation identity; the gate disposition; the re-pin list.
+- Attempt 2: the D2 row identity; schema enums; superseded text.
+- Attempt 3: D5 was not exhaustive.
+
+The plan freezes:
+- **D1:** the shipped-default control is held to exact `-v2` equality on scored metrics.
+- **D2:** an opt-in `agent_memory_semantic` comparator on LongMemEval only, with a pre-registered prediction.
+- **D3:** an AMB semantic row deferred for the uv.lock conflict.
+- **D4:** #669's "must move" gate transfers to #673.
+
+---
+
+### Entry #90: IMPLEMENTATION — #669 Step B `-v3` same-harness lanes frozen; semantic row runner and importer support
+
+**Timestamp**: 2026-10-07T09:30:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Plan**: docs/plan-669-lanes-v3.md (iteration 4; Gate Tribunal PASS at Entry #89; implementation amendment IA1)
+
+**Artifacts**:
+- lanes `longmemeval-s-retrieval-parity-v3` and `amb-precisionmembench-retrieval-v3`;
+- `reference/run_longmemeval.py` (semantic mode, posture, gold-blind route diagnostics);
+- `scripts/import_longmemeval_lane_evidence.py` (row identity, runner backend, posture checks), and the `normalize.py` lane directory and run id keyed by `provider_key`;
+- `longmemeval-competitive.yml` and `amb-competitive.yml`, plus the workflow policy and inventory (timeout 240);
+- tests: `test_same_harness_lanes_v3.py` (new); additions to `test_import_longmemeval_lane_evidence.py`, `test_longmemeval.py` and `test_same_harness_lane.py` (six lanes).
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `f328ea9dbb8fd40178c8d8dc42b948c9c498e74e`): `3deb4dc05f3542944eaa4e540ff1a231d1cc89b231a762e960cd46677817cf87`
+**Previous Hash**: `86d46da61aa2de4302e9234573395e1c6715a9d37e9d95fac41f8631a747b3f5`
+**Chain Hash**: `0b4899c26d395eeb2870983ca43be263e8a7a1a8237d97a47ed27959a5d4259d`
+
+**Decision**: Both `-v3` lanes are frozen before any score.
+- The v2→v3 difference is asserted to be exactly D5 plus IA1.
+- The control runs the shipped default (semantic off).
+- `agent_memory_semantic` is a frozen comparator on LongMemEval, pinned to config_digest `sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee`, and deferred on AMB (uv.lock conflict).
+
+Full suite: 2,180 tests; the only failure is the pre-existing environmental `test_gauntlet_durability` failure, identical on main.
+
+Next (D7, after merge): dispatch 8 LongMemEval and 3 AMB runs from `main`, import, accept per D1/D2, then docs/67 Step B1/B2.

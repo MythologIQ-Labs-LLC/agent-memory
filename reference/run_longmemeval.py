@@ -448,7 +448,15 @@ def _lexical_rank(question: str, items: Sequence[Mapping[str, str]]) -> list[str
 TEMPORAL_METADATA_MODES = ("none", "host_declared", "source_observed_at")
 RANKING_VARIANTS = tuple(VARIANTS)
 # Evaluation-only configuration of the Agent Memory adapter, recorded in every report.
-_AGENT_MEMORY_CONFIGURATION: dict[str, str] = {"temporal_metadata": "none", "ranking_variant": "default", "budget": "none"}
+SEMANTIC_RETRIEVAL_MODES = ("off", "required")
+_AGENT_MEMORY_CONFIGURATION: dict[str, str] = {
+    "temporal_metadata": "none",
+    "ranking_variant": "default",
+    "budget": "none",
+    "semantic_retrieval": "off",
+}
+# The facade's semantic-route posture, recorded once per run when the route is required (#669).
+_SEMANTIC_POSTURE: dict[str, Any] = {}
 _DATE = re.compile(r"^(\d{4})/(\d{2})/(\d{2})(?:\s*\([A-Za-z]{3}\))?\s*(\d{2}):(\d{2})")
 
 
@@ -471,7 +479,13 @@ def _parse_budget(value: str | int | None) -> str:
     return str(budget)
 
 
-def configure_agent_memory(*, temporal_metadata: str = "none", ranking_variant: str = "default", budget: str | int | None = "none") -> dict[str, str]:
+def configure_agent_memory(
+    *,
+    temporal_metadata: str = "none",
+    ranking_variant: str = "default",
+    budget: str | int | None = "none",
+    semantic_retrieval: str = "off",
+) -> dict[str, str]:
     """Select how the Agent Memory adapter uses the host-visible temporal information.
 
     ``temporal_metadata = none`` (default, frozen comparability): only question and
@@ -490,13 +504,24 @@ def configure_agent_memory(*, temporal_metadata: str = "none", ranking_variant: 
     ``budget`` (contract 1.4.0, #670) is the facade return budget ``k`` the adapter
     declares on every recall, or ``none``: the adapter ranks ``returned``, which equals
     ``admitted`` when unbudgeted, so an unbudgeted run is byte-for-byte the pre-1.4.0 run.
+
+    ``semantic_retrieval`` (#669) is the facade's ``semantic_retrieval`` mode: ``off``
+    (the shipped default) or ``required`` (the pinned local representation provider must
+    load, or every question fails as a runtime error). ``auto`` is not offered: a lane row
+    must not silently fall back to the lexical posture.
     """
 
     if temporal_metadata not in TEMPORAL_METADATA_MODES:
         raise ValueError(f"unknown temporal_metadata {temporal_metadata!r}")
+    if semantic_retrieval not in SEMANTIC_RETRIEVAL_MODES:
+        raise ValueError(f"semantic_retrieval must be one of {SEMANTIC_RETRIEVAL_MODES}, got {semantic_retrieval!r}")
     apply_ranking_variant(ranking_variant)
+    _SEMANTIC_POSTURE.clear()
     _AGENT_MEMORY_CONFIGURATION.update(
-        temporal_metadata=temporal_metadata, ranking_variant=ranking_variant, budget=_parse_budget(budget)
+        temporal_metadata=temporal_metadata,
+        ranking_variant=ranking_variant,
+        budget=_parse_budget(budget),
+        semantic_retrieval=semantic_retrieval,
     )
     return dict(_AGENT_MEMORY_CONFIGURATION)
 
@@ -519,6 +544,9 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
     host_declared = _AGENT_MEMORY_CONFIGURATION["temporal_metadata"] == "host_declared"
     declare_observed = _AGENT_MEMORY_CONFIGURATION["temporal_metadata"] in {"host_declared", "source_observed_at"}
     observed_mapped = observed_unmapped = 0
+    semantic = _AGENT_MEMORY_CONFIGURATION["semantic_retrieval"]
+    # An `off` run opens the facade exactly as before #669 (the shipped default).
+    open_kwargs = {} if semantic == "off" else {"semantic_retrieval": semantic}
     with tempfile.TemporaryDirectory(prefix="agent-memory-longmemeval-") as temporary:
         with AgentMemory.open(
             temporary,
@@ -526,6 +554,7 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
             actor_id="agent:benchmark",
             scope=f"benchmark:longmemeval:{row_index}",
             purpose="LongMemEval retrieval evaluation",
+            **open_kwargs,
         ) as memory:
             uuid_to_item: dict[str, str] = {}
             started = time.perf_counter()
@@ -551,6 +580,8 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
             recall_kwargs = {} if budget == "none" else {"budget": int(budget)}
             recalled = memory.recall(question, reference_time=reference_time, **recall_kwargs)
             recall_seconds = time.perf_counter() - started
+            if semantic != "off" and not _SEMANTIC_POSTURE:
+                _SEMANTIC_POSTURE.update(_recorded_semantic_posture(memory.semantic_retrieval_posture()))
     unmapped_admitted = [value for value in recalled["admitted"] if value not in uuid_to_item]
     refusals: dict[str, int] = {}
     for candidate, decision in recalled["admissions"].items():
@@ -559,6 +590,16 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
         reason = str(decision.get("refusal") or "not_admitted")
         refusals[reason] = refusals.get(reason, 0) + 1
     extra = {"observed_at_mapped_count": observed_mapped, "observed_at_unmapped_count": observed_unmapped} if declare_observed else {}
+    if semantic != "off":
+        # Gold-blind trace: item ids only. Gold is joined after scoring (_semantic_route_diagnostics).
+        extra["_semantic_trace"] = {
+            "admitted": [uuid_to_item[value] for value in recalled["admitted"] if value in uuid_to_item],
+            "semantic_only": sorted(
+                uuid_to_item[value]
+                for value in recalled["admitted"]
+                if value in uuid_to_item and _routes(recalled, value) == {SEMANTIC_ROUTE_ID}
+            ),
+        }
     return {
         **extra,
         "ranked": [uuid_to_item[value] for value in recalled["returned"] if value in uuid_to_item],
@@ -570,6 +611,47 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
         "ingestion_failures": ingestion_failures,
         "ingest_seconds": round(ingest_seconds, 6),
         "recall_seconds": round(recall_seconds, 6),
+    }
+
+
+SEMANTIC_ROUTE_ID = "semantic_vector"
+
+
+def _routes(recalled: Mapping[str, Any], fact_uuid: str) -> set[str]:
+    decision = recalled["admissions"].get(fact_uuid) or {}
+    return {str(hit.get("route_id")) for hit in decision.get("route_provenance") or ()}
+
+
+def _recorded_semantic_posture(posture: Mapping[str, Any]) -> dict[str, Any]:
+    """The run-stable part of the facade posture (store row counts vary per question)."""
+
+    representation = posture.get("representation") or {}
+    return {
+        "status": posture.get("status"),
+        "mode": posture.get("mode"),
+        "representation_ref": representation.get("representation_ref"),
+        "representation_version": representation.get("representation_version"),
+        "config_digest": representation.get("config_digest"),
+        "dimensions": representation.get("dimensions"),
+        "minimum_similarity": posture.get("minimum_similarity"),
+        "candidate_limit": posture.get("candidate_limit"),
+    }
+
+
+def _semantic_route_diagnostics(trace: Mapping[str, Any], gold: Sequence[str]) -> dict[str, Any]:
+    """Per-question route diagnostics (#669 D2), computed after scoring from a gold-blind trace."""
+
+    admitted = list(trace["admitted"])
+    semantic_only = set(trace["semantic_only"])
+    gold_set = set(gold)
+    first_rank = {}
+    for rank, item in enumerate(admitted, start=1):
+        first_rank.setdefault(item, rank)
+    return {
+        "admitted_count": len(admitted),
+        "semantic_only_admitted_count": len(semantic_only),
+        "gold_reached_only_by_semantic": sorted(gold_set & semantic_only),
+        "gold_admitted_rank": {item: first_rank.get(item) for item in sorted(gold_set)},
     }
 
 
@@ -774,6 +856,9 @@ def _evaluate_backend(dataset: Iterable[Mapping[str, Any]], granularity: str, ba
             outcome = {"ranked": []}
             error = f"{type(exc).__name__}: {exc}"
         ranked = list(outcome.pop("ranked"))
+        trace = outcome.pop("_semantic_trace", None)
+        if trace is not None:
+            outcome["semantic_route"] = _semantic_route_diagnostics(trace, corpus(row, granularity)[1])
         rows.append(score_record(row, granularity, ranked, runtime_error=error, extra=outcome))
     elapsed = time.perf_counter() - started
 
@@ -792,6 +877,16 @@ def _evaluate_backend(dataset: Iterable[Mapping[str, Any]], granularity: str, ba
             "unmapped_admitted_count_total": sum(row.get("unmapped_admitted_count", 0) for row in rows),
             "return_budget_applied_total": sum(1 for row in rows if (row.get("return_policy") or {}).get("applied") is True),
         }
+        if any("semantic_route" in row for row in rows):
+            traced = [row["semantic_route"] for row in rows if "semantic_route" in row]
+            result["semantic_route"] = {
+                "semantic_only_admitted_count_total": sum(item["semantic_only_admitted_count"] for item in traced),
+                "questions_with_gold_reached_only_by_semantic": sum(
+                    1 for item in traced if item["gold_reached_only_by_semantic"]
+                ),
+                "gold_reached_only_by_semantic_total": sum(len(item["gold_reached_only_by_semantic"]) for item in traced),
+                "authority_effect": "none",
+            }
     elif backend in EXTERNAL_BACKENDS:
         identity = EXTERNAL_BACKENDS[backend]
         result["boundary"] = str(identity.get("boundary") or f"external system {identity['system_id']} through its own public surface")
@@ -932,6 +1027,7 @@ def run(
             },
             "granularities": list(granularities),
             "agent_memory_configuration": dict(_AGENT_MEMORY_CONFIGURATION),
+            **({"agent_memory_semantic_posture": dict(_SEMANTIC_POSTURE)} if _SEMANTIC_POSTURE else {}),
             "resource_consumption": {
                 "method": "getrusage(RUSAGE_SELF).ru_maxrss; the process high-water mark, not attributable to one backend",
                 "peak_rss_mb_process": _peak_rss_mb(),
@@ -990,13 +1086,22 @@ def main() -> int:
         default="none",
         help="facade return budget k declared on every Agent Memory recall (contract 1.4.0), or none (default)",
     )
+    parser.add_argument(
+        "--agent-memory-semantic-retrieval",
+        choices=SEMANTIC_RETRIEVAL_MODES,
+        default="off",
+        help="facade semantic_retrieval mode (#669); only with --backend agent_memory alone; auto is refused",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    if args.agent_memory_semantic_retrieval != "off" and (args.without_agent_memory or args.backend != ["agent_memory"]):
+        parser.error("--agent-memory-semantic-retrieval required is accepted only with --backend agent_memory alone")
     load_external_backends(args.external_backend)
     configure_agent_memory(
         temporal_metadata=args.agent_memory_temporal_metadata,
         ranking_variant=args.agent_memory_ranking_variant,
         budget=args.agent_memory_budget,
+        semantic_retrieval=args.agent_memory_semantic_retrieval,
     )
     report = run(
         args.input.resolve(),

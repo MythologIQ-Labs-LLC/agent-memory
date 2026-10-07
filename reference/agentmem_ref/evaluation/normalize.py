@@ -263,7 +263,10 @@ def normalize_longmemeval(report: Mapping[str, Any]) -> list[dict[str, Any]]:
 
 def _longmemeval_lane_directory(record: Mapping[str, Any]) -> str:
     row = record["row"]
-    return f"reports/benchmarks/longmemeval/{record['lane_id']}/{row['backend']}-{row['plane']}-{record['execution']['agent_memory_revision'][:12]}"
+    # A row's directory and run id carry its provider_key, which equals the runner backend for
+    # every row except one that runs a built-in backend under its own identity (#669 D2).
+    key = row.get("provider_key", row["backend"])
+    return f"reports/benchmarks/longmemeval/{record['lane_id']}/{key}-{row['plane']}-{record['execution']['agent_memory_revision'][:12]}"
 
 
 def normalize_longmemeval_lane(record: Mapping[str, Any], *, repo_root: Path | None = None) -> list[dict[str, Any]]:
@@ -298,7 +301,7 @@ def normalize_longmemeval_lane(record: Mapping[str, Any], *, repo_root: Path | N
     # backend name in the run id but carry the lane's system id on the manifest.
     system["id"] = record["system"]["id"]
     files = record.get("files", {})
-    manifest["run_id"] = f"longmemeval:{record['lane_id']}:{plane}:{backend}:{system['revision'][:12]}"
+    manifest["run_id"] = f"longmemeval:{record['lane_id']}:{plane}:{row.get('provider_key', backend)}:{system['revision'][:12]}"
     manifest["benchmark"]["task_profile"] = f"{record['lane_id']}:{plane}"
     manifest["execution"]["environment"]["runner"] = "github-hosted ubuntu-24.04 (LongMemEval Same-Harness Lane Run)"
     manifest["execution"]["environment"]["lane_digest_at_execution"] = record["lane_digest_at_execution"]
