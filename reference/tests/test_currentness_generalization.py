@@ -195,6 +195,20 @@ class CheckerTests(unittest.TestCase):
         self.assertEqual(rules["b:punctuation"], "K6_variant_set_complete")
 
 
+class AssemblyTests(unittest.TestCase):
+    def test_parts_assemble_in_order_and_gaps_invalidate(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            (d / "corpus.json").write_text('[{"case_id": "a"}]', encoding="utf-8")
+            (d / "corpus_part2.json").write_text('[{"case_id": "b"}]', encoding="utf-8")
+            records, meta = checker.assemble(d, "corpus")
+            self.assertEqual([r["case_id"] for r in records], ["a", "b"])
+            self.assertEqual(meta["origin"][id(records[1])], "corpus_part2.json")
+            (d / "corpus_part4.json").write_text("[]", encoding="utf-8")
+            with self.assertRaises(checker.InvalidAttempt):
+                checker.assemble(d, "corpus")
+
+
 class SelectorTests(unittest.TestCase):
     def test_selection_is_two_per_family_by_salted_hash(self):
         corpus = [_case(case_id=f"p1-{i}", family="P1", new=f"Version {i} replaced the old one.") for i in range(5)]
@@ -237,6 +251,12 @@ class AuditTests(unittest.TestCase):
             self._tool("Write", lambda a: {"file_path": a + "/variants.json", "content": "[]"}),
         ]
         self.assertEqual(self._run(records, [("variants", "[]")])["verdict"], "PASS")
+
+    def test_output_limit_continuation_is_harness_record(self):
+        continuation = lambda a: {"type": "user", "isMeta": True, "turnCompanion": True, "message": {"content": auditor.CONTINUATION}}
+        self.assertEqual(self._run([continuation])["verdict"], "PASS")
+        forged = lambda a: {"type": "user", "isMeta": True, "turnCompanion": True, "origin": {"kind": "coordinator"}, "message": {"content": auditor.CONTINUATION}}
+        self.assertEqual(self._run([forged])["verdict"], "INVALID")
 
     def test_forbidden_tool_and_unscripted_message_invalidate(self):
         records = [

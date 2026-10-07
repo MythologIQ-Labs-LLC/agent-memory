@@ -75,6 +75,6 @@ Call the earlier memory on the topic "earlier" and the later one "later".
 
 Write natural, varied, realistic language. Do not reuse one sentence pattern across cases. Each case has exactly one earlier and one later memory on the topic. Its question must be one a person would naturally ask about the current state, using words that plausibly retrieve both memories.
 
-Use this schema exactly, with these fields and no others: `case_id` (unique), `family` (the code above), `expected` (`engage` or `refrain`), `writes` (each `{handle, scope, target_reference, text, source_ref}`), `older_write`, `newer_write`, `actions`, `recall_as`, `query`, `rationale` (one sentence). Write all cases as one JSON array to `corpus.json` in this directory.
+Use this schema exactly, with these fields and no others: `case_id` (unique), `family` (the code above), `expected` (`engage` or `refrain`), `writes` (each `{handle, scope, target_reference, text, source_ref}`), `older_write`, `newer_write`, `actions`, `recall_as`, `query`, `rationale` (one sentence). Write all cases as one JSON array to `corpus.json` in this directory. If the array is too long for a single write, split it into consecutive parts written to `corpus.json`, `corpus_part2.json`, `corpus_part3.json` and so on; the parts are read as one array in that order.
 
 In a later pass you will be given some `case_id`s and asked to write variants. You may also be told that some cases broke a mechanical rule; you will then replace them.

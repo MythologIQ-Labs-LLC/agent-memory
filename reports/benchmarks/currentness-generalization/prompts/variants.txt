@@ -3,7 +3,7 @@ Second pass. The same tool rule applies: only Write and Read, only inside {AUTHO
 For each case_id in this JSON list, write variants of that case:
 {CASE_IDS}
 
-Write one record per (case_id, variant_type) for all 14 variant types below, as one JSON array in {AUTHOR_DIR}/variants.json.
+Write one record per (case_id, variant_type) for all 14 variant types below, as one JSON array in {AUTHOR_DIR}/variants.json. If the array is too long for a single write, split it into consecutive parts written to {AUTHOR_DIR}/variants.json, {AUTHOR_DIR}/variants_part2.json, {AUTHOR_DIR}/variants_part3.json and so on; the parts are read as one array in that order.
 
 Invariance variants (kind "invariance", expected "same_as_base"). Keep every field of the base case identical except the text of the writes and the query, and keep the meaning unchanged:
 - punctuation: change only punctuation.

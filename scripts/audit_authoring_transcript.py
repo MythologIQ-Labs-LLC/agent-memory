@@ -23,6 +23,8 @@ The rules are:
   - (1) a ``tool_result``;
   - (2) a harness reminder: ``isMeta`` with no coordinator origin, whose whole content is
     ``<system-reminder>`` blocks;
+  - (2b) the harness's output-limit continuation: ``isMeta`` with ``turnCompanion: true``, no
+    origin, and content exactly ``CONTINUATION`` (amendment A1);
   - (3) a coordinator message equal to ``PREFIX + interpolated prompt + SUFFIX``, matching the
     manifest's order;
   - (4) the spawn record;
@@ -53,6 +55,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PROMPTS = ROOT / "reports" / "benchmarks" / "currentness-generalization" / "prompts"
 PREFIX = "The coordinator sent a message while you were working:\n"
 SUFFIX = "\n\nAddress this before completing your current task."
+CONTINUATION = (
+    "Output token limit hit. Resume directly \u2014 no apology, no recap of what you were doing. "
+    "Pick up mid-thought if that is where the cut happened. Break remaining work into smaller pieces."
+)
 REMINDER = re.compile(r"\s*(?:<system-reminder>.*?</system-reminder>\s*)+", re.DOTALL)
 KNOWN_TYPES = {"user", "assistant", "attachment", "system"}
 KNOWN_ORIGINS = {None, "coordinator"}
@@ -176,6 +182,9 @@ def audit(transcript: Path, manifest_path: Path) -> dict:
         text = _text(content)
         if is_meta and origin_kind is None and REMINDER.fullmatch(text):
             counts["reminder"] += 1
+            continue
+        if is_meta and origin_kind is None and record.get("turnCompanion") is True and text == CONTINUATION:
+            counts["continuation"] += 1
             continue
         if not seen_spawn:
             if origin_kind is None and kind == "string" and text == spawn:

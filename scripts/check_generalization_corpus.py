@@ -27,6 +27,11 @@ The rules:
 * ``K8_holdout_overlap``: holdouts only (``--prior``). Any text with similarity of at least 0.5
   against any text of a prior corpus fails.
 
+Split files (amendment A1): ``assemble`` reads ``<stem>.json``, then ``<stem>_part2.json``,
+``<stem>_part3.json`` and so on, until the first missing index. A part beyond a gap, or a part
+that is not a JSON array, makes the attempt invalid (exit 2). Each rejection names the file that
+holds the record.
+
 Similarity: text is lower-cased and tokenised with ``[a-z0-9]+``. If both texts have at least 3
 tokens, similarity is the Jaccard of their token trigrams. Otherwise it is the Jaccard of their
 token sets. Two empty sets score 0.
@@ -270,7 +275,18 @@ def overlap_rule(record: dict, references: list[str], rule: str) -> None:
                 raise Reject(rule)
 
 
-def check(corpus: list, variants: list | None, selection: list | None, prior_texts: list[str]) -> dict:
+def check(
+    corpus: list,
+    variants: list | None,
+    selection: list | None,
+    prior_texts: list[str],
+    origin: dict | None = None,
+) -> dict:
+    origin = origin or {}
+
+    def file_of(record, default: str) -> str:
+        return origin.get(id(record), default)
+
     templates = template_texts()
     rejections: list[dict] = []
     seen_ids: set = set()
@@ -295,7 +311,7 @@ def check(corpus: list, variants: list | None, selection: list | None, prior_tex
                 overlap_rule(record, prior_texts, "K8_holdout_overlap")
             valid_cases[rid] = record
         except Reject as exc:
-            rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": "corpus.json", "rule": exc.rule})
+            rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": file_of(record, "corpus.json"), "rule": exc.rule})
         if isinstance(rid, str):
             seen_ids.add(rid)
 
@@ -344,13 +360,13 @@ def check(corpus: list, variants: list | None, selection: list | None, prior_tex
                     overlap_rule(record, prior_texts, "K8_holdout_overlap")
                 pairs.add(pair)
             except Reject as exc:
-                rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": "variants.json", "rule": exc.rule})
+                rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": file_of(record, "variants.json"), "rule": exc.rule})
             if isinstance(rid, str):
                 seen_ids.add(rid)
         for base_id in sorted(selected):
             for vtype in INVARIANCE + MUST_CHANGE:
                 if (base_id, vtype) not in pairs and not any(
-                    r["file"] == "variants.json" and r["id"] in _ids_for(variants, base_id, vtype) for r in rejections
+                    r["file"].startswith("variants") and r["id"] in _ids_for(variants, base_id, vtype) for r in rejections
                 ):
                     rejections.append({"id": f"{base_id}:{vtype}", "file": "variants.json", "rule": "K6_variant_set_complete"})
 
@@ -372,13 +388,45 @@ def _ids_for(variants: list, base_id: str, vtype: str) -> set:
     }
 
 
+class InvalidAttempt(SystemExit):
+    pass
+
+
+def assemble(directory: Path, stem: str) -> tuple[list, dict]:
+    """Assemble ``stem.json`` and its consecutive parts into one list, with each record's file name."""
+
+    names = [f"{stem}.json"]
+    k = 2
+    while (directory / f"{stem}_part{k}.json").exists():
+        names.append(f"{stem}_part{k}.json")
+        k += 1
+    stray = sorted(
+        p.name for p in directory.glob(f"{stem}_part*.json") if p.name not in names
+    )
+    if stray:
+        raise InvalidAttempt(f"part file(s) beyond a gap: {stray}")
+    records: list = []
+    origin: dict = {}
+    for name in names:
+        data = json.loads((directory / name).read_text(encoding="utf-8"))
+        if not isinstance(data, list):
+            raise InvalidAttempt(f"{name} is not a JSON array")
+        for record in data:
+            key = id(record)
+            origin[key] = name
+            records.append(record)
+    return records, {"files": names, "origin": origin}
+
+
 def compact(value) -> str:
     return json.dumps(value, separators=(",", ":"), ensure_ascii=False)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("corpus", type=Path)
+    parser.add_argument("corpus", type=Path, nargs="?")
+    parser.add_argument("--author-dir", type=Path, help="assemble corpus (and variants, if present) from split files")
+    parser.add_argument("--assembled-out", type=Path, help="with --author-dir: write assembled arrays to this directory")
     parser.add_argument("--variants", type=Path)
     parser.add_argument("--selection", type=Path, help="compact JSON list from select_metamorphic_bases.py")
     parser.add_argument("--prior", type=Path, action="append", default=[], help="prior corpus or variants file (holdouts)")
@@ -386,19 +434,38 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--rejections", type=Path, help="write the compact {REJECTIONS} JSON here")
     args = parser.parse_args(argv)
 
-    corpus = json.loads(args.corpus.read_text(encoding="utf-8"))
-    variants = json.loads(args.variants.read_text(encoding="utf-8")) if args.variants else None
+    origin: dict = {}
+    assembled_files: dict = {}
+    if args.author_dir:
+        corpus, meta = assemble(args.author_dir, "corpus")
+        origin.update(meta["origin"])
+        assembled_files["corpus"] = meta["files"]
+        variants = None
+        if (args.author_dir / "variants.json").exists():
+            variants, vmeta = assemble(args.author_dir, "variants")
+            origin.update(vmeta["origin"])
+            assembled_files["variants"] = vmeta["files"]
+        if args.assembled_out:
+            args.assembled_out.mkdir(parents=True, exist_ok=True)
+            (args.assembled_out / "corpus.json").write_text(json.dumps(corpus, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+            if variants is not None:
+                (args.assembled_out / "variants.json").write_text(json.dumps(variants, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    else:
+        corpus = json.loads(args.corpus.read_text(encoding="utf-8"))
+        variants = json.loads(args.variants.read_text(encoding="utf-8")) if args.variants else None
     selection = json.loads(args.selection.read_text(encoding="utf-8")) if args.selection else None
     prior_texts: list[str] = []
     for path in args.prior:
         for record in json.loads(path.read_text(encoding="utf-8")):
             if isinstance(record, dict) and "writes" in record:
                 prior_texts += record_texts(record)
-    report = check(corpus, variants, selection, prior_texts)
+    report = check(corpus, variants, selection, prior_texts, origin)
+    inputs = [args.corpus, args.variants, args.selection, *args.prior]
+    if args.author_dir:
+        inputs += [args.author_dir / name for names in assembled_files.values() for name in names]
+        report["assembled_files"] = assembled_files
     report["inputs_sha256"] = {
-        str(path): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in [args.corpus, args.variants, args.selection, *args.prior]
-        if path is not None
+        str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs if path is not None
     }
     if args.report:
         args.report.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")

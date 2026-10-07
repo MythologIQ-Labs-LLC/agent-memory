@@ -14,7 +14,7 @@
 - The thresholds are owner-ratified (G5).
 
 **doctrine**: a benchmark identifies a gap but never defines the production grammar; a perfect benchmark score is not closure evidence; no tuning after any score
-**iteration**: 5
+**iteration**: 6 (post-PASS amendment A1, re-gated)
 
 **Gate history**:
 - **Attempt 1: VETO (B1–B6).**
@@ -32,6 +32,15 @@
   - C5: the structural families were not structurally constrained.
   - C6: the deficit row was schema-invalid.
 
+- **Attempt 5: PASS** (Entry #112).
+- **Authoring attempt 1 (author732-1): INVALID by the frozen audit, and discarded.**
+  - The transcript sha256 is `8b6826087721f14f1635def576eff0c14919153cf60c58ccdbd17ef441ac8ffa`. The one violation is record 26.
+  - While writing the variants, the author hit the output-token limit. The harness then injected an `isMeta` user record with `turnCompanion: true`, no origin, and the fixed text quoted in G1 (b)(2b). The frozen rules do not classify that record.
+  - The author also split the variants across `variants.json` and `variants_part2.json` … `variants_part4.json`, which the frozen `variants.txt` did not provide for.
+  - Per the I3 fail-closed rule, the attempt is discarded and the observed shape goes to a tribunal before any new attempt.
+  - No runtime was run, no outcome was seen, and no case text was edited.
+  - Its corpus had passed K1–K7 with 0 rejections, which is recorded only. It is not reused: attempt 2 starts from a fresh author and a fresh directory.
+- **Amendment A1 (this iteration):** the (b)(2b) record class and split-file assembly. Both prompt files that change get new hashes.
 - **Attempt 4: VETO (H1).** The effective-source rule rejected the natural N9 case (two agents, both with null source), which follows the brief literally.
 - **Attempt 3: VETO (E1–E2).**
   - E1: the audit's byte-equality rule did not match the harness's wrapper on coordinator messages, and the hand-back tool was not addressed.
@@ -43,9 +52,9 @@ The owner's thresholds were never in question. Iteration 3 fixed C1–C6 and D1�
 
 | File | sha256 |
 |---|---|
-| `brief.md` | `672cc56070b08441f0337f93f8ae2c83c5f7f30ee3a469db709b9fc9b2db6794` |
+| `brief.md` | `4448a5e90e2939e30c42361e3e6e11650304a9b96cf6f24643a8bd97f7643007` |
 | `spawn.txt` | `bb9057ff55ec2a6ea6354483d81f28e0d921a32f811bb49fdc7e6cf3db0cbab3` |
-| `variants.txt` | `52b3ca6b8129f2ba22e1cf2f3595750cd30033c3669a95f7e33e38c84a5493b7` |
+| `variants.txt` | `2e11b4e41f9f9defee4751f5fb188de091619f518bb5989d6891787ec6f6ca8c` |
 | `replace.txt` | `4741ab43f902e90250c0a3d4f3d5dcc17bf0aeac9ee0666b6d979ae77d146ac8` |
 
 ## Purpose
@@ -83,6 +92,10 @@ This plan:
   - (b) every `type:"user"` record is exactly one of these (E1):
     - (1) a `tool_result`;
     - (2) a harness reminder: an `isMeta` record with no `origin.kind == "coordinator"`, whose entire content is one or more `<system-reminder>…</system-reminder>` blocks separated only by whitespace;
+    - (2b) a harness output-limit continuation (A1). This is an `isMeta` record with `turnCompanion: true` and no origin, whose content equals, byte for byte, `"Output token limit hit. Resume directly — no apology, no recap of what you were doing. Pick up mid-thought if that is where the cut happened. Break remaining work into smaller pieces."`.
+      - The text is frozen as observed in the discarded attempt-1 transcript.
+      - It carries no case information. It is a harness instruction to continue.
+      - Any other text, or this text on a record with a coordinator origin, falls under "anything else";
     - (3) a coordinator message: a record with `origin.kind == "coordinator"`, whose content equals `PREFIX + P + SUFFIX` byte for byte. Here `P` is the interpolated `variants.txt` or `replace.txt`, and its interpolated values equal the recorded script outputs and directory for that attempt. The harness wrapper is frozen as observed in the attempt-2 and attempt-3 tribunal transcripts:
       - `PREFIX` = `"The coordinator sent a message while you were working:\n"`;
       - `SUFFIX` = `"\n\nAddress this before completing your current task."`;
@@ -95,6 +108,12 @@ This plan:
     - a record carries a shape the rules do not classify. The attempt is discarded, and the observed wrapper is reported to a tribunal before any new attempt. The rule is never loosened silently.
   - **Dry run.** The freeze PR includes a dry run of the audit on a throwaway subagent transcript. The throwaway subagent receives the frozen prompts interpolated with a dummy directory, and does no authoring.
   - (c) the first `type:"user"` record that is not a harness reminder is the interpolated `spawn.txt`, as a plain string without a coordinator origin.
+- **Split-file assembly (A1).**
+  - Both `brief.md` and `variants.txt` allow an array that is too long for one write to be split into consecutive parts: `corpus.json`, `corpus_part2.json`, `corpus_part3.json`, … (and the same for `variants`).
+  - The mechanical tooling assembles one array by reading the base file, then `_part2`, `_part3`, … until the first missing index.
+  - A part file beyond a gap, or a part that is not a JSON array, makes the attempt **invalid**, because the input cannot be assembled mechanically.
+  - Each rejection names the actual file holding the record.
+  - The freeze PR commits the assembled arrays as `corpus.json` and `variants.json`, with the part hashes recorded.
 - **Transcript binding (D2).**
   - The transcript is copied into the freeze PR under `reports/benchmarks/currentness-generalization/authoring/`, with its sha256.
   - The freeze tribunal runs in the same container. It hashes the live `~/.claude/projects/<session>/subagents/agent-<id>.jsonl` itself, compares the hash with the committed copy, and re-runs the audit.
