@@ -34,10 +34,10 @@ def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _repository_head() -> str | None:
+def _git_revision(spec: str) -> str | None:
     try:
         completed = subprocess.run(
-            ["git", "rev-parse", "HEAD"],
+            ["git", "rev-parse", spec],
             cwd=ROOT,
             check=True,
             capture_output=True,
@@ -49,6 +49,15 @@ def _repository_head() -> str | None:
     return value or None
 
 
+def _source_identity() -> dict[str, str] | None:
+    values = {
+        "dashboard": _git_revision("HEAD:reports/benchmarks/dashboard/current.json"),
+        "scorecards": _git_revision("HEAD:reports/benchmarks/scorecards/scorecards.json"),
+        "normalized": _git_revision("HEAD:reports/benchmarks/normalized"),
+    }
+    return None if any(value is None for value in values.values()) else {key: str(value) for key, value in values.items()}
+
+
 def build() -> dict:
     normalized = {
         str(path.relative_to(ROOT)): _load(path)
@@ -58,7 +67,8 @@ def build() -> dict:
         dashboard=_load(DASHBOARD),
         scorecards=_load(SCORECARDS),
         normalized_runs=normalized,
-        repository_head=_repository_head(),
+        repository_head=_git_revision("HEAD"),
+        source_identity=_source_identity(),
     )
     schema = _load(SCHEMA)
     errors = sorted(Draft202012Validator(schema).iter_errors(catalog), key=lambda error: list(error.absolute_path))
@@ -77,10 +87,19 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    expected = payload()
+    catalog = build()
+    expected = (json.dumps(catalog, indent=2, sort_keys=True, ensure_ascii=False) + "\n").encode("utf-8")
     if args.check:
-        if not OUTPUT.is_file() or OUTPUT.read_bytes() != expected:
+        if not OUTPUT.is_file():
             print(f"stale or missing: {OUTPUT.relative_to(ROOT)}")
+            return 1
+        try:
+            committed = _load(OUTPUT)
+        except (OSError, json.JSONDecodeError):
+            print(f"stale or invalid: {OUTPUT.relative_to(ROOT)}")
+            return 1
+        if committed != catalog:
+            print(f"stale: {OUTPUT.relative_to(ROOT)}")
             return 1
         return 0
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
