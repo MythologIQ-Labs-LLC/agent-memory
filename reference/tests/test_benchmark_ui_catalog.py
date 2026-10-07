@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -39,6 +41,15 @@ class BenchmarkUiCatalogTests(unittest.TestCase):
             normalized_runs=cls.normalized,
             repository_head="261c6a66f739b5e45e306a69195392edbc800175",
         )
+
+    def test_committed_catalog_is_current(self):
+        completed = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "build_benchmark_ui_catalog.py"), "--check"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
 
     def test_catalog_validates_against_schema(self):
         errors = sorted(
