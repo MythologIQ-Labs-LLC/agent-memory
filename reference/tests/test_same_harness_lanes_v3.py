@@ -142,8 +142,17 @@ class _V3LaneMixin:
             "declaration_blob": _blob(V3_DECLARATION),
             "checker_state_required": ["PASS", "TRANSITION"],
         })
+        # The register declares v3 as the open successor until Step B1 publishes it; after that the
+        # published v3 record names the same declaration as its predecessor block (docs/67).
         register = json.loads((REPO_ROOT / "reports/runtime/baseline-register.json").read_text(encoding="utf-8"))
-        self.assertEqual(register["declared_successor"]["declaration"], V3_DECLARATION)
+        declared = register["declared_successor"]
+        if declared is not None:
+            self.assertEqual(declared["declaration"], V3_DECLARATION)
+        else:
+            entry = next(item for item in register["baselines"] if item["baseline_id"] == "agent-memory-runtime-baseline-v3")
+            record = json.loads((REPO_ROOT / entry["record"]).read_text(encoding="utf-8"))
+            self.assertEqual(record["predecessor"]["declaration"], V3_DECLARATION)
+            self.assertEqual(record["predecessor"]["declaration_blob"], posture["declaration_blob"])
 
     def test_reference_blobs_are_the_ones_the_accepted_runs_executed(self):
         lane = self._lane()
