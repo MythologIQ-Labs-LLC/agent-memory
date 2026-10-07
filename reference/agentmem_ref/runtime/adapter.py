@@ -743,6 +743,199 @@ class GovernedMemoryAdapter:
         )
         return "open" if live(target, proposal["target_reference"]) and live(source, source_ref) else "stale"
 
+    # -- read-time cross-fact currentness (#671) ----------------------------
+
+    def cross_fact_applicability(self, admitted, context: RecallContext, intent) -> dict[str, dict]:
+        """Build bounded, non-authoritative cross-fact applicability evidence.
+
+        Only an explicit-current query can receive this evidence. The method is a
+        pure read: it does not apply proposals, mutate lifecycle state, or remove
+        candidates from admission.
+        """
+
+        from .cross_fact_currentness import ASSERTION_FILTER_VERSION, assertion_filter_refusal
+        from .temporal_order_constraints import explicit_current_profile
+
+        if not explicit_current_profile(intent):
+            return {}
+
+        admitted_set = set(admitted)
+        result: dict[str, dict] = {}
+        guards = [
+            "explicit_current_profile",
+            "state_change_candidate",
+            "accepted_relation_basis",
+            "open_non_authoritative_proposal",
+            "proposal_live_and_open",
+            "unhedged_untrusted_claim_free",
+            "write_provenance_present",
+            "same_actor",
+            "same_source",
+            "same_scope",
+            "no_mutual_limitation",
+        ]
+
+        def target_record(target_ref: str) -> dict:
+            return result.setdefault(target_ref, {"accepted": [], "refusal_reason": None})
+
+        def refuse(target_ref: str, reason: str) -> None:
+            record = target_record(target_ref)
+            if record["refusal_reason"] is None:
+                record["refusal_reason"] = reason
+
+        def stored_semantics(fact) -> Mapping[str, object]:
+            value = (fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY) or {}
+            return value if isinstance(value, Mapping) else {}
+
+        def provenance(fact) -> Mapping[str, object] | None:
+            value = (fact.attributes or {}).get("write_provenance")
+            return value if isinstance(value, Mapping) else None
+
+        def relation_back(target_fact, source_ref: str) -> bool:
+            for item in stored_semantics(target_fact).get("relations", ()) or ():
+                if not isinstance(item, Mapping):
+                    continue
+                if str(item.get("other_fact_uuid") or "") != source_ref:
+                    continue
+                basis = str(item.get("basis") or "")
+                if (
+                    item.get("classification") == semantics.STATE_CHANGE_CANDIDATE
+                    and (basis == "single_valued_replacement_marker" or basis.startswith("explicit_termination:"))
+                ):
+                    return True
+            return False
+
+        def clock_refusal(source_fact, target_fact) -> str | None:
+            source_declared = (source_fact.attributes or {}).get(DECLARED_TEMPORAL_KEY) or {}
+            target_declared = (target_fact.attributes or {}).get(DECLARED_TEMPORAL_KEY) or {}
+            for kind in ("observed_at", "valid_from"):
+                target_value = target_declared.get(kind)
+                if not target_value:
+                    continue
+                source_value = source_declared.get(kind)
+                if not source_value:
+                    return "declared_clock_unconfirmed"
+                source_clock = parse_time(source_value)
+                target_clock = parse_time(target_value)
+                if source_clock is None or target_clock is None:
+                    return "declared_clock_unconfirmed"
+                if source_clock < target_clock:
+                    return "declared_clock_contradicts_direction"
+            return None
+
+        for source_ref in sorted(admitted_set):
+            source_fact = self._substrate.get_fact(source_ref)
+            if source_fact is None:
+                continue
+            source_semantics = stored_semantics(source_fact)
+            for relation in source_semantics.get("relations", ()) or ():
+                if not isinstance(relation, Mapping):
+                    continue
+                target_ref = str(relation.get("other_fact_uuid") or "")
+                if not target_ref or target_ref not in admitted_set or target_ref == source_ref:
+                    continue
+
+                target_fact = self._substrate.get_fact(target_ref)
+                if target_fact is None:
+                    continue
+
+                if relation.get("classification") != semantics.STATE_CHANGE_CANDIDATE:
+                    refuse(target_ref, "relation_not_state_change")
+                    continue
+
+                relation_basis = str(relation.get("basis") or "")
+                if not (
+                    relation_basis == "single_valued_replacement_marker"
+                    or relation_basis.startswith("explicit_termination:")
+                ):
+                    refuse(target_ref, "relation_basis_not_accepted")
+                    continue
+
+                proposal = relation.get("proposal")
+                if (
+                    not isinstance(proposal, Mapping)
+                    or proposal.get("applied") is not False
+                    or proposal.get("authority_effect") != "none"
+                ):
+                    refuse(target_ref, "no_open_proposal")
+                    continue
+
+                proposal_status = self._proposal_status(dict(proposal))
+                if proposal_status != "open":
+                    refuse(target_ref, f"proposal_not_open:{proposal_status}")
+                    continue
+
+                markers = source_semantics.get("markers") or {}
+                if (
+                    markers.get("hedge")
+                    or markers.get("self_claims")
+                    or source_semantics.get("proposal_ineligible_reasons")
+                ):
+                    refuse(target_ref, "hedged_or_untrusted_claim")
+                    continue
+
+                source_prov, target_prov = provenance(source_fact), provenance(target_fact)
+                if source_prov is None or target_prov is None:
+                    refuse(target_ref, "cross_fact_identity_unavailable")
+                    continue
+
+                source_actor = str(source_prov.get("actor_id") or "")
+                target_actor = str(target_prov.get("actor_id") or "")
+                if not source_actor or source_actor != target_actor:
+                    refuse(target_ref, "actor_mismatch")
+                    continue
+
+                same_source = (
+                    source_prov.get("source_ref") == target_prov.get("source_ref")
+                    and source_prov.get("tenant") == target_prov.get("tenant")
+                    and source_prov.get("purpose") == target_prov.get("purpose")
+                    and source_prov.get("channel") == "caller_observation"
+                    and target_prov.get("channel") == "caller_observation"
+                )
+                if not same_source:
+                    refuse(target_ref, "source_mismatch")
+                    continue
+
+                source_scope, target_scope = self._fact_scope.get(source_ref), self._fact_scope.get(target_ref)
+                same_scope = (
+                    self._same_semantic_scope(target_scope, source_scope or {})
+                    and set((source_scope or {}).get("required_domain_refs", ()))
+                    == set((target_scope or {}).get("required_domain_refs", ()))
+                    and source_prov.get("tenant") == target_prov.get("tenant") == self._tenant
+                )
+                if not same_scope:
+                    refuse(target_ref, "scope_mismatch")
+                    continue
+
+                if relation_back(target_fact, source_ref):
+                    refuse(target_ref, "contradictory_cross_fact_evidence")
+                    continue
+
+                assertion_refusal = assertion_filter_refusal(source_fact.fact_text, source_semantics)
+                if assertion_refusal:
+                    refuse(target_ref, assertion_refusal)
+                    continue
+
+                clock_reason = clock_refusal(source_fact, target_fact)
+                if clock_reason:
+                    refuse(target_ref, clock_reason)
+                    continue
+
+                evidence = {
+                    "basis": "interpreted_cross_fact",
+                    "source_fact_uuid": source_ref,
+                    "proposal_id": str(proposal.get("proposal_id") or ""),
+                    "relation_basis": relation_basis,
+                    "guards": list(guards),
+                    "assertion_filter_version": ASSERTION_FILTER_VERSION,
+                    "authority_effect": "none",
+                }
+                target_record(target_ref)["accepted"].append(evidence)
+
+        for record in result.values():
+            record["accepted"].sort(key=lambda item: (item["source_fact_uuid"], item["proposal_id"]))
+        return result
+
     # -- read path ------------------------------------------------------
 
     def governed_recall(self, query: str, context: RecallContext | None = None) -> AdmissionResult:
