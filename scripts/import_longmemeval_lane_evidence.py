@@ -208,6 +208,65 @@ def check_recall_control(native: dict, mode: str, row: dict) -> dict | None:
     return summary
 
 
+def check_cross_fact(native: dict, lane: dict, row: dict, backend: str) -> dict | None:
+    """Bind #671 C9 attribution fields only for the v5 Agent Memory control."""
+
+    v5 = lane.get("lane_id") == "longmemeval-s-retrieval-parity-v5"
+    rows = native.get("rows") or []
+    carrying = [item for item in rows if "cross_fact" in item]
+    summary = native.get("cross_fact_summary")
+    is_control = row.get("provider_key") == "agent_memory" and backend == "agent_memory"
+    if not v5:
+        return None
+    if not is_control:
+        if carrying or summary is not None:
+            raise ImportError_(
+                f"v5 non-control row {row['row_id']} must not carry cross_fact attribution"
+            )
+        return None
+    expected = 0
+    for item in rows:
+        if item.get("runtime_error") is not None:
+            if "cross_fact" in item:
+                raise ImportError_(
+                    f"v5 runtime-error question {item.get('question_id')} must not carry cross_fact"
+                )
+            continue
+        expected += 1
+        record = item.get("cross_fact")
+        if not isinstance(record, dict):
+            raise ImportError_(
+                f"v5 control question {item.get('question_id')} lacks cross_fact attribution"
+            )
+        if not isinstance(record.get("limited_count"), int) or record["limited_count"] < 0:
+            raise ImportError_("cross_fact limited_count must be a non-negative integer")
+        if len(record.get("limited_item_ids") or []) != record["limited_count"]:
+            raise ImportError_("cross_fact limited_item_ids does not match limited_count")
+        if record["limited_count"] > 0 and not isinstance(record.get("ranked_top_mechanism_off"), list):
+            raise ImportError_(
+                f"limited question {item.get('question_id')} lacks mechanism-off ranked output"
+            )
+        if record["limited_count"] == 0 and record.get("ranked_top_mechanism_off") is not None:
+            raise ImportError_(
+                f"unlimited question {item.get('question_id')} unexpectedly ran mechanism-off"
+            )
+    if len(carrying) != expected:
+        raise ImportError_(
+            f"v5 control carries {len(carrying)} cross_fact rows for {expected} error-free questions"
+        )
+    if not isinstance(summary, dict) or summary.get("authority_effect") != "none":
+        raise ImportError_("v5 control lacks authority-free cross_fact_summary")
+    if summary.get("questions_with_limitation") != sum(
+        1 for item in carrying if item["cross_fact"].get("limited_count", 0) > 0
+    ):
+        raise ImportError_("cross_fact_summary questions_with_limitation does not match rows")
+    if summary.get("limited_count_total") != sum(
+        int(item["cross_fact"].get("limited_count", 0)) for item in carrying
+    ):
+        raise ImportError_("cross_fact_summary limited_count_total does not match rows")
+    return dict(summary)
+
+
 def runtime_baseline_binding(identity: dict, lane: dict, row: dict | None = None) -> dict | None:
     """Bind the checker state the run recorded to the posture the lane's control row pins.
 
@@ -322,6 +381,7 @@ def _check_report(report: dict, *, identity: dict, lane: dict, row: dict) -> Non
     if len(native.get("rows") or []) != lane["dataset"]["query_count"]:
         raise ImportError_("report does not carry one row per frozen question")
     check_recall_control(native, expected_configuration["recall_control"], row)
+    check_cross_fact(native, lane, row, backend)
     external = (execution.get("external_backends") or {}).get(backend)
     if row["source"]["kind"] == "python_package":
         if external is None:
@@ -449,6 +509,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
             "runtime_baseline": runtime_baseline_binding(identity, lane, row),
             "semantic_route_posture": report["execution"].get("agent_memory_semantic_posture"),
             "recall_control_summary": report["planes"][plane]["backends"][backend].get("recall_control_summary"),
+            "cross_fact_summary": report["planes"][plane]["backends"][backend].get("cross_fact_summary"),
         },
         "input": {
             "sha256": lane["dataset"]["input_sha256"],
