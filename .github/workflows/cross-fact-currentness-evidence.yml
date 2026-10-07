@@ -1,0 +1,42 @@
+name: Cross-Fact Currentness Evidence
+
+on:
+  pull_request:
+    paths:
+      - "reference/agentmem_ref/**"
+      - "reference/run_cross_fact_currentness_report.py"
+      - "reference/tests/test_cross_fact_currentness.py"
+      - "reports/runtime/baseline-v5-declaration.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  c7-attribution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install reference dependencies
+        run: python -m pip install -r reference/requirements.txt
+      - name: Run cross-fact attribution report
+        id: report
+        continue-on-error: true
+        env:
+          PYTHONPATH: reference
+        run: |
+          python reference/run_cross_fact_currentness_report.py \
+            --output cross-fact-currentness-report.json
+      - name: Upload C7 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-fact-currentness-c7
+          path: cross-fact-currentness-report.json
+          if-no-files-found: error
+      - name: Enforce attribution result
+        if: steps.report.outcome != 'success'
+        run: exit 1
