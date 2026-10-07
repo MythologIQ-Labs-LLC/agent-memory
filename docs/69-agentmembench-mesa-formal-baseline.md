@@ -239,3 +239,23 @@ Re-run the same frozen runner, unchanged, after every material runtime tranche t
 - the M4 `win_basis` and `primary_stage` distributions, not only the rate.
 
 Judged M2 runs once an authorized Qwen2.5-14B-Instruct judge exists. It re-judges this baseline's raw report and the five published upstream detail files with the same judge.
+
+### Successor freeze `mesa-formal-v2` (#671, Runtime Baseline v5)
+
+The plan of record is docs/plan-671-evidence-v5.md (E5–E9, Gate PASS at attempt 2). It amends the replay plan above in one respect: **the runner is no longer unchanged.**
+
+- **What changed in the runner.** `reference/run_agentmembench_formal.py` hard-coded the v1 freeze. It now takes `--freeze PATH`, which defaults to v1 and must name a committed file in `reference/fixtures/benchmarks/agentmembench/`. The loaded freeze supplies:
+  - the report's `profile_id` (its `freeze_id`);
+  - the report's freeze binding (path and sha256);
+  - the judge's binding check, which now also compares the path.
+- **What did not change.** `classify_conflict_case` and every stage tuple are byte-identical to `7b041a7`. Tests pin each by sha256.
+- **The v2 freeze** (`mesa-formal-v2-freeze.json`) differs from v1 only in these fields, and the difference is tested exhaustively:
+  - `freeze_id`, `owning_issue` (671), `frozen_on`, `status` and `run_id`;
+  - `adapter.surface` (contract 1.5.0) and `adapter.ranking_policy` (3.3.0);
+  - `agent_memory`: runtime tree `f508c63f…`, the `reference/agentmem_ref` tree at the #726 merge `74c8683`, with policy 3.3.0 and contract 1.5.0;
+  - `runner.sha256`;
+  - the added `supersedes` and `predictions` (the E6 confirmation).
+
+  The upstream pins, arguments, phases, judge identity, deviations D1–D6, stop lines and classifier are unchanged.
+- **Replays of each version.** v1 replays still run at `7b041a7`. The v1 freeze pins that revision's runner sha256 (`58b2fced…`), so the current runner refuses it by design. The v2 replay runs at the merge commit of the PR that adds the v2 freeze, whose `reference/agentmem_ref` tree equals the freeze. It runs before any later commit writes into that tree.
+- **The judge.** It stays unprovisioned (#706). Deviation D1 holds for v2 as it does for v1.

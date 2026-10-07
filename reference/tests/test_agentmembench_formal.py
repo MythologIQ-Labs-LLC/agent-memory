@@ -270,10 +270,32 @@ class JudgeTests(unittest.TestCase):
             formal.verify_raw_against_committed(raw, bad)
 
 
+V2_FREEZE = formal.FREEZE_DIR / "mesa-formal-v2-freeze.json"
+# The runner at 7b041a7, which the v1 freeze binds and where v1 replays run (docs/69
+# "Determinism"). Hard-coded: CI checkouts are shallow, so the commit is not readable there.
+V1_RUNNER_SHA256 = "58b2fced97a82d762a3cb24325af31173248431837880cd9b19b0a70ae55540c"
+# docs/plan-671-evidence-v5.md E5: the classifier and its stage vocabulary are unchanged
+# from 7b041a7 (sha256 of the function source, and of each tuple's JSON).
+CLASSIFIER_SOURCE_SHA256 = "65961b6f37f74845b0bd01f2d9cd05c0c62631a68bf6f3986caeeb2d7f870302"
+CLASSIFIER_CONSTANT_SHA256 = {
+    "CURRENTNESS_STAGES": "874135506c0f447342d8f8ec959fe6c89cd4394764136ab0bb82607e732f2a5a",
+    "RELEVANCE_STAGES": "86b9ab6d6fffa501ed5f6abbfe1502ec0ff8810498c50db872b64fc8e7a14a2b",
+    "RELEVANCE_STAGE_PREFIXES": "05a48646e15c3dd7caf09949c509bf2e9cbca6d7b50170bfc5a2b057a4bb47d9",
+    "CONTENT_TIE_STAGES": "eac20539e70b87bec3647dc712aeb661994849914cfa528be433caeb7c2817a4",
+    "RECENCY_TIE_STAGES": "46d2df0501cd616010e47fdaf052f9aa801c550e4d54de66b485c5167bd9597b",
+    "STAGES": "5a75cbe8fa3a94d615025ca114b993d7f5448f9b3d567c44a0746e496482fe70",
+    "CLASSIFIER_VERSION": "280ce3741476a7092aff70a6ef4aee4895bace1623809c63376f9906b9ea3214",
+}
+
+
 class FreezeTests(unittest.TestCase):
     def test_runner_digest_matches_freeze(self):
-        freeze = formal.load_freeze()
-        self.assertEqual(formal.sha256_file(Path(formal.__file__)), freeze["runner"]["sha256"])
+        # The current runner executes under the v2 freeze; the v1 freeze keeps binding the
+        # 7b041a7 runner, so a v1 replay on this runner is refused by design (verify_self).
+        self.assertEqual(formal.sha256_file(Path(formal.__file__)), formal.load_freeze(V2_FREEZE)["runner"]["sha256"])
+        self.assertEqual(formal.load_freeze()["runner"]["sha256"], V1_RUNNER_SHA256)
+        with self.assertRaises(SystemExit):
+            formal.verify_self(formal.load_freeze())
 
     def test_freeze_binds_runtime_baseline_v2_policy_and_contract(self):
         # Historical binding (#669): the v1 freeze binds the Runtime Baseline v2 runtime
@@ -303,6 +325,81 @@ class FreezeTests(unittest.TestCase):
     def test_m6_is_not_comparable_never_pass(self):
         axis = formal.load_freeze()["axis_plan"]["M6_llm_portability"]
         self.assertEqual(axis["expected_class"], "not_comparable")
+
+
+class SuccessorFreezeTests(unittest.TestCase):
+    """docs/plan-671-evidence-v5.md E5/E6: mesa-formal-v2 differs from v1 only where listed."""
+
+    CHANGED = {"freeze_id", "owning_issue", "frozen_on", "status", "run_id", "adapter", "runner", "agent_memory"}
+    ADDED = {"supersedes", "predictions"}
+
+    def setUp(self):
+        self.v1 = formal.load_freeze()
+        self.v2 = formal.load_freeze(V2_FREEZE)
+
+    def test_field_differences_are_exhaustive(self):
+        self.assertEqual(set(self.v2) - set(self.v1), self.ADDED)
+        self.assertEqual(set(self.v1) - set(self.v2), set())
+        changed = {key for key in self.v1 if self.v1[key] != self.v2[key]}
+        self.assertLessEqual(changed, self.CHANGED)
+        for key in set(self.v1) - self.CHANGED:
+            self.assertEqual(self.v2[key], self.v1[key], key)
+        adapter_changed = {key for key in self.v1["adapter"] if self.v1["adapter"][key] != self.v2["adapter"][key]}
+        self.assertEqual(adapter_changed, {"surface", "ranking_policy"})
+        self.assertIn("contract 1.5.0", self.v2["adapter"]["surface"])
+        self.assertIn("3.3.0", self.v2["adapter"]["ranking_policy"])
+        memory_changed = {key for key in self.v1["agent_memory"] if self.v1["agent_memory"][key] != self.v2["agent_memory"][key]}
+        self.assertEqual(memory_changed, {"runtime_tree", "ranking_policy_version", "public_contract_version"})
+        self.assertEqual(set(self.v2["runner"]), {"path", "sha256"})
+
+    def test_identity_and_supersession(self):
+        self.assertEqual(self.v2["freeze_id"], "agent-memory-agentmembench-mesa-formal-v2")
+        self.assertEqual(self.v2["owning_issue"], 671)
+        self.assertEqual(self.v2["run_id"], "agent_memory_formal_v2_s2027_9170")
+        self.assertEqual(self.v2["supersedes"], {
+            "freeze_id": self.v1["freeze_id"],
+            "path": str(formal.FREEZE_PATH.relative_to(formal.REPO_ROOT)),
+            "sha256": formal.sha256_file(formal.FREEZE_PATH),
+        })
+        self.assertEqual([item["id"] for item in self.v2["deviations"]], ["D1", "D2", "D3", "D4", "D5", "D6"])
+
+    def test_binds_runtime_baseline_v5_policy_and_contract(self):
+        declaration = json.loads((REFERENCE.parent / "reports" / "runtime" / "baseline-v5-declaration.json").read_text())
+        [delta] = declaration["identity_deltas"]
+        self.assertEqual(self.v2["agent_memory"]["ranking_policy_version"], delta["to"])
+        live = formal.observed_agent_memory_binding()
+        self.assertEqual(self.v2["agent_memory"]["ranking_policy_version"], live["ranking_policy_version"])
+        self.assertEqual(self.v2["agent_memory"]["public_contract_version"], live["public_contract_version"])
+        self.assertEqual(self.v2["agent_memory"]["ranking_policy_id"], live["ranking_policy_id"])
+
+    def test_predictions_are_frozen_exact_dicts(self):
+        predictions = self.v2["predictions"]
+        self.assertEqual(predictions["P1"], {"m4_failure_classification.outcomes": {"new_fact": 250},
+                                             "phases.conflict.dual_version_rate": 0.0})
+        self.assertEqual(predictions["P2"], {"m4_failure_classification.win_basis_counts": {"currentness_mechanism": 250}})
+        self.assertEqual(predictions["P3"], {"m4_failure_classification.primary_stage_counts": {},
+                                             "m4_failure_classification.unmet_stage_counts": {}})
+        self.assertEqual(predictions["P5"], {"m4_failure_classification.upstream_consistency.consistent": True})
+
+    def test_classifier_is_unchanged_from_7b041a7(self):
+        import hashlib
+        import inspect
+
+        self.assertEqual(hashlib.sha256(inspect.getsource(formal.classify_conflict_case).encode()).hexdigest(),
+                         CLASSIFIER_SOURCE_SHA256)
+        for name, digest in CLASSIFIER_CONSTANT_SHA256.items():
+            self.assertEqual(hashlib.sha256(json.dumps(getattr(formal, name)).encode()).hexdigest(), digest, name)
+        self.assertEqual(self.v2["m4_classifier"], self.v1["m4_classifier"])
+
+    def test_report_binding_and_profile_follow_the_selected_freeze(self):
+        import inspect
+
+        source = inspect.getsource(formal.run_formal)
+        self.assertIn('"profile_id": freeze["freeze_id"]', source)
+        self.assertIn("freeze_path.resolve().relative_to(REPO_ROOT)", source)
+        self.assertNotIn("FREEZE_PATH", source.split('"""', 2)[2])
+        judge = inspect.getsource(formal.judge_raw_report)
+        self.assertIn('binding.get("path") != str(freeze_path.resolve().relative_to(REPO_ROOT))', judge)
 
 
 if __name__ == "__main__":

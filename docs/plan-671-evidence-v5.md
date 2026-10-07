@@ -7,7 +7,7 @@
 **precedent**: docs/plan-644-lanes-v4.md (L1–L9); docs/plan-669-lanes-v3.md (IA1, IA2); docs/69 (formal MESA protocol, "Determinism"); the mesa-formal-v1 freeze
 **owner rulings in force**: `decision-671-currentness-mechanism` (Option A now, Option D next, never D inside A); `decision-671-same-source`; `decision-eval-credential`
 **doctrine**: benchmark score != truth; a higher score without attribution is not acceptance; no tuning after any score
-**iteration**: 2
+**iteration**: 2 (Gate Tribunal PASS at attempt 2, META_LEDGER Entry #105; advisories folded below)
 
 Gate history:
 - **Attempt 1, VETO, four findings.** The prediction was confirmed by execution: the frozen classifier on this branch's runtime gave `new_fact` 250 and `currentness_mechanism` 250, and M1/M3/M5/M6 were equal to v1.
@@ -19,6 +19,13 @@ Gate history:
     - the semantic-row reason states policy 3.2.0;
     - two AMB `-v4` lines contradict `-v5` and must be replaced, not appended to.
 
+- **Attempt 2, PASS with advisories.** The tribunal verified the remedies by execution:
+  - **AMB attribution is computable.** The frozen renderer, `modes/retrieval.py:50-54` (blob `416dd4df`), rebuilds all 77 `-v4` contexts byte for byte from ordered document ids.
+  - **The off recompute is sound.** The facade reads `MULTI_ROUTE_RANKING_POLICY` at call time, the live policy is restored afterwards, and a later recall is identical whether or not an off recall preceded it.
+  - **The MESA PR stays outside `reference/agentmem_ref`**, and the runner's checks pass there.
+  - **E8 is complete except for one test:** 11 failures are simulated, 10 of them listed.
+
+  Advisories A1–A8 are folded into "Advisories folded at attempt 2" below. Where that section and an E-clause differ, the section governs.
   Iteration 2 resequences execution (E7), specifies the runner change completely (E5), adds the re-pin list (E8) and a corrected E4, and folds in advisories A1–A11. A1 makes attribution causal, not co-occurrence (E1, E2).
 
 ## Purpose
@@ -210,6 +217,31 @@ The evidence has to show two things:
   - the v2 freeze;
   - the execution revision;
   - that v1 replays remain at `7b041a7`.
+
+## Advisories folded at attempt 2 (binding)
+
+- **A1 (E8).** Add `reference/tests/test_same_harness_lane.py:222-239`. It hard-codes the lane ids and lets only `-v4` lanes be `frozen`. It gains the two `-v5` lane ids, and `frozen` is allowed for `-v5` (`-v4` is now `accepted`).
+- **A2 (E7 step 6).** The deficit closure follows `schemas/benchmark-deficit-ledger.schema.json`. The schema allows no extra fields, so the closure sets exactly:
+  - `state: "frontier"`, or `improved_not_frontier` if the accepted evidence does not reach the upstream frontier;
+  - `closed_at`;
+  - `closure_evidence`, citing the v2 report and the acceptance ledger entry;
+  - `remaining_gap: 0`.
+
+  It adds no `status`, `closed_by` or history field.
+- **A3 (E8).** Shallow CI checkouts cannot read `7b041a7`. The v1 runner sha256 (`58b2fced…`), the classifier-source sha256 and the tuple sha256s are therefore hard-coded in the test, after being verified once against `git show 7b041a7:reference/run_agentmembench_formal.py`.
+- **A4 (E2).** The off recall:
+  - runs inside the single `mechanism()` context manager, which restores the policy on error;
+  - runs after the on recall and outside any timed span;
+  - writes one journal row and one governance row to the benchmark store, which changes no ranking.
+
+  The no-effect test uses the AMB durable-store pattern, with a later recall on a different query.
+- **A5 (E1).** The AMB renderer is `modes/retrieval.py:50-54` at `03c1d0f` (blob `416dd4df`). The content source is the `-v4` case contexts. The same ordered documents give the same per-case score fields.
+- **A6 (E8).** The `-v4` evidence records carry the bridge blob, not the version string. The re-pin at `test_same_harness_lanes_v4.py:208-210` therefore checks the blob against the evidence records, and `bridge_version 0.3.0` against the `-v4` lane's own `revision_rule`.
+- **A7 (wording).**
+  - **E4, LongMemEval:** of the configuration identity line, only the `agent_memory_shadow` clause is dropped; the control's `recall_control: off` clause stays.
+  - **E4, AMB:** the AMB semantic row has no `runtime_baseline_posture`, so none is replaced.
+  - **E5:** `runner.sha256` is the file's sha256, not a git blob id.
+- **A8 (E6 P4).** Guard verdicts come only from the C7 report regenerated at acceptance, because the frozen trace digest drops cross-fact fields. P1–P3 imply P4.
 
 ## Boundaries
 
