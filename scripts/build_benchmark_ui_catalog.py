@@ -28,6 +28,9 @@ SCORECARDS = ROOT / "reports" / "benchmarks" / "scorecards" / "scorecards.json"
 NORMALIZED = ROOT / "reports" / "benchmarks" / "normalized"
 OUTPUT = ROOT / "reports" / "benchmarks" / "ui" / "catalog.json"
 SCHEMA = ROOT / "schemas" / "benchmark-ui-catalog.schema.json"
+DIAGNOSTIC_SOURCES = (
+    ROOT / "reports" / "benchmarks" / "replays" / "594-post-550-semantic-qualification" / "phase-b-score-v1.json",
+)
 
 
 def _load(path: Path):
@@ -52,6 +55,7 @@ def _git_revision(spec: str) -> str | None:
 def _source_identity() -> dict[str, str] | None:
     values = {
         "dashboard": _git_revision("HEAD:reports/benchmarks/dashboard/current.json"),
+        "diagnostics": _git_revision("HEAD:reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"),
         "scorecards": _git_revision("HEAD:reports/benchmarks/scorecards/scorecards.json"),
         "normalized": _git_revision("HEAD:reports/benchmarks/normalized"),
     }
@@ -67,6 +71,7 @@ def build() -> dict:
         dashboard=_load(DASHBOARD),
         scorecards=_load(SCORECARDS),
         normalized_runs=normalized,
+        diagnostic_sources={str(path.relative_to(ROOT)): _load(path) for path in DIAGNOSTIC_SOURCES},
         repository_head=_git_revision("HEAD"),
         source_identity=_source_identity(),
     )
