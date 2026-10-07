@@ -449,11 +449,13 @@ TEMPORAL_METADATA_MODES = ("none", "host_declared", "source_observed_at")
 RANKING_VARIANTS = tuple(VARIANTS)
 # Evaluation-only configuration of the Agent Memory adapter, recorded in every report.
 SEMANTIC_RETRIEVAL_MODES = ("off", "required")
+RECALL_CONTROL_MODES = ("off", "shadow")
 _AGENT_MEMORY_CONFIGURATION: dict[str, str] = {
     "temporal_metadata": "none",
     "ranking_variant": "default",
     "budget": "none",
     "semantic_retrieval": "off",
+    "recall_control": "off",
 }
 # The facade's semantic-route posture, recorded once per run when the route is required (#669).
 _SEMANTIC_POSTURE: dict[str, Any] = {}
@@ -485,6 +487,7 @@ def configure_agent_memory(
     ranking_variant: str = "default",
     budget: str | int | None = "none",
     semantic_retrieval: str = "off",
+    recall_control: str = "off",
 ) -> dict[str, str]:
     """Select how the Agent Memory adapter uses the host-visible temporal information.
 
@@ -509,12 +512,22 @@ def configure_agent_memory(
     (the shipped default) or ``required`` (the pinned local representation provider must
     load, or every question fails as a runtime error). ``auto`` is not offered: a lane row
     must not silently fall back to the lexical posture.
+
+    ``recall_control`` (contract 1.5.0, #644 plan-644-lanes-v4 L2) is the facade's
+    ``recall_control`` mode: ``off`` (the shipped default; the facade opens exactly as before)
+    or ``shadow`` (retrieval unchanged; each question records the controller's telemetry
+    block without ``usage.elapsed_ms``). Shadow combined with a required semantic route is
+    refused: that pairing is not a frozen lane row.
     """
 
     if temporal_metadata not in TEMPORAL_METADATA_MODES:
         raise ValueError(f"unknown temporal_metadata {temporal_metadata!r}")
     if semantic_retrieval not in SEMANTIC_RETRIEVAL_MODES:
         raise ValueError(f"semantic_retrieval must be one of {SEMANTIC_RETRIEVAL_MODES}, got {semantic_retrieval!r}")
+    if recall_control not in RECALL_CONTROL_MODES:
+        raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}, got {recall_control!r}")
+    if recall_control != "off" and semantic_retrieval != "off":
+        raise ValueError("recall_control shadow is not combined with a required semantic route")
     apply_ranking_variant(ranking_variant)
     _SEMANTIC_POSTURE.clear()
     _AGENT_MEMORY_CONFIGURATION.update(
@@ -522,6 +535,7 @@ def configure_agent_memory(
         ranking_variant=ranking_variant,
         budget=_parse_budget(budget),
         semantic_retrieval=semantic_retrieval,
+        recall_control=recall_control,
     )
     return dict(_AGENT_MEMORY_CONFIGURATION)
 
@@ -547,6 +561,10 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
     semantic = _AGENT_MEMORY_CONFIGURATION["semantic_retrieval"]
     # An `off` run opens the facade exactly as before #669 (the shipped default).
     open_kwargs = {} if semantic == "off" else {"semantic_retrieval": semantic}
+    shadow = _AGENT_MEMORY_CONFIGURATION["recall_control"] == "shadow"
+    # An `off` run passes no recall_control keyword: the facade default applies (#644 L6).
+    if shadow:
+        open_kwargs["recall_control"] = "shadow"
     with tempfile.TemporaryDirectory(prefix="agent-memory-longmemeval-") as temporary:
         with AgentMemory.open(
             temporary,
@@ -590,6 +608,8 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
         reason = str(decision.get("refusal") or "not_admitted")
         refusals[reason] = refusals.get(reason, 0) + 1
     extra = {"observed_at_mapped_count": observed_mapped, "observed_at_unmapped_count": observed_unmapped} if declare_observed else {}
+    if shadow:
+        extra["recall_control"] = recorded_recall_control(recalled.get("recall_control"))
     if semantic != "off":
         # Gold-blind trace: item ids only. Gold is joined after scoring (_semantic_route_diagnostics).
         extra["_semantic_trace"] = {
@@ -615,6 +635,39 @@ def _agent_memory(question: str, items: Sequence[Mapping[str, str]], row_index: 
 
 
 SEMANTIC_ROUTE_ID = "semantic_vector"
+
+
+def recorded_recall_control(block: Mapping[str, Any] | None) -> dict[str, Any]:
+    """The deterministic part of the facade's shadow telemetry: ``usage.elapsed_ms`` removed."""
+
+    if not isinstance(block, Mapping):
+        raise RuntimeError("recall_control shadow returned no recall_control block")
+    record = json.loads(json.dumps(block))
+    record.setdefault("usage", {}).pop("elapsed_ms", None)
+    return record
+
+
+def recall_control_summary(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Aggregate shadow telemetry (plan-644-lanes-v4 L2): counts only, never authority."""
+
+    stops: dict[str, int] = {}
+    statuses: dict[str, int] = {}
+    truncating: dict[str, int] = {}
+    for record in records:
+        reason = str((record.get("actual_stop") or {}).get("actual_stop_reason"))
+        stops[reason] = stops.get(reason, 0) + 1
+        status = str((record.get("response") or {}).get("decision_status"))
+        statuses[status] = statuses.get(status, 0) + 1
+        for route, delta in sorted((record.get("shadow_delta") or {}).items()):
+            if delta.get("would_truncate") is True:
+                truncating[route] = truncating.get(route, 0) + 1
+    return {
+        "questions_with_telemetry": len(records),
+        "actual_stop_reason_counts": dict(sorted(stops.items())),
+        "decision_status_counts": dict(sorted(statuses.items())),
+        "would_truncate_question_counts": dict(sorted(truncating.items())),
+        "authority_effect": "none",
+    }
 
 
 def _routes(recalled: Mapping[str, Any], fact_uuid: str) -> set[str]:
@@ -877,6 +930,10 @@ def _evaluate_backend(dataset: Iterable[Mapping[str, Any]], granularity: str, ba
             "unmapped_admitted_count_total": sum(row.get("unmapped_admitted_count", 0) for row in rows),
             "return_budget_applied_total": sum(1 for row in rows if (row.get("return_policy") or {}).get("applied") is True),
         }
+        if any("recall_control" in row for row in rows):
+            result["recall_control_summary"] = recall_control_summary(
+                [row["recall_control"] for row in rows if "recall_control" in row]
+            )
         if any("semantic_route" in row for row in rows):
             traced = [row["semantic_route"] for row in rows if "semantic_route" in row]
             result["semantic_route"] = {
@@ -1092,8 +1149,16 @@ def main() -> int:
         default="off",
         help="facade semantic_retrieval mode (#669); only with --backend agent_memory alone; auto is refused",
     )
+    parser.add_argument(
+        "--agent-memory-recall-control",
+        choices=RECALL_CONTROL_MODES,
+        default="off",
+        help="facade recall_control mode (contract 1.5.0, #644); only with --backend agent_memory alone",
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    if args.agent_memory_recall_control != "off" and (args.without_agent_memory or args.backend != ["agent_memory"]):
+        parser.error("--agent-memory-recall-control shadow is accepted only with --backend agent_memory alone")
     if args.agent_memory_semantic_retrieval != "off" and (args.without_agent_memory or args.backend != ["agent_memory"]):
         parser.error("--agent-memory-semantic-retrieval required is accepted only with --backend agent_memory alone")
     load_external_backends(args.external_backend)
@@ -1102,6 +1167,7 @@ def main() -> int:
         ranking_variant=args.agent_memory_ranking_variant,
         budget=args.agent_memory_budget,
         semantic_retrieval=args.agent_memory_semantic_retrieval,
+        recall_control=args.agent_memory_recall_control,
     )
     report = run(
         args.input.resolve(),

@@ -183,6 +183,67 @@ def native_summary(summary: dict) -> dict:
     }
 
 
+SIDECAR_NAME = "recall-control.jsonl"
+BLANK_QUERY_CONTEXT = "## Retrieved memories (0)"
+
+
+def row_recall_control(row: dict) -> str:
+    """A row's ``recall_control`` mode; absence is the shipped default ``off`` (plan-644-lanes-v4 L6)."""
+
+    return str((row.get("configuration") or {}).get("recall_control", "off"))
+
+
+def join_recall_control_sidecar(lines: list[str], results: list[dict]) -> dict:
+    """Join the bridge's shadow telemetry sidecar to the EvalSummary cases (plan-644-lanes-v4 L9).
+
+    The frozen harness calls ``retrieve()`` exactly once per non-blank-query case, in
+    ``results[]`` order at concurrency 1, and never for a blank query. Any count, order or digest
+    mismatch refuses the import (a blocked execution, never a score); a blank-query case is
+    ``no_recall_executed``, never a zero. Counts are reported, never benchmark authority.
+    """
+
+    records = [json.loads(line) for line in lines if line.strip()]
+    if [record.get("call_index") for record in records] != list(range(len(records))):
+        raise ImportError_("recall-control sidecar call_index is not contiguous from 0")
+    for previous, current in zip(records, records[1:]):
+        if (previous.get("scope"), previous.get("query_sha256")) == (current.get("scope"), current.get("query_sha256")):
+            raise ImportError_(f"recall-control sidecar has adjacent duplicate records at call_index {current['call_index']}")
+    asked = [case for case in results if (case.get("query") or "").strip()]
+    blank = [case for case in results if not (case.get("query") or "").strip()]
+    if len(records) != len(asked):
+        raise ImportError_(f"recall-control sidecar has {len(records)} records for {len(asked)} non-blank-query cases")
+    for case in blank:
+        meta = case.get("meta") or {}
+        if (case.get("retrieve_time_ms") != 0.0 or meta.get("relevant_beliefs") or meta.get("retrieved_count") != 0
+                or meta.get("resolution") != {} or case.get("context") != BLANK_QUERY_CONTEXT):
+            raise ImportError_(f"blank-query case {case.get('query_id')} shows a retrieval")
+    stops: dict[str, int] = {}
+    statuses: dict[str, int] = {}
+    truncating: dict[str, int] = {}
+    for record, case in zip(records, asked):
+        digest = hashlib.sha256(str(case["query"]).encode("utf-8")).hexdigest()
+        if record.get("query_sha256") != digest:
+            raise ImportError_(f"recall-control record {record['call_index']} does not match case {case.get('query_id')}")
+        block = record.get("recall_control") or {}
+        if block.get("authority_effect") != "none" or "elapsed_ms" in (block.get("usage") or {}):
+            raise ImportError_(f"recall-control record {record['call_index']} is not an authority-free deterministic record")
+        reason = str((block.get("actual_stop") or {}).get("actual_stop_reason"))
+        stops[reason] = stops.get(reason, 0) + 1
+        status = str((block.get("response") or {}).get("decision_status"))
+        statuses[status] = statuses.get(status, 0) + 1
+        for route, delta in sorted((block.get("shadow_delta") or {}).items()):
+            if delta.get("would_truncate") is True:
+                truncating[route] = truncating.get(route, 0) + 1
+    return {
+        "records": len(records),
+        "no_recall_executed_cases": len(blank),
+        "actual_stop_reason_counts": dict(sorted(stops.items())),
+        "decision_status_counts": dict(sorted(statuses.items())),
+        "would_truncate_case_counts": dict(sorted(truncating.items())),
+        "authority_effect": "none",
+    }
+
+
 def find_artifact_dirs(runs_dir: Path) -> list[tuple[str, Path]]:
     found: list[tuple[str, Path]] = []
     for identity in sorted(runs_dir.rglob("execution-identity.json")):
@@ -251,6 +312,21 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
             raise ImportError_(f"{name}: copied digest {files[name]} != inventory {digest}")
 
     summary = json.loads((destination / "single-turn.json").read_text(encoding="utf-8"))
+    sidecar_source = artifact_dir / SIDECAR_NAME
+    recall_control_sidecar = None
+    if row_recall_control(row) == "shadow":
+        if not sidecar_source.is_file():
+            raise ImportError_(f"shadow row {row['row_id']} artifact lacks {SIDECAR_NAME}")
+        shutil.copyfile(sidecar_source, destination / SIDECAR_NAME)
+        files[SIDECAR_NAME] = sha256_of(destination / SIDECAR_NAME)
+        if inventory.get(SIDECAR_NAME) != files[SIDECAR_NAME]:
+            raise ImportError_(f"{SIDECAR_NAME}: copied digest {files[SIDECAR_NAME]} != inventory {inventory.get(SIDECAR_NAME)}")
+        joined = join_recall_control_sidecar(
+            (destination / SIDECAR_NAME).read_text(encoding="utf-8").splitlines(), summary.get("results") or []
+        )
+        recall_control_sidecar = {"file": SIDECAR_NAME, "sha256": files[SIDECAR_NAME], **joined}
+    elif sidecar_source.exists():
+        raise ImportError_(f"row {row['row_id']} runs recall_control off but the artifact carries {SIDECAR_NAME}")
     if summary.get("memory_provider") != identity["memory"] or summary.get("mode") != "retrieval":
         raise ImportError_("EvalSummary provider/mode do not match the execution identity")
     if summary.get("total_queries") != lane["dataset"]["query_count"]:
@@ -306,6 +382,7 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
             "artifact_directory": artifact_dir.name,
         },
         "native_summary": native_summary(summary),
+        "recall_control_sidecar": recall_control_sidecar,
         "files": files,
         "authority_effect": "none",
     }

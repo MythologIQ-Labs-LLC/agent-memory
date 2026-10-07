@@ -6,12 +6,13 @@ on:
       lane_id:
         description: "Frozen PrecisionMemBench retrieval lane this run executes when dataset=precisionmembench and mode=retrieval (an accepted lane is refused)"
         required: true
-        default: "amb-precisionmembench-retrieval-v3"
+        default: "amb-precisionmembench-retrieval-v4"
         type: choice
         options:
           - amb-precisionmembench-retrieval-v1
           - amb-precisionmembench-retrieval-v2
           - amb-precisionmembench-retrieval-v3
+          - amb-precisionmembench-retrieval-v4
       dataset:
         description: "AMB dataset"
         required: true
@@ -35,6 +36,7 @@ on:
         type: choice
         options:
           - agent-memory
+          - agent-memory-shadow
           - bm25
           - mem0-explicit
           - hindsight
@@ -109,7 +111,7 @@ jobs:
           mode='${{ inputs.mode }}'
           memory='${{ inputs.memory }}'
 
-          if [ "$mode" = "retrieval" ] && { [ "$memory" = "agent-memory" ] || [ "$memory" = "bm25" ] || [ "$memory" = "mem0-explicit" ]; }; then
+          if [ "$mode" = "retrieval" ] && { [ "$memory" = "agent-memory" ] || [ "$memory" = "agent-memory-shadow" ] || [ "$memory" = "bm25" ] || [ "$memory" = "mem0-explicit" ]; }; then
             # Frozen AMB constructs its configured answer client even though RetrievalMode
             # explicitly makes no LLM calls. Supply an inert value only to satisfy client
             # construction; this value is never valid benchmark-generation authority.
@@ -268,6 +270,11 @@ jobs:
           args=(run --dataset "${{ inputs.dataset }}" --split "${{ inputs.split }}" --memory "${{ inputs.memory }}" --mode "${{ inputs.mode }}" --output-dir "$RUNNER_TEMP/amb-output" --name "${{ inputs.memory }}-${GITHUB_SHA::12}")
           if [ "${{ inputs.query_limit }}" != "0" ]; then
             args+=(--query-limit "${{ inputs.query_limit }}")
+          fi
+          if [ "${{ inputs.memory }}" = "agent-memory-shadow" ]; then
+            # Bridge 0.3.0 writes one shadow telemetry line per retrieve() call (plan-644-lanes-v4 L9):
+            # the frozen runner keeps no provider raw response, so this sidecar is the only carrier.
+            export AGENT_MEMORY_AMB_RECALL_CONTROL_SIDECAR="$RUNNER_TEMP/amb-output/recall-control.jsonl"
           fi
           PYTHONPATH=reference python reference/run_amb_external.py --amb-root .external/amb -- "${args[@]}"
 

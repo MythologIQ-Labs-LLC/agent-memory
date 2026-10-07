@@ -18,12 +18,13 @@ on:
       lane_id:
         description: "Frozen lane to execute (an accepted lane is refused)"
         required: true
-        default: "longmemeval-s-retrieval-parity-v3"
+        default: "longmemeval-s-retrieval-parity-v4"
         type: choice
         options:
           - longmemeval-s-retrieval-parity-v1
           - longmemeval-s-retrieval-parity-v2
           - longmemeval-s-retrieval-parity-v3
+          - longmemeval-s-retrieval-parity-v4
       backend:
         description: "Lane row to execute"
         required: true
@@ -32,6 +33,7 @@ on:
         options:
           - agent_memory
           - agent_memory_semantic
+          - agent_memory_shadow
           - lexical_overlap
           - mem0_explicit
       granularity:
@@ -197,20 +199,24 @@ jobs:
           )
           # A row may run a built-in backend under its own identity (#669 D2): the row's
           # configuration.backend names the runner backend, and its semantic_retrieval mode
-          # (absent: off) is read from the selected row, never from the dispatcher.
+          # (absent: off) is read from the selected row, never from the dispatcher; so is its
+          # recall_control mode (absent: off; #644 plan-644-lanes-v4 L6).
           row_posture="$(python - <<'PY'
           import json, os
           from pathlib import Path
           lane = json.loads(Path(os.environ["LANE_FILE"]).read_text(encoding="utf-8"))
           row = next(item for item in lane["systems"] if item["provider_key"] == "${{ inputs.backend }}")
           configuration = row.get("configuration") or {}
-          print(configuration.get("backend", row["provider_key"]), configuration.get("semantic_retrieval", "off"))
+          print(configuration.get("backend", row["provider_key"]), configuration.get("semantic_retrieval", "off"), configuration.get("recall_control", "off"))
           PY
           )"
-          read -r runner_backend semantic <<< "$row_posture"
+          read -r runner_backend semantic recall_control <<< "$row_posture"
           args+=(--backend "$runner_backend")
           if [ "$semantic" != "off" ]; then
             args+=(--agent-memory-semantic-retrieval "$semantic")
+          fi
+          if [ "$recall_control" != "off" ]; then
+            args+=(--agent-memory-recall-control "$recall_control")
           fi
           echo "RUNNER_BACKEND=$runner_backend" >> "$GITHUB_ENV"
           if [ "${{ inputs.backend }}" = "mem0_explicit" ]; then

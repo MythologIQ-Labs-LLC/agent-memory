@@ -4285,3 +4285,114 @@ No retrieval or ranking change.
 - **Full suite:** the only failure is the pre-existing environmental `test_gauntlet_durability`.
 
 Next: a gated `-v4` lanes plan (D1 off equals `-v3`; the shadow row equals the control), then dispatch, acceptance, and Step B1/B2 for v4.
+
+---
+
+### Entry #96: GOVERNANCE — owner rulings: #671 option A (then D), baseline sequencing v4/v5, semantic default off
+
+**Timestamp**: 2026-10-07T13:40:00-04:00
+**Phase**: GOVERNANCE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `.qor/roadmaps/north-star-best-in-class/events.jsonl` (seq 55-60), `docs/BACKLOG.md`
+
+**Artifacts**: roadmap events seq 55-60 (`node_added` + `node_resolved` for `decision-671-currentness-mechanism`, `decision-baseline-sequencing-v4-v5`, `decision-semantic-default`, each with authority `{actor: Knapp-Kevin, role: repository-owner}`); `docs/BACKLOG.md` Phase B execution sequence
+**Content Hash** (SHA256 over `git write-tree` of the staged index `59ca37d772407f3354b1df8d837def57231bc522`): `29133278ddb6c8dd4cdf2838ec2d40b85ba2e5efde819f6206d5aee4a1bdcaea`
+**Previous Hash**: `1dc3954f4c2adc90cf68998270d6c3a7601c390c7d295ff13dff0839a5c92e9d`
+**Chain Hash**: `cfeafd0077b6c821f5752933c8464b6f34cb60582a96f0bd5f6f3472e1a43ace`
+
+**Decision**: Three owner rulings were given on 2026-10-07, after #715 merged as 729a6c8.
+
+**#671: option A now, option D next.**
+- Currentness becomes a read-path applicability mechanism with an explicit `interpreted_cross_fact` evidence basis.
+- A typed, open, unapplied `state_change_candidate` limits the older fact for explicit-current recall only when all of these hold:
+  - the two facts share actor, source and scope;
+  - the change is unhedged and untrusted-claim-free;
+  - the newer fact is live and undisputed at read time.
+- There is no lifecycle mutation and no automatic correction. Historical and non-current recall are preserved.
+- Recency is never a substitute for typed change evidence.
+- Option D (governed auto-application into durable supersession with receipts) is a later, separately reviewed ADR and is not part of A.
+
+**Sequencing.**
+- Runtime Baseline v4 is the #644 shadow-controller transition alone and is qualified and published first.
+- #671 is the next transition (v5).
+- #673 is re-planned only on accepted currentness.
+
+**Semantic default.** `semantic_retrieval` stays `off`. `auto` is deferred until currentness and fusion are independently qualified.
+
+No runtime file changed.
+
+---
+
+### Entry #97: GATE TRIBUNAL — PASS (#644 -v4 same-harness lanes, attempt 4)
+
+**Timestamp**: 2026-10-07T14:05:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-644-lanes-v4.md (iteration 4, b3b8fc7)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_644_lanes_v4.md) = 98ea492571ddb9142338e775e5e79049a7bb0642d7667159ca3b477ab258f942
+
+**Previous Hash**: `cfeafd0077b6c821f5752933c8464b6f34cb60582a96f0bd5f6f3472e1a43ace`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 132de985c6ac0100d372d71ce15a64f05b105218ca20f1ac2b219bddceb4b96d
+
+**Decision**: PASS at attempt 4, from an independent reviewer working in a fresh context.
+
+The earlier attempts were vetoed for:
+1. unretainable AMB shadow telemetry, plus misnamed fields, a missing re-pin list, and a weak AMB L1;
+2. blank-query AMB cases breaking the sidecar join;
+3. a wrong blank-query condition.
+
+The plan freezes the `-v4` lanes:
+- **L1:** with `recall_control` off, results equal `-v3` on scored metrics and ranked outputs.
+- **L2:** a shadow row whose metrics and rankings equal the same lane's control. Its deterministic controller telemetry is reported with no authority, under a stop-reason prediction registered before any score.
+- **L3:** the LongMemEval semantic row is deferred.
+- **L9:** an AMB telemetry sidecar joined over the non-blank cases.
+- **Lanes and tooling:** the bridge goes to 0.3.0, the re-pins are listed, and lane, importer and workflow differences from `-v3` are listed exhaustively.
+
+No runtime change.
+
+---
+
+### Entry #98: IMPLEMENTATION — #644 -v4 same-harness lanes frozen; runner shadow mode; bridge 0.3.0; importers
+
+**Timestamp**: 2026-10-07T15:10:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Plan**: docs/plan-644-lanes-v4.md (iteration 4; Gate Tribunal PASS at Entry #97)
+
+**Artifacts**:
+- **Lanes:** `longmemeval-s-retrieval-parity-v4.json` and `amb-precisionmembench-retrieval-v4.json`, frozen before any score.
+  - Both differ from `-v3` by exactly the L5 list.
+  - Both add the `agent-memory-recall-control-shadow` row.
+  - The LongMemEval semantic row is deferred (L3).
+  - Pins: runner blob 592fc20…, bridge blob 8aad089…, declaration blob ac1e498c….
+- **Runner:** `reference/run_longmemeval.py` gains `--agent-memory-recall-control {off,shadow}`.
+  - With `off`, the facade opens exactly as before.
+  - With `shadow`, each question records the deterministic telemetry block and the report records `recall_control_summary`.
+  - Shadow combined with a required semantic route is refused.
+- **AMB bridge 0.3.0:** registers `agent-memory-shadow`, which writes the L9 sidecar and refuses to retrieve without one. The control provider is unchanged.
+- **Importers:**
+  - LongMemEval: `recall_control` default, plus a per-question telemetry binding.
+  - AMB: the L9 sidecar join over non-blank cases, with blank-query cases reported as `no_recall_executed` and any mismatch refused.
+- **Workflows:** the `-v4` lanes and shadow rows are offered and set as defaults; the AMB sidecar env is set for the shadow row only.
+- **Tests:**
+  - new `test_same_harness_lanes_v4.py`;
+  - runner, bridge and importer cases, including the sidecar join over the 77 retained `-v3` AMB cases (73 records, 4 `no_recall_executed`);
+  - the B3 re-pins.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `a89167f9b92f0c16f921524bb7ec436a43d444b1`): `f17e3edf3f58207cf3515f2a73f287b2ffde98b2f470085cfbfb9a8615f12789`
+**Previous Hash**: `132de985c6ac0100d372d71ce15a64f05b105218ca20f1ac2b219bddceb4b96d`
+**Chain Hash**: `5bf73582fea68af99a7200ab15ef908cd0e5c9bc7ffa81485fa8c232d1409580`
+
+**Decision**: The `-v4` evidence lanes are frozen and executable, and no runtime file changed.
+- **Full suite:** 2,221 tests. The only failure is the pre-existing environmental `test_gauntlet_durability`.
+- **Next:** merge, then dispatch 12 runs on `main` (LongMemEval: 4 rows × 2 planes; AMB: 4 rows). Then import and accept per L1/L2/L9, then docs/67 Step B1/B2 for v4.

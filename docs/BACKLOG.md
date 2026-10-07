@@ -64,9 +64,11 @@ North Star comparison coverage:
 
 The #694 formal baseline is frozen as the pre-major-runtime baseline (`docs/69`, Entry #86). Evidence-informed order, with reasons:
 
-1. **#671 currentness, first.** It is the only `below_standard` row measured on an exact protocol (MESA M4 0.200/0.800). The failure is fully localized: in 250/250 pairs, write-time interpretation, slot identity and the `state_change_candidate` proposal all succeed, and read-path currentness separates 0 pairs. The tranche must connect governed write-time change evidence to read-path currentness without making recency authoritative and without auto-applying proposals. It needs no new dependency.
-2. **#669 semantic vector route, second (may run in parallel).** The `decision-embedding-dependency` ruling unblocks it. The MESA M2 diagnostics (answer-substring 0.728 vs dense verbatim Naive RAG 0.794; source text 0.899 vs 0.971) and the LongMemEval lane gaps both point at missing semantic retrieval. Its M4 effect must be read through `win_basis`: a relevance accident is not currentness.
-3. **#673 ranking/fusion** after #669 (fusion needs a second scored route). It now owns #669's movement gate, because under policy 3.2.0 the semantic-only candidates rank after every lexical candidate (`-v3` lane D2).
+Execution sequence (owner direction 2026-10-07, roadmap events seq 55-60):
+
+1. **Runtime Baseline v4 qualification (#644 shadow controller), first and narrow.** `-v4` lanes (`docs/plan-644-lanes-v4.md`): the default equals `-v3`, shadow equals the default, and the telemetry is reported but carries no authority. Then docs/67 B1/B2. v4 is never amended with #671 behaviour.
+2. **#671 currentness, next (Runtime Baseline v5).** Owner ruling: option A now, option D next (`decision-671-currentness-mechanism`). A read-path applicability mechanism with an explicit `interpreted_cross_fact` basis: a typed, open, unapplied `state_change_candidate` between same-actor, same-source, same-scope facts limits the older fact for explicit-current queries only, when the change is unhedged, untrusted-claim-free, and the source fact is live and undisputed. There is no lifecycle mutation and no automatic correction, and recency is never a substitute. The MESA M4 defect is localized: 250/250 pairs pass every write-time stage and read-path currentness separates 0. Acceptance is a formal MESA replay whose wins classify as `currentness_mechanism`.
+3. **#673 ranking/fusion, re-planned on accepted currentness.** Iteration 1 was vetoed (`docs/plan-673-route-fusion.md`), and its findings are design inputs. `semantic_retrieval` stays `off` by default (`decision-semantic-default`). No fusion constant is tuned after a score.
 4. **#644 controlled recall**, **#688 typed relations**, **#689 metabolism**, **#690 failure memory**, **#691 consumer package**, **#636 composition**. These are accepted architecture that MESA does not score, and they stay in scope.
 5. **#596 / #597** interpreter work. Not the M4 bottleneck (interpretation succeeded in 250/250 MESA pairs), but natural-data recognition (#580/#594) still needs it.
 
@@ -81,12 +83,14 @@ Retrieval and representation:
   - #712 and #713 published and bound Runtime Baseline v3.
   - The movement gate transferred to #673, because the subordinate ordering cannot reach the scored k.
 - [ ] **#644**: native controlled recall from the Jev-Mem harvest (call/deadline budgets, stop reasons, route needs, sufficiency, allocation, bounded controller, telemetry).
+  - The T-controller shadow seam merged in #715: contract 1.5.0, Runtime Baseline v4 declared, `-v4` qualification in progress.
+  - T-controller-2 follows #671 and #673. It covers enforced route, call and deadline budgets, calibrated route needs, sufficiency, adaptive stopping, bounded traversal and a decision cache.
 - [ ] **#688**: typed entity/causal relation vocabulary, bounded relation judgments, and typed graph traversal reachable through the facade.
 - [ ] **#673**: post-admission route fusion, then a separately versioned reranker if justified. Ranking orders admitted candidates and never admits.
 
 Temporal, currentness and semantics:
 
-- [ ] **#671**: currentness capability work, informed by the formal M4 failure taxonomy. Recency never becomes authority.
+- [ ] **#671**: read-path currentness, option A (`interpreted_cross_fact` applicability limitation), Runtime Baseline v5. Option D (governed auto-application with receipts) is a separate ADR afterwards. Recency never becomes authority.
 - [ ] **#596**: natural proposition recognition without weakening abstention.
 - [ ] **#597**: canonical proposition slot/value boundaries.
 - [ ] **#586**: explicit bounded exception/override precedence.

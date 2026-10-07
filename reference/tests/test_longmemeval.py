@@ -291,6 +291,52 @@ class LongMemEvalProfileTests(unittest.TestCase):
                     M.main()
                 self.assertEqual(raised.exception.code, 2)
 
+    def test_shadow_recall_control_equals_off_and_records_telemetry(self) -> None:
+        # plan-644-lanes-v4 L2/L6: shadow ranks exactly as off; each question records the
+        # facade's telemetry block without usage.elapsed_ms; off records none.
+        self.assertEqual(M._AGENT_MEMORY_CONFIGURATION["recall_control"], "off")
+        default = M.run(FIXTURE, corpus_class="synthetic", backends=("agent_memory",))
+        try:
+            configuration = M.configure_agent_memory(recall_control="shadow")
+            self.assertEqual(configuration["recall_control"], "shadow")
+            shadow = M.run(FIXTURE, corpus_class="synthetic", backends=("agent_memory",))
+        finally:
+            M.configure_agent_memory()
+        self.assertEqual(default["execution"]["agent_memory_configuration"]["recall_control"], "off")
+        self.assertEqual(shadow["execution"]["agent_memory_configuration"]["recall_control"], "shadow")
+        for granularity in ("session", "turn"):
+            plain = default["planes"][granularity]["backends"]["agent_memory"]
+            backend = shadow["planes"][granularity]["backends"]["agent_memory"]
+            for key in ("aggregate", "by_question_type", "currentness", "failures"):
+                self.assertEqual(plain[key], backend[key])
+            self.assertNotIn("recall_control_summary", plain)
+            for row_off, row_shadow in zip(plain["rows"], backend["rows"], strict=True):
+                self.assertNotIn("recall_control", row_off)
+                self.assertEqual(row_off["ranked_top"], row_shadow["ranked_top"])
+                self.assertEqual(row_off["metrics"], row_shadow["metrics"])
+                record = row_shadow["recall_control"]
+                self.assertEqual(record["authority_effect"], "none")
+                self.assertEqual(record["response"]["decision_status"], "complete")
+                self.assertNotIn("elapsed_ms", record["usage"])
+                expected = "frontier_exhausted" if row_shadow["candidate_count"] else "no_evidence"
+                self.assertEqual(record["actual_stop"]["actual_stop_reason"], expected)
+            summary = backend["recall_control_summary"]
+            self.assertEqual(summary["questions_with_telemetry"], len(backend["rows"]))
+            self.assertEqual(sum(summary["actual_stop_reason_counts"].values()), len(backend["rows"]))
+            self.assertEqual(summary["authority_effect"], "none")
+        with self.assertRaises(ValueError):
+            M.configure_agent_memory(recall_control="enforced")
+        with self.assertRaises(ValueError):
+            M.configure_agent_memory(recall_control="shadow", semantic_retrieval="required")
+        M.configure_agent_memory()
+
+    def test_recall_control_mode_is_refused_for_other_backends(self) -> None:
+        for argv in (["--backend", "lexical_overlap"], ["--backend", "agent_memory", "--backend", "lexical_overlap"], []):
+            with mock.patch.object(sys, "argv", ["run_longmemeval.py", *argv, "--agent-memory-recall-control", "shadow"]):
+                with self.assertRaises(SystemExit) as raised, mock.patch("sys.stderr"):
+                    M.main()
+                self.assertEqual(raised.exception.code, 2)
+
     def test_temporal_metadata_modes_declare_only_their_fields(self) -> None:
         """#594: ``source_observed_at`` adds the session date as ``observed_at`` and nothing else."""
         from agentmem_ref import AgentMemory
