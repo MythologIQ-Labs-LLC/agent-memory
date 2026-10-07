@@ -75,6 +75,13 @@ The first implementation slice adds deterministic, provider-neutral primitives:
 
 These primitives are runtime code, not benchmark helpers.
 
+`AdaptiveControlDecision` is an internal typed evidence object for slice 2A,
+not the complete System-One wire response. Its projection does not satisfy the
+frozen request/response/usage/actual-stop exchange by itself. The enforcement
+slice must wrap these primitives in the complete frozen contract, including
+`operation`, `decision_status`, usage accounting, fallback events, and the
+host-owned actual-stop record.
+
 The deterministic baseline may emit only boundary-valued probabilities
 (0.0 or 1.0) until calibration evidence exists. It must not manufacture
 pseudo-probabilities that merely look scientific.
@@ -91,6 +98,12 @@ One request budget owns controller work:
 - optional maximum_depth.
 
 Every value is non-negative and finite where applicable.
+
+A zero `maximum_controller_decisions` is a valid host posture. It permits no
+controller call: the 2A deterministic controller refuses `decide()` when the
+budget is zero. A single `decide()` call consumes one decision conceptually;
+cross-call accounting and conversion to the frozen `budget_exhausted` wire
+status belong to the enforcement slice.
 
 Allocation is bounded twice:
 
@@ -178,6 +191,11 @@ Its key binds:
 - tenant/isolation namespace.
 
 Cache hits carry no authority and do not bypass ordinary validation.
+
+The cache API does not accept an arbitrary caller-supplied cache key. It derives
+the key internally from the complete T2-7 identity tuple through
+`adaptive_cache_key`, so callers cannot accidentally bypass contract/backend/
+policy/isolation binding by choosing a convenient string.
 
 No cache is persisted in canonical memory.
 
