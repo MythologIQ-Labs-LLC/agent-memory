@@ -115,7 +115,7 @@ jobs:
 
       - name: Restore the pinned representation model (agent_memory_semantic row only)
         if: ${{ inputs.backend == 'agent_memory_semantic' }}
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .representation
           key: semantic-minilm-b207367-${{ hashFiles('reference/agentmem_ref/runtime/representation_onnx.py') }}
