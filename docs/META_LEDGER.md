@@ -4488,3 +4488,30 @@ SHA256(content_hash + previous_hash) = 6ad12eb1889d7901685fbefe00f75ccb3b90b30ce
 - **L9 holds.** The AMB sidecar joined 73 records with 4 `no_recall_executed` cases. The stops are 68 `frontier_exhausted` and 5 `no_evidence` (each with zero candidates), all `complete`.
 
 Next: docs/67 Step B1 for Runtime Baseline v4.
+
+---
+
+### Entry #102: PUBLICATION — Runtime Baseline v4 (docs/67 Step B1)
+
+**Timestamp**: 2026-10-07T15:20:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reports/runtime/baseline-v4.json`, `-source-boundary.json`, `-qualification.json` (pending) and `.md`; `examples/gauntlet/agent-memory-runtime-baseline-v4.json` and `agent_memory_runtime_baseline_v4_stdio.py`; the register
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `0621f9dbcbdc451476ff9d760d06f90f1106f091`): `b85f02d81fcb4617af0a5d6d36fb38c839112996f952d9f9d3909296742e8d4b`
+**Previous Hash**: `4f10b0474a09748edae9fdb59c84cd618cf1679c725e63952bd16c549d0e5608`
+**Chain Hash**: `8cc3d050cb9a61abb0675eb095d1dab41e01f0e9f8730989288a356ce63309bb`
+
+**Decision**: Runtime Baseline v4 is published against `729a6c8`, the merge of PR #715, the declared #644 T-controller tranche.
+
+- **Identity delta:** `public_contract_version` 1.4.0 → 1.5.0. Ranking stays 3.2.0.
+- **`read_semantics.recall_control`** records the facade default (off), the shadow-only, authority-free telemetry and the actual-stop classes.
+- **Capability corrections** (CONTRIBUTOR_ARCHITECTURE §8): `typed_relations_graph_traversal` and `memory_metabolism` become `harness_only`; `controlled_recall` is `shadow_only`.
+- **Predecessor block:** copied from the v4 declaration (blob `ac1e498c`).
+- **Evidence cited:** the twelve accepted `-v4` lane rows, by evidence id and executing revision (`f5a79d2`, TRANSITION). Inherited replay evidence carries the reason the declared change cannot reach it.
+- **Register and checks:** v4 is appended as the current entry, with `published_commit` null and `declared_successor` null. The checker prints PASS against v4, and the validator accepts v1–v3 bound and v4 pending.
+- **Unchanged:** the v3 files.
+
+Step B2 binds the probe artifact.

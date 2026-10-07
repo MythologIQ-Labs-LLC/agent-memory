@@ -44,7 +44,7 @@ Stable architectural rules. Changes require explicit doctrine/contract work.
 | Evidence/provenance doctrine | `docs/16-source-trust-and-reputation.md`, `docs/30-memory-observability-and-audit-events.md`, `docs/policies/EVIDENCE_PROMOTION.md` |
 | Lifecycle/correction/deletion doctrine | `docs/02-lifecycle-state-machine.md`, `docs/17-conflict-resolution-engine.md`, `docs/28-retention-deletion-and-tombstones.md`, `docs/31-recovery-rollback-and-replay.md` |
 | Schema contracts | `schemas/*.schema.json`, registry doctrine in `docs/27-schema-registry-and-type-evolution.md` |
-| Runtime Baseline succession | `docs/67-runtime-baseline-succession.md`, `reports/runtime/baseline-register.json` (v1 and v2 pinned, v3 current), `reports/runtime/baseline-v3.json`, `schemas/runtime-baseline-declaration.schema.json`, `scripts/check_runtime_baseline_equivalence.py` |
+| Runtime Baseline succession | `docs/67-runtime-baseline-succession.md`, `reports/runtime/baseline-register.json` (v1, v2 and v3 pinned, v4 current), `reports/runtime/baseline-v4.json`, `schemas/runtime-baseline-declaration.schema.json`, `scripts/check_runtime_baseline_equivalence.py` |
 | Baseline-first execution posture | `docs/68-baseline-first-complete-architecture-execution.md`, `docs/BACKLOG.md`, `.qor/roadmaps/north-star-best-in-class/events.jsonl` (owner rulings seq 47-51) |
 | Project governance | `GOVERNANCE.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, `.github/CODEOWNERS` |
 
