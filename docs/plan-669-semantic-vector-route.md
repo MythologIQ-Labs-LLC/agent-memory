@@ -8,7 +8,7 @@
 **owner rulings in force**: `decision-embedding-dependency` (pinned, versioned local provider behind the existing abstraction, shipped as an optional extra), `decision-capacity-split`, `decision-temporal-posture`
 **baseline**: Step A of docs/67 for Runtime Baseline **v3** (the register shows v2 published, `declared_successor: null`)
 **evidence that orders this tranche**: formal MESA (docs/69). M2 answer-substring 0.728 vs Naive RAG 0.794 and source text 0.899 vs 0.971, against dense verbatim retrieval. LongMemEval_S lane v2 turn-plane recall_all@50: 0.859 for Agent Memory vs 0.895 for Mem0 (dense MiniLM).
-**iteration**: 3 (attempt-1 VETO grounds 1-9 addressed in "Iteration 2 changes"; attempt-2 VETO grounds A2-1..A2-3 and advisories addressed in "Iteration 3 changes")
+**iteration**: 3, Gate PASS at attempt 3 with the A2-3 line correction applied (attempt-1 VETO grounds 1-9 addressed in "Iteration 2 changes"; attempt-2 VETO grounds A2-1..A2-3 and advisories addressed in "Iteration 3 changes")
 
 ## Problem (verified on `main` 728d01d)
 
@@ -39,6 +39,8 @@
 - `rank()` builds admitted-set BM25 statistics from every admitted fact (ranking_policy.py:524-534). Under 3.2.0 the statistics are computed only over admitted candidates with **at least one non-subordinate route hit**.
 - `identity()` reports `lexical_relevance_statistics_scope: "admitted_set_primary_routes"` when `subordinate_routes` is non-empty, and keeps `"admitted_set"` otherwise.
 - Test: adding semantic-only admitted candidates leaves every lexical candidate's `lexical_relevance_score` byte-identical, and the lexical order unchanged.
+- The anti-laundering `effective_df_excluded_terms` set is computed over the same primary-route scope.
+- The re-scoped MESA test keeps comparing `ranking_policy_id` with the live policy and reads only the version and contract from baseline-v2 (gate attempt 3).
 
 **A2-2 — The MESA v1 freeze test.**
 - `reference/tests/test_agentmembench_formal.py:278-282` asserts that the live policy equals the v1 freeze. It is re-scoped to assert that the freeze's `agent_memory` block equals the **Runtime Baseline v2** values read from `reports/runtime/baseline-v2.json` (policy 3.1.2, contract 1.4.0). This is a deliberate historical-binding change.
@@ -47,7 +49,7 @@
 
 **A2-3 — The exact re-pin list.**
 - Only these assertions change, and only version strings or stage names/positions:
-  - test_post_admission_ranking_policy.py:117, :120-128 (the stage slice positions shift by the subordinate stage), :133, :231;
+  - test_post_admission_ranking_policy.py:116 (version), :121-128 (the stage slice positions shift by the subordinate stage), :134 (`lexical_relevance_statistics_scope` becomes `"admitted_set_primary_routes"` for `MULTI_ROUTE_RANKING_POLICY`), :231. Line :133 is unchanged, because the stage name is unchanged (gate attempt-3 correction);
   - test_query_conditioned_applicability.py:268;
   - test_temporal_order_constraints.py:65, :264;
   - test_temporal_unknown_basis_ordering_contract.py:46, :62 (`test_all_active_recall_planners_share_policy_312_boundary` is renamed to `..._share_policy_boundary`, and its assertion becomes 3.2.0 for all three active planners);

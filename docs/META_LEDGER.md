@@ -3954,3 +3954,47 @@ semantics and read-path currentness (#671), not interpretation,
 identity, candidate generation or admission. No runtime file changed,
 and Runtime Baseline v2 is untouched. This state is frozen as the
 pre-major-runtime baseline.
+
+---
+
+### Entry #87: GATE TRIBUNAL — PASS (#669 semantic vector route plan, attempt 3)
+
+**Timestamp**: 2026-10-07T05:05:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-669-semantic-vector-route.md (iteration 3, plus the attempt-3 line correction)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_669_plan.md) = 5c21b26208d28f20680739e975a0f6d08628d13fc41e0914580b00f958225d29
+
+**Previous Hash**: `8561cb066d44f8ff491df3f5bcabd10ae453c81f084737db76fe98b09a45f960`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 1464838912df85c480b9d0f29698dd141e8c97b779d8bb42910bb9655dccfbad
+
+**Decision**: PASS at attempt 3 of 5. The reviewer was independent and
+worked in a fresh context.
+
+Attempt 1 was VETOed on nine grounds:
+- new identity rows break the succession checker;
+- the vector route's eligibility diverged from the lexical route's;
+- an environment-dependent `auto` default;
+- cosine ordering ahead of the temporal stages (#584);
+- a MESA successor the frozen runner cannot run;
+- under-specified lanes;
+- a tokenizer and numerics mismatch;
+- no CI that exercises the provider;
+- no integrity story for the derived store.
+
+Attempt 2 was VETOed on three grounds:
+- BM25 admitted-set statistics shift when semantic-only candidates are admitted;
+- the MESA v1 freeze test is not addressed;
+- the re-pin list is not explicit.
+
+Attempt 3 passed. Its one required correction to the re-pin line list has
+been applied. Implementation may proceed under iteration 3: ranking policy
+3.2.0 with the semantic route ordering-subordinate, a facade default of
+`off`, and Runtime Baseline v3 declared with the single delta
+active_policy_version 3.1.2 to 3.2.0 plus the pyproject extra.
