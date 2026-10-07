@@ -88,7 +88,7 @@
       "v1_ref_shared": true,
       "tranche": {
         "order": "T-metabolism",
-        "issue": null,
+        "issue": 689,
         "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
       },
       "reason": "NativeMetabolismEstimator, propose_consolidation and plan_metabolism_maintenance have no facade or composition caller; ranking records metabolic_evidence not_used",
@@ -104,7 +104,7 @@
       "evidence": [],
       "tranche": {
         "order": "T-typed-relations",
-        "issue": null,
+        "issue": 688,
         "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
       },
       "reason": "no entity/causal vocabulary exists; graph relation types are caller-supplied strings (runtime/recall_control.py GraphTraversalSpec)",
@@ -125,7 +125,7 @@
       "evidence": [],
       "tranche": {
         "order": "T-failure-memory",
-        "issue": null,
+        "issue": 690,
         "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
       },
       "reason": "FailureMemory is not referenced by api, composition or adapter; only the failure-memory benchmark runner constructs it",
@@ -334,7 +334,7 @@
       "evidence": [],
       "tranche": {
         "order": "T-typed-relations",
-        "issue": null,
+        "issue": 688,
         "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
       },
       "reason": "same-slot classes only; TypedRelation.relation_type is a free string written only by the harness",
@@ -482,7 +482,7 @@
       "evidence": [],
       "tranche": {
         "order": "T-metabolism",
-        "issue": null,
+        "issue": 689,
         "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
       },
       "reason": "propose_consolidation returns eligible/scope_mismatch/non_current_source/disputed_source only; no redundant/contradiction/obsolete/link or keep_separate/merge/promote/uncertain; no runtime caller",
@@ -567,7 +567,7 @@
       "evidence": [],
       "tranche": {
         "order": "T-consumer-package",
-        "issue": null,
+        "issue": 691,
         "lane_gate": "a new lane id on the accepted -v2 lane configurations (docs/CONTRIBUTOR_ARCHITECTURE.md §10 lane generations) with no regression of the accepted v2 rows' scored metrics, and a declared Runtime Baseline successor for any runtime change (docs/67-runtime-baseline-succession.md)"
       },
       "reason": "only the return-budget k-prefix exists; consumer_profile is reserved in the fixture only",

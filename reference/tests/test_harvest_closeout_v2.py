@@ -30,14 +30,7 @@ POLICY = REPO_ROOT / "data" / "github-actions-workflow-policy.json"
 REGISTRY = REPO_ROOT / "sources" / "source-registry.json"
 
 # Phase 3 of docs/plan-672-tranche-5-harvests.md: tranche rows whose issue does not exist yet.
-EXPECTED_UNASSIGNED: list[str] = [
-    "evolveai-failure-memory",
-    "evolveai-metabolism",
-    "evolveai-typed-traversal-claim",
-    "jh-03-typed-relation-judgments",
-    "jh-10-consolidation-vocabulary",
-    "jh-16-consumer-package",
-]
+EXPECTED_UNASSIGNED: list[str] = []
 
 SHIPPED_REACH = {"facade", "evaluation_only"}
 TRANCHE_REACH = {"library_only", "harness_only", "absent"}
