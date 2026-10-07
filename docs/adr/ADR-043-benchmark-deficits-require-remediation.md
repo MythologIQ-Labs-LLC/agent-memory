@@ -73,6 +73,35 @@ run benchmark
 
 That is not sufficient for a best-in-class North Star.
 
+## Relationship to the closed-loop North Star
+
+This ADR is the remediation edge of the closed-loop strengthening model in `docs/68-baseline-first-complete-architecture-execution.md`.
+
+```text
+accepted architecture
+    -> runtime implementation
+    -> benchmark pressure
+    -> deficit attribution
+    -> governed remediation
+    -> stronger runtime evidence
+       -> architecture refinement
+       -> benchmark refinement
+       -> next runtime tranche
+```
+
+The relationships are intentionally bidirectional:
+
+- architecture defines what evaluation must pressure;
+- evaluation may falsify architecture;
+- remediation converts observed deficits into runtime work;
+- runtime changes create new evidence obligations;
+- new evidence may alter architecture priority or expose a missing capability;
+- new architecture may require new benchmark coverage.
+
+The repository therefore treats benchmark failure as **structured feedback**, not as a terminal report.
+
+This does not grant the runtime autonomous implementation or policy mutation authority. It is a governed engineering loop.
+
 ## Decision
 
 ### 1. Every accepted benchmark result receives an operational posture
