@@ -241,8 +241,13 @@ Tests prove:
 8. cache keys separate tenant, policy, backend and contract identity;
 9. cache hits do not mutate canonical memory;
 10. every mandatory ablation identity is represented;
-11. existing off/shadow facade behavior is unchanged;
-12. System-One authority invariants remain true.
+11. existing off/shadow facade behavior is unchanged; this is a load-bearing
+    inherited dependency on `reference/tests/test_facade_recall_control.py`,
+    including byte-equal retrieval output with the telemetry block removed and
+    controller-failure no-effect behavior;
+12. System-One authority invariants remain true; this is a load-bearing
+    inherited dependency on `reference/tests/test_system_one_controller_contract.py`
+    plus the 2A objects' `authority_effect == "none"` validation.
 
 ## Non-goals
 
