@@ -143,6 +143,21 @@ class AdaptiveRecallControlTests(unittest.TestCase):
         self.assertEqual(budget.maximum_controller_decisions, 0)
         self.assertEqual(budget.maximum_candidates, 0)
 
+
+    def test_zero_controller_decision_budget_cannot_be_spent(self) -> None:
+        controller = DeterministicAdaptiveRecallController()
+        with self.assertRaisesRegex(ValueError, "decision budget exhausted"):
+            controller.decide(
+                "pottery class",
+                logical_memory_refs=(),
+                available_routes=(LEXICAL_ROUTE,),
+                outer_budget=RecallOuterBudget(
+                    maximum_controller_decisions=0,
+                    maximum_candidates=8,
+                ),
+                host_caps={LEXICAL_ROUTE: 32},
+            )
+
     def test_outer_and_host_work_budgets_require_integers(self) -> None:
         invalid_outer = (
             {"maximum_controller_decisions": 1.5},
@@ -250,7 +265,7 @@ class AdaptiveRecallControlTests(unittest.TestCase):
             changed[field] = value
             self.assertNotEqual(original, adaptive_cache_key(**changed), field)
 
-    def test_cache_is_process_local_evidence_and_refuses_authority(self) -> None:
+    def test_cache_is_process_local_and_derives_identity_bound_keys(self) -> None:
         controller = DeterministicAdaptiveRecallController()
         decision = controller.decide(
             "pottery class",
@@ -260,22 +275,25 @@ class AdaptiveRecallControlTests(unittest.TestCase):
             host_caps={LEXICAL_ROUTE: 32},
             routes_remaining=1,
         )
-        key = adaptive_cache_key(
-            operation="retrieval_planning",
-            canonical_request_state={"query": "pottery class"},
-            controller_contract_version="1.0.0",
-            backend_ref=decision.controller_ref,
-            backend_version=decision.controller_version,
-            model_or_policy_ref="deterministic-adaptive-rule-policy",
-            host_policy_version="3.3.0",
-            isolation_namespace="tenant:a/project:a",
-        )
+        identity = {
+            "operation": "retrieval_planning",
+            "canonical_request_state": {"query": "pottery class"},
+            "controller_contract_version": "1.0.0",
+            "backend_ref": decision.controller_ref,
+            "backend_version": decision.controller_version,
+            "model_or_policy_ref": "deterministic-adaptive-rule-policy",
+            "host_policy_version": "3.3.0",
+            "isolation_namespace": "tenant:a/project:a",
+        }
         cache = ControllerDecisionCache()
-        cache.put(key, decision)
-        self.assertIs(cache.get(key), decision)
+        key = cache.put(decision, **identity)
+        self.assertEqual(key, adaptive_cache_key(**identity))
+        self.assertIs(cache.get(**identity), decision)
         self.assertEqual(len(cache), 1)
-        with self.assertRaises(ValueError):
-            cache.put("", decision)
+
+        other_scope = dict(identity)
+        other_scope["isolation_namespace"] = "tenant:b/project:a"
+        self.assertIsNone(cache.get(**other_scope))
 
     def test_all_mandatory_ablation_profiles_are_executable(self) -> None:
         controller = DeterministicAdaptiveRecallController()
