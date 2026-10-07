@@ -39,7 +39,7 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 
 ## Competitive view — same-harness systems
 
-**Status: four same-harness lanes accepted (#640; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06).**
+**Status: six same-harness lanes accepted (#640, #669; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06, the `-v3` generation under the declared transition to Runtime Baseline v3 on 2026-10-07).**
 
 #601 now has executable independent-harness infrastructure:
 
@@ -101,6 +101,27 @@ Session and turn are separate planes (separate scorecards) and are never average
 | mem0_explicit | comparator | turn | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37543565695 | 0.499 | 0.673 | 0.895 | 0.596 | 0.611 | 0.486 |
 
 Reading the generation change: the LongMemEval control's `unmapped_admitted_count_total` is 0 on both planes and every scored metric equals the v1 control's at every k, with the return budget applied on 39 of 500 session questions and 500 of 500 turn questions (the ranked prefix at 50 is the full ranking's prefix, exactly as #670 predicted). The AMB control's active passes, total passes, mean precision and mean recall equal the v1 control's: the only difference between the generations, mapped-among-top-k instead of skip-then-count, changed no case on this 77-case split. Neither equality is authority; both are what the frozen harnesses measured. Same-plane rule, no overall score, no market claim; Hindsight remains deferred under all four lanes.
+
+**Accepted same-harness rows (fourth lane generation, `amb-precisionmembench-retrieval-v3` and `longmemeval-s-retrieval-parity-v3`, 2026-10-07).** Both lanes were frozen before any score (PR #709, plan `docs/plan-669-lanes-v3.md`) and re-execute every row of their `-v2` predecessors at a runtime in the declared transition to Runtime Baseline v3 (ranking policy 3.2.0: the semantic vector route is reachable and ordering-subordinate, default off). Eleven dispatches on `main` `04bb286` (full selections; the checker recorded `TRANSITION` toward v3 on every row, which the importers bound); raw artifacts under `reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/` and `reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/`, eleven complete `evidence_history` entries. LongMemEval_S adds one measured row, `agent_memory_semantic`: the same facade with `semantic_retrieval="required"` under the pinned local MiniLM ONNX representation (config digest `sha256:7447705…`). It is a variant of the control, not a separate system, so it stays outside the scorecards, which hold one row per system. Under AMB that row is deferred: the harness's own uv.lock conflicts with the pinned semantic numerics.
+
+| row | role | system revision | run | active passes | total passes | mean precision | mean recall |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| agent-memory | control | Agent Memory `04bb286` | 37601531946 | 4/43 | 15/77 | 0.18 | 0.95 |
+| bm25 | baseline | AMB `03c1d0f` built-in | 37601535521 | 0/43 | 8/77 | 0.05 | 0.97 |
+| mem0-explicit | comparator | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37601539010 | 0/43 | 10/77 | 0.10 | 1.00 |
+
+| row | role | plane | system revision | run | recall_all@5 | recall_all@10 | recall_all@50 | ndcg_any@10 | knowledge-update recall_all@5 | latest gold first |
+| --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| agent-memory | control | session | Agent Memory `04bb286` | 37601498295 | 0.823 | 0.893 | n/a | 0.878 | 0.972 | 0.457 |
+| agent_memory_semantic | comparator (semantic route required) | session | Agent Memory `04bb286`, MiniLM ONNX `7447705` | 37601507396 | 0.823 | 0.893 | n/a | 0.878 | 0.972 | 0.457 |
+| lexical_overlap | baseline | session | runner blob `eaa7ca9` built-in | 37601515167 | 0.730 | 0.826 | n/a | 0.793 | 0.917 | 0.457 |
+| mem0_explicit | comparator | session | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37601522990 | 0.809 | 0.883 | n/a | 0.841 | 0.903 | 0.443 |
+| agent-memory | control | turn | Agent Memory `04bb286` | 37601502623 | 0.601 | 0.723 | 0.859 | 0.682 | 0.792 | 0.557 |
+| agent_memory_semantic | comparator (semantic route required) | turn | Agent Memory `04bb286`, MiniLM ONNX `7447705` | 37601511653 | 0.601 | 0.723 | 0.859 | 0.682 | 0.792 | 0.557 |
+| lexical_overlap | baseline | turn | runner blob `eaa7ca9` built-in | 37601519437 | 0.487 | 0.587 | 0.761 | 0.560 | 0.681 | 0.614 |
+| mem0_explicit | comparator | turn | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37601527643 | 0.499 | 0.673 | 0.895 | 0.596 | 0.611 | 0.486 |
+
+Reading the generation change: the shipped-default control equals the `-v2` control on every scored metric of both benchmarks and both planes (plan D1), as do the BM25, lexical-overlap and Mem0 rows. That is the acceptance evidence `reports/runtime/baseline-v3-declaration.json` names. The semantic row changes no scored metric and no per-question `recall_all@k` on either plane, which matches its pre-registered prediction (plan D2). The route admitted 2 semantic-only candidates on the session plane (22,633 admitted in total) and 123 on the turn plane (103,479 in total). One gold turn was reached only through the semantic route, and it ranked 116th of 116 admitted: policy 3.2.0 orders every semantic-only candidate after every lexical one, and the lexical route already admits at least 113 candidates per turn question. #669's movement gate therefore transfers to #673 (fusion). Same-plane rule, no overall score, no market claim; Hindsight remains deferred.
 
 The LLM-judged AMB profile is frozen to `gemini:gemini-2.5-flash-lite` for answer and judge, but remains **blocked pending authorized evaluation credentials**.
 

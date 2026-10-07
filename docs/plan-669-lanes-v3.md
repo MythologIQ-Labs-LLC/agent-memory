@@ -156,3 +156,24 @@ None blocking.
 - `execution.execution_identity_requirements` (AMB) gains one line stating that no `agent_memory_semantic` run is importable under the lane (D3). This is the gate's attempt-3 advisory.
 - The importer takes the expected Agent Memory configuration, the semantic posture and the runtime-baseline posture from the matched row **when that row runs the `agent_memory` backend** (the control, or D2). Lexical and Mem0 runs record the control's Agent Memory configuration, as in `-v2`, because the workflow passes the control's budget to every row. Their expectation therefore stays the control's.
 - `reference/tests/test_same_harness_lanes_v3.py` asserts that the v2→v3 difference is exactly D5 plus these items.
+
+**IA2 — the D2 row stays out of the scorecards.**
+- The scorecard contract (`reference/agentmem_ref/evaluation/scorecard.py`) holds one row per system in a comparison group. `agent_memory_semantic` is the control's system (`agent-memory`) in another configuration, so it cannot share the control's scorecard without a misleading second system id.
+- Its evidence records, its `evidence_history` entries (without `normalized_reports`), the lane row and the D2 analysis below carry it instead.
+
+## Results (accepted 2026-10-07, META_LEDGER Entry #91)
+
+The eleven dispatches ran on `main` `04bb286`, every one a full selection with zero runtime, ingestion or out-of-corpus failures. Every row recorded checker state TRANSITION toward v3.
+
+**D1 — holds.** Every scored metric of every re-executed row equals its `-v2` row:
+- AMB: the control, BM25 and Mem0;
+- LongMemEval: the control, lexical overlap and Mem0, on both planes.
+
+**D2 — the prediction holds.**
+- The semantic row changes no aggregate metric and no per-question `recall_all@k` on either plane (419 scored questions each).
+- Session recall_all@30/@50 did not rise. Session @50 is already 1.0 for the control.
+- Semantic-only admitted candidates: 2 on the session plane (22,633 admitted) and 123 on the turn plane (103,479 admitted).
+- One gold turn was reached only through the semantic route (question `75499fd8`), at rank 116 of 116 admitted. That is the subordinate ordering of policy 3.2.0.
+- The pinned representation posture was recorded and bound field for field: `config_digest sha256:7447705…`, enabled/required.
+
+**D4.** The movement gate transfers to #673 with these diagnostics. #669 closes at Runtime Baseline v3 publication (docs/67 Step B1/B2).

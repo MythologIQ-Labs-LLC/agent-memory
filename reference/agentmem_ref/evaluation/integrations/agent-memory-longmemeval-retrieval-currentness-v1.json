@@ -600,6 +600,133 @@
       "variant": "lane:longmemeval-s-retrieval-parity-v2:hindsight",
       "status": "blocked",
       "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory:session",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "agent-memory",
+      "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory-session-04bb286f90f1/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v3-session-agent_memory-04bb286f90f1.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory:turn",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "agent-memory",
+      "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory-turn-04bb286f90f1/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v3-turn-agent_memory-04bb286f90f1.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:lexical_overlap:session",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "lexical_overlap",
+      "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/lexical_overlap-session-04bb286f90f1/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v3-session-lexical_overlap-04bb286f90f1.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:lexical_overlap:turn",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "lexical_overlap",
+      "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/lexical_overlap-turn-04bb286f90f1/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v3-turn-lexical_overlap-04bb286f90f1.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:mem0_explicit:session",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/mem0_explicit-session-04bb286f90f1/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v3-session-mem0_explicit-94c3fe9f238f.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:mem0_explicit:turn",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/mem0_explicit-turn-04bb286f90f1/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v3-turn-mem0_explicit-94c3fe9f238f.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:session",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "agent-memory",
+      "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory_semantic-session-04bb286f90f1/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:agent_memory_semantic:turn",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "agent-memory",
+      "system_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v3/agent_memory_semantic-turn-04bb286f90f1/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v3:hindsight",
+      "status": "blocked",
+      "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
     }
   ],
   "product_findings": [

@@ -294,6 +294,30 @@ Equality is what the frozen harness measured, not authority, and a `-v2` row is 
 beside its `-v1` row rather than merged with it (`comparability.not_comparable_to`). The
 Hindsight row stays deferred.
 
+### Accepted rows (lane `amb-precisionmembench-retrieval-v3`, 2026-10-07)
+
+The fourth lane generation (#669, plan `docs/plan-669-lanes-v3.md`) re-executes the three
+`-v2` rows at a runtime in the declared transition to Runtime Baseline v3: ranking policy
+3.2.0, with the semantic vector route reachable but off by default. The control runs that
+shipped default through bridge 0.2.0, unchanged. It pins the v3 transition posture
+(declaration blob `593fee1`), and every row's execution identity recorded checker state
+`TRANSITION` against that blob. Three dispatches ran on `main`
+`04bb286f90f126c0dedcd78750ad67e4e1a8a57e`, each over the full 77-case selection:
+
+| row | role | system revision | workflow run | evidence record |
+| --- | --- | --- | --- | --- |
+| agent-memory | control | Agent Memory `04bb286f90f126c0dedcd78750ad67e4e1a8a57e` (declared transition to v3) | 37601531946 | `reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/agent-memory-04bb286f90f1/evidence.json` |
+| bm25 | baseline | AMB `03c1d0f1d27da63034f0931121c858faba512383` | 37601535521 | `…/bm25-04bb286f90f1/evidence.json` |
+| mem0-explicit | comparator | mem0ai 2.2.1 (`94c3fe9f238f3dbf29c9ce98643bd71eb13077cd`), fastembed and spaCy absent | 37601539010 | `…/mem0-explicit-04bb286f90f1/evidence.json` |
+
+Every `-v3` harness-summary number equals its `-v2` number: 15/77 total, 4/43 active,
+precision 0.18 and recall 0.95 for the control; 8/77 for BM25; 10/77 for Mem0. This is the
+plan's D1 acceptance check for publishing v3. The semantic-route row
+(`agent_memory_semantic`) is deferred under this harness because AMB's own uv.lock pins
+onnxruntime 1.22.1, tokenizers 0.22.2 and numpy 2.4.3, which conflict with the pinned
+semantic extra that the representation digest binds. The route is measured on
+LongMemEval_S only. The Hindsight row stays deferred.
+
 ### Normalized manifests
 
 `normalize_amb_precisionmembench()` (`reference/agentmem_ref/evaluation/normalize.py`)

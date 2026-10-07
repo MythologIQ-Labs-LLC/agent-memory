@@ -1,0 +1,41 @@
+{
+  "agent_memory_revision": "04bb286f90f126c0dedcd78750ad67e4e1a8a57e",
+  "authority_effect": "none",
+  "backend": "lexical_overlap",
+  "declaration_blob": "593fee135b8fbb8a99b619f59406484b0cb063a6",
+  "evidence_class": "same_harness_external_candidate",
+  "full_selection": true,
+  "granularity": "turn",
+  "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+  "lane_digest_sha256": "9cf28fefd8d9d268dd8ffd1c35bcb707b50c99e51915d73a25719e6de3edccca",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json",
+  "lane_id": "longmemeval-s-retrieval-parity-v3",
+  "mem0_optional_components": {
+    "fastembed_installed": false,
+    "spacy_installed": false
+  },
+  "resolved_packages": {
+    "agent-memory-reference": "0.2.0",
+    "mem0ai": null,
+    "numpy": null,
+    "onnxruntime": null,
+    "openai": null,
+    "posthog": null,
+    "qdrant-client": null,
+    "sentence-transformers": null,
+    "tokenizers": null,
+    "torch": null
+  },
+  "runner": "ubuntu24",
+  "runner_backend": "lexical_overlap",
+  "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v2; declared_successor=agent-memory-runtime-baseline-v3 (issue #669); protected surface = frozen 488d64aadb16ba4b0c474af95d67e96e970e4dfc + 11 declared blobs; deltas=identity.ranking.active_policy_version 3.1.2->3.2.0; candidate=HEAD",
+  "runtime_baseline_state": "TRANSITION",
+  "source_blobs": {
+    "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+    "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+    "reference/run_longmemeval.py": "eaa7ca96bc68cec23eab904ca9fed76db82faafc"
+  },
+  "subset_size": "0",
+  "upstream_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+  "workflow_run_id": "37601519437"
+}
