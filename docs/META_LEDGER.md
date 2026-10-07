@@ -4758,3 +4758,43 @@ The replay runs at this PR's merge commit.
 - #671 stays open.
 - G12 is frozen until the first independent generalization run.
 - The queue is v5 B1/B2 as pre-registered, then the #732 independent generalization decision gate against the unchanged v5 runtime, then the #673 re-plan. #673 is held until that gate is accepted, and until any remediation it requires is accepted too.
+
+---
+
+### Entry #110: PUBLICATION — Runtime Baseline v5 (docs/67 Step B1)
+
+**Timestamp**: 2026-10-07T18:05:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reports/runtime/baseline-v5{.json,.md,-source-boundary.json,-qualification.json}`, the register, `examples/gauntlet/agent-memory-runtime-baseline-v5.json` and its stdio adapter, CONTRIBUTOR_ARCHITECTURE §8, GOVERNANCE_INDEX, `test_runtime_baseline_succession.py`
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `ba6e5a53dd0c61a189b608ef9efcb654033a7fba`): `27b035a69e9ec3620ff1e9104d153d8dbada0c2bc422d6f1c37b514cd721d41c`
+**Previous Hash**: `41e93c53d2c5d4bd05d4daebf34f55cb1ff8d335ad67d45aebd45f9359b34c69`
+**Chain Hash**: `9f8b72fdecb248e0a973937d14e450209623151c520469c780b0aa1747ce1d7f`
+
+**Decision**: Runtime Baseline v5 is published against `74c8683`, the merge of PR #726 (the declared #671 tranche). This step makes no runtime change.
+
+- **Identity delta:** `active_policy_version` moves from 3.2.0 to 3.3.0. The contract stays at 1.5.0.
+- **Record additions:**
+  - `read_semantics.cross_fact_currentness`, which applies under explicit-current recall only;
+  - `public_runtime_contract.source_ref`;
+  - a temporal precedence entry for the cross-fact limit.
+- **Evidence cited:**
+  - the nine accepted `-v5` lane rows (`e6f9db7`, TRANSITION);
+  - `mesa-formal-v2` (M4 1.000, every win `currentness_mechanism`).
+- **Inherited replays:** they keep a basis explaining why the declared change cannot reach them.
+- **Known limitation `cross_fact_currentness_scope`** (issue 732), following the owner posture:
+  - MESA M4 is a regression floor;
+  - general currentness semantics are not measured (#732/#733);
+  - G12 is a temporary envelope;
+  - 0 candidates were limited on LongMemEval and AMB;
+  - Option D is not implemented;
+  - #671 stays open.
+- **Gauntlet:** a v5 manifest and adapter, with `PUBLIC_CONTRACT_VERSION` 1.5.0 and config digest `96c36563…` (the v4 recipe reproduces `bbd910d3`).
+- **Register:** v5 is appended as pending, with `published_commit` null and the declared successor cleared.
+- **Checks:** the checker reports PASS against v5. The validator binds v1–v4 and reports v5 pending.
+- **Tests:** the full suite has 2329 tests. The only failure is the pre-existing `test_gauntlet_durability`.
+
+Step B2 binds the probe artifact. After B2, the next step is the #732 independent generalization gate against this unchanged runtime. #673 stays held.
