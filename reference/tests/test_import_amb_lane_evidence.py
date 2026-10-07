@@ -220,3 +220,60 @@ class ImportAmbLaneEvidenceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+M = _load_script()
+
+
+class RecallControlSidecarJoinTests(unittest.TestCase):
+    """plan-644-lanes-v4 L9: the AMB shadow sidecar joins over non-blank-query cases only."""
+
+    V3_CONTROL = REPO_ROOT / "reports/benchmarks/amb/amb-precisionmembench-retrieval-v3/agent-memory-04bb286f90f1/single-turn.json"
+
+    def _results(self) -> list[dict]:
+        return json.loads(self.V3_CONTROL.read_text(encoding="utf-8"))["results"]
+
+    @staticmethod
+    def _lines(results: list[dict]) -> list[str]:
+        asked = [case for case in results if (case.get("query") or "").strip()]
+        block = {"response": {"decision_status": "complete"}, "usage": {"controller_decisions_used": 1, "fallback_events": []},
+                 "actual_stop": {"actual_stop_reason": "frontier_exhausted", "stop_class": "search_space"},
+                 "shadow_delta": {"lexical": {"proposed_limit": 8, "actual_count": 12, "would_truncate": True}},
+                 "authority_effect": "none"}
+        return [json.dumps({"call_index": index, "scope": f"scope:{case['query_id']}",
+                            "query_sha256": hashlib.sha256(case["query"].encode("utf-8")).hexdigest(),
+                            "budget": 20, "recall_control": block}) for index, case in enumerate(asked)]
+
+    def test_retained_v3_cases_join_with_four_blank_queries_reported_as_no_recall(self):
+        results = self._results()
+        joined = M.join_recall_control_sidecar(self._lines(results), results)
+        self.assertEqual((joined["records"], joined["no_recall_executed_cases"]), (73, 4))
+        self.assertEqual(joined["actual_stop_reason_counts"], {"frontier_exhausted": 73})
+        self.assertEqual(joined["decision_status_counts"], {"complete": 73})
+        self.assertEqual(joined["would_truncate_case_counts"], {"lexical": 73})
+        self.assertEqual(joined["authority_effect"], "none")
+        self.assertEqual(M.row_recall_control({"configuration": {}}), "off")
+
+    def test_any_mismatch_refuses_rather_than_counting_zero(self):
+        results = self._results()
+        lines = self._lines(results)
+        cases = [
+            (lines[:-1], "72 records for 73"),
+            (lines + [json.dumps({**json.loads(lines[-1]), "call_index": 73})], "adjacent duplicate"),
+            ([lines[1], lines[0], *lines[2:]], "not contiguous"),
+            ([*lines[:5], lines[6], lines[5], *lines[7:]], "not contiguous"),
+        ]
+        swapped = [json.loads(line) for line in lines]
+        swapped[5]["query_sha256"], swapped[6]["query_sha256"] = swapped[6]["query_sha256"], swapped[5]["query_sha256"]
+        cases.append(([json.dumps(item) for item in swapped], "does not match case"))
+        timed = [json.loads(line) for line in lines]
+        timed[0]["recall_control"]["usage"]["elapsed_ms"] = 1.5
+        cases.append(([json.dumps(item) for item in timed], "authority-free deterministic"))
+        for bad, message in cases:
+            with self.assertRaisesRegex(M.ImportError_, message):
+                M.join_recall_control_sidecar(bad, results)
+        retrieved_blank = json.loads(json.dumps(results))
+        blank = next(case for case in retrieved_blank if not case["query"].strip())
+        blank["retrieve_time_ms"] = 3.0
+        with self.assertRaisesRegex(M.ImportError_, "shows a retrieval"):
+            M.join_recall_control_sidecar(lines, retrieved_blank)

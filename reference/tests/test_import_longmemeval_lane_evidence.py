@@ -31,6 +31,7 @@ M = _load_script()
 
 
 V2_LANE_FILE = "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v2.json"
+V4_LANE_FILE = "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v4.json"
 V3_LANE_FILE = "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v3.json"
 
 
@@ -241,7 +242,7 @@ class ImportLongMemEvalLaneEvidenceTests(unittest.TestCase):
         # binds the checker state and the declaration blob, and expects the declared budget.
         lane = _lane(V2_LANE_FILE)
         posture = next(row for row in lane["systems"] if row["role"] == "control")["configuration"]["runtime_baseline_posture"]
-        self.assertEqual(M.expected_agent_memory_configuration(lane), {"temporal_metadata": "none", "ranking_variant": "default", "budget": "50", "semantic_retrieval": "off"})
+        self.assertEqual(M.expected_agent_memory_configuration(lane), {"temporal_metadata": "none", "ranking_variant": "default", "budget": "50", "semantic_retrieval": "off", "recall_control": "off"})
         self.assertEqual(M.RUNNER_CONFIGURATION_DEFAULTS, _runner_defaults())
 
         def report_with_budget() -> dict:
@@ -343,6 +344,58 @@ class ImportLongMemEvalLaneEvidenceTests(unittest.TestCase):
         _write_artifact(self.runs, "6201", "agent_memory_semantic", "session", report=agent_memory_report(semantic=True), identity_overrides=semantic_identity, lane_file=V2_LANE_FILE)
         with self.assertRaisesRegex(M.ImportError_, "no row for backend 'agent_memory_semantic'"):
             self._import("6201")
+
+    def test_v4_shadow_row_binds_per_question_telemetry(self) -> None:
+        # plan-644-lanes-v4 L2/L6: agent_memory_shadow runs the agent_memory backend with
+        # recall_control shadow; every question without a runtime error carries an
+        # authority-free record without elapsed_ms and the report carries the aggregate;
+        # the control (recall_control absent, read as off) carries neither.
+        lane = _lane(V4_LANE_FILE)
+        control = next(row for row in lane["systems"] if row["role"] == "control")
+        bound = {"runtime_baseline_state": "TRANSITION", "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; ...",
+                 "declaration_blob": control["configuration"]["runtime_baseline_posture"]["declaration_blob"]}
+        self.assertEqual(M.expected_agent_memory_configuration(lane)["recall_control"], "off")
+        record = {"response": {"decision_status": "complete"}, "usage": {"controller_decisions_used": 1, "fallback_events": []},
+                  "actual_stop": {"actual_stop_reason": "frontier_exhausted", "stop_class": "search_space"},
+                  "shadow_delta": {"lexical": {"proposed_limit": 32, "actual_count": 40, "would_truncate": True}},
+                  "authority_effect": "none"}
+
+        def report(*, shadow: bool, telemetry=None, summary: bool = True) -> dict:
+            built = _report(lane, "agent_memory", "session")
+            built["execution"]["agent_memory_configuration"] = {"temporal_metadata": "none", "ranking_variant": "default", "budget": "50",
+                                                                 "semantic_retrieval": "off", "recall_control": "shadow" if shadow else "off"}
+            native = built["planes"]["session"]["backends"]["agent_memory"]
+            if telemetry is not None:
+                for row in native["rows"]:
+                    row["recall_control"] = json.loads(json.dumps(telemetry))
+                if summary:
+                    native["recall_control_summary"] = {"questions_with_telemetry": len(native["rows"]), "authority_effect": "none"}
+            return built
+
+        shadow_identity = {**bound, "runner_backend": "agent_memory"}
+        _write_artifact(self.runs, "7001", "agent_memory", "session", report=report(shadow=False), identity_overrides=bound, lane_file=V4_LANE_FILE)
+        _write_artifact(self.runs, "7002", "agent_memory_shadow", "session", report=report(shadow=True, telemetry=record), identity_overrides=shadow_identity, lane_file=V4_LANE_FILE)
+        control_record = json.loads((self._import("7001") / "evidence.json").read_text(encoding="utf-8"))
+        shadow_record = json.loads((self._import("7002") / "evidence.json").read_text(encoding="utf-8"))
+        self.assertIsNone(control_record["system"]["recall_control_summary"])
+        self.assertEqual(shadow_record["system"]["recall_control_summary"]["authority_effect"], "none")
+        self.assertEqual((shadow_record["row"]["provider_key"], shadow_record["row"]["role"]), ("agent_memory_shadow", "comparator"))
+        self.assertEqual(shadow_record["system"]["runtime_baseline"]["declared_successor"], "agent-memory-runtime-baseline-v4")
+
+        timed = json.loads(json.dumps(record))
+        timed["usage"]["elapsed_ms"] = 3.0
+        refusals = [
+            ("7101", "agent_memory", report(shadow=False, telemetry=record), bound, "carries shadow telemetry"),
+            ("7102", "agent_memory_shadow", report(shadow=True), shadow_identity, "lacks an authority-free telemetry record"),
+            ("7103", "agent_memory_shadow", report(shadow=True, telemetry={**record, "authority_effect": "advisory"}), shadow_identity, "lacks an authority-free"),
+            ("7104", "agent_memory_shadow", report(shadow=True, telemetry=timed), shadow_identity, "elapsed_ms"),
+            ("7105", "agent_memory_shadow", report(shadow=True, telemetry=record, summary=False), shadow_identity, "recall_control_summary"),
+            ("7106", "agent_memory_shadow", report(shadow=False, telemetry=record), shadow_identity, "declared posture"),
+        ]
+        for run_id, key, built, identity, message in refusals:
+            _write_artifact(self.runs, run_id, key, "session", report=built, identity_overrides=identity, lane_file=V4_LANE_FILE)
+            with self.assertRaisesRegex(M.ImportError_, message, msg=run_id):
+                self._import(run_id)
 
     def test_inventory_tamper_is_refused(self) -> None:
         _write_artifact(self.runs, "5001", "lexical_overlap", "turn", tamper_inventory=True)

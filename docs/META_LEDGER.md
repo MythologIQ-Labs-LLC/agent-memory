@@ -4357,3 +4357,42 @@ The plan freezes the `-v4` lanes:
 - **Lanes and tooling:** the bridge goes to 0.3.0, the re-pins are listed, and lane, importer and workflow differences from `-v3` are listed exhaustively.
 
 No runtime change.
+
+---
+
+### Entry #98: IMPLEMENTATION — #644 -v4 same-harness lanes frozen; runner shadow mode; bridge 0.3.0; importers
+
+**Timestamp**: 2026-10-07T15:10:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Plan**: docs/plan-644-lanes-v4.md (iteration 4; Gate Tribunal PASS at Entry #97)
+
+**Artifacts**:
+- **Lanes:** `longmemeval-s-retrieval-parity-v4.json` and `amb-precisionmembench-retrieval-v4.json`, frozen before any score.
+  - Both differ from `-v3` by exactly the L5 list.
+  - Both add the `agent-memory-recall-control-shadow` row.
+  - The LongMemEval semantic row is deferred (L3).
+  - Pins: runner blob 592fc20…, bridge blob 8aad089…, declaration blob ac1e498c….
+- **Runner:** `reference/run_longmemeval.py` gains `--agent-memory-recall-control {off,shadow}`.
+  - With `off`, the facade opens exactly as before.
+  - With `shadow`, each question records the deterministic telemetry block and the report records `recall_control_summary`.
+  - Shadow combined with a required semantic route is refused.
+- **AMB bridge 0.3.0:** registers `agent-memory-shadow`, which writes the L9 sidecar and refuses to retrieve without one. The control provider is unchanged.
+- **Importers:**
+  - LongMemEval: `recall_control` default, plus a per-question telemetry binding.
+  - AMB: the L9 sidecar join over non-blank cases, with blank-query cases reported as `no_recall_executed` and any mismatch refused.
+- **Workflows:** the `-v4` lanes and shadow rows are offered and set as defaults; the AMB sidecar env is set for the shadow row only.
+- **Tests:**
+  - new `test_same_harness_lanes_v4.py`;
+  - runner, bridge and importer cases, including the sidecar join over the 77 retained `-v3` AMB cases (73 records, 4 `no_recall_executed`);
+  - the B3 re-pins.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `a89167f9b92f0c16f921524bb7ec436a43d444b1`): `f17e3edf3f58207cf3515f2a73f287b2ffde98b2f470085cfbfb9a8615f12789`
+**Previous Hash**: `132de985c6ac0100d372d71ce15a64f05b105218ca20f1ac2b219bddceb4b96d`
+**Chain Hash**: `5bf73582fea68af99a7200ab15ef908cd0e5c9bc7ffa81485fa8c232d1409580`
+
+**Decision**: The `-v4` evidence lanes are frozen and executable, and no runtime file changed.
+- **Full suite:** 2,221 tests. The only failure is the pre-existing environmental `test_gauntlet_durability`.
+- **Next:** merge, then dispatch 12 runs on `main` (LongMemEval: 4 rows × 2 planes; AMB: 4 rows). Then import and accept per L1/L2/L9, then docs/67 Step B1/B2 for v4.
