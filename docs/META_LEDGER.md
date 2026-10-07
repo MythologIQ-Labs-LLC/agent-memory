@@ -4322,3 +4322,38 @@ Next: a gated `-v4` lanes plan (D1 off equals `-v3`; the shadow row equals the c
 **Semantic default.** `semantic_retrieval` stays `off`. `auto` is deferred until currentness and fusion are independently qualified.
 
 No runtime file changed.
+
+---
+
+### Entry #97: GATE TRIBUNAL — PASS (#644 -v4 same-harness lanes, attempt 4)
+
+**Timestamp**: 2026-10-07T14:05:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-644-lanes-v4.md (iteration 4, b3b8fc7)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_644_lanes_v4.md) = 98ea492571ddb9142338e775e5e79049a7bb0642d7667159ca3b477ab258f942
+
+**Previous Hash**: `cfeafd0077b6c821f5752933c8464b6f34cb60582a96f0bd5f6f3472e1a43ace`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 132de985c6ac0100d372d71ce15a64f05b105218ca20f1ac2b219bddceb4b96d
+
+**Decision**: PASS at attempt 4, from an independent reviewer working in a fresh context.
+
+The earlier attempts were vetoed for:
+1. unretainable AMB shadow telemetry, plus misnamed fields, a missing re-pin list, and a weak AMB L1;
+2. blank-query AMB cases breaking the sidecar join;
+3. a wrong blank-query condition.
+
+The plan freezes the `-v4` lanes:
+- **L1:** with `recall_control` off, results equal `-v3` on scored metrics and ranked outputs.
+- **L2:** a shadow row whose metrics and rankings equal the same lane's control. Its deterministic controller telemetry is reported with no authority, under a stop-reason prediction registered before any score.
+- **L3:** the LongMemEval semantic row is deferred.
+- **L9:** an AMB telemetry sidecar joined over the non-blank cases.
+- **Lanes and tooling:** the bridge goes to 0.3.0, the re-pins are listed, and lane, importer and workflow differences from `-v3` are listed exhaustively.
+
+No runtime change.

@@ -7,7 +7,7 @@
 **precedent**: docs/plan-669-lanes-v3.md (D1, D2, D3, D5, D6, D7, IA1, IA2)
 **owner rulings in force**: `decision-temporal-posture`, `decision-embedding-dependency`
 **doctrine**: controller output != truth; stop recommendation != actual stop reason; benchmark score != truth
-**iteration**: 4
+**iteration**: 4 (Gate Tribunal PASS at attempt 4, META_LEDGER Entry #97)
 
 Gate history:
 - **Attempt 1, VETO, four findings:**
