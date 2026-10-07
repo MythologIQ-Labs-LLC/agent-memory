@@ -196,17 +196,42 @@ class CheckerTests(unittest.TestCase):
 
 
 class AssemblyTests(unittest.TestCase):
-    def test_parts_assemble_in_order_and_gaps_invalidate(self):
+    def test_parts_assemble_in_order(self):
         with tempfile.TemporaryDirectory() as tmp:
             d = Path(tmp)
             (d / "corpus.json").write_text('[{"case_id": "a"}]', encoding="utf-8")
             (d / "corpus_part2.json").write_text('[{"case_id": "b"}]', encoding="utf-8")
-            records, meta = checker.assemble(d, "corpus")
+            records, files, names = checker.assemble(d, "corpus")
             self.assertEqual([r["case_id"] for r in records], ["a", "b"])
-            self.assertEqual(meta["origin"][id(records[1])], "corpus_part2.json")
-            (d / "corpus_part4.json").write_text("[]", encoding="utf-8")
-            with self.assertRaises(checker.InvalidAttempt):
-                checker.assemble(d, "corpus")
+            self.assertEqual(files, ["corpus.json", "corpus_part2.json"])
+            self.assertIsNone(checker.assemble(d, "variants"))
+
+    def test_gap_missing_base_and_non_array_invalidate(self):
+        for files in (
+            {"corpus.json": "[]", "corpus_part3.json": "[]"},
+            {"corpus_part2.json": "[]"},
+            {"corpus.json": "{}"},
+        ):
+            with tempfile.TemporaryDirectory() as tmp:
+                d = Path(tmp)
+                for name, text in files.items():
+                    (d / name).write_text(text, encoding="utf-8")
+                with self.assertRaises(checker.InvalidAttempt):
+                    checker.assemble(d, "corpus")
+
+    def test_cli_exit_codes(self):
+        good = _case(old="Our CI pipeline runs on Jenkins at the moment.", new="We migrated CI off Jenkins; it runs on Buildkite now.")
+        with tempfile.TemporaryDirectory() as tmp:
+            d = Path(tmp)
+            (d / "corpus.json").write_text(json.dumps([good]), encoding="utf-8")
+            (d / "sel.json").write_text('["syn-p"]', encoding="utf-8")
+            self.assertEqual(checker.main(["--author-dir", str(d), "--report", str(d / "r.json")]), 0)
+            # A selection with no variants at all: every pair is missing.
+            self.assertEqual(checker.main(["--author-dir", str(d), "--selection", str(d / "sel.json"), "--report", str(d / "r.json")]), 1)
+            report = json.loads((d / "r.json").read_text(encoding="utf-8"))
+            self.assertEqual(len(report["rejections"]), 14)
+            (d / "variants_part2.json").write_text("[]", encoding="utf-8")
+            self.assertEqual(checker.main(["--author-dir", str(d), "--selection", str(d / "sel.json")]), 2)
 
 
 class SelectorTests(unittest.TestCase):

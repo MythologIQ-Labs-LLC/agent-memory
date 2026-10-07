@@ -28,9 +28,16 @@ The rules:
   against any text of a prior corpus fails.
 
 Split files (amendment A1): ``assemble`` reads ``<stem>.json``, then ``<stem>_part2.json``,
-``<stem>_part3.json`` and so on, until the first missing index. A part beyond a gap, or a part
-that is not a JSON array, makes the attempt invalid (exit 2). Each rejection names the file that
-holds the record.
+``<stem>_part3.json`` and so on, until the first missing index. The attempt is invalid (exit 2) if:
+
+* a part exists without the base file;
+* a part lies beyond a gap;
+* a part is not a JSON array.
+
+Each rejection names the file that holds the record. When a selection is given but no variants
+exist, every (base, type) pair is reported missing.
+
+Exit codes: 0 for no rejections, 1 for rejections, 2 for an invalid attempt.
 
 Similarity: text is lower-cased and tokenised with ``[a-z0-9]+``. If both texts have at least 3
 tokens, similarity is the Jaccard of their token trigrams. Otherwise it is the Jaccard of their
@@ -280,12 +287,11 @@ def check(
     variants: list | None,
     selection: list | None,
     prior_texts: list[str],
-    origin: dict | None = None,
+    corpus_files: list | None = None,
+    variant_files: list | None = None,
 ) -> dict:
-    origin = origin or {}
-
-    def file_of(record, default: str) -> str:
-        return origin.get(id(record), default)
+    def file_of(files: list | None, index: int, default: str) -> str:
+        return files[index] if files else default
 
     templates = template_texts()
     rejections: list[dict] = []
@@ -294,7 +300,7 @@ def check(
 
     if not isinstance(corpus, list):
         raise SystemExit("corpus.json must be a JSON array")
-    for record in corpus:
+    for index, record in enumerate(corpus):
         rid = record.get("case_id") if isinstance(record, dict) else None
         try:
             if not isinstance(record, dict) or set(record) != CASE_FIELDS or not _nonempty_str(rid):
@@ -311,7 +317,7 @@ def check(
                 overlap_rule(record, prior_texts, "K8_holdout_overlap")
             valid_cases[rid] = record
         except Reject as exc:
-            rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": file_of(record, "corpus.json"), "rule": exc.rule})
+            rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": file_of(corpus_files, index, "corpus.json"), "rule": exc.rule})
         if isinstance(rid, str):
             seen_ids.add(rid)
 
@@ -325,7 +331,7 @@ def check(
     if variants is not None:
         selected = set(selection or [])
         pairs: set = set()
-        for record in variants:
+        for index, record in enumerate(variants):
             rid = record.get("variant_id") if isinstance(record, dict) else None
             try:
                 if not isinstance(record, dict) or not _nonempty_str(rid) or rid in seen_ids:
@@ -360,7 +366,7 @@ def check(
                     overlap_rule(record, prior_texts, "K8_holdout_overlap")
                 pairs.add(pair)
             except Reject as exc:
-                rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": file_of(record, "variants.json"), "rule": exc.rule})
+                rejections.append({"id": rid if isinstance(rid, str) else "<missing>", "file": file_of(variant_files, index, "variants.json"), "rule": exc.rule})
             if isinstance(rid, str):
                 seen_ids.add(rid)
         for base_id in sorted(selected):
@@ -388,34 +394,44 @@ def _ids_for(variants: list, base_id: str, vtype: str) -> set:
     }
 
 
-class InvalidAttempt(SystemExit):
-    pass
+class InvalidAttempt(Exception):
+    """The author's files cannot be assembled mechanically; the attempt is invalid (exit 2)."""
 
 
-def assemble(directory: Path, stem: str) -> tuple[list, dict]:
-    """Assemble ``stem.json`` and its consecutive parts into one list, with each record's file name."""
+def assemble(directory: Path, stem: str) -> tuple[list, list, list] | None:
+    """Assemble ``stem.json`` and its consecutive parts.
 
+    Returns ``(records, record_files, names)``, where ``record_files[i]`` is the file holding
+    ``records[i]``. It returns None only when neither the base file nor any part exists. A part
+    without the base file, a part beyond a gap, or a part that is not a JSON array raises
+    ``InvalidAttempt``.
+    """
+
+    parts = sorted(p.name for p in directory.glob(f"{stem}_part*.json"))
+    if not (directory / f"{stem}.json").exists():
+        if parts:
+            raise InvalidAttempt(f"{stem}.json is missing but part file(s) exist: {parts}")
+        return None
     names = [f"{stem}.json"]
     k = 2
     while (directory / f"{stem}_part{k}.json").exists():
         names.append(f"{stem}_part{k}.json")
         k += 1
-    stray = sorted(
-        p.name for p in directory.glob(f"{stem}_part*.json") if p.name not in names
-    )
+    stray = [name for name in parts if name not in names]
     if stray:
         raise InvalidAttempt(f"part file(s) beyond a gap: {stray}")
     records: list = []
-    origin: dict = {}
+    record_files: list = []
     for name in names:
-        data = json.loads((directory / name).read_text(encoding="utf-8"))
+        try:
+            data = json.loads((directory / name).read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise InvalidAttempt(f"{name} is not valid JSON: {exc}") from exc
         if not isinstance(data, list):
             raise InvalidAttempt(f"{name} is not a JSON array")
-        for record in data:
-            key = id(record)
-            origin[key] = name
-            records.append(record)
-    return records, {"files": names, "origin": origin}
+        records += data
+        record_files += [name] * len(data)
+    return records, record_files, names
 
 
 def compact(value) -> str:
@@ -434,17 +450,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--rejections", type=Path, help="write the compact {REJECTIONS} JSON here")
     args = parser.parse_args(argv)
 
-    origin: dict = {}
+    corpus_files = variant_files = None
     assembled_files: dict = {}
     if args.author_dir:
-        corpus, meta = assemble(args.author_dir, "corpus")
-        origin.update(meta["origin"])
-        assembled_files["corpus"] = meta["files"]
+        try:
+            assembled = assemble(args.author_dir, "corpus")
+            if assembled is None:
+                raise InvalidAttempt("corpus.json is missing")
+            corpus, corpus_files, assembled_files["corpus"] = assembled
+            assembled_variants = assemble(args.author_dir, "variants")
+        except InvalidAttempt as exc:
+            sys.stderr.write(f"INVALID ATTEMPT: {exc}\n")
+            return 2
         variants = None
-        if (args.author_dir / "variants.json").exists():
-            variants, vmeta = assemble(args.author_dir, "variants")
-            origin.update(vmeta["origin"])
-            assembled_files["variants"] = vmeta["files"]
+        if assembled_variants is not None:
+            variants, variant_files, assembled_files["variants"] = assembled_variants
         if args.assembled_out:
             args.assembled_out.mkdir(parents=True, exist_ok=True)
             (args.assembled_out / "corpus.json").write_text(json.dumps(corpus, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
@@ -459,7 +479,10 @@ def main(argv: list[str] | None = None) -> int:
         for record in json.loads(path.read_text(encoding="utf-8")):
             if isinstance(record, dict) and "writes" in record:
                 prior_texts += record_texts(record)
-    report = check(corpus, variants, selection, prior_texts, origin)
+    if selection is not None and variants is None:
+        # A selection without variants: every (base, type) pair is missing (K6_variant_set_complete).
+        variants = []
+    report = check(corpus, variants, selection, prior_texts, corpus_files, variant_files)
     inputs = [args.corpus, args.variants, args.selection, *args.prior]
     if args.author_dir:
         inputs += [args.author_dir / name for names in assembled_files.values() for name in names]
