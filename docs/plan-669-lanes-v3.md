@@ -6,7 +6,7 @@
 **parent plan**: docs/plan-669-semantic-vector-route.md (Gate PASS at Entry #87; Step A merged as `aede8fd`; `main` prints TRANSITION to v3)
 **precedent**: docs/plan-640-lanes-v2-return-budget.md (LD1, LD5, LD6, LD7)
 **owner rulings in force**: `decision-temporal-posture`, `decision-embedding-dependency`
-**iteration**: 4
+**iteration**: 4 (Gate Tribunal PASS at attempt 4, META_LEDGER Entry #89)
 
 Gate history:
 - Attempt 1 VETO: the AMB lock conflict; no AMB evidence channel for the mode; representation identity under-bound; the gate structurally decided; an incomplete re-pin list.
@@ -147,3 +147,12 @@ Additional acceptance checks:
 ## Open Questions
 
 None blocking.
+
+## Implementation amendments
+
+**IA1 — three lane-file differences D5 left implicit, and the selection of the configuration row.**
+- `findings`: the `-v2` acceptance entry ("accepted rows …") describes `-v2` rows. It is not carried into an unexecuted lane. All other findings are unchanged.
+- `execution.timeout` (LongMemEval) restates the workflow timeout: 240 minutes (D6).
+- `execution.execution_identity_requirements` (AMB) gains one line stating that no `agent_memory_semantic` run is importable under the lane (D3). This is the gate's attempt-3 advisory.
+- The importer takes the expected Agent Memory configuration, the semantic posture and the runtime-baseline posture from the matched row **when that row runs the `agent_memory` backend** (the control, or D2). Lexical and Mem0 runs record the control's Agent Memory configuration, as in `-v2`, because the workflow passes the control's budget to every row. Their expectation therefore stays the control's.
+- `reference/tests/test_same_harness_lanes_v3.py` asserts that the v2→v3 difference is exactly D5 plus these items.

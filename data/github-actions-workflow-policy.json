@@ -688,7 +688,7 @@
       "concurrency": "complete_every_run",
       "jobs": {
         "evaluate": {
-          "timeout_minutes": 180,
+          "timeout_minutes": 240,
           "full_suite_passes": 0
         }
       }

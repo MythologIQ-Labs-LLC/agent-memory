@@ -6,11 +6,12 @@ on:
       lane_id:
         description: "Frozen PrecisionMemBench retrieval lane this run executes when dataset=precisionmembench and mode=retrieval (an accepted lane is refused)"
         required: true
-        default: "amb-precisionmembench-retrieval-v2"
+        default: "amb-precisionmembench-retrieval-v3"
         type: choice
         options:
           - amb-precisionmembench-retrieval-v1
           - amb-precisionmembench-retrieval-v2
+          - amb-precisionmembench-retrieval-v3
       dataset:
         description: "AMB dataset"
         required: true

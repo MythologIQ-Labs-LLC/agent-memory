@@ -4058,3 +4058,35 @@ on main.
 Step B1/B2 is still open: the `-v3` lane plan, the lane dispatch, and
 publishing v3. M4 is unchanged by design: currentness is #671 and fusion
 is #673.
+
+---
+
+### Entry #89: GATE TRIBUNAL — PASS (#669 Step B `-v3` lanes plan, attempt 4)
+
+**Timestamp**: 2026-10-07T07:10:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-669-lanes-v3.md (iteration 4, d6e9e7d)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_669_lanes_v3.md) = 4c02f9731a32e2c39ec106e03071604b3d083ad0614c7f24f23ec213ac88f00b
+
+**Previous Hash**: `6e285fc1891ee7a0f9c4c1b02138dde789ec0441c3d0047fae71f9c0672de686`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 86d46da61aa2de4302e9234573395e1c6715a9d37e9d95fac41f8631a747b3f5
+
+**Decision**: PASS at attempt 4. The reviewer was independent and worked in a fresh context.
+
+Earlier VETOs:
+- Attempt 1: the AMB lock conflict; the representation identity; the gate disposition; the re-pin list.
+- Attempt 2: the D2 row identity; schema enums; superseded text.
+- Attempt 3: D5 was not exhaustive.
+
+The plan freezes:
+- **D1:** the shipped-default control is held to exact `-v2` equality on scored metrics.
+- **D2:** an opt-in `agent_memory_semantic` comparator on LongMemEval only, with a pre-registered prediction.
+- **D3:** an AMB semantic row deferred for the uv.lock conflict.
+- **D4:** #669's "must move" gate transfers to #673.

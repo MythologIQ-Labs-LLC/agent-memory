@@ -221,6 +221,76 @@ class LongMemEvalProfileTests(unittest.TestCase):
             M.configure_agent_memory(budget=0)
         M.configure_agent_memory()
 
+    def test_semantic_retrieval_mode_records_posture_and_gold_blind_route_diagnostics(self) -> None:
+        # #669 D2: `required` opens the facade with the semantic route and records the
+        # run-stable posture plus per-question route diagnostics joined to gold after scoring;
+        # `off` (the default) records neither and opens the facade exactly as before.
+        from agentmem_ref.runtime import representation_onnx
+        from agentmem_ref.runtime.vector_retrieval import VectorRepresentationSpec
+
+        class FixtureProvider:
+            spec = VectorRepresentationSpec(
+                representation_ref="agent-memory:test-semantic-fixture",
+                representation_version="1.0.0",
+                config_digest="sha256:" + "cd" * 32,
+                dimensions=3,
+                deterministic_rebuild=True,
+            )
+
+            def __init__(self, model_dir=None) -> None:
+                pass
+
+            def embed(self, text: str) -> tuple[float, ...]:
+                return (1.0, float(len(text) % 7), 0.5)
+
+        self.assertEqual(M._AGENT_MEMORY_CONFIGURATION["semantic_retrieval"], "off")
+        default = M.run(FIXTURE, corpus_class="synthetic", backends=("agent_memory",))
+        self.assertNotIn("agent_memory_semantic_posture", default["execution"])
+        try:
+            with mock.patch.object(representation_onnx, "OnnxSentenceEmbeddingProvider", FixtureProvider):
+                M.configure_agent_memory(semantic_retrieval="required")
+                semantic = M.run(FIXTURE, corpus_class="synthetic", backends=("agent_memory",))
+        finally:
+            M.configure_agent_memory()
+        self.assertEqual(semantic["execution"]["agent_memory_configuration"]["semantic_retrieval"], "required")
+        self.assertEqual(semantic["execution"]["agent_memory_semantic_posture"], {
+            "status": "enabled", "mode": "required",
+            "representation_ref": "agent-memory:test-semantic-fixture", "representation_version": "1.0.0",
+            "config_digest": "sha256:" + "cd" * 32, "dimensions": 3, "minimum_similarity": 0.3, "candidate_limit": 16,
+        })
+        for granularity in ("session", "turn"):
+            plain = default["planes"][granularity]["backends"]["agent_memory"]
+            backend = semantic["planes"][granularity]["backends"]["agent_memory"]
+            self.assertNotIn("semantic_route", plain)
+            self.assertEqual(backend["semantic_route"]["authority_effect"], "none")
+            for row in backend["rows"]:
+                self.assertIsNone(row["runtime_error"])
+                diagnostics = row["semantic_route"]
+                self.assertEqual(diagnostics["admitted_count"], row["admitted_count"])
+                self.assertEqual(set(diagnostics["gold_admitted_rank"]), set(row["gold"]))
+                self.assertLessEqual(set(diagnostics["gold_reached_only_by_semantic"]), set(row["gold"]))
+            self.assertEqual(backend["semantic_route"]["semantic_only_admitted_count_total"],
+                             sum(row["semantic_route"]["semantic_only_admitted_count"] for row in backend["rows"]))
+        with self.assertRaises(ValueError):
+            M.configure_agent_memory(semantic_retrieval="auto")
+        M.configure_agent_memory()
+
+    def test_semantic_route_diagnostics_join_gold_after_the_trace(self) -> None:
+        trace = {"admitted": ["a", "b", "c", "b"], "semantic_only": ["c"]}
+        self.assertEqual(M._semantic_route_diagnostics(trace, ["c", "b", "z"]), {
+            "admitted_count": 4,
+            "semantic_only_admitted_count": 1,
+            "gold_reached_only_by_semantic": ["c"],
+            "gold_admitted_rank": {"b": 2, "c": 3, "z": None},
+        })
+
+    def test_semantic_mode_is_refused_for_other_backends(self) -> None:
+        for argv in (["--backend", "lexical_overlap"], ["--backend", "agent_memory", "--backend", "lexical_overlap"], []):
+            with mock.patch.object(sys, "argv", ["run_longmemeval.py", *argv, "--agent-memory-semantic-retrieval", "required"]):
+                with self.assertRaises(SystemExit) as raised, mock.patch("sys.stderr"):
+                    M.main()
+                self.assertEqual(raised.exception.code, 2)
+
     def test_temporal_metadata_modes_declare_only_their_fields(self) -> None:
         """#594: ``source_observed_at`` adds the session date as ``observed_at`` and nothing else."""
         from agentmem_ref import AgentMemory

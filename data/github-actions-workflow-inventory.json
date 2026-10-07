@@ -2550,7 +2550,7 @@
       "timeoutState": {
         "explicit": true,
         "valuesMinutes": [
-          180
+          240
         ]
       },
       "concurrencyState": {
@@ -4399,6 +4399,10 @@
     {
       "date": "2026-10-07",
       "change": "added .github/workflows/semantic-representation.yml (#669): installs the optional extra 'semantic', fetches the pinned model by digest and runs the provider/store/policy/facade tests with AGENT_MEMORY_REQUIRE_REPRESENTATION=1"
+    },
+    {
+      "date": "2026-10-07",
+      "change": "longmemeval-competitive.yml (#669 lanes -v3): lane input gains longmemeval-s-retrieval-parity-v3 (default), backend gains agent_memory_semantic (installs the semantic extra under reference/requirements-semantic.txt and fetches the pinned model for that row only), job timeout 180 -> 240 minutes; amb-competitive.yml lane input gains amb-precisionmembench-retrieval-v3 (default)"
     }
   ]
 }
