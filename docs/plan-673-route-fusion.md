@@ -105,3 +105,37 @@ This tranche replaces the lexical relevance stage with **reciprocal-rank fusion 
 ## Open Questions
 
 - (owner, non-blocking) Should the facade default become `semantic_retrieval="auto"` once 3.3.0 is published, so the route engages wherever the extra is installed? This would need its own lane generation and baseline transition.
+
+## Gate attempt 1: VETO (2026-10-07), implementation held
+
+An independent reviewer prototyped F1 and F2 literally and ran the prototype against the real 3.2.0 code and the real pinned provider. Scratch evidence: `scratchpad/gate673/`.
+
+**What holds.** F3 holds as F2 intends: 0 order or stage differences across 3,125 route-off cases and 50 gauntlet probes. Fusion cannot cross a temporal applicability tier, and admission is untouched.
+
+**Blocking findings**
+1. **Step 2 is wrong.** The fused stage must not enter the `_pre_temporal_key` stop-set. Doing so reorders 937 of 3,125 route-off cases by content digest.
+2. **F1 misstates 3.2.0.** The exact-identity route *is* counted toward corroboration today. Excluding it reorders 2,621 of 3,125 cases.
+3. **With the route on, the design trips its own F4 blocker.** The ordering-difference report shows:
+   - #580 required unit `D18-observation-time-disagrees-with-valid-time/current-inferred/current_applicability_accuracy` passes → fails;
+   - #584 M4, M12 and M15 reorder;
+   - the M4-shaped new-fact rate falls from 0.20 to 0.04.
+
+   There are two mechanisms. (a) Counting `semantic_vector` toward corroboration makes the 0.30 similarity threshold outrank relevance: an older fact with a semantic hit beats a newer, lexically stronger fact. (b) Two-route RRF ties exactly when ranks cross, which hands the decision to `temporal_order_within_query_regime` (newer first).
+4. **F8 does not fit the formal MESA runner's freeze.** It binds the runner digest, the D2 "no embedding dependency" deviation and the `RELEVANCE_STAGE_PREFIXES` vocabulary.
+5. **The F5 re-pin list is incomplete.** Missing items:
+   - gauntlet order digests on 19 of 50 probes, which `VERSIONED_RANKING_TRANSITIONS` cannot explain because those changes are per_key only;
+   - the surface posture text;
+   - docs/67 Step A.3;
+   - about a dozen test pins.
+
+**Finding: #673 depends on #671.** With unknown-basis facts, read-path currentness does not exist yet (#671; MESA M4: currentness separates 0 of 250 pairs). Relevance therefore decides "current" questions. Any fusion that changes relevance changes currentness outcomes on the frozen #580/#584 contracts. Re-registering those guards to accept the regressions would trade currentness for relevance, which doctrine forbids (relevance != currentness).
+
+So #673 implementation is held until #671's currentness mechanism exists, which needs the owner ruling requested on #671. This matches the backlog order: #671 first, #673 after #669.
+
+Iteration 2 will be re-planned on top of #671 with these constraints:
+- the fused stage stays out of the stop-set;
+- corroboration semantics are stated exactly;
+- no similarity-driven corroboration;
+- an explicit tie rule that never hands relevance ties to recency;
+- a new MESA runner identity, or no MESA item;
+- the full re-pin list.
