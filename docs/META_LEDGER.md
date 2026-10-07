@@ -4189,3 +4189,30 @@ The movement gate transfers to #673. Next: Runtime Baseline v3 publication (docs
 - **Contestants:** the durability and agmi contestants pin v1 and remain retired.
 
 Step B2 binds this PR's runtime-baseline.yml probe artifact. #669 then closes, with the movement gate handed to #673.
+
+---
+
+### Entry #93: PUBLICATION — Runtime Baseline v3 evidence binding (docs/67 Step B2)
+
+**Timestamp**: 2026-10-07T12:20:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Procedure**: docs/67-runtime-baseline-succession.md Step B2
+
+**Artifacts**: `reports/runtime/baseline-v3-qualification.json` (complete); the register entry (qualification blob, published_commit); `reports/runtime/baseline-v3.md` (re-rendered); the v3 succession test.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `c5466feab1e5f959e0d341e687e8696c53f6672e`): `dc60483c130998a9ba9253511b14a57c730ff00fe3bf49f9dd3491ae23452cc8`
+**Previous Hash**: `ab9ea5e60894a9a208219f9bae24c166f307cc6d4613f3929fb48c079fee6246`
+**Chain Hash**: `05609c2d934e0b0da0d234d6262b38dd42869f1761365097afb19a617059308a`
+
+**Decision**: The companion qualification file is complete. It binds the probe that runtime-baseline.yml produced on the B1 PR head 57ad872:
+- workflow run 37615387248;
+- artifact 11478848842, digest sha256:b1ca7414…;
+- sample_count 3, exact_top1 1.0;
+- system git-commit:aede8fd, with the exact adapter blob.
+
+The register entry pins published_commit 2e73375, the B1 merge, whose tree holds the record and boundary bytes B1 pinned, together with the new qualification blob. The record itself is untouched. The validator binds v1, v2 and v3, and the checker prints PASS against v3.
+
+This closes the declared transition opened by PR #707. #669 closes with its movement gate transferred to #673.
