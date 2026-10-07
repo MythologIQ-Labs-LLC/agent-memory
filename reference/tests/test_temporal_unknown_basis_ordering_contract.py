@@ -40,17 +40,18 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         self.assertEqual(deps["write_semantics"], "agent-memory-deterministic-write-semantics/1.1.0")
 
         # The frozen oracle records the preimplementation 3.1.1 baseline above;
-        # successful implementation activates the bounded 3.1.2 policy without
-        # rewriting that historical dependency.
+        # successful implementation activated the bounded 3.1.2 policy, now carried
+        # forward unchanged in ordering by 3.2.0 (#669), without rewriting that
+        # historical dependency.
         policy = runtime_composition.MULTI_ROUTE_RANKING_POLICY.identity()
-        self.assertEqual(policy["policy_version"], "3.1.2")
+        self.assertEqual(policy["policy_version"], "3.2.0")
         self.assertEqual(policy["unknown_basis_policy"], "explicit_current_exclusive_pairwise_v1")
         self.assertFalse(policy["global_applicable_over_unknown_tier"])
         self.assertEqual(policy["authority_effect"], "none")
         self.assertEqual(ti.INTERPRETER_VERSION, "1.1.0")
         self.assertEqual(ps.INTERPRETER_VERSION, "1.1.0")
 
-    def test_all_active_recall_planners_share_policy_312_boundary(self):
+    def test_all_active_recall_planners_share_policy_boundary(self):
         policies = {
             "multi_route": runtime_composition.MULTI_ROUTE_RANKING_POLICY,
             "query_driven": query_driven_recall.QUERY_DRIVEN_RANKING_POLICY,
@@ -59,7 +60,7 @@ class TemporalUnknownBasisOrderingContractTests(unittest.TestCase):
         for name, policy in policies.items():
             with self.subTest(planner=name):
                 identity = policy.identity()
-                self.assertEqual(identity["policy_version"], "3.1.2")
+                self.assertEqual(identity["policy_version"], "3.2.0")
                 self.assertEqual(
                     identity["unknown_basis_policy"],
                     "explicit_current_exclusive_pairwise_v1",

@@ -3954,3 +3954,107 @@ semantics and read-path currentness (#671), not interpretation,
 identity, candidate generation or admission. No runtime file changed,
 and Runtime Baseline v2 is untouched. This state is frozen as the
 pre-major-runtime baseline.
+
+---
+
+### Entry #87: GATE TRIBUNAL — PASS (#669 semantic vector route plan, attempt 3)
+
+**Timestamp**: 2026-10-07T05:05:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-669-semantic-vector-route.md (iteration 3, plus the attempt-3 line correction)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_669_plan.md) = 5c21b26208d28f20680739e975a0f6d08628d13fc41e0914580b00f958225d29
+
+**Previous Hash**: `8561cb066d44f8ff491df3f5bcabd10ae453c81f084737db76fe98b09a45f960`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 1464838912df85c480b9d0f29698dd141e8c97b779d8bb42910bb9655dccfbad
+
+**Decision**: PASS at attempt 3 of 5. The reviewer was independent and
+worked in a fresh context.
+
+Attempt 1 was VETOed on nine grounds:
+- new identity rows break the succession checker;
+- the vector route's eligibility diverged from the lexical route's;
+- an environment-dependent `auto` default;
+- cosine ordering ahead of the temporal stages (#584);
+- a MESA successor the frozen runner cannot run;
+- under-specified lanes;
+- a tokenizer and numerics mismatch;
+- no CI that exercises the provider;
+- no integrity story for the derived store.
+
+Attempt 2 was VETOed on three grounds:
+- BM25 admitted-set statistics shift when semantic-only candidates are admitted;
+- the MESA v1 freeze test is not addressed;
+- the re-pin list is not explicit.
+
+Attempt 3 passed. Its one required correction to the re-pin line list has
+been applied. Implementation may proceed under iteration 3: ranking policy
+3.2.0 with the semantic route ordering-subordinate, a facade default of
+`off`, and Runtime Baseline v3 declared with the single delta
+active_policy_version 3.1.2 to 3.2.0 plus the pyproject extra.
+
+---
+
+### Entry #88: IMPLEMENTATION — #669 semantic vector route reachable through the facade; Runtime Baseline v3 declared
+
+**Timestamp**: 2026-10-07T05:40:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Plan**: docs/plan-669-semantic-vector-route.md (iteration 3; Gate Tribunal PASS at Entry #87; implementation amendments IA1, IA2)
+
+**Artifacts**:
+- `runtime/representation_onnx.py` and `runtime/representation_cache.py` (new), with layer-table aliases;
+- `runtime/vector_retrieval.py`, `runtime/ranking_policy.py`, `runtime/temporal_order_constraints.py`, `runtime/runtime_composition.py`, `runtime/sqlite_composition.py`, `api/surface.py`;
+- `pyproject.toml` extra `semantic`, plus `reference/requirements-semantic.txt`;
+- `.github/workflows/semantic-representation.yml`, with its policy and inventory entries;
+- `reports/runtime/baseline-v3-declaration.json` and the register's `declared_successor`;
+- `reports/runtime/semantic-route-669/ordering-difference-report.json`, from `reference/run_semantic_route_ordering_report.py`;
+- `reference/fixtures/runtime/semantic-representation-golden-v1.json`;
+- tests `test_representation_onnx.py`, `test_representation_cache.py` and `test_semantic_route_policy_320.py`;
+- the planned re-pins (A2-3), IA2, and docs/44.
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `5d8f3c47bbf5fe595fa3673f7753bdaf7ea6e716`): `17994688cc4ec79fe9839f59774a723651dea9822e834df689d41a2b0f147fdf`
+**Previous Hash**: `1464838912df85c480b9d0f29698dd141e8c97b779d8bb42910bb9655dccfbad`
+**Chain Hash**: `6e285fc1891ee7a0f9c4c1b02138dde789ec0441c3d0047fae71f9c0672de686`
+
+**Decision**: The semantic vector route is now reachable through
+`AgentMemory.open(semantic_retrieval="auto"|"required")`. The default is
+`off`.
+
+- The provider is the pinned MiniLM ONNX export from the optional extra.
+  It verifies every file digest, is deterministic, and canonicalises
+  vectors to float32.
+- A derived, integrity-checked vector store removes per-query re-embedding.
+- The route receives the same domain-eligibility prefilter as the lexical
+  route.
+- Under ranking policy 3.2.0 the route is ordering-subordinate. With the
+  route off, ordering is exactly 3.1.2's (tested).
+
+The checker prints TRANSITION: v2, plus the declared successor v3 (issue
+#669), plus 11 declared blobs, with the delta active_policy_version
+3.1.2->3.2.0.
+
+The ordering-difference report against the real provider, route on
+versus off:
+- #584 admitted order changes: 0;
+- #580 unit status changes: 0, with identical metrics;
+- MESA-M4-shaped new-fact rate: 0.20 both ways;
+- three #580 order digests changed, all residual ties formerly broken by
+  the neutral digest and now broken by similarity, with no candidate or
+  unit change.
+
+The full suite passes except the locally pre-existing
+`test_gauntlet_durability` adapter-EOF failure, which fails identically
+on main.
+
+Step B1/B2 is still open: the `-v3` lane plan, the lane dispatch, and
+publishing v3. M4 is unchanged by design: currentness is #671 and fusion
+is #673.

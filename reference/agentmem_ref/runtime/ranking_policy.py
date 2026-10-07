@@ -342,6 +342,10 @@ _DEMOTED = {
 }
 
 
+def _subordinate_stage_name(route: str) -> str:
+    return f"route_score_desc_subordinate:{route}"
+
+
 def _neutral_digest(candidate_ref: str) -> str:
     return hashlib.sha256(candidate_ref.encode("utf-8")).hexdigest()
 
@@ -360,6 +364,9 @@ class PostAdmissionRankingPolicy:
     stable_fallback: str = "neutral_digest"
     unspecified_intent_order: str = "none"
     version: str = POLICY_VERSION
+    # Routes that contribute candidates but order only after every temporal stage
+    # (#669, policy 3.2.0). Empty keeps every 3.1.1 identity and ordering unchanged.
+    subordinate_routes: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.temporal_regime not in {"query_conditioned", "universal_newer_first", "none"}:
@@ -376,6 +383,8 @@ class PostAdmissionRankingPolicy:
             raise ValueError("bm25_admitted_set requires lexical_route to be one of route_score_order")
         if len(set(self.route_score_order)) != len(self.route_score_order):
             raise ValueError("route_score_order must not repeat a route")
+        if set(self.subordinate_routes) & (set(self.route_score_order) | {self.exact_identity_route}):
+            raise ValueError("a subordinate route cannot also be an ordering or exact-identity route")
 
     def stage_names(self) -> list[str]:
         stages = []
@@ -387,11 +396,12 @@ class PostAdmissionRankingPolicy:
             stages.append("temporal_order_within_query_regime")
         elif self.temporal_regime == "universal_newer_first":
             stages.append("temporal_evidence:newer_first")
+        stages += [_subordinate_stage_name(route) for route in self.subordinate_routes]
         stages.append("candidate_ref_neutral_digest" if self.stable_fallback == "neutral_digest" else "candidate_ref_asc")
         return stages
 
     def identity(self) -> dict[str, Any]:
-        return {
+        identity = {
             "policy_family": POLICY_FAMILY,
             "policy_id": self.policy_id,
             "policy_version": self.version,
@@ -407,6 +417,12 @@ class PostAdmissionRankingPolicy:
             "metabolic_evidence": "not_used",
             "authority_effect": "none",
         }
+        if self.subordinate_routes:
+            # Present only when used, so every 3.1.1 identity stays byte-identical.
+            identity["subordinate_routes"] = list(self.subordinate_routes)
+            if self.lexical_relevance == "bm25_admitted_set":
+                identity["lexical_relevance_statistics_scope"] = "admitted_set_primary_routes"
+        return identity
 
     def _stage_name(self, route: str) -> str:
         if route == self.lexical_route and self.lexical_relevance == "bm25_admitted_set":
@@ -415,6 +431,7 @@ class PostAdmissionRankingPolicy:
 
     def evidence(self, candidate_ref: str, hits: Sequence[Any], fact: Any, intent: TemporalIntent | None = None) -> dict[str, Any]:
         route_ids = sorted({hit.route_id for hit in hits})
+        primary_ids = [route for route in route_ids if route not in self.subordinate_routes]
         scores = {
             route: max((float(hit.raw_score) for hit in hits if hit.route_id == route), default=None)
             for route in self.route_score_order
@@ -422,11 +439,18 @@ class PostAdmissionRankingPolicy:
         record: dict[str, Any] = {
             "candidate_ref": candidate_ref,
             "routes": route_ids,
-            "route_corroboration_count": len(route_ids),
+            "route_corroboration_count": len(primary_ids),
             "exact_identity": self.exact_identity_route in route_ids,
             "route_scores": {route: score for route, score in scores.items() if score is not None},
             "metabolic_evidence": "not_used",
         }
+        if self.subordinate_routes:
+            # Subordinate scores are evidence and a post-temporal tiebreak only (#669).
+            record["subordinate_route_scores"] = {
+                route: max(float(hit.raw_score) for hit in hits if hit.route_id == route)
+                for route in self.subordinate_routes
+                if any(hit.route_id == route for hit in hits)
+            }
         if self.temporal_regime == "universal_newer_first":
             axis, raw, seconds = temporal_evidence(fact)
             record.update(temporal_axis=axis, temporal_value=raw, temporal_seconds=seconds)
@@ -495,6 +519,9 @@ class PostAdmissionRankingPolicy:
         elif self.temporal_regime == "universal_newer_first":
             seconds = evidence["temporal_seconds"]
             stages.append(("temporal_evidence:newer_first", (0 if seconds is not None else 1, -(seconds or 0.0))))
+        for route in self.subordinate_routes:
+            subordinate = evidence.get("subordinate_route_scores") or {}
+            stages.append((_subordinate_stage_name(route), -subordinate.get(route, 0.0)))
         if self.stable_fallback == "neutral_digest":
             stages.append(("candidate_ref_neutral_digest", _neutral_digest(evidence["candidate_ref"])))
         else:
@@ -522,12 +549,20 @@ class PostAdmissionRankingPolicy:
             for candidate_ref in admitted
         }
         if self.lexical_relevance == "bm25_admitted_set":
-            texts = {ref: getattr(fact, "fact_text", "") or "" for ref, fact in facts.items()}
+            # 3.2.0: statistics come only from candidates some primary route found, so a
+            # subordinate route's extra candidates cannot move any lexical score.
+            lexical_scope = {
+                ref: fact for ref, fact in facts.items()
+                if not self.subordinate_routes
+                or any(hit.route_id not in self.subordinate_routes for hit in hits_by_candidate.get(ref, ()))
+            }
+            texts = {ref: getattr(fact, "fact_text", "") or "" for ref, fact in lexical_scope.items()}
             active_guard = (
                 self.temporal_regime == "query_conditioned"
                 and self.lexical_anti_laundering == LEXICAL_ANTI_LAUNDERING_GUARD
             )
-            masks = _candidate_term_masks(query, intent, facts) if active_guard else {ref: () for ref in facts}
+            masks = (_candidate_term_masks(query, intent, lexical_scope) if active_guard
+                     else {ref: () for ref in lexical_scope})
             eligible_terms = list(eligible_temporal_query_terms(query, intent))
             effective_df_excluded_terms = sorted({term for terms in masks.values() for term in terms})
             for ref, score in admitted_set_bm25(query, texts, masks).items():

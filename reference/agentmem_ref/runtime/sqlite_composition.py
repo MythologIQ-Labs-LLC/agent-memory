@@ -20,6 +20,7 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         tenant: str,
         plan: RuntimeConfigurationPlan,
         verifier_registry=None,
+        vector_retriever=None,
     ) -> "SQLiteConfiguredCompositionRuntime":
         durable = SQLiteConfigBoundRestartRuntime.create(
             root,
@@ -27,7 +28,7 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
             plan=plan,
             verifier_registry=verifier_registry,
         )
-        return cls(durable_runtime=durable, plan=plan)
+        return cls(durable_runtime=durable, plan=plan, vector_retriever=vector_retriever)
 
     @classmethod
     def recover(
@@ -37,6 +38,7 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
         plan: RuntimeConfigurationPlan,
         provider_failures=(),
         verifier_registry=None,
+        vector_retriever=None,
     ) -> "SQLiteConfiguredCompositionRuntime":
         durable = SQLiteConfigBoundRestartRuntime.recover(
             root,
@@ -44,7 +46,7 @@ class SQLiteConfiguredCompositionRuntime(ConfiguredCompositionRuntime):
             provider_failures=provider_failures,
             verifier_registry=verifier_registry,
         )
-        return cls(durable_runtime=durable, plan=plan)
+        return cls(durable_runtime=durable, plan=plan, vector_retriever=vector_retriever)
 
     @property
     def serialization_lock(self):

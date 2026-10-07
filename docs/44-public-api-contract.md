@@ -97,9 +97,15 @@ raw discovery matches
 - **`returned`** is the ranked admitted prefix of length at most `k`; without a budget it equals `admitted`.
 - **`return_policy`** states what was returned and why: `policy_id: ranked-prefix-return-budget`, `policy_version: 1.0.0`, `requested_k` (`null` when unbudgeted), `applied` (**`applied` means truncated**: a budget at or above the admitted count returns everything and reports `applied: false`), `admitted_count`, `returned_count`, `basis: post_admission_ranking_prefix`, `authority_effect: none`.
 - **The budget is policy, never authority.** It is applied after admission and after the post-admission ranking stage, by a pure function (`contract.apply_return_budget`) that sees only the ranked admitted list; it cannot change which facts are admissible, current, or visible, and `admissions` and `candidates` are identical between a budgeted and an unbudgeted call. `unsupported` and `blocked` stay distinct from an empty budgeted result: a domain-blocked recall under a budget returns empty `candidates`, `admissions`, `admitted` and `returned` with `applied: false` and zero counts; a `migration_required` or `unknown` envelope returns `stage: none` with neither field.
-- **No score cutoff.** Ranking policy 3.1.2 declares route scores not cross-comparable, so a cutoff has no meaning until a fusion stage exists (#673).
+- **No score cutoff.** Ranking policy 3.2.0 (3.1.2 before #669) declares route scores not cross-comparable, so a cutoff has no meaning until a fusion stage exists (#673).
 - **Module-level `recall`** (the adapter path) has no ranking stage; its prefix is taken in admission order, which `return_policy.basis` does not yet distinguish.
 - **Facade**: `AgentMemory.recall(query, ..., budget=None)`; `budget=0` fails schema validation before any runtime call.
+- **Semantic vector route (#669).** `AgentMemory.open(..., semantic_retrieval="off"|"auto"|"required", representation_dir=None)`. The default is `off`.
+  - When enabled, the pinned ONNX provider (optional extra `semantic`) adds domain-eligible candidates through the same governed admission.
+  - Under ranking policy 3.2.0, similarity is ordering-subordinate: it never counts toward corroboration, never moves a lexical score, and orders only after every relevance and temporal stage.
+  - Each semantic hit carries `representation_ref`, `representation_version` and `representation_config_digest` in `route_provenance`.
+  - `AgentMemory.semantic_retrieval_posture()` reports the route's status, and `AgentMemory.verify_semantic_store(rebuild=False)` recomputes the derived vector store.
+  - Similarity is retrieval evidence only: never currentness, truth, scope, permission or authority.
 - `candidate_policy` keeps its `1.3.0` meaning (candidate formation; no identifiers, no counts); the return budget is recorded beside it, not inside it. The `memory.recall` audit event records admission and is unchanged.
 
 **Compatibility.** Additive minor: `1.0.0`–`1.3.0` envelopes remain `current` and receive a `1.4.0` result with `returned` and `return_policy` present; the budget is opt-in per request, and an unbudgeted call returns what it returned under `1.3.0` plus the two fields. The benchmark bridges still truncate benchmark-side until the next lane ids read `returned` under the case budget (roadmap `prereq-lane-v3-ids`).

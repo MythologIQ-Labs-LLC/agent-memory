@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import math
-from typing import Iterable, Protocol, runtime_checkable
+from typing import Callable, Iterable, Protocol, runtime_checkable
 
 from ..state.substrate import Fact
 
@@ -75,6 +75,12 @@ class VectorRepresentationProvider(Protocol):
     def embed(self, text: str) -> tuple[float, ...]: ...
 
 
+class DerivedVectorStoreProtocol(Protocol):
+    """Derived, rebuildable vector cache; never canonical, never authority."""
+
+    def vector_for(self, fact_uuid: str, text: str, embed: Callable[[str], tuple[float, ...]]) -> tuple[float, ...]: ...
+
+
 @runtime_checkable
 class AllFactsTemporalGraphPort(Protocol):
     """Optional canonical-state enumeration used for deterministic rebuild.
@@ -122,8 +128,10 @@ class NativeVectorCandidateRetriever:
         representation: VectorRepresentationProvider,
         *,
         minimum_similarity: float = 0.0,
+        store: DerivedVectorStoreProtocol | None = None,
     ) -> None:
         self.representation = representation
+        self.store = store
         self.spec = representation.spec
         if not math.isfinite(minimum_similarity):
             raise ValueError("minimum_similarity must be finite")
@@ -153,7 +161,17 @@ class NativeVectorCandidateRetriever:
         *,
         group_id: str,
         candidate_limit: int,
+        eligible: Callable[[Fact], bool] | None = None,
+        store: "DerivedVectorStoreProtocol | None" = None,
     ) -> list[VectorCandidateHit]:
+        """Top cosine candidates among domain-eligible canonical facts.
+
+        ``eligible`` is the same domain-eligibility prefilter the lexical route receives
+        (minimization, never permission); validity is left to governed admission, so
+        explicit historical intent still sees invalidated facts. ``store`` supplies
+        derived vectors keyed by fact identity and content, so a query embeds only the
+        query text and facts not yet cached; without it every fact is embedded.
+        """
         if candidate_limit < 0:
             raise ValueError("candidate_limit must be non-negative")
         if candidate_limit == 0:
@@ -169,9 +187,17 @@ class NativeVectorCandidateRetriever:
         for fact in substrate.all_facts():
             if fact.group_id != group_id:
                 continue
-            candidate_vector = self._validated_vector(
-                self.representation.embed(fact.fact_text)
-            )
+            if eligible is not None and not eligible(fact):
+                continue
+            store = store if store is not None else self.store
+            if store is not None:
+                candidate_vector = self._validated_vector(
+                    store.vector_for(fact.uuid, fact.fact_text, self.representation.embed)
+                )
+            else:
+                candidate_vector = self._validated_vector(
+                    self.representation.embed(fact.fact_text)
+                )
             similarity = self._cosine(query_vector, candidate_vector)
             if similarity <= self.minimum_similarity:
                 continue

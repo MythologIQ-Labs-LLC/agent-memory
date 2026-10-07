@@ -1,0 +1,8 @@
+# CI constraints for the optional extra 'semantic' (#669). Exact pins for the
+# representation provider's numerics and its transitive runtime dependencies.
+onnxruntime==1.30.0
+tokenizers==0.23.2
+numpy==2.4.6
+protobuf==7.36.2
+flatbuffers==25.12.19
+packaging==26.3

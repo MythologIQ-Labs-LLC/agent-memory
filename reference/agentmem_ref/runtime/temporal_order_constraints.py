@@ -44,7 +44,7 @@ from .temporal_intent import (
 
 UNKNOWN_TEMPORAL_BASIS = "unknown_temporal_basis"
 APPLICABLE = "applicable"
-POLICY_VERSION = "3.1.2"
+POLICY_VERSION = "3.2.0"
 UNKNOWN_BASIS_POLICY = "explicit_current_exclusive_pairwise_v1"
 
 _ALLOWED_INTENT_BASES = frozenset({CALLER_DECLARED, QUERY_LANGUAGE_EXPLICIT})
@@ -278,7 +278,12 @@ def apply_pairwise_constraints(
 
 @dataclass(frozen=True)
 class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
-    """Policy 3.1.2: 3.1.1 ranking plus bounded explicit-current constraints.
+    """Policy 3.2.0: 3.1.1 ranking plus bounded explicit-current constraints.
+
+    3.2.0 (#669) adds ordering-subordinate routes (``subordinate_routes``): they add
+    candidates but order only after every temporal stage, and admitted-set lexical
+    statistics exclude candidates found only by them. With no subordinate route hit the
+    ordering is exactly 3.1.2's.
 
     Outside the explicit-current profile this class delegates entirely to the existing
     post-admission ranker. Inside the profile it performs two post-order operations:
@@ -324,6 +329,8 @@ class ExplicitCurrentConstrainedRankingPolicy(PostAdmissionRankingPolicy):
             if name in {"temporal_order_within_query_regime", "temporal_evidence:newer_first"}:
                 break
             if name in {"candidate_ref_neutral_digest", "candidate_ref_asc"}:
+                break
+            if name.startswith("route_score_desc_subordinate:"):
                 break
             values.append(value)
         return tuple(values)

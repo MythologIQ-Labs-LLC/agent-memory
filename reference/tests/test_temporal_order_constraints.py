@@ -62,7 +62,7 @@ def _policy(cls=ExplicitCurrentConstrainedRankingPolicy):
         exact_identity_route="exact",
         lexical_route="lexical",
         lexical_relevance="route_score",
-        **({"version": "3.1.2"} if cls is PostAdmissionRankingPolicy else {}),
+        **({"version": "3.2.0"} if cls is PostAdmissionRankingPolicy else {}),
     )
 
 
@@ -261,7 +261,7 @@ class TemporalOrderConstraintTests(unittest.TestCase):
             query="Where does the user currently live?",
             intent=_intent(),
         )
-        self.assertEqual(policy.identity()["policy_version"], "3.1.2")
+        self.assertEqual(policy.identity()["policy_version"], "3.2.0")
         self.assertEqual(ordered, ["unrelated", "new", "old"])
         self.assertEqual(evidence["new"]["temporal_applicability"], "applicable")
         self.assertEqual(evidence["old"]["temporal_applicability"], "unknown_temporal_basis")

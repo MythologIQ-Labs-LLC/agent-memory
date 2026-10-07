@@ -239,6 +239,36 @@ def _serialized(method):
     return wrapper
 
 
+SEMANTIC_RETRIEVAL_DEFAULT = "off"
+SEMANTIC_RETRIEVAL_MODES = ("off", "auto", "required")
+SEMANTIC_MINIMUM_SIMILARITY = 0.30
+SEMANTIC_CANDIDATE_LIMIT = 16
+
+
+def _semantic_route(root: Path, mode: str, representation_dir: str | Path | None) -> dict:
+    """Build the semantic vector retriever for ``mode``, or record why it is disabled."""
+
+    if mode not in SEMANTIC_RETRIEVAL_MODES:
+        raise ValueError(f"semantic_retrieval must be one of {SEMANTIC_RETRIEVAL_MODES}")
+    if mode == "off":
+        return {"status": "disabled", "mode": mode, "reason": "off", "retriever": None}
+    from ..runtime.representation_cache import DerivedVectorStore
+    from ..runtime.representation_onnx import OnnxSentenceEmbeddingProvider, RepresentationUnavailable
+    from ..runtime.vector_retrieval import NativeVectorCandidateRetriever
+
+    try:
+        provider = OnnxSentenceEmbeddingProvider(representation_dir)
+    except RepresentationUnavailable as exc:
+        if mode == "required":
+            raise
+        return {"status": "disabled", "mode": mode, "reason": f"unavailable: {exc}", "retriever": None}
+    store = DerivedVectorStore(root, provider.spec.config_digest, provider.spec.dimensions)
+    retriever = NativeVectorCandidateRetriever(
+        provider, minimum_similarity=SEMANTIC_MINIMUM_SIMILARITY, store=store
+    )
+    return {"status": "enabled", "mode": mode, "reason": "pinned provider verified", "retriever": retriever}
+
+
 class AgentMemory:
     """Small developer surface over one governed SQLite Agent Memory runtime.
 
@@ -265,6 +295,7 @@ class AgentMemory:
         scope: str,
         purpose: str,
         runtime: Any,
+        semantic: dict | None = None,
     ) -> None:
         self.root = root
         self.config_path = config_path
@@ -277,6 +308,8 @@ class AgentMemory:
         self.runtime = runtime
         self._closed = False
         self._serialization_lock = getattr(runtime, "serialization_lock", None) or threading.RLock()
+        self._semantic = semantic or {"status": "disabled", "mode": SEMANTIC_RETRIEVAL_DEFAULT,
+                                      "reason": "off", "retriever": None}
 
     @classmethod
     def open(
@@ -291,8 +324,18 @@ class AgentMemory:
         config_path: str | Path | None = None,
         qualification_path: str | Path | None = None,
         verifier_registry=None,
+        semantic_retrieval: str = SEMANTIC_RETRIEVAL_DEFAULT,
+        representation_dir: str | Path | None = None,
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
+
+        ``semantic_retrieval`` (#669) is ``"off"`` (default), ``"auto"`` or
+        ``"required"``. ``auto`` enables the semantic vector route only when the
+        optional extra ``semantic`` is installed and the pinned model verifies;
+        otherwise recall stays lexical and ``semantic_retrieval_posture()`` records why.
+        ``required`` raises instead of degrading. The route only widens candidates:
+        every candidate still crosses governed admission, and under ranking policy
+        3.2.0 similarity orders only after every relevance and temporal stage.
 
         Existing durable state is never replaced by a fresh runtime. A partial
         state marker fails closed so a damaged or incomplete runtime cannot be
@@ -319,6 +362,7 @@ class AgentMemory:
         bindings = doctor.load_qualification_bindings(resolved_qualification)
         plan = validate_runtime_behavior_contract(value, qualification_bindings=bindings)
 
+        semantic = _semantic_route(root, semantic_retrieval, representation_dir)
         database = root / _DATABASE_NAME
         binding = root / _BINDING_NAME
         if database.exists():
@@ -326,6 +370,7 @@ class AgentMemory:
                 root,
                 plan=plan,
                 verifier_registry=verifier_registry,
+                vector_retriever=semantic["retriever"],
             )
         elif binding.exists():
             raise RuntimeRecoveryError(
@@ -337,6 +382,7 @@ class AgentMemory:
                 tenant=tenant,
                 plan=plan,
                 verifier_registry=verifier_registry,
+                vector_retriever=semantic["retriever"],
             )
 
         actual_tenant = runtime.adapter.checkpoint_tenant()
@@ -355,6 +401,7 @@ class AgentMemory:
             scope=scope,
             purpose=purpose,
             runtime=runtime,
+            semantic=semantic,
         )
 
     @property
@@ -839,10 +886,50 @@ class AgentMemory:
         return contract.result("posture", contract.CURRENT, posture=report)
 
     @_serialized
+    def semantic_retrieval_posture(self) -> dict:
+        """Read-only status of the semantic vector route (#669); never authority."""
+
+        self._require_open()
+        retriever = self._semantic.get("retriever")
+        spec = retriever.spec if retriever is not None else None
+        store = getattr(retriever, "store", None) if retriever is not None else None
+        return {
+            "status": self._semantic["status"],
+            "mode": self._semantic["mode"],
+            "reason": self._semantic["reason"],
+            "representation": None if spec is None else {
+                "representation_ref": spec.representation_ref,
+                "representation_version": spec.representation_version,
+                "config_digest": spec.config_digest,
+                "dimensions": spec.dimensions,
+                "rebuild_posture": spec.rebuild_posture,
+            },
+            "minimum_similarity": None if retriever is None else retriever.minimum_similarity,
+            "candidate_limit": None if retriever is None else SEMANTIC_CANDIDATE_LIMIT,
+            "ordering": "subordinate: after every relevance and temporal stage (ranking policy 3.2.0)",
+            "store": None if store is None else store.posture(),
+            "authority_effect": "none",
+        }
+
+    @_serialized
+    def verify_semantic_store(self, *, rebuild: bool = False) -> dict:
+        """Recompute every derived vector against the pinned provider (#669)."""
+
+        self._require_open()
+        retriever = self._semantic.get("retriever")
+        if retriever is None or getattr(retriever, "store", None) is None:
+            raise ValueError("semantic retrieval is not enabled on this handle")
+        texts = {fact.uuid: fact.fact_text for fact in self.runtime.adapter.checkpoint_substrate().all_facts()}
+        return retriever.store.verify(texts, retriever.representation.embed, rebuild=rebuild)
+
+    @_serialized
     def close(self) -> None:
         if self._closed:
             return
         self.runtime.close()
+        retriever = self._semantic.get("retriever")
+        if retriever is not None and getattr(retriever, "store", None) is not None:
+            retriever.store.close()
         self._closed = True
 
     def __enter__(self) -> "AgentMemory":

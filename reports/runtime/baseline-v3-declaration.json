@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v3",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v2",
+  "issue": 669,
+  "declared_changes": [
+    {
+      "path": "pyproject.toml",
+      "blob": "59e8f97cb9de3dfc92f583616b79b2ee54c6fa4d"
+    },
+    {
+      "path": "reference/agentmem_ref/api/surface.py",
+      "blob": "ecf722235aee7e22be27eadac780893b532c73d2"
+    },
+    {
+      "path": "reference/agentmem_ref/representation_cache.py",
+      "blob": "0c3bee5002affa86467d65dfe4e8bf79eebc881a"
+    },
+    {
+      "path": "reference/agentmem_ref/representation_onnx.py",
+      "blob": "c793d30691407a3bf8888d77499073a23110eebb"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/ranking_policy.py",
+      "blob": "e5eed998e40557ccd3864206ed14a5a372d5cb59"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/representation_cache.py",
+      "blob": "9bb0a899176ecd35eb06e1ec773b9641ecc34147"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/representation_onnx.py",
+      "blob": "ee404e99434d4280a88e5627f6e19598552528b3"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "blob": "b582ab3a5f6b919ecbd3c554e9ea4b47f14f383d"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/sqlite_composition.py",
+      "blob": "d5727201403bbb5a90e27729514936e903eb4baa"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/temporal_order_constraints.py",
+      "blob": "c6e1baa6efb096012162de7c5fff82f167345ec6"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/vector_retrieval.py",
+      "blob": "00e9547fc5700058f8d0887a43c2bc25c0e1116b"
+    }
+  ],
+  "identity_deltas": [
+    {
+      "identity_path": "identity.ranking.active_policy_version",
+      "from": "3.1.2",
+      "to": "3.2.0"
+    }
+  ],
+  "pyproject_change": {
+    "reason": "optional extra 'semantic' for the pinned ONNX representation provider (decision-embedding-dependency); facade default semantic_retrieval='off', so existing stores keep 3.1.2-equivalent ordering on recover unless a caller opts in; controlled-multi-route and query-driven-relational report 3.2.0 with unchanged behaviour (class-level version)"
+  },
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v3"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v3"
+    }
+  ]
+}

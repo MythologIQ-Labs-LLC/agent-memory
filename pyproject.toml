@@ -20,6 +20,14 @@ comparators = [
   "agent-manifest==0.12.0",
   "agentrust-trace==0.10.0",
 ]
+# #669 pinned local representation provider (decision-embedding-dependency).
+# Numerics-determining packages are exact; numpy's exact pin lives in
+# reference/requirements-semantic.txt and is bound into the representation config_digest.
+semantic = [
+  "onnxruntime==1.30.0",
+  "tokenizers==0.23.2",
+  "numpy>=1.26,<3",
+]
 
 [project.scripts]
 agent-memory = "agentmem_ref.console:main"
