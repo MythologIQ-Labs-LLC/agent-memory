@@ -641,7 +641,7 @@ The plan defined "the full suite runs once per trigger" as a policy invariant de
 
 | Status | Action Taken |
 |--------|--------------|
-| OPEN | Iteration 2 pending: token-level full-suite detection with the two path-filtered jobs accounted for; 29 further jobs measured from run history; PR-only cancellation (`cancel-in-progress: ${{ github.event_name == 'pull_request' }}`). |
+| OPEN | Iteration 2 closed V1-V3 (token-level detection, 29 further jobs measured, PR-only cancellation) and was VETOed again at Entry #76 (V4): the complete-every-run set was written from memory instead of from the records the rule names; iteration 3 derives it by resolving every cited run id. |
 
 #### Related Entries
 

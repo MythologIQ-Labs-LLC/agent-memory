@@ -3564,3 +3564,33 @@ other's post-merge runs, unstated and contrary to OQ1's rationale.
 Advisories A1 (an underived minute figure) and A2 (a new `pathScope`
 vocabulary value). Security, Ghost UI, Razor, Dependency (pyyaml 6.0.3,
 test-time) and Orphan passes clean. Shadow Genome Failure #18.
+
+
+---
+
+### Entry #76: GATE TRIBUNAL — VETO
+
+**Timestamp**: 2026-10-07T05:40:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-662-ci-cost-phases-2-4.md (iteration 2; plan gate `plan-iter9.json`)
+
+**Artifact**: `.agent/staging/AUDIT_REPORT_662_attempt2.md` (gitignored staging; hashed here)
+**Content Hash**: `ec3f81fcf7b2aee8206b39e92df880b54ea03dc91cc0206c075044fb34ff2b87`
+**Previous Hash**: `98310f3a40d1a3ea440a2cce4fc1a66698235f5f437ac9d5b94da5ae2bc6dc6e`
+**Chain Hash**: `90b8e06f1adf3e389d192010d90b166c8700010c8d8a1a1a0b0dd6f769c2fc14`
+
+**Decision**: VETO (V4). V1-V3 of Entry #75 are remediated and verified
+(13 full-suite invocations classified by the token rule, both
+path-filtered full-suite workflows carry `pull_request: paths`; 78
+measurements cover the 77 untimed jobs and the stated rule reproduces the
+table; cancellation conditional on the pull_request event). V4: the
+complete-every-run set of OQ2/LD4 misapplies its own rule; resolving the
+40 run ids cited by committed records shows nine PR/push workflows whose
+runs are cited (agmi, canonical-json-v2-vector-integrity,
+gauntlet-external-contestant-dogfood, hindsight-v090-qualification,
+memos-v2017-substitution, proposition-semantics-score, runtime-baseline,
+rust-shadow-kernel, temporal-currentness-final-replay); the plan omitted
+five and exempted two uncited workflows. Advisory A3: a count off by one.
