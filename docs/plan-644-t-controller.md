@@ -1,125 +1,130 @@
-# Plan: #644 T-controller — a facade-level recall-control seam (no ranking change)
+# Plan: #644 T-controller — shadow recall control on the facade (no retrieval or ranking change)
 
 **change_class**: runtime
 **doc_tier**: standard
 **risk_grade**: L2
-**owning issue**: #644, first Jev-Mem tranche (`docs/plan-672-tranche-5-harvests.md` LD5, T-controller)
-**contracts**: `reference/fixtures/runtime/system-one-controller-contract-v1.json` (frozen); `reference/fixtures/harvest-closeout-final-v2.json` rows `jh-06`, `jh-14`, `jh-04`, `jh-09`, `codegenome-graph-propagation`
-**doctrine**: routing != recall admission; ranking != recall admission; controller output != truth; stopping because sufficient != stopping because budget exhausted; recency != currentness
-**iteration**: 1
+**owning issue**: #644, first Jev-Mem tranche (`docs/plan-672-tranche-5-harvests.md` LD5). This is #644's own "Phase 3 — shadow adaptive retrieval".
+**contracts**: `reference/fixtures/runtime/system-one-controller-contract-v1.json` (frozen); `reference/fixtures/harvest-closeout-final-v2.json` (published, never edited)
+**doctrine**: routing != recall admission; controller output != truth; stop recommendation != actual stop reason; stopping because sufficient != stopping because budget exhausted
+**iteration**: 2
 
-## Purpose
+Gate history:
+- **Attempt 1, VETO.** The controlled planner's candidate generation differs from the default planner's in three ways:
+  - lexical-anchor shared-evidence expansion;
+  - a vector limit of 24 against the facade's 16;
+  - no vector domain prefilter.
 
-`ControlledRecallPlanner` (`runtime/recall_control.py`) exists but is harness-only. Its controller output, route budgets, route counts and stop reason never reach a facade caller, and `controller_calls` is a constant 1.
+  That changes ranking inputs, so "ranking unchanged" was false. Lexical truncation can also drop the current fact while the stop reads as "sufficient". The C10 guards were vacuous on the existing corpora. Further faults: missing contract fields, a missing public-contract bump, and an edit to a published fixture.
 
-This tranche makes controlled recall reachable through `AgentMemory` as an opt-in. It changes no ranking semantics and no default behaviour. It also implements the frozen controller contract's host-side obligations:
-- an outer budget;
-- distinct actual-stop classes;
-- usage telemetry.
+  The prototypes are in `scratchpad/gate644/`.
 
-The harness planner sorts with `CONTROLLED_RECALL_RANKING_POLICY`, which orders `semantic_vector` before `lexical`. Exposing that on the facade would let similarity decide over relevance. The #673 gate measured that pattern regressing the frozen #580/#584 contracts. So the facade path ranks with the facade's own policy (C2).
+This iteration removes the controlled execution path from the facade. The controller runs in **shadow**: it plans, the default planner executes exactly as today, and the facade reports the controller's proposal beside what actually ran.
 
 ## Decisions
 
-**C1 — The seam.**
-- `AgentMemory.open(..., recall_control="off" | "deterministic")`, default `"off"`.
-- `"off"` is the current path, byte for byte. No controlled-planner code runs.
-- `"deterministic"` routes every `recall` through `ControlledRecallPlanner` with `DeterministicRecallController`.
-- Custom controller injection is not exposed on the facade in this tranche (see C8).
+**S1 — The seam.**
+- `AgentMemory.open(..., recall_control="off" | "shadow")`, default `"off"`.
+- **Retrieval is identical in both modes:** `candidates`, `admitted`, `returned`, `admissions` and `ranking_evidence` are the same.
+  - Tested byte for byte over the facade test corpus.
+  - Also tested over new cases built to expose the attempt-1 differences: more than 32 lexical hits, shared evidence reachable from lexical anchors, more than 16 vector-eligible facts, and cross-domain facts.
+- `"shadow"` only adds the `recall_control` block (S3).
+- Shadow runs inside the same governed read and audit path (`run_governed_read`, `runtime/sqlite_composition.py`). It writes nothing to the audit beyond what the default recall writes.
 
-**C2 — Ranking unchanged.**
-- `ControlledRecallPlanner` gains a `ranking_policy` constructor argument. It defaults to `CONTROLLED_RECALL_RANKING_POLICY`, so the harness is unchanged.
-- The facade passes `MULTI_ROUTE_RANKING_POLICY` (3.2.0), the same object the default path uses.
-- The facade's controlled path executes exactly the facade's routes: lexical, exact identity, shared evidence, and `semantic_vector` (subordinate) when `semantic_retrieval` enables it.
-- The typed-graph route is **not** reachable in this tranche (C9).
-- Admission is the same governed `admit_preselected_candidates` call. The controller's budgets bound candidate generation only.
+**S2 — The shadow controller.**
+- `DeterministicRecallController.plan()` is called once per recall with:
+  - the query;
+  - the logical memory references;
+  - the routes the default planner *actually* has available: lexical, exact identity, shared evidence, and `semantic_vector` when the semantic route is enabled.
+- The plan never reaches candidate generation.
+- Its budgets are compared with the default planner's actual per-route candidate counts, and the result is a **counterfactual delta** per route: `proposed_limit`, `actual_count`, and `would_truncate: actual_count > proposed_limit`.
+- No counterfactual ranking is computed. The delta states what the budget *would* bound, never what the result *would* be.
 
-**C3 — Outer budget (JH-06).** This is the host-enforced budget the contract requires.
-- `recall_control_budget = {"maximum_controller_decisions": int >= 1, "deadline_ms": int >= 1 | None}`.
-- Default: `{1, None}`. With no deadline, results stay deterministic, which benchmark lanes need.
-- **Deadline:** checked between route executions. When it is exceeded, the remaining planned routes are skipped. The candidates already gathered still go through admission, and the actual stop reason is `max_latency`.
-- **Decisions:** the deterministic controller makes one decision. `controller_decisions_used` is counted, not constant. A plan requesting more than the budget allows is refused as `max_controller_decisions`.
+**S3 — The telemetry block (JH-14).** It maps onto the frozen contract's request, response and usage fields:
+- **Request:**
+  - `operation: "retrieval_planning"`;
+  - `available_capabilities` (the S2 route list);
+  - `budget: {maximum_controller_decisions: 1, deadline_ms: null}`;
+  - `policy_context: {tenant_scope_ref, recall_policy_ref, controller_contract_version: "1.0.0"}`.
+- **Response:**
+  - `controller_identity` (`backend_ref`, `backend_version`, `model_or_policy_ref`);
+  - `decision_status` (`complete`, or `invalid_response` and `unavailable` from S4);
+  - `evidence.route_budgets` (the plan);
+  - `evidence.stop_recommendation: "abstain"` (the deterministic controller makes no sufficiency judgement);
+  - `authority_effect: "none"`.
+- **Usage:** `controller_decisions_used` (counted), `cache_hits: 0`, `elapsed_ms`, `fallback_events`.
+- **Actual stop record:**
+  - `actual_stop_reason: "frontier_exhausted"` (class `search_space`), because the default planner runs every available route without a budget;
+  - `controller_recommendation: "abstain"`;
+  - `budget_state`.
+  - A quality class is never reported, because nothing decided on quality.
+- **Shadow delta:** the S2 per-route counterfactual.
+- `elapsed_ms` is non-deterministic and excluded from every digest and lane metric.
 
-**C4 — Actual stop record.** It is separate from any controller recommendation and uses the contract's classes:
-- **quality:** `evidence_sufficient` when the ranked admitted count reaches the plan's `evidence_sufficiency_target` and every planned route ran;
-- **search_space:**
-  - `frontier_exhausted`: all planned routes ran and the target was not met;
-  - `no_evidence`: zero candidates;
-- **resource:** `max_latency`, or `max_controller_decisions`;
-- **controller_failure:** `controller_unavailable` or `invalid_controller_response`.
-  - These fall back to the default facade planner. Its authority is no greater, and the event is recorded in `fallback_events`.
+**S4 — Controller failure.**
+- An exception, or a plan that fails `RecallControlPlan` validation, yields `decision_status: "unavailable"` or `"invalid_response"`, `fallback_events: ["controller_failure_no_effect"]`, and the same recall output.
+- Shadow has no authority to lose, so it needs no fallback planner.
+- Tested at planner level through an injected failing controller. The facade does not accept controller injection.
 
-Invariant (tested): a resource stop is never reported as `evidence_sufficient`, even when the target count was reached.
+**S5 — Public contract 1.5.0.**
+- The result envelope forbids unknown fields (`schemas/api-result-envelope.schema.json`, and the protected copy under `reference/agentmem_ref/_schemas/`).
+- Adding the optional `recall_control` field is a minor contract bump, following the precedent of 1.3.0 and 1.4.0.
+- Files:
+  - both schema copies;
+  - `api/contract.py` (`CONTRACT_VERSION` 1.4.0 → 1.5.0);
+  - docs/44: status, `open()` and recall sections.
+- With `"off"`, `recall_control` is absent and every other field is unchanged.
 
-**C5 — Telemetry (JH-14).** `recall()` returns a `recall_control` block only when control is on. Its fields:
-- controller identity (`backend_ref`, `backend_version`, `model_or_policy_ref`);
-- the plan (`RecallControlPlan.to_dict()`);
-- `routes_executed` and `route_candidate_counts`;
-- usage: `controller_decisions_used`, `cache_hits` (0), `elapsed_ms`, `fallback_events`;
-- the actual stop record: reason, class, `controller_recommendation`, `budget_state`;
-- `authority_effect: "none"`.
+**S6 — A harness bug fixed in passing.**
+- The harness planner's vector search runs without the domain-eligibility prefilter (`runtime/recall_control.py:607-612`). This contradicts docs/44, which says the prefilter is "not optional per request".
+- Fix: pass `eligible=` as the default planner does (`runtime_composition.py:214`).
+- This is harness-only behaviour, so the facade is unaffected. It is a protected-file change, so it is declared in S7. Tested with a cross-domain vector case.
 
-`elapsed_ms` is non-deterministic and is never part of any digest or lane metric.
+**S7 — Succession: Runtime Baseline v4, docs/67 Step A.**
+- Declaration `reports/runtime/baseline-v4-declaration.json`, and the register's `declared_successor` (A.3).
+- `declared_changes` comes from the script.
+- The identity delta is `identity.public_contract_version` 1.4.0 → 1.5.0. The ranking policy stays 3.2.0.
+- `pyproject_change: null`.
+- `acceptance_evidence_required` names, now:
+  - lanes `amb-precisionmembench-retrieval-v4` and `longmemeval-s-retrieval-parity-v4`;
+  - the public Gauntlet probe.
+- The declaration and the v4 record (at B1) correct the stale `native_qualified` capability claims the CONTRIBUTOR_ARCHITECTURE rule requires. `typed_relations_graph_traversal` and the controller planner are recorded as harness-only.
+- If #671 is ruled during the transition, it amends this declaration (A.6).
+- At B1 the successor adapter's `PUBLIC_CONTRACT_VERSION` is 1.5.0.
 
-**C6 — JH-09 bounds.** Per-route `candidate_limit` and `anchor_limit` are the bounds this tranche exposes, and they are recorded. Node, edge and depth bounds belong to graph traversal (C9).
+**S8 — Closeout fixture v3.** The published v2 is never edited (CONTRIBUTOR_ARCHITECTURE §10). `reference/fixtures/harvest-closeout-final-v3.json` supersedes v2 and changes only these rows. Each carries an issue, an order and the lane gate.
+- **`jh-14-telemetry`:** stays `tranche`, with T-controller evidence attached (tests). It becomes `shipped` only after the `-v4` lanes are accepted, because the row's lane gate requires them.
+- **`jh-06-call-deadline-budget`:** stays `tranche` and moves to T-controller-2. Shadow enforces no budget, so there is nothing to ship.
+- **`jh-04-route-needs`:** moves to T-controller-2. The contract types route needs as probabilities, and the deterministic controller has no calibrated estimate.
+- **`jh-09-bounded-traversal`:** moves to T-controller-2, with node, edge and depth bounds.
+- **`codegenome-graph-propagation`:** moves to issue #688. Facade typed-graph hits would change the corroboration inputs to ranking.
+- **JH-15 ablations:** `controller_off` against `shadow` is the only pair this tranche can measure. The rest move to T-controller-2.
 
-**C7 — Deferred, with reasons** (the #672 closeout rows are updated to say so):
-- **JH-04 route needs:** the contract types them as probabilities. The deterministic controller has no calibrated estimate, and emitting rule-derived 0/1 values as probabilities would violate the contract's typed-probability rule. Moved to T-controller-2 with JH-12.
-- **JH-15 ablations:** only `controller_off` versus `combined_controller` is meaningful for a single deterministic controller. The remaining contract ablations need separable adaptive components (T-controller-2).
-
-**C8 — JH-11 backend neutrality.**
-- The `RecallController` protocol already is the backend-neutral seam.
-- The facade accepts only named built-in controllers, so no arbitrary code path reaches recall.
-- Programmatic injection remains available on `ControlledRecallPlanner` for harnesses.
-
-**C9 — Typed-graph route deferred to #688.** Making it facade-reachable would feed `typed_graph` hits into the ranking policy's corroboration count. That is a ranking-input change this tranche excludes. It needs #688's typed relation vocabulary and its own ordering evidence.
-
-**C10 — Doctrine guards.** Each is a test or report.
-- `recall_control="off"` is byte-identical to the current facade. The `recall()` output must be equal across the existing facade test corpus.
-- **With control on:**
-  - the admitted set is a subset of the control-off admitted set for the same query and store (bounding can only remove candidates; it never admits);
-  - ranking evidence and policy identity equal the default policy's;
-  - the #584 M1–M15 expectations and every #580 required unit keep their status, rerun through a control-on ordering report.
-- Any change blocks the tranche; it is not re-pinned. The measure is unit status and admitted-order equality, defined in the report.
-
-**C11 — Succession and evidence.**
-- The facade change touches the protected surface (`api/surface.py`, and `runtime/recall_control.py` if C2 edits it). Runtime Baseline **v4** is declared through docs/67 Step A:
-  - the declaration;
-  - the register's `declared_successor` (Step A.3);
-  - `declared_changes` via the script;
-  - no identity delta, because ranking policy stays 3.2.0;
-  - `pyproject_change: null`.
-- If #671 later opens work in the same window, it amends this declaration (docs/67 A.6).
-- Evidence for publication is a separate gated lanes plan (`-v4`). It must show:
-  - **D1:** the default (control off) equals `-v3` exactly;
-  - **measured, not gated:** a LongMemEval and AMB `agent_memory_controlled` row.
+**S9 — Evidence: a separate gated lanes plan (`-v4`).**
+- **D1:** the default (`"off"`) equals `-v3` exactly.
+- **A `shadow` row per lane:** its scored metrics must equal the control's exactly (the S1 invariant at lane scale). Its route deltas are reported per question, and are evidence for T-controller-2's budget design.
 
 ## Implementation steps (after gate PASS)
 
-1. `recall_control.py`:
-   - the `ranking_policy` argument;
-   - the outer budget;
-   - the actual-stop record and the counted decisions;
-   - the fallback path;
-   - an `elapsed_ms` measurement.
-2. `api/surface.py`: the `recall_control` and `recall_control_budget` parameters, planner construction, the `recall_control` result block, and posture text.
-3. Tests: `test_facade_recall_control.py` covering C1, C3, C4 and C10, plus the contract-conformance assertions against the frozen fixture.
-4. A control-on ordering report, extending `reference/run_semantic_route_ordering_report.py` with a `recall_control` axis, or a sibling script.
-5. Closeout fixture: update rows `jh-06` and `jh-14` to facade reachability, with the evidence pointing at the tests. Record the C7 and C9 deferrals.
-6. The v4 declaration; the checker shows TRANSITION. Then a ledger entry, and a merge commit.
+1. `api/surface.py`: the `recall_control` parameter, the shadow invocation inside the governed read, the telemetry block and the posture text.
+2. `runtime/recall_control.py`: the S6 prefilter fix, plus a pure helper that builds the S3 block from a plan and the actual route counts.
+3. S5 contract and schema files, and docs/44.
+4. Tests:
+   - `test_facade_recall_control.py`: S1 equality over the adversarial cases, S3 contract conformance against the frozen fixture, S4 failure, the S6 prefilter;
+   - updates to `test_recall_control.py` (the S6 prefilter case);
+   - contract-version re-pins.
+5. `harvest-closeout-final-v3.json` (S8), with its test.
+6. The v4 declaration (S7), with the checker showing TRANSITION. Then a ledger entry and a merge commit.
 
 ## Boundaries
 
 - **Non-goals:**
-  - any ranking or policy change;
-  - adaptive stopping beyond the target count (JH-07 is T-controller-2);
-  - budget allocation (JH-05);
+  - any change to candidate generation, admission or ranking on the facade;
+  - an enforced budget (JH-06) or adaptive stopping (JH-07), both T-controller-2;
   - the typed-graph route;
-  - a learned or hosted controller;
-  - consumer-aware packaging (#691).
+  - learned or hosted controllers;
+  - consumer packaging (#691).
 - **Exclusions:**
-  - no default change;
-  - no admission change;
+  - no default behaviour change;
   - no benchmark-specific behaviour;
   - no non-deterministic field in any digest.
 
