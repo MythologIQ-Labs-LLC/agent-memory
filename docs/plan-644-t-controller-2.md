@@ -8,6 +8,7 @@
 **predecessor**: docs/plan-644-t-controller.md
 **frozen contract**: reference/fixtures/runtime/system-one-controller-contract-v1.json
 **runtime base**: a9fa96211f65f07a3d1b2545ba6e9d5782db69fb
+**iteration**: 1 (implementation draft; Gate Tribunal not yet run; no merge authority)
 
 ## Purpose
 
@@ -254,4 +255,5 @@ Tests prove:
 - recency as currentness;
 - lifecycle mutation;
 - universal controller quality score;
-- merging before mesa-formal-v2 is executed.
+- merging before Runtime Baseline v5 completes docs/67 B1+B2 and T-controller-2 declares its own successor baseline;
+- treating focused/broad CI success as a substitute for the required Gate Tribunal PASS.
