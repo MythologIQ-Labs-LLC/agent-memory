@@ -14,7 +14,8 @@ import subprocess
 import unittest
 from pathlib import Path
 
-from agentmem_ref.evaluation.same_harness_lane import get_lane, resolve_lane, validate_lane
+from agentmem_ref.evaluation.registry import get_integration
+from agentmem_ref.evaluation.same_harness_lane import get_lane, lane_digest, resolve_lane, validate_lane
 
 from tests.test_same_harness_lanes_v3 import POSTURE, SEMANTIC_KEY, _as_frozen, _flat
 
@@ -49,6 +50,38 @@ class _V4LaneMixin:
         self.assertIn(lane["status"], {"frozen", "accepted"})
         self.assertIs(lane["frozen_before_any_score"], True)
         self.assertEqual(lane["owning_issue"], 644)
+
+    def test_accepted_rows_are_bound_to_evidence_executed_under_the_v4_transition(self):
+        # plan-644-lanes-v4 L7: every executed row is accepted and bound by its evidence_history
+        # entries; deferred rows are recorded as blocked. Acceptance adds only statuses,
+        # status_reasons and one findings note, so undoing them gives the digest the run executed.
+        lane = self._lane()
+        self.assertEqual(lane["status"], "accepted")
+        integration = get_integration(lane["benchmark_integration"])
+        history = {entry["variant"]: entry for entry in integration["evidence_history"]}
+        for row in lane["systems"]:
+            prefix = f"lane:{self.lane_id}:{row['provider_key']}"
+            variants = [variant for variant in history if variant == prefix or variant.startswith(prefix + ":")]
+            if row["status"] == "deferred":
+                self.assertEqual([history[v]["status"] for v in variants], ["blocked"], row["row_id"])
+                continue
+            self.assertEqual(row["status"], "accepted", row["row_id"])
+            self.assertEqual(len(variants), self.planes_per_row, row["row_id"])
+            for variant in variants:
+                entry = history[variant]
+                self.assertEqual(entry["status"], "complete")
+                self.assertIn(variant, row["status_reason"])
+                record = json.loads((REPO_ROOT / entry["report"]).read_text(encoding="utf-8"))
+                self.assertEqual(record["row"]["provider_key"], row["provider_key"])
+                binding = record["system"]["runtime_baseline"]
+                self.assertEqual(binding["state"], "TRANSITION")
+                self.assertEqual(binding["declared_successor"], "agent-memory-runtime-baseline-v4")
+                self.assertEqual(record["lane_digest_at_execution"], lane_digest(_as_frozen(lane)))
+                self.assertEqual(record["lane_digest_at_execution"], record["execution"]["lane_digest_sha256"])
+                # plan-644-lanes-v4 L4: the shadow row stays out of the scorecards
+                self.assertEqual(bool(entry.get("normalized_reports")), row["provider_key"] != self.shadow_key and self.planes_per_row == 2, variant)
+                for path in entry.get("normalized_reports", []):
+                    self.assertTrue((REPO_ROOT / path).is_file(), path)
 
     def test_differs_from_v3_by_exactly_the_l5_list(self):
         v3, v4 = _flat(_as_frozen(get_lane(self.v3_id))), _flat(_as_frozen(self._lane()))
@@ -111,6 +144,7 @@ class LongMemEvalParityV4LaneTests(_V4LaneMixin, unittest.TestCase):
     v3_id = "longmemeval-s-retrieval-parity-v3"
     control_key = "agent_memory"
     shadow_key = "agent_memory_shadow"
+    planes_per_row = 2
     workflow_path = ".github/workflows/longmemeval-competitive.yml"
     extra_differences = {
         "/harness/source_blobs/reference/run_longmemeval.py",
@@ -156,6 +190,7 @@ class AmbPrecisionMemBenchV4LaneTests(_V4LaneMixin, unittest.TestCase):
     v3_id = "amb-precisionmembench-retrieval-v3"
     control_key = "agent-memory"
     shadow_key = "agent-memory-shadow"
+    planes_per_row = 1
     workflow_path = ".github/workflows/amb-competitive.yml"
     extra_differences = {
         "/harness/source_blobs/reference/amb_agent_memory_bridge.py",

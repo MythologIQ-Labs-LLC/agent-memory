@@ -432,6 +432,68 @@
       "variant": "lane:amb-precisionmembench-retrieval-v3:hindsight",
       "status": "blocked",
       "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:agent-memory",
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "agent-memory",
+      "system_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-f5a79d230a31/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:agent-memory-shadow",
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "agent-memory",
+      "system_revision": "f5a79d230a315829b456b9eef1bf0e77df30a902",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-shadow-f5a79d230a31/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:bm25",
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "bm25",
+      "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/bm25-f5a79d230a31/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:mem0-explicit",
+      "status": "complete",
+      "dataset_revision": "tenurehq/precisionmembench@b95d6abb471c0d591c440172283dd74e7af000df",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/mem0-explicit-f5a79d230a31/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      }
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:agent_memory_semantic",
+      "status": "blocked",
+      "blocker": "semantic-route row deferred: AMB uv.lock conflicts with the pinned semantic numerics (#669 D3)"
+    },
+    {
+      "variant": "lane:amb-precisionmembench-retrieval-v4:hindsight",
+      "status": "blocked",
+      "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
     }
   ],
   "product_findings": [],

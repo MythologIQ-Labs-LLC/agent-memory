@@ -55,9 +55,10 @@ class HarvestCloseoutV3Tests(unittest.TestCase):
         self.assertEqual(rows["jh-14-telemetry"]["disposition"], "tranche")
         self.assertIn("contract 1.5.0", rows["jh-14-telemetry"]["reason"])
 
-    def test_rc1_closeout_manifest_names_v3(self) -> None:
+    def test_rc1_closeout_manifest_names_v3_or_its_successor(self) -> None:
+        # v4 supersedes v3 by pointer (docs/plan-644-lanes-v4.md L8); v3 stays published unchanged.
         harvest = build_manifest("0" * 40)["harvest_closeout"]
-        self.assertEqual(harvest["artifact"], "reference/fixtures/harvest-closeout-final-v3.json")
+        self.assertIn(harvest["artifact"], {"reference/fixtures/harvest-closeout-final-v3.json", "reference/fixtures/harvest-closeout-final-v4.json"})
         self.assertEqual(harvest["status"], self.v3["status"])
 
 

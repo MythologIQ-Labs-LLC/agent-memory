@@ -2,7 +2,7 @@
   "contract_family": "agent-memory-same-harness-lane",
   "contract_version": "1.0.0",
   "lane_id": "amb-precisionmembench-retrieval-v4",
-  "status": "frozen",
+  "status": "accepted",
   "owning_issue": 644,
   "frozen_on": "2026-10-07",
   "frozen_before_any_score": true,
@@ -162,7 +162,7 @@
       "system_id": "agent-memory",
       "display_name": "Agent Memory (public facade, declared transition to Runtime Baseline v4)",
       "role": "control",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "agent-memory",
       "source": {
         "kind": "repository_runtime",
@@ -209,14 +209,15 @@
       ],
       "notes": [
         "concurrency 1 until multi-handle semantics are independently qualified"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-07 at repository revision f5a79d230a315829b456b9eef1bf0e77df30a902: workflow run 37661856397 (raw evidence under reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-f5a79d230a31/); bound by the integration's evidence_history entries lane:amb-precisionmembench-retrieval-v4:agent-memory"
     },
     {
       "row_id": "agent-memory-recall-control-shadow",
       "system_id": "agent-memory",
       "display_name": "Agent Memory (public facade, shadow recall control, declared transition to Runtime Baseline v4)",
       "role": "comparator",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "agent-memory-shadow",
       "source": {
         "kind": "repository_runtime",
@@ -265,14 +266,15 @@
       ],
       "notes": [
         "measured shadow recall-control row (#644 S9); not the v4 publication control; evidence for T-controller-2"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-07 at repository revision f5a79d230a315829b456b9eef1bf0e77df30a902: workflow run 37661860248 (raw evidence under reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/agent-memory-shadow-f5a79d230a31/); bound by the integration's evidence_history entries lane:amb-precisionmembench-retrieval-v4:agent-memory-shadow"
     },
     {
       "row_id": "bm25-harness-baseline",
       "system_id": "bm25",
       "display_name": "BM25 keyword baseline (AMB built-in)",
       "role": "baseline",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "bm25",
       "source": {
         "kind": "harness_builtin",
@@ -305,14 +307,15 @@
       ],
       "notes": [
         "a baseline comparator, not a market-position claim"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-07 at repository revision f5a79d230a315829b456b9eef1bf0e77df30a902: workflow run 37661864946 (raw evidence under reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/bm25-f5a79d230a31/); bound by the integration's evidence_history entries lane:amb-precisionmembench-retrieval-v4:bm25"
     },
     {
       "row_id": "mem0-oss-2.2.1-explicit-memory",
       "system_id": "mem0-oss",
       "display_name": "Mem0 OSS 2.2.1 (explicit memory, no inference)",
       "role": "comparator",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "mem0-explicit",
       "source": {
         "kind": "python_package",
@@ -378,7 +381,8 @@
         "Mem0's own hybrid vector+keyword ranking, threshold, and entity boosts are product behaviour and are not altered",
         "no benchmark-specific prompt, mission, or dataset-name branch exists in the adapter",
         "optional components (fastembed keyword search, spaCy lemmatizer) are absent by product default; a row with extras installed is a different frozen row, never an in-place change"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-07 at repository revision f5a79d230a315829b456b9eef1bf0e77df30a902: workflow run 37661869364 (raw evidence under reports/benchmarks/amb/amb-precisionmembench-retrieval-v4/mem0-explicit-f5a79d230a31/); bound by the integration's evidence_history entries lane:amb-precisionmembench-retrieval-v4:mem0-explicit"
     },
     {
       "row_id": "agent-memory-semantic-route",
@@ -460,7 +464,8 @@
     "Mem0 2.2.1 changes retrieval behaviour depending on optional extras (fastembed keyword search, spaCy lemmatizer); the lane freezes the base-package install and records the absent components in the execution identity",
     "the frozen harness's pyproject dependency set does not resolve under pip's default backtracking budget (resolution-too-deep after ~26 minutes in workflow run 37343360127, before any query ran); the uv.lock shipped at the frozen revision resolves in seconds and is the harness environment the lane installs",
     "the frozen harness lock installs fastembed 0.6.0 for its Cognee provider; run 37349426994 showed Mem0 2.2.1 would therefore have executed with hybrid BM25 retrieval, contradicting the frozen base-package row, so the row removes fastembed after install and the posture check refuses to run otherwise",
-    "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob and the lane digest, and the importer refuses a run whose state is not admitted by the posture, whose declaration blob differs from the one pinned here, or whose bridge blobs differ from harness.source_blobs"
+    "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob and the lane digest, and the importer refuses a run whose state is not admitted by the posture, whose declaration blob differs from the one pinned here, or whose bridge blobs differ from harness.source_blobs",
+    "accepted rows 2026-10-07: agent-memory, agent-memory (shadow recall control), bm25, mem0-oss (workflow runs 37661856397, 37661860248, 37661864946, 37661869364); L1 control equals -v3 on the summary and every case, L2 shadow equals the control, the L9 sidecar joined 73 records with 4 no_recall_executed cases; numbers live in the committed evidence records, the native reports and the normalized manifests, never in this lane"
   ],
   "change_rule": "any change to harness revision, fixtures, selection, budget, gold identity, evaluator, execution semantics, or a frozen row's source/adapter/configuration after a score has been observed requires a new lane_id; this record is never edited in place once status leaves frozen",
   "authority_effect": "none"
