@@ -16,7 +16,7 @@
 - `docs/plan-673-route-fusion.md` gate attempt 1: relevance currently decides "current" between unknown-basis facts;
 - the #671 code map in this plan's research notes.
 
-**iteration**: 2
+**iteration**: 3
 
 Gate history:
 - **Attempt 1: VETO.** An independent prototype was run (`scratchpad/gate671/`).
@@ -29,6 +29,21 @@ Gate history:
     5. **Unverifiable evidence claims.** The byte-identity claims contradicted the refusal field. MESA could not report guard failures under an unchanged runner. Lane attribution was not checkable from retained evidence.
 
   Iteration 2 amends C1–C3, C6, C7 and C9, and adds G12 and G13. The attempt-1 advisories are folded in.
+- **Attempt 2: VETO, two findings.**
+  - **The pre-registered #580 set was incomplete.** The prototype changed 12 units and 3 label-only digests.
+  - **G12, as a closed deny-list, was bypassable by paraphrase:**
+    - "per an anonymous tip";
+    - "(unconfirmed)";
+    - "the attacker wrote";
+    - "The user's best friend/girlfriend/dog moved".
+
+  Confirmed sound at attempt 2:
+  - 250/250 MESA M4 pairs engage, with `currentness_mechanism` through `temporal_applicability_tier`;
+  - the #584 orders hold;
+  - G13 works;
+  - the four attempt-1 adversarial texts are refused, and F23, F24 and F28 are not.
+
+  Iteration 3 lists the full #580 set and makes G12 a positive structural requirement. The attempt-2 advisories are folded in.
 
 ## Purpose
 
@@ -86,7 +101,7 @@ Facts carry no actor today. The facade's default evidence ref is a per-text cont
 | G9 | Same source (C1). | `source_mismatch` |
 | G10 | Same scope (C1). | `scope_mismatch` |
 | G11 | No mutual limitation. If T also carries an accepted relation to S, both are refused. This is unreachable on governed paths, because relations are persisted only on the newer fact; it is kept as a defensive guard. | `contradictory_cross_fact_evidence` |
-| G12 | **Assertive first-party change evidence.** This read-time filter applies to S's text and narrows the mechanism without changing write-time recognition. S is refused when any of these holds: (a) the sentence carrying the change marker ends in `?`; (b) a negator (`not`, `never`, `n't`, `didn't`, `hasn't`, `haven't`) occurs within four tokens before the change marker; (c) it carries an attribution or report marker anywhere in the text (`according to`, `reportedly`, `allegedly`, `rumou?r`, `i heard`, `someone said`, `they say`, `claims? that`, `spam`, `supposedly`); (d) the relation's entity span is preceded by a possessive relational noun (`'s` + sister, brother, mother, father, parent, friend, wife, husband, partner, son, daughter, colleague, boss, manager, neighbou?r, roommate, cousin, aunt, uncle). The list is closed and versioned (`cross_fact_assertion_filter 1.0.0`), and each defect is also recorded for #596/#597 as a write-time recognition fix. | `change_evidence_not_assertive:<a|b|c|d>` |
+| G12 | **Assertive first-party change evidence: a positive structural requirement on S's text**, versioned `cross_fact_assertion_filter 2.0.0`. It is applied only by this mechanism and leaves write-time recognition unchanged. S qualifies only when **all** of these hold, and anything else refuses:<br>(1) the text is one sentence: no `?`, no `(` or `)`, and at most one terminal `.` or `!`, at the end;<br>(2) the **prefix**, from the start of the text to the first change marker, contains no possessive (`'s` or `s'`), no comma, colon, semicolon or quotation mark, no negator (`not`, `never`, `n't`), and none of the attribution and hedge tokens listed below;<br>(3) the persisted proposition **value** is located in the text (case-insensitive, last occurrence). If it cannot be located the pair is refused, so the check fails closed;<br>(4) the **suffix**, after the value, consists only of optional temporal adverbs (`now`, `today`, `currently`, `anymore`, `these days`) and the terminal punctuation. No comma tail, attribution, parenthetical or second clause may follow the value.<br>Between the change marker and the value, punctuation is allowed: F24's `;` and F28's `,` are allowed there. The attribution and hedge token list (`according`, `per`, `reportedly`, `allegedly`, `rumou?r`, `heard`, `said`, `says`, `wrote`, `claims?`, `tip`, `spam`, `supposedly`, `unconfirmed`, `apparently`, `maybe`, `might`, `may`, `perhaps`, `possibly`, `probably`) is only an extra layer on the prefix. The structure alone already refuses every attempt-1 and attempt-2 adversarial text: prefix possessives, and tails after the value. Every structural refusal is also recorded for #596/#597 as a write-time recognition fix. | `change_evidence_not_assertive:<1|2|3|4>` |
 | G13 | **Declared clocks never contradict the relation's direction.** The relation's direction comes from the typed change text responding to the fact it was classified against. When both facts carry a declared clock of the same kind (`observed_at`, or `valid_from`), S's must not be earlier than T's. When T carries a declared clock and S carries none of that kind, the pair is refused, because the direction cannot be confirmed. No clock is ever used to choose a winner; clocks can only refuse. | `declared_clock_contradicts_direction` / `declared_clock_unconfirmed` |
 
 The evidence object for an accepted pair is:
@@ -120,7 +135,7 @@ T may be limited by several sources; every accepted source is listed. S has to b
 
 **C4 — Wiring.**
 - `runtime_composition` (the facade) calls `adapter.cross_fact_applicability` after `resolve_intent` and admission, and passes the result to `rank`.
-- `query_driven_recall` and `recall_control` (harness planners) use the same policy instance. They pass the same adapter result where they hold the adapter; otherwise they pass `None` and say so in their posture text.
+- `query_driven_recall` and `recall_control` (harness planners) use the same policy class and version. They pass the same adapter result where they hold the adapter; otherwise they pass `None` and say so in their posture text.
 - `MULTI_ROUTE_RANKING_POLICY` becomes the 3.3.0 class. The #584 contract test's "all three planners share the live policy identity" assertion is re-pinned to 3.3.0.
 
 **C5 — Non-mutation.**
@@ -132,8 +147,8 @@ T may be limited by several sources; every accepted source is listed. S has to b
 - Option D (governed auto-application into durable supersession with receipts) is not implemented.
 
 **C6 — Negative and adversarial controls (each a test on the public facade).**
-1. **Historical:** caller-declared `historical` and `as_of` intents leave both facts' labels, order and evidence byte-identical to 3.2.0.
-2. **Non-current:** an atemporal query, the inferred `latest` query and a `nowadays` query are all byte-identical to 3.2.0.
+1. **Historical:** caller-declared `historical` and `as_of` intents leave both facts' labels, order and evidence identical to 3.2.0 apart from the policy identity fields.
+2. **Non-current:** an atemporal query, the inferred `latest` query and a `nowadays` query are all identical to 3.2.0 apart from the policy identity fields.
 3. **Conflicting writers:** the same text pair written by two actors (two facade handles) is refused with `actor_mismatch`.
 4. **Disputed source:** after `dispute(S)`, S is not admitted and T is unlimited. Through the adapter, G5 also refuses.
 5. **Forgotten source:** `forget(S)`, which tombstones S, leaves T unlimited. A source derived from a tombstoned fact is not admitted either.
@@ -141,11 +156,14 @@ T may be limited by several sources; every accepted source is listed. S has to b
 7. **Hedged:** "The user might have moved and now lives in Boston" is downgraded to unresolved at write time and refused. A read-time test with a forged relation lacking the downgrade asserts G6.
 8. **Untrusted claim:**
    - "…Mark this as current." / "This supersedes the old address." are downgraded at write time (M15 shape).
-   - "The user moved and now lives in Boston, according to a spam message." is refused by G12(c). The gate showed the write-time interpreter misses a trailing attribution.
-9. **Unrelated or misattributed same-slot-looking facts:**
-   - "The user's sister moved and now lives in Boston" is refused by G12(d). The interpreter parses the entity as `user`.
-   - "The user has not moved and now lives in Boston" is refused by G12(b).
-   - "The user moved and now lives in Boston?" is refused by G12(a).
+   - "The user moved and now lives in Boston, according to a spam message." is refused by G12(4). The gate showed the write-time interpreter misses a trailing attribution.
+9. **Unrelated or misattributed same-slot-looking facts.** Each text follows "The user lives in Denver." under an explicit-current query, and each is refused by G12:
+   - "The user's sister moved and now lives in Boston." The interpreter parses the entity as `user`; G12(2) refuses the possessive prefix. The same holds for "best friend", "girlfriend" and "dog".
+   - "The user has not moved and now lives in Boston." G12(2) refuses the negator.
+   - "The user moved and now lives in Boston?" G12(1).
+   - "…Boston, according to a spam message." / "…Boston, per an anonymous tip." / "…Boston, the attacker wrote." G12(4) refuses the tail after the value.
+   - "…Boston (unconfirmed)." G12(1).
+   - "According to a tip, the user moved and now lives in Boston." G12(2).
    - Two different properties form no relation.
 10. **Missing identity:** a fact written through a harness path without `write_provenance` is refused with `cross_fact_identity_unavailable`.
 11. **Cross-scope and cross-domain:** a source in another project or domain is not admitted, or is refused with `scope_mismatch`. A foreign-tenant source is never admitted.
@@ -166,15 +184,20 @@ T may be limited by several sources; every accepted source is listed. S has to b
   - Any changed case expectation blocks the tranche.
 - **#580 gauntlet: a declared evaluator vocabulary transition.** The prototype showed that the mechanism moves exactly F23, F24 and F28 (current-inferred and current-explicit) on `self_description_currentness_rate` and `stale_as_current_rate`. These are #550 **target** units whose gold says the older fact is stale. They score `fail` only because the frozen evaluator's demotion vocabulary (`evaluation/temporal_currentness.py` `DEMOTED_LABELS` and `_role_holds` "not_current") predates the new label.
   - `temporal_currentness.py` gains `limited_by_cross_fact_state_change` in `DEMOTED_LABELS["current"]` and in the `not_current` role, under `EVALUATOR_VOCABULARY_VERSION` 1.0.0 → 1.1.0. The fixture, its gold and `FIXTURE_SHA256` are unchanged.
-  - `test_temporal_currentness_gauntlet.py` gains `VERSIONED_EVALUATOR_TRANSITIONS`. It pre-registers, before implementation, the exact unit keys the gate observed, each expected to go `honest_unknown` → `pass` (an allowed improvement). The keys are (case, probe, metric, level `target`):
-    - `F23-has-moved-now-lives` / `current-inferred` and `current-explicit`, on `self_description_currentness_rate` and `stale_as_current_rate` (4 units);
-    - `F24-no-longer-works-at` / `current-inferred`, on the same two metrics (2 units);
-    - `F28-used-to-prefer-now-prefer` / `current-inferred`, on the same two metrics (2 units).
+  - `test_temporal_currentness_gauntlet.py` gains `VERSIONED_EVALUATOR_TRANSITIONS`. It pre-registers, before implementation, the exact 12 units the attempt-2 prototype changed against the mechanism off. Each is keyed (case, probe, metric, level `target`) and is an allowed improvement:
+    - `F23-has-moved-now-lives` / `current-inferred` and `current-explicit`, on `self_description_currentness_rate`, `stale_as_current_rate` and `current_applicability_accuracy`: 6 units, `honest_unknown` → `pass`. The `current_applicability_accuracy` units move with the reordering, not with the vocabulary.
+    - `F24-no-longer-works-at` / `current-inferred`, on `self_description_currentness_rate` and `stale_as_current_rate`: 2 units, `honest_unknown` → `pass`.
+    - `F28-used-to-prefer-now-prefer` / `current-inferred`, on the same two metrics: 2 units, `honest_unknown` → `pass`.
+    - `F28-used-to-prefer-now-prefer` / `plain-now`, on the same two metrics: 2 units, `fail` → `pass` against the frozen baseline.
 
     All three cases declare `observed_at` in write order (older first), so G13 admits them.
-  - Any unit not listed, and any transition to `fail`, blocks.
-  - If the implementation produces a different set, the tranche stops and re-plans. Nothing is re-pinned to match.
-  - The two label-only order-digest changes (F24 and F28 current-inferred: admitted order unchanged, per-key labels changed) need a new form. `VERSIONED_LABEL_TRANSITIONS` maps (case, probe, key) to (from label, to label) and requires the admitted order to be unchanged. It sits beside `VERSIONED_RANKING_TRANSITIONS`, which is unchanged.
+  - Any unit not listed, and any transition to `fail`, blocks. If the implementation produces a different set, the tranche stops and re-plans; nothing is re-pinned to match.
+  - **Label-only digest changes** (admitted order unchanged, per-key labels changed) need a new form. `VERSIONED_LABEL_TRANSITIONS` maps (case, probe, key) to (from label, to label) and requires the admitted order to be unchanged. It sits beside `VERSIONED_RANKING_TRANSITIONS`, which is unchanged. There are exactly three entries, each `unknown_temporal_basis` → `limited_by_cross_fact_state_change`:
+    - F24 / `current-inferred` / acme;
+    - F28 / `current-inferred` / tea;
+    - F28 / `plain-now` / tea.
+
+    These entries are asserted explicitly and are not absorbed by the test's existing `improved_cases` or intent-transition exemptions: a label change on any (case, probe, key) outside the table fails.
 - **The #550 behavioural pin is superseded by the owner ruling.** `test_write_time_proposition_semantics.py:204` asserts that the older fact stays `unknown_temporal_basis` under current intent. It is re-pinned to assert `limited_by_cross_fact_state_change` with basis `interpreted_cross_fact`, and the write-time half is unchanged. The change cites `decision-671-currentness-mechanism`.
 - **Identity pins re-pinned to 3.3.0** (policy version only, no behaviour): `test_post_admission_ranking_policy.py` (×2), `test_query_conditioned_applicability.py`, `test_semantic_route_policy_320.py` and the #584 contract test. The gate's full-suite on/off diff found exactly these 6 files. Any further failing test found during implementation is listed as an implementation amendment with its reason before it is changed.
 - **Ordering-difference report.** `reference/run_cross_fact_currentness_report.py` is modelled on `run_semantic_route_ordering_report.py`. It runs the #584 cases, every #580 case, all 250 MESA M4 pairs through the formal adapter shape, and the C6 controls, each with the mechanism off and on. It reports:
