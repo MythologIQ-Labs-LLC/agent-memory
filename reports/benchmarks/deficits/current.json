@@ -63,8 +63,9 @@
       "gap": 0.035799,
       "priority": "P1",
       "posture": "competitive_deficit",
-      "primary_stage": "ranking_fusion",
+      "primary_stage": "unclassified",
       "secondary_stages": [
+        "ranking_fusion",
         "candidate_generation_route_reachability"
       ],
       "evidence_refs": [
@@ -73,7 +74,7 @@
       ],
       "owning_issue": 673,
       "architecture_tranche": "#673 route fusion",
-      "remediation_hypothesis": "Make semantic-route candidates ranking-relevant through benchmark-agnostic fusion after currentness is independently enforced.",
+      "remediation_hypothesis": "Root-cause #673 should determine whether the deep-recall gap comes from route reachability, candidate population, fusion/order, or another retrieval stage. The semantic route's current inability to affect scored ranks is relevant evidence, not yet a complete attribution.",
       "negative_control_refs": [
         "docs/plan-673-route-fusion.md",
         "#671"
