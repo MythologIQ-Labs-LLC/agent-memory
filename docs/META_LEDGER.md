@@ -4515,3 +4515,29 @@ Next: docs/67 Step B1 for Runtime Baseline v4.
 - **Unchanged:** the v3 files.
 
 Step B2 binds the probe artifact.
+
+---
+
+### Entry #103: PUBLICATION — Runtime Baseline v4 evidence binding (docs/67 Step B2)
+
+**Timestamp**: 2026-10-07T15:25:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reports/runtime/baseline-v4-qualification.json`, the register (v4 `qualification.blob` and `published_commit`), `reports/runtime/baseline-v4.md`
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `10def1f6142d4f3163e960edfd0b5ff5c2379d0b`): `944eb18dd57072fb10b2f95e4a5933caeb735ca86f32b6a87a14101904fd5050`
+**Previous Hash**: `8cc3d050cb9a61abb0675eb095d1dab41e01f0e9f8730989288a356ce63309bb`
+**Chain Hash**: `e46cd845a336990a62e62b87ac965ddd2abf1193d1251e1cac9835dfbd019fcc`
+
+**Decision**: Runtime Baseline v4's public Gauntlet evidence is bound, and v4 is fully published.
+
+- **Probe run:** workflow run 37671546394 on B1 head `8a89f94` (PR #723).
+- **Artifact:** `agent-memory-runtime-baseline-v4-public-gauntlet`, id 11504273551, digest `sha256:2f2fd946…`.
+- **Probe result:** `sample_count` 3, `exact_top1` 1.0, `system_revision` `729a6c8`, adapter blob `8d81a37`.
+- **Published commit:** `2501f0f`, the merge of #723.
+- **Unchanged:** the record and boundary blobs.
+- **Checks:** the checker prints PASS against v4, and the validator binds v1–v4.
+
+#671 (Runtime Baseline v5) is next.
