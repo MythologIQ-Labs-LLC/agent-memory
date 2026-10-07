@@ -614,6 +614,42 @@ Plan LD1 added a posture step to both lane workflows that runs `scripts/check_ru
 
 ---
 
+### Failure #18: CI-cost plan iteration 1 VETOed on a literal-string invariant and unmeasured defaults
+
+**Date**: 2026-10-07
+**Iteration**: 1 (audit attempt 1 of 5)
+**Verdict ID**: AUDIT_REPORT_662_attempt1 2026-10-07T05:10 VETO (V1-V3)
+**Category**: SPEC_DRIFT
+
+#### What Was Attempted
+
+The plan defined "the full suite runs once per trigger" as a policy invariant detected by matching one literal command string, assigned default timeout tiers to the hosted jobs it had not measured, and applied one concurrency expression with `cancel-in-progress: true` to both PR heads and post-merge `main` pushes.
+
+#### Why It Failed
+
+- The invariant was defined by the shape of the nine steps the plan wanted to delete, not by the semantics of the command; two path-filtered workflows already run the whole suite with a different spelling (`-p 'test_*.py'`, no `-t`).
+- The timeout rule was stated as measurement-derived but applied a default where the measurement had not been taken, although the same API that measured 49 jobs could measure the other 29.
+- The concurrency expression was reasoned about for PR heads only; its effect on the second lifecycle boundary the plan deliberately keeps (`main` pushes) went unstated.
+
+#### Pattern to Avoid
+
+**Anti-Pattern**: encoding an enforcement invariant as a string literal copied from the cases at hand; declaring a rule "derived from measurement" and then defaulting where measurement is missing; applying one expression to two lifecycle boundaries without tracing both.
+
+**Correct Pattern**: define invariants over parsed semantics (tokens, not literals) and test them against every existing instance before writing them down; measure every row the rule covers before stating the rule; for each trigger kind a change touches, state its effect explicitly.
+
+#### Resolution
+
+| Status | Action Taken |
+|--------|--------------|
+| OPEN | Iteration 2 pending: token-level full-suite detection with the two path-filtered jobs accounted for; 29 further jobs measured from run history; PR-only cancellation (`cancel-in-progress: ${{ github.event_name == 'pull_request' }}`). |
+
+#### Related Entries
+
+- Entry #75 (GATE TRIBUNAL VETO); Entry #74 (research brief, finding E).
+- Audit Report: `.agent/staging/AUDIT_REPORT_662_attempt1.md`
+
+---
+
 ## Pattern Library (Extracted Lessons)
 
 Cross-cutting lessons from the temporal/currentness and evidence work (#538 through #550) are collected in [`62-lessons-learned-evidence-and-currentness.md`](62-lessons-learned-evidence-and-currentness.md).
@@ -651,10 +687,10 @@ Cross-cutting lessons from the temporal/currentness and evidence work (#538 thro
 | GHOST_PATH | 0 | - |
 | HALLUCINATION | 2 | 2026-09-01 |
 | ORPHAN | 0 | - |
-| SPEC_DRIFT | 16 | 2026-10-06 |
+| SPEC_DRIFT | 17 | 2026-10-07 |
 | CHAIN_BREAK | 0 | - |
 
-**Total Failures Recorded**: 17
+**Total Failures Recorded**: 18
 **Failures Resolved**: 14 (Failure #17 fixed by the lane-workflow checkout fix; Failure #16 grounds closed by iteration 2; Failure #15 grounds closed by iteration 2; Failures #13 and #14 grounds closed by iterations 2-3; Failure #2; Failures #3 and #4 grounds closed by the following iteration; Failure #6 fixed at Entry #28; Failure #8 grounds closed by iteration 2; Failure #7 fixed at Entry #32; Failure #9 grounds closed by iterations 2-3; Failure #10 grounds closed by iteration 2; Failure #12 grounds closed by iteration 2)
 **Patterns Extracted**: 5
 

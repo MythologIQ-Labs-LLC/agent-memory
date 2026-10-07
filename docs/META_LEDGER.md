@@ -3531,3 +3531,36 @@ tranche order (reachable controller with JH-06 budget and the four stop
 classes first) behind a source-registry record and a notice convention;
 Phases 4-2-3 of #662 as one evaluation-only plan with a validating
 inventory test. Findings are advisory; no decision is taken here.
+
+---
+
+### Entry #75: GATE TRIBUNAL — VETO
+
+**Timestamp**: 2026-10-07T05:10:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Session**: 2026-10-06T1200-668ns
+**Target**: docs/plan-662-ci-cost-phases-2-4.md (iteration 1; plan gate `plan-iter8.json`)
+
+**Artifact**: `.agent/staging/AUDIT_REPORT_662_attempt1.md` (gitignored staging; hashed here)
+**Content Hash**: `cf926dd4367cc867749127e08f2e3f27000221a9301ba8c9f9e1e3d8951b15b7`
+**Previous Hash**: `68c1ef759d73ccb3fddca418ecabe8283caa0fde49b6ef51c45f52f6e1d4bcc9`
+**Chain Hash**: `98310f3a40d1a3ea440a2cce4fc1a66698235f5f437ac9d5b94da5ae2bc6dc6e`
+
+**Decision**: VETO (V1–V3). The plan's file lists and counts verify
+against the YAML (40 bare push+pull_request files, 43 jobs, 81 PR/push
+workflows, 90 jobs, 77 without timeouts in 74 files, the nine full-suite
+steps at the cited lines, the OQ2 run ids resolving to the named
+workflows). V1: the full-suite detector is a string literal that
+`evolveai-multicapability-qualification.yml:148` and
+`hermes-observe-govern-integration.yml:167` evade with `discover -s
+reference/tests -p 'test_*.py'`, so invariant (ii) would certify a false
+"once per trigger" claim. V2: unmeasured hosted jobs receive default tiers
+(15, 30) contrary to #662 Phase 3's workload-derived rule, while run
+history is available. V3: the shared concurrency group with
+`cancel-in-progress: true` makes successive `main` pushes cancel each
+other's post-merge runs, unstated and contrary to OQ1's rationale.
+Advisories A1 (an underived minute figure) and A2 (a new `pathScope`
+vocabulary value). Security, Ghost UI, Razor, Dependency (pyyaml 6.0.3,
+test-time) and Orphan passes clean. Shadow Genome Failure #18.
