@@ -328,6 +328,48 @@ The floor MAY be:
 
 This turns benchmark history into cumulative product quality rather than disconnected snapshots.
 
+### 10. Frontier success creates a harder-pressure obligation
+
+Reaching a competitive and adequacy frontier does not end evaluation of the capability.
+
+A closed frontier deficit produces two outputs:
+
+1. a regression floor that protects the accepted win;
+2. a **frontier-escalation candidate** that asks what harder or more orthogonal pressure should come next.
+
+Examples:
+
+- deeper or longer-horizon retrieval;
+- larger scale tier;
+- paraphrase/semantic pressure after lexical success;
+- adversarial currentness after simple state-change success;
+- multi-source conflict after same-source currentness;
+- restart/concurrency pressure after single-process correctness;
+- memory-to-action utility after retrieval quality;
+- externally qualified benchmark after a Gauntlet-native gap suite;
+- a new benchmark family where the current one is saturated.
+
+The escalation MUST preserve benchmark integrity:
+
+- do not mutate the frozen benchmark merely to make it harder;
+- create or qualify a new profile/version;
+- preserve the old frontier evidence and regression floor;
+- prefer orthogonal pressure over endless variants of the same task;
+- do not create a harder benchmark whose only purpose is to make Agent Memory look impressive.
+
+The desired evaluation progression is:
+
+```text
+deficit
+  -> remediation
+  -> frontier
+  -> regression floor
+  -> harder independent pressure
+  -> next deficit or stronger frontier
+```
+
+A capability that remains perfect only because evaluation stopped evolving is not defensibly best in class.
+
 ### 10. Runtime incompleteness explains deficits but does not close them
 
 During Phase B, many poor results are expected because the runtime is unfinished.
