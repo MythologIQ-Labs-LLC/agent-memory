@@ -114,7 +114,7 @@ class PolicyUnitTests(unittest.TestCase):
     def test_policy_identity_is_explicit_and_authority_neutral(self):
         identity = MULTI_ROUTE_RANKING_POLICY.identity()
         self.assertEqual(identity["policy_id"], "multi-route-default")
-        self.assertEqual(identity["policy_version"], "3.3.0")
+        self.assertEqual(identity["policy_version"], "3.2.0")
         self.assertEqual(identity["authority_effect"], "none")
         self.assertFalse(identity["route_scores_cross_comparable"])
         self.assertEqual(identity["temporal_regime"], "query_conditioned")
