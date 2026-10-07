@@ -4572,3 +4572,74 @@ Step B2 binds the probe artifact.
 - **Full suite:** 2280 tests. The only failure is the pre-existing environmental `test_gauntlet_durability`.
 
 The C9 evidence plan (`-v5` lanes with attribution fields; the `mesa-formal-v2` replay with its pre-registered prediction) is next, under its own gate. Option D is not implemented.
+
+---
+
+### Entry #105: GATE TRIBUNAL — PASS (#671 C9 evidence plan, attempt 2)
+
+**Timestamp**: 2026-10-07T16:20:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-671-evidence-v5.md (iteration 2, 7eff005)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_671_evidence_attempt2.md) = 6aa5fc9b590e3d96bf280fda2e21d2e7729909bd7439301f63ca8de36a6fac68
+
+**Previous Hash**: `ecb941811ce2e789b7086ceb90579b210abafa843d05ed67bda2fd04b17296c0`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = aace737e8d4baf21bfbc26982bf99b1e7943d6e9ae0cefe8679b36c6a909af70
+
+**Decision**: The C9 evidence plan (`-v5` lanes and the `mesa-formal-v2` replay) passes at attempt 2.
+
+**Attempt 1 (VETO)** had four blocking findings:
+- the runtime-tree binding could not be met as sequenced;
+- the runner change was under-specified, and the plan made a false claim that v1 replays would be byte-reproducible;
+- there was no re-pin list (10 failures);
+- the E4 lane-difference list was incomplete.
+
+That audit also ran the frozen classifier on the v5 runtime: `new_fact` 250 and `currentness_mechanism` 250, with M1/M3/M5/M6 equal to v1.
+
+**Attempt 2** verified each remedy by running it:
+- **AMB attribution:** the frozen renderer rebuilds all 77 `-v4` contexts byte for byte from ordered document ids;
+- **off recompute:** a recall with the mechanism off is sound and leaves no effect on later outputs;
+- **MESA PR:** its file set stays outside the bound tree;
+- **E8:** 11 simulated failures, 10 of them already listed.
+
+Advisories A1–A8 are folded into the plan as a binding section, among them:
+- the extra lane test;
+- deficit-closure fields that match the schema;
+- hard-coded hashes for shallow CI checkouts.
+
+---
+
+### Entry #106: IMPLEMENTATION — mesa-formal-v2 freeze and the `--freeze` runner (#671 C9, E5/E7 step 2)
+
+**Timestamp**: 2026-10-07T16:35:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reference/run_agentmembench_formal.py`, `reference/fixtures/benchmarks/agentmembench/mesa-formal-v2-freeze.json`, `reference/tests/test_agentmembench_formal.py`, `docs/69`, `docs/plan-671-evidence-v5.md`
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `92acdb28fe10a2c2497afc9535a61836063d781b`): `cc4010232162f1170f698534f9fc3a5653a551b5e2aa2d29a0e57d1bfde7371c`
+**Previous Hash**: `aace737e8d4baf21bfbc26982bf99b1e7943d6e9ae0cefe8679b36c6a909af70`
+**Chain Hash**: `9cf4e84d99a5e4ac3f4e3f5ce343de35c62bb60b5dbdacb141a2b225b74747e7`
+
+**Decision**: Step 2 of E7 is implemented. Nothing under `reference/agentmem_ref` is touched.
+
+- **Runner:** gains `--freeze`, restricted to committed freezes in the fixtures directory. The report's `profile_id` and freeze binding (path and sha256), and the judge's binding check (now including the path), all follow the selected freeze. `classify_conflict_case` and the seven stage constants are sha256-pinned to their values at `7b041a7`, which were verified against `git show`.
+- **v2 freeze:** differs from v1 only in the fields the plan lists, and the test enforces that list exhaustively:
+  - runtime tree `f508c63f…` at the #726 merge `74c8683`;
+  - policy 3.3.0 and contract 1.5.0;
+  - the new runner sha256;
+  - `supersedes` (v1 by path and sha256);
+  - the E6 confirmations P1–P6 as exact dicts.
+
+  Deviations D1–D6 are unchanged.
+- **v1:** stays bound to the `7b041a7` runner (`58b2fced…`), and `verify_self` refuses it on this runner by design.
+- **docs/69:** gains the successor-freeze section.
+
+The replay runs at this PR's merge commit.

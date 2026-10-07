@@ -68,7 +68,11 @@ from agentmem_ref import AgentMemory  # noqa: E402
 from agentmem_ref.api import contract  # noqa: E402
 from agentmem_ref.runtime import proposition_semantics  # noqa: E402
 
-FREEZE_PATH = REFERENCE_ROOT / "fixtures" / "benchmarks" / "agentmembench" / "mesa-formal-v1-freeze.json"
+FREEZE_DIR = REFERENCE_ROOT / "fixtures" / "benchmarks" / "agentmembench"
+# The default (v1) freeze. Successor freezes (#671 C9: ``mesa-formal-v2``) are selected with
+# ``--freeze``; the profile id, the report's freeze binding and the judge's binding check are
+# all properties of the loaded freeze, never of this default.
+FREEZE_PATH = FREEZE_DIR / "mesa-formal-v1-freeze.json"
 PROFILE_ID = "agent-memory-agentmembench-mesa-formal-v1"
 REPORT_SCHEMA = "agent-memory-mesa-formal-report-1.0.0"
 CLASSIFIER_VERSION = "mesa-m4-stage-classifier-1.2.0"
@@ -899,10 +903,11 @@ def _upstream_config(upstream, freeze: Mapping[str, Any], output_dir: Path):
 
 
 def run_formal(upstream_root: Path, output_dir: Path, *, phases: Sequence[str] | None = None,
-               freeze: Mapping[str, Any] | None = None, verify: bool = True) -> tuple[dict, dict]:
+               freeze: Mapping[str, Any] | None = None, verify: bool = True,
+               freeze_path: Path = FREEZE_PATH) -> tuple[dict, dict]:
     """Execute the frozen protocol; returns (committed_report, raw_report)."""
 
-    freeze = freeze or load_freeze()
+    freeze = freeze or load_freeze(freeze_path)
     if verify:
         verify_arguments(freeze)
         runner_sha = verify_self(freeze)
@@ -986,11 +991,11 @@ def run_formal(upstream_root: Path, output_dir: Path, *, phases: Sequence[str] |
         if phase == "conflict":
             semantics[uuid] = value
     agent_memory_ext: dict[str, Any] = {
-        "profile_id": PROFILE_ID,
+        "profile_id": freeze["freeze_id"],
         "report_schema": REPORT_SCHEMA,
         "freeze": {
-            "path": str(FREEZE_PATH.relative_to(REPO_ROOT)),
-            "sha256": sha256_file(FREEZE_PATH),
+            "path": str(freeze_path.resolve().relative_to(REPO_ROOT)),
+            "sha256": sha256_file(freeze_path),
             "runner_sha256": runner_sha,
         },
         "upstream_verification": upstream_obs,
@@ -1089,15 +1094,17 @@ def judged_recall(hits: Sequence[bool], rows: Sequence[Mapping[str, Any]], parse
 
 
 def judge_raw_report(upstream_root: Path, raw: dict, committed: dict, freeze: Mapping[str, Any],
-                     base_url: str) -> dict:
+                     base_url: str, freeze_path: Path = FREEZE_PATH) -> dict:
     """Apply the frozen judge to a raw report via the unmodified upstream ``judge_retrievals``."""
 
     verify_arguments(freeze)
     verify_self(freeze)
     verify_upstream(freeze, upstream_root)
     binding = committed["agent_memory"]["freeze"]
-    if binding["runner_sha256"] != freeze["runner"]["sha256"] or binding["sha256"] != sha256_file(FREEZE_PATH):
-        raise SystemExit("the committed report was not produced under the current freeze")
+    if (binding["runner_sha256"] != freeze["runner"]["sha256"]
+            or binding.get("path") != str(freeze_path.resolve().relative_to(REPO_ROOT))
+            or binding["sha256"] != sha256_file(freeze_path)):
+        raise SystemExit("the committed report was not produced under the selected freeze")
     verify_raw_against_committed(raw, committed)
     upstream = import_upstream(upstream_root)
     stats = {"parsed": 0, "failures": 0, "malformed": 0, "served_models": Counter()}
@@ -1168,8 +1175,13 @@ def main() -> int:
     parser.add_argument("--judge", type=Path, help="raw report to judge with the frozen judge identity")
     parser.add_argument("--judge-base-url")
     parser.add_argument("--print-digests", action="store_true")
+    parser.add_argument("--freeze", type=Path, default=FREEZE_PATH,
+                        help="committed freeze to execute or judge under (default: mesa-formal-v1)")
     args = parser.parse_args()
-    freeze = load_freeze()
+    freeze_path = args.freeze.resolve()
+    if freeze_path.parent != FREEZE_DIR.resolve() or not freeze_path.is_file():
+        raise SystemExit(f"--freeze must name a committed freeze under {FREEZE_DIR.relative_to(REPO_ROOT)}")
+    freeze = load_freeze(freeze_path)
     if args.print_digests:
         print(json.dumps(build_freeze_digest_fields(args.upstream_root), indent=2))
         return 0
@@ -1183,12 +1195,13 @@ def main() -> int:
             raise SystemExit("--judge requires --judge-base-url (authorized frozen judge) and --output "
                              "(the committed report whose digests the raw report must match)")
         result = judge_raw_report(args.upstream_root, json.loads(args.judge.read_text()),
-                                  json.loads(args.output.read_text()), freeze, args.judge_base_url)
+                                  json.loads(args.output.read_text()), freeze, args.judge_base_url,
+                                  freeze_path=freeze_path)
         print(json.dumps({k: v for k, v in result.items() if k != "hits"}, indent=2))
         return 0
     if not (args.output and args.raw_output):
         raise SystemExit("an execution run requires --output and --raw-output (judging reads the raw report)")
-    committed, raw = run_formal(args.upstream_root, args.output.parent)
+    committed, raw = run_formal(args.upstream_root, args.output.parent, freeze=freeze, freeze_path=freeze_path)
     args.raw_output.write_text(json.dumps(raw, indent=2, sort_keys=True, default=str) + "\n")
     args.output.write_text(json.dumps(committed, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8")
     return 0
