@@ -33,6 +33,10 @@ on:
       - 'reference/tests/test_runtime_baseline_succession.py'
       - '.github/workflows/runtime-baseline.yml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 
