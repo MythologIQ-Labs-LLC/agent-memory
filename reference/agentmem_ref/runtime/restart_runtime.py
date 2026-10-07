@@ -1031,6 +1031,7 @@ class RestartSafeRuntime:
         attestation=None,
         temporal=None,
         replacement_kind="error_correction",
+        source_ref=None,
     ):
         """Forward the governed commit, including the qualified-evidence channel.
 
