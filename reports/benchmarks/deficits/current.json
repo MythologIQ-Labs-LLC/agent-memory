@@ -12,7 +12,7 @@
       "evidence_class": "exact workload; published external references",
       "metric": "new_fact_rate",
       "direction": "higher",
-      "agent_memory": 1,
+      "agent_memory": 1.0,
       "same_harness_frontier": null,
       "published_frontier": {
         "system": "Naive RAG",
