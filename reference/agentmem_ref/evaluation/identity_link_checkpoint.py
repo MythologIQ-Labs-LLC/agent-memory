@@ -170,14 +170,14 @@ def verify_journal_head(
 
     try:
         actual = replay(expected_stream_ref, events)
-        head_match = all((
-            type(checkpoint) is JournalHeadCheckpoint,
-            checkpoint.stream_ref == expected_stream_ref,
-            checkpoint.head_digest == expected_head_digest,
-            checkpoint.event_count == expected_event_count,
-            actual.head_digest == expected_head_digest,
-            len(actual.events) == expected_event_count,
-        ))
+        head_match = (
+            type(checkpoint) is JournalHeadCheckpoint
+            and checkpoint.stream_ref == expected_stream_ref
+            and checkpoint.head_digest == expected_head_digest
+            and checkpoint.event_count == expected_event_count
+            and actual.head_digest == expected_head_digest
+            and len(actual.events) == expected_event_count
+        )
         binding = "match" if head_match else "mismatch"
         if not head_match:
             reasons.add("independent_head_binding_mismatch")
