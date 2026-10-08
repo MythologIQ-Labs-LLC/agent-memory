@@ -1,0 +1,33 @@
+name: Read-only benchmark deficit evidence audit
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit_benchmark_deficit_ledger.py'
+      - 'tests/test_deficit_evidence_audit.py'
+      - 'reports/benchmarks/deficits/current.json'
+      - '.github/workflows/deficit-evidence-audit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit_benchmark_deficit_ledger.py'
+      - 'tests/test_deficit_evidence_audit.py'
+      - 'reports/benchmarks/deficits/current.json'
+      - '.github/workflows/deficit-evidence-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  read-only-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Verify pure reconciliation audit behavior
+        run: python3 -m unittest discover -s tests -p 'test_deficit_evidence_audit.py' -v
+      - name: Audit current accepted deficit ledger structurally
+        run: |
+          python3 scripts/audit_benchmark_deficit_ledger.py --output /tmp/deficit-audit.json
+          python3 -c 'import json; r=json.load(open("/tmp/deficit-audit.json")); print("posture:", r["posture"]); print("records:", r["counts"].get("records",0)); print("review candidates:", len(r["review_candidates"])); print("structural errors:", len(r["structural_errors"])); print("mutation count:", r["record_mutations"])'
