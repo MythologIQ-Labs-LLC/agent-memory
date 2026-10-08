@@ -1,0 +1,5 @@
+case split      : {'structural': 25, 'active': 43, 'trivially-empty': 9}
+passes by type  : {'structural': 25, 'active': 43, 'trivially-empty': 9}
+total passes    : 77/77
+precision/recall: 1.00 / 1.00
+OK — port matches upstream's reference row.

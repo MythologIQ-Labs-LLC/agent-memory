@@ -5170,3 +5170,43 @@ SHA256(content_hash + previous_hash) = 89d855e31db870b708ab6a1d6e045e53beffbcd05
 **Advisories N1/N2:** P4 guard identity comes from the regenerated C7; P6 uses the per-item `retrieved` digests.
 
 **Next:** the MESA PR (v3 freeze), then the replay, then the lanes PR and dispatch, then acceptance, then B1/B2.
+
+---
+
+### Entry #120: ACCEPTANCE — Runtime Baseline v6 evidence (`-v6` lanes + `mesa-formal-v3`) (#732, V6-E7 step 5)
+
+**Timestamp**: 2026-10-08T06:00:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**: lane statuses, `evidence_history` entries, normalized manifests, scorecards, UI catalog, dashboard, docs/65, GOVERNANCE_INDEX, the regenerated C7 report `ordering-difference-report-v6.json`, and the results section of docs/plan-732-evidence-v6.md
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `d943367b116e86c6725e526bef44b5024fa560fc`): `840552b4df393025dc09d9720d84f6ca8f22d6f2ab282c3c377ca9a734a8bdbc`
+**Previous Hash**: `89d855e31db870b708ab6a1d6e045e53beffbcd053445bb65857412424273e4c`
+**Chain Hash**: `0591a0f464f23e7d98a9d6202dade82c741f872e9f6a25ef0e24d1cde7aa1c03`
+
+**Decision**: The `-v6` lanes and the `mesa-formal-v3` replay are accepted as Runtime Baseline v6 acceptance evidence for the extractor-off default.
+
+**Runs.** Nine runs on `main` `24048d5` (LongMemEval 37718255173, 37718257278, 37718259916, 37718262620, 37718265216, 37718267521; AMB 37718270129, 37718272612, 37718275682), imported onto this branch.
+
+**V6-E1 equality.** `scripts/check_cross_fact_attribution.py`, unchanged, with `--v4-dir` set to the `-v5` lane evidence directories and `--v5-dir` set to the `-v6` ones:
+- LongMemEval: `verdict_counts {EQUAL: 1000}` across both planes;
+- AMB: `verdict_counts {EQUAL: 77}`;
+- the cross-fact records equal `-v5` row by row, with 0 limited carried over.
+
+**V6-E2 comparators.**
+- Lexical overlap and BM25 equal `-v5` exactly.
+- Mem0 equals `-v5` on every LongMemEval row's `ranked_top` and `metrics` (500 per plane) and on every AMB case's `query_id`, `correct` and `context`. Unlike `-v5` (45 turn-row near-tie reorders), there is no reorder.
+
+**V6-E3.** The lane files differ from `-v5` by exactly the listed paths; acceptance adds only statuses, `status_reason`s and one findings note.
+
+**V6-E5 (MESA).** `mesa-formal-v3`, executed at `d7b2974` with the extractor off, reproduces v2: M4 `new_fact` 250/250, `dual_version_rate` 0.0, `win_basis` `currentness_mechanism` 250, no primary or unmet stage, upstream consistent; P6 phase non-latency fields and retrieval diagnostics equal v2. P4's guard identity is taken from C7 (N1).
+
+**V6-E6 (guards).** The C7 report, regenerated at the execution revision: assertion filter 6.1.0, ranking 3.4.0 on and 3.2.0 off, 0 blockers, M4 250/250 limited, top-1 new 50 off → 250 on, no refusals, #580 pre-registered units only, 0 admitted #584 order changes; identical in structure and counts to the v5 report. The guard tests pass (111 tests).
+
+**Deficits.** Unchanged. `mesa-m4-currentness-2026-10-07` is already `frontier`; `mesa-formal-v3` confirms its regression floor.
+
+**Posture.** The typed proposition and extractor path is **unaccepted** until the remediation R6 acceptance (`docs/plan-732-remediation.md`, advisory V1). Generalization of currentness semantics remains tracked by `cross-fact-currentness-generalization-2026-10-07`.
+
+**Next:** docs/67 Step B1 for v6, then Step B2 (V6-E7 steps 6–7).

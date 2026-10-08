@@ -970,6 +970,117 @@
       "variant": "lane:longmemeval-s-retrieval-parity-v5:hindsight",
       "status": "blocked",
       "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:agent_memory:session",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "agent-memory",
+      "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v6-session-agent_memory-24048d55e26d.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:agent_memory:turn",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "agent-memory",
+      "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-turn-24048d55e26d/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v6-turn-agent_memory-24048d55e26d.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:agent_memory_shadow",
+      "status": "blocked",
+      "blocker": "shadow row deferred: measured at -v4 (jh-14 shipped); next controller measurement belongs to T-controller-2's lanes (plan-671-evidence-v5 E3); at -v6: ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches (plan-732-evidence-v6 V6-E2)"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:session",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "lexical_overlap",
+      "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-session-24048d55e26d/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v6-session-lexical_overlap-24048d55e26d.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:turn",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "lexical_overlap",
+      "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-turn-24048d55e26d/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v6-turn-lexical_overlap-24048d55e26d.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:session",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-session-24048d55e26d/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v6-session-mem0_explicit-94c3fe9f238f.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:turn",
+      "status": "complete",
+      "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "system_id": "mem0-oss",
+      "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+      "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-turn-24048d55e26d/evidence.json",
+      "report_binding": {
+        "input_sha256_path": "input.sha256",
+        "system_revision_path": "system.revision"
+      },
+      "normalized_reports": [
+        "reports/benchmarks/normalized/longmemeval-longmemeval-s-retrieval-parity-v6-turn-mem0_explicit-94c3fe9f238f.json"
+      ]
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:agent_memory_semantic",
+      "status": "blocked",
+      "blocker": "semantic-route row deferred: the route is unchanged since -v3; 3.3.0 adds only explicit-current cross-fact applicability (plan-671-evidence-v5 E3); at -v6: ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches (plan-732-evidence-v6 V6-E2)"
+    },
+    {
+      "variant": "lane:longmemeval-s-retrieval-parity-v6:hindsight",
+      "status": "blocked",
+      "blocker": "benchmark-agnostic Hindsight provider configuration not yet frozen (#640)"
     }
   ],
   "product_findings": [

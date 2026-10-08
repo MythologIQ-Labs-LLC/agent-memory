@@ -351,6 +351,19 @@ Three dispatches ran on `main` `e6f9db7f1db571e56d81511c20c93768987b35d7`, each 
 - **E1:** all 77 cases are EQUAL to the `-v4` control. The sidecar joined 73 records with 0 limited, and the 4 blank-query cases are `no_recall_executed`.
 - **E3:** BM25 and Mem0 equal `-v4` on the summary and on every case.
 
+### Accepted rows (lane `amb-precisionmembench-retrieval-v6`, 2026-10-08)
+
+The seventh lane generation (#732, plan `docs/plan-732-evidence-v6.md`) re-executes the `-v5` control and comparator rows at a runtime in the declared transition to Runtime Baseline v6: ranking policy 3.4.0, assertion filter 6.1.0 and contract 1.6.0, with bridge 0.4.0 unchanged. The proposition extractor is off by default and no lane input declares a typed proposition, so the rule is equality with `-v5`, not attribution. The typed proposition and extractor path is **unaccepted** until the remediation R6 acceptance (`docs/plan-732-remediation.md`). The shadow and semantic rows stay deferred.
+
+Three dispatches ran on `main` `24048d55e26d7db27715e78b24a8b795433a5e16`, each over the full 77-case selection, with checker state `TRANSITION` toward v6:
+- agent-memory, run 37718270129;
+- bm25, run 37718272612;
+- mem0-explicit, run 37718275682.
+
+**Results:**
+- **V6-E1:** all 77 cases are EQUAL to the `-v5` control (`verdict_counts {EQUAL: 77}`). The `cross-fact.jsonl` sidecar equals `-v5` row by row, with 0 limited.
+- **V6-E2:** BM25 and Mem0 equal `-v5` on `query_id`, `correct` and `context` for every case.
+
 ### Normalized manifests
 
 `normalize_amb_precisionmembench()` (`reference/agentmem_ref/evaluation/normalize.py`)

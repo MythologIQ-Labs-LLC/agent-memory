@@ -2,7 +2,7 @@
   "contract_family": "agent-memory-same-harness-lane",
   "contract_version": "1.0.0",
   "lane_id": "longmemeval-s-retrieval-parity-v6",
-  "status": "frozen",
+  "status": "accepted",
   "owning_issue": 732,
   "frozen_on": "2026-10-08",
   "frozen_before_any_score": true,
@@ -177,7 +177,7 @@
       "system_id": "agent-memory",
       "display_name": "Agent Memory (public facade, declared transition to Runtime Baseline v6)",
       "role": "control",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "agent_memory",
       "source": {
         "kind": "repository_runtime",
@@ -228,7 +228,8 @@
         "document_timestamp is unsupported under this lane by choice: the frozen comparability posture declares no session dates to Agent Memory, exactly as the accepted Agent Memory LongMemEval_S evidence was produced",
         "concurrency 1 until multi-handle semantics are independently qualified",
         "the runner records return_policy per question and return_budget_applied_total; unmapped_admitted_count_total must be 0 for the metric-neutrality claim of this lane's freeze_rationale to hold"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-08 at repository revision 24048d55e26d7db27715e78b24a8b795433a5e16: session plane from workflow run 37718255173 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d/); turn plane from workflow run 37718257278 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-turn-24048d55e26d/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v6:agent_memory:session and lane:longmemeval-s-retrieval-parity-v6:agent_memory:turn"
     },
     {
       "row_id": "agent-memory-recall-control-shadow",
@@ -294,7 +295,7 @@
       "system_id": "lexical_overlap",
       "display_name": "Lexical-overlap baseline (profile built-in)",
       "role": "baseline",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "lexical_overlap",
       "source": {
         "kind": "harness_builtin",
@@ -327,14 +328,15 @@
       ],
       "notes": [
         "a profile-local baseline, not upstream's flat-bm25 or dense retrievers, and not a market-position claim; the no_memory floor is available from the runner but is not a lane row"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-08 at repository revision 24048d55e26d7db27715e78b24a8b795433a5e16: session plane from workflow run 37718259916 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-session-24048d55e26d/); turn plane from workflow run 37718262620 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-turn-24048d55e26d/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:session and lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:turn"
     },
     {
       "row_id": "mem0-oss-2.2.1-explicit-memory",
       "system_id": "mem0-oss",
       "display_name": "Mem0 OSS 2.2.1 (explicit memory, no inference)",
       "role": "comparator",
-      "status": "frozen",
+      "status": "accepted",
       "provider_key": "mem0_explicit",
       "source": {
         "kind": "python_package",
@@ -404,7 +406,8 @@
         "document_timestamp is unsupported for retrieval: the session date is stored as metadata only and Mem0 2.2.1 does not use it to rank",
         "the lane v1 Mem0 row resolved these exact stack releases under the AMB harness lock; without a harness lock here they are pinned explicitly so the retrieval stack is identical across the two lanes",
         "the smoke run on the synthetic fixture with the real 2.2.1 stack ingested at ~10 ms per item; the full turn plane (122,416 items) is expected to take well under the 180-minute job bound"
-      ]
+      ],
+      "status_reason": "accepted 2026-10-08 at repository revision 24048d55e26d7db27715e78b24a8b795433a5e16: session plane from workflow run 37718265216 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-session-24048d55e26d/); turn plane from workflow run 37718267521 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-turn-24048d55e26d/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:session and lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:turn"
     },
     {
       "row_id": "agent-memory-semantic-route",
@@ -537,7 +540,8 @@
     "the runner evaluates the same question once per plane; per-question isolation for Mem0 therefore has to be per (question, plane), which the bridge implements as one user_id namespace per retriever call rather than per question id.",
     "Mem0 2.2.1's default search threshold (0.1) drops low-similarity memories, so a Mem0 ranking can be shorter than the corpus even with top_k=50; a shorter ranking scores as misses beyond its length, exactly as any other backend's.",
     "the hub serves longmemeval_s_cleaned.json with an x-linked-etag equal to its sha256, which the digest check relies on only as corroboration; the runner's own byte digest remains the binding identity.",
-    "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob, and the importer refuses a run whose state is not admitted by the posture or whose declaration blob differs from the one pinned here, so a declaration amended by a later tranche (docs/67 Step A.6) invalidates this lane rather than silently changing its control"
+    "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob, and the importer refuses a run whose state is not admitted by the posture or whose declaration blob differs from the one pinned here, so a declaration amended by a later tranche (docs/67 Step A.6) invalidates this lane rather than silently changing its control",
+    "accepted rows 2026-10-08: agent-memory, lexical_overlap, mem0-oss on both planes (workflow runs 37718255173, 37718257278, 37718259916, 37718262620, 37718265216, 37718267521); V6-E1 every control output EQUAL to -v5 (1000/1000 questions, verdict_counts {EQUAL: 1000}; cross-fact records equal -v5 row by row, 0 limited, 0 UNATTRIBUTED); V6-E2 comparators equal -v5 (lexical_overlap and mem0_explicit ranked_top and metrics equal on every question); the typed proposition and extractor path is unaccepted until the plan-732-remediation R6 acceptance; numbers live in the committed evidence records, the native reports and the normalized manifests, never in this lane"
   ],
   "change_rule": "any change to the upstream revision, the fixture or its digest, the selection, the budget, the gold identity, the evaluator (including the runner blob), execution semantics, or a frozen row's source, adapter (including the bridge blobs), or configuration after a score has been observed requires a new lane_id; while no score exists, a re-freeze may update the bound blobs in place; this record is never edited in place once status leaves frozen",
   "authority_effect": "none"

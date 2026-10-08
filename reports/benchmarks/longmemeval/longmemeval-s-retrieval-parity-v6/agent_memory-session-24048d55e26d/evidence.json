@@ -1,0 +1,172 @@
+{
+  "authority_effect": "none",
+  "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+  "contract_family": "agent-memory-same-harness-lane-evidence",
+  "contract_version": "1.0.0",
+  "evidence_class": "same_harness_external_candidate",
+  "execution": {
+    "agent_memory_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+    "authority_effect": "none",
+    "backend": "agent_memory",
+    "declaration_blob": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+    "evidence_class": "same_harness_external_candidate",
+    "full_selection": true,
+    "granularity": "session",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "lane_digest_sha256": "b850e41a6a34cfc87593b8eda6584bfe5461d8894b9b23a4942f700b3fc10ac6",
+    "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v6.json",
+    "lane_id": "longmemeval-s-retrieval-parity-v6",
+    "mem0_optional_components": {
+      "fastembed_installed": false,
+      "spacy_installed": false
+    },
+    "resolved_packages": {
+      "agent-memory-reference": "0.2.0",
+      "mem0ai": null,
+      "numpy": null,
+      "onnxruntime": null,
+      "openai": null,
+      "posthog": null,
+      "qdrant-client": null,
+      "sentence-transformers": null,
+      "tokenizers": null,
+      "torch": null
+    },
+    "runner": "ubuntu24",
+    "runner_backend": "agent_memory",
+    "runtime_baseline_line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v5; declared_successor=agent-memory-runtime-baseline-v6 (issue #732); protected surface = frozen 74c8683e33f2b716577138e5b4c750a9ae670966 + 15 declared blobs; deltas=identity.ranking.active_policy_version 3.3.0->3.4.0, identity.public_contract_version 1.5.0->1.6.0; candidate=HEAD",
+    "runtime_baseline_state": "TRANSITION",
+    "source_blobs": {
+      "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+      "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+      "reference/run_longmemeval.py": "6b9c237380f1d527e564161c2dac7fe32ada0ef9"
+    },
+    "subset_size": "0",
+    "upstream_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+    "workflow_run_id": "37718255173"
+  },
+  "files": {
+    "execution-identity.json": "08898886ce67d025f7e52d351cc7e19c9a6b67ed179e22eb72db1f04dbfd2c19",
+    "files.txt": "7cc082037eda0c11b528b4f46922413c8d2073ed920807281c0fd43cc9455430",
+    "lane-validation.json": "6cff1ca3392d29475fb3a150dba6042bd9aa661b24d225a220a5269d7bc43161",
+    "report.json": "ad54923e92b7593d47261027b1eb571dc8fff1708136d8520433253e66dd0b33",
+    "report.rows.json.gz": "d33e9edd40c4035352fec6d03398e62e3389b6fb7874f94b39a5c3e6afbb4349",
+    "sha256.txt": "9cfa4fc577e5d5946326f57e475d344f8d07fcbfda0de04d01530a9aff733dfd"
+  },
+  "input": {
+    "corpus_class": "external_frozen",
+    "dataset_revision": "xiaowu0162/longmemeval-cleaned@98d7416c24c778c2fee6e6f3006e7a073259d48f",
+    "fixtures": {
+      "longmemeval_s_cleaned.json": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442"
+    },
+    "query_count": 500,
+    "question_ids_sha256": "7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03",
+    "selection_id": "all-500:7d738ae585fd4014",
+    "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "verified_by": "re-hashed from the pinned hub URL at import"
+  },
+  "lane_digest_at_execution": "b850e41a6a34cfc87593b8eda6584bfe5461d8894b9b23a4942f700b3fc10ac6",
+  "lane_file": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v6.json",
+  "lane_id": "longmemeval-s-retrieval-parity-v6",
+  "native_summary": {
+    "backend": "agent_memory",
+    "evaluated_question_count": 419,
+    "failures": {
+      "ingestion_failure_count": 0,
+      "out_of_corpus_returned_count": 0,
+      "runtime_failure_count": 0
+    },
+    "governance": {
+      "admitted_count_total": 22631,
+      "candidate_count_total": 22631,
+      "refused_candidate_count_total": 0,
+      "return_budget_applied_total": 39,
+      "unmapped_admitted_count_total": 0
+    },
+    "headline": {
+      "ndcg_any@10": 0.878274,
+      "ndcg_any@5": 0.863142,
+      "recall_all@10": 0.892601,
+      "recall_all@5": 0.823389
+    },
+    "knowledge_update_headline": {
+      "ndcg_any@10": 0.973048,
+      "ndcg_any@5": 0.970733,
+      "recall_all@10": 0.986111,
+      "recall_all@5": 0.972222
+    },
+    "latest_gold_ranked_first": {
+      "applicable_question_count": 70,
+      "definition": "among scored knowledge-update questions with gold items on >=2 distinct dates, fraction where the most recently dated gold item is returned ahead of every older gold item",
+      "rate": 0.457143,
+      "upstream_metric": false
+    },
+    "plane": "session",
+    "shape_note": "copied from the runner's own aggregate for this plane and backend; the full native report is report.json",
+    "timing": {
+      "ingest_seconds_total": 171.147,
+      "recall_seconds_max": 0.028654,
+      "recall_seconds_total": 7.785,
+      "wall_seconds": 197.05
+    }
+  },
+  "raw_report": {
+    "name": "session-agent_memory.json",
+    "sha256": "5abd593b7c6c43b9f9e57bcfa8a1378b564d3c24cd6d0d2a966a252e72d001c9",
+    "split_rule": "rows moved to report.rows.json.gz ({plane: {backend: rows}}); report.json is the remainder; recomposition verified byte for byte at import"
+  },
+  "row": {
+    "backend": "agent_memory",
+    "display_name": "Agent Memory (public facade, declared transition to Runtime Baseline v6)",
+    "inference_posture": "none",
+    "plane": "session",
+    "provider_key": "agent_memory",
+    "role": "control",
+    "row_id": "agent-memory-public-facade",
+    "system_id": "agent-memory"
+  },
+  "system": {
+    "cross_fact_summary": {
+      "authority_effect": "none",
+      "limited_total": 0,
+      "questions_with_limited": 0,
+      "questions_with_record": 500,
+      "refusal_counts": {}
+    },
+    "external_backend_identity": null,
+    "id": "agent-memory",
+    "mem0_optional_components": {
+      "fastembed_installed": false,
+      "spacy_installed": false
+    },
+    "recall_control_summary": null,
+    "resolved_packages": {
+      "agent-memory-reference": "0.2.0",
+      "mem0ai": null,
+      "numpy": null,
+      "onnxruntime": null,
+      "openai": null,
+      "posthog": null,
+      "qdrant-client": null,
+      "sentence-transformers": null,
+      "tokenizers": null,
+      "torch": null
+    },
+    "revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+    "revision_rule": "git rev-parse HEAD of the executing checkout; the protected runtime surface is pinned by scripts/check_runtime_baseline_equivalence.py, which must print PASS or TRANSITION against the declaration blob this row pins (configuration.runtime_baseline_posture) for the run to be importable; the state, line and declaration blob are recorded in the execution identity",
+    "runtime_baseline": {
+      "declaration_blob": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+      "declared_successor": "agent-memory-runtime-baseline-v6",
+      "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v5; declared_successor=agent-memory-runtime-baseline-v6 (issue #732); protected surface = frozen 74c8683e33f2b716577138e5b4c750a9ae670966 + 15 declared blobs; deltas=identity.ranking.active_policy_version 3.3.0->3.4.0, identity.public_contract_version 1.5.0->1.6.0; candidate=HEAD",
+      "predecessor": "agent-memory-runtime-baseline-v5",
+      "state": "TRANSITION"
+    },
+    "semantic_route_posture": null,
+    "source_kind": "repository_runtime"
+  },
+  "workflow_run": {
+    "artifact_directory": "longmemeval-lane-longmemeval-s-retrieval-parity-v6-agent_memory-session-24048d55e26d7db27715e78b24a8b795433a5e16",
+    "id": "37718255173",
+    "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/37718255173"
+  }
+}
