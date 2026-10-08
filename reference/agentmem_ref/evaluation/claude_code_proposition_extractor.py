@@ -85,7 +85,7 @@ class ClaudeCodeCLIExtractor:
             parsed = json.loads(auth.stdout)
         except json.JSONDecodeError as exc:
             raise RuntimeError("Claude Code auth status was not JSON") from exc
-        if parsed.get("authMethod") not in ("oauth_token", "claudeai", "subscription"):
+        if parsed.get("authMethod") not in ("oauth_token", "claude.ai"):
             raise RuntimeError(f"unexpected Claude Code auth method: {parsed.get('authMethod')!r}")
         return {"version": version, "auth_method": str(parsed.get("authMethod"))}
 
