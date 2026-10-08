@@ -45,17 +45,28 @@ class ClaudeCodeCLIExtractor:
 
     @staticmethod
     def _clean_env(config_dir: Path) -> dict[str, str]:
-        env = os.environ.copy()
-        if env.get("ANTHROPIC_API_KEY") or env.get("ANTHROPIC_AUTH_TOKEN"):
+        # Fail closed when the invoking process carries API credentials, and
+        # pass only the explicitly allowed OS/transport environment to Claude.
+        # This prevents ambient Bedrock/Vertex/Foundry/gateway routing and
+        # arbitrary user/project Claude settings from altering billing or model.
+        if os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN"):
             raise RuntimeError("direct Anthropic API credentials are forbidden for #732 R6")
-        if not env.get("CLAUDE_CODE_OAUTH_TOKEN"):
+        token = os.environ.get("CLAUDE_CODE_OAUTH_TOKEN")
+        if not token:
             raise RuntimeError(
                 "CLAUDE_CODE_OAUTH_TOKEN is required; generate it with claude setup-token "
                 "from the owner's Claude subscription"
             )
+        allow = {
+            "PATH", "HOME", "USERPROFILE", "SYSTEMROOT", "WINDIR",
+            "TMP", "TEMP", "TMPDIR", "LANG", "LC_ALL",
+            "SSL_CERT_FILE", "SSL_CERT_DIR", "HTTPS_PROXY", "HTTP_PROXY",
+            "NO_PROXY", "NODE_EXTRA_CA_CERTS",
+        }
+        env = {key: val for key, val in os.environ.items() if key in allow}
+        env["CLAUDE_CODE_OAUTH_TOKEN"] = token
         env["CLAUDE_CONFIG_DIR"] = str(config_dir)
         env["CLAUDE_CODE_SKIP_PROMPT_HISTORY"] = "1"
-        env["MCP_CONNECTION_NONBLOCKING"] = "true"
         return env
 
     def _verify_cli(self, env: Mapping[str, str], cwd: Path) -> dict[str, str]:
@@ -80,13 +91,15 @@ class ClaudeCodeCLIExtractor:
             timeout=10,
         )
         if auth.returncode != 0:
-            raise RuntimeError(f"Claude Code OAuth status failed: {auth.stderr.strip()}")
+            raise RuntimeError("Claude Code subscription OAuth status failed")
         try:
             parsed = json.loads(auth.stdout)
         except json.JSONDecodeError as exc:
             raise RuntimeError("Claude Code auth status was not JSON") from exc
         if parsed.get("authMethod") not in ("oauth_token", "claude.ai"):
             raise RuntimeError(f"unexpected Claude Code auth method: {parsed.get('authMethod')!r}")
+        if parsed.get("apiProvider") not in (None, "firstParty"):
+            raise RuntimeError("Claude Code did not select first-party subscription auth")
         return {"version": version, "auth_method": str(parsed.get("authMethod"))}
 
     def extract(self, new_text: str, candidates: Sequence[Mapping[str, str]]) -> px.TypedExtraction:
@@ -142,10 +155,8 @@ class ClaudeCodeCLIExtractor:
                 timeout=self.timeout_seconds,
             )
             if proc.returncode != 0:
-                detail = (proc.stderr or proc.stdout).strip()
-                raise RuntimeError(
-                    f"Claude Code extraction failed ({proc.returncode}): {detail[:500]}"
-                )
+                # Do not echo the CLI's stderr/stdout into CI or issue logs.
+                raise RuntimeError(f"Claude Code extraction failed (exit {proc.returncode})")
 
             try:
                 envelope = json.loads(proc.stdout)
