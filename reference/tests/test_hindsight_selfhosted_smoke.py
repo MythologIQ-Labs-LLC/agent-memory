@@ -122,7 +122,8 @@ class H3SelfhostedTests(unittest.TestCase):
         self.assertEqual(holder["client"].options["max_attempts"], 1)
         self.assertEqual(record["status"], "selfhosted_product_smoke_pass")
         self.assertIsNone(record["benchmark_score"])
-        self.assertEqual(record["product"]["network_model_calls"], 0)
+        self.assertEqual(record["product"]["model_calls_observed"], "not_measured")
+        self.assertTrue(record["product"]["llm_provider_forced_none"])
         self.assertEqual(record["probe"]["ingest_count"], 2)
 
     def test_server_stops_if_client_factory_fails(self):

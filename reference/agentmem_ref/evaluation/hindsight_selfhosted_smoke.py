@@ -153,7 +153,10 @@ def run_selfhosted_smoke(
             "and no API key; pre/post effective bank config confirmed"
         )
         record["product"]["server_isolation"] = "temporary embedded local PostgreSQL; loopback only"
-        record["product"]["network_model_calls"] = 0
+        # This path enforces the no-LLM provider at construction but does
+        # not instrument all outbound network calls. Report the distinction.
+        record["product"]["model_calls_observed"] = "not_measured"
+        record["product"]["llm_provider_forced_none"] = True
         record["model_snapshot"] = model_identity
         return record
     finally:
