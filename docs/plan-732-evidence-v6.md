@@ -150,3 +150,30 @@ None.
 The plan passed at attempt 2 (META_LEDGER Entry #119; audit sha256 `0e4546c6…`). Two advisories are binding:
 - **N1:** P4's guard identity cannot be computed from the replay's own traces, because the frozen runner's ranking digest omits the cross-fact fields. It is taken instead from the C7 report regenerated at the execution revision, as at v2.
 - **N2:** in P6, "M1 retrieval digests" means the per-item `retrieved` sha256 digests. The trace digests carry `policy_version` and so differ by construction.
+
+## Results (accepted 2026-10-08, META_LEDGER Entry #120)
+
+**MESA (V6-E5).** `mesa-formal-v3` was executed at `d7b2974` with the extractor off (`reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v3_s2027_9170.json`). It reproduces v2:
+- **P1:** `outcomes {"new_fact": 250}`, upstream `dual_version_rate` 0.0;
+- **P2:** `win_basis_counts {"currentness_mechanism": 250}`;
+- **P3:** no primary or unmet stage;
+- **P4:** no pair fails a guard; the guard identity is taken from the regenerated C7 report (N1);
+- **P5:** upstream consistent;
+- **P6:** every other phase's non-latency fields and the M1 per-item `retrieved` digests equal v2 (N2).
+
+**Lanes (V6-E1), nine runs on `24048d5`.** The attribution script ran unchanged with `--v4-dir` set to the `-v5` lane evidence directories and `--v5-dir` set to the `-v6` ones.
+- LongMemEval (runs 37718255173, 37718257278, 37718259916, 37718262620, 37718265216, 37718267521): `verdict_counts {EQUAL: 1000}` across both planes.
+- AMB (runs 37718270129, 37718272612, 37718275682): `verdict_counts {EQUAL: 77}`.
+- The cross-fact records (LongMemEval `cross_fact`, AMB `cross-fact.jsonl`) equal `-v5` row by row, with 0 limited carried over.
+
+**Comparators (V6-E2).**
+- Lexical overlap and BM25 equal `-v5` exactly.
+- Mem0 equals `-v5` on every LongMemEval row's `ranked_top` and `metrics` (500 per plane) and on every AMB case's `query_id`, `correct` and `context`. Unlike `-v5` (45 turn-row near-tie reorders), no reorder was observed.
+- All 9 `-v6` sources are appended to the scorecard `SOURCES`, and `evidence_history` grows by the `-v6` entries.
+
+**Guards (V6-E6).** The C7 report, regenerated at the execution revision (`reports/runtime/cross-fact-currentness-671/ordering-difference-report-v6.json`), has assertion filter 6.1.0, ranking 3.4.0 on and 3.2.0 off, 0 blockers, M4 250/250 limited, top-1 new 50 off → 250 on, no refusals, #580 pre-registered units only and 0 admitted #584 order changes. It is identical in structure and counts to the v5 report. The guard tests (`test_temporal_currentness_gauntlet`, `test_temporal_unknown_basis_ordering_contract`, `test_cross_fact_currentness`, `test_typed_propositions`) pass.
+
+**Interpretation.**
+- With the extractor off, v6 is observationally identical to v5 on every same-harness workload, as frozen.
+- The typed proposition and extractor path is **unaccepted** until the remediation R6 acceptance (`docs/plan-732-remediation.md`, advisory V1). These results do not measure it.
+- Next: docs/67 Step B1 and B2 for v6 (V6-E7 steps 6–7).

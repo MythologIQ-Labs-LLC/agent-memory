@@ -11,7 +11,8 @@ edits are not re-applied. No harness changes at v6, so the -v5 harness tests sta
 The L1 acceptance assertions (verdict_counts ``{"EQUAL": 1000}`` / ``{"EQUAL": 77}`` and per-row
 cross-fact equality with -v5) read the imported -v6 evidence. Until that evidence is imported
 (V6-E7 step 4) they skip while the lane is ``frozen``; once the lane leaves ``frozen`` a missing
-evidence directory fails them.
+evidence directory fails them. Both lanes were accepted at META_LEDGER Entry #120 (V6-E7 step 5);
+the frozen-form assertions read the lane through ``_as_frozen``.
 """
 
 from __future__ import annotations
@@ -24,7 +25,8 @@ import sys
 import unittest
 from pathlib import Path
 
-from agentmem_ref.evaluation.same_harness_lane import get_lane, resolve_lane, validate_lane
+from agentmem_ref.evaluation.registry import get_integration
+from agentmem_ref.evaluation.same_harness_lane import get_lane, lane_digest, resolve_lane, validate_lane
 
 from tests.test_same_harness_lanes_v3 import POSTURE, SEMANTIC_KEY, _as_frozen, _flat
 
@@ -90,7 +92,7 @@ class _V6LaneMixin:
     def test_lane_validates_resolves_and_is_frozen_before_any_score(self):
         lane = validate_lane(self._lane())
         resolve_lane(lane)
-        self.assertEqual(lane["status"], "frozen")
+        self.assertEqual(lane["status"], "accepted")  # accepted at META_LEDGER Entry #120
         self.assertIs(lane["frozen_before_any_score"], True)
         self.assertEqual(lane["owning_issue"], 732)
         self.assertEqual(lane["frozen_on"], "2026-10-08")
@@ -109,7 +111,7 @@ class _V6LaneMixin:
         self.assertEqual(changed, allowed)
 
     def test_rows_findings_and_statuses_follow_v6_e2_e3(self):
-        v5, lane = self._v5(), self._lane()
+        v5, lane = self._v5(), _as_frozen(self._lane())
         self.assertEqual(lane["findings"], [item for item in v5["findings"] if not item.startswith("accepted rows ")])
         self.assertEqual(len(lane["findings"]), len(v5["findings"]) - 1)
         before = {row["provider_key"]: row for row in v5["systems"]}
@@ -126,6 +128,40 @@ class _V6LaneMixin:
                 self.assertEqual(row, before[key], key)  # Hindsight: unchanged
         executed = {row["provider_key"] for row in lane["systems"] if row["status"] == "frozen"}
         self.assertEqual(executed, self.executed_rows)
+
+    def test_accepted_rows_are_bound_to_evidence_executed_under_the_v6_transition(self):
+        # plan-732-evidence-v6 V6-E7 step 5: every executed row is accepted and bound by its
+        # evidence_history entries; deferred rows are recorded as blocked. Acceptance adds only
+        # statuses, status_reasons and one findings note, so undoing them gives the executed digest.
+        lane = self._lane()
+        self.assertEqual(lane["status"], "accepted")
+        integration = get_integration(lane["benchmark_integration"])
+        history = {entry["variant"]: entry for entry in integration["evidence_history"]}
+        for row in lane["systems"]:
+            prefix = f"lane:{self.lane_id}:{row['provider_key']}"
+            variants = [variant for variant in history if variant == prefix or variant.startswith(prefix + ":")]
+            if row["status"] == "deferred":
+                self.assertEqual([history[v]["status"] for v in variants], ["blocked"], row["row_id"])
+                continue
+            self.assertEqual(row["status"], "accepted", row["row_id"])
+            self.assertEqual(len(variants), self.planes_per_row, row["row_id"])
+            for variant in variants:
+                entry = history[variant]
+                self.assertEqual(entry["status"], "complete")
+                self.assertIn(variant, row["status_reason"])
+                record = json.loads((REPO_ROOT / entry["report"]).read_text(encoding="utf-8"))
+                self.assertEqual(record["row"]["provider_key"], row["provider_key"])
+                binding = record["system"]["runtime_baseline"]
+                self.assertEqual(binding["state"], "TRANSITION")
+                self.assertEqual(binding["declared_successor"], "agent-memory-runtime-baseline-v6")
+                self.assertEqual(record["lane_digest_at_execution"], lane_digest(_as_frozen(lane)))
+                self.assertEqual(record["lane_digest_at_execution"], record["execution"]["lane_digest_sha256"])
+                # as at -v5: the LongMemEval entries name their normalized manifests; AMB entries do not
+                self.assertEqual(bool(entry.get("normalized_reports")), self.planes_per_row == 2, variant)
+                for path in entry.get("normalized_reports", []):
+                    self.assertTrue((REPO_ROOT / path).is_file(), path)
+        self.assertTrue(any("0 UNATTRIBUTED" in item for item in lane["findings"]))
+        self.assertTrue(any("typed proposition and extractor path is unaccepted" in item for item in lane["findings"]))
 
     def test_control_and_every_agent_memory_row_carry_the_v6_posture(self):
         lane = self._lane()
@@ -228,6 +264,7 @@ class _V6LaneMixin:
 
 
 class LongMemEvalParityV6LaneTests(_V6LaneMixin, unittest.TestCase):
+    planes_per_row = 2
     lane_id = "longmemeval-s-retrieval-parity-v6"
     v5_id = "longmemeval-s-retrieval-parity-v5"
     benchmark = "longmemeval"
@@ -269,6 +306,7 @@ class LongMemEvalParityV6LaneTests(_V6LaneMixin, unittest.TestCase):
 
 
 class AmbPrecisionMemBenchV6LaneTests(_V6LaneMixin, unittest.TestCase):
+    planes_per_row = 1
     lane_id = "amb-precisionmembench-retrieval-v6"
     v5_id = "amb-precisionmembench-retrieval-v5"
     benchmark = "amb"

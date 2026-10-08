@@ -39,7 +39,7 @@ The strict slot/value result uses zero aliases frozen before scoring. It is exac
 
 ## Competitive view — same-harness systems
 
-**Status: ten same-harness lanes accepted (#640, #669, #644, #671; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06, and the `-v3`, `-v4` and `-v5` generations under the declared transitions to Runtime Baselines v3, v4 and v5 on 2026-10-07).**
+**Status: twelve same-harness lanes accepted (#640, #669, #644, #671, #732; lane generations v1 on 2026-10-05 and 2026-10-06, the budgeted `-v2` generation on 2026-10-06, the `-v3`, `-v4` and `-v5` generations under the declared transitions to Runtime Baselines v3, v4 and v5 on 2026-10-07, and the `-v6` generation under the declared transition to Runtime Baseline v6 on 2026-10-08).**
 
 #601 now has executable independent-harness infrastructure:
 
@@ -101,6 +101,18 @@ Session and turn are separate planes (separate scorecards) and are never average
 | mem0_explicit | comparator | turn | mem0ai 2.2.1 `94c3fe9`, no fastembed/spaCy | 37543565695 | 0.499 | 0.673 | 0.895 | 0.596 | 0.611 | 0.486 |
 
 Reading the generation change: the LongMemEval control's `unmapped_admitted_count_total` is 0 on both planes and every scored metric equals the v1 control's at every k, with the return budget applied on 39 of 500 session questions and 500 of 500 turn questions (the ranked prefix at 50 is the full ranking's prefix, exactly as #670 predicted). The AMB control's active passes, total passes, mean precision and mean recall equal the v1 control's: the only difference between the generations, mapped-among-top-k instead of skip-then-count, changed no case on this 77-case split. Neither equality is authority; both are what the frozen harnesses measured. Same-plane rule, no overall score, no market claim; Hindsight remains deferred under all four lanes.
+
+**Accepted same-harness rows (seventh lane generation, `amb-precisionmembench-retrieval-v6` and `longmemeval-s-retrieval-parity-v6`, 2026-10-08).**
+- **Freeze.** Both lanes were frozen before any score (PR #743, plan `docs/plan-732-evidence-v6.md`). They re-execute the `-v5` control and comparator rows at a runtime in the declared transition to Runtime Baseline v6: ranking policy 3.4.0, assertion filter 6.1.0 and contract 1.6.0. The proposition extractor is off by default and no lane input declares a typed proposition, so the rule is equality with `-v5`, not attribution.
+- **Runs.** Nine dispatches on `main` `24048d5`, all full selections. The checker recorded `TRANSITION` toward v6 on every row. The shadow and semantic rows stay deferred.
+- **Equality (V6-E1).**
+  - LongMemEval: all 1000 questions across both planes are EQUAL to `-v5` (ranked output and metrics).
+  - AMB: all 77 cases are EQUAL.
+  - The cross-fact records equal `-v5` row by row, with 0 limited, as at `-v5`.
+  - Every number in the `-v4` tables below therefore holds for `-v6`.
+- **Comparators (V6-E2).** Lexical overlap and BM25 equal `-v5` exactly. Mem0 equals `-v5` on every LongMemEval question's ranked output and metrics and on every AMB case; unlike `-v5`, no near-tie reorder was observed.
+- **MESA (V6-E5).** `mesa-formal-v3` (extractor off, executed at `d7b2974`) reproduces `mesa-formal-v2`: M4 new-fact 250/250, `dual_version_rate` 0.0, all wins credited to `currentness_mechanism`, no unmet stage, upstream consistent; every other phase's non-latency fields equal v2.
+- **Reading.** The typed proposition and extractor path is **unaccepted** until the remediation R6 acceptance (`docs/plan-732-remediation.md`); these lanes measure the extractor-off default only. Generalization of currentness semantics remains tracked as `cross-fact-currentness-generalization-2026-10-07` (#732/#733).
 
 **Accepted same-harness rows (sixth lane generation, `amb-precisionmembench-retrieval-v5` and `longmemeval-s-retrieval-parity-v5`, 2026-10-07).**
 - **Freeze.** Both lanes were frozen before any score (PR #729, plan `docs/plan-671-evidence-v5.md`). They re-execute the control and comparator rows at a runtime in the declared transition to Runtime Baseline v5: ranking policy 3.3.0, with read-path cross-fact currentness under explicit-current recall.
