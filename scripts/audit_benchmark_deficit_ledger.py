@@ -106,7 +106,7 @@ def audit(ledger: object) -> dict[str, Any]:
             if item.get("negative_control_refs") is not None and not _references(item["negative_control_refs"]):
                 note("error", "invalid_negative_controls", name,
                      "Negative-control evidence references must be an array of nonempty strings.")
-            elif not item.get("negative_control_refs") and ":" not in name:
+            elif not item.get("negative_control_refs"):
                 note("review", "negative_controls_missing", name,
                      "Propose independent, generalizable negative controls before a runtime fix.")
         same_harness = item.get("same_harness_frontier")
