@@ -52,7 +52,16 @@ class FailureRecallShadowTests(TestCase):
         for _ in range(3):
             self.inspect()
         self.assertEqual(old_writes, tuple(self.substrate.write_log))
-        self.assertEqual(old_events, tuple(self.adapter.events))
+        after_events = tuple(self.adapter.events)
+        self.assertEqual(
+            len(after_events), len(old_events) + 3,
+            "normal governed recall must retain its audit receipts",
+        )
+        self.assertTrue(
+            all(event["event_type"] == "memory.recall"
+                for event in after_events[len(old_events):]),
+            "recall must append only operational recall evidence",
+        )
         self.assertEqual(old_history, self.memory.history(FAILURE_REF))
         self.assertEqual(1, self.memory.occurrence_count(FAILURE_REF))
 
