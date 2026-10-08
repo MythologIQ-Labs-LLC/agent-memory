@@ -14,7 +14,7 @@
 - The thresholds are owner-ratified (G5).
 
 **doctrine**: a benchmark identifies a gap but never defines the production grammar; a perfect benchmark score is not closure evidence; no tuning after any score
-**iteration**: 6 (post-PASS amendment A1, re-gated)
+**iteration**: 7 (post-PASS amendments A1 and A2, each re-gated)
 
 **Gate history**:
 - **Attempt 1: VETO (B1–B6).**
@@ -41,6 +41,17 @@
   - No runtime was run, no outcome was seen, and no case text was edited.
   - Its corpus had passed K1–K7 with 0 rejections, which is recorded only. It is not reused: attempt 2 starts from a fresh author and a fresh directory.
 - **Amendment A1 (this iteration):** the (b)(2b) record class and split-file assembly. Both prompt files that change get new hashes.
+- **Amendment A1: PASS** (Entry #113).
+- **Authoring attempt 2 (author732-2): audit PASS.**
+  - Corpus: 0 rejections.
+  - Variants: one replacement round for 8 `K6_variant_apostrophe` rejections, then 0.
+- **Amendment A2 (owner decision, 2026-10-08): commit transcripts redacted.**
+  - The harness records session context (the user's email, the system prompt and session links) in `type:"attachment"` lines.
+  - The owner chose redaction over a verbatim commit.
+  - `scripts/redact_authoring_transcript.py` replaces only the `attachment` and `rendered` values of attachment lines with `{type, redacted_sha256}`. Every other line stays byte-identical.
+  - `verify(original, redacted)` re-derives the redaction.
+  - The freeze tribunal runs `verify` against the unredacted live file in this container (D2) and re-runs the G1 audit on the redacted copy. The audit's verdict does not depend on attachment content, because attachment types are preserved.
+  - The committed transcripts are the redacted copies. Both the original and the redacted sha256 are bound in `freeze/manifest.json`.
 - **Attempt 4: VETO (H1).** The effective-source rule rejected the natural N9 case (two agents, both with null source), which follows the brief literally.
 - **Attempt 3: VETO (E1–E2).**
   - E1: the audit's byte-equality rule did not match the harness's wrapper on coordinator messages, and the hand-back tool was not addressed.

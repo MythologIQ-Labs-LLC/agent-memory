@@ -4912,3 +4912,42 @@ SHA256(content_hash + previous_hash) = 5be29cd9de870e16757f75558b7651d367201cca1
 - **N2 / L4:** the freeze PR commits the discarded-attempt replay evidence.
 
 **Next:** authoring attempt 2 (author732-2), with a fresh author and directory.
+
+---
+
+### Entry #114: GATE TRIBUNAL — PASS (#732 freeze and amendment A2)
+
+**Timestamp**: 2026-10-08T00:40:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: PR #738 (head 76a9e30 plus advisories M1/M2): `reports/benchmarks/currentness-generalization/freeze/` (corpus `cf2e7646…`, 316 cases; variants `72588822…`, 560 records; selection `6a1ae7e6…`) and amendment A2 (redacted transcripts)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_732_freeze.md) = d07d67de90eaa003cf063f1dbe3f5e22a74fbe8d291ae71fc2e2d748cae09197
+
+**Previous Hash**: `5be29cd9de870e16757f75558b7651d367201cca1680428a3c48766fbccc945a`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 9ce8aa019f719836d935f26cce321e1685889bf32936fac15334d970beb0da4f
+
+**Decision**: The #732 generalization corpus is frozen. The measurement runs once, on `main`, against Runtime Baseline v5 unchanged.
+
+**Evidence.** The tribunal verified each of these by execution in this container:
+- **Redacted transcripts.** `verify` passes against the live unredacted files:
+  - attempt 2: live `1b6f4065…`, redacted `0805692b…`;
+  - attempt 1: live `8b682608…`, redacted `7f09a8bf…`;
+  - dry run: live `719394e0…`, redacted `4f941090…`.
+
+  No email address, session link, organisation id or system-prompt text survives. This live-file comparison cannot be repeated once the container is gone, so the report itself is the binding record (M4). A copy is committed as `authoring/freeze-tribunal-report.md`.
+- **G1 audit, attempt 2: PASS.** Run on both the redacted and the live transcript. The two coordinator messages are the frozen `variants.txt` and `replace.txt`, each with mechanical interpolations only.
+- **Reproducibility.** Re-assembling the files reproduces the frozen arrays byte for byte. The final check finds 0 rejections, and the selection reproduces.
+- **No orchestrator edits.** The committed author files are byte-equal to the author's last `Write` of each file. The replacement round touched exactly the 8 rejected ids.
+- **Runtime.** Nothing changed. The checker reports PASS against v5, and 33 synthetic-only tests pass. The runner was never run on the corpus.
+
+**Advisories:**
+- **M1 and M2:** applied in this PR (replay inputs added beside the attempt-2 manifest; the manifest's plan reference updated).
+- **M3:** round-0 state is reconstructible from the transcript. No action taken.
+
+**Next:** merge #738, then run once on `main` and commit the bound report. Classification against the owner's fork follows. #673 stays held.

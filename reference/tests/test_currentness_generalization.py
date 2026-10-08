@@ -294,5 +294,21 @@ class AuditTests(unittest.TestCase):
         self.assertEqual(len(result["violations"]), 3)
 
 
+
+class RedactionTests(unittest.TestCase):
+    def test_redaction_hides_only_attachment_context(self):
+        redactor = _load("redact_authoring_transcript")
+        lines = [
+            json.dumps({"type": "user", "message": {"content": "spawn"}}).encode() + b"\n",
+            json.dumps({"type": "attachment", "attachment": {"type": "session_context", "email": "x@y"}, "rendered": "x@y"}).encode() + b"\n",
+        ]
+        redacted = b"".join(redactor.redact_lines(lines))
+        self.assertNotIn(b"x@y", redacted)
+        self.assertEqual(redacted.splitlines(keepends=True)[0], lines[0])
+        self.assertEqual(redactor.verify(b"".join(lines), redacted), [])
+        tampered = redacted.replace(b"spawn", b"spawm")
+        self.assertTrue(redactor.verify(b"".join(lines), tampered))
+
+
 if __name__ == "__main__":
     unittest.main()
