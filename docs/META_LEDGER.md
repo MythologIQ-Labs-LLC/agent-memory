@@ -4989,3 +4989,45 @@ SHA256(content_hash + previous_hash) = 9ce8aa019f719836d935f26cce321e1685889bf32
 **#671 stays open.** MESA M4 1.000 is benchmark-shaped evidence only.
 
 **Next:** classification rows (#719, plan G8), which wait for #733's parent row (D8). Then the #732 remediation plan.
+
+---
+
+### Entry #116: GATE TRIBUNAL — PASS (#732 remediation plan, attempt 3)
+
+**Timestamp**: 2026-10-08T01:30:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-732-remediation.md (iteration 3, 83eafb2)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_732_remediation_attempt3.md) = 112e3980efffa566fe9d35c1cb5af9fa0f1f242c5873cd75986008cef8460ea2
+
+**Previous Hash**: `324b24da25992e3c2bcbfb77e418544058762a08e7d0a51898a3f7a74cf8e9a5`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 6d90c30304e637e4b27bc2637d260b7fe8f29b746a805c05f44f3b170bbbda68
+
+**Decision**: The #732 remediation plan passes. The direction is the owner's choice: typed write-time propositions, either caller-declared or produced by a versioned model extractor that is computed once and persisted.
+
+**What the plan provides:**
+- **Typed eligibility** (Q1) closes the 176-of-197 inertness.
+- **Deterministic typed-link confirmation** (Q2/T2): a typed linked fact must be on the same slot, and the value-text check applies only to untyped facts.
+- **Acceptance** keeps the measurement's hash-identical, single-use holdout and scores natural text with the extractor on (Q3).
+- **Release order follows docs/67** (T1): Step A merge, then the `-v6` lanes and extractor-off MESA, then B1/B2, then the credential, then the holdout freeze, then a single scoring, then acceptance.
+
+**Floors in both extractor modes:**
+- MESA v2 M4 = 1.000, with every win `currentness_mechanism`;
+- #580 and #584 unchanged;
+- with the extractor off, the `-v6` lanes EQUAL to `-v5`.
+
+**The direction was not reopened**, and the thresholds are untouched.
+
+**Attempts 1 and 2** were VETOs (Q1–Q3 and T1–T2). Their findings were fixed and the fixes verified.
+
+**Advisories carried forward:**
+- **V1:** mark the extractor path unaccepted in the v6 record until R6 acceptance.
+- **V2:** the implementation-PR gate executes the control tests, the S6 check and extractor-off byte identity.
+
+**Next:** the implementation PR (Step A). The credential (R7) and provider confirmation (OQ1) are owner actions. #673 stays held.

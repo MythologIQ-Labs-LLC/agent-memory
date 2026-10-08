@@ -205,3 +205,13 @@ The measurement found 0 engagements in 212 legitimate changes: 197 at S3 (no wri
 ## Open Questions
 - **OQ1 (owner):** the provider and model. The proposal is a current Claude model through the Anthropic API at temperature 0, with the exact id recorded in the extractor version at implementation. Alternatively, name another provider or a local model.
 - **OQ2 (owner):** whether the extractor stays opt-in after acceptance. This plan keeps it opt-in.
+
+## Gate result
+
+The plan passed at attempt 3 (META_LEDGER Entry #116; audit sha256 `112e3980…`). Two advisories are carried forward:
+- **V1:** v6 is published before holdout acceptance. The v6 record, boundary and benchmark dashboard therefore mark the extractor path **unaccepted** until the R6 acceptance PR. If acceptance fails, the next attempt needs a v7 declaration.
+- **V2:** the implementation-PR gate verifies each of these by execution:
+  - every control test;
+  - that recovery never calls the extractor;
+  - the S6 similarity check;
+  - that `write_semantics` bytes with the extractor off are identical to v5 on synthetic fixtures.
