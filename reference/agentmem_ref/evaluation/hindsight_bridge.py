@@ -12,12 +12,21 @@ occurs in offline tests. The real-product smoke and score remain separate gates.
 from __future__ import annotations
 
 import hashlib
+import json
 from dataclasses import dataclass
 from typing import Any, Mapping, Protocol, Sequence
 
 HINDSIGHT_SOURCE_REVISION = "5fc4ce20917b916240cef27c212c387a177f115b"
 HINDSIGHT_RELEASE = "0.10.2"
-BRIDGE_VERSION = "0.1.0"
+BRIDGE_VERSION = "0.2.0"
+EXPECTED_BANK_CONFIG = {
+    "retain_extraction_mode": "chunks",
+    "enable_observations": False,
+    "enable_text_search": True,
+    "enable_temporal_retrieval": False,
+    "enable_graph_retrieval": False,
+    "enable_reranking": False,
+}
 # A namespace avoids treating the benchmark/gold ID as a native provider ID.
 DOC_PREFIX = "agent-memory-comparator-"
 
@@ -35,6 +44,7 @@ class IdentityMappingError(HindsightBridgeError):
 
 
 class HindsightClientContract(Protocol):
+    def get_bank_config(self, bank_id: str) -> Any: ...
     def retain(self, *, bank_id: str, content: str, document_id: str, retain_async: bool) -> Any: ...
     def recall(self, *, bank_id: str, query: str, max_tokens: int, budget: str) -> Any: ...
 
@@ -81,6 +91,38 @@ class HindsightRetrievalBridge:
         self.bank_id = bank_id
         self._corpus_to_native: dict[str, str] = {}
         self._native_to_corpus: dict[str, str] = {}
+        self._qualified_bank_config_sha256: str | None = None
+
+    def qualify_bank(self) -> str:
+        """Verify the product's effective bank settings before any ingest.
+
+        Refuse a different bank, omitted switches, or config drift. This is an
+        offline-testable product API preflight, not a scored benchmark result.
+        """
+        if self._corpus_to_native:
+            raise HindsightBridgeError("cannot qualify bank after ingest")
+        view = _mapping(self.client.get_bank_config(self.bank_id), label="bank config")
+        if view.get("bank_id") != self.bank_id:
+            raise HindsightBridgeError("bank config belongs to a different bank")
+        config = view.get("config")
+        if not isinstance(config, dict):
+            raise HindsightBridgeError("effective Hindsight bank config unavailable")
+        for key, expected in EXPECTED_BANK_CONFIG.items():
+            observed = config.get(key)
+            if type(observed) is not type(expected) or observed != expected:
+                raise HindsightBridgeError(f"unqualified Hindsight bank config: {key}")
+        evidence = {key: config[key] for key in sorted(EXPECTED_BANK_CONFIG)}
+        digest = hashlib.sha256(
+            json.dumps(evidence, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        self._qualified_bank_config_sha256 = digest
+        return digest
+
+    def _require_qualified_bank(self) -> None:
+        if self._qualified_bank_config_sha256 is None:
+            raise HindsightBridgeError(
+                "Hindsight bank not qualified: call qualify_bank before retain/recall"
+            )
 
     @property
     def ingest_count(self) -> int:
@@ -89,6 +131,7 @@ class HindsightRetrievalBridge:
     def retain(self, document: CorpusDocument) -> str:
         """Insert unchanged content synchronously; refuse ambiguous repeat IDs."""
 
+        self._require_qualified_bank()
         if not isinstance(document.corpus_id, str) or not document.corpus_id:
             raise ValueError("corpus_id must be non-empty")
         if not isinstance(document.text, str) or not document.text:
@@ -118,6 +161,7 @@ class HindsightRetrievalBridge:
         return native_id
 
     def recall(self, query: str, *, top_k: int, max_tokens: int, budget: str = "mid") -> RecallEnvelope:
+        self._require_qualified_bank()
         if not isinstance(query, str) or not query:
             raise ValueError("query must be non-empty")
         if type(top_k) is not int or top_k < 1:
@@ -179,6 +223,7 @@ class HindsightRetrievalBridge:
             "retained_count": self.ingest_count,
             "inference": "none",
             "authority_effect": "none",
-            "product_configuration_verified": False,
-            "status": "adapter-only; requires H3 real-product smoke and H4 lane freeze",
+            "product_configuration_verified": self._qualified_bank_config_sha256 is not None,
+            "verified_bank_config_sha256": self._qualified_bank_config_sha256,
+            "status": "config preflight only; H3 real-product smoke and H4 lane freeze required",
         }

@@ -10,6 +10,7 @@ from agentmem_ref.evaluation.hindsight_bridge import (
     HindsightBridgeError,
     HindsightRetrievalBridge,
     IdentityMappingError,
+    EXPECTED_BANK_CONFIG,
 )
 
 
@@ -19,6 +20,16 @@ class FakeHindsightClient:
         self.queries: list[dict[str, Any]] = []
         self.results: list[dict[str, Any]] = []
         self.retain_success = True
+        self.bank_config = dict(EXPECTED_BANK_CONFIG)
+        self.config_queries: list[str] = []
+
+    def get_bank_config(self, bank_id: str) -> dict[str, Any]:
+        self.config_queries.append(bank_id)
+        return {
+            "bank_id": bank_id,
+            "config": dict(self.bank_config),
+            "overrides": dict(self.bank_config),
+        }
 
     def retain(self, **kwargs: Any) -> dict[str, Any]:
         self.retains.append(kwargs)
@@ -38,6 +49,36 @@ class HindsightBridgeTests(unittest.TestCase):
     def setUp(self):
         self.client = FakeHindsightClient()
         self.bridge = HindsightRetrievalBridge(client=self.client, bank_id="comparability-test")
+        self.bridge.qualify_bank()
+
+    def test_unqualified_bank_refuses_calls_without_product_mutation(self):
+        bridge = HindsightRetrievalBridge(client=self.client, bank_id="unqualified")
+        with self.assertRaisesRegex(HindsightBridgeError, "not qualified"):
+            bridge.retain(CorpusDocument("doc", "text"))
+        with self.assertRaisesRegex(HindsightBridgeError, "not qualified"):
+            bridge.recall("q", top_k=1, max_tokens=1024)
+        self.assertEqual(self.client.retains, [])
+        self.assertEqual(self.client.queries, [])
+
+    def test_configuration_mismatches_refused_before_ingest(self):
+        for key, expected in EXPECTED_BANK_CONFIG.items():
+            with self.subTest(setting=key):
+                client = FakeHindsightClient()
+                client.bank_config[key] = (not expected if isinstance(expected, bool) else "verbose")
+                bridge = HindsightRetrievalBridge(client=client, bank_id="test")
+                with self.assertRaisesRegex(HindsightBridgeError, key):
+                    bridge.qualify_bank()
+                self.assertEqual(bridge.ingest_count, 0)
+                self.assertFalse(bridge.identity()["product_configuration_verified"])
+
+    def test_config_identity_stable_and_requalification_blocked_after_ingest(self):
+        digest = self.bridge.identity()["verified_bank_config_sha256"]
+        self.assertEqual(len(digest), 64)
+        other = HindsightRetrievalBridge(client=FakeHindsightClient(), bank_id="comparability-test")
+        self.assertEqual(other.qualify_bank(), digest)
+        self.bridge.retain(CorpusDocument("doc", "text"))
+        with self.assertRaisesRegex(HindsightBridgeError, "after ingest"):
+            self.bridge.qualify_bank()
 
     def test_synchronous_retain_keeps_document_text_unmodified(self):
         native = self.bridge.retain(CorpusDocument("source:0005", "Exactly the source text."))
@@ -50,7 +91,7 @@ class HindsightBridgeTests(unittest.TestCase):
             "document_id": native,
             "retain_async": False,
         }])
-        self.assertEqual(self.bridge.identity()["product_configuration_verified"], False)
+        self.assertEqual(self.bridge.identity()["product_configuration_verified"], True)
 
     def test_recall_preserves_native_order_and_exact_identity(self):
         first = self.bridge.retain(CorpusDocument("doc-A", "alpha"))
