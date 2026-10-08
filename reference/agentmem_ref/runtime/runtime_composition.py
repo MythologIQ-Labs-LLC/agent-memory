@@ -437,7 +437,8 @@ class ConfiguredCompositionRuntime:
     def projection_id(self) -> str:
         return self._projection_id
 
-    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None, source_ref=None):
+    def retain(self, proposal, fact_text: str, *, evidence=None, attestation=None, temporal=None, source_ref=None,
+               typed_write=None):
         """Commit canonical memory, then materialize the configured derived declaration.
 
         Forwards the qualified-evidence channel (ADR-037 step 4b-2, DoD 20).
@@ -445,7 +446,8 @@ class ConfiguredCompositionRuntime:
         mutation while making the remediation route unreachable.
         """
         result = self.durable_runtime.commit_proposal(
-            proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal, source_ref=source_ref
+            proposal, fact_text, evidence=evidence, attestation=attestation, temporal=temporal, source_ref=source_ref,
+            typed_write=typed_write,
         )
         if result.committed and self._projection_component_enabled:
             if self.projections.store.get(self._projection_id) is None:

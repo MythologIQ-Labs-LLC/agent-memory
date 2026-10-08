@@ -41,15 +41,15 @@ class EnvelopeValidation(unittest.TestCase):
         # two inverted; this re-statement is the one existing-test edit of that cycle.
         cases = {
             "1.0.0": contract.CURRENT, "1.1.0": contract.CURRENT, "1.2.0": contract.CURRENT, "1.3.0": contract.CURRENT,
-            "1.4.0": contract.CURRENT, "1.5.0": contract.CURRENT,
-            "1.6.0": contract.MIGRATION_REQUIRED,
+            "1.4.0": contract.CURRENT, "1.5.0": contract.CURRENT, "1.6.0": contract.CURRENT,
+            "1.7.0": contract.MIGRATION_REQUIRED,
             "0.9.0": contract.INCOMPATIBLE, "2.0.0": contract.INCOMPATIBLE, None: contract.UNKNOWN, "one.zero": contract.UNKNOWN,
         }
         for version, expected in cases.items():
             with self.subTest(version=version):
                 envelope = {} if version is None else {"contract_version": version}
                 self.assertEqual(contract.compatibility(envelope), expected)
-        self.assertEqual(contract.CONTRACT_VERSION, "1.5.0")
+        self.assertEqual(contract.CONTRACT_VERSION, "1.6.0")
 
     def test_apply_return_budget(self):
         # Contract 1.4.0 (#670): a pure ranked-prefix policy; applied means truncated.

@@ -228,6 +228,15 @@ def _atomic_write_text(path: Path, text: str) -> None:
     os.replace(temporary, path)
 
 
+def _checked_extractor(extractor: Any) -> Any:
+    """An opted-in proposition extractor must carry the caller's egress policy (#732 R2)."""
+    if extractor is None:
+        return None
+    if not callable(getattr(extractor, "extract", None)) or not callable(getattr(extractor, "egress_policy", None)):
+        raise ValueError("proposition_extractor must provide extract() and a caller-supplied egress_policy")
+    return extractor
+
+
 def _serialized(method):
     """Run one public handle operation under the runtime-owned serialization lock (#530)."""
 
@@ -301,6 +310,7 @@ class AgentMemory:
         runtime: Any,
         semantic: dict | None = None,
         recall_control: str = RECALL_CONTROL_DEFAULT,
+        proposition_extractor: Any = None,
     ) -> None:
         self.root = root
         self.config_path = config_path
@@ -318,6 +328,7 @@ class AgentMemory:
         if recall_control not in RECALL_CONTROL_MODES:
             raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
         self._recall_control = recall_control
+        self._proposition_extractor = _checked_extractor(proposition_extractor)
 
     @classmethod
     def open(
@@ -335,6 +346,7 @@ class AgentMemory:
         semantic_retrieval: str = SEMANTIC_RETRIEVAL_DEFAULT,
         representation_dir: str | Path | None = None,
         recall_control: str = RECALL_CONTROL_DEFAULT,
+        proposition_extractor: Any = None,
     ) -> "AgentMemory":
         """Create or recover one qualified local SQLite composition.
 
@@ -352,6 +364,15 @@ class AgentMemory:
         the actual per-route counts and the actual stop. Candidates, admission, ranking
         and returned facts are identical in both modes; the controller owns nothing.
 
+        ``proposition_extractor`` (contract 1.6.0, #732) is off by default. Passing an
+        extractor is this handle's opt-in to data egress: for each ``remember`` without a
+        caller-declared ``proposition``, the new text and up to eight retained candidate
+        texts admitted by this writer's own governed recall are sent to the extractor's
+        provider, subject to the extractor's required ``egress_policy`` (a refused new text
+        is not sent; a refused candidate is dropped). The typed result is computed once and
+        persisted with the fact; it is never recomputed, and recovery never calls an
+        extractor. A failure or refusal persists no typed proposition and the write commits.
+
         Existing durable state is never replaced by a fresh runtime. A partial
         state marker fails closed so a damaged or incomplete runtime cannot be
         silently reinitialized as empty memory.
@@ -366,6 +387,7 @@ class AgentMemory:
             raise ValueError("tenant, actor_id, charter_version, and scope must be non-empty")
         if recall_control not in RECALL_CONTROL_MODES:
             raise ValueError(f"recall_control must be one of {RECALL_CONTROL_MODES}")
+        _checked_extractor(proposition_extractor)
 
         if config_path is None:
             resolved_config = root / _DEFAULT_CONFIG_NAME
@@ -420,6 +442,7 @@ class AgentMemory:
             runtime=runtime,
             semantic=semantic,
             recall_control=recall_control,
+            proposition_extractor=proposition_extractor,
         )
 
     @property
@@ -534,6 +557,7 @@ class AgentMemory:
         valid_until: str | None = None,
         observed_at: str | None = None,
         source_ref: str | None = None,
+        proposition: Mapping[str, Any] | None = None,
     ) -> dict:
         """Retain a low-risk observation through ordinary PAMA and durable commit.
 
@@ -547,10 +571,21 @@ class AgentMemory:
         ``actor:<actor_id>``, the acting agent's own observation, and is recorded in the
         fact's write provenance. It grants nothing: read-path cross-fact currentness only
         relates two facts that share it (owner ruling ``decision-671-same-source``).
+
+        ``proposition`` (contract 1.6.0, #732 R1) optionally declares the typed proposition
+        the text asserts: ``subject``, ``attribute``, ``value``, ``assertion`` (``state`` or
+        ``change``), and optionally ``cardinality`` (``single``/``multi``/None),
+        ``replaces_value`` and ``flags`` (``hedged``, ``attributed_to_other``,
+        ``conditional``, ``negated``, ``joke_or_sarcasm``, ``quoted_or_forwarded``,
+        ``coexistent``; each defaults to false). It is persisted as write-time evidence with
+        basis ``caller_declared`` and outranks any extractor, which is then not called. It
+        grants nothing: PAMA, the read-path guards and the lifecycle are unchanged.
         """
+        from ..runtime import typed_proposition
         from ..runtime.cross_fact_currentness import validate_source_ref
 
         source_ref = validate_source_ref(source_ref)
+        declared = typed_proposition.validate(proposition) if proposition is not None else None
         temporal = declared_temporal(
             {"valid_from": valid_from, "valid_until": valid_until, "observed_at": observed_at}
         )
@@ -568,6 +603,7 @@ class AgentMemory:
                 overrides=overrides,
             )
         )
+        typed_write = self._typed_write(proposal, fact_text, declared)
         outcome = self.runtime.retain(
             proposal,
             fact_text,
@@ -575,8 +611,26 @@ class AgentMemory:
             attestation=attestation,
             temporal=temporal,
             source_ref=source_ref,
+            **({"typed_write": typed_write} if typed_write is not None else {}),
         )
         return self._commit_result(outcome)
+
+    def _typed_write(self, proposal, fact_text: str, declared: Mapping[str, Any] | None) -> dict | None:
+        """#732: the caller's declaration, else one extraction for this write, else None."""
+        from ..runtime import proposition_extraction, typed_proposition
+
+        if declared is not None:
+            return {"typed_proposition": typed_proposition.typed_record(declared, typed_proposition.CALLER_DECLARED)}
+        if self._proposition_extractor is None:
+            return None
+        try:
+            admitted = self.runtime.recall(fact_text, self._handle_recall_context()).admitted
+            candidates = self.runtime.adapter.typed_candidates(proposal, admitted)
+        except Exception as exc:  # the write still commits without a typed proposition
+            record = proposition_extraction.extraction_record(
+                self._proposition_extractor, [], status="failed", reason=f"candidate_recall_failed:{type(exc).__name__}")
+            return {"typed_proposition": None, "extraction": record}
+        return proposition_extraction.extract_for_write(self._proposition_extractor, fact_text, candidates)
 
     @_serialized
     def correct(

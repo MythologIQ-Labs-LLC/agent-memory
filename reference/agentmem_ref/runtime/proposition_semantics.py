@@ -55,6 +55,10 @@ INTERPRETER_REF = "agent-memory-deterministic-write-semantics"
 INTERPRETER_VERSION = "1.1.0"
 WRITE_SEMANTICS_KEY = "write_semantics"
 CLASSIFIER_VERSION = "1.0.0"
+# Classifier 1.1.0 (#732 R3) classifies only a write that carries a typed proposition; every
+# other write keeps 1.0.0 and its persisted version tag, so its stored bytes are unchanged.
+TYPED_CLASSIFIER_VERSION = "1.1.0"
+TYPED_KEYS = ("typed_proposition", "typed_ineligible_reasons", "extraction")
 MAX_CLAUSES = 4  # persisted clause evidence is bounded; clause_count records the total
 MAX_RELATIONS = 8  # persisted relations per write are bounded; relation_count records the total
 _RELATION_PRIORITY = {"state_change_candidate": 0, "conflict": 1, "same_value": 2, "coexistence": 3, "unresolved": 4}
@@ -700,7 +704,8 @@ def persisted_form(interpretation: Mapping[str, Any]) -> dict[str, Any]:
     ``expanded_form`` restores the full typed contract exactly.
     """
 
-    stored: dict[str, Any] = {"version": f"{INTERPRETER_VERSION}/{CLASSIFIER_VERSION}"}
+    classifier_version = (interpretation.get("classifier") or {}).get("version") or CLASSIFIER_VERSION
+    stored: dict[str, Any] = {"version": f"{INTERPRETER_VERSION}/{classifier_version}"}
     proposition = {k: v for k, v in (interpretation.get("proposition") or {}).items() if k != "basis"}
     if proposition.get("status", UNKNOWN) != UNKNOWN:
         if "slots" in proposition:
@@ -719,6 +724,7 @@ def persisted_form(interpretation: Mapping[str, Any]) -> dict[str, Any]:
     reasons = [r for r in interpretation.get("proposal_ineligible_reasons") or () if not r.startswith("proposition_")]
     if reasons:
         stored["proposal_ineligible_reasons"] = reasons
+    stored.update({key: interpretation[key] for key in TYPED_KEYS if key in interpretation})
     return stored
 
 
@@ -748,6 +754,7 @@ def expanded_form(stored: Mapping[str, Any] | None) -> dict[str, Any] | None:
         **({"unresolved_cardinality_unknown_count": stored["unresolved_cardinality_unknown_count"]}
            if "unresolved_cardinality_unknown_count" in stored else {}),
         "proposal_ineligible_reasons": reasons,
+        **{key: stored[key] for key in TYPED_KEYS if key in stored},
     }
 
 
@@ -788,8 +795,8 @@ def interpreted_validity(interpretation: Mapping[str, Any] | None) -> dict[str, 
 # --------------------------------------------------------------------------- classification
 
 
-def proposal_id(source_fact_uuid: str, target_fact_uuid: str) -> str:
-    material = json.dumps([INTERPRETER_VERSION, CLASSIFIER_VERSION, source_fact_uuid, target_fact_uuid])
+def proposal_id(source_fact_uuid: str, target_fact_uuid: str, *, classifier_version: str = CLASSIFIER_VERSION) -> str:
+    material = json.dumps([INTERPRETER_VERSION, classifier_version, source_fact_uuid, target_fact_uuid])
     return "semantic-proposal:" + hashlib.sha256(material.encode("utf-8")).hexdigest()[:32]
 
 
@@ -898,6 +905,6 @@ def classify_write(
 __all__ = [
     "AFFIRMED", "AMBIGUOUS", "CARDINALITIES", "CLASSIFICATIONS", "CLASSIFIER_VERSION", "COEXISTENCE", "CONFLICT",
     "ENDED", "HIERARCHICAL", "INTERPRETER_REF", "INTERPRETER_VERSION", "KNOWN", "MULTI_VALUED", "SAME_VALUE",
-    "SINGLE_VALUED", "STATE_CHANGE_CANDIDATE", "UNKNOWN", "UNRESOLVED", "WRITE_SEMANTICS_KEY", "bounded_relations", "classify_write", "expanded_form", "index_summary", "persisted_form",
+    "SINGLE_VALUED", "STATE_CHANGE_CANDIDATE", "TYPED_CLASSIFIER_VERSION", "TYPED_KEYS", "UNKNOWN", "UNRESOLVED", "WRITE_SEMANTICS_KEY", "bounded_relations", "classify_write", "expanded_form", "index_summary", "persisted_form",
     "ended_slots", "interpret_write", "interpreted_validity", "proposal_id", "slot_key", "write_slot",
 ]
