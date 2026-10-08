@@ -256,7 +256,7 @@ class PropositionLinkSafetyTests(unittest.TestCase):
             write(fact="f", revision="r", coexistent="yes")
         with self.assertRaises(TypeError):
             preflight({})
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             proposed(claims=["claimed"])
 
     def test_immutable_receipts_cannot_be_rewritten_into_acceptance(self):
