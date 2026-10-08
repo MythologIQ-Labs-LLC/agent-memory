@@ -113,11 +113,16 @@ def _transcript(registry: PropertyRegistry) -> bytes:
         raise RegistryError("expected a typed registry")
     # Payload includes complete versioned ontology, scope, revisions and
     # issuer key ref. Domain-separated from temporal/journal attestations.
+    material = asdict(registry)
+    material["properties"] = [
+        {"property_ref": p.property_ref, "label_refs": list(p.label_refs), "state": p.state}
+        for p in registry.properties
+    ]
     return canonical_json({
         "profile": PROFILE,
         "version": VERSION,
         "algorithm": ALGORITHM,
-        "registry": asdict(registry),
+        "registry": material,
     })
 
 
