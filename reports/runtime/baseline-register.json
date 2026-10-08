@@ -73,5 +73,8 @@
       "published_commit": "0110f8efdb6a6d577aaf8630c17721b3813479b0"
     }
   ],
-  "declared_successor": null
+  "declared_successor": {
+    "baseline_id": "agent-memory-runtime-baseline-v6",
+    "declaration": "reports/runtime/baseline-v6-declaration.json"
+  }
 }

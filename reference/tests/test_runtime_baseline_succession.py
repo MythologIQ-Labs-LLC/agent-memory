@@ -721,10 +721,12 @@ class RealRepository(unittest.TestCase):
 
     def test_register_carries_v5_as_the_current_entry(self) -> None:
         # docs/67 Steps B1 and B2 for #671: v5 is the last entry, blob-pinned in the working tree,
-        # its companion qualification bound and its publication commit pinned; no successor declared.
+        # its companion qualification bound and its publication commit pinned.
         register = checker.load_register(REPO_ROOT, REGISTER)
         self.assertEqual([item["baseline_id"] for item in register["baselines"]], [V1, V2, V3, V4, V5])
-        self.assertIsNone(register["declared_successor"])
+        # #732 typed write-time propositions opened the v6 transition (docs/67 Step A); v5 stays current.
+        self.assertEqual(register["declared_successor"],
+                         {"baseline_id": "agent-memory-runtime-baseline-v6", "declaration": "reports/runtime/baseline-v6-declaration.json"})
         entry = register["baselines"][-1]
         self.assertEqual(entry["record"], "reports/runtime/baseline-v5.json")
         self.assertEqual(blob(REPO_ROOT, entry["record"]), entry["record_blob"])

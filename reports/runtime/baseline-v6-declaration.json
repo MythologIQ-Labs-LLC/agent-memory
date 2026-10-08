@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v6",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v5",
+  "issue": 732,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/api/contract.py",
+      "blob": "dc497b97e098992f8acacbca04ce900e7da08678"
+    },
+    {
+      "path": "reference/agentmem_ref/api/surface.py",
+      "blob": "ba9a058e468858b52ffc36b9bc2662650e99142e"
+    },
+    {
+      "path": "reference/agentmem_ref/proposition_extraction.py",
+      "blob": "245884e70c8b7ac5b62dfaccb099939303593579"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/adapter.py",
+      "blob": "9f0e0812b79bfdc5289fc0fef67de719932f9583"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/configured_restart.py",
+      "blob": "60bae12192e9228626370cf5181719a852c28119"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/cross_fact_currentness.py",
+      "blob": "26dbda22c8fbf147f058bde5935bde926ed44c8a"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/proposition_extraction.py",
+      "blob": "e438d16e8306e6cea552cbf4893f9bef303c4fb8"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/proposition_semantics.py",
+      "blob": "877843a34638d558ab0c6b14820de7565375de7b"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/restart_runtime.py",
+      "blob": "b2b7322393f55c16c93caee302984a555f368943"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+      "blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/sqlite_composition.py",
+      "blob": "3ebcefce22d21005f1cea2443b6c9e5d194716fc"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/sqlite_runtime.py",
+      "blob": "b6f52a882c6a112296d6cb95db8fff5975bbf4e4"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/temporal_order_constraints.py",
+      "blob": "835757abf7ac55de11042962d3aae05a922f8f7f"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/typed_proposition.py",
+      "blob": "1e2a922a5f653b7736b99a75f1dee52ea4d34a81"
+    },
+    {
+      "path": "reference/agentmem_ref/typed_proposition.py",
+      "blob": "40db70e74788420f68afb52389e2300350039418"
+    }
+  ],
+  "identity_deltas": [
+    {
+      "identity_path": "identity.ranking.active_policy_version",
+      "from": "3.3.0",
+      "to": "3.4.0"
+    },
+    {
+      "identity_path": "identity.public_contract_version",
+      "from": "1.5.0",
+      "to": "1.6.0"
+    }
+  ],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v6"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v6"
+    },
+    {
+      "kind": "replay",
+      "ref": "mesa-formal-v3"
+    }
+  ]
+}
