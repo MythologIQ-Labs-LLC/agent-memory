@@ -47,10 +47,11 @@ from .temporal_intent import (
 UNKNOWN_TEMPORAL_BASIS = "unknown_temporal_basis"
 APPLICABLE = "applicable"
 # The active multi-route policy version (identity.ranking.active_policy_version): 3.3.0 adds
-# #671 read-path cross-fact currentness. The 3.2.0 class keeps its own constant, so an
+# #671 read-path cross-fact currentness; 3.4.0 (#732 R4) admits typed-proposition relations
+# to that evidence under assertion filter 6.1.0. The 3.2.0 class keeps its own constant, so an
 # instance constructed without cross-fact evidence still reports 3.2.0.
 CONSTRAINED_POLICY_VERSION = "3.2.0"
-POLICY_VERSION = "3.3.0"
+POLICY_VERSION = "3.4.0"
 UNKNOWN_BASIS_POLICY = "explicit_current_exclusive_pairwise_v1"
 CROSS_FACT_POLICY = "explicit_current_interpreted_cross_fact_v1"
 
@@ -474,7 +475,7 @@ _CROSS_FACT_DECISIONS: ContextVar[dict[str, dict[str, Any]] | None] = ContextVar
 
 @dataclass(frozen=True)
 class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPolicy):
-    """Policy 3.3.0 (#671 Option A): 3.2.0 plus read-path cross-fact currentness.
+    """Policy 3.4.0 (#671 Option A; #732 R4): 3.2.0 plus read-path cross-fact currentness.
 
     ``rank(..., cross_fact=...)`` takes the adapter's guarded evidence
     (``GovernedMemoryAdapter.cross_fact_applicability``). A target T is limited only when its
@@ -483,7 +484,9 @@ class ExplicitCurrentCrossFactRankingPolicy(ExplicitCurrentConstrainedRankingPol
     ``limited_by_cross_fact_state_change`` (basis ``interpreted_cross_fact``), which the
     existing ``temporal_applicability_tier`` stage demotes for current intent only. No stage
     is added, admission is unchanged, and with no cross-fact evidence the ranking and every
-    evidence field equal 3.2.0's apart from the policy identity.
+    evidence field equal 3.2.0's apart from the policy identity. 3.4.0 changes only the
+    evidence it is given: typed-proposition relations may pass the guards (assertion filter
+    6.1.0); the ranking stages are 3.3.0's.
     """
 
     version: str = POLICY_VERSION

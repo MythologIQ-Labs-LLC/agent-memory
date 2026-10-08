@@ -17,6 +17,13 @@ entity's possessive or a clause boundary and whose value is a bounded proper nam
 or single token, with no hedge, negation, condition, attribution or interjection anywhere,
 qualifies. The residual it accepts is stated in the plan: a deliberately Capitalised two-token
 value from the same actor and declared source.
+
+Assertion filter 6.1.0 (#732 R4, docs/plan-732-remediation.md) adds a typed branch only. A
+``typed_slot`` or ``typed_link`` relation is accepted at G3 only when S carries a typed
+proposition with basis ``caller_declared`` or ``extracted:*``; G6 reads its
+``typed_ineligible_reasons``; G12 reads its persisted typed flags (any true flag refuses with
+``typed_assertion_not_assertive:<flag>``) and never re-checks a typed relation against S's text.
+Interpreted relations pass G3, G6 and G12 exactly as in 6.0.0; every other guard is unchanged.
 """
 
 from __future__ import annotations
@@ -26,13 +33,14 @@ import unicodedata
 from typing import Any, Callable, Mapping, Sequence
 
 from . import proposition_semantics as semantics
+from . import typed_proposition as typed
 from .temporal_intent import DECLARED_TEMPORAL_KEY, TemporalIntent, parse_time
 
 WRITE_PROVENANCE_KEY = "write_provenance"
 WRITE_PROVENANCE_VERSION = "1.0.0"
 CROSS_FACT_BASIS = "interpreted_cross_fact"
 CROSS_FACT_LABEL = "limited_by_cross_fact_state_change"
-ASSERTION_FILTER_VERSION = "6.0.0"
+ASSERTION_FILTER_VERSION = "6.1.0"
 SOURCE_REF_MAX = 256
 ACCEPTED_RELATION_BASES = ("single_valued_replacement_marker",)
 ACCEPTED_RELATION_BASIS_PREFIXES = ("explicit_termination:",)
@@ -190,8 +198,30 @@ def assertion_refusal(text: str, write_semantics: Mapping[str, Any], relation: M
 # ---------------------------------------------------------------------------- G1-G13
 
 
-def _relation_basis_accepted(basis: str) -> bool:
+def _typed_relation(relation: Mapping[str, Any]) -> bool:
+    return str(relation.get("basis") or "") in typed.TYPED_RELATION_BASES
+
+
+def _relation_basis_accepted(basis: str, write_semantics: Mapping[str, Any]) -> bool:
+    if basis in typed.TYPED_RELATION_BASES:
+        return typed.typed_basis_accepted(write_semantics.get("typed_proposition"))
     return basis in ACCEPTED_RELATION_BASES or basis.startswith(ACCEPTED_RELATION_BASIS_PREFIXES)
+
+
+def _not_proposable(write_semantics: Mapping[str, Any], relation: Mapping[str, Any]) -> bool:
+    """G6: typed relations read ``typed_ineligible_reasons``; interpreted ones are unchanged."""
+
+    if _typed_relation(relation):
+        return bool(write_semantics.get("typed_ineligible_reasons"))
+    markers = write_semantics.get("markers") or {}
+    return bool(markers.get("hedge") or markers.get("self_claims") or write_semantics.get("proposal_ineligible_reasons"))
+
+
+def typed_assertion_refusal(write_semantics: Mapping[str, Any]) -> str | None:
+    """G12 for a typed relation: the persisted flags are the assertion evidence; no text re-check."""
+
+    flags = typed.true_flags(write_semantics.get("typed_proposition"))
+    return f"typed_assertion_not_assertive:{flags[0]}" if flags else None
 
 
 def _clock_refusal(source_attributes: Mapping[str, Any], target_attributes: Mapping[str, Any]) -> str | None:
@@ -275,7 +305,7 @@ def _refusal(source, target, source_attributes, target_attributes, write_semanti
              source_uuid, target_uuid, proposal_status, fact_scope, same_scope) -> str | None:
     if relation.get("classification") != semantics.STATE_CHANGE_CANDIDATE:  # G2
         return "relation_not_state_change"
-    if not _relation_basis_accepted(str(relation.get("basis") or "")):  # G3
+    if not _relation_basis_accepted(str(relation.get("basis") or ""), write_semantics):  # G3
         return "relation_basis_not_accepted"
     proposal = relation.get("proposal")
     if not proposal or proposal.get("applied") is not False or proposal.get("authority_effect") != "none":  # G4
@@ -283,8 +313,7 @@ def _refusal(source, target, source_attributes, target_attributes, write_semanti
     status = proposal_status(proposal)
     if status != "open":  # G5: live, undisputed, untombstoned, unapplied
         return f"proposal_not_open:{status}"
-    markers = write_semantics.get("markers") or {}
-    if markers.get("hedge") or markers.get("self_claims") or write_semantics.get("proposal_ineligible_reasons"):  # G6
+    if _not_proposable(write_semantics, relation):  # G6
         return "hedged_or_untrusted_claim"
     source_provenance = source_attributes.get(WRITE_PROVENANCE_KEY)
     target_provenance = target_attributes.get(WRITE_PROVENANCE_KEY)
@@ -302,9 +331,14 @@ def _refusal(source, target, source_attributes, target_attributes, write_semanti
             or set(source_scope.get("required_domain_refs", ())) != set(target_scope.get("required_domain_refs", ()))
             or getattr(source, "group_id", None) != getattr(target, "group_id", None)):  # G10
         return "scope_mismatch"
-    assertion = assertion_refusal(getattr(source, "fact_text", "") or "", write_semantics, relation)  # G12
-    if assertion is not None:
-        return f"change_evidence_not_assertive:{assertion}"
+    if _typed_relation(relation):  # G12, typed branch
+        assertion = typed_assertion_refusal(write_semantics)
+        if assertion is not None:
+            return assertion
+    else:  # G12
+        assertion = assertion_refusal(getattr(source, "fact_text", "") or "", write_semantics, relation)
+        if assertion is not None:
+            return f"change_evidence_not_assertive:{assertion}"
     return _clock_refusal(source_attributes, target_attributes)  # G13
 
 
@@ -314,6 +348,7 @@ __all__ = [
     "CROSS_FACT_LABEL",
     "WRITE_PROVENANCE_KEY",
     "assertion_refusal",
+    "typed_assertion_refusal",
     "default_source_ref",
     "evaluate",
     "validate_source_ref",
