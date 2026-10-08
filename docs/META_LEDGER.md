@@ -5085,3 +5085,49 @@ The checker reports TRANSITION.
 **Suite:** 2396 tests. The failures that remain also fail on clean `main` in this container: `test_gauntlet_durability`, `test_benchmark_author_golden_path`, `test_gauntlet_external_example` and `test_keyed_rebinding_benchmark`.
 
 **Next:** the implementation-PR Tribunal (V2: execute the controls, the S6 check and the byte identity). Then the `-v6` lanes, the mesa-formal-v3 freeze and extractor-off replay, and B1/B2. The credential (R7) remains an owner action.
+
+---
+
+### Entry #118: GATE TRIBUNAL — PASS (#732 remediation implementation, Step A, attempt 2)
+
+**Timestamp**: 2026-10-08T03:00:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: PR #741 at e3420c0 (R1–R4 of docs/plan-732-remediation.md and the Runtime Baseline v6 declaration)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_732_implementation_attempt2.md) = 513a24223ae908e8cf048b9410b6daab096b9b2dec555ffbfde1e0a9d0f2cbbf
+
+**Previous Hash**: `43ef4efeb9384700b7fbedfd918c88e5ed788fb9b2b7e255fd2d27e376a22492`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 097e13ee838803d926a32a2f9eacfdcd266957eadcb59e812cad7a0bc9416b08
+
+**Decision**: The implementation passes.
+
+**Attempt 1** was a VETO on X1: the reference provider request was incompatible with current Messages API constraints. The fix:
+- the wire schema omits the length keywords;
+- no sampling parameters are sent by default;
+- `max_tokens` is 16000, and `effort` is optional.
+
+The frozen prompt and schema hashes are unchanged.
+
+**Verified by execution:**
+- the checker reports TRANSITION, v5 to declared v6;
+- 39 control tests pass, including extractor-off byte identity against real v5 code;
+- S6 maximum is 0.333;
+- full suite: 2373 passed, and the only failure is the pre-existing `test_gauntlet_durability`.
+
+**Advisories carried forward:**
+- **Y1:** the gated provider-freeze record includes one synthetic-text smoke request with its request id.
+- **W2–W5** are documented.
+
+**Next:**
+1. Merge (Step A, TRANSITION).
+2. The `-v6` lanes, plus the mesa-formal-v3 freeze and extractor-off replay.
+3. v6 B1/B2, with the extractor path marked unaccepted.
+4. Owner credential, then the provider-freeze record, then holdout acceptance.
+
+#673 stays held.
