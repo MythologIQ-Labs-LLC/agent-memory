@@ -5131,3 +5131,42 @@ The frozen prompt and schema hashes are unchanged.
 4. Owner credential, then the provider-freeze record, then holdout acceptance.
 
 #673 stays held.
+
+---
+
+### Entry #119: GATE TRIBUNAL — PASS (Runtime Baseline v6 evidence plan, attempt 2)
+
+**Timestamp**: 2026-10-08T03:30:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-732-evidence-v6.md (iteration 2, 51deda8)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_732_evidence_v6_attempt2.md) = 0e4546c65908949903ad716b3416cb08918b1eecc36928cd61b522ae54886f3d
+
+**Previous Hash**: `097e13ee838803d926a32a2f9eacfdcd266957eadcb59e812cad7a0bc9416b08`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 89d855e31db870b708ab6a1d6e045e53beffbcd053445bb65857412424273e4c
+
+**Decision**: The v6 evidence plan passes.
+
+**What the plan requires:**
+- **`-v6` lanes:** EQUAL to `-v5` (1000/1000 and 77/77), with per-row cross-fact equality.
+- **`mesa-formal-v3` freeze, extractor off:** it changes only the tree, the policy (3.4.0) and the contract (1.6.0). It must reproduce v2 exactly.
+- **Guards:** #580 and #584 at the execution revision.
+- **docs/67 B1/B2:** the typed-proposition and extractor path is marked unaccepted.
+
+**Attempt 1** was a VETO on K1, an incomplete re-pin list; V6-E8 now lists the re-pins per PR.
+
+**Verified by execution:**
+- the runner refuses v2 at HEAD on exactly the tree, policy and contract, and the runner sha is unchanged;
+- C7 at HEAD: 250/250 M4 limited, 0 blockers;
+- the attribution script, run against `-v5` as the reference, gives 1000/77 EQUAL;
+- the runner and bridge blobs are unchanged.
+
+**Advisories N1/N2:** P4 guard identity comes from the regenerated C7; P6 uses the per-item `retrieved` digests.
+
+**Next:** the MESA PR (v3 freeze), then the replay, then the lanes PR and dispatch, then acceptance, then B1/B2.

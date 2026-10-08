@@ -144,3 +144,9 @@ The extractor-on MESA run is **not** part of this plan. It belongs to remediatio
 
 ## Open Questions
 None.
+
+## Gate result
+
+The plan passed at attempt 2 (META_LEDGER Entry #119; audit sha256 `0e4546c6…`). Two advisories are binding:
+- **N1:** P4's guard identity cannot be computed from the replay's own traces, because the frozen runner's ranking digest omits the cross-fact fields. It is taken instead from the C7 report regenerated at the execution revision, as at v2.
+- **N2:** in P6, "M1 retrieval digests" means the per-item `retrieved` sha256 digests. The trace digests carry `policy_version` and so differ by construction.
