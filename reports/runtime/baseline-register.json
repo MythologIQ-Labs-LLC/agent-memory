@@ -82,9 +82,9 @@
       "qualification": {
         "path": "reports/runtime/baseline-v6-qualification.json",
         "pointer": "",
-        "blob": "49f5ba7cdebfdd9ebfb4ff1de598b3b5b25c39e1"
+        "blob": "a785b3d2d15f2f5ffee4e5ece13f36879ed46cba"
       },
-      "published_commit": null
+      "published_commit": "b08cd844b319f400a1e515950efc6157d9ed106b"
     }
   ],
   "declared_successor": null
