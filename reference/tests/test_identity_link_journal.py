@@ -195,10 +195,12 @@ class IdentityLinkJournalTests(TestCase):
             replace(p, newer=replace(p.newer, source_ref="source:other")),
             replace(p, newer=replace(p.newer, value_ref="new:value")),
             replace(p, older=replace(p.older, subject_ref="subject:other")),
-            replace(p, older=replace(p.older, purpose_ref="purpose:other")),
+            replace(p, older=replace(p.older, purpose_ref="purpose:other"),
+                    newer=replace(p.newer, purpose_ref="purpose:other")),
             replace(p, newer=replace(p.newer, revision_ref="revision:v3")),
             replace(p, claims=(replace(claims()[0], evidence_ref="evidence:new"), claims()[1])),
-            replace(p, expected_head_ref="source-revision:new"),
+            replace(p, expected_head_ref="source-revision:new",
+                    observed_head_ref="source-revision:new"),
         ]
         for variant in variants:
             if variant.newer.value_ref == variant.older.value_ref:
