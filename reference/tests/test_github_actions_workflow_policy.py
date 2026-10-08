@@ -83,6 +83,7 @@ class WorkflowPolicyTests(unittest.TestCase):
             "amb-competitive.yml",
             "amb-evidence-import.yml",
             "canonical-json-v2-vector-integrity.yml",
+            "currentness-extractor-smoke.yml",
             "gauntlet-external-contestant-dogfood.yml",
             "hindsight-v090-qualification.yml",
             "longmemeval-competitive.yml",

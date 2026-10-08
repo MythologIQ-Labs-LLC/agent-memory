@@ -437,6 +437,20 @@
         }
       }
     },
+    "currentness-extractor-smoke.yml": {
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "complete_every_run",
+      "jobs": {
+        "smoke": {
+          "timeout_minutes": 10,
+          "full_suite_passes": 0
+        }
+      }
+    },
     "dashclaw-external-verdict.yml": {
       "pull_request": "paths",
       "push": null,

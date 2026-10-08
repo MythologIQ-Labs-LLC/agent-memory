@@ -568,7 +568,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-3",
         "signature": "checkout+python",
-        "memberCount": 7,
+        "memberCount": 8,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -767,7 +767,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-3",
         "signature": "checkout+python",
-        "memberCount": 7,
+        "memberCount": 8,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -816,7 +816,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-3",
         "signature": "checkout+python",
-        "memberCount": 7,
+        "memberCount": 8,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -867,7 +867,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-3",
         "signature": "checkout+python",
-        "memberCount": 7,
+        "memberCount": 8,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -968,7 +968,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-3",
         "signature": "checkout+python",
-        "memberCount": 7,
+        "memberCount": 8,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -1630,6 +1630,56 @@
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
         "memberCount": 60,
+        "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
+      }
+    },
+    {
+      "path": ".github/workflows/currentness-extractor-smoke.yml",
+      "name": "Currentness Extractor Provider Smoke",
+      "capability": "R6 Claude subscription-OAuth connectivity/protocol smoke for #732",
+      "ownerOrProgram": [
+        "agent-memory#732"
+      ],
+      "lifecycleClass": "manual_exception",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "discretionary",
+      "pathScope": "repository-wide-or-unscoped",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          10
+        ]
+      },
+      "concurrencyState": {
+        "configured": true,
+        "cancelInProgress": false
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": true,
+        "retentionDays": [
+          30
+        ]
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
+      "proposedDisposition": "MANUAL",
+      "retirementOrReviewCondition": "Retire after #732 R6 acceptance/rejection is durably recorded and no later extractor qualification depends on this exact subscription smoke contract.",
+      "classificationConfidence": "high",
+      "reviewNotes": "Manual, one-request synthetic Claude subscription-OAuth evidence. Direct Platform API credentials are forbidden. It is not a benchmark score.",
+      "sharedImplementationFamily": {
+        "id": "setup-family-3",
+        "signature": "checkout+python",
+        "memberCount": 8,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -2730,7 +2780,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-3",
         "signature": "checkout+python",
-        "memberCount": 7,
+        "memberCount": 8,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -3827,7 +3877,7 @@
       "sharedImplementationFamily": {
         "id": "setup-family-3",
         "signature": "checkout+python",
-        "memberCount": 7,
+        "memberCount": 8,
         "note": "Shared setup signature only. Consolidation requires semantic review; similar setup does not imply equivalent authority, evidence, or test semantics."
       }
     },
@@ -4341,30 +4391,30 @@
     "behaviorAuthority": "Inventory classification alone does not authorize disabling, deleting, or moving required checks."
   },
   "inventorySummary": {
-    "workflowCount": 86,
+    "workflowCount": 87,
     "lifecycleCounts": {
       "required_hot_path": 34,
       "conditional_hot_path": 22,
       "async_assurance": 20,
-      "manual_exception": 3,
+      "manual_exception": 4,
       "one_time": 6
     },
     "dispositionCounts": {
       "KEEP": 34,
       "CONDITIONAL": 22,
       "ASYNC": 20,
-      "MANUAL": 3,
+      "MANUAL": 4,
       "RETIRE": 6
     },
     "consequenceCounts": {
       "protected": 64,
-      "discretionary": 21
+      "discretionary": 22
     },
     "triggerCounts": {
       "issues": 1,
       "pull_request": 81,
       "push": 50,
-      "workflow_dispatch": 42
+      "workflow_dispatch": 43
     },
     "missingExplicitTimeoutCount": 0,
     "supersedablePrOrPushWithoutConcurrencyCount": 0,
@@ -4383,7 +4433,7 @@
       {
         "id": "setup-family-3",
         "signature": "checkout+python",
-        "memberCount": 7
+        "memberCount": 8
       }
     ]
   },
