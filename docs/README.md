@@ -24,6 +24,7 @@ For the current RC/evidence boundary after #591/#594, start with [`64-current-go
 | Review current benchmark results | [`../reports/benchmarks/dashboard/current.md`](../reports/benchmarks/dashboard/current.md) | [`../reports/benchmarks/dashboard/current.json`](../reports/benchmarks/dashboard/current.json), #594 closeout |
 | Contribute code or evidence | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | [`REPOSITORY_OPERATING_MODEL.md`](REPOSITORY_OPERATING_MODEL.md), [`../GOVERNANCE.md`](../GOVERNANCE.md) |
 | Review source rights / intellectual lineage | [`08-source-material-index.md`](08-source-material-index.md) | [`40-aligned-projects-and-intellectual-lineage.md`](40-aligned-projects-and-intellectual-lineage.md), [`SOURCE_RIGHTS_POLICY.md`](SOURCE_RIGHTS_POLICY.md) |
+| Review UOR/PrismPM/TRACE/AGT lessons for cross-write proposition identity | [`research/cryptographic-proposition-identity-ancestry-2026-10-08.md`](research/cryptographic-proposition-identity-ancestry-2026-10-08.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757), [`52-harvest-closeout-final.md`](52-harvest-closeout-final.md) |
 | Review security/privacy | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41`, [`../SECURITY.md`](../SECURITY.md) |
 
 ## Repository operating model
