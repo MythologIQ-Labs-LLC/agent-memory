@@ -37,7 +37,13 @@
     "effort": "high",
     "max_candidates": 8,
     "clean_working_directory": true,
-    "clean_config_directory_for_token_runs": true
+    "clean_config_directory_for_token_runs": true,
+    "permission_mode": "dontAsk",
+    "max_turns": 3,
+    "timeout_seconds": 20,
+    "config_isolation": "temporary CLAUDE_CONFIG_DIR; OAuth token only",
+    "project_context": "clean temporary working directory; no repository CLAUDE.md",
+    "direct_api_credentials": "forbidden"
   },
   "extractor": {
     "extraction_record_version": "1.0.0",
