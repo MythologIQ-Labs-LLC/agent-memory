@@ -138,7 +138,13 @@ def build_record(
         "generalization_score": None,
         "executed_at": None if dry_run else datetime.now(timezone.utc).isoformat(),
         "system_revision": _git_revision(),
-        "runtime_baseline_line": _baseline_line(),
+        # Offline tests run in shallow CI checkouts where the historical frozen
+        # runtime commit may not be available. Dry-run never claims equivalence.
+        # The live provider smoke always runs the strict comparison and fails
+        # closed if the frozen commit is absent or protected bytes changed.
+        "runtime_baseline_line": (
+            "NOT_VERIFIED_DRY_RUN" if dry_run else _baseline_line()
+        ),
         "provider_freeze": {
             "path": str(FREEZE_DEFAULT.relative_to(REPO_ROOT)),
             "sha256": sha256_bytes(freeze_raw),
