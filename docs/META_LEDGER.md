@@ -5278,3 +5278,30 @@ Step B2 binds the probe artifact. After B2, R6 waits on the owner credential (R7
 **Scope of the rendered close-gate sentence.** It is the renderer's fixed public-Gauntlet completion text, the same text v5 carries for #671. It satisfies only the docs/67 publication gate. **#732 stays open.** Remediation advisory V1 still applies: the typed proposition and extractor path is UNACCEPTED until the R6 acceptance PR, and a failed acceptance requires a v7 declaration.
 
 **Next:** R6/R7 are blocked on the owner, who must supply the provider credential and model choice and decide OQ2 (whether the extractor stays opt-in). After that come the W5/Y1 provider-freeze record and smoke request, then holdout authoring, freeze and a single scoring. #673 stays held until then.
+
+---
+
+### Entry #123: GATE TRIBUNAL — PASS (#732 oracle-ceiling diagnostic, PR #756, independent review 3)
+
+**Timestamp**: 2026-10-08T16:30:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L1
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: PR #756 at `8cc1dae2ff66db013670ae1c5dc47ee7eee862ed` (base `5309dc4`): the evaluation-only oracle-ceiling diagnostic under `reports/benchmarks/currentness-generalization/diagnostics/oracle-ceiling-v1/`, with its runner and tests
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_756_oracle_ceiling_review3.md) = 894a78036a0cb02040dbb473308cc50b9b2c043ab91e9b52dd3c5ae924e171f3
+
+**Previous Hash**: `941815f5f3dbaea9f364b948e6d31ffe0da68d70c68255a88d712f5e53b60ef7`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a3f85d0f4ace6525be2a9c2d
+
+**Decision**: An independent adversarial review of the exact head `8cc1dae` returned **PASS**, with no blocking findings and five advisories. This PASS is bound to that revision. The commit that adds this entry changes only `docs/META_LEDGER.md`.
+
+- **History:** review 1 vetoed the first draft. Review 2 vetoed `12a8177` on one blocking finding: H-ID1 was still framed as a proposal. `8cc1dae` fixed the README only.
+- **Verified:** the reviewer recomputed every README number from row data, reproduced all three modes byte-identically, and confirmed the extractor-off baseline equals `measurement-v1`. The 11 tests pass. All five owner focus items hold, and nothing protected, frozen or holdout-related changed.
+- **Advisories A1–A5** are recorded in the audit report. Their wording refinements are carried into #757 design inputs. They do not alter any result.
+
+**Scope**: `diagnostic_not_score`. This is not R6 acceptance. The `measurement-v1` FAIL (0/212) stands, and #732 stays open. The owner chose option (b): cross-write proposition identity is designed first (#757). No v7 implementation and no evaluator tuning are authorized.

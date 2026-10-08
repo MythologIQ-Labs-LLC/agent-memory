@@ -1,0 +1,34 @@
+{
+ "authority_effect": "none",
+ "command": "python3 reference/run_currentness_generalization.py <freeze>/corpus.json <freeze>/variants.json <freeze>/selection.json --out <path>",
+ "frozen": {
+  "assertion_filter_version": "6.0.0",
+  "executing_commit": "db20b4e867e65b7a0b7d3e9c4731f5558affeab7",
+  "path": "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+  "ranking_policy_version": "3.3.0",
+  "results_sha256": "5dc1bc5eea3631b8a1dd6472100d72d6d91a416b49fe3f01a5085e52d3196634",
+  "runtime_baseline": "v5",
+  "scores_sha256": "a7c65866bdb85e98746b7bf9bd65ea2cdd5bcc49d4370604314d8ba0348b4d35"
+ },
+ "kind": "baseline_reproduction",
+ "reproduction": {
+  "assertion_filter_version": "6.1.0",
+  "checker_output_tail": [
+   "Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v6; frozen=e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation"
+  ],
+  "executing_commit": "5309dc4a99ed367738bfa57cd493e7376e02433d",
+  "inputs": {
+   "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
+   "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
+   "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab"
+  },
+  "ranking_policy_version": "3.4.0",
+  "results_sha256": "5dc1bc5eea3631b8a1dd6472100d72d6d91a416b49fe3f01a5085e52d3196634",
+  "runtime_baseline": "v6 (extractor off)",
+  "scores_sha256": "a7c65866bdb85e98746b7bf9bd65ea2cdd5bcc49d4370604314d8ba0348b4d35"
+ },
+ "results_identical": true,
+ "row_differences": 0,
+ "rows_compared": 800,
+ "scores_identical": true
+}
