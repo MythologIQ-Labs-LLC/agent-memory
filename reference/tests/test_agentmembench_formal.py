@@ -364,13 +364,15 @@ class SuccessorFreezeTests(unittest.TestCase):
         self.assertEqual([item["id"] for item in self.v2["deviations"]], ["D1", "D2", "D3", "D4", "D5", "D6"])
 
     def test_binds_runtime_baseline_v5_policy_and_contract(self):
+        # Historical binding (#732): the v2 freeze binds the Runtime Baseline v5 runtime it
+        # executed against; ranking policy 3.4.0 and contract 1.6.0 moved the live identity.
         declaration = json.loads((REFERENCE.parent / "reports" / "runtime" / "baseline-v5-declaration.json").read_text())
         [delta] = declaration["identity_deltas"]
         self.assertEqual(self.v2["agent_memory"]["ranking_policy_version"], delta["to"])
-        live = formal.observed_agent_memory_binding()
-        self.assertEqual(self.v2["agent_memory"]["ranking_policy_version"], live["ranking_policy_version"])
-        self.assertEqual(self.v2["agent_memory"]["public_contract_version"], live["public_contract_version"])
-        self.assertEqual(self.v2["agent_memory"]["ranking_policy_id"], live["ranking_policy_id"])
+        baseline = json.loads((REFERENCE.parent / "reports" / "runtime" / "baseline-v5.json").read_text())
+        self.assertEqual(self.v2["agent_memory"]["ranking_policy_version"], baseline["identity"]["ranking"]["active_policy_version"])
+        self.assertEqual(self.v2["agent_memory"]["public_contract_version"], baseline["identity"]["public_contract_version"])
+        self.assertEqual(self.v2["agent_memory"]["ranking_policy_id"], formal.observed_agent_memory_binding()["ranking_policy_id"])
 
     def test_predictions_are_frozen_exact_dicts(self):
         predictions = self.v2["predictions"]

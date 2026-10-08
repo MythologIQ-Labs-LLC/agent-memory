@@ -1,0 +1,31 @@
+{
+  "description": "Recorded-fixture stub inputs and outputs for reference/tests/test_typed_propositions.py (#732 R2/R3 control tests). Synthetic text; never derived from any measurement corpus.",
+  "texts": {
+    "room_old": "The Kestrel standup meets in room Aurora.",
+    "room_new": "The Kestrel standup now meets in room Borealis.",
+    "room_hedged": "The Kestrel standup probably meets in room Borealis.",
+    "room_query": "Which room does the Kestrel standup meet in?",
+    "dentist": "The user's dentist is in Boston.",
+    "home_move": "The user moved from Boston to Denver.",
+    "home_query": "Where is the user and the dentist in Boston or Denver?",
+    "flag_old": "The export job beta flag is off.",
+    "flag_new": "The export job beta flag is now enabled.",
+    "flag_query": "Is the export job beta flag enabled?",
+    "unlinked_new": "The Kestrel standup now meets in room Cygnus."
+  },
+  "propositions": {
+    "room_old": {"subject": "Kestrel standup", "attribute": "meeting room", "value": "Aurora", "assertion": "state", "cardinality": "single"},
+    "room_new": {"subject": "Kestrel standup", "attribute": "meeting room", "value": "Borealis", "assertion": "change", "cardinality": "single", "replaces_value": "Aurora"},
+    "dentist": {"subject": "user's dentist", "attribute": "location", "value": "Boston", "assertion": "state", "cardinality": "single"},
+    "home_move": {"subject": "user", "attribute": "home city", "value": "Denver", "assertion": "change", "cardinality": "single", "replaces_value": "Boston"},
+    "flag_new": {"subject": "export job beta flag", "attribute": "setting", "value": "enabled", "assertion": "change", "cardinality": "single", "replaces_value": "off"},
+    "unlinked_new": {"subject": "Kestrel standup", "attribute": "meeting room", "value": "Cygnus", "assertion": "change", "cardinality": "single", "replaces_value": "Aurora"}
+  },
+  "recordings": {
+    "room_new": {"proposition": "room_new", "link_to": "room_old"},
+    "room_hedged": {"proposition": "room_new", "link_to": "room_old"},
+    "home_move": {"proposition": "home_move", "link_to": "dentist"},
+    "flag_new": {"proposition": "flag_new", "link_to": "flag_old"},
+    "unlinked_new": {"proposition": "unlinked_new", "updates_fact_uuid": "ref-9999"}
+  }
+}

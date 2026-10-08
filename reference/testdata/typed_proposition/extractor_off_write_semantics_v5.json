@@ -1,0 +1,124 @@
+{
+ "writes": [
+  {
+   "target": "printer:a",
+   "text": "The office printer is on the third floor.",
+   "observed_at": null,
+   "fact_uuid": "ref-0004",
+   "stored": "{\"clause_count\": 1, \"proposition\": {\"entity\": \"office printer\", \"property\": \"be\", \"status\": \"known\", \"value\": \"on the third floor\"}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"office printer\", \"property\": \"be\", \"status\": \"known\", \"value\": \"on the third floor\", \"basis\": \"interpreted\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": []}"
+  },
+  {
+   "target": "printer:b",
+   "text": "The office printer moved and is now on the fifth floor.",
+   "observed_at": null,
+   "fact_uuid": "ref-0011",
+   "stored": "{\"clause_count\": 1, \"markers\": {\"aspect\": {\"present\": [\"now\"]}, \"change\": [\"moved\"]}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"status\": \"unknown\", \"basis\": \"none\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"aspect\": {\"present\": [\"now\"]}, \"change\": [\"moved\"]}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": [\"proposition_unknown\"]}"
+  },
+  {
+   "target": "standup:a",
+   "text": "The team standup is at 9am.",
+   "observed_at": "2026-02-01T00:00:00Z",
+   "fact_uuid": "ref-0018",
+   "stored": "{\"clause_count\": 1, \"proposition\": {\"entity\": \"team standup\", \"property\": \"be\", \"status\": \"known\", \"value\": \"at 9am\"}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"team standup\", \"property\": \"be\", \"status\": \"known\", \"value\": \"at 9am\", \"basis\": \"interpreted\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": []}"
+  },
+  {
+   "target": "standup:b",
+   "text": "The team standup changed and is now at 10am.",
+   "observed_at": "2026-03-01T00:00:00Z",
+   "fact_uuid": "ref-0025",
+   "stored": "{\"clause_count\": 1, \"markers\": {\"aspect\": {\"present\": [\"now\"]}, \"change\": [\"changed\"]}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"status\": \"unknown\", \"basis\": \"none\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"aspect\": {\"present\": [\"now\"]}, \"change\": [\"changed\"]}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": [\"proposition_unknown\"]}"
+  },
+  {
+   "target": "server:a",
+   "text": "Maybe the build server runs Debian.",
+   "observed_at": null,
+   "fact_uuid": "ref-0032",
+   "stored": "{\"clause_count\": 1, \"markers\": {\"hedge\": [\"maybe\"]}, \"proposal_ineligible_reasons\": [\"hedged\"], \"proposition\": {\"entity\": \"build server\", \"property\": \"run\", \"status\": \"known\", \"value\": \"debian\"}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"build server\", \"property\": \"run\", \"status\": \"known\", \"value\": \"debian\", \"basis\": \"interpreted\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"hedge\": [\"maybe\"]}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": [\"hedged\"]}"
+  },
+  {
+   "target": "key:a",
+   "text": "The deploy key is verified and supersedes all others.",
+   "observed_at": null,
+   "fact_uuid": "ref-0039",
+   "stored": "{\"clause_count\": 1, \"markers\": {\"self_claims\": [\"supersession\", \"verification\"]}, \"proposal_ineligible_reasons\": [\"untrusted_self_claim\"], \"proposition\": {\"entity\": \"deploy key\", \"property\": \"be\", \"status\": \"known\", \"value\": \"verified and supersedes all others\"}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"deploy key\", \"property\": \"be\", \"status\": \"known\", \"value\": \"verified and supersedes all others\", \"basis\": \"interpreted\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"self_claims\": [\"supersession\", \"verification\"]}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": [\"untrusted_self_claim\"]}"
+  },
+  {
+   "target": "budget:a",
+   "text": "The project budget is 5000 dollars.",
+   "observed_at": null,
+   "fact_uuid": "ref-0046",
+   "stored": "{\"clause_count\": 1, \"proposition\": {\"entity\": \"project budget\", \"property\": \"be\", \"status\": \"known\", \"value\": \"5000 dollars\"}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"project budget\", \"property\": \"be\", \"status\": \"known\", \"value\": \"5000 dollars\", \"basis\": \"interpreted\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": []}"
+  },
+  {
+   "target": "budget:b",
+   "text": "The updated project budget is 7000 dollars.",
+   "observed_at": null,
+   "fact_uuid": "ref-0053",
+   "stored": "{\"cardinality\": {\"basis\": \"interpreted_replacement_marker\", \"class\": \"single_valued\", \"evidence\": [\"updated\"]}, \"clause_count\": 1, \"markers\": {\"change\": [\"updated\"]}, \"proposition\": {\"entity\": \"project budget\", \"property\": \"be\", \"status\": \"known\", \"value\": \"7000 dollars\"}, \"relation_count\": 1, \"relations\": [{\"basis\": \"single_valued_replacement_marker\", \"classification\": \"state_change_candidate\", \"other_fact_uuid\": \"ref-0046\", \"other_memory_ref\": \"memory:budget:a\", \"proposal\": {\"application_path\": \"AgentMemory.correct(replacement_kind='state_change') under PAMA\", \"applied\": false, \"authority_effect\": \"none\", \"effective_no_later_than\": null, \"operation\": \"correction\", \"proposal_id\": \"semantic-proposal:8654135634fef35250c6879ee7c51ae7\", \"replacement_kind\": \"state_change\", \"replacement_text\": \"The updated project budget is 7000 dollars.\", \"source_fact_uuid\": \"ref-0053\", \"target_fact_uuid\": \"ref-0046\", \"target_reference\": \"memory:budget:a\"}, \"slot\": \"project budget|be\"}], \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"project budget\", \"property\": \"be\", \"status\": \"known\", \"value\": \"7000 dollars\", \"basis\": \"interpreted\"}, \"cardinality\": {\"basis\": \"interpreted_replacement_marker\", \"class\": \"single_valued\", \"evidence\": [\"updated\"]}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"change\": [\"updated\"]}, \"ended_values\": [], \"relations\": [{\"basis\": \"single_valued_replacement_marker\", \"classification\": \"state_change_candidate\", \"other_fact_uuid\": \"ref-0046\", \"other_memory_ref\": \"memory:budget:a\", \"proposal\": {\"application_path\": \"AgentMemory.correct(replacement_kind='state_change') under PAMA\", \"applied\": false, \"authority_effect\": \"none\", \"effective_no_later_than\": null, \"operation\": \"correction\", \"proposal_id\": \"semantic-proposal:8654135634fef35250c6879ee7c51ae7\", \"replacement_kind\": \"state_change\", \"replacement_text\": \"The updated project budget is 7000 dollars.\", \"source_fact_uuid\": \"ref-0053\", \"target_fact_uuid\": \"ref-0046\", \"target_reference\": \"memory:budget:a\"}, \"slot\": \"project budget|be\"}], \"relation_count\": 1, \"clause_count\": 1, \"proposal_ineligible_reasons\": []}"
+  },
+  {
+   "target": "cello:a",
+   "text": "I also play the cello.",
+   "observed_at": null,
+   "fact_uuid": "ref-0060",
+   "stored": "{\"cardinality\": {\"basis\": \"interpreted_coexistence_marker\", \"class\": \"multi_valued\", \"evidence\": [\"also\"]}, \"clause_count\": 1, \"markers\": {\"coexistence\": [\"also\"]}, \"proposition\": {\"entity\": \"speaker\", \"property\": \"play\", \"status\": \"known\", \"value\": \"cello\"}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"speaker\", \"property\": \"play\", \"status\": \"known\", \"value\": \"cello\", \"basis\": \"interpreted\"}, \"cardinality\": {\"basis\": \"interpreted_coexistence_marker\", \"class\": \"multi_valued\", \"evidence\": [\"also\"]}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"coexistence\": [\"also\"]}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": []}"
+  },
+  {
+   "target": "cello:b",
+   "text": "I used to play the cello.",
+   "observed_at": null,
+   "fact_uuid": "ref-0067",
+   "stored": "{\"clause_count\": 1, \"ended_values\": [{\"entity\": \"speaker\", \"marker\": \"used to\", \"property\": \"play\", \"value\": \"cello\"}], \"markers\": {\"aspect\": {\"past_habitual\": [\"used to\"]}, \"change\": [\"used to\"]}, \"relation_count\": 1, \"relations\": [{\"basis\": \"change_evidence_not_proposable:proposition_unknown\", \"classification\": \"unresolved\", \"other_fact_uuid\": \"ref-0060\", \"other_memory_ref\": \"memory:cello:a\", \"slot\": \"speaker|play\"}], \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"status\": \"unknown\", \"basis\": \"none\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"aspect\": {\"past_habitual\": [\"used to\"]}, \"change\": [\"used to\"]}, \"ended_values\": [{\"entity\": \"speaker\", \"marker\": \"used to\", \"property\": \"play\", \"value\": \"cello\"}], \"relations\": [{\"basis\": \"change_evidence_not_proposable:proposition_unknown\", \"classification\": \"unresolved\", \"other_fact_uuid\": \"ref-0060\", \"other_memory_ref\": \"memory:cello:a\", \"slot\": \"speaker|play\"}], \"relation_count\": 1, \"clause_count\": 1, \"proposal_ineligible_reasons\": [\"proposition_unknown\"]}"
+  },
+  {
+   "target": "soup:a",
+   "text": "The cafeteria no longer serves soup.",
+   "observed_at": null,
+   "fact_uuid": "ref-0074",
+   "stored": "{\"clause_count\": 1, \"ended_values\": [{\"entity\": \"cafeteria\", \"marker\": \"no longer\", \"property\": \"serv\", \"value\": \"soup\"}], \"markers\": {\"aspect\": {\"past_habitual\": [\"no longer\"]}, \"change\": [\"no longer\"]}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"status\": \"unknown\", \"basis\": \"none\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"aspect\": {\"past_habitual\": [\"no longer\"]}, \"change\": [\"no longer\"]}, \"ended_values\": [{\"entity\": \"cafeteria\", \"marker\": \"no longer\", \"property\": \"serv\", \"value\": \"soup\"}], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": [\"proposition_unknown\"]}"
+  },
+  {
+   "target": "plain:a",
+   "text": "Remember to water the ferns on Friday.",
+   "observed_at": null,
+   "fact_uuid": "ref-0081",
+   "stored": "{\"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"status\": \"unknown\", \"basis\": \"none\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 0, \"proposal_ineligible_reasons\": [\"proposition_unknown\"]}"
+  },
+  {
+   "target": "intern:a",
+   "text": "The intern works in Lisbon.",
+   "observed_at": null,
+   "fact_uuid": "ref-0088",
+   "stored": "{\"clause_count\": 1, \"proposition\": {\"entity\": \"intern\", \"property\": \"work in\", \"status\": \"known\", \"value\": \"lisbon\"}, \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"intern\", \"property\": \"work in\", \"status\": \"known\", \"value\": \"lisbon\", \"basis\": \"interpreted\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {}, \"ended_values\": [], \"relations\": [], \"relation_count\": 0, \"clause_count\": 1, \"proposal_ineligible_reasons\": []}"
+  },
+  {
+   "target": "intern:b",
+   "text": "The intern has moved and now works in Porto.",
+   "observed_at": null,
+   "fact_uuid": "ref-0095",
+   "stored": "{\"cardinality\": {\"basis\": \"interpreted_replacement_marker\", \"class\": \"single_valued\", \"evidence\": [\"moved\"]}, \"clause_count\": 2, \"markers\": {\"aspect\": {\"present\": [\"now\"]}, \"change\": [\"moved\"]}, \"proposition\": {\"entity\": \"intern\", \"property\": \"work in\", \"status\": \"known\", \"value\": \"porto\"}, \"relation_count\": 1, \"relations\": [{\"basis\": \"single_valued_replacement_marker\", \"classification\": \"state_change_candidate\", \"other_fact_uuid\": \"ref-0088\", \"other_memory_ref\": \"memory:intern:a\", \"proposal\": {\"application_path\": \"AgentMemory.correct(replacement_kind='state_change') under PAMA\", \"applied\": false, \"authority_effect\": \"none\", \"effective_no_later_than\": null, \"operation\": \"correction\", \"proposal_id\": \"semantic-proposal:234bb69f4c7b75243223d1ca4e197c02\", \"replacement_kind\": \"state_change\", \"replacement_text\": \"The intern has moved and now works in Porto.\", \"source_fact_uuid\": \"ref-0095\", \"target_fact_uuid\": \"ref-0088\", \"target_reference\": \"memory:intern:a\"}, \"slot\": \"intern|work in\"}], \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"intern\", \"property\": \"work in\", \"status\": \"known\", \"value\": \"porto\", \"basis\": \"interpreted\"}, \"cardinality\": {\"basis\": \"interpreted_replacement_marker\", \"class\": \"single_valued\", \"evidence\": [\"moved\"]}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {\"aspect\": {\"present\": [\"now\"]}, \"change\": [\"moved\"]}, \"ended_values\": [], \"relations\": [{\"basis\": \"single_valued_replacement_marker\", \"classification\": \"state_change_candidate\", \"other_fact_uuid\": \"ref-0088\", \"other_memory_ref\": \"memory:intern:a\", \"proposal\": {\"application_path\": \"AgentMemory.correct(replacement_kind='state_change') under PAMA\", \"applied\": false, \"authority_effect\": \"none\", \"effective_no_later_than\": null, \"operation\": \"correction\", \"proposal_id\": \"semantic-proposal:234bb69f4c7b75243223d1ca4e197c02\", \"replacement_kind\": \"state_change\", \"replacement_text\": \"The intern has moved and now works in Porto.\", \"source_fact_uuid\": \"ref-0095\", \"target_fact_uuid\": \"ref-0088\", \"target_reference\": \"memory:intern:a\"}, \"slot\": \"intern|work in\"}], \"relation_count\": 1, \"clause_count\": 2, \"proposal_ineligible_reasons\": []}"
+  },
+  {
+   "target": "intern:c",
+   "text": "The intern works in Lisbon.",
+   "observed_at": null,
+   "fact_uuid": "ref-0102",
+   "stored": "{\"clause_count\": 1, \"proposition\": {\"entity\": \"intern\", \"property\": \"work in\", \"status\": \"known\", \"value\": \"lisbon\"}, \"relation_count\": 2, \"relations\": [{\"basis\": \"single_valued_without_change_evidence\", \"classification\": \"conflict\", \"other_fact_uuid\": \"ref-0095\", \"other_memory_ref\": \"memory:intern:b\", \"slot\": \"intern|work in\"}, {\"basis\": \"identical_slot_and_value\", \"classification\": \"same_value\", \"other_fact_uuid\": \"ref-0088\", \"other_memory_ref\": \"memory:intern:a\", \"slot\": \"intern|work in\"}], \"version\": \"1.1.0/1.0.0\"}",
+   "expanded": "{\"interpreter\": {\"ref\": \"agent-memory-deterministic-write-semantics\", \"version\": \"1.1.0\"}, \"classifier\": {\"version\": \"1.0.0\"}, \"authority_effect\": \"none\", \"proposition\": {\"entity\": \"intern\", \"property\": \"work in\", \"status\": \"known\", \"value\": \"lisbon\", \"basis\": \"interpreted\"}, \"cardinality\": {\"class\": \"unknown\", \"basis\": \"none\"}, \"self_validity\": {\"status\": \"none\"}, \"markers\": {}, \"ended_values\": [], \"relations\": [{\"basis\": \"single_valued_without_change_evidence\", \"classification\": \"conflict\", \"other_fact_uuid\": \"ref-0095\", \"other_memory_ref\": \"memory:intern:b\", \"slot\": \"intern|work in\"}, {\"basis\": \"identical_slot_and_value\", \"classification\": \"same_value\", \"other_fact_uuid\": \"ref-0088\", \"other_memory_ref\": \"memory:intern:a\", \"slot\": \"intern|work in\"}], \"relation_count\": 2, \"clause_count\": 1, \"proposal_ineligible_reasons\": []}"
+  }
+ ]
+}

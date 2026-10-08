@@ -32,6 +32,7 @@ from ..core.readmission import RejectedValueRegistry
 from ..state.substrate import DeterministicIds, Episode, Fact, TemporalGraphPort
 from . import cross_fact_currentness as cross_fact
 from . import proposition_semantics as semantics
+from . import typed_proposition as typed
 from .temporal_intent import DECLARED_TEMPORAL_KEY, declared_temporal, parse_time
 
 
@@ -292,6 +293,7 @@ class GovernedMemoryAdapter:
         temporal: "Mapping[str, str] | None" = None,
         replacement_kind: str = ERROR_CORRECTION,
         source_ref: str | None = None,
+        typed_write: "Mapping[str, object] | None" = None,
     ) -> CommitResult:
         """Commit a proposal through the governed path.
 
@@ -324,6 +326,10 @@ class GovernedMemoryAdapter:
         `governed_delete` for the same reason: capping a discharge without
         providing the replacement channel removes a legitimate operation rather
         than governing it.
+
+        `typed_write` (#732 R1/R2) carries a validated caller-declared typed
+        proposition or a persisted extraction record. It is write-time evidence
+        only and grants nothing; PAMA decides exactly as without it.
         """
         correlation = self._ids.next()
         if episode is not None:
@@ -395,7 +401,7 @@ class GovernedMemoryAdapter:
                         attestation.authority_kind if attestation is not None else None
                     ),
                 )
-            fact_uuid = self._write(proposal, fact_text, temporal, source_ref=source_ref)
+            fact_uuid = self._write(proposal, fact_text, temporal, source_ref=source_ref, typed_write=typed_write)
             self._current_fact_by_memory[proposal.target_reference] = fact_uuid
             events.append(
                 self._event(
@@ -565,21 +571,11 @@ class GovernedMemoryAdapter:
         temporal: "Mapping[str, str] | None" = None,
         *,
         source_ref: str | None = None,
+        typed_write: "Mapping[str, object] | None" = None,
     ) -> str:
         declared = declared_temporal(temporal)
-        domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
-        required_domains = tuple(dict.fromkeys(proposal.required_isolation_domain_refs))
-        if required_domains and not set(required_domains).issubset(set(domain_refs)):
-            raise ValueError("required isolation domains must also be bound isolation domains")
-
+        scope = self._write_scope(proposal)
         uuid = self._ids.next()
-        scope = {
-            "domain_refs": domain_refs,
-            "required_domain_refs": required_domains,
-            "project_ref": proposal.project_ref,
-            "task_ref": proposal.task_ref,
-            "purpose": proposal.purpose,
-        }
         attributes: dict = {DECLARED_TEMPORAL_KEY: declared} if declared else {}
         # #671 C1: immutable write provenance (actor, adapter tenant, purpose, channel, source_ref);
         # derived here from the governed proposal, never from caller overrides.
@@ -591,7 +587,7 @@ class GovernedMemoryAdapter:
             source_ref=cross_fact.validate_source_ref(source_ref),
         )
         attributes[semantics.WRITE_SEMANTICS_KEY] = semantics.persisted_form(
-            self._interpret_write(uuid, proposal.target_reference, fact_text, declared, scope)
+            self._interpret_write(uuid, proposal.target_reference, fact_text, declared, scope, typed_write)
         )
         self._substrate.write_fact(
             Fact(
@@ -609,23 +605,49 @@ class GovernedMemoryAdapter:
         if summary is not None and self._semantic_slot_index is not None:
             key = self._semantic_key(semantics.write_slot(summary), scope)
             self._semantic_slot_index.setdefault(key, {})[uuid] = summary
+        typed_summary = self._typed_summary(attributes[semantics.WRITE_SEMANTICS_KEY])
+        if typed_summary is not None and self._semantic_slot_index is not None:
+            key = self._semantic_key(typed_summary["typed_proposition"]["slot"], scope)
+            self._semantic_slot_index.setdefault(key, {})[uuid] = typed_summary
         self._fact_memory[uuid] = proposal.target_reference
         self._state_version[proposal.target_reference] = self._state_version.get(proposal.target_reference, 0) + 1
         return uuid
 
     # -- write-time semantics (#550) ----------------------------------------
 
+    def _write_scope(self, proposal: policy.Proposal) -> dict:
+        domain_refs = tuple(proposal.isolation_domain_refs) or ((proposal.scope,) if proposal.scope else (self._tenant,))
+        required_domains = tuple(dict.fromkeys(proposal.required_isolation_domain_refs))
+        if required_domains and not set(required_domains).issubset(set(domain_refs)):
+            raise ValueError("required isolation domains must also be bound isolation domains")
+        return {
+            "domain_refs": domain_refs,
+            "required_domain_refs": required_domains,
+            "project_ref": proposal.project_ref,
+            "task_ref": proposal.task_ref,
+            "purpose": proposal.purpose,
+        }
+
     def _interpret_write(
-        self, uuid: str, memory_ref: str, fact_text: str, declared: "Mapping[str, str] | None", scope: dict
+        self, uuid: str, memory_ref: str, fact_text: str, declared: "Mapping[str, str] | None", scope: dict,
+        typed_write: "Mapping[str, object] | None" = None,
     ) -> dict:
         """Typed write-time evidence: interpretation, then same-slot classification.
 
         Evidence only. Nothing here mutates another fact, refuses, supersedes, or
         changes currentness; a ``state_change`` proposal is applied only by an explicit
-        governed correction.
+        governed correction. A write carrying a typed proposition (#732 R3) is
+        classified by classifier 1.1.0 instead of the interpreted slot logic; a write
+        without one (including a failed extraction) takes the unchanged 1.0.0 path.
         """
 
         interpretation = semantics.interpret_write(fact_text, declared_temporal=declared)
+        typed_write = typed_write or {}
+        if typed_write.get("typed_proposition"):
+            return self._interpret_typed_write(interpretation, uuid, memory_ref, fact_text, declared, scope,
+                                               typed_write)
+        if typed_write:
+            interpretation.update({key: typed_write.get(key) for key in ("typed_proposition", "extraction")})
         slots = {semantics.write_slot(interpretation)} | semantics.ended_slots(interpretation)
         slots.discard(None)
         retained = []
@@ -636,21 +658,84 @@ class GovernedMemoryAdapter:
             for key in keys:
                 candidates.update(index.get(key, {}))
             for other in sorted(candidates):
-                # Lifecycle maps decide currentness: a governed correction or state change
-                # moves the memory's current fact, and forget/dispute are recorded here.
-                other_ref = self._fact_memory.get(other)
-                if other_ref is None or other_ref == memory_ref or self._current_fact_by_memory.get(other_ref) != other:
-                    continue
-                if other in self._tombstones or other in self._disputed:
-                    continue
-                if not self._same_semantic_scope(self._fact_scope.get(other), scope):
-                    continue
-                retained.append((other, other_ref, candidates[other]))
+                other_ref = self._retained_ref(other, memory_ref, scope)
+                if other_ref is not None:
+                    retained.append((other, other_ref, candidates[other]))
         relations = semantics.classify_write(
             interpretation, uuid, fact_text, retained, observed_at=(declared or {}).get("observed_at")
         )
         interpretation.update(semantics.bounded_relations(relations))
         return interpretation
+
+    def _retained_ref(self, other: str, memory_ref: str, scope: dict) -> str | None:
+        """The retained-fact filter: the other fact's memory ref when it may be related, else None.
+
+        Lifecycle maps decide currentness: a governed correction or state change moves the
+        memory's current fact, and forget/dispute are recorded here.
+        """
+
+        other_ref = self._fact_memory.get(other)
+        if other_ref is None or other_ref == memory_ref or self._current_fact_by_memory.get(other_ref) != other:
+            return None
+        if other in self._tombstones or other in self._disputed:
+            return None
+        if not self._same_semantic_scope(self._fact_scope.get(other), scope):
+            return None
+        return other_ref
+
+    def typed_candidates(self, proposal: policy.Proposal, fact_uuids: Sequence[str]) -> list[tuple[str, str]]:
+        """#732 R2: ``(uuid, text)`` for admitted facts that pass the retained filter for this write.
+
+        Same tenant and scope (including ``task_ref``), current, not disputed, not tombstoned,
+        in the order given (the writer's governed-recall admission order).
+        """
+
+        scope = self._write_scope(proposal)
+        out = []
+        for fact_uuid in dict.fromkeys(fact_uuids):
+            fact = self._substrate.get_fact(fact_uuid)
+            if fact is None or fact.group_id != self._tenant:
+                continue
+            if self._retained_ref(fact_uuid, proposal.target_reference, scope) is not None:
+                out.append((fact_uuid, fact.fact_text))
+        return out
+
+    def _interpret_typed_write(self, interpretation: dict, uuid: str, memory_ref: str, fact_text: str,
+                               declared: "Mapping[str, str] | None", scope: dict,
+                               typed_write: "Mapping[str, object]") -> dict:
+        """Classifier 1.1.0 (#732 R3): typed-slot and confirmed-link relations only."""
+
+        record = dict(typed_write["typed_proposition"])
+        extraction = typed_write.get("extraction")
+        reasons = typed.typed_ineligible_reasons(interpretation, record)
+        link_uuid = record.get("updates_fact_uuid")
+        allowed_link = link_uuid if link_uuid in ((extraction or {}).get("candidate_uuids") or ()) else None
+        candidates = set(self._semantic_index().get(self._semantic_key(record["slot"], scope), {}))
+        if allowed_link:
+            candidates.add(allowed_link)
+        retained = []
+        for other in sorted(candidates):
+            other_ref = self._retained_ref(other, memory_ref, scope)
+            fact = self._substrate.get_fact(other) if other_ref is not None else None
+            if fact is not None and fact.group_id == self._tenant:
+                stored = (fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY)
+                retained.append((other, other_ref, fact.fact_text, stored))
+        link = (str(link_uuid), self._fact_memory.get(str(link_uuid), "")) if link_uuid else None
+        relations = typed.classify_typed(record, reasons, uuid, fact_text, retained, link=link,
+                                         link_is_candidate=allowed_link is not None,
+                                         observed_at=(declared or {}).get("observed_at"))
+        interpretation["classifier"] = {"version": semantics.TYPED_CLASSIFIER_VERSION}
+        interpretation.update(semantics.bounded_relations(relations))
+        interpretation["typed_proposition"] = record
+        interpretation["typed_ineligible_reasons"] = reasons
+        if extraction is not None:
+            interpretation["extraction"] = extraction
+        return interpretation
+
+    @staticmethod
+    def _typed_summary(stored: "Mapping[str, object] | None") -> dict | None:
+        record = (stored or {}).get("typed_proposition")
+        return {"typed_proposition": dict(record)} if record else None
 
     @staticmethod
     def _same_semantic_scope(other: dict | None, scope: dict) -> bool:
@@ -674,10 +759,15 @@ class GovernedMemoryAdapter:
             for fact in getattr(self._substrate, "all_facts", lambda: ())():
                 if fact.group_id != self._tenant:
                     continue
-                summary = semantics.index_summary((fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY))
+                stored = (fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY)
+                summary = semantics.index_summary(stored)
                 if summary is not None:
                     key = self._semantic_key(semantics.write_slot(summary), self._fact_scope.get(fact.uuid))
                     index.setdefault(key, {})[fact.uuid] = summary
+                typed_summary = self._typed_summary(stored)
+                if typed_summary is not None:
+                    key = self._semantic_key(typed_summary["typed_proposition"]["slot"], self._fact_scope.get(fact.uuid))
+                    index.setdefault(key, {})[fact.uuid] = typed_summary
             self._semantic_slot_index = index
         return self._semantic_slot_index
 

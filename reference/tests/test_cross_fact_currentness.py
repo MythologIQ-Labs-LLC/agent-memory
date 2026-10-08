@@ -168,7 +168,7 @@ class ProvenanceAndPolicyIdentityTests(_Case):
 
     def test_policy_identity(self):
         identity = runtime_composition.MULTI_ROUTE_RANKING_POLICY.identity()
-        self.assertEqual(POLICY_VERSION, "3.3.0")
+        self.assertEqual(POLICY_VERSION, "3.4.0")  # #732 R4: typed relations admitted to the guards
         self.assertEqual(CONSTRAINED_POLICY_VERSION, "3.2.0")
         self.assertEqual(identity["cross_fact_policy"], CROSS_FACT_POLICY)
 
@@ -623,7 +623,7 @@ class GuardTests(unittest.TestCase):
     def test_g12_is_versioned(self):
         source = _fact("S", "The user's sister moved and now lives in Boston.", semantics=_semantics())
         self.assertEqual(self.refusal(source=source), "change_evidence_not_assertive:2")
-        self.assertEqual(cf.ASSERTION_FILTER_VERSION, "6.0.0")
+        self.assertEqual(cf.ASSERTION_FILTER_VERSION, "6.1.0")  # #732 R4: typed branch only
 
     def test_g13_clocks(self):
         older = {"observed_at": "2026-01-01T00:00:00Z"}

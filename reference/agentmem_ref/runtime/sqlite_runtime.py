@@ -584,6 +584,7 @@ class SQLiteRestartSafeRuntime:
         temporal=None,
         replacement_kind="error_correction",
         source_ref=None,
+        typed_write=None,
     ):
         return self._transactional_operation(
             lambda: self.adapter.commit_proposal(
@@ -595,6 +596,7 @@ class SQLiteRestartSafeRuntime:
                 temporal=temporal,
                 replacement_kind=replacement_kind,
                 source_ref=source_ref,
+                typed_write=typed_write,
             )
         )
 
@@ -707,7 +709,7 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
             lambda: self.adapter.governed_recall(query, context)
         )
 
-    def commit_proposal(self, proposal, fact_text: str, episode=None, *, evidence=None, attestation=None, temporal=None, replacement_kind="error_correction", source_ref=None):
+    def commit_proposal(self, proposal, fact_text: str, episode=None, *, evidence=None, attestation=None, temporal=None, replacement_kind="error_correction", source_ref=None, typed_write=None):
         result = self.base.commit_proposal(
             proposal,
             fact_text,
@@ -717,6 +719,7 @@ class SQLiteConfigBoundRestartRuntime(ConfigBoundRestartRuntime):
             temporal=temporal,
             replacement_kind=replacement_kind,
             source_ref=source_ref,
+            typed_write=typed_write,
         )
         self._bind_current_base()
         return result

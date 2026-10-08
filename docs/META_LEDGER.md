@@ -5031,3 +5031,103 @@ SHA256(content_hash + previous_hash) = 6d90c30304e637e4b27bc2637d260b7fe8f29b746
 - **V2:** the implementation-PR gate executes the control tests, the S6 check and extractor-off byte identity.
 
 **Next:** the implementation PR (Step A). The credential (R7) and provider confirmation (OQ1) are owner actions. #673 stays held.
+
+---
+
+### Entry #117: IMPLEMENTATION — #732 typed write-time propositions; Runtime Baseline v6 declared (docs/67 Step A)
+
+**Timestamp**: 2026-10-08T02:30:00-04:00
+**Phase**: IMPLEMENT
+**Author**: Specialist
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**: R1–R4 of docs/plan-732-remediation.md, `reports/runtime/baseline-v6-declaration.json`, register `declared_successor`
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `2ab761aa445bc4701fe8334da16e996b7a074930`): `735cdb7958fa105cd4cb35f9f6aa89394419b6682793a356329745839e92862d`
+**Previous Hash**: `6d90c30304e637e4b27bc2637d260b7fe8f29b746a805c05f44f3b170bbbda68`
+**Chain Hash**: `43ef4efeb9384700b7fbedfd918c88e5ed788fb9b2b7e255fd2d27e376a22492`
+
+**Decision**: The #732 remediation is implemented as planned (Gate PASS, Entry #116).
+
+**R1.** `remember(..., proposition=)` takes a caller-declared typed proposition with closed flags. The public contract moves to 1.6.0.
+
+**R2.** The `PropositionExtractor` is opt-in:
+- egress requires a caller-supplied `egress_policy`;
+- each call has a 20 s timeout;
+- the extraction is persisted once, together with the raw output, request id, candidates and prompt sha256;
+- recovery never calls the extractor.
+
+There are two implementations:
+- a recorded-fixture stub for tests;
+- a reference Anthropic Messages provider. Its model id is a constructor argument, and its frozen prompt sha256 is `9974ab01…`.
+
+**R3.** Classifier 1.1.0 (typed writes only):
+- typed relations come from a typed slot, or from a deterministically confirmed link;
+- an unconfirmed link is recorded as `typed_link_unconfirmed`;
+- typed eligibility drops only `proposition_unknown` and `proposition_ambiguous`.
+
+**R4.** Assertion filter 6.1.0 and ranking policy 3.4.0:
+- the typed branches of G3, G6 and G12 read the persisted typed flags;
+- the interpreted path is byte-identical.
+
+**Verification:**
+- 38 control tests pass. They include the Boston/dentist different-slot refusal, trivial `replaces_value`, the flags, actor/source/scope, dispute/forget, and failure/timeout/egress.
+- Extractor-off `write_semantics` bytes are identical to cbcc48f on 15 synthetic writes.
+- The S6 prompt-similarity check shows a maximum of 0.333 against the measurement corpus.
+
+**Runtime Baseline v6** is declared as successor to v5 (issue #732):
+- 15 declared blobs;
+- identity deltas: ranking policy 3.3.0→3.4.0, public contract 1.5.0→1.6.0;
+- acceptance evidence: the public Gauntlet probe, the `-v6` AMB and LongMemEval lanes, and replay `mesa-formal-v3`.
+
+The checker reports TRANSITION.
+
+**Suite:** 2396 tests. The failures that remain also fail on clean `main` in this container: `test_gauntlet_durability`, `test_benchmark_author_golden_path`, `test_gauntlet_external_example` and `test_keyed_rebinding_benchmark`.
+
+**Next:** the implementation-PR Tribunal (V2: execute the controls, the S6 check and the byte identity). Then the `-v6` lanes, the mesa-formal-v3 freeze and extractor-off replay, and B1/B2. The credential (R7) remains an owner action.
+
+---
+
+### Entry #118: GATE TRIBUNAL — PASS (#732 remediation implementation, Step A, attempt 2)
+
+**Timestamp**: 2026-10-08T03:00:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: PR #741 at e3420c0 (R1–R4 of docs/plan-732-remediation.md and the Runtime Baseline v6 declaration)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_732_implementation_attempt2.md) = 513a24223ae908e8cf048b9410b6daab096b9b2dec555ffbfde1e0a9d0f2cbbf
+
+**Previous Hash**: `43ef4efeb9384700b7fbedfd918c88e5ed788fb9b2b7e255fd2d27e376a22492`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 097e13ee838803d926a32a2f9eacfdcd266957eadcb59e812cad7a0bc9416b08
+
+**Decision**: The implementation passes.
+
+**Attempt 1** was a VETO on X1: the reference provider request was incompatible with current Messages API constraints. The fix:
+- the wire schema omits the length keywords;
+- no sampling parameters are sent by default;
+- `max_tokens` is 16000, and `effort` is optional.
+
+The frozen prompt and schema hashes are unchanged.
+
+**Verified by execution:**
+- the checker reports TRANSITION, v5 to declared v6;
+- 39 control tests pass, including extractor-off byte identity against real v5 code;
+- S6 maximum is 0.333;
+- full suite: 2373 passed, and the only failure is the pre-existing `test_gauntlet_durability`.
+
+**Advisories carried forward:**
+- **Y1:** the gated provider-freeze record includes one synthetic-text smoke request with its request id.
+- **W2–W5** are documented.
+
+**Next:**
+1. Merge (Step A, TRANSITION).
+2. The `-v6` lanes, plus the mesa-formal-v3 freeze and extractor-off replay.
+3. v6 B1/B2, with the extractor path marked unaccepted.
+4. Owner credential, then the provider-freeze record, then holdout acceptance.
+
+#673 stays held.
