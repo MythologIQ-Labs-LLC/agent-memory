@@ -73,7 +73,7 @@ scores of `measurement-v1` reproduce byte-identically on v6 with the extractor o
 |---|---|---|
 | S1/S2 retrieval admission | 15 | identical set to extractor-off; independent of typed evidence |
 | S4 lexical ineligibility false refusal | 2 | P9-07 `I think in Celsius` → interpreter hedge scan; P11-09 subjectless report → `untrusted_self_claim` |
-| Candidate generation | 1 hidden | the older fact was not offered as a candidate in 69/800 records (3 base positives: P7-02, P10-07, P9-06), mostly masked by S1/S2 attributed first. P9-06 and two variants (P10-08-subject_wording, R6-05-subject_wording) reach S7 under `gold` only through the shared placeholder slot, which a real extractor could not reproduce, so the realistic ceiling is **194/212** |
+| Candidate generation | 1 hidden | the older fact was not offered as a candidate in 69/800 records (3 base positives: P7-02, P10-07, P9-06), mostly masked by S1/S2 attributed first. P9-06 and two variants (P10-08-subject_wording, R6-05-subject_wording) reach S7 under `gold` only through the shared placeholder slot, which a real extractor could not reproduce, so the realistic ceiling is **194/212**. The same artefact affects one negative: under `flag_blind`, N2-05 engages without its older fact offered, so 43 of the 44/64 flag-blind non-structural false engagements had the older fact offered |
 | Guards G1–G13 | 0 false refusals | |
 | Ranking (S6) | 0 | |
 
@@ -81,8 +81,8 @@ M-inv mismatches (5, all `subject_wording` variants) are admission differences (
 S4 `relation_not_state_change` refusal (P4-03 variant), not ranking differences.
 
 Structural controls are **not** all refused by guards. N7, N8 and most of N9 are refused by G8/G9.
-N10 and N13 (8/8 each) stop at admission (S2 `newer_not_admitted`) in every mode, and so do most
-`change_scope`/`dispute` variants (part of the 90 S2 must-change rows). Under `slot_drift`, N7–N9
+N10 and N13 (8/8 each) stop at admission (S2 `newer_not_admitted`) in every mode, and so do all
+`change_scope` and `dispute` variants (40/40 each; part of the 90 S2 must-change rows). Under `slot_drift`, N7–N9
 stop at S4 before any guard. Zero structural false engagements is therefore a property of
 admission plus guards together, not of the guards alone.
 
@@ -102,10 +102,14 @@ admission plus guards together, not of the guards alone.
    rate of the frozen extractor is **unmeasured** (not zero); this diagnostic shows engagement is
    all-or-nothing on it. The `slot_drift` 0/212 is a fact about the code made visible, not a
    measured rate: every record is given 100% drift and a typed older fact.
-3. **Safety is single-sourced for six semantic control families.** Apart from hedging (the
-   interpreter's lexical hedge scan) and the structural guards, the read path relies entirely on
-   extractor flags for quotation, forwarding, sarcasm, conditionals, negation and multi-value /
-   coexistence. An extractor that misses those flags produces up to 44/64 false engagements.
+3. **Once a write is admitted, safety for the semantic control families rests on extractor flags alone.**
+   In every mode, 11/64 non-structural negatives stop at admission (S2 `newer_not_admitted`:
+   N1 1, N3 1, N4 1, N5 1, N11 3, N12 4) before any flag matters. Under `gold`, the 0/64 is therefore
+   53 S4 flag refusals plus 11 admission refusals. Of the admitted negatives, only hedging (N4,
+   through the interpreter's lexical hedge scan) has a defence other than extractor flags. The rest
+   (N1, N2, N3, N5, N6, N11, N12: quotation, forwarding, sarcasm, conditionals, negation, multi-value /
+   coexistence) rely entirely on flags. Under `flag_blind`, 44/64 engage. Of the 20 that do not,
+   11 stop at S2 and 9 at S4 (N4 7, N1-02 1, N3-07 1).
 4. **The lexical scans cut both ways.** They are the only flag-blind hedge defence (N4 0/8) and
    also cause the two positive false refusals. Removing or extending them case-by-case is out of
    bounds (no G12 cue-list expansion).
@@ -113,9 +117,12 @@ admission plus guards together, not of the guards alone.
 Unclassified: whether real extractor errors are dominated by slot drift, missing flags, false
 flags or declines; this needs the frozen extractor's output and is blocked on the provider gate.
 
-## Mechanism hypothesis (proposed, not implemented) and adversarial challenge
+## Rejected hypothesis H-ID1 (circular) and adversarial challenge
 
-**H-ID1. Write-time identity resolution against the candidate's typed record.** When a write
+This section records a hypothesis that was examined and **rejected**. It is not a proposal or
+a remedy, and nothing here is a design input except the reasons for rejection.
+
+**H-ID1 (rejected). Write-time identity resolution against the candidate's typed record.** When a write
 carries an extracted link `updates_fact_uuid` to a candidate the runtime itself offered, and the
 candidate is typed with a different slot, accept identity only when independent, typed,
 non-lexical corroboration holds: the newer `replaces_value` normalizes equal to the candidate's
@@ -123,8 +130,9 @@ typed `value`, the actor/source/scope guards pass, and neither side is `multi`. 
 resolved identity as an explicit, versioned alias edge (`typed_link_resolved`) with
 `authority_effect: none`; the read path keeps every existing guard.
 
-Why it might generalize: it uses persisted typed evidence (value equality on a linked,
-guard-compatible pair), not words, domains, entities or benchmark templates.
+Its apparent appeal was that it uses typed evidence rather than words or templates. That appeal
+does not survive challenge: the "typed evidence" is produced by the same extractor call that it
+would corroborate.
 
 Adversarial challenge (independent review, recorded VETO on the first draft of this section):
 - **Circular on this diagnostic.** `slot_drift` keeps `replaces_value` byte-identical to the
@@ -143,21 +151,21 @@ Adversarial challenge (independent review, recorded VETO on the first draft of t
   `TRIVIAL_VALUES` analogue); `cardinality: null` passing "neither side multi"; a persisted alias
   edge merging slots transitively into later `typed_slot` matches.
 
-**Status of H-ID1: not supported; not proposed for implementation.** Proposition identity across
+**Status of H-ID1: rejected as circular; not proposed for implementation or further testing.**
+The same holds for any same-extractor link plus `replaces_value` corroboration, especially across
+subjects and for low-entropy values. Proposition identity across
 independent extractions remains an open deficit with no qualified mechanism. Any candidate
 needs evidence that does not share the extractor call it corroborates, and must be tested on
 independently authored identity cases (value drift, cross-subject collisions, low-entropy values)
 rather than on this corpus.
 
-Further considerations:
-- *Same old value, different property* (port 8080 used by two settings): the link must still
-  name that candidate and both slots must be `single`; residual risk remains when an extractor
-  links the wrong candidate → test with independently authored cross-property collisions.
-- *Extractor omits `replaces_value`* (common for bare restatements): H-ID1 then refuses —
-  recall loss, not unsafety; measure separately.
+Further reasons for rejection, and constraints on any successor:
+- *Same old value, different property* (port 8080 used by two settings): a same-extractor value
+  match cannot tell the two properties apart, so H-ID1 can merge distinct slots whenever the
+  extractor links the wrong candidate.
 - *Alternative H-ID2 (send candidates' typed slots to the extractor)* changes the frozen prompt
-  and input contract → requires a new extractor version and invalidates the W5 freeze; H-ID1
-  does not touch the prompt.
+  and input contract, so it would need a new extractor version and would invalidate the W5
+  freeze. It is listed only as a constraint on #757 design work, not evaluated here.
 - *Alternative H-ID3 (fuzzy slot similarity)* is rejected: it is a lexical heuristic with no
   typed corroboration.
 - Any of these is a protected-runtime change → requires a gated plan, a Runtime Baseline
@@ -174,4 +182,9 @@ contract and is not proposed for this cycle.
 R6 on published v6 can approach the ~194/212 ceiling only if the frozen extractor names slots
 identically across independent calls, which is unmeasured. Whether to run the single
 smoke/holdout on v6 as frozen, or first design a non-circular identity mechanism (a v7
-candidate, serialized against #644 / PR #731), is an owner/governance decision recorded on #732.
+candidate, serialized against #644 / PR #731), was put to the owner on #732.
+
+**Owner decision (2026-10-08): option (b).** Cross-write proposition identity is designed before the
+single-use R6 holdout is spent on v6. The bounded design work is tracked in #757. This choice
+authorizes no v7 runtime implementation and no evaluator tuning. The `measurement-v1` FAIL (0/212)
+stands, and #732 stays open.
