@@ -3,7 +3,8 @@
   "generated_from": [
     "docs/69-agentmembench-mesa-formal-baseline.md",
     "reports/benchmarks/dashboard/current.json",
-    "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json"
+    "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json",
+    "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json"
   ],
   "deficits": [
     {
@@ -223,6 +224,584 @@
       "closed_at": null,
       "closure_evidence": [],
       "remaining_gap": "R6 extractor-on holdout acceptance pending; initial v5 generalization gate failed at 0/212 recall"
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P1:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P2:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P3:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S2"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P4:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S2"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P5:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P6:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S2"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P7:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S1"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P8:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P9:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S2"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P10:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S2"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P11:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P12:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S2"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P13:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S2"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R1:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R2:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R3:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R4:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R5:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R6:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R7:recall",
+      "benchmark_profile": "currentness-generalization-732 (corpus sha256 cf2e7646c4ba)",
+      "evidence_class": "independent challenge corpus; deterministic public-facade harness; Runtime Baseline v5 unchanged",
+      "metric": "engagement_recall",
+      "direction": "higher",
+      "agent_memory": 0,
+      "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
+      "gap": null,
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "S3",
+      "secondary_stages": [
+        "S2"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "docs/plan-732-generalization-gate.md"
+      ],
+      "owning_issue": 732,
+      "replay_requirements": [
+        "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
+        "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-08",
+      "closed_at": null,
+      "closure_evidence": []
     }
   ]
 }
