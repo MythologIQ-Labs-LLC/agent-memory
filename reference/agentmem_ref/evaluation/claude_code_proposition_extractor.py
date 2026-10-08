@@ -90,11 +90,17 @@ class ClaudeCodeCLIExtractor:
         return {"version": version, "auth_method": str(parsed.get("authMethod"))}
 
     def extract(self, new_text: str, candidates: Sequence[Mapping[str, str]]) -> px.TypedExtraction:
+        # The policy must approve the complete outbound request, not only the
+        # new text. Candidate memories can contain protected information too.
+        if len(candidates) > px.MAX_CANDIDATES:
+            raise ValueError("candidate count exceeds frozen extractor budget")
         payload = json.dumps(
             {"new_text": new_text, "candidates": [dict(item) for item in candidates]},
             ensure_ascii=False,
             sort_keys=True,
         )
+        if self.egress_policy(payload) is not True:
+            raise PermissionError("Claude Code extraction egress refused by caller policy")
         schema = json.dumps(
             px.WIRE_OUTPUT_SCHEMA,
             ensure_ascii=False,
