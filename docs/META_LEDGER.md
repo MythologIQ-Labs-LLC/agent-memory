@@ -5250,3 +5250,31 @@ SHA256(content_hash + previous_hash) = 89d855e31db870b708ab6a1d6e045e53beffbcd05
 - **Tests:** the full suite has 2431 tests. The only failures are the four pre-existing ones (`test_gauntlet_durability`, `test_benchmark_author_golden_path`, `test_gauntlet_external_example`, `test_keyed_rebinding_benchmark`), which also fail on the base.
 
 Step B2 binds the probe artifact. After B2, R6 waits on the owner credential (R7). #673 stays held.
+
+---
+
+### Entry #122: PUBLICATION — Runtime Baseline v6 evidence binding (docs/67 Step B2)
+
+**Timestamp**: 2026-10-08T00:40:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reports/runtime/baseline-v6-qualification.json`, the register (v6 `qualification.blob` and `published_commit`), `reports/runtime/baseline-v6.md`, docs/BACKLOG
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `500cf4418ab51b29bc2583c425fad5ae70be15ac`): `cecab9391a6339adc897f6011486f7be76bcd07ff33452560164e00014f340b3`
+**Previous Hash**: `cf8138c7dd13002e8150741e5fa33303fac93d7dd45cd2872f5bb7179caab4b3`
+**Chain Hash**: `941815f5f3dbaea9f364b948e6d31ffe0da68d70c68255a88d712f5e53b60ef7`
+
+**Decision**: Runtime Baseline v6's public Gauntlet evidence is bound, and v6 is fully published, with the extractor path still unaccepted.
+
+- **Probe run:** `runtime-baseline.yml` run 37726966322 on B1 head `24c6ba8` (PR #745), which ran on the PR head and was not a manual dispatch.
+- **Artifact:** `agent-memory-runtime-baseline-v6-public-gauntlet`, id 11528465358, digest `sha256:2cd74fcb…`.
+- **Probe result:** `sample_count` 3, `exact_top1` 1.0, `system_revision` `e98e6e7`, adapter blob `865ae87`.
+- **Published commit:** `b08cd84`, the merge of #745.
+- **Unchanged:** the record and boundary blobs.
+- **Checks:** the checker prints PASS against v6, the validator binds v1–v6, and the succession tests pass 40/40.
+
+**Scope of the rendered close-gate sentence.** It is the renderer's fixed public-Gauntlet completion text, the same text v5 carries for #671. It satisfies only the docs/67 publication gate. **#732 stays open.** Remediation advisory V1 still applies: the typed proposition and extractor path is UNACCEPTED until the R6 acceptance PR, and a failed acceptance requires a v7 declaration.
+
+**Next:** R6/R7 are blocked on the owner, who must supply the provider credential and model choice and decide OQ2 (whether the extractor stays opt-in). After that come the W5/Y1 provider-freeze record and smoke request, then holdout authoring, freeze and a single scoring. #673 stays held until then.

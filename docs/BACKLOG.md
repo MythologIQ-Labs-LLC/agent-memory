@@ -76,6 +76,12 @@ Execution sequence (owner direction 2026-10-07, roadmap events seq 55-60):
    - **Zero-tolerance invariants held:** 0 false engagements, M-flip 320/320, M-attr 0, M-inv 164/164. They hold vacuously, because nothing engaged.
    - **Report:** `reports/benchmarks/currentness-generalization/measurement/`.
    - **Next:** the classification PR (#719 rows; it waits for #733's parent row), then a #732 remediation plan. The remediation is typed write-time change semantics, generic and never G12 case-by-case. It is accepted only on a fresh G6 holdout plus the MESA v2 / #580 / #584 floors.
+2b. **#732 remediation (Runtime Baseline v6): v6 published 2026-10-08; the extractor path is UNACCEPTED, and #732 stays open.**
+   - **Built:** typed caller propositions and an opt-in model extractor, contract 1.6.0, policy 3.4.0 (#741).
+   - **Evidence:** `-v6` lanes EQUAL to `-v5`; `mesa-formal-v3`, extractor off, reproduces v2.
+   - **Published:** B1 #745, bound at B2 (probe run 37726966322, published commit `b08cd84`).
+   - **Acceptance (R6) is blocked on the owner.** It needs the provider credential and model choice (R7). The provider-freeze record and smoke request come next, then a fresh G6 holdout scored once with the extractor on, plus MESA, #580 and #584 with the extractor on.
+   - **If acceptance fails:** a v7 declaration is required.
 3. **#673 ranking/fusion: held. The #732 gate FAILED, so #732 remediation must be accepted first.** Iteration 1 was vetoed (`docs/plan-673-route-fusion.md`), and its findings are design inputs. `semantic_retrieval` stays `off` by default (`decision-semantic-default`). No fusion constant is tuned after a score.
 4. **#644 controlled recall**, **#688 typed relations**, **#689 metabolism**, **#690 failure memory**, **#691 consumer package**, **#636 composition**. These are accepted architecture that MESA does not score, and they stay in scope.
 5. **#596 / #597** interpreter work. Not the M4 bottleneck (interpretation succeeded in 250/250 MESA pairs), but natural-data recognition (#580/#594) still needs it.
