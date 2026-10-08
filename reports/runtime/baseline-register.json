@@ -71,10 +71,21 @@
         "blob": "514d2e92f64da2c8f3eb1db95b19204ab9a479e3"
       },
       "published_commit": "0110f8efdb6a6d577aaf8630c17721b3813479b0"
+    },
+    {
+      "baseline_id": "agent-memory-runtime-baseline-v6",
+      "record": "reports/runtime/baseline-v6.json",
+      "record_blob": "f2dc28e7a8d2f9b8187702c63a663db554a0830f",
+      "source_boundary": "reports/runtime/baseline-v6-source-boundary.json",
+      "source_boundary_blob": "2dc61c4d3341da8b60cca839bc34838b204f37d8",
+      "public_gauntlet_manifest": "examples/gauntlet/agent-memory-runtime-baseline-v6.json",
+      "qualification": {
+        "path": "reports/runtime/baseline-v6-qualification.json",
+        "pointer": "",
+        "blob": "49f5ba7cdebfdd9ebfb4ff1de598b3b5b25c39e1"
+      },
+      "published_commit": null
     }
   ],
-  "declared_successor": {
-    "baseline_id": "agent-memory-runtime-baseline-v6",
-    "declaration": "reports/runtime/baseline-v6-declaration.json"
-  }
+  "declared_successor": null
 }

@@ -5210,3 +5210,43 @@ SHA256(content_hash + previous_hash) = 89d855e31db870b708ab6a1d6e045e53beffbcd05
 **Posture.** The typed proposition and extractor path is **unaccepted** until the remediation R6 acceptance (`docs/plan-732-remediation.md`, advisory V1). Generalization of currentness semantics remains tracked by `cross-fact-currentness-generalization-2026-10-07`.
 
 **Next:** docs/67 Step B1 for v6, then Step B2 (V6-E7 steps 6–7).
+
+---
+
+### Entry #121: PUBLICATION — Runtime Baseline v6 (docs/67 Step B1)
+
+**Timestamp**: 2026-10-08T07:00:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L1
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reports/runtime/baseline-v6{.json,.md,-source-boundary.json,-qualification.json}`, the register, `examples/gauntlet/agent-memory-runtime-baseline-v6.json` and its stdio adapter, CONTRIBUTOR_ARCHITECTURE §8, GOVERNANCE_INDEX, the benchmark dashboard, the C7 report docstring, `test_runtime_baseline_succession.py`
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `9949347285527e333dc2df4e894213c4c8708276`): `b42a2165951ebfb0de10497344355b1275a8b43903e6e102f827adf260b5dbbd`
+**Previous Hash**: `0591a0f464f23e7d98a9d6202dade82c741f872e9f6a25ef0e24d1cde7aa1c03`
+**Chain Hash**: `cf8138c7dd13002e8150741e5fa33303fac93d7dd45cd2872f5bb7179caab4b3`
+
+**Decision**: Runtime Baseline v6 is published against `e98e6e7`, the merge of PR #741 (the declared #732 tranche). This step makes no runtime change. The protected surface at `main` `3cac171` equals `e98e6e7` byte for byte, so the checker reports PASS against v6.
+
+- **Identity deltas:** `active_policy_version` moves from 3.3.0 to 3.4.0, and `public_contract_version` from 1.5.0 to 1.6.0.
+- **Record additions:**
+  - `public_runtime_contract.proposition` and `public_runtime_contract.proposition_extractor` (contract 1.6.0, extractor off by default, per-handle opt-in with a required egress policy);
+  - `write_semantics.typed_proposition` (classifier 1.1.0 for typed writes only);
+  - `read_semantics.cross_fact_currentness` at policy 3.4.0 with assertion filter 6.1.0;
+  - the capability `typed_write_time_propositions: opt_in_unaccepted`;
+  - the C7 ordering report `ordering-difference-report-v6.json` under the #580/#584 evidence.
+- **Evidence cited:**
+  - the nine accepted `-v6` lane rows (`24048d5`, TRANSITION, declaration blob `1ac4d7d`), EQUAL to `-v5`;
+  - `mesa-formal-v3` (`d7b2974`, extractor off), which reproduces `mesa-formal-v2` (M4 1.000, every win `currentness_mechanism`).
+- **Inherited replays:** they keep a basis explaining why the declared change cannot reach them.
+- **Remediation advisory V1:** v6 is published before holdout acceptance.
+  - The record carries the known limitation `typed_proposition_extractor_unaccepted` (issue 732). The rendering, the boundary notes and the dashboard state the same thing.
+  - The typed proposition and extractor path is **unaccepted** until the `docs/plan-732-remediation.md` R6 acceptance PR.
+  - If that acceptance fails, the next attempt needs a v7 declaration.
+- **Known limitation `cross_fact_currentness_scope`:** general currentness semantics are still not measured (#732/#733). MESA M4 stays a regression floor. #671 stays open.
+- **Gauntlet:** a v6 manifest and adapter, with `PUBLIC_CONTRACT_VERSION` 1.6.0 and config digest `0bd76fbf…`. The same recipe reproduces v5's `96c36563…`. A local run of the orchestration probe completed (3 samples, exact-top1 1.0); it is not evidence, because B2 binds the workflow run.
+- **Register:** v6 is appended as pending, with `published_commit` null and the declared successor cleared.
+- **Checks:** the checker reports PASS against v6. The validator binds v1–v5 and reports v6 pending.
+- **Tests:** the full suite has 2431 tests. The only failures are the four pre-existing ones (`test_gauntlet_durability`, `test_benchmark_author_golden_path`, `test_gauntlet_external_example`, `test_keyed_rebinding_benchmark`), which also fail on the base.
+
+Step B2 binds the probe artifact. After B2, R6 waits on the owner credential (R7). #673 stays held.

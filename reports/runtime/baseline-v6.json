@@ -1,0 +1,668 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v6",
+  "publication_date": "2026-10-08",
+  "status": "rc1_qualified_with_explicit_limitations",
+  "production_1_0": false,
+  "authority_effect": "none",
+  "runtime_revision": {
+    "repository": "MythologIQ-Labs-LLC/agent-memory",
+    "commit": "e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1",
+    "merge_pr": 741,
+    "tranche_issue": 732,
+    "procedure_issue": 674,
+    "rc_issue": 410,
+    "baseline_issue": 732
+  },
+  "identity": {
+    "runtime_id": "agent-memory-rc1-local",
+    "runtime_version": "0.2.0-rc1",
+    "runtime_profile_id": "rc1-local-sqlite-composition",
+    "runtime_profile_version": "1.0.0",
+    "public_contract_version": "1.6.0",
+    "sqlite_substrate_schema_version": "1.0.0",
+    "sqlite_substrate_profile": "sqlite_single_host_v1",
+    "typed_relation_schema_version": "1.0.0",
+    "query_temporal_interpreter": {
+      "ref": "agent-memory-deterministic-temporal-cues",
+      "version": "1.1.0"
+    },
+    "write_semantics_interpreter": {
+      "ref": "agent-memory-deterministic-write-semantics",
+      "version": "1.1.0",
+      "classifier_version": "1.0.0"
+    },
+    "ranking": {
+      "active_policy_version": "3.4.0",
+      "base_policy_family": "agent-memory-post-admission-ranking",
+      "base_lexical_policy_version": "3.1.1",
+      "unknown_basis_policy": "explicit_current_exclusive_pairwise_v1",
+      "lexical_anti_laundering_guard": "candidate_specific_typed_temporal_self_claim_guard",
+      "bm25": {
+        "k1": 1.2,
+        "b": 0.75,
+        "corpus": "admitted_set"
+      },
+      "cross_fact_policy": "explicit_current_interpreted_cross_fact_v1"
+    }
+  },
+  "public_runtime_contract": {
+    "facade": "AgentMemory",
+    "lifecycle": [
+      "open",
+      "remember",
+      "recall",
+      "correct",
+      "forget",
+      "history",
+      "posture",
+      "close"
+    ],
+    "inspection_and_governance": [
+      "write_semantics",
+      "semantic_proposals",
+      "apply_semantic_proposal",
+      "dispute"
+    ],
+    "threading": "one public handle is runtime-serialized; direct internal runtime access is not independently thread-safe",
+    "tenant_scope_isolation": "fail_closed",
+    "recall_control": {
+      "parameter": "AgentMemory.open(..., recall_control='off'|'shadow')",
+      "facade_default": "off",
+      "shadow": "the deterministic System-One controller plans once per recall after the default planner executes; the result gains an optional recall_control telemetry block (request, response, usage, routes_executed, route_candidate_counts, shadow_delta, actual_stop); candidates, admission, ranking and returned are identical to off",
+      "contract_version": "1.5.0",
+      "authority_effect": "none"
+    },
+    "source_ref": {
+      "parameter": "AgentMemory.remember(..., source_ref=None)",
+      "default": "actor:<actor_id>",
+      "validation": "non-empty string, at most 256 characters; not settable through overrides",
+      "use": "recorded in the fact's immutable write_provenance; read only by the cross-fact guard set (same declared source)",
+      "contract_version": "1.5.0",
+      "authority_effect": "none"
+    },
+    "proposition": {
+      "parameter": "AgentMemory.remember(..., proposition=None)",
+      "default": "None (no typed proposition; the 1.0.0 interpreted path applies)",
+      "shape": "{subject, attribute, value, assertion: state|change, cardinality: single|multi|null, replaces_value, flags: {hedged, attributed_to_other, conditional, negated, joke_or_sarcasm, quoted_or_forwarded, coexistent}}; strings non-empty, at most 200 characters, no control characters; enums and flag keys closed; each flag defaults to false",
+      "use": "persisted as write-time evidence in write_semantics.typed_proposition with basis caller_declared; outranks any extractor, which is then not called",
+      "contract_version": "1.6.0",
+      "acceptance": "unaccepted until the docs/plan-732-remediation.md R6 acceptance PR (advisory V1)",
+      "authority_effect": "none"
+    },
+    "proposition_extractor": {
+      "parameter": "AgentMemory.open(..., proposition_extractor=None)",
+      "facade_default": "off (None)",
+      "opt_in": "passing an extractor is the handle's per-handle opt-in to data egress; the extractor must carry a caller-supplied egress_policy(text) -> bool with no default",
+      "egress": "for each remember without a caller-declared proposition, the new text and up to eight retained candidate texts admitted by the writer's own governed recall are sent to the extractor's provider, subject to egress_policy (a refused new text is not sent and persists typed_proposition null with reason egress_refused; a refused candidate is dropped)",
+      "persistence": "computed once and persisted with the fact (basis extracted:<id>@<version>, raw provider output, request id, candidate uuids, prompt sha256); never recomputed; recovery never calls an extractor",
+      "failure": "provider error, 20 s timeout or schema-invalid output persists typed_proposition null with a typed reason; the write always commits",
+      "contract_version": "1.6.0",
+      "acceptance": "unaccepted until the docs/plan-732-remediation.md R6 acceptance PR (advisory V1)",
+      "authority_effect": "none"
+    }
+  },
+  "persistence_and_durability": {
+    "canonical_store": "SQLite",
+    "profile": "single_host_transactional",
+    "journal_mode": "WAL",
+    "synchronous": "FULL",
+    "foreign_keys": true,
+    "restart_recovery": "qualified",
+    "single_writer_generation": true,
+    "distributed_multi_host": "unsupported",
+    "canonical_state_commitment": {
+      "active_scheme": "bmerkle-v1",
+      "legacy_scheme": "sha256"
+    },
+    "governance_state_commitment": {
+      "active_scheme": "gsect-v1",
+      "legacy_scheme": "full-json-v1"
+    },
+    "canonical_json_v2": {
+      "adr": "ADR-040",
+      "status": "accepted_migration_candidate_not_live_commitment_scheme",
+      "migration_posture": "verify_before_recommit; side-effect-free preflight; transactional recommit only on verified disposable copy"
+    }
+  },
+  "write_semantics": {
+    "proposition_identity": [
+      "known",
+      "unknown",
+      "ambiguous"
+    ],
+    "cardinality": [
+      "single_valued",
+      "multi_valued",
+      "hierarchical",
+      "unknown"
+    ],
+    "temporal_aspect": "principal-proposition-scoped interpreted evidence only",
+    "self_validity": "bounded and anchored only by caller-declared observed_at; may limit, never affirm currentness",
+    "markers": [
+      "change",
+      "coexistence",
+      "hedge",
+      "self_claim"
+    ],
+    "same_slot_relations": [
+      "same_value",
+      "coexistence",
+      "state_change_candidate",
+      "conflict",
+      "unresolved"
+    ],
+    "proposal_application": "explicit caller action through governed lifecycle; never automatic",
+    "authority_effect": "none",
+    "typed_proposition": {
+      "bases": [
+        "caller_declared",
+        "extracted:<extractor_id>@<extractor_version>"
+      ],
+      "typed_slot": "typed:<norm(subject)>|<norm(attribute)>; norm lower-cases, collapses whitespace and strips edge punctuation; no stemming, no synonym table",
+      "classifier_version": "1.1.0 only for a write that carries a typed proposition; every other write keeps classifier 1.0.0 and its persisted version tag, so its stored bytes are unchanged",
+      "relation_bases": "typed_slot, typed_link (updates_fact_uuid confirmed deterministically at write time), typed_link_unconfirmed (unresolved; never a proposal)",
+      "state_change_candidate_rule": "assertion change, cardinality not multi, every flag false, values differ; typed_ineligible_reasons (untrusted_self_claim; hedged by typed flag or lexical hedge scan) non-empty gives unresolved and no proposal",
+      "null_typed_proposition": "extraction failure, egress refusal or extractor off takes the unchanged 1.0.0 interpreted path",
+      "proposal_application": "explicit caller action through governed lifecycle; never automatic",
+      "acceptance": "unaccepted until the docs/plan-732-remediation.md R6 acceptance PR (advisory V1); the v6 acceptance evidence measures the extractor-off default only",
+      "authority_effect": "none"
+    }
+  },
+  "read_semantics": {
+    "query_temporal_modes": [
+      "current",
+      "as_of",
+      "historical",
+      "atemporal_or_unspecified",
+      "prospective"
+    ],
+    "candidate_routes": [
+      "lexical",
+      "exact_logical_identity",
+      "shared_evidence_neighbor",
+      "semantic_vector"
+    ],
+    "canonical_admission": "single governed admission boundary after candidate union",
+    "contextual_admission": "purpose/scope/tenant constrained",
+    "temporal_applicability_precedence": [
+      "caller_declared_validity",
+      "interpreted_self_validity_as_limit_only",
+      "interpreted_cross_fact_limit_only_explicit_current",
+      "unknown_temporal_basis"
+    ],
+    "ranking_policy": "3.4.0",
+    "explicit_current_unknown_basis": "time-neutral normalized-content fallback for genuine relevance ties; applicable-over-unknown only inside persisted typed exclusive competition",
+    "lexical_anti_laundering": "candidate-specific masking only for high-risk persisted self-claims and high-confidence consumed temporal-intent spans",
+    "structured_recall_shapes": [
+      "ranked",
+      "timeline"
+    ],
+    "authority_effect": "none",
+    "return_budget": {
+      "contract_version": "1.4.0",
+      "request": "optional recall budget {k >= 1}",
+      "policy_id": "ranked-prefix-return-budget",
+      "policy_version": "1.0.0",
+      "basis": "post_admission_ranking_prefix",
+      "rule": "returned is the ranked prefix of the admitted set at k; admitted stays whole and is counted; a call without a budget returns exactly what contract 1.3.0 returned",
+      "authority_effect": "none"
+    },
+    "semantic_route": {
+      "route_id": "semantic_vector",
+      "facade_default": "off",
+      "modes": [
+        "off",
+        "auto",
+        "required"
+      ],
+      "ordering": "subordinate: semantic-only candidates order after every relevance and temporal stage; the route never counts toward corroboration and never moves a lexical score (ranking policy 3.2.0; unchanged in 3.3.0 and 3.4.0)",
+      "off_equivalence": "with no semantic hit, 3.2.0 orders exactly as 3.1.2 (reference/tests/test_semantic_route_policy_320.py); the facade default opens no representation provider and writes no derived store",
+      "representation": {
+        "provider": "pinned local ONNX export, optional extra 'semantic' (decision-embedding-dependency)",
+        "representation_ref": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367",
+        "representation_version": "onnx-mean-l2-f32/1.0.0",
+        "config_digest": "sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee",
+        "config_digest_scope": "binds every model file digest, the numerics settings and the onnxruntime, tokenizers and numpy versions pinned by reference/requirements-semantic.txt"
+      },
+      "eligibility": "the same domain-eligibility prefilter as the lexical route",
+      "authority_effect": "none"
+    },
+    "recall_control": {
+      "facade_default": "off",
+      "modes": [
+        "off",
+        "shadow"
+      ],
+      "controller_contract": "reference/fixtures/runtime/system-one-controller-contract-v1.json (1.0.0)",
+      "actual_stop": "describes the default planner's execution: no_evidence, frontier_exhausted, or max_candidates (resource) when the semantic host cap of 16 binds; never a controller quality judgement",
+      "controller_recommendation": "abstain",
+      "failure": "controller unavailable or invalid response leaves recall unchanged (fallback_events: controller_failure_no_effect)",
+      "enforcement": "none: budgets, deadlines and adaptive stopping are T-controller-2",
+      "authority_effect": "none"
+    },
+    "cross_fact_currentness": {
+      "policy": "ExplicitCurrentCrossFactRankingPolicy 3.4.0 (explicit_current_interpreted_cross_fact_v1); the ranking stages are 3.3.0's, only the evidence the guards admit changes",
+      "applies_to": "explicit-current recall only (caller-declared or query_language_explicit); historical, as-of, atemporal and inferred recalls are identical to 3.2.0 apart from policy identity",
+      "label": "limited_by_cross_fact_state_change (basis interpreted_cross_fact, evidence cross_fact_limitation)",
+      "condition": "a newer admitted fact carries an open, unapplied write-time state_change_candidate proposal against the older fact and guards G1-G13 hold (same actor, same declared source, same scope, direct observations, assertive first-party change sentence, no contradicting declared clock) under assertion filter 6.1.0: interpreted relations pass G3, G6 and G12 exactly as under 6.0.0; a typed_slot or typed_link relation passes G3 only with a caller_declared or extracted:* typed proposition, G6 reads its typed_ineligible_reasons, and G12 reads its persisted typed flags (any true flag refuses with typed_assertion_not_assertive:<flag>) without re-checking the text",
+      "effect": "the older fact is demoted inside the existing temporal_applicability_tier stage; it stays admitted and returned; nothing is mutated and the proposal stays open (Option D not implemented)",
+      "refusal": "cross_fact_refusal_reason (first failing guard) under explicit-current intent only",
+      "pre_v5_facts": "facts without write_provenance never participate",
+      "authority_effect": "none",
+      "assertion_filter_version": "6.1.0",
+      "typed_relations": "unaccepted until the docs/plan-732-remediation.md R6 acceptance PR (advisory V1); with the extractor off and no caller declaration no typed relation exists"
+    }
+  },
+  "capabilities": {
+    "exact_canonical_fact_state": "native_qualified",
+    "lexical_retrieval": "native_qualified",
+    "semantic_vector_retrieval": "native_qualified",
+    "typed_relations_graph_traversal": "harness_only",
+    "temporal_history_as_of": "native_qualified",
+    "episodes_session_like_state": "native_limited",
+    "memory_metabolism": "harness_only",
+    "governed_correction_supersession": "native_qualified",
+    "governed_forgetting_tombstones": "native_qualified",
+    "scope_tenant_isolation": "native_qualified",
+    "provenance_evidence_surfaces": "native_qualified",
+    "distributed_multi_host_persistence": "unsupported",
+    "heterogeneous_projection_composition_program_636": "not_in_baseline",
+    "controlled_recall": "shadow_only",
+    "typed_write_time_propositions": "opt_in_unaccepted"
+  },
+  "governance_invariants": [
+    "candidate retrieval != governed recall admission",
+    "classifier output != truth",
+    "classifier confidence != permission",
+    "ranking != recall admission",
+    "ranking != truth",
+    "ranking != authority",
+    "relevance != currentness",
+    "staleness != irrelevance",
+    "age != staleness",
+    "recency != authority",
+    "newer != superseding",
+    "metabolic stability != temporal validity",
+    "reinforcement != currentness",
+    "interpretation != authority",
+    "semantic interpretation != retention/lifecycle policy",
+    "conflict detection != mutation",
+    "proposal != application",
+    "external verification != Agent Memory authority",
+    "benchmark score != memory authority",
+    "published vendor score != same-harness comparator",
+    "implementation language != doctrine"
+  ],
+  "qualification_evidence": {
+    "agentmembench": {
+      "exact_source_recall_at_5": 0.899,
+      "source": "reports/benchmarks/replays/591-identity-first-materialization-f76c441/",
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2, v3, v4 and v5)",
+      "basis": "the declared change adds ranking policy 3.4.0 and contract 1.6.0, whose typed-proposition relations exist only for writes carrying a caller-declared proposition or made through a handle with an opted-in extractor, and whose cross-fact limitation engages only under explicit-current recall with a guarded open state-change proposal; this unbudgeted replay declares no proposition, opens no extractor and issues no explicit-current intent over pairs carrying such proposals, so it is carried unchanged"
+    },
+    "longmemeval_s": {
+      "session_recall_all_at_5": 0.823389,
+      "turn_recall_all_at_10": 0.72315,
+      "source": "lane longmemeval-s-retrieval-parity-v6 control rows (evidence ids lane:longmemeval-s-retrieval-parity-v6:agent_memory:session and :turn), executed at 24048d55e26d7db27715e78b24a8b795433a5e16 under budget 50 with the proposition extractor off; every question EQUAL to the -v5 control (plan-732-evidence-v6 V6-E1: 1000/1000 EQUAL, 0 limited)",
+      "return_budget_applied": {
+        "session": 39,
+        "turn": 500
+      },
+      "unmapped_admitted_count_total": {
+        "session": 0,
+        "turn": 0
+      }
+    },
+    "longmemeval_m": {
+      "session_recall_all_at_5": 0.708831,
+      "turn_recall_all_at_5": 0.53222,
+      "source": "reports/benchmarks/longmemeval/longmemeval-m-full-409098f.analysis.json",
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2, v3, v4 and v5)",
+      "basis": "the declared change adds ranking policy 3.4.0 and contract 1.6.0, whose typed-proposition relations exist only for writes carrying a caller-declared proposition or made through a handle with an opted-in extractor, and whose cross-fact limitation engages only under explicit-current recall with a guarded open state-change proposal; this unbudgeted replay declares no proposition, opens no extractor and issues no explicit-current intent over pairs carrying such proposals, so it is carried unchanged"
+    },
+    "natural_semantics_594": {
+      "part_r_known_precision": 0.8,
+      "part_r_known_recall": 0.148148,
+      "part_r_ambiguous_recall": 1.0,
+      "part_r_unknown_precision": 1.0,
+      "part_r_unknown_recall": 0.848485,
+      "strict_slot_value_exact_label_conformance": 0.0,
+      "strict_slot_value_note": "zero aliases frozen before scoring; not semantic synonym precision",
+      "source": "reports/benchmarks/replays/594-post-550-semantic-qualification/phase-b-score-v1.json",
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2, v3, v4 and v5)",
+      "basis": "the declared change adds ranking policy 3.4.0 and contract 1.6.0, whose typed-proposition relations exist only for writes carrying a caller-declared proposition or made through a handle with an opted-in extractor, and whose cross-fact limitation engages only under explicit-current recall with a guarded open state-change proposal; this unbudgeted replay declares no proposition, opens no extractor and issues no explicit-current intent over pairs carrying such proposals, so it is carried unchanged"
+    },
+    "temporal_currentness_580_584": {
+      "status": "qualified",
+      "final_runtime_policy": "3.1.2",
+      "merge_commit": "f2aef57293b516e065cad5d0afea26ac7e3c28a9",
+      "final_replay_artifact": {
+        "workflow_run": 37175525822,
+        "artifact_id": 11292814272,
+        "digest": "sha256:0b22e7283a14fc209b06e2b82567792ff47c222b9c2e09f899f8670ccd127cf4"
+      },
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2, v3, v4 and v5)",
+      "basis": "the declared change adds ranking policy 3.4.0 and contract 1.6.0, whose typed-proposition relations exist only for writes carrying a caller-declared proposition or made through a handle with an opted-in extractor, and whose cross-fact limitation engages only under explicit-current recall with a guarded open state-change proposal; this unbudgeted replay declares no proposition, opens no extractor and issues no explicit-current intent over pairs carrying such proposals, so it is carried unchanged",
+      "semantic_route_ordering_report": {
+        "source": "reports/runtime/semantic-route-669/ordering-difference-report.json",
+        "result": "route on vs off against the real pinned provider: 0 #584 admitted-order changes, 0 #580 unit status changes, identical #580 metrics; 3 #580 order digests changed, residual ties only"
+      },
+      "cross_fact_ordering_report": {
+        "source": "reports/runtime/cross-fact-currentness-671/ordering-difference-report-v6.json",
+        "result": "regenerated at the -v6 execution revision (plan-732-evidence-v6 V6-E6): assertion filter 6.1.0, ranking 3.4.0 on and 3.2.0 off, 0 blockers, M4 250/250 limited, no refusals, #580 changes only in pre-registered units, 0 admitted #584 order changes; identical in structure and counts to the v5 report"
+      }
+    },
+    "performance_591": {
+      "search_p50_ms": 7.7,
+      "search_p95_ms": 11.9,
+      "agentmembench_wall_seconds": 38.6,
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2, v3, v4 and v5)",
+      "basis": "the declared change adds ranking policy 3.4.0 and contract 1.6.0, whose typed-proposition relations exist only for writes carrying a caller-declared proposition or made through a handle with an opted-in extractor, and whose cross-fact limitation engages only under explicit-current recall with a guarded open state-change proposal; this unbudgeted replay declares no proposition, opens no extractor and issues no explicit-current intent over pairs carrying such proposals, so it is carried unchanged"
+    },
+    "rust_shadow": {
+      "status": "implementation_qualification_only",
+      "hot_path_speedup": 2.488,
+      "decision_effect": "does_not_select_runtime_profile",
+      "inherited_from": "agent-memory-runtime-baseline-v1 (carried by v2, v3, v4 and v5)",
+      "basis": "the declared change adds ranking policy 3.4.0 and contract 1.6.0, whose typed-proposition relations exist only for writes carrying a caller-declared proposition or made through a handle with an opted-in extractor, and whose cross-fact limitation engages only under explicit-current recall with a guarded open state-change proposal; this unbudgeted replay declares no proposition, opens no extractor and issues no explicit-current intent over pairs carrying such proposals, so it is carried unchanged"
+    },
+    "same_harness_competitors": {
+      "accepted_non_agent_memory_systems": 1,
+      "systems": [
+        "mem0-oss 2.2.1 explicit memory (amb-precisionmembench-retrieval-v6; longmemeval-s-retrieval-parity-v6 session and turn)"
+      ],
+      "status": "accepted_bounded",
+      "tracking_issue": 640,
+      "note": "same-harness rows for one frozen comparator composition on two benchmarks; Hindsight deferred; no market claim and no overall score"
+    },
+    "provider_credential_dependent_lanes": {
+      "llm_judged_amb": "blocked_pending_authorized_evaluation_credential"
+    },
+    "public_gauntlet_baseline_qualification": {
+      "companion": "reports/runtime/baseline-v6-qualification.json",
+      "manifest": "examples/gauntlet/agent-memory-runtime-baseline-v6.json",
+      "adapter_source": "examples/gauntlet/agent_memory_runtime_baseline_v6_stdio.py",
+      "configuration_digest_basis": "sha256 over the canonical JSON (sorted keys, compact separators) of the adapter's frozen identity: runtime_profile, public_contract, frozen_runtime_revision, tenant, actor, scope, purpose",
+      "note": "the qualification block lives in the companion file so this record is never edited after publication (docs/67 Step B2)"
+    },
+    "amb_precisionmembench_retrieval": {
+      "active_passes": "4/43",
+      "total_passes": "15/77",
+      "mean_precision": 0.1806,
+      "mean_recall": 0.9535,
+      "source": "lane amb-precisionmembench-retrieval-v6 control row (evidence id lane:amb-precisionmembench-retrieval-v6:agent-memory), bridge 0.4.0 at the case budget, executed at 24048d55e26d7db27715e78b24a8b795433a5e16 with the proposition extractor off; every case EQUAL to the -v5 control (plan-732-evidence-v6 V6-E1: 77/77 EQUAL; cross-fact sidecar 73 records, 0 limited, byte-identical to -v5)"
+    },
+    "successor_lane_acceptance": {
+      "declaration": "reports/runtime/baseline-v6-declaration.json",
+      "declaration_blob": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+      "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+      "checker_state_at_execution": "TRANSITION",
+      "note": "every row executed at a revision whose protected surface the checker reported as frozen v5 plus the declared blobs this record names; the importers bound that state and blob; the proposition extractor was off (the default) and no lane input declared a typed proposition; docs/67 Step B2",
+      "rows": [
+        {
+          "evidence_id": "lane:amb-precisionmembench-retrieval-v6:agent-memory",
+          "system_id": "agent-memory",
+          "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718270129",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/agent-memory-24048d55e26d/evidence.json"
+        },
+        {
+          "evidence_id": "lane:amb-precisionmembench-retrieval-v6:bm25",
+          "system_id": "bm25",
+          "system_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718272612",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/bm25-24048d55e26d/evidence.json"
+        },
+        {
+          "evidence_id": "lane:amb-precisionmembench-retrieval-v6:mem0-explicit",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718275682",
+          "report": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/mem0-explicit-24048d55e26d/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v6:agent_memory:session",
+          "system_id": "agent-memory",
+          "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718255173",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v6:agent_memory:turn",
+          "system_id": "agent-memory",
+          "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718257278",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-turn-24048d55e26d/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:session",
+          "system_id": "lexical_overlap",
+          "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718259916",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-session-24048d55e26d/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:turn",
+          "system_id": "lexical_overlap",
+          "system_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718262620",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-turn-24048d55e26d/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:session",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718265216",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-session-24048d55e26d/evidence.json"
+        },
+        {
+          "evidence_id": "lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:turn",
+          "system_id": "mem0-oss",
+          "system_revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "executing_revision": "24048d55e26d7db27715e78b24a8b795433a5e16",
+          "checker_state": "TRANSITION",
+          "workflow_run": "37718267521",
+          "report": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-turn-24048d55e26d/evidence.json"
+        }
+      ]
+    },
+    "agentmembench_mesa_formal_v3": {
+      "freeze": "reference/fixtures/benchmarks/agentmembench/mesa-formal-v3-freeze.json",
+      "report": "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v3_s2027_9170.json",
+      "executing_revision": "d7b2974ce3cb34643388d24868ef245e112885f7",
+      "runtime_tree": "4d2f1b966f0fa531cad5391fa9a08c4326e4a8ff",
+      "proposition_extractor": "off",
+      "m4_new_fact_rate": 1.0,
+      "m4_staleness_rate": 0.0,
+      "m4_win_basis_counts": {
+        "currentness_mechanism": 250
+      },
+      "reproduces": {
+        "freeze": "mesa-formal-v2",
+        "report": "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v2_s2027_9170.json",
+        "result": "plan-732-evidence-v6 V6-E5 P1-P6: outcomes new_fact 250, dual_version_rate 0.0, win_basis currentness_mechanism 250, no primary or unmet stage, upstream consistent; every other phase's non-latency fields and the M1 per-item retrieved digests equal v2; the P4 guard identity is taken from the regenerated C7 report (N1)"
+      },
+      "m2_judged_recall": "blocked pending an authorized judge credential (#706)",
+      "authority_effect": "none"
+    }
+  },
+  "known_limitations": [
+    {
+      "id": "semantic_proposition_recognition",
+      "issue": 596,
+      "status": "open_bounded_baseline_limitation",
+      "evidence": "Part R known recall 0.148148 with precision 0.8; dominant failure mode is conservative ambiguity/under-recognition"
+    },
+    {
+      "id": "property_value_canonicalization",
+      "issue": 597,
+      "status": "open_bounded_baseline_limitation",
+      "evidence": "exact-label slot/value conformance 0.0 under zero-alias frozen scoring; genuine extraction defects remain"
+    },
+    {
+      "id": "distributed_persistence",
+      "status": "unsupported",
+      "evidence": "SQLite runtime is explicitly single-host"
+    },
+    {
+      "id": "competitive_same_harness",
+      "issue": 640,
+      "status": "accepted_bounded",
+      "evidence": "Mem0 OSS 2.2.1 explicit memory accepted on both -v6 lanes beside the control; Hindsight deferred; no market claim"
+    },
+    {
+      "id": "llm_judged_external_benchmark",
+      "status": "blocked",
+      "evidence": "authorized evaluation credential not present in accepted evidence"
+    },
+    {
+      "id": "exception_override_precedence",
+      "issue": 586,
+      "status": "deferred_post_rc"
+    },
+    {
+      "id": "adr_039",
+      "status": "proposed_not_promoted"
+    },
+    {
+      "id": "semantic_route_subordinate_ordering",
+      "issue": 673,
+      "status": "open_bounded_baseline_limitation",
+      "evidence": "under ranking policy 3.2.0 (unchanged in 3.3.0 and 3.4.0) a semantic-only candidate ranks after every lexical candidate, so the opt-in route changes no LongMemEval_S scored metric (lane -v3 D2); fusion and default-on are #673"
+    },
+    {
+      "id": "controlled_recall_shadow_only",
+      "issue": 644,
+      "status": "open_bounded_baseline_limitation",
+      "evidence": "recall_control is shadow-only: the controller plans and reports but enforces no budget, deadline or adaptive stop; T-controller-2 (route/call/deadline budgets, sufficiency, adaptive stopping) is open"
+    },
+    {
+      "id": "cross_fact_currentness_scope",
+      "issue": 732,
+      "status": "open_bounded_baseline_limitation",
+      "evidence": "read-path cross-fact currentness (#671 Option A) is proven only on AgentMemBench/MESA M4 under the frozen mesa-formal protocol (mesa-formal-v3 reproduces v2 with the extractor off: new-fact 1.000, all wins currentness_mechanism; kept as a regression floor). General currentness semantics are not measured (deficit cross-fact-currentness-generalization-2026-10-07, #732/#733); the independent gate measurement failed (META_LEDGER Entry #115). Assertion filter 6.1.0 keeps the 6.0.0 G12 envelope byte-identical for interpreted relations; it remains a temporary safety envelope. On LongMemEval-S and AMB PrecisionMemBench it limited 0 candidates. Option D (auto-application) is not implemented. #671 stays open."
+    },
+    {
+      "id": "typed_proposition_extractor_unaccepted",
+      "issue": 732,
+      "status": "unaccepted_pending_r6_acceptance",
+      "evidence": "The typed proposition and extractor path (contract 1.6.0 remember(..., proposition=...) and open(..., proposition_extractor=...); classifier 1.1.0; assertion filter 6.1.0 typed branch) is UNACCEPTED until the docs/plan-732-remediation.md R6 acceptance PR (advisory V1). v6 is published before holdout acceptance; its acceptance evidence (-v6 lanes EQUAL to -v5, mesa-formal-v3) measures the extractor-off default only. R6 needs the owner credential (R7), a gated holdout and a single scoring on published v6 with the extractor on. If R6 acceptance fails, the next attempt needs a Runtime Baseline v7 declaration; this record is never edited."
+    }
+  ],
+  "dogfood": {
+    "public_gauntlet_issue": 637,
+    "status": "completed",
+    "merge_pr": 649,
+    "merge_commit": "10898c0edf4fa7093a0bbeda1b2cb8062469e843",
+    "verified_head": "90a55f31fec68e94a8486acca065c778801a01f4",
+    "workflow_run": 37218887168,
+    "golden_evidence": "reports/gauntlet/external-contestant-v1/golden-evidence.json",
+    "evidence_class": "baseline_or_probe",
+    "authority_effect": "none",
+    "inherited_from": "agent-memory-runtime-baseline-v1",
+    "note": "a successor names the same #637 evidence by pointer and does not re-run it (docs/67 Step B1)"
+  },
+  "drift_policy": {
+    "immutable_after_publication": true,
+    "observable_behavior_changes_must_bind_new_revision": true,
+    "future_636_ablations_must_name_this_baseline": true
+  },
+  "predecessor": {
+    "baseline_id": "agent-memory-runtime-baseline-v5",
+    "runtime_revision": "74c8683e33f2b716577138e5b4c750a9ae670966",
+    "declaration": "reports/runtime/baseline-v6-declaration.json",
+    "declaration_blob": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+    "identity_deltas": [
+      {
+        "identity_path": "identity.ranking.active_policy_version",
+        "from": "3.3.0",
+        "to": "3.4.0"
+      },
+      {
+        "identity_path": "identity.public_contract_version",
+        "from": "1.5.0",
+        "to": "1.6.0"
+      }
+    ],
+    "declared_changes": [
+      {
+        "path": "reference/agentmem_ref/api/contract.py",
+        "blob": "dc497b97e098992f8acacbca04ce900e7da08678"
+      },
+      {
+        "path": "reference/agentmem_ref/api/surface.py",
+        "blob": "ba9a058e468858b52ffc36b9bc2662650e99142e"
+      },
+      {
+        "path": "reference/agentmem_ref/proposition_extraction.py",
+        "blob": "245884e70c8b7ac5b62dfaccb099939303593579"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/adapter.py",
+        "blob": "9f0e0812b79bfdc5289fc0fef67de719932f9583"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/configured_restart.py",
+        "blob": "60bae12192e9228626370cf5181719a852c28119"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/cross_fact_currentness.py",
+        "blob": "26dbda22c8fbf147f058bde5935bde926ed44c8a"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/proposition_extraction.py",
+        "blob": "cf234c4dfa53b199a06047c85f23e0cb02b0ecef"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/proposition_semantics.py",
+        "blob": "877843a34638d558ab0c6b14820de7565375de7b"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/restart_runtime.py",
+        "blob": "b2b7322393f55c16c93caee302984a555f368943"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/runtime_composition.py",
+        "blob": "65a39d5e3d3f052f03985cafa4751ad1ce3d4817"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/sqlite_composition.py",
+        "blob": "3ebcefce22d21005f1cea2443b6c9e5d194716fc"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/sqlite_runtime.py",
+        "blob": "b6f52a882c6a112296d6cb95db8fff5975bbf4e4"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/temporal_order_constraints.py",
+        "blob": "835757abf7ac55de11042962d3aae05a922f8f7f"
+      },
+      {
+        "path": "reference/agentmem_ref/runtime/typed_proposition.py",
+        "blob": "34f9a11d7a87257490d59905816734c0288353da"
+      },
+      {
+        "path": "reference/agentmem_ref/typed_proposition.py",
+        "blob": "40db70e74788420f68afb52389e2300350039418"
+      }
+    ],
+    "pyproject_change": null
+  }
+}

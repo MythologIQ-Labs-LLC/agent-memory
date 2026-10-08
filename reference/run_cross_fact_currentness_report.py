@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Ordering-difference report for read-path cross-fact currentness (#671 Option A, policy 3.3.0).
+"""Ordering-difference report for read-path cross-fact currentness (#671 Option A; policy 3.4.0 at Runtime Baseline v6).
 
-docs/plan-671-cross-fact-currentness.md C7. Runs, once with the mechanism off (ranking
-policy 3.2.0 with the facade's own parameters) and once on (3.3.0):
+docs/plan-671-cross-fact-currentness.md C7, regenerated for Runtime Baseline v6 (#732,
+docs/plan-732-evidence-v6.md V6-E6; assertion filter 6.1.0). Runs, once with the mechanism
+off (ranking policy 3.2.0 with the facade's own parameters) and once on (the runtime's active
+policy, ``POLICY_VERSION``: 3.3.0 at v5, 3.4.0 at v6):
 
 * the #584 unknown-basis ordering contract (M1..M15);
 * every #580 temporal-currentness gauntlet case (its own scorer, units and order digests);
