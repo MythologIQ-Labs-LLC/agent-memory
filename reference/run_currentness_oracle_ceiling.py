@@ -7,12 +7,18 @@ would the rest of the pipeline engage on legitimate changes and refrain on the c
 separates the write-interpretation stage from candidate generation, typed relation, the guards
 (G1-G13), admission (S1/S2) and ranking (S6).
 
+It never emits a G5 verdict: the measurement corpus is spent, and any successor mechanism must
+be judged on a fresh holdout, never on this corpus.
+
 Method. Every case and variant of the frozen measurement corpus runs through the unchanged
 ``run_currentness_generalization.run_record`` with an oracle ``PropositionExtractor`` attached to
 every write handle through the public ``AgentMemory.open(..., proposition_extractor=...)``. The
 oracle never reads the write text. Its typed record is derived only from corpus *metadata*
 (family, variant type, write role), using placeholder subject/attribute/value tokens that share
-one typed slot per case. The link to the older fact is returned only when the older fact is in
+one typed slot per case. It does use the corpus's role indices (``older_write``/``newer_write``)
+and family/variant labels, and keys its answers by exact write text. Because every record shares
+one placeholder slot, a ``typed_slot`` relation can form even when candidate generation missed
+the older fact; those cases are reported separately (``candidate_generation``). The link to the older fact is returned only when the older fact is in
 the candidates the runtime itself sent, so candidate generation is measured, not assumed.
 
 Two oracle modes:
@@ -200,6 +206,10 @@ def diagnose(corpus_path: Path, variants_path: Path, selection_path: Path, mode:
         if "na_reason" not in variant:
             results[variant["variant_id"]] = run_with_oracle(variant, family_of[variant["base_case_id"]], mode)
     scores = gen.score(corpus, variants, selection, results)
+    # The measurement corpus is spent: no gate verdict is emitted from it (plan-732-remediation
+    # non-goal "re-scoring the measurement corpus"). Only the counts are kept, for diagnosis.
+    for key in ("verdict", "fail_reasons", "pass_criteria", "mixed_causes"):
+        scores.pop(key, None)
     positive_ids = [c["case_id"] for c in corpus if c["family"] in gen.POSITIVE]
     negative_ids = [c["case_id"] for c in corpus if c["family"] in gen.N_FAMILIES]
     must_change = [v["variant_id"] for v in variants if "na_reason" not in v and v["kind"] == "must_change"]
@@ -210,7 +220,16 @@ def diagnose(corpus_path: Path, variants_path: Path, selection_path: Path, mode:
         entry = flip_by_type.setdefault(v["variant_type"], {"total": 0, "engaged": 0})
         entry["total"] += 1
         entry["engaged"] += results[v["variant_id"]]["stage"] == "S7"
+    missing = sorted(cid for cid, r in results.items()
+                     if (r.get("observations") or {}).get("oracle_older_in_candidates") is False)
+    engaged_positive = [cid for cid in positive_ids if results[cid]["stage"] == "S7"]
     return {
+        "candidate_generation": {
+            "older_not_in_candidates": missing,
+            "positive_engaged": len(engaged_positive),
+            "positive_engaged_with_older_in_candidates": sum(
+                1 for cid in engaged_positive if cid not in missing),
+        },
         "protocol": {"id": PROTOCOL_ID, "mode": mode, "kind": "diagnostic_not_score",
                      "authority_effect": "none", "credential_used": False, "egress": "none"},
         "inputs": {"corpus_sha256": _sha(corpus_path), "variants_sha256": _sha(variants_path),
@@ -242,6 +261,8 @@ def main(argv: list[str] | None = None) -> int:
                       "structural_fe": s["structural_false_engagements"],
                       "non_structural_fe": s["non_structural_false_engagements"],
                       "m_inv": s["m_inv"], "m_flip": s["m_flip"], "m_attr": s["m_attr"],
+                      "candidate_generation": {k: v for k, v in report["candidate_generation"].items()
+                                               if k != "older_not_in_candidates"},
                       "attribution": report["attribution"]}, sort_keys=True))
     return 0
 

@@ -279,20 +279,17 @@
     }
    },
    "file": "oracle-flag-blind.json",
-   "file_sha256": "2d5e256ff03baf006fb44009d0c176b9ae488c57172ac6e0a70dca1cea068e28",
-   "g5_verdict_if_it_were_scored": "FAIL",
+   "file_sha256": "008270940d4ef9f8f30e85ba341f247f87f0b576b132dad2afddf097b868944d",
    "inputs": {
     "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
     "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
     "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab"
    },
    "m_attr": 0,
-   "m_flip": 0.6531,
    "m_flip_counts": {
     "refrained": 209,
     "total": 320
    },
-   "m_inv": 0.9695,
    "m_inv_counts": {
     "matched": 159,
     "total": 164
@@ -332,9 +329,10 @@
     }
    },
    "non_structural_false_engagements": 44,
-   "overall_recall": 0.9198,
    "positive_engaged": 195,
+   "positive_engaged_with_older_in_candidates": 194,
    "positive_valid": 212,
+   "records_older_not_in_candidates": 69,
    "results_sha256": "205a8f82a2b5cfc901a40339ec88f3284315bc2d339bdcb9338d309f0906da3b",
    "structural_false_engagements": 0
   },
@@ -611,20 +609,17 @@
     }
    },
    "file": "oracle-gold.json",
-   "file_sha256": "4185beca63c809ef5bdd79502a39bec86cb5d0f9c6f4976d17da6c04143c8d05",
-   "g5_verdict_if_it_were_scored": "PASS",
+   "file_sha256": "17ebf9532365bbcc063269726a5eae4d0e3f7798c0b7a02fec4f9d2463f90a9c",
    "inputs": {
     "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
     "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
     "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab"
    },
    "m_attr": 0,
-   "m_flip": 1.0,
    "m_flip_counts": {
     "refrained": 320,
     "total": 320
    },
-   "m_inv": 0.9695,
    "m_inv_counts": {
     "matched": 159,
     "total": 164
@@ -664,9 +659,10 @@
     }
    },
    "non_structural_false_engagements": 0,
-   "overall_recall": 0.9198,
    "positive_engaged": 195,
+   "positive_engaged_with_older_in_candidates": 194,
    "positive_valid": 212,
+   "records_older_not_in_candidates": 69,
    "results_sha256": "088da203c7f24ad7090dba5f0d60f9677819bd611e1302a59dfcda4d04174df2",
    "structural_false_engagements": 0
   },
@@ -940,20 +936,17 @@
     }
    },
    "file": "oracle-slot-drift.json",
-   "file_sha256": "9cea1e829866b5cf6fc7ec5ec669470b6ac039fec414cc0bdc54264d467a69cf",
-   "g5_verdict_if_it_were_scored": "FAIL",
+   "file_sha256": "72bb2b57f13b15dabc02f3777ea6f7ad60da1ac43b90e5cc1052afb089541cf7",
    "inputs": {
     "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
     "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
     "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab"
    },
    "m_attr": 0,
-   "m_flip": 1.0,
    "m_flip_counts": {
     "refrained": 320,
     "total": 320
    },
-   "m_inv": 1.0,
    "m_inv_counts": {
     "matched": 164,
     "total": 164
@@ -993,12 +986,14 @@
     }
    },
    "non_structural_false_engagements": 0,
-   "overall_recall": 0.0,
    "positive_engaged": 0,
+   "positive_engaged_with_older_in_candidates": 0,
    "positive_valid": 212,
+   "records_older_not_in_candidates": 69,
    "results_sha256": "5fa853a52821e9930bd57794819c473fcb2f16827edef30992a01d777b9b61ab",
    "structural_false_engagements": 0
   }
  },
+ "no_gate_verdict": "the measurement corpus is spent; successors are judged only on a fresh holdout",
  "protocol_id": "currentness-oracle-ceiling-732-v1"
 }

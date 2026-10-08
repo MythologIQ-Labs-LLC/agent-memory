@@ -21,6 +21,81 @@
    "relation_not_state_change": 2
   }
  },
+ "candidate_generation": {
+  "older_not_in_candidates": [
+   "N1-03",
+   "N10-01",
+   "N10-02",
+   "N10-03",
+   "N10-04",
+   "N10-05",
+   "N10-06",
+   "N10-07",
+   "N10-08",
+   "N11-01",
+   "N11-06",
+   "N12-03",
+   "N12-05",
+   "N2-05",
+   "N3-03",
+   "P1-05-change_scope",
+   "P1-06-change_scope",
+   "P10-07",
+   "P10-07-adverb_placement",
+   "P10-07-attribution",
+   "P10-07-change_actor",
+   "P10-07-change_scope",
+   "P10-07-change_source_ref",
+   "P10-07-conditional",
+   "P10-07-dispute",
+   "P10-07-hedge",
+   "P10-07-punctuation",
+   "P10-07-unit_spelling",
+   "P10-08-change_scope",
+   "P10-08-subject_wording",
+   "P11-05-change_scope",
+   "P11-11-change_scope",
+   "P12-05-change_scope",
+   "P12-07-change_scope",
+   "P13-09-change_scope",
+   "P13-11-change_scope",
+   "P2-09-change_scope",
+   "P2-10-change_scope",
+   "P3-07-change_scope",
+   "P3-09-change_scope",
+   "P4-02-change_scope",
+   "P4-03-change_scope",
+   "P5-06-change_scope",
+   "P5-09-change_scope",
+   "P6-04-change_scope",
+   "P6-08-change_scope",
+   "P7-02",
+   "P7-05-change_scope",
+   "P7-08-change_scope",
+   "P8-03-change_scope",
+   "P8-08-change_scope",
+   "P9-02-change_scope",
+   "P9-06",
+   "P9-10-change_scope",
+   "R1-02-change_scope",
+   "R1-07-change_scope",
+   "R2-01-change_scope",
+   "R2-04-change_scope",
+   "R3-01-change_scope",
+   "R3-06-change_scope",
+   "R4-05-change_scope",
+   "R4-07-change_scope",
+   "R5-07-change_scope",
+   "R5-08-change_scope",
+   "R6-05-change_scope",
+   "R6-05-subject_wording",
+   "R6-06-change_scope",
+   "R7-05-change_scope",
+   "R7-07-change_scope"
+  ],
+  "positive_engaged": 195,
+  "positive_engaged_with_older_in_candidates": 194
+ },
  "inputs": {
   "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
   "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
@@ -14375,9 +14450,6 @@
   }
  },
  "scores": {
-  "fail_reasons": [
-   "m_flip_below_100"
-  ],
   "families": {
    "N1": {
     "class": "unsafe",
@@ -14806,65 +14878,9 @@
    "R3": 1
   },
   "missing_must_change": [],
-  "mixed_causes": [
-   {
-    "cause": "ii_unsafe",
-    "families": [
-     "N1"
-    ]
-   },
-   {
-    "cause": "ii_unsafe",
-    "families": [
-     "N2"
-    ]
-   },
-   {
-    "cause": "ii_unsafe",
-    "families": [
-     "N3"
-    ]
-   },
-   {
-    "cause": "ii_unsafe",
-    "families": [
-     "N5"
-    ]
-   },
-   {
-    "cause": "ii_unsafe",
-    "families": [
-     "N6"
-    ]
-   },
-   {
-    "cause": "ii_unsafe",
-    "families": [
-     "N11"
-    ]
-   },
-   {
-    "cause": "ii_unsafe",
-    "families": [
-     "N12"
-    ]
-   }
-  ],
   "non_structural_false_engagements": 44,
   "overall_recall": 0.9198,
-  "pass_criteria": {
-   "every_positive_family_ge_0.60": true,
-   "m_attr_eq_0": true,
-   "m_flip_eq_1": false,
-   "m_inv_ge_0.95": true,
-   "no_family_insufficient": true,
-   "no_missing_must_change": true,
-   "non_structural_false_engagements_le_1": false,
-   "overall_recall_ge_0.80": true,
-   "structural_false_engagements_eq_0": true
-  },
   "s0": [],
-  "structural_false_engagements": 0,
-  "verdict": "FAIL"
+  "structural_false_engagements": 0
  }
 }
