@@ -232,8 +232,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -245,13 +243,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -260,8 +251,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P2:recall",
@@ -270,8 +260,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -283,13 +271,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -298,8 +279,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P3:recall",
@@ -308,8 +288,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -323,13 +301,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -338,8 +309,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P4:recall",
@@ -348,8 +318,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -363,13 +331,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -378,8 +339,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P5:recall",
@@ -388,8 +348,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -401,13 +359,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -416,8 +367,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P6:recall",
@@ -426,8 +376,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -441,13 +389,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -456,8 +397,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P7:recall",
@@ -466,8 +406,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -481,13 +419,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -496,8 +427,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P8:recall",
@@ -506,8 +436,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -519,13 +447,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -534,8 +455,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P9:recall",
@@ -544,8 +464,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -559,13 +477,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -574,8 +485,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P10:recall",
@@ -584,8 +494,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -599,13 +507,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -614,8 +515,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P11:recall",
@@ -624,8 +524,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -637,13 +535,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -652,8 +543,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P12:recall",
@@ -662,8 +552,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -677,13 +565,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -692,8 +573,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:P13:recall",
@@ -702,8 +582,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -717,13 +595,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -732,8 +603,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R1:recall",
@@ -742,8 +612,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -755,13 +623,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -770,8 +631,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R2:recall",
@@ -780,8 +640,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -793,13 +651,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -808,8 +659,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R3:recall",
@@ -818,8 +668,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -831,13 +679,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -846,8 +687,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R4:recall",
@@ -856,8 +696,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -869,13 +707,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -884,8 +715,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R5:recall",
@@ -894,8 +724,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -907,13 +735,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -922,8 +743,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R6:recall",
@@ -932,8 +752,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -945,13 +763,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -960,8 +771,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     },
     {
       "deficit_id": "cross-fact-currentness-generalization-2026-10-07:R7:recall",
@@ -970,8 +780,6 @@
       "metric": "engagement_recall",
       "direction": "higher",
       "agent_memory": 0,
-      "same_harness_frontier": null,
-      "published_frontier": null,
       "adequacy_target": ">=0.80 overall recall; >=0.60 per-family floor",
       "gap": null,
       "priority": "P1",
@@ -985,13 +793,6 @@
         "docs/plan-732-generalization-gate.md"
       ],
       "owning_issue": 732,
-      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
-      "remediation_hypothesis": "Qualify general typed write-time proposition/change semantics on the single-use G6 holdout; do not tune G12 or family-specific phrase rules.",
-      "negative_control_refs": [
-        "#580",
-        "#584",
-        "mesa-formal-v2 M4"
-      ],
       "replay_requirements": [
         "single-use G6 holdout meeting every PASS criterion over non-narrowed families",
         "mesa-formal-v2 M4 = 1.000 with every win currentness_mechanism",
@@ -1000,8 +801,7 @@
       "state": "open",
       "opened_at": "2026-10-08",
       "closed_at": null,
-      "closure_evidence": [],
-      "remaining_gap": "family recall 0.000 on the frozen v1 measurement"
+      "closure_evidence": []
     }
   ]
 }
