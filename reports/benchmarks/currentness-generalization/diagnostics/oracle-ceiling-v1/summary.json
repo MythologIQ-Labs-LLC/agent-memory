@@ -1,0 +1,1004 @@
+{
+ "authority_effect": "none",
+ "kind": "diagnostic_not_score",
+ "modes": {
+  "flag_blind": {
+   "attribution": {
+    "must_change": {
+     "engaged": 111,
+     "guard_refusal:G8": 38,
+     "guard_refusal:G9": 38,
+     "newer_not_admitted": 90,
+     "relation_not_state_change": 43
+    },
+    "negative": {
+     "engaged": 44,
+     "guard_refusal:G8": 8,
+     "guard_refusal:G9": 15,
+     "newer_not_admitted": 28,
+     "relation_not_state_change": 9
+    },
+    "positive": {
+     "engaged": 195,
+     "newer_not_admitted": 12,
+     "older_not_admitted": 3,
+     "relation_not_state_change": 2
+    }
+   },
+   "families": {
+    "N1": {
+     "engaged": 6,
+     "stages": {
+      "S2": 1,
+      "S4": 1,
+      "S7": 6
+     },
+     "valid": 8
+    },
+    "N10": {
+     "engaged": 0,
+     "stages": {
+      "S2": 8
+     },
+     "valid": 8
+    },
+    "N11": {
+     "engaged": 5,
+     "stages": {
+      "S2": 3,
+      "S7": 5
+     },
+     "valid": 8
+    },
+    "N12": {
+     "engaged": 4,
+     "stages": {
+      "S2": 4,
+      "S7": 4
+     },
+     "valid": 8
+    },
+    "N13": {
+     "engaged": 0,
+     "stages": {
+      "S2": 8
+     },
+     "valid": 8
+    },
+    "N2": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "N3": {
+     "engaged": 6,
+     "stages": {
+      "S2": 1,
+      "S4": 1,
+      "S7": 6
+     },
+     "valid": 8
+    },
+    "N4": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N5": {
+     "engaged": 7,
+     "stages": {
+      "S2": 1,
+      "S7": 7
+     },
+     "valid": 8
+    },
+    "N6": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "N7": {
+     "engaged": 0,
+     "stages": {
+      "S5": 8
+     },
+     "valid": 8
+    },
+    "N8": {
+     "engaged": 0,
+     "stages": {
+      "S5": 8
+     },
+     "valid": 8
+    },
+    "N9": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S5": 7
+     },
+     "valid": 8
+    },
+    "P1": {
+     "engaged": 12,
+     "stages": {
+      "S7": 12
+     },
+     "valid": 12
+    },
+    "P10": {
+     "engaged": 11,
+     "stages": {
+      "S2": 1,
+      "S7": 11
+     },
+     "valid": 12
+    },
+    "P11": {
+     "engaged": 11,
+     "stages": {
+      "S4": 1,
+      "S7": 11
+     },
+     "valid": 12
+    },
+    "P12": {
+     "engaged": 11,
+     "stages": {
+      "S2": 1,
+      "S7": 11
+     },
+     "valid": 12
+    },
+    "P13": {
+     "engaged": 10,
+     "stages": {
+      "S2": 2,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "P2": {
+     "engaged": 12,
+     "stages": {
+      "S7": 12
+     },
+     "valid": 12
+    },
+    "P3": {
+     "engaged": 10,
+     "stages": {
+      "S2": 2,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "P4": {
+     "engaged": 10,
+     "stages": {
+      "S2": 2,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "P5": {
+     "engaged": 12,
+     "stages": {
+      "S7": 12
+     },
+     "valid": 12
+    },
+    "P6": {
+     "engaged": 10,
+     "stages": {
+      "S2": 2,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "P7": {
+     "engaged": 9,
+     "stages": {
+      "S1": 3,
+      "S7": 9
+     },
+     "valid": 12
+    },
+    "P8": {
+     "engaged": 12,
+     "stages": {
+      "S7": 12
+     },
+     "valid": 12
+    },
+    "P9": {
+     "engaged": 10,
+     "stages": {
+      "S2": 1,
+      "S4": 1,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "R1": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R2": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R3": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R4": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R5": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R6": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R7": {
+     "engaged": 7,
+     "stages": {
+      "S2": 1,
+      "S7": 7
+     },
+     "valid": 8
+    }
+   },
+   "file": "oracle-flag-blind.json",
+   "file_sha256": "2d5e256ff03baf006fb44009d0c176b9ae488c57172ac6e0a70dca1cea068e28",
+   "g5_verdict_if_it_were_scored": "FAIL",
+   "inputs": {
+    "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
+    "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
+    "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab"
+   },
+   "m_attr": 0,
+   "m_flip": 0.6531,
+   "m_flip_counts": {
+    "refrained": 209,
+    "total": 320
+   },
+   "m_inv": 0.9695,
+   "m_inv_counts": {
+    "matched": 159,
+    "total": 164
+   },
+   "must_change_engaged_by_type": {
+    "attribution": {
+     "engaged": 34,
+     "total": 40
+    },
+    "change_actor": {
+     "engaged": 0,
+     "total": 40
+    },
+    "change_scope": {
+     "engaged": 0,
+     "total": 40
+    },
+    "change_source_ref": {
+     "engaged": 0,
+     "total": 40
+    },
+    "coexistent": {
+     "engaged": 39,
+     "total": 40
+    },
+    "conditional": {
+     "engaged": 38,
+     "total": 40
+    },
+    "dispute": {
+     "engaged": 0,
+     "total": 40
+    },
+    "hedge": {
+     "engaged": 0,
+     "total": 40
+    }
+   },
+   "non_structural_false_engagements": 44,
+   "overall_recall": 0.9198,
+   "positive_engaged": 195,
+   "positive_valid": 212,
+   "results_sha256": "205a8f82a2b5cfc901a40339ec88f3284315bc2d339bdcb9338d309f0906da3b",
+   "structural_false_engagements": 0
+  },
+  "gold": {
+   "attribution": {
+    "must_change": {
+     "guard_refusal:G8": 38,
+     "guard_refusal:G9": 38,
+     "newer_not_admitted": 90,
+     "relation_not_state_change": 154
+    },
+    "negative": {
+     "guard_refusal:G8": 8,
+     "guard_refusal:G9": 15,
+     "newer_not_admitted": 28,
+     "relation_not_state_change": 53
+    },
+    "positive": {
+     "engaged": 195,
+     "newer_not_admitted": 12,
+     "older_not_admitted": 3,
+     "relation_not_state_change": 2
+    }
+   },
+   "families": {
+    "N1": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N10": {
+     "engaged": 0,
+     "stages": {
+      "S2": 8
+     },
+     "valid": 8
+    },
+    "N11": {
+     "engaged": 0,
+     "stages": {
+      "S2": 3,
+      "S4": 5
+     },
+     "valid": 8
+    },
+    "N12": {
+     "engaged": 0,
+     "stages": {
+      "S2": 4,
+      "S4": 4
+     },
+     "valid": 8
+    },
+    "N13": {
+     "engaged": 0,
+     "stages": {
+      "S2": 8
+     },
+     "valid": 8
+    },
+    "N2": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "N3": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N4": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N5": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N6": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "N7": {
+     "engaged": 0,
+     "stages": {
+      "S5": 8
+     },
+     "valid": 8
+    },
+    "N8": {
+     "engaged": 0,
+     "stages": {
+      "S5": 8
+     },
+     "valid": 8
+    },
+    "N9": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S5": 7
+     },
+     "valid": 8
+    },
+    "P1": {
+     "engaged": 12,
+     "stages": {
+      "S7": 12
+     },
+     "valid": 12
+    },
+    "P10": {
+     "engaged": 11,
+     "stages": {
+      "S2": 1,
+      "S7": 11
+     },
+     "valid": 12
+    },
+    "P11": {
+     "engaged": 11,
+     "stages": {
+      "S4": 1,
+      "S7": 11
+     },
+     "valid": 12
+    },
+    "P12": {
+     "engaged": 11,
+     "stages": {
+      "S2": 1,
+      "S7": 11
+     },
+     "valid": 12
+    },
+    "P13": {
+     "engaged": 10,
+     "stages": {
+      "S2": 2,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "P2": {
+     "engaged": 12,
+     "stages": {
+      "S7": 12
+     },
+     "valid": 12
+    },
+    "P3": {
+     "engaged": 10,
+     "stages": {
+      "S2": 2,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "P4": {
+     "engaged": 10,
+     "stages": {
+      "S2": 2,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "P5": {
+     "engaged": 12,
+     "stages": {
+      "S7": 12
+     },
+     "valid": 12
+    },
+    "P6": {
+     "engaged": 10,
+     "stages": {
+      "S2": 2,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "P7": {
+     "engaged": 9,
+     "stages": {
+      "S1": 3,
+      "S7": 9
+     },
+     "valid": 12
+    },
+    "P8": {
+     "engaged": 12,
+     "stages": {
+      "S7": 12
+     },
+     "valid": 12
+    },
+    "P9": {
+     "engaged": 10,
+     "stages": {
+      "S2": 1,
+      "S4": 1,
+      "S7": 10
+     },
+     "valid": 12
+    },
+    "R1": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R2": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R3": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R4": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R5": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R6": {
+     "engaged": 8,
+     "stages": {
+      "S7": 8
+     },
+     "valid": 8
+    },
+    "R7": {
+     "engaged": 7,
+     "stages": {
+      "S2": 1,
+      "S7": 7
+     },
+     "valid": 8
+    }
+   },
+   "file": "oracle-gold.json",
+   "file_sha256": "4185beca63c809ef5bdd79502a39bec86cb5d0f9c6f4976d17da6c04143c8d05",
+   "g5_verdict_if_it_were_scored": "PASS",
+   "inputs": {
+    "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
+    "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
+    "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab"
+   },
+   "m_attr": 0,
+   "m_flip": 1.0,
+   "m_flip_counts": {
+    "refrained": 320,
+    "total": 320
+   },
+   "m_inv": 0.9695,
+   "m_inv_counts": {
+    "matched": 159,
+    "total": 164
+   },
+   "must_change_engaged_by_type": {
+    "attribution": {
+     "engaged": 0,
+     "total": 40
+    },
+    "change_actor": {
+     "engaged": 0,
+     "total": 40
+    },
+    "change_scope": {
+     "engaged": 0,
+     "total": 40
+    },
+    "change_source_ref": {
+     "engaged": 0,
+     "total": 40
+    },
+    "coexistent": {
+     "engaged": 0,
+     "total": 40
+    },
+    "conditional": {
+     "engaged": 0,
+     "total": 40
+    },
+    "dispute": {
+     "engaged": 0,
+     "total": 40
+    },
+    "hedge": {
+     "engaged": 0,
+     "total": 40
+    }
+   },
+   "non_structural_false_engagements": 0,
+   "overall_recall": 0.9198,
+   "positive_engaged": 195,
+   "positive_valid": 212,
+   "results_sha256": "088da203c7f24ad7090dba5f0d60f9677819bd611e1302a59dfcda4d04174df2",
+   "structural_false_engagements": 0
+  },
+  "slot_drift": {
+   "attribution": {
+    "must_change": {
+     "newer_not_admitted": 90,
+     "relation_not_state_change": 230
+    },
+    "negative": {
+     "newer_not_admitted": 28,
+     "no_write_time_relation:older_not_in_candidates": 1,
+     "relation_not_state_change": 75
+    },
+    "positive": {
+     "newer_not_admitted": 12,
+     "no_write_time_relation:older_not_in_candidates": 1,
+     "older_not_admitted": 3,
+     "relation_not_state_change": 196
+    }
+   },
+   "families": {
+    "N1": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N10": {
+     "engaged": 0,
+     "stages": {
+      "S2": 8
+     },
+     "valid": 8
+    },
+    "N11": {
+     "engaged": 0,
+     "stages": {
+      "S2": 3,
+      "S4": 5
+     },
+     "valid": 8
+    },
+    "N12": {
+     "engaged": 0,
+     "stages": {
+      "S2": 4,
+      "S4": 4
+     },
+     "valid": 8
+    },
+    "N13": {
+     "engaged": 0,
+     "stages": {
+      "S2": 8
+     },
+     "valid": 8
+    },
+    "N2": {
+     "engaged": 0,
+     "stages": {
+      "S3": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N3": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N4": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N5": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "N6": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "N7": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "N8": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "N9": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    },
+    "P1": {
+     "engaged": 0,
+     "stages": {
+      "S4": 12
+     },
+     "valid": 12
+    },
+    "P10": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 11
+     },
+     "valid": 12
+    },
+    "P11": {
+     "engaged": 0,
+     "stages": {
+      "S4": 12
+     },
+     "valid": 12
+    },
+    "P12": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 11
+     },
+     "valid": 12
+    },
+    "P13": {
+     "engaged": 0,
+     "stages": {
+      "S2": 2,
+      "S4": 10
+     },
+     "valid": 12
+    },
+    "P2": {
+     "engaged": 0,
+     "stages": {
+      "S4": 12
+     },
+     "valid": 12
+    },
+    "P3": {
+     "engaged": 0,
+     "stages": {
+      "S2": 2,
+      "S4": 10
+     },
+     "valid": 12
+    },
+    "P4": {
+     "engaged": 0,
+     "stages": {
+      "S2": 2,
+      "S4": 10
+     },
+     "valid": 12
+    },
+    "P5": {
+     "engaged": 0,
+     "stages": {
+      "S4": 12
+     },
+     "valid": 12
+    },
+    "P6": {
+     "engaged": 0,
+     "stages": {
+      "S2": 2,
+      "S4": 10
+     },
+     "valid": 12
+    },
+    "P7": {
+     "engaged": 0,
+     "stages": {
+      "S1": 3,
+      "S4": 9
+     },
+     "valid": 12
+    },
+    "P8": {
+     "engaged": 0,
+     "stages": {
+      "S4": 12
+     },
+     "valid": 12
+    },
+    "P9": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S3": 1,
+      "S4": 10
+     },
+     "valid": 12
+    },
+    "R1": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "R2": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "R3": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "R4": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "R5": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "R6": {
+     "engaged": 0,
+     "stages": {
+      "S4": 8
+     },
+     "valid": 8
+    },
+    "R7": {
+     "engaged": 0,
+     "stages": {
+      "S2": 1,
+      "S4": 7
+     },
+     "valid": 8
+    }
+   },
+   "file": "oracle-slot-drift.json",
+   "file_sha256": "9cea1e829866b5cf6fc7ec5ec669470b6ac039fec414cc0bdc54264d467a69cf",
+   "g5_verdict_if_it_were_scored": "FAIL",
+   "inputs": {
+    "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
+    "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
+    "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab"
+   },
+   "m_attr": 0,
+   "m_flip": 1.0,
+   "m_flip_counts": {
+    "refrained": 320,
+    "total": 320
+   },
+   "m_inv": 1.0,
+   "m_inv_counts": {
+    "matched": 164,
+    "total": 164
+   },
+   "must_change_engaged_by_type": {
+    "attribution": {
+     "engaged": 0,
+     "total": 40
+    },
+    "change_actor": {
+     "engaged": 0,
+     "total": 40
+    },
+    "change_scope": {
+     "engaged": 0,
+     "total": 40
+    },
+    "change_source_ref": {
+     "engaged": 0,
+     "total": 40
+    },
+    "coexistent": {
+     "engaged": 0,
+     "total": 40
+    },
+    "conditional": {
+     "engaged": 0,
+     "total": 40
+    },
+    "dispute": {
+     "engaged": 0,
+     "total": 40
+    },
+    "hedge": {
+     "engaged": 0,
+     "total": 40
+    }
+   },
+   "non_structural_false_engagements": 0,
+   "overall_recall": 0.0,
+   "positive_engaged": 0,
+   "positive_valid": 212,
+   "results_sha256": "5fa853a52821e9930bd57794819c473fcb2f16827edef30992a01d777b9b61ab",
+   "structural_false_engagements": 0
+  }
+ },
+ "protocol_id": "currentness-oracle-ceiling-732-v1"
+}
