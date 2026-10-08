@@ -4951,3 +4951,41 @@ SHA256(content_hash + previous_hash) = 9ce8aa019f719836d935f26cce321e1685889bf32
 - **M3:** round-0 state is reconstructible from the transcript. No action taken.
 
 **Next:** merge #738, then run once on `main` and commit the bound report. Classification against the owner's fork follows. #673 stays held.
+
+---
+
+### Entry #115: MEASUREMENT — #732 independent currentness generalization gate (FAIL)
+
+**Timestamp**: 2026-10-08T00:50:00-04:00
+**Phase**: SUBSTANTIATE
+**Author**: Governor
+**Risk Grade**: L2
+**Session**: 2026-10-07-694-baseline-first
+**Target**: `reports/benchmarks/currentness-generalization/measurement/` (measurement-v1.json sha256 `508f54f85ba27802089f2bbc63c5d8e25f3fabf7304807d55d02ef8f8833be0e`), docs/BACKLOG
+
+**Content Hash** (SHA256 over `git write-tree` of the staged index `f875947034e88bbd5c0a6de8ffdbfcf073ee60dc`): `08a0f16e78ff36a61677643ddd06b169973be08b6ea1608699b287a30307a24a`
+**Previous Hash**: `9ce8aa019f719836d935f26cce321e1685889bf32936fac15334d970beb0da4f`
+**Chain Hash**: `324b24da25992e3c2bcbfb77e418544058762a08e7d0a51898a3f7a74cf8e9a5`
+
+**Decision**: The #732 generalization decision gate **FAILS** on Runtime Baseline v5.
+
+**Run.** The single run happened on `main` `db20b4e` (the merge of #738). The equivalence checker reports PASS against v5 (frozen `74c8683`), with G12 6.0.0 and policy 3.3.0. 0 cases were S0.
+
+**Results:**
+- **Overall engagement recall: 0.000** (0/212). The FAIL rule is overall recall < 0.50.
+- **Where positives stopped:**
+  - 197 had no write-time `state_change_candidate` relation between the newer and older fact (S3);
+  - 11 had the newer fact not admitted (S2);
+  - 4 had the older fact not admitted (S1).
+- **Negatives:** 104 refrained, with 0 false engagements, structural or not.
+- **Metamorphic variants:** M-flip 320/320, M-inv 164/164, M-attr 0. These hold vacuously, since nothing engaged.
+
+**Fork (owner direction).** FAIL, so:
+- #673 stays held;
+- #732 remediation is inserted before #673;
+- stages route the work: S3 to write-time recognition (typed assertion and change semantics; #596/#597), S1/S2 to retrieval;
+- remediation is generic, never G12 case-by-case. It is accepted only under G6: a fresh single-use holdout meeting every PASS criterion, plus the MESA v2 M4 = 1.000, #580 and #584 floors.
+
+**#671 stays open.** MESA M4 1.000 is benchmark-shaped evidence only.
+
+**Next:** classification rows (#719, plan G8), which wait for #733's parent row (D8). Then the #732 remediation plan.
