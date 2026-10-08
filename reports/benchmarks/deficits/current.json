@@ -169,6 +169,60 @@
       "closed_at": null,
       "closure_evidence": [],
       "remaining_gap": "open"
+    },
+    {
+      "deficit_id": "cross-fact-currentness-generalization-2026-10-07",
+      "benchmark_profile": "repository-owned #732 cross-fact currentness generalization v1",
+      "evidence_class": "repository-owned frozen generalization measurement",
+      "metric": "legitimate_change_engagement_recall / adversarial_false_engagements / metamorphic invariance",
+      "direction": "mixed",
+      "agent_memory": {
+        "overall_recall": 0,
+        "legitimate_changes": "0/212",
+        "positive_families_below_floor": "20/20",
+        "structural_false_engagements": 0,
+        "non_structural_false_engagements": 0,
+        "invariance": "164/164",
+        "must_change_refrain": "320/320",
+        "unattributed_ranking_changes": 0
+      },
+      "same_harness_frontier": null,
+      "published_frontier": null,
+      "adequacy_target": "PASS: overall recall >=0.80, every positive family >=0.60, zero structural-guard false engagements, <=1 other false engagement, invariance >=0.95, must-change refrain =1.0, unattributed ranking changes =0; FAIL if any structural-guard false engagement or overall recall <0.50",
+      "gap": "FAIL: overall recall 0.000; every one of the 20 positive families is 0.000. Safety and metamorphic invariants hold, but vacuously because the mechanism engaged on no case.",
+      "priority": "P1",
+      "posture": "architecture_gap",
+      "primary_stage": "write_interpretation_proposition_extraction",
+      "secondary_stages": [
+        "retrieval_candidate_admission",
+        "temporal_applicability_currentness"
+      ],
+      "evidence_refs": [
+        "reports/benchmarks/currentness-generalization/measurement/measurement-v1.json",
+        "reports/benchmarks/currentness-generalization/measurement/README.md",
+        "docs/plan-732-generalization-gate.md",
+        "#732"
+      ],
+      "owning_issue": 732,
+      "architecture_tranche": "#732 typed write-time propositions / Runtime Baseline v6; extractor path pending R6 acceptance",
+      "remediation_hypothesis": "The v5 failure is primarily missing write-time proposition/change identity (197/212 positives at S3), with a smaller retrieval-admission tail (15/212). Remediate generically with typed write-time semantics and an independently frozen extractor path; do not expand G12 case-by-case.",
+      "negative_control_refs": [
+        "#580",
+        "#584",
+        "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v2_s2027_9170.json",
+        "reports/benchmarks/agentmembench-mesa-formal/agent_memory_formal_v3_s2027_9170.json"
+      ],
+      "replay_requirements": [
+        "single-use G6 holdout meeting every frozen PASS criterion over non-narrowed families",
+        "MESA currentness floor = 1.000 with every win currentness_mechanism",
+        "#580 and #584 unchanged",
+        "provider configuration frozen before holdout authoring"
+      ],
+      "state": "open",
+      "opened_at": "2026-10-07",
+      "closed_at": null,
+      "closure_evidence": [],
+      "remaining_gap": "R6 extractor-on holdout acceptance pending; initial v5 generalization gate failed at 0/212 recall"
     }
   ]
 }
