@@ -174,7 +174,14 @@ def _verify(signed: SignedPropertyRegistry, *, public_key: Ed25519PublicKey,
                 raise RegistryError("unsupported signature contract")
             # Revalidate the manifest to defend against post-construction
             # dataclass/mutable subclass tampering.
-            PropertyRegistry(**asdict(reg), properties=reg.properties)
+            rebuilt = tuple(PropertyDefinition(item.property_ref, item.label_refs, item.state)
+                            for item in reg.properties)
+            PropertyRegistry(
+                schema_ref=reg.schema_ref, revision_ref=reg.revision_ref,
+                tenant_ref=reg.tenant_ref, scope_ref=reg.scope_ref,
+                purpose_ref=reg.purpose_ref, issuer_key_ref=reg.issuer_key_ref,
+                properties=rebuilt,
+            )
             raw = base64.b64decode(signed.signature_b64, validate=True)
             if len(raw) != 64 or base64.b64encode(raw).decode("ascii") != signed.signature_b64:
                 raise RegistryError("invalid or noncanonical signature")
