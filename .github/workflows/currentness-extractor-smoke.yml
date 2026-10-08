@@ -1,0 +1,114 @@
+name: Currentness Extractor Provider Smoke
+
+# #732 R6 / W5-Y1. Exactly one synthetic Claude subscription-OAuth request.
+# Connectivity/protocol evidence only. It never authors or scores the holdout.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: currentness-extractor-provider-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      PYTHONPATH: reference
+      CLAUDE_VERSION: "2.1.294"
+      CLAUDE_SHA256: "c152a9520cbe30adfaa7dbff26016d74c668c7dfb093fca2a06fa72cb6e98369"
+    steps:
+      - name: Refuse non-main execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "main" || {
+            echo "Provider smoke is evidence only from main after the W5 freeze lands." >&2
+            exit 2
+          }
+
+      - name: Checkout exact revision
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Install exact Claude Code CLI release
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="${RUNNER_TEMP}/claude.tar.gz"
+          root="${RUNNER_TEMP}/claude-bin"
+          curl -fsSL             "https://github.com/anthropics/claude-code/releases/download/v${CLAUDE_VERSION}/claude-linux-x64.tar.gz"             -o "${archive}"
+          echo "${CLAUDE_SHA256}  ${archive}" | sha256sum -c -
+          mkdir -p "${root}"
+          tar -xzf "${archive}" -C "${root}"
+          binary="$(find "${root}" -type f -name claude -print -quit)"
+          test -n "${binary}"
+          chmod +x "${binary}"
+          echo "$(dirname "${binary}")" >> "${GITHUB_PATH}"
+
+      - name: Verify subscription OAuth boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "${ANTHROPIC_API_KEY:-}" || {
+            echo "ANTHROPIC_API_KEY is forbidden for #732 R6." >&2
+            exit 2
+          }
+          test -z "${ANTHROPIC_AUTH_TOKEN:-}" || {
+            echo "ANTHROPIC_AUTH_TOKEN is forbidden for #732 R6." >&2
+            exit 2
+          }
+          if [ -z "${CLAUDE_CODE_OAUTH_TOKEN}" ]; then
+            echo "CLAUDE_CODE_OAUTH_TOKEN is not provisioned. Generate it with 'claude setup-token'. BLOCKED, not a failed score." >&2
+            exit 2
+          fi
+          echo "::add-mask::${CLAUDE_CODE_OAUTH_TOKEN}"
+          claude --version
+
+      - name: Verify frozen provider and runtime without model use
+        run: |
+          python scripts/smoke_currentness_extractor.py             --dry-run             --output "${RUNNER_TEMP}/provider-smoke-dry-run.json"
+
+      - name: Execute exactly one synthetic subscription request
+        run: |
+          python scripts/smoke_currentness_extractor.py             --output "${RUNNER_TEMP}/provider-smoke.json"
+
+      - name: Validate smoke evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path(os.environ["RUNNER_TEMP"]) / "provider-smoke.json"
+          data = json.loads(path.read_text(encoding="utf-8"))
+          assert data["evidence_class"] == "provider_connectivity_smoke"
+          assert data["generalization_score"] is None
+          assert data["response"]["status"] == "pass"
+          assert data["response"]["session_provenance"].startswith("claude-code-session:")
+          assert data["extractor"]["provider"] == "claude-code-cli"
+          assert data["extractor"]["cli_version"] == "2.1.294"
+          assert data["extractor"]["model"] == "claude-sonnet-5-5"
+          assert data["billing_safety"]["platform_api_key_used"] is False
+          assert data["runtime_baseline_line"].startswith("Runtime Baseline equivalence: PASS")
+          print("subscription-OAuth provider smoke evidence: PASS")
+          PY
+
+      - name: Upload non-secret smoke evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: currentness-extractor-provider-smoke-v2
+          path: ${{ runner.temp }}/provider-smoke.json
+          if-no-files-found: error
+          retention-days: 30
