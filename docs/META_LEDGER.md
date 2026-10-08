@@ -4826,3 +4826,89 @@ Step B2 binds the probe artifact. After B2, the next step is the #732 independen
 **#671 stays open**, per the owner posture: MESA M4 is a regression floor, and general currentness semantics are not measured.
 
 **Next queue item:** the #732/#733 independent generalization decision gate, against this unchanged runtime. #673 stays held until that gate, and any #732 remediation it requires, is accepted.
+
+---
+
+### Entry #112: GATE TRIBUNAL — PASS (#732 independent currentness generalization gate plan, attempt 5)
+
+**Timestamp**: 2026-10-07T19:00:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-732-generalization-gate.md (iteration 5, ba4cf43) and `reports/benchmarks/currentness-generalization/prompts/` (brief.md `672cc560…`, spawn.txt `bb9057ff…`, variants.txt `52b3ca6b…`, replace.txt `4741ab43…`)
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_732_gate_attempt5.md) = 9cbfe521c68e031816c4daf1fc66d09575d3dd98bd9f178ef1a2fbe277d24a0b
+
+**Previous Hash**: `23418aaac7b41c4b70339bc75811698e55e5435f44a28315db849647a884cf6e`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 9ee249929c33ed122a166db913e7e32230943adba0cb2633f21176cb41463524
+
+**Decision**: The #732 generalization decision gate passes at attempt 5. Its corpus rules, metrics, the owner-ratified thresholds (unchanged in every attempt), holdout strategy and frozen author prompts are fixed before any corpus exists, before any #732 remediation, and independently of #673. The measurement runs against Runtime Baseline v5 unchanged.
+
+**Attempts 1–4 were VETOs:**
+- **Attempt 1 (B1–B6):** independence, a runnable schema, stages, denominators, the seed and exclusion rule, and holdout single-use.
+- **Attempt 2 (C1–C6):**
+  - the orchestrator's user-role channels into the author were not audited;
+  - MIXED could be resolved vacuously;
+  - S7 was not attributed to the newer write, so a distractor could turn N8 into a structural FAIL;
+  - G3b and G3c left choices open;
+  - the structural families were unconstrained;
+  - the deficit row was schema-invalid.
+- **Attempt 3 (E1–E2):** the harness wrapper on coordinator messages and the hand-back tool were not handled, and the missing-must-change-variant cause had no family to carry it.
+- **Attempt 4 (H1):** the effective-source rule rejected the natural N9 case.
+
+**Attempt 5 verified by execution:**
+- the checker reports PASS against v5;
+- the prompt hashes match;
+- audit rules (b) and (c) classify all 78 user records of the tribunal's own transcript;
+- N9 compares the declared source in every handle and source pairing, and the runtime refuses at G8 `actor_mismatch` as intended;
+- the deficit rows validate against the schema and the 8 ledger tests.
+
+**Advisories carried into the freeze PR (non-normative):**
+- **J1:** the audit script requires `type` and `message.content`, and treats an absent `isMeta` or `origin` as false or none. It fails closed only on an unknown content shape or `origin.kind`.
+- **J2:** the freeze-PR dry-run transcript is committed with its sha256 as the evidence for the frozen wrapper strings.
+
+**Next:** authoring under G1, then the mechanical checks with replacement rounds, selection and variants, then the freeze PR (gated). #673 stays held.
+
+---
+
+### Entry #113: GATE TRIBUNAL — PASS (#732 gate plan amendment A1, attempt 2)
+
+**Timestamp**: 2026-10-07T21:00:00-04:00
+**Phase**: GATE
+**Author**: Judge
+**Risk Grade**: L2
+**Verdict**: PASS
+**Session**: 2026-10-07-694-baseline-first
+**Target**: docs/plan-732-generalization-gate.md (iteration 6, amendment A1) and its tooling at 5555504. Prompts: brief.md `4448a5e9…`, spawn.txt `bb9057ff…`, variants.txt `2e11b4e4…`, replace.txt `4741ab43…`.
+
+**Content Hash**:
+SHA256(.agent/staging/AUDIT_REPORT_732_gate_amendmentA1_attempt2.md) = 4a299352c3a1e5333d865ececa96141d6c539f4575e11d1496412508bc258dcd
+
+**Previous Hash**: `9ee249929c33ed122a166db913e7e32230943adba0cb2633f21176cb41463524`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 5be29cd9de870e16757f75558b7651d367201cca1680428a3c48766fbccc945a
+
+**Decision**: Amendment A1 passes.
+
+**Authoring attempt 1 (author732-1) is INVALID and discarded, per the plan's fail-closed rule (I3).**
+- **Transcript:** sha256 `8b682608…`.
+- **The one violation (record 26):** the author hit its output-token limit, and the harness injected an `isMeta` + `turnCompanion` continuation that the frozen rules did not classify.
+- **Variants:** they were also split across part files.
+- **Contamination:** none. No runtime was run, no outcome was seen and no case was edited. The tribunal reproduced the coordinator record byte for byte from the frozen prompt and the mechanical selection.
+
+**What A1 adds:**
+- **Rule (b)(2b):** that exact harness string on an origin-less, `turnCompanion` record is classified as a harness continuation.
+- **Split-file assembly:** an over-long array may be written as consecutive part files. The assembly fails closed with exit 2 when the base file is missing, a part follows a gap, or a part is not a JSON array. A selection with no variants reports every (base, type) pair missing.
+- **L1 allowlist:** unknown attachment types and `system` records carrying content fail closed. This closes the `task_reminder` channel, which carries the session task list.
+
+**Attempt 1 of the A1 gate** was a VETO on K1: the assembly failed open. That is fixed and verified by execution, with 32 tests passing. The checker reports PASS against v5.
+
+**Carried forward:**
+- **N1:** pre-flight before any author run. Clear the session task list and run no background tasks.
+- **N2 / L4:** the freeze PR commits the discarded-attempt replay evidence.
+
+**Next:** authoring attempt 2 (author732-2), with a fresh author and directory.

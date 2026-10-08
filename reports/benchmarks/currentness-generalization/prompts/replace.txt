@@ -1,0 +1,6 @@
+Replacement pass. The same tool rule applies: only Write and Read, only inside {AUTHOR_DIR}; any other tool call invalidates your work.
+
+The following records broke a mechanical rule. Each entry gives the record id, the file and the name of the rule:
+{REJECTIONS}
+
+For each entry, remove that record from its file and add one new record with a new id: for corpus.json, a new case of the same family; for variants.json, a new variant of the same base_case_id and variant_type. Follow the brief and the variant instructions exactly. Do not change any record that is not listed. When done, finish by replying with the single word: done. If the harness requires a hand-back tool to finish, call it exactly once with the message done and nothing else; that is the only permitted tool other than Write and Read.
