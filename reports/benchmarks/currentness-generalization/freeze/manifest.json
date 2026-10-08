@@ -48,8 +48,25 @@
       }
     }
   ],
-  "transcripts_committed": false,
-  "transcripts_pending": "owner decision: commit as recorded (contains harness session context) or redact via a gated amendment",
+  "transcripts_committed": "redacted (amendment A2)",
   "runtime": "Runtime Baseline v5 unchanged; measurement not yet run",
-  "authority_effect": "none"
+  "authority_effect": "none",
+  "transcripts": {
+    "attempt2": {
+      "path": "reports/benchmarks/currentness-generalization/authoring/attempt2/transcript.redacted.jsonl",
+      "original_sha256": "1b6f4065975079e95756625d8151ee81bdb9b92b0632a6fe6ee4bcbb4b15d74f",
+      "redacted_sha256": "0805692b5ae2839d880e86c2925ccc5e78216541208f3692d61d477fc92d9873"
+    },
+    "attempt1-discarded": {
+      "path": "reports/benchmarks/currentness-generalization/authoring/attempt1-discarded/transcript.redacted.jsonl",
+      "original_sha256": "8b6826087721f14f1635def576eff0c14919153cf60c58ccdbd17ef441ac8ffa",
+      "redacted_sha256": "7f09a8bffb0f827025ed2a7baa0efa8abb2503af1aa031e55e75fced6710e637"
+    },
+    "dryrun": {
+      "path": "reports/benchmarks/currentness-generalization/authoring/dryrun/transcript.redacted.jsonl",
+      "original_sha256": "719394e0166fb3f45e8073148469be8d38d68f487f96451e7529733b7b728741",
+      "redacted_sha256": "4f94109014e19dc5c68ed81536f752c2de3451c311bb90f947d21c9e8f25dbb3",
+      "note": "dry run used the pre-A1 prompts (commit 7b5f7a1); its audit replays PASS only against those prompts"
+    }
+  }
 }
