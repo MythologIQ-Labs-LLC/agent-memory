@@ -28,6 +28,7 @@ For the current RC/evidence boundary after #591/#594, start with [`64-current-go
 | Examine non-authoritative cross-write identity link safety | [`plan-757-proposition-link-falsification.md`](plan-757-proposition-link-falsification.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only structural adversarial tests |
 | Qualify append-only, unsigned proposition-link evidence replay | [`plan-757-link-evidence-journal.md`](plan-757-link-evidence-journal.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only replay, no semantic or authority claims |
 | Qualify independently pinned Ed25519 evidence-journal checkpoints | [`plan-757-signed-journal-checkpoints.md`](plan-757-signed-journal-checkpoints.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation only, no issuer/semantic trust |
+| Qualify explicit schema-backed cross-write property identity | [`plan-757-property-registry.md`](plan-757-property-registry.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only candidate, no semantic authority |
 | Review security/privacy | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41`, [`../SECURITY.md`](../SECURITY.md) |
 
 ## Repository operating model
