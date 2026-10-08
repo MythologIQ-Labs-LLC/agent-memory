@@ -108,7 +108,7 @@ class FailureRecallShadowTests(TestCase):
             admitted_fact_uuids=[self.write.fact_uuid, unknown_fact],
             active_object_refs=[FAILURE_REF],
             refusals={unknown_fact: "memory_type_mismatch:negative_failure_memory"},
-            contextual_decisions={},
+            contextual_decisions={FAILURE_REF: {"outcome": "admit"}},
         )
         with patch.object(self.memory, "recall_active", return_value=active):
             result = self.inspect()
@@ -131,6 +131,20 @@ class FailureRecallShadowTests(TestCase):
             result = self.inspect()
         self.assertEqual(result.usable_failures, ())
         self.assertEqual(result.generic_admitted_fact_uuids, ())
+
+    def test_claimed_active_without_contextual_admit_fails_closed(self):
+        for decisions in ({}, {FAILURE_REF: {"outcome": "require_review"}}):
+            active = ActiveCognition(
+                candidate_fact_uuids=[self.write.fact_uuid],
+                admitted_fact_uuids=[self.write.fact_uuid],
+                active_object_refs=[FAILURE_REF],
+                refusals={},
+                contextual_decisions=decisions,
+            )
+            with patch.object(self.memory, "recall_active", return_value=active):
+                result = self.inspect()
+            self.assertEqual(result.usable_failures, ())
+            self.assertEqual(result.authority_effect, "none")
 
     def test_severity_and_recurrence_never_create_action_authority(self):
         for _ in range(2):
