@@ -18,7 +18,7 @@ on:
       lane_id:
         description: "Frozen lane to execute (an accepted lane is refused)"
         required: true
-        default: "longmemeval-s-retrieval-parity-v5"
+        default: "longmemeval-s-retrieval-parity-v6"
         type: choice
         options:
           - longmemeval-s-retrieval-parity-v1
@@ -26,6 +26,7 @@ on:
           - longmemeval-s-retrieval-parity-v3
           - longmemeval-s-retrieval-parity-v4
           - longmemeval-s-retrieval-parity-v5
+          - longmemeval-s-retrieval-parity-v6
       backend:
         description: "Lane row to execute"
         required: true

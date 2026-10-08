@@ -227,17 +227,17 @@ class SameHarnessLaneTests(unittest.TestCase):
         report = json.loads(output.getvalue())
         self.assertEqual(report["command"], "benchmark_lanes")
         self.assertEqual(report["authority_effect"], "none")
-        # lanes list in sorted id order: the accepted v1, -v2, -v3 (#669) and -v4 (#644) lanes and
-        # the -v5 lanes (#671 plan-671-evidence-v5 A1), frozen until their rows are accepted
+        # lanes list in sorted id order: the accepted v1, -v2, -v3 (#669), -v4 (#644) and -v5 (#671)
+        # lanes and the -v6 lanes (#732 plan-732-evidence-v6 V6-E8), frozen until their rows are accepted
         ids = [lane["lane_id"] for lane in report["lanes"]]
         self.assertEqual(ids, [
             LANE_ID, AMB_V2_LANE_ID, "amb-precisionmembench-retrieval-v3", "amb-precisionmembench-retrieval-v4",
-            "amb-precisionmembench-retrieval-v5",
+            "amb-precisionmembench-retrieval-v5", "amb-precisionmembench-retrieval-v6",
             LME_LANE_ID, LME_V2_LANE_ID, "longmemeval-s-retrieval-parity-v3", "longmemeval-s-retrieval-parity-v4",
-            "longmemeval-s-retrieval-parity-v5",
+            "longmemeval-s-retrieval-parity-v5", "longmemeval-s-retrieval-parity-v6",
         ])
         for lane in report["lanes"]:
-            expected = {"frozen", "accepted"} if lane["lane_id"].endswith("-v5") else {"accepted"}
+            expected = {"frozen", "accepted"} if lane["lane_id"].endswith("-v6") else {"accepted"}
             self.assertIn(lane["status"], expected, lane["lane_id"])
 
         output = io.StringIO()

@@ -214,7 +214,8 @@ class _V5LaneMixin:
         workflow = (REPO_ROOT / self.workflow_path).read_text(encoding="utf-8")
         self.assertIn(f"- {self.lane_id}", workflow)
         self.assertIn(f"- {self.v4_id}", workflow)
-        self.assertIn(f'default: "{self.lane_id}"', workflow)
+        # The default moved to the -v6 lane (plan-732-evidence-v6 V6-E8); this accepted lane stays offered.
+        self.assertRegex(workflow, r'default: "' + self.lane_id.rsplit("-v", 1)[0] + r'-v[56]"')
         self.assertIn('lane["status"] == "frozen"', workflow)  # an accepted lane is refused
 
 

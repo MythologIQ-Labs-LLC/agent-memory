@@ -134,8 +134,9 @@ class _V4LaneMixin:
     def test_workflow_offers_and_defaults_to_this_lane_and_the_shadow_row(self):
         workflow = (REPO_ROOT / self.workflow_path).read_text(encoding="utf-8")
         self.assertIn(f"- {self.lane_id}", workflow)
-        # The default moved to the -v5 lane (plan-671-evidence-v5 E4/E8); this accepted lane stays offered.
-        self.assertRegex(workflow, r'default: "' + self.lane_id.rsplit("-v", 1)[0] + r'-v[45]"')
+        # The default moved to the -v5 lane (plan-671-evidence-v5 E4/E8), then to -v6 (plan-732-evidence-v6
+        # V6-E8); this accepted lane stays offered.
+        self.assertRegex(workflow, r'default: "' + self.lane_id.rsplit("-v", 1)[0] + r'-v[456]"')
         self.assertIn(f"- {self.shadow_key}", workflow)
         self.assertIn('python-version: "3.12"', workflow)  # the AMB join relies on 3.12's FIFO semaphore
 

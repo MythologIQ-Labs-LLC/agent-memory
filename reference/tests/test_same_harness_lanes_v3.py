@@ -168,9 +168,9 @@ class _V3LaneMixin:
     def test_workflow_offers_and_defaults_to_this_lane(self):
         workflow = (REPO_ROOT / self.workflow_path).read_text(encoding="utf-8")
         self.assertIn(f"- {self.lane_id}", workflow)
-        # The default moved to the -v4 lane (plan-644-lanes-v4 L6), then to -v5 (plan-671-evidence-v5 E8);
-        # this accepted lane stays offered.
-        self.assertRegex(workflow, r'default: "' + self.lane_id.rsplit("-v", 1)[0] + r'-v[345]"')
+        # The default moved to the -v4 lane (plan-644-lanes-v4 L6), then to -v5 (plan-671-evidence-v5 E8)
+        # and -v6 (plan-732-evidence-v6 V6-E8); this accepted lane stays offered.
+        self.assertRegex(workflow, r'default: "' + self.lane_id.rsplit("-v", 1)[0] + r'-v[3456]"')
         self.assertIn('lane["status"] == "frozen"', workflow)  # an accepted lane is refused
 
 
