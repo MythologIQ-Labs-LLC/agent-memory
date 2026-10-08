@@ -173,7 +173,7 @@ def replaces_value_confirms(typed: Mapping[str, Any], other_text: str, other: Ma
     if not replaced or replaced == value or len(replaced) < 2 or replaced in TRIVIAL_VALUES:
         return False
     interpreted = _interpreted_value(other)
-    if replaced.replace(" ", "").isdigit() and interpreted != replaced:
+    if re.sub(r"[\s.,]", "", replaced).isdigit() and interpreted != replaced:
         return False
     return interpreted == replaced or _occurs(_tokens(replaced), _tokens(other_text))
 

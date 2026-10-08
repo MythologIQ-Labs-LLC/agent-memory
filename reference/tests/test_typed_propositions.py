@@ -262,6 +262,8 @@ class ClassificationTests(_Case):
             ({**typed, "replaces_value": "A"}, "room A", None, False),
             ({**typed, "replaces_value": "off"}, TEXT["flag_old"], None, False),
             ({**typed, "replaces_value": "17"}, "room 17", None, False),
+            ({**typed, "replaces_value": "3.5"}, "limit 3.5", None, False),
+            ({**typed, "replaces_value": "1,000"}, "quota 1,000", None, False),
             ({**typed, "replaces_value": "42"}, "number 42", untyped, True),
             ({**typed, "replaces_value": None}, TEXT["room_old"], None, False),
             ({**typed, "replaces_value": "Aurora"}, TEXT["room_old"],
@@ -536,12 +538,27 @@ class AnthropicProviderTests(unittest.TestCase):
     def test_request_is_frozen_and_deterministic(self):
         body = self.extractor.request_body(TEXT["room_new"], [{"fact_uuid": "f1", "text": TEXT["room_old"]}])
         self.assertEqual(body["model"], "test-model")
-        self.assertEqual(body["temperature"], 0.0)
+        self.assertNotIn("temperature", body)
+        self.assertNotIn("effort", body["output_config"])
+        self.assertGreaterEqual(body["max_tokens"], 16000)
         self.assertEqual(body["system"], px.FROZEN_PROMPT)
-        self.assertEqual(body["output_config"]["format"]["schema"], px.FROZEN_OUTPUT_SCHEMA)
+        self.assertEqual(body["output_config"]["format"]["schema"], px.WIRE_OUTPUT_SCHEMA)
+        wire = json.dumps(body)
+        self.assertNotIn("minLength", wire)
+        self.assertNotIn("maxLength", wire)
         self.assertIn("test-model", self.extractor.extractor_version)
-        self.assertNotIn("temperature", px.AnthropicMessagesExtractor(
-            "test-model", egress_policy=lambda text: True, temperature=None).request_body("x", []))
+        tuned = px.AnthropicMessagesExtractor("test-model", egress_policy=lambda text: True, temperature=0.0,
+                                              effort="low").request_body("x", [])
+        self.assertEqual(tuned["temperature"], 0.0)
+        self.assertEqual(tuned["output_config"]["effort"], "low")
+
+    def test_wire_schema_only_drops_length_keywords(self):
+        def strip(schema):
+            if isinstance(schema, dict):
+                return {k: strip(v) for k, v in schema.items() if k not in {"minLength", "maxLength"}}
+            return [strip(v) for v in schema] if isinstance(schema, list) else schema
+        self.assertEqual(px.WIRE_OUTPUT_SCHEMA, strip(px.FROZEN_OUTPUT_SCHEMA))
+        self.assertIn("minLength", json.dumps(px.FROZEN_OUTPUT_SCHEMA))
 
     def test_response_parsing(self):
         answer = json.dumps({"proposition": PROP["room_new"], "updates_fact_uuid": "f1"})

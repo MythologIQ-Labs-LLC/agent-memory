@@ -94,6 +94,20 @@ def _sha256(value: str) -> str:
 
 PROMPT_SHA256 = _sha256(FROZEN_PROMPT)
 OUTPUT_SCHEMA_SHA256 = _sha256(json.dumps(FROZEN_OUTPUT_SCHEMA, sort_keys=True, separators=(",", ":")))
+# Structured outputs do not accept string-length keywords; the frozen schema keeps them for the
+# client-side check (typed.validate), and only this stripped copy is sent on the wire.
+_WIRE_UNSUPPORTED = frozenset({"minLength", "maxLength"})
+
+
+def wire_schema(schema: Any) -> Any:
+    if isinstance(schema, dict):
+        return {key: wire_schema(value) for key, value in schema.items() if key not in _WIRE_UNSUPPORTED}
+    if isinstance(schema, list):
+        return [wire_schema(item) for item in schema]
+    return schema
+
+
+WIRE_OUTPUT_SCHEMA: dict[str, Any] = wire_schema(FROZEN_OUTPUT_SCHEMA)
 
 EGRESS_REFUSED = "egress_refused"
 EXTRACTOR_DECLINED = "extractor_declined"
@@ -276,26 +290,36 @@ class AnthropicMessagesExtractor:
     """Reference provider: the frozen prompt through the Anthropic Messages API (stdlib HTTPS).
 
     The model id is a required constructor argument and is recorded in ``extractor_version``.
-    ``temperature`` defaults to 0 and is sent when not None (a caller whose model rejects
-    sampling parameters passes None; the choice is recorded in the version). The API key is
-    read from ``ANTHROPIC_API_KEY``. The output is constrained to ``FROZEN_OUTPUT_SCHEMA``.
+    No sampling parameter is sent by default: current models reject them, so ``temperature``
+    defaults to None and is sent only when a caller sets it. ``max_tokens`` defaults to 16000
+    so thinking tokens cannot truncate the JSON, and ``effort`` is sent only when given. All
+    three are recorded in ``extractor_version``. The API key is read from ``ANTHROPIC_API_KEY``.
+    The output is constrained to ``WIRE_OUTPUT_SCHEMA`` (the frozen schema without string-length
+    keywords) and validated client-side against the frozen schema.
+
+    Operational notes: extraction, and so egress, happens before PAMA decides the write, so a
+    write PAMA refuses may already have been sent; the handle is held for up to the 20 s
+    timeout; a timed-out call may still complete at the provider after the write commits,
+    and its request id is then not recorded.
     """
 
     endpoint = "https://api.anthropic.com/v1/messages"
     api_version = "2023-06-01"
     extractor_id = "anthropic-messages"
 
-    def __init__(self, model: str, *, egress_policy: Callable[[str], bool], temperature: float | None = 0.0,
-                 max_tokens: int = 1024, api_key: str | None = None) -> None:
+    def __init__(self, model: str, *, egress_policy: Callable[[str], bool], temperature: float | None = None,
+                 max_tokens: int = 16000, effort: str | None = None, api_key: str | None = None) -> None:
         if not isinstance(model, str) or not model or "@" in model:
             raise ValueError("model must be a non-empty provider model id")
         self.egress_policy = _require_policy(egress_policy)
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.effort = effort
         self._api_key = api_key
         sampling = "default" if temperature is None else f"t{temperature:g}"
-        self.extractor_version = f"{EXTRACTION_RECORD_VERSION}/{model}/{sampling}/{PROMPT_SHA256[:12]}"
+        tuning = f"{sampling}/mt{max_tokens}/{effort or 'effort-default'}"
+        self.extractor_version = f"{EXTRACTION_RECORD_VERSION}/{model}/{tuning}/{PROMPT_SHA256[:12]}"
 
     def request_body(self, new_text: str, candidates: Sequence[Mapping[str, str]]) -> dict[str, Any]:
         content = json.dumps({"new_text": new_text, "candidates": [dict(item) for item in candidates]},
@@ -305,8 +329,10 @@ class AnthropicMessagesExtractor:
             "max_tokens": self.max_tokens,
             "system": FROZEN_PROMPT,
             "messages": [{"role": "user", "content": content}],
-            "output_config": {"format": {"type": "json_schema", "schema": FROZEN_OUTPUT_SCHEMA}},
+            "output_config": {"format": {"type": "json_schema", "schema": WIRE_OUTPUT_SCHEMA}},
         }
+        if self.effort is not None:
+            body["output_config"]["effort"] = self.effort
         if self.temperature is not None:
             body["temperature"] = self.temperature
         return body
@@ -360,6 +386,6 @@ def frozen_texts() -> list[str]:
 __all__ = [
     "AnthropicMessagesExtractor", "EGRESS_REFUSED", "extraction_record", "EXTRACTION_TIMEOUT_SECONDS", "EXTRACTOR_DECLINED",
     "EXTRACTOR_ERROR", "EXTRACTOR_OUTPUT_INVALID", "EXTRACTOR_TIMEOUT", "ExtractionOutputError", "FROZEN_OUTPUT_SCHEMA",
-    "FROZEN_PROMPT", "MAX_CANDIDATES", "OUTPUT_SCHEMA_SHA256", "PROMPT_SHA256", "PropositionExtractor",
+    "FROZEN_PROMPT", "MAX_CANDIDATES", "OUTPUT_SCHEMA_SHA256", "PROMPT_SHA256", "PropositionExtractor", "WIRE_OUTPUT_SCHEMA", "wire_schema",
     "RecordedFixtureExtractor", "TypedExtraction", "extract_for_write", "frozen_texts",
 ]

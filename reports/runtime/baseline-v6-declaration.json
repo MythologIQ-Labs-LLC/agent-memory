@@ -30,7 +30,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/proposition_extraction.py",
-      "blob": "e438d16e8306e6cea552cbf4893f9bef303c4fb8"
+      "blob": "cf234c4dfa53b199a06047c85f23e0cb02b0ecef"
     },
     {
       "path": "reference/agentmem_ref/runtime/proposition_semantics.py",
@@ -58,7 +58,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/typed_proposition.py",
-      "blob": "1e2a922a5f653b7736b99a75f1dee52ea4d34a81"
+      "blob": "34f9a11d7a87257490d59905816734c0288353da"
     },
     {
       "path": "reference/agentmem_ref/typed_proposition.py",

@@ -215,3 +215,16 @@ The plan passed at attempt 3 (META_LEDGER Entry #116; audit sha256 `112e3980…`
   - that recovery never calls the extractor;
   - the S6 similarity check;
   - that `write_semantics` bytes with the extractor off are identical to v5 on synthetic fixtures.
+
+## Implementation gate notes (attempt 1 VETO X1; recorded, non-normative to the gated decisions)
+
+- **"Temperature 0" (R2, OQ1) is superseded.**
+  - Current Claude models reject sampling parameters. The reference provider therefore sends **no** `temperature` by default, and `max_tokens` defaults to 16000 so thinking tokens cannot truncate the JSON. `effort` is sent only when configured.
+  - The schema sent on the wire omits `minLength` and `maxLength`, which structured outputs does not support. The frozen schema keeps them and still validates client-side. The frozen prompt and the frozen schema sha256 are unchanged.
+  - Reproducibility rests on persisting the raw output (S4), not on sampling settings.
+- **Provider freeze record (W5).** Before the credential is used and before holdout authoring, a gated record freezes the provider configuration and binds `extractor_version`. The configuration covers model id, sampling, `max_tokens` and effort.
+- **Operational notes (W2–W4).**
+  - Extraction, and so egress, happens before PAMA decides the write.
+  - A handle is held for up to the 20 s timeout.
+  - A timed-out call may still complete at the provider after the write commits. Its request id is then not recorded.
+
