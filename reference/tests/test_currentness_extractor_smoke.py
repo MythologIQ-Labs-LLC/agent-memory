@@ -100,6 +100,28 @@ class CurrentnessExtractorSmokeTests(unittest.TestCase):
                     [{"fact_uuid": str(n), "text": "candidate"} for n in range(px.MAX_CANDIDATES + 1)],
                 )
 
+    def test_subscription_auth_environment_drops_ambient_provider_routing(self):
+        from agentmem_ref.evaluation.claude_code_proposition_extractor import (
+            ClaudeCodeCLIExtractor,
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            hostile = {
+                "CLAUDE_CODE_OAUTH_TOKEN": "synthetic-not-a-real-token",
+                "CLAUDE_CODE_USE_BEDROCK": "1",
+                "CLAUDE_CODE_USE_VERTEX": "1",
+                "CLAUDE_CODE_USE_FOUNDRY": "1",
+                "ANTHROPIC_BASE_URL": "https://untrusted.example.test",
+                "CLAUDE_CODE_USE_GATEWAY": "1",
+            }
+            with mock.patch.dict(os.environ, hostile, clear=True):
+                env = ClaudeCodeCLIExtractor._clean_env(Path(tmp))
+        self.assertEqual(env["CLAUDE_CODE_OAUTH_TOKEN"], hostile["CLAUDE_CODE_OAUTH_TOKEN"])
+        self.assertEqual(env["CLAUDE_CONFIG_DIR"], tmp)
+        for name in hostile:
+            if name != "CLAUDE_CODE_OAUTH_TOKEN":
+                self.assertNotIn(name, env)
+
     def test_direct_api_credentials_are_refused_even_in_dry_run(self):
         env = os.environ.copy()
         env["ANTHROPIC_API_KEY"] = "must-not-be-used"
