@@ -36,7 +36,7 @@ generic admission != specialized failure admission
 - occurrence count, causal posture, severity, action class and revision identity as **descriptive evidence**;
 - explicit `authority_effect=none`, `mutates_memory=false`, and `integration_state=evaluation_only`.
 
-It performs one existing specialized recall call and does not modify failure history, action approvals, recurrence, PAMA, canonical state, or facade output. It never invents a similarity score from lexical overlap. The module lives in the baseline-declared **evaluation exclusion** and is not imported by production runtime.
+It performs one existing specialized recall call and does not modify failure history, action approvals, recurrence, PAMA, canonical memory facts, or facade output. **The existing governed adapter intentionally appends ordinary `memory.recall` operational audit events on reads.** Those receipts are preserved and tested, not suppressed; read-only here means no canonical memory/lifecycle mutation, not zero operational observability. It never invents a similarity score from lexical overlap. The module lives in the baseline-declared **evaluation exclusion** and is not imported by production runtime.
 
 ### Repeatable local checks
 
