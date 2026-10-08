@@ -1,0 +1,40 @@
+{
+  "attachment_types": {
+    "auto_mode": 1,
+    "credential_org": 1,
+    "date": 1,
+    "deferred_tools_delta": 1,
+    "environment": 1,
+    "mcp_instructions_delta": 1,
+    "model": 1,
+    "prompt_snapshot": 2,
+    "remote_session_change": 1,
+    "session_context": 1,
+    "skill_listing": 1,
+    "total_tokens_reminder": 6
+  },
+  "author_dir": "/tmp/claude-0/-home-user-agent-memory/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/author732-1",
+  "authority_effect": "none",
+  "counts": {
+    "coordinator": 1,
+    "reminder": 1,
+    "spawn": 1,
+    "tool_result": 8,
+    "tool_use:Read": 1,
+    "tool_use:SubagentHandback": 2,
+    "tool_use:Write": 5
+  },
+  "prompt_sha256": {
+    "brief.md": "672cc56070b08441f0337f93f8ae2c83c5f7f30ee3a469db709b9fc9b2db6794",
+    "replace.txt": "4741ab43f902e90250c0a3d4f3d5dcc17bf0aeac9ee0666b6d979ae77d146ac8",
+    "spawn.txt": "bb9057ff55ec2a6ea6354483d81f28e0d921a32f811bb49fdc7e6cf3db0cbab3",
+    "variants.txt": "52b3ca6b8129f2ba22e1cf2f3595750cd30033c3669a95f7e33e38c84a5493b7"
+  },
+  "records": 46,
+  "transcript": "/root/.claude/projects/-home-user-agent-memory/d274b759-6504-590d-ae30-53afbfeafd56/subagents/agent-a95e496b91139d3ed.jsonl",
+  "transcript_sha256": "8b6826087721f14f1635def576eff0c14919153cf60c58ccdbd17ef441ac8ffa",
+  "verdict": "INVALID",
+  "violations": [
+    "record 26: unclassified user record"
+  ]
+}

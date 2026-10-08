@@ -1,0 +1,38 @@
+{
+  "attachment_types": {
+    "auto_mode": 1,
+    "credential_org": 1,
+    "date": 2,
+    "deferred_tools_delta": 1,
+    "environment": 1,
+    "mcp_instructions_delta": 1,
+    "model": 1,
+    "prompt_snapshot": 2,
+    "remote_session_change": 1,
+    "session_context": 1,
+    "skill_listing": 1,
+    "total_tokens_reminder": 24
+  },
+  "author_dir": "/tmp/claude-0/-home-user-agent-memory/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/author732-2",
+  "authority_effect": "none",
+  "counts": {
+    "coordinator": 2,
+    "reminder": 1,
+    "spawn": 1,
+    "tool_result": 27,
+    "tool_use:Read": 2,
+    "tool_use:SubagentHandback": 3,
+    "tool_use:Write": 22
+  },
+  "prompt_sha256": {
+    "brief.md": "4448a5e90e2939e30c42361e3e6e11650304a9b96cf6f24643a8bd97f7643007",
+    "replace.txt": "4741ab43f902e90250c0a3d4f3d5dcc17bf0aeac9ee0666b6d979ae77d146ac8",
+    "spawn.txt": "bb9057ff55ec2a6ea6354483d81f28e0d921a32f811bb49fdc7e6cf3db0cbab3",
+    "variants.txt": "2e11b4e41f9f9defee4751f5fb188de091619f518bb5989d6891787ec6f6ca8c"
+  },
+  "records": 120,
+  "transcript": "/root/.claude/projects/-home-user-agent-memory/d274b759-6504-590d-ae30-53afbfeafd56/subagents/agent-a35d62e5a5879eaa5.jsonl",
+  "transcript_sha256": "1b6f4065975079e95756625d8151ee81bdb9b92b0632a6fe6ee4bcbb4b15d74f",
+  "verdict": "PASS",
+  "violations": []
+}

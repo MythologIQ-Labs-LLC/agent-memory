@@ -1,0 +1,55 @@
+{
+  "freeze_id": "currentness-generalization-732-v1",
+  "plan": "docs/plan-732-generalization-gate.md (iteration 6, Entries #112/#113)",
+  "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
+  "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab",
+  "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
+  "prompt_sha256": {
+    "brief.md": "4448a5e90e2939e30c42361e3e6e11650304a9b96cf6f24643a8bd97f7643007",
+    "spawn.txt": "bb9057ff55ec2a6ea6354483d81f28e0d921a32f811bb49fdc7e6cf3db0cbab3",
+    "variants.txt": "2e11b4e41f9f9defee4751f5fb188de091619f518bb5989d6891787ec6f6ca8c",
+    "replace.txt": "4741ab43f902e90250c0a3d4f3d5dcc17bf0aeac9ee0666b6d979ae77d146ac8"
+  },
+  "author_part_sha256": {
+    "corpus.json": "36e5d8cab6c7790363a1b64abf7cf9bf0956ffee34448e1ca090c5b9a99d39b4",
+    "corpus_part2.json": "dcffe4670969ad6122ac323fa1f4ebfee7c44e5302a930593be5036475c52f73",
+    "corpus_part3.json": "c2782d51efc93d9a8b0700deb945d4d8682aed309f1fcbc5c57b6ecb55c13db5",
+    "corpus_part4.json": "318a75f72a59af60e0bae93d9d98628728bc1e607ff532f4c70857ffa23cd36a",
+    "corpus_part5.json": "a6cb3ca5afad3b324404326e96e59e2ee0fe9f834018547bee777521b76f1976",
+    "corpus_part6.json": "cd01132c9a2fa5145d211e3b2c9b1b2395ca189055dabb2045ab41af75f9a47f",
+    "corpus_part7.json": "47e216c4cab23f5bf43213cb045a5de436cccd57b62eb2024d01bfeb0d48ee99",
+    "corpus_part8.json": "18e32a02fc48cd23d102d079341ea73e910cf6cffb4d9e253be45b870fdb3b9a",
+    "corpus_part9.json": "b1b5c145d337d8459ca2a32ac44784098253c337464cc52dff796083491fb1d4",
+    "variants.json": "7370d73a7923ada585b0e8927015594d507aad01e59466393d652f64eae20d1f",
+    "variants_part2.json": "50fc86baf36758ad2ff7e95d57f5782c2d4ea6cbaad3ee03a91f636f98b43bd2",
+    "variants_part3.json": "62485b60e114659ee90e82e620e7afaff903c67a4eb0bf4f9c3a4c9766cad224",
+    "variants_part4.json": "fec9a1244d6cf1cd7036a00865aed8b10d42df32a685e095f8bb000182759958",
+    "variants_part5.json": "1b2b5c7bddee918ca4c18740d720db40ec8868a8803eb2e322e3d6d686f9b8ae",
+    "variants_part6.json": "f5fe5833088314f6a9fdb03de530545dc87cb295c3d6685c2cd9ac33c35a2037",
+    "variants_part7.json": "4e78da746b59e9ed47bf22844617fd0c1dd78720d8c0f6d156c83bb883877d8b",
+    "variants_part8.json": "3dd8bed76d77c27880685827fb4cfbd98dece752b23b2cca4a569bd1b44934c1"
+  },
+  "authoring_attempts": [
+    {
+      "attempt": 1,
+      "dir": "author732-1",
+      "verdict": "INVALID (discarded; harness output-limit continuation unclassified pre-A1)",
+      "transcript_sha256": "8b6826087721f14f1635def576eff0c14919153cf60c58ccdbd17ef441ac8ffa"
+    },
+    {
+      "attempt": 2,
+      "dir": "author732-2",
+      "verdict": "PASS",
+      "transcript_sha256": "1b6f4065975079e95756625d8151ee81bdb9b92b0632a6fe6ee4bcbb4b15d74f",
+      "rounds": {
+        "corpus_replacement_rounds": 0,
+        "variant_replacement_rounds": 1,
+        "variant_rejections_round1": 8
+      }
+    }
+  ],
+  "transcripts_committed": false,
+  "transcripts_pending": "owner decision: commit as recorded (contains harness session context) or redact via a gated amendment",
+  "runtime": "Runtime Baseline v5 unchanged; measurement not yet run",
+  "authority_effect": "none"
+}
