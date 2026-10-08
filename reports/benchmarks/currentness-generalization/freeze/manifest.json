@@ -1,6 +1,6 @@
 {
   "freeze_id": "currentness-generalization-732-v1",
-  "plan": "docs/plan-732-generalization-gate.md (iteration 6, Entries #112/#113)",
+  "plan": "docs/plan-732-generalization-gate.md (iteration 7, Entries #112/#113, amendment A2 gated with the freeze, Entry #114)",
   "corpus_sha256": "cf2e7646c4ba6b0139b9d2ff68e916ef3f47427cf3505f71db5b53b629c47cec",
   "variants_sha256": "72588822196ec185a3245dccb3245f6fe1a99822f33cf50450e3b22c251de1ab",
   "selection_sha256": "6a1ae7e6bc4ba1a17721351d840481ddb92ca654cc9ae1a0ea32e39eb6937996",
