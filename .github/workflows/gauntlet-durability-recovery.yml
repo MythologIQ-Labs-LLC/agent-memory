@@ -207,7 +207,7 @@ jobs:
 
       - name: Upload durability qualification evidence
         if: steps.classify.outputs.state == 'PASS' && steps.contestant.outputs.contestant == 'current'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gauntlet-durability-recovery-alpha-v1
           path: |

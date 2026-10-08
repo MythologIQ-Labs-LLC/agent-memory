@@ -180,7 +180,7 @@ jobs:
           while IFS= read -r file; do sha256sum "$file"; done < contributor-evidence/files.txt | tee contributor-evidence/sha256.txt
 
       - name: Upload contributor-contract evidence
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: benchmark-integration-contract
           path: |

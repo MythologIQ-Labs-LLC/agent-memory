@@ -197,7 +197,7 @@ jobs:
 
       - name: Upload public Gauntlet qualification evidence
         if: steps.classify.outputs.state == 'PASS'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ steps.current.outputs.baseline_id }}-public-gauntlet
           path: |
