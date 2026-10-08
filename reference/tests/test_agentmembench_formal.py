@@ -271,6 +271,7 @@ class JudgeTests(unittest.TestCase):
 
 
 V2_FREEZE = formal.FREEZE_DIR / "mesa-formal-v2-freeze.json"
+V3_FREEZE = formal.FREEZE_DIR / "mesa-formal-v3-freeze.json"
 # The runner at 7b041a7, which the v1 freeze binds and where v1 replays run (docs/69
 # "Determinism"). Hard-coded: CI checkouts are shallow, so the commit is not readable there.
 V1_RUNNER_SHA256 = "58b2fced97a82d762a3cb24325af31173248431837880cd9b19b0a70ae55540c"
@@ -402,6 +403,58 @@ class SuccessorFreezeTests(unittest.TestCase):
         self.assertNotIn("FREEZE_PATH", source.split('"""', 2)[2])
         judge = inspect.getsource(formal.judge_raw_report)
         self.assertIn('binding.get("path") != str(freeze_path.resolve().relative_to(REPO_ROOT))', judge)
+
+
+class SuccessorFreezeV3Tests(unittest.TestCase):
+    """docs/plan-732-evidence-v6.md V6-E4/E5: mesa-formal-v3 differs from v2 only where listed."""
+
+    CHANGED = {"freeze_id", "supersedes", "owning_issue", "frozen_on", "status", "run_id", "adapter", "agent_memory",
+               "predictions"}
+
+    def setUp(self):
+        self.v2 = formal.load_freeze(V2_FREEZE)
+        self.v3 = formal.load_freeze(V3_FREEZE)
+
+    def test_field_differences_are_exhaustive(self):
+        self.assertEqual(set(self.v3), set(self.v2))
+        for key in set(self.v2) - self.CHANGED:
+            self.assertEqual(self.v3[key], self.v2[key], key)
+        adapter_changed = {key for key in self.v2["adapter"] if self.v2["adapter"][key] != self.v3["adapter"][key]}
+        self.assertEqual(adapter_changed, {"surface", "ranking_policy"})
+        self.assertIn("contract 1.6.0", self.v3["adapter"]["surface"])
+        self.assertIn("3.4.0", self.v3["adapter"]["ranking_policy"])
+        self.assertIn("no proposition extractor", self.v3["adapter"]["ranking_policy"])
+        memory_changed = {key for key in self.v2["agent_memory"] if self.v2["agent_memory"][key] != self.v3["agent_memory"][key]}
+        self.assertEqual(memory_changed, {"runtime_tree", "ranking_policy_version", "public_contract_version"})
+        self.assertEqual(self.v3["runner"], self.v2["runner"])
+        self.assertEqual(self.v3["m4_classifier"], self.v2["m4_classifier"])
+
+    def test_identity_and_supersession(self):
+        self.assertEqual(self.v3["freeze_id"], "agent-memory-agentmembench-mesa-formal-v3")
+        self.assertEqual(self.v3["owning_issue"], 732)
+        self.assertEqual(self.v3["run_id"], "agent_memory_formal_v3_s2027_9170")
+        self.assertEqual(self.v3["supersedes"], {
+            "freeze_id": self.v2["freeze_id"],
+            "path": str(V2_FREEZE.relative_to(formal.REPO_ROOT)),
+            "sha256": formal.sha256_file(V2_FREEZE),
+        })
+
+    def test_binds_the_live_v6_runtime_and_runner(self):
+        observed = formal.observed_agent_memory_binding()
+        self.assertEqual(self.v3["agent_memory"]["ranking_policy_version"], "3.4.0")
+        self.assertEqual(self.v3["agent_memory"]["public_contract_version"], "1.6.0")
+        self.assertEqual(self.v3["agent_memory"]["ranking_policy_id"], observed["ranking_policy_id"])
+        self.assertEqual(formal.sha256_file(Path(formal.__file__)), self.v3["runner"]["sha256"])
+        declaration = json.loads((REFERENCE.parent / "reports" / "runtime" / "baseline-v6-declaration.json").read_text())
+        deltas = {item["identity_path"]: item["to"] for item in declaration["identity_deltas"]}
+        self.assertEqual(deltas["identity.ranking.active_policy_version"], self.v3["agent_memory"]["ranking_policy_version"])
+        self.assertEqual(deltas["identity.public_contract_version"], self.v3["agent_memory"]["public_contract_version"])
+
+    def test_predictions_reproduce_v2_exactly(self):
+        for key in ("P1", "P2", "P3", "P5"):
+            self.assertEqual(self.v3["predictions"][key], self.v2["predictions"][key], key)
+        self.assertIn("any P6 difference", self.v3["predictions"]["on_miss"])
+        self.assertIn("retrieved sha256", self.v3["predictions"]["P6"])
 
 
 if __name__ == "__main__":
