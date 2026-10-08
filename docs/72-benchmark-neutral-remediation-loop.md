@@ -45,7 +45,7 @@ The script parses the current accepted deficit ledger `reports/benchmarks/defici
 - published research numbers **never** promoted to same-harness frontiers;
 - no metric weighting, threshold selection, model inference or remediation decision.
 
-The audit has two results: `STRUCTURAL_FAILURE` for invalid records, or `READ_ONLY_REVIEW` for mechanically well-formed inputs, even when they contain outstanding deficits. `review_candidates` are suggestions, **not** governance violations or automatic GitHub issues. The CI job blocks only structural invalidity, not missing optional negative controls, scientific judgments or the score itself. It never alters current.json or source benchmark artifacts.
+The audit has two results: `STRUCTURAL_FAILURE` for invalid records, or `READ_ONLY_REVIEW` for mechanically well-formed inputs, even when they contain outstanding deficits. `review_candidates` are suggestions, **not** governance violations or automatic GitHub issues. The canonical doctrine CI audit step blocks only structural invalidity, not missing optional negative controls, scientific judgments or the score itself. It never alters current.json or source benchmark artifacts.
 
 This phase intentionally does **not** implement #722's comparator arithmetic, automatic reopen/close transitions, issue creation, architecture proposals or frontier escalation. Those features require accepted identity/metric comparability policy and regression floors; without them an automatic engine would fabricate decision authority.
 
