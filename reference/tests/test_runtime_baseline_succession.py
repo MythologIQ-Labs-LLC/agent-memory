@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ast
+import hashlib
 import json
 import shutil
 import subprocess
@@ -487,6 +489,9 @@ V5_FROZEN = "74c8683e33f2b716577138e5b4c750a9ae670966"
 V5_DECLARATION = "reports/runtime/baseline-v5-declaration.json"
 V5_B1_HEAD = "ee5578b37c547a1a98e4fe6f49f2e4276ad239c8"
 V5_PUBLISHED = "0110f8efdb6a6d577aaf8630c17721b3813479b0"
+V6 = "agent-memory-runtime-baseline-v6"
+V6_FROZEN = "e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1"
+V6_DECLARATION = "reports/runtime/baseline-v6-declaration.json"
 
 
 class RealRepository(unittest.TestCase):
@@ -719,15 +724,12 @@ class RealRepository(unittest.TestCase):
         self.assertEqual(rendered, output.read_text(encoding="utf-8"))
         self.assertIn("public Gauntlet path: **complete** via `stdio`", rendered)
 
-    def test_register_carries_v5_as_the_current_entry(self) -> None:
-        # docs/67 Steps B1 and B2 for #671: v5 is the last entry, blob-pinned in the working tree,
-        # its companion qualification bound and its publication commit pinned.
+    def test_register_pins_v5_after_its_b2(self) -> None:
+        # docs/67 Steps B1 and B2 for #671: v5 is blob-pinned in the working tree, its companion
+        # qualification bound and its publication commit pinned. v6 succeeds it (#732).
         register = checker.load_register(REPO_ROOT, REGISTER)
-        self.assertEqual([item["baseline_id"] for item in register["baselines"]], [V1, V2, V3, V4, V5])
-        # #732 typed write-time propositions opened the v6 transition (docs/67 Step A); v5 stays current.
-        self.assertEqual(register["declared_successor"],
-                         {"baseline_id": "agent-memory-runtime-baseline-v6", "declaration": "reports/runtime/baseline-v6-declaration.json"})
-        entry = register["baselines"][-1]
+        self.assertEqual([item["baseline_id"] for item in register["baselines"]][:5], [V1, V2, V3, V4, V5])
+        entry = self._entry(register, V5)
         self.assertEqual(entry["record"], "reports/runtime/baseline-v5.json")
         self.assertEqual(blob(REPO_ROOT, entry["record"]), entry["record_blob"])
         self.assertEqual(blob(REPO_ROOT, entry["source_boundary"]), entry["source_boundary_blob"])
@@ -790,10 +792,112 @@ class RealRepository(unittest.TestCase):
 
     def test_v5_rendering_is_byte_identical(self) -> None:
         register = checker.load_register(REPO_ROOT, REGISTER)
-        output, rendered = renderer.render_entry(REPO_ROOT, register["baselines"][-1])
+        output, rendered = renderer.render_entry(REPO_ROOT, self._entry(register, V5))
         self.assertEqual(output, REPO_ROOT / "reports/runtime/baseline-v5.md")
         self.assertEqual(rendered, output.read_text(encoding="utf-8"))
         self.assertIn("public Gauntlet path: **complete** via `stdio`", rendered)
+
+    def test_register_carries_v6_as_the_current_entry(self) -> None:
+        # docs/67 Step B1 for #732: v6 is the last entry, blob-pinned in the working tree, with
+        # a pending companion qualification and no publication commit yet; no successor is declared.
+        register = checker.load_register(REPO_ROOT, REGISTER)
+        self.assertEqual([item["baseline_id"] for item in register["baselines"]], [V1, V2, V3, V4, V5, V6])
+        self.assertIsNone(register["declared_successor"])
+        entry = register["baselines"][-1]
+        self.assertEqual(entry["record"], "reports/runtime/baseline-v6.json")
+        self.assertEqual(blob(REPO_ROOT, entry["record"]), entry["record_blob"])
+        self.assertEqual(blob(REPO_ROOT, entry["source_boundary"]), entry["source_boundary_blob"])
+        self.assertEqual(entry["qualification"]["path"], "reports/runtime/baseline-v6-qualification.json")
+        self.assertEqual(entry["qualification"]["pointer"], "")
+        self.assertEqual(blob(REPO_ROOT, entry["qualification"]["path"]), entry["qualification"]["blob"])
+        qualification = json.loads((REPO_ROOT / entry["qualification"]["path"]).read_text(encoding="utf-8"))
+        self.assertEqual(qualification["status"], "pending")
+        self.assertIsNone(entry["published_commit"])
+        record = json.loads((REPO_ROOT / entry["record"]).read_text(encoding="utf-8"))
+        boundary = json.loads((REPO_ROOT / entry["source_boundary"]).read_text(encoding="utf-8"))
+        self.assertEqual(record["runtime_revision"]["commit"], V6_FROZEN)
+        self.assertEqual(record["runtime_revision"]["merge_pr"], 741)
+        self.assertEqual(boundary["frozen_revision"], V6_FROZEN)
+        self.assertEqual(record["identity"]["public_contract_version"], "1.6.0")
+        self.assertEqual(record["identity"]["ranking"]["active_policy_version"], "3.4.0")
+        cross_fact = record["read_semantics"]["cross_fact_currentness"]
+        self.assertEqual(cross_fact["authority_effect"], "none")
+        self.assertEqual(cross_fact["assertion_filter_version"], "6.1.0")
+        self.assertIn("explicit-current recall only", cross_fact["applies_to"])
+        contract = record["public_runtime_contract"]
+        self.assertEqual(contract["proposition_extractor"]["facade_default"], "off (None)")
+        for key in ("proposition", "proposition_extractor"):
+            self.assertEqual(contract[key]["contract_version"], "1.6.0")
+            self.assertEqual(contract[key]["authority_effect"], "none")
+        # remediation advisory V1: v6 is published before holdout acceptance, so the typed proposition
+        # and extractor path is unaccepted until R6, and a failed acceptance needs a v7 declaration
+        limitation = next(item for item in record["known_limitations"] if item["id"] == "typed_proposition_extractor_unaccepted")
+        self.assertEqual(limitation["issue"], 732)
+        self.assertIn("UNACCEPTED until the docs/plan-732-remediation.md R6 acceptance", limitation["evidence"])
+        self.assertIn("v7 declaration", limitation["evidence"])
+        self.assertEqual(record["capabilities"]["typed_write_time_propositions"], "opt_in_unaccepted")
+        self.assertIn("unaccepted", record["write_semantics"]["typed_proposition"]["acceptance"])
+        self.assertTrue(any("UNACCEPTED" in note and "v7" in note for note in boundary["notes"]))
+        scope = next(item for item in record["known_limitations"] if item["id"] == "cross_fact_currentness_scope")
+        self.assertEqual(scope["issue"], 732)
+        self.assertIn("not measured", scope["evidence"])
+        mesa = record["qualification_evidence"]["agentmembench_mesa_formal_v3"]
+        self.assertEqual(mesa["m4_win_basis_counts"], {"currentness_mechanism": 250})
+        self.assertEqual(mesa["proposition_extractor"], "off")
+        self.assertTrue((REPO_ROOT / mesa["report"]).is_file())
+        self.assertTrue((REPO_ROOT / mesa["freeze"]).is_file())
+        declaration = json.loads((REPO_ROOT / V6_DECLARATION).read_text(encoding="utf-8"))
+        self.assertEqual(record["predecessor"]["baseline_id"], V5)
+        self.assertEqual(record["predecessor"]["runtime_revision"], V5_FROZEN)
+        self.assertEqual(record["predecessor"]["identity_deltas"], declaration["identity_deltas"])
+        self.assertEqual(record["predecessor"]["declared_changes"], declaration["declared_changes"])
+        self.assertEqual(record["predecessor"]["pyproject_change"], declaration["pyproject_change"])
+        self.assertEqual(record["predecessor"]["declaration_blob"], blob(REPO_ROOT, V6_DECLARATION))
+        acceptance = record["qualification_evidence"]["successor_lane_acceptance"]
+        self.assertEqual(acceptance["declaration_blob"], blob(REPO_ROOT, V6_DECLARATION))
+        rows = acceptance["rows"]
+        self.assertEqual(len(rows), 9)
+        self.assertEqual({row["checker_state"] for row in rows}, {"TRANSITION"})
+        for row in rows:
+            self.assertIn("-v6:", row["evidence_id"])
+            self.assertTrue((REPO_ROOT / row["report"]).is_file(), row["report"])
+        manifest = json.loads((REPO_ROOT / entry["public_gauntlet_manifest"]).read_text(encoding="utf-8"))
+        adapter = manifest["transport"]["startup"][-1]
+        self.assertEqual(adapter, "examples/gauntlet/agent_memory_runtime_baseline_v6_stdio.py")
+        self.assertEqual(manifest["system"]["revision"], f"git-commit:{V6_FROZEN}")
+        self.assertEqual(manifest["adapter"]["revision"], f"git-blob:{blob(REPO_ROOT, adapter)}")
+        self.assertEqual(manifest["metadata"]["baseline_id"], V6)
+        source = (REPO_ROOT / adapter).read_text(encoding="utf-8")
+        self.assertIn(f'FROZEN_RUNTIME_REVISION = "{V6_FROZEN}"', source)
+        self.assertIn('PUBLIC_CONTRACT_VERSION = "1.6.0"', source)
+        # the manifest's configuration digest follows the recipe the record names, over the adapter's constants
+        constants = {}
+        for node in ast.parse(source).body:
+            if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant) and len(node.targets) == 1:
+                constants[getattr(node.targets[0], "id", "")] = node.value.value
+        identity = {
+            "runtime_profile": manifest["metadata"]["runtime_profile"],
+            "public_contract": constants["PUBLIC_CONTRACT_VERSION"],
+            "frozen_runtime_revision": constants["FROZEN_RUNTIME_REVISION"],
+            "tenant": constants["TENANT"],
+            "actor": constants["ACTOR"],
+            "scope": constants["SCOPE"],
+            "purpose": constants["PURPOSE"],
+        }
+        digest = hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+        self.assertEqual(manifest["system"]["configuration_digest"], f"sha256:{digest}")
+        v5_source = (REPO_ROOT / "examples/gauntlet/agent_memory_runtime_baseline_v5_stdio.py").read_text(encoding="utf-8")
+        self.assertIn(f'FROZEN_RUNTIME_REVISION = "{V5_FROZEN}"', v5_source, "the v5 adapter keeps its constants")
+        self.assertIn('PUBLIC_CONTRACT_VERSION = "1.5.0"', v5_source, "the v5 adapter keeps its constants")
+
+    def test_v6_rendering_is_byte_identical(self) -> None:
+        register = checker.load_register(REPO_ROOT, REGISTER)
+        output, rendered = renderer.render_entry(REPO_ROOT, register["baselines"][-1])
+        self.assertEqual(output, REPO_ROOT / "reports/runtime/baseline-v6.md")
+        self.assertEqual(rendered, output.read_text(encoding="utf-8"))
+        self.assertIn("public Gauntlet path: **pending** via `stdio`", rendered)
+        self.assertIn("**typed_proposition_extractor_unaccepted** (#732)", rendered)
+        self.assertIn("Runtime Baseline v7 declaration", rendered)
 
     def test_contestant_workflows_retire_a_predecessor_pin_truthfully(self) -> None:
         # docs/67 Step B1: a contestant that pins a predecessor baseline is skipped with a notice,
