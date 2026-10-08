@@ -7,14 +7,18 @@
 **gate result being remediated**: `docs/plan-732-generalization-gate.md` measurement v1 = **FAIL** (META_LEDGER Entry #115)
 **owner decision (2026-10-08)**: the remediation direction is the typed caller API plus a model extractor
 **doctrine**: a benchmark identifies a gap but never defines the production grammar; no tuning after any score; G12 is never expanded case by case
-**iteration**: 2
+**iteration**: 3
 
 **Gate history**: attempt 1 was a VETO (Q1–Q3; advisories S1–S9).
 - **Q1:** the typed path was switched off by the interpreter's `proposition_*` ineligibility reasons.
 - **Q2:** a model-chosen link could relate facts about different properties.
 - **Q3:** the two-mode holdout broke plan-732 G6, because the prompts were no longer hash-identical and the authoring was contaminated. The MESA floor was also ill-formed.
 
-The direction was not in question. Iteration 2 fixes Q1–Q3 and folds in S1–S9.
+Attempt 2 was a VETO (T1–T2; advisories U1–U5).
+- **T1:** the release order was circular and contradicted docs/67.
+- **T2:** a typed link to a fact with a *different* typed slot could still be confirmed through the value-text branch.
+
+The direction was not in question. Iteration 2 fixed Q1–Q3 and S1–S9; iteration 3 fixes T1–T2 and folds in U1–U5.
 
 ## Diagnosis (from the bound measurement; for diagnosis only, never a tuning target)
 
@@ -94,7 +98,15 @@ The measurement found 0 engagements in 212 legitimate changes: 197 at S3 (no wri
 - **Typed link.**
   - `updates_fact_uuid` counts only when it is **deterministically confirmed** (Q2). Confirmation requires both of these:
     - (i) the linked fact is a filtered candidate;
-    - (ii) **either** it has a `typed_proposition` with the same typed slot, **or** `replaces_value` is non-empty, its normalized token sequence occurs in the linked fact's normalized text, and it differs from `value`.
+    - (ii) **if the linked fact has a `typed_proposition`**, it has the **same typed slot**. A different slot is evidence of a different property, so the link is never confirmed (T2).
+    - (iii) **only if the linked fact has no `typed_proposition`** (an untyped or older fact), the value-text branch applies:
+      - `replaces_value` is non-empty and differs from `value`;
+      - it is non-trivial: at least 2 characters, not purely numeric unless the linked fact's interpreted proposition value equals it exactly, and not one of the closed set {yes, no, on, off, true, false, none, n/a};
+      - its normalized token sequence occurs in the linked fact's normalized text, **or** it equals the linked fact's interpreted proposition value exactly (U1).
+    - **Control tests** cover:
+      - a different-slot typed link, which must refuse (T2's example: a move-from-Boston change linked to "The user's dentist is in Boston");
+      - a trivial `replaces_value`, which must refuse;
+      - an untyped linked fact with a matching value, which must confirm.
   - A confirmed link is basis `typed_link`.
   - An unconfirmed link is recorded as `unresolved` with basis `typed_link_unconfirmed`, and never creates a proposal.
 - **When a typed relation is a `state_change_candidate`.** All of these must hold:
@@ -104,9 +116,10 @@ The measurement found 0 engagements in 212 legitimate changes: 197 at S3 (no wri
   - the values differ.
 
   Otherwise the relation is `coexistence`, `same_value` or `unresolved`, with a typed basis.
+- **Null typed proposition (U5).** A fact whose `typed_proposition` is null (extraction failure, egress refusal or extractor off) takes the unchanged 1.0.0 interpreted path.
 - **Typed eligibility (Q1).**
   - For typed relations, `proposal_ineligible_reasons` is replaced by `typed_ineligible_reasons`. This set:
-    - **drops** `proposition_unknown`, `proposition_ambiguous` and `proposition_known`-dependent reasons;
+    - **drops** `proposition_unknown` and `proposition_ambiguous`, the only parser-dependent reasons the interpreter emits (U4);
     - **keeps** `untrusted_self_claim` (from the interpreter's self-claim scan);
     - **keeps** `hedged` when either the typed flag or the interpreter's lexical hedge scan finds a hedge. The conservative OR means a typed write cannot be less cautious than 1.0.0.
   - A non-empty set gives `unresolved`, basis `change_evidence_not_proposable:<reasons>`, and no proposal.
@@ -126,13 +139,14 @@ The measurement found 0 engagements in 212 legitimate changes: 197 at S3 (no wri
 - **Equivalence.** The `-v6` lanes must be EQUAL to `-v5` with the extractor **off**, the default; any UNATTRIBUTED difference blocks.
 - **MESA, extractor off.** `mesa-formal-v2` M4 = 1.000, with every win `currentness_mechanism`.
 - **Guards.** #580 and #584 unchanged.
-- **Order (S8).**
-  1. The implementation PR is gated.
-  2. Then the v6 declaration.
-  3. Then the `-v6` lanes and MESA, with the extractor off.
-  4. Then acceptance, then B1, then merge, then B2.
-
-  The holdout runs against the **published v6** commit.
+- **Order (T1, consistent with docs/67).**
+  1. The implementation PR (Step A, TRANSITION) is gated, then merged.
+  2. The `-v6` lanes and extractor-off MESA run at the transition revision.
+  3. B1 publishes against the tranche merge commit; B2 binds it. v6 is now published, which is safe because the extractor is opt-in and off by default, and every extractor-off floor holds.
+  4. The owner provides the credential (R7).
+  5. The holdout is authored and its freeze PR gated.
+  6. A single scoring runs on the **published v6**, plus MESA with the extractor on.
+  7. Acceptance PR.
 
 **R6 — Acceptance (plan-732 G6, unchanged; Q3).**
 - **Holdout authoring.**
@@ -142,6 +156,7 @@ The measurement found 0 engagements in 212 legitimate changes: 197 at S3 (no wri
 - **Accepted when all of these hold:**
   - every plan-732 G5 PASS criterion over the non-narrowed families;
   - `mesa-formal-v2` with the extractor on: M4 = 1.000, every win `currentness_mechanism` (Q3d);
+  - #580 and #584 unchanged with the extractor **on** (U3), as well as off;
   - the extractor-off floors from R5;
   - the measurement corpus re-reported, for reporting only.
 
@@ -172,20 +187,20 @@ The measurement found 0 engagements in 212 legitimate changes: 197 at S3 (no wri
   - no G12 case-by-case expansion;
   - no retroactive extraction;
   - typed evidence never grants authority;
-  - no sensitive memory is sent to a provider.
+  - nothing is sent to a provider without the caller's per-handle opt-in and an explicit `egress_policy` decision. The runtime cannot itself guarantee that no sensitive text leaves the process; that is the caller's policy (U2).
 
 ## Execution order
 1. Gate this plan.
-2. **Implementation PR**, gated, containing:
+2. Implementation PR (Step A), gated and merged. It contains:
    - R1–R4;
    - the frozen prompt and schema, with the S6 check;
    - the stub and control tests;
-   - the v6 declaration;
-   - the `-v6` lanes and MESA with the extractor off.
-3. Owner credential (R7).
-4. Holdout authoring and freeze PR, gated.
-5. A single holdout scoring on published v6, plus MESA with the extractor on.
-6. Acceptance PR: classification against plan-732 G7, then B1, merge and B2. The deficit rows are discharged, and only then does the #673 re-plan begin.
+   - the v6 declaration.
+3. The `-v6` lanes and MESA with the extractor off, then v6 B1/B2 (published, extractor off by default).
+4. Owner credential (R7).
+5. Holdout authoring and freeze PR, gated.
+6. A single holdout scoring on published v6, plus MESA and #580/#584 with the extractor on.
+7. Acceptance PR. It classifies against plan-732 G7 and discharges the deficit rows. Only then does the #673 re-plan begin.
 
 ## Open Questions
 - **OQ1 (owner):** the provider and model. The proposal is a current Claude model through the Anthropic API at temperature 0, with the exact id recorded in the extractor version at implementation. Alternatively, name another provider or a local model.
