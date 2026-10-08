@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+from ..core.contextual_recall import ADMITTING_OUTCOMES
 from ..memory.failure_memory import FailureMemory
 from ..runtime.adapter import RecallContext
 
@@ -73,6 +74,11 @@ def inspect_failure_recall(
     usable: list[UsableFailureEvidence] = []
 
     for ref in result.active_object_refs:
+        decision = result.contextual_decisions.get(ref)
+        if not isinstance(decision, dict) or decision.get("outcome") not in ADMITTING_OUTCOMES:
+            # Even if an upstream result falsely labels the owner active, a
+            # missing / review-required contextual receipt is not admission.
+            continue
         current = failure_memory.current(ref)
         # A stale/externally modified owner state MUST NOT be turned into a
         # shadow acceptance. Do not promote generic admission to failure use.
