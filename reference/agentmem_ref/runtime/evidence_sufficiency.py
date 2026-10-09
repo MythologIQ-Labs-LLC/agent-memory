@@ -61,6 +61,80 @@ class CoverageObservation:
 
 
 @dataclass(frozen=True)
+class TypedValueClaim:
+    """Eligible persisted claim only. It grants neither truth nor state-change status."""
+
+    candidate_ref: str
+    need_key: str
+    value: str
+    cardinality: str | None = None
+    assertion: str = "state"
+
+    def __post_init__(self) -> None:
+        _ident(self.candidate_ref, "claim candidate reference")
+        _ident(self.need_key, "claim need key")
+        _ident(self.value, "claim value")
+        if self.cardinality not in (None, "single", "multi"):
+            raise ValueError("invalid typed claim cardinality")
+        if self.assertion not in ("state", "change"):
+            raise ValueError("invalid typed claim assertion")
+
+
+@dataclass(frozen=True)
+class ValueCoherenceAssessment:
+    """Groups exact values by admitted fact identity, never exposes raw values."""
+
+    need_key: str
+    status: str
+    fact_groups: tuple[tuple[str, ...], ...]
+
+
+def assess_value_coherence(
+    needs: tuple[CoverageNeed, ...], claims: tuple[TypedValueClaim, ...]
+) -> tuple[ValueCoherenceAssessment, ...]:
+    """Conservative same-slot evidence comparison, NOT contradiction resolution.
+
+    Raw values are grouped by strict string equality only. An asserted change
+    is not a governed correction. Distinct facts are not independent sources.
+    Unknown cardinality cannot establish single-valued incompatibility.
+    """
+    if type(needs) is not tuple or type(claims) is not tuple:
+        raise TypeError("typed value inputs must be tuples")
+    requested = {need.key for need in needs}
+    if len(requested) != len(needs) or any(type(need) is not CoverageNeed for need in needs):
+        raise ValueError("unique typed coverage needs required")
+    seen: set[tuple[str, str]] = set()
+    for claim in claims:
+        if type(claim) is not TypedValueClaim or claim.need_key not in requested:
+            raise ValueError("claim is not a declared typed coverage need")
+        identity = (claim.need_key, claim.candidate_ref)
+        if identity in seen:
+            raise ValueError("duplicate value claim per fact and slot")
+        seen.add(identity)
+    assessments = []
+    for need in sorted(requested):
+        subset = [claim for claim in claims if claim.need_key == need]
+        groups: dict[str, set[str]] = {}
+        for claim in subset:
+            groups.setdefault(claim.value, set()).add(claim.candidate_ref)
+        fact_groups = tuple(sorted(tuple(sorted(refs)) for refs in groups.values()))
+        if not subset:
+            status = "no_eligible_value"
+        elif any(item.assertion == "change" for item in subset):
+            status = "change_assertion_unresolved"
+        elif len(groups) == 1:
+            status = "same_value_observed"
+        elif any(item.cardinality == "multi" for item in subset):
+            status = "coexistence_possible"
+        elif any(item.cardinality is None for item in subset):
+            status = "cardinality_unresolved"
+        else:
+            status = "competing_values_unresolved"
+        assessments.append(ValueCoherenceAssessment(need, status, fact_groups))
+    return tuple(assessments)
+
+
+@dataclass(frozen=True)
 class RouteWorkObservation:
     route_id: str
     candidate_limit: int
@@ -88,6 +162,7 @@ class SufficiencyObservation:
     contradictions: tuple[tuple[str, str], ...] = ()
     route_work: tuple[RouteWorkObservation, ...] = ()
     count_target: int = 1
+    typed_value_claims: tuple[TypedValueClaim, ...] = ()
 
     def __post_init__(self) -> None:
         _unique_refs(self.admitted_refs, "admitted references")
@@ -98,6 +173,7 @@ class SufficiencyObservation:
             ("coverage", self.coverage, CoverageObservation),
             ("contradictions", self.contradictions, tuple),
             ("route_work", self.route_work, RouteWorkObservation),
+            ("typed_value_claims", self.typed_value_claims, TypedValueClaim),
         ):
             if type(values) is not tuple or any(type(item) is not type_ for item in values):
                 raise TypeError(f"{label} must contain typed tuple entries")
@@ -114,6 +190,14 @@ class SufficiencyObservation:
                 raise ValueError("coverage may refer only to governed admitted evidence")
             if not set(item.need_keys).issubset(known_needs):
                 raise ValueError("coverage names an undeclared need")
+        typed_support = {(item.candidate_ref, key) for item in self.coverage
+                         if item.origin == TYPED_OBSERVATION for key in item.need_keys}
+        for claim in self.typed_value_claims:
+            if claim.candidate_ref not in admitted or claim.need_key not in known_needs:
+                raise ValueError("typed value claim must refer to admitted declared evidence")
+            if (claim.candidate_ref, claim.need_key) not in typed_support:
+                raise ValueError("typed value claim requires matching typed support evidence")
+        assess_value_coherence(self.needs, self.typed_value_claims)
         for pair in self.contradictions:
             if len(pair) != 2 or any(type(ref) is not str for ref in pair):
                 raise ValueError("contradiction must be a pair of admitted refs")
@@ -141,6 +225,7 @@ class SufficiencyReport:
     can_admit: bool = False
     can_mutate: bool = False
     authority_effect: str = "none"
+    value_coherence: tuple[ValueCoherenceAssessment, ...] = ()
 
     def __post_init__(self) -> None:
         if (self.answer_quality_verified is not False
@@ -159,6 +244,11 @@ class SufficiencyReport:
             "need_support_counts": dict(self.need_support_counts),
             "need_support_refs": {need: list(refs) for need, refs in self.need_support_refs},
             "missing_needs": list(self.missing_needs),
+            "value_coherence": [
+                {"need_key": item.need_key, "status": item.status,
+                 "fact_groups": [list(group) for group in item.fact_groups]}
+                for item in self.value_coherence
+            ],
             "contradiction_pairs": [list(x) for x in self.contradiction_pairs],
             "budget_bound_routes": list(self.budget_bound_routes),
             "unexecuted_routes": list(self.unexecuted_routes),
@@ -196,6 +286,11 @@ def assess_sufficiency(observation: SufficiencyObservation) -> SufficiencyReport
     unexecuted = tuple(sorted(route.route_id for route in observation.route_work
                               if not route.executed and route.candidate_limit > 0))
     covered = bool(observation.needs) and not missing
+    value_coherence = assess_value_coherence(observation.needs, observation.typed_value_claims)
+    ambiguous_values = any(
+        item.status not in ("no_eligible_value", "same_value_observed")
+        for item in value_coherence
+    )
     if not observation.admitted_refs:
         diagnosis = "no_admitted_evidence"
     elif pairings:
@@ -206,6 +301,8 @@ def assess_sufficiency(observation: SufficiencyObservation) -> SufficiencyReport
         diagnosis = "planned_routes_not_executed"
     elif not covered:
         diagnosis = "budget_bound_missing_evidence" if capped else "missing_declared_evidence"
+    elif ambiguous_values:
+        diagnosis = "value_coherence_unresolved"
     elif capped:
         diagnosis = "coverage_observed_resource_bound"
     else:
@@ -225,4 +322,5 @@ def assess_sufficiency(observation: SufficiencyObservation) -> SufficiencyReport
         unexecuted_routes=unexecuted,
         diagnosis=diagnosis,
         continuation_proposal=proposal,
+        value_coherence=value_coherence if observation.typed_value_claims else (),
     )
