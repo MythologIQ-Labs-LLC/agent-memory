@@ -846,6 +846,88 @@ class GovernedMemoryAdapter:
         permitted, claim = self.current_governed_typed_claim(fact_uuid, context)
         return permitted, claim["slot"] if claim is not None else None
 
+    def governed_applied_transition_witnesses(
+        self, admitted_fact_uuids: Sequence[str], context: RecallContext,
+    ) -> tuple["GovernedTransitionWitness", ...]:
+        """Read-only #644 committed-correction witnesses for visible admitted facts.
+
+        This does not establish query membership for a caller-tampered list,
+        interpret competing value meanings, or identify immediate successors.
+        Only source and current replacement facts that still pass CURRENT
+        admission and belong to the supplied admitted set are considered.
+        The prior invalid fact is inspected only within the same reader scope,
+        and its text/value is never returned.
+        """
+        from .governed_transition_witness import (
+            GovernedTransitionWitness, inspect_committed_replacement,
+        )
+
+        if not isinstance(context, RecallContext):
+            raise TypeError("governed transition inspection requires a recall context")
+        if not isinstance(admitted_fact_uuids, (tuple, list)) or any(
+            not isinstance(ref, str) for ref in admitted_fact_uuids
+        ):
+            raise TypeError("governed transition inspection requires admitted fact identities")
+        if len(set(admitted_fact_uuids)) != len(admitted_fact_uuids):
+            raise ValueError("duplicate admitted fact reference")
+        admitted = set(admitted_fact_uuids)
+        witnesses: dict[tuple[str, str], GovernedTransitionWitness] = {}
+        for source_ref in sorted(admitted):
+            source_visible, source_claim = self.current_governed_typed_claim(source_ref, context)
+            if not source_visible or source_claim is None or source_claim["assertion"] != "change":
+                continue
+            source_memory = self._fact_memory.get(source_ref)
+            if not source_memory or self._current_fact_by_memory.get(source_memory) != source_ref:
+                continue
+            source_semantics = self.write_semantics(source_ref, context) or {}
+            for relation in source_semantics.get("relations", ()):
+                if not isinstance(relation, dict):
+                    continue
+                prior_ref = relation.get("other_fact_uuid")
+                proposal = relation.get("proposal")
+                if not isinstance(prior_ref, str) or not isinstance(proposal, dict):
+                    continue
+                # The old fact is invalid, so CURRENT admission cannot be used
+                # to access it. Require the identical tenant/domain/task scope,
+                # no tombstone/dispute, and an actual event-invalid prior.
+                prior = self._semantics_visible(prior_ref, context)
+                if (prior is None or prior.group_id != self._tenant
+                        or not prior.is_event_invalid or prior_ref in self._disputed
+                        or not self._same_semantic_scope(
+                            self._fact_scope.get(source_ref), self._fact_scope.get(prior_ref)
+                        )):
+                    continue
+                target_memory = self._fact_memory.get(prior_ref)
+                if not target_memory or target_memory != proposal.get("target_reference"):
+                    continue
+                current_target_ref = self._current_fact_by_memory.get(target_memory)
+                # Current target must be present in the original admitted list:
+                # the observer cannot silently discover and export hidden facts.
+                if current_target_ref not in admitted:
+                    continue
+                successor = self._substrate.get_fact(current_target_ref)
+                if (successor is None or successor.is_transaction_expired
+                        or self._admission_refusal(successor, context) is not None
+                        or not self._same_semantic_scope(
+                            self._fact_scope.get(prior_ref),
+                            self._fact_scope.get(current_target_ref),
+                        )):
+                    continue
+                record = self.replacement_record(prior_ref)
+                if not record:
+                    continue
+                witness = inspect_committed_replacement(
+                    source_fact_ref=source_ref,
+                    prior_fact_ref=prior_ref,
+                    current_target_fact_ref=current_target_ref,
+                    source_slot=source_claim["slot"],
+                    relation=relation,
+                    replacement=record,
+                )
+                if witness is not None:
+                    witnesses[(witness.proposal_ref, witness.prior_fact_ref)] = witness
+        return tuple(witnesses[key] for key in sorted(witnesses))
+
     def semantic_proposals(self, context: RecallContext) -> list[dict]:
         """Every write-time ``state_change`` proposal with its status derived now.
 
