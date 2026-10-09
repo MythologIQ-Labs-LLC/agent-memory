@@ -1,6 +1,6 @@
 # #644 — Typed post-admission evidence sufficiency, v1 candidate
 
-**Status:** implementation committed on unopened, non-main branch; 17 focused local tests passed on byte-identical source; integration/full-runtime replay **not yet qualified**. **Change class:** protected runtime-bearing candidate. **Baseline:** current immutable v6 remains controlling; prepare a fully pinned v7 successor declaration and its lane/gauntlet evidence before merging. No register, frozen benchmark or runtime baseline was edited. **Authority:** none.
+**Status:** implementation committed on unopened, non-main branch; 18 focused local tests passed on byte-identical source; integration/full-runtime replay **not yet qualified**. **Change class:** protected runtime-bearing candidate. **Baseline:** current immutable v6 remains controlling; prepare a fully pinned v7 successor declaration and its lane/gauntlet evidence before merging. No register, frozen benchmark or runtime baseline was edited. **Authority:** none.
 
 ## Problem this slice fixes
 
@@ -34,11 +34,11 @@ The observer counts `CoverageObservation(origin='runtime_typed_observation')` to
 - `returned_count == candidate_limit` is **conservatively** reported as resource-bound, never proof that the frontier was fully searched; disabled routes are not capped.
 - Unexecuted planned routes are explicitly distinguishable from executed but empty routes.
 - Count adequacy, typed coverage, contradiction, budget exhaustion, actual authority and task answer quality never collapse to one scalar.
-- Output order is stable independent of admission, route, need, and support observation ordering; no benchmark phrases or gold labels inform runtime logic.
+- The immutable report also refuses direct construction with forged answer-quality, admission, mutation, authority or execution proposals. Output order is stable independent of admission, route, need, and support observation ordering; no benchmark phrases or gold labels inform runtime logic.
 
 ## Evidence and next gates
 
-**Locally executed:** `python -m unittest discover -s /mnt/data/am644/reference/tests -p 'test_evidence_sufficiency.py' -v`, 17/17 passing. The source committed to GitHub has byte-exact Git blob hashes matching locally tested source (`evidence_sufficiency.py` `2011c45d36e0291ec352a1d1a559f1758852a003`; unit tests `1c0decdd837ab7189525854f482d1e259382e971`). The added `reference/tests/test_recall_control.py` integration assertion has **not yet run**, because the connected desktop checkout is offline.
+**Locally executed:** `python -m unittest discover -s /mnt/data/am644/reference/tests -p 'test_evidence_sufficiency.py' -v`, 18/18 passing. The source committed to GitHub has byte-exact Git blob hashes matching locally tested source (`evidence_sufficiency.py` `3464e97d80f9fa1a49b2c14e098b00c94f660191`; unit tests `6d4d22794483e082f961ceecf9b7b87f870c7173`). The added `reference/tests/test_recall_control.py` integration assertion has **not yet run**, because the connected desktop checkout is offline.
 
 1. Locally checkout the quiet branch; execute `python -m unittest discover -s reference/tests -t reference -p 'test_evidence_sufficiency.py' -v` and `-p 'test_recall_control.py'`, then the full reference suite and baseline checker. No GitHub Actions during iterative development.
 2. Independently challenge forged provenance labels, structural contradictions, capped-route continuation, foreign scoped candidate injection, empty typed needs, duplicate references and shuffled enumeration.
