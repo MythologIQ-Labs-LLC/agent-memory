@@ -110,11 +110,13 @@ class RecallControlTests(unittest.TestCase):
         evidence_refs: tuple[str, ...],
         project_ref: str = PROJECT,
         typed_write: dict | None = None,
+        temporal: dict | None = None,
     ):
         outcome = self.runtime.retain(
             _proposal(target, evidence_refs=evidence_refs, project_ref=project_ref),
             text,
             **({"typed_write": typed_write} if typed_write is not None else {}),
+            **({"temporal": temporal} if temporal is not None else {}),
         )
         self.assertTrue(outcome.committed)
         self.assertIsNotNone(outcome.fact_uuid)
@@ -463,6 +465,41 @@ class RecallControlTests(unittest.TestCase):
         self.assertTrue(report.mechanical_coverage_met)
         self.assertFalse(report.stop_attested)
         self.assertEqual(report.continuation_proposal, "continue_if_permitted")
+        self.assertEqual(report.diagnosis, "coverage_observed_unattested")
+
+    def test_declared_valid_until_cannot_authorize_a_stop(self) -> None:
+        self._retain(
+            "memory:ended-validity", "Atlas cache version is 3",
+            evidence_refs=("session:ended-validity",),
+            typed_write=self._typed_write("Atlas cache", "version", "3"),
+            temporal={"valid_until": "2019-01-01T00:00:00Z"},
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Atlas cache version", _context())
+        need = CoverageNeed(typed.typed_slot("Atlas cache", "version"))
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertEqual(report.continuation_proposal, "continue_if_permitted")
+        self.assertFalse(report.stop_attested)
+        self.assertGreaterEqual(report.slot_obstacles[0][3], 1)
+
+    def test_untyped_competitor_cannot_produce_an_executable_stop(self) -> None:
+        self._retain(
+            "memory:owner-typed", "Aurora manager is Alice",
+            evidence_refs=("session:typed-owner",),
+            typed_write=self._typed_write("Aurora", "manager", "Alice"),
+        )
+        self._retain(
+            "memory:owner-untyped", "Aurora manager is Bob",
+            evidence_refs=("session:untyped-owner",),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Aurora manager", _context())
+        need = CoverageNeed(typed.typed_slot("Aurora", "manager"))
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertTrue(report.mechanical_coverage_met)
+        self.assertEqual(report.continuation_proposal, "continue_if_permitted")
+        self.assertFalse(report.stop_attested)
+        # The typed census is deliberately NOT an untyped conflict detector.
         self.assertEqual(report.diagnosis, "coverage_observed_unattested")
 
     def test_extracted_and_hedged_facts_do_not_launder_support(self) -> None:
