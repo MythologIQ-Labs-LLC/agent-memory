@@ -125,6 +125,10 @@ The `00` through `42` series contains the canonical architecture and operational
 - [`41-memory-isolation-domains-and-governed-crossing.md`](41-memory-isolation-domains-and-governed-crossing.md)
 - [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md)
 
+## Active recall integrity candidate
+
+- [`80-immutable-controlled-recall-observation.md`](80-immutable-controlled-recall-observation.md) documents the **unmerged** #644 planner-owned immutable membership and route snapshot, its limits and the required reconciliation with the independently evaluated v7 sufficiency candidate. This provides no stopping authority and no durable revision attestation.
+
 ## Architecture Decision Records
 
 See [`adr/README.md`](adr/README.md).
