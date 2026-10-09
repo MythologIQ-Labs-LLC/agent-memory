@@ -1,6 +1,6 @@
 # #644 — Typed post-admission evidence sufficiency, v1 candidate
 
-**Status:** implementation staged on unopened, non-main branch; 18 prior isolated unit tests passed on the **pre-integration revision**, while the extended adapter/controller tests and updated module remain **unexecuted**. Integration/full-runtime replay **not yet qualified**. **Change class:** protected runtime-bearing candidate. **Baseline:** current immutable v6 remains controlling; prepare a fully pinned v7 successor declaration and its lane/gauntlet evidence before merging. No register, frozen benchmark or runtime baseline was edited. **Authority:** none.
+**Status:** implementation staged on unopened, non-main branch; **18/18 focused unit tests passed locally on the current evidence-sufficiency module's exact Git blob**, while the extended adapter/controller integration tests remain **unexecuted**. Full-runtime replay **not yet qualified**. **Change class:** protected runtime-bearing candidate. **Baseline:** current immutable v6 remains controlling; prepare a fully pinned v7 successor declaration and its lane/gauntlet evidence before merging. No register, frozen benchmark or runtime baseline was edited. **Authority:** none.
 
 ## Problem this slice fixes
 
@@ -56,7 +56,7 @@ The new `ControlledRecallPlanner.observe_persisted_typed_coverage(result, contex
 
 ## Evidence and next gates
 
-**Prior isolated qualification:** The pre-integration `evidence_sufficiency.py` had 18/18 focused local tests passing on the earlier revision. Subsequent changes include support-reference provenance, adapter-backed scope revalidation, manual-origin stop suppression and additional controller integration tests. **No current-head full test execution has been performed** because the connected desktop checkout remains offline. Source and baseline-blob identity can be verified remotely but do not substitute for executable tests.
+**Executed locally on exact current module bytes:** `python -m unittest discover -s /mnt/data/am644/reference/tests -p 'test_evidence_sufficiency.py' -v` passed **18/18**, and `compileall` passed. The tested module Git blob is `8d556f6a5a76fb68d89879f50a070e90188c5032`; the focused test blob is `3955e1acff1d7562fc991451d8e6d64063bf2b15`. The adapter-backed read method and changes to `recall_control.py`, plus extended `test_recall_control.py` integration cases, **have not been executed against the full repository** because the connected desktop is offline. Neither a standalone suite nor source hash validation qualifies v7 for merge.
 
 
 1. Locally checkout the quiet branch; execute `python -m unittest discover -s reference/tests -t reference -p 'test_evidence_sufficiency.py' -v` and `-p 'test_recall_control.py'`, then the full reference suite and baseline checker. No GitHub Actions during iterative development.
