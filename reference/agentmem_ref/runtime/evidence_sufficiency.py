@@ -122,12 +122,12 @@ def assess_value_coherence(
             status = "no_eligible_value"
         elif any(item.assertion == "change" for item in subset):
             status = "change_assertion_unresolved"
-        elif len(groups) == 1:
-            status = "same_value_observed"
         elif any(item.cardinality == "multi" for item in subset):
             status = "coexistence_possible"
         elif any(item.cardinality is None for item in subset):
             status = "cardinality_unresolved"
+        elif len(groups) == 1:
+            status = "same_value_observed"
         else:
             status = "competing_values_unresolved"
         assessments.append(ValueCoherenceAssessment(need, status, fact_groups))
