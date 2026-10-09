@@ -6,15 +6,15 @@
   "declared_changes": [
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
-      "blob": "4d3241093f055c40f634c0d3f3664a292ddd78ae"
+      "blob": "55edbc614bf86c8f1ffd0d46369a8738712ff5b3"
     },
     {
       "path": "reference/agentmem_ref/governed_transition_witness.py",
-      "blob": "ad0577685b49d33365d87677930b684c1bf42b76"
+      "blob": "c638210619d661db2d57490ed684df2b80e9db19"
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "b4d66169640cfce6dbe1c764ff92d8113bfa1697"
+      "blob": "50197b3cc0f85992845aa5c81f7d16c1adcd91e9"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
