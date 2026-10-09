@@ -79,3 +79,4 @@ jobs:
           name: native-memory-metabolism
           path: memory-metabolism.json
           if-no-files-found: error
+          retention-days: 30
