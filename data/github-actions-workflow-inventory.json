@@ -3865,7 +3865,7 @@
       },
       "permissionsExplicit": true,
       "artifactState": {
-        "producesArtifacts": true,
+        "producesArtifacts": false,
         "retentionDays": []
       },
       "repeatedSetupFamily": [
@@ -4373,7 +4373,7 @@
     },
     "missingExplicitTimeoutCount": 0,
     "supersedablePrOrPushWithoutConcurrencyCount": 0,
-    "artifactUploadWithoutExplicitRetentionCount": 40,
+    "artifactUploadWithoutExplicitRetentionCount": 50,
     "repeatedSetupFamilies": [
       {
         "id": "setup-family-1",
@@ -4420,6 +4420,10 @@
     {
       "date": "2026-10-09",
       "change": "#662 bounded discretionary artifacts: exact actions/upload-artifact retention 30d for five manual benchmark evidence workflows, 90d for component/Hindsight independent qualification. Ten upload steps now have explicit retention; remaining 40 uploads lack explicit retention and require source-citation/evidence review. Protected artifact retention left unchanged. sync_workflow_inventory now derives upload-artifact retention and missing-step count directly from YAML."
+    },
+    {
+      "date": "2026-10-09",
+      "change": "#662 full source audit reconciled all 86 committed workflows' upload-artifact steps against the inventory: 50 upload steps STILL lack an explicit retention-days setting, due to previously stale pre-2026-10-09 summary count (the added ten explicit retention settings are real; earlier starting count was not accurate). semantic-representation.yml was incorrectly marked as uploading an artifact, but has zero upload steps; corrected. No protected upload step was shortened."
     }
   ]
 }
