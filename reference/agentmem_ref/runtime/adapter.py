@@ -789,6 +789,204 @@ class GovernedMemoryAdapter:
         value = semantics.expanded_form((fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY))
         return json.loads(json.dumps(value)) if value is not None else None
 
+    def current_governed_typed_claim(
+        self, fact_uuid: str, context: RecallContext,
+    ) -> tuple[bool, dict | None]:
+        """Current admission recheck plus eligible persisted typed value evidence.
+
+        This is a read-only capability for downstream mechanical diagnostics.
+        The boolean is current admission visibility, NOT truth or retained
+        source authority. A typed slot is descriptive write evidence only.
+        Historical/as-of facts are conservatively omitted from this method;
+        a future temporal sufficiency observer needs an explicit admission
+        mode and separate qualification before recognizing them.
+        """
+        if not isinstance(context, RecallContext) or not isinstance(fact_uuid, str) or not fact_uuid:
+            raise TypeError("fact identity and recall context are required")
+        fact = self._substrate.get_fact(fact_uuid)
+        if (fact is None or fact.is_transaction_expired
+                or self._admission_refusal(fact, context) is not None):
+            return False, None
+        # A second visibility gate is intentional; read-only semantics must
+        # respect source tombstones, tenant/project/task and shared membership.
+        stored = self.write_semantics(fact_uuid, context)
+        if not isinstance(stored, dict):
+            return True, None
+        record = stored.get("typed_proposition")
+        if not isinstance(record, dict) or record.get("basis") != typed.CALLER_DECLARED:
+            return True, None
+        if stored.get("typed_ineligible_reasons"):
+            return True, None
+        fields = (
+            "subject", "attribute", "value", "assertion", "cardinality",
+            "flags", "replaces_value",
+        )
+        if not all(field in record for field in (*fields, "slot")):
+            return True, None
+        try:
+            validated = typed.validate({field: record[field] for field in fields})
+            if any(validated["flags"].values()):
+                return True, None
+            slot = typed.typed_slot(validated["subject"], validated["attribute"])
+        except (ValueError, TypeError, KeyError):
+            return True, None
+        if slot != record.get("slot"):
+            return True, None
+        return True, {
+            "slot": slot,
+            "value": validated["value"],
+            "cardinality": validated["cardinality"],
+            "assertion": validated["assertion"],
+        }
+
+    def current_typed_slot_obstacles(
+        self, slots: tuple[str, ...], admitted_refs: tuple[str, ...],
+        context: RecallContext,
+    ) -> dict[str, dict[str, int]]:
+        """Read-only census of *currently admissible* typed-slot blockers.
+
+        Eligibility for supporting a claim is intentionally different from
+        visibility as counter-evidence. Excluded/extracted/hedged typed claims
+        cannot confer support but may prevent a false completeness conclusion.
+        Scan all current admissible facts, not merely the retrieval top-k.
+        Unknown untyped competitors remain outside the typed slot census,
+        therefore this probe NEVER certifies closed-world sufficiency.
+        """
+        if (type(slots) is not tuple or type(admitted_refs) is not tuple
+                or not isinstance(context, RecallContext)
+                or any(type(item) is not str or not item for item in slots + admitted_refs)):
+            raise TypeError("typed slot audit requires typed identifiers and recall context")
+        selected = set(slots)
+        admitted = set(admitted_refs)
+        if len(selected) != len(slots) or len(admitted) != len(admitted_refs):
+            raise ValueError("typed slot audit does not accept duplicate identities")
+        counters: dict[str, dict[str, int]] = {
+            key: {
+                "eligible_unretrieved": 0,
+                "qualified_counter_evidence": 0,
+                "declared_temporal_boundary": 0,
+            }
+            for key in sorted(selected)
+        }
+        reader = getattr(self._substrate, "all_facts", None)
+        if not callable(reader):
+            raise RuntimeError("cannot audit typed slot without complete substrate enumeration")
+        for fact in reader():
+            if (fact.is_transaction_expired
+                    or self._admission_refusal(fact, context) is not None):
+                continue
+            stored = self.write_semantics(fact.uuid, context)
+            if not isinstance(stored, dict):
+                continue
+            record = stored.get("typed_proposition")
+            if not isinstance(record, dict):
+                continue
+            slot = record.get("slot")
+            if not isinstance(slot, str) or slot not in selected:
+                continue
+            # A malformed or unqualified record cannot count as support,
+            # but it is still a potential competing value for this slot.
+            declared = (fact.attributes or {}).get(DECLARED_TEMPORAL_KEY) or {}
+            if declared.get("valid_until"):
+                counters[slot]["declared_temporal_boundary"] += 1
+            if (record.get("basis") != typed.CALLER_DECLARED
+                    or stored.get("typed_ineligible_reasons")
+                    or not isinstance(record.get("flags"), dict)
+                    or any(record["flags"].values())):
+                counters[slot]["qualified_counter_evidence"] += 1
+            if fact.uuid not in admitted:
+                counters[slot]["eligible_unretrieved"] += 1
+        return counters
+
+    def current_governed_typed_slot(
+        self, fact_uuid: str, context: RecallContext,
+    ) -> tuple[bool, str | None]:
+        """Compatibility reader: no extra reads and no policy bypass."""
+        permitted, claim = self.current_governed_typed_claim(fact_uuid, context)
+        return permitted, claim["slot"] if claim is not None else None
+
+    def governed_applied_transition_witnesses(
+        self, admitted_fact_uuids: Sequence[str], context: RecallContext,
+    ) -> tuple["GovernedTransitionWitness", ...]:
+        """Read-only #644 committed-correction witnesses for visible admitted facts.
+
+        This does not establish query membership for a caller-tampered list,
+        interpret competing value meanings, or identify immediate successors.
+        Only source and current replacement facts that still pass CURRENT
+        admission and belong to the supplied admitted set are considered.
+        The prior invalid fact is inspected only within the same reader scope,
+        and its text/value is never returned.
+        """
+        from .governed_transition_witness import (
+            GovernedTransitionWitness, inspect_committed_replacement,
+        )
+
+        if not isinstance(context, RecallContext):
+            raise TypeError("governed transition inspection requires a recall context")
+        if not isinstance(admitted_fact_uuids, (tuple, list)) or any(
+            not isinstance(ref, str) for ref in admitted_fact_uuids
+        ):
+            raise TypeError("governed transition inspection requires admitted fact identities")
+        if len(set(admitted_fact_uuids)) != len(admitted_fact_uuids):
+            raise ValueError("duplicate admitted fact reference")
+        admitted = set(admitted_fact_uuids)
+        witnesses: dict[tuple[str, str], GovernedTransitionWitness] = {}
+        for source_ref in sorted(admitted):
+            source_visible, source_claim = self.current_governed_typed_claim(source_ref, context)
+            if not source_visible or source_claim is None or source_claim["assertion"] != "change":
+                continue
+            source_memory = self._fact_memory.get(source_ref)
+            if not source_memory or self._current_fact_by_memory.get(source_memory) != source_ref:
+                continue
+            source_semantics = self.write_semantics(source_ref, context) or {}
+            for relation in source_semantics.get("relations", ()):
+                if not isinstance(relation, dict):
+                    continue
+                prior_ref = relation.get("other_fact_uuid")
+                proposal = relation.get("proposal")
+                if not isinstance(prior_ref, str) or not isinstance(proposal, dict):
+                    continue
+                # The old fact is invalid, so CURRENT admission cannot be used
+                # to access it. Require the identical tenant/domain/task scope,
+                # no tombstone/dispute, and an actual event-invalid prior.
+                prior = self._semantics_visible(prior_ref, context)
+                if (prior is None or prior.group_id != self._tenant
+                        or not prior.is_event_invalid or prior_ref in self._disputed
+                        or not self._same_semantic_scope(
+                            self._fact_scope.get(source_ref), self._fact_scope.get(prior_ref)
+                        )):
+                    continue
+                target_memory = self._fact_memory.get(prior_ref)
+                if not target_memory or target_memory != proposal.get("target_reference"):
+                    continue
+                current_target_ref = self._current_fact_by_memory.get(target_memory)
+                # Current target must be present in the original admitted list:
+                # the observer cannot silently discover and export hidden facts.
+                if current_target_ref not in admitted:
+                    continue
+                successor = self._substrate.get_fact(current_target_ref)
+                if (successor is None or successor.is_transaction_expired
+                        or self._admission_refusal(successor, context) is not None
+                        or not self._same_semantic_scope(
+                            self._fact_scope.get(prior_ref),
+                            self._fact_scope.get(current_target_ref),
+                        )):
+                    continue
+                record = self.replacement_record(prior_ref)
+                if not record:
+                    continue
+                witness = inspect_committed_replacement(
+                    source_fact_ref=source_ref,
+                    prior_fact_ref=prior_ref,
+                    current_target_fact_ref=current_target_ref,
+                    source_slot=source_claim["slot"],
+                    relation=relation,
+                    replacement=record,
+                )
+                if witness is not None:
+                    witnesses[(witness.proposal_ref, witness.prior_fact_ref)] = witness
+        return tuple(witnesses[key] for key in sorted(witnesses))
+
     def semantic_proposals(self, context: RecallContext) -> list[dict]:
         """Every write-time ``state_change`` proposal with its status derived now.
 
