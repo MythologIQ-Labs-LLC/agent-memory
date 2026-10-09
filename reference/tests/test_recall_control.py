@@ -467,6 +467,91 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(report.continuation_proposal, "continue_if_permitted")
         self.assertEqual(report.diagnosis, "coverage_observed_unattested")
 
+    def test_future_declared_valid_from_is_temporal_obstacle(self) -> None:
+        self._retain(
+            "memory:future-validity", "Pegasus API region is west",
+            evidence_refs=("session:future-validity",),
+            typed_write=self._typed_write("Pegasus API", "region", "west"),
+            temporal={"valid_from": "2099-01-01T00:00:00Z"},
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Pegasus API region", _context())
+        need = CoverageNeed(typed.typed_slot("Pegasus API", "region"))
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertGreaterEqual(report.slot_obstacles[0][3], 1)
+        self.assertEqual(report.continuation_proposal, "continue_if_permitted")
+        self.assertFalse(report.stop_attested)
+
+    def test_slot_audit_uses_warm_index_without_full_store_deserialization(self) -> None:
+        self._retain(
+            "memory:indexed-primary", "Vega runtime owner is Aster",
+            evidence_refs=("session:indexed-primary",),
+            typed_write=self._typed_write("Vega runtime", "owner", "Aster"),
+        )
+        self._retain(
+            "memory:indexed-hedged", "Vega runtime owner might be Boreal",
+            evidence_refs=("session:indexed-hedged",),
+            typed_write=self._typed_write("Vega runtime", "owner", "Boreal",
+                                          flags={"hedged": True}),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Vega runtime owner", _context())
+        need = CoverageNeed(typed.typed_slot("Vega runtime", "owner"))
+        adapter = self.runtime.adapter
+        # Warming the existing write-maintained slot index is deliberate:
+        # subsequent observations must never deserialize every SQLite fact.
+        adapter._semantic_index()
+        substrate = adapter.checkpoint_substrate()
+        with patch.object(substrate, "all_facts",
+                          side_effect=AssertionError("full store scan forbidden")):
+            report = planner.observe_persisted_typed_coverage(
+                result, _context(), needs=(need,),
+            )
+        self.assertEqual(report.diagnosis, "qualified_counter_evidence_unresolved")
+        self.assertGreaterEqual(report.slot_obstacles[0][2], 1)
+
+    def test_indexed_audit_matches_independent_visible_same_slot_census(self) -> None:
+        first = self._retain(
+            "memory:census-one", "Nova deploy tier is gold",
+            evidence_refs=("session:census-one",),
+            typed_write=self._typed_write("Nova deploy", "tier", "gold"),
+        )
+        second = self._retain(
+            "memory:census-two", "Nova deploy tier might be silver",
+            evidence_refs=("session:census-two",),
+            typed_write=self._typed_write("Nova deploy", "tier", "silver",
+                                          flags={"hedged": True}),
+        )
+        unrelated = self._retain(
+            "memory:census-other", "Nova deploy region is west",
+            evidence_refs=("session:census-other",),
+            typed_write=self._typed_write("Nova deploy", "region", "west"),
+        )
+        adapter = self.runtime.adapter
+        slot = typed.typed_slot("Nova deploy", "tier")
+        admitted = (first.fact_uuid,)
+        actual = adapter.current_typed_slot_obstacles((slot,), admitted, _context())
+        seen = {"eligible_unretrieved": 0, "qualified_counter_evidence": 0,
+                "declared_temporal_boundary": 0}
+        for fact in adapter.checkpoint_substrate().all_facts():
+            if fact.uuid == unrelated.fact_uuid:
+                continue
+            if fact.is_transaction_expired or adapter._admission_refusal(fact, _context()) is not None:
+                continue
+            stored = adapter.write_semantics(fact.uuid, _context())
+            record = (stored or {}).get("typed_proposition") or {}
+            if record.get("slot") != slot:
+                continue
+            if (record.get("basis") != typed.CALLER_DECLARED
+                    or stored.get("typed_ineligible_reasons")
+                    or any((record.get("flags") or {}).values())):
+                seen["qualified_counter_evidence"] += 1
+            if fact.uuid not in admitted:
+                seen["eligible_unretrieved"] += 1
+        self.assertEqual(actual[slot], seen)
+        self.assertEqual(actual[slot]["eligible_unretrieved"], 1)
+        self.assertEqual(actual[slot]["qualified_counter_evidence"], 1)
+
     def test_declared_valid_until_cannot_authorize_a_stop(self) -> None:
         self._retain(
             "memory:ended-validity", "Atlas cache version is 3",
