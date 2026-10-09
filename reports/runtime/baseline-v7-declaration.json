@@ -6,15 +6,19 @@
   "declared_changes": [
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "4bda22a8102f1a3ca2c6d9c2ccbecd8477a21f21"
+      "blob": "4f3e37dad99d20b625ad0fa105cb210f7ac80f47"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
       "blob": "2be4845989c5b9abb50efff23683ea26a3414a44"
     },
     {
+      "path": "reference/agentmem_ref/runtime/governed_transition_witness.py",
+      "blob": "3928708751da8544c86eb5e15f59c7af194e4557"
+    },
+    {
       "path": "reference/agentmem_ref/runtime/recall_control.py",
-      "blob": "32146569344e8645dc2b7a5628b70b84169d25c7"
+      "blob": "3a9971eaa0d297fea38ed1b96bf28f905c2b0daf"
     }
   ],
   "identity_deltas": [],
@@ -43,6 +47,10 @@
     {
       "kind": "replay",
       "ref": "governed-admitted-typed-value-coherence-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "committed-governed-transition-witness-v1"
     }
   ]
 }
