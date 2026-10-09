@@ -189,16 +189,70 @@ def dump(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def trigger_budget_envelope(policy: dict[str, Any]) -> dict[str, Any]:
+    """Pure configuration fan-out, deliberately NOT billed-minute accounting.
+
+    Unfiltered PR workflows start on any PR, path-filtered ones *might* start,
+    main-push workflows start on a main push, and workflow_dispatch starts only
+    when deliberately requested. Run counts cannot predict a bill: matrices,
+    cache, runner tier, cancellation, rounding and real execution time matter.
+    """
+    workflows = policy["workflows"]
+    mandatory = sorted(name for name, x in workflows.items()
+                       if x["pull_request"] == "unfiltered")
+    conditional = sorted(name for name, x in workflows.items()
+                         if x["pull_request"] == "paths")
+    main_push = sorted(name for name, x in workflows.items()
+                       if x["push"] in ("main", "main_paths"))
+    manual_only = sorted(name for name, x in workflows.items()
+                         if x["pull_request"] is None and x["push"] is None
+                         and "workflow_dispatch" in x["other_triggers"])
+    return {
+        "schema_version": "1.0.0",
+        "provenance": "committed_workflow_configuration_only",
+        "authoritative_billing_minutes": None,
+        "calculated_dollar_savings": None,
+        "unfiltered_pr_workflow_starts_per_head": len(mandatory),
+        "potential_path_scoped_pr_workflows_per_head": len(conditional),
+        "potential_all_pr_workflows_per_head": len(mandatory) + len(conditional),
+        "main_push_workflows": len(main_push),
+        "manual_only_workflows": len(manual_only),
+        "unfiltered_pr_workflow_names": mandatory,
+        "manual_only_workflow_names": manual_only,
+        "discretionary_benchmarks_not_automatically_triggered": [
+            name for name in manual_only if name in {
+                "long-horizon-memory-benchmark.yml",
+                "memory-metabolism-benchmark.yml",
+                "operational-memory-benchmark.yml",
+                "precedent-candidate-retrieval.yml",
+                "retrieval-quality-benchmark.yml",
+                "semantic-representation.yml",
+            }
+        ],
+        "qualification_caveat": (
+            "Check required status contexts before changing protected checks; "
+            "external billing usage, actual runtime and cache consumption unknown"
+        ),
+        "branch_staging": (
+            "Unopened non-main feature branch pushes do not start these "
+            "pull_request or main-scoped push workflows"
+        ),
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", type=Path, default=ROOT, help=argparse.SUPPRESS)
     parser.add_argument("--check", action="store_true", help="exit 1 when the inventory's mechanical fields differ from the YAML")
     parser.add_argument("--write", action="store_true", help="rewrite the inventory's mechanical fields and summary counts")
     parser.add_argument("--emit-policy", action="store_true", help="print the policy derived from the YAML")
+    parser.add_argument("--finops-report", action="store_true", help="print trigger-only fan-out, not GitHub billed minutes")
     parser.add_argument("--report", action="store_true", help="print the before/after trigger table")
     parser.add_argument("--before", default=None, help="git revision for the 'before' side of --report (default: HEAD)")
     args = parser.parse_args(argv)
     root = args.root.resolve()
+    if args.finops_report:
+        print(json.dumps(trigger_budget_envelope(derive_policy(root)), indent=2))
     if args.emit_policy:
         print(json.dumps(derive_policy(root), indent=2))
     if args.report:
