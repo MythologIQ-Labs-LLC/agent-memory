@@ -5305,3 +5305,32 @@ SHA256(content_hash + previous_hash) = f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a
 - **Advisories A1–A5** are recorded in the audit report. Their wording refinements are carried into #757 design inputs. They do not alter any result.
 
 **Scope**: `diagnostic_not_score`. This is not R6 acceptance. The `measurement-v1` FAIL (0/212) stands, and #732 stays open. The owner chose option (b): cross-write proposition identity is designed first (#757). No v7 implementation and no evaluator tuning are authorized.
+
+---
+
+### Entry #124: CANDIDATE DECLARATION — Runtime Baseline v7 safety reconciliation (#644)
+
+**Timestamp**: 2026-10-09T16:50:00-04:00 (candidate record; actual commit time differs)
+
+**Phase**: ENCODE (candidate only)
+
+**Author**: Implementation Agent
+
+**Risk Grade**: L2 (protected runtime candidate and formal successor declaration; no accepted release)
+
+**Target**: `implementation/644-indexed-safety-fix-no-ci`, `reports/runtime/baseline-v7-declaration.json`, `reports/runtime/baseline-register.json`, and independent qualification comment on #644
+
+**Content Hash** (SHA256 of the following exact UTF-8 decision sentence):
+
+`Candidate v7 successor declared for Agent Memory #644; six protected runtime blobs pinned, indexed typed-slot audit and canonical aliases corrected; v6 remains published; independent verdict CHANGES REQUIRED; no PR, no merge, no Actions.`
+
+`2a02395c8043b68662012332fbdcdec73e88f0367b79a29e3e12ae12ee40263b`
+
+**Previous Hash**: `f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a3f85d0f4ace6525be2a9c2d`
+
+**Chain Hash**: `092b151b315cb94a37bbcfbed300eba6e3374a0a1ed151fb4ed97a687538bbe6`
+
+**Decision**: Record an **unaccepted** v7 transition candidate with six explicitly pinned protected files, preserving published v6. Independent qualification of the prior candidate reported CHANGES REQUIRED. This implementation tranche repairs canonical package aliases, register test expectations, future-validity classification, and the all-facts SQLite audit using the existing write-maintained typed-slot index. Every candidate fact is still rechecked under the current reader's admission context. Untyped competitors and immutable closure remain unresolved. All runtime stop recommendations remain disabled. This entry is **not a PASS, publication, qualification, merge approval, or benchmark claim**.
+
+**Evidence still required**: exact-head local full suite, comparison with Claude's independent indexed patch, package layout 8/8, succession 40/40, baseline checker TRANSITION, SQLite scale and restart, unchanged 126-case holdout, public gauntlet, AMB, LongMemEval, and independent peer review. No hosted Actions should run for iterative debugging.
+
