@@ -93,7 +93,8 @@ def inspect_committed_replacement(
     """
     if not isinstance(relation, Mapping) or not isinstance(replacement, Mapping):
         return None
-    if relation.get("classification") != "state_change_candidate":
+    if (relation.get("classification") != "state_change_candidate"
+            or relation.get("basis") not in ("typed_slot", "typed_link")):
         return None
     if relation.get("other_fact_uuid") != prior_fact_ref or relation.get("slot") != source_slot:
         return None
@@ -113,7 +114,10 @@ def inspect_committed_replacement(
     if (not isinstance(proposal_ref, str) or not proposal_ref
             or not isinstance(correction_ref, str) or not correction_ref
             or not isinstance(logical_ref, str) or not logical_ref
+            or relation.get("other_memory_ref") != logical_ref
             or replacement.get("memory_id") != logical_ref
+            or not isinstance(replacement.get("replaced_at"), str)
+            or not replacement["replaced_at"].strip()
             or replacement.get("kind") not in (STATE_CHANGE, ERROR_CORRECTION)):
         return None
     evidence_refs = replacement.get("evidence_refs")
