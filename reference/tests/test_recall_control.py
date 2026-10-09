@@ -13,6 +13,7 @@ from agentmem_ref.recall_control import (
     RecallControlPlan,
     RecallRouteBudget,
 )
+from agentmem_ref.runtime import typed_proposition as typed
 from agentmem_ref.runtime.evidence_sufficiency import (
     CoverageNeed,
     CoverageObservation,
@@ -107,10 +108,12 @@ class RecallControlTests(unittest.TestCase):
         *,
         evidence_refs: tuple[str, ...],
         project_ref: str = PROJECT,
+        typed_write: dict | None = None,
     ):
         outcome = self.runtime.retain(
             _proposal(target, evidence_refs=evidence_refs, project_ref=project_ref),
             text,
+            **({"typed_write": typed_write} if typed_write is not None else {}),
         )
         self.assertTrue(outcome.committed)
         self.assertIsNotNone(outcome.fact_uuid)
@@ -343,6 +346,122 @@ class RecallControlTests(unittest.TestCase):
                     "foreign-unadmitted-reference", ("glaze",), TYPED_OBSERVATION,
                 ),),
             )
+
+    @staticmethod
+    def _typed_write(subject: str, attribute: str, value: str, *,
+                     basis: str = typed.CALLER_DECLARED,
+                     flags: dict | None = None) -> dict:
+        validated = typed.validate({
+            "subject": subject,
+            "attribute": attribute,
+            "value": value,
+            "assertion": "state",
+            "cardinality": "single",
+            "flags": flags or {},
+        })
+        return {"typed_proposition": typed.typed_record(validated, basis)}
+
+    def _typed_plan(self):
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:persisted-coverage",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 12),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 0),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+            ),
+        ))
+        return ControlledRecallPlanner(self.runtime.adapter, controller=fixed)
+
+    def test_persisted_slot_coverage_reads_real_governed_facts(self) -> None:
+        kept = self._retain(
+            "memory:typed",
+            "Acme service base URL is api.acme.internal",
+            evidence_refs=("session:typed",),
+            typed_write=self._typed_write("Acme service", "base URL", "api.acme.internal"),
+        )
+        self._retain(
+            "memory:untyped",
+            "Acme service is running in production",
+            evidence_refs=("session:other",),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Acme service", _context())
+        before = (list(result.admitted), list(result.ranked_admitted),
+                  dict(result.recall.refusals))
+        need = CoverageNeed(typed.typed_slot("Acme service", "base URL"))
+        evidence = planner.observe_persisted_typed_coverage(
+            result, _context(), needs=(need,),
+        )
+        self.assertEqual(evidence.diagnosis, "mechanical_coverage_observed")
+        self.assertEqual(evidence.need_support_counts, ((need.key, 1),))
+        self.assertEqual(evidence.need_support_refs, ((need.key, (kept.fact_uuid,)),))
+        self.assertFalse(evidence.answer_quality_verified)
+        self.assertFalse(evidence.can_admit)
+        self.assertFalse(evidence.can_mutate)
+        self.assertEqual(
+            (list(result.admitted), list(result.ranked_admitted),
+             dict(result.recall.refusals)), before,
+        )
+
+    def test_extracted_and_hedged_facts_do_not_launder_support(self) -> None:
+        self._retain(
+            "memory:extracted",
+            "Orion client quota is 16",
+            evidence_refs=("session:extracted",),
+            typed_write=self._typed_write(
+                "Orion client", "quota", "16", basis="extracted:test@1",
+            ),
+        )
+        self._retain(
+            "memory:hedged",
+            "Orion client quota might be 24",
+            evidence_refs=("session:hedged",),
+            typed_write=self._typed_write(
+                "Orion client", "quota", "24", flags={"hedged": True},
+            ),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Orion client quota", _context())
+        need = CoverageNeed(typed.typed_slot("Orion client", "quota"))
+        evidence = planner.observe_persisted_typed_coverage(
+            result, _context(), needs=(need,),
+        )
+        self.assertEqual(evidence.need_support_counts, ((need.key, 0),))
+        self.assertEqual(evidence.need_support_refs, ((need.key, ()),))
+        self.assertFalse(evidence.mechanical_coverage_met)
+
+    def test_recheck_blocks_foreign_fact_in_tampered_admitted_list(self) -> None:
+        foreign = self._retain(
+            "memory:foreign-typed",
+            "Nebula deploy status is online",
+            evidence_refs=("session:foreign",),
+            project_ref="project-beta",
+            typed_write=self._typed_write("Nebula deploy", "status", "online"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Nebula deploy status", _context())
+        self.assertNotIn(foreign.fact_uuid, result.admitted)
+        # Even a caller-mutated result cannot cause the observer to read
+        # typed metadata from another project.
+        result.recall.admitted.append(foreign.fact_uuid)
+        need = CoverageNeed(typed.typed_slot("Nebula deploy", "status"))
+        evidence = planner.observe_persisted_typed_coverage(
+            result, _context(), needs=(need,),
+        )
+        self.assertEqual(evidence.admitted_count, 0)
+        self.assertEqual(evidence.need_support_counts, ((need.key, 0),))
+        self.assertEqual(evidence.diagnosis, "no_admitted_evidence")
+
+    def test_persisted_coverage_requires_canonical_slot_identity(self) -> None:
+        planner = self._typed_plan()
+        result = planner.recall("unused", _context())
+        for candidate in ("quota", "typed:missing-divider",
+                          "typed:two||separators", "typed:|empty"):
+            with self.subTest(candidate=candidate), self.assertRaises(ValueError):
+                planner.observe_persisted_typed_coverage(
+                    result, _context(), needs=(CoverageNeed(candidate),),
+                )
 
     def test_unavailable_route_plan_fails_closed(self) -> None:
         fixed = _FixedController(
