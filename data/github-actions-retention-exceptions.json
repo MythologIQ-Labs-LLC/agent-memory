@@ -323,6 +323,106 @@
       "reason": "protected_evidence_custody_undetermined",
       "review_state": "hold",
       "retention_authorized": false
+    },
+    {
+      "id": "provider-discovery.yml/validate/upload-0",
+      "workflow": "provider-discovery.yml",
+      "job": "validate",
+      "upload_index": 0,
+      "artifact_name": "provider-discovery-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "recall-validation-characterization.yml/characterize/upload-0",
+      "workflow": "recall-validation-characterization.yml",
+      "job": "characterize",
+      "upload_index": 0,
+      "artifact_name": "recall-validation-characterization",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "recall-validation-external-replay.yml/agentmembench/upload-0",
+      "workflow": "recall-validation-external-replay.yml",
+      "job": "agentmembench",
+      "upload_index": 0,
+      "artifact_name": "recall-validation-agentmembench",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "recall-validation-external-replay.yml/longmemeval-s/upload-0",
+      "workflow": "recall-validation-external-replay.yml",
+      "job": "longmemeval-s",
+      "upload_index": 0,
+      "artifact_name": "recall-validation-longmemeval-s",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "restart-safe-runtime.yml/acceptance/upload-0",
+      "workflow": "restart-safe-runtime.yml",
+      "job": "acceptance",
+      "upload_index": 0,
+      "artifact_name": "restart-safe-runtime",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "reusable-grant-authority-transition.yml/reusable-grant-authority-transition/upload-0",
+      "workflow": "reusable-grant-authority-transition.yml",
+      "job": "reusable-grant-authority-transition",
+      "upload_index": 0,
+      "artifact_name": "reusable-grant-authority-transition-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "runtime-composition.yml/compose/upload-0",
+      "workflow": "runtime-composition.yml",
+      "job": "compose",
+      "upload_index": 0,
+      "artifact_name": "runtime-composition-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "runtime-configuration.yml/validate/upload-0",
+      "workflow": "runtime-configuration.yml",
+      "job": "validate",
+      "upload_index": 0,
+      "artifact_name": "runtime-configuration-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "sleeper-poisoning-evidence.yml/sleeper-poisoning/upload-0",
+      "workflow": "sleeper-poisoning-evidence.yml",
+      "job": "sleeper-poisoning",
+      "upload_index": 0,
+      "artifact_name": "sleeper-poisoning-evidence-depth",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "sqlite-production-substrate.yml/qualification/upload-0",
+      "workflow": "sqlite-production-substrate.yml",
+      "job": "qualification",
+      "upload_index": 0,
+      "artifact_name": "sqlite-production-substrate",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
     }
   ]
 }
