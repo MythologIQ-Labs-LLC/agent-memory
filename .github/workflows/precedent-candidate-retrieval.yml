@@ -66,3 +66,4 @@ jobs:
           name: precedent-candidate-retrieval-evidence
           path: precedent-candidate-retrieval.json
           if-no-files-found: error
+          retention-days: 30
