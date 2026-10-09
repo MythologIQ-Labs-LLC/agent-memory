@@ -805,6 +805,7 @@ class ControlledRecallPlanner:
                 )
                 for budget in plan.route_budgets
             ),
+            observed_route_counts=route_counts,
         )
         return ControlledRecallResult(
             plan=plan,
