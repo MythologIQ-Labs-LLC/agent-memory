@@ -54,7 +54,7 @@ This is **not cryptographic attestation**: the result is derived from the commit
 
 ## Baseline candidate and independent QA
 
-`reports/runtime/baseline-v7-declaration.json` now pins four protected runtime blobs (adapter, sufficiency observer, transition witness and recall controller) and adds `committed-governed-transition-witness-v1` as a replay gate. `reports/runtime/baseline-register.json` still declares `declared_successor=null`; Runtime Baseline **v6** controls. Reconcile all four exact blobs and the full v6 noninterference corpus before any PR or acceptance.
+`reports/runtime/baseline-v7-declaration.json` now pins four protected runtime blobs (adapter, sufficiency observer, transition witness and recall controller) and adds `committed-governed-transition-witness-v1` as a replay gate. The original review branch had `declared_successor=null`; on the later #644 safety reconciliation branch the register declares a nonpublished v7 transition while v6 remains the last published baseline. Runtime Baseline **v6** controls. Reconcile all four exact blobs and the full v6 noninterference corpus before any PR or acceptance.
 
 Once Claude completes its ongoing independent value-coherence evaluation, extend it with the five integration cases and adversarial alternatives: forged semantic `proposal_id` in correction evidence, duplicate prior/current identity, changed context, post-application removal of source/current target, error-correction refusal of historical validity, later corrections of the same target, and restart-loaded extension state. Never modify frozen benchmark cases, add a GitHub Actions workflow or optimize for the evaluator's wording.
 
