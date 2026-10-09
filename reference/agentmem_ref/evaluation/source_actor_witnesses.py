@@ -86,6 +86,8 @@ class WitnessQualification:
     pin_matches: int
     required_positions: int
     observed_positions: int
+    preflight_status: Literal["refused", "underdetermined", "structurally_plausible_unverified"]
+    preflight_reason_codes: tuple[str, ...]
     principal_authenticated: Literal[False] = False
     origin_independence_verified: Literal[False] = False
     issuer_authorized: Literal[False] = False
@@ -182,7 +184,10 @@ def _verify_one(
     if (signed.claimed_principal_ref != expected.expected_principal_ref
             or signed.claimed_principal_ref != principal):
         reasons.add("witness_principal_binding_mismatch")
-    if signed.observed != observed or type(signed.observed) is not ObservedWrite:
+    # D4: compare exact field bytes, never user-defined __eq__ dispatch.
+    if (type(observed) is not ObservedWrite
+            or type(signed.observed) is not ObservedWrite
+            or asdict(signed.observed) != asdict(observed)):
         reasons.add("witness_observation_revision_mismatch")
     sig_ok = False
     try:
@@ -214,8 +219,15 @@ def qualify_write_origins(
         raise TypeError("witnesses must be a tuple")
     reasons: set[str] = set()
     base = preflight(proposal)
+    # D4: a dataclass subclass can override equality without changing fields.
+    # It must never be accepted as a signed observation.
+    if (type(proposal.older) is not ObservedWrite
+            or type(proposal.newer) is not ObservedWrite):
+        reasons.add("noncanonical_proposed_observation_type")
     if base.status == "refused":
         reasons.add("structural_preflight_refused")
+    elif base.status == "underdetermined":
+        reasons.add("structural_preflight_underdetermined")
     if len(witnesses) > MAX_WITNESSES:
         reasons.add("unexpected_witness_count")
     positions: set[tuple[str, str]] = set()
@@ -245,7 +257,9 @@ def qualify_write_origins(
         status: Literal["cryptographic_witness_candidate", "abstain", "refused"] = (
             "cryptographic_witness_candidate"
         )
-    elif reasons == {"missing_witness_position"}:
+    elif reasons <= {"missing_witness_position",
+                     "structural_preflight_underdetermined"}:
+        # D5: provenance signatures cannot prove subject/property equivalence.
         status = "abstain"
     else:
         status = "refused"
@@ -256,4 +270,6 @@ def qualify_write_origins(
         pin_matches=pins,
         required_positions=MAX_WITNESSES,
         observed_positions=len(positions),
+        preflight_status=base.status,
+        preflight_reason_codes=base.reasons,
     )
