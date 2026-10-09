@@ -36,6 +36,10 @@ The observer counts `CoverageObservation(origin='runtime_typed_observation')` to
 - Count adequacy, typed coverage, contradiction, budget exhaustion, actual authority and task answer quality never collapse to one scalar.
 - The immutable report also refuses direct construction with forged answer-quality, admission, mutation, authority or execution proposals. Output order is stable independent of admission, route, need, and support observation ordering; no benchmark phrases or gold labels inform runtime logic.
 
+## Candidate Runtime Baseline v7 (not active)
+
+`reports/runtime/baseline-v7-declaration.json` now preregisters exactly two protected blob changes, `runtime/evidence_sufficiency.py` and `runtime/recall_control.py`, against the immutable published v6, with no public contract or ranking identity delta. It names the existing public gauntlet and AMB/LongMemEval v6 replay as non-regression gates plus a new noninterference/negative-control replay requirement. The declaration is only a *candidate file*: `reports/runtime/baseline-register.json` still has `declared_successor=null`; no v7 baseline exists, and this candidate must not be merged without completing `docs/67` transition/publication and all evidence.
+
 ## Evidence and next gates
 
 **Locally executed:** `python -m unittest discover -s /mnt/data/am644/reference/tests -p 'test_evidence_sufficiency.py' -v`, 18/18 passing. The source committed to GitHub has byte-exact Git blob hashes matching locally tested source (`evidence_sufficiency.py` `3464e97d80f9fa1a49b2c14e098b00c94f660191`; unit tests `6d4d22794483e082f961ceecf9b7b87f870c7173`). The added `reference/tests/test_recall_control.py` integration assertion has **not yet run**, because the connected desktop checkout is offline.
