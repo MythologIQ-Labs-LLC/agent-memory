@@ -868,6 +868,9 @@ class GovernedMemoryAdapter:
             }
             for key in sorted(selected)
         }
+        reader = getattr(self._substrate, "all_facts", None)
+        if not callable(reader):
+            raise RuntimeError("cannot audit typed slot without complete substrate enumeration")
         # The write-maintained semantic index maps a scoped canonical slot
         # to persisted fact IDs. Iterating all_facts() here forced SQLite to
         # deserialize the entire database on EVERY observation, even when only
