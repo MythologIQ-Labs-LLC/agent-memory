@@ -97,6 +97,52 @@ class WorkflowPolicyTests(unittest.TestCase):
         pending = set(EXPECTED_FAILURES["without_concurrency"])
         self.assertEqual(actual, expected - pending)
 
+    def test_finops_discretionary_benchmarks_are_deliberate_dispatch_only(self):
+        # #662: protected reference safety remains in the doctrine umbrella;
+        # these six expensive comparative/measurement workflows are invoked
+        # deliberately at one reviewed SHA, not on each incremental commit.
+        manual = {
+            "long-horizon-memory-benchmark.yml",
+            "memory-metabolism-benchmark.yml",
+            "operational-memory-benchmark.yml",
+            "precedent-candidate-retrieval.yml",
+            "retrieval-quality-benchmark.yml",
+            "semantic-representation.yml",
+        }
+        policy_workflows = policy()["workflows"]
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        records = {item["path"].split("/")[-1]: item for item in inventory["records"]}
+        for name in sorted(manual):
+            workflow = policy_workflows[name]
+            with self.subTest(name=name):
+                self.assertIsNone(workflow["pull_request"])
+                self.assertIsNone(workflow["push"])
+                self.assertEqual(workflow["other_triggers"], ["workflow_dispatch"])
+                self.assertEqual(records[name]["lifecycleClass"], "async_assurance")
+                self.assertEqual(records[name]["consequenceClass"], "discretionary")
+                self.assertEqual(records[name]["proposedDisposition"], "ASYNC")
+                self.assertGreater(len(workflow["jobs"]), 0)
+                self.assertTrue(all(job["timeout_minutes"] is not None
+                                    for job in workflow["jobs"].values()))
+        self.assertEqual(policy_workflows["validate-doctrine-evidence.yml"][
+            "pull_request"], "unfiltered")
+
+    def test_finops_trigger_envelope_cannot_make_a_billing_claim(self):
+        envelope = estate.trigger_budget_envelope(policy())
+        self.assertIsNone(envelope["authoritative_billing_minutes"])
+        self.assertIsNone(envelope["calculated_dollar_savings"])
+        self.assertEqual(envelope["unfiltered_pr_workflow_starts_per_head"], 35)
+        self.assertEqual(envelope["potential_path_scoped_pr_workflows_per_head"], 40)
+        self.assertEqual(envelope["main_push_workflows"], 44)
+        self.assertEqual(envelope["potential_all_pr_workflows_per_head"], 75)
+        self.assertEqual(len(
+            envelope["discretionary_benchmarks_not_automatically_triggered"]
+        ), 6)
+        self.assertIn("validate-doctrine-evidence.yml",
+                      envelope["unfiltered_pr_workflow_names"])
+        self.assertEqual(envelope["provenance"],
+                         "committed_workflow_configuration_only")
+
     def test_inventory_mechanical_fields_follow_the_yaml(self):
         inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
         self.assertEqual(estate.sync_inventory(inventory, REPO_ROOT), inventory, "run scripts/sync_workflow_inventory.py --write")
