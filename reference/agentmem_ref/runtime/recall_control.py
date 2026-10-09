@@ -26,6 +26,7 @@ from .evidence_sufficiency import (
     SufficiencyReport,
     assess_sufficiency,
     TYPED_OBSERVATION,
+    TypedValueClaim,
 )
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
@@ -853,18 +854,20 @@ class ControlledRecallPlanner:
                 raise ValueError("persisted coverage needs unique slots")
             expected.add(key)
 
-        lookup = getattr(self.adapter, "current_governed_typed_slot", None)
+        lookup = getattr(self.adapter, "current_governed_typed_claim", None)
         if not callable(lookup):
             raise RuntimeRecoveryError("persisted coverage requires governed typed-slot lookup")
         usable: list[str] = []
         observations: list[CoverageObservation] = []
+        values: list[TypedValueClaim] = []
         original = tuple(result.recall.admitted)
         if len(original) != len(set(original)):
             raise ValueError("recall contains duplicate admitted references")
         for ref in original:
             # The adapter alone decides current visibility and reads persisted
             # typed evidence. The caller cannot supply or upgrade an origin.
-            current_visible, slot = lookup(ref, context)
+            current_visible, claim = lookup(ref, context)
+            slot = claim["slot"] if claim is not None else None
             if not current_visible:
                 continue
             usable.append(ref)
@@ -872,6 +875,13 @@ class ControlledRecallPlanner:
                 observations.append(CoverageObservation(
                     candidate_ref=ref, need_keys=(slot,),
                     origin=TYPED_OBSERVATION,
+                ))
+                values.append(TypedValueClaim(
+                    candidate_ref=ref,
+                    need_key=slot,
+                    value=claim["value"],
+                    cardinality=claim["cardinality"],
+                    assertion=claim["assertion"],
                 ))
         executed = set(result.recall.routes_executed)
         report = assess_sufficiency(SufficiencyObservation(
@@ -888,6 +898,7 @@ class ControlledRecallPlanner:
                 for budget in result.plan.route_budgets
             ),
             count_target=result.plan.evidence_sufficiency_target,
+            typed_value_claims=tuple(values),
         ))
         return report
 
