@@ -917,7 +917,36 @@ class ControlledRecallPlanner:
             count_target=result.plan.evidence_sufficiency_target,
             typed_value_claims=tuple(values),
         ))
-        return report
+        census_reader = getattr(self.adapter, "current_typed_slot_obstacles", None)
+        if not callable(census_reader):
+            raise RuntimeRecoveryError("persisted sufficiency requires full admission-scoped slot audit")
+        obstacles = census_reader(tuple(sorted(expected)), original, context)
+        counters = tuple(
+            (slot,
+             obstacles[slot]["eligible_unretrieved"],
+             obstacles[slot]["qualified_counter_evidence"],
+             obstacles[slot]["declared_temporal_boundary"])
+            for slot in sorted(expected)
+        )
+        # A completeness verdict requires query-membership and read-revision
+        # attestation plus a policy for untyped counter-evidence. The current
+        # mutable recall result provides NEITHER. Not even a review-only stop
+        # recommendation is permitted, regardless of counted agreement.
+        if any(item[2] for item in counters):
+            diagnosis = "qualified_counter_evidence_unresolved"
+        elif any(item[1] for item in counters):
+            diagnosis = "slot_evidence_not_admitted"
+        elif any(item[3] for item in counters):
+            diagnosis = "declared_temporal_boundary_unresolved"
+        elif report.diagnosis == "mechanical_coverage_observed":
+            diagnosis = "coverage_observed_unattested"
+        else:
+            diagnosis = report.diagnosis
+        return replace(
+            report, diagnosis=diagnosis,
+            continuation_proposal="continue_if_permitted",
+            slot_obstacles=counters,
+        )
 
     @staticmethod
     def _validate_plan(plan: RecallControlPlan, available_routes: tuple[str, ...]) -> None:
