@@ -868,34 +868,48 @@ class GovernedMemoryAdapter:
             }
             for key in sorted(selected)
         }
-        reader = getattr(self._substrate, "all_facts", None)
-        if not callable(reader):
-            raise RuntimeError("cannot audit typed slot without complete substrate enumeration")
-        for fact in reader():
-            if (fact.is_transaction_expired
-                    or self._admission_refusal(fact, context) is not None):
+        # The write-maintained semantic index maps a scoped canonical slot
+        # to persisted fact IDs. Iterating all_facts() here forced SQLite to
+        # deserialize the entire database on EVERY observation, even when only
+        # one slot was requested. The index is only a candidate generator:
+        # independently recheck each indexed fact against current admission.
+        for scoped_key, indexed in self._semantic_index().items():
+            try:
+                indexed_slot = json.loads(scoped_key)[0]
+            except (TypeError, ValueError, IndexError, KeyError):
+                # An index whose key cannot be interpreted is not a reliable
+                # proof of completeness. Refuse to synthesize a clean audit.
+                raise RuntimeError("malformed semantic slot index key")
+            if indexed_slot not in selected:
                 continue
-            stored = self.write_semantics(fact.uuid, context)
-            if not isinstance(stored, dict):
-                continue
-            record = stored.get("typed_proposition")
-            if not isinstance(record, dict):
-                continue
-            slot = record.get("slot")
-            if not isinstance(slot, str) or slot not in selected:
-                continue
-            # A malformed or unqualified record cannot count as support,
-            # but it is still a potential competing value for this slot.
-            declared = (fact.attributes or {}).get(DECLARED_TEMPORAL_KEY) or {}
-            if declared.get("valid_until"):
-                counters[slot]["declared_temporal_boundary"] += 1
-            if (record.get("basis") != typed.CALLER_DECLARED
-                    or stored.get("typed_ineligible_reasons")
-                    or not isinstance(record.get("flags"), dict)
-                    or any(record["flags"].values())):
-                counters[slot]["qualified_counter_evidence"] += 1
-            if fact.uuid not in admitted:
-                counters[slot]["eligible_unretrieved"] += 1
+            for fact_uuid in indexed:
+                fact = self._substrate.get_fact(fact_uuid)
+                if (fact is None or fact.is_transaction_expired
+                        or self._admission_refusal(fact, context) is not None):
+                    continue
+                stored = self.write_semantics(fact.uuid, context)
+                if not isinstance(stored, dict):
+                    continue
+                record = stored.get("typed_proposition")
+                if not isinstance(record, dict) or record.get("slot") != indexed_slot:
+                    continue
+                # An ineligible stored proposition cannot support a value,
+                # but still remains counter-evidence for the same slot.
+                declared = (fact.attributes or {}).get(DECLARED_TEMPORAL_KEY) or {}
+                valid_from = parse_time(declared.get("valid_from"))
+                created_at = parse_time(fact.created_at)
+                if (declared.get("valid_until")
+                        or (declared.get("valid_from") and
+                            (valid_from is None or created_at is None
+                             or valid_from > created_at))):
+                    counters[indexed_slot]["declared_temporal_boundary"] += 1
+                if (record.get("basis") != typed.CALLER_DECLARED
+                        or stored.get("typed_ineligible_reasons")
+                        or not isinstance(record.get("flags"), dict)
+                        or any(record["flags"].values())):
+                    counters[indexed_slot]["qualified_counter_evidence"] += 1
+                if fact.uuid not in admitted:
+                    counters[indexed_slot]["eligible_unretrieved"] += 1
         return counters
 
     def current_governed_typed_slot(
