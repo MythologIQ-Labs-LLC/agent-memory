@@ -1,6 +1,6 @@
 # #644 — Typed post-admission evidence sufficiency, v1 candidate
 
-**Status:** implementation committed on unopened, non-main branch; 18 focused local tests passed on byte-identical source; integration/full-runtime replay **not yet qualified**. **Change class:** protected runtime-bearing candidate. **Baseline:** current immutable v6 remains controlling; prepare a fully pinned v7 successor declaration and its lane/gauntlet evidence before merging. No register, frozen benchmark or runtime baseline was edited. **Authority:** none.
+**Status:** implementation staged on unopened, non-main branch; 18 prior isolated unit tests passed on the **pre-integration revision**, while the extended adapter/controller tests and updated module remain **unexecuted**. Integration/full-runtime replay **not yet qualified**. **Change class:** protected runtime-bearing candidate. **Baseline:** current immutable v6 remains controlling; prepare a fully pinned v7 successor declaration and its lane/gauntlet evidence before merging. No register, frozen benchmark or runtime baseline was edited. **Authority:** none.
 
 ## Problem this slice fixes
 
@@ -26,6 +26,20 @@ governed admitted reference set
 
 The observer counts `CoverageObservation(origin='runtime_typed_observation')` toward *mechanical* coverage and ignores `controller_estimate` for satisfying a need. The origin value in a supplied object is **not authenticated by this helper**. A production host must bind that label to persisted, scope-permitted typed evidence rather than trusting a controller to self-label. Consequently even a mechanical coverage hit has `answer_quality_verified=false`, `can_admit=false`, `can_mutate=false` and `authority_effect='none'`. `review_stop` is a non-executable proposal, not an actual stop reason. Missing needs, contradictions, route caps and incomplete routes always produce `continue_if_permitted` where applicable; no restart/retrieval budget is implicitly extended.
 
+## New implementation: adapter-backed persisted typed support
+
+The earlier `ControlledRecallResult.observe_evidence_sufficiency(...)` accepts caller-provided coverage observations for diagnostics. Even when such an observation labels itself `runtime_typed_observation`, it is **not a verified source**. Accordingly, this manual API now **always returns `continuation_proposal=continue_if_permitted`**, even if its mechanical coverage field is true. Caller-supplied origin labels cannot create a stopping recommendation.
+
+The new `ControlledRecallPlanner.observe_persisted_typed_coverage(result, context, needs=...)` is a separate executable method. The caller declares only the **canonical typed-slot needs** and minimum admitted fact counts. The caller cannot supply supporting fact IDs or assert a support origin. For each candidate already in the controlled recall's admitted set:
+
+1. `GovernedMemoryAdapter.current_governed_typed_slot(...)` rechecks current tenant, scope/project/task/shared-space eligibility, disputes, event invalidity, transaction expiry, source tombstones and deletion. If the recheck refuses access, the fact is omitted **before** its semantics are read.
+2. The adapter reads the fact's already-persisted `write_semantics` under its independent visibility gate.
+3. Only a structurally validated, exact-slot, `basis=caller_declared` typed proposition with no ineligibility reasons or asserted hedge/quote/attribution/conditional/negation/sarcasm flags contributes **mechanical** support. An extractor result, inferred English parse or controller estimate contributes zero.
+4. The deterministic report includes deduplicated `need_support_counts`, **exact governed `need_support_refs`**, missing needs, route-cap diagnostics and the separate count threshold. Non-typed facts still contribute to the current-admitted count.
+5. Neither path changes the original recall candidate set, ranking, refusal, audit log, lifecycle state or true stopping behavior. A `review_stop` from adapter-backed mechanical coverage is **not executable**, and none of the report fields verifies factual truth or independent source credibility.
+
+**Limits that remain explicit:** the result's admitted-reference list is mutable in the internal reference layer, observations are not an atomic historical snapshot, and caller-declared propositions can be factually false. The adapter recheck protects permission even when a candidate reference is injected into a result, but it does not authenticate the original query membership, establish source independence, infer temporal supersession, or automatically classify competing values as contradictions. These limitations block real autonomous stopping or production authority until addressed and independently tested. The helper conservatively declines historical/as-of supporting facts rather than reinterpreting them as current.
+
 ## Deterministic safety controls
 
 - Identity references and need keys are typed, unique where required, bounded, control-character-free; coverage and contradiction references must all belong to the governed admitted set, never pre-admission candidates.
@@ -38,16 +52,17 @@ The observer counts `CoverageObservation(origin='runtime_typed_observation')` to
 
 ## Candidate Runtime Baseline v7 (not active)
 
-`reports/runtime/baseline-v7-declaration.json` now preregisters exactly two protected blob changes, `runtime/evidence_sufficiency.py` and `runtime/recall_control.py`, against the immutable published v6, with no public contract or ranking identity delta. It names the existing public gauntlet and AMB/LongMemEval v6 replay as non-regression gates plus a new noninterference/negative-control replay requirement. The declaration is only a *candidate file*: `reports/runtime/baseline-register.json` still has `declared_successor=null`; no v7 baseline exists, and this candidate must not be merged without completing `docs/67` transition/publication and all evidence.
+`reports/runtime/baseline-v7-declaration.json` now preregisters exactly **three protected blob changes**, `runtime/adapter.py`, `runtime/evidence_sufficiency.py`, and `runtime/recall_control.py`, against the immutable published v6, with no public contract or ranking identity delta. It names the existing public gauntlet and AMB/LongMemEval v6 replay as non-regression gates plus a new noninterference/negative-control replay requirement. The declaration is only a *candidate file*: `reports/runtime/baseline-register.json` still has `declared_successor=null`; no v7 baseline exists, and this candidate must not be merged without completing `docs/67` transition/publication and all evidence.
 
 ## Evidence and next gates
 
-**Locally executed:** `python -m unittest discover -s /mnt/data/am644/reference/tests -p 'test_evidence_sufficiency.py' -v`, 18/18 passing. The source committed to GitHub has byte-exact Git blob hashes matching locally tested source (`evidence_sufficiency.py` `3464e97d80f9fa1a49b2c14e098b00c94f660191`; unit tests `6d4d22794483e082f961ceecf9b7b87f870c7173`). The added `reference/tests/test_recall_control.py` integration assertion has **not yet run**, because the connected desktop checkout is offline.
+**Prior isolated qualification:** The pre-integration `evidence_sufficiency.py` had 18/18 focused local tests passing on the earlier revision. Subsequent changes include support-reference provenance, adapter-backed scope revalidation, manual-origin stop suppression and additional controller integration tests. **No current-head full test execution has been performed** because the connected desktop checkout remains offline. Source and baseline-blob identity can be verified remotely but do not substitute for executable tests.
+
 
 1. Locally checkout the quiet branch; execute `python -m unittest discover -s reference/tests -t reference -p 'test_evidence_sufficiency.py' -v` and `-p 'test_recall_control.py'`, then the full reference suite and baseline checker. No GitHub Actions during iterative development.
 2. Independently challenge forged provenance labels, structural contradictions, capped-route continuation, foreign scoped candidate injection, empty typed needs, duplicate references and shuffled enumeration.
-3. Build authentic runtime-generated typed-support provenance instead of accepting an estimator-supplied origin label as independent truth. That is the prerequisite for any externally usable `review_stop` consumer.
-4. Follow `docs/67-runtime-baseline-succession.md`: declare only the actual protected file blobs and identity deltas in the v7 candidate, run the exact v6 replay and cross-benchmark memory/governance/latency gates, and publish only after explicit acceptance. Until then this is an **unmerged runtime candidate**, not the published v6 behavior.
+3. Expand adapter-backed typed-support provenance into an immutable, revision-bound governed observation before using it for autonomous stopping. The current persisted caller-declared slot is genuine stored evidence but is not a verified factual statement, independent source, or authenticated query-membership receipt.
+4. Follow `docs/67-runtime-baseline-succession.md`: verify the three exact protected blob declarations and unchanged identity table in the v7 candidate, run the exact v6 replay and cross-benchmark memory/governance/latency gates, and publish only after explicit acceptance. Until then this is an **unmerged runtime candidate**, not the published v6 behavior.
 5. A later separate tranche may feed this diagnostic into cost-aware adaptive route selection or consumer packaging. Requiring actual stop decisions must be a later, independently qualified policy evolution, never an implicit consequence of observing `mechanical_coverage_met`.
 
 ### Non-goals
