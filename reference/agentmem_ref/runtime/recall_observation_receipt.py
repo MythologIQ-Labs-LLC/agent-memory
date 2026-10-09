@@ -198,17 +198,27 @@ class RecallObservationReceipt:
             )
         except (TypeError, ValueError, OverflowError):
             return False
-        return (
-            control_digest == self.control_digest
-            and admission_digest == self.admission_digest
-            and tuple(candidates) == self.candidate_refs
-            and tuple(admitted) == self.admitted_refs
-            and tuple(ranked) == self.ranked_refs
-            and tuple(routes_executed) ==
-                tuple(r.route_id for r in self.routes if r.executed)
-            and tuple(sorted(route_counts.items())) == self.observed_route_counts
-            and self.integrity_valid()
-        )
+        try:
+            # Mutable caller-owned counters are untrusted. Reject malformed
+            # maps rather than allowing sorting/comparison to raise.
+            if not isinstance(route_counts, Mapping) or any(
+                type(route_id) is not str or type(count) is not int or count < 0
+                for route_id, count in route_counts.items()
+            ):
+                return False
+            return (
+                control_digest == self.control_digest
+                and admission_digest == self.admission_digest
+                and tuple(candidates) == self.candidate_refs
+                and tuple(admitted) == self.admitted_refs
+                and tuple(ranked) == self.ranked_refs
+                and tuple(routes_executed) ==
+                    tuple(r.route_id for r in self.routes if r.executed)
+                and tuple(sorted(route_counts.items())) == self.observed_route_counts
+                and self.integrity_valid()
+            )
+        except (TypeError, ValueError, AttributeError):
+            return False
 
     def to_dict(self) -> dict[str, object]:
         """Disclose admitted refs, not refused/hidden candidate identities."""
