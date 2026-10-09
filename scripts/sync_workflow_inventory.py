@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = Path(".github/workflows")
 POLICY = Path("data/github-actions-workflow-policy.json")
 INVENTORY = Path("data/github-actions-workflow-inventory.json")
+RETENTION_EXCEPTIONS = Path("data/github-actions-retention-exceptions.json")
 CONCURRENCY_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
 CANCEL_SUPERSEDED = "${{ github.event_name == 'pull_request' }}"
 FULL_SUITE_START = "reference/tests"
@@ -135,16 +136,47 @@ def mechanical_fields(workflow: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def artifact_retention_fields(workflow: dict[str, Any]) -> tuple[dict[str, Any], int]:
+    """Exact upload-artifact step inventory, not an evidence deletion decision.
+
+    Artifacts used as cited qualifications remain subject to independent
+    retention policy. This only records explicit step settings and reports
+    missing ones; it never assigns a default to protected evidence.
+    """
+    uploads = []
+    for job in workflow["jobs"].values():
+        for step in job.get("steps", []):
+            if not str(step.get("uses", "")).startswith("actions/upload-artifact@"):
+                continue
+            options = step.get("with") or {}
+            duration = options.get("retention-days")
+            if duration is not None:
+                if type(duration) is not int or duration < 1 or duration > 400:
+                    raise ValueError("unsupported artifact retention-days")
+            uploads.append(duration)
+    return (
+        {
+            "producesArtifacts": bool(uploads),
+            "retentionDays": sorted({days for days in uploads if days is not None}),
+        },
+        sum(days is None for days in uploads),
+    )
+
+
 def sync_inventory(inventory: dict[str, Any], root: Path) -> dict[str, Any]:
     synced = json.loads(json.dumps(inventory))
     by_path = {path.as_posix(): path for path in (p.relative_to(root) for p in workflow_paths(root))}
     counts: dict[str, int] = {}
     missing_timeout = 0
+    missing_retention = 0
     supersedable_without = 0
     for record in synced["records"]:
         workflow = load_workflow(root / by_path[record["path"]])
         fields = mechanical_fields(workflow)
         record.update(fields)
+        artifact_state, missing_step_retention = artifact_retention_fields(workflow)
+        record["artifactState"] = artifact_state
+        missing_retention += missing_step_retention
         for name in fields["triggers"]:
             counts[name] = counts.get(name, 0) + 1
         missing_timeout += not fields["timeoutState"]["explicit"]
@@ -153,6 +185,7 @@ def sync_inventory(inventory: dict[str, Any], root: Path) -> dict[str, Any]:
     summary = synced["inventorySummary"]
     summary["triggerCounts"] = dict(sorted(counts.items()))
     summary["missingExplicitTimeoutCount"] = missing_timeout
+    summary["artifactUploadWithoutExplicitRetentionCount"] = missing_retention
     summary["supersedablePrOrPushWithoutConcurrencyCount"] = supersedable_without
     return synced
 
@@ -189,27 +222,171 @@ def dump(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def trigger_budget_envelope(policy: dict[str, Any]) -> dict[str, Any]:
+    """Pure configuration fan-out, deliberately NOT billed-minute accounting.
+
+    Unfiltered PR workflows start on any PR, path-filtered ones *might* start,
+    main-push workflows start on a main push, and workflow_dispatch starts only
+    when deliberately requested. Run counts cannot predict a bill: matrices,
+    cache, runner tier, cancellation, rounding and real execution time matter.
+    """
+    workflows = policy["workflows"]
+    mandatory = sorted(name for name, x in workflows.items()
+                       if x["pull_request"] == "unfiltered")
+    conditional = sorted(name for name, x in workflows.items()
+                         if x["pull_request"] == "paths")
+    main_push = sorted(name for name, x in workflows.items()
+                       if x["push"] in ("main", "main_paths"))
+    manual_only = sorted(name for name, x in workflows.items()
+                         if x["pull_request"] is None and x["push"] is None
+                         and "workflow_dispatch" in x["other_triggers"])
+    return {
+        "schema_version": "1.0.0",
+        "provenance": "committed_workflow_configuration_only",
+        "authoritative_billing_minutes": None,
+        "calculated_dollar_savings": None,
+        "unfiltered_pr_workflow_starts_per_head": len(mandatory),
+        "potential_path_scoped_pr_workflows_per_head": len(conditional),
+        "potential_all_pr_workflows_per_head": len(mandatory) + len(conditional),
+        "main_push_workflows": len(main_push),
+        "manual_only_workflows": len(manual_only),
+        "unfiltered_pr_workflow_names": mandatory,
+        "manual_only_workflow_names": manual_only,
+        "discretionary_benchmarks_not_automatically_triggered": [
+            name for name in manual_only if name in {
+                "long-horizon-memory-benchmark.yml",
+                "memory-metabolism-benchmark.yml",
+                "operational-memory-benchmark.yml",
+                "precedent-candidate-retrieval.yml",
+                "retrieval-quality-benchmark.yml",
+                "semantic-representation.yml",
+            }
+        ],
+        "qualification_caveat": (
+            "Check required status contexts before changing protected checks; "
+            "external billing usage, actual runtime and cache consumption unknown"
+        ),
+        "branch_staging": (
+            "Unopened non-main feature branch pushes do not start these "
+            "pull_request or main-scoped push workflows"
+        ),
+    }
+
+
+def enumerate_unbounded_uploads(root: Path) -> list[dict[str, Any]]:
+    """Every uncapped upload is identifiable by workflow, job and upload ordinal.
+
+    Ordinal counts *all* upload-artifact steps in a job, including bounded
+    ones, so a new uncapped artifact cannot quietly borrow a retired ID.
+    """
+    result = []
+    for path in workflow_paths(root):
+        workflow = load_workflow(path)
+        for job_id, job in workflow["jobs"].items():
+            ordinal = 0
+            for step in job.get("steps", []):
+                if not str(step.get("uses", "")).startswith("actions/upload-artifact@"):
+                    continue
+                idx = ordinal
+                ordinal += 1
+                opts = step.get("with") or {}
+                if opts.get("retention-days") is not None:
+                    continue
+                result.append({
+                    "id": f"{path.name}/{job_id}/upload-{idx}",
+                    "workflow": path.name,
+                    "job": job_id,
+                    "upload_index": idx,
+                    "artifact_name": str(opts["name"]) if "name" in opts else None,
+                    "reason": "protected_evidence_custody_undetermined",
+                    "review_state": "hold",
+                    "retention_authorized": False,
+                })
+    return result
+
+
+def verify_retention_exceptions(
+    root: Path, inventory: dict[str, Any], registry: dict[str, Any]
+) -> dict[str, Any]:
+    """Fail if a newly unbounded artifact escapes explicit protected review.
+
+    Entries identify *unresolved custody*, not approval for indefinite storage,
+    truncation, release acceptance, or destructive retention changes.
+    """
+    if (registry.get("schema_version") != "1.0.0"
+            or registry.get("governing_issue") != "#662"
+            or registry.get("status") != "source_reconciled_pending_evidence_owner_review"):
+        raise ValueError("retention exception registry is unapproved or malformed")
+    rules = registry.get("rules")
+    if (type(rules) is not dict
+            or rules.get("new_unbounded_discretionary_uploads_allowed") is not False
+            or rules.get("protected_exception_requires_explicit_review") is not True
+            or rules.get("retirement_requires_branch_protection_review") is not True):
+        raise ValueError("protected custody stop lines changed")
+    declared = registry.get("upload_step_exceptions")
+    names = registry.get("exception_workflow_names")
+    if type(declared) is not list or type(names) is not list:
+        raise ValueError("retention exception manifest must declare typed arrays")
+    actual = enumerate_unbounded_uploads(root)
+    if declared != actual:
+        raise ValueError("unreviewed retention upload added, removed or modified")
+    current_names = sorted({row["workflow"] for row in actual})
+    if names != current_names or len(names) != len(set(names)):
+        raise ValueError("protected workflow exception set drift")
+    by_file = {row["path"].split("/")[-1]: row for row in inventory["records"]}
+    if any(by_file[row["workflow"]]["consequenceClass"] != "protected" for row in actual):
+        raise ValueError("discretionary artifact cannot use protected retention exception")
+    count = inventory["inventorySummary"]["artifactUploadWithoutExplicitRetentionCount"]
+    if len(actual) != count:
+        raise ValueError("artifact upload step count does not match inventory")
+    return {
+        "status": "source_matched_but_retention_not_approved",
+        "unbounded_upload_steps": len(actual),
+        "protected_workflows": len(current_names),
+        "unbounded_discretionary_upload_steps": 0,
+        "authorized_deletions": 0,
+        "approved_retention_policy_changes": 0,
+        "billing_minutes_known": False,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", type=Path, default=ROOT, help=argparse.SUPPRESS)
     parser.add_argument("--check", action="store_true", help="exit 1 when the inventory's mechanical fields differ from the YAML")
     parser.add_argument("--write", action="store_true", help="rewrite the inventory's mechanical fields and summary counts")
     parser.add_argument("--emit-policy", action="store_true", help="print the policy derived from the YAML")
+    parser.add_argument("--finops-report", action="store_true", help="print trigger-only fan-out, not GitHub billed minutes")
+    parser.add_argument("--retention-exception-report", action="store_true", help="show exact protected upload custody backlog, not approval")
     parser.add_argument("--report", action="store_true", help="print the before/after trigger table")
     parser.add_argument("--before", default=None, help="git revision for the 'before' side of --report (default: HEAD)")
     args = parser.parse_args(argv)
     root = args.root.resolve()
+    if args.finops_report:
+        print(json.dumps(trigger_budget_envelope(derive_policy(root)), indent=2))
     if args.emit_policy:
         print(json.dumps(derive_policy(root), indent=2))
     if args.report:
         print(render_report(report_rows(root, args.before or "HEAD"), report_rows(root, None)))
     inventory = json.loads((root / INVENTORY).read_text(encoding="utf-8"))
     synced = sync_inventory(inventory, root)
-    if args.write:
-        dump(root / INVENTORY, synced)
+    # Always validate protected-artifact exceptions BEFORE writing anything.
+    # Otherwise --write could persist an unreviewed exception and make the
+    # mechanically derived inventory look more trustworthy than its source.
+    if args.check or args.write or args.retention_exception_report:
+        registry = json.loads((root / RETENTION_EXCEPTIONS).read_text(encoding="utf-8"))
+        try:
+            status = verify_retention_exceptions(root, synced, registry)
+        except (ValueError, KeyError, TypeError) as error:
+            print("retention evidence exception mismatch: " + str(error), file=sys.stderr)
+            return 1
     if args.check and synced != inventory:
         print("inventory mechanical fields differ from the workflow YAML; run --write", file=sys.stderr)
         return 1
+    if args.write:
+        dump(root / INVENTORY, synced)
+    if args.retention_exception_report:
+        print(json.dumps(status, indent=2))
     return 0
 
 

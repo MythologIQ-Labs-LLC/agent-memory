@@ -85,7 +85,7 @@
     },
     "atlas-research-intake.yml": {
       "pull_request": "paths",
-      "push": "main_paths",
+      "push": null,
       "other_triggers": [
         "workflow_dispatch"
       ],
@@ -529,7 +529,7 @@
     },
     "evolveai-multicapability-qualification.yml": {
       "pull_request": "paths",
-      "push": "main_paths",
+      "push": null,
       "other_triggers": [
         "workflow_dispatch"
       ],
@@ -537,7 +537,7 @@
       "jobs": {
         "qualify-evolveai": {
           "timeout_minutes": 10,
-          "full_suite_passes": 1
+          "full_suite_passes": 0
         }
       }
     },
@@ -611,7 +611,7 @@
     },
     "hermes-recursive-learning-research.yml": {
       "pull_request": "paths",
-      "push": "main_paths",
+      "push": null,
       "other_triggers": [
         "workflow_dispatch"
       ],
@@ -664,9 +664,11 @@
       }
     },
     "long-horizon-memory-benchmark.yml": {
-      "pull_request": "unfiltered",
-      "push": "main",
-      "other_triggers": [],
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
       "concurrency": "cancel_superseded",
       "jobs": {
         "local-representations": {
@@ -732,9 +734,11 @@
       }
     },
     "memory-metabolism-benchmark.yml": {
-      "pull_request": "unfiltered",
-      "push": "main",
-      "other_triggers": [],
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
       "concurrency": "cancel_superseded",
       "jobs": {
         "native-memory-metabolism": {
@@ -770,9 +774,11 @@
       }
     },
     "operational-memory-benchmark.yml": {
-      "pull_request": "unfiltered",
-      "push": "main",
-      "other_triggers": [],
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
       "concurrency": "cancel_superseded",
       "jobs": {
         "local-representations": {
@@ -810,9 +816,11 @@
       }
     },
     "precedent-candidate-retrieval.yml": {
-      "pull_request": "unfiltered",
-      "push": "main",
-      "other_triggers": [],
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
       "concurrency": "cancel_superseded",
       "jobs": {
         "validate": {
@@ -918,9 +926,11 @@
       }
     },
     "retrieval-quality-benchmark.yml": {
-      "pull_request": "unfiltered",
-      "push": "main",
-      "other_triggers": [],
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
       "concurrency": "cancel_superseded",
       "jobs": {
         "rc-retrieval-quality": {
@@ -1020,9 +1030,11 @@
       }
     },
     "semantic-representation.yml": {
-      "pull_request": "unfiltered",
-      "push": "main",
-      "other_triggers": [],
+      "pull_request": null,
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
       "concurrency": "cancel_superseded",
       "jobs": {
         "semantic-representation": {

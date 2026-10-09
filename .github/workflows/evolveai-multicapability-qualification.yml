@@ -12,18 +12,6 @@ on:
       - 'reference/tests/test_evolveai_profile.py'
       - 'docs/programs/memory-modules/evolveai-multicapability-profile.md'
       - '.github/workflows/evolveai-multicapability-qualification.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'reference/agentmem_ref/contracts/evolveai_profile.py'
-      - 'reference/fixtures/component-capabilities/evolveai.example.json'
-      - 'reference/fixtures/evolveai-qualification.json'
-      - 'reference/fixtures/evolveai-qualification-driver/**'
-      - 'reference/run_evolveai_multicapability_qualification.py'
-      - 'reference/run_evolveai_failure_probe.py'
-      - 'reference/tests/test_evolveai_profile.py'
-      - 'docs/programs/memory-modules/evolveai-multicapability-profile.md'
-      - '.github/workflows/evolveai-multicapability-qualification.yml'
   workflow_dispatch:
 
 concurrency:
@@ -146,11 +134,6 @@ jobs:
           assert unavailable['currentness'] == 'unavailable'
           assert unavailable['authority_effect'] == 'none'
           PY
-
-      - name: Run full Agent Memory reference regression
-        env:
-          PYTHONPATH: reference
-        run: python -m unittest discover -s reference/tests -p 'test_*.py'
 
       - name: Record evidence digests
         run: |

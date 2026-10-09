@@ -328,7 +328,6 @@
       "lifecycleClass": "async_assurance",
       "triggers": [
         "pull_request",
-        "push",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
@@ -363,7 +362,7 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 2026-10-09] Removed redundant main-push rerun; path-matched PR gate and manual qualification retained. PR/head evidence does not qualify a different merge commit automatically.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -1409,7 +1408,9 @@
       "permissionsExplicit": true,
       "artifactState": {
         "producesArtifacts": true,
-        "retentionDays": []
+        "retentionDays": [
+          90
+        ]
       },
       "repeatedSetupFamily": [
         "checkout",
@@ -1423,7 +1424,7 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 2026-10-09] Explicit 90-day artifact retention (discretionary qualification, not a protected release citation). Evidence corpus and on-disk committed source unchanged. Do not retroactively apply to artifacts from past runs.",
       "sharedImplementationFamily": {
         "id": "setup-family-2",
         "signature": "checkout+python+rust+python-deps+cargo",
@@ -1987,7 +1988,6 @@
       "lifecycleClass": "async_assurance",
       "triggers": [
         "pull_request",
-        "push",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
@@ -2024,7 +2024,7 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 2026-10-09] Removed redundant main-push rerun; path-matched PR gate and manual qualification retained. PR/head evidence does not qualify a different merge commit automatically.",
       "sharedImplementationFamily": {
         "id": "setup-family-2",
         "signature": "checkout+python+rust+python-deps+cargo",
@@ -2295,7 +2295,6 @@
       "lifecycleClass": "async_assurance",
       "triggers": [
         "pull_request",
-        "push",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
@@ -2328,7 +2327,7 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 2026-10-09] Removed redundant main-push rerun; path-matched PR gate and manual qualification retained. PR/head evidence does not qualify a different merge commit automatically.",
       "sharedImplementationFamily": null
     },
     {
@@ -2361,7 +2360,9 @@
       "permissionsExplicit": true,
       "artifactState": {
         "producesArtifacts": true,
-        "retentionDays": []
+        "retentionDays": [
+          90
+        ]
       },
       "repeatedSetupFamily": [
         "checkout",
@@ -2373,7 +2374,7 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 2026-10-09] Explicit 90-day artifact retention (discretionary qualification, not a protected release citation). Evidence corpus and on-disk committed source unchanged. Do not retroactively apply to artifacts from past runs.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -2490,11 +2491,10 @@
       ],
       "lifecycleClass": "async_assurance",
       "triggers": [
-        "pull_request",
-        "push"
+        "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "branches",
+      "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
@@ -2511,7 +2511,9 @@
       "permissionsExplicit": true,
       "artifactState": {
         "producesArtifacts": true,
-        "retentionDays": []
+        "retentionDays": [
+          30
+        ]
       },
       "repeatedSetupFamily": [
         "checkout",
@@ -2521,9 +2523,9 @@
       "reusableWorkflowCalls": [],
       "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
       "proposedDisposition": "ASYNC",
-      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "retirementOrReviewCondition": "Manual evaluation remains available; require explicitly reviewed dispatch evidence on material long-horizon-memory-benchmark runtime/lane changes and review whether protected checks cover the deterministic invariants.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 FinOps 2026-10-09] Exact-SHA benchmark evidence remains dispatchable; no ordinary PR or main push trigger. Run before release when change affects capability, otherwise do not fabricate an accepted benchmark replay. [#662 2026-10-09] Explicit 30-day artifact retention (discretionary qualification, not a protected release citation). Evidence corpus and on-disk committed source unchanged. Do not retroactively apply to artifacts from past runs.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -2743,11 +2745,10 @@
       ],
       "lifecycleClass": "async_assurance",
       "triggers": [
-        "pull_request",
-        "push"
+        "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "branches",
+      "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
@@ -2764,7 +2765,9 @@
       "permissionsExplicit": true,
       "artifactState": {
         "producesArtifacts": true,
-        "retentionDays": []
+        "retentionDays": [
+          30
+        ]
       },
       "repeatedSetupFamily": [
         "checkout",
@@ -2774,9 +2777,9 @@
       "reusableWorkflowCalls": [],
       "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
       "proposedDisposition": "ASYNC",
-      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "retirementOrReviewCondition": "Manual evaluation remains available; require explicitly reviewed dispatch evidence on material memory-metabolism-benchmark runtime/lane changes and review whether protected checks cover the deterministic invariants.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 FinOps 2026-10-09] Exact-SHA benchmark evidence remains dispatchable; no ordinary PR or main push trigger. Run before release when change affects capability, otherwise do not fabricate an accepted benchmark replay. [#662 2026-10-09] Explicit 30-day artifact retention (discretionary qualification, not a protected release citation). Evidence corpus and on-disk committed source unchanged. Do not retroactively apply to artifacts from past runs.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -2889,11 +2892,10 @@
       ],
       "lifecycleClass": "async_assurance",
       "triggers": [
-        "pull_request",
-        "push"
+        "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "branches",
+      "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
@@ -2910,7 +2912,9 @@
       "permissionsExplicit": true,
       "artifactState": {
         "producesArtifacts": true,
-        "retentionDays": []
+        "retentionDays": [
+          30
+        ]
       },
       "repeatedSetupFamily": [
         "checkout",
@@ -2920,9 +2924,9 @@
       "reusableWorkflowCalls": [],
       "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
       "proposedDisposition": "ASYNC",
-      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "retirementOrReviewCondition": "Manual evaluation remains available; require explicitly reviewed dispatch evidence on material operational-memory-benchmark runtime/lane changes and review whether protected checks cover the deterministic invariants.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 FinOps 2026-10-09] Exact-SHA benchmark evidence remains dispatchable; no ordinary PR or main push trigger. Run before release when change affects capability, otherwise do not fabricate an accepted benchmark replay. [#662 2026-10-09] Explicit 30-day artifact retention (discretionary qualification, not a protected release citation). Evidence corpus and on-disk committed source unchanged. Do not retroactively apply to artifacts from past runs.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -3035,11 +3039,10 @@
       ],
       "lifecycleClass": "async_assurance",
       "triggers": [
-        "pull_request",
-        "push"
+        "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "branches",
+      "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
@@ -3056,7 +3059,9 @@
       "permissionsExplicit": true,
       "artifactState": {
         "producesArtifacts": true,
-        "retentionDays": []
+        "retentionDays": [
+          30
+        ]
       },
       "repeatedSetupFamily": [
         "checkout",
@@ -3066,9 +3071,9 @@
       "reusableWorkflowCalls": [],
       "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
       "proposedDisposition": "ASYNC",
-      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "retirementOrReviewCondition": "Manual evaluation remains available; require explicitly reviewed dispatch evidence on material precedent-candidate-retrieval runtime/lane changes and review whether protected checks cover the deterministic invariants.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 FinOps 2026-10-09] Exact-SHA benchmark evidence remains dispatchable; no ordinary PR or main push trigger. Run before release when change affects capability, otherwise do not fabricate an accepted benchmark replay. [#662 2026-10-09] Explicit 30-day artifact retention (discretionary qualification, not a protected release citation). Evidence corpus and on-disk committed source unchanged. Do not retroactively apply to artifacts from past runs.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -3432,11 +3437,10 @@
       ],
       "lifecycleClass": "async_assurance",
       "triggers": [
-        "pull_request",
-        "push"
+        "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "branches",
+      "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
@@ -3453,7 +3457,9 @@
       "permissionsExplicit": true,
       "artifactState": {
         "producesArtifacts": true,
-        "retentionDays": []
+        "retentionDays": [
+          30
+        ]
       },
       "repeatedSetupFamily": [
         "checkout",
@@ -3463,9 +3469,9 @@
       "reusableWorkflowCalls": [],
       "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
       "proposedDisposition": "ASYNC",
-      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "retirementOrReviewCondition": "Manual evaluation remains available; require explicitly reviewed dispatch evidence on material retrieval-quality-benchmark runtime/lane changes and review whether protected checks cover the deterministic invariants.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 FinOps 2026-10-09] Exact-SHA benchmark evidence remains dispatchable; no ordinary PR or main push trigger. Run before release when change affects capability, otherwise do not fabricate an accepted benchmark replay. [#662 2026-10-09] Explicit 30-day artifact retention (discretionary qualification, not a protected release citation). Evidence corpus and on-disk committed source unchanged. Do not retroactively apply to artifacts from past runs.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -3840,11 +3846,10 @@
       ],
       "lifecycleClass": "async_assurance",
       "triggers": [
-        "pull_request",
-        "push"
+        "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
-      "pathScope": "branches",
+      "pathScope": "repository-wide-or-unscoped",
       "runnerOSMatrix": [
         "ubuntu-latest"
       ],
@@ -3860,7 +3865,7 @@
       },
       "permissionsExplicit": true,
       "artifactState": {
-        "producesArtifacts": true,
+        "producesArtifacts": false,
         "retentionDays": []
       },
       "repeatedSetupFamily": [
@@ -3871,9 +3876,9 @@
       "reusableWorkflowCalls": [],
       "evidenceReleaseSecurityDependency": "nonblocking-or-qualification",
       "proposedDisposition": "ASYNC",
-      "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
+      "retirementOrReviewCondition": "Manual evaluation remains available; require explicitly reviewed dispatch evidence on material semantic-representation runtime/lane changes and review whether protected checks cover the deterministic invariants.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Added 2026-10-07 for #669: the only CI job that exercises the real pinned representation provider (skips become failures).",
+      "reviewNotes": "Added 2026-10-07 for #669: the only CI job that exercises the real pinned representation provider (skips become failures). [#662 FinOps 2026-10-09] Exact-SHA benchmark evidence remains dispatchable; no ordinary PR or main push trigger. Run before release when change affects capability, otherwise do not fabricate an accepted benchmark replay.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -4328,7 +4333,7 @@
       }
     }
   ],
-  "lastUpdatedAt": "2026-10-06",
+  "lastUpdatedAt": "2026-10-09",
   "processedWorkflowCount": 85,
   "currentBranchTriggerReconciliation": {
     "observedAt": "2026-10-05",
@@ -4362,9 +4367,9 @@
     },
     "triggerCounts": {
       "issues": 1,
-      "pull_request": 81,
-      "push": 50,
-      "workflow_dispatch": 42
+      "pull_request": 75,
+      "push": 41,
+      "workflow_dispatch": 48
     },
     "missingExplicitTimeoutCount": 0,
     "supersedablePrOrPushWithoutConcurrencyCount": 0,
@@ -4403,6 +4408,22 @@
     {
       "date": "2026-10-07",
       "change": "longmemeval-competitive.yml (#669 lanes -v3): lane input gains longmemeval-s-retrieval-parity-v3 (default), backend gains agent_memory_semantic (installs the semantic extra under reference/requirements-semantic.txt and fetches the pinned model for that row only), job timeout 180 -> 240 minutes; amb-competitive.yml lane input gains amb-precisionmembench-retrieval-v3 (default)"
+    },
+    {
+      "date": "2026-10-09",
+      "change": "#662 quiet staging/benchmark fan-out: six independently inventoried discretionary async-assurance benchmark workflows moved from unfiltered PR plus main push to manual workflow_dispatch only. Their names, jobs, pinned evidence, tests, permission, concurrency, explicit timeouts and artifact upload logic are unchanged. Configuration eliminates six PR run starts and six main push run starts when all previously matched; no billed-minute savings claim."
+    },
+    {
+      "date": "2026-10-09",
+      "change": "#662 selective PR+main deduplication: atlas-research-intake, evolveai-multicapability-qualification and hermes-recursive-learning-research retain path-filtered PR and workflow_dispatch, remove duplicate main-push triggers. EvolveAI also removes a broad unittest discover duplicate of the protected doctrine umbrella while keeping focused native/provider/source tests. No changed workflow names or job IDs; no equivalence/accepted-revision claims."
+    },
+    {
+      "date": "2026-10-09",
+      "change": "#662 bounded discretionary artifacts: exact actions/upload-artifact retention 30d for five manual benchmark evidence workflows, 90d for component/Hindsight independent qualification. Ten upload steps now have explicit retention; remaining 40 uploads lack explicit retention and require source-citation/evidence review. Protected artifact retention left unchanged. sync_workflow_inventory now derives upload-artifact retention and missing-step count directly from YAML."
+    },
+    {
+      "date": "2026-10-09",
+      "change": "#662 full source audit reconciled all 86 committed workflows' upload-artifact steps against the inventory: 50 upload steps STILL lack an explicit retention-days setting, due to previously stale pre-2026-10-09 summary count (the added ten explicit retention settings are real; earlier starting count was not accurate). semantic-representation.yml was incorrectly marked as uploading an artifact, but has zero upload steps; corrected. No protected upload step was shortened."
     }
   ]
 }

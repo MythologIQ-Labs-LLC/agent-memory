@@ -6,12 +6,6 @@ on:
       - 'docs/programs/hermes-research/**'
       - 'scripts/validate_hermes_recursive_learning_research.py'
       - '.github/workflows/hermes-recursive-learning-research.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'docs/programs/hermes-research/**'
-      - 'scripts/validate_hermes_recursive_learning_research.py'
-      - '.github/workflows/hermes-recursive-learning-research.yml'
   workflow_dispatch:
 
 concurrency:

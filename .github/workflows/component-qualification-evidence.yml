@@ -263,3 +263,4 @@ jobs:
           name: component-qualification-${{ env.AGENT_MEMORY_COMMIT }}
           path: /tmp/component-qualification-raw
           if-no-files-found: error
+          retention-days: 90
