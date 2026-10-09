@@ -234,6 +234,10 @@ class SufficiencyReport:
             raise ValueError("sufficiency report cannot grant authority or certify quality")
         if self.continuation_proposal not in ("review_stop", "continue_if_permitted"):
             raise ValueError("unsupported continuation proposal")
+        if (self.continuation_proposal == "review_stop"
+                and any(item.status not in ("no_eligible_value", "same_value_observed")
+                        for item in self.value_coherence)):
+            raise ValueError("unresolved typed values cannot recommend stopping")
 
     def to_dict(self) -> dict[str, object]:
         return {
