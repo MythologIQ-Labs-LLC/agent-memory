@@ -226,12 +226,24 @@ class SufficiencyReport:
     can_mutate: bool = False
     authority_effect: str = "none"
     value_coherence: tuple[ValueCoherenceAssessment, ...] = ()
+    # Read-time, admission-rechecked census of slot obstacles. Counts alone
+    # never imply complete recall, independent sources, or stop authority.
+    slot_obstacles: tuple[tuple[str, int, int, int], ...] = ()
+    stop_attested: bool = False
 
     def __post_init__(self) -> None:
         if (self.answer_quality_verified is not False
                 or self.can_admit is not False or self.can_mutate is not False
-                or self.authority_effect != "none"):
+                or self.authority_effect != "none"
+                or self.stop_attested is not False):
             raise ValueError("sufficiency report cannot grant authority or certify quality")
+        for entry in self.slot_obstacles:
+            if (type(entry) is not tuple or len(entry) != 4
+                    or type(entry[0]) is not str or not entry[0]
+                    or any(type(value) is not int or value < 0 for value in entry[1:])):
+                raise ValueError("slot obstacle counters must be typed nonnegative integers")
+        if len({entry[0] for entry in self.slot_obstacles}) != len(self.slot_obstacles):
+            raise ValueError("duplicate typed slot obstacle entry")
         if self.continuation_proposal not in ("review_stop", "continue_if_permitted"):
             raise ValueError("unsupported continuation proposal")
         if (self.continuation_proposal == "review_stop"
@@ -248,6 +260,15 @@ class SufficiencyReport:
             "need_support_counts": dict(self.need_support_counts),
             "need_support_refs": {need: list(refs) for need, refs in self.need_support_refs},
             "missing_needs": list(self.missing_needs),
+            "slot_obstacles": {
+                slot: {
+                    "eligible_unretrieved": missed,
+                    "qualified_counter_evidence": weaker,
+                    "declared_temporal_boundary": temporal,
+                }
+                for slot, missed, weaker, temporal in self.slot_obstacles
+            },
+            "stop_attested": False,
             "value_coherence": [
                 {"need_key": item.need_key, "status": item.status,
                  "fact_groups": [list(group) for group in item.fact_groups]}
