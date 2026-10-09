@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v7",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v6",
+  "issue": 644,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/runtime/adapter.py",
+      "blob": "4f3e37dad99d20b625ad0fa105cb210f7ac80f47"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
+      "blob": "2be4845989c5b9abb50efff23683ea26a3414a44"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/governed_transition_witness.py",
+      "blob": "6deb69083617bc0f3c229d6870e3f52a8545756c"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "3a9971eaa0d297fea38ed1b96bf28f905c2b0daf"
+    }
+  ],
+  "identity_deltas": [],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "typed-sufficiency-noninterference-and-negative-controls-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v6"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v6"
+    },
+    {
+      "kind": "replay",
+      "ref": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "governed-admitted-typed-value-coherence-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "committed-governed-transition-witness-v1"
+    }
+  ]
+}
