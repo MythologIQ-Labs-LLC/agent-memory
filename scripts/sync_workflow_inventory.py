@@ -150,7 +150,7 @@ def artifact_retention_fields(workflow: dict[str, Any]) -> tuple[dict[str, Any],
             options = step.get("with") or {}
             duration = options.get("retention-days")
             if duration is not None:
-                if type(duration) is not int or duration < 1 or duration > 90:
+                if type(duration) is not int or duration < 1 or duration > 400:
                     raise ValueError("unsupported artifact retention-days")
             uploads.append(duration)
     return (
