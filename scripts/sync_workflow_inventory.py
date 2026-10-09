@@ -370,20 +370,23 @@ def main(argv: list[str] | None = None) -> int:
         print(render_report(report_rows(root, args.before or "HEAD"), report_rows(root, None)))
     inventory = json.loads((root / INVENTORY).read_text(encoding="utf-8"))
     synced = sync_inventory(inventory, root)
-    if args.write:
-        dump(root / INVENTORY, synced)
-    if args.check and synced != inventory:
-        print("inventory mechanical fields differ from the workflow YAML; run --write", file=sys.stderr)
-        return 1
-    if args.check or args.retention_exception_report:
+    # Always validate protected-artifact exceptions BEFORE writing anything.
+    # Otherwise --write could persist an unreviewed exception and make the
+    # mechanically derived inventory look more trustworthy than its source.
+    if args.check or args.write or args.retention_exception_report:
         registry = json.loads((root / RETENTION_EXCEPTIONS).read_text(encoding="utf-8"))
         try:
             status = verify_retention_exceptions(root, synced, registry)
         except (ValueError, KeyError, TypeError) as error:
             print("retention evidence exception mismatch: " + str(error), file=sys.stderr)
             return 1
-        if args.retention_exception_report:
-            print(json.dumps(status, indent=2))
+    if args.check and synced != inventory:
+        print("inventory mechanical fields differ from the workflow YAML; run --write", file=sys.stderr)
+        return 1
+    if args.write:
+        dump(root / INVENTORY, synced)
+    if args.retention_exception_report:
+        print(json.dumps(status, indent=2))
     return 0
 
 
