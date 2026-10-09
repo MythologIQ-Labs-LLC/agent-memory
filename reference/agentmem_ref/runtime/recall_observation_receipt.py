@@ -33,6 +33,31 @@ def _ids(items: tuple[str, ...], name: str) -> None:
         raise ValueError(f"{name} has invalid identity")
 
 
+def _binding_digest(domain: bytes, payload: object) -> str:
+    """Internal deterministic binding; no authentication or secrecy promise."""
+    return _sha(domain + _json_bytes(payload))
+
+
+def _admission_binding(
+    *, query: str, policy_version: str, admission_mode: str,
+    evaluated_at: str, refusals: Mapping[str, str],
+) -> str:
+    if not all(type(value) is str for value in
+               (query, policy_version, admission_mode, evaluated_at)):
+        raise ValueError("admission binding fields must be strings")
+    if not isinstance(refusals, Mapping) or any(
+        type(k) is not str or type(v) is not str for k, v in refusals.items()
+    ):
+        raise ValueError("refusals must be a mapping of string identities to reasons")
+    return _binding_digest(b"agent-memory/recall-admission-binding/v1\x00", {
+        "query": query,
+        "policy": policy_version,
+        "mode": admission_mode,
+        "evaluated_at": evaluated_at,
+        "refusals": dict(refusals),
+    })
+
+
 def _hex_digest(value: str) -> bool:
     return (type(value) is str and len(value) == 64
             and all(c in "0123456789abcdef" for c in value))
@@ -75,6 +100,8 @@ class RecallObservationReceipt:
     ranked_refs: tuple[str, ...]
     routes: tuple[RouteObservation, ...]
     observed_route_counts: tuple[tuple[str, int], ...]
+    control_digest: str
+    admission_digest: str
     content_digest: str
     version: str = VERSION
     state_revision: None = None
@@ -102,6 +129,8 @@ class RecallObservationReceipt:
                 for r in self.routes
             ],
             "observed_route_counts": [list(pair) for pair in self.observed_route_counts],
+            "control_digest": self.control_digest,
+            "admission_digest": self.admission_digest,
         }
 
     def __post_init__(self) -> None:
@@ -111,8 +140,11 @@ class RecallObservationReceipt:
                 or self.can_stop is not False
                 or self.authority_effect != "none"):
             raise ValueError("receipt cannot claim revision, closure or authority")
-        if not _hex_digest(self.query_digest) or not _hex_digest(self.reader_digest):
-            raise ValueError("invalid query or reader binding")
+        if not all(_hex_digest(value) for value in (
+            self.query_digest, self.reader_digest,
+            self.control_digest, self.admission_digest,
+        )):
+            raise ValueError("invalid receipt query, reader, plan or admission binding")
         for key in (self.controller_ref, self.admission_policy,
                     self.admission_mode, self.evaluated_at):
             if type(key) is not str:
@@ -151,10 +183,25 @@ class RecallObservationReceipt:
         self, *,
         candidates: list[str], admitted: list[str], ranked: list[str],
         route_counts: Mapping[str, int], routes_executed: tuple[str, ...],
+        query: str, plan: Mapping[str, object], refusals: Mapping[str, str],
+        policy_version: str, admission_mode: str, evaluated_at: str,
     ) -> bool:
         """Detect post-capture edits, not prove capture trust or query coverage."""
+        try:
+            control_digest = _binding_digest(
+                b"agent-memory/recall-control-binding/v1\x00", plan
+            )
+            admission_digest = _admission_binding(
+                query=query, policy_version=policy_version,
+                admission_mode=admission_mode, evaluated_at=evaluated_at,
+                refusals=refusals,
+            )
+        except (TypeError, ValueError, OverflowError):
+            return False
         return (
-            tuple(candidates) == self.candidate_refs
+            control_digest == self.control_digest
+            and admission_digest == self.admission_digest
+            and tuple(candidates) == self.candidate_refs
             and tuple(admitted) == self.admitted_refs
             and tuple(ranked) == self.ranked_refs
             and tuple(routes_executed) ==
@@ -205,6 +252,8 @@ def capture_recall_observation(
     ranked: list[str],
     route_observations: tuple[RouteObservation, ...],
     observed_route_counts: Mapping[str, int],
+    plan: Mapping[str, object],
+    refusals: Mapping[str, str],
 ) -> RecallObservationReceipt:
     """Copy mutable runtime outputs into a frozen diagnostic record."""
     if type(query) is not str:
@@ -213,6 +262,14 @@ def capture_recall_observation(
     for value in (principal_ref, project_ref, purpose, task_ref):
         if type(value) is not str:
             raise ValueError("reader context must contain string fields")
+    control_digest = _binding_digest(
+        b"agent-memory/recall-control-binding/v1\x00", plan
+    )
+    admission_digest = _admission_binding(
+        query=query, policy_version=admission_policy,
+        admission_mode=admission_mode, evaluated_at=evaluated_at,
+        refusals=refusals,
+    )
     query_digest = _sha(b"query\x00" + query.encode("utf-8"))
     reader_digest = _sha(b"reader\x00" + _json_bytes({
         "domains": sorted(reader_domain_refs),
@@ -233,6 +290,8 @@ def capture_recall_observation(
         "ranked_refs": tuple(ranked),
         "routes": tuple(route_observations),
         "observed_route_counts": tuple(sorted(observed_route_counts.items())),
+        "control_digest": control_digest,
+        "admission_digest": admission_digest,
     }
     # Construct digest before invoking the validating dataclass constructor.
     # The helper cannot forge missing revision or completeness authority.
@@ -251,6 +310,8 @@ def capture_recall_observation(
             for r in data["routes"]
         ],
         "observed_route_counts": [list(pair) for pair in data["observed_route_counts"]],
+        "control_digest": data["control_digest"],
+        "admission_digest": data["admission_digest"],
     }
     return RecallObservationReceipt(
         **data, content_digest=_sha(_DOMAIN + _json_bytes(payload)),
