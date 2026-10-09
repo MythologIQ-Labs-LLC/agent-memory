@@ -30,6 +30,7 @@ For the current RC/evidence boundary after #591/#594, start with [`64-current-go
 | Qualify independently pinned Ed25519 evidence-journal checkpoints | [`plan-757-signed-journal-checkpoints.md`](plan-757-signed-journal-checkpoints.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation only, no issuer/semantic trust |
 | Qualify explicit schema-backed cross-write property identity | [`plan-757-property-registry.md`](plan-757-property-registry.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only candidate, no semantic authority |
 | Qualify pinned issuer-policy grants and revocation (non-authoritative) | [`plan-757-issuer-policy.md`](plan-757-issuer-policy.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only policy match, not source legitimacy or runtime authorization |
+| Qualify issuer-policy lineage and independently pinned rollback observations | [`plan-757-policy-lineage-rollback.md`](plan-757-policy-lineage-rollback.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only irreversible revocation and mechanical anti-rollback, no trusted distribution |
 | Review security/privacy | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41`, [`../SECURITY.md`](../SECURITY.md) |
 
 ## Repository operating model
