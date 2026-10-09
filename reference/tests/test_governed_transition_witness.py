@@ -16,7 +16,9 @@ spec.loader.exec_module(w)
 def candidate():
     return {
         "classification": "state_change_candidate",
+        "basis": "typed_slot",
         "other_fact_uuid": "fact:old",
+        "other_memory_ref": "memory:target",
         "slot": "typed:beacon api|region",
         "proposal": {
             "proposal_id": "proposal:change",
@@ -78,6 +80,7 @@ class GovernedTransitionWitnessTests(unittest.TestCase):
             {**record(), "memory_id": "memory:elsewhere"},
             {**record(), "kind": "imaginary"},
             {**record(), "proposal_id": None},
+            {**record(), "replaced_at": None},
         ):
             with self.subTest(payload=payload):
                 self.assertIsNone(evaluate(replacement=payload))
@@ -87,6 +90,8 @@ class GovernedTransitionWitnessTests(unittest.TestCase):
             {"classification": "coexistence"},
             {"other_fact_uuid": "fact:foreign"},
             {"slot": "typed:other|scope"},
+            {"basis": "lexical_change_cue"},
+            {"other_memory_ref": "memory:foreign"},
         ):
             claim = candidate()
             claim.update(modified)
