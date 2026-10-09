@@ -516,19 +516,26 @@ class ControlledRecallResult:
     def observation_unchanged(self) -> bool:
         """Detect result tampering; never authorize a stop or state action."""
         receipt = self.observation_receipt
-        return receipt is not None and receipt.matches_mutable_result(
-            candidates=self.recall.candidates,
-            admitted=self.recall.admitted,
-            ranked=self.recall.ranked_admitted,
-            route_counts=self.route_candidate_counts,
-            routes_executed=self.recall.routes_executed,
-            query=self.recall.query,
-            plan=self.plan.to_dict(),
-            refusals=self.recall.refusals,
-            policy_version=self.recall.policy_version,
-            admission_mode=self.recall.admission_mode,
-            evaluated_at=self.recall.evaluated_at,
-        )
+        if type(receipt) is not RecallObservationReceipt:
+            return False
+        try:
+            return receipt.matches_mutable_result(
+                candidates=self.recall.candidates,
+                admitted=self.recall.admitted,
+                ranked=self.recall.ranked_admitted,
+                route_counts=self.route_candidate_counts,
+                routes_executed=self.recall.routes_executed,
+                query=self.recall.query,
+                plan=self.plan.to_dict(),
+                refusals=self.recall.refusals,
+                policy_version=self.recall.policy_version,
+                admission_mode=self.recall.admission_mode,
+                evaluated_at=self.recall.evaluated_at,
+            ) is True
+        except Exception:
+            # validation(644): a caller-mutated result is untrusted input. Any
+            # malformed field (missing attribute, hostile mapping) fails closed.
+            return False
 
     def observe_evidence_sufficiency(
         self,
@@ -994,7 +1001,10 @@ class ControlledRecallPlanner:
         elif any(item[3] for item in counters):
             diagnosis = "declared_temporal_boundary_unresolved"
         elif report.diagnosis == "mechanical_coverage_observed":
-            diagnosis = "coverage_observed_unattested"
+            # validation(644): coverage read from a result whose planner receipt is
+            # missing or no longer matches is not even unattested coverage.
+            diagnosis = ("coverage_observed_unattested" if result.observation_unchanged()
+                         else "recall_observation_unverified")
         else:
             diagnosis = report.diagnosis
         return replace(

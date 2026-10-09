@@ -5334,3 +5334,31 @@ SHA256(content_hash + previous_hash) = f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a
 
 **Evidence still required**: exact-head local full suite, comparison with Claude's independent indexed patch, package layout 8/8, succession 40/40, baseline checker TRANSITION, SQLite scale and restart, unchanged 126-case holdout, public gauntlet, AMB, LongMemEval, and independent peer review. No hosted Actions should run for iterative debugging.
 
+
+---
+
+### Entry #125: CANDIDATE VALIDATION — independent integration check of the combined receipt and indexed audit (#644)
+
+**Timestamp**: 2026-10-09 (candidate record on a local validation branch; actual commit time differs)
+
+**Phase**: VALIDATE (candidate only)
+
+**Author**: Independent validation agent
+
+**Risk Grade**: L2 (protected runtime candidate; formal successor declaration refreshed; no accepted release)
+
+**Target**: `validation/644-combined-safety-receipt-independent`, an isolated validation of `implementation/644-combined-safety-receipt-unqualified` at `de3dbe813683e417f73546bfbdd66976997bea76`; `reports/runtime/baseline-v7-declaration.json`
+
+**Content Hash** (SHA256 of the following exact UTF-8 decision sentence):
+
+`Independent validation of Agent Memory #644 candidate de3dbe8; v7 successor re-declared by the sanctioned tool with eight protected blobs; receipt verification fails closed and unverified recalls never read as clean coverage; v6 remains published; not a PASS, publication or merge approval; no PR, no merge, no Actions.`
+
+`481a7c4a2c153cfa11a45d02882e83f3fbd9d1d0eb609a0c787e3c451904dcc4`
+
+**Previous Hash**: `092b151b315cb94a37bbcfbed300eba6e3374a0a1ed151fb4ed97a687538bbe6`
+
+**Chain Hash**: `a44d073f22ec6ba719449def4fddb72ba7c104a25129b20984ecdcc982501f2c`
+
+**Decision**: Record an **unaccepted** validation remediation of the v7 transition candidate. The candidate's declaration pinned six blobs and omitted the immutable recall receipt module and its alias, so the sanctioned checker failed. `declare_runtime_baseline_changes.py` regenerated it with eight protected blobs. Two narrow repairs are pinned. First, `ControlledRecallResult.observation_unchanged` and `RecallObservationReceipt.matches_mutable_result` return `False` instead of raising on malformed results or hostile mappings. Second, `observe_persisted_typed_coverage` reports `recall_observation_unverified` instead of `coverage_observed_unattested` when the planner receipt is missing or no longer matches. Obstacle diagnoses keep precedence, and no stop is ever proposed. Entries #124 and earlier, including the CHANGES REQUIRED history, are unchanged. The content hash is change detection, not a signed attestation, a trusted state revision, a complete-slot proof or stopping authority. This entry is **not a PASS, publication, qualification, merge approval, or benchmark claim**.
+
+**Evidence still required**: public gauntlet for a v7 contestant, AMB and LongMemEval v7 lanes, the five declared #644 replays (no executable definitions exist in the repository), an untyped-competitor (F6) policy, public typed correction (F7), the SQLite restart wrapper (F12), and independent peer review. No hosted Actions should run for iterative debugging.

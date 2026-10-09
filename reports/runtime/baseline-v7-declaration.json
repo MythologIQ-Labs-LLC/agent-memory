@@ -13,6 +13,10 @@
       "blob": "c638210619d661db2d57490ed684df2b80e9db19"
     },
     {
+      "path": "reference/agentmem_ref/recall_observation_receipt.py",
+      "blob": "cfeeb6948f38cae0e04a87ed6e61c1344548509c"
+    },
+    {
       "path": "reference/agentmem_ref/runtime/adapter.py",
       "blob": "36be4dece830ff01a872d333c4c639e81e50fe00"
     },
@@ -26,7 +30,11 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_control.py",
-      "blob": "7d3d1410dad21caa6ad2ecd01c4713cfcea24d48"
+      "blob": "5136922f5a23b70399b1b422159a0d14f0fa1312"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
+      "blob": "f80d3145d7290c8931b3269c7dcb95585385a45d"
     }
   ],
   "identity_deltas": [],

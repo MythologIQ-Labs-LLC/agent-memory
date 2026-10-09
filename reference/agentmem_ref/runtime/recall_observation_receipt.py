@@ -196,7 +196,7 @@ class RecallObservationReceipt:
                 admission_mode=admission_mode, evaluated_at=evaluated_at,
                 refusals=refusals,
             )
-        except (TypeError, ValueError, OverflowError):
+        except Exception:  # validation(644): hostile mappings/recursion fail closed
             return False
         try:
             # Mutable caller-owned counters are untrusted. Reject malformed
@@ -217,7 +217,7 @@ class RecallObservationReceipt:
                 and tuple(sorted(route_counts.items())) == self.observed_route_counts
                 and self.integrity_valid()
             )
-        except (TypeError, ValueError, AttributeError):
+        except Exception:  # validation(644): hostile mappings/recursion fail closed
             return False
 
     def to_dict(self) -> dict[str, object]:
