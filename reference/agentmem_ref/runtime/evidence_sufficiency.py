@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-SUFFICIENCY_OBSERVER_VERSION = "1.0.0"
+SUFFICIENCY_OBSERVER_VERSION = "1.1.0"
 TYPED_OBSERVATION = "runtime_typed_observation"
 CONTROLLER_ESTIMATE = "controller_estimate"
 _ORIGINS = frozenset((TYPED_OBSERVATION, CONTROLLER_ESTIMATE))
