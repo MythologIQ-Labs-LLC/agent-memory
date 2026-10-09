@@ -51,8 +51,9 @@ def observed_peer_position(row: Mapping[str, Any]) -> str:
     ).startswith("same_harness"):
         return "no_comparable_numeric_peer"
     system = comparator.get("system")
-    if isinstance(system, str) and system.strip().lower().replace("_", " ").startswith(
-        "agent memory"
+    if isinstance(system, str) and (
+        system.strip().lower().replace("_", " ") in ("agent memory", "agent-memory")
+        or system.strip().lower().startswith("agent memory (")
     ):
         return "self_frontier_only"
     current = row.get("agent_memory")
