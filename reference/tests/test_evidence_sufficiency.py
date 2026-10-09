@@ -142,6 +142,100 @@ class EvidenceSufficiencyTests(unittest.TestCase):
             with self.subTest(patch=patch), self.assertRaises(ValueError):
                 replace(base, **patch)
 
+    def test_competing_single_values_block_mechanical_review_stop(self):
+        need=s.CoverageNeed('typed:engine|owner')
+        coverage=tuple(s.CoverageObservation(ref,(need.key,),s.TYPED_OBSERVATION) for ref in ('old','new'))
+        claims=(s.TypedValueClaim('old',need.key,'Alice','single'),
+                s.TypedValueClaim('new',need.key,'Bob','single'))
+        observation=s.SufficiencyObservation(('new','old'),(need,),coverage,
+                                             count_target=1,typed_value_claims=claims)
+        result=s.assess_sufficiency(observation)
+        self.assertTrue(result.mechanical_coverage_met)
+        self.assertTrue(result.count_target_met)
+        self.assertEqual(result.diagnosis,'value_coherence_unresolved')
+        self.assertEqual(result.continuation_proposal,'continue_if_permitted')
+        self.assertEqual(result.value_coherence[0].status,'competing_values_unresolved')
+        self.assertEqual(result.value_coherence[0].fact_groups,(('new',),('old',)))
+        self.assertFalse(result.answer_quality_verified)
+
+    def test_change_assertion_is_not_proof_of_governed_transition(self):
+        need=s.CoverageNeed('typed:app|endpoint')
+        coverage=(s.CoverageObservation('v2',(need.key,),s.TYPED_OBSERVATION),)
+        claim=(s.TypedValueClaim('v2',need.key,'https://new.example','single','change'),)
+        result=s.assess_sufficiency(s.SufficiencyObservation(
+            ('v2',),(need,),coverage,count_target=1,typed_value_claims=claim))
+        self.assertEqual(result.value_coherence[0].status,'change_assertion_unresolved')
+        self.assertEqual(result.diagnosis,'value_coherence_unresolved')
+        self.assertNotEqual(result.continuation_proposal,'review_stop')
+
+    def test_coexistence_and_unknown_cardinality_are_not_contradiction_certificates(self):
+        need=s.CoverageNeed('typed:team|maintainer')
+        coverage=tuple(s.CoverageObservation(ref,(need.key,),s.TYPED_OBSERVATION) for ref in ('a','b'))
+        for cardinality,status in (('multi','coexistence_possible'),(None,'cardinality_unresolved')):
+            with self.subTest(cardinality=cardinality):
+                claims=(s.TypedValueClaim('a',need.key,'Dawn','single'),
+                        s.TypedValueClaim('b',need.key,'Eve',cardinality))
+                result=s.assess_sufficiency(s.SufficiencyObservation(
+                    ('a','b'),(need,),coverage,count_target=1,typed_value_claims=claims))
+                self.assertEqual(result.value_coherence[0].status,status)
+                self.assertEqual(result.diagnosis,'value_coherence_unresolved')
+                self.assertEqual(result.contradiction_pairs,())
+
+    def test_identical_values_group_references_without_claiming_independence(self):
+        need=s.CoverageNeed('typed:system|version',2)
+        coverage=tuple(s.CoverageObservation(ref,(need.key,),s.TYPED_OBSERVATION) for ref in ('a','b'))
+        claims=(s.TypedValueClaim('b',need.key,'3.1','single'),
+                s.TypedValueClaim('a',need.key,'3.1','single'))
+        result=s.assess_sufficiency(s.SufficiencyObservation(
+            ('b','a'),(need,),coverage,count_target=1,typed_value_claims=claims))
+        self.assertEqual(result.value_coherence[0].status,'same_value_observed')
+        self.assertEqual(result.value_coherence[0].fact_groups,(('a','b'),))
+        self.assertEqual(result.diagnosis,'mechanical_coverage_observed')
+        self.assertFalse(result.answer_quality_verified)
+
+    def test_value_comparison_never_emits_private_literal(self):
+        need=s.CoverageNeed('typed:tenant|secret')
+        literal='Sensitive internal value'
+        coverage=(s.CoverageObservation('private',(need.key,),s.TYPED_OBSERVATION),)
+        claim=(s.TypedValueClaim('private',need.key,literal,'single'),)
+        result=s.assess_sufficiency(s.SufficiencyObservation(
+            ('private',),(need,),coverage,typed_value_claims=claim))
+        self.assertNotIn(literal,json.dumps(result.to_dict()))
+        self.assertEqual(result.to_dict()['value_coherence'][0]['fact_groups'],[['private']])
+
+    def test_fake_or_unadmitted_typed_value_claims_fail_closed(self):
+        need=s.CoverageNeed('typed:repo|license')
+        good=s.CoverageObservation('a',(need.key,),s.TYPED_OBSERVATION)
+        for candidate in ('outsider','a'):
+            with self.subTest(candidate=candidate):
+                with self.assertRaisesRegex(ValueError,'typed value claim'):
+                    s.SufficiencyObservation(('a',),(need,),(),typed_value_claims=(
+                        s.TypedValueClaim(candidate,need.key,'MIT'),))
+        with self.assertRaisesRegex(ValueError,'duplicate value claim'):
+            s.assess_value_coherence((need,),(
+                s.TypedValueClaim('a',need.key,'MIT'),
+                s.TypedValueClaim('a',need.key,'GPL')))
+        with self.assertRaisesRegex(ValueError,'cardinality'):
+            s.TypedValueClaim('a',need.key,'MIT','invented')
+        with self.assertRaisesRegex(ValueError,'assertion'):
+            s.TypedValueClaim('a',need.key,'MIT','single','definitive')
+        with self.assertRaisesRegex(ValueError,'control'):
+            s.TypedValueClaim('a',need.key,'secret\\nleak')
+
+    def test_value_assessment_order_independent_and_no_raw_values(self):
+        need=s.CoverageNeed('typed:product|price')
+        coverage=tuple(s.CoverageObservation(ref,(need.key,),s.TYPED_OBSERVATION) for ref in ('a','b','c'))
+        claims=(s.TypedValueClaim('a',need.key,'10','single'),
+                s.TypedValueClaim('b',need.key,'12','single'),
+                s.TypedValueClaim('c',need.key,'10','single'))
+        def invoke(refs,claim_order):
+            return s.assess_sufficiency(s.SufficiencyObservation(
+                refs,(need,),coverage,typed_value_claims=claim_order)).to_dict()
+        self.assertEqual(invoke(('a','b','c'),claims),
+                         invoke(('c','a','b'),claims[::-1]))
+        self.assertEqual(invoke(('a','b','c'),claims)['value_coherence'][0]['fact_groups'],
+                         [['a','c'],['b']])
+
     def test_determinism_independent_of_evidence_and_route_order(self):
         needs=(s.CoverageNeed('one'),s.CoverageNeed('two'))
         c=(s.CoverageObservation('a',('one',),s.TYPED_OBSERVATION),
