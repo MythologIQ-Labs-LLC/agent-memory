@@ -127,6 +127,47 @@ class WorkflowPolicyTests(unittest.TestCase):
         self.assertEqual(policy_workflows["validate-doctrine-evidence.yml"][
             "pull_request"], "unfiltered")
 
+    def test_discretionary_research_keeps_pr_gate_but_drops_repeated_main_push(self):
+        names = (
+            "atlas-research-intake.yml",
+            "evolveai-multicapability-qualification.yml",
+            "hermes-recursive-learning-research.yml",
+        )
+        rows = policy()["workflows"]
+        for name in names:
+            with self.subTest(workflow=name):
+                self.assertEqual(rows[name]["pull_request"], "paths")
+                self.assertIsNone(rows[name]["push"])
+                self.assertIn("workflow_dispatch", rows[name]["other_triggers"])
+        self.assertEqual(rows["evolveai-multicapability-qualification.yml"][
+            "jobs"]["qualify-evolveai"]["full_suite_passes"], 0)
+
+    def test_retention_is_explicit_only_for_classified_discretionary_evidence(self):
+        review = {
+            "long-horizon-memory-benchmark.yml": 30,
+            "memory-metabolism-benchmark.yml": 30,
+            "operational-memory-benchmark.yml": 30,
+            "precedent-candidate-retrieval.yml": 30,
+            "retrieval-quality-benchmark.yml": 30,
+            "component-qualification-evidence.yml": 90,
+            "hindsight-v090-qualification.yml": 90,
+        }
+        data = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        rows = {row["path"].split("/")[-1]: row for row in data["records"]}
+        for name, days in review.items():
+            with self.subTest(workflow=name):
+                record = rows[name]
+                self.assertEqual(record["consequenceClass"], "discretionary")
+                self.assertEqual(record["artifactState"]["retentionDays"], [days])
+                workflow = estate.load_workflow(
+                    REPO_ROOT / estate.WORKFLOWS / name
+                )
+                artifact, missing = estate.artifact_retention_fields(workflow)
+                self.assertEqual(missing, 0)
+                self.assertEqual(artifact["retentionDays"], [days])
+        self.assertEqual(data["inventorySummary"][
+            "artifactUploadWithoutExplicitRetentionCount"], 40)
+
     def test_candidate_trust_regressions_reuse_the_protected_doctrine_umbrella(self):
         # Prevent recurrence of the #767 separate top-level workflow; the
         # governed reference test suite is already discovered by doctrine CI.
@@ -143,7 +184,7 @@ class WorkflowPolicyTests(unittest.TestCase):
         self.assertIsNone(envelope["calculated_dollar_savings"])
         self.assertEqual(envelope["unfiltered_pr_workflow_starts_per_head"], 35)
         self.assertEqual(envelope["potential_path_scoped_pr_workflows_per_head"], 40)
-        self.assertEqual(envelope["main_push_workflows"], 44)
+        self.assertEqual(envelope["main_push_workflows"], 41)
         self.assertEqual(envelope["potential_all_pr_workflows_per_head"], 75)
         self.assertEqual(len(
             envelope["discretionary_benchmarks_not_automatically_triggered"]
