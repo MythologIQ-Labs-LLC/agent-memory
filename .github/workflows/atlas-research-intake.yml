@@ -1,22 +1,6 @@
 name: Atlas Research Intake
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'docs/programs/atlas-research/**'
-      - 'scripts/build_atlas_research_inventory.py'
-      - 'scripts/validate_atlas_research_scaffold.py'
-      - 'scripts/validate_atlas_research_synthesis.py'
-      - '.github/workflows/atlas-research-intake.yml'
-  pull_request:
-    paths:
-      - 'docs/programs/atlas-research/**'
-      - 'scripts/build_atlas_research_inventory.py'
-      - 'scripts/validate_atlas_research_scaffold.py'
-      - 'scripts/validate_atlas_research_synthesis.py'
-      - '.github/workflows/atlas-research-intake.yml'
   workflow_dispatch:
 
 concurrency:
