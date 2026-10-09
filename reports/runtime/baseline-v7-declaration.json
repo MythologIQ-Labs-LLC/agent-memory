@@ -6,15 +6,15 @@
   "declared_changes": [
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "73a8be2b1e96600ec0b9cd8c71efe5cb9d4da133"
+      "blob": "4bda22a8102f1a3ca2c6d9c2ccbecd8477a21f21"
     },
     {
       "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
-      "blob": "8d556f6a5a76fb68d89879f50a070e90188c5032"
+      "blob": "2be4845989c5b9abb50efff23683ea26a3414a44"
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_control.py",
-      "blob": "a61978043dbb432edfe510b56f97b196313d62f6"
+      "blob": "32146569344e8645dc2b7a5628b70b84169d25c7"
     }
   ],
   "identity_deltas": [],
@@ -39,6 +39,10 @@
     {
       "kind": "replay",
       "ref": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "governed-admitted-typed-value-coherence-v1"
     }
   ]
 }
