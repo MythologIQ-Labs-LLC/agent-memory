@@ -43,7 +43,7 @@ F10. CI is a deliberately controlled **final** exact-head qualification; no per-
 ## Local qualification before creating a PR
 
 ```sh
-python -m unittest reference.tests.test_github_actions_workflow_policy -v
+python -m unittest discover -s reference/tests -t reference -p 'test_github_actions_workflow_policy.py' -v
 python scripts/sync_workflow_inventory.py --check
 python -m unittest discover -s reference/tests -t reference -p 'test_*.py'
 ```
