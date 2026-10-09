@@ -395,7 +395,9 @@ class RecallControlTests(unittest.TestCase):
         evidence = planner.observe_persisted_typed_coverage(
             result, _context(), needs=(need,),
         )
-        self.assertEqual(evidence.diagnosis, "mechanical_coverage_observed")
+        self.assertEqual(evidence.diagnosis, "coverage_observed_unattested")
+        self.assertEqual(evidence.continuation_proposal, "continue_if_permitted")
+        self.assertFalse(evidence.stop_attested)
         self.assertEqual(evidence.need_support_counts, ((need.key, 1),))
         self.assertEqual(evidence.need_support_refs, ((need.key, (kept.fact_uuid,)),))
         self.assertFalse(evidence.answer_quality_verified)
@@ -405,6 +407,63 @@ class RecallControlTests(unittest.TestCase):
             (list(result.admitted), list(result.ranked_admitted),
              dict(result.recall.refusals)), before,
         )
+
+    def test_slot_audit_detects_nonretrieved_counter_evidence(self) -> None:
+        retained = self._retain(
+            "memory:slot-primary", "Draco engine owner is Alice",
+            evidence_refs=("session:slot-primary",),
+            typed_write=self._typed_write("Draco engine", "owner", "Alice"),
+        )
+        competing = self._retain(
+            "memory:slot-contrary", "Under a different description, Draco has Bob as owner",
+            evidence_refs=("session:slot-contrary",),
+            typed_write=self._typed_write("Draco engine", "owner", "Bob"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Draco engine owner", _context())
+        # Deliberately remove a valid candidate to reproduce a truncated top-k.
+        result.recall.admitted[:] = [retained.fact_uuid]
+        need = CoverageNeed(typed.typed_slot("Draco engine", "owner"))
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertEqual(report.diagnosis, "slot_evidence_not_admitted")
+        self.assertEqual(report.slot_obstacles[0][1], 1)
+        self.assertEqual(report.continuation_proposal, "continue_if_permitted")
+        self.assertNotIn(competing.fact_uuid, report.need_support_refs[0][1])
+
+    def test_slot_audit_includes_weak_same_slot_counter_evidence(self) -> None:
+        self._retain(
+            "memory:slot-eligible", "Lyra quota is 16",
+            evidence_refs=("session:slot-good",),
+            typed_write=self._typed_write("Lyra service", "quota", "16"),
+        )
+        self._retain(
+            "memory:slot-hedged", "Lyra quota might be 24",
+            evidence_refs=("session:slot-weak",),
+            typed_write=self._typed_write("Lyra service", "quota", "24",
+                                          flags={"hedged": True}),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Lyra quota", _context())
+        need = CoverageNeed(typed.typed_slot("Lyra service", "quota"))
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertEqual(report.diagnosis, "qualified_counter_evidence_unresolved")
+        self.assertGreaterEqual(report.slot_obstacles[0][2], 1)
+        self.assertEqual(report.continuation_proposal, "continue_if_permitted")
+
+    def test_observed_coverage_never_certifies_a_stop_on_mutable_recall(self) -> None:
+        self._retain(
+            "memory:slot-single", "Orion endpoint is /health",
+            evidence_refs=("session:slot-one",),
+            typed_write=self._typed_write("Orion service", "endpoint", "/health"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Orion endpoint", _context())
+        need = CoverageNeed(typed.typed_slot("Orion service", "endpoint"))
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertTrue(report.mechanical_coverage_met)
+        self.assertFalse(report.stop_attested)
+        self.assertEqual(report.continuation_proposal, "continue_if_permitted")
+        self.assertEqual(report.diagnosis, "coverage_observed_unattested")
 
     def test_extracted_and_hedged_facts_do_not_launder_support(self) -> None:
         self._retain(
