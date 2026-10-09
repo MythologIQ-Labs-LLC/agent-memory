@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "governing_issue": "#662",
-  "status": "staged_pending_source_reconciliation",
+  "status": "source_reconciled_pending_evidence_owner_review",
   "purpose": "Explicit source-bound exceptions for protected upload steps lacking retention-days; no deletion or automatic authorization.",
   "rules": {
     "new_unbounded_discretionary_uploads_allowed": false,
@@ -420,6 +420,136 @@
       "job": "qualification",
       "upload_index": 0,
       "artifact_name": "sqlite-production-substrate",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "structural-mutation-governance.yml/validate/upload-0",
+      "workflow": "structural-mutation-governance.yml",
+      "job": "validate",
+      "upload_index": 0,
+      "artifact_name": "structural-mutation-governance",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "temporal-commitment-evidence.yml/temporal-commitment/upload-0",
+      "workflow": "temporal-commitment-evidence.yml",
+      "job": "temporal-commitment",
+      "upload_index": 0,
+      "artifact_name": "temporal-commitment-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "temporal-currentness-final-replay.yml/final-replay/upload-0",
+      "workflow": "temporal-currentness-final-replay.yml",
+      "job": "final-replay",
+      "upload_index": 0,
+      "artifact_name": "temporal-currentness-final-replay",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "unsafe-composition-evidence.yml/unsafe-composition/upload-0",
+      "workflow": "unsafe-composition-evidence.yml",
+      "job": "unsafe-composition",
+      "upload_index": 0,
+      "artifact_name": "unsafe-composition-evidence-depth",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "uor-addr-compatibility.yml/uor-addr-compatibility/upload-0",
+      "workflow": "uor-addr-compatibility.yml",
+      "job": "uor-addr-compatibility",
+      "upload_index": 0,
+      "artifact_name": "uor-addr-compatibility-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "validate-doctrine-evidence.yml/validate/upload-0",
+      "workflow": "validate-doctrine-evidence.yml",
+      "job": "validate",
+      "upload_index": 0,
+      "artifact_name": "dependency-pair-qualification",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "validate-doctrine-evidence.yml/validate/upload-1",
+      "workflow": "validate-doctrine-evidence.yml",
+      "job": "validate",
+      "upload_index": 1,
+      "artifact_name": "concurrency-conflict-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "validate-doctrine-evidence.yml/validate/upload-2",
+      "workflow": "validate-doctrine-evidence.yml",
+      "job": "validate",
+      "upload_index": 2,
+      "artifact_name": "p5-benchmark-security-scorecard",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "validate-doctrine-evidence.yml/validate/upload-3",
+      "workflow": "validate-doctrine-evidence.yml",
+      "job": "validate",
+      "upload_index": 3,
+      "artifact_name": "security-evidence-depth-report",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "validate-doctrine-evidence.yml/validate/upload-4",
+      "workflow": "validate-doctrine-evidence.yml",
+      "job": "validate",
+      "upload_index": 4,
+      "artifact_name": "scanner-finding-evidence-depth-report",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "validate-doctrine-evidence.yml/validate/upload-5",
+      "workflow": "validate-doctrine-evidence.yml",
+      "job": "validate",
+      "upload_index": 5,
+      "artifact_name": "p6-mem0-comparator-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "validate-doctrine-evidence.yml/validate/upload-6",
+      "workflow": "validate-doctrine-evidence.yml",
+      "job": "validate",
+      "upload_index": 6,
+      "artifact_name": "deletion-completeness-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "write-readable-visibility.yml/characterize/upload-0",
+      "workflow": "write-readable-visibility.yml",
+      "job": "characterize",
+      "upload_index": 0,
+      "artifact_name": "write-readable-visibility",
       "reason": "protected_evidence_custody_undetermined",
       "review_state": "hold",
       "retention_authorized": false
