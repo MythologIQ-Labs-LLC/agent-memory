@@ -5,7 +5,7 @@ production mutation, frozen #732/R6 inputs or claim of independent issuers.
 """
 from __future__ import annotations
 
-from dataclasses import FrozenInstanceError, replace
+from dataclasses import FrozenInstanceError, asdict, replace
 import unittest
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -25,7 +25,7 @@ class WriteWitnessTests(unittest.TestCase):
             older=write(fact="fact:w1", revision="revision:r1",
                         prop="property:unspecifiedA", value="opaque:x1"),
             newer=write(fact="fact:w2", revision="revision:r2",
-                        prop="attribute:unspecifiedB", value="opaque:x2"),
+                        prop="property:unspecifiedA", value="opaque:x2"),
         )
         self.keys = (
             Ed25519PrivateKey.from_private_bytes(bytes([0x61] * 32)),
@@ -285,6 +285,58 @@ class WriteWitnessTests(unittest.TestCase):
             result.status = "refused"
         with self.assertRaises(FrozenInstanceError):
             self.inputs[0].signed.side = "newer"
+        self.no_authority(result)
+
+
+    def test_d4_permissive_observation_subclass_equality_cannot_bind_wrong_write(self):
+        from agentmem_ref.evaluation.proposition_link_preflight import ObservedWrite
+
+        class EqualEverythingWrite(ObservedWrite):
+            def __eq__(self, other):
+                return True
+
+        fake = EqualEverythingWrite(**{
+            **asdict(self.proposal.older),
+            "revision_ref": "revision:attacker-forged",
+        })
+        altered = replace(self.proposal, older=fake)
+        result = qualify_write_origins(altered, self.inputs)
+        self.assertEqual(result.status, "refused")
+        self.assertIn("noncanonical_proposed_observation_type", result.reason_codes)
+        self.assertIn("witness_observation_revision_mismatch", result.reason_codes)
+        self.no_authority(result)
+
+    def test_d5_underdetermined_identity_evidence_does_not_become_positive(self):
+        scenarios = (
+            {"property_ref": "property:unproven-crosswalk"},
+            {"subject_ref": "subject:unproven-alias"},
+            {"source_ref": "source:different-origin"},
+        )
+        for changed in scenarios:
+            altered = replace(self.proposal, newer=replace(
+                self.proposal.newer, **changed
+            ))
+            fresh = tuple(
+                self.witness(side, role, self.keys[i], observed=getattr(altered, side))
+                for i, (side, role) in enumerate((
+                    ("older", "actor"), ("older", "source"),
+                    ("newer", "actor"), ("newer", "source"),
+                ))
+            )
+            result = qualify_write_origins(altered, fresh)
+            self.assertEqual(result.status, "abstain", msg=changed)
+            self.assertEqual(result.preflight_status, "underdetermined")
+            self.assertIn("structural_preflight_underdetermined", result.reason_codes)
+            self.assertTrue(result.preflight_reason_codes)
+            self.assertEqual(result.signature_matches, 4)
+            self.no_authority(result)
+
+    def test_d5_positive_preserves_lower_layer_uncertainty_receipt(self):
+        result = qualify_write_origins(self.proposal, self.inputs)
+        self.assertEqual(result.status, "cryptographic_witness_candidate")
+        self.assertEqual(result.preflight_status, "structurally_plausible_unverified")
+        self.assertIn("claimed_issuers_and_receipts_not_independently_verified",
+                      result.preflight_reason_codes)
         self.no_authority(result)
 
 
