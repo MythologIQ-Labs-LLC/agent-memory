@@ -38,7 +38,7 @@ def _hex_digest(value: str) -> bool:
             and all(c in "0123456789abcdef" for c in value))
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class RouteObservation:
     route_id: str
     candidate_limit: int
@@ -60,7 +60,7 @@ class RouteObservation:
             raise ValueError("route execution must match the captured budget")
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class RecallObservationReceipt:
     """Content-committed snapshot. Caller cannot turn it into authority."""
 
@@ -172,7 +172,12 @@ class RecallObservationReceipt:
             "candidate_count": len(self.candidate_refs),
             "admitted_refs": list(self.admitted_refs),
             "ranked_refs": list(self.ranked_refs),
-            "routes": [r.__dict__.copy() for r in self.routes],
+            "routes": [
+                {"route_id": r.route_id, "candidate_limit": r.candidate_limit,
+                 "anchor_limit": r.anchor_limit, "returned_count": r.returned_count,
+                 "executed": r.executed}
+                for r in self.routes
+            ],
             "observed_route_counts": [list(pair) for pair in self.observed_route_counts],
             "state_revision": None,
             "snapshot_attested": False,
