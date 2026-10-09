@@ -326,7 +326,7 @@ class RecallControlTests(unittest.TestCase):
             ),),
         )
         self.assertEqual(observed.diagnosis, "mechanical_coverage_observed")
-        self.assertEqual(observed.continuation_proposal, "review_stop")
+        self.assertEqual(observed.continuation_proposal, "continue_if_permitted")
         self.assertFalse(observed.answer_quality_verified)
         self.assertFalse(observed.can_admit)
         self.assertFalse(observed.can_mutate)
@@ -514,6 +514,7 @@ class RecallControlTests(unittest.TestCase):
                                           (need.key,), TYPED_OBSERVATION),),
         )
         self.assertTrue(claimed.mechanical_coverage_met)
+        self.assertEqual(claimed.continuation_proposal, "continue_if_permitted")
         trusted = planner.observe_persisted_typed_coverage(
             result, _context(), needs=(need,),
         )
