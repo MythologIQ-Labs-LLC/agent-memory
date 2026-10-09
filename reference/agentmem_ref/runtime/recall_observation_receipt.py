@@ -115,7 +115,8 @@ class RecallObservationReceipt:
             raise ValueError("invalid query or reader binding")
         for key in (self.controller_ref, self.admission_policy,
                     self.admission_mode, self.evaluated_at):
-            _ids((key,), "receipt metadata")
+            if type(key) is not str:
+                raise ValueError("receipt metadata must be strings")
         for name, values in (
             ("candidate refs", self.candidate_refs),
             ("admitted refs", self.admitted_refs),
@@ -206,14 +207,12 @@ def capture_recall_observation(
     observed_route_counts: Mapping[str, int],
 ) -> RecallObservationReceipt:
     """Copy mutable runtime outputs into a frozen diagnostic record."""
-    if type(query) is not str or not query:
-        raise ValueError("query must be nonempty")
+    if type(query) is not str:
+        raise ValueError("query must be a string")
     _ids(reader_domain_refs, "reader domain refs")
     for value in (principal_ref, project_ref, purpose, task_ref):
-        if type(value) is not str or len(value) > 512 or any(
-            ord(char) < 32 or ord(char) == 127 for char in value
-        ):
-            raise ValueError("invalid optional reader context field")
+        if type(value) is not str:
+            raise ValueError("reader context must contain string fields")
     query_digest = _sha(b"query\x00" + query.encode("utf-8"))
     reader_digest = _sha(b"reader\x00" + _json_bytes({
         "domains": sorted(reader_domain_refs),
