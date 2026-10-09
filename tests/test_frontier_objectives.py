@@ -197,6 +197,24 @@ class BenchmarkFrontierObjectiveTests(unittest.TestCase):
         self.assertTrue(all(not x["benchmark_specific_implementation_allowed"]
                             for x in first["goals"]))
 
+    def test_original_deficit_issue_must_remain_accountable(self):
+        config = deepcopy(self.config)
+        row = next(x for x in config["objectives"] if x["id"] == "B02")
+        row["owners"].remove(719)
+        with self.assertRaisesRegex(FrontierEvidenceError, "original deficit owner"):
+            self.report(config=config)
+
+    def test_priority_and_replay_obligations_survive_projection(self):
+        deep = next(x for x in self.report()["goals"] if x["id"] == "B01")
+        row = deep["evidence"][0]
+        self.assertEqual(row["owning_issue"], 673)
+        self.assertIn(673, deep["owners"])
+        self.assertEqual(row["priority"], "P1")
+        self.assertIn("LongMemEval_S successor same-harness lane",
+                      row["replay_requirements"])
+        self.assertEqual(row["closure_evidence"], [])
+
+
 
 if __name__ == "__main__":
     unittest.main()
