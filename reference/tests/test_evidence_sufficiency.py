@@ -261,6 +261,26 @@ class EvidenceSufficiencyTests(unittest.TestCase):
         self.assertEqual(invoke(('a','b','c'),claims)['value_coherence'][0]['fact_groups'],
                          [['a','c'],['b']])
 
+    def test_canonical_slot_longer_than_256_supports_full_identity(self):
+        slot='typed:' + 's'*192 + '|' + 'a'*190
+        need=s.CoverageNeed(slot)
+        support=s.CoverageObservation('fact-1',(slot,),s.TYPED_OBSERVATION)
+        claim=s.TypedValueClaim('fact-1',slot,'v','single')
+        report=s.assess_sufficiency(s.SufficiencyObservation(
+            ('fact-1',),(need,),(support,),typed_value_claims=(claim,)))
+        self.assertEqual(report.need_support_refs,((slot,('fact-1',)),))
+        self.assertFalse(report.stop_attested)
+
+    def test_forged_attestation_and_malformed_slot_obstacles_fail_closed(self):
+        from dataclasses import replace
+        report=s.assess_sufficiency(obs())
+        with self.assertRaisesRegex(ValueError, 'cannot grant authority'):
+            replace(report, stop_attested=True)
+        for bogus in ((('slot',-1,0,0),), (('slot',True,0,0),),
+                      (('slot',0,0,0),('slot',0,0,0))):
+            with self.subTest(bogus=bogus), self.assertRaises(ValueError):
+                replace(report, slot_obstacles=bogus)
+
     def test_determinism_independent_of_evidence_and_route_order(self):
         needs=(s.CoverageNeed('one'),s.CoverageNeed('two'))
         c=(s.CoverageObservation('a',('one',),s.TYPED_OBSERVATION),
