@@ -133,7 +133,7 @@ class ImmutableRecallObservationTests(unittest.TestCase):
         self.assertNotEqual(r.content_digest,r.query_digest)
         self.assertEqual(r.content_digest,
                          __import__("hashlib").sha256(
-                             b"agent-memory/recall-observation/v1\\x00" +
+                             b"agent-memory/recall-observation/v1\x00" +
                              json.dumps(r._payload(),sort_keys=True,
                                         ensure_ascii=True,separators=(",",":")).encode()
                          ).hexdigest())
