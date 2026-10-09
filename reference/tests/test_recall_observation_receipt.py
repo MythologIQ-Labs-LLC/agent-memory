@@ -10,6 +10,26 @@ from agentmem_ref.runtime.recall_observation_receipt import (
 )
 
 
+CONTROL_PLAN = {"controller_ref": "controller:v1", "controller_version": "1",
+                "evidence_sufficiency_target": 1, "route_budgets": [
+                    {"route_id": "lexical", "candidate_limit": 5, "anchor_limit": 0},
+                ]}
+REFUSALS = {"fact:private": "governed_refusal"}
+
+
+def bindings(*, query="Which region?", plan=None, refusals=None,
+             policy_version="policy:v1", admission_mode="current_state",
+             evaluated_at="2026-10-09T12:00:00Z"):
+    return {
+        "query": query,
+        "plan": CONTROL_PLAN if plan is None else plan,
+        "refusals": REFUSALS if refusals is None else refusals,
+        "policy_version": policy_version,
+        "admission_mode": admission_mode,
+        "evaluated_at": evaluated_at,
+    }
+
+
 def captured(*, query="Which region?", principal="agent:a", project="project:p",
              task="", domains=("tenant:t", "project:p")):
     candidates=["fact:private", "fact:admitted"]
@@ -24,6 +44,7 @@ def captured(*, query="Which region?", principal="agent:a", project="project:p",
         admission_mode="current_state", evaluated_at="2026-10-09T12:00:00Z",
         candidates=candidates, admitted=admitted, ranked=ranked,
         route_observations=routes, observed_route_counts=counts,
+        plan=CONTROL_PLAN, refusals=REFUSALS,
     )
     return receipt,candidates,admitted,ranked,counts
 
@@ -35,7 +56,7 @@ class ImmutableRecallObservationTests(unittest.TestCase):
         self.assertTrue(r.integrity_valid())
         self.assertTrue(r.matches_mutable_result(
             candidates=candidates,admitted=admitted,ranked=ranked,
-            route_counts=counts,routes_executed=("lexical",)))
+            route_counts=counts,routes_executed=("lexical",), **bindings()))
         candidates.clear()
         admitted.clear()
         ranked.clear()
@@ -45,7 +66,7 @@ class ImmutableRecallObservationTests(unittest.TestCase):
         self.assertEqual(r.observed_route_counts,(("exact_identity",0),("lexical",1)))
         self.assertFalse(r.matches_mutable_result(
             candidates=candidates,admitted=admitted,ranked=ranked,
-            route_counts=counts,routes_executed=("lexical",)))
+            route_counts=counts,routes_executed=("lexical",), **bindings()))
         with self.assertRaises(FrozenInstanceError):
             r.can_stop=True
         with self.assertRaises(AttributeError):
@@ -58,23 +79,60 @@ class ImmutableRecallObservationTests(unittest.TestCase):
         counts["exact_identity"]=1
         self.assertFalse(r.matches_mutable_result(
             candidates=c,admitted=a,ranked=rank,route_counts=counts,
-            routes_executed=("lexical",)))
+            routes_executed=("lexical",), **bindings()))
         del counts["exact_identity"]
         self.assertFalse(r.matches_mutable_result(
             candidates=c,admitted=a,ranked=rank,route_counts=counts,
-            routes_executed=("lexical",)))
+            routes_executed=("lexical",), **bindings()))
 
     def test_removed_candidate_and_rerank_are_detected(self):
         r,c,a,rank,counts=captured()
         c.remove("fact:private")
         self.assertFalse(r.matches_mutable_result(
             candidates=c,admitted=a,ranked=rank,route_counts=counts,
-            routes_executed=("lexical",)))
+            routes_executed=("lexical",), **bindings()))
         c[:]=list(r.candidate_refs)
         rank[0]="fact:outsider"
         self.assertFalse(r.matches_mutable_result(
             candidates=c,admitted=a,ranked=rank,route_counts=counts,
-            routes_executed=("lexical",)))
+            routes_executed=("lexical",), **bindings()))
+
+    def test_changed_refusal_policy_query_or_controller_plan_is_detected(self):
+        r,c,a,rank,counts=captured()
+        def unchanged(**changes):
+            return r.matches_mutable_result(
+                candidates=c, admitted=a, ranked=rank,
+                route_counts=counts, routes_executed=("lexical",),
+                **bindings(**changes),
+            )
+        self.assertTrue(unchanged())
+        altered=dict(CONTROL_PLAN)
+        altered["controller_version"]="2"
+        self.assertFalse(unchanged(plan=altered))
+        self.assertFalse(unchanged(refusals={"fact:private":"not_a_refusal"}))
+        self.assertFalse(unchanged(refusals={}))
+        self.assertFalse(unchanged(query="different question"))
+        self.assertFalse(unchanged(policy_version="policy:v2"))
+        self.assertFalse(unchanged(admission_mode="historical_evidence"))
+        self.assertFalse(unchanged(evaluated_at="2026-10-09T13:00:00Z"))
+
+    def test_changed_binding_is_detected_even_when_membership_is_unchanged(self):
+        first,*_=captured()
+        second,*_=captured()
+        self.assertEqual(first.content_digest,second.content_digest)
+        self.assertTrue(first.integrity_valid())
+        self.assertNotIn("fact:private",json.dumps(first.to_dict()))
+        # No successful mutation of the result sequence is needed to reveal
+        # this defect: changing a controller decision is independently checked.
+        plan={**CONTROL_PLAN,"reason_codes":["forced_relevance"]}
+        self.assertFalse(first.matches_mutable_result(
+            candidates=list(first.candidate_refs),
+            admitted=list(first.admitted_refs),
+            ranked=list(first.ranked_refs),
+            route_counts=dict(first.observed_route_counts),
+            routes_executed=("lexical",),
+            **bindings(plan=plan),
+        ))
 
     def test_empty_query_and_blank_reader_fields_preserve_existing_inputs(self):
         r,*_=captured(query="")
