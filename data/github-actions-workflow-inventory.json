@@ -524,6 +524,51 @@
       }
     },
     {
+      "path": ".github/workflows/candidate-trust-state-qualification.yml",
+      "name": "Candidate Trust State Qualification",
+      "capability": "Single-checkpoint revocable identity candidate synthetic qualification",
+      "ownerOrProgram": [
+        "MythologIQ-Labs-LLC/agent-memory"
+      ],
+      "lifecycleClass": "conditional_hot_path",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "consequenceClass": "protected",
+      "pathScope": "paths",
+      "runnerOSMatrix": [
+        "ubuntu-latest"
+      ],
+      "timeoutState": {
+        "explicit": true,
+        "valuesMinutes": [
+          12
+        ]
+      },
+      "concurrencyState": {
+        "configured": true,
+        "cancelInProgress": true
+      },
+      "permissionsExplicit": true,
+      "artifactState": {
+        "producesArtifacts": false,
+        "retentionDays": []
+      },
+      "repeatedSetupFamily": [
+        "checkout",
+        "python",
+        "python-deps"
+      ],
+      "reusableWorkflowCalls": [],
+      "evidenceReleaseSecurityDependency": "protected-until-proven-discretionary",
+      "proposedDisposition": "CONDITIONAL",
+      "retirementOrReviewCondition": "Retain as path-scoped #757 safety qualification unless an equivalent protected check is proven",
+      "classificationConfidence": "medium-high",
+      "reviewNotes": "Synthetic evaluation-only safety tests; no runtime authority. Added with explicit workflow policy entry and exact test gate.",
+      "sharedImplementationFamily": null
+    },
+    {
       "path": ".github/workflows/canonical-json-v2-migration-contract.yml",
       "name": "Canonical JSON v2 Migration Contract",
       "capability": "Canonical JSON v2 Migration Contract",
@@ -4328,8 +4373,8 @@
       }
     }
   ],
-  "lastUpdatedAt": "2026-10-06",
-  "processedWorkflowCount": 85,
+  "lastUpdatedAt": "2026-10-09",
+  "processedWorkflowCount": 86,
   "currentBranchTriggerReconciliation": {
     "observedAt": "2026-10-05",
     "note": "Current main-branch code search found no .github/workflows files containing schedule:. The earlier 2026-10-05 audit snapshot recorded 6 scheduled workflow files. Treat this as configuration drift between audit snapshots, not as equivalent observations.",
@@ -4341,30 +4386,30 @@
     "behaviorAuthority": "Inventory classification alone does not authorize disabling, deleting, or moving required checks."
   },
   "inventorySummary": {
-    "workflowCount": 86,
+    "workflowCount": 87,
     "lifecycleCounts": {
       "required_hot_path": 34,
-      "conditional_hot_path": 22,
+      "conditional_hot_path": 23,
       "async_assurance": 20,
       "manual_exception": 3,
       "one_time": 6
     },
     "dispositionCounts": {
       "KEEP": 34,
-      "CONDITIONAL": 22,
+      "CONDITIONAL": 23,
       "ASYNC": 20,
       "MANUAL": 3,
       "RETIRE": 6
     },
     "consequenceCounts": {
-      "protected": 64,
+      "protected": 65,
       "discretionary": 21
     },
     "triggerCounts": {
       "issues": 1,
-      "pull_request": 81,
+      "pull_request": 82,
       "push": 50,
-      "workflow_dispatch": 42
+      "workflow_dispatch": 43
     },
     "missingExplicitTimeoutCount": 0,
     "supersedablePrOrPushWithoutConcurrencyCount": 0,
@@ -4403,6 +4448,10 @@
     {
       "date": "2026-10-07",
       "change": "longmemeval-competitive.yml (#669 lanes -v3): lane input gains longmemeval-s-retrieval-parity-v3 (default), backend gains agent_memory_semantic (installs the semantic extra under reference/requirements-semantic.txt and fetches the pinned model for that row only), job timeout 180 -> 240 minutes; amb-competitive.yml lane input gains amb-precisionmembench-retrieval-v3 (default)"
+    },
+    {
+      "date": "2026-10-09",
+      "change": "added path-filtered candidate-trust-state-qualification.yml (#757) with 12-minute timeout and supersedable PR concurrency, plus authoritative policy and mechanical inventory entry; runs focused issuer/witness/candidate tests, not the unfiltered full suite"
     }
   ]
 }
