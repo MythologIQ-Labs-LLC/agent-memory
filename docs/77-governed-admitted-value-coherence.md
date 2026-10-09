@@ -54,7 +54,7 @@ Comparisons are **strict literal equality**, without embedding similarity, lexic
 
 **Executed without hosted CI:** 27 focused Python tests passed against the exact current `evidence_sufficiency.py` source bytes, including 18 previous tests and nine independent new negative/control tests. The source Git blob is `2be4845989c5b9abb50efff23683ea26a3414a44`. This is **not** evidence that the newly edited `adapter.py`, `recall_control.py`, and checked-in integration test code passed in a full checkout.
 
-The v7 candidate declaration `reports/runtime/baseline-v7-declaration.json` pins exactly three protected runtime blobs and names the new `governed-admitted-typed-value-coherence-v1` replay obligation. The baseline register retains `declared_successor=null`. No active baseline transition or merge.
+The v7 candidate declaration `reports/runtime/baseline-v7-declaration.json` pins exactly three protected runtime blobs and names the new `governed-admitted-typed-value-coherence-v1` replay obligation. The original review branch retained `declared_successor=null`; the later #644 safety reconciliation branch declares the v7 candidate for controlled transition validation, without publishing it. No active baseline transition or merge.
 
 Required before any PR, merge, or benchmark comparison:
 
