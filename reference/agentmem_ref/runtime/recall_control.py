@@ -12,7 +12,7 @@ weights, and relation density remain non-authoritative candidate evidence.
 from __future__ import annotations
 
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 import math
 import re
 from typing import Protocol
@@ -515,13 +515,13 @@ class ControlledRecallResult:
     ) -> SufficiencyReport:
         """Diagnose already-admitted evidence without changing the recall.
 
-        The caller must provide trustworthy typed support metadata; estimates
-        cannot count toward mechanical coverage. No output can stop retrieval,
+        Manual support metadata is unverified even when labeled typed; estimates
+        cannot count toward mechanical coverage, and this path never proposes a stop. No output can stop retrieval,
         certify an answer, change ranking, admit a candidate, or mutate state.
         Count-target agreement is reported separately from typed coverage.
         """
         executed = set(self.recall.routes_executed)
-        return assess_sufficiency(SufficiencyObservation(
+        report = assess_sufficiency(SufficiencyObservation(
             admitted_refs=tuple(self.recall.admitted),
             needs=needs,
             coverage=coverage,
@@ -537,6 +537,10 @@ class ControlledRecallResult:
             ),
             count_target=self.plan.evidence_sufficiency_target,
         ))
+        # Caller-supplied observations cannot authenticate their own origin.
+        # Preserve useful diagnostic counts but never even *recommend* a stop
+        # from manually asserted typed evidence.
+        return replace(report, continuation_proposal="continue_if_permitted")
 
     @property
     def ranked_admitted(self) -> list[str]:
