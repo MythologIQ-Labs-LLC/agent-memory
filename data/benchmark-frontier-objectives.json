@@ -63,6 +63,22 @@
       "unmeasured_state": "not_run"
     },
     {
+      "id": "A03",
+      "group": "A",
+      "capability": "Natural proposition recognition and canonical value boundaries",
+      "benchmark": "#594 Part R natural proposition semantics",
+      "metric": "known_recall",
+      "source_kind": "ledger",
+      "owners": [
+        596,
+        597,
+        732
+      ],
+      "architecture": "Versioned typed write-time interpretation, independent slot/value canonicalization and conservative abstention",
+      "release_gate": "improve known recall and boundary accuracy on unseen language without weakening known precision or assertion posture",
+      "deficit_selector": "natural-proposition-known-recall-2026-10-07"
+    },
+    {
       "id": "B01",
       "group": "B",
       "capability": "Deep long-horizon recall against reproduced systems",
