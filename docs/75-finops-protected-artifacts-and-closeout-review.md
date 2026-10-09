@@ -6,6 +6,8 @@
 
 All **86 workflow files** were source-checked for `actions/upload-artifact` steps and `retention-days`. After establishing 30/90-day durations on ten discretionary upload steps and correcting the semantic-representation misclassification, **50 upload steps across 43 workflow files** still have no explicit retention. All 43 are classified **protected** by the accepted inventory. An upload step with no explicit duration inherits repository/org retention settings, which are unknown here. These are evidence custody/retention decisions, not permission to delete.
 
+Every remaining uncapped upload is now itemized by **workflow, job, upload ordinal, and artifact name** in `data/github-actions-retention-exceptions.json`. All 50 entries are in a `hold` state with `retention_authorized=false`. These entries neither grant permission for indefinite retention nor allow deletion: they are an explicit tracked exception backlog until an evidence owner decides on custody. `scripts/sync_workflow_inventory.py --check` validates exact alignment with the workflow YAML and fails when an uncapped artifact is introduced, removed, renamed or reclassified without reconciling the review record. Use `--retention-exception-report` for a local, non-billing summary.
+
 The separate **six `one_time` / `RETIRE`** candidates are also still protected. Removing their workflows merely because a program closed could invalidate branch-required check names, release citations or evidence replay. None is deleted or converted to manual by this slice.
 
 ## One-time retirement candidates: explicit evidence gates
