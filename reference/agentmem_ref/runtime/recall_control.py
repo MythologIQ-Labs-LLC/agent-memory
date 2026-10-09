@@ -842,55 +842,29 @@ class ControlledRecallPlanner:
             # which facts support it. Canonical slot identity is checked again
             # against the actual persisted subject and attribute below.
             if (not key.startswith("typed:") or key.count("|") != 1
-                    or any(not part for part in key[6:].split("|"))):
+                    or any(not part for part in key[6:].split("|"))
+                    or typed.typed_slot(*key[6:].split("|")) != key):
                 raise ValueError("persisted coverage needs canonical typed slots")
             if key in expected:
                 raise ValueError("persisted coverage needs unique slots")
             expected.add(key)
 
-        substrate = self.adapter.checkpoint_substrate()
-        recheck = getattr(self.adapter, "_admission_refusal", None)
-        if not callable(recheck):
-            raise RuntimeRecoveryError("persisted coverage requires current governed admission recheck")
+        lookup = getattr(self.adapter, "current_governed_typed_slot", None)
+        if not callable(lookup):
+            raise RuntimeRecoveryError("persisted coverage requires governed typed-slot lookup")
         usable: list[str] = []
         observations: list[CoverageObservation] = []
         original = tuple(result.recall.admitted)
         if len(original) != len(set(original)):
             raise ValueError("recall contains duplicate admitted references")
         for ref in original:
-            fact = substrate.get_fact(ref)
-            if (fact is None or fact.is_transaction_expired
-                    or recheck(fact, context) is not None):
+            # The adapter alone decides current visibility and reads persisted
+            # typed evidence. The caller cannot supply or upgrade an origin.
+            current_visible, slot = lookup(ref, context)
+            if not current_visible:
                 continue
-            # Recheck happens BEFORE reading semantics. write_semantics itself
-            # performs its independent scope and tombstone visibility check.
             usable.append(ref)
-            semantics = self.adapter.write_semantics(ref, context)
-            if not isinstance(semantics, dict):
-                continue
-            proposition = semantics.get("typed_proposition")
-            if not isinstance(proposition, dict) or proposition.get("basis") != typed.CALLER_DECLARED:
-                continue
-            if semantics.get("typed_ineligible_reasons"):
-                continue
-            if not all(field in proposition for field in (
-                "subject", "attribute", "value", "assertion", "cardinality",
-                "flags", "replaces_value", "slot",
-            )):
-                continue
-            try:
-                validated = typed.validate({
-                    key: proposition[key] for key in (
-                        "subject", "attribute", "value", "assertion",
-                        "cardinality", "flags", "replaces_value",
-                    )
-                })
-                if any(validated["flags"].values()):
-                    continue
-                slot = typed.typed_slot(validated["subject"], validated["attribute"])
-            except (ValueError, TypeError, KeyError):
-                continue
-            if proposition["slot"] == slot and slot in expected:
+            if slot in expected:
                 observations.append(CoverageObservation(
                     candidate_ref=ref, need_keys=(slot,),
                     origin=TYPED_OBSERVATION,
