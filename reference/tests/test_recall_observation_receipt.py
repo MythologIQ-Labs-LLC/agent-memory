@@ -85,6 +85,22 @@ class ImmutableRecallObservationTests(unittest.TestCase):
             candidates=c,admitted=a,ranked=rank,route_counts=counts,
             routes_executed=("lexical",), **bindings()))
 
+    def test_malformed_mutable_route_counts_fail_closed(self):
+        r, candidates, admitted, ranked, _ = captured()
+        for bad_counts in (
+            {"lexical": 1, "exact_identity": "invalid"},
+            {"lexical": 1, 4: 0},
+            {"lexical": True},
+            {"lexical": -1},
+            None,
+        ):
+            with self.subTest(counts=bad_counts):
+                self.assertFalse(r.matches_mutable_result(
+                    candidates=candidates, admitted=admitted, ranked=ranked,
+                    route_counts=bad_counts, routes_executed=("lexical",),
+                    **bindings(),
+                ))
+
     def test_removed_candidate_and_rerank_are_detected(self):
         r,c,a,rank,counts=captured()
         c.remove("fact:private")
