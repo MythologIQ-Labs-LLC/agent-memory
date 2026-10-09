@@ -10,26 +10,26 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-SUFFICIENCY_OBSERVER_VERSION = "1.1.0"
+SUFFICIENCY_OBSERVER_VERSION = "1.2.0"
 TYPED_OBSERVATION = "runtime_typed_observation"
 CONTROLLER_ESTIMATE = "controller_estimate"
 _ORIGINS = frozenset((TYPED_OBSERVATION, CONTROLLER_ESTIMATE))
 
 
-def _ident(value: str, label: str) -> None:
-    if type(value) is not str or not value or not value.strip() or len(value) > 256:
-        raise ValueError(f"{label} must be a non-empty string of at most 256 chars")
+def _ident(value: str, label: str, *, limit: int = 256) -> None:
+    if type(value) is not str or not value or not value.strip() or len(value) > limit:
+        raise ValueError(f"{label} must be a non-empty string of at most {limit} chars")
     if any(ord(ch) < 32 or ord(ch) == 127 for ch in value):
         raise ValueError(f"{label} must not contain control characters")
 
 
-def _unique_refs(values: tuple[str, ...], label: str) -> None:
+def _unique_refs(values: tuple[str, ...], label: str, *, limit: int = 256) -> None:
     if type(values) is not tuple:
         raise TypeError(f"{label} must be a tuple")
     if len(set(values)) != len(values):
         raise ValueError(f"{label} must not repeat identities")
     for value in values:
-        _ident(value, label)
+        _ident(value, label, limit=limit)
 
 
 @dataclass(frozen=True)
@@ -40,7 +40,7 @@ class CoverageNeed:
     min_admitted_supports: int = 1
 
     def __post_init__(self) -> None:
-        _ident(self.key, "need key")
+        _ident(self.key, "need key", limit=512)
         if type(self.min_admitted_supports) is not int or not 1 <= self.min_admitted_supports <= 256:
             raise ValueError("min_admitted_supports must be an integer from 1 to 256")
 
@@ -55,7 +55,7 @@ class CoverageObservation:
 
     def __post_init__(self) -> None:
         _ident(self.candidate_ref, "candidate reference")
-        _unique_refs(self.need_keys, "coverage need keys")
+        _unique_refs(self.need_keys, "coverage need keys", limit=512)
         if self.origin not in _ORIGINS:
             raise ValueError("unsupported coverage observation origin")
 
@@ -72,7 +72,7 @@ class TypedValueClaim:
 
     def __post_init__(self) -> None:
         _ident(self.candidate_ref, "claim candidate reference")
-        _ident(self.need_key, "claim need key")
+        _ident(self.need_key, "claim need key", limit=512)
         _ident(self.value, "claim value")
         if self.cardinality not in (None, "single", "multi"):
             raise ValueError("invalid typed claim cardinality")
