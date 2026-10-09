@@ -17,6 +17,14 @@ import math
 import re
 from typing import Protocol
 
+from .evidence_sufficiency import (
+    CoverageNeed,
+    CoverageObservation,
+    RouteWorkObservation,
+    SufficiencyObservation,
+    SufficiencyReport,
+    assess_sufficiency,
+)
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .temporal_intent import resolve_intent
@@ -495,6 +503,38 @@ class ControlledRecallResult:
     graph_candidate_hits: dict[str, GraphCandidateHit] = field(default_factory=dict)
     controller_calls: int = 1
     authority_effect: str = "none"
+
+    def observe_evidence_sufficiency(
+        self,
+        *,
+        needs: tuple[CoverageNeed, ...] = (),
+        coverage: tuple[CoverageObservation, ...] = (),
+        contradictions: tuple[tuple[str, str], ...] = (),
+    ) -> SufficiencyReport:
+        """Diagnose already-admitted evidence without changing the recall.
+
+        The caller must provide trustworthy typed support metadata; estimates
+        cannot count toward mechanical coverage. No output can stop retrieval,
+        certify an answer, change ranking, admit a candidate, or mutate state.
+        Count-target agreement is reported separately from typed coverage.
+        """
+        executed = set(self.recall.routes_executed)
+        return assess_sufficiency(SufficiencyObservation(
+            admitted_refs=tuple(self.recall.admitted),
+            needs=needs,
+            coverage=coverage,
+            contradictions=contradictions,
+            route_work=tuple(
+                RouteWorkObservation(
+                    route_id=budget.route_id,
+                    candidate_limit=budget.candidate_limit,
+                    returned_count=self.route_candidate_counts.get(budget.route_id, 0),
+                    executed=budget.route_id in executed,
+                )
+                for budget in self.plan.route_budgets
+            ),
+            count_target=self.plan.evidence_sufficiency_target,
+        ))
 
     @property
     def ranked_admitted(self) -> list[str]:

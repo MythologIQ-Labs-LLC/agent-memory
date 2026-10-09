@@ -13,6 +13,11 @@ from agentmem_ref.recall_control import (
     RecallControlPlan,
     RecallRouteBudget,
 )
+from agentmem_ref.runtime.evidence_sufficiency import (
+    CoverageNeed,
+    CoverageObservation,
+    TYPED_OBSERVATION,
+)
 from agentmem_ref.restart_runtime import RuntimeRecoveryError
 from agentmem_ref.runtime_composition import (
     EXACT_IDENTITY_ROUTE,
@@ -276,6 +281,68 @@ class RecallControlTests(unittest.TestCase):
 
         self.assertEqual(result.candidates, [known.fact_uuid])
         self.assertEqual(result.recall.routes_executed, (EXACT_IDENTITY_ROUTE,))
+
+    def test_sufficiency_observer_cannot_change_governed_recall(self) -> None:
+        retained = self._retain(
+            "memory:sufficiency",
+            "blue ceramic glaze in the pottery class",
+            evidence_refs=("session:pottery",),
+        )
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:typed-sufficiency",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 5),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 0),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+            ),
+        ))
+        result = ControlledRecallPlanner(
+            self.runtime.adapter, controller=fixed,
+        ).recall("blue ceramic glaze", _context())
+        original = (
+            list(result.candidates),
+            list(result.admitted),
+            list(result.ranked_admitted),
+            dict(result.recall.refusals),
+        )
+        self.assertIn(retained.fact_uuid, result.admitted)
+        estimate = result.observe_evidence_sufficiency(
+            needs=(CoverageNeed("glaze"),),
+            coverage=(CoverageObservation(retained.fact_uuid, ("glaze",)),),
+        )
+        self.assertTrue(estimate.count_target_met)
+        self.assertFalse(estimate.mechanical_coverage_met)
+        self.assertEqual(estimate.diagnosis, "missing_declared_evidence")
+
+        observed = result.observe_evidence_sufficiency(
+            needs=(CoverageNeed("glaze"),),
+            coverage=(CoverageObservation(
+                retained.fact_uuid, ("glaze",), TYPED_OBSERVATION,
+            ),),
+        )
+        self.assertEqual(observed.diagnosis, "mechanical_coverage_observed")
+        self.assertEqual(observed.continuation_proposal, "review_stop")
+        self.assertFalse(observed.answer_quality_verified)
+        self.assertFalse(observed.can_admit)
+        self.assertFalse(observed.can_mutate)
+        self.assertEqual(observed.authority_effect, "none")
+        self.assertEqual(
+            (
+                list(result.candidates),
+                list(result.admitted),
+                list(result.ranked_admitted),
+                dict(result.recall.refusals),
+            ),
+            original,
+        )
+        with self.assertRaisesRegex(ValueError, "governed admitted"):
+            result.observe_evidence_sufficiency(
+                needs=(CoverageNeed("glaze"),),
+                coverage=(CoverageObservation(
+                    "foreign-unadmitted-reference", ("glaze",), TYPED_OBSERVATION,
+                ),),
+            )
 
     def test_unavailable_route_plan_fails_closed(self) -> None:
         fixed = _FixedController(

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "baseline_id": "agent-memory-runtime-baseline-v7",
+  "predecessor_baseline_id": "agent-memory-runtime-baseline-v6",
+  "issue": 644,
+  "declared_changes": [
+    {
+      "path": "reference/agentmem_ref/runtime/evidence_sufficiency.py",
+      "blob": "3464e97d80f9fa1a49b2c14e098b00c94f660191"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "aafc4781c698b04bf81b166d49008aa39512a937"
+    }
+  ],
+  "identity_deltas": [],
+  "pyproject_change": null,
+  "acceptance_evidence_required": [
+    {
+      "kind": "public_gauntlet",
+      "ref": "gauntlet-orchestration-retrieval-probe-v1"
+    },
+    {
+      "kind": "replay",
+      "ref": "typed-sufficiency-noninterference-and-negative-controls-v1"
+    },
+    {
+      "kind": "lane",
+      "ref": "amb-precisionmembench-retrieval-v6"
+    },
+    {
+      "kind": "lane",
+      "ref": "longmemeval-s-retrieval-parity-v6"
+    }
+  ]
+}
