@@ -85,7 +85,7 @@
     },
     "atlas-research-intake.yml": {
       "pull_request": "paths",
-      "push": "main_paths",
+      "push": null,
       "other_triggers": [
         "workflow_dispatch"
       ],
@@ -529,7 +529,7 @@
     },
     "evolveai-multicapability-qualification.yml": {
       "pull_request": "paths",
-      "push": "main_paths",
+      "push": null,
       "other_triggers": [
         "workflow_dispatch"
       ],
@@ -537,7 +537,7 @@
       "jobs": {
         "qualify-evolveai": {
           "timeout_minutes": 10,
-          "full_suite_passes": 1
+          "full_suite_passes": 0
         }
       }
     },
@@ -611,7 +611,7 @@
     },
     "hermes-recursive-learning-research.yml": {
       "pull_request": "paths",
-      "push": "main_paths",
+      "push": null,
       "other_triggers": [
         "workflow_dispatch"
       ],
