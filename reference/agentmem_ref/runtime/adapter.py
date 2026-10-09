@@ -789,6 +789,51 @@ class GovernedMemoryAdapter:
         value = semantics.expanded_form((fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY))
         return json.loads(json.dumps(value)) if value is not None else None
 
+    def current_governed_typed_slot(
+        self, fact_uuid: str, context: RecallContext,
+    ) -> tuple[bool, str | None]:
+        """Current admission recheck plus stored, eligible caller-declared slot.
+
+        This is a read-only capability for downstream mechanical diagnostics.
+        The boolean is current admission visibility, NOT truth or retained
+        source authority. A typed slot is descriptive write evidence only.
+        Historical/as-of facts are conservatively omitted from this method;
+        a future temporal sufficiency observer needs an explicit admission
+        mode and separate qualification before recognizing them.
+        """
+        if not isinstance(context, RecallContext) or not isinstance(fact_uuid, str) or not fact_uuid:
+            raise TypeError("fact identity and recall context are required")
+        fact = self._substrate.get_fact(fact_uuid)
+        if (fact is None or fact.is_transaction_expired
+                or self._admission_refusal(fact, context) is not None):
+            return False, None
+        # A second visibility gate is intentional; read-only semantics must
+        # respect source tombstones, tenant/project/task and shared membership.
+        stored = self.write_semantics(fact_uuid, context)
+        if not isinstance(stored, dict):
+            return True, None
+        record = stored.get("typed_proposition")
+        if not isinstance(record, dict) or record.get("basis") != typed.CALLER_DECLARED:
+            return True, None
+        if stored.get("typed_ineligible_reasons"):
+            return True, None
+        fields = (
+            "subject", "attribute", "value", "assertion", "cardinality",
+            "flags", "replaces_value",
+        )
+        if not all(field in record for field in (*fields, "slot")):
+            return True, None
+        try:
+            validated = typed.validate({field: record[field] for field in fields})
+            if any(validated["flags"].values()):
+                return True, None
+            slot = typed.typed_slot(validated["subject"], validated["attribute"])
+        except (ValueError, TypeError, KeyError):
+            return True, None
+        if slot != record.get("slot"):
+            return True, None
+        return True, slot
+
     def semantic_proposals(self, context: RecallContext) -> list[dict]:
         """Every write-time ``state_change`` proposal with its status derived now.
 

@@ -12,11 +12,21 @@ weights, and relation density remain non-authoritative candidate evidence.
 from __future__ import annotations
 
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 import math
 import re
 from typing import Protocol
 
+from . import typed_proposition as typed
+from .evidence_sufficiency import (
+    CoverageNeed,
+    CoverageObservation,
+    RouteWorkObservation,
+    SufficiencyObservation,
+    SufficiencyReport,
+    assess_sufficiency,
+    TYPED_OBSERVATION,
+)
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .temporal_intent import resolve_intent
@@ -496,6 +506,42 @@ class ControlledRecallResult:
     controller_calls: int = 1
     authority_effect: str = "none"
 
+    def observe_evidence_sufficiency(
+        self,
+        *,
+        needs: tuple[CoverageNeed, ...] = (),
+        coverage: tuple[CoverageObservation, ...] = (),
+        contradictions: tuple[tuple[str, str], ...] = (),
+    ) -> SufficiencyReport:
+        """Diagnose already-admitted evidence without changing the recall.
+
+        Manual support metadata is unverified even when labeled typed; estimates
+        cannot count toward mechanical coverage, and this path never proposes a stop. No output can stop retrieval,
+        certify an answer, change ranking, admit a candidate, or mutate state.
+        Count-target agreement is reported separately from typed coverage.
+        """
+        executed = set(self.recall.routes_executed)
+        report = assess_sufficiency(SufficiencyObservation(
+            admitted_refs=tuple(self.recall.admitted),
+            needs=needs,
+            coverage=coverage,
+            contradictions=contradictions,
+            route_work=tuple(
+                RouteWorkObservation(
+                    route_id=budget.route_id,
+                    candidate_limit=budget.candidate_limit,
+                    returned_count=self.route_candidate_counts.get(budget.route_id, 0),
+                    executed=budget.route_id in executed,
+                )
+                for budget in self.plan.route_budgets
+            ),
+            count_target=self.plan.evidence_sufficiency_target,
+        ))
+        # Caller-supplied observations cannot authenticate their own origin.
+        # Preserve useful diagnostic counts but never even *recommend* a stop
+        # from manually asserted typed evidence.
+        return replace(report, continuation_proposal="continue_if_permitted")
+
     @property
     def ranked_admitted(self) -> list[str]:
         return self.recall.ranked_admitted
@@ -771,6 +817,79 @@ class ControlledRecallPlanner:
             ),
             graph_candidate_hits=graph_candidate_hits,
         )
+
+    def observe_persisted_typed_coverage(
+        self,
+        result: ControlledRecallResult,
+        context: RecallContext,
+        *,
+        needs: tuple[CoverageNeed, ...],
+    ) -> SufficiencyReport:
+        """Read governed, persisted typed-slot support, NEVER a controller label.
+
+        Each fact is rechecked against CURRENT admission before its stored
+        semantics are consulted. A stale/as-of fact is conservatively omitted.
+        Only a validated caller-declared typed proposition with no qualifying
+        ineligibility/uncertainty flags is mechanically counted. Extracted
+        propositions, inferred lexical interpretations and controller claims
+        do not qualify. This is an inspection over read-time state, not an
+        atomic snapshot or a verification of statement truth.
+        """
+        if type(result) is not ControlledRecallResult or not isinstance(context, RecallContext):
+            raise TypeError("controlled recall result and recall context required")
+        if type(needs) is not tuple or not needs or any(type(n) is not CoverageNeed for n in needs):
+            raise ValueError("persisted coverage requires typed, non-empty needs")
+        expected: set[str] = set()
+        for need in needs:
+            key = need.key
+            # The caller may name the memory slot it needs, but may not declare
+            # which facts support it. Canonical slot identity is checked again
+            # against the actual persisted subject and attribute below.
+            if (not key.startswith("typed:") or key.count("|") != 1
+                    or any(not part for part in key[6:].split("|"))
+                    or typed.typed_slot(*key[6:].split("|")) != key):
+                raise ValueError("persisted coverage needs canonical typed slots")
+            if key in expected:
+                raise ValueError("persisted coverage needs unique slots")
+            expected.add(key)
+
+        lookup = getattr(self.adapter, "current_governed_typed_slot", None)
+        if not callable(lookup):
+            raise RuntimeRecoveryError("persisted coverage requires governed typed-slot lookup")
+        usable: list[str] = []
+        observations: list[CoverageObservation] = []
+        original = tuple(result.recall.admitted)
+        if len(original) != len(set(original)):
+            raise ValueError("recall contains duplicate admitted references")
+        for ref in original:
+            # The adapter alone decides current visibility and reads persisted
+            # typed evidence. The caller cannot supply or upgrade an origin.
+            current_visible, slot = lookup(ref, context)
+            if not current_visible:
+                continue
+            usable.append(ref)
+            if slot in expected:
+                observations.append(CoverageObservation(
+                    candidate_ref=ref, need_keys=(slot,),
+                    origin=TYPED_OBSERVATION,
+                ))
+        executed = set(result.recall.routes_executed)
+        report = assess_sufficiency(SufficiencyObservation(
+            admitted_refs=tuple(usable),
+            needs=needs,
+            coverage=tuple(observations),
+            route_work=tuple(
+                RouteWorkObservation(
+                    route_id=budget.route_id,
+                    candidate_limit=budget.candidate_limit,
+                    returned_count=result.route_candidate_counts.get(budget.route_id, 0),
+                    executed=budget.route_id in executed,
+                )
+                for budget in result.plan.route_budgets
+            ),
+            count_target=result.plan.evidence_sufficiency_target,
+        ))
+        return report
 
     @staticmethod
     def _validate_plan(plan: RecallControlPlan, available_routes: tuple[str, ...]) -> None:
