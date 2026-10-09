@@ -82,27 +82,26 @@ def run_preflight(mode: str, allow_dirty: bool = False) -> dict[str, Any]:
     }
     for name, command in test_commands(mode):
         started = time.monotonic()
-        # Capture output so a local diagnostic has bounded user-facing noise.
-        # Do not write exception details or environment variables into the
-        # receipt. Fail closed after the first unsuccessful command.
+        # Diagnostic output is printed locally only on failure. Never store
+        # stdout/stderr in a receipt that could accidentally be committed.
+        # Stop at the first failed step.
         try:
             proc = subprocess.run(
                 command, cwd=ROOT, stdin=subprocess.DEVNULL,
                 capture_output=True, text=True, timeout=1800,
             )
             code = proc.returncode
-            stdout_tail = proc.stdout[-2500:]
-            stderr_tail = proc.stderr[-2500:]
+            if code != 0:
+                print(f"{name}: local command failed with exit {code}", file=sys.stderr)
+                print(proc.stderr[-2500:], file=sys.stderr)
+                print(proc.stdout[-2500:], file=sys.stderr)
         except subprocess.TimeoutExpired:
             code = 124
-            stdout_tail = ""
-            stderr_tail = "local test step timed out"
+            print(f"{name}: local command timed out", file=sys.stderr)
         report["steps"].append({
             "name": name,
             "exit_code": code,
             "duration_seconds": round(time.monotonic() - started, 3),
-            "stdout_tail": stdout_tail,
-            "stderr_tail": stderr_tail,
         })
         if code != 0:
             report["status"] = "failed"
