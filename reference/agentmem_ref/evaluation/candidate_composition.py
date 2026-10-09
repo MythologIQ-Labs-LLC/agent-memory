@@ -16,7 +16,7 @@ from ..memory.temporal_commitment import canonical_json
 from ..memory.temporal_trust import public_key_digest
 from .candidate_trust_state import CandidateTrustState, TrustCheckpoint
 from .issuer_policy import qualify_issuer_policy
-from .property_registry import SignedPropertyRegistry
+from .property_registry import PropertyRegistry, SignedPropertyRegistry
 from .proposition_link_preflight import (
     ClaimOfIdentity, ObservedWrite, ProposedIdentityLink, preflight,
 )
@@ -159,10 +159,8 @@ def qualify_candidate_at_trust_state(
             incomplete = True
 
         reg = signed_registry.registry
-        if (type(reg) is not type(view.policy_snapshot.grants[0])
-                and not hasattr(reg, "schema_ref")):
-            # Defensive, actual exact schema typing is enforced below.
-            raise ValueError("malformed signed registry")
+        if type(reg) is not PropertyRegistry:
+            raise ValueError("noncanonical signed registry content")
         tenant = proposal.older.tenant_ref
         if any((tenant, key) in view.denied_keys for key in dependencies):
             reasons.add("signing_key_revoked_at_checkpoint")
