@@ -351,13 +351,14 @@ class RecallControlTests(unittest.TestCase):
     @staticmethod
     def _typed_write(subject: str, attribute: str, value: str, *,
                      basis: str = typed.CALLER_DECLARED,
-                     flags: dict | None = None) -> dict:
+                     flags: dict | None = None, assertion: str = "state",
+                     cardinality: str | None = "single") -> dict:
         validated = typed.validate({
             "subject": subject,
             "attribute": attribute,
             "value": value,
-            "assertion": "state",
-            "cardinality": "single",
+            "assertion": assertion,
+            "cardinality": cardinality,
             "flags": flags or {},
         })
         return {"typed_proposition": typed.typed_record(validated, basis)}
@@ -562,6 +563,80 @@ class RecallControlTests(unittest.TestCase):
             )
             read.assert_not_called()
         self.assertEqual(report.need_support_counts, ((need.key, 0),))
+
+    def test_two_current_values_do_not_fake_single_slot_resolution(self) -> None:
+        first = self._retain(
+            "memory:owner-first", "Hydra service owner is Linda",
+            evidence_refs=("session:owner-a",),
+            typed_write=self._typed_write("Hydra service", "owner", "Linda"),
+        )
+        second = self._retain(
+            "memory:owner-second", "Hydra service owner is Simon",
+            evidence_refs=("session:owner-b",),
+            typed_write=self._typed_write("Hydra service", "owner", "Simon"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Hydra service owner", _context())
+        self.assertTrue({first.fact_uuid, second.fact_uuid}.issubset(result.admitted))
+        need = CoverageNeed(typed.typed_slot("Hydra service", "owner"))
+        assessment = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertTrue(assessment.mechanical_coverage_met)
+        self.assertEqual(assessment.value_coherence[0].status, "competing_values_unresolved")
+        self.assertEqual(assessment.diagnosis, "value_coherence_unresolved")
+        self.assertEqual(assessment.continuation_proposal, "continue_if_permitted")
+        self.assertFalse(assessment.answer_quality_verified)
+        self.assertEqual(assessment.contradiction_pairs, ())
+
+    def test_multi_value_slot_coexistence_does_not_claim_conflict(self) -> None:
+        self._retain(
+            "memory:tag-first", "Nimbus application tag is blue",
+            evidence_refs=("session:tags-1",),
+            typed_write=self._typed_write("Nimbus application", "tag", "blue",
+                                         cardinality="multi"),
+        )
+        self._retain(
+            "memory:tag-second", "Nimbus application tag is orange",
+            evidence_refs=("session:tags-2",),
+            typed_write=self._typed_write("Nimbus application", "tag", "orange",
+                                         cardinality="multi"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Nimbus application tag", _context())
+        need = CoverageNeed(typed.typed_slot("Nimbus application", "tag"))
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertEqual(report.value_coherence[0].status, "coexistence_possible")
+        self.assertEqual(report.diagnosis, "value_coherence_unresolved")
+        self.assertEqual(report.contradiction_pairs, ())
+
+    def test_claimed_change_is_not_equivalent_to_applied_correction(self) -> None:
+        self._retain(
+            "memory:change-without-apply", "Beacon API region changed to west",
+            evidence_refs=("session:claimed-change",),
+            typed_write=self._typed_write("Beacon API", "region", "west",
+                                         assertion="change"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Beacon API region changed", _context())
+        need = CoverageNeed(typed.typed_slot("Beacon API", "region"))
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertEqual(report.value_coherence[0].status, "change_assertion_unresolved")
+        self.assertEqual(report.diagnosis, "value_coherence_unresolved")
+        self.assertEqual(report.continuation_proposal, "continue_if_permitted")
+
+    def test_compatible_values_are_not_independent_source_proof(self) -> None:
+        for idx in (1, 2):
+            self._retain(
+                f"memory:same-value-{idx}", "Lyra service tier is gold",
+                evidence_refs=(f"session:duplicated-{idx}",),
+                typed_write=self._typed_write("Lyra service", "tier", "gold"),
+            )
+        planner = self._typed_plan()
+        result = planner.recall("Lyra service tier", _context())
+        need = CoverageNeed(typed.typed_slot("Lyra service", "tier"), 2)
+        report = planner.observe_persisted_typed_coverage(result, _context(), needs=(need,))
+        self.assertEqual(report.value_coherence[0].status, "same_value_observed")
+        self.assertEqual(len(report.value_coherence[0].fact_groups[0]), 2)
+        self.assertFalse(report.answer_quality_verified)
 
     def test_persisted_coverage_requires_canonical_slot_identity(self) -> None:
         planner = self._typed_plan()
