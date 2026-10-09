@@ -7,7 +7,7 @@
 1. Work on an **unopened, non-`main` staging branch**. The recorded workflow policy prohibits push triggers outside `main`. Merely pushing that branch does not start the PR- or main-push-triggered workflow estate.
 2. Do not create the PR prematurely. **Creating a PR is the qualification event** that will launch the broad protected suite, currently 35 unfiltered workflows after the six-lane manual conversion.
 3. Run focused unit, integration and mutation tests on the local checkout or an independently authorized local Claude session. Include the same Python/runtime dependencies and pinned source revision where evidence matters. Use the existing repository smoke/gate scripts instead of remote hosted CI for diagnosis.
-4. Accumulate changes and run a local preflight on the **final** staged revision: `python -m unittest discover -s reference/tests -t reference -p 'test_github_actions_workflow_policy.py' -v`; `python scripts/sync_workflow_inventory.py --check`; `python scripts/sync_workflow_inventory.py --finops-report`; the full reference tests; and relevant benchmark-specific qualification if they are affected.
+4. Accumulate changes and run the **offline** preflight on the final staged revision: `python scripts/run_finops_local_preflight.py --mode quick`, then `python scripts/run_finops_local_preflight.py --mode full`. This checks exact committed SHA and clean worktree, source-bound workflow/retention policy, the full reference suite and repository tests. The JSON receipt is written outside the checkout in the local temporary directory, contains no test stdout/stderr, and explicitly carries **no release or billing authority**. Run capability-specific benchmark qualification separately where needed.
 5. Review branch-protection status contexts and current billing/remaining budget before opening a PR. Where an external capability needs an authoritative GitHub workflow artifact, run a **deliberate** `workflow_dispatch` exactly once on an approved branch revision, with the executing SHA recorded.
 6. Open one coherent PR for review; check which workflows started and why. Fix findings locally before the next deliberate update. Do not use GitHub-hosted Actions as an iterative test runner.
 
@@ -41,6 +41,12 @@ These removals save up to three redundant **main-push workflow starts** for comm
 Routine discretionary benchmark reports from `long-horizon-memory`, `memory-metabolism`, `operational-memory`, `precedent-candidate-retrieval`, and `retrieval-quality` now have 30-day retention. Exact-head component and Hindsight qualification artifacts have 90-day retention. Every explicit duration is reflected in the authoritative inventory, and the inventory sync derives missing-step counts from workflow source. Neither retention policy changes historical artifacts retroactively nor replaces a required durable evidence archive.
 
 All 43 workflows still missing explicit upload retention are classified as protected. Their 50 affected upload steps are **intentionally held**, with no duration guessed. See `docs/75-finops-protected-artifacts-and-closeout-review.md` for the unmerged review matrix.
+
+## Enforceable protected artifact exceptions
+
+`data/github-actions-retention-exceptions.json` lists all 50 unresolved protected upload steps under 43 workflows, keyed by exact workflow, job and upload ordinal, with the artifact name, `review_state=hold`, and `retention_authorized=false`. `scripts/sync_workflow_inventory.py --check` compares the list with the actual YAML and rejects new uncapped uploads, changed artifact identity, mislabeled discretionary uploads, or silently removed exceptions. This is a machine-checked **review backlog**, not an approval to retain forever or a shortcut around a documented evidence owner. Use `--retention-exception-report` for the outstanding count.
+
+For local work, `scripts/run_finops_local_preflight.py` provides quick/full modes and a revision-bound, explicitly non-authoritative diagnostic receipt. It refuses to run under `GITHUB_ACTIONS=true` to prevent accidentally moving this local test work onto paid CI. Keep the local output outside the repository and avoid treating green local tests as proof of external provider, branch-protection or billing readiness.
 
 ## What this does and does not save
 
