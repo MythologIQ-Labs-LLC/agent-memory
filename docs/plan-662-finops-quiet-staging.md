@@ -42,12 +42,19 @@ F10. CI is a deliberately controlled **final** exact-head qualification; no per-
 - Consolidate repeated setup steps by proven compute reduction, not simply shrinking file count.
 - Billing authority is unavailable from this connector. The target 1,000 hosted-runner-minutes/month and exception band 2,000 remain **provisional**, not measured spend or an imposed hard cap.
 
+## Source-checked protected artifact exceptions and offline preflight
+
+The remaining 50 unbounded artifact uploads are now individually identified in `data/github-actions-retention-exceptions.json`, all under 43 protected workflow files. Their status is **hold pending evidence-owner review**, never retention authorization. The workflow-policy check fails on drift, new uncapped uploads, new uncapped discretionary artifacts, and unauthorized changes to the exception identities. Do not shorten or delete any of the protected evidence merely to satisfy the tracker.
+
+`scripts/run_finops_local_preflight.py` executes the canonical source audit and quick or full Python suites **locally**, captures the exact committed revision and a non-authoritative receipt outside the repository, and refuses GitHub Actions execution. This permits substantial iteration with zero GitHub-hosted test spend. A local green result is necessary prequalification but never a substitute for final protected security or exact-source provider evidence.
+
 ## Local qualification before creating a PR
 
 ```sh
-python -m unittest discover -s reference/tests -t reference -p 'test_github_actions_workflow_policy.py' -v
-python scripts/sync_workflow_inventory.py --check
-python -m unittest discover -s reference/tests -t reference -p 'test_*.py'
+python scripts/run_finops_local_preflight.py --mode quick
+python scripts/run_finops_local_preflight.py --mode full
+python scripts/sync_workflow_inventory.py --retention-exception-report
+python scripts/sync_workflow_inventory.py --finops-report
 ```
 
 Also run `python scripts/sync_workflow_inventory.py --finops-report` and verify all discretionary upload steps have explicit retention; the remaining 50 protected steps require separate evidence-owner approval. Run these in a local/Claude checkout at the final staged revision. Only then open a single review PR, obtain intentional CI qualification, and compare exact workflow triggers/statuses before merge. Never use Github Actions for debugging repeated edits.
