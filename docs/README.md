@@ -129,6 +129,7 @@ The `00` through `42` series contains the canonical architecture and operational
 
 - [`76-typed-recall-evidence-sufficiency.md`](76-typed-recall-evidence-sufficiency.md) records the **unmerged** #644 typed post-admission sufficiency observer, its local tests and Runtime Baseline v7 publication prerequisites. This is a candidate implementation, not accepted v6 runtime behavior.
 - [`77-governed-admitted-value-coherence.md`](77-governed-admitted-value-coherence.md) documents the #644 persisted-value disagreement/coexistence guard, its adversarial controls and independent local qualification requirements.
+- [`78-committed-governed-transition-witness.md`](78-committed-governed-transition-witness.md) documents the independently implemented, read-only applied-correction witness and its release/authority limits.
 
 ## Architecture Decision Records
 
