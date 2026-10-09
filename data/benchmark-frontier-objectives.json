@@ -102,9 +102,10 @@
       "metric": "active_passes/43 and mean_precision",
       "source_kind": "ledger",
       "owners": [
+        644,
         673,
         691,
-        644
+        719
       ],
       "architecture": "Admission, post-admission ordering and consumer packaging separated",
       "release_gate": "more active passes and materially higher precision without recall/authority regressions",
@@ -482,9 +483,10 @@
       "metric": "unclosed_material_deficits",
       "source_kind": "ledger_family",
       "owners": [
+        668,
         719,
         722,
-        668
+        732
       ],
       "architecture": "Stage attribution, objective gates, holdout isolation and regression floors",
       "release_gate": "open deficits remain owned until adequacy and frontier proven",
