@@ -13,11 +13,13 @@ Being able to freeze what the planner actually produced is **necessary but insuf
 `reference/agentmem_ref/runtime/recall_observation_receipt.py` defines:
 
 - `RouteObservation`, a slotted frozen typed record of a selected route's limit, anchor budget, observed work and planned execution.
-- `RecallObservationReceipt`, a slotted frozen record of the exact candidate, governed-admitted and ranked reference sequences, full available-route count map, selected route budgets, query and reader-context fingerprints, actual admission policy/mode and evaluated-at time.
+- `RecallObservationReceipt`, a slotted frozen record of the exact candidate, governed-admitted and ranked reference sequences, full available-route count map, selected route budgets, query and reader-context fingerprints, actual admission policy/mode and evaluated-at time. The capture now additionally binds the exact controller plan and the per-candidate refusal reasons, so changes to those inputs cannot masquerade as the original observation.
 - `capture_recall_observation(...)`, a deterministic, defensive-copy constructor with domain-separated SHA-256 over canonical JSON.
 - `matches_mutable_result(...)`, which detects later modifications to membership, ranking, route execution or **any** route count, including an available route with zero planned work.
 
 The existing `ControlledRecallPlanner.recall()` now creates the receipt **before** exposing `ControlledRecallResult`, and the result carries `observation_receipt` plus `observation_unchanged()`. The earlier candidate generation, admission, ranking, `evidence_sufficiency_met` and `stop_reason` calculations remain unchanged. The public `AgentMemory.recall` contract is not modified.
+
+The receipt's plan/refusal bindings are unkeyed hashes, not authenticated credentials. As before, this cannot protect against an in-process caller able to construct arbitrary new receipts. The current receipt does not yet bind each individual route hit or every ranking-evidence field, so those must never be independently trusted as immutable merely because `observation_unchanged()` is true.
 
 Receipt capture uses only in-memory data already produced by the normal planner. It does not search, tick clocks, create identifiers, call external providers, perform separate admissions, write to the database, or change PAMA. It can still add bounded CPU/hash/memory overhead, which must be measured independently before integration.
 
@@ -34,7 +36,7 @@ Receipt capture uses only in-memory data already produced by the normal planner.
 
 Changed protected paths are `runtime/recall_observation_receipt.py`, `runtime/recall_control.py`, and the flat compatibility alias `agentmem_ref/recall_observation_receipt.py`; `scripts/restructure_package.py` registers the new runtime module to prevent the package-layout regression that Claude found in the earlier v7 work.
 
-Added `reference/tests/test_recall_observation_receipt.py` (11 focused cases) and an end-to-end result-mutation test in `reference/tests/test_recall_control.py`. These tests are **committed but not yet executed on a complete repository checkout**; the connected desktop remains offline. The branch is based on published `main` independently of Claude's work. No v7 declaration/register edit was made here to avoid creating a competing or invalid successor claim.
+Added `reference/tests/test_recall_observation_receipt.py` (13 focused cases) and an end-to-end result-mutation test in `reference/tests/test_recall_control.py`. These tests are **committed but not yet executed on a complete repository checkout**; the connected desktop remains offline. The branch is based on published `main` independently of Claude's work. No v7 declaration/register edit was made here to avoid creating a competing or invalid successor claim.
 
 Before merging anything:
 
