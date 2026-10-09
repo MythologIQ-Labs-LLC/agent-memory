@@ -117,6 +117,10 @@ class BenchmarkFrontierObjectiveTests(unittest.TestCase):
         self.assertEqual(observed_peer_position(row), "tied_with_observed_peer")
         row["same_harness_frontier"]["system"] = "Agent Memory"
         self.assertEqual(observed_peer_position(row), "self_frontier_only")
+        row["same_harness_frontier"]["system"] = "Agent Memory (control)"
+        self.assertEqual(observed_peer_position(row), "self_frontier_only")
+        row["same_harness_frontier"]["system"] = "Agent Memory Competitor"
+        self.assertEqual(observed_peer_position(row), "tied_with_observed_peer")
 
     def test_missing_material_deficit_must_fail_not_silently_drop(self):
         ledger = deepcopy(self.ledger)
