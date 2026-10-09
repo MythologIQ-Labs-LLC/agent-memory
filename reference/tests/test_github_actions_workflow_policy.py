@@ -184,6 +184,38 @@ class WorkflowPolicyTests(unittest.TestCase):
                         if row["path"].endswith("/semantic-representation.yml"))
         self.assertFalse(semantic["artifactState"]["producesArtifacts"])
 
+    def test_upload_retention_audit_counts_steps_without_deleting_evidence(self):
+        synthetic = {
+            "jobs": {
+                "evidence": {
+                    "steps": [
+                        {"uses": "actions/checkout@v7"},
+                        {"uses": "actions/upload-artifact@v7",
+                         "with": {"retention-days": 7}},
+                        {"uses": "actions/upload-artifact@v7",
+                         "with": {"path": "protected-evidence.json"}},
+                    ]
+                },
+            },
+        }
+        evidence, missing = estate.artifact_retention_fields(synthetic)
+        self.assertEqual(evidence, {"producesArtifacts": True,
+                                    "retentionDays": [7]})
+        self.assertEqual(missing, 1)
+        empty, missing = estate.artifact_retention_fields(
+            {"jobs": {"none": {"steps": [{"uses": "actions/checkout@v7"}]}}}
+        )
+        self.assertEqual(empty, {"producesArtifacts": False,
+                                 "retentionDays": []})
+        self.assertEqual(missing, 0)
+        synthetic["jobs"]["evidence"]["steps"][1]["with"]["retention-days"] = 0
+        with self.assertRaisesRegex(ValueError, "retention-days"):
+            estate.artifact_retention_fields(synthetic)
+        synthetic["jobs"]["evidence"]["steps"][1]["with"]["retention-days"] = 400
+        bounded, missing = estate.artifact_retention_fields(synthetic)
+        self.assertEqual(bounded["retentionDays"], [400])
+        self.assertEqual(missing, 1)
+
     def test_one_time_retirement_candidates_are_not_deleted_without_review(self):
         # #662: inventory intent to RETIRE is not authority to remove a
         # protected status context or its accepted run/artifact evidence.
