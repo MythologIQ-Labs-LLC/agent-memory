@@ -1,0 +1,478 @@
+{
+  "schema_version": "1.0.0",
+  "governing_issues": [
+    668,
+    719,
+    722
+  ],
+  "source_of_truth": [
+    "docs/BENCHMARK_COVERAGE_ATLAS.md",
+    "reports/benchmarks/deficits/current.json",
+    "reports/benchmarks/dashboard/current.json"
+  ],
+  "claims_policy": {
+    "same_harness_ranking_only": true,
+    "benchmark_winning_not_adequacy": true,
+    "published_not_comparable": true,
+    "blocked_not_zero": true,
+    "authority_effect": "none",
+    "universal_score": null
+  },
+  "capability_groups": {
+    "A": "Ingestion and representation",
+    "B": "Retrieval and relevance",
+    "C": "Temporal memory",
+    "D": "Lifecycle and metabolism",
+    "E": "Governance and safety",
+    "F": "Operational durability",
+    "G": "Cognition and task utility",
+    "H": "Multi-source / multi-agent / multimodal",
+    "I": "Evaluator quality"
+  },
+  "objectives": [
+    {
+      "id": "A01",
+      "group": "A",
+      "capability": "Formal MESA M1 write correctness and concurrency",
+      "benchmark": "MESA/M1",
+      "metric": "M1_write_success",
+      "source_kind": "native_or_published_only",
+      "owners": [
+        668,
+        694,
+        644
+      ],
+      "architecture": "Contract 1.6 write/adapter + governed state",
+      "release_gate": "new reproducible same-harness M1 at mixed concurrency and strict write integrity",
+      "unmeasured_state": "needs_comparison"
+    },
+    {
+      "id": "A02",
+      "group": "A",
+      "capability": "Representation and high-volume ingest",
+      "benchmark": "BEAM + storage stress",
+      "metric": "ingestion_quality_at_scale",
+      "source_kind": "not_run",
+      "owners": [
+        669,
+        688,
+        602
+      ],
+      "architecture": "Versioned representation, bounded indexing and deterministic persistence",
+      "release_gate": "cross-tier ingestion/reconstruction and cost measurements",
+      "unmeasured_state": "not_run"
+    },
+    {
+      "id": "B01",
+      "group": "B",
+      "capability": "Deep long-horizon recall against reproduced systems",
+      "benchmark": "LongMemEval_S turn",
+      "metric": "recall_all@50",
+      "source_kind": "ledger",
+      "owners": [
+        673,
+        669,
+        644
+      ],
+      "architecture": "Hybrid route reachability and post-admission fusion",
+      "release_gate": "same-harness replay at frozen k plus accepted currentness/safety floors",
+      "deficit_selector": "longmemeval-s-turn-deep-recall-2026-10-07"
+    },
+    {
+      "id": "B02",
+      "group": "B",
+      "capability": "Precision at useful recall",
+      "benchmark": "AMB PrecisionMemBench",
+      "metric": "active_passes/43 and mean_precision",
+      "source_kind": "ledger",
+      "owners": [
+        673,
+        691,
+        644
+      ],
+      "architecture": "Admission, post-admission ordering and consumer packaging separated",
+      "release_gate": "more active passes and materially higher precision without recall/authority regressions",
+      "deficit_selector": "precisionmembench-active-precision-2026-10-07"
+    },
+    {
+      "id": "B03",
+      "group": "B",
+      "capability": "Bounded retrieval across long histories",
+      "benchmark": "LongMemEval_M",
+      "metric": "recall_all@5",
+      "source_kind": "external_only",
+      "owners": [
+        673,
+        669,
+        644
+      ],
+      "architecture": "Domain-first candidate generation, retrieval budgets and route fusion",
+      "release_gate": "independent same-harness frontier, latency and memory-cost gates",
+      "unmeasured_state": "needs_comparison"
+    },
+    {
+      "id": "B04",
+      "group": "B",
+      "capability": "Short-horizon exact-source recall",
+      "benchmark": "AgentMemBench/MESA M2",
+      "metric": "source_text_hit@5",
+      "source_kind": "external_only",
+      "owners": [
+        669,
+        673,
+        694
+      ],
+      "architecture": "Exact identity and hybrid search without admission bypass",
+      "release_gate": "reproducible same-harness source recall with judged QA separately",
+      "unmeasured_state": "needs_comparison"
+    },
+    {
+      "id": "C01",
+      "group": "C",
+      "capability": "Formal exact-history currentness",
+      "benchmark": "AgentMemBench/MESA M4",
+      "metric": "new_fact_rate",
+      "source_kind": "ledger",
+      "owners": [
+        671,
+        732
+      ],
+      "architecture": "Typed temporal applicability, not recency=truth",
+      "release_gate": "preserve M4 regression floor AND independently demonstrate generalization",
+      "deficit_selector": "mesa-m4-currentness-2026-10-07"
+    },
+    {
+      "id": "C02",
+      "group": "C",
+      "capability": "Unseen cross-fact temporal generalization",
+      "benchmark": "#732 frozen generalization",
+      "metric": "engagement_recall",
+      "source_kind": "ledger_family",
+      "owners": [
+        732,
+        596,
+        597,
+        757
+      ],
+      "architecture": "Typed write-time proposition identity, guarded read-time applicability",
+      "release_gate": "overall and per-family adequacy with zero structural false engagements",
+      "deficit_selector": "cross-fact-currentness-generalization-2026-10-07"
+    },
+    {
+      "id": "C03",
+      "group": "C",
+      "capability": "As-of / valid-time / exception temporal recall",
+      "benchmark": "temporal gauntlet",
+      "metric": "#580/#584",
+      "source_kind": "native_gap",
+      "owners": [
+        586,
+        671,
+        732
+      ],
+      "architecture": "Event and transaction time with exceptions and proper abstention",
+      "release_gate": "external temporal corpus qualification plus native non-regression floors",
+      "unmeasured_state": "evidence_gap"
+    },
+    {
+      "id": "D01",
+      "group": "D",
+      "capability": "Correction, dispute and false-link withdrawal",
+      "benchmark": "governed lifecycle",
+      "metric": "correction_replay",
+      "source_kind": "native_gap",
+      "owners": [
+        757,
+        689,
+        410
+      ],
+      "architecture": "Retractable evidence and provenance-preserving correction",
+      "release_gate": "accepted external correction and anti-resurrection suite",
+      "unmeasured_state": "evidence_gap"
+    },
+    {
+      "id": "D02",
+      "group": "D",
+      "capability": "Selective deletion, forgetting and tombstone integrity",
+      "benchmark": "MESA/M5",
+      "metric": "audited_deletion_rate",
+      "source_kind": "external_only",
+      "owners": [
+        689,
+        694
+      ],
+      "architecture": "Governed deletion over canonical and derived state",
+      "release_gate": "same-harness non-resurrection and end-to-end audited deletion",
+      "unmeasured_state": "needs_comparison"
+    },
+    {
+      "id": "D03",
+      "group": "D",
+      "capability": "Consolidation and metabolism without knowledge loss",
+      "benchmark": "lifecycle/longitudinal",
+      "metric": "retained_recall_after_consolidation",
+      "source_kind": "not_run",
+      "owners": [
+        689,
+        410
+      ],
+      "architecture": "Proposal-first consolidation with raw evidence retention",
+      "release_gate": "before/after utility, contradiction, deletion and latency",
+      "unmeasured_state": "not_run"
+    },
+    {
+      "id": "E01",
+      "group": "E",
+      "capability": "Isolation, scope and purpose safety",
+      "benchmark": "MESA/M5",
+      "metric": "cross_user_leak_rate",
+      "source_kind": "external_only",
+      "owners": [
+        694,
+        636
+      ],
+      "architecture": "Governed admission and tenant/project boundaries",
+      "release_gate": "zero leakage and full negative controls in same-harness",
+      "unmeasured_state": "needs_comparison"
+    },
+    {
+      "id": "E02",
+      "group": "E",
+      "capability": "Poisoning, authority laundering and privacy boundaries",
+      "benchmark": "Governance Gauntlet",
+      "metric": "authority_violation_count",
+      "source_kind": "native_gap",
+      "owners": [
+        554,
+        757,
+        636
+      ],
+      "architecture": "Authority/provenance firewall across ingestion/recall",
+      "release_gate": "zero-tolerance mutation and leakage regression plus external adversarial pressure",
+      "unmeasured_state": "evidence_gap"
+    },
+    {
+      "id": "F01",
+      "group": "F",
+      "capability": "BEAM long-horizon scale tiers",
+      "benchmark": "BEAM",
+      "metric": "scale_quality_and_cost",
+      "source_kind": "not_run",
+      "owners": [
+        602,
+        669,
+        644
+      ],
+      "architecture": "Storage, retrieval, representation and bounded budgets",
+      "release_gate": "tiered 100K/1M/10M with latency/storage and quality curves",
+      "unmeasured_state": "not_run"
+    },
+    {
+      "id": "F02",
+      "group": "F",
+      "capability": "Restart durability and multi-writer consistency",
+      "benchmark": "durability gauntlet",
+      "metric": "replay_integrity_and_fork_safety",
+      "source_kind": "native_gap",
+      "owners": [
+        602,
+        757,
+        689
+      ],
+      "architecture": "Durable checkpoints, replay, revocation and bounded concurrency",
+      "release_gate": "restart/fork multi-host independent fault injection",
+      "unmeasured_state": "evidence_gap"
+    },
+    {
+      "id": "F03",
+      "group": "F",
+      "capability": "Cost, latency and storage efficiency",
+      "benchmark": "same-harness operational",
+      "metric": "latency_p95_and_resources",
+      "source_kind": "native_gap",
+      "owners": [
+        602,
+        644,
+        691
+      ],
+      "architecture": "Controlled work budgets, no per-query reembedding and cache discipline",
+      "release_gate": "latency/quality Pareto compared under pinned hardware and input",
+      "unmeasured_state": "evidence_gap"
+    },
+    {
+      "id": "G01",
+      "group": "G",
+      "capability": "Memory-supported answering",
+      "benchmark": "LongMemEval end-to-end QA",
+      "metric": "judged_accuracy",
+      "source_kind": "blocked",
+      "owners": [
+        694,
+        640,
+        673
+      ],
+      "architecture": "Evidence packaging and bounded reader/judge, separate retrieval metrics",
+      "release_gate": "version-pinned authorized reader/judge and comparable QA runs",
+      "unmeasured_state": "blocked_credential"
+    },
+    {
+      "id": "G02",
+      "group": "G",
+      "capability": "Conversation reasoning and multimodal narrative",
+      "benchmark": "LoCoMo",
+      "metric": "end_to_end_QA",
+      "source_kind": "not_run",
+      "owners": [
+        554,
+        636,
+        688
+      ],
+      "architecture": "Cross-session graph/temporal memory plus evidence provenance",
+      "release_gate": "externally qualified dataset, real answer model and independent judge",
+      "unmeasured_state": "not_run"
+    },
+    {
+      "id": "G03",
+      "group": "G",
+      "capability": "Memory-to-action effectiveness",
+      "benchmark": "DolphinBench or qualified equivalent",
+      "metric": "task_success",
+      "source_kind": "not_run",
+      "owners": [
+        644,
+        690,
+        691
+      ],
+      "architecture": "Non-authoritative experience/action evidence to governed tools",
+      "release_gate": "task completion compared with no-memory under matched tools",
+      "unmeasured_state": "not_run"
+    },
+    {
+      "id": "G04",
+      "group": "G",
+      "capability": "Persona continuity and personalization",
+      "benchmark": "PersonaMem",
+      "metric": "persona_consistency",
+      "source_kind": "not_run",
+      "owners": [
+        636,
+        691,
+        596
+      ],
+      "architecture": "Scoped personal preference and update semantics",
+      "release_gate": "independent persona accuracy vs privacy/conflict controls",
+      "unmeasured_state": "not_run"
+    },
+    {
+      "id": "G05",
+      "group": "G",
+      "capability": "Coding-agent task reuse",
+      "benchmark": "SWE-ContextBench Lite",
+      "metric": "task_top1",
+      "source_kind": "blocked",
+      "owners": [
+        467,
+        644,
+        688
+      ],
+      "architecture": "Long-lived experience retrieval and safe procedural recall",
+      "release_gate": "exact public protocol reproduction; no synthetic-to-external score promotion",
+      "unmeasured_state": "blocked_provenance"
+    },
+    {
+      "id": "H01",
+      "group": "H",
+      "capability": "Multi-source conflict and synthesis",
+      "benchmark": "RHELM / multi-source",
+      "metric": "cross_source_resolution",
+      "source_kind": "not_run",
+      "owners": [
+        688,
+        636,
+        757
+      ],
+      "architecture": "Independent source identity, contradiction and correction",
+      "release_gate": "externally qualified conflict/delegation corpus",
+      "unmeasured_state": "not_run"
+    },
+    {
+      "id": "H02",
+      "group": "H",
+      "capability": "Shared multi-agent memory with isolation",
+      "benchmark": "Governance Gauntlet",
+      "metric": "shared_memory_policy_safety",
+      "source_kind": "native_gap",
+      "owners": [
+        636,
+        757,
+        410
+      ],
+      "architecture": "Portable identity adapter outside Agent Memory, role-scoped memory",
+      "release_gate": "cross-host policy negative controls and explicit ownership",
+      "unmeasured_state": "evidence_gap"
+    },
+    {
+      "id": "H03",
+      "group": "H",
+      "capability": "Multimodal cross-modal recall",
+      "benchmark": "multimodal evaluation",
+      "metric": "grounded_cross_modal_recall",
+      "source_kind": "not_run",
+      "owners": [
+        669,
+        636
+      ],
+      "architecture": "Media-grounded provenance and safe retrieval routes",
+      "release_gate": "external multimodal evidence with rights and scope boundaries",
+      "unmeasured_state": "not_run"
+    },
+    {
+      "id": "I01",
+      "group": "I",
+      "capability": "Evaluator validity and metric reproducibility",
+      "benchmark": "Evaluator-integrity probes",
+      "metric": "mutation_detection_and_replay",
+      "source_kind": "native_gap",
+      "owners": [
+        554,
+        719,
+        722
+      ],
+      "architecture": "Frozen protocols, independent integrity mutations and exact provenance",
+      "release_gate": "metric-specific falsification plus independent reruns",
+      "unmeasured_state": "evidence_gap"
+    },
+    {
+      "id": "I02",
+      "group": "I",
+      "capability": "Independent comparator breadth",
+      "benchmark": "Gauntlet same-harness",
+      "metric": "qualified_external_systems",
+      "source_kind": "blocked",
+      "owners": [
+        640,
+        601,
+        574
+      ],
+      "architecture": "Provider-neutral comparators with fidelity and cost controls",
+      "release_gate": "Mem0, Hindsight, Zep/Graphiti, Letta, Cognee and LangMem where qualified",
+      "unmeasured_state": "blocked_external"
+    },
+    {
+      "id": "I03",
+      "group": "I",
+      "capability": "Unbiased remediation and cross-family generalization",
+      "benchmark": "Deficit governance / #719",
+      "metric": "unclosed_material_deficits",
+      "source_kind": "ledger_family",
+      "owners": [
+        719,
+        722,
+        668
+      ],
+      "architecture": "Stage attribution, objective gates, holdout isolation and regression floors",
+      "release_gate": "open deficits remain owned until adequacy and frontier proven",
+      "deficit_selector": "cross-fact-currentness-generalization-2026-10-07"
+    }
+  ]
+}
