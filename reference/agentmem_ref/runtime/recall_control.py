@@ -17,6 +17,7 @@ import math
 import re
 from typing import Protocol
 
+from . import typed_proposition as typed
 from .evidence_sufficiency import (
     CoverageNeed,
     CoverageObservation,
@@ -811,6 +812,105 @@ class ControlledRecallPlanner:
             ),
             graph_candidate_hits=graph_candidate_hits,
         )
+
+    def observe_persisted_typed_coverage(
+        self,
+        result: ControlledRecallResult,
+        context: RecallContext,
+        *,
+        needs: tuple[CoverageNeed, ...],
+    ) -> SufficiencyReport:
+        """Read governed, persisted typed-slot support, NEVER a controller label.
+
+        Each fact is rechecked against CURRENT admission before its stored
+        semantics are consulted. A stale/as-of fact is conservatively omitted.
+        Only a validated caller-declared typed proposition with no qualifying
+        ineligibility/uncertainty flags is mechanically counted. Extracted
+        propositions, inferred lexical interpretations and controller claims
+        do not qualify. This is an inspection over read-time state, not an
+        atomic snapshot or a verification of statement truth.
+        """
+        if type(result) is not ControlledRecallResult or not isinstance(context, RecallContext):
+            raise TypeError("controlled recall result and recall context required")
+        if type(needs) is not tuple or not needs or any(type(n) is not CoverageNeed for n in needs):
+            raise ValueError("persisted coverage requires typed, non-empty needs")
+        expected: set[str] = set()
+        for need in needs:
+            key = need.key
+            # The caller may name the memory slot it needs, but may not declare
+            # which facts support it. Canonical slot identity is checked again
+            # against the actual persisted subject and attribute below.
+            if (not key.startswith("typed:") or key.count("|") != 1
+                    or any(not part for part in key[6:].split("|"))):
+                raise ValueError("persisted coverage needs canonical typed slots")
+            if key in expected:
+                raise ValueError("persisted coverage needs unique slots")
+            expected.add(key)
+
+        substrate = self.adapter.checkpoint_substrate()
+        recheck = getattr(self.adapter, "_admission_refusal", None)
+        if not callable(recheck):
+            raise RuntimeRecoveryError("persisted coverage requires current governed admission recheck")
+        usable: list[str] = []
+        observations: list[CoverageObservation] = []
+        original = tuple(result.recall.admitted)
+        if len(original) != len(set(original)):
+            raise ValueError("recall contains duplicate admitted references")
+        for ref in original:
+            fact = substrate.get_fact(ref)
+            if (fact is None or fact.is_transaction_expired
+                    or recheck(fact, context) is not None):
+                continue
+            # Recheck happens BEFORE reading semantics. write_semantics itself
+            # performs its independent scope and tombstone visibility check.
+            semantics = self.adapter.write_semantics(ref, context)
+            if semantics is None:
+                continue
+            usable.append(ref)
+            proposition = semantics.get("typed_proposition")
+            if not isinstance(proposition, dict) or proposition.get("basis") != typed.CALLER_DECLARED:
+                continue
+            if semantics.get("typed_ineligible_reasons"):
+                continue
+            if not all(field in proposition for field in (
+                "subject", "attribute", "value", "assertion", "cardinality",
+                "flags", "replaces_value", "slot",
+            )):
+                continue
+            try:
+                validated = typed.validate({
+                    key: proposition[key] for key in (
+                        "subject", "attribute", "value", "assertion",
+                        "cardinality", "flags", "replaces_value",
+                    )
+                })
+                if any(validated["flags"].values()):
+                    continue
+                slot = typed.typed_slot(validated["subject"], validated["attribute"])
+            except (ValueError, TypeError, KeyError):
+                continue
+            if proposition["slot"] == slot and slot in expected:
+                observations.append(CoverageObservation(
+                    candidate_ref=ref, need_keys=(slot,),
+                    origin="runtime_typed_observation",
+                ))
+        executed = set(result.recall.routes_executed)
+        report = assess_sufficiency(SufficiencyObservation(
+            admitted_refs=tuple(usable),
+            needs=needs,
+            coverage=tuple(observations),
+            route_work=tuple(
+                RouteWorkObservation(
+                    route_id=budget.route_id,
+                    candidate_limit=budget.candidate_limit,
+                    returned_count=result.route_candidate_counts.get(budget.route_id, 0),
+                    executed=budget.route_id in executed,
+                )
+                for budget in result.plan.route_budgets
+            ),
+            count_target=result.plan.evidence_sufficiency_target,
+        ))
+        return report
 
     @staticmethod
     def _validate_plan(plan: RecallControlPlan, available_routes: tuple[str, ...]) -> None:
