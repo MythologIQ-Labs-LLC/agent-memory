@@ -839,6 +839,65 @@ class GovernedMemoryAdapter:
             "assertion": validated["assertion"],
         }
 
+    def current_typed_slot_obstacles(
+        self, slots: tuple[str, ...], admitted_refs: tuple[str, ...],
+        context: RecallContext,
+    ) -> dict[str, dict[str, int]]:
+        """Read-only census of *currently admissible* typed-slot blockers.
+
+        Eligibility for supporting a claim is intentionally different from
+        visibility as counter-evidence. Excluded/extracted/hedged typed claims
+        cannot confer support but may prevent a false completeness conclusion.
+        Scan all current admissible facts, not merely the retrieval top-k.
+        Unknown untyped competitors remain outside the typed slot census,
+        therefore this probe NEVER certifies closed-world sufficiency.
+        """
+        if (type(slots) is not tuple or type(admitted_refs) is not tuple
+                or not isinstance(context, RecallContext)
+                or any(type(item) is not str or not item for item in slots + admitted_refs)):
+            raise TypeError("typed slot audit requires typed identifiers and recall context")
+        selected = set(slots)
+        admitted = set(admitted_refs)
+        if len(selected) != len(slots) or len(admitted) != len(admitted_refs):
+            raise ValueError("typed slot audit does not accept duplicate identities")
+        counters: dict[str, dict[str, int]] = {
+            key: {
+                "eligible_unretrieved": 0,
+                "qualified_counter_evidence": 0,
+                "declared_temporal_boundary": 0,
+            }
+            for key in sorted(selected)
+        }
+        reader = getattr(self._substrate, "all_facts", None)
+        if not callable(reader):
+            raise RuntimeError("cannot audit typed slot without complete substrate enumeration")
+        for fact in reader():
+            if (fact.is_transaction_expired
+                    or self._admission_refusal(fact, context) is not None):
+                continue
+            stored = self.write_semantics(fact.uuid, context)
+            if not isinstance(stored, dict):
+                continue
+            record = stored.get("typed_proposition")
+            if not isinstance(record, dict):
+                continue
+            slot = record.get("slot")
+            if not isinstance(slot, str) or slot not in selected:
+                continue
+            # A malformed or unqualified record cannot count as support,
+            # but it is still a potential competing value for this slot.
+            declared = (fact.attributes or {}).get(DECLARED_TEMPORAL_KEY) or {}
+            if declared.get("valid_until"):
+                counters[slot]["declared_temporal_boundary"] += 1
+            if (record.get("basis") != typed.CALLER_DECLARED
+                    or stored.get("typed_ineligible_reasons")
+                    or not isinstance(record.get("flags"), dict)
+                    or any(record["flags"].values())):
+                counters[slot]["qualified_counter_evidence"] += 1
+            if fact.uuid not in admitted:
+                counters[slot]["eligible_unretrieved"] += 1
+        return counters
+
     def current_governed_typed_slot(
         self, fact_uuid: str, context: RecallContext,
     ) -> tuple[bool, str | None]:
