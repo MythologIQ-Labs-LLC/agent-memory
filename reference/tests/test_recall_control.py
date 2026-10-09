@@ -453,6 +453,73 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(evidence.need_support_counts, ((need.key, 0),))
         self.assertEqual(evidence.diagnosis, "no_admitted_evidence")
 
+    def test_persisted_coverage_rechecks_changed_context(self) -> None:
+        retained = self._retain(
+            "memory:context-dependent",
+            "Atlas build has release channel stable",
+            evidence_refs=("session:current",),
+            typed_write=self._typed_write("Atlas build", "release channel", "stable"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Atlas build release channel", _context())
+        self.assertIn(retained.fact_uuid, result.admitted)
+        need = CoverageNeed(typed.typed_slot("Atlas build", "release channel"))
+        downgraded = planner.observe_persisted_typed_coverage(
+            result, _context("project-beta"), needs=(need,),
+        )
+        self.assertEqual(downgraded.admitted_count, 0)
+        self.assertEqual(downgraded.need_support_refs, ((need.key, ()),))
+        self.assertFalse(downgraded.mechanical_coverage_met)
+
+    def test_persisted_support_is_distinct_facts_not_duplicate_claims(self) -> None:
+        first = self._retain(
+            "memory:version-1",
+            "Gateway runtime version is 4",
+            evidence_refs=("session:one",),
+            typed_write=self._typed_write("Gateway runtime", "version", "4"),
+        )
+        second = self._retain(
+            "memory:version-2",
+            "Gateway runtime version is 4",
+            evidence_refs=("session:two",),
+            typed_write=self._typed_write("Gateway runtime", "version", "4"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Gateway runtime version", _context())
+        need = CoverageNeed(typed.typed_slot("Gateway runtime", "version"), 2)
+        report = planner.observe_persisted_typed_coverage(
+            result, _context(), needs=(need,),
+        )
+        self.assertTrue(report.mechanical_coverage_met)
+        self.assertEqual(report.need_support_counts, ((need.key, 2),))
+        self.assertEqual(report.need_support_refs, (
+            (need.key, tuple(sorted((first.fact_uuid, second.fact_uuid)))),))
+        self.assertFalse(report.answer_quality_verified)
+
+    def test_user_claimed_typed_origin_does_not_mint_persisted_support(self) -> None:
+        plain = self._retain(
+            "memory:plain",
+            "Skylark approval window is Friday",
+            evidence_refs=("session:untyped",),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Skylark approval window", _context())
+        need = CoverageNeed(typed.typed_slot("Skylark", "approval window"))
+        # The older manual diagnostic accepts a caller-supplied origin, but
+        # that label is not sufficient to support the governed read helper.
+        claimed = result.observe_evidence_sufficiency(
+            needs=(need,),
+            coverage=(CoverageObservation(plain.fact_uuid,
+                                          (need.key,), TYPED_OBSERVATION),),
+        )
+        self.assertTrue(claimed.mechanical_coverage_met)
+        trusted = planner.observe_persisted_typed_coverage(
+            result, _context(), needs=(need,),
+        )
+        self.assertEqual(trusted.admitted_count, 1)
+        self.assertFalse(trusted.mechanical_coverage_met)
+        self.assertEqual(trusted.need_support_refs, ((need.key, ()),))
+
     def test_persisted_coverage_requires_canonical_slot_identity(self) -> None:
         planner = self._typed_plan()
         result = planner.recall("unused", _context())
