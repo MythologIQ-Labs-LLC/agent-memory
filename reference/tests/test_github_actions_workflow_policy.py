@@ -12,6 +12,7 @@ import json
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
@@ -312,6 +313,17 @@ class WorkflowPolicyTests(unittest.TestCase):
                       envelope["unfiltered_pr_workflow_names"])
         self.assertEqual(envelope["provenance"],
                          "committed_workflow_configuration_only")
+
+    def test_inventory_write_refuses_unreviewed_protected_uploads(self):
+        # An inventory rewrite cannot launder a newly uncapped artifact into
+        # the canonical metadata before its custody exception is reviewed.
+        with patch.object(estate, "verify_retention_exceptions",
+                          side_effect=ValueError("synthetic uncapped upload")), \\
+             patch.object(estate, "dump") as dump:
+            self.assertEqual(
+                estate.main(["--root", str(REPO_ROOT), "--write"]), 1
+            )
+            dump.assert_not_called()
 
     def test_inventory_mechanical_fields_follow_the_yaml(self):
         inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
