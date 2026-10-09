@@ -233,6 +233,96 @@
       "reason": "protected_evidence_custody_undetermined",
       "review_state": "hold",
       "retention_authorized": false
+    },
+    {
+      "id": "federated-resource-exchange.yml/federated-resource-exchange/upload-0",
+      "workflow": "federated-resource-exchange.yml",
+      "job": "federated-resource-exchange",
+      "upload_index": 0,
+      "artifact_name": "federated-resource-exchange-${{ env.AGENT_MEMORY_COMMIT }}",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "langgraph-lifecycle-comparator.yml/langgraph-lifecycle/upload-0",
+      "workflow": "langgraph-lifecycle-comparator.yml",
+      "job": "langgraph-lifecycle",
+      "upload_index": 0,
+      "artifact_name": "langgraph-lifecycle-comparator-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "logical-state-algebra-pressure.yml/logical-state-algebra-pressure/upload-0",
+      "workflow": "logical-state-algebra-pressure.yml",
+      "job": "logical-state-algebra-pressure",
+      "upload_index": 0,
+      "artifact_name": "logical-state-algebra-pressure-${{ env.AGENT_MEMORY_COMMIT }}",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "maf-lifecycle-comparator.yml/maf-lifecycle/upload-0",
+      "workflow": "maf-lifecycle-comparator.yml",
+      "job": "maf-lifecycle",
+      "upload_index": 0,
+      "artifact_name": "maf-lifecycle-comparator-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "memos-v2017-substitution.yml/qualify-and-substitute/upload-0",
+      "workflow": "memos-v2017-substitution.yml",
+      "job": "qualify-and-substitute",
+      "upload_index": 0,
+      "artifact_name": "memos-v2017-substitution-${{ env.AGENT_MEMORY_COMMIT }}",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "opa-policy-comparator.yml/opa-policy-comparator/upload-0",
+      "workflow": "opa-policy-comparator.yml",
+      "job": "opa-policy-comparator",
+      "upload_index": 0,
+      "artifact_name": "opa-policy-comparator-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "p9-systems-characterization.yml/characterize/upload-0",
+      "workflow": "p9-systems-characterization.yml",
+      "job": "characterize",
+      "upload_index": 0,
+      "artifact_name": "p9-systems-economic-characterization",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "policy-projection-compatibility.yml/compatibility/upload-0",
+      "workflow": "policy-projection-compatibility.yml",
+      "job": "compatibility",
+      "upload_index": 0,
+      "artifact_name": "policy-projection-compatibility-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "procedural-memory-evidence.yml/procedural-memory-evidence/upload-0",
+      "workflow": "procedural-memory-evidence.yml",
+      "job": "procedural-memory-evidence",
+      "upload_index": 0,
+      "artifact_name": "procedural-memory-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
     }
   ]
 }
