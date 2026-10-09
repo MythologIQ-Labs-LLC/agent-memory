@@ -25,6 +25,7 @@ from .evidence_sufficiency import (
     SufficiencyObservation,
     SufficiencyReport,
     assess_sufficiency,
+    TYPED_OBSERVATION,
 )
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
@@ -863,10 +864,10 @@ class ControlledRecallPlanner:
                 continue
             # Recheck happens BEFORE reading semantics. write_semantics itself
             # performs its independent scope and tombstone visibility check.
-            semantics = self.adapter.write_semantics(ref, context)
-            if semantics is None:
-                continue
             usable.append(ref)
+            semantics = self.adapter.write_semantics(ref, context)
+            if not isinstance(semantics, dict):
+                continue
             proposition = semantics.get("typed_proposition")
             if not isinstance(proposition, dict) or proposition.get("basis") != typed.CALLER_DECLARED:
                 continue
@@ -892,7 +893,7 @@ class ControlledRecallPlanner:
             if proposition["slot"] == slot and slot in expected:
                 observations.append(CoverageObservation(
                     candidate_ref=ref, need_keys=(slot,),
-                    origin="runtime_typed_observation",
+                    origin=TYPED_OBSERVATION,
                 ))
         executed = set(result.recall.routes_executed)
         report = assess_sufficiency(SufficiencyObservation(
