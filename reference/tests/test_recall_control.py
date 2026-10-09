@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import json
 import tempfile
 import unittest
@@ -110,6 +112,58 @@ class RecallControlTests(unittest.TestCase):
         self.assertTrue(outcome.committed)
         self.assertIsNotNone(outcome.fact_uuid)
         return outcome
+
+    def test_planner_captures_immutable_receipt_before_result_mutation(self) -> None:
+        retained = self._retain(
+            "memory:receipt-observation", "pottery kiln glazing demonstration",
+            evidence_refs=("session:receipt-observation",),
+        )
+        fixed = _FixedController(RecallControlPlan(
+            controller_ref="test:receipt-control",
+            controller_version="1",
+            route_budgets=(
+                RecallRouteBudget(LEXICAL_ROUTE, 5),
+                RecallRouteBudget(EXACT_IDENTITY_ROUTE, 0),
+                RecallRouteBudget(SHARED_EVIDENCE_ROUTE, 0),
+            ),
+        ))
+        planner = ControlledRecallPlanner(self.runtime.adapter, controller=fixed)
+        result = planner.recall("pottery kiln", _context())
+        receipt = result.observation_receipt
+        self.assertIsNotNone(receipt)
+        self.assertTrue(receipt.integrity_valid())
+        self.assertTrue(result.observation_unchanged())
+        self.assertIn(retained.fact_uuid, receipt.admitted_refs)
+        self.assertEqual(receipt.admitted_refs, tuple(result.admitted))
+        self.assertFalse(receipt.snapshot_attested)
+        self.assertFalse(receipt.slot_closure_attested)
+        self.assertFalse(receipt.can_stop)
+        self.assertEqual(receipt.state_revision, None)
+        frozen = receipt.content_digest
+        result.recall.admitted.clear()
+        self.assertFalse(result.observation_unchanged())
+        self.assertEqual(receipt.content_digest, frozen)
+        self.assertIn(retained.fact_uuid, receipt.admitted_refs)
+        result.recall.admitted[:] = list(receipt.admitted_refs)
+        self.assertTrue(result.observation_unchanged())
+        original_plan = result.plan
+        result.plan = replace(original_plan, controller_version="tampered")
+        self.assertFalse(result.observation_unchanged())
+        result.plan = original_plan
+        result.recall.refusals["fact:forged"] = "new refusal"
+        self.assertFalse(result.observation_unchanged())
+        del result.recall.refusals["fact:forged"]
+        original_query = result.recall.query
+        result.recall.query = "different retrieval question"
+        self.assertFalse(result.observation_unchanged())
+        result.recall.query = original_query
+        original_policy = result.recall.policy_version
+        result.recall.policy_version = "tampered-policy"
+        self.assertFalse(result.observation_unchanged())
+        result.recall.policy_version = original_policy
+        self.assertTrue(result.observation_unchanged())
+        result.route_candidate_counts[LEXICAL_ROUTE] = 0
+        self.assertFalse(result.observation_unchanged())
 
     def test_deterministic_controller_selects_bounded_routes(self) -> None:
         controller = DeterministicRecallController()
