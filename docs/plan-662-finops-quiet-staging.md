@@ -4,7 +4,7 @@
 
 ## Cause and evidence
 
-The October 5 #662 audit recorded 84 workflows, 80 PR hooks, 49 push hooks and 2,500 workflow runs in five days, but **did not measure billed minutes**. Subsequent accepted Phases 2–4 added PR stale-run concurrency cancellation, explicit per-job timeouts, main-only push gates and removed multiple redundant unfiltered full-suite runs. Today's policy snapshot contains 86 workflows, 41 unfiltered PR gates, 50 main-push gates and 20 async-assurance lanes. The protected doctrine umbrella executes the full reference suite on every PR. A non-PR staging branch cannot use GitHub Actions as a test runner and should be qualified locally/through an independently authorized Claude checkout.
+The October 5 #662 audit recorded 84 workflows, 80 PR hooks, 49 push hooks and 2,500 workflow runs in five days, but **did not measure billed minutes**. Subsequent accepted Phases 2–4 added PR stale-run concurrency cancellation, explicit per-job timeouts, main-only push gates and removed multiple redundant unfiltered full-suite runs. The pre-FinOps main snapshot contains 86 workflows, 41 unfiltered PR gates, 50 main-push gates and 20 async-assurance lanes. The staged outcome is 35 unfiltered PR gates, 75 possible PR gates, 41 main-push gates and 48 manual-dispatch workflows. The protected doctrine umbrella executes the full reference suite on every PR. A non-PR staging branch cannot use GitHub Actions as a test runner and should be qualified locally/through an independently authorized Claude checkout.
 
 ## Phase 5A: remove redundant broad automatic benchmark fan-out
 
@@ -25,7 +25,7 @@ All six currently trigger on every PR **and** `main` push. Replace both automati
 F1. The six named workflows have no automatic `push` or `pull_request` trigger, and retain `workflow_dispatch` with all existing job IDs/steps and workflow names.
 F2. No `required_hot_path`, `conditional_hot_path` or `protected` workflow changes trigger, job implementation, status check name or release semantics.
 F3. New policy `data/github-actions-workflow-policy.json` matches the YAML under the repository's existing `test_github_actions_workflow_policy.py`.
-F4. `data/github-actions-workflow-inventory.json` mechanical fields and summary counts exactly match YAML. Judgment fields and original review conditions remain intact.
+F4. `data/github-actions-workflow-inventory.json` mechanical fields and summary counts exactly match YAML. Existing lifecycle/authority classifications are preserved, with review reasons explicitly extended for altered discretionary lanes.
 F5. No PR auto workflows fire on push to the **unopened staging branch**. Existing push hooks remain main-only.
 F6. The 6 deliberate benchmark workflows retain pinned inputs, scripts, evidence validation, output artifact handling and explicit timeouts.
 F7. Evidence from a manual benchmark still carries the executing revision; cancellation is not mistaken for accepted evidence.
@@ -36,7 +36,9 @@ F10. CI is a deliberately controlled **final** exact-head qualification; no per-
 ## Additional cleanup lanes gated by evidence
 
 - Classify **six one-time**/retirement-candidate workflows for retirement only after their run/citation and branch protection dependencies are known. These are currently **protected** and are **not** removed in Phase 5A.
-- Inspect 50 artifact uploads without explicit per-step retention. Distinguish ephemeral CI diagnostics from immutable evaluation/provenance artifacts; never apply a global destructive retention rule.
+- **Phase 5B implemented:** `atlas-research-intake`, `evolveai-multicapability-qualification`, `hermes-recursive-learning-research` lose **only** duplicate `main` push triggers while retaining path-filtered PR checks and manual dispatch. EvolveAI drops the exact full-reference-suite pass already run by the required doctrine umbrella; its focused source/provider qualification is preserved.
+- **Phase 6 bounded discretion:** ten `upload-artifact` steps across seven discretionary benchmark/comparator workflows receive explicit 30-day (routine benchmark) or 90-day (component/Hindsight qualification) retention. The dedicated `semantic-representation` workflow produces no artifact and its incorrect inventory classification was corrected.
+- **Source audit corrected a stale counter:** all 86 workflow YAMLs were independently compared to their artifact inventory records. There are **50 remaining upload steps with missing explicit retention in 43 workflows**, and every one of those workflows is `protected`. The prior 50-step count was stale before this change; do not claim it fell to 40. Classify custody, branch protection, release citations and artifact lifetimes before changing those protected jobs.
 - Consolidate repeated setup steps by proven compute reduction, not simply shrinking file count.
 - Billing authority is unavailable from this connector. The target 1,000 hosted-runner-minutes/month and exception band 2,000 remain **provisional**, not measured spend or an imposed hard cap.
 
@@ -48,4 +50,4 @@ python scripts/sync_workflow_inventory.py --check
 python -m unittest discover -s reference/tests -t reference -p 'test_*.py'
 ```
 
-Run these in a local/Claude checkout at the final staged revision. Only then open a single review PR, obtain intentional CI qualification, and compare exact workflow triggers/statuses before merge. Never use Github Actions for debugging repeated edits.
+Also run `python scripts/sync_workflow_inventory.py --finops-report` and verify all discretionary upload steps have explicit retention; the remaining 50 protected steps require separate evidence-owner approval. Run these in a local/Claude checkout at the final staged revision. Only then open a single review PR, obtain intentional CI qualification, and compare exact workflow triggers/statuses before merge. Never use Github Actions for debugging repeated edits.
