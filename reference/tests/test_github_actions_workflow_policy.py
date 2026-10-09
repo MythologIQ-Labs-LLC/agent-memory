@@ -166,7 +166,23 @@ class WorkflowPolicyTests(unittest.TestCase):
                 self.assertEqual(missing, 0)
                 self.assertEqual(artifact["retentionDays"], [days])
         self.assertEqual(data["inventorySummary"][
-            "artifactUploadWithoutExplicitRetentionCount"], 40)
+            "artifactUploadWithoutExplicitRetentionCount"], 50)
+
+    def test_uncapped_artifacts_are_protected_evidence_pending_explicit_review(self):
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        pending = [
+            row for row in inventory["records"]
+            if row["artifactState"]["producesArtifacts"]
+            and not row["artifactState"]["retentionDays"]
+        ]
+        self.assertEqual(len(pending), 43)
+        self.assertTrue(all(row["consequenceClass"] == "protected"
+                            for row in pending))
+        self.assertEqual(inventory["inventorySummary"][
+            "artifactUploadWithoutExplicitRetentionCount"], 50)
+        semantic = next(row for row in inventory["records"]
+                        if row["path"].endswith("/semantic-representation.yml"))
+        self.assertFalse(semantic["artifactState"]["producesArtifacts"])
 
     def test_candidate_trust_regressions_reuse_the_protected_doctrine_umbrella(self):
         # Prevent recurrence of the #767 separate top-level workflow; the
