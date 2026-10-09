@@ -6,7 +6,7 @@ PAMA or memory-mutation authority exists in this module.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from hashlib import sha256
 from threading import Lock
 from typing import Literal
@@ -97,6 +97,26 @@ def _event_head(sequence: int, prior: str, snapshot_hash: str) -> str:
     })
 
 
+def _snapshot_copy(snapshot: IssuerPolicySnapshot) -> IssuerPolicySnapshot:
+    """Deep-copy a snapshot: frozen objects can be mutated with object.__setattr__."""
+    if type(snapshot) is not IssuerPolicySnapshot:
+        raise PolicyLineageError("noncanonical snapshot type")
+    return IssuerPolicySnapshot(
+        policy_ref=snapshot.policy_ref,
+        revision_ref=snapshot.revision_ref,
+        grants=tuple(IssuerGrant(**asdict(x)) for x in snapshot.grants),
+        revoked_key_digests=tuple(snapshot.revoked_key_digests),
+        invalidated_registry_revisions=tuple(snapshot.invalidated_registry_revisions),
+    )
+
+
+def _event_copy(item: PolicyLineageEvent) -> PolicyLineageEvent:
+    return PolicyLineageEvent(
+        item.sequence, item.previous_head, _snapshot_copy(item.snapshot),
+        item.snapshot_digest, item.head_digest,
+    )
+
+
 def _grants(snapshot: IssuerPolicySnapshot) -> dict[tuple[str, ...], IssuerGrant]:
     return {grant.scope_key: grant for grant in snapshot.grants}
 
@@ -146,11 +166,13 @@ class PolicyLineage:
     """Bounded process-local journal. Lock is not durable or distributed CAS."""
 
     def __init__(self, genesis: IssuerPolicySnapshot) -> None:
-        self._genesis = genesis
-        self._genesis_head = genesis_head(genesis)
+        owned = _snapshot_copy(genesis)
+        self._genesis = owned
+        self._genesis_head = genesis_head(owned)
         self._head = self._genesis_head
-        self._current = genesis
+        self._current = owned
         self._events: tuple[PolicyLineageEvent, ...] = ()
+        self._seen_revision_refs = {owned.revision_ref}
         self._lock = Lock()
 
     def append(self, next_snapshot: IssuerPolicySnapshot, *,
@@ -161,29 +183,33 @@ class PolicyLineage:
                 raise PolicyLineageError("stale or forked expected policy head")
             if len(self._events) >= MAX_TRANSITIONS:
                 raise PolicyLineageError("lineage transition limit reached")
-            _validate_transition(self._current, next_snapshot)
-            digest = policy_digest(next_snapshot)
+            owned = _snapshot_copy(next_snapshot)
+            if owned.revision_ref in self._seen_revision_refs:
+                raise PolicyLineageError("policy revision ref cannot be reused")
+            _validate_transition(self._current, owned)
+            digest = policy_digest(owned)
             sequence = len(self._events) + 1
             event = PolicyLineageEvent(
                 sequence=sequence,
                 previous_head=self._head,
-                snapshot=next_snapshot,
+                snapshot=owned,
                 snapshot_digest=digest,
                 head_digest=_event_head(sequence, self._head, digest),
             )
             # Mutations occur only after all checks and hash generation.
             self._events += (event,)
             self._head = event.head_digest
-            self._current = next_snapshot
-            return event
+            self._current = owned
+            self._seen_revision_refs.add(owned.revision_ref)
+            return _event_copy(event)
 
     def report(self) -> PolicyLineageReport:
         with self._lock:
             return PolicyLineageReport(
-                genesis_snapshot=self._genesis,
+                genesis_snapshot=_snapshot_copy(self._genesis),
                 genesis_head=self._genesis_head,
                 head_digest=self._head,
-                events=self._events,
+                events=tuple(_event_copy(x) for x in self._events),
             )
 
 
