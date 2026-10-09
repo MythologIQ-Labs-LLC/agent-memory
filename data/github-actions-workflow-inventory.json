@@ -328,7 +328,6 @@
       "lifecycleClass": "async_assurance",
       "triggers": [
         "pull_request",
-        "push",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
@@ -363,7 +362,7 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 2026-10-09] Removed redundant main-push rerun; path-matched PR gate and manual qualification retained. PR/head evidence does not qualify a different merge commit automatically.",
       "sharedImplementationFamily": {
         "id": "setup-family-1",
         "signature": "checkout+python+python-deps",
@@ -1987,7 +1986,6 @@
       "lifecycleClass": "async_assurance",
       "triggers": [
         "pull_request",
-        "push",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
@@ -2024,7 +2022,7 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 2026-10-09] Removed redundant main-push rerun; path-matched PR gate and manual qualification retained. PR/head evidence does not qualify a different merge commit automatically.",
       "sharedImplementationFamily": {
         "id": "setup-family-2",
         "signature": "checkout+python+rust+python-deps+cargo",
@@ -2295,7 +2293,6 @@
       "lifecycleClass": "async_assurance",
       "triggers": [
         "pull_request",
-        "push",
         "workflow_dispatch"
       ],
       "consequenceClass": "discretionary",
@@ -2328,7 +2325,7 @@
       "proposedDisposition": "ASYNC",
       "retirementOrReviewCondition": "Confirm it is not required merge/release authority; move off ordinary PR critical path where safe.",
       "classificationConfidence": "medium-high",
-      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation.",
+      "reviewNotes": "Provisional classification derived from workflow contract and naming; behavior change still requires exact before/after validation. [#662 2026-10-09] Removed redundant main-push rerun; path-matched PR gate and manual qualification retained. PR/head evidence does not qualify a different merge commit automatically.",
       "sharedImplementationFamily": null
     },
     {
@@ -4357,7 +4354,7 @@
     "triggerCounts": {
       "issues": 1,
       "pull_request": 75,
-      "push": 44,
+      "push": 41,
       "workflow_dispatch": 48
     },
     "missingExplicitTimeoutCount": 0,
@@ -4401,6 +4398,10 @@
     {
       "date": "2026-10-09",
       "change": "#662 quiet staging/benchmark fan-out: six independently inventoried discretionary async-assurance benchmark workflows moved from unfiltered PR plus main push to manual workflow_dispatch only. Their names, jobs, pinned evidence, tests, permission, concurrency, explicit timeouts and artifact upload logic are unchanged. Configuration eliminates six PR run starts and six main push run starts when all previously matched; no billed-minute savings claim."
+    },
+    {
+      "date": "2026-10-09",
+      "change": "#662 selective PR+main deduplication: atlas-research-intake, evolveai-multicapability-qualification and hermes-recursive-learning-research retain path-filtered PR and workflow_dispatch, remove duplicate main-push triggers. EvolveAI also removes a broad unittest discover duplicate of the protected doctrine umbrella while keeping focused native/provider/source tests. No changed workflow names or job IDs; no equivalence/accepted-revision claims."
     }
   ]
 }
