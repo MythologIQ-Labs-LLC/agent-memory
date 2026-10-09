@@ -184,6 +184,27 @@ class WorkflowPolicyTests(unittest.TestCase):
                         if row["path"].endswith("/semantic-representation.yml"))
         self.assertFalse(semantic["artifactState"]["producesArtifacts"])
 
+    def test_one_time_retirement_candidates_are_not_deleted_without_review(self):
+        # #662: inventory intent to RETIRE is not authority to remove a
+        # protected status context or its accepted run/artifact evidence.
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        pending = [r for r in inventory["records"]
+                   if r["proposedDisposition"] == "RETIRE"]
+        expected = {
+            "architecture-family-closeout.yml",
+            "canonical-json-v2-migration-contract.yml",
+            "canonical-json-v2-migration-preflight.yml",
+            "codegenome-scope-residue-closeout.yml",
+            "memory-component-program-closeout.yml",
+            "temporal-currentness-final-replay.yml",
+        }
+        self.assertEqual(
+            {r["path"].split("/")[-1] for r in pending}, expected
+        )
+        self.assertTrue(all(r["consequenceClass"] == "protected" for r in pending))
+        self.assertTrue(expected <= set(policy()["workflows"]))
+        self.assertTrue(all(r["retirementOrReviewCondition"] for r in pending))
+
     def test_candidate_trust_regressions_reuse_the_protected_doctrine_umbrella(self):
         # Prevent recurrence of the #767 separate top-level workflow; the
         # governed reference test suite is already discovered by doctrine CI.
