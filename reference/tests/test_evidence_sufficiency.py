@@ -34,6 +34,8 @@ class EvidenceSufficiencyTests(unittest.TestCase):
         coverage=(s.CoverageObservation('a',('requested-software-version',),s.TYPED_OBSERVATION),)
         r=s.assess_sufficiency(obs(admitted=('a',),needs=needs,coverage=coverage))
         self.assertTrue(r.mechanical_coverage_met)
+        self.assertEqual(r.need_support_refs,(('requested-software-version',('a',)),))
+        self.assertEqual(r.to_dict()['need_support_refs'],{'requested-software-version':['a']})
         self.assertEqual(r.diagnosis,'mechanical_coverage_observed')
         self.assertEqual(r.continuation_proposal,'review_stop')
         self.assertFalse(r.answer_quality_verified)
