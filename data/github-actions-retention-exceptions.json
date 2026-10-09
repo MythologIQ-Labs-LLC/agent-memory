@@ -53,5 +53,96 @@
     "validate-doctrine-evidence.yml",
     "write-readable-visibility.yml"
   ],
-  "upload_step_exceptions": []
+  "upload_step_exceptions": [
+    {
+      "id": "agent-manifest-external-evidence.yml/agent-manifest-external-evidence/upload-0",
+      "workflow": "agent-manifest-external-evidence.yml",
+      "job": "agent-manifest-external-evidence",
+      "upload_index": 0,
+      "artifact_name": "agent-manifest-external-evidence-comparator",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "architecture-family-closeout.yml/architecture-family-closeout/upload-0",
+      "workflow": "architecture-family-closeout.yml",
+      "job": "architecture-family-closeout",
+      "upload_index": 0,
+      "artifact_name": "architecture-family-closeout-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "authority-laundering-evidence.yml/authority-laundering/upload-0",
+      "workflow": "authority-laundering-evidence.yml",
+      "job": "authority-laundering",
+      "upload_index": 0,
+      "artifact_name": "authority-laundering-evidence-depth",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "autonomous-maintenance-evidence.yml/autonomous-maintenance/upload-0",
+      "workflow": "autonomous-maintenance-evidence.yml",
+      "job": "autonomous-maintenance",
+      "upload_index": 0,
+      "artifact_name": "autonomous-maintenance-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "capability-behavior-contract.yml/validate/upload-0",
+      "workflow": "capability-behavior-contract.yml",
+      "job": "validate",
+      "upload_index": 0,
+      "artifact_name": "capability-behavior-contract",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "cedar-policy-comparator.yml/cedar-policy-comparator/upload-0",
+      "workflow": "cedar-policy-comparator.yml",
+      "job": "cedar-policy-comparator",
+      "upload_index": 0,
+      "artifact_name": "cedar-policy-comparator-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "cli-doctor.yml/validate/upload-0",
+      "workflow": "cli-doctor.yml",
+      "job": "validate",
+      "upload_index": 0,
+      "artifact_name": "cli-doctor-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "cmcp-external-evidence.yml/cmcp-external-evidence/upload-0",
+      "workflow": "cmcp-external-evidence.yml",
+      "job": "cmcp-external-evidence",
+      "upload_index": 0,
+      "artifact_name": "cmcp-external-evidence-comparator",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "codegenome-multicapability-profile.yml/validate-profile/upload-0",
+      "workflow": "codegenome-multicapability-profile.yml",
+      "job": "validate-profile",
+      "upload_index": 0,
+      "artifact_name": "codegenome-multicapability-profile-${{ env.AGENT_MEMORY_COMMIT }}",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    }
+  ]
 }
