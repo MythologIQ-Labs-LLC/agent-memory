@@ -32,7 +32,7 @@ ControlledRecallResult.admitted (candidate IDs; caller-mutable, not attested)
          authority_effect=none
 ```
 
-The record's `proposal_id` is the *governed correction proposal*, while the original write-time semantic `proposal_id` must appear in `evidence_refs`. Their difference matters: merely writing a source statement, proposing a change, or committing an unrelated correction must never count as applying that semantic proposal.
+The source relation must additionally carry the accepted typed basis (`typed_slot` or `typed_link`), and its recorded target memory must match the replacement record. The replacement record must include a committed replacement time. The record's `proposal_id` is the *governed correction proposal*, while the original write-time semantic `proposal_id` must appear in `evidence_refs`. Their difference matters: merely writing a source statement, proposing a change, or committing an unrelated correction must never count as applying that semantic proposal.
 
 This is **not cryptographic attestation**: the result is derived from the committed adapter's durable record and the read-time scope, not from a third-party proof of identity or evidence independence. A caller could mutate the internal result's admitted list, so query membership and the original retrieval revision are **not immutable**, even though every exposed current fact is independently reauthorized. These witnesses must never be used as executable stopping authority.
 
