@@ -511,6 +511,12 @@ class ControlledRecallResult:
             ranked=self.recall.ranked_admitted,
             route_counts=self.route_candidate_counts,
             routes_executed=self.recall.routes_executed,
+            query=self.recall.query,
+            plan=self.plan.to_dict(),
+            refusals=self.recall.refusals,
+            policy_version=self.recall.policy_version,
+            admission_mode=self.recall.admission_mode,
+            evaluated_at=self.recall.evaluated_at,
         )
 
     @property
@@ -806,6 +812,8 @@ class ControlledRecallPlanner:
                 for budget in plan.route_budgets
             ),
             observed_route_counts=route_counts,
+            plan=plan.to_dict(),
+            refusals=recall.refusals,
         )
         return ControlledRecallResult(
             plan=plan,
