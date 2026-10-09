@@ -318,7 +318,7 @@ class WorkflowPolicyTests(unittest.TestCase):
         # An inventory rewrite cannot launder a newly uncapped artifact into
         # the canonical metadata before its custody exception is reviewed.
         with patch.object(estate, "verify_retention_exceptions",
-                          side_effect=ValueError("synthetic uncapped upload")), \\
+                          side_effect=ValueError("synthetic uncapped upload")), \
              patch.object(estate, "dump") as dump:
             self.assertEqual(
                 estate.main(["--root", str(REPO_ROOT), "--write"]), 1
