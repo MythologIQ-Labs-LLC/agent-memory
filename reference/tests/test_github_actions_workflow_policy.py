@@ -216,6 +216,56 @@ class WorkflowPolicyTests(unittest.TestCase):
         self.assertEqual(bounded["retentionDays"], [400])
         self.assertEqual(missing, 1)
 
+    def test_protected_artifact_exceptions_match_exact_sources(self):
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        registry = json.loads(
+            (REPO_ROOT / estate.RETENTION_EXCEPTIONS).read_text(encoding="utf-8")
+        )
+        result = estate.verify_retention_exceptions(REPO_ROOT, inventory, registry)
+        self.assertEqual(result["unbounded_upload_steps"], 50)
+        self.assertEqual(result["protected_workflows"], 43)
+        self.assertEqual(result["unbounded_discretionary_upload_steps"], 0)
+        self.assertEqual(result["authorized_deletions"], 0)
+        self.assertEqual(result["approved_retention_policy_changes"], 0)
+        self.assertFalse(result["billing_minutes_known"])
+
+    def test_protected_retention_register_cannot_grant_authority(self):
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        registry = json.loads(
+            (REPO_ROOT / estate.RETENTION_EXCEPTIONS).read_text(encoding="utf-8")
+        )
+        registry["upload_step_exceptions"][0]["retention_authorized"] = True
+        with self.assertRaisesRegex(ValueError, "unreviewed retention"):
+            estate.verify_retention_exceptions(REPO_ROOT, inventory, registry)
+        registry["upload_step_exceptions"][0]["retention_authorized"] = False
+        registry["rules"]["new_unbounded_discretionary_uploads_allowed"] = True
+        with self.assertRaisesRegex(ValueError, "stop lines"):
+            estate.verify_retention_exceptions(REPO_ROOT, inventory, registry)
+
+    def test_new_protected_retention_exception_requires_source_review(self):
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        registry = json.loads(
+            (REPO_ROOT / estate.RETENTION_EXCEPTIONS).read_text(encoding="utf-8")
+        )
+        removed = registry["upload_step_exceptions"].pop()
+        with self.assertRaisesRegex(ValueError, "unreviewed retention"):
+            estate.verify_retention_exceptions(REPO_ROOT, inventory, registry)
+        registry["upload_step_exceptions"].append(removed)
+        inventory["inventorySummary"]["artifactUploadWithoutExplicitRetentionCount"] -= 1
+        with self.assertRaisesRegex(ValueError, "step count"):
+            estate.verify_retention_exceptions(REPO_ROOT, inventory, registry)
+
+    def test_uncapped_artifact_cannot_be_discretionary(self):
+        inventory = json.loads((REPO_ROOT / estate.INVENTORY).read_text(encoding="utf-8"))
+        registry = json.loads(
+            (REPO_ROOT / estate.RETENTION_EXCEPTIONS).read_text(encoding="utf-8")
+        )
+        first = registry["upload_step_exceptions"][0]["workflow"]
+        next(row for row in inventory["records"]
+             if row["path"].endswith("/" + first))["consequenceClass"] = "discretionary"
+        with self.assertRaisesRegex(ValueError, "discretionary artifact"):
+            estate.verify_retention_exceptions(REPO_ROOT, inventory, registry)
+
     def test_one_time_retirement_candidates_are_not_deleted_without_review(self):
         # #662: inventory intent to RETIRE is not authority to remove a
         # protected status context or its accepted run/artifact evidence.
