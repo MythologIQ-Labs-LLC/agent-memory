@@ -135,16 +135,47 @@ def mechanical_fields(workflow: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def artifact_retention_fields(workflow: dict[str, Any]) -> tuple[dict[str, Any], int]:
+    """Exact upload-artifact step inventory, not an evidence deletion decision.
+
+    Artifacts used as cited qualifications remain subject to independent
+    retention policy. This only records explicit step settings and reports
+    missing ones; it never assigns a default to protected evidence.
+    """
+    uploads = []
+    for job in workflow["jobs"].values():
+        for step in job.get("steps", []):
+            if not str(step.get("uses", "")).startswith("actions/upload-artifact@"):
+                continue
+            options = step.get("with") or {}
+            duration = options.get("retention-days")
+            if duration is not None:
+                if type(duration) is not int or duration < 1 or duration > 90:
+                    raise ValueError("unsupported artifact retention-days")
+            uploads.append(duration)
+    return (
+        {
+            "producesArtifacts": bool(uploads),
+            "retentionDays": sorted({days for days in uploads if days is not None}),
+        },
+        sum(days is None for days in uploads),
+    )
+
+
 def sync_inventory(inventory: dict[str, Any], root: Path) -> dict[str, Any]:
     synced = json.loads(json.dumps(inventory))
     by_path = {path.as_posix(): path for path in (p.relative_to(root) for p in workflow_paths(root))}
     counts: dict[str, int] = {}
     missing_timeout = 0
+    missing_retention = 0
     supersedable_without = 0
     for record in synced["records"]:
         workflow = load_workflow(root / by_path[record["path"]])
         fields = mechanical_fields(workflow)
         record.update(fields)
+        artifact_state, missing_step_retention = artifact_retention_fields(workflow)
+        record["artifactState"] = artifact_state
+        missing_retention += missing_step_retention
         for name in fields["triggers"]:
             counts[name] = counts.get(name, 0) + 1
         missing_timeout += not fields["timeoutState"]["explicit"]
@@ -153,6 +184,7 @@ def sync_inventory(inventory: dict[str, Any], root: Path) -> dict[str, Any]:
     summary = synced["inventorySummary"]
     summary["triggerCounts"] = dict(sorted(counts.items()))
     summary["missingExplicitTimeoutCount"] = missing_timeout
+    summary["artifactUploadWithoutExplicitRetentionCount"] = missing_retention
     summary["supersedablePrOrPushWithoutConcurrencyCount"] = supersedable_without
     return synced
 
