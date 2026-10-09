@@ -177,6 +177,7 @@ def capture_recall_observation(
     principal_ref: str,
     project_ref: str,
     purpose: str,
+    task_ref: str,
     controller_ref: str,
     admission_policy: str,
     admission_mode: str,
@@ -190,14 +191,18 @@ def capture_recall_observation(
     if type(query) is not str or not query:
         raise ValueError("query must be nonempty")
     _ids(reader_domain_refs, "reader domain refs")
-    for value in (principal_ref, project_ref, purpose):
-        _ids((value,), "reader identity")
+    for value in (principal_ref, project_ref, purpose, task_ref):
+        if type(value) is not str or len(value) > 512 or any(
+            ord(char) < 32 or ord(char) == 127 for char in value
+        ):
+            raise ValueError("invalid optional reader context field")
     query_digest = _sha(b"query\x00" + query.encode("utf-8"))
     reader_digest = _sha(b"reader\x00" + _json_bytes({
         "domains": list(reader_domain_refs),
         "principal": principal_ref,
         "project": project_ref,
         "purpose": purpose,
+        "task": task_ref,
     }))
     data = {
         "query_digest": query_digest,
@@ -211,9 +216,8 @@ def capture_recall_observation(
         "ranked_refs": tuple(ranked),
         "routes": tuple(route_observations),
     }
-    provisional = RecallObservationReceipt.__new__(RecallObservationReceipt)
-    # Construct digest without bypassing dataclass invariants on the actual
-    # immutable record. The helper cannot forge missing revision authority.
+    # Construct digest before invoking the validating dataclass constructor.
+    # The helper cannot forge missing revision or completeness authority.
     payload = {
         "version": VERSION, "query_digest": query_digest,
         "reader_digest": reader_digest, "controller_ref": controller_ref,
