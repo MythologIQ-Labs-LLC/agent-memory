@@ -127,6 +127,16 @@ class WorkflowPolicyTests(unittest.TestCase):
         self.assertEqual(policy_workflows["validate-doctrine-evidence.yml"][
             "pull_request"], "unfiltered")
 
+    def test_candidate_trust_regressions_reuse_the_protected_doctrine_umbrella(self):
+        # Prevent recurrence of the #767 separate top-level workflow; the
+        # governed reference test suite is already discovered by doctrine CI.
+        self.assertNotIn(
+            "candidate-trust-state-qualification.yml", policy()["workflows"]
+        )
+        doctrine_path = REPO_ROOT / ".github/workflows/validate-doctrine-evidence.yml"
+        body = doctrine_path.read_text(encoding="utf-8")
+        self.assertIn("python -m unittest discover -s reference/tests -t reference", body)
+
     def test_finops_trigger_envelope_cannot_make_a_billing_claim(self):
         envelope = estate.trigger_budget_envelope(policy())
         self.assertIsNone(envelope["authoritative_billing_minutes"])
