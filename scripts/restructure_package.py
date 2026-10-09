@@ -56,6 +56,7 @@ LAYERS: dict[str, tuple[str, ...]] = {
         "projection_governance", "query_driven_recall", "recall_control", "vector_retrieval", "cross_fact_currentness",
         "typed_proposition", "proposition_extraction", "evidence_sufficiency",
         "governed_transition_witness",
+        "recall_observation_receipt",
         "representation_cache", "representation_onnx",
         "semantic_readmission_adapter", "write_claims", "scope_governance", "shared_revocation",
     ),
