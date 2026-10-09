@@ -1,0 +1,7 @@
+...........Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v1; frozen=07a4f1e1652b6ca6a39a00253bcb0e7198a51724; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation
+.............................
+----------------------------------------------------------------------
+Ran 40 tests in 2.602s
+
+OK
+rc=0 wall=2.828988322s

@@ -1,0 +1,40 @@
+]
+................../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa6b39a06d0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa6b39a0130>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa6b39a1c60>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa6b39a2b60>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+............................/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa6b9bee7a0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa6b39a2110>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................ssss..............................................Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v1; frozen=8349869553dd7c0bbfbe61f42d8b1cbf48b06f11; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation
+.............................................................................................................................................................................................................sssssssss.................................................................................................................................................inventory mechanical fields differ from the workflow YAML; run --write
+.............................................................................................................................<unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+.............s..............................................................................................................................................................
+======================================================================
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/cand/reference/tests/test_benchmark_integration_contract.py", line 379, in test_evaluation_only_change_keeps_runtime_baseline_equivalence
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/recall_observation_receipt.py
+undeclared protected change: reference/agentmem_ref/runtime/recall_observation_receipt.py
+declared blob mismatch for reference/agentmem_ref/runtime/recall_control.py: declared 7d3d1410dad21caa6ad2ecd01c4713cfcea24d48, candidate b21d6fae699916af8e6d21aceeb1124d6a28e783
+
+
+----------------------------------------------------------------------
+Ran 2628 tests in 133.598s
+
+FAILED (failures=1, skipped=34)
+rc=1 wall=135.171799104s

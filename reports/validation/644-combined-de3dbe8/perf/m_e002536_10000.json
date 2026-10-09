@@ -1,0 +1,84 @@
+{
+ "n_facts": 10000,
+ "has_observer": true,
+ "has_receipt": false,
+ "samples": 30,
+ "cold": {
+  "open": {
+   "n": 5,
+   "median_ms": 1577.535,
+   "p95_ms": 1604.526,
+   "min_ms": 1539.478,
+   "max_ms": 1604.526
+  },
+  "first_recall": {
+   "n": 5,
+   "median_ms": 321.094,
+   "p95_ms": 408.336,
+   "min_ms": 298.695,
+   "max_ms": 408.336
+  },
+  "first_index_build": {
+   "n": 5,
+   "median_ms": 250.792,
+   "p95_ms": 292.749,
+   "min_ms": 220.923,
+   "max_ms": 292.749
+  },
+  "first_audit": {
+   "n": 5,
+   "median_ms": 639.32,
+   "p95_ms": 708.259,
+   "min_ms": 614.481,
+   "max_ms": 708.259
+  },
+  "first_observer": {
+   "n": 5,
+   "median_ms": 613.995,
+   "p95_ms": 683.663,
+   "min_ms": 546.877,
+   "max_ms": 683.663
+  }
+ },
+ "admitted": 8,
+ "candidates": 8,
+ "warm": {
+  "recall": {
+   "n": 30,
+   "median_ms": 262.043,
+   "p95_ms": 365.323,
+   "min_ms": 247.37,
+   "max_ms": 387.191
+  },
+  "receipt_capture": null,
+  "receipt_verify": null,
+  "index_rebuild": {
+   "n": 6,
+   "median_ms": 232.425,
+   "p95_ms": 284.517,
+   "min_ms": 223.938,
+   "max_ms": 284.517
+  },
+  "audit_indexed": {
+   "n": 30,
+   "median_ms": 617.738,
+   "p95_ms": 686.636,
+   "min_ms": 550.849,
+   "max_ms": 757.634
+  },
+  "audit_full_scan_reference": {
+   "n": 6,
+   "median_ms": 663.333,
+   "p95_ms": 720.138,
+   "min_ms": 578.426,
+   "max_ms": 720.138
+  },
+  "observer_combined": {
+   "n": 30,
+   "median_ms": 661.338,
+   "p95_ms": 760.106,
+   "min_ms": 599.4,
+   "max_ms": 1087.069
+  }
+ }
+}

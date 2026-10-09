@@ -1,0 +1,40 @@
+]
+..[
+  {
+    "run_id": "301",
+    "destination": "/tmp/tmpnmetb4rk/out/amb-precisionmembench-retrieval-v2/agent-memory-eeeeeeeeeeee",
+    "row_id": "agent-memory-public-facade",
+    "native_summary": {
+      "accuracy": 0.03896103896103896,
+      "active_passes": 3,
+      "active_total": 43,
+      "answer_llm": null,
+      "correct": 3,
+      "id_resolution": {
+        "source_id": 231
+      },
+      "ingested_docs": 35,
+      "ingestion_time_ms": 12.5,
+      "judge_llm": null,
+      "mean_precision": 0.5,
+      "mean_recall": 1.0,
+      "mean_retrieve_ms": 10.0,
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 3,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+......................................................................................................................................................................................................................................................................sss..........................................................................................................................................................................................................................................................................................................................................................................................ssss..............................................Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v1; frozen=b655e8c6ef16497c59503aed19fe428c8c81990f; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation
+.......................................................................................................................................................................................................................................................................................................................................................................inventory mechanical fields differ from the workflow YAML; run --write
+.............................................................................................................................<unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+............................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 2650 tests in 148.142s
+
+OK (skipped=17)
+rc=0 wall=151s

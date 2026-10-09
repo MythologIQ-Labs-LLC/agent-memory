@@ -1,0 +1,259 @@
+......FF........FFFFFFF....
+======================================================================
+FAIL: test_observer_on_tampered_result_does_not_report_clean_coverage (tests.test_644_combined_independent.CompoundObservation.test_observer_on_tampered_result_does_not_report_clean_coverage)
+A report over a result whose receipt no longer matches must not read as clean.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 319, in test_observer_on_tampered_result_does_not_report_clean_coverage
+    self.assertNotEqual(tampered.diagnosis, "coverage_observed_unattested",
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        "observer ignores a receipt mismatch and reports clean coverage")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'coverage_observed_unattested' == 'coverage_observed_unattested' : observer ignores a receipt mismatch and reports clean coverage
+
+======================================================================
+FAIL: test_observer_without_receipt_does_not_report_clean_coverage (tests.test_644_combined_independent.CompoundObservation.test_observer_without_receipt_does_not_report_clean_coverage)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 327, in test_observer_without_receipt_does_not_report_clean_coverage
+    self.assertNotEqual(report.diagnosis, "coverage_observed_unattested")
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'coverage_observed_unattested' == 'coverage_observed_unattested'
+
+======================================================================
+FAIL: test_malformed_counters_and_mappings_fail_closed (tests.test_644_combined_independent.ReceiptMalformedInputs.test_malformed_counters_and_mappings_fail_closed) (case='counts_exploding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 240, in _check
+    return result.observation_unchanged()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_control.py", line 519, in observation_unchanged
+    return receipt is not None and receipt.matches_mutable_result(
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        candidates=self.recall.candidates,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+        evaluated_at=self.recall.evaluated_at,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 204, in matches_mutable_result
+    if not isinstance(route_counts, Mapping) or any(
+                                                ~~~^
+        type(route_id) is not str or type(count) is not int or count < 0
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        for route_id, count in route_counts.items()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 206, in <genexpr>
+    for route_id, count in route_counts.items()
+                           ~~~~~~~~~~~~~~~~~~^^
+  File "<frozen _collections_abc>", line 898, in __iter__
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 273, in __iter__
+    def __iter__(self): raise RuntimeError("boom")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: boom
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 303, in test_malformed_counters_and_mappings_fail_closed
+    self.assertFalse(self._check(result))
+                     ~~~~~~~~~~~^^^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 242, in _check
+    self.fail(f"uncaught {type(exc).__name__}: {exc}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: uncaught RuntimeError: boom
+
+======================================================================
+FAIL: test_malformed_counters_and_mappings_fail_closed (tests.test_644_combined_independent.ReceiptMalformedInputs.test_malformed_counters_and_mappings_fail_closed) (case='refusals_exploding')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 240, in _check
+    return result.observation_unchanged()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_control.py", line 519, in observation_unchanged
+    return receipt is not None and receipt.matches_mutable_result(
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        candidates=self.recall.candidates,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+        evaluated_at=self.recall.evaluated_at,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 194, in matches_mutable_result
+    admission_digest = _admission_binding(
+        query=query, policy_version=policy_version,
+        admission_mode=admission_mode, evaluated_at=evaluated_at,
+        refusals=refusals,
+    )
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 48, in _admission_binding
+    if not isinstance(refusals, Mapping) or any(
+                                            ~~~^
+        type(k) is not str or type(v) is not str for k, v in refusals.items()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 49, in <genexpr>
+    type(k) is not str or type(v) is not str for k, v in refusals.items()
+                                                         ~~~~~~~~~~~~~~^^
+  File "<frozen _collections_abc>", line 898, in __iter__
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 273, in __iter__
+    def __iter__(self): raise RuntimeError("boom")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: boom
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 303, in test_malformed_counters_and_mappings_fail_closed
+    self.assertFalse(self._check(result))
+                     ~~~~~~~~~~~^^^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 242, in _check
+    self.fail(f"uncaught {type(exc).__name__}: {exc}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: uncaught RuntimeError: boom
+
+======================================================================
+FAIL: test_malformed_counters_and_mappings_fail_closed (tests.test_644_combined_independent.ReceiptMalformedInputs.test_malformed_counters_and_mappings_fail_closed) (case='plan_object')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 240, in _check
+    return result.observation_unchanged()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_control.py", line 526, in observation_unchanged
+    plan=self.plan.to_dict(),
+         ^^^^^^^^^^^^^^^^^
+AttributeError: 'object' object has no attribute 'to_dict'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 303, in test_malformed_counters_and_mappings_fail_closed
+    self.assertFalse(self._check(result))
+                     ~~~~~~~~~~~^^^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 242, in _check
+    self.fail(f"uncaught {type(exc).__name__}: {exc}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: uncaught AttributeError: 'object' object has no attribute 'to_dict'
+
+======================================================================
+FAIL: test_malformed_counters_and_mappings_fail_closed (tests.test_644_combined_independent.ReceiptMalformedInputs.test_malformed_counters_and_mappings_fail_closed) (case='recall_none')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 240, in _check
+    return result.observation_unchanged()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_control.py", line 520, in observation_unchanged
+    candidates=self.recall.candidates,
+               ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'candidates'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 303, in test_malformed_counters_and_mappings_fail_closed
+    self.assertFalse(self._check(result))
+                     ~~~~~~~~~~~^^^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 242, in _check
+    self.fail(f"uncaught {type(exc).__name__}: {exc}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: uncaught AttributeError: 'NoneType' object has no attribute 'candidates'
+
+======================================================================
+FAIL: test_malformed_counters_and_mappings_fail_closed (tests.test_644_combined_independent.ReceiptMalformedInputs.test_malformed_counters_and_mappings_fail_closed) (case='receipt_garbage')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 240, in _check
+    return result.observation_unchanged()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_control.py", line 519, in observation_unchanged
+    return receipt is not None and receipt.matches_mutable_result(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'matches_mutable_result'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 303, in test_malformed_counters_and_mappings_fail_closed
+    self.assertFalse(self._check(result))
+                     ~~~~~~~~~~~^^^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 242, in _check
+    self.fail(f"uncaught {type(exc).__name__}: {exc}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: uncaught AttributeError: 'str' object has no attribute 'matches_mutable_result'
+
+======================================================================
+FAIL: test_receipt_method_rejects_hostile_mappings_directly (tests.test_644_combined_independent.ReceiptMalformedInputs.test_receipt_method_rejects_hostile_mappings_directly) (field='route_counts')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 263, in test_receipt_method_rejects_hostile_mappings_directly
+    outcome = result.observation_receipt.matches_mutable_result(**{**base, key: Exploding()})
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 204, in matches_mutable_result
+    if not isinstance(route_counts, Mapping) or any(
+                                                ~~~^
+        type(route_id) is not str or type(count) is not int or count < 0
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        for route_id, count in route_counts.items()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 206, in <genexpr>
+    for route_id, count in route_counts.items()
+                           ~~~~~~~~~~~~~~~~~~^^
+  File "<frozen _collections_abc>", line 898, in __iter__
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 250, in __iter__
+    def __iter__(self): raise RuntimeError("boom")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: boom
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 265, in test_receipt_method_rejects_hostile_mappings_directly
+    self.fail(f"uncaught {type(exc).__name__}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: uncaught RuntimeError
+
+======================================================================
+FAIL: test_receipt_method_rejects_hostile_mappings_directly (tests.test_644_combined_independent.ReceiptMalformedInputs.test_receipt_method_rejects_hostile_mappings_directly) (field='refusals')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 263, in test_receipt_method_rejects_hostile_mappings_directly
+    outcome = result.observation_receipt.matches_mutable_result(**{**base, key: Exploding()})
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 194, in matches_mutable_result
+    admission_digest = _admission_binding(
+        query=query, policy_version=policy_version,
+        admission_mode=admission_mode, evaluated_at=evaluated_at,
+        refusals=refusals,
+    )
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 48, in _admission_binding
+    if not isinstance(refusals, Mapping) or any(
+                                            ~~~^
+        type(k) is not str or type(v) is not str for k, v in refusals.items()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ):
+    ^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/agentmem_ref/runtime/recall_observation_receipt.py", line 49, in <genexpr>
+    type(k) is not str or type(v) is not str for k, v in refusals.items()
+                                                         ~~~~~~~~~~~~~~^^
+  File "<frozen _collections_abc>", line 898, in __iter__
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 250, in __iter__
+    def __iter__(self): raise RuntimeError("boom")
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: boom
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_644_combined_independent.py", line 265, in test_receipt_method_rejects_hostile_mappings_directly
+    self.fail(f"uncaught {type(exc).__name__}")
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: uncaught RuntimeError
+
+----------------------------------------------------------------------
+Ran 22 tests in 3.474s
+
+FAILED (failures=9)

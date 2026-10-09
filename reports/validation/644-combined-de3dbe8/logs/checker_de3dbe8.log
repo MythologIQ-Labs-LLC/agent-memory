@@ -1,0 +1,4 @@
+undeclared protected change: reference/agentmem_ref/recall_observation_receipt.py
+undeclared protected change: reference/agentmem_ref/runtime/recall_observation_receipt.py
+declared blob mismatch for reference/agentmem_ref/runtime/recall_control.py: declared 7d3d1410dad21caa6ad2ecd01c4713cfcea24d48, candidate b21d6fae699916af8e6d21aceeb1124d6a28e783
+rc=1

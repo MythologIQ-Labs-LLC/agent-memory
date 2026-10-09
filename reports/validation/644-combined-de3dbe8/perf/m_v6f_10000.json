@@ -1,0 +1,42 @@
+{
+ "n_facts": 10000,
+ "has_observer": false,
+ "has_receipt": false,
+ "samples": 30,
+ "cold": {
+  "open": {
+   "n": 5,
+   "median_ms": 1734.561,
+   "p95_ms": 2456.307,
+   "min_ms": 1479.644,
+   "max_ms": 2456.307
+  },
+  "first_recall": {
+   "n": 5,
+   "median_ms": 265.884,
+   "p95_ms": 307.495,
+   "min_ms": 252.142,
+   "max_ms": 307.495
+  },
+  "first_index_build": null,
+  "first_audit": null,
+  "first_observer": null
+ },
+ "admitted": 8,
+ "candidates": 8,
+ "warm": {
+  "recall": {
+   "n": 30,
+   "median_ms": 285.263,
+   "p95_ms": 345.181,
+   "min_ms": 239.609,
+   "max_ms": 646.833
+  },
+  "receipt_capture": null,
+  "receipt_verify": null,
+  "index_rebuild": null,
+  "audit_indexed": null,
+  "audit_full_scan_reference": null,
+  "observer_combined": null
+ }
+}

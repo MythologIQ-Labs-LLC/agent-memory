@@ -1,0 +1,23 @@
+== bench_e002536.json
+latent-clear on unsafe (missed counter-evidence): 6/78 ; latent-clear on safe: 37/48
+  SAFE  unique_single              {('coverage_observed_unattested', False): 6}
+  SAFE  agree_two                  {('coverage_observed_unattested', False): 6}
+  SAFE  case_variant_agree         {('coverage_observed_unattested', False): 1, ('value_coherence_unresolved', False): 5}
+  SAFE  deleted_competitor         {('coverage_observed_unattested', False): 6}
+  SAFE  disputed_competitor        {('coverage_observed_unattested', False): 6}
+  SAFE  crossproject_competitor    {('coverage_observed_unattested', False): 6}
+  SAFE  typed_correction_applied   {('coverage_observed_unattested', False): 6}
+  SAFE  facade_correction_applied  {('missing_declared_evidence', False): 6}
+  UNSAFE conflict_single            {('value_coherence_unresolved', False): 6}
+  UNSAFE multi_set                  {('value_coherence_unresolved', False): 6}
+  UNSAFE multi_one                  {('value_coherence_unresolved', False): 6}
+  UNSAFE unknown_cardinality        {('value_coherence_unresolved', False): 6}
+  UNSAFE change_unapplied           {('value_coherence_unresolved', False): 6}
+  UNSAFE extracted_competitor       {('qualified_counter_evidence_unresolved', False): 6}
+  UNSAFE negated_competitor         {('qualified_counter_evidence_unresolved', False): 6}
+  UNSAFE hedged_change              {('qualified_counter_evidence_unresolved', False): 6}
+  UNSAFE attributed_competitor      {('qualified_counter_evidence_unresolved', False): 6}
+  UNSAFE untyped_competitor         {('coverage_observed_unattested', False): 6}
+  UNSAFE expired_validity           {('declared_temporal_boundary_unresolved', False): 6}
+  UNSAFE paraphrase_unretrieved     {('slot_evidence_not_admitted', False): 6}
+  UNSAFE budget_cap_conflict        {('slot_evidence_not_admitted', False): 6}

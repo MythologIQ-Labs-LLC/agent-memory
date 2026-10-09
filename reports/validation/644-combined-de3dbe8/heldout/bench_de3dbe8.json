@@ -1,0 +1,2547 @@
+{
+ "has_observer": true,
+ "rows": [
+  {
+   "cat": "unique_single",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unique_single",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unique_single",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unique_single",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unique_single",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unique_single",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "agree_two",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "agree_two",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "agree_two",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "agree_two",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "agree_two",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "agree_two",
+   "kind": "plain",
+   "gold_stop_safe": true,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "case_variant_agree",
+   "kind": "equiv",
+   "gold_stop_safe": true,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "case_variant_agree",
+   "kind": "equiv",
+   "gold_stop_safe": true,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "case_variant_agree",
+   "kind": "equiv",
+   "gold_stop_safe": true,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "case_variant_agree",
+   "kind": "equiv",
+   "gold_stop_safe": true,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "case_variant_agree",
+   "kind": "equiv",
+   "gold_stop_safe": true,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "case_variant_agree",
+   "kind": "equiv",
+   "gold_stop_safe": true,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "deleted_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "deleted_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "deleted_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "deleted_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "deleted_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "deleted_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "disputed_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "disputed_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "disputed_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "disputed_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "disputed_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "disputed_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "crossproject_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "crossproject_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "crossproject_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "crossproject_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "crossproject_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "crossproject_competitor",
+   "kind": "lifecycle",
+   "gold_stop_safe": true,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "typed_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "typed_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "typed_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "typed_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "typed_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "typed_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "facade_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "missing_declared_evidence",
+   "status": [],
+   "support_refs": [],
+   "support_precision": null
+  },
+  {
+   "cat": "facade_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "missing_declared_evidence",
+   "status": [],
+   "support_refs": [],
+   "support_precision": null
+  },
+  {
+   "cat": "facade_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "missing_declared_evidence",
+   "status": [],
+   "support_refs": [],
+   "support_precision": null
+  },
+  {
+   "cat": "facade_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "missing_declared_evidence",
+   "status": [],
+   "support_refs": [],
+   "support_precision": null
+  },
+  {
+   "cat": "facade_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "missing_declared_evidence",
+   "status": [],
+   "support_refs": [],
+   "support_precision": null
+  },
+  {
+   "cat": "facade_correction_applied",
+   "kind": "correction",
+   "gold_stop_safe": true,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "missing_declared_evidence",
+   "status": [],
+   "support_refs": [],
+   "support_precision": null
+  },
+  {
+   "cat": "conflict_single",
+   "kind": "conflict",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "conflict_single",
+   "kind": "conflict",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "conflict_single",
+   "kind": "conflict",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "conflict_single",
+   "kind": "conflict",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "conflict_single",
+   "kind": "conflict",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "conflict_single",
+   "kind": "conflict",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "competing_values_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_set",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_set",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_set",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_set",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_set",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_set",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_one",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_one",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_one",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_one",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_one",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "multi_one",
+   "kind": "coexist",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "coexistence_possible"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unknown_cardinality",
+   "kind": "cardinality",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "cardinality_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unknown_cardinality",
+   "kind": "cardinality",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "cardinality_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unknown_cardinality",
+   "kind": "cardinality",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "cardinality_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unknown_cardinality",
+   "kind": "cardinality",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "cardinality_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unknown_cardinality",
+   "kind": "cardinality",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "cardinality_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "unknown_cardinality",
+   "kind": "cardinality",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "cardinality_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "change_unapplied",
+   "kind": "change",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "change_assertion_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "change_unapplied",
+   "kind": "change",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "change_assertion_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "change_unapplied",
+   "kind": "change",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "change_assertion_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "change_unapplied",
+   "kind": "change",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "change_assertion_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "change_unapplied",
+   "kind": "change",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "change_assertion_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "change_unapplied",
+   "kind": "change",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "value_coherence_unresolved",
+   "status": [
+    "change_assertion_unresolved"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "extracted_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "extracted_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "extracted_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "extracted_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "extracted_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "extracted_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "negated_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "negated_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "negated_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "negated_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "negated_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "negated_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "hedged_change",
+   "kind": "change_hidden",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "hedged_change",
+   "kind": "change_hidden",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "hedged_change",
+   "kind": "change_hidden",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "hedged_change",
+   "kind": "change_hidden",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "hedged_change",
+   "kind": "change_hidden",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "hedged_change",
+   "kind": "change_hidden",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "attributed_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "attributed_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "attributed_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "attributed_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "attributed_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "attributed_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "qualified_counter_evidence_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "untyped_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "untyped_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "untyped_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "untyped_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "untyped_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "untyped_competitor",
+   "kind": "conflict_hidden",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "coverage_observed_unattested",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "expired_validity",
+   "kind": "temporal",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "declared_temporal_boundary_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "expired_validity",
+   "kind": "temporal",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "declared_temporal_boundary_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "expired_validity",
+   "kind": "temporal",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "declared_temporal_boundary_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "expired_validity",
+   "kind": "temporal",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "declared_temporal_boundary_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "expired_validity",
+   "kind": "temporal",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "declared_temporal_boundary_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "expired_validity",
+   "kind": "temporal",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "declared_temporal_boundary_unresolved",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "paraphrase_unretrieved",
+   "kind": "retrieval",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "paraphrase_unretrieved",
+   "kind": "retrieval",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "paraphrase_unretrieved",
+   "kind": "retrieval",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "paraphrase_unretrieved",
+   "kind": "retrieval",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "paraphrase_unretrieved",
+   "kind": "retrieval",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "paraphrase_unretrieved",
+   "kind": "retrieval",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "budget_cap_conflict",
+   "kind": "budget",
+   "gold_stop_safe": false,
+   "i": 0,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "budget_cap_conflict",
+   "kind": "budget",
+   "gold_stop_safe": false,
+   "i": 1,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "budget_cap_conflict",
+   "kind": "budget",
+   "gold_stop_safe": false,
+   "i": 2,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "budget_cap_conflict",
+   "kind": "budget",
+   "gold_stop_safe": false,
+   "i": 3,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "budget_cap_conflict",
+   "kind": "budget",
+   "gold_stop_safe": false,
+   "i": 4,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  },
+  {
+   "cat": "budget_cap_conflict",
+   "kind": "budget",
+   "gold_stop_safe": false,
+   "i": 5,
+   "v6_stop": true,
+   "admitted": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "obs_stop": false,
+   "diagnosis": "slot_evidence_not_admitted",
+   "status": [
+    "same_value_observed"
+   ],
+   "support_refs": [
+    "ref-0004",
+    "ref-0011"
+   ],
+   "support_precision": 1.0
+  }
+ ],
+ "recall_ms_median": 4.1824,
+ "observe_ms_median": 2.1655,
+ "observe_ms_p95": 3.2792,
+ "observe_peak_bytes_median": 23385.0,
+ "summary": {
+  "v6_stop": {
+   "false_stop(unsafe cases)": "78/78",
+   "correct_stop(safe cases)": "48/48",
+   "per_category_stop": {
+    "unique_single": "6/6",
+    "agree_two": "6/6",
+    "case_variant_agree": "6/6",
+    "deleted_competitor": "6/6",
+    "disputed_competitor": "6/6",
+    "crossproject_competitor": "6/6",
+    "typed_correction_applied": "6/6",
+    "facade_correction_applied": "6/6",
+    "conflict_single": "6/6",
+    "multi_set": "6/6",
+    "multi_one": "6/6",
+    "unknown_cardinality": "6/6",
+    "change_unapplied": "6/6",
+    "extracted_competitor": "6/6",
+    "negated_competitor": "6/6",
+    "hedged_change": "6/6",
+    "attributed_competitor": "6/6",
+    "untyped_competitor": "6/6",
+    "expired_validity": "6/6",
+    "paraphrase_unretrieved": "6/6",
+    "budget_cap_conflict": "6/6"
+   }
+  },
+  "obs_stop": {
+   "false_stop(unsafe cases)": "0/78",
+   "correct_stop(safe cases)": "0/48",
+   "per_category_stop": {
+    "unique_single": "0/6",
+    "agree_two": "0/6",
+    "case_variant_agree": "0/6",
+    "deleted_competitor": "0/6",
+    "disputed_competitor": "0/6",
+    "crossproject_competitor": "0/6",
+    "typed_correction_applied": "0/6",
+    "facade_correction_applied": "0/6",
+    "conflict_single": "0/6",
+    "multi_set": "0/6",
+    "multi_one": "0/6",
+    "unknown_cardinality": "0/6",
+    "change_unapplied": "0/6",
+    "extracted_competitor": "0/6",
+    "negated_competitor": "0/6",
+    "hedged_change": "0/6",
+    "attributed_competitor": "0/6",
+    "untyped_competitor": "0/6",
+    "expired_validity": "0/6",
+    "paraphrase_unretrieved": "0/6",
+    "budget_cap_conflict": "0/6"
+   }
+  },
+  "value_competition_detected(conflict_single)": "6/6",
+  "hidden_conflict_detected": "30/30",
+  "coexistence_reported": "12/12",
+  "change_flagged_unresolved": "6/12",
+  "false_conflict(case_variant)": "5/6",
+  "support_ref_precision": 1.0,
+  "recall_ms_median": 4.1824,
+  "observe_ms_median": 2.1655,
+  "observe_ms_p95": 3.2792,
+  "observe_peak_bytes_median": 23385.0
+ }
+}

@@ -1,0 +1,40 @@
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+.Note: switching to 'de3dbe813683e417f73546bfbdd66976997bea76'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+..................................................................................................................................................inventory mechanical fields differ from the workflow YAML; run --write
+.............................................................................................................................<unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+............................................................................................................................................................................
+======================================================================
+FAIL: test_evaluation_only_change_keeps_runtime_baseline_equivalence (tests.test_benchmark_integration_contract.BenchmarkIntegrationContractTests.test_evaluation_only_change_keeps_runtime_baseline_equivalence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/q644c/pristine/reference/tests/test_benchmark_integration_contract.py", line 379, in test_evaluation_only_change_keeps_runtime_baseline_equivalence
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+AssertionError: 1 != 0 : undeclared protected change: reference/agentmem_ref/recall_observation_receipt.py
+undeclared protected change: reference/agentmem_ref/runtime/recall_observation_receipt.py
+declared blob mismatch for reference/agentmem_ref/runtime/recall_control.py: declared 7d3d1410dad21caa6ad2ecd01c4713cfcea24d48, candidate b21d6fae699916af8e6d21aceeb1124d6a28e783
+
+
+----------------------------------------------------------------------
+Ran 2628 tests in 150.027s
+
+FAILED (failures=1, skipped=17)
+rc=1 wall=152s

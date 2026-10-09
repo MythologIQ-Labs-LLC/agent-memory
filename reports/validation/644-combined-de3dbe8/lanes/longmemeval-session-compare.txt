@@ -1,0 +1,9 @@
+== session
+v6 evaluated 419 headline {"ndcg_any@10": 0.878274, "ndcg_any@5": 0.863142, "recall_all@10": 0.892601, "recall_all@5": 0.823389} rows 500 rankdigest 7315db7103c679cf input d6f21ea9d60a
+46d84ad evaluated 419 headline {"ndcg_any@10": 0.878274, "ndcg_any@5": 0.863142, "recall_all@10": 0.892601, "recall_all@5": 0.823389} rows 500 rankdigest 7315db7103c679cf input d6f21ea9d60a
+accepted v6 evidence headline {"ndcg_any@10": 0.878274, "ndcg_any@5": 0.863142, "recall_all@10": 0.892601, "recall_all@5": 0.823389} evaluated 419
+local v6 == candidate (all metrics): True | rankings identical: True
+local v6 headline == accepted: True | candidate headline == accepted: True
+governance v6 {"admitted_count_total": 22631, "candidate_count_total": 22631, "refused_candidate_count_total": 0, "return_budget_applied_total": 39, "unmapped_admitted_count_total": 0}
+governance cand {"admitted_count_total": 22631, "candidate_count_total": 22631, "refused_candidate_count_total": 0, "return_budget_applied_total": 39, "unmapped_admitted_count_total": 0}
+accepted governance {"admitted_count_total": 22631, "candidate_count_total": 22631, "refused_candidate_count_total": 0, "return_budget_applied_total": 39, "unmapped_admitted_count_total": 0} failures {"ingestion_failure_count": 0, "out_of_corpus_returned_count": 0, "runtime_failure_count": 0}

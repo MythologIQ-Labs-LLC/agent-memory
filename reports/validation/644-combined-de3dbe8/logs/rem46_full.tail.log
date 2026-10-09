@@ -1,0 +1,40 @@
+      "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+      "structural_passes": 0,
+      "structural_total": 25,
+      "total_passes": 3,
+      "total_queries": 77,
+      "trivially_empty_passes": 0,
+      "trivially_empty_total": 9
+    }
+  }
+]
+................../usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa4be0495d0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa4b7b1d3f0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa4b7b1c130>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa4b7b1d120>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+............................/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa4b7b1ff10>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa4bdf766b0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/json/encoder.py:254: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7fa4b7b1f6a0>
+  _iterencode = c_make_encoder(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................ssss..............................................Runtime Baseline equivalence: PASS; baseline=agent-memory-runtime-baseline-v1; frozen=bbd049a4e7661676c60f58b3744034640d15b46c; candidate=HEAD; explicit non-runtime exclusions=reference/agentmem_ref/evaluation
+.......................................................................................................................................................................................................................................................................................................................................................................inventory mechanical fields differ from the workflow YAML; run --write
+.............................................................................................................................<unknown>:79: SyntaxWarning: invalid escape sequence '\+'
+.............s..............................................................................................................................................................
+----------------------------------------------------------------------
+Ran 2650 tests in 156.876s
+
+OK (skipped=25)
+rc=0 wall=157.835544273s
