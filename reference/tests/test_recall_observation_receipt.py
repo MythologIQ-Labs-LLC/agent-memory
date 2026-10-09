@@ -48,6 +48,10 @@ class ImmutableRecallObservationTests(unittest.TestCase):
             route_counts=counts,routes_executed=("lexical",)))
         with self.assertRaises(FrozenInstanceError):
             r.can_stop=True
+        with self.assertRaises(AttributeError):
+            _ = r.__dict__
+        with self.assertRaises(AttributeError):
+            _ = r.routes[0].__dict__
 
     def test_mutated_or_missing_unselected_route_counter_is_detected(self):
         r,c,a,rank,counts=captured()
@@ -71,6 +75,12 @@ class ImmutableRecallObservationTests(unittest.TestCase):
         self.assertFalse(r.matches_mutable_result(
             candidates=c,admitted=a,ranked=rank,route_counts=counts,
             routes_executed=("lexical",)))
+
+    def test_empty_query_and_blank_reader_fields_preserve_existing_inputs(self):
+        r,*_=captured(query="")
+        self.assertTrue(r.integrity_valid())
+        self.assertFalse(r.can_stop)
+        self.assertIsNone(r.state_revision)
 
     def test_query_reader_and_task_are_bound_but_not_trusted(self):
         r,*_=captured()
