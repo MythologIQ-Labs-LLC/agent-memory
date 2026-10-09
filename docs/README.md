@@ -32,6 +32,7 @@ For the current RC/evidence boundary after #591/#594, start with [`64-current-go
 | Qualify pinned issuer-policy grants and revocation (non-authoritative) | [`plan-757-issuer-policy.md`](plan-757-issuer-policy.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only policy match, not source legitimacy or runtime authorization |
 | Qualify issuer-policy lineage and independently pinned rollback observations | [`plan-757-policy-lineage-rollback.md`](plan-757-policy-lineage-rollback.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only irreversible revocation and mechanical anti-rollback, no trusted distribution |
 | Qualify exact signed actor/source witnesses for cross-write revisions | [`plan-757-source-actor-witnesses.md`](plan-757-source-actor-witnesses.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only cryptographic claims, no independent origin authority |
+| Qualify revocable identity-link candidates against one paged issuer/witness trust state | [`plan-757-single-state-revocable-candidates.md`](plan-757-single-state-revocable-candidates.md) | [#757](https://github.com/MythologIQ-Labs-LLC/agent-memory/issues/757); evaluation-only C01–C14, no authenticated currentness |
 | Review security/privacy | [`15-memory-threat-model.md`](15-memory-threat-model.md) | `16`, `19`, `28`, `29`, `41`, [`../SECURITY.md`](../SECURITY.md) |
 
 ## Repository operating model
