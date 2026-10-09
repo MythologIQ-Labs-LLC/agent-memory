@@ -36,7 +36,7 @@
       "capability": "Formal MESA M1 write correctness and concurrency",
       "benchmark": "MESA/M1",
       "metric": "M1_write_success",
-      "source_kind": "native_or_published_only",
+      "source_kind": "external_only",
       "owners": [
         668,
         694,
