@@ -789,10 +789,10 @@ class GovernedMemoryAdapter:
         value = semantics.expanded_form((fact.attributes or {}).get(semantics.WRITE_SEMANTICS_KEY))
         return json.loads(json.dumps(value)) if value is not None else None
 
-    def current_governed_typed_slot(
+    def current_governed_typed_claim(
         self, fact_uuid: str, context: RecallContext,
-    ) -> tuple[bool, str | None]:
-        """Current admission recheck plus stored, eligible caller-declared slot.
+    ) -> tuple[bool, dict | None]:
+        """Current admission recheck plus eligible persisted typed value evidence.
 
         This is a read-only capability for downstream mechanical diagnostics.
         The boolean is current admission visibility, NOT truth or retained
@@ -832,7 +832,19 @@ class GovernedMemoryAdapter:
             return True, None
         if slot != record.get("slot"):
             return True, None
-        return True, slot
+        return True, {
+            "slot": slot,
+            "value": validated["value"],
+            "cardinality": validated["cardinality"],
+            "assertion": validated["assertion"],
+        }
+
+    def current_governed_typed_slot(
+        self, fact_uuid: str, context: RecallContext,
+    ) -> tuple[bool, str | None]:
+        """Compatibility reader: no extra reads and no policy bypass."""
+        permitted, claim = self.current_governed_typed_claim(fact_uuid, context)
+        return permitted, claim["slot"] if claim is not None else None
 
     def semantic_proposals(self, context: RecallContext) -> list[dict]:
         """Every write-time ``state_change`` proposal with its status derived now.
