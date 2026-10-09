@@ -32,6 +32,11 @@ from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .temporal_intent import resolve_intent
 from .temporal_order_constraints import ExplicitCurrentCrossFactRankingPolicy
+from .recall_observation_receipt import (
+    RecallObservationReceipt,
+    RouteObservation,
+    capture_recall_observation,
+)
 from .restart_runtime import RuntimeRecoveryError
 from .runtime_composition import (
     EXACT_IDENTITY_ROUTE,
@@ -506,6 +511,24 @@ class ControlledRecallResult:
     graph_candidate_hits: dict[str, GraphCandidateHit] = field(default_factory=dict)
     controller_calls: int = 1
     authority_effect: str = "none"
+    observation_receipt: RecallObservationReceipt | None = None
+
+    def observation_unchanged(self) -> bool:
+        """Detect result tampering; never authorize a stop or state action."""
+        receipt = self.observation_receipt
+        return receipt is not None and receipt.matches_mutable_result(
+            candidates=self.recall.candidates,
+            admitted=self.recall.admitted,
+            ranked=self.recall.ranked_admitted,
+            route_counts=self.route_candidate_counts,
+            routes_executed=self.recall.routes_executed,
+            query=self.recall.query,
+            plan=self.plan.to_dict(),
+            refusals=self.recall.refusals,
+            policy_version=self.recall.policy_version,
+            admission_mode=self.recall.admission_mode,
+            evaluated_at=self.recall.evaluated_at,
+        )
 
     def observe_evidence_sufficiency(
         self,
@@ -808,6 +831,37 @@ class ControlledRecallPlanner:
             query_temporal_intent=intent.to_dict(),
         )
         sufficient = len(ranked) >= plan.evidence_sufficiency_target
+        # Capture while route/admission membership is still planner-owned.
+        # The receipt is frozen and content-committed, NOT an attested durable
+        # state revision or a certificate of complete slot exploration.
+        receipt = capture_recall_observation(
+            query=query,
+            reader_domain_refs=tuple(context.target_domain_refs),
+            principal_ref=context.principal_ref,
+            project_ref=context.project_ref,
+            purpose=context.purpose,
+            task_ref=context.task_ref,
+            controller_ref=plan.controller_ref,
+            admission_policy=recall.policy_version,
+            admission_mode=recall.admission_mode,
+            evaluated_at=recall.evaluated_at,
+            candidates=recall.candidates,
+            admitted=recall.admitted,
+            ranked=recall.ranked_admitted,
+            route_observations=tuple(
+                RouteObservation(
+                    route_id=budget.route_id,
+                    candidate_limit=budget.candidate_limit,
+                    anchor_limit=budget.anchor_limit,
+                    returned_count=route_counts.get(budget.route_id, 0),
+                    executed=budget.candidate_limit > 0,
+                )
+                for budget in plan.route_budgets
+            ),
+            observed_route_counts=route_counts,
+            plan=plan.to_dict(),
+            refusals=recall.refusals,
+        )
         return ControlledRecallResult(
             plan=plan,
             recall=recall,
@@ -817,6 +871,7 @@ class ControlledRecallPlanner:
                 "evidence_target_met" if sufficient else "planned_routes_exhausted"
             ),
             graph_candidate_hits=graph_candidate_hits,
+            observation_receipt=receipt,
         )
 
     def observe_governed_transition_witnesses(
