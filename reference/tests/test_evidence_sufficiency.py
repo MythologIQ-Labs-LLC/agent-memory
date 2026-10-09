@@ -245,7 +245,7 @@ class EvidenceSufficiencyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'assertion'):
             s.TypedValueClaim('a',need.key,'MIT','single','definitive')
         with self.assertRaisesRegex(ValueError,'control'):
-            s.TypedValueClaim('a',need.key,'secret\\nleak')
+            s.TypedValueClaim('a',need.key,'secret\nleak')
 
     def test_value_assessment_order_independent_and_no_raw_values(self):
         need=s.CoverageNeed('typed:product|price')
