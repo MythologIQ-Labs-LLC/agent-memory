@@ -819,6 +819,23 @@ class ControlledRecallPlanner:
             graph_candidate_hits=graph_candidate_hits,
         )
 
+    def observe_governed_transition_witnesses(
+        self, result: ControlledRecallResult, context: RecallContext,
+    ) -> tuple["GovernedTransitionWitness", ...]:
+        """Observe applied corrections without altering recall or resolving slots.
+
+        The adapter re-verifies reader scope and currently admitted source and
+        target facts, then cross-checks persisted proposals against committed
+        replacement evidence. This is no assertion of an immediate successor,
+        source independence, answer truth, or permission to stop retrieval.
+        """
+        if type(result) is not ControlledRecallResult or not isinstance(context, RecallContext):
+            raise TypeError("controlled recall result and context required")
+        lookup = getattr(self.adapter, "governed_applied_transition_witnesses", None)
+        if not callable(lookup):
+            raise RuntimeRecoveryError("governed replacement evidence reader unavailable")
+        return lookup(tuple(result.recall.admitted), context)
+
     def observe_persisted_typed_coverage(
         self,
         result: ControlledRecallResult,
