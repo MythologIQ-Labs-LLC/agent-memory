@@ -131,6 +131,15 @@ class EvidenceSufficiencyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'undeclared need'):
             obs(coverage=(s.CoverageObservation('e:1',('need',),s.TYPED_OBSERVATION),))
 
+    def test_report_constructor_cannot_spoof_authority(self):
+        base=s.assess_sufficiency(obs())
+        from dataclasses import replace
+        for patch in ({'can_admit':True}, {'can_mutate':True},
+                      {'answer_quality_verified':True}, {'authority_effect':'allow'},
+                      {'continuation_proposal':'execute_stop'}):
+            with self.subTest(patch=patch), self.assertRaises(ValueError):
+                replace(base, **patch)
+
     def test_determinism_independent_of_evidence_and_route_order(self):
         needs=(s.CoverageNeed('one'),s.CoverageNeed('two'))
         c=(s.CoverageObservation('a',('one',),s.TYPED_OBSERVATION),
