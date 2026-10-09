@@ -257,7 +257,7 @@ class WriteWitnessTests(unittest.TestCase):
                 expected_key_ref="key:any",
                 pinned_public_key_digest=public_key_digest(self.keys[0].public_key()),
             )
-        with self.assertRaises(WitnessError):
+        with self.assertRaises(ValueError):
             sign_write_witness(
                 self.proposal.older, side="older", role="actor",
                 claimed_principal_ref="principal:a",
