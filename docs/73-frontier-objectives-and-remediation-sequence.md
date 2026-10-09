@@ -11,7 +11,7 @@ Best-in-class is a **nine-axis capability frontier**, not one leaderboard. The C
 - `reports/benchmarks/deficits/current.json`: accepted concrete current deficit evidence, including family-level currentness failures, untouched by this implementation.
 - `reports/benchmarks/dashboard/current.json`: canonical accepted baseline and lane identities, not a universal ranking.
 - `scripts/build_frontier_objectives.py`: deterministic projection, comparable-relative-to-observed-peer only, rejects ownerless deficits and loss of blocked-state or authority guard. Run `python scripts/build_frontier_objectives.py --output /tmp/frontier-obligations.json`. Never write to the inputs from this tool.
-- `tests/test_frontier_objectives.py`: 17 synthetic and source-integrity checks executed in the existing doctrine workflow, including all nine families, all currently accepted deficit rows, comparator direction, unmeasured states, exact metric ID, live ledger drift, reproducibility and no score/mutation authority.
+- `tests/test_frontier_objectives.py`: 19 synthetic and source-integrity checks executed in the existing doctrine workflow, including all nine families, all currently accepted deficit rows, original owner preservation, comparator direction, unmeasured states, replay obligations, exact metric ID, live ledger drift, reproducibility and no score/mutation authority.
 
 ## Reconciled measured posture (no invented rankings)
 
