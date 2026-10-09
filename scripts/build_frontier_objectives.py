@@ -150,6 +150,11 @@ def build_frontier_report(
         if item["source_kind"] in ("ledger", "ledger_family"):
             rows = _rows_for(item, deficits)
             for row in rows:
+                if row.get("owning_issue") not in item["owners"]:
+                    raise FrontierEvidenceError(
+                        f'{item["id"]}: original deficit owner not represented for '
+                        + row["deficit_id"]
+                    )
                 covered.add(row["deficit_id"])
                 state = row.get("state")
                 if state not in ("frontier", "open", "blocked", "deferred", "closed"):
@@ -167,7 +172,12 @@ def build_frontier_report(
                     "published_frontier": row.get("published_frontier"),
                     "known_peer_position": observed_peer_position(row),
                     "owning_issue": row.get("owning_issue"),
+                    "priority": row.get("priority"),
                     "primary_stage": row.get("primary_stage", "unclassified"),
+                    "secondary_stages": row.get("secondary_stages", []),
+                    "replay_requirements": row.get("replay_requirements", []),
+                    "negative_control_refs": row.get("negative_control_refs", []),
+                    "closure_evidence": row.get("closure_evidence", []),
                     "evidence_refs": row.get("evidence_refs", []),
                 })
         records.append({
