@@ -172,16 +172,18 @@ class SingleStateCandidateTests(unittest.TestCase):
         self.no_authority(modified)
 
     def test_t05_different_subject_or_property_remains_underdetermined(self):
-        for field, value in (
-            ("property_ref", "field:current-phase"),
-            ("subject_ref", "subject:other-alias"),
-            ("source_ref", "source:other-origin"),
+        for field, value, expected in (
+            ("property_ref", "field:current-phase", "abstain"),
+            ("subject_ref", "subject:other-alias", "refused"),
+            ("source_ref", "source:other-origin", "abstain"),
         ):
             variant = replace(self.proposal, newer=replace(
                 self.proposal.newer, **{field: value},
             ))
             result = self.qualify(proposal=variant)
-            self.assertEqual(result.status, "abstain", msg=field)
+            # An independent stronger schema/subject refusal dominates
+            # structural uncertainty; otherwise uncertainty stays abstain.
+            self.assertEqual(result.status, expected, msg=field)
             self.assertEqual(result.structural_status, "underdetermined")
             self.assertIn("structural_preflight_underdetermined",
                           result.reason_codes)
