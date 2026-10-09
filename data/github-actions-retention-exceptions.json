@@ -143,6 +143,96 @@
       "reason": "protected_evidence_custody_undetermined",
       "review_state": "hold",
       "retention_authorized": false
+    },
+    {
+      "id": "codegenome-reality-mesh-evidence.yml/codegenome-reality-mesh/upload-0",
+      "workflow": "codegenome-reality-mesh-evidence.yml",
+      "job": "codegenome-reality-mesh",
+      "upload_index": 0,
+      "artifact_name": "codegenome-reality-mesh-${{ github.event.pull_request.head.sha || github.sha }}",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "codegenome-scope-residue-closeout.yml/closeout/upload-0",
+      "workflow": "codegenome-scope-residue-closeout.yml",
+      "job": "closeout",
+      "upload_index": 0,
+      "artifact_name": "codegenome-scope-residue-${{ env.AGENT_MEMORY_COMMIT }}",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "cognitive-mesh-evidence.yml/cognitive-mesh-evidence/upload-0",
+      "workflow": "cognitive-mesh-evidence.yml",
+      "job": "cognitive-mesh-evidence",
+      "upload_index": 0,
+      "artifact_name": "cognitive-mesh-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "conditional-memory-evidence.yml/conditional-memory/upload-0",
+      "workflow": "conditional-memory-evidence.yml",
+      "job": "conditional-memory",
+      "upload_index": 0,
+      "artifact_name": "conditional-memory-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "config-bound-recovery.yml/acceptance/upload-0",
+      "workflow": "config-bound-recovery.yml",
+      "job": "acceptance",
+      "upload_index": 0,
+      "artifact_name": "config-bound-recovery",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "dashclaw-external-verdict.yml/provider-proof/upload-0",
+      "workflow": "dashclaw-external-verdict.yml",
+      "job": "provider-proof",
+      "upload_index": 0,
+      "artifact_name": "dashclaw-external-verdict-${{ env.AGENT_MEMORY_COMMIT }}",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "derivation-currentness-evidence.yml/derivation-currentness/upload-0",
+      "workflow": "derivation-currentness-evidence.yml",
+      "job": "derivation-currentness",
+      "upload_index": 0,
+      "artifact_name": "derivation-currentness-evidence-depth",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "domain-schema-discovery-evidence.yml/domain-schema-discovery/upload-0",
+      "workflow": "domain-schema-discovery-evidence.yml",
+      "job": "domain-schema-discovery",
+      "upload_index": 0,
+      "artifact_name": "domain-schema-discovery-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
+    },
+    {
+      "id": "external-evidence-contract.yml/external-evidence-contract/upload-0",
+      "workflow": "external-evidence-contract.yml",
+      "job": "external-evidence-contract",
+      "upload_index": 0,
+      "artifact_name": "external-trust-evidence",
+      "reason": "protected_evidence_custody_undetermined",
+      "review_state": "hold",
+      "retention_authorized": false
     }
   ]
 }
