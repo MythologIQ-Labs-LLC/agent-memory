@@ -128,6 +128,7 @@ class SufficiencyReport:
     count_target_met: bool
     mechanical_coverage_met: bool
     need_support_counts: tuple[tuple[str, int], ...]
+    need_support_refs: tuple[tuple[str, tuple[str, ...]], ...]
     missing_needs: tuple[str, ...]
     contradiction_pairs: tuple[tuple[str, str], ...]
     budget_bound_routes: tuple[str, ...]
@@ -156,6 +157,7 @@ class SufficiencyReport:
             "count_target_met": self.count_target_met,
             "mechanical_coverage_met": self.mechanical_coverage_met,
             "need_support_counts": dict(self.need_support_counts),
+            "need_support_refs": {need: list(refs) for need, refs in self.need_support_refs},
             "missing_needs": list(self.missing_needs),
             "contradiction_pairs": [list(x) for x in self.contradiction_pairs],
             "budget_bound_routes": list(self.budget_bound_routes),
@@ -216,6 +218,7 @@ def assess_sufficiency(observation: SufficiencyObservation) -> SufficiencyReport
         count_target_met=len(observation.admitted_refs) >= observation.count_target,
         mechanical_coverage_met=covered,
         need_support_counts=tuple(sorted((k, len(refs)) for k, refs in supports.items())),
+        need_support_refs=tuple(sorted((k, tuple(sorted(refs))) for k, refs in supports.items())),
         missing_needs=missing,
         contradiction_pairs=pairings,
         budget_bound_routes=capped,
