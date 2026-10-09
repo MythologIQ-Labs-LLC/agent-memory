@@ -193,6 +193,31 @@ class EvidenceSufficiencyTests(unittest.TestCase):
         self.assertEqual(result.diagnosis,'mechanical_coverage_observed')
         self.assertFalse(result.answer_quality_verified)
 
+    def test_single_multi_value_or_unknown_slot_cannot_signal_complete(self):
+        need=s.CoverageNeed('typed:docs|contributors')
+        support=(s.CoverageObservation('one',(need.key,),s.TYPED_OBSERVATION),)
+        for cardinality,status in (('multi','coexistence_possible'),
+                                   (None,'cardinality_unresolved')):
+            with self.subTest(cardinality=cardinality):
+                claim=(s.TypedValueClaim('one',need.key,'Jo',cardinality),)
+                report=s.assess_sufficiency(s.SufficiencyObservation(
+                    ('one',),(need,),support,typed_value_claims=claim))
+                self.assertEqual(report.value_coherence[0].status,status)
+                self.assertEqual(report.diagnosis,'value_coherence_unresolved')
+                self.assertEqual(report.continuation_proposal,'continue_if_permitted')
+
+    def test_cannot_forge_stop_on_unresolved_competition(self):
+        from dataclasses import replace
+        need=s.CoverageNeed('typed:server|owner')
+        support=(s.CoverageObservation('a',(need.key,),s.TYPED_OBSERVATION),
+                 s.CoverageObservation('b',(need.key,),s.TYPED_OBSERVATION))
+        claims=(s.TypedValueClaim('a',need.key,'A','single'),
+                s.TypedValueClaim('b',need.key,'B','single'))
+        report=s.assess_sufficiency(s.SufficiencyObservation(
+            ('a','b'),(need,),support,typed_value_claims=claims))
+        with self.assertRaisesRegex(ValueError,'cannot recommend stopping'):
+            replace(report, continuation_proposal='review_stop')
+
     def test_value_comparison_never_emits_private_literal(self):
         need=s.CoverageNeed('typed:tenant|secret')
         literal='Sensitive internal value'
