@@ -37,6 +37,7 @@ jobs:
       - name: Audit accepted deficit evidence without making remediation decisions
         run: |
           python3 -m unittest discover -s tests -p 'test_deficit_evidence_audit.py' -v
+          python3 -m unittest discover -s tests -p 'test_frontier_objectives.py' -v
           python3 scripts/audit_benchmark_deficit_ledger.py --output /tmp/deficit-audit.json
           python3 -c 'import json; r=json.load(open("/tmp/deficit-audit.json")); print("posture:",r["posture"],"records:",r["counts"].get("records",0),"review:",len(r["review_candidates"]),"errors:",len(r["structural_errors"]),"mutations:",r["record_mutations"])'
 

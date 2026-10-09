@@ -8,6 +8,8 @@ The governing repository relationship is documented in [`docs/REPOSITORY_OPERATI
 
 The canonical current portfolio view is [`reports/benchmarks/dashboard/current.md`](reports/benchmarks/dashboard/current.md). Historical generated scorecards remain revision-bound snapshots and are not the current-state dashboard.
 
+The nine-family [North Star remediation plan](docs/73-frontier-objectives-and-remediation-sequence.md), [versioned objective registry](data/benchmark-frontier-objectives.json), and read-only `python scripts/build_frontier_objectives.py` tracker connect all accepted material deficits to general runtime architecture owners and evidence gates. The tracker does not manufacture a global ranking, closure decision, or metric comparison for blocked and unmeasured lanes.
+
 ## Governing benchmark rules
 
 ```text
