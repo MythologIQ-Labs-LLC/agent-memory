@@ -4,6 +4,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from agentmem_ref import policy
 from agentmem_ref.adapter import RecallContext
@@ -519,6 +520,47 @@ class RecallControlTests(unittest.TestCase):
         self.assertEqual(trusted.admitted_count, 1)
         self.assertFalse(trusted.mechanical_coverage_met)
         self.assertEqual(trusted.need_support_refs, ((need.key, ()),))
+
+    def test_corrupted_stored_slot_is_never_counted(self) -> None:
+        retained = self._retain(
+            "memory:corrupt-slot",
+            "Sigma product code is 472",
+            evidence_refs=("session:corruption",),
+            typed_write=self._typed_write("Sigma product", "code", "472"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Sigma product code", _context())
+        need = CoverageNeed(typed.typed_slot("Sigma product", "code"))
+        stored = self.runtime.adapter.write_semantics(retained.fact_uuid, _context())
+        self.assertIsNotNone(stored)
+        stored["typed_proposition"]["slot"] = "typed:unrelated|property"
+        with patch.object(self.runtime.adapter, "write_semantics", return_value=stored):
+            report = planner.observe_persisted_typed_coverage(
+                result, _context(), needs=(need,),
+            )
+        self.assertEqual(report.admitted_count, 1)
+        self.assertFalse(report.mechanical_coverage_met)
+        self.assertEqual(report.need_support_refs, ((need.key, ()),))
+
+    def test_foreign_candidate_never_reaches_semantics_reader(self) -> None:
+        foreign = self._retain(
+            "memory:foreign-private",
+            "Secretus rollout flag is enabled",
+            evidence_refs=("session:foreign-private",),
+            project_ref="project-beta",
+            typed_write=self._typed_write("Secretus rollout", "flag", "enabled"),
+        )
+        planner = self._typed_plan()
+        result = planner.recall("Secretus rollout", _context())
+        result.recall.admitted.append(foreign.fact_uuid)
+        need = CoverageNeed(typed.typed_slot("Secretus rollout", "flag"))
+        with patch.object(self.runtime.adapter, "write_semantics",
+                          wraps=self.runtime.adapter.write_semantics) as read:
+            report = planner.observe_persisted_typed_coverage(
+                result, _context(), needs=(need,),
+            )
+            read.assert_not_called()
+        self.assertEqual(report.need_support_counts, ((need.key, 0),))
 
     def test_persisted_coverage_requires_canonical_slot_identity(self) -> None:
         planner = self._typed_plan()
