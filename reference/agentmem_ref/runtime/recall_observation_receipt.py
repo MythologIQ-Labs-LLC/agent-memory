@@ -74,6 +74,7 @@ class RecallObservationReceipt:
     admitted_refs: tuple[str, ...]
     ranked_refs: tuple[str, ...]
     routes: tuple[RouteObservation, ...]
+    observed_route_counts: tuple[tuple[str, int], ...]
     content_digest: str
     version: str = VERSION
     state_revision: None = None
@@ -100,6 +101,7 @@ class RecallObservationReceipt:
                  "executed": r.executed}
                 for r in self.routes
             ],
+            "observed_route_counts": [list(pair) for pair in self.observed_route_counts],
         }
 
     def __post_init__(self) -> None:
@@ -128,6 +130,16 @@ class RecallObservationReceipt:
                 or any(type(r) is not RouteObservation for r in self.routes)):
             raise ValueError("route observations must be an immutable typed tuple")
         _ids(tuple(r.route_id for r in self.routes), "route identities")
+        if (type(self.observed_route_counts) is not tuple
+                or any(type(x) is not tuple or len(x) != 2
+                       or type(x[0]) is not str or not x[0]
+                       or type(x[1]) is not int or x[1] < 0
+                       for x in self.observed_route_counts)):
+            raise ValueError("observed route counts must be immutable nonnegative pairs")
+        _ids(tuple(key for key, _ in self.observed_route_counts), "observed routes")
+        observed = dict(self.observed_route_counts)
+        if any(observed.get(r.route_id) != r.returned_count for r in self.routes):
+            raise ValueError("route work and observed counters disagree")
         if not _hex_digest(self.content_digest) or not self.integrity_valid():
             raise ValueError("receipt digest does not match its immutable contents")
 
@@ -146,8 +158,7 @@ class RecallObservationReceipt:
             and tuple(ranked) == self.ranked_refs
             and tuple(routes_executed) ==
                 tuple(r.route_id for r in self.routes if r.executed)
-            and all(route_counts.get(r.route_id) == r.returned_count
-                    for r in self.routes)
+            and tuple(sorted(route_counts.items())) == self.observed_route_counts
             and self.integrity_valid()
         )
 
@@ -162,6 +173,7 @@ class RecallObservationReceipt:
             "admitted_refs": list(self.admitted_refs),
             "ranked_refs": list(self.ranked_refs),
             "routes": [r.__dict__.copy() for r in self.routes],
+            "observed_route_counts": [list(pair) for pair in self.observed_route_counts],
             "state_revision": None,
             "snapshot_attested": False,
             "slot_closure_attested": False,
@@ -186,6 +198,7 @@ def capture_recall_observation(
     admitted: list[str],
     ranked: list[str],
     route_observations: tuple[RouteObservation, ...],
+    observed_route_counts: Mapping[str, int],
 ) -> RecallObservationReceipt:
     """Copy mutable runtime outputs into a frozen diagnostic record."""
     if type(query) is not str or not query:
@@ -198,7 +211,7 @@ def capture_recall_observation(
             raise ValueError("invalid optional reader context field")
     query_digest = _sha(b"query\x00" + query.encode("utf-8"))
     reader_digest = _sha(b"reader\x00" + _json_bytes({
-        "domains": list(reader_domain_refs),
+        "domains": sorted(reader_domain_refs),
         "principal": principal_ref,
         "project": project_ref,
         "purpose": purpose,
@@ -215,6 +228,7 @@ def capture_recall_observation(
         "admitted_refs": tuple(admitted),
         "ranked_refs": tuple(ranked),
         "routes": tuple(route_observations),
+        "observed_route_counts": tuple(sorted(observed_route_counts.items())),
     }
     # Construct digest before invoking the validating dataclass constructor.
     # The helper cannot forge missing revision or completeness authority.
@@ -232,6 +246,7 @@ def capture_recall_observation(
              "executed": r.executed}
             for r in data["routes"]
         ],
+        "observed_route_counts": [list(pair) for pair in data["observed_route_counts"]],
     }
     return RecallObservationReceipt(
         **data, content_digest=_sha(_DOMAIN + _json_bytes(payload)),
