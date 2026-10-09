@@ -125,6 +125,14 @@ The `00` through `42` series contains the canonical architecture and operational
 - [`41-memory-isolation-domains-and-governed-crossing.md`](41-memory-isolation-domains-and-governed-crossing.md)
 - [`42-governed-mutable-memory-fabric.md`](42-governed-mutable-memory-fabric.md)
 
+## Active runtime succession candidates
+
+- [`76-typed-recall-evidence-sufficiency.md`](76-typed-recall-evidence-sufficiency.md) records the **unmerged** #644 typed post-admission sufficiency observer, its local tests and Runtime Baseline v7 publication prerequisites. This is a candidate implementation, not accepted v6 runtime behavior.
+- [`77-governed-admitted-value-coherence.md`](77-governed-admitted-value-coherence.md) documents the #644 persisted-value disagreement/coexistence guard, its adversarial controls and independent local qualification requirements.
+- [`78-committed-governed-transition-witness.md`](78-committed-governed-transition-witness.md) documents the independently implemented, read-only applied-correction witness and its release/authority limits.
+- [`79-independent-644-qualification-reconciliation.md`](79-independent-644-qualification-reconciliation.md) records independent high-severity findings, conservative slot audit, and the mandatory stop-attestation safety hold.
+- [`81-indexed-slot-audit-qualification.md`](81-indexed-slot-audit-qualification.md) records the SQLite indexed-audit repair, differential controls, future validity and remaining independent qualification.
+
 ## Architecture Decision Records
 
 See [`adr/README.md`](adr/README.md).
