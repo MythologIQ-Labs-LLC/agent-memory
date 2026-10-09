@@ -141,6 +141,14 @@ class SufficiencyReport:
     can_mutate: bool = False
     authority_effect: str = "none"
 
+    def __post_init__(self) -> None:
+        if (self.answer_quality_verified is not False
+                or self.can_admit is not False or self.can_mutate is not False
+                or self.authority_effect != "none"):
+            raise ValueError("sufficiency report cannot grant authority or certify quality")
+        if self.continuation_proposal not in ("review_stop", "continue_if_permitted"):
+            raise ValueError("unsupported continuation proposal")
+
     def to_dict(self) -> dict[str, object]:
         return {
             "observation_version": self.observation_version,
