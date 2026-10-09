@@ -135,6 +135,20 @@
         }
       }
     },
+    "candidate-trust-state-qualification.yml": {
+      "pull_request": "paths",
+      "push": null,
+      "other_triggers": [
+        "workflow_dispatch"
+      ],
+      "concurrency": "cancel_superseded",
+      "jobs": {
+        "candidate-trust": {
+          "timeout_minutes": 12,
+          "full_suite_passes": 0
+        }
+      }
+    },
     "canonical-json-v2-migration-contract.yml": {
       "pull_request": "paths",
       "push": null,
