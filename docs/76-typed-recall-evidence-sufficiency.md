@@ -52,7 +52,7 @@ The new `ControlledRecallPlanner.observe_persisted_typed_coverage(result, contex
 
 ## Candidate Runtime Baseline v7 (not active)
 
-`reports/runtime/baseline-v7-declaration.json` now preregisters exactly **three protected blob changes**, `runtime/adapter.py`, `runtime/evidence_sufficiency.py`, and `runtime/recall_control.py`, against the immutable published v6, with no public contract or ranking identity delta. It names the existing public gauntlet and AMB/LongMemEval v6 replay as non-regression gates plus a new noninterference/negative-control replay requirement. The declaration is only a *candidate file*: `reports/runtime/baseline-register.json` still has `declared_successor=null`; no v7 baseline exists, and this candidate must not be merged without completing `docs/67` transition/publication and all evidence.
+`reports/runtime/baseline-v7-declaration.json` now preregisters exactly **three protected blob changes**, `runtime/adapter.py`, `runtime/evidence_sufficiency.py`, and `runtime/recall_control.py`, against the immutable published v6, with no public contract or ranking identity delta. It names the existing public gauntlet and AMB/LongMemEval v6 replay as non-regression gates plus a new noninterference/negative-control replay requirement. The declaration is only a *candidate file*: On the newer #644 safety reconciliation branch, the register now *declares* the v7 successor for transition validation, but the last published baseline remains v6; no v7 baseline exists, and this candidate must not be merged without completing `docs/67` transition/publication and all evidence.
 
 ## Evidence and next gates
 
