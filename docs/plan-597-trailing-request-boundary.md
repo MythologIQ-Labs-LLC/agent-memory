@@ -48,6 +48,36 @@ v1.1.0 replay on its pinned runtime and independently validate 1.2.0's
 intentional behavioral differences. Until this is done, full-suite and
 successor-baseline status are CHANGES REQUIRED.
 
+## Further adversarial discoveries and versioned behavior
+
+The predeclared generic corpus now includes paired values containing grammatical
+request phrases in straight/curly quotation marks, inline code, parentheses,
+brackets and braces, plus an actual request following that literal. The clause
+splitter and request-boundary splitter must both honor these protected spans;
+guarding only one stage is insufficient.
+
+The original v6 conjunction matcher used a case-sensitive lowercase opening
+vocabulary even when applied to raw capitalized sentences. In a normal phrase
+like `I prefer green tea and I like strong coffee`, v6 can treat both claims
+as one known value. The candidate uses case-insensitive top-level conjunction
+matching, making the two-slot case **ambiguous** rather than incorrectly known.
+This is an intentional, separately asserted **1.2.0 behavioral delta**, not
+noninterference. The differential suite preserves exact identity for unrelated
+utterances and checks this changed case explicitly. Changes from `known` to
+`ambiguous` are potentially safety-positive yet could lower benchmark known
+recall, so Part R precision and recall must be reported separately; neither
+conservative abstention nor lower engagement is automatically a success.
+
+A synthetic persistence test now checks the actual public `remember` /
+`write_semantics` / close / reopen round trip and verifies that existing 1.1.0
+stored interpretation decodes without retroactive rewriting.
+
+A **source-equivalent isolated helper smoke** exercised six conjunction/request
+examples (6/6), including nested data and capitalized multi-assertion. This
+does **not** establish execution of the actual GitHub candidate, any API test
+or frozen suites. The branch remains unqualified until executed in a trusted
+checkout with exact SHA and the recorded source identity.
+
 ## Falsification gates
 
 1. Independently run `python -m unittest discover -s reference/tests -t reference -p test_597_trailing_request_boundary.py`
