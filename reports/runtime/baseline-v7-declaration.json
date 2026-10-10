@@ -50,11 +50,11 @@
     },
     {
       "kind": "lane",
-      "ref": "amb-precisionmembench-retrieval-v6"
+      "ref": "amb-precisionmembench-retrieval-v7"
     },
     {
       "kind": "lane",
-      "ref": "longmemeval-s-retrieval-parity-v6"
+      "ref": "longmemeval-s-retrieval-parity-v7"
     },
     {
       "kind": "replay",
