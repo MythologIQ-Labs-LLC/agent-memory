@@ -46,6 +46,21 @@ def run_cases(replay_id: str, ids: set[str] | None = None) -> dict:
     return out
 
 
+def adapter_owner(attribute: str):
+    """The class that defines `attribute` for the adapter the runner actually builds.
+
+    Some suites evict and re-import agentmem_ref modules, so a class imported here can be a
+    different object from the one behind the runner's facade; patch the live one instead.
+    """
+    with tempfile.TemporaryDirectory() as tmp:
+        sc = runner.Scenario(Path(tmp) / "probe")
+        try:
+            cls = type(sc.memory.runtime.adapter)
+        finally:
+            sc.close()
+    return next(k for k in cls.__mro__ if attribute in vars(k))
+
+
 class FixtureIntegrity(unittest.TestCase):
     def test_every_declared_replay_has_a_frozen_fixture(self):
         self.assertEqual(sorted(declared()), sorted(runner.REPLAYS))
@@ -148,15 +163,13 @@ class NegativeControls(unittest.TestCase):
             return {s: {"eligible_unretrieved": 0, "qualified_counter_evidence": 0, "declared_temporal_boundary": 0}
                     for s in slots}
 
-        from agentmem_ref.runtime.adapter import GovernedMemoryAdapter
-        with mock.patch.object(GovernedMemoryAdapter, "current_typed_slot_obstacles", blind):
+        with mock.patch.object(adapter_owner("current_typed_slot_obstacles"), "current_typed_slot_obstacles", blind):
             out = run_cases("governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
                             {"A6-hidden-admissible-competitor-counted"})
         self.assertEqual(out["A6-hidden-admissible-competitor-counted"]["outcome"], "fail")
 
     def test_witness_contract_detects_an_inferred_application(self):
-        from agentmem_ref.runtime import governed_transition_witness as gtw
-        from agentmem_ref.runtime.adapter import GovernedMemoryAdapter
+        from agentmem_ref.runtime import governed_transition_witness as gtw  # only read by the runner
 
         def eager(adapter, refs, ctx):
             if len(refs) < 2:
@@ -165,7 +178,7 @@ class NegativeControls(unittest.TestCase):
                                                   current_target_fact_ref=refs[1], proposal_ref="p",
                                                   correction_proposal_ref="c", replacement_kind="state_change"),)
 
-        with mock.patch.object(GovernedMemoryAdapter, "governed_applied_transition_witnesses", eager):
+        with mock.patch.object(adapter_owner("governed_applied_transition_witnesses"), "governed_applied_transition_witnesses", eager):
             out = run_cases("committed-governed-transition-witness-v1", {"T1-asserted-change-only"})
         self.assertEqual(out["T1-asserted-change-only"]["outcome"], "fail")
 
@@ -177,8 +190,8 @@ class NegativeControls(unittest.TestCase):
     def test_admission_recheck_detects_stale_support(self):
         # Remove both read-time gates (admission and semantics visibility) for tombstoned facts:
         # a forgotten fact then keeps supporting the slot, and A3 must turn red.
-        from agentmem_ref.runtime.adapter import GovernedMemoryAdapter
-        original_refusal = GovernedMemoryAdapter._admission_refusal
+        owner = adapter_owner("_admission_refusal")
+        original_refusal = owner._admission_refusal
 
         def lenient(adapter, fact, ctx, *args, **kwargs):
             reason = original_refusal(adapter, fact, ctx, *args, **kwargs)
@@ -187,8 +200,8 @@ class NegativeControls(unittest.TestCase):
         def visible(adapter, fact_uuid, ctx):
             return adapter._substrate.get_fact(fact_uuid)
 
-        with mock.patch.object(GovernedMemoryAdapter, "_admission_refusal", lenient), \
-                mock.patch.object(GovernedMemoryAdapter, "_semantics_visible", visible):
+        with mock.patch.object(owner, "_admission_refusal", lenient), \
+                mock.patch.object(adapter_owner("_semantics_visible"), "_semantics_visible", visible):
             out = run_cases("governed-persisted-typed-slot-sufficiency-admission-recheck-v1", {"A3-recheck-after-forget"})
         self.assertEqual(out["A3-recheck-after-forget"]["outcome"], "fail")
 
