@@ -1,0 +1,723 @@
+{
+ "authority_boundary": "A replay verdict is evidence for independent review. It is not v7 acceptance, not publication, and not stop authority. sha256 values are integrity bindings, not signatures.",
+ "cases": [
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 0
+     },
+     "observable": "witness_count",
+     "observed": 0
+    }
+   ],
+   "error": null,
+   "id": "T1-asserted-change-only",
+   "invariants": [
+    "T1"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 0,
+    "witness_statuses": [],
+    "witnesses": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 1
+     },
+     "observable": "witness_count",
+     "observed": 1
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       {
+        "current": "memory:prior@2",
+        "prior": "memory:prior",
+        "proposal": "open_proposal",
+        "source": "memory:source",
+        "status": "applied_state_change_observed"
+       }
+      ]
+     },
+     "observable": "witnesses",
+     "observed": [
+      {
+       "current": "memory:prior@2",
+       "prior": "memory:prior",
+       "proposal": "open_proposal",
+       "source": "memory:source",
+       "status": "applied_state_change_observed"
+      }
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "state_unchanged",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "text_absent",
+     "observed": true
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "immediate_successor_verified_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "can_stop_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "answer_quality_verified_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "authority_effect_all_none",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "T2-applied-state-change",
+   "invariants": [
+    "T2",
+    "T3",
+    "T12"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "state_unchanged": true,
+    "text_absent": true,
+    "witness_count": 1,
+    "witness_statuses": [
+     "applied_state_change_observed"
+    ],
+    "witnesses": [
+     {
+      "current": "memory:prior@2",
+      "prior": "memory:prior",
+      "proposal": "open_proposal",
+      "source": "memory:source",
+      "status": "applied_state_change_observed"
+     }
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 0
+     },
+     "observable": "witness_count",
+     "observed": 0
+    }
+   ],
+   "error": null,
+   "id": "T4-source-only",
+   "invariants": [
+    "T4"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 0,
+    "witness_statuses": [],
+    "witnesses": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 0
+     },
+     "observable": "witness_count",
+     "observed": 0
+    }
+   ],
+   "error": null,
+   "id": "T4-current-only",
+   "invariants": [
+    "T4"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 0,
+    "witness_statuses": [],
+    "witnesses": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 0
+     },
+     "observable": "witness_count",
+     "observed": 0
+    }
+   ],
+   "error": null,
+   "id": "T5-other-project-reader",
+   "invariants": [
+    "T5"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 0,
+    "witness_statuses": [],
+    "witnesses": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 0
+     },
+     "observable": "witness_count",
+     "observed": 0
+    }
+   ],
+   "error": null,
+   "id": "T6-uncited-correction",
+   "invariants": [
+    "T6"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 0,
+    "witness_statuses": [],
+    "witnesses": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 0
+     },
+     "observable": "witness_count",
+     "observed": 0
+    }
+   ],
+   "error": null,
+   "id": "T6-forged-proposal-citation",
+   "invariants": [
+    "T6"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 0,
+    "witness_statuses": [],
+    "witnesses": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 1
+     },
+     "observable": "witness_count",
+     "observed": 1
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "applied_error_correction_observed"
+      ]
+     },
+     "observable": "witness_statuses",
+     "observed": [
+      "applied_error_correction_observed"
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "immediate_successor_verified_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "can_stop_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "answer_quality_verified_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "authority_effect_all_none",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "T7-cited-error-correction",
+   "invariants": [
+    "T7",
+    "T3"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 1,
+    "witness_statuses": [
+     "applied_error_correction_observed"
+    ],
+    "witnesses": [
+     {
+      "current": "memory:prior@2",
+      "prior": "memory:prior",
+      "proposal": "open_proposal",
+      "source": "memory:source",
+      "status": "applied_error_correction_observed"
+     }
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": "ValueError"
+     },
+     "observable": "raises",
+     "observed": "ValueError"
+    }
+   ],
+   "error": null,
+   "id": "T8-duplicate-admitted",
+   "invariants": [
+    "T8"
+   ],
+   "kind": "witness",
+   "observations": {
+    "raised_message": "duplicate admitted fact reference",
+    "raises": "ValueError",
+    "raises_any": true
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 1
+     },
+     "observable": "witness_count",
+     "observed": 1
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       "applied_state_change_observed"
+      ]
+     },
+     "observable": "witness_statuses",
+     "observed": [
+      "applied_state_change_observed"
+     ]
+    }
+   ],
+   "error": null,
+   "id": "T9-restart",
+   "invariants": [
+    "T9"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 1,
+    "witness_statuses": [
+     "applied_state_change_observed"
+    ],
+    "witnesses": [
+     {
+      "current": "memory:prior@2",
+      "prior": "memory:prior",
+      "proposal": "open_proposal",
+      "source": "memory:source",
+      "status": "applied_state_change_observed"
+     }
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 1
+     },
+     "observable": "witness_count",
+     "observed": 1
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": [
+       {
+        "current": "memory:prior@3",
+        "prior": "memory:prior",
+        "proposal": "open_proposal",
+        "source": "memory:source",
+        "status": "applied_state_change_observed"
+       }
+      ]
+     },
+     "observable": "witnesses",
+     "observed": [
+      {
+       "current": "memory:prior@3",
+       "prior": "memory:prior",
+       "proposal": "open_proposal",
+       "source": "memory:source",
+       "status": "applied_state_change_observed"
+      }
+     ]
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "immediate_successor_verified_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "can_stop_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": false
+     },
+     "observable": "answer_quality_verified_any",
+     "observed": false
+    },
+    {
+     "holds": true,
+     "matcher": {
+      "eq": true
+     },
+     "observable": "authority_effect_all_none",
+     "observed": true
+    }
+   ],
+   "error": null,
+   "id": "T10-later-governed-change",
+   "invariants": [
+    "T10",
+    "T3"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 1,
+    "witness_statuses": [
+     "applied_state_change_observed"
+    ],
+    "witnesses": [
+     {
+      "current": "memory:prior@3",
+      "prior": "memory:prior",
+      "proposal": "open_proposal",
+      "source": "memory:source",
+      "status": "applied_state_change_observed"
+     }
+    ]
+   },
+   "outcome": "pass",
+   "recorded": {}
+  },
+  {
+   "checks": [
+    {
+     "holds": true,
+     "matcher": {
+      "eq": 0
+     },
+     "observable": "witness_count",
+     "observed": 0
+    }
+   ],
+   "error": null,
+   "id": "T11-source-forgotten",
+   "invariants": [
+    "T11"
+   ],
+   "kind": "witness",
+   "observations": {
+    "answer_quality_verified_any": false,
+    "authority_effect_all_none": true,
+    "can_stop_any": false,
+    "immediate_successor_verified_any": false,
+    "raises": null,
+    "raises_any": false,
+    "witness_count": 0,
+    "witness_statuses": [],
+    "witnesses": []
+   },
+   "outcome": "pass",
+   "recorded": {}
+  }
+ ],
+ "dsl_version": "644-v7-replay-dsl/1",
+ "invariants": {
+  "T1": {
+   "cases": [
+    "T1-asserted-change-only"
+   ],
+   "holds": true,
+   "statement": "An asserted change without a committed governed application produces no witness."
+  },
+  "T10": {
+   "cases": [
+    "T10-later-governed-change"
+   ],
+   "holds": true,
+   "statement": "A later governed change of the same target still yields a witness whose current head is the latest head, with immediate_successor_verified false."
+  },
+  "T11": {
+   "cases": [
+    "T11-source-forgotten"
+   ],
+   "holds": true,
+   "statement": "If the source fact is no longer current (forgotten) no witness is produced."
+  },
+  "T12": {
+   "cases": [
+    "T2-applied-state-change"
+   ],
+   "holds": true,
+   "statement": "Witness serialization contains no raw fact text or values, and observation writes nothing."
+  },
+  "T2": {
+   "cases": [
+    "T2-applied-state-change"
+   ],
+   "holds": true,
+   "statement": "An explicit governed application of the semantic proposal produces exactly one applied_state_change_observed witness naming the source, the prior, the supplied current head and the original semantic proposal."
+  },
+  "T3": {
+   "cases": [
+    "T2-applied-state-change",
+    "T7-cited-error-correction",
+    "T10-later-governed-change"
+   ],
+   "holds": true,
+   "statement": "A witness never asserts the immediate successor, answer quality, stop or mutation authority."
+  },
+  "T4": {
+   "cases": [
+    "T4-source-only",
+    "T4-current-only"
+   ],
+   "holds": true,
+   "statement": "A witness requires both the source and the current head in the supplied admitted set."
+  },
+  "T5": {
+   "cases": [
+    "T5-other-project-reader"
+   ],
+   "holds": true,
+   "statement": "A reader in another project sees no witness."
+  },
+  "T6": {
+   "cases": [
+    "T6-uncited-correction",
+    "T6-forged-proposal-citation"
+   ],
+   "holds": true,
+   "statement": "A correction that does not cite the semantic proposal, or cites a fabricated proposal identity, produces no witness."
+  },
+  "T7": {
+   "cases": [
+    "T7-cited-error-correction"
+   ],
+   "holds": true,
+   "statement": "A cited error correction yields applied_error_correction_observed, never a state-change witness."
+  },
+  "T8": {
+   "cases": [
+    "T8-duplicate-admitted"
+   ],
+   "holds": true,
+   "statement": "Duplicate admitted references are refused."
+  },
+  "T9": {
+   "cases": [
+    "T9-restart"
+   ],
+   "holds": true,
+   "statement": "The witness survives restart unchanged."
+  }
+ },
+ "observations_sha256": "8ab1b53fb863d8bbc39f902736ac0f09b0dcc25bc157cb32d4767ce9eb169070",
+ "provenance": {
+  "dirty_exclusion": "reports/validation/644-v7-replays/",
+  "dirty_paths": [],
+  "fixture": {
+   "path": "reference/fixtures/644-v7-replays/committed-governed-transition-witness-v1.json",
+   "sha256": "aa47fc50215ede864317c492cd72bb139c19bdb91947cf42cadab84bcaacd178"
+  },
+  "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+  "python": "3.13.16",
+  "runner": {
+   "path": "reference/run_644_v7_replays.py",
+   "sha256": "941a0dc6860e932531d77eb65c1f305f84feeab3366cacd39953dae160cf0def",
+   "version": "644-v7-replay-runner/1"
+  },
+  "runtime_tree": "f9ccd0472e32cb68a5caf988a017078a73425cc5",
+  "source_commit": "76632295163a4b80cf7c153d9297a788c59d1b95",
+  "sqlite": "3.45.1"
+ },
+ "replay_id": "committed-governed-transition-witness-v1",
+ "schema": "644-v7-replay-report/1",
+ "summary": {
+  "cases": 12,
+  "errors": 0,
+  "failed": 0,
+  "passed": 12
+ },
+ "verdict": "PASS",
+ "verdict_reasons": [
+  "every expectation held on a clean source tree"
+ ]
+}

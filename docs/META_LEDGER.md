@@ -5396,3 +5396,31 @@ SHA256(content_hash + previous_hash) = f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a
 **Minimal repair**: `assess_sufficiency` passes the computed assessments through unconditionally, instead of only when typed claims exist. The v7 declaration is regenerated only with `declare_runtime_baseline_changes.py`.
 
 **Not**: a PASS, publication, qualification, merge approval or benchmark claim. The fixture is not edited.
+
+---
+
+### Entry #127: CANDIDATE EVIDENCE — five declared v7 replays executed and independently verified (#644)
+
+**Timestamp**: 2026-10-10 (candidate record on a local validation branch; actual commit time differs)
+
+**Phase**: VALIDATE (candidate only)
+
+**Author**: Independent validation agent
+
+**Risk Grade**: L2 (acceptance evidence for a protected runtime transition candidate; no acceptance)
+
+**Target**: `validation/644-v7-replay-closeout`; `reports/validation/644-v7-replays/`; runtime `76632295163a4b80cf7c153d9297a788c59d1b95` (tree `f9ccd047`)
+
+**Content Hash** (SHA256 of the following exact UTF-8 decision sentence):
+
+`Five Agent Memory #644 v7 replays executed at runtime 7663229: 104 of 104 cases and 58 of 58 invariants PASS, independently verified with re-execution; inventory remains BLOCKED; acceptance not granted; v6 remains published; no merge, no publication, no Actions.`
+
+`2c8ab5ae34ea234071b5de779ff2855e04122673ca6d6c39b7deabc451d38b7a`
+
+**Previous Hash**: `eaef0e9944ba44a8786d60581a0366cda131afec030a41ac27f0e1d25258cc0b`
+
+**Chain Hash**: `a15ad4f55519ad3ba187b646ea2d635715b1c3d4bdf51f2d197d08d6fcd6ccf7`
+
+**Decision**: Record the five replay packages that the v7 declaration requires. The fixtures were frozen in `7530378`, before any runner existed. The runner, the independent verifier and the tests were added in `afff1b5`. Every replay PASSes on a clean tree, and the evidence is reproducible byte for byte. `scripts/verify_644_v7_replays.py --reexecute` verifies all five. The tamper challenge detects every mutation except a fully consistent static forgery, which re-execution catches. That limitation is recorded: the sha256 bindings are not signatures. One preregistered protected repair (Entry #126) was required. `scripts/check_644_v7_replay_inventory.py` remains BLOCKED by design. F6, F7 and F12 remain open. This entry is **not acceptance, a PASS of v7, publication, merge approval, or a benchmark claim**.
+
+**Evidence still required**: an independent reviewer's re-execution and acceptance decision recorded in this ledger, a v7 public-gauntlet contestant, and workflow-imported lane evidence at the v7 candidate.

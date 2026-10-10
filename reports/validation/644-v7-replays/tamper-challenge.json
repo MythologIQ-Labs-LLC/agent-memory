@@ -1,0 +1,246 @@
+{
+ "all_detected_as_expected": true,
+ "challenge": "644-v7-replay-tamper-challenge/1",
+ "rows": [
+  {
+   "detected_as_expected": true,
+   "expected": "all VERIFIED",
+   "mutation": "baseline-no-mutation",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "VERIFIED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": null,
+   "target_problems": []
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "fixture-expectation-edited",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "TAMPERED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "committed-governed-transition-witness-v1",
+   "target_problems": [
+    "fixture bytes differ from the recorded fixture hash",
+    "T1-asserted-change-only: checks do not match fixture expectations"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "output-edited-without-rehash",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "VERIFIED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "TAMPERED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+   "target_problems": [
+    "report bytes do not match manifest hash",
+    "observations digest does not recompute"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "output-check-edited-and-rehashed",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "TAMPERED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "committed-governed-transition-witness-v1",
+   "target_problems": [
+    "T2-applied-state-change: check observation differs from recorded observation",
+    "T2-applied-state-change: recorded 'holds' does not recompute",
+    "observations digest does not recompute"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "VERIFIED statically (documented limitation: unkeyed hashes); caught only by --reexecute",
+   "mutation": "membership-forged-consistently-static",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "VERIFIED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+   "target_problems": []
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "membership-forged-consistently-reexecuted",
+   "reexecute": true,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "VERIFIED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "TAMPERED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+   "target_problems": [
+    "re-execution produced different observations"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "membership-forged-with-checks",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "VERIFIED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "TAMPERED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+   "target_problems": [
+    "A3-recheck-after-forget: checks do not match fixture expectations"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "provenance-commit-forged",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "TAMPERED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "committed-governed-transition-witness-v1",
+   "target_problems": [
+    "recorded source commit does not carry the recorded runtime tree",
+    "recorded source commit is not an ancestor of HEAD"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "runtime-tree-substituted",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "TAMPERED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "committed-governed-transition-witness-v1",
+   "target_problems": [
+    "recorded source commit does not carry the recorded runtime tree"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "verdict-upgraded-over-failing-case",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "TAMPERED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "committed-governed-transition-witness-v1",
+   "target_problems": [
+    "T1-asserted-change-only: outcome does not recompute",
+    "verdict does not recompute (expected FAIL)"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "failing-check-dropped",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "VERIFIED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "TAMPERED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+   "target_problems": [
+    "A2-weaker-same-slot-claims-are-not-support: checks do not match fixture expectations"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "manifest-identity-swapped",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "TAMPERED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "committed-governed-transition-witness-v1",
+   "target_problems": [
+    "replay identity mismatch"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "evidence-deleted",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "MISSING",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "committed-governed-transition-witness-v1",
+   "target_problems": [
+    "manifest or report absent"
+   ]
+  },
+  {
+   "detected_as_expected": true,
+   "expected": "target not VERIFIED",
+   "mutation": "runner-hash-substituted",
+   "reexecute": false,
+   "statuses": {
+    "committed-governed-transition-witness-v1": "TAMPERED",
+    "governed-admitted-typed-value-coherence-v1": "VERIFIED",
+    "governed-persisted-typed-slot-sufficiency-admission-recheck-v1": "VERIFIED",
+    "same-slot-safety-counterevidence-and-immutable-stop-gate-v1": "VERIFIED",
+    "typed-sufficiency-noninterference-and-negative-controls-v1": "VERIFIED"
+   },
+   "target": "committed-governed-transition-witness-v1",
+   "target_problems": [
+    "runner bytes differ from the recorded runner hash"
+   ]
+  }
+ ]
+}
