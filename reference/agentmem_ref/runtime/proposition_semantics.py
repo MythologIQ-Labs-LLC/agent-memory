@@ -250,18 +250,44 @@ def _is_finite_verb(words: list[str], index: int) -> bool:
 # --------------------------------------------------------------------------- clauses
 
 
-def _separate_trailing_request(piece: str) -> tuple[str, ...]:
-    """A comma plus an explicit grammatical request opens a separate discourse act.
+_QUOTE_PAIRS = {'"': '"', "'": "'", "“": "”", "‘": "’", chr(96): chr(96)}
 
-    Ordinary lists and conjoined assertions are never split by this rule.
-    This is punctuation/syntax evidence only, never semantic truth or authority.
+
+def _inside_quoted_span(text: str, offset: int) -> bool:
+    """True if offset falls within explicit quotes, not a word apostrophe.
+
+    Treat quote markers as syntax boundaries only; they are not interpreted as
+    attribution, truth, a memory classification, or an authorization signal.
+    """
+    stack: list[str] = []
+    index = 0
+    while index < offset:
+        char = text[index]
+        if char == "\\" and index + 1 < len(text):
+            index += 2
+            continue
+        if (char == "'" and index and index + 1 < len(text)
+                and text[index - 1].isalnum() and text[index + 1].isalnum()):
+            index += 1
+            continue
+        if stack and char == stack[-1]:
+            stack.pop()
+        elif char in _QUOTE_PAIRS:
+            stack.append(_QUOTE_PAIRS[char])
+        index += 1
+    return bool(stack)
+
+
+def _separate_trailing_request(piece: str) -> tuple[str, ...]:
+    """Split explicitly opened requests outside quoted text from asserted text.
+
+    This syntax-only rule never changes proposition identity or truth and leaves
+    conjoined declarative clauses to the existing bounded ambiguity handling.
     """
     for boundary in re.finditer(r",\s*(?:and\s+)?|\s+and\s+", piece, flags=re.IGNORECASE):
-        prefix = piece[:boundary.start()].strip()
-        # Syntactic request markers inside quoted content are data, not new
-        # discourse acts. Apostrophes in contractions are not quote delimiters.
-        if prefix.count('"') % 2 or prefix.count("“") > prefix.count("”"):
+        if _inside_quoted_span(piece, boundary.start()):
             continue
+        prefix = piece[:boundary.start()].strip()
         suffix = piece[boundary.end():].strip()
         if suffix and _opens_question(_norm(suffix).split()):
             return tuple(part for part in (prefix, suffix) if part)
