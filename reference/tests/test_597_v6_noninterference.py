@@ -20,7 +20,6 @@ UNCHANGED_CASES = (
     "The monitor is blue.",
     "My inventory has 24 units.",
     "I currently work in research.",
-    "I prefer green tea and I like strong coffee.",
     'I enjoy the song "Hello, can you hear me?"',
     "Could you recommend an infusion?",
     "I might prefer an herbal infusion.",
@@ -73,6 +72,14 @@ class V6BoundaryNoninterferenceTests(unittest.TestCase):
         self.assertEqual(expanded["interpreter"]["version"], "1.1.0")
         self.assertEqual(expanded["proposition"],
                          self.legacy["expanded_form"](old)["proposition"])
+
+    def test_capitalized_conjunction_is_an_explicit_versioned_delta(self):
+        text = "I prefer green tea and I like strong coffee."
+        old = self.legacy["interpret_write"](text)["proposition"]
+        new = candidate.interpret_write(text)["proposition"]
+        self.assertEqual(old["status"], "known", old)
+        self.assertEqual(new["status"], "ambiguous", new)
+        self.assertEqual(candidate.INTERPRETER_VERSION, "1.2.0")
 
     def test_compound_request_repairs_general_value_boundary(self):
         text = "I prefer green tea, can you recommend a book?"
