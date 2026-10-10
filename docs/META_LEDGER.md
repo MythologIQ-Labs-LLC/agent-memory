@@ -5362,3 +5362,37 @@ SHA256(content_hash + previous_hash) = f4e71a5f9ae3393832ca336c4dec76ebe3ec2168a
 **Decision**: Record an **unaccepted** validation remediation of the v7 transition candidate. The candidate's declaration pinned six blobs and omitted the immutable recall receipt module and its alias, so the sanctioned checker failed. `declare_runtime_baseline_changes.py` regenerated it with eight protected blobs. Two narrow repairs are pinned. First, `ControlledRecallResult.observation_unchanged` and `RecallObservationReceipt.matches_mutable_result` return `False` instead of raising on malformed results or hostile mappings. Second, `observe_persisted_typed_coverage` reports `recall_observation_unverified` instead of `coverage_observed_unattested` when the planner receipt is missing or no longer matches. Obstacle diagnoses keep precedence, and no stop is ever proposed. Entries #124 and earlier, including the CHANGES REQUIRED history, are unchanged. The content hash is change detection, not a signed attestation, a trusted state revision, a complete-slot proof or stopping authority. This entry is **not a PASS, publication, qualification, merge approval, or benchmark claim**.
 
 **Evidence still required**: public gauntlet for a v7 contestant, AMB and LongMemEval v7 lanes, the five declared #644 replays (no executable definitions exist in the repository), an untyped-competitor (F6) policy, public typed correction (F7), the SQLite restart wrapper (F12), and independent peer review. No hosted Actions should run for iterative debugging.
+
+---
+
+### Entry #126: PREREGISTRATION — minimal protected repair for doc 77's no_eligible_value disposition (#644)
+
+**Timestamp**: 2026-10-10 (candidate record on a local validation branch; actual commit time differs)
+
+**Phase**: PREREGISTER (candidate only)
+
+**Author**: Independent validation agent
+
+**Risk Grade**: L2 (one protected runtime line; v7 transition candidate only)
+
+**Target**: `validation/644-v7-replay-closeout`, which builds on `implementation/644-v7-evidence-closeout-no-ci` @ `c4827f9`; `reference/agentmem_ref/runtime/evidence_sufficiency.py`
+
+**Content Hash** (SHA256 of the following exact UTF-8 decision sentence):
+
+`Preregistered minimal protected repair for Agent Memory #644: the sufficiency report must emit the documented no_eligible_value disposition for every declared need; reproducer test_644_no_eligible_value_disposition and replay case V1 fail before the repair; no diagnosis, proposal or authority change; v6 remains published.`
+
+`3a3865154405217c456d3b7c781aa356c69e402dd24ff7363d8842bfec772639`
+
+**Previous Hash**: `a44d073f22ec6ba719449def4fddb72ba7c104a25129b20984ecdcc982501f2c`
+
+**Chain Hash**: `eaef0e9944ba44a8786d60581a0366cda131afec030a41ac27f0e1d25258cc0b`
+
+**Reason**: Replay `governed-admitted-typed-value-coherence-v1` was frozen in commit `7530378` before any runner existed. Its case V1 encodes doc 77's disposition table: a requested slot with no eligible typed value has disposition `no_eligible_value`. On first execution the report omitted value coherence entirely whenever no typed claim existed for any requested need, so "no eligible value" and "never assessed" could not be told apart.
+
+**Reproducer**: `reference/tests/test_644_no_eligible_value_disposition.py` fails 2 of its 4 tests before the repair, and replay case V1 fails.
+
+**Intended invariant**: every declared need receives exactly one value-coherence assessment. A need without any eligible typed claim is `no_eligible_value`. Diagnosis, continuation proposal, stop gate and authority fields do not change. `no_eligible_value` is not an ambiguous disposition and cannot enable a stop. No needs means no assessments.
+
+**Minimal repair**: `assess_sufficiency` passes the computed assessments through unconditionally, instead of only when typed claims exist. The v7 declaration is regenerated only with `declare_runtime_baseline_changes.py`.
+
+**Not**: a PASS, publication, qualification, merge approval or benchmark claim. The fixture is not edited.
