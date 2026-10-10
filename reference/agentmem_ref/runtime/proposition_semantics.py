@@ -315,11 +315,30 @@ def _split_top_level_conjunctions(sentence: str) -> list[str]:
     return pieces
 
 
+def _split_top_level_sentences(text: str) -> list[str]:
+    """Keep sentence and semicolon/colon boundaries out of literal data spans.
+
+    The historical sentence delimiter grammar is preserved, but a punctuation
+    match inside balanced quotation, inline code or parentheses is not a
+    discourse boundary. The rule neither creates facts nor interprets truth.
+    """
+    pattern = r"(?<=[.!?])\s+|;\s*|:\s+"
+    pieces: list[str] = []
+    begin = 0
+    for match in re.finditer(pattern, text):
+        if _inside_protected_span(text, match.start()):
+            continue
+        pieces.append(text[begin:match.start()])
+        begin = match.end()
+    pieces.append(text[begin:])
+    return pieces
+
+
 def _clause_pieces(text: str) -> list[tuple[str, int, bool]]:
     """Clause pieces with their sentence number and whether that sentence ends in ``?``."""
 
     parts: list[tuple[str, int, bool]] = []
-    for number, sentence in enumerate(re.split(r"(?<=[.!?])\s+|;\s*|:\s+", text)):
+    for number, sentence in enumerate(_split_top_level_sentences(text)):
         question = sentence.rstrip().rstrip("\"')]}*\u201d\u2019").endswith("?")
         for piece in _split_top_level_conjunctions(sentence):
             for bounded in _separate_trailing_request(piece):
