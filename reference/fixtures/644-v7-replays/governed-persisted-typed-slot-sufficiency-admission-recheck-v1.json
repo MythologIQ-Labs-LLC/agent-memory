@@ -1,0 +1,1212 @@
+{
+  "replay_id": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+  "fixture_version": 1,
+  "dsl_version": "644-v7-replay-dsl/1",
+  "owning_issue": 644,
+  "frozen_on": "2026-10-10",
+  "status": "frozen_before_execution",
+  "base_commit": "c4827f9fef055b0bc2a9bd94b28adba22bfc42d0",
+  "independence": "Expected outcomes were written from the contract documents listed in contract_sources before any replay runner existed or executed. They are not derived from running the implementation under test. The original 126-case independent holdout (heldout_bench.py, sha256 25ce88eb...) and its vocabulary were not used. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding fixture version with a recorded reason.",
+  "stop_lines": [
+    "no fixture edit after first execution; supersede with -v2 and record why",
+    "no expectation weakened to obtain PASS",
+    "no runtime change motivated by a replay outcome without a preregistered reproducer",
+    "a replay verdict is evidence, not v7 acceptance; acceptance requires independent review"
+  ],
+  "title": "Persisted typed-slot support is rechecked against current admission and the slot census sees non-retrieved evidence",
+  "contract_sources": [
+    {
+      "path": "docs/76-typed-recall-evidence-sufficiency.md",
+      "sha256_at_base": "3ce9d1781446f4ea678f5240fc5f66e79ab2d466eaef03d5ade0ed960e4913f1"
+    },
+    {
+      "path": "docs/79-independent-644-qualification-reconciliation.md",
+      "sha256_at_base": "a957b70cfe69e3567c585010575a21ae3de6bd8b24d26343e092bfc27339fe12"
+    },
+    {
+      "path": "docs/81-indexed-slot-audit-qualification.md",
+      "sha256_at_base": "ba56c43900559e8487af20c8e61fc0f73225024d9e81fdb5a882f7168227fba2"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "A1",
+      "statement": "Support comes only from currently admitted facts carrying a persisted caller-declared, unflagged typed proposition in exactly the requested slot.",
+      "falsified_by": "support_refs differing from that set"
+    },
+    {
+      "id": "A2",
+      "statement": "Untyped, extracted and flagged (hedged, negated, attributed) same-slot facts contribute zero support; flagged and extracted ones remain visible as qualified counter-evidence.",
+      "falsified_by": "any of them in support_refs, or the qualified counter-evidence count differing"
+    },
+    {
+      "id": "A3",
+      "statement": "Admission is rechecked at observation time: a fact forgotten, disputed or superseded after recall contributes zero support.",
+      "falsified_by": "such a fact in support_refs"
+    },
+    {
+      "id": "A4",
+      "statement": "A reference injected into the admitted list from another project, or a nonexistent reference, contributes zero support and exposes no value.",
+      "falsified_by": "support or a leaked value from the injected reference"
+    },
+    {
+      "id": "A5",
+      "statement": "Observation under another project's context yields no support from this project's facts.",
+      "falsified_by": "non-empty support"
+    },
+    {
+      "id": "A6",
+      "statement": "Same-slot facts admissible to the reader but absent from the admitted set are counted as eligible_unretrieved and block clean coverage; facts invisible to the reader (other project, forgotten, disputed, superseded) are never counted.",
+      "falsified_by": "eligible_unretrieved differing from the number of admissible non-retrieved same-slot facts"
+    },
+    {
+      "id": "A7",
+      "statement": "Any declared valid_until, or a valid_from later than recording time, is a declared_temporal_boundary obstacle; an earlier valid_from is not.",
+      "falsified_by": "the temporal counter differing"
+    },
+    {
+      "id": "A8",
+      "statement": "A requested slot with no typed facts is reported missing with zero support.",
+      "falsified_by": "coverage reported or support non-zero"
+    },
+    {
+      "id": "A9",
+      "statement": "The slot census equals an independent full-store enumeration performed under the same reader context.",
+      "falsified_by": "any counter differing from the enumeration"
+    },
+    {
+      "id": "A10",
+      "statement": "Reopening the store yields an identical report for an identical query.",
+      "falsified_by": "a different serialized report after restart"
+    },
+    {
+      "id": "A11",
+      "statement": "A minimum support multiplicity counts distinct admitted facts.",
+      "falsified_by": "a need with min 2 covered by one fact, or not covered by two"
+    }
+  ],
+  "cases": [
+    {
+      "id": "A1-only-caller-declared-exact-slot-support",
+      "invariants": [
+        "A1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Pellucid queue retention window was discussed at standup"
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q3",
+          "text": "Pellucid queue retention window owner is the data team",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "owner",
+            "v": "data team",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "expect": {
+        "support_refs": {
+          "eq": [
+            "memory:q1"
+          ]
+        },
+        "mechanical_coverage_met": {
+          "eq": true
+        },
+        "diagnosis": {
+          "eq": "coverage_observed_unattested"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A2-weaker-same-slot-claims-are-not-support",
+      "invariants": [
+        "A2"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "retain_extracted",
+          "ref": "memory:q2",
+          "text": "Pellucid queue retention window is sixty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "sixty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q3",
+          "text": "Pellucid queue retention window might be sixty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "sixty days",
+            "assertion": "state",
+            "cardinality": "single",
+            "flags": {
+              "hedged": true
+            }
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q4",
+          "text": "Pellucid queue retention window is not thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single",
+            "flags": {
+              "negated": true
+            }
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q5",
+          "text": "Vendors say Pellucid queue retention window is ninety days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "ninety days",
+            "assertion": "state",
+            "cardinality": "single",
+            "flags": {
+              "attributed_to_other": true
+            }
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "expect": {
+        "support_refs": {
+          "eq": [
+            "memory:q1"
+          ]
+        },
+        "obstacles.qualified_counter_evidence": {
+          "eq": 4
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A3-recheck-after-forget",
+      "invariants": [
+        "A3"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Pellucid queue retention window confirmed thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "between": [
+        {
+          "op": "forget",
+          "ref": "memory:q2"
+        }
+      ],
+      "expect": {
+        "support_refs": {
+          "eq": [
+            "memory:q1"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A3-recheck-after-dispute",
+      "invariants": [
+        "A3"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Pellucid queue retention window confirmed thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "between": [
+        {
+          "op": "dispute",
+          "ref": "memory:q2"
+        }
+      ],
+      "expect": {
+        "support_refs": {
+          "eq": [
+            "memory:q1"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A3-recheck-after-supersede",
+      "invariants": [
+        "A3"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Pellucid queue retention window confirmed thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "between": [
+        {
+          "op": "correct",
+          "ref": "memory:q2",
+          "text": "Pellucid queue retention window review pending",
+          "kind": "error_correction",
+          "cite": "none"
+        }
+      ],
+      "expect": {
+        "support_refs": {
+          "eq": [
+            "memory:q1"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A4-injected-foreign-and-missing-references",
+      "invariants": [
+        "A4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:qb",
+          "text": "Pellucid queue retention window is forty five days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "forty five days",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "scope": "project:b"
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "mutations": [
+        {
+          "m": "inject_admitted",
+          "ref": "b:memory:qb"
+        },
+        {
+          "m": "inject_admitted",
+          "ref": "@literal:ref-9999"
+        }
+      ],
+      "probes": [
+        "values_absent:forty five days"
+      ],
+      "expect": {
+        "support_refs": {
+          "eq": [
+            "memory:q1"
+          ]
+        },
+        "values_absent": {
+          "eq": true
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A5-other-project-context-sees-nothing",
+      "invariants": [
+        "A5"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "observe_scope": "project:b",
+      "expect": {
+        "support_refs": {
+          "eq": []
+        },
+        "need_missing": {
+          "eq": true
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A6-hidden-admissible-competitor-counted",
+      "invariants": [
+        "A6"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Since the audit the purge horizon became ninety days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "ninety days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:qb",
+          "text": "Purge horizon for the other team is weekly",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "weekly",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "scope": "project:b"
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q3",
+          "text": "The archive horizon was briefly two days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "two days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:q3"
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q4",
+          "text": "The purge horizon was rumoured at one day",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "one day",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "dispute",
+          "ref": "memory:q4"
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "expect": {
+        "obstacles.eligible_unretrieved": {
+          "eq": 1
+        },
+        "support_refs": {
+          "eq": [
+            "memory:q1"
+          ]
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A6-budget-capped-same-slot-counted",
+      "invariants": [
+        "A6"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Pellucid queue retention window is ninety days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "ninety days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "lexical_limit": 1,
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "expect": {
+        "obstacles.eligible_unretrieved": {
+          "eq": 1
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A7-future-valid-until",
+      "invariants": [
+        "A7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "valid_from": "2020-01-01",
+          "valid_until": "2099-01-01"
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "expect": {
+        "obstacles.declared_temporal_boundary": {
+          "eq": 1
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A7-expired-valid-until",
+      "invariants": [
+        "A7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "valid_from": "2018-01-01",
+          "valid_until": "2018-12-31"
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "expect": {
+        "obstacles.declared_temporal_boundary": {
+          "eq": 1
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A7-prospective-valid-from",
+      "invariants": [
+        "A7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "valid_from": "2099-06-01"
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "expect": {
+        "obstacles.declared_temporal_boundary": {
+          "eq": 1
+        },
+        "diagnosis": {
+          "not_in": [
+            "coverage_observed_unattested",
+            "mechanical_coverage_observed"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A7-past-valid-from-is-not-an-obstacle",
+      "invariants": [
+        "A7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "valid_from": "2001-01-01"
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "expect": {
+        "obstacles.declared_temporal_boundary": {
+          "eq": 0
+        },
+        "diagnosis": {
+          "eq": "coverage_observed_unattested"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A8-missing-evidence",
+      "invariants": [
+        "A8"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "encryption mode"
+        }
+      ],
+      "expect": {
+        "support_refs": {
+          "eq": []
+        },
+        "need_missing": {
+          "eq": true
+        },
+        "mechanical_coverage_met": {
+          "eq": false
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A9-census-equals-full-enumeration",
+      "invariants": [
+        "A9"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Since the audit the purge horizon became ninety days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "ninety days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q3",
+          "text": "Pellucid queue retention window might be sixty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "sixty days",
+            "assertion": "state",
+            "cardinality": "single",
+            "flags": {
+              "hedged": true
+            }
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q4",
+          "text": "Pellucid queue retention window was ten days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "ten days",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "valid_from": "2015-01-01",
+          "valid_until": "2015-02-01"
+        },
+        {
+          "op": "remember",
+          "ref": "memory:qb",
+          "text": "Purge horizon elsewhere is weekly",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "weekly",
+            "assertion": "state",
+            "cardinality": "single"
+          },
+          "scope": "project:b"
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q5",
+          "text": "Purge horizon draft value",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "draft",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "forget",
+          "ref": "memory:q5"
+        },
+        {
+          "op": "correct",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty one days",
+          "kind": "state_change",
+          "cite": "none"
+        },
+        {
+          "op": "reopen"
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "probes": [
+        "census_oracle"
+      ],
+      "expect": {
+        "census_matches_full_scan": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "A10-restart-stable-report",
+      "invariants": [
+        "A10"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Since the audit the purge horizon became ninety days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "ninety days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window"
+        }
+      ],
+      "probes": [
+        "restart_identical"
+      ],
+      "expect": {
+        "restart_identical": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "A11-multiplicity-one-fact",
+      "invariants": [
+        "A11"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window",
+          "min": 2
+        }
+      ],
+      "expect": {
+        "need_missing": {
+          "eq": true
+        },
+        "mechanical_coverage_met": {
+          "eq": false
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "A11-multiplicity-two-facts",
+      "invariants": [
+        "A11"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:q1",
+          "text": "Pellucid queue retention window is thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:q2",
+          "text": "Pellucid queue retention window confirmed thirty days",
+          "prop": {
+            "s": "Pellucid queue",
+            "a": "retention window",
+            "v": "thirty days",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Pellucid queue retention window",
+      "needs": [
+        {
+          "s": "Pellucid queue",
+          "a": "retention window",
+          "min": 2
+        }
+      ],
+      "expect": {
+        "need_missing": {
+          "eq": false
+        },
+        "support_refs": {
+          "eq": [
+            "memory:q1",
+            "memory:q2"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    }
+  ]
+}

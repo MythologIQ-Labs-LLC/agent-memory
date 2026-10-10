@@ -1,0 +1,944 @@
+{
+  "replay_id": "governed-admitted-typed-value-coherence-v1",
+  "fixture_version": 1,
+  "dsl_version": "644-v7-replay-dsl/1",
+  "owning_issue": 644,
+  "frozen_on": "2026-10-10",
+  "status": "frozen_before_execution",
+  "base_commit": "c4827f9fef055b0bc2a9bd94b28adba22bfc42d0",
+  "independence": "Expected outcomes were written from the contract documents listed in contract_sources before any replay runner existed or executed. They are not derived from running the implementation under test. The original 126-case independent holdout (heldout_bench.py, sha256 25ce88eb...) and its vocabulary were not used. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding fixture version with a recorded reason.",
+  "stop_lines": [
+    "no fixture edit after first execution; supersede with -v2 and record why",
+    "no expectation weakened to obtain PASS",
+    "no runtime change motivated by a replay outcome without a preregistered reproducer",
+    "a replay verdict is evidence, not v7 acceptance; acceptance requires independent review"
+  ],
+  "title": "Same-slot admitted typed values are classified by the documented disposition table and never resolved implicitly",
+  "contract_sources": [
+    {
+      "path": "docs/77-governed-admitted-value-coherence.md",
+      "sha256_at_base": "efd8ed226dcf4ce17d852e3fbe11ecdb2b3ebf2a58c8f30975d5dc8ce4fdab35"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "V1",
+      "statement": "No eligible typed value among admitted facts: disposition no_eligible_value.",
+      "falsified_by": "another or no disposition"
+    },
+    {
+      "id": "V2",
+      "statement": "One or more exactly equal single-valued values without asserted change: same_value_observed, one group holding every supporting fact.",
+      "falsified_by": "another disposition or grouping"
+    },
+    {
+      "id": "V3",
+      "statement": "Different single-valued values without asserted change: competing_values_unresolved, one group per value.",
+      "falsified_by": "another disposition or grouping"
+    },
+    {
+      "id": "V4",
+      "statement": "Any multi-valued claim, even a single value: coexistence_possible.",
+      "falsified_by": "another disposition"
+    },
+    {
+      "id": "V5",
+      "statement": "Any unknown cardinality, even a single value: cardinality_unresolved.",
+      "falsified_by": "another disposition"
+    },
+    {
+      "id": "V6",
+      "statement": "Any asserted change, including a single current claim: change_assertion_unresolved; an asserted change is never treated as an applied correction.",
+      "falsified_by": "another disposition"
+    },
+    {
+      "id": "V7",
+      "statement": "Comparison is strict literal equality: capitalization variants compete.",
+      "falsified_by": "same_value_observed for case variants"
+    },
+    {
+      "id": "V8",
+      "statement": "An unresolved disposition yields diagnosis value_coherence_unresolved and continuation, even when mechanical coverage is met.",
+      "falsified_by": "another diagnosis or a stop proposal"
+    },
+    {
+      "id": "V9",
+      "statement": "Disputed or forgotten facts never contribute a value.",
+      "falsified_by": "their reference in any value group"
+    },
+    {
+      "id": "V10",
+      "statement": "The serialized report contains no raw claim values.",
+      "falsified_by": "a claim value string in the report"
+    },
+    {
+      "id": "V11",
+      "statement": "Grouping is independent of write order.",
+      "falsified_by": "different groups or disposition for permuted write order"
+    },
+    {
+      "id": "V12",
+      "statement": "A report carrying an unresolved disposition cannot be constructed with a stop proposal.",
+      "falsified_by": "construction succeeding"
+    },
+    {
+      "id": "V13",
+      "statement": "Multiplicity counts distinct facts, not independent sources (recorded boundary).",
+      "falsified_by": "two agreeing facts from one source counted once"
+    }
+  ],
+  "cases": [
+    {
+      "id": "V1-no-eligible-typed-value",
+      "invariants": [
+        "V1"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team discussed in review"
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "no_eligible_value"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "V2-single-value",
+      "invariants": [
+        "V2"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "same_value_observed"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "coherence_groups": {
+          "eq": [
+            [
+              "memory:c1"
+            ]
+          ]
+        },
+        "diagnosis": {
+          "eq": "coverage_observed_unattested"
+        }
+      }
+    },
+    {
+      "id": "V2-equal-values",
+      "invariants": [
+        "V2"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team confirmed as Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "same_value_observed"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "coherence_groups": {
+          "eq": [
+            [
+              "memory:c1",
+              "memory:c2"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "V3-competing-values",
+      "invariants": [
+        "V3",
+        "V8"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team is Northwind",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Northwind",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "competing_values_unresolved"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "coherence_groups": {
+          "eq": [
+            [
+              "memory:c1"
+            ],
+            [
+              "memory:c2"
+            ]
+          ]
+        },
+        "diagnosis": {
+          "eq": "value_coherence_unresolved"
+        },
+        "mechanical_coverage_met": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "V4-multi-single-value",
+      "invariants": [
+        "V4",
+        "V8"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team includes Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "multi"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "coexistence_possible"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "diagnosis": {
+          "eq": "value_coherence_unresolved"
+        }
+      }
+    },
+    {
+      "id": "V4-multi-two-values",
+      "invariants": [
+        "V4"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team includes Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "multi"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team includes Northwind",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Northwind",
+            "assertion": "state",
+            "cardinality": "multi"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "coexistence_possible"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "V5-unknown-cardinality",
+      "invariants": [
+        "V5",
+        "V8"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": null
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "cardinality_unresolved"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "diagnosis": {
+          "eq": "value_coherence_unresolved"
+        }
+      }
+    },
+    {
+      "id": "V6-single-change-assertion",
+      "invariants": [
+        "V6",
+        "V8"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team changed to Northwind",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Northwind",
+            "assertion": "change",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "change_assertion_unresolved"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "diagnosis": {
+          "eq": "value_coherence_unresolved"
+        }
+      }
+    },
+    {
+      "id": "V6-change-over-prior-state",
+      "invariants": [
+        "V6"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team changed to Northwind",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Northwind",
+            "assertion": "change",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "change_assertion_unresolved"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "V7-capitalization-competes",
+      "invariants": [
+        "V7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team is ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "competing_values_unresolved"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "coherence_groups": {
+          "eq": [
+            [
+              "memory:c1"
+            ],
+            [
+              "memory:c2"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "V9-disputed-and-forgotten-excluded",
+      "invariants": [
+        "V9"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team is Northwind",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Northwind",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c3",
+          "text": "Corvid console owner team is Halcyon",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Halcyon",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "dispute",
+          "ref": "memory:c2"
+        },
+        {
+          "op": "forget",
+          "ref": "memory:c3"
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "same_value_observed"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "coherence_groups": {
+          "eq": [
+            [
+              "memory:c1"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "V10-no-raw-values-in-report",
+      "invariants": [
+        "V10"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team is Northwind",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Northwind",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "probes": [
+        "values_absent:Ledgerline",
+        "values_absent:Northwind"
+      ],
+      "expect": {
+        "values_absent": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "V11-write-order-a",
+      "invariants": [
+        "V11"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team is Northwind",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Northwind",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c3",
+          "text": "Corvid console owner team also Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "competing_values_unresolved"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "coherence_groups": {
+          "eq": [
+            [
+              "memory:c1",
+              "memory:c3"
+            ],
+            [
+              "memory:c2"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "V11-write-order-b",
+      "invariants": [
+        "V11"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c3",
+          "text": "Corvid console owner team also Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team is Northwind",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Northwind",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "competing_values_unresolved"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "coherence_groups": {
+          "eq": [
+            [
+              "memory:c1",
+              "memory:c3"
+            ],
+            [
+              "memory:c2"
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "V12-stop-with-unresolved-values-refused",
+      "invariants": [
+        "V12"
+      ],
+      "kind": "forge_report",
+      "field": "continuation_proposal",
+      "value": "review_stop",
+      "with_unresolved_values": true,
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "V13-one-source-two-facts",
+      "invariants": [
+        "V13"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:c1",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:c2",
+          "text": "Corvid console owner team is Ledgerline",
+          "prop": {
+            "s": "Corvid console",
+            "a": "owner team",
+            "v": "Ledgerline",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Corvid console owner team",
+      "needs": [
+        {
+          "s": "Corvid console",
+          "a": "owner team"
+        }
+      ],
+      "expect": {
+        "coherence_status": {
+          "eq": "same_value_observed"
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        },
+        "coherence_groups": {
+          "eq": [
+            [
+              "memory:c1",
+              "memory:c2"
+            ]
+          ]
+        },
+        "support_count": {
+          "eq": 2
+        }
+      }
+    }
+  ]
+}

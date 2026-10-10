@@ -1,0 +1,809 @@
+{
+  "replay_id": "typed-sufficiency-noninterference-and-negative-controls-v1",
+  "fixture_version": 1,
+  "dsl_version": "644-v7-replay-dsl/1",
+  "owning_issue": 644,
+  "frozen_on": "2026-10-10",
+  "status": "frozen_before_execution",
+  "base_commit": "c4827f9fef055b0bc2a9bd94b28adba22bfc42d0",
+  "independence": "Expected outcomes were written from the contract documents listed in contract_sources before any replay runner existed or executed. They are not derived from running the implementation under test. The original 126-case independent holdout (heldout_bench.py, sha256 25ce88eb...) and its vocabulary were not used. A failing expectation is a finding, never a reason to edit this fixture; a corrected expectation requires a superseding fixture version with a recorded reason.",
+  "stop_lines": [
+    "no fixture edit after first execution; supersede with -v2 and record why",
+    "no expectation weakened to obtain PASS",
+    "no runtime change motivated by a replay outcome without a preregistered reproducer",
+    "a replay verdict is evidence, not v7 acceptance; acceptance requires independent review"
+  ],
+  "title": "Typed sufficiency observation is read-only, never confers authority, and refuses malformed input",
+  "contract_sources": [
+    {
+      "path": "docs/76-typed-recall-evidence-sufficiency.md",
+      "sha256_at_base": "3ce9d1781446f4ea678f5240fc5f66e79ab2d466eaef03d5ade0ed960e4913f1"
+    },
+    {
+      "path": "docs/79-independent-644-qualification-reconciliation.md",
+      "sha256_at_base": "a957b70cfe69e3567c585010575a21ae3de6bd8b24d26343e092bfc27339fe12"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "N1",
+      "statement": "Running every #644 observer (persisted coverage, manual coverage, transition witness, receipt verification) between operations leaves all facade-visible outputs, the persisted canonical facts and the audit event sequence identical to an identical twin run without observers.",
+      "falsified_by": "any normalized output, fact or event that differs between the twin runs"
+    },
+    {
+      "id": "N2",
+      "statement": "A single observation changes neither the substrate state digest, the audit event count, nor the recall result's candidates, admitted, ranked or refusals.",
+      "falsified_by": "a digest, count or list differing before and after observation"
+    },
+    {
+      "id": "N3",
+      "statement": "Meeting the admitted-count target is not typed sufficiency: untyped admitted facts leave a typed need missing and never produce a stop proposal.",
+      "falsified_by": "mechanical coverage reported, or the need not missing, with only untyped facts"
+    },
+    {
+      "id": "N4",
+      "statement": "Controller-estimate coverage cannot satisfy a typed need.",
+      "falsified_by": "mechanical_coverage_met true from controller_estimate observations only"
+    },
+    {
+      "id": "N5",
+      "statement": "Caller-labelled (manual) coverage never proposes a stop, even when labelled runtime_typed_observation and covering every need.",
+      "falsified_by": "continuation_proposal review_stop from the manual observer"
+    },
+    {
+      "id": "N6",
+      "statement": "Report authority fields are fixed (answer_quality_verified, can_admit, can_mutate false; authority none; stop_attested false) and a report constructed with any forged authority value is refused.",
+      "falsified_by": "a report exposing a different value or accepting a forged one"
+    },
+    {
+      "id": "N7",
+      "statement": "Malformed needs fail closed with ValueError: empty, duplicate, non-canonical slot spelling and non-typed keys.",
+      "falsified_by": "a report produced for a malformed need"
+    },
+    {
+      "id": "N8",
+      "statement": "The report is independent of the order in which needs are declared.",
+      "falsified_by": "different serialized reports for permuted needs"
+    },
+    {
+      "id": "N9",
+      "statement": "Route budget diagnostics are conservative: a route that returned exactly its limit is budget-bound, a planned route not executed is reported unexecuted, and neither yields a stop proposal.",
+      "falsified_by": "a capped route not reported budget-bound, an unexecuted route not reported, or review_stop"
+    },
+    {
+      "id": "N10",
+      "statement": "Manual coverage may refer only to admitted references.",
+      "falsified_by": "a report accepting coverage for a non-admitted reference"
+    }
+  ],
+  "cases": [
+    {
+      "id": "N1-twin-lifecycle",
+      "invariants": [
+        "N1"
+      ],
+      "kind": "twin",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "observe_all",
+          "query": "Vireo cluster storage tier",
+          "needs": [
+            {
+              "s": "Vireo cluster",
+              "a": "storage tier"
+            }
+          ]
+        },
+        {
+          "op": "remember",
+          "ref": "memory:v2",
+          "text": "Vireo cluster storage tier is warm",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "warm",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:v3",
+          "text": "Vireo cluster storage tier changed to frozen",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "frozen",
+            "assertion": "change",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:v4",
+          "text": "Vireo cluster operator note about maintenance windows"
+        },
+        {
+          "op": "observe_all",
+          "query": "Vireo cluster storage tier",
+          "needs": [
+            {
+              "s": "Vireo cluster",
+              "a": "storage tier"
+            }
+          ]
+        },
+        {
+          "op": "dispute",
+          "ref": "memory:v2"
+        },
+        {
+          "op": "forget",
+          "ref": "memory:v4"
+        },
+        {
+          "op": "correct",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is glacial",
+          "kind": "state_change",
+          "cite": "none"
+        },
+        {
+          "op": "observe_all",
+          "query": "Vireo cluster storage tier",
+          "needs": [
+            {
+              "s": "Vireo cluster",
+              "a": "storage tier"
+            }
+          ]
+        },
+        {
+          "op": "reopen"
+        },
+        {
+          "op": "observe_all",
+          "query": "Vireo cluster storage tier",
+          "needs": [
+            {
+              "s": "Vireo cluster",
+              "a": "storage tier"
+            }
+          ]
+        }
+      ],
+      "expect": {
+        "twin_identical": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "N2-read-only-single-observation",
+      "invariants": [
+        "N2"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:v2",
+          "text": "Vireo cluster storage tier is warm",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "warm",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        }
+      ],
+      "probes": [
+        "state_unchanged",
+        "result_unchanged"
+      ],
+      "expect": {
+        "state_unchanged": {
+          "eq": true
+        },
+        "result_unchanged": {
+          "eq": true
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "N3-count-target-is-not-typed-sufficiency",
+      "invariants": [
+        "N3"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier notes from Monday"
+        },
+        {
+          "op": "remember",
+          "ref": "memory:v2",
+          "text": "Vireo cluster storage tier notes from Tuesday"
+        },
+        {
+          "op": "remember",
+          "ref": "memory:v3",
+          "text": "Vireo cluster storage tier notes from Friday"
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "count_target": 3,
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        }
+      ],
+      "expect": {
+        "count_target_met": {
+          "eq": true
+        },
+        "mechanical_coverage_met": {
+          "eq": false
+        },
+        "need_missing": {
+          "eq": true
+        },
+        "support_refs": {
+          "eq": []
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "N4-controller-estimate-cannot-cover",
+      "invariants": [
+        "N4"
+      ],
+      "kind": "manual_coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        }
+      ],
+      "coverage": [
+        {
+          "ref": "memory:v1",
+          "origin": "controller_estimate"
+        }
+      ],
+      "expect": {
+        "mechanical_coverage_met": {
+          "eq": false
+        },
+        "need_missing": {
+          "eq": true
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "N5-forged-typed-label-never-stops",
+      "invariants": [
+        "N5"
+      ],
+      "kind": "manual_coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        }
+      ],
+      "coverage": [
+        {
+          "ref": "memory:v1",
+          "origin": "runtime_typed_observation"
+        }
+      ],
+      "expect": {
+        "mechanical_coverage_met": {
+          "eq": true
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "N6-authority-fields-fixed",
+      "invariants": [
+        "N6"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        }
+      ],
+      "expect": {
+        "answer_quality_verified": {
+          "eq": false
+        },
+        "can_admit": {
+          "eq": false
+        },
+        "can_mutate": {
+          "eq": false
+        },
+        "authority_effect": {
+          "eq": "none"
+        },
+        "stop_attested": {
+          "eq": false
+        }
+      }
+    },
+    {
+      "id": "N6-forged-report-answer_quality_verified",
+      "invariants": [
+        "N6"
+      ],
+      "kind": "forge_report",
+      "field": "answer_quality_verified",
+      "value": true,
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N6-forged-report-can_admit",
+      "invariants": [
+        "N6"
+      ],
+      "kind": "forge_report",
+      "field": "can_admit",
+      "value": true,
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N6-forged-report-can_mutate",
+      "invariants": [
+        "N6"
+      ],
+      "kind": "forge_report",
+      "field": "can_mutate",
+      "value": true,
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N6-forged-report-authority_effect",
+      "invariants": [
+        "N6"
+      ],
+      "kind": "forge_report",
+      "field": "authority_effect",
+      "value": "stop",
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N6-forged-report-stop_attested",
+      "invariants": [
+        "N6"
+      ],
+      "kind": "forge_report",
+      "field": "stop_attested",
+      "value": true,
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N7-malformed-needs-empty",
+      "invariants": [
+        "N7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "need_keys": [],
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N7-malformed-needs-duplicate",
+      "invariants": [
+        "N7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "need_keys": [
+        "@canonical:Vireo cluster|storage tier",
+        "@canonical:Vireo cluster|storage tier"
+      ],
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N7-malformed-needs-non-canonical-spelling",
+      "invariants": [
+        "N7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "need_keys": [
+        "typed:Vireo Cluster|Storage Tier"
+      ],
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N7-malformed-needs-untyped-key",
+      "invariants": [
+        "N7"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "need_keys": [
+        "vireo cluster storage tier"
+      ],
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    },
+    {
+      "id": "N8-need-order-invariance",
+      "invariants": [
+        "N8"
+      ],
+      "kind": "coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        },
+        {
+          "op": "remember",
+          "ref": "memory:v2",
+          "text": "Vireo cluster backup cadence is nightly",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "backup cadence",
+            "v": "nightly",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier backup cadence",
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        },
+        {
+          "s": "Vireo cluster",
+          "a": "backup cadence"
+        }
+      ],
+      "probes": [
+        "permutation_invariant"
+      ],
+      "expect": {
+        "permutation_invariant": {
+          "eq": true
+        }
+      }
+    },
+    {
+      "id": "N9-capped-route-is-budget-bound",
+      "invariants": [
+        "N9"
+      ],
+      "kind": "pure_assess",
+      "admitted": [
+        "fact-a",
+        "fact-b"
+      ],
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        }
+      ],
+      "coverage": [
+        {
+          "ref": "fact-a",
+          "origin": "runtime_typed_observation"
+        }
+      ],
+      "route_work": [
+        {
+          "route_id": "lexical",
+          "candidate_limit": 2,
+          "returned_count": 2,
+          "executed": true
+        }
+      ],
+      "expect": {
+        "budget_bound_routes": {
+          "eq": [
+            "lexical"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        }
+      }
+    },
+    {
+      "id": "N9-unexecuted-route-reported",
+      "invariants": [
+        "N9"
+      ],
+      "kind": "pure_assess",
+      "admitted": [
+        "fact-a"
+      ],
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        }
+      ],
+      "coverage": [
+        {
+          "ref": "fact-a",
+          "origin": "runtime_typed_observation"
+        }
+      ],
+      "route_work": [
+        {
+          "route_id": "lexical",
+          "candidate_limit": 5,
+          "returned_count": 1,
+          "executed": true
+        },
+        {
+          "route_id": "semantic_vector",
+          "candidate_limit": 4,
+          "returned_count": 0,
+          "executed": false
+        }
+      ],
+      "expect": {
+        "unexecuted_routes": {
+          "eq": [
+            "semantic_vector"
+          ]
+        },
+        "continuation_proposal": {
+          "eq": "continue_if_permitted"
+        }
+      }
+    },
+    {
+      "id": "N10-coverage-outside-admitted-refused",
+      "invariants": [
+        "N10"
+      ],
+      "kind": "manual_coverage",
+      "setup": [
+        {
+          "op": "remember",
+          "ref": "memory:v1",
+          "text": "Vireo cluster storage tier is cold",
+          "prop": {
+            "s": "Vireo cluster",
+            "a": "storage tier",
+            "v": "cold",
+            "assertion": "state",
+            "cardinality": "single"
+          }
+        }
+      ],
+      "query": "Vireo cluster storage tier",
+      "needs": [
+        {
+          "s": "Vireo cluster",
+          "a": "storage tier"
+        }
+      ],
+      "coverage": [
+        {
+          "ref": "@literal:not-an-admitted-fact",
+          "origin": "runtime_typed_observation"
+        }
+      ],
+      "expect": {
+        "raises": {
+          "eq": "ValueError"
+        }
+      }
+    }
+  ]
+}
