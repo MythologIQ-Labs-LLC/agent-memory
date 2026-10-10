@@ -295,13 +295,33 @@ def _separate_trailing_request(piece: str) -> tuple[str, ...]:
     return (piece,)
 
 
+def _split_top_level_conjunctions(sentence: str) -> list[str]:
+    """Preserve the original conjunction grammar outside literal data spans.
+
+    Only top-level conjunctions delimit independent asserted clauses. A title,
+    quotation, inline code span or bracketed aside must not be promoted into a
+    second principal proposition merely because it contains "and I" or "but".
+    """
+    pattern = (r",?\s+but\s+|,?\s+and\s+(?=(?:"
+               + "|".join(sorted(_CLAUSE_OPENERS)) + r")\b)")
+    pieces: list[str] = []
+    begin = 0
+    for match in re.finditer(pattern, sentence):
+        if _inside_protected_span(sentence, match.start()):
+            continue
+        pieces.append(sentence[begin:match.start()])
+        begin = match.end()
+    pieces.append(sentence[begin:])
+    return pieces
+
+
 def _clause_pieces(text: str) -> list[tuple[str, int, bool]]:
     """Clause pieces with their sentence number and whether that sentence ends in ``?``."""
 
     parts: list[tuple[str, int, bool]] = []
     for number, sentence in enumerate(re.split(r"(?<=[.!?])\s+|;\s*|:\s+", text)):
         question = sentence.rstrip().rstrip("\"')]}*\u201d\u2019").endswith("?")
-        for piece in re.split(r",?\s+but\s+|,?\s+and\s+(?=(?:" + "|".join(sorted(_CLAUSE_OPENERS)) + r")\b)", sentence):
+        for piece in _split_top_level_conjunctions(sentence):
             for bounded in _separate_trailing_request(piece):
                 bounded = bounded.strip(" ,.!?")
                 if bounded:
