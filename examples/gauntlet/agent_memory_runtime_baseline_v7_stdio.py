@@ -37,14 +37,21 @@ BASE = Path(tempfile.gettempdir()) / "agent-memory-gauntlet-runtime-baseline-v7"
 CHECKOUT = Path(__file__).resolve().parents[2]
 
 
+# The Runtime Baseline source boundary (reports/runtime/baseline-v1-source-boundary.json):
+# evaluation and Gauntlet machinery, lane records included, are not runtime.
+RUNTIME_PATHSPECS = ("reference/agentmem_ref", ":(exclude)reference/agentmem_ref/evaluation/**")
+
+
 def _runtime_identity() -> dict[str, Any]:
     """Which runtime this process actually imported, checked against FROZEN_RUNTIME_REVISION.
 
     The revision constant is only a declaration. Evidence may carry it only when the
-    imported ``agentmem_ref`` is this checkout's package and that package's tracked files
-    equal the frozen revision with nothing untracked. Otherwise the adapter refuses every
-    operation (fail closed) instead of producing mislabelled evidence. This check is
-    integrity, not attestation: it is computed by the process under test.
+    imported ``agentmem_ref`` is this checkout's package and that package's runtime files
+    (the Runtime Baseline source boundary: ``evaluation/**`` is excluded there, and this
+    process imports none of it) equal the frozen revision with nothing untracked. Otherwise
+    the adapter refuses every operation (fail closed) instead of producing mislabelled
+    evidence. This check is integrity, not attestation: it is computed by the process under
+    test.
     """
     imported = Path(agentmem_ref.__file__).resolve().parent
     expected = (CHECKOUT / "reference" / "agentmem_ref").resolve()
@@ -60,8 +67,8 @@ def _runtime_identity() -> dict[str, Any]:
 
     try:
         tree = git("rev-parse", f"{FROZEN_RUNTIME_REVISION}:reference/agentmem_ref")
-        changed = git("diff", "--quiet", FROZEN_RUNTIME_REVISION, "--", "reference/agentmem_ref")
-        untracked = git("ls-files", "--others", "--exclude-standard", "--", "reference/agentmem_ref")
+        changed = git("diff", "--quiet", FROZEN_RUNTIME_REVISION, "--", *RUNTIME_PATHSPECS)
+        untracked = git("ls-files", "--others", "--exclude-standard", "--", *RUNTIME_PATHSPECS)
         identity["frozen_runtime_tree"] = tree.stdout.strip() if tree.returncode == 0 else None
         identity["matches_frozen_revision"] = (tree.returncode == 0 and changed.returncode == 0
                                               and untracked.returncode == 0 and not untracked.stdout.strip())

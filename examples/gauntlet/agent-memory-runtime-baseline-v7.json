@@ -1,7 +1,7 @@
 {
   "adapter": {
     "id": "agent-memory-runtime-baseline-v7-stdio",
-    "revision": "git-blob:2d650caa612c86d96fa3cc63d2d29ae1d2aec423",
+    "revision": "git-blob:28b8333256ac508a45517d6c4a38b9c44a873dd7",
     "version": "0.1.0"
   },
   "authority_effect": "none",

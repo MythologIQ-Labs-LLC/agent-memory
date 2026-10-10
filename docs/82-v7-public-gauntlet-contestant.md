@@ -22,8 +22,11 @@ in `adapter.revision`. The independent validation found that the first candidate
 different field set, and corrected it (D1).
 
 **Imported-runtime guard (D2).** At start-up the adapter checks two things: that the
-imported `agentmem_ref` is this checkout's `reference/agentmem_ref`, and that its tracked
-files equal `FROZEN_RUNTIME_REVISION`, with nothing untracked. Otherwise it refuses every
+imported `agentmem_ref` is this checkout's `reference/agentmem_ref`, and that its runtime
+files equal `FROZEN_RUNTIME_REVISION`, with nothing untracked. "Runtime files" means the
+Runtime Baseline source boundary, which excludes `reference/agentmem_ref/evaluation/**`;
+the adapter process imports none of that directory. Lane records committed there (#770)
+therefore do not trip the guard. Otherwise it refuses every
 operation with `runtime_identity_unverified`, rather than producing evidence labelled
 with a revision it did not run. Each response carries the computed `runtime_identity`
 under `adapter_evidence`. The process under test computes this itself, so it is an
