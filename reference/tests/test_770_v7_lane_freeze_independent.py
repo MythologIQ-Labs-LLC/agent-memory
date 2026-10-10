@@ -18,6 +18,9 @@ L4  frozen rows carry no status_reason, and the v6 findings carry over without t
     acceptance note, so the acceptance-digest reconstruction (``_as_frozen``) round-trips.
 L5  the importers must admit exactly the v7 posture and refuse every other declaration blob,
     checker state, lane digest or lane id.
+L6  lane records under reference/agentmem_ref/evaluation are not runtime: the five v7 replay
+    records must stay VERIFIED (not STALE) while the runtime source boundary is unchanged, and
+    a runtime edit must still make them STALE.
 """
 
 from __future__ import annotations
@@ -25,6 +28,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import runpy
 import subprocess
 import sys
 import unittest
@@ -238,6 +242,28 @@ class V7ImporterRefusals(unittest.TestCase):
         lane_file = "reference/agentmem_ref/evaluation/lanes/amb-precisionmembench-retrieval-v7.json"
         with self.assertRaises(subprocess.CalledProcessError):
             AMB_IMPORT.lane_at_revision(REPO_ROOT, lane_file, "16a248b1e28f455fbf19217114175f0c20df2a01", at_head=False)
+
+
+# L6
+class ReplayEvidenceFreshness(unittest.TestCase):
+    def test_lane_records_do_not_make_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        result = verifier["verify"]()
+        self.assertEqual({row["replay"]: row["status"] for row in result["replays"]},
+                         {row["replay"]: "VERIFIED" for row in result["replays"]}, result)
+        self.assertEqual(len(result["replays"]), 5)
+
+    def test_a_runtime_edit_still_makes_replay_evidence_stale(self):
+        verifier = runpy.run_path(str(REPO_ROOT / "scripts/verify_644_v7_replays.py"))
+        target = REPO_ROOT / "reference/agentmem_ref/runtime/adapter.py"
+        original = target.read_bytes()
+        try:
+            target.write_bytes(original + b"\n# runtime edit probe\n")
+            stale = verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01")
+        finally:
+            target.write_bytes(original)
+        self.assertTrue(stale)
+        self.assertFalse(verifier["runtime_changed_since"]("16a248b1e28f455fbf19217114175f0c20df2a01"))
 
 
 if __name__ == "__main__":
