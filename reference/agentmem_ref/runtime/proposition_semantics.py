@@ -250,14 +250,15 @@ def _is_finite_verb(words: list[str], index: int) -> bool:
 # --------------------------------------------------------------------------- clauses
 
 
-_QUOTE_PAIRS = {'"': '"', "'": "'", "“": "”", "‘": "’", chr(96): chr(96)}
+_PROTECTED_DELIMITERS = {'"': '"', "'": "'", "“": "”", "‘": "’", chr(96): chr(96),
+                         "(": ")", "[": "]", "{": "}"}
 
 
-def _inside_quoted_span(text: str, offset: int) -> bool:
-    """True if offset falls within explicit quotes, not a word apostrophe.
+def _inside_protected_span(text: str, offset: int) -> bool:
+    """True inside a quoted or balanced parenthetical data span.
 
-    Treat quote markers as syntax boundaries only; they are not interpreted as
-    attribution, truth, a memory classification, or an authorization signal.
+    Delimiter balancing is syntactic protection against mistaken discourse
+    boundaries, never evidence of truth, relevance, or memory authority.
     """
     stack: list[str] = []
     index = 0
@@ -272,20 +273,20 @@ def _inside_quoted_span(text: str, offset: int) -> bool:
             continue
         if stack and char == stack[-1]:
             stack.pop()
-        elif char in _QUOTE_PAIRS:
-            stack.append(_QUOTE_PAIRS[char])
+        elif char in _PROTECTED_DELIMITERS:
+            stack.append(_PROTECTED_DELIMITERS[char])
         index += 1
     return bool(stack)
 
 
 def _separate_trailing_request(piece: str) -> tuple[str, ...]:
-    """Split explicitly opened requests outside quoted text from asserted text.
+    """Split explicitly opened requests outside protected data from asserted text.
 
     This syntax-only rule never changes proposition identity or truth and leaves
     conjoined declarative clauses to the existing bounded ambiguity handling.
     """
     for boundary in re.finditer(r",\s*(?:and\s+)?|\s+and\s+", piece, flags=re.IGNORECASE):
-        if _inside_quoted_span(piece, boundary.start()):
+        if _inside_protected_span(piece, boundary.start()):
             continue
         prefix = piece[:boundary.start()].strip()
         suffix = piece[boundary.end():].strip()
