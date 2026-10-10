@@ -256,10 +256,14 @@ def _separate_trailing_request(piece: str) -> tuple[str, ...]:
     Ordinary lists and conjoined assertions are never split by this rule.
     This is punctuation/syntax evidence only, never semantic truth or authority.
     """
-    for boundary in re.finditer(r",\s*(?:and\s+)?", piece, flags=re.IGNORECASE):
+    for boundary in re.finditer(r",\s*(?:and\s+)?|\s+and\s+", piece, flags=re.IGNORECASE):
+        prefix = piece[:boundary.start()].strip()
+        # Syntactic request markers inside quoted content are data, not new
+        # discourse acts. Apostrophes in contractions are not quote delimiters.
+        if prefix.count('"') % 2 or prefix.count("“") > prefix.count("”"):
+            continue
         suffix = piece[boundary.end():].strip()
         if suffix and _opens_question(_norm(suffix).split()):
-            prefix = piece[:boundary.start()].strip()
             return tuple(part for part in (prefix, suffix) if part)
     return (piece,)
 
