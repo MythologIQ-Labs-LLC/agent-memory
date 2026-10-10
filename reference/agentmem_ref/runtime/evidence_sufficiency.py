@@ -347,5 +347,7 @@ def assess_sufficiency(observation: SufficiencyObservation) -> SufficiencyReport
         unexecuted_routes=unexecuted,
         diagnosis=diagnosis,
         continuation_proposal=proposal,
-        value_coherence=value_coherence if observation.typed_value_claims else (),
+        # Doc 77 disposition table: every declared need is assessed; a need without an
+        # eligible typed claim is no_eligible_value (META_LEDGER Entry #126).
+        value_coherence=value_coherence,
     )
