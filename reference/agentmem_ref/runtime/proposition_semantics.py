@@ -52,7 +52,7 @@ from typing import Any, Iterable, Mapping, Sequence
 from .temporal_intent import parse_time
 
 INTERPRETER_REF = "agent-memory-deterministic-write-semantics"
-INTERPRETER_VERSION = "1.1.0"
+INTERPRETER_VERSION = "1.2.0"
 WRITE_SEMANTICS_KEY = "write_semantics"
 CLASSIFIER_VERSION = "1.0.0"
 # Classifier 1.1.0 (#732 R3) classifies only a write that carries a typed proposition; every
@@ -250,16 +250,31 @@ def _is_finite_verb(words: list[str], index: int) -> bool:
 # --------------------------------------------------------------------------- clauses
 
 
+def _separate_trailing_request(piece: str) -> tuple[str, ...]:
+    """A comma plus an explicit grammatical request opens a separate discourse act.
+
+    Ordinary lists and conjoined assertions are never split by this rule.
+    This is punctuation/syntax evidence only, never semantic truth or authority.
+    """
+    for boundary in re.finditer(r",\s*(?:and\s+)?", piece, flags=re.IGNORECASE):
+        suffix = piece[boundary.end():].strip()
+        if suffix and _opens_question(_norm(suffix).split()):
+            prefix = piece[:boundary.start()].strip()
+            return tuple(part for part in (prefix, suffix) if part)
+    return (piece,)
+
+
 def _clause_pieces(text: str) -> list[tuple[str, int, bool]]:
     """Clause pieces with their sentence number and whether that sentence ends in ``?``."""
 
     parts: list[tuple[str, int, bool]] = []
     for number, sentence in enumerate(re.split(r"(?<=[.!?])\s+|;\s*|:\s+", text)):
         question = sentence.rstrip().rstrip("\"')]}*\u201d\u2019").endswith("?")
-        for piece in re.split(r",?\s+but\s+|,?\s+and\s+(?=(?:" + "|".join(sorted(_CLAUSE_OPENERS)) + r")\b)", sentence):
-            piece = piece.strip(" ,.!?")
-            if piece:
-                parts.append((piece, number, question))
+        for piece in re.split(r",?\\s+but\\s+|,?\\s+and\\s+(?=(?:" + "|".join(sorted(_CLAUSE_OPENERS)) + r")\\b)", sentence):
+            for bounded in _separate_trailing_request(piece):
+                bounded = bounded.strip(" ,.!?")
+                if bounded:
+                    parts.append((bounded, number, question))
     return parts
 
 
@@ -609,9 +624,12 @@ def interpret_write(text: str, *, declared_temporal: Mapping[str, Any] | None = 
     hedges = sorted(h for h in _HEDGES if _contains(month_free, h))
     self_claims = sorted(name for name, pattern in _SELF_CLAIMS.items() if re.search(pattern, lowered))
     pieces = _clause_pieces(text)
+    # 1.2.0: a trailing request must not be incorporated into the value.
     clauses: list[dict[str, Any]] = []
     antecedent: str | None = None
     for piece_index, (raw, _, _) in enumerate(pieces):
+        if _opens_question(_norm(raw).split()):
+            continue
         clause = _parse_clause(raw, antecedent)
         if clause is None:
             continue
