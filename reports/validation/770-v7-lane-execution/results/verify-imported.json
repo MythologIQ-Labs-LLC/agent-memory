@@ -1,0 +1,159 @@
+{
+ "revision": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+ "records": [
+  {
+   "record": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v7/agent-memory-9b025f945e7e",
+   "workflow_run_id": "38031417209",
+   "problems": [],
+   "inventory_files_rehashed": "7/12",
+   "lane_digest": "12acd4c7495efc906a6efcf05d33b93ff24183d63f29482619f70658daf4117d",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  },
+  {
+   "record": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v7/bm25-9b025f945e7e",
+   "workflow_run_id": "38031874405",
+   "problems": [],
+   "inventory_files_rehashed": "6/7",
+   "lane_digest": "12acd4c7495efc906a6efcf05d33b93ff24183d63f29482619f70658daf4117d",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  },
+  {
+   "record": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v7/mem0-explicit-9b025f945e7e",
+   "workflow_run_id": "38031876286",
+   "problems": [],
+   "inventory_files_rehashed": "6/11",
+   "lane_digest": "12acd4c7495efc906a6efcf05d33b93ff24183d63f29482619f70658daf4117d",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  },
+  {
+   "record": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/agent_memory-session-9b025f945e7e",
+   "workflow_run_id": "38031419237",
+   "problems": [],
+   "inventory_files_rehashed": "3/4",
+   "lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  },
+  {
+   "record": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/agent_memory-turn-9b025f945e7e",
+   "workflow_run_id": "38031420941",
+   "problems": [],
+   "inventory_files_rehashed": "3/4",
+   "lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  },
+  {
+   "record": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/lexical_overlap-session-9b025f945e7e",
+   "workflow_run_id": "38031877700",
+   "problems": [],
+   "inventory_files_rehashed": "3/4",
+   "lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  },
+  {
+   "record": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/lexical_overlap-turn-9b025f945e7e",
+   "workflow_run_id": "38031879634",
+   "problems": [],
+   "inventory_files_rehashed": "3/4",
+   "lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  },
+  {
+   "record": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/mem0_explicit-session-9b025f945e7e",
+   "workflow_run_id": "38031881481",
+   "problems": [],
+   "inventory_files_rehashed": "3/4",
+   "lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  },
+  {
+   "record": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/mem0_explicit-turn-9b025f945e7e",
+   "workflow_run_id": "38031883040",
+   "problems": [],
+   "inventory_files_rehashed": "3/4",
+   "lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c",
+   "runtime_baseline": {
+    "state": "TRANSITION",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "predecessor": "agent-memory-runtime-baseline-v6"
+   },
+   "evidence_class": "same_harness_external_candidate",
+   "authority_effect": "none",
+   "status": "VERIFIED"
+  }
+ ],
+ "all_verified": true
+}

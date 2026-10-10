@@ -1,0 +1,551 @@
+{
+ "longmemeval": {
+  "agent_memory/session": {
+   "questions": [
+    500,
+    500
+   ],
+   "changed_questions_by_field": {
+    "ranked_top": 0,
+    "metrics": 0,
+    "cross_fact": 0,
+    "admitted_count": 0,
+    "status": 0,
+    "error": 0
+   },
+   "changed_examples": {},
+   "ranked_top_changes": 0,
+   "aggregate_equal": true,
+   "headline": {
+    "ndcg_any@10": 0.878274,
+    "ndcg_any@5": 0.863142,
+    "recall_all@10": 0.892601,
+    "recall_all@5": 0.823389
+   },
+   "aggregate_metric_keys": [
+    "session"
+   ],
+   "governance_equal": true,
+   "governance_v7": {
+    "admitted_count_total": 22631,
+    "candidate_count_total": 22631,
+    "refused_candidate_count_total": 0,
+    "return_budget_applied_total": 39,
+    "unmapped_admitted_count_total": 0
+   },
+   "cross_fact_summary_equal": true,
+   "efficiency": {
+    "v6": {
+     "ingest_seconds_total": 171.147,
+     "recall_seconds_max": 0.028654,
+     "wall_seconds": 197.05,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 199.773
+    },
+    "v7": {
+     "ingest_seconds_total": 149.056,
+     "recall_seconds_max": 0.022803,
+     "wall_seconds": 171.763,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 174.621
+    }
+   },
+   "v7_dir": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/agent_memory-session-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031419237",
+   "v7_lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c"
+  },
+  "agent_memory/turn": {
+   "questions": [
+    500,
+    500
+   ],
+   "changed_questions_by_field": {
+    "ranked_top": 0,
+    "metrics": 0,
+    "cross_fact": 0,
+    "admitted_count": 0,
+    "status": 0,
+    "error": 0
+   },
+   "changed_examples": {},
+   "ranked_top_changes": 0,
+   "aggregate_equal": true,
+   "headline": {
+    "ndcg_any@10": 0.68156,
+    "ndcg_any@5": 0.648611,
+    "ndcg_any@50": 0.711426,
+    "recall_all@10": 0.72315,
+    "recall_all@5": 0.601432,
+    "recall_all@50": 0.859189
+   },
+   "aggregate_metric_keys": [
+    "turn",
+    "turn_to_session"
+   ],
+   "governance_equal": true,
+   "governance_v7": {
+    "admitted_count_total": 103356,
+    "candidate_count_total": 103356,
+    "refused_candidate_count_total": 0,
+    "return_budget_applied_total": 500,
+    "unmapped_admitted_count_total": 0
+   },
+   "cross_fact_summary_equal": true,
+   "efficiency": {
+    "v6": {
+     "ingest_seconds_total": 392.702,
+     "recall_seconds_max": 0.055434,
+     "wall_seconds": 416.703,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 418.501
+    },
+    "v7": {
+     "ingest_seconds_total": 612.692,
+     "recall_seconds_max": 0.056565,
+     "wall_seconds": 650.953,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 653.756
+    }
+   },
+   "v7_dir": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/agent_memory-turn-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031420941",
+   "v7_lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c"
+  },
+  "lexical_overlap/session": {
+   "questions": [
+    500,
+    500
+   ],
+   "changed_questions_by_field": {
+    "ranked_top": 0,
+    "metrics": 0,
+    "cross_fact": 0,
+    "admitted_count": 0,
+    "status": 0,
+    "error": 0
+   },
+   "changed_examples": {},
+   "ranked_top_changes": 0,
+   "aggregate_equal": true,
+   "headline": {
+    "ndcg_any@10": 0.792944,
+    "ndcg_any@5": 0.767471,
+    "recall_all@10": 0.825776,
+    "recall_all@5": 0.73031
+   },
+   "aggregate_metric_keys": [
+    "session"
+   ],
+   "governance_equal": true,
+   "governance_v7": null,
+   "cross_fact_summary_equal": true,
+   "efficiency": {
+    "v6": {
+     "ingest_seconds_total": null,
+     "recall_seconds_max": null,
+     "wall_seconds": 3.81,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 6.637
+    },
+    "v7": {
+     "ingest_seconds_total": null,
+     "recall_seconds_max": null,
+     "wall_seconds": 3.731,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 6.527
+    }
+   },
+   "v7_dir": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/lexical_overlap-session-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031877700",
+   "v7_lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c"
+  },
+  "lexical_overlap/turn": {
+   "questions": [
+    500,
+    500
+   ],
+   "changed_questions_by_field": {
+    "ranked_top": 0,
+    "metrics": 0,
+    "cross_fact": 0,
+    "admitted_count": 0,
+    "status": 0,
+    "error": 0
+   },
+   "changed_examples": {},
+   "ranked_top_changes": 0,
+   "aggregate_equal": true,
+   "headline": {
+    "ndcg_any@10": 0.559738,
+    "ndcg_any@5": 0.527168,
+    "ndcg_any@50": 0.598419,
+    "recall_all@10": 0.587112,
+    "recall_all@5": 0.486874,
+    "recall_all@50": 0.761337
+   },
+   "aggregate_metric_keys": [
+    "turn",
+    "turn_to_session"
+   ],
+   "governance_equal": true,
+   "governance_v7": null,
+   "cross_fact_summary_equal": true,
+   "efficiency": {
+    "v6": {
+     "ingest_seconds_total": null,
+     "recall_seconds_max": null,
+     "wall_seconds": 4.847,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 7.597
+    },
+    "v7": {
+     "ingest_seconds_total": null,
+     "recall_seconds_max": null,
+     "wall_seconds": 4.736,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 7.403
+    }
+   },
+   "v7_dir": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/lexical_overlap-turn-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031879634",
+   "v7_lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c"
+  },
+  "mem0_explicit/session": {
+   "questions": [
+    500,
+    500
+   ],
+   "changed_questions_by_field": {
+    "ranked_top": 0,
+    "metrics": 0,
+    "cross_fact": 0,
+    "admitted_count": 0,
+    "status": 0,
+    "error": 0
+   },
+   "changed_examples": {},
+   "ranked_top_changes": 0,
+   "aggregate_equal": true,
+   "headline": {
+    "ndcg_any@10": 0.841054,
+    "ndcg_any@5": 0.825047,
+    "recall_all@10": 0.883055,
+    "recall_all@5": 0.809069
+   },
+   "aggregate_metric_keys": [
+    "session"
+   ],
+   "governance_equal": true,
+   "governance_v7": null,
+   "cross_fact_summary_equal": true,
+   "efficiency": {
+    "v6": {
+     "ingest_seconds_total": 1254.605,
+     "recall_seconds_max": 0.416089,
+     "wall_seconds": 1348.231,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 1350.815
+    },
+    "v7": {
+     "ingest_seconds_total": 1228.503,
+     "recall_seconds_max": 0.572486,
+     "wall_seconds": 1321.66,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 1324.203
+    }
+   },
+   "v7_dir": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/mem0_explicit-session-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031881481",
+   "v7_lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c"
+  },
+  "mem0_explicit/turn": {
+   "questions": [
+    500,
+    500
+   ],
+   "changed_questions_by_field": {
+    "ranked_top": 45,
+    "metrics": 0,
+    "cross_fact": 0,
+    "admitted_count": 0,
+    "status": 0,
+    "error": 0
+   },
+   "changed_examples": {
+    "ranked_top": [
+     "099778bb",
+     "1cea1afa",
+     "1da05512",
+     "2311e44b_abs",
+     "2c63a862"
+    ]
+   },
+   "ranked_top_changes": 45,
+   "aggregate_equal": true,
+   "headline": {
+    "ndcg_any@10": 0.596012,
+    "ndcg_any@5": 0.547177,
+    "ndcg_any@50": 0.635529,
+    "recall_all@10": 0.673031,
+    "recall_all@5": 0.498807,
+    "recall_all@50": 0.894988
+   },
+   "aggregate_metric_keys": [
+    "turn",
+    "turn_to_session"
+   ],
+   "governance_equal": true,
+   "governance_v7": null,
+   "cross_fact_summary_equal": true,
+   "efficiency": {
+    "v6": {
+     "ingest_seconds_total": 2353.266,
+     "recall_seconds_max": 1.637085,
+     "wall_seconds": 2729.564,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 2732.087
+    },
+    "v7": {
+     "ingest_seconds_total": 2365.909,
+     "recall_seconds_max": 1.351676,
+     "wall_seconds": 2641.102,
+     "recall_seconds_mean": null,
+     "recall_seconds_p50": null,
+     "recall_seconds_p95": null,
+     "execution_wall_seconds": 2643.3
+    }
+   },
+   "v7_dir": "reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v7/mem0_explicit-turn-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031883040",
+   "v7_lane_digest": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c"
+  }
+ },
+ "amb": {
+  "agent-memory": {
+   "queries": [
+    77,
+    77
+   ],
+   "changed_queries_by_field": {
+    "correct": 0,
+    "context": 0,
+    "meta": 0
+   },
+   "native_summary_equal_excluding_timing": true,
+   "native_summary_v7": {
+    "accuracy": 0.19480519480519481,
+    "active_passes": 4,
+    "active_total": 43,
+    "answer_llm": null,
+    "correct": 15,
+    "id_resolution": {
+     "source_id": 686
+    },
+    "ingested_docs": 35,
+    "judge_llm": null,
+    "mean_precision": 0.1806,
+    "mean_recall": 0.9535,
+    "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+    "structural_passes": 6,
+    "structural_total": 25,
+    "total_passes": 15,
+    "total_queries": 77,
+    "trivially_empty_passes": 5,
+    "trivially_empty_total": 9
+   },
+   "efficiency": {
+    "v6": {
+     "ingestion_time_ms": 277.6,
+     "mean_retrieve_ms": 28.14
+    },
+    "v7": {
+     "ingestion_time_ms": 192.3,
+     "mean_retrieve_ms": 16.97
+    }
+   },
+   "cross_fact_sidecar_byte_identical": true,
+   "v7_dir": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v7/agent-memory-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031417209",
+   "v7_lane_digest": "12acd4c7495efc906a6efcf05d33b93ff24183d63f29482619f70658daf4117d"
+  },
+  "bm25": {
+   "queries": [
+    77,
+    77
+   ],
+   "changed_queries_by_field": {
+    "correct": 0,
+    "context": 0,
+    "meta": 0
+   },
+   "native_summary_equal_excluding_timing": true,
+   "native_summary_v7": {
+    "accuracy": 0.1038961038961039,
+    "active_passes": 0,
+    "active_total": 43,
+    "answer_llm": null,
+    "correct": 8,
+    "id_resolution": {
+     "doc_id": 1391
+    },
+    "ingested_docs": 35,
+    "judge_llm": null,
+    "mean_precision": 0.0536,
+    "mean_recall": 0.9651,
+    "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+    "structural_passes": 5,
+    "structural_total": 25,
+    "total_passes": 8,
+    "total_queries": 77,
+    "trivially_empty_passes": 3,
+    "trivially_empty_total": 9
+   },
+   "efficiency": {
+    "v6": {
+     "ingestion_time_ms": 439.7,
+     "mean_retrieve_ms": 4.06
+    },
+    "v7": {
+     "ingestion_time_ms": 847.7,
+     "mean_retrieve_ms": 3.36
+    }
+   },
+   "cross_fact_sidecar_byte_identical": null,
+   "v7_dir": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v7/bm25-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031874405",
+   "v7_lane_digest": "12acd4c7495efc906a6efcf05d33b93ff24183d63f29482619f70658daf4117d"
+  },
+  "mem0-explicit": {
+   "queries": [
+    77,
+    77
+   ],
+   "changed_queries_by_field": {
+    "correct": 0,
+    "context": 0,
+    "meta": 0
+   },
+   "native_summary_equal_excluding_timing": true,
+   "native_summary_v7": {
+    "accuracy": 0.12987012987012986,
+    "active_passes": 0,
+    "active_total": 43,
+    "answer_llm": null,
+    "correct": 10,
+    "id_resolution": {
+     "source_id": 607
+    },
+    "ingested_docs": 35,
+    "judge_llm": null,
+    "mean_precision": 0.1049,
+    "mean_recall": 1.0,
+    "shape_note": "recomputed from results[].meta exactly as the frozen harness's summarize_run does; active_passes/active_total is the upstream-comparable number",
+    "structural_passes": 7,
+    "structural_total": 25,
+    "total_passes": 10,
+    "total_queries": 77,
+    "trivially_empty_passes": 3,
+    "trivially_empty_total": 9
+   },
+   "efficiency": {
+    "v6": {
+     "ingestion_time_ms": 652.0,
+     "mean_retrieve_ms": 11.96
+    },
+    "v7": {
+     "ingestion_time_ms": 1023.3,
+     "mean_retrieve_ms": 10.99
+    }
+   },
+   "cross_fact_sidecar_byte_identical": null,
+   "v7_dir": "reports/benchmarks/amb/amb-precisionmembench-retrieval-v7/mem0-explicit-9b025f945e7e",
+   "v7_runtime_baseline": {
+    "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
+    "declared_successor": "agent-memory-runtime-baseline-v7",
+    "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+    "predecessor": "agent-memory-runtime-baseline-v6",
+    "state": "TRANSITION"
+   },
+   "v7_workflow_run_id": "38031876286",
+   "v7_lane_digest": "12acd4c7495efc906a6efcf05d33b93ff24183d63f29482619f70658daf4117d"
+  }
+ }
+}

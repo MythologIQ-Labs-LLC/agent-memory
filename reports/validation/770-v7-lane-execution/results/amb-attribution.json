@@ -1,0 +1,813 @@
+{
+  "authority_effect": "none",
+  "benchmark": "amb",
+  "lanes": {
+    "v4": "amb-precisionmembench-retrieval-v4",
+    "v5": "amb-precisionmembench-retrieval-v5"
+  },
+  "reported_never_gated": {
+    "correct_flips": {},
+    "summary_deltas": {
+      "accuracy": {
+        "delta": 0.0,
+        "v4": 0.19480519480519481,
+        "v5": 0.19480519480519481
+      },
+      "active_passes": {
+        "delta": 0,
+        "v4": 4,
+        "v5": 4
+      },
+      "correct": {
+        "delta": 0,
+        "v4": 15,
+        "v5": 15
+      },
+      "mean_precision": {
+        "delta": 0.0,
+        "v4": 0.1806,
+        "v5": 0.1806
+      },
+      "mean_recall": {
+        "delta": 0.0,
+        "v4": 0.9535,
+        "v5": 0.9535
+      }
+    }
+  },
+  "verdict_counts": {
+    "EQUAL": 77
+  },
+  "verdicts": [
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "happy-stack-repository-layer",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "happy-alias-match-kubernetes",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-kube-resolves",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "alias-gha-resolves",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "long-query-rambling-kubernetes",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "out-of-scope-coin-collecting",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "happy-writing-scope",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "conflict-scope-disambiguation-redis-writing",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "conflict-scope-disambiguation-redis-code",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "multi-scope-redis-both-surfaces",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "conflict-mongodb-supersedes-sqlalchemy",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "edge-empty-query",
+      "limited_count": null,
+      "reason": "blank query, no recall, equal to -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "edge-short-query-raw-passthrough",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "isolation-user-scoping",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "questions-pinned-active-only",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-ts-resolves",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-mongo-resolves",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-reactjs-resolves",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-protagonist-resolves",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "canonical-name-match-mara",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-pov-shift-resolves",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-base-class-retrieves-composition",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-exceptions-retrieves-error-handling",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "filter-resolved-at-excluded",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "scope-bleed-questions-code-excludes-writing",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "persona-prelude-content-present",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "edge-short-query-score-clears",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "edge-whitespace-query",
+      "limited_count": null,
+      "reason": "blank query, no recall, equal to -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "score-boundary-weak-match-filtered",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "user-edited-cross-scope-surfaces",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "user-edited-absent-without-flag",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "ranking-canonical-name-over-content",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "messy-typo-blind-spot",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "messy-all-caps-case-insensitive",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "messy-filler-heavy-extraction",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "messy-negation-surfaces-topic",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "messy-compound-surfaces-two-beliefs",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "cap-stress-compound-six-entities",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "cap-stress-kitchen-sink-exceeds-twelve",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "cap-stress-late-position-entity-at-risk",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "fuzzy-single-edit-fires-non-pinned",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "fuzzy-scope-filter-discriminates-after-fuzzy-fires",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "fuzzy-prefix-blocks-transitive-match",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "fuzzy-abbreviation-prefix-blind-spot",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "fuzzy-two-edit-transposition-blocked",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "fuzzy-single-term-only-signal",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "universal-scope-belief-content-in-persona-prelude",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "type-isolation-open-question-not-in-relevant",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "multi-hop-supersession-chain-all-excluded",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "cross-scope-one-empty-domain-does-not-degrade",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "ranking-orderedbefore-alias-beats-content",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "cold-start-user-no-beliefs",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "narrator-voice-pinned-in-own-scope",
+      "limited_count": null,
+      "reason": "blank query, no recall, equal to -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "multi-scope-prelude-uses-primary-scope-only",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "why-it-matters-not-indexed-blind-spot",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "budget-ceiling-evicts-relevant-beliefs",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "negative-guidance-mongoose",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "recency-tiebreak-reinforcement",
+      "limited_count": null,
+      "reason": "blank query, no recall, equal to -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "preference-flood-relevant-entity-survives",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "cross-scope-non-user-edited-blocked",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-two-word-shingle-dead-letter",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "alias-dlq-abbreviation-resolves",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "counter-signal-jest-surfaces-vitest",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "relation-type-expands-participants",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "relation-participant-open-question-routes-correctly",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "relation-expansion-respects-scope-filter",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "subtype-expertise-retrieval",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "pinned-plus-resolved-excluded-from-questions",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "zero-reinforcement-fresh-belief-surfaces",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "budget-zero-graceful-empty",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": true,
+        "v5": true
+      },
+      "id": "budget-one-pinned-wins-over-relevant",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "multi-scope-code-writing-dedup-no-double-surface",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "empty-alias-belief-content-path-only",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "universal-scope-explicit-query-no-relevant",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "negation-query-still-surfaces-rejected-tool",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "superseded-chain-query-terminal-only",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    },
+    {
+      "correct": {
+        "v4": false,
+        "v5": false
+      },
+      "id": "relation-does-not-appear-as-entity",
+      "limited_count": 0,
+      "reason": "case fields equal -v4",
+      "verdict": "EQUAL"
+    }
+  ]
+}

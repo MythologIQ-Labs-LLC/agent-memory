@@ -1,0 +1,6 @@
+mem0_explicit turn v6->v7: questions with reordered ranked_top: 45 of 500
+gold positions moved: 0; metrics changed: 0; latest_gold_first changed: 0; same item set and length: 45/45
+items moved in total: 119 ; max displacement: 4 ; questions with only adjacent swaps: 32
+displacement histogram: {1: 91, 2: 22, 3: 5, 4: 1}
+question types: {'multi-session': 17, 'knowledge-update': 8, 'single-session-preference': 1, 'temporal-reasoning': 6, 'single-session-user': 8, 'single-session-assistant': 5}
+question ids: ['099778bb', '1cea1afa', '1da05512', '2311e44b_abs', '2c63a862', '2ce6a0f2', '37d43f65', '37f165cf', '3f1e9474', '4388e9dd', '51b23612', '577d4d32', '60036106', '61f8c8f8', '6456829e', '6d550036', '830ce83f', '86f00804', '8752c811', '89941a93', '92a0aa75', 'a82c026e', 'a9f6b44c', 'ac031881', 'c2ac3c61', 'c4ea545c', 'c6853660', 'ce6d2d27', 'd851d5ba', 'db467c8c', 'dccbc061', 'e66b632c', 'eaca4986', 'eeda8a6d', 'f4f1d8a4', 'faba32e5', 'gpt4_1a1dc16d', 'gpt4_2655b836', 'gpt4_2f91af09', 'gpt4_372c3eed_abs', 'gpt4_483dd43c', 'gpt4_5501fe77', 'gpt4_78cf46a3', 'gpt4_b4a80587', 'gpt4_d84a3211']

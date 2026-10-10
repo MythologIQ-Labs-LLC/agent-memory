@@ -1,0 +1,10 @@
+Tokenizer drift check for the 45 reordered mem0_explicit turn questions (no torch, no Actions).
+
+tokenizer.json: sentence-transformers/multi-qa-MiniLM-L6-cos-v1 @ b207367332321f8e44f96e224ef15bc607f4dbf0
+  sha256 7fa9272f7ef1ebd1666bb3bfd9d4707660ff0076ca9d1671cd9a9c6e18e03331
+texts: each affected question plus every user turn of its haystack (LongMemEval_S d6f21ea9...), 11214 texts
+command: python -I tokenize_check.py tokenizer.json texts.json ids.json   (in a venv with tokenizers==<version>)
+
+tokenizers 0.23.2 (v6 run)  11214 ids sha256 8e497343229aadd4a4efb6dcc506a9a5cdc1e433d429d5542da002810e0ced88
+tokenizers 0.23.3 (v7 run)  11214 ids sha256 8e497343229aadd4a4efb6dcc506a9a5cdc1e433d429d5542da002810e0ced88
+texts with different token ids: 0  -> the tokenizers drift does not explain the reordering.

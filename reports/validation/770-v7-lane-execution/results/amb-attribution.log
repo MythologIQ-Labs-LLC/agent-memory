@@ -1,0 +1,118 @@
+EQUAL	happy-stack-repository-layer	case fields equal -v4
+EQUAL	happy-alias-match-kubernetes	case fields equal -v4
+EQUAL	alias-kube-resolves	case fields equal -v4
+EQUAL	alias-gha-resolves	case fields equal -v4
+EQUAL	long-query-rambling-kubernetes	case fields equal -v4
+EQUAL	out-of-scope-coin-collecting	case fields equal -v4
+EQUAL	happy-writing-scope	case fields equal -v4
+EQUAL	conflict-scope-disambiguation-redis-writing	case fields equal -v4
+EQUAL	conflict-scope-disambiguation-redis-code	case fields equal -v4
+EQUAL	multi-scope-redis-both-surfaces	case fields equal -v4
+EQUAL	conflict-mongodb-supersedes-sqlalchemy	case fields equal -v4
+EQUAL	edge-empty-query	blank query, no recall, equal to -v4
+EQUAL	edge-short-query-raw-passthrough	case fields equal -v4
+EQUAL	isolation-user-scoping	case fields equal -v4
+EQUAL	questions-pinned-active-only	case fields equal -v4
+EQUAL	alias-ts-resolves	case fields equal -v4
+EQUAL	alias-mongo-resolves	case fields equal -v4
+EQUAL	alias-reactjs-resolves	case fields equal -v4
+EQUAL	alias-protagonist-resolves	case fields equal -v4
+EQUAL	canonical-name-match-mara	case fields equal -v4
+EQUAL	alias-pov-shift-resolves	case fields equal -v4
+EQUAL	alias-base-class-retrieves-composition	case fields equal -v4
+EQUAL	alias-exceptions-retrieves-error-handling	case fields equal -v4
+EQUAL	filter-resolved-at-excluded	case fields equal -v4
+EQUAL	scope-bleed-questions-code-excludes-writing	case fields equal -v4
+EQUAL	persona-prelude-content-present	case fields equal -v4
+EQUAL	edge-short-query-score-clears	case fields equal -v4
+EQUAL	edge-whitespace-query	blank query, no recall, equal to -v4
+EQUAL	score-boundary-weak-match-filtered	case fields equal -v4
+EQUAL	user-edited-cross-scope-surfaces	case fields equal -v4
+EQUAL	user-edited-absent-without-flag	case fields equal -v4
+EQUAL	ranking-canonical-name-over-content	case fields equal -v4
+EQUAL	messy-typo-blind-spot	case fields equal -v4
+EQUAL	messy-all-caps-case-insensitive	case fields equal -v4
+EQUAL	messy-filler-heavy-extraction	case fields equal -v4
+EQUAL	messy-negation-surfaces-topic	case fields equal -v4
+EQUAL	messy-compound-surfaces-two-beliefs	case fields equal -v4
+EQUAL	cap-stress-compound-six-entities	case fields equal -v4
+EQUAL	cap-stress-kitchen-sink-exceeds-twelve	case fields equal -v4
+EQUAL	cap-stress-late-position-entity-at-risk	case fields equal -v4
+EQUAL	fuzzy-single-edit-fires-non-pinned	case fields equal -v4
+EQUAL	fuzzy-scope-filter-discriminates-after-fuzzy-fires	case fields equal -v4
+EQUAL	fuzzy-prefix-blocks-transitive-match	case fields equal -v4
+EQUAL	fuzzy-abbreviation-prefix-blind-spot	case fields equal -v4
+EQUAL	fuzzy-two-edit-transposition-blocked	case fields equal -v4
+EQUAL	fuzzy-single-term-only-signal	case fields equal -v4
+EQUAL	universal-scope-belief-content-in-persona-prelude	case fields equal -v4
+EQUAL	type-isolation-open-question-not-in-relevant	case fields equal -v4
+EQUAL	multi-hop-supersession-chain-all-excluded	case fields equal -v4
+EQUAL	cross-scope-one-empty-domain-does-not-degrade	case fields equal -v4
+EQUAL	ranking-orderedbefore-alias-beats-content	case fields equal -v4
+EQUAL	cold-start-user-no-beliefs	case fields equal -v4
+EQUAL	narrator-voice-pinned-in-own-scope	blank query, no recall, equal to -v4
+EQUAL	multi-scope-prelude-uses-primary-scope-only	case fields equal -v4
+EQUAL	why-it-matters-not-indexed-blind-spot	case fields equal -v4
+EQUAL	budget-ceiling-evicts-relevant-beliefs	case fields equal -v4
+EQUAL	negative-guidance-mongoose	case fields equal -v4
+EQUAL	recency-tiebreak-reinforcement	blank query, no recall, equal to -v4
+EQUAL	preference-flood-relevant-entity-survives	case fields equal -v4
+EQUAL	cross-scope-non-user-edited-blocked	case fields equal -v4
+EQUAL	alias-two-word-shingle-dead-letter	case fields equal -v4
+EQUAL	alias-dlq-abbreviation-resolves	case fields equal -v4
+EQUAL	counter-signal-jest-surfaces-vitest	case fields equal -v4
+EQUAL	relation-type-expands-participants	case fields equal -v4
+EQUAL	relation-participant-open-question-routes-correctly	case fields equal -v4
+EQUAL	relation-expansion-respects-scope-filter	case fields equal -v4
+EQUAL	subtype-expertise-retrieval	case fields equal -v4
+EQUAL	pinned-plus-resolved-excluded-from-questions	case fields equal -v4
+EQUAL	zero-reinforcement-fresh-belief-surfaces	case fields equal -v4
+EQUAL	budget-zero-graceful-empty	case fields equal -v4
+EQUAL	budget-one-pinned-wins-over-relevant	case fields equal -v4
+EQUAL	multi-scope-code-writing-dedup-no-double-surface	case fields equal -v4
+EQUAL	empty-alias-belief-content-path-only	case fields equal -v4
+EQUAL	universal-scope-explicit-query-no-relevant	case fields equal -v4
+EQUAL	negation-query-still-surfaces-rejected-tool	case fields equal -v4
+EQUAL	superseded-chain-query-terminal-only	case fields equal -v4
+EQUAL	relation-does-not-appear-as-entity	case fields equal -v4
+{
+  "authority_effect": "none",
+  "benchmark": "amb",
+  "lanes": {
+    "v4": "amb-precisionmembench-retrieval-v4",
+    "v5": "amb-precisionmembench-retrieval-v5"
+  },
+  "reported_never_gated": {
+    "correct_flips": {},
+    "summary_deltas": {
+      "accuracy": {
+        "delta": 0.0,
+        "v4": 0.19480519480519481,
+        "v5": 0.19480519480519481
+      },
+      "active_passes": {
+        "delta": 0,
+        "v4": 4,
+        "v5": 4
+      },
+      "correct": {
+        "delta": 0,
+        "v4": 15,
+        "v5": 15
+      },
+      "mean_precision": {
+        "delta": 0.0,
+        "v4": 0.1806,
+        "v5": 0.1806
+      },
+      "mean_recall": {
+        "delta": 0.0,
+        "v4": 0.9535,
+        "v5": 0.9535
+      }
+    }
+  },
+  "verdict_counts": {
+    "EQUAL": 77
+  }
+}

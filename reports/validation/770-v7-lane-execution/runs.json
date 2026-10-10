@@ -1,0 +1,218 @@
+{
+ "ref": "implementation/770-v7-lane-freeze-review-no-ci",
+ "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+ "event": "workflow_dispatch",
+ "runs": [
+  {
+   "run_id": "38031417209",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031417209",
+   "workflow": "amb-competitive.yml",
+   "inputs": {
+    "lane_id": "amb-precisionmembench-retrieval-v7",
+    "dataset": "precisionmembench",
+    "split": "single-turn",
+    "memory": "agent-memory",
+    "mode": "retrieval",
+    "query_limit": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:34:38Z",
+   "updated_at": "2026-10-10T06:38:41Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11662520748,
+    "size_in_bytes": 152885,
+    "zip_sha256": "8f9e1ce29d724433264b4804a34b097c07fae65db9352e5029d54bbcea00d538"
+   }
+  },
+  {
+   "run_id": "38031874405",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031874405",
+   "workflow": "amb-competitive.yml",
+   "inputs": {
+    "lane_id": "amb-precisionmembench-retrieval-v7",
+    "dataset": "precisionmembench",
+    "split": "single-turn",
+    "memory": "bm25",
+    "mode": "retrieval",
+    "query_limit": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:42:38Z",
+   "updated_at": "2026-10-10T06:46:19Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11662760610,
+    "size_in_bytes": 55349,
+    "zip_sha256": "10b597f45bc02422e55dc2bfb05838bba3e47dc83fcfb5284dd90ec713b02e11"
+   }
+  },
+  {
+   "run_id": "38031876286",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031876286",
+   "workflow": "amb-competitive.yml",
+   "inputs": {
+    "lane_id": "amb-precisionmembench-retrieval-v7",
+    "dataset": "precisionmembench",
+    "split": "single-turn",
+    "memory": "mem0-explicit",
+    "mode": "retrieval",
+    "query_limit": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:42:40Z",
+   "updated_at": "2026-10-10T06:46:43Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11662990449,
+    "size_in_bytes": 132915,
+    "zip_sha256": "a8f45ce42c5e17e2cfd51d4f810ddb85f3782babb946cca7ac6fd8e43da26f49"
+   }
+  },
+  {
+   "run_id": "38031419237",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031419237",
+   "workflow": "longmemeval-competitive.yml",
+   "inputs": {
+    "lane_id": "longmemeval-s-retrieval-parity-v7",
+    "backend": "agent_memory",
+    "granularity": "session",
+    "subset_size": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:34:40Z",
+   "updated_at": "2026-10-10T06:38:57Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11661644860,
+    "size_in_bytes": 213989,
+    "zip_sha256": "9941033fb28a13e693ee257487651bd04cc47c87f5c1692129c65f98f3e6347e"
+   }
+  },
+  {
+   "run_id": "38031420941",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031420941",
+   "workflow": "longmemeval-competitive.yml",
+   "inputs": {
+    "lane_id": "longmemeval-s-retrieval-parity-v7",
+    "backend": "agent_memory",
+    "granularity": "turn",
+    "subset_size": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:34:41Z",
+   "updated_at": "2026-10-10T06:46:58Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11663245319,
+    "size_in_bytes": 215651,
+    "zip_sha256": "6636b1a64c52c62187829047e255b858c8f030e361f591b046f5d5597231e966"
+   }
+  },
+  {
+   "run_id": "38031877700",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031877700",
+   "workflow": "longmemeval-competitive.yml",
+   "inputs": {
+    "lane_id": "longmemeval-s-retrieval-parity-v7",
+    "backend": "lexical_overlap",
+    "granularity": "session",
+    "subset_size": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:42:41Z",
+   "updated_at": "2026-10-10T06:44:10Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11662256297,
+    "size_in_bytes": 193733,
+    "zip_sha256": "069fa1f22baa4159551b4f2ef65f124a960bcda3750b7d052be5acc60c4f0060"
+   }
+  },
+  {
+   "run_id": "38031879634",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031879634",
+   "workflow": "longmemeval-competitive.yml",
+   "inputs": {
+    "lane_id": "longmemeval-s-retrieval-parity-v7",
+    "backend": "lexical_overlap",
+    "granularity": "turn",
+    "subset_size": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:42:43Z",
+   "updated_at": "2026-10-10T06:43:40Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11662980211,
+    "size_in_bytes": 200213,
+    "zip_sha256": "13d278edc2709b9ec450ad0846ef2e25c8a3a7b58c008258315f0424a38c5ea1"
+   }
+  },
+  {
+   "run_id": "38031881481",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031881481",
+   "workflow": "longmemeval-competitive.yml",
+   "inputs": {
+    "lane_id": "longmemeval-s-retrieval-parity-v7",
+    "backend": "mem0_explicit",
+    "granularity": "session",
+    "subset_size": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:42:45Z",
+   "updated_at": "2026-10-10T07:07:40Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11663102563,
+    "size_in_bytes": 92606,
+    "zip_sha256": "caff6aa46e2fa8f194780c61d1781b8261fa2e375111d2bbace7ffadda15873e"
+   }
+  },
+  {
+   "run_id": "38031883040",
+   "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/38031883040",
+   "workflow": "longmemeval-competitive.yml",
+   "inputs": {
+    "lane_id": "longmemeval-s-retrieval-parity-v7",
+    "backend": "mem0_explicit",
+    "granularity": "turn",
+    "subset_size": "0"
+   },
+   "conclusion": "success",
+   "created_at": "2026-10-10T06:42:47Z",
+   "updated_at": "2026-10-10T07:30:16Z",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "artifact": {
+    "id": 11663430181,
+    "size_in_bytes": 193670,
+    "zip_sha256": "eb4742614efd84a00f9cddd12c10db85fd6570dfb452d3fa8e9c189b489c047d"
+   }
+  }
+ ],
+ "imports": [
+  {
+   "run_id": "38032778567",
+   "lane": "amb",
+   "run_ids": "38031417209,38031874405,38031876286",
+   "ref": "evidence/770-v7-lane-import",
+   "head_sha": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+   "conclusion": "success",
+   "commit": "54e1be949c339a53d88b17bb241ed663bf42caf7"
+  },
+  {
+   "run_id": "38035027175",
+   "lane": "longmemeval",
+   "run_ids": "38031419237,38031420941,38031877700,38031879634,38031881481,38031883040",
+   "ref": "evidence/770-v7-lane-import",
+   "head_sha": "54e1be949c339a53d88b17bb241ed663bf42caf7",
+   "conclusion": "success",
+   "commit": "30d22e90b018f21eef244df43a7353a4a1dec07c"
+  }
+ ],
+ "lane_digests": {
+  "amb-precisionmembench-retrieval-v7": "12acd4c7495efc906a6efcf05d33b93ff24183d63f29482619f70658daf4117d",
+  "longmemeval-s-retrieval-parity-v7": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c"
+ },
+ "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f"
+}
