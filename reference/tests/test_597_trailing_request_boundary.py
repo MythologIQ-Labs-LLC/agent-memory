@@ -87,6 +87,29 @@ class TrailingRequestBoundaryTests(unittest.TestCase):
         base = "I enjoy the motto (and I mean it)"
         self.assert_same_principal(base, base + ", could you propose a variation?")
 
+    def test_question_punctuation_inside_quoted_value_not_sentence_split(self):
+        text = 'I enjoy the line "Can you stay? I can stay"'
+        result = interpret_write(text)["proposition"]
+        self.assertEqual(result["status"], "known", result)
+        self.assertIn("i can stay", result["value"])
+
+    def test_semicolon_inside_parenthesized_value_not_clause_split(self):
+        text = "I enjoy the aside (I asked; can you reply?)"
+        result = interpret_write(text)["proposition"]
+        self.assertEqual(result["status"], "known", result)
+        self.assertIn("can you reply", result["value"])
+
+    def test_colon_inside_quoted_value_not_clause_split(self):
+        text = 'I enjoy the label "Tag: can you help?"'
+        result = interpret_write(text)["proposition"]
+        self.assertEqual(result["status"], "known", result)
+        self.assertIn("can you help", result["value"])
+
+    def test_top_level_semicolon_still_separates_distinct_assertions(self):
+        text = "I prefer green tea; I enjoy strong coffee"
+        result = interpret_write(text)["proposition"]
+        self.assertEqual(result["status"], "ambiguous", result)
+
     def test_contraction_before_genuine_request_boundary(self):
         self.assert_same_principal(
             "I'm fond of black tea",
