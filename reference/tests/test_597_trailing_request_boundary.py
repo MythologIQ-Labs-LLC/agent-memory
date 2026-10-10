@@ -60,8 +60,8 @@ class TrailingRequestBoundaryTests(unittest.TestCase):
 
     def test_contraction_before_genuine_request_boundary(self):
         self.assert_same_principal(
-            "I don't prefer black tea",
-            "I don't prefer black tea, can you suggest an alternative?",
+            "I'm fond of black tea",
+            "I'm fond of black tea, can you suggest an alternative?",
         )
 
     def test_followup_request_in_separate_sentence(self):
