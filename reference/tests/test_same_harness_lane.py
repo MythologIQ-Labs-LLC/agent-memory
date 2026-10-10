@@ -227,17 +227,17 @@ class SameHarnessLaneTests(unittest.TestCase):
         report = json.loads(output.getvalue())
         self.assertEqual(report["command"], "benchmark_lanes")
         self.assertEqual(report["authority_effect"], "none")
-        # lanes list in sorted id order: the accepted v1, -v2, -v3 (#669), -v4 (#644) and -v5 (#671)
-        # lanes and the -v6 lanes (#732 plan-732-evidence-v6 V6-E8), frozen until their rows are accepted
+        # lanes list in sorted id order: the accepted v1, -v2, -v3 (#669), -v4 (#644), -v5 (#671) and
+        # -v6 (#732) lanes and the -v7 lanes (#770), frozen until their rows are accepted
         ids = [lane["lane_id"] for lane in report["lanes"]]
         self.assertEqual(ids, [
             LANE_ID, AMB_V2_LANE_ID, "amb-precisionmembench-retrieval-v3", "amb-precisionmembench-retrieval-v4",
-            "amb-precisionmembench-retrieval-v5", "amb-precisionmembench-retrieval-v6",
+            "amb-precisionmembench-retrieval-v5", "amb-precisionmembench-retrieval-v6", "amb-precisionmembench-retrieval-v7",
             LME_LANE_ID, LME_V2_LANE_ID, "longmemeval-s-retrieval-parity-v3", "longmemeval-s-retrieval-parity-v4",
-            "longmemeval-s-retrieval-parity-v5", "longmemeval-s-retrieval-parity-v6",
+            "longmemeval-s-retrieval-parity-v5", "longmemeval-s-retrieval-parity-v6", "longmemeval-s-retrieval-parity-v7",
         ])
         for lane in report["lanes"]:
-            expected = {"frozen", "accepted"} if lane["lane_id"].endswith("-v6") else {"accepted"}
+            expected = {"frozen"} if lane["lane_id"].endswith("-v7") else {"accepted"}
             self.assertIn(lane["status"], expected, lane["lane_id"])
 
         output = io.StringIO()
