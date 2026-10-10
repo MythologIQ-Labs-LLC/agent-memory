@@ -12,12 +12,22 @@ on a distinct namespace; it does not copy a v6 baseline or claim that v7 is publ
 - The manifest's `system.revision` names the tested runtime implementation, **not**
   the manifest/adapter preparation commits and not a published baseline.
 
-The `configuration_digest` is SHA-256 over canonical JSON (sort keys,
-compact separators) of these exact string fields: `adapter_blob`, `runtime_commit`,
-`tenant`, `scope`, `public_contract`, and `transport`. The values are the
-pinned adapter Git blob, the above runtime commit, `tenant:gauntlet-runtime-baseline-v7`,
-`scope:gauntlet-runtime-baseline-v7`, `1.6.0`, and `stdio`. This digest is
-a reproducible **configuration identifier**, not signature or authorization.
+The `configuration_digest` follows the basis the v5 and v6 records state
+(`qualification_evidence.public_gauntlet_baseline_qualification.configuration_digest_basis`):
+SHA-256 over canonical JSON (sorted keys, compact separators) of the adapter's frozen
+identity, which is `runtime_profile`, `public_contract`, `frozen_runtime_revision`,
+`tenant`, `actor`, `scope` and `purpose`. It is a reproducible **configuration
+identifier**, not a signature or an authorization. The adapter blob is pinned separately
+in `adapter.revision`. The independent validation found that the first candidate used a
+different field set, and corrected it (D1).
+
+**Imported-runtime guard (D2).** At start-up the adapter checks two things: that the
+imported `agentmem_ref` is this checkout's `reference/agentmem_ref`, and that its tracked
+files equal `FROZEN_RUNTIME_REVISION`, with nothing untracked. Otherwise it refuses every
+operation with `runtime_identity_unverified`, rather than producing evidence labelled
+with a revision it did not run. Each response carries the computed `runtime_identity`
+under `adapter_evidence`. The process under test computes this itself, so it is an
+integrity check, not attestation.
 
 ## Candidate-only validation commands
 

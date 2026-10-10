@@ -13,6 +13,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
@@ -20,6 +21,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+import agentmem_ref
 from agentmem_ref import AgentMemory
 
 CONTRACT_FAMILY = "agent-memory-gauntlet-operation"
@@ -31,6 +33,45 @@ ACTOR = "agent:gauntlet-runtime-baseline-v7"
 SCOPE = "scope:gauntlet-runtime-baseline-v7"
 PURPOSE = "Runtime Baseline v7 public Gauntlet qualification"
 BASE = Path(tempfile.gettempdir()) / "agent-memory-gauntlet-runtime-baseline-v7"
+
+CHECKOUT = Path(__file__).resolve().parents[2]
+
+
+def _runtime_identity() -> dict[str, Any]:
+    """Which runtime this process actually imported, checked against FROZEN_RUNTIME_REVISION.
+
+    The revision constant is only a declaration. Evidence may carry it only when the
+    imported ``agentmem_ref`` is this checkout's package and that package's tracked files
+    equal the frozen revision with nothing untracked. Otherwise the adapter refuses every
+    operation (fail closed) instead of producing mislabelled evidence. This check is
+    integrity, not attestation: it is computed by the process under test.
+    """
+    imported = Path(agentmem_ref.__file__).resolve().parent
+    expected = (CHECKOUT / "reference" / "agentmem_ref").resolve()
+    identity: dict[str, Any] = {
+        "imported_package": str(imported),
+        "same_checkout": imported == expected,
+        "frozen_runtime_revision": FROZEN_RUNTIME_REVISION,
+        "matches_frozen_revision": False,
+    }
+
+    def git(*args: str) -> subprocess.CompletedProcess:
+        return subprocess.run(["git", *args], cwd=CHECKOUT, capture_output=True, text=True, timeout=60)
+
+    try:
+        tree = git("rev-parse", f"{FROZEN_RUNTIME_REVISION}:reference/agentmem_ref")
+        changed = git("diff", "--quiet", FROZEN_RUNTIME_REVISION, "--", "reference/agentmem_ref")
+        untracked = git("ls-files", "--others", "--exclude-standard", "--", "reference/agentmem_ref")
+        identity["frozen_runtime_tree"] = tree.stdout.strip() if tree.returncode == 0 else None
+        identity["matches_frozen_revision"] = (tree.returncode == 0 and changed.returncode == 0
+                                              and untracked.returncode == 0 and not untracked.stdout.strip())
+    except (OSError, subprocess.SubprocessError) as exc:
+        identity["error"] = f"identity not established: {type(exc).__name__}"
+    identity["verified"] = bool(identity["same_checkout"] and identity["matches_frozen_revision"])
+    return identity
+
+
+RUNTIME_IDENTITY = _runtime_identity()
 
 # Translation-only state. The SUT owns memory semantics; this map merely preserves the
 # benchmark's stable record IDs across the public facade's fact UUID responses.
@@ -78,6 +119,7 @@ def response(
             "surface": "AgentMemory public facade",
             "public_contract": PUBLIC_CONTRACT_VERSION,
             "frozen_runtime_revision": FROZEN_RUNTIME_REVISION,
+            "runtime_identity": RUNTIME_IDENTITY,
             "translation_only": True,
         },
         "authority_effect": "none",
@@ -104,6 +146,15 @@ def handle(request: dict[str, Any]) -> dict[str, Any]:
 
     operation = request.get("operation")
     namespace = str(payload.get("namespace", "default"))
+
+    if not RUNTIME_IDENTITY["verified"]:
+        return response(
+            request,
+            status="system_error",
+            error={"source": "system_adapter", "code": "runtime_identity_unverified",
+                   "message": "imported agentmem_ref is not this checkout's runtime at FROZEN_RUNTIME_REVISION"},
+            started=started,
+        )
 
     if operation == "describe":
         return response(

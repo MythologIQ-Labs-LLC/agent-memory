@@ -28,18 +28,23 @@ class V7GauntletCandidateTests(unittest.TestCase):
         self.assertNotIn("tenant:gauntlet-runtime-baseline-v6", source)
 
     def test_configuration_digest_is_reproducible_and_non_authoritative(self):
+        # validation(#644): the basis the v5/v6 records state (baseline-v6.json
+        # qualification_evidence.public_gauntlet_baseline_qualification.configuration_digest_basis).
         m = json.loads(MANIFEST.read_text(encoding="utf-8"))
+        source = ADAPTER.read_text(encoding="utf-8")
+        constant = lambda name: source.split(f'\n{name} = "', 1)[1].split('"', 1)[0]  # noqa: E731
         config = {
-            "adapter_blob": m["adapter"]["revision"].removeprefix("git-blob:"),
-            "runtime_commit": m["system"]["revision"].removeprefix("git-commit:"),
-            "tenant": "tenant:gauntlet-runtime-baseline-v7",
-            "scope": "scope:gauntlet-runtime-baseline-v7",
-            "public_contract": "1.6.0",
-            "transport": "stdio",
+            "runtime_profile": m["metadata"]["runtime_profile"],
+            "public_contract": constant("PUBLIC_CONTRACT_VERSION"),
+            "frozen_runtime_revision": constant("FROZEN_RUNTIME_REVISION"),
+            "tenant": constant("TENANT"),
+            "actor": constant("ACTOR"),
+            "scope": constant("SCOPE"),
+            "purpose": constant("PURPOSE"),
         }
+        self.assertEqual(config["frozen_runtime_revision"], EXPECTED_RUNTIME)
         digest = hashlib.sha256(json.dumps(config, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
         self.assertEqual(m["system"]["configuration_digest"], "sha256:" + digest)
-
 
 if __name__ == "__main__":
     unittest.main()
