@@ -46,6 +46,24 @@ class TrailingRequestBoundaryTests(unittest.TestCase):
         self.assertEqual(out["status"], "known", out)
         self.assertIn("can you hear me", out["value"])
 
+    def test_single_quoted_question_stays_within_asserted_title(self):
+        text = "I enjoy the song 'Hello, can you hear me?'"
+        proposition = interpret_write(text)["proposition"]
+        self.assertEqual(proposition["status"], "known", proposition)
+        self.assertIn("can you hear me", proposition["value"])
+
+    def test_curly_quoted_question_stays_within_asserted_title(self):
+        text = "I enjoy the song ‘Hello, could you hear me?’"
+        proposition = interpret_write(text)["proposition"]
+        self.assertEqual(proposition["status"], "known", proposition)
+        self.assertIn("could you hear me", proposition["value"])
+
+    def test_contraction_before_genuine_request_boundary(self):
+        self.assert_same_principal(
+            "I don't prefer black tea",
+            "I don't prefer black tea, can you suggest an alternative?",
+        )
+
     def test_followup_request_in_separate_sentence(self):
         self.assert_same_principal(
             "I prefer green tea",
