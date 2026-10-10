@@ -40,7 +40,7 @@
     "runtime_profile": "rc1-local-sqlite-composition"
   },
   "system": {
-    "configuration_digest": "sha256:pending-candidate-configuration-qualification",
+    "configuration_digest": "sha256:1c6adb534f95dfbd3899c0a65954bce41e83ef5d76058f95d06f623da0f275a4",
     "id": "agent-memory-runtime-baseline-v7",
     "kind": "agent_memory",
     "revision": "git-commit:16a248b1e28f455fbf19217114175f0c20df2a01",
