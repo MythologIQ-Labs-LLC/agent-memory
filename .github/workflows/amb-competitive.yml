@@ -15,6 +15,7 @@ on:
           - amb-precisionmembench-retrieval-v4
           - amb-precisionmembench-retrieval-v5
           - amb-precisionmembench-retrieval-v6
+          - amb-precisionmembench-retrieval-v7
       dataset:
         description: "AMB dataset"
         required: true
