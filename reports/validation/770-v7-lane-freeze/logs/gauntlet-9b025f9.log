@@ -1,0 +1,17 @@
+$ agent-memory gauntlet validate-adapter examples/gauntlet/agent-memory-runtime-baseline-v7.json
+Gauntlet adapter: valid
+System: agent-memory-runtime-baseline-v7 @ git-commit:16a248b1e28f455fbf19217114175f0c20df2a01
+Adapter: agent-memory-runtime-baseline-v7-stdio @ git-blob:28b8333256ac508a45517d6c4a38b9c44a873dd7
+Transport: stdio
+Digest: 10747172771c1fb52babda6b926203e4a22c3e0f065a3f93f6e8e1df0e6ca282
+Authority effect: none
+rc=0
+$ agent-memory gauntlet run --system examples/gauntlet/agent-memory-runtime-baseline-v7.json --profile gauntlet-orchestration-retrieval-probe-v1 --allow-external-process --allow-destructive-reset --output-dir <dir>
+Gauntlet run: gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-d7a63b49dc73
+Profile: gauntlet-orchestration-retrieval-probe-v1
+System: agent-memory-runtime-baseline-v7 @ git-commit:16a248b1e28f455fbf19217114175f0c20df2a01
+Negotiation: eligible
+Execution: complete
+Normalized evidence: /tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/gauntlet-run/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-d7a63b49dc73/normalized-run.json
+Authority effect: none
+rc=0

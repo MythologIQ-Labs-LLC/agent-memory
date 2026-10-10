@@ -1,0 +1,8 @@
+{
+  "authority_effect": "none",
+  "command": "benchmark_lanes",
+  "error": "$.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'",
+  "schema_version": "1.1.0",
+  "status": "refused",
+  "valid": false
+}

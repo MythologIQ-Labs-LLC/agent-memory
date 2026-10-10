@@ -1,0 +1,9 @@
+$ agent-memory gauntlet run --system examples/gauntlet/agent-memory-runtime-baseline-v7.json --profile gauntlet-orchestration-retrieval-probe-v1 --allow-external-process --allow-destructive-reset --output-dir <dir>
+Gauntlet run: gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-83651a1653b1
+Profile: gauntlet-orchestration-retrieval-probe-v1
+System: agent-memory-runtime-baseline-v7 @ git-commit:16a248b1e28f455fbf19217114175f0c20df2a01
+Negotiation: eligible
+Execution: complete
+Normalized evidence: /tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/gauntlet-run/gauntlet-gauntlet-orchestration-retrieval-probe-v1-agent-memory-runtime-baseline-v7-83651a1653b1/normalized-run.json
+Authority effect: none
+rc=0

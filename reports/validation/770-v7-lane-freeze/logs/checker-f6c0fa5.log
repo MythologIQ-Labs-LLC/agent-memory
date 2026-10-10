@@ -1,0 +1,1 @@
+Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD

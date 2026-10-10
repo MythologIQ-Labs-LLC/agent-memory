@@ -1,0 +1,672 @@
+{
+  "authority_effect": "none",
+  "command": "benchmark_validate_lane",
+  "executed": false,
+  "findings": [
+    "reference/run_longmemeval.py had its three backends hard-coded (RETRIEVERS) and imported the Agent Memory facade directly; lane v1 deferred this lane for that reason. The registration seam added for this freeze keeps the built-in backends untouched and records every external backend's identity in execution.external_backends.",
+    "the runner evaluates the same question once per plane; per-question isolation for Mem0 therefore has to be per (question, plane), which the bridge implements as one user_id namespace per retriever call rather than per question id.",
+    "Mem0 2.2.1's default search threshold (0.1) drops low-similarity memories, so a Mem0 ranking can be shorter than the corpus even with top_k=50; a shorter ranking scores as misses beyond its length, exactly as any other backend's.",
+    "the hub serves longmemeval_s_cleaned.json with an x-linked-etag equal to its sha256, which the digest check relies on only as corroboration; the runner's own byte digest remains the binding identity.",
+    "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob, and the importer refuses a run whose state is not admitted by the posture or whose declaration blob differs from the one pinned here, so a declaration amended by a later tranche (docs/67 Step A.6) invalidates this lane rather than silently changing its control",
+    "accepted rows 2026-10-08: agent-memory, lexical_overlap, mem0-oss on both planes (workflow runs 37718255173, 37718257278, 37718259916, 37718262620, 37718265216, 37718267521); V6-E1 every control output EQUAL to -v5 (1000/1000 questions, verdict_counts {EQUAL: 1000}; cross-fact records equal -v5 row by row, 0 limited, 0 UNATTRIBUTED); V6-E2 comparators equal -v5 (lexical_overlap and mem0_explicit ranked_top and metrics equal on every question); the typed proposition and extractor path is unaccepted until the plan-732-remediation R6 acceptance; numbers live in the committed evidence records, the native reports and the normalized manifests, never in this lane"
+  ],
+  "lane": {
+    "authority_effect": "none",
+    "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+    "budget": {
+      "context_budget": {
+        "answer_generation": "none",
+        "headline_session": [
+          "recall_all@5",
+          "ndcg_any@5",
+          "recall_all@10",
+          "ndcg_any@10"
+        ],
+        "headline_turn": [
+          "recall_all@5",
+          "ndcg_any@5",
+          "recall_all@10",
+          "ndcg_any@10",
+          "recall_all@50",
+          "ndcg_any@50"
+        ],
+        "reported_rank_depth": 50,
+        "scored_k": [
+          1,
+          3,
+          5,
+          10,
+          30,
+          50
+        ]
+      },
+      "default_k": 50,
+      "forbidden_overrides": [
+        "--max-questions and --subset-size must be unset (subset_size 0 in the workflow); a bounded run is a smoke, never an acceptable row",
+        "--agent-memory-temporal-metadata must remain none and --agent-memory-ranking-variant must remain default (the frozen comparability posture: only question and item text reach Agent Memory)",
+        "no backend may read answer, answer_session_ids, has_answer, question_type, question_date or haystack_dates of a question; backends receive the question text and the corpus items {id, text, date} only",
+        "the Mem0 row may not use infer=True, a graph store, a reranker, the fastembed extra or the spaCy extra; mem0.__version__ must equal 2.2.1",
+        "--agent-memory-semantic-retrieval only on agent_memory_semantic (required); every other row runs it off; auto is refused by the runner",
+        "--agent-memory-recall-control only on agent_memory_shadow (shadow); every other row runs it off; shadow with --agent-memory-semantic-retrieval required is refused by the runner"
+      ],
+      "retrieval_k_rule": "every backend returns one ranking per question; rankings are scored at k in {1, 3, 5, 10, 30, 50} and the top 50 is reported. The lexical baseline returns every overlapping item; the Agent Memory control declares budget=50 on every recall (contract 1.4.0) and ranks the facade's `returned` prefix of its admitted facts, the deepest scored k, so bounding there cannot change any scored metric; the Mem0 row returns top_k=50. No answer-generation context budget exists."
+    },
+    "change_rule": "any change to the upstream revision, the fixture or its digest, the selection, the budget, the gold identity, the evaluator (including the runner blob), execution semantics, or a frozen row's source, adapter (including the bridge blobs), or configuration after a score has been observed requires a new lane_id; while no score exists, a re-freeze may update the bound blobs in place; this record is never edited in place once status leaves frozen",
+    "comparability": {
+      "evidence_class_when_accepted": "same_harness_external",
+      "not_comparable_to": [
+        "longmemeval-s-retrieval-parity-v5 rows for the same system: the executing runtime (declared transition to Runtime Baseline v6, ranking policy 3.4.0, assertion filter 6.1.0, public contract 1.6.0) differs while the runner blob is unchanged, so rows are re-executed under this lane, never copied forward; the control's relation to the -v5 control is equality (plan-732-evidence-v6 V6-E1: every question's ranked_top, metrics and cross_fact limited_count, limited_item_ids and refusal_counts equal -v5), not attribution, and is an acceptance check, not a comparability claim",
+        "amb-precisionmembench-retrieval-v1 rows (different benchmark, gold semantics and budget), even for the same system",
+        "Agent Memory's accepted LongMemEval_S evidence_history rows at runtime f73b872c (an earlier revision; a lane row is executed again at the executing revision, never copied forward)",
+        "published LongMemEval accuracy (model-judged answer quality; this lane is retrieval only)",
+        "upstream flat-bm25 or dense retriever baselines (not reproduced by this profile)",
+        "a future reflective Mem0 lane (different system composition)",
+        "LongMemEval_M (different input; a separate lane once the S rows are accepted)"
+      ],
+      "notes": [
+        "rows compare only within one plane: session rows with session rows, turn rows with turn rows; the normalizer emits one manifest per (plane, backend) and the scorecard groups by task profile",
+        "the baseline is the profile's lexical-overlap ranker and Agent Memory is the control; neither row is a market claim",
+        "each accepted row must retain the raw report with rows and its execution identity; no overall score is produced",
+        "a Mem0 number from this lane and from lane v1 describe one frozen system composition on two benchmarks; they are reported side by side, never averaged",
+        "the control row is held to the plan-732-evidence-v6 V6-E1 equality rule against the accepted -v5 control: every question's ranked_top and metrics, and its cross_fact limited_count, limited_item_ids and refusal_counts, equal -v5; any difference blocks Runtime Baseline v6 publication",
+        "no shadow row executes under this lane; the -v6 control is the single Agent Memory system per comparison group (plan-669-lanes-v3 IA2)"
+      ]
+    },
+    "contract_family": "agent-memory-same-harness-lane",
+    "contract_version": "1.0.0",
+    "dataset": {
+      "document_count": 23867,
+      "fixtures": [
+        {
+          "name": "longmemeval_s_cleaned.json",
+          "sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+          "url": "https://huggingface.co/datasets/xiaowu0162/longmemeval-cleaned/resolve/98d7416c24c778c2fee6e6f3006e7a073259d48f/longmemeval_s_cleaned.json?download=true"
+        }
+      ],
+      "harness_dataset": "longmemeval-cleaned",
+      "input_digest_rule": "sha256 over the raw bytes of longmemeval_s_cleaned.json (277,383,467 bytes at hub revision 98d7416c); the runner streams and hashes every byte on each pass and refuses if any pass disagrees; the workflow also checks the download against this digest before the run",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "notes": [
+        "document_count is the session plane: 23,867 haystack sessions summed over the 500 questions (max 62 per question); the turn plane indexes 122,416 user turns (max 305 per question). Each question is its own isolated corpus exactly as upstream process_item_flat_index builds a flat index per question; there is no shared corpus across questions.",
+        "query_partition is by upstream question_type. Scoring denominators exclude the 30 abstention questions (_abs in question_id) and the 51 questions with no user-side has_answer target, leaving 419 scored questions in both planes; the exclusions are upstream rules replicated byte for byte.",
+        "13 questions repeat a haystack session id; the replica indexes each repetition as its own corpus item under the same id, as upstream does, and refuses repeats whose content differs.",
+        "the hub serves the fixture with x-linked-etag equal to its sha256, so the digest check is also a check that the hub object is unchanged"
+      ],
+      "query_count": 500,
+      "query_partition": {
+        "knowledge-update": 78,
+        "multi-session": 133,
+        "single-session-assistant": 56,
+        "single-session-preference": 30,
+        "single-session-user": 70,
+        "temporal-reasoning": 133
+      },
+      "split": "LongMemEval_S (longmemeval_s_cleaned.json)",
+      "upstream": {
+        "license_spdx": "MIT",
+        "paper_url": "https://arxiv.org/abs/2410.10813",
+        "repository": "xiaowu0162/LongMemEval",
+        "revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc"
+      }
+    },
+    "deferred_lanes": [
+      {
+        "lane_id": "amb-precisionmembench-retrieval-mem0-reflective-v1",
+        "reason": "Mem0 reflective extraction through a frozen LLM identity is a Mem0+LLM composition; it needs provider-dependent credentials and a separately frozen answer-model identity, and must be frozen before any reflective score is seen"
+      },
+      {
+        "lane_id": "longmemeval-m-retrieval-parity-v1",
+        "reason": "LongMemEval_M is a different frozen input (9d79e552\u2026) with ~10x the haystack per question; freeze it separately after the S rows are accepted and the Mem0 row's runtime on the full S turn plane is known"
+      }
+    ],
+    "description": "Seventh lane generation (#732, plan-732-evidence-v6): frozen LongMemEval_S retrieval parity, retrieval only, no LLM anywhere, re-executing every executed row of longmemeval-s-retrieval-parity-v5 at a runtime revision in the declared transition to Runtime Baseline v6 (ranking policy 3.4.0, assertion filter 6.1.0, public contract 1.6.0: typed write-time propositions and an opt-in proposition extractor, off by default; no lane input declares a typed proposition). The Agent Memory control runs the facade default with the extractor off; every question records its cross-fact limitation as at -v5, and every question's ranked_top, metrics and cross-fact record must equal the accepted -v5 control. This lane is acceptance evidence reports/runtime/baseline-v6-declaration.json names for the successor publication. The shadow, semantic-route and Hindsight rows are deferred.",
+    "evaluator": {
+      "answer_model": null,
+      "headline_metrics": [
+        "session recall_all@5, ndcg_any@5, recall_all@10, ndcg_any@10 over 419 scored questions",
+        "turn recall_all@5, ndcg_any@5, recall_all@10, ndcg_any@10, recall_all@50, ndcg_any@50 over 419 scored questions",
+        "knowledge-update slice of the same metrics (72 scored questions)",
+        "latest_gold_ranked_first (profile-local currentness diagnostic, not an upstream metric)",
+        "failures: runtime_failure_count, ingestion_failure_count, out_of_corpus_returned_count"
+      ],
+      "integrity_check": "the integration's declared negative controls (missing_gold, irrelevant_ahead, rank_below_cutoff, stale_over_current, suppressed_abstention, identity_mapping_corruption, cross_scope_injection) run through reference/run_benchmark_integrity_mutants.py and must all be detected, with irrelevant_at_rank_one recorded as the known upstream DCG insensitivity, before any row of this lane is accepted",
+      "judge_model": null,
+      "llm_calls": false,
+      "mode": "retrieval",
+      "scorer": "reference/run_longmemeval.py @ blob 6b9c237380f1d527e564161c2dac7fe32ada0ef9: evaluate_retrieval / evaluate_retrieval_turn2session / _ndcg replicate src/retrieval/eval_utils.py @ blob 9c43a835e7c41aff0eb3272c448f5cbe76bbbd45 and the exclusion and averaging rules of src/retrieval/run_retrieval.py @ blob 48e615df943a329801c3703edf4f83dc0a18fe17"
+    },
+    "execution": {
+      "artifact_requirements": [
+        "the native report JSON with per-question rows (<granularity>-<backend>.json)",
+        "execution-identity.json (repository revision, lane id and digest, backend, plane, subset_size, input sha256, reference/* blobs, resolved package versions, Mem0 extras posture, workflow run id)",
+        "lane-validation.json as emitted by agent-memory benchmark validate-lane --json at execution",
+        "files.txt and sha256.txt inventories of the artifact"
+      ],
+      "concurrency": 1,
+      "environment": {
+        "dataset_acquisition": "curl of the frozen hub URL, sha256 verified against dataset.input_sha256 before the run",
+        "dispatch_unit": "one workflow dispatch per (row, plane) with lane_id longmemeval-s-retrieval-parity-v6: backend in {agent_memory, lexical_overlap, mem0_explicit} x granularity in {session, turn}, subset_size 0; the workflow passes --agent-memory-budget from the control row's configuration.budget",
+        "embedder_weights": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1 at Hugging Face revision b207367332321f8e44f96e224ef15bc607f4dbf0, downloaded into HF_HOME at run time",
+        "install": "python -m pip install -e . -r reference/requirements.txt",
+        "mem0_row_install": "python -m pip install mem0ai==2.2.1 qdrant-client==1.17.0 sentence-transformers==5.2.3 torch==2.10.0 (the releases the accepted lane v1 Mem0 row resolved, run 37351804149); verify_install_posture() refuses any other mem0 release or an installed fastembed/spaCy extra",
+        "preconditions": "git rev-parse HEAD equals the workflow sha; agent-memory benchmark validate-lane passes; the lane status is frozen and the selected row is frozen; git hash-object of every reference/* path in harness.source_blobs equals the frozen blob",
+        "python": "3.12",
+        "runner": "GitHub-hosted ubuntu-24.04",
+        "semantic_row_install": "agent_memory_semantic only: python -m pip install -e '.[semantic]' -r reference/requirements.txt -c reference/requirements-semantic.txt; the pinned MiniLM ONNX files are fetched by python -m agentmem_ref.runtime.representation_onnx fetch into AGENT_MEMORY_REPRESENTATION_DIR and verified by sha256 before the facade opens",
+        "workflow": ".github/workflows/longmemeval-competitive.yml"
+      },
+      "execution_identity_requirements": [
+        "repository revision == workflow sha",
+        "lane_digest_sha256 at execution == the digest of this file as committed",
+        "input.sha256 == dataset.input_sha256 and input.selection.question_ids_sha256 == the frozen selection digest",
+        "execution.external_backends.mem0_explicit.system_revision == the Mem0 tag commit and install_posture.mem0ai == 2.2.1 with both extras absent (Mem0 row)",
+        "execution.agent_memory_configuration == {temporal_metadata: none, ranking_variant: default, budget: 50, semantic_retrieval: off, recall_control: off} (control, lexical and Mem0 rows); the importer overlays the runner defaults with the declared keys of the row that runs the agent_memory backend",
+        "runtime_baseline_state in {PASS, TRANSITION} and declaration_blob == the control row's configuration.runtime_baseline_posture.declaration_blob (recorded by the workflow from scripts/check_runtime_baseline_equivalence.py and the register)",
+        "source_blobs == harness.source_blobs for every reference/* path",
+        "full_selection true",
+        "agent_memory_semantic: identity.backend == agent_memory_semantic and identity.runner_backend == agent_memory; execution.agent_memory_semantic_posture has status enabled, mode required, and representation_ref, representation_version, config_digest, dimensions, minimum_similarity and candidate_limit equal to the row's configuration.semantic_representation; every other row records no such posture",
+        "every error-free agent_memory question carries a cross_fact record (limited_count, limited_item_ids in rank order, refusal_counts, ranked_top_mechanism_off null when limited_count is 0) and the report carries cross_fact_summary; no other row carries one"
+      ],
+      "failure_handling": "a question-level exception is recorded as runtime_error and the question scores as a miss with an empty ranking; ingestion refusals (Agent Memory not_committed, Mem0 add without an ADD event) are counted per question, never raised; an input digest that differs between streaming passes aborts the run; a missing credential or a failed posture check is a blocked execution, never a score",
+      "timeout": "none in the runner; the workflow job timeout (240 min) bounds each (row, plane) dispatch"
+    },
+    "findings": [
+      "reference/run_longmemeval.py had its three backends hard-coded (RETRIEVERS) and imported the Agent Memory facade directly; lane v1 deferred this lane for that reason. The registration seam added for this freeze keeps the built-in backends untouched and records every external backend's identity in execution.external_backends.",
+      "the runner evaluates the same question once per plane; per-question isolation for Mem0 therefore has to be per (question, plane), which the bridge implements as one user_id namespace per retriever call rather than per question id.",
+      "Mem0 2.2.1's default search threshold (0.1) drops low-similarity memories, so a Mem0 ranking can be shorter than the corpus even with top_k=50; a shorter ranking scores as misses beyond its length, exactly as any other backend's.",
+      "the hub serves longmemeval_s_cleaned.json with an x-linked-etag equal to its sha256, which the digest check relies on only as corroboration; the runner's own byte digest remains the binding identity.",
+      "the control executes during a declared baseline transition: the workflow records the checker state, line and declaration blob, and the importer refuses a run whose state is not admitted by the posture or whose declaration blob differs from the one pinned here, so a declaration amended by a later tranche (docs/67 Step A.6) invalidates this lane rather than silently changing its control",
+      "accepted rows 2026-10-08: agent-memory, lexical_overlap, mem0-oss on both planes (workflow runs 37718255173, 37718257278, 37718259916, 37718262620, 37718265216, 37718267521); V6-E1 every control output EQUAL to -v5 (1000/1000 questions, verdict_counts {EQUAL: 1000}; cross-fact records equal -v5 row by row, 0 limited, 0 UNATTRIBUTED); V6-E2 comparators equal -v5 (lexical_overlap and mem0_explicit ranked_top and metrics equal on every question); the typed proposition and extractor path is unaccepted until the plan-732-remediation R6 acceptance; numbers live in the committed evidence records, the native reports and the normalized manifests, never in this lane"
+    ],
+    "freeze_rationale": [
+      "the -v5 lane is accepted and its control executed the declared transition to Runtime Baseline v5; #732 (PR #741) added typed write-time propositions and an opt-in proposition extractor, off by default (ranking policy 3.3.0 to 3.4.0, assertion filter 6.1.0, public contract 1.5.0 to 1.6.0), and declared a transition to Runtime Baseline v6, so the executing runtime is new and needs a new lane id (change_rule)",
+      "the control declares no recall_control and no semantic_retrieval (the runner and importer read absence as off, the shipped default), declares no typed proposition, leaves the proposition extractor at its shipped default (off) and runs budget 50 on both planes; per question, against the accepted -v5 control (plan-732-evidence-v6 V6-E1): ranked_top and metrics must equal -v5, and the cross_fact record must equal -v5 in limited_count, limited_item_ids and refusal_counts, with -v5's 0 limited carried over; a question with a runtime error carries no cross_fact record and must equal -v5; the rule is equality, not attribution, and any difference blocks v6 publication; scripts/check_cross_fact_attribution.py is reused unchanged with --v4-dir the -v5 lane evidence and --v5-dir this lane's, and the acceptance test additionally requires verdict_counts {EQUAL: 1000} and per-row cross-fact equality",
+      "expected effect, recorded before any score (plan-732-evidence-v6 V6-E1): with the extractor off, ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches, so v6 must be observationally identical to v5 and no question is expected to differ; up/down counts and the summary deltas are reported, never gated, and must be zero",
+      "the agent_memory_shadow row stays deferred (plan-732-evidence-v6 V6-E2): it was measured at -v4 (jh-14 shipped) and the next controller measurement belongs to T-controller-2's lanes; ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes; it is neither re-executed nor copied forward",
+      "the agent_memory_semantic row stays deferred (plan-732-evidence-v6 V6-E2): the semantic route is unchanged since -v3, where its ordering effect was measured (plan-669-lanes-v3 D2); ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes",
+      "the lexical baseline is re-executed and must equal -v5 exactly; the Mem0 row is re-executed, a difference from -v5 being an environment finding as at -v4 and -v5; accepted -v5 rows are never copied forward"
+    ],
+    "frozen_before_any_score": true,
+    "frozen_on": "2026-10-08",
+    "gold_identity": {
+      "leakage_rule": "item ids are opaque handles supplied beside the text, never inside it; Agent Memory receives opaque target references and the item text, Mem0 receives the item text as a single user message with the id only in metadata; gold, answers, has_answer flags and question types never reach any backend; out-of-corpus ids in a ranking are counted and score as misses",
+      "resolution_paths": [
+        "item id returned verbatim by the backend (lexical_overlap, no_memory)",
+        "admitted fact uuid mapped to the item id through a per-question sidecar that never enters memory text (agent_memory)",
+        "metadata.doc_id read back from each Mem0 search result; results without doc_id are counted as unmapped and dropped (mem0_explicit)"
+      ],
+      "rule": "per question, exactly upstream: session plane gold = haystack session ids containing 'answer' (relabelled noans when no user turn in that session carries has_answer); turn plane gold = user turns of those sessions with has_answer (others relabelled noans); recall_all/recall_any/ndcg_any computed by the replica of eval_utils.py; turn rankings are also collapsed to distinct sessions for the turn-to-session view"
+    },
+    "harness": {
+      "entry": "PYTHONPATH=reference python reference/run_longmemeval.py --input longmemeval_s_cleaned.json --corpus-class external_frozen --granularity <session|turn> --backend <agent_memory|lexical_overlap|mem0_explicit> [--external-backend longmemeval_mem0_explicit_bridge:install_longmemeval_mem0_explicit_backend]",
+      "license_note": "upstream code MIT (LICENSE blob below); the cleaned dataset is obtained by the operator from the Hugging Face hub at the recorded revision and is never redistributed by this repository",
+      "license_spdx": "MIT",
+      "package": "reference/run_longmemeval.py (repository-owned replica of the upstream retrieval evaluator at the pinned revision; retrieval only, the upstream model-judged QA evaluator is never run). source_blobs bind the upstream files the replica reproduces (src/retrieval/*) and the repository files that execute the lane (reference/*); the workflow refuses to run if a reference/* blob differs.",
+      "repository": "xiaowu0162/LongMemEval",
+      "revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "source_blobs": {
+        "LICENSE": "2e2c8491038bf0383c324a478b66a4663833efea",
+        "reference/amb_mem0_explicit_bridge.py": "ce41b1f5766b99cb968b798be3ad6d37c3283228",
+        "reference/longmemeval_mem0_explicit_bridge.py": "08366b72ac0d76fdc0754a8182e3b6fd61cb1912",
+        "reference/run_longmemeval.py": "6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+        "src/retrieval/eval_utils.py": "9c43a835e7c41aff0eb3272c448f5cbe76bbbd45",
+        "src/retrieval/run_retrieval.py": "48e615df943a329801c3703edf4f83dc0a18fe17"
+      },
+      "url": "https://github.com/xiaowu0162/LongMemEval"
+    },
+    "lane_id": "longmemeval-s-retrieval-parity-v6",
+    "owning_issue": 732,
+    "selection": {
+      "category": null,
+      "query_limit": null,
+      "selection_id": "all-500:7d738ae585fd4014",
+      "selection_method": "all 500 questions in source order; no --max-questions, no --subset-size; input.selection.question_ids_sha256 must equal 7d738ae585fd4014c9d231088ff824864fded501adc07b0e08c2b97a28210c03"
+    },
+    "status": "accepted",
+    "systems": [
+      {
+        "adapter": {
+          "install_entry": null,
+          "module": "reference/run_longmemeval.py (_agent_memory backend)",
+          "revision_rule": "git blob of the runner at execution must equal harness.source_blobs[reference/run_longmemeval.py] = 6b9c237380f1d527e564161c2dac7fe32ada0ef9"
+        },
+        "capability_posture": {
+          "document_timestamp": "unsupported",
+          "governed_admission": "native",
+          "per_question_isolation": "native",
+          "verbatim_document_retention": "native"
+        },
+        "configuration": {
+          "backend": "agent_memory",
+          "budget": "50",
+          "isolation": "one tenant and scope per question (tenant:longmemeval:<row>, benchmark:longmemeval:<row>) in a fresh temporary store",
+          "k": "the facade's return budget 50 (the deepest scored k), never a runner-side cap; scored at k <= 50",
+          "ranking_variant": "default",
+          "recall": "memory.recall(question, budget=50) with no reference_time; the facade's `returned` prefix (contract 1.4.0 ranked-prefix-return-budget, admitted stays whole) mapped back to item ids through a per-question uuid sidecar; return_policy recorded per question",
+          "remember": "memory.remember(opaque target reference memory:longmemeval:<row>:<item>, item text) with no observed_at (frozen comparability posture)",
+          "runtime_baseline_posture": {
+            "checker_state_required": [
+              "PASS",
+              "TRANSITION"
+            ],
+            "declaration": "reports/runtime/baseline-v6-declaration.json",
+            "declaration_blob": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+            "declared_successor": "agent-memory-runtime-baseline-v6",
+            "predecessor": "agent-memory-runtime-baseline-v5"
+          },
+          "temporal_metadata": "none"
+        },
+        "credentials": "credential_free",
+        "dependency_pins": [
+          "agent-memory-reference @ executing revision",
+          "reference/requirements.txt"
+        ],
+        "display_name": "Agent Memory (public facade, declared transition to Runtime Baseline v6)",
+        "inference_posture": "none",
+        "notes": [
+          "document_timestamp is unsupported under this lane by choice: the frozen comparability posture declares no session dates to Agent Memory, exactly as the accepted Agent Memory LongMemEval_S evidence was produced",
+          "concurrency 1 until multi-handle semantics are independently qualified",
+          "the runner records return_policy per question and return_budget_applied_total; unmapped_admitted_count_total must be 0 for the metric-neutrality claim of this lane's freeze_rationale to hold"
+        ],
+        "provider_key": "agent_memory",
+        "role": "control",
+        "row_id": "agent-memory-public-facade",
+        "source": {
+          "identity": "MythologIQ-Labs-LLC/agent-memory reference runtime through the public AgentMemory facade",
+          "kind": "repository_runtime",
+          "license_spdx": "Apache-2.0",
+          "revision": "exact 40-hex repository revision at execution",
+          "revision_rule": "git rev-parse HEAD of the executing checkout; the protected runtime surface is pinned by scripts/check_runtime_baseline_equivalence.py, which must print PASS or TRANSITION against the declaration blob this row pins (configuration.runtime_baseline_posture) for the run to be importable; the state, line and declaration blob are recorded in the execution identity",
+          "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory"
+        },
+        "status": "accepted",
+        "status_reason": "accepted 2026-10-08 at repository revision 24048d55e26d7db27715e78b24a8b795433a5e16: session plane from workflow run 37718255173 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-session-24048d55e26d/); turn plane from workflow run 37718257278 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/agent_memory-turn-24048d55e26d/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v6:agent_memory:session and lane:longmemeval-s-retrieval-parity-v6:agent_memory:turn",
+        "system_id": "agent-memory"
+      },
+      {
+        "adapter": {
+          "install_entry": null,
+          "module": "reference/run_longmemeval.py (_agent_memory backend)",
+          "revision_rule": "git blob of the runner at execution must equal harness.source_blobs[reference/run_longmemeval.py] = 6b9c237380f1d527e564161c2dac7fe32ada0ef9"
+        },
+        "capability_posture": {
+          "document_timestamp": "unsupported",
+          "governed_admission": "native",
+          "per_question_isolation": "native",
+          "verbatim_document_retention": "native"
+        },
+        "configuration": {
+          "backend": "agent_memory",
+          "budget": "50",
+          "isolation": "one tenant and scope per question (tenant:longmemeval:<row>, benchmark:longmemeval:<row>) in a fresh temporary store",
+          "k": "the facade's return budget 50 (the deepest scored k), never a runner-side cap; scored at k <= 50",
+          "ranking_variant": "default",
+          "recall": "memory.recall(question, budget=50) with no reference_time; the facade's `returned` prefix (contract 1.4.0 ranked-prefix-return-budget, admitted stays whole) mapped back to item ids through a per-question uuid sidecar; return_policy recorded per question",
+          "recall_control": "shadow",
+          "recall_control_telemetry": "per question (LongMemEval rows) or per non-blank case (AMB sidecar recall-control.jsonl): the facade's recall_control block without usage.elapsed_ms (response.decision_status, usage.fallback_events, usage.controller_decisions_used, actual_stop.actual_stop_reason/stop_class, routes_executed, route_candidate_counts, shadow_delta, authority_effect); reported, never benchmark authority (plan-644-lanes-v4 L2)",
+          "remember": "memory.remember(opaque target reference memory:longmemeval:<row>:<item>, item text) with no observed_at (frozen comparability posture)",
+          "runtime_baseline_posture": {
+            "checker_state_required": [
+              "PASS",
+              "TRANSITION"
+            ],
+            "declaration": "reports/runtime/baseline-v6-declaration.json",
+            "declaration_blob": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+            "declared_successor": "agent-memory-runtime-baseline-v6",
+            "predecessor": "agent-memory-runtime-baseline-v5"
+          },
+          "temporal_metadata": "none"
+        },
+        "credentials": "credential_free",
+        "dependency_pins": [
+          "agent-memory-reference @ executing revision",
+          "reference/requirements.txt"
+        ],
+        "display_name": "Agent Memory (public facade, shadow recall control, declared transition to Runtime Baseline v4)",
+        "inference_posture": "none",
+        "notes": [
+          "measured shadow recall-control row (#644 S9); not the v4 publication control; evidence for T-controller-2"
+        ],
+        "provider_key": "agent_memory_shadow",
+        "role": "comparator",
+        "row_id": "agent-memory-recall-control-shadow",
+        "source": {
+          "identity": "MythologIQ-Labs-LLC/agent-memory reference runtime through the public AgentMemory facade",
+          "kind": "repository_runtime",
+          "license_spdx": "Apache-2.0",
+          "revision": "exact 40-hex repository revision at execution",
+          "revision_rule": "git rev-parse HEAD of the executing checkout; the protected runtime surface is pinned by scripts/check_runtime_baseline_equivalence.py, which must print PASS or TRANSITION against the declaration blob this row pins (configuration.runtime_baseline_posture) for the run to be importable; the state, line and declaration blob are recorded in the execution identity",
+          "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory"
+        },
+        "status": "deferred",
+        "status_reason": "deferred at freeze (plan-671-evidence-v5 E3): measured at -v4 (jh-14 shipped); the next controller measurement belongs to T-controller-2's lanes; at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes",
+        "system_id": "agent-memory"
+      },
+      {
+        "adapter": {
+          "install_entry": null,
+          "module": "reference/run_longmemeval.py (_lexical backend)",
+          "revision_rule": "git blob of the runner at execution must equal harness.source_blobs[reference/run_longmemeval.py]"
+        },
+        "capability_posture": {
+          "document_timestamp": "unsupported",
+          "governed_admission": "not_applicable",
+          "per_question_isolation": "native",
+          "verbatim_document_retention": "native"
+        },
+        "configuration": {
+          "backend": "lexical_overlap",
+          "ranking": "items with any query-token overlap, ordered by overlap count desc, Jaccard desc, item id asc; items with no overlap are not returned",
+          "tokens": "[A-Za-z0-9_]+ lowercased, tokens longer than one character"
+        },
+        "credentials": "credential_free",
+        "dependency_pins": [
+          "reference/requirements.txt"
+        ],
+        "display_name": "Lexical-overlap baseline (profile built-in)",
+        "inference_posture": "harness_builtin",
+        "notes": [
+          "a profile-local baseline, not upstream's flat-bm25 or dense retrievers, and not a market-position claim; the no_memory floor is available from the runner but is not a lane row"
+        ],
+        "provider_key": "lexical_overlap",
+        "role": "baseline",
+        "row_id": "lexical-overlap-profile-baseline",
+        "source": {
+          "identity": "reference/run_longmemeval.py::_lexical_rank (token-overlap count, then Jaccard, then item id)",
+          "kind": "harness_builtin",
+          "license_spdx": "Apache-2.0",
+          "revision": "6b9c237380f1d527e564161c2dac7fe32ada0ef9",
+          "revision_rule": "git blob of reference/run_longmemeval.py at execution",
+          "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory"
+        },
+        "status": "accepted",
+        "status_reason": "accepted 2026-10-08 at repository revision 24048d55e26d7db27715e78b24a8b795433a5e16: session plane from workflow run 37718259916 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-session-24048d55e26d/); turn plane from workflow run 37718262620 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/lexical_overlap-turn-24048d55e26d/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:session and lane:longmemeval-s-retrieval-parity-v6:lexical_overlap:turn",
+        "system_id": "lexical_overlap"
+      },
+      {
+        "adapter": {
+          "install_entry": "longmemeval_mem0_explicit_bridge:install_longmemeval_mem0_explicit_backend",
+          "module": "reference/longmemeval_mem0_explicit_bridge.py",
+          "revision_rule": "git blob of the module at execution must equal harness.source_blobs[reference/longmemeval_mem0_explicit_bridge.py] = 08366b72ac0d76fdc0754a8182e3b6fd61cb1912; it imports its Mem0 configuration from reference/amb_mem0_explicit_bridge.py (blob ce41b1f5766b99cb968b798be3ad6d37c3283228); bridge_version 0.1.0 recorded in every report"
+        },
+        "capability_posture": {
+          "document_timestamp": "unsupported",
+          "governed_admission": "not_applicable",
+          "per_question_isolation": "native",
+          "verbatim_document_retention": "native"
+        },
+        "configuration": {
+          "add": "Memory.add([{'role': 'user', 'content': <item text>}], user_id=<namespace>, metadata={'doc_id': <item id>, 'source_date': <session date>, 'lme_bridge': '0.1.0'}, infer=False); a result without an ADD event is counted as an ingestion failure",
+          "backend": "mem0_explicit",
+          "content_rule": "item text verbatim (session: user turns joined by one space; turn: one user turn), identical to the text the other rows receive; ids, dates and gold never enter memory text",
+          "embedder": {
+            "dims": 384,
+            "model": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1",
+            "provider": "huggingface",
+            "revision": "b207367332321f8e44f96e224ef15bc607f4dbf0"
+          },
+          "history_db": "<store>/history.db; MEM0_DIR=<store>/mem0-home; MEM0_TELEMETRY=false",
+          "identity_mapping": "metadata.doc_id read back from each result in Mem0's order; results without doc_id are counted as unmapped and dropped",
+          "inference": "infer=False on every add; the constructed LLM is replaced by a fail-closed guard, so any inference call aborts the question as a runtime_error",
+          "isolation": "one Mem0 user_id namespace per retriever call (lme-<row>-<call>), i.e. per question and plane; search is filtered to that namespace",
+          "llm_config": "provider openai with an inert api_key used solely to satisfy Mem0's eager client construction; never a credential",
+          "optional_components": {
+            "fastembed_bm25_keyword_search": "not installed; Mem0 logs 'BM25 keyword search disabled' and ranks by vector similarity only",
+            "graph_store": "not configured",
+            "install": "pip install mem0ai==2.2.1 (base package, no extras)",
+            "reranker": "not configured (rerank=False)",
+            "spacy_lemmatizer": "not installed; Mem0 skips text lemmatization"
+          },
+          "search": "Memory.search(question, top_k=50, filters={'user_id': <namespace>}); threshold 0.1 and rerank=false are Mem0 2.2.1 defaults, recorded not tuned",
+          "vector_store": {
+            "collection": "lme640_mem0_explicit",
+            "mode": "local path, on_disk=true, fresh per run, one collection for the whole run",
+            "provider": "qdrant"
+          }
+        },
+        "credentials": "placeholder_for_client_construction_only",
+        "dependencies_recorded_at_execution": [
+          "mem0ai",
+          "qdrant-client",
+          "sentence-transformers",
+          "torch",
+          "openai",
+          "posthog"
+        ],
+        "dependency_pins": [
+          "mem0ai==2.2.1",
+          "qdrant-client==1.17.0",
+          "sentence-transformers==5.2.3",
+          "torch==2.10.0"
+        ],
+        "display_name": "Mem0 OSS 2.2.1 (explicit memory, no inference)",
+        "inference_posture": "explicit_memory_no_inference",
+        "notes": [
+          "document_timestamp is unsupported for retrieval: the session date is stored as metadata only and Mem0 2.2.1 does not use it to rank",
+          "the lane v1 Mem0 row resolved these exact stack releases under the AMB harness lock; without a harness lock here they are pinned explicitly so the retrieval stack is identical across the two lanes",
+          "the smoke run on the synthetic fixture with the real 2.2.1 stack ingested at ~10 ms per item; the full turn plane (122,416 items) is expected to take well under the 180-minute job bound"
+        ],
+        "provider_key": "mem0_explicit",
+        "role": "comparator",
+        "row_id": "mem0-oss-2.2.1-explicit-memory",
+        "source": {
+          "identity": "mem0ai (mem0ai/mem0 Python SDK)",
+          "kind": "python_package",
+          "license_spdx": "Apache-2.0",
+          "revision": "94c3fe9f238f3dbf29c9ce98643bd71eb13077cd",
+          "revision_rule": "release tag v2.2.1; pip pin mem0ai==2.2.1; mem0.__version__ verified before the store is opened",
+          "url": "https://github.com/mem0ai/mem0/releases/tag/v2.2.1"
+        },
+        "status": "accepted",
+        "status_reason": "accepted 2026-10-08 at repository revision 24048d55e26d7db27715e78b24a8b795433a5e16: session plane from workflow run 37718265216 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-session-24048d55e26d/); turn plane from workflow run 37718267521 (raw evidence under reports/benchmarks/longmemeval/longmemeval-s-retrieval-parity-v6/mem0_explicit-turn-24048d55e26d/); bound by the integration's evidence_history entries lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:session and lane:longmemeval-s-retrieval-parity-v6:mem0_explicit:turn",
+        "system_id": "mem0-oss"
+      },
+      {
+        "adapter": {
+          "install_entry": null,
+          "module": "reference/run_longmemeval.py (_agent_memory backend)",
+          "revision_rule": "git blob of the runner at execution must equal harness.source_blobs[reference/run_longmemeval.py] = 6b9c237380f1d527e564161c2dac7fe32ada0ef9"
+        },
+        "capability_posture": {
+          "document_timestamp": "unsupported",
+          "governed_admission": "native",
+          "per_question_isolation": "native",
+          "verbatim_document_retention": "native"
+        },
+        "configuration": {
+          "backend": "agent_memory",
+          "budget": "50",
+          "isolation": "one tenant and scope per question (tenant:longmemeval:<row>, benchmark:longmemeval:<row>) in a fresh temporary store",
+          "k": "the facade's return budget 50 (the deepest scored k), never a runner-side cap; scored at k <= 50",
+          "ranking_variant": "default",
+          "recall": "memory.recall(question, budget=50) with no reference_time; the facade's `returned` prefix (contract 1.4.0 ranked-prefix-return-budget, admitted stays whole) mapped back to item ids through a per-question uuid sidecar; return_policy recorded per question",
+          "remember": "memory.remember(opaque target reference memory:longmemeval:<row>:<item>, item text) with no observed_at (frozen comparability posture)",
+          "route_diagnostics": "per question, after scoring from a gold-blind trace: admitted_count, semantic_only_admitted_count, gold items reached only through the semantic route, and the rank of each gold item in the full admitted list",
+          "runtime_baseline_posture": {
+            "checker_state_required": [
+              "PASS",
+              "TRANSITION"
+            ],
+            "declaration": "reports/runtime/baseline-v6-declaration.json",
+            "declaration_blob": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+            "declared_successor": "agent-memory-runtime-baseline-v6",
+            "predecessor": "agent-memory-runtime-baseline-v5"
+          },
+          "semantic_representation": {
+            "candidate_limit": 16,
+            "config_digest": "sha256:7447705443160d1ae7c1de49902b786bd3f578d06e7125c05dabaed52dd31aee",
+            "dimensions": 384,
+            "minimum_similarity": 0.3,
+            "representation_ref": "sentence-transformers/multi-qa-MiniLM-L6-cos-v1@b207367",
+            "representation_version": "onnx-mean-l2-f32/1.0.0"
+          },
+          "semantic_retrieval": "required",
+          "temporal_metadata": "none"
+        },
+        "credentials": "credential_free",
+        "dependency_pins": [
+          "agent-memory-reference @ executing revision",
+          "reference/requirements.txt",
+          "reference/requirements-semantic.txt"
+        ],
+        "display_name": "Agent Memory (public facade, semantic route required, declared transition to Runtime Baseline v4)",
+        "inference_posture": "none",
+        "notes": [
+          "measured semantic route row (#669 D2); not the v3 publication control; evidence for #673",
+          "document_timestamp is unsupported under this lane by choice: the frozen comparability posture declares no session dates to Agent Memory, exactly as the accepted Agent Memory LongMemEval_S evidence was produced",
+          "concurrency 1 until multi-handle semantics are independently qualified",
+          "the runner records return_policy per question and return_budget_applied_total; unmapped_admitted_count_total must be 0 for the metric-neutrality claim of this lane's freeze_rationale to hold"
+        ],
+        "provider_key": "agent_memory_semantic",
+        "role": "comparator",
+        "row_id": "agent-memory-semantic-route",
+        "source": {
+          "identity": "MythologIQ-Labs-LLC/agent-memory reference runtime through the public AgentMemory facade",
+          "kind": "repository_runtime",
+          "license_spdx": "Apache-2.0",
+          "revision": "exact 40-hex repository revision at execution",
+          "revision_rule": "git rev-parse HEAD of the executing checkout; the protected runtime surface is pinned by scripts/check_runtime_baseline_equivalence.py, which must print PASS or TRANSITION against the declaration blob this row pins (configuration.runtime_baseline_posture) for the run to be importable; the state, line and declaration blob are recorded in the execution identity",
+          "url": "https://github.com/MythologIQ-Labs-LLC/agent-memory"
+        },
+        "status": "deferred",
+        "status_reason": "deferred at freeze (plan-671-evidence-v5 E3): the semantic route is unchanged since -v3, where its ordering effect was measured (plan-669-lanes-v3 D2); ranking policy 3.3.0 adds only explicit-current cross-fact applicability, which never reads similarity; the next measurement belongs to #673's lanes; at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes",
+        "system_id": "agent-memory"
+      },
+      {
+        "adapter": {
+          "install_entry": null,
+          "module": "not yet written (a longmemeval_hindsight_bridge registered through register_external_backend)",
+          "revision_rule": "git blob of the module at execution"
+        },
+        "capability_posture": {},
+        "configuration": {},
+        "display_name": "Hindsight v0.10.2",
+        "provider_key": "hindsight",
+        "role": "comparator",
+        "row_id": "hindsight-0.10.2",
+        "source": {
+          "identity": "hindsight-all (vectorize-io/hindsight)",
+          "kind": "python_package",
+          "license_spdx": null,
+          "revision": "unbound",
+          "revision_rule": "release tag v0.10.2 once the provider configuration is frozen",
+          "url": "https://github.com/vectorize-io/hindsight/releases/tag/v0.10.2"
+        },
+        "status": "deferred",
+        "status_reason": "a benchmark-agnostic, exactly pinned Hindsight provider configuration must be frozen before any Hindsight row can run (#640 ruling 2026-10-03, unchanged); it will enter this benchmark through the same registration seam under a new lane id",
+        "system_id": "hindsight"
+      }
+    ]
+  },
+  "lane_digest_sha256": "0c7866dfacc58e75d867c638e67e503650c9338fb95dd3946e242980b3e0f1b7",
+  "lane_id": "longmemeval-s-retrieval-parity-v6",
+  "path": "reference/agentmem_ref/evaluation/lanes/longmemeval-s-retrieval-parity-v6.json",
+  "resolution": {
+    "authority_effect": "none",
+    "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "integration_id": "agent-memory-longmemeval-retrieval-currentness-v1",
+    "lane_digest_sha256": "0c7866dfacc58e75d867c638e67e503650c9338fb95dd3946e242980b3e0f1b7",
+    "lane_id": "longmemeval-s-retrieval-parity-v6",
+    "provenance_class": "external_adapted",
+    "rows": [
+      {
+        "role": "control",
+        "row_id": "agent-memory-public-facade",
+        "status": "accepted",
+        "system_id": "agent-memory"
+      },
+      {
+        "role": "comparator",
+        "row_id": "agent-memory-recall-control-shadow",
+        "status": "deferred",
+        "system_id": "agent-memory"
+      },
+      {
+        "role": "baseline",
+        "row_id": "lexical-overlap-profile-baseline",
+        "status": "accepted",
+        "system_id": "lexical_overlap"
+      },
+      {
+        "role": "comparator",
+        "row_id": "mem0-oss-2.2.1-explicit-memory",
+        "status": "accepted",
+        "system_id": "mem0-oss"
+      },
+      {
+        "role": "comparator",
+        "row_id": "agent-memory-semantic-route",
+        "status": "deferred",
+        "system_id": "agent-memory"
+      },
+      {
+        "role": "comparator",
+        "row_id": "hindsight-0.10.2",
+        "status": "deferred",
+        "system_id": "hindsight"
+      }
+    ],
+    "status": "accepted"
+  },
+  "schema_version": "1.1.0",
+  "status": "accepted",
+  "summary": {
+    "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+    "dataset": "longmemeval-cleaned/LongMemEval_S (longmemeval_s_cleaned.json)",
+    "evaluator_mode": "retrieval",
+    "frozen_on": "2026-10-08",
+    "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+    "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+    "lane_digest_sha256": "0c7866dfacc58e75d867c638e67e503650c9338fb95dd3946e242980b3e0f1b7",
+    "lane_id": "longmemeval-s-retrieval-parity-v6",
+    "llm_calls": false,
+    "owning_issue": 732,
+    "rows": [
+      {
+        "provider_key": "agent_memory",
+        "role": "control",
+        "row_id": "agent-memory-public-facade",
+        "status": "accepted",
+        "system_id": "agent-memory"
+      },
+      {
+        "provider_key": "agent_memory_shadow",
+        "role": "comparator",
+        "row_id": "agent-memory-recall-control-shadow",
+        "status": "deferred",
+        "system_id": "agent-memory"
+      },
+      {
+        "provider_key": "lexical_overlap",
+        "role": "baseline",
+        "row_id": "lexical-overlap-profile-baseline",
+        "status": "accepted",
+        "system_id": "lexical_overlap"
+      },
+      {
+        "provider_key": "mem0_explicit",
+        "role": "comparator",
+        "row_id": "mem0-oss-2.2.1-explicit-memory",
+        "status": "accepted",
+        "system_id": "mem0-oss"
+      },
+      {
+        "provider_key": "agent_memory_semantic",
+        "role": "comparator",
+        "row_id": "agent-memory-semantic-route",
+        "status": "deferred",
+        "system_id": "agent-memory"
+      },
+      {
+        "provider_key": "hindsight",
+        "role": "comparator",
+        "row_id": "hindsight-0.10.2",
+        "status": "deferred",
+        "system_id": "hindsight"
+      }
+    ],
+    "status": "accepted"
+  },
+  "valid": true
+}

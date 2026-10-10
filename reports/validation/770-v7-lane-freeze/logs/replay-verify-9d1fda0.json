@@ -1,0 +1,51 @@
+{
+  "acceptance": "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER",
+  "evidence_verified": false,
+  "replays": [
+    {
+      "problems": [
+        "HEAD runtime tree differs from the evidence runtime tree"
+      ],
+      "reexecuted": false,
+      "replay": "typed-sufficiency-noninterference-and-negative-controls-v1",
+      "status": "STALE",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [
+        "HEAD runtime tree differs from the evidence runtime tree"
+      ],
+      "reexecuted": false,
+      "replay": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+      "status": "STALE",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [
+        "HEAD runtime tree differs from the evidence runtime tree"
+      ],
+      "reexecuted": false,
+      "replay": "governed-admitted-typed-value-coherence-v1",
+      "status": "STALE",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [
+        "HEAD runtime tree differs from the evidence runtime tree"
+      ],
+      "reexecuted": false,
+      "replay": "committed-governed-transition-witness-v1",
+      "status": "STALE",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [
+        "HEAD runtime tree differs from the evidence runtime tree"
+      ],
+      "reexecuted": false,
+      "replay": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1",
+      "status": "STALE",
+      "verdict": "PASS"
+    }
+  ]
+}

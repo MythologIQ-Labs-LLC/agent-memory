@@ -1,0 +1,41 @@
+{
+  "acceptance": "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER",
+  "evidence_verified": true,
+  "replays": [
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "typed-sufficiency-noninterference-and-negative-controls-v1",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "governed-persisted-typed-slot-sufficiency-admission-recheck-v1",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "governed-admitted-typed-value-coherence-v1",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "committed-governed-transition-witness-v1",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "same-slot-safety-counterevidence-and-immutable-stop-gate-v1",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    }
+  ]
+}

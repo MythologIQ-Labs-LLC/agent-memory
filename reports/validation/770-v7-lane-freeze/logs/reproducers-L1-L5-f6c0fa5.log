@@ -1,0 +1,299 @@
+EFFFEFEEFFFEFE.EE.
+======================================================================
+ERROR: test_acceptance_digest_reconstruction_round_trips (tests.test_770_v7_lane_freeze_independent.AmbPrecisionMemBenchV7FreezeTests.test_acceptance_digest_reconstruction_round_trips)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 127, in test_acceptance_digest_reconstruction_round_trips
+    self.assertEqual(lane_digest(_as_frozen(accepted)), lane_digest(lane))
+                                 ~~~~~~~~~~^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_same_harness_lanes_v3.py", line 57, in _as_frozen
+    frozen["findings"] = [item for item in frozen["findings"] if not item.startswith("accepted rows ")]
+                                                                     ^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'startswith'
+
+======================================================================
+ERROR: test_every_committed_lane_still_lists (tests.test_770_v7_lane_freeze_independent.AmbPrecisionMemBenchV7FreezeTests.test_every_committed_lane_still_lists)
+----------------------------------------------------------------------
+jsonschema.exceptions.ValidationError: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+Failed validating 'type' in schema['properties']['findings']['items']:
+    {'type': 'string', 'minLength': 1}
+
+On instance['findings'][0]:
+    {'id': 'v7-awaiting-workflow-evidence',
+     'severity': 'blocker',
+     'description': 'No workflow-imported v7 evidence or independent '
+                    'acceptance; v6 metrics must not be inherited.'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 90, in test_every_committed_lane_still_lists
+    ids = {lane["lane_id"] for lane in list_lanes()}
+                                       ~~~~~~~~~~^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 202, in list_lanes
+    lanes = [load_lane(path) for path in lane_paths()]
+             ~~~~~~~~~^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 186, in load_lane
+    return validate_lane(document)
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 162, in validate_lane
+    raise SameHarnessLaneError(f"{_path(first)}: {first.message}") from first
+agentmem_ref.evaluation.same_harness_lane.SameHarnessLaneError: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+======================================================================
+ERROR: test_lane_validates_and_resolves (tests.test_770_v7_lane_freeze_independent.AmbPrecisionMemBenchV7FreezeTests.test_lane_validates_and_resolves)
+----------------------------------------------------------------------
+jsonschema.exceptions.ValidationError: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+Failed validating 'type' in schema['properties']['findings']['items']:
+    {'type': 'string', 'minLength': 1}
+
+On instance['findings'][0]:
+    {'id': 'v7-awaiting-workflow-evidence',
+     'severity': 'blocker',
+     'description': 'No workflow-imported v7 evidence or independent '
+                    'acceptance; v6 metrics must not be inherited.'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 84, in test_lane_validates_and_resolves
+    lane = validate_lane(self._lane())
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 162, in validate_lane
+    raise SameHarnessLaneError(f"{_path(first)}: {first.message}") from first
+agentmem_ref.evaluation.same_harness_lane.SameHarnessLaneError: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+======================================================================
+ERROR: test_acceptance_digest_reconstruction_round_trips (tests.test_770_v7_lane_freeze_independent.LongMemEvalParityV7FreezeTests.test_acceptance_digest_reconstruction_round_trips)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 127, in test_acceptance_digest_reconstruction_round_trips
+    self.assertEqual(lane_digest(_as_frozen(accepted)), lane_digest(lane))
+                                 ~~~~~~~~~~^^^^^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_same_harness_lanes_v3.py", line 57, in _as_frozen
+    frozen["findings"] = [item for item in frozen["findings"] if not item.startswith("accepted rows ")]
+                                                                     ^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'startswith'
+
+======================================================================
+ERROR: test_every_committed_lane_still_lists (tests.test_770_v7_lane_freeze_independent.LongMemEvalParityV7FreezeTests.test_every_committed_lane_still_lists)
+----------------------------------------------------------------------
+jsonschema.exceptions.ValidationError: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+Failed validating 'type' in schema['properties']['findings']['items']:
+    {'type': 'string', 'minLength': 1}
+
+On instance['findings'][0]:
+    {'id': 'v7-awaiting-workflow-evidence',
+     'severity': 'blocker',
+     'description': 'No workflow-imported v7 evidence or independent '
+                    'acceptance; v6 metrics must not be inherited.'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 90, in test_every_committed_lane_still_lists
+    ids = {lane["lane_id"] for lane in list_lanes()}
+                                       ~~~~~~~~~~^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 202, in list_lanes
+    lanes = [load_lane(path) for path in lane_paths()]
+             ~~~~~~~~~^^^^^^
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 186, in load_lane
+    return validate_lane(document)
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 162, in validate_lane
+    raise SameHarnessLaneError(f"{_path(first)}: {first.message}") from first
+agentmem_ref.evaluation.same_harness_lane.SameHarnessLaneError: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+======================================================================
+ERROR: test_lane_validates_and_resolves (tests.test_770_v7_lane_freeze_independent.LongMemEvalParityV7FreezeTests.test_lane_validates_and_resolves)
+----------------------------------------------------------------------
+jsonschema.exceptions.ValidationError: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+Failed validating 'type' in schema['properties']['findings']['items']:
+    {'type': 'string', 'minLength': 1}
+
+On instance['findings'][0]:
+    {'id': 'v7-awaiting-workflow-evidence',
+     'severity': 'blocker',
+     'description': 'No workflow-imported v7 evidence or independent '
+                    'acceptance; v6 metrics must not be inherited.'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 84, in test_lane_validates_and_resolves
+    lane = validate_lane(self._lane())
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 162, in validate_lane
+    raise SameHarnessLaneError(f"{_path(first)}: {first.message}") from first
+agentmem_ref.evaluation.same_harness_lane.SameHarnessLaneError: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+======================================================================
+ERROR: test_binding_admits_only_the_v7_posture (tests.test_770_v7_lane_freeze_independent.V7ImporterRefusals.test_binding_admits_only_the_v7_posture)
+----------------------------------------------------------------------
+jsonschema.exceptions.ValidationError: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+Failed validating 'type' in schema['properties']['findings']['items']:
+    {'type': 'string', 'minLength': 1}
+
+On instance['findings'][0]:
+    {'id': 'v7-awaiting-workflow-evidence',
+     'severity': 'blocker',
+     'description': 'No workflow-imported v7 evidence or independent '
+                    'acceptance; v6 metrics must not be inherited.'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 201, in test_binding_admits_only_the_v7_posture
+    lane = validate_lane(_read(lane_id))
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 162, in validate_lane
+    raise SameHarnessLaneError(f"{_path(first)}: {first.message}") from first
+agentmem_ref.evaluation.same_harness_lane.SameHarnessLaneError: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+======================================================================
+ERROR: test_lane_digest_and_lane_id_are_bound (tests.test_770_v7_lane_freeze_independent.V7ImporterRefusals.test_lane_digest_and_lane_id_are_bound)
+----------------------------------------------------------------------
+jsonschema.exceptions.ValidationError: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+Failed validating 'type' in schema['properties']['findings']['items']:
+    {'type': 'string', 'minLength': 1}
+
+On instance['findings'][0]:
+    {'id': 'v7-awaiting-workflow-evidence',
+     'severity': 'blocker',
+     'description': 'No workflow-imported v7 evidence or independent '
+                    'acceptance; v6 metrics must not be inherited.'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 219, in test_lane_digest_and_lane_id_are_bound
+    amb = validate_lane(_read("amb-precisionmembench-retrieval-v7"))
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/agentmem_ref/evaluation/same_harness_lane.py", line 162, in validate_lane
+    raise SameHarnessLaneError(f"{_path(first)}: {first.message}") from first
+agentmem_ref.evaluation.same_harness_lane.SameHarnessLaneError: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of type 'string'
+
+======================================================================
+FAIL: test_comparability_and_rationale_state_the_v7_rule (tests.test_770_v7_lane_freeze_independent.AmbPrecisionMemBenchV7FreezeTests.test_comparability_and_rationale_state_the_v7_rule)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 148, in test_comparability_and_rationale_state_the_v7_rule
+    self.assertTrue(first.startswith(f"{self.v6_id} rows for the same system"), first)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : amb-precisionmembench-retrieval-v5 rows for the same system: the executing runtime (declared transition to Runtime Baseline v6, ranking policy 3.4.0, assertion filter 6.1.0, public contract 1.6.0) differs while the bridge blob (bridge 0.4.0) is unchanged, so rows are re-executed under this lane, never copied forward; the control's relation to the -v5 control is equality (plan-732-evidence-v6 V6-E1: every case's correct, context and nine meta fields, and its cross-fact limited_count, limited_document_ids and refusal_counts, equal -v5), not attribution, and is an acceptance check, not a comparability claim
+
+======================================================================
+FAIL: test_differs_from_v6_by_exactly_the_identity_list (tests.test_770_v7_lane_freeze_independent.AmbPrecisionMemBenchV7FreezeTests.test_differs_from_v6_by_exactly_the_identity_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 105, in test_differs_from_v6_by_exactly_the_identity_list
+    self.assertEqual(sorted(changed - allowed), [], "unlisted v6 -> v7 changes")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['/findings', '/findings[0]/description', [148 chars]son'] != []
+
+First list contains 7 additional elements.
+First extra element 0:
+'/findings'
+
++ []
+- ['/findings',
+-  '/findings[0]/description',
+-  '/findings[0]/id',
+-  '/findings[0]/severity',
+-  '/systems/agent-memory/status_reason',
+-  '/systems/bm25/status_reason',
+-  '/systems/mem0-explicit/status_reason'] : unlisted v6 -> v7 changes
+
+======================================================================
+FAIL: test_every_agent_memory_row_carries_the_v7_posture (tests.test_770_v7_lane_freeze_independent.AmbPrecisionMemBenchV7FreezeTests.test_every_agent_memory_row_carries_the_v7_posture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 142, in test_every_agent_memory_row_carries_the_v7_posture
+    self.assertEqual(posture, expected, key)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pre[38 chars]ine-v5', 'declared_successor': 'agent-memory-r[192 chars]ON']} != {'pre[38 chars]ine-v6', 'declared_successor': 'agent-memory-r[192 chars]ON']}
+Diff is 871 characters long. Set self.maxDiff to None to see it. : agent-memory-shadow
+
+======================================================================
+FAIL: test_findings_and_rows_carry_over_without_v6_acceptance (tests.test_770_v7_lane_freeze_independent.AmbPrecisionMemBenchV7FreezeTests.test_findings_and_rows_carry_over_without_v6_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 111, in test_findings_and_rows_carry_over_without_v6_acceptance
+    self.assertEqual(lane["findings"], v6["findings"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'id': 'v7-awaiting-workflow-evidence', '[129 chars]d.'}] != ["AMB's frozen mem0 provider calls Memory.[1655 chars]obs']
+
+First differing element 0:
+{'id': 'v7-awaiting-workflow-evidence', '[128 chars]ed.'}
+"AMB's frozen mem0 provider calls Memory.[180 chars] pin"
+
+Second list contains 6 additional elements.
+First extra element 1:
+'vectorize-io/agent-memory-benchmark carries no LICENSE file at the frozen revision; the harness is used from an external checkout only'
+
+Diff is 2058 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_comparability_and_rationale_state_the_v7_rule (tests.test_770_v7_lane_freeze_independent.LongMemEvalParityV7FreezeTests.test_comparability_and_rationale_state_the_v7_rule)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 148, in test_comparability_and_rationale_state_the_v7_rule
+    self.assertTrue(first.startswith(f"{self.v6_id} rows for the same system"), first)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : longmemeval-s-retrieval-parity-v5 rows for the same system: the executing runtime (declared transition to Runtime Baseline v6, ranking policy 3.4.0, assertion filter 6.1.0, public contract 1.6.0) differs while the runner blob is unchanged, so rows are re-executed under this lane, never copied forward; the control's relation to the -v5 control is equality (plan-732-evidence-v6 V6-E1: every question's ranked_top, metrics and cross_fact limited_count, limited_item_ids and refusal_counts equal -v5), not attribution, and is an acceptance check, not a comparability claim
+
+======================================================================
+FAIL: test_differs_from_v6_by_exactly_the_identity_list (tests.test_770_v7_lane_freeze_independent.LongMemEvalParityV7FreezeTests.test_differs_from_v6_by_exactly_the_identity_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 105, in test_differs_from_v6_by_exactly_the_identity_list
+    self.assertEqual(sorted(changed - allowed), [], "unlisted v6 -> v7 changes")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['/findings', '/findings[0]/description', [159 chars]son'] != []
+
+First list contains 7 additional elements.
+First extra element 0:
+'/findings'
+
++ []
+- ['/findings',
+-  '/findings[0]/description',
+-  '/findings[0]/id',
+-  '/findings[0]/severity',
+-  '/systems/agent_memory/status_reason',
+-  '/systems/lexical_overlap/status_reason',
+-  '/systems/mem0_explicit/status_reason'] : unlisted v6 -> v7 changes
+
+======================================================================
+FAIL: test_every_agent_memory_row_carries_the_v7_posture (tests.test_770_v7_lane_freeze_independent.LongMemEvalParityV7FreezeTests.test_every_agent_memory_row_carries_the_v7_posture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 142, in test_every_agent_memory_row_carries_the_v7_posture
+    self.assertEqual(posture, expected, key)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'pre[38 chars]ine-v5', 'declared_successor': 'agent-memory-r[192 chars]ON']} != {'pre[38 chars]ine-v6', 'declared_successor': 'agent-memory-r[192 chars]ON']}
+Diff is 871 characters long. Set self.maxDiff to None to see it. : agent_memory_shadow
+
+======================================================================
+FAIL: test_findings_and_rows_carry_over_without_v6_acceptance (tests.test_770_v7_lane_freeze_independent.LongMemEvalParityV7FreezeTests.test_findings_and_rows_carry_over_without_v6_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/d274b759-6504-590d-ae30-53afbfeafd56/scratchpad/l770/repo/reference/tests/test_770_v7_lane_freeze_independent.py", line 111, in test_findings_and_rows_carry_over_without_v6_acceptance
+    self.assertEqual(lane["findings"], v6["findings"])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: [{'id': 'v7-awaiting-workflow-evidence', '[129 chars]d.'}] != ["reference/run_longmemeval.py had its thr[1344 chars]rol']
+
+First differing element 0:
+{'id': 'v7-awaiting-workflow-evidence', '[128 chars]ed.'}
+"reference/run_longmemeval.py had its thr[282 chars]nds."
+
+Second list contains 4 additional elements.
+First extra element 1:
+'the runner evaluates the same question once per plane; per-question isolation for Mem0 therefore has to be per (question, plane), which the bridge implements as one user_id namespace per retriever call rather than per question id.'
+
+Diff is 1717 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.084s
+
+FAILED (failures=8, errors=8)

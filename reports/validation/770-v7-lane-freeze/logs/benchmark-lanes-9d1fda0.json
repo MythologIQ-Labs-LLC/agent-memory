@@ -1,0 +1,737 @@
+{
+  "authority_effect": "none",
+  "command": "benchmark_lanes",
+  "executed": false,
+  "lane_count": 14,
+  "lanes": [
+    {
+      "benchmark_integration": "amb-precisionmembench-retrieval-v1",
+      "dataset": "precisionmembench/single-turn",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-05",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "lane_digest_sha256": "748620131b0a53d7ab6e59f177784602323e03c6840dcb71985430e71bd3dcae",
+      "lane_id": "amb-precisionmembench-retrieval-v1",
+      "llm_calls": false,
+      "owning_issue": 640,
+      "rows": [
+        {
+          "provider_key": "agent-memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "bm25",
+          "role": "baseline",
+          "row_id": "bm25-harness-baseline",
+          "status": "accepted",
+          "system_id": "bm25"
+        },
+        {
+          "provider_key": "mem0-explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "amb-precisionmembench-retrieval-v1",
+      "dataset": "precisionmembench/single-turn",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-06",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "lane_digest_sha256": "3a3ad0f143b628ff130a082af39378cf471378e4599a7437ff253aeb79b4a7ef",
+      "lane_id": "amb-precisionmembench-retrieval-v2",
+      "llm_calls": false,
+      "owning_issue": 640,
+      "rows": [
+        {
+          "provider_key": "agent-memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "bm25",
+          "role": "baseline",
+          "row_id": "bm25-harness-baseline",
+          "status": "accepted",
+          "system_id": "bm25"
+        },
+        {
+          "provider_key": "mem0-explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "amb-precisionmembench-retrieval-v1",
+      "dataset": "precisionmembench/single-turn",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-07",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "lane_digest_sha256": "4230e09208e7a0dd70a10329f36b330cd99f6b0ab840a5c9cd4120ff3b111e90",
+      "lane_id": "amb-precisionmembench-retrieval-v3",
+      "llm_calls": false,
+      "owning_issue": 669,
+      "rows": [
+        {
+          "provider_key": "agent-memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "bm25",
+          "role": "baseline",
+          "row_id": "bm25-harness-baseline",
+          "status": "accepted",
+          "system_id": "bm25"
+        },
+        {
+          "provider_key": "mem0-explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "amb-precisionmembench-retrieval-v1",
+      "dataset": "precisionmembench/single-turn",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-07",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "lane_digest_sha256": "9cbf73b137460b4d8efbc98eb30ce10c32391f66414b3e08933bc478bd81efc1",
+      "lane_id": "amb-precisionmembench-retrieval-v4",
+      "llm_calls": false,
+      "owning_issue": 644,
+      "rows": [
+        {
+          "provider_key": "agent-memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "agent-memory-shadow",
+          "role": "comparator",
+          "row_id": "agent-memory-recall-control-shadow",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "bm25",
+          "role": "baseline",
+          "row_id": "bm25-harness-baseline",
+          "status": "accepted",
+          "system_id": "bm25"
+        },
+        {
+          "provider_key": "mem0-explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "amb-precisionmembench-retrieval-v1",
+      "dataset": "precisionmembench/single-turn",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-07",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "lane_digest_sha256": "2073019202aab8af7ba8a25e673ec850d93fe625f5b38530d963326dc47c059a",
+      "lane_id": "amb-precisionmembench-retrieval-v5",
+      "llm_calls": false,
+      "owning_issue": 671,
+      "rows": [
+        {
+          "provider_key": "agent-memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "agent-memory-shadow",
+          "role": "comparator",
+          "row_id": "agent-memory-recall-control-shadow",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "bm25",
+          "role": "baseline",
+          "row_id": "bm25-harness-baseline",
+          "status": "accepted",
+          "system_id": "bm25"
+        },
+        {
+          "provider_key": "mem0-explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "amb-precisionmembench-retrieval-v1",
+      "dataset": "precisionmembench/single-turn",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-08",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "lane_digest_sha256": "0555d3acbf8e65eaf90c22c1a414ee5ff0bb5a01d91accd52f55a520bbec1d3b",
+      "lane_id": "amb-precisionmembench-retrieval-v6",
+      "llm_calls": false,
+      "owning_issue": 732,
+      "rows": [
+        {
+          "provider_key": "agent-memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "agent-memory-shadow",
+          "role": "comparator",
+          "row_id": "agent-memory-recall-control-shadow",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "bm25",
+          "role": "baseline",
+          "row_id": "bm25-harness-baseline",
+          "status": "accepted",
+          "system_id": "bm25"
+        },
+        {
+          "provider_key": "mem0-explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "amb-precisionmembench-retrieval-v1",
+      "dataset": "precisionmembench/single-turn",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-10",
+      "harness_revision": "03c1d0f1d27da63034f0931121c858faba512383",
+      "input_sha256": "caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd",
+      "lane_digest_sha256": "12acd4c7495efc906a6efcf05d33b93ff24183d63f29482619f70658daf4117d",
+      "lane_id": "amb-precisionmembench-retrieval-v7",
+      "llm_calls": false,
+      "owning_issue": 770,
+      "rows": [
+        {
+          "provider_key": "agent-memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "frozen",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "agent-memory-shadow",
+          "role": "comparator",
+          "row_id": "agent-memory-recall-control-shadow",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "bm25",
+          "role": "baseline",
+          "row_id": "bm25-harness-baseline",
+          "status": "frozen",
+          "system_id": "bm25"
+        },
+        {
+          "provider_key": "mem0-explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "frozen",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "frozen"
+    },
+    {
+      "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+      "dataset": "longmemeval-cleaned/LongMemEval_S (longmemeval_s_cleaned.json)",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-06",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "lane_digest_sha256": "6c13d540f6a5baa67eea955e9d14b02e972eaf7a57458c3dc4f92ef1a694a3b3",
+      "lane_id": "longmemeval-s-retrieval-parity-v1",
+      "llm_calls": false,
+      "owning_issue": 640,
+      "rows": [
+        {
+          "provider_key": "agent_memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "lexical_overlap",
+          "role": "baseline",
+          "row_id": "lexical-overlap-profile-baseline",
+          "status": "accepted",
+          "system_id": "lexical_overlap"
+        },
+        {
+          "provider_key": "mem0_explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+      "dataset": "longmemeval-cleaned/LongMemEval_S (longmemeval_s_cleaned.json)",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-06",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "lane_digest_sha256": "70cd362b016087310ed00b1554aba86f1acedf84e0a2890f2b7c00bbc4668bea",
+      "lane_id": "longmemeval-s-retrieval-parity-v2",
+      "llm_calls": false,
+      "owning_issue": 640,
+      "rows": [
+        {
+          "provider_key": "agent_memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "lexical_overlap",
+          "role": "baseline",
+          "row_id": "lexical-overlap-profile-baseline",
+          "status": "accepted",
+          "system_id": "lexical_overlap"
+        },
+        {
+          "provider_key": "mem0_explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+      "dataset": "longmemeval-cleaned/LongMemEval_S (longmemeval_s_cleaned.json)",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-07",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "lane_digest_sha256": "3c12550616354426e0c9ed33a72b91a5c8d9312b4db6200a3c3d2f23b53389fc",
+      "lane_id": "longmemeval-s-retrieval-parity-v3",
+      "llm_calls": false,
+      "owning_issue": 669,
+      "rows": [
+        {
+          "provider_key": "agent_memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "lexical_overlap",
+          "role": "baseline",
+          "row_id": "lexical-overlap-profile-baseline",
+          "status": "accepted",
+          "system_id": "lexical_overlap"
+        },
+        {
+          "provider_key": "mem0_explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+      "dataset": "longmemeval-cleaned/LongMemEval_S (longmemeval_s_cleaned.json)",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-07",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "lane_digest_sha256": "50155c9bfd83f71a936f6ea4f54ccff7f308d9870bad21c5cf82e2a3b202b6df",
+      "lane_id": "longmemeval-s-retrieval-parity-v4",
+      "llm_calls": false,
+      "owning_issue": 644,
+      "rows": [
+        {
+          "provider_key": "agent_memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "agent_memory_shadow",
+          "role": "comparator",
+          "row_id": "agent-memory-recall-control-shadow",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "lexical_overlap",
+          "role": "baseline",
+          "row_id": "lexical-overlap-profile-baseline",
+          "status": "accepted",
+          "system_id": "lexical_overlap"
+        },
+        {
+          "provider_key": "mem0_explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+      "dataset": "longmemeval-cleaned/LongMemEval_S (longmemeval_s_cleaned.json)",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-07",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "lane_digest_sha256": "9a70b170ebd8e6b50aa060b758ac4dd3e7997adc73c07c10501159eb33dca6e5",
+      "lane_id": "longmemeval-s-retrieval-parity-v5",
+      "llm_calls": false,
+      "owning_issue": 671,
+      "rows": [
+        {
+          "provider_key": "agent_memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "agent_memory_shadow",
+          "role": "comparator",
+          "row_id": "agent-memory-recall-control-shadow",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "lexical_overlap",
+          "role": "baseline",
+          "row_id": "lexical-overlap-profile-baseline",
+          "status": "accepted",
+          "system_id": "lexical_overlap"
+        },
+        {
+          "provider_key": "mem0_explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+      "dataset": "longmemeval-cleaned/LongMemEval_S (longmemeval_s_cleaned.json)",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-08",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "lane_digest_sha256": "0c7866dfacc58e75d867c638e67e503650c9338fb95dd3946e242980b3e0f1b7",
+      "lane_id": "longmemeval-s-retrieval-parity-v6",
+      "llm_calls": false,
+      "owning_issue": 732,
+      "rows": [
+        {
+          "provider_key": "agent_memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "accepted",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "agent_memory_shadow",
+          "role": "comparator",
+          "row_id": "agent-memory-recall-control-shadow",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "lexical_overlap",
+          "role": "baseline",
+          "row_id": "lexical-overlap-profile-baseline",
+          "status": "accepted",
+          "system_id": "lexical_overlap"
+        },
+        {
+          "provider_key": "mem0_explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "accepted",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "accepted"
+    },
+    {
+      "benchmark_integration": "agent-memory-longmemeval-retrieval-currentness-v1",
+      "dataset": "longmemeval-cleaned/LongMemEval_S (longmemeval_s_cleaned.json)",
+      "evaluator_mode": "retrieval",
+      "frozen_on": "2026-10-10",
+      "harness_revision": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+      "input_sha256": "d6f21ea9d60a0d56f34a05b609c79c88a451d2ae03597821ea3d5a9678c3a442",
+      "lane_digest_sha256": "e730636fb92d23e2dc1681c5edc09f011705d97bdca7d53097d6957f52104a4c",
+      "lane_id": "longmemeval-s-retrieval-parity-v7",
+      "llm_calls": false,
+      "owning_issue": 770,
+      "rows": [
+        {
+          "provider_key": "agent_memory",
+          "role": "control",
+          "row_id": "agent-memory-public-facade",
+          "status": "frozen",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "agent_memory_shadow",
+          "role": "comparator",
+          "row_id": "agent-memory-recall-control-shadow",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "lexical_overlap",
+          "role": "baseline",
+          "row_id": "lexical-overlap-profile-baseline",
+          "status": "frozen",
+          "system_id": "lexical_overlap"
+        },
+        {
+          "provider_key": "mem0_explicit",
+          "role": "comparator",
+          "row_id": "mem0-oss-2.2.1-explicit-memory",
+          "status": "frozen",
+          "system_id": "mem0-oss"
+        },
+        {
+          "provider_key": "agent_memory_semantic",
+          "role": "comparator",
+          "row_id": "agent-memory-semantic-route",
+          "status": "deferred",
+          "system_id": "agent-memory"
+        },
+        {
+          "provider_key": "hindsight",
+          "role": "comparator",
+          "row_id": "hindsight-0.10.2",
+          "status": "deferred",
+          "system_id": "hindsight"
+        }
+      ],
+      "status": "frozen"
+    }
+  ],
+  "schema_version": "1.1.0"
+}

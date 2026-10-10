@@ -1,0 +1,349 @@
+{
+ "revision": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+ "lanes": {
+  "amb-precisionmembench-retrieval": {
+   "leaves_compared": 259,
+   "differences": 18,
+   "unlisted": [],
+   "listed_but_unchanged": [],
+   "rows": [
+    {
+     "path": "/comparability/not_comparable_to",
+     "class": "identity (listed)",
+     "v6_as_frozen": [
+      "amb-precisionmembench-retrieval-v5 rows for the same system: the executing runtime (declared transition to Runtime Baseline v6, ranking policy 3.4.0, assertion filter 6.1.0, public contract 1.6.0) differs while the bridge blob (bridge 0.4.0) is unchanged, so rows are re-executed under this lane, never copied forward; the control's relation to the -v5 control is equality (plan-732-evidence-v6 V6-E1: every case's correct, context and nine meta fields, and its cross-fact limited_count, limited_document_ids and refusal_counts, equal -v5), not attribution, and is an acceptance check, not a comparability claim",
+      "Agent Memory LongMemEval recall_all@k (different benchmark, different gold semantics)",
+      "AMB RAG/agent accuracy on any dataset (end-to-end answer quality, model-judged)",
+      "published_reference rows (vendor or managed-service numbers)",
+      "a future reflective Mem0 lane (different system composition)"
+     ],
+     "v7": [
+      "amb-precisionmembench-retrieval-v6 rows for the same system: the executing runtime (declared transition to Runtime Baseline v7: the eight protected blobs reports/runtime/baseline-v7-declaration.json declares (evidence sufficiency, the governed transition witness, the recall observation receipt, the runtime adapter and recall control); ranking policy 3.4.0, assertion filter 6.1.0 and public contract 1.6.0 are unchanged) differs while the bridge blob (bridge 0.4.0) is unchanged, so rows are re-executed under this lane, never copied forward; the control's relation to the -v6 control is equality (#770: every case's correct, context and nine meta fields, and its cross-fact limited_count, limited_document_ids and refusal_counts, equal -v6), not attribution, and is an acceptance check, not a comparability claim",
+      "Agent Memory LongMemEval recall_all@k (different benchmark, different gold semantics)",
+      "AMB RAG/agent accuracy on any dataset (end-to-end answer quality, model-judged)",
+      "published_reference rows (vendor or managed-service numbers)",
+      "a future reflective Mem0 lane (different system composition)"
+     ]
+    },
+    {
+     "path": "/comparability/notes",
+     "class": "identity (listed)",
+     "v6_as_frozen": [
+      "active_passes/active_total is the number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases that a provider returning nothing can satisfy",
+      "BM25 is a baseline, Agent Memory is the control; neither row is a market claim",
+      "each accepted row must retain the raw AMB artifact and its execution identity; no overall score is produced",
+      "the control row is held to the plan-732-evidence-v6 V6-E1 equality rule against the accepted -v5 control: every case's harness fields, and its cross-fact limited_count, limited_document_ids and refusal_counts, equal -v5; any difference blocks Runtime Baseline v6 publication",
+      "no shadow row executes under this lane; the -v6 control is the single Agent Memory system per comparison group (plan-669-lanes-v3 IA2)"
+     ],
+     "v7": [
+      "active_passes/active_total is the number comparable to upstream's Active passes column; total passes include structural and trivially-empty cases that a provider returning nothing can satisfy",
+      "BM25 is a baseline, Agent Memory is the control; neither row is a market claim",
+      "each accepted row must retain the raw AMB artifact and its execution identity; no overall score is produced",
+      "the control row is held to the #770 equality rule against the accepted -v6 control: every case's harness fields, and its cross-fact limited_count, limited_document_ids and refusal_counts, equal -v6; any difference blocks Runtime Baseline v7 publication",
+      "no shadow row executes under this lane; the -v7 control is the single Agent Memory system per comparison group (plan-669-lanes-v3 IA2)"
+     ]
+    },
+    {
+     "path": "/description",
+     "class": "identity (listed)",
+     "v6_as_frozen": "Seventh lane generation (#732, plan-732-evidence-v6): PrecisionMemBench single-turn belief-ID retrieval under the frozen independent AMB harness, retrieval mode, no LLM anywhere, re-executing every executed row of amb-precisionmembench-retrieval-v5 at a runtime revision in the declared transition to Runtime Baseline v6 (ranking policy 3.4.0, assertion filter 6.1.0, public contract 1.6.0: typed write-time propositions and an opt-in proposition extractor, off by default; no lane input declares a typed proposition). The Agent Memory control runs the facade default with the extractor off through the unchanged bridge 0.4.0, which writes the cross-fact sidecar cross-fact.jsonl, and every case's harness fields and cross-fact record must equal the accepted -v5 control. This lane is acceptance evidence reports/runtime/baseline-v6-declaration.json names for the successor publication. The shadow, semantic-route and Hindsight rows are deferred.",
+     "v7": "Eighth lane generation (#770): PrecisionMemBench single-turn belief-ID retrieval under the frozen independent AMB harness, retrieval mode, no LLM anywhere, re-executing every executed row of amb-precisionmembench-retrieval-v6 at a runtime revision in the declared transition to Runtime Baseline v7 (the eight protected blobs reports/runtime/baseline-v7-declaration.json declares (evidence sufficiency, the governed transition witness, the recall observation receipt, the runtime adapter and recall control); ranking policy 3.4.0, assertion filter 6.1.0 and public contract 1.6.0 are unchanged). The Agent Memory control runs the facade default through the unchanged bridge 0.4.0, which writes the cross-fact sidecar cross-fact.jsonl, and every case's harness fields and cross-fact record must equal the accepted -v6 control. This lane is acceptance evidence reports/runtime/baseline-v7-declaration.json names for the successor publication. No v7 score is accepted and no -v6 acceptance transfers. The shadow, semantic-route and Hindsight rows are deferred."
+    },
+    {
+     "path": "/freeze_rationale",
+     "class": "identity (listed)",
+     "v6_as_frozen": [
+      "the -v5 lane is accepted and its control executed the declared transition to Runtime Baseline v5; #732 (PR #741) added typed write-time propositions and an opt-in proposition extractor, off by default (ranking policy 3.3.0 to 3.4.0, assertion filter 6.1.0, public contract 1.5.0 to 1.6.0), and declared a transition to Runtime Baseline v6, so the executing runtime is new and needs a new lane id (change_rule)",
+      "the control runs the shipped default (recall_control off, semantic route off, no typed proposition, proposition extractor off) at the case budget through bridge 0.4.0 with AGENT_MEMORY_AMB_CROSS_FACT_SIDECAR set; per case, against the accepted -v5 control (plan-732-evidence-v6 V6-E1): correct, context, meta.relevant_beliefs, meta.pinned_beliefs, meta.retrieved_questions, meta.retrieval_precision, meta.retrieval_recall, meta.pinned_coverage, meta.resolution, meta.failures and meta.retrieved_count, compared by query_id, must equal -v5, and each cross-fact.jsonl record must equal -v5 in limited_count, limited_document_ids and refusal_counts, with -v5's 0 limited carried over; the four blank-query cases run no recall, carry no record and must equal -v5; the rule is equality, not attribution, and any difference blocks v6 publication; scripts/check_cross_fact_attribution.py is reused unchanged with --v4-dir the -v5 lane evidence and --v5-dir this lane's, and the acceptance test additionally requires verdict_counts {EQUAL: 77} and per-record cross-fact equality",
+      "expected effect, recorded before any score (plan-732-evidence-v6 V6-E1): with the extractor off, ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches, so v6 must be observationally identical to v5 and no case is expected to differ; up/down counts and the AMB summary deltas are reported, never gated, and must be zero",
+      "the agent-memory-shadow row stays deferred (plan-732-evidence-v6 V6-E2): it was measured at -v4 (jh-14 shipped) and the next controller measurement belongs to T-controller-2's lanes; ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes; it is neither re-executed nor copied forward",
+      "the agent_memory_semantic row stays deferred for the uv.lock conflict (plan-669-lanes-v3 D3, unchanged; plan-732-evidence-v6 V6-E2: ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes)",
+      "the BM25 baseline is re-executed and must equal -v5 exactly; the Mem0 row is re-executed, a difference from -v5 being an environment finding as at -v4 and -v5; accepted -v5 rows are never copied forward"
+     ],
+     "v7": [
+      "the -v6 lane is accepted and its control executed the declared transition to Runtime Baseline v6; #644 declared a transition to Runtime Baseline v7 (the eight protected blobs reports/runtime/baseline-v7-declaration.json declares (evidence sufficiency, the governed transition witness, the recall observation receipt, the runtime adapter and recall control); ranking policy 3.4.0, assertion filter 6.1.0 and public contract 1.6.0 are unchanged), so the executing runtime is new and needs a new lane id (change_rule; docs/67: a successor needs new lane ids)",
+      "the control runs the shipped default (recall_control off, semantic route off, no typed proposition, proposition extractor off) at the case budget through bridge 0.4.0 with AGENT_MEMORY_AMB_CROSS_FACT_SIDECAR set; per case, against the accepted -v6 control (#770): correct, context, meta.relevant_beliefs, meta.pinned_beliefs, meta.retrieved_questions, meta.retrieval_precision, meta.retrieval_recall, meta.pinned_coverage, meta.resolution, meta.failures and meta.retrieved_count, compared by query_id, must equal -v6, and each cross-fact.jsonl record must equal -v6 in limited_count, limited_document_ids and refusal_counts, with -v6's 0 limited carried over; the four blank-query cases run no recall, carry no record and must equal -v6; the rule is equality, not attribution, and any difference blocks v7 publication; scripts/check_cross_fact_attribution.py is reused unchanged with --v4-dir the -v6 lane evidence and --v6-dir this lane's, and the acceptance test additionally requires verdict_counts {EQUAL: 77} and per-record cross-fact equality",
+      "expected effect, recorded before any score under this lane: the declared v7 changes alter no ranking policy, assertion filter or public contract version, so v7 is expected to be observationally identical to v6 and no case is expected to differ; up/down counts and the summary deltas are reported, never gated, and must be zero; disclosure: non-importable local reproductions of this exact configuration at the v7 candidate b854d5e (#644 independent validation) were visible before this freeze; no frozen fact differs from -v6, so they could not shape any frozen choice, and they are not lane evidence",
+      "the agent-memory-shadow row stays deferred (#770): unchanged from -v6, where its reason is recorded; it is neither re-executed nor copied forward",
+      "the agent_memory_semantic row stays deferred for the uv.lock conflict (plan-669-lanes-v3 D3, unchanged at -v6 and -v7)",
+      "the BM25 baseline is re-executed and must equal -v6 exactly; the Mem0 row is re-executed, a difference from -v6 being an environment finding as at -v4 to -v6; accepted -v6 rows are never copied forward, and no -v7 row is accepted before its workflow-imported evidence is independently reviewed"
+     ]
+    },
+    {
+     "path": "/frozen_on",
+     "class": "identity (listed)",
+     "v6_as_frozen": "2026-10-08",
+     "v7": "2026-10-10"
+    },
+    {
+     "path": "/lane_id",
+     "class": "identity (listed)",
+     "v6_as_frozen": "amb-precisionmembench-retrieval-v6",
+     "v7": "amb-precisionmembench-retrieval-v7"
+    },
+    {
+     "path": "/owning_issue",
+     "class": "identity (listed)",
+     "v6_as_frozen": 732,
+     "v7": 770
+    },
+    {
+     "path": "/systems/agent-memory-shadow/configuration/runtime_baseline_posture/declaration",
+     "class": "identity (listed)",
+     "v6_as_frozen": "reports/runtime/baseline-v6-declaration.json",
+     "v7": "reports/runtime/baseline-v7-declaration.json"
+    },
+    {
+     "path": "/systems/agent-memory-shadow/configuration/runtime_baseline_posture/declaration_blob",
+     "class": "identity (listed)",
+     "v6_as_frozen": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+     "v7": "ae8012a7540d43e589a31d00161bd30a82e3b73f"
+    },
+    {
+     "path": "/systems/agent-memory-shadow/configuration/runtime_baseline_posture/declared_successor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v6",
+     "v7": "agent-memory-runtime-baseline-v7"
+    },
+    {
+     "path": "/systems/agent-memory-shadow/configuration/runtime_baseline_posture/predecessor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v5",
+     "v7": "agent-memory-runtime-baseline-v6"
+    },
+    {
+     "path": "/systems/agent-memory-shadow/status_reason",
+     "class": "identity (listed)",
+     "v6_as_frozen": "deferred at freeze (plan-671-evidence-v5 E3): measured at -v4 (jh-14 shipped); the next controller measurement belongs to T-controller-2's lanes; at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes",
+     "v7": "deferred at freeze (plan-671-evidence-v5 E3): measured at -v4 (jh-14 shipped); the next controller measurement belongs to T-controller-2's lanes; at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes; at -v7 (#770): deferral carried forward unchanged; this row is not executed under this lane"
+    },
+    {
+     "path": "/systems/agent-memory/configuration/runtime_baseline_posture/declaration",
+     "class": "identity (listed)",
+     "v6_as_frozen": "reports/runtime/baseline-v6-declaration.json",
+     "v7": "reports/runtime/baseline-v7-declaration.json"
+    },
+    {
+     "path": "/systems/agent-memory/configuration/runtime_baseline_posture/declaration_blob",
+     "class": "identity (listed)",
+     "v6_as_frozen": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+     "v7": "ae8012a7540d43e589a31d00161bd30a82e3b73f"
+    },
+    {
+     "path": "/systems/agent-memory/configuration/runtime_baseline_posture/declared_successor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v6",
+     "v7": "agent-memory-runtime-baseline-v7"
+    },
+    {
+     "path": "/systems/agent-memory/configuration/runtime_baseline_posture/predecessor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v5",
+     "v7": "agent-memory-runtime-baseline-v6"
+    },
+    {
+     "path": "/systems/agent-memory/display_name",
+     "class": "identity (listed)",
+     "v6_as_frozen": "Agent Memory (public facade, declared transition to Runtime Baseline v6)",
+     "v7": "Agent Memory (public facade, declared transition to Runtime Baseline v7)"
+    },
+    {
+     "path": "/systems/agent_memory_semantic/status_reason",
+     "class": "identity (listed)",
+     "v6_as_frozen": "deferred at freeze (plan-669-lanes-v3 D3): the AMB harness installs under its own uv.lock constraints (onnxruntime 1.22.1, tokenizers 0.22.2, numpy 2.4.3, protobuf 5.29.6, packaging 24.2), which conflict with the pinned semantic extra (reference/requirements-semantic.txt) whose versions the representation config_digest binds; the semantic route is measured on LongMemEval only (longmemeval-s-retrieval-parity-v3); at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes",
+     "v7": "deferred at freeze (plan-669-lanes-v3 D3): the AMB harness installs under its own uv.lock constraints (onnxruntime 1.22.1, tokenizers 0.22.2, numpy 2.4.3, protobuf 5.29.6, packaging 24.2), which conflict with the pinned semantic extra (reference/requirements-semantic.txt) whose versions the representation config_digest binds; the semantic route is measured on LongMemEval only (longmemeval-s-retrieval-parity-v3); at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes; at -v7 (#770): deferral carried forward unchanged; this row is not executed under this lane"
+    }
+   ]
+  },
+  "longmemeval-s-retrieval-parity": {
+   "leaves_compared": 297,
+   "differences": 23,
+   "unlisted": [],
+   "listed_but_unchanged": [],
+   "rows": [
+    {
+     "path": "/comparability/not_comparable_to",
+     "class": "identity (listed)",
+     "v6_as_frozen": [
+      "longmemeval-s-retrieval-parity-v5 rows for the same system: the executing runtime (declared transition to Runtime Baseline v6, ranking policy 3.4.0, assertion filter 6.1.0, public contract 1.6.0) differs while the runner blob is unchanged, so rows are re-executed under this lane, never copied forward; the control's relation to the -v5 control is equality (plan-732-evidence-v6 V6-E1: every question's ranked_top, metrics and cross_fact limited_count, limited_item_ids and refusal_counts equal -v5), not attribution, and is an acceptance check, not a comparability claim",
+      "amb-precisionmembench-retrieval-v1 rows (different benchmark, gold semantics and budget), even for the same system",
+      "Agent Memory's accepted LongMemEval_S evidence_history rows at runtime f73b872c (an earlier revision; a lane row is executed again at the executing revision, never copied forward)",
+      "published LongMemEval accuracy (model-judged answer quality; this lane is retrieval only)",
+      "upstream flat-bm25 or dense retriever baselines (not reproduced by this profile)",
+      "a future reflective Mem0 lane (different system composition)",
+      "LongMemEval_M (different input; a separate lane once the S rows are accepted)"
+     ],
+     "v7": [
+      "longmemeval-s-retrieval-parity-v6 rows for the same system: the executing runtime (declared transition to Runtime Baseline v7: the eight protected blobs reports/runtime/baseline-v7-declaration.json declares (evidence sufficiency, the governed transition witness, the recall observation receipt, the runtime adapter and recall control); ranking policy 3.4.0, assertion filter 6.1.0 and public contract 1.6.0 are unchanged) differs while the runner blob is unchanged, so rows are re-executed under this lane, never copied forward; the control's relation to the -v6 control is equality (#770: every question's ranked_top, metrics and cross_fact limited_count, limited_item_ids and refusal_counts equal -v6), not attribution, and is an acceptance check, not a comparability claim",
+      "amb-precisionmembench-retrieval-v1 rows (different benchmark, gold semantics and budget), even for the same system",
+      "Agent Memory's accepted LongMemEval_S evidence_history rows at runtime f73b872c (an earlier revision; a lane row is executed again at the executing revision, never copied forward)",
+      "published LongMemEval accuracy (model-judged answer quality; this lane is retrieval only)",
+      "upstream flat-bm25 or dense retriever baselines (not reproduced by this profile)",
+      "a future reflective Mem0 lane (different system composition)",
+      "LongMemEval_M (different input; a separate lane once the S rows are accepted)"
+     ]
+    },
+    {
+     "path": "/comparability/notes",
+     "class": "identity (listed)",
+     "v6_as_frozen": [
+      "rows compare only within one plane: session rows with session rows, turn rows with turn rows; the normalizer emits one manifest per (plane, backend) and the scorecard groups by task profile",
+      "the baseline is the profile's lexical-overlap ranker and Agent Memory is the control; neither row is a market claim",
+      "each accepted row must retain the raw report with rows and its execution identity; no overall score is produced",
+      "a Mem0 number from this lane and from lane v1 describe one frozen system composition on two benchmarks; they are reported side by side, never averaged",
+      "the control row is held to the plan-732-evidence-v6 V6-E1 equality rule against the accepted -v5 control: every question's ranked_top and metrics, and its cross_fact limited_count, limited_item_ids and refusal_counts, equal -v5; any difference blocks Runtime Baseline v6 publication",
+      "no shadow row executes under this lane; the -v6 control is the single Agent Memory system per comparison group (plan-669-lanes-v3 IA2)"
+     ],
+     "v7": [
+      "rows compare only within one plane: session rows with session rows, turn rows with turn rows; the normalizer emits one manifest per (plane, backend) and the scorecard groups by task profile",
+      "the baseline is the profile's lexical-overlap ranker and Agent Memory is the control; neither row is a market claim",
+      "each accepted row must retain the raw report with rows and its execution identity; no overall score is produced",
+      "a Mem0 number from this lane and from lane v1 describe one frozen system composition on two benchmarks; they are reported side by side, never averaged",
+      "the control row is held to the #770 equality rule against the accepted -v6 control: every question's ranked_top and metrics, and its cross_fact limited_count, limited_item_ids and refusal_counts, equal -v6; any difference blocks Runtime Baseline v7 publication",
+      "no shadow row executes under this lane; the -v7 control is the single Agent Memory system per comparison group (plan-669-lanes-v3 IA2)"
+     ]
+    },
+    {
+     "path": "/description",
+     "class": "identity (listed)",
+     "v6_as_frozen": "Seventh lane generation (#732, plan-732-evidence-v6): frozen LongMemEval_S retrieval parity, retrieval only, no LLM anywhere, re-executing every executed row of longmemeval-s-retrieval-parity-v5 at a runtime revision in the declared transition to Runtime Baseline v6 (ranking policy 3.4.0, assertion filter 6.1.0, public contract 1.6.0: typed write-time propositions and an opt-in proposition extractor, off by default; no lane input declares a typed proposition). The Agent Memory control runs the facade default with the extractor off; every question records its cross-fact limitation as at -v5, and every question's ranked_top, metrics and cross-fact record must equal the accepted -v5 control. This lane is acceptance evidence reports/runtime/baseline-v6-declaration.json names for the successor publication. The shadow, semantic-route and Hindsight rows are deferred.",
+     "v7": "Eighth lane generation (#770): frozen LongMemEval_S retrieval parity, retrieval only, no LLM anywhere, re-executing every executed row of longmemeval-s-retrieval-parity-v6 at a runtime revision in the declared transition to Runtime Baseline v7 (the eight protected blobs reports/runtime/baseline-v7-declaration.json declares (evidence sufficiency, the governed transition witness, the recall observation receipt, the runtime adapter and recall control); ranking policy 3.4.0, assertion filter 6.1.0 and public contract 1.6.0 are unchanged). The Agent Memory control runs the facade default; every question records its cross-fact limitation as at -v6, and every question's ranked_top, metrics and cross-fact record must equal the accepted -v6 control. This lane is acceptance evidence reports/runtime/baseline-v7-declaration.json names for the successor publication. No v7 score is accepted and no -v6 acceptance transfers. The shadow, semantic-route and Hindsight rows are deferred."
+    },
+    {
+     "path": "/execution/environment/dispatch_unit",
+     "class": "identity (listed)",
+     "v6_as_frozen": "one workflow dispatch per (row, plane) with lane_id longmemeval-s-retrieval-parity-v6: backend in {agent_memory, lexical_overlap, mem0_explicit} x granularity in {session, turn}, subset_size 0; the workflow passes --agent-memory-budget from the control row's configuration.budget",
+     "v7": "one workflow dispatch per (row, plane) with lane_id longmemeval-s-retrieval-parity-v7: backend in {agent_memory, lexical_overlap, mem0_explicit} x granularity in {session, turn}, subset_size 0; the workflow passes --agent-memory-budget from the control row's configuration.budget"
+    },
+    {
+     "path": "/freeze_rationale",
+     "class": "identity (listed)",
+     "v6_as_frozen": [
+      "the -v5 lane is accepted and its control executed the declared transition to Runtime Baseline v5; #732 (PR #741) added typed write-time propositions and an opt-in proposition extractor, off by default (ranking policy 3.3.0 to 3.4.0, assertion filter 6.1.0, public contract 1.5.0 to 1.6.0), and declared a transition to Runtime Baseline v6, so the executing runtime is new and needs a new lane id (change_rule)",
+      "the control declares no recall_control and no semantic_retrieval (the runner and importer read absence as off, the shipped default), declares no typed proposition, leaves the proposition extractor at its shipped default (off) and runs budget 50 on both planes; per question, against the accepted -v5 control (plan-732-evidence-v6 V6-E1): ranked_top and metrics must equal -v5, and the cross_fact record must equal -v5 in limited_count, limited_item_ids and refusal_counts, with -v5's 0 limited carried over; a question with a runtime error carries no cross_fact record and must equal -v5; the rule is equality, not attribution, and any difference blocks v6 publication; scripts/check_cross_fact_attribution.py is reused unchanged with --v4-dir the -v5 lane evidence and --v5-dir this lane's, and the acceptance test additionally requires verdict_counts {EQUAL: 1000} and per-row cross-fact equality",
+      "expected effect, recorded before any score (plan-732-evidence-v6 V6-E1): with the extractor off, ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches, so v6 must be observationally identical to v5 and no question is expected to differ; up/down counts and the summary deltas are reported, never gated, and must be zero",
+      "the agent_memory_shadow row stays deferred (plan-732-evidence-v6 V6-E2): it was measured at -v4 (jh-14 shipped) and the next controller measurement belongs to T-controller-2's lanes; ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes; it is neither re-executed nor copied forward",
+      "the agent_memory_semantic row stays deferred (plan-732-evidence-v6 V6-E2): the semantic route is unchanged since -v3, where its ordering effect was measured (plan-669-lanes-v3 D2); ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes",
+      "the lexical baseline is re-executed and must equal -v5 exactly; the Mem0 row is re-executed, a difference from -v5 being an environment finding as at -v4 and -v5; accepted -v5 rows are never copied forward"
+     ],
+     "v7": [
+      "the -v6 lane is accepted and its control executed the declared transition to Runtime Baseline v6; #644 declared a transition to Runtime Baseline v7 (the eight protected blobs reports/runtime/baseline-v7-declaration.json declares (evidence sufficiency, the governed transition witness, the recall observation receipt, the runtime adapter and recall control); ranking policy 3.4.0, assertion filter 6.1.0 and public contract 1.6.0 are unchanged), so the executing runtime is new and needs a new lane id (change_rule; docs/67: a successor needs new lane ids)",
+      "the control declares no recall_control and no semantic_retrieval (the runner and importer read absence as off, the shipped default), declares no typed proposition, leaves the proposition extractor at its shipped default (off) and runs budget 50 on both planes; per question, against the accepted -v6 control (#770): ranked_top and metrics must equal -v6, and the cross_fact record must equal -v6 in limited_count, limited_item_ids and refusal_counts, with -v6's 0 limited carried over; a question with a runtime error carries no cross_fact record and must equal -v6; the rule is equality, not attribution, and any difference blocks v7 publication; scripts/check_cross_fact_attribution.py is reused unchanged with --v4-dir the -v6 lane evidence and --v6-dir this lane's, and the acceptance test additionally requires verdict_counts {EQUAL: 1000} and per-row cross-fact equality",
+      "expected effect, recorded before any score under this lane: the declared v7 changes alter no ranking policy, assertion filter or public contract version, so v7 is expected to be observationally identical to v6 and no question is expected to differ; up/down counts and the summary deltas are reported, never gated, and must be zero; disclosure: non-importable local reproductions of this exact configuration at the v7 candidate b854d5e (#644 independent validation) were visible before this freeze; no frozen fact differs from -v6, so they could not shape any frozen choice, and they are not lane evidence",
+      "the agent_memory_shadow row stays deferred (#770): unchanged from -v6, where its reason is recorded; it is neither re-executed nor copied forward",
+      "the agent_memory_semantic row stays deferred (#770): unchanged from -v6, where its reason is recorded",
+      "the lexical baseline is re-executed and must equal -v6 exactly; the Mem0 row is re-executed, a difference from -v6 being an environment finding as at -v4 to -v6; accepted -v6 rows are never copied forward, and no -v7 row is accepted before its workflow-imported evidence is independently reviewed"
+     ]
+    },
+    {
+     "path": "/frozen_on",
+     "class": "identity (listed)",
+     "v6_as_frozen": "2026-10-08",
+     "v7": "2026-10-10"
+    },
+    {
+     "path": "/lane_id",
+     "class": "identity (listed)",
+     "v6_as_frozen": "longmemeval-s-retrieval-parity-v6",
+     "v7": "longmemeval-s-retrieval-parity-v7"
+    },
+    {
+     "path": "/owning_issue",
+     "class": "identity (listed)",
+     "v6_as_frozen": 732,
+     "v7": 770
+    },
+    {
+     "path": "/systems/agent_memory/configuration/runtime_baseline_posture/declaration",
+     "class": "identity (listed)",
+     "v6_as_frozen": "reports/runtime/baseline-v6-declaration.json",
+     "v7": "reports/runtime/baseline-v7-declaration.json"
+    },
+    {
+     "path": "/systems/agent_memory/configuration/runtime_baseline_posture/declaration_blob",
+     "class": "identity (listed)",
+     "v6_as_frozen": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+     "v7": "ae8012a7540d43e589a31d00161bd30a82e3b73f"
+    },
+    {
+     "path": "/systems/agent_memory/configuration/runtime_baseline_posture/declared_successor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v6",
+     "v7": "agent-memory-runtime-baseline-v7"
+    },
+    {
+     "path": "/systems/agent_memory/configuration/runtime_baseline_posture/predecessor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v5",
+     "v7": "agent-memory-runtime-baseline-v6"
+    },
+    {
+     "path": "/systems/agent_memory/display_name",
+     "class": "identity (listed)",
+     "v6_as_frozen": "Agent Memory (public facade, declared transition to Runtime Baseline v6)",
+     "v7": "Agent Memory (public facade, declared transition to Runtime Baseline v7)"
+    },
+    {
+     "path": "/systems/agent_memory_semantic/configuration/runtime_baseline_posture/declaration",
+     "class": "identity (listed)",
+     "v6_as_frozen": "reports/runtime/baseline-v6-declaration.json",
+     "v7": "reports/runtime/baseline-v7-declaration.json"
+    },
+    {
+     "path": "/systems/agent_memory_semantic/configuration/runtime_baseline_posture/declaration_blob",
+     "class": "identity (listed)",
+     "v6_as_frozen": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+     "v7": "ae8012a7540d43e589a31d00161bd30a82e3b73f"
+    },
+    {
+     "path": "/systems/agent_memory_semantic/configuration/runtime_baseline_posture/declared_successor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v6",
+     "v7": "agent-memory-runtime-baseline-v7"
+    },
+    {
+     "path": "/systems/agent_memory_semantic/configuration/runtime_baseline_posture/predecessor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v5",
+     "v7": "agent-memory-runtime-baseline-v6"
+    },
+    {
+     "path": "/systems/agent_memory_semantic/status_reason",
+     "class": "identity (listed)",
+     "v6_as_frozen": "deferred at freeze (plan-671-evidence-v5 E3): the semantic route is unchanged since -v3, where its ordering effect was measured (plan-669-lanes-v3 D2); ranking policy 3.3.0 adds only explicit-current cross-fact applicability, which never reads similarity; the next measurement belongs to #673's lanes; at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes",
+     "v7": "deferred at freeze (plan-671-evidence-v5 E3): the semantic route is unchanged since -v3, where its ordering effect was measured (plan-669-lanes-v3 D2); ranking policy 3.3.0 adds only explicit-current cross-fact applicability, which never reads similarity; the next measurement belongs to #673's lanes; at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes; at -v7 (#770): deferral carried forward unchanged; this row is not executed under this lane"
+    },
+    {
+     "path": "/systems/agent_memory_shadow/configuration/runtime_baseline_posture/declaration",
+     "class": "identity (listed)",
+     "v6_as_frozen": "reports/runtime/baseline-v6-declaration.json",
+     "v7": "reports/runtime/baseline-v7-declaration.json"
+    },
+    {
+     "path": "/systems/agent_memory_shadow/configuration/runtime_baseline_posture/declaration_blob",
+     "class": "identity (listed)",
+     "v6_as_frozen": "1ac4d7d87b6b86250b7f4497478e36b2ea17f48a",
+     "v7": "ae8012a7540d43e589a31d00161bd30a82e3b73f"
+    },
+    {
+     "path": "/systems/agent_memory_shadow/configuration/runtime_baseline_posture/declared_successor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v6",
+     "v7": "agent-memory-runtime-baseline-v7"
+    },
+    {
+     "path": "/systems/agent_memory_shadow/configuration/runtime_baseline_posture/predecessor",
+     "class": "identity (listed)",
+     "v6_as_frozen": "agent-memory-runtime-baseline-v5",
+     "v7": "agent-memory-runtime-baseline-v6"
+    },
+    {
+     "path": "/systems/agent_memory_shadow/status_reason",
+     "class": "identity (listed)",
+     "v6_as_frozen": "deferred at freeze (plan-671-evidence-v5 E3): measured at -v4 (jh-14 shipped); the next controller measurement belongs to T-controller-2's lanes; at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes",
+     "v7": "deferred at freeze (plan-671-evidence-v5 E3): measured at -v4 (jh-14 shipped); the next controller measurement belongs to T-controller-2's lanes; at -v6 (plan-732-evidence-v6 V6-E2): ranking policy 3.4.0 and assertion filter 6.1.0 add only typed-basis branches that no lane input reaches; the next measurement belongs to #673's lanes; at -v7 (#770): deferral carried forward unchanged; this row is not executed under this lane"
+    }
+   ]
+  }
+ }
+}

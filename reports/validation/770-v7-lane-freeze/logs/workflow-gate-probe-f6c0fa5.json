@@ -1,0 +1,117 @@
+{
+ "checkout": "f6c0fa5f961368e4aa113633fc29b5b8973c0e87",
+ "base": "f92ea422dcf2d61cad51ef1f427df352baef4cbb",
+ "workflows": {
+  "amb": {
+   "lane_options": [
+    "amb-precisionmembench-retrieval-v1",
+    "amb-precisionmembench-retrieval-v2",
+    "amb-precisionmembench-retrieval-v3",
+    "amb-precisionmembench-retrieval-v4",
+    "amb-precisionmembench-retrieval-v5",
+    "amb-precisionmembench-retrieval-v6",
+    "amb-precisionmembench-retrieval-v7"
+   ],
+   "default": "amb-precisionmembench-retrieval-v6",
+   "permissions_unchanged": true,
+   "permissions": {
+    "contents": "read"
+   },
+   "secrets": [
+    "AMB_GEMINI_API_KEY",
+    "AMB_OPENAI_API_KEY",
+    "AMB_SUPERMEMORY_API_KEY"
+   ],
+   "secrets_unchanged": true,
+   "diff_vs_base": 1,
+   "dispatches": [
+    {
+     "lane_id": "amb-precisionmembench-retrieval-v7",
+     "row": "agent-memory",
+     "validate_lane_rc": 2,
+     "outcome": "REFUSED at validate-lane: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of "
+    },
+    {
+     "lane_id": "amb-precisionmembench-retrieval-v7",
+     "row": "bm25",
+     "validate_lane_rc": 2,
+     "outcome": "REFUSED at validate-lane: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of "
+    },
+    {
+     "lane_id": "amb-precisionmembench-retrieval-v7",
+     "row": "mem0-explicit",
+     "validate_lane_rc": 2,
+     "outcome": "REFUSED at validate-lane: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of "
+    },
+    {
+     "lane_id": "amb-precisionmembench-retrieval-v7",
+     "row": "agent-memory-shadow",
+     "validate_lane_rc": 2,
+     "outcome": "REFUSED at validate-lane: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of "
+    },
+    {
+     "lane_id": "amb-precisionmembench-retrieval-v6",
+     "row": "agent-memory",
+     "validate_lane_rc": 0,
+     "outcome": "REFUSED by workflow precondition: AssertionError: accepted"
+    }
+   ]
+  },
+  "lme": {
+   "lane_options": [
+    "longmemeval-s-retrieval-parity-v1",
+    "longmemeval-s-retrieval-parity-v2",
+    "longmemeval-s-retrieval-parity-v3",
+    "longmemeval-s-retrieval-parity-v4",
+    "longmemeval-s-retrieval-parity-v5",
+    "longmemeval-s-retrieval-parity-v6",
+    "longmemeval-s-retrieval-parity-v7"
+   ],
+   "default": "longmemeval-s-retrieval-parity-v6",
+   "permissions_unchanged": true,
+   "permissions": {
+    "contents": "read"
+   },
+   "secrets": [],
+   "secrets_unchanged": true,
+   "diff_vs_base": 1,
+   "dispatches": [
+    {
+     "lane_id": "longmemeval-s-retrieval-parity-v7",
+     "row": "agent_memory",
+     "validate_lane_rc": 2,
+     "outcome": "REFUSED at validate-lane: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of "
+    },
+    {
+     "lane_id": "longmemeval-s-retrieval-parity-v7",
+     "row": "lexical_overlap",
+     "validate_lane_rc": 2,
+     "outcome": "REFUSED at validate-lane: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of "
+    },
+    {
+     "lane_id": "longmemeval-s-retrieval-parity-v7",
+     "row": "mem0_explicit",
+     "validate_lane_rc": 2,
+     "outcome": "REFUSED at validate-lane: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of "
+    },
+    {
+     "lane_id": "longmemeval-s-retrieval-parity-v7",
+     "row": "agent_memory_shadow",
+     "validate_lane_rc": 2,
+     "outcome": "REFUSED at validate-lane: $.findings[0]: {'id': 'v7-awaiting-workflow-evidence', 'severity': 'blocker', 'description': 'No workflow-imported v7 evidence or independent acceptance; v6 metrics must not be inherited.'} is not of "
+    },
+    {
+     "lane_id": "longmemeval-s-retrieval-parity-v6",
+     "row": "agent_memory",
+     "validate_lane_rc": 0,
+     "outcome": "REFUSED by workflow precondition: AssertionError: accepted"
+    }
+   ]
+  }
+ },
+ "runtime_baseline": {
+  "line": "Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD",
+  "rc": 0,
+  "workflow_declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f"
+ }
+}

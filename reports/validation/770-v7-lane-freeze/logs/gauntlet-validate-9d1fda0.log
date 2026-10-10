@@ -1,0 +1,10 @@
+$ git rev-parse HEAD
+9d1fda0ef99d30eb671f43e1f51d4953201dcccc
+$ agent-memory gauntlet validate-adapter examples/gauntlet/agent-memory-runtime-baseline-v7.json
+Gauntlet adapter: valid
+System: agent-memory-runtime-baseline-v7 @ git-commit:16a248b1e28f455fbf19217114175f0c20df2a01
+Adapter: agent-memory-runtime-baseline-v7-stdio @ git-blob:28b8333256ac508a45517d6c4a38b9c44a873dd7
+Transport: stdio
+Digest: 10747172771c1fb52babda6b926203e4a22c3e0f065a3f93f6e8e1df0e6ca282
+Authority effect: none
+rc=0

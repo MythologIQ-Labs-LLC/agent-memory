@@ -1,0 +1,5 @@
+$ git rev-parse HEAD
+9b025f945e7ec4a1e349e56bba251e3122413e88
+$ python scripts/check_runtime_baseline_equivalence.py --candidate HEAD
+Runtime Baseline equivalence: TRANSITION; baseline=agent-memory-runtime-baseline-v6; declared_successor=agent-memory-runtime-baseline-v7 (issue #644); protected surface = frozen e98e6e7b776aa2dd680e84f3ed4773ad2afa4ae1 + 8 declared blobs; deltas=none; candidate=HEAD
+rc=0
