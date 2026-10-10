@@ -27,6 +27,7 @@ on:
           - longmemeval-s-retrieval-parity-v4
           - longmemeval-s-retrieval-parity-v5
           - longmemeval-s-retrieval-parity-v6
+          - longmemeval-s-retrieval-parity-v7
       backend:
         description: "Lane row to execute"
         required: true
