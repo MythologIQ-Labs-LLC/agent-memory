@@ -79,6 +79,14 @@ class TrailingRequestBoundaryTests(unittest.TestCase):
             base + ", can you recommend another template?",
         )
 
+    def test_conjoined_assertion_words_inside_literal_not_split(self):
+        base = 'I enjoy the phrase "and I like that"'
+        self.assert_same_principal(base, base + ", can you explain it?")
+
+    def test_conjoined_assertion_words_inside_parentheses_not_split(self):
+        base = "I enjoy the motto (and I mean it)"
+        self.assert_same_principal(base, base + ", could you propose a variation?")
+
     def test_contraction_before_genuine_request_boundary(self):
         self.assert_same_principal(
             "I'm fond of black tea",
