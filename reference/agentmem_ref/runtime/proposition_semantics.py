@@ -306,7 +306,7 @@ def _split_top_level_conjunctions(sentence: str) -> list[str]:
                + "|".join(sorted(_CLAUSE_OPENERS)) + r")\b)")
     pieces: list[str] = []
     begin = 0
-    for match in re.finditer(pattern, sentence):
+    for match in re.finditer(pattern, sentence, flags=re.IGNORECASE):
         if _inside_protected_span(sentence, match.start()):
             continue
         pieces.append(sentence[begin:match.start()])
