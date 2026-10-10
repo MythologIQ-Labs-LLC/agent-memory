@@ -270,7 +270,7 @@ def _clause_pieces(text: str) -> list[tuple[str, int, bool]]:
     parts: list[tuple[str, int, bool]] = []
     for number, sentence in enumerate(re.split(r"(?<=[.!?])\s+|;\s*|:\s+", text)):
         question = sentence.rstrip().rstrip("\"')]}*\u201d\u2019").endswith("?")
-        for piece in re.split(r",?\\s+but\\s+|,?\\s+and\\s+(?=(?:" + "|".join(sorted(_CLAUSE_OPENERS)) + r")\\b)", sentence):
+        for piece in re.split(r",?\s+but\s+|,?\s+and\s+(?=(?:" + "|".join(sorted(_CLAUSE_OPENERS)) + r")\b)", sentence):
             for bounded in _separate_trailing_request(piece):
                 bounded = bounded.strip(" ,.!?")
                 if bounded:
