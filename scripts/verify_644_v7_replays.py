@@ -8,7 +8,9 @@ For every replay the v7 declaration requires, this checks that:
 - the manifest names the replay and binds the exact report bytes;
 - the fixture and runner bytes on disk equal the recorded hashes;
 - the recorded runtime tree equals the tree of the recorded source commit, that commit is
-  an ancestor of HEAD, and HEAD carries the same runtime tree;
+  an ancestor of HEAD, and the working tree's runtime files equal that commit's (the
+  Runtime Baseline source boundary, which excludes `reference/agentmem_ref/evaluation/**`:
+  lane records and evaluation machinery committed later do not make the evidence stale);
 - the report covers every fixture case exactly once, and each check corresponds to a
   fixture expectation;
 - every recorded verdict, `holds` flag and observation digest recomputes from the report's
@@ -41,6 +43,17 @@ EVIDENCE_ROOT = ROOT / "reports/validation/644-v7-replays"
 
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, check=check)
+
+
+# The Runtime Baseline source boundary (reports/runtime/baseline-v1-source-boundary.json).
+RUNTIME_PATHSPECS = ("reference/agentmem_ref", ":(exclude)reference/agentmem_ref/evaluation/**")
+
+
+def runtime_changed_since(commit: str) -> bool:
+    """True when the working tree's runtime files differ from ``commit``'s or are untracked."""
+    changed = git("diff", "--quiet", commit, "--", *RUNTIME_PATHSPECS, check=False).returncode != 0
+    untracked = git("ls-files", "--others", "--exclude-standard", "--", *RUNTIME_PATHSPECS).stdout.strip()
+    return changed or bool(untracked)
 
 
 def declared_replays(declaration: Path) -> list[str]:
@@ -93,7 +106,7 @@ def verify_one(replay_id: str, evidence_root: Path, fixture_dir: Path, reexecute
         problems.append("recorded source commit does not carry the recorded runtime tree")
     if git("merge-base", "--is-ancestor", commit, "HEAD", check=False).returncode != 0:
         problems.append("recorded source commit is not an ancestor of HEAD")
-    stale = git("rev-parse", "HEAD:reference/agentmem_ref").stdout.strip() != tree
+    stale = runtime_changed_since(commit)
     # Report internal consistency against the frozen fixture.
     fixture_cases = {c["id"]: c for c in fixture.get("cases", [])}
     report_cases = report.get("cases", [])
@@ -132,7 +145,7 @@ def verify_one(replay_id: str, evidence_root: Path, fixture_dir: Path, reexecute
         status = "TAMPERED"
     elif stale:
         status = "STALE"
-        problems.append("HEAD runtime tree differs from the evidence runtime tree")
+        problems.append("runtime files differ from the evidence source commit")
     else:
         status = "VERIFIED"
     return {"replay": replay_id, "status": status, "verdict": report.get("verdict"), "problems": problems,
