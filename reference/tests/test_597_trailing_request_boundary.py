@@ -58,6 +58,27 @@ class TrailingRequestBoundaryTests(unittest.TestCase):
         self.assertEqual(proposition["status"], "known", proposition)
         self.assertIn("could you hear me", proposition["value"])
 
+    def test_parenthesized_question_verb_does_not_truncate_literal_value(self):
+        base = "I enjoy the phrase (and can you imagine that)"
+        self.assert_same_principal(
+            base,
+            base + ", can you recommend a book?",
+        )
+
+    def test_bracketed_question_verb_does_not_truncate_literal_value(self):
+        base = "I enjoy the heading [and could you possibly help]"
+        self.assert_same_principal(
+            base,
+            base + ", could you suggest a title?",
+        )
+
+    def test_braced_request_like_code_does_not_open_request(self):
+        base = "I prefer the template {and can you improve this}"
+        self.assert_same_principal(
+            base,
+            base + ", can you recommend another template?",
+        )
+
     def test_contraction_before_genuine_request_boundary(self):
         self.assert_same_principal(
             "I'm fond of black tea",
