@@ -105,6 +105,10 @@ class TrailingRequestBoundaryTests(unittest.TestCase):
             "I prefer green tea, please suggest a recipe",
         )
 
+    def test_capitalized_first_person_conjunction_keeps_two_assertions(self):
+        result = interpret_write("I prefer green tea and I enjoy strong coffee")["proposition"]
+        self.assertEqual(result["status"], "ambiguous", result)
+
     def test_two_actual_assertions_not_silently_reduced_to_one(self):
         result = interpret_write("I prefer green tea, and I like strong coffee")["proposition"]
         self.assertEqual(result["status"], "ambiguous", result)
