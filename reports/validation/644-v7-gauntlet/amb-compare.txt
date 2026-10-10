@@ -1,0 +1,2 @@
+AMB PrecisionMemBench agent-memory @ b854d5e: 15/77 active 4/43 P 0.1806 R 0.9535; per-query identical to accepted v6 evidence: True
+cross-fact sidecar byte-identical to v6 run
