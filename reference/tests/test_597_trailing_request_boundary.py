@@ -31,6 +31,27 @@ class TrailingRequestBoundaryTests(unittest.TestCase):
             "I prefer green tea, and could you suggest a recipe?",
         )
 
+    def test_unpunctuated_conjunction_opens_a_request(self):
+        self.assert_same_principal(
+            "I prefer green tea",
+            "I prefer green tea and can you suggest an infusion?",
+        )
+
+    def test_quoted_question_is_not_a_request_boundary(self):
+        self.assert_same_principal(
+            'I enjoy the song "Hello, can you hear me?"',
+            'I enjoy the song "Hello, can you hear me?"',
+        )
+        out = interpret_write('I enjoy the song "Hello, can you hear me?"')["proposition"]
+        self.assertEqual(out["status"], "known", out)
+        self.assertIn("can you hear me", out["value"])
+
+    def test_followup_request_in_separate_sentence(self):
+        self.assert_same_principal(
+            "I prefer green tea",
+            "I prefer green tea. Can you suggest an infusion?",
+        )
+
     def test_non_question_request_without_question_mark(self):
         self.assert_same_principal(
             "I prefer green tea",
