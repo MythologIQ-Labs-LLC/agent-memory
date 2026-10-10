@@ -198,7 +198,7 @@
           "predecessor": "agent-memory-runtime-baseline-v6",
           "declared_successor": "agent-memory-runtime-baseline-v7",
           "declaration": "reports/runtime/baseline-v7-declaration.json",
-          "declaration_blob": "6e13cbaefa3805bc635219f2996fea809af4b224",
+          "declaration_blob": "ae8012a7540d43e589a31d00161bd30a82e3b73f",
           "checker_state_required": [
             "PASS",
             "TRANSITION"
