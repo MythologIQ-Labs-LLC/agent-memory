@@ -7,6 +7,8 @@ from __future__ import annotations
 
 import tempfile
 import unittest
+from dataclasses import replace
+from unittest.mock import patch
 from pathlib import Path
 
 from agentmem_ref.recall_control import (
@@ -112,6 +114,27 @@ class CompetitionRuntimeObservationTests(unittest.TestCase):
         self.assertEqual(diagnostic.admitted_untyped_count, 0)
         self.assertFalse(diagnostic.typed_coverage_observed)
         self.assertEqual(diagnostic.stop_recommendation, "abstain")
+
+    def test_reader_context_must_match_receipt_before_lookup(self):
+        self.retain("memory:typed", "Aster service endpoint is /health",
+                    typed_write=_typed("Aster service", "endpoint", "/health"))
+        result = self.planner.recall("Aster service endpoint", _context())
+        contexts = (
+            replace(_context(), project_ref="project-other"),
+            replace(_context(), principal_ref="agent:other"),
+            replace(_context(), purpose="other-purpose"),
+            replace(_context(), target_domain_refs=(TENANT, "project-other")),
+        )
+        for invalid_context in contexts:
+            with self.subTest(context=invalid_context):
+                with patch.object(self.runtime.adapter, "current_governed_typed_claim",
+                                  side_effect=AssertionError("no lookup after context mismatch")):
+                    out = self.planner.observe_competition_diagnostic(
+                        result, invalid_context, needs=(self.need,),
+                    )
+                self.assertEqual(out.diagnosis, "recall_observation_unverified")
+                self.assertEqual(out.admitted_untyped_count, 0)
+                self.assertFalse(out.typed_coverage_observed)
 
     def test_hidden_project_memory_does_not_enter_visible_admitted_count(self):
         self.retain("memory:typed", "Aster service endpoint is /health",
