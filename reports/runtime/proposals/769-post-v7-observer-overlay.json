@@ -1,0 +1,31 @@
+{
+  "schema_version": "769-protected-overlay-proposal-v1",
+  "issue": 769,
+  "parent_issue": 644,
+  "stage": "unqualified_post_v7_protected_runtime_overlay",
+  "base_runtime_commit": "9b025f945e7ec4a1e349e56bba251e3122413e88",
+  "published_baseline": "agent-memory-runtime-baseline-v6",
+  "frozen_candidate_baseline": "agent-memory-runtime-baseline-v7",
+  "change_scope": [
+    {
+      "path": "reference/agentmem_ref/runtime/competition_diagnostics.py",
+      "blob": "c42e399643a61c767ca8e74b8baac5ccb833d920"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_control.py",
+      "blob": "9e014c1b796ded8995b36469b5bdfc7ad9d45758"
+    }
+  ],
+  "allow_v7_evidence_repin": false,
+  "active_baseline_declaration_modified": false,
+  "default_recall_affected": false,
+  "stop_recommendation": "abstain",
+  "authority_effect": "none",
+  "qualification_status": "NOT_EXECUTED",
+  "next_gate": "sanctioned post-v7 successor declaration and independent exact-SHA validation after v7 evidence acceptance",
+  "notes": [
+    "Blob IDs are Git object blob hashes from the committed candidate; not an attestation, signed report, or accepted baseline.",
+    "The current v7 declaration is frozen for already imported #770 evidence; it must not be changed to retrofit this overlay.",
+    "Only explicit post-admission diagnostic invocations consume the new observer."
+  ]
+}
