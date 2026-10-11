@@ -179,6 +179,36 @@ class RecallObservationReceipt:
     def integrity_valid(self) -> bool:
         return self.content_digest == _sha(_DOMAIN + _json_bytes(self._payload()))
 
+    def matches_reader_context(
+        self,
+        *,
+        reader_domain_refs: tuple[str, ...],
+        principal_ref: str,
+        project_ref: str,
+        purpose: str,
+        task_ref: str,
+    ) -> bool:
+        """Match the exact originally bound reader identity without exposing it.
+
+        This is a domain-binding check on the mutable-result receipt, not an
+        attestation of read revision, enumerated scope or stopping authority.
+        """
+        try:
+            _ids(reader_domain_refs, "reader domain refs")
+            if any(type(v) is not str for v in
+                   (principal_ref, project_ref, purpose, task_ref)):
+                return False
+            observed = _sha(b"reader\x00" + _json_bytes({
+                "domains": sorted(reader_domain_refs),
+                "principal": principal_ref,
+                "project": project_ref,
+                "purpose": purpose,
+                "task": task_ref,
+            }))
+            return observed == self.reader_digest and self.integrity_valid()
+        except (TypeError, ValueError, KeyError):
+            return False
+
     def matches_mutable_result(
         self, *,
         candidates: list[str], admitted: list[str], ranked: list[str],
