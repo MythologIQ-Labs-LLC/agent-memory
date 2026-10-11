@@ -1,0 +1,643 @@
+{
+  "schema_version": "769-observation-contract-v1",
+  "issue": 769,
+  "owning_parent": 644,
+  "stage": "preregistered_evaluation_contract_only",
+  "frozen_on": "2026-10-10",
+  "scope": "synthetic, semantic-domain-independent, post-admission diagnostic projections; no live runtime assertion",
+  "warning": "attested_complete is a hypothetical future input NOT provided or certified by the current v7 runtime; never convert reviewable_for_future_positive_policy to actual_stop or stop_recommendation",
+  "input_enums": {
+    "receipt_state": [
+      "verified",
+      "missing",
+      "mismatch",
+      "stale"
+    ],
+    "scope_enumeration": [
+      "attested_complete",
+      "read_path_observed",
+      "partial",
+      "unknown"
+    ],
+    "admission_boundary": [
+      "admitted_only",
+      "unverified"
+    ],
+    "support_posture": [
+      "typed_support",
+      "controller_estimate",
+      "none"
+    ]
+  },
+  "case_count": 32,
+  "cases": [
+    {
+      "id": "C01",
+      "group": "hypothetical_attested_clear",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Future-only attested complete scope: no typed or admitted untyped competitor observed; never sufficient for stop."
+    },
+    {
+      "id": "C02",
+      "group": "metamorphic_surface",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Whitespaced value spelling cannot change evidence posture absent typed identity change."
+    },
+    {
+      "id": "C03",
+      "group": "metamorphic_surface",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Case-only variation cannot substitute for verified slot identity."
+    },
+    {
+      "id": "C04",
+      "group": "metamorphic_surface",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Paraphrase alone is not a typed contradiction."
+    },
+    {
+      "id": "C05",
+      "group": "lexical_nonmatching",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Irrelevant lexical overlap is not admissible competitor evidence."
+    },
+    {
+      "id": "C06",
+      "group": "untyped_competitor",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "untyped_identity_unverified",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Admitted untyped candidate may concern the same slot, but has no trusted link."
+    },
+    {
+      "id": "C07",
+      "group": "untyped_competitor",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "untyped_identity_unverified",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Paraphrased competing candidate remains identity-unverified."
+    },
+    {
+      "id": "C08",
+      "group": "untyped_competitor",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "untyped_identity_unverified",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Whitespace/case in candidate are non-authoritative."
+    },
+    {
+      "id": "C09",
+      "group": "untyped_competitor",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "untyped_identity_unverified",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Another admitted source is not automatically independent or contradictory."
+    },
+    {
+      "id": "C10",
+      "group": "typed_conflict",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": true,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "typed_conflict",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Verified typed incompatible values for same authorized slot block confidence."
+    },
+    {
+      "id": "C11",
+      "group": "typed_conflict",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": true,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "typed_conflict",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Typed conflict takes priority in diagnosis; retain independent untyped flag in evidence."
+    },
+    {
+      "id": "C12",
+      "group": "coexistence",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Coexistence-compatible values are not typed conflicts absent exclusive cardinality evidence."
+    },
+    {
+      "id": "C13",
+      "group": "cardinality_unknown",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "untyped_identity_unverified",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Unknown cardinality may not be promoted to exclusion or compatibility."
+    },
+    {
+      "id": "C14",
+      "group": "receipt_failure",
+      "input": {
+        "receipt_state": "missing",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "observation_integrity_unknown",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "No receipt means observation cannot justify control."
+    },
+    {
+      "id": "C15",
+      "group": "receipt_failure",
+      "input": {
+        "receipt_state": "mismatch",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "observation_integrity_unknown",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Mismatched receipt takes precedence over any supposed coverage."
+    },
+    {
+      "id": "C16",
+      "group": "receipt_failure",
+      "input": {
+        "receipt_state": "stale",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "observation_integrity_unknown",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Stale receipt cannot attest a current read."
+    },
+    {
+      "id": "C17",
+      "group": "enumeration_failure",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "partial",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "enumeration_unattested",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Partial visible enumeration is not completeness."
+    },
+    {
+      "id": "C18",
+      "group": "enumeration_failure",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "unknown",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "enumeration_unattested",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Unknown completeness is not an empty competitor set."
+    },
+    {
+      "id": "C19",
+      "group": "enumeration_failure",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "read_path_observed",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "enumeration_unattested",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Current read-result observation is not durable full-scope attestation."
+    },
+    {
+      "id": "C20",
+      "group": "admission_failure",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "unverified",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "admission_scope_unverified",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Unverified admitted/refused boundary cannot count competitor evidence."
+    },
+    {
+      "id": "C21",
+      "group": "noninterference",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "A hidden tenant's memory must not alter the same visible projection."
+    },
+    {
+      "id": "C22",
+      "group": "noninterference",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "A scope-ineligible write must not change the consumer-facing diagnosis."
+    },
+    {
+      "id": "C23",
+      "group": "noninterference",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "A forgotten/tombstoned inaccessible memory must not reappear as competition."
+    },
+    {
+      "id": "C24",
+      "group": "noninterference",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "A disputed non-admitted candidate is not disclosed through this projection."
+    },
+    {
+      "id": "C25",
+      "group": "support_missing",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "none",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "No competitor does not imply required coverage."
+    },
+    {
+      "id": "C26",
+      "group": "support_untrusted",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "controller_estimate",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Controller-estimated coverage is not typed support."
+    },
+    {
+      "id": "C27",
+      "group": "enumeration_failure",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "read_path_observed",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": true,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "enumeration_unattested",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Unattested enumeration blocks the gate even if local typed conflict is visible."
+    },
+    {
+      "id": "C28",
+      "group": "receipt_failure",
+      "input": {
+        "receipt_state": "missing",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": true,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "observation_integrity_unknown",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Integrity failure outranks conflicting claims."
+    },
+    {
+      "id": "C29",
+      "group": "admission_failure",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "unverified",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "admission_scope_unverified",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "No counts or payload from a record with unverified admission."
+    },
+    {
+      "id": "C30",
+      "group": "typed_agreement",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": false
+      },
+      "expected": {
+        "competition_state": "no_competitor_observed",
+        "reviewable_for_future_positive_policy": true,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Several agreeing rows are still not guaranteed independent sources."
+    },
+    {
+      "id": "C31",
+      "group": "untyped_competitor",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "attested_complete",
+        "admission_boundary": "admitted_only",
+        "support_posture": "none",
+        "typed_conflict": false,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "untyped_identity_unverified",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Untyped competition remains unresolved even if typed coverage is absent."
+    },
+    {
+      "id": "C32",
+      "group": "enumeration_failure",
+      "input": {
+        "receipt_state": "verified",
+        "scope_enumeration": "partial",
+        "admission_boundary": "admitted_only",
+        "support_posture": "typed_support",
+        "typed_conflict": false,
+        "untyped_competitor": true
+      },
+      "expected": {
+        "competition_state": "enumeration_unattested",
+        "reviewable_for_future_positive_policy": false,
+        "stop_recommendation": "abstain",
+        "authority_effect": "none"
+      },
+      "notes": "Do not claim competitor scope is fully evaluated."
+    }
+  ]
+}
