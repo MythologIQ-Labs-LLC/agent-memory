@@ -42,6 +42,30 @@ class UntypedCompetitionContractTests(unittest.TestCase):
                 with self.assertRaises((TypeError, ValueError)):
                     self.evaluate(invalid)
 
+    def test_invalid_enum_or_truthy_nonboolean_never_becomes_authority(self):
+        clear = self.cases[0]["input"]
+        bad_fields = {
+            "receipt_state": ("maybe_verified", None),
+            "scope_enumeration": ("probably_complete", "complete"),
+            "admission_boundary": ("visible_if_interesting",),
+            "support_posture": ("probably_typed",),
+            "typed_conflict": (1, "true", None),
+            "untyped_competitor": (0, "false", None),
+        }
+        for field, values in bad_fields.items():
+            for value in values:
+                with self.subTest(field=field, value=value):
+                    payload = dict(clear, **{field: value})
+                    with self.assertRaises((TypeError, ValueError)):
+                        self.evaluate(payload)
+
+    def test_no_gold_or_raw_evidence_can_enter_the_diagnostic_input(self):
+        clear = self.cases[0]["input"]
+        for secret in ("benchmark_gold", "raw_text", "tenant_id", "hidden_ref"):
+            with self.subTest(secret=secret):
+                with self.assertRaises((TypeError, ValueError)):
+                    self.evaluate(dict(clear, **{secret: "untrusted"}))
+
     def test_hidden_metadata_cannot_change_visible_projection(self):
         baseline = self.cases[0]["input"]
         expected = self.evaluate(baseline)
