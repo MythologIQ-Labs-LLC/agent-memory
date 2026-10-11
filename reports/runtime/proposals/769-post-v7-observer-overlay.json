@@ -13,7 +13,11 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/recall_control.py",
-      "blob": "9e014c1b796ded8995b36469b5bdfc7ad9d45758"
+      "blob": "ac7a3ef8c5469c406d46abee36b6ad0b6a6a314f"
+    },
+    {
+      "path": "reference/agentmem_ref/runtime/recall_observation_receipt.py",
+      "blob": "5331fe9e31a181f23ca0d28619c4e9dbfc9957c7"
     }
   ],
   "allow_v7_evidence_repin": false,
@@ -26,6 +30,7 @@
   "notes": [
     "Blob IDs are Git object blob hashes from the committed candidate; not an attestation, signed report, or accepted baseline.",
     "The current v7 declaration is frozen for already imported #770 evidence; it must not be changed to retrofit this overlay.",
-    "Only explicit post-admission diagnostic invocations consume the new observer."
+    "Only explicit post-admission diagnostic invocations consume the new observer.",
+    "Receipt reader-context digest binding was added after adversarial review found a substituted-context replay risk. This is also protected runtime change and needs future independent requalification."
   ]
 }
