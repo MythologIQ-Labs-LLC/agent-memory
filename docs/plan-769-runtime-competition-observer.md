@@ -11,7 +11,10 @@ The opt-in method `ControlledRecallPlanner.observe_competition_diagnostic(result
 now invokes the actual existing governed read path:
 
 1. Verify the immutable planner observation receipt still matches the caller-visible
-   mutable recall result **before** using any candidate IDs.
+   mutable recall result **before** using any candidate IDs. Also verify the
+   *exact reader context* (domains, principal, project, purpose and task)
+   against the receipt's original digest, refusing attempts to replay a
+   legitimate result under a different reading authority.
 2. Reuse `observe_persisted_typed_coverage` for canonical current-admission
    rechecks, caller-declared typed slots, same-slot value coherence, and the
    indexed admission-scoped typed-slot obstacle census.
@@ -46,9 +49,12 @@ manufactures that state**.
   typed, redacted, read-only result and pure diagnostic classifier.
 - `reference/agentmem_ref/runtime/recall_control.py`: opt-in method added to
   the controlled planner; no default recall call-site changes.
-- `reference/tests/test_769_competition_runtime_observer.py`: seven fresh
+- `reference/agentmem_ref/runtime/recall_observation_receipt.py`:
+  adds a pure reader-context digest comparison against the already frozen
+  receipt, without granting attestation authority.
+- `reference/tests/test_769_competition_runtime_observer.py`: eight fresh
   integration regressions **committed before** the runtime implementation,
-  including typed/no-competitor unknown completeness, admitted untyped
+  including mismatched context replay rejection, typed/no-competitor unknown completeness, admitted untyped
   presence, same-slot unresolved values, tampered receipt, cross-project
   isolation, absent typed coverage and result immutability.
 
@@ -80,7 +86,7 @@ Independent acceptance requires:
 
 1. An adversarial review of every read and serialization boundary, including
    hidden/refused/forgotten sources and mutation of result membership.
-2. Exact-head execution with all 7 new integration tests plus original suites;
+2. Exact-head execution with all 8 new integration tests plus original suites;
    no changes to accepted v6 or frozen v7 evidence.
 3. Side-by-side effect comparison confirming the default recall path has no
    new observer reads or execution variance.
