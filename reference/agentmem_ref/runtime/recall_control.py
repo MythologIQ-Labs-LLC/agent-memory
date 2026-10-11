@@ -28,6 +28,7 @@ from .evidence_sufficiency import (
     TYPED_OBSERVATION,
     TypedValueClaim,
 )
+from .competition_diagnostics import CompetitionDiagnostic, diagnose as diagnose_competition
 from .adapter import RecallContext, eligible_search
 from .contextual_recall_adapter import admission_mode_for_intent, admit_preselected_candidates
 from .temporal_intent import resolve_intent
@@ -1011,6 +1012,51 @@ class ControlledRecallPlanner:
             report, diagnosis=diagnosis,
             continuation_proposal="continue_if_permitted",
             slot_obstacles=counters,
+        )
+
+    def observe_competition_diagnostic(
+        self,
+        result: ControlledRecallResult,
+        context: RecallContext,
+        *,
+        needs: tuple[CoverageNeed, ...],
+    ) -> CompetitionDiagnostic:
+        """Opt-in #769 read-only observation: typed values vs admitted untyped presence.
+
+        The existing canonical adapter independently re-checks CURRENT admission
+        for each fact. An untyped admitted fact is not claimed to compete with a
+        particular typed slot, even when lexical wording overlaps. The current
+        read cannot certify complete scoped enumeration, stable read revision,
+        or authority to stop. This method never runs on the default recall path.
+        """
+        if type(result) is not ControlledRecallResult or not isinstance(context, RecallContext):
+            raise TypeError("controlled recall result and context required")
+        if type(needs) is not tuple or not needs or any(type(n) is not CoverageNeed for n in needs):
+            raise ValueError("competition diagnostics require non-empty typed needs")
+        # A mutated or absent receipt is an evidence failure, not a cue to
+        # inspect the result's possibly forged candidate identities.
+        if not result.observation_unchanged():
+            return diagnose_competition(receipt_matches=False)
+
+        # Reuse the audited typed current-visibility boundary; the slot census
+        # is indexed, admission-rechecked, and never certifies completeness.
+        report = self.observe_persisted_typed_coverage(result, context, needs=needs)
+        reader = getattr(self.adapter, "current_governed_typed_claim", None)
+        if not callable(reader):
+            raise RuntimeRecoveryError("competition diagnostics require governed typed evidence")
+        untyped = 0
+        for ref in result.recall.admitted:
+            visible, claim = reader(ref, context)
+            if visible and claim is None:
+                # This is strictly presence of a currently admitted untyped
+                # read candidate, not identity evidence or contradiction.
+                untyped += 1
+        # A post-read receipt check detects caller mutations during inspection.
+        # It cannot establish an atomic database snapshot or query completeness.
+        return diagnose_competition(
+            receipt_matches=result.observation_unchanged(),
+            sufficiency=report,
+            admitted_untyped_count=untyped,
         )
 
     @staticmethod
