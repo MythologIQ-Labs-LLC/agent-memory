@@ -52,7 +52,7 @@ manufactures that state**.
 - `reference/agentmem_ref/runtime/recall_observation_receipt.py`:
   adds a pure reader-context digest comparison against the already frozen
   receipt, without granting attestation authority.
-- `reference/tests/test_769_competition_runtime_observer.py`: eight fresh
+- `reference/tests/test_769_competition_runtime_observer.py`: nine fresh
   integration regressions **committed before** the runtime implementation,
   including mismatched context replay rejection, typed/no-competitor unknown completeness, admitted untyped
   presence, same-slot unresolved values, tampered receipt, cross-project
@@ -86,7 +86,7 @@ Independent acceptance requires:
 
 1. An adversarial review of every read and serialization boundary, including
    hidden/refused/forgotten sources and mutation of result membership.
-2. Exact-head execution with all 8 new integration tests plus original suites;
+2. Exact-head execution with all 9 new integration tests plus original suites;
    no changes to accepted v6 or frozen v7 evidence.
 3. Side-by-side effect comparison confirming the default recall path has no
    new observer reads or execution variance.
