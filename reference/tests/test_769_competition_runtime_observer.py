@@ -86,7 +86,9 @@ class CompetitionRuntimeObservationTests(unittest.TestCase):
         self.assertEqual(diagnostic.diagnosis, "untyped_admitted_candidates_observed")
         self.assertGreaterEqual(diagnostic.admitted_untyped_count, 1)
         self.assertEqual(diagnostic.untyped_relation_status, "identity_unverified")
-        self.assertNotIn("untyped", str(diagnostic.to_dict()).split("refs"))
+        projection = diagnostic.to_dict()
+        self.assertFalse({"candidate_refs", "raw_text", "fact_uuid", "tenant"} & set(projection))
+        self.assertTrue(projection["admitted_untyped_count"] >= 1)
 
     def test_verified_typed_competing_values_are_unresolved_not_superseded(self):
         self.retain("memory:alice", "Aster service endpoint is /v1",
