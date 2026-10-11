@@ -1033,9 +1033,19 @@ class ControlledRecallPlanner:
             raise TypeError("controlled recall result and context required")
         if type(needs) is not tuple or not needs or any(type(n) is not CoverageNeed for n in needs):
             raise ValueError("competition diagnostics require non-empty typed needs")
-        # A mutated or absent receipt is an evidence failure, not a cue to
-        # inspect the result's possibly forged candidate identities.
-        if not result.observation_unchanged():
+        # A mutated/absent receipt OR a context replay is an evidence failure.
+        # The receipt originally commits the principal, purpose, project,
+        # task and reader domains; do not re-read under a caller-substituted
+        # authority context, even when membership has not changed.
+        receipt = result.observation_receipt
+        if (not result.observation_unchanged()
+                or not receipt.matches_reader_context(
+                    reader_domain_refs=tuple(context.target_domain_refs),
+                    principal_ref=context.principal_ref,
+                    project_ref=context.project_ref,
+                    purpose=context.purpose,
+                    task_ref=context.task_ref,
+                )):
             return diagnose_competition(receipt_matches=False)
 
         # Reuse the audited typed current-visibility boundary; the slot census
