@@ -152,6 +152,15 @@ class CompetitionRuntimeObservationTests(unittest.TestCase):
         self.assertEqual(diagnostic.diagnosis, "untyped_admitted_candidates_observed")
         self.assertEqual(diagnostic.stop_recommendation, "abstain")
 
+    def test_observer_is_opt_in_and_default_recall_never_calls_it(self):
+        self.retain("memory:typed", "Aster service endpoint is /health",
+                    typed_write=_typed("Aster service", "endpoint", "/health"))
+        with patch.object(ControlledRecallPlanner, "observe_competition_diagnostic",
+                          side_effect=AssertionError("observer used without opting in")):
+            result = self.planner.recall("Aster service endpoint", _context())
+        self.assertTrue(result.observation_unchanged())
+        self.assertGreaterEqual(len(result.admitted), 1)
+
     def test_never_mutates_original_recall_membership(self):
         self.retain("memory:typed", "Aster service endpoint is /health",
                     typed_write=_typed("Aster service", "endpoint", "/health"))
