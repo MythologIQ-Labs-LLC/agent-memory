@@ -1,0 +1,321 @@
+diff --git a/reference/tests/test_776_deletion_decision_properties.py b/reference/tests/test_776_deletion_decision_properties.py
+new file mode 100644
+index 00000000..92b9b781
+--- /dev/null
++++ b/reference/tests/test_776_deletion_decision_properties.py
+@@ -0,0 +1,104 @@
++"""validation(#776 @ 5098577): deletion decisions are a pure function of governed state.
++
++Property: for random interleavings of writes (with provenance to existing AND
++not-yet-existing facts), state changes, governed deletions, re-creation of deleted
++memory ids and recalls, every fact's deletion-family decision equals an independent
++from-scratch oracle -- regardless of query order, warm caches, later writes, or
++checkpoint recovery.
++"""
++from __future__ import annotations
++
++import random
++import unittest
++
++from tests.test_776_adversarial_review import _Store
++from tests.test_runtime_composition import _context
++
++DELETION_FAMILY = {"tombstoned", "derived_from_tombstoned_source",
++                   "logical_memory_deleted", "derived_from_deleted_logical_memory"}
++
++
++def oracle(adapter):
++    """Independent definition: a fact is deletion-refused iff it is in a deleted lineage
++    or its provenance (episode_uuids, transitively over facts) reaches one."""
++    deleted = set(adapter._tombstones)
++    for key, record in adapter._tombstones.items():
++        deleted.update(record.get("deleted_fact_uuids") or ())
++    facts = {f.uuid: f for f in adapter._substrate.all_facts()}
++    out = {}
++    for uuid, fact in facts.items():
++        if uuid in deleted:
++            out[uuid] = True
++            continue
++        seen, stack, hit = set(), list(fact.episode_uuids), False
++        while stack:
++            ref = stack.pop()
++            if ref in seen:
++                continue
++            seen.add(ref)
++            if ref in deleted:
++                hit = True
++                break
++            if ref in facts:
++                stack.extend(facts[ref].episode_uuids)
++        out[uuid] = hit
++    return out
++
++
++def observed(adapter, *, cold=False):
++    if cold:
++        adapter._deleted_lineage_cache = None
++        adapter._derived_taint_memo = None
++    ctx = _context()
++    return {f.uuid: adapter._admission_refusal(f, ctx, "historical") in DELETION_FAMILY
++            for f in adapter._substrate.all_facts()}
++
++
++class DeletionDecisionProperties(unittest.TestCase):
++    def run_seed(self, seed):
++        rng = random.Random(seed)
++        h = _Store(self)
++        live, deleted, n = [], [], 0
++        for step in range(28):
++            op = rng.random()
++            adapter = h.adapter
++            known = [f.uuid for f in adapter._substrate.all_facts()]
++            if op < 0.40 or not live:
++                n += 1
++                name = f"m{n}"
++                refs = []
++                if known and rng.random() < 0.7:
++                    refs.append(rng.choice(known))
++                if rng.random() < 0.35:  # forward citation of a fact id that may be written later
++                    refs.append(f"ref-{rng.randint(1, 400):04d}")
++                versions = [(f"{name} value {k} for seed {seed}", None if k == 0 else "state_change")
++                            for k in range(rng.randint(1, 3))]
++                h.chain(name, versions, evidence_refs=tuple(dict.fromkeys(refs)) or None)
++                live.append(name)
++            elif op < 0.60:
++                name = live.pop(rng.randrange(len(live)))
++                h.prune(name)
++                deleted.append(name)
++            elif op < 0.72 and deleted:
++                name = deleted.pop(rng.randrange(len(deleted)))
++                again = h.runtime.retain(h.proposal(name, 500 + step), f"{name} recreated at {step}")
++                self.assertTrue(again.committed, again)
++                live.append(name)
++            else:
++                h.recall(f"value seed {seed}")  # warms caches in arbitrary order
++            warm, truth = observed(h.adapter), oracle(h.adapter)
++            self.assertEqual(warm, truth, f"seed {seed} step {step}: warm cache diverged")
++        self.assertEqual(observed(h.adapter, cold=True), oracle(h.adapter), f"seed {seed}: cold")
++        h.runtime.durable_runtime.checkpoint()
++        recovered = h.recovered().adapter
++        self.assertEqual(observed(recovered), oracle(recovered), f"seed {seed}: after recovery")
++        self.assertEqual(oracle(recovered), oracle(h.adapter), f"seed {seed}: recovery changed state")
++
++    def test_random_interleavings(self):
++        for seed in range(40):
++            with self.subTest(seed=seed):
++                self.run_seed(seed)
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/reference/tests/test_776_transitive_traversal_review.py b/reference/tests/test_776_transitive_traversal_review.py
+new file mode 100644
+index 00000000..a95aac3b
+--- /dev/null
++++ b/reference/tests/test_776_transitive_traversal_review.py
+@@ -0,0 +1,127 @@
++"""validation(#776 @ 5d90965): independent review of the transitive deleted-provenance traversal.
++
++Each test states an invariant of `_derives_from_deleted`; a failure is a finding against
++the exact SHA, recorded before any repair.
++"""
++from __future__ import annotations
++
++import time
++import unittest
++
++from tests.test_644_combined_independent import _prop
++from tests.test_776_adversarial_review import _Facade
++
++HIST = {"mode": "historical"}
++
++
++class TransitiveTraversal(_Facade):
++    def admitted(self, query):
++        return set(self.memory.recall(query, temporal_intent=HIST)["admitted"])
++
++    def next_ref(self, ahead=1):
++        # Deterministic ids: the n-th next fact id, used only to build forward/cyclic provenance.
++        ids = self.memory.runtime.adapter._ids
++        return f"ref-{ids._next + ahead:04d}" if hasattr(ids, "_next") else None
++
++    def test_cycle_without_deletion_terminates_and_stays_admitted(self):
++        a = self.memory.remember("memory:ca", "Cycle note alpha about the gateway", evidence_refs=("memory-free:x",))["fact_uuid"]
++        b = self.memory.remember("memory:cb", "Cycle note beta about the gateway", evidence_refs=(a,))["fact_uuid"]
++        # a <- b already; make the graph cyclic through a third fact citing b and cited by itself
++        c = self.memory.remember("memory:cc", "Cycle note gamma about the gateway", evidence_refs=(b, a))["fact_uuid"]
++        self.assertTrue({a, b, c} <= self.admitted("cycle note gateway"))
++
++    def test_self_and_mutual_reference_with_deletion_is_refused(self):
++        old, _ = self.state_changed()
++        x = self.memory.remember("memory:x", "Derived x: region was Oslo", evidence_refs=(old, "external:doc-1"))["fact_uuid"]
++        y = self.memory.remember("memory:y", "Derived y: see x", evidence_refs=(x, "external:doc-2"))["fact_uuid"]
++        self.assertTrue(self.memory.forget("memory:a")["committed"])
++        self.assertFalse({x, y} & self.admitted("Derived region Oslo see"))
++
++    def test_unknown_provenance_is_not_deletion(self):
++        live = self.memory.remember("memory:u", "Unknown provenance note about the gateway",
++                                    evidence_refs=("ref-9999", "external:ticket-7"))["fact_uuid"]
++        self.state_changed()
++        self.assertTrue(self.memory.forget("memory:a")["committed"])
++        self.assertIn(live, self.admitted("Unknown provenance note gateway"))
++
++    def _order_scenario(self, root, future):
++        from agentmem_ref import AgentMemory
++        from tests.test_644_combined_independent import _evidence
++        m = AgentMemory.open(root, tenant="tenant:c644", actor_id="agent:c644", scope="project:a", purpose="c644")
++        q = "Orrin gateway region"
++        old = m.remember("memory:a", f"{q} is Oslo", proposition=_prop("Oslo"))["fact_uuid"]
++        m.correct("memory:a", f"{q} is Bergen", evidence=_evidence(), risk_class="low", replacement_kind="state_change")
++        m.forget("memory:a")
++        a = m.remember("memory:fwd", "Forward note citing a later digest about the gateway",
++                       evidence_refs=(future,))["fact_uuid"]
++        look = lambda mem: a in mem.recall("Forward note gateway digest", temporal_intent=HIST)["admitted"]
++        before = look(m)  # evaluated and memoised before the late write
++        late = m.remember("memory:late", "Late digest: the gateway region was Oslo", evidence_refs=(old,))["fact_uuid"]
++        live = look(m)
++        m.close()
++        m = AgentMemory.open(root, tenant="tenant:c644", actor_id="agent:c644", scope="project:a", purpose="c644")
++        fresh = look(m)
++        m.close()
++        return late, before, live, fresh
++
++    def test_decision_does_not_depend_on_query_order(self):
++        # A fact whose provenance becomes tainted WITHOUT a new deletion (a later write
++        # deriving from an already-deleted version) must be refused whether or not it was
++        # evaluated (memoised) before that write. Deterministic ids: a discovery pass learns
++        # the late fact's id, the replay cites it before it exists.
++        import tempfile
++        with tempfile.TemporaryDirectory() as d1:
++            late_id, *_ = self._order_scenario(d1 + "/m", "external:placeholder")
++        with tempfile.TemporaryDirectory() as d2:
++            late, before, live, fresh = self._order_scenario(d2 + "/m", late_id)
++        self.assertEqual(late, late_id)
++        self.assertEqual(live, fresh, f"stale memo: before={before} live={live} fresh={fresh}")
++        self.assertFalse(fresh)
++
++    def test_recreated_generation_derivations_are_live_old_ones_refused(self):
++        old, new = self.state_changed()
++        d_old = self.memory.remember("memory:dold", "Derived from old generation: region Oslo",
++                                     evidence_refs=(old,))["fact_uuid"]
++        self.assertTrue(self.memory.forget("memory:a")["committed"])
++        again = self.memory.remember("memory:a", "Orrin gateway region is Turku", proposition=_prop("Turku"))["fact_uuid"]
++        d_new = self.memory.remember("memory:dnew", "Derived from new generation: region Turku",
++                                     evidence_refs=(again,))["fact_uuid"]
++        d_new2 = self.memory.remember("memory:dnew2", "Second-hop from new generation: Turku",
++                                      evidence_refs=(d_new,))["fact_uuid"]
++        got = self.admitted("Derived generation region Oslo Turku second-hop")
++        self.assertNotIn(d_old, got)
++        self.assertTrue({again, d_new, d_new2} <= got)
++
++    def test_deep_chain_is_bounded_in_cost(self):
++        old, _ = self.state_changed()
++        prev = old
++        chain = []
++        for i in range(300):
++            prev = self.memory.remember(f"memory:deep{i}", f"deep chain link {i}", evidence_refs=(prev,))["fact_uuid"]
++            chain.append(prev)
++        self.assertTrue(self.memory.forget("memory:a")["committed"])
++        start = time.perf_counter()
++        got = self.admitted("deep chain link")
++        self.assertLess(time.perf_counter() - start, 5.0)
++        self.assertFalse(set(chain) & got)
++
++
++class LegacyCheckpointDerivation(unittest.TestCase):
++    def test_legacy_tombstone_without_lineage_field_still_taints_derivations_after_restart(self):
++        from tests.test_776_adversarial_review import KILN, _Store
++        h = _Store(self)
++        old, _ = h.chain("kiln", KILN)
++        d1 = h.runtime.retain(h.proposal("d1", 0, evidence_refs=(old,)), "Kiln digest one: cone 6 glaze").fact_uuid
++        d2 = h.runtime.retain(h.proposal("d2", 0, evidence_refs=(d1,)), "Kiln digest two: cone 6 glaze").fact_uuid
++        h.prune("kiln")
++        for record in h.adapter._tombstones.values():
++            record.pop("deleted_fact_uuids", None)
++        h.runtime.durable_runtime.checkpoint()
++        recovered = h.recovered()
++        self.assertTrue(all("deleted_fact_uuids" not in r for r in recovered.adapter._tombstones.values()))
++        result = h.recall("Kiln digest cone 6 glaze", runtime=recovered)
++        self.assertFalse({old, d1, d2} & set(result.admitted))
++
++
++if __name__ == "__main__":
++    unittest.main()
+diff --git a/reference/tests/test_api_action_authority.py b/reference/tests/test_api_action_authority.py
+index 6a0956b3..60c7a067 100644
+--- a/reference/tests/test_api_action_authority.py
++++ b/reference/tests/test_api_action_authority.py
+@@ -90,7 +90,7 @@ class Authorize(unittest.TestCase):
+     def test_older_contract_version_is_current(self):
+         result = surface.authorize(self.memory, {**ACTION, "contract_version": "1.1.0"})
+         self.assertEqual((result["compatibility"], result["stage"]), (contract.CURRENT, "action_authority"))
+-        self.assertEqual(surface.authorize(self.memory, {**ACTION, "contract_version": "1.7.0"})["stage"], "none")
++        self.assertEqual(surface.authorize(self.memory, {**ACTION, "contract_version": "1.8.0"})["stage"], "none")
+ 
+ 
+ class Witness(unittest.TestCase):
+diff --git a/reference/tests/test_api_surface.py b/reference/tests/test_api_surface.py
+index b5eb0606..297ac9a7 100644
+--- a/reference/tests/test_api_surface.py
++++ b/reference/tests/test_api_surface.py
+@@ -218,7 +218,7 @@ class PublicSurface(unittest.TestCase):
+                           blocked["return_policy"]["returned_count"]), (False, 0, 0))
+ 
+     def test_migration_required_envelope_carries_no_return_fields(self):
+-        newer = surface.recall(self.memory, "release branch", {**RECALL, "contract_version": "1.7.0", "budget": {"k": 1}})
++        newer = surface.recall(self.memory, "release branch", {**RECALL, "contract_version": "1.8.0", "budget": {"k": 1}})
+         self.assertEqual((newer["stage"], newer["compatibility"]), ("none", contract.MIGRATION_REQUIRED))
+         self.assertNotIn("returned", newer)
+         self.assertNotIn("return_policy", newer)
+diff --git a/reference/tests/test_developer_facade.py b/reference/tests/test_developer_facade.py
+index 508544d8..496b4f65 100644
+--- a/reference/tests/test_developer_facade.py
++++ b/reference/tests/test_developer_facade.py
+@@ -51,7 +51,7 @@ class DeveloperFacade(unittest.TestCase):
+         with tempfile.TemporaryDirectory() as temporary:
+             root = Path(temporary)
+             memory = self._open(root)
+-            self.assertEqual(memory.contract_version, "1.6.0")
++            self.assertEqual(memory.contract_version, "1.7.0")
+             retained = memory.remember(TARGET, "release branch main")
+             self.assertTrue(retained["committed"])
+             self.assertEqual(retained["stage"], "commit")
+diff --git a/reference/tests/test_facade_recall_control.py b/reference/tests/test_facade_recall_control.py
+index 1e8b1bd9..32671fea 100644
+--- a/reference/tests/test_facade_recall_control.py
++++ b/reference/tests/test_facade_recall_control.py
+@@ -92,7 +92,7 @@ class FacadeShadowRecallControlTests(unittest.TestCase):
+             memory.remember("memory:a", "The user's dog is called Biscuit.")
+             result = memory.recall("What is the dog called?")
+         self.assertNotIn("recall_control", result)
+-        self.assertEqual(result["contract_version"], "1.6.0")
++        self.assertEqual(result["contract_version"], "1.7.0")
+         with self.assertRaises(ValueError):
+             AgentMemory.open(tempfile.mkdtemp(), recall_control="deterministic")
+ 
+diff --git a/reference/tests/test_rc_cognitive_memory_scenario.py b/reference/tests/test_rc_cognitive_memory_scenario.py
+index 922fa171..b0658a7a 100644
+--- a/reference/tests/test_rc_cognitive_memory_scenario.py
++++ b/reference/tests/test_rc_cognitive_memory_scenario.py
+@@ -14,7 +14,7 @@ class RCCognitiveMemoryScenario(unittest.TestCase):
+         self.assertTrue(report["passed"])
+         self.assertEqual(report["scenario_id"], "agent-memory-rc1-cognitive-lifecycle")
+         self.assertEqual(report["scenario_version"], "1.0.0")
+-        self.assertEqual(report["contract_version"], "1.6.0")
++        self.assertEqual(report["contract_version"], "1.7.0")
+         self.assertEqual(set(report) & {"quality", "governance", "runtime_recovery"}, {"quality", "governance", "runtime_recovery"})
+         self.assertNotIn("health_score", report)
+         self.assertNotIn("score", report)
+diff --git a/reference/tests/test_typed_propositions.py b/reference/tests/test_typed_propositions.py
+index 053cd106..5cdc01a8 100644
+--- a/reference/tests/test_typed_propositions.py
++++ b/reference/tests/test_typed_propositions.py
+@@ -137,7 +137,7 @@ class _Case(unittest.TestCase):
+ 
+ class VersionTests(unittest.TestCase):
+     def test_versions(self):
+-        self.assertEqual(contract.CONTRACT_VERSION, "1.6.0")
++        self.assertEqual(contract.CONTRACT_VERSION, "1.7.0")
+         self.assertEqual(ps.CLASSIFIER_VERSION, "1.0.0")
+         self.assertEqual(ps.TYPED_CLASSIFIER_VERSION, "1.1.0")
+         self.assertEqual(cf.ASSERTION_FILTER_VERSION, "6.1.0")

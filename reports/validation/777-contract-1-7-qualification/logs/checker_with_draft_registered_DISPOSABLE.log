@@ -1,0 +1,13 @@
+declared successor agent-memory-runtime-baseline-v8 names predecessor agent-memory-runtime-baseline-v7 but the current baseline is agent-memory-runtime-baseline-v6
+undeclared protected change: reference/agentmem_ref/evidence_sufficiency.py
+undeclared protected change: reference/agentmem_ref/governed_transition_witness.py
+undeclared protected change: reference/agentmem_ref/recall_observation_receipt.py
+undeclared protected change: reference/agentmem_ref/runtime/evidence_sufficiency.py
+undeclared protected change: reference/agentmem_ref/runtime/governed_transition_witness.py
+undeclared protected change: reference/agentmem_ref/runtime/recall_observation_receipt.py
+declared change absent from candidate: schemas/api-action-envelope.schema.json
+declared change absent from candidate: schemas/api-execution-observation.schema.json
+declared change absent from candidate: schemas/api-proposal-envelope.schema.json
+declared change absent from candidate: schemas/api-recall-context.schema.json
+declared change absent from candidate: schemas/api-result-envelope.schema.json
+declared change absent from candidate: schemas/api-target-envelope.schema.json
