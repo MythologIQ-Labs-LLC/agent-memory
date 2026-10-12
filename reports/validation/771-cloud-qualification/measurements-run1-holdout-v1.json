@@ -1,0 +1,3152 @@
+{
+  "corpora": {
+    "halcyon-holdout": {
+      "backends": {
+        "composed-multiroute": {
+          "P3_engineering": {
+            "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
+            "queries": 24,
+            "store_build_plus_all_queries_seconds": 0.229
+          },
+          "diagnostics": [
+            {
+              "beyond_budget": [
+                "inc-2207",
+                "room",
+                "adr-db-v2",
+                "oncall-lrt",
+                "authz-5s",
+                "deploy-days",
+                "bookclub",
+                "money-repr",
+                "freeze-bf25",
+                "region-eu-us",
+                "fx-why",
+                "ratelimit",
+                "fx-fetch",
+                "ratelimit-rumor"
+              ],
+              "id": "H01",
+              "ranked_admitted_count": 17
+            },
+            {
+              "beyond_budget": [
+                "room",
+                "oncall-lrt",
+                "region-draft",
+                "bookclub",
+                "deploy-days",
+                "inc-2207",
+                "bus",
+                "money-repr",
+                "freeze-bf25",
+                "region-eu-us",
+                "fx-why",
+                "ratelimit",
+                "fx-fetch",
+                "authz-5s",
+                "ratelimit-rumor"
+              ],
+              "id": "H02",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "pgver-16",
+                "freeze-bf25",
+                "fx-fetch",
+                "bus",
+                "money-repr",
+                "migration-rule",
+                "deploy-days",
+                "webhook-retry",
+                "fx-why",
+                "adr-db-v2",
+                "region-draft",
+                "region-eu-us",
+                "ratelimit",
+                "bookclub",
+                "authz-5s",
+                "ratelimit-rumor"
+              ],
+              "id": "H03",
+              "ranked_admitted_count": 19
+            },
+            {
+              "beyond_budget": [
+                "inc-2207",
+                "pgver-16",
+                "room",
+                "bus",
+                "oncall-lrt",
+                "money-repr",
+                "migration-rule",
+                "adr-db-v2",
+                "freeze-bf25",
+                "region-eu-us",
+                "ratelimit",
+                "authz-5s",
+                "ratelimit-rumor"
+              ],
+              "id": "H04",
+              "ranked_admitted_count": 16
+            },
+            {
+              "beyond_budget": [
+                "pci",
+                "fx-why",
+                "adr-db-v2",
+                "deploy-days",
+                "freeze-bf25",
+                "webhook-retry",
+                "fx-fetch",
+                "room",
+                "region-draft",
+                "inc-2207"
+              ],
+              "id": "H05",
+              "ranked_admitted_count": 13
+            },
+            {
+              "beyond_budget": [
+                "bookclub",
+                "room",
+                "freeze-bf25",
+                "ratelimit",
+                "region-eu-us",
+                "ratelimit-rumor",
+                "region-draft",
+                "pgver-16",
+                "fx-why",
+                "bus",
+                "fx-fetch",
+                "money-repr",
+                "authz-5s",
+                "migration-rule",
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "id": "H06",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "room",
+                "fx-why",
+                "freeze-bf25",
+                "deploy-days",
+                "bookclub",
+                "region-draft",
+                "region-eu-us",
+                "fx-fetch",
+                "webhook-retry",
+                "inc-2207",
+                "pgver-16",
+                "bus",
+                "money-repr",
+                "authz-5s",
+                "migration-rule",
+                "adr-db-v2"
+              ],
+              "id": "H07",
+              "ranked_admitted_count": 19
+            },
+            {
+              "beyond_budget": [
+                "pci",
+                "region-draft",
+                "bus-why",
+                "inc-2207"
+              ],
+              "id": "H08",
+              "ranked_admitted_count": 6
+            },
+            {
+              "beyond_budget": [
+                "adr-db-v2",
+                "bus-why",
+                "bookclub",
+                "pci",
+                "bus",
+                "ratelimit",
+                "authz-5s",
+                "oncall-lrt",
+                "fx-why",
+                "ratelimit-rumor",
+                "webhook-retry",
+                "region-draft",
+                "room",
+                "pgver-16",
+                "fx-fetch",
+                "money-repr",
+                "migration-rule",
+                "inc-2207"
+              ],
+              "id": "H09",
+              "ranked_admitted_count": 21
+            },
+            {
+              "beyond_budget": [
+                "adr-db-v2",
+                "bus-why",
+                "deploy-days",
+                "pgver-16",
+                "fx-fetch",
+                "room",
+                "money-repr",
+                "oncall-lrt",
+                "region-eu-us",
+                "fx-why"
+              ],
+              "id": "H10",
+              "ranked_admitted_count": 13
+            },
+            {
+              "beyond_budget": [
+                "pci",
+                "inc-2207",
+                "freeze-bf25",
+                "adr-db-v2",
+                "fx-fetch",
+                "webhook-retry",
+                "pgver-16",
+                "region-eu-us",
+                "room",
+                "oncall-lrt",
+                "ratelimit-rumor",
+                "migration-rule",
+                "fx-why",
+                "bus-why",
+                "ratelimit",
+                "bookclub",
+                "authz-5s"
+              ],
+              "id": "H11",
+              "ranked_admitted_count": 19
+            },
+            {
+              "beyond_budget": [
+                "freeze-bf25",
+                "webhook-retry",
+                "bus",
+                "pci",
+                "deploy-days",
+                "room",
+                "region-draft",
+                "inc-2207"
+              ],
+              "id": "H12",
+              "ranked_admitted_count": 11
+            },
+            {
+              "beyond_budget": [
+                "freeze-bf25",
+                "ratelimit",
+                "oncall-lrt",
+                "deploy-days",
+                "ratelimit-rumor",
+                "region-draft",
+                "room",
+                "pgver-16",
+                "fx-why",
+                "bookclub",
+                "fx-fetch",
+                "money-repr",
+                "authz-5s",
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "id": "H13",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "adr-db-v2",
+                "freeze-bf25",
+                "ratelimit",
+                "oncall-lrt",
+                "deploy-days",
+                "ratelimit-rumor",
+                "room",
+                "pgver-16",
+                "fx-why",
+                "bookclub",
+                "fx-fetch",
+                "bus",
+                "money-repr",
+                "authz-5s",
+                "inc-2207"
+              ],
+              "id": "H14",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "bookclub",
+                "bus-why",
+                "adr-db-v2",
+                "fx-why"
+              ],
+              "id": "H15",
+              "ranked_admitted_count": 6
+            },
+            {
+              "beyond_budget": [
+                "bus-why",
+                "region-draft",
+                "inc-2207",
+                "fx-why",
+                "bookclub",
+                "migration-rule",
+                "adr-db-v2",
+                "deploy-days",
+                "freeze-bf25",
+                "fx-fetch",
+                "room"
+              ],
+              "id": "H16",
+              "ranked_admitted_count": 13
+            },
+            {
+              "beyond_budget": [
+                "freeze-bf25",
+                "ratelimit",
+                "deploy-days",
+                "region-eu-us",
+                "ratelimit-rumor",
+                "region-draft",
+                "pgver-16",
+                "fx-why",
+                "bus",
+                "fx-fetch",
+                "money-repr",
+                "authz-5s",
+                "migration-rule",
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "id": "H17",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "room",
+                "oncall-lrt",
+                "pgver-16",
+                "freeze-bf25",
+                "region-eu-us",
+                "fx-why",
+                "bus",
+                "fx-fetch",
+                "money-repr",
+                "authz-5s",
+                "migration-rule",
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "id": "H18",
+              "ranked_admitted_count": 16
+            },
+            {
+              "beyond_budget": [
+                "pgver-16",
+                "freeze-bf25",
+                "region-eu-us",
+                "fx-why",
+                "ratelimit",
+                "bus",
+                "fx-fetch",
+                "money-repr",
+                "authz-5s",
+                "migration-rule",
+                "ratelimit-rumor",
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "id": "H19",
+              "ranked_admitted_count": 16
+            },
+            {
+              "beyond_budget": [
+                "money-repr",
+                "authz-5s",
+                "freeze-bf25",
+                "ratelimit",
+                "migration-rule",
+                "pci",
+                "webhook-retry",
+                "deploy-days",
+                "region-draft",
+                "bus",
+                "region-eu-us",
+                "room",
+                "bus-why",
+                "adr-db-v2",
+                "pgver-16",
+                "oncall-lrt",
+                "bookclub"
+              ],
+              "id": "H20",
+              "ranked_admitted_count": 21
+            },
+            {
+              "beyond_budget": [
+                "bus-why",
+                "deploy-days",
+                "fx-fetch",
+                "region-eu-us",
+                "migration-rule",
+                "adr-db-v2",
+                "inc-2207",
+                "fx-why"
+              ],
+              "id": "H21",
+              "ranked_admitted_count": 11
+            },
+            {
+              "beyond_budget": [
+                "oncall-lrt",
+                "bookclub",
+                "room",
+                "freeze-bf25",
+                "deploy-days",
+                "region-eu-us",
+                "region-draft",
+                "pgver-16",
+                "bus",
+                "fx-fetch",
+                "money-repr",
+                "authz-5s",
+                "migration-rule",
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "id": "H22",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "pci",
+                "room",
+                "oncall-lrt",
+                "bus-why",
+                "adr-db-v2",
+                "deploy-days",
+                "pgver-16",
+                "region-draft",
+                "fx-why",
+                "bus",
+                "money-repr",
+                "freeze-bf25",
+                "region-eu-us",
+                "ratelimit",
+                "fx-fetch",
+                "authz-5s",
+                "ratelimit-rumor"
+              ],
+              "id": "H23",
+              "ranked_admitted_count": 20
+            },
+            {
+              "beyond_budget": [
+                "oncall-lrt",
+                "pgver-16",
+                "freeze-bf25",
+                "region-eu-us",
+                "fx-why",
+                "ratelimit",
+                "fx-fetch",
+                "bus",
+                "money-repr",
+                "authz-5s",
+                "migration-rule",
+                "ratelimit-rumor",
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "id": "H24",
+              "ranked_admitted_count": 16
+            }
+          ],
+          "per_query": [
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bus",
+                "migration-rule"
+              ],
+              "empty_delivery": false,
+              "id": "H01",
+              "intent": "current",
+              "ndcg": 0.45866,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "bus",
+                "migration-rule",
+                "pgver-16"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "changing-fact-current",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "adr-db-v2",
+                "migration-rule"
+              ],
+              "empty_delivery": false,
+              "id": "H02",
+              "intent": "historical",
+              "ndcg": 0.319394,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 0.5,
+              "returned": [
+                "pgver-16",
+                "adr-db-v2",
+                "migration-rule"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "changing-fact-history",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt",
+                "room",
+                "inc-2207"
+              ],
+              "empty_delivery": false,
+              "id": "H03",
+              "intent": "historical",
+              "ndcg": 0.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": 0.0,
+              "returned": [
+                "oncall-lrt",
+                "room",
+                "inc-2207"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why-history",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [
+                "adr-db-v2"
+              ],
+              "distractors_served": [
+                "bookclub",
+                "fx-fetch",
+                "fx-why"
+              ],
+              "empty_delivery": false,
+              "id": "H04",
+              "intent": "historical",
+              "ndcg": 0.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": 0.0,
+              "returned": [
+                "bookclub",
+                "fx-fetch",
+                "fx-why"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why-history",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "bus"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bookclub"
+              ],
+              "empty_delivery": false,
+              "id": "H05",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "bus-why",
+                "bus",
+                "bookclub"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "deploy-days"
+              ],
+              "empty_delivery": false,
+              "id": "H06",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "oncall-lrt",
+                "deploy-days"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "changing-fact-current",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "ratelimit-rumor"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt"
+              ],
+              "empty_delivery": false,
+              "id": "H07",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "ratelimit",
+                "ratelimit-rumor",
+                "oncall-lrt"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "unreliable-source",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "migration-rule"
+              ],
+              "empty_delivery": false,
+              "id": "H08",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "authz-5s",
+                "migration-rule"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "correction-current",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "region-eu-us"
+              ],
+              "empty_delivery": false,
+              "id": "H09",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "deploy-days",
+                "region-eu-us",
+                "freeze-bf25"
+              ],
+              "safely_answerable": true,
+              "stale_served": [
+                "freeze-bf25"
+              ],
+              "stratum": "expired-window",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "2/2",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "region-draft"
+              ],
+              "empty_delivery": false,
+              "id": "H10",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "inc-2207",
+                "migration-rule",
+                "region-draft"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "multi-fact-why",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bus"
+              ],
+              "empty_delivery": false,
+              "id": "H11",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "money-repr",
+                "bus"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "single-fact",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "money-repr"
+              ],
+              "empty_delivery": false,
+              "id": "H12",
+              "intent": "timeless",
+              "ndcg": 0.833991,
+              "order_permutations_changed": "0/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "fx-fetch",
+                "fx-why",
+                "money-repr"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bus",
+                "migration-rule"
+              ],
+              "empty_delivery": false,
+              "id": "H13",
+              "intent": "current",
+              "ndcg": 0.917319,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "region-eu-us",
+                "bus",
+                "migration-rule"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "changing-fact-current",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "region-draft",
+                "migration-rule"
+              ],
+              "empty_delivery": false,
+              "id": "H14",
+              "intent": "historical",
+              "ndcg": 0.337352,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 0.5,
+              "returned": [
+                "region-eu-us",
+                "region-draft",
+                "migration-rule"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "correction-history",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "authz-5s"
+              ],
+              "empty_delivery": false,
+              "id": "H15",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "pci",
+                "authz-5s"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "paraphrase",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "pci"
+              ],
+              "empty_delivery": false,
+              "id": "H16",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "webhook-retry",
+                "pci"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "single-fact",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/0",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt",
+                "bookclub",
+                "room"
+              ],
+              "empty_delivery": false,
+              "id": "H17",
+              "intent": "current",
+              "ndcg": null,
+              "order_permutations_changed": "0/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": null,
+              "returned": [
+                "oncall-lrt",
+                "bookclub",
+                "room"
+              ],
+              "safely_answerable": false,
+              "stale_served": [],
+              "stratum": "no-answer",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/0",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "ratelimit",
+                "ratelimit-rumor",
+                "bookclub"
+              ],
+              "empty_delivery": false,
+              "id": "H18",
+              "intent": "current",
+              "ndcg": null,
+              "order_permutations_changed": "0/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": null,
+              "returned": [
+                "ratelimit",
+                "ratelimit-rumor",
+                "bookclub"
+              ],
+              "safely_answerable": false,
+              "stale_served": [],
+              "stratum": "no-answer-deleted",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "oncall-lrt"
+              ],
+              "critical": "0/0",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bookclub",
+                "room"
+              ],
+              "empty_delivery": false,
+              "id": "H19",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": null,
+              "returned": [
+                "oncall-lrt",
+                "bookclub",
+                "room"
+              ],
+              "safely_answerable": false,
+              "stale_served": [],
+              "stratum": "no-answer-cross-project",
+              "top1_relevant": false
+            },
+            {
+              "budget": 4,
+              "context_only_served": [
+                "ratelimit-rumor"
+              ],
+              "critical": "0/3",
+              "critical_ranked_beyond_budget": [
+                "money-repr",
+                "authz-5s",
+                "ratelimit"
+              ],
+              "distractors_served": [
+                "fx-why",
+                "fx-fetch",
+                "inc-2207"
+              ],
+              "empty_delivery": false,
+              "id": "H20",
+              "intent": "current",
+              "ndcg": 0.04111,
+              "order_permutations_changed": "0/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": 0.0,
+              "returned": [
+                "fx-why",
+                "ratelimit-rumor",
+                "fx-fetch",
+                "inc-2207"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "multi-fact-current",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "region-draft",
+                "ratelimit-rumor"
+              ],
+              "empty_delivery": false,
+              "id": "H21",
+              "intent": "timeless",
+              "ndcg": 0.917319,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "bus",
+                "region-draft",
+                "ratelimit-rumor"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "unseen-terminology",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "ratelimit-rumor"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "fx-why"
+              ],
+              "empty_delivery": false,
+              "id": "H22",
+              "intent": "current",
+              "ndcg": 0.70981,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "ratelimit-rumor",
+                "ratelimit",
+                "fx-why"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "contradiction",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bookclub"
+              ],
+              "empty_delivery": false,
+              "id": "H23",
+              "intent": "timeless",
+              "ndcg": 0.833991,
+              "order_permutations_changed": "0/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "migration-rule",
+                "inc-2207",
+                "bookclub"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bookclub"
+              ],
+              "empty_delivery": false,
+              "id": "H24",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "room",
+                "bookclub"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "distractor-domain",
+              "top1_relevant": true
+            }
+          ],
+          "report_summary": {
+            "P0_safety": {
+              "cases_with_prohibited_exposure": 0,
+              "cases_with_stale_exposure": 1
+            },
+            "P1_served_correctness": {
+              "all_critical_groups_covered_rate": 0.761905,
+              "answer_abstention_status": "not_measured_without_answering_layer",
+              "answer_abstention_verified": null,
+              "answerable_case_count": 21,
+              "empty_delivery_on_answerable_count": 0,
+              "no_safe_answer_case_count": 3,
+              "no_safe_answer_empty_context_count": 0,
+              "no_safe_answer_served_total": 9,
+              "no_safe_answer_with_context_count": 3,
+              "top1_relevant_rate": 0.761905
+            },
+            "P2_context_utility": {
+              "irrelevant_served_total": 40,
+              "macro_critical_coverage": 0.761905,
+              "macro_ndcg_at_budget": 0.731855,
+              "macro_relevant_precision": 0.380952,
+              "macro_relevant_recall": 0.809524,
+              "macro_relevant_recall_at_budget": 0.809524,
+              "macro_scope": "answerable_cases_only"
+            }
+          },
+          "run": {
+            "execution_backend": "composed-multiroute",
+            "input_sha256": "d6d87913cb8701076c8d2dc1321acb8e5bdca47f499481d72734c42c3ee10c01",
+            "lane_id": "independent-771-composed-multiroute",
+            "rows": [
+              {
+                "id": "H01",
+                "returned": [
+                  "bus",
+                  "migration-rule",
+                  "pgver-16"
+                ]
+              },
+              {
+                "id": "H02",
+                "returned": [
+                  "pgver-16",
+                  "adr-db-v2",
+                  "migration-rule"
+                ]
+              },
+              {
+                "id": "H03",
+                "returned": [
+                  "oncall-lrt",
+                  "room",
+                  "inc-2207"
+                ]
+              },
+              {
+                "id": "H04",
+                "returned": [
+                  "bookclub",
+                  "fx-fetch",
+                  "fx-why"
+                ]
+              },
+              {
+                "id": "H05",
+                "returned": [
+                  "bus-why",
+                  "bus",
+                  "bookclub"
+                ]
+              },
+              {
+                "id": "H06",
+                "returned": [
+                  "oncall-lrt",
+                  "deploy-days"
+                ]
+              },
+              {
+                "id": "H07",
+                "returned": [
+                  "ratelimit",
+                  "ratelimit-rumor",
+                  "oncall-lrt"
+                ]
+              },
+              {
+                "id": "H08",
+                "returned": [
+                  "authz-5s",
+                  "migration-rule"
+                ]
+              },
+              {
+                "id": "H09",
+                "returned": [
+                  "deploy-days",
+                  "region-eu-us",
+                  "freeze-bf25"
+                ]
+              },
+              {
+                "id": "H10",
+                "returned": [
+                  "inc-2207",
+                  "migration-rule",
+                  "region-draft"
+                ]
+              },
+              {
+                "id": "H11",
+                "returned": [
+                  "money-repr",
+                  "bus"
+                ]
+              },
+              {
+                "id": "H12",
+                "returned": [
+                  "fx-fetch",
+                  "fx-why",
+                  "money-repr"
+                ]
+              },
+              {
+                "id": "H13",
+                "returned": [
+                  "region-eu-us",
+                  "bus",
+                  "migration-rule"
+                ]
+              },
+              {
+                "id": "H14",
+                "returned": [
+                  "region-eu-us",
+                  "region-draft",
+                  "migration-rule"
+                ]
+              },
+              {
+                "id": "H15",
+                "returned": [
+                  "pci",
+                  "authz-5s"
+                ]
+              },
+              {
+                "id": "H16",
+                "returned": [
+                  "webhook-retry",
+                  "pci"
+                ]
+              },
+              {
+                "id": "H17",
+                "returned": [
+                  "oncall-lrt",
+                  "bookclub",
+                  "room"
+                ]
+              },
+              {
+                "id": "H18",
+                "returned": [
+                  "ratelimit",
+                  "ratelimit-rumor",
+                  "bookclub"
+                ]
+              },
+              {
+                "id": "H19",
+                "returned": [
+                  "oncall-lrt",
+                  "bookclub",
+                  "room"
+                ]
+              },
+              {
+                "id": "H20",
+                "returned": [
+                  "fx-why",
+                  "ratelimit-rumor",
+                  "fx-fetch",
+                  "inc-2207"
+                ]
+              },
+              {
+                "id": "H21",
+                "returned": [
+                  "bus",
+                  "region-draft",
+                  "ratelimit-rumor"
+                ]
+              },
+              {
+                "id": "H22",
+                "returned": [
+                  "ratelimit-rumor",
+                  "ratelimit",
+                  "fx-why"
+                ]
+              },
+              {
+                "id": "H23",
+                "returned": [
+                  "migration-rule",
+                  "inc-2207",
+                  "bookclub"
+                ]
+              },
+              {
+                "id": "H24",
+                "returned": [
+                  "room",
+                  "bookclub"
+                ]
+              }
+            ],
+            "runtime_revision": "0ee4ed703fa68b0e61872acc096795ba534d0d65",
+            "schema": "served-memory-run-v1"
+          }
+        },
+        "governed-lexical": {
+          "P3_engineering": {
+            "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
+            "queries": 24,
+            "store_build_plus_all_queries_seconds": 0.202
+          },
+          "diagnostics": [
+            {
+              "beyond_budget": [
+                "migration-rule",
+                "room",
+                "bus",
+                "oncall-lrt",
+                "authz-5s",
+                "bookclub",
+                "money-repr",
+                "ratelimit",
+                "ratelimit-rumor",
+                "freeze-bf25",
+                "deploy-days",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us"
+              ],
+              "id": "H01",
+              "ranked_admitted_count": 17
+            },
+            {
+              "beyond_budget": [
+                "room",
+                "oncall-lrt",
+                "inc-2207",
+                "bookclub",
+                "money-repr",
+                "bus",
+                "ratelimit",
+                "ratelimit-rumor",
+                "authz-5s",
+                "freeze-bf25",
+                "deploy-days",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us",
+                "region-draft"
+              ],
+              "id": "H02",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "adr-db-v2",
+                "pgver-16",
+                "freeze-bf25",
+                "migration-rule",
+                "money-repr",
+                "fx-fetch",
+                "fx-why",
+                "bus",
+                "ratelimit",
+                "ratelimit-rumor",
+                "authz-5s",
+                "deploy-days",
+                "bookclub",
+                "region-eu-us",
+                "region-draft",
+                "webhook-retry"
+              ],
+              "id": "H03",
+              "ranked_admitted_count": 19
+            },
+            {
+              "beyond_budget": [
+                "pgver-16",
+                "bus",
+                "oncall-lrt",
+                "ratelimit",
+                "ratelimit-rumor",
+                "authz-5s",
+                "freeze-bf25",
+                "inc-2207",
+                "migration-rule",
+                "room",
+                "bookclub",
+                "money-repr",
+                "region-eu-us"
+              ],
+              "id": "H04",
+              "ranked_admitted_count": 16
+            },
+            {
+              "beyond_budget": [
+                "adr-db-v2",
+                "freeze-bf25",
+                "deploy-days",
+                "inc-2207",
+                "room",
+                "bookclub",
+                "fx-fetch",
+                "region-draft",
+                "pci",
+                "webhook-retry"
+              ],
+              "id": "H05",
+              "ranked_admitted_count": 13
+            },
+            {
+              "beyond_budget": [
+                "ratelimit-rumor",
+                "freeze-bf25",
+                "region-eu-us",
+                "adr-db-v2",
+                "pgver-16",
+                "bus",
+                "authz-5s",
+                "deploy-days",
+                "inc-2207",
+                "migration-rule",
+                "room",
+                "bookclub",
+                "money-repr",
+                "fx-fetch",
+                "fx-why",
+                "region-draft"
+              ],
+              "id": "H06",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "freeze-bf25",
+                "room",
+                "deploy-days",
+                "inc-2207",
+                "bookclub",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us",
+                "region-draft",
+                "adr-db-v2",
+                "pgver-16",
+                "bus",
+                "authz-5s",
+                "migration-rule",
+                "money-repr",
+                "webhook-retry"
+              ],
+              "id": "H07",
+              "ranked_admitted_count": 19
+            },
+            {
+              "beyond_budget": [
+                "bus-why",
+                "inc-2207",
+                "region-draft",
+                "pci"
+              ],
+              "id": "H08",
+              "ranked_admitted_count": 6
+            },
+            {
+              "beyond_budget": [
+                "bus",
+                "bus-why",
+                "oncall-lrt",
+                "ratelimit",
+                "ratelimit-rumor",
+                "authz-5s",
+                "deploy-days",
+                "bookclub",
+                "fx-why",
+                "pgver-16",
+                "inc-2207",
+                "migration-rule",
+                "room",
+                "money-repr",
+                "fx-fetch",
+                "region-draft",
+                "pci",
+                "webhook-retry"
+              ],
+              "id": "H09",
+              "ranked_admitted_count": 21
+            },
+            {
+              "beyond_budget": [
+                "pgver-16",
+                "bus-why",
+                "oncall-lrt",
+                "deploy-days",
+                "room",
+                "money-repr",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us",
+                "region-draft"
+              ],
+              "id": "H10",
+              "ranked_admitted_count": 13
+            },
+            {
+              "beyond_budget": [
+                "money-repr",
+                "pgver-16",
+                "bus",
+                "oncall-lrt",
+                "ratelimit-rumor",
+                "freeze-bf25",
+                "migration-rule",
+                "room",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us",
+                "pci",
+                "bus-why",
+                "ratelimit",
+                "authz-5s",
+                "bookclub",
+                "webhook-retry"
+              ],
+              "id": "H11",
+              "ranked_admitted_count": 19
+            },
+            {
+              "beyond_budget": [
+                "webhook-retry",
+                "bus",
+                "deploy-days",
+                "inc-2207",
+                "room",
+                "money-repr",
+                "region-draft",
+                "pci"
+              ],
+              "id": "H12",
+              "ranked_admitted_count": 11
+            },
+            {
+              "beyond_budget": [
+                "ratelimit",
+                "ratelimit-rumor",
+                "freeze-bf25",
+                "migration-rule",
+                "adr-db-v2",
+                "pgver-16",
+                "authz-5s",
+                "deploy-days",
+                "inc-2207",
+                "room",
+                "bookclub",
+                "money-repr",
+                "fx-fetch",
+                "fx-why",
+                "region-draft"
+              ],
+              "id": "H13",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "ratelimit",
+                "ratelimit-rumor",
+                "freeze-bf25",
+                "migration-rule",
+                "region-draft",
+                "pgver-16",
+                "bus",
+                "authz-5s",
+                "deploy-days",
+                "inc-2207",
+                "room",
+                "bookclub",
+                "money-repr",
+                "fx-fetch",
+                "fx-why"
+              ],
+              "id": "H14",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "bus-why",
+                "authz-5s",
+                "bookclub",
+                "fx-why"
+              ],
+              "id": "H15",
+              "ranked_admitted_count": 6
+            },
+            {
+              "beyond_budget": [
+                "inc-2207",
+                "fx-why",
+                "region-draft",
+                "adr-db-v2",
+                "freeze-bf25",
+                "deploy-days",
+                "migration-rule",
+                "room",
+                "bookclub",
+                "fx-fetch",
+                "pci"
+              ],
+              "id": "H16",
+              "ranked_admitted_count": 13
+            },
+            {
+              "beyond_budget": [
+                "freeze-bf25",
+                "room",
+                "bookclub",
+                "region-eu-us",
+                "adr-db-v2",
+                "pgver-16",
+                "bus",
+                "authz-5s",
+                "deploy-days",
+                "inc-2207",
+                "migration-rule",
+                "money-repr",
+                "fx-fetch",
+                "fx-why",
+                "region-draft"
+              ],
+              "id": "H17",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "room",
+                "bookclub",
+                "adr-db-v2",
+                "pgver-16",
+                "bus",
+                "authz-5s",
+                "freeze-bf25",
+                "inc-2207",
+                "migration-rule",
+                "money-repr",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us"
+              ],
+              "id": "H18",
+              "ranked_admitted_count": 16
+            },
+            {
+              "beyond_budget": [
+                "bus",
+                "ratelimit",
+                "ratelimit-rumor",
+                "authz-5s",
+                "freeze-bf25",
+                "inc-2207",
+                "migration-rule",
+                "room",
+                "bookclub",
+                "money-repr",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us"
+              ],
+              "id": "H19",
+              "ranked_admitted_count": 16
+            },
+            {
+              "beyond_budget": [
+                "migration-rule",
+                "fx-why",
+                "adr-db-v2",
+                "bus",
+                "ratelimit",
+                "authz-5s",
+                "deploy-days",
+                "room",
+                "money-repr",
+                "region-eu-us",
+                "region-draft",
+                "webhook-retry",
+                "pgver-16",
+                "bus-why",
+                "oncall-lrt",
+                "bookclub",
+                "pci"
+              ],
+              "id": "H20",
+              "ranked_admitted_count": 21
+            },
+            {
+              "beyond_budget": [
+                "ratelimit-rumor",
+                "deploy-days",
+                "inc-2207",
+                "migration-rule",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us",
+                "region-draft"
+              ],
+              "id": "H21",
+              "ranked_admitted_count": 11
+            },
+            {
+              "beyond_budget": [
+                "freeze-bf25",
+                "room",
+                "bookclub",
+                "fx-why",
+                "region-eu-us",
+                "adr-db-v2",
+                "pgver-16",
+                "bus",
+                "authz-5s",
+                "deploy-days",
+                "inc-2207",
+                "migration-rule",
+                "money-repr",
+                "fx-fetch",
+                "region-draft"
+              ],
+              "id": "H22",
+              "ranked_admitted_count": 18
+            },
+            {
+              "beyond_budget": [
+                "room",
+                "bookclub",
+                "pgver-16",
+                "bus-why",
+                "oncall-lrt",
+                "money-repr",
+                "fx-why",
+                "bus",
+                "ratelimit",
+                "ratelimit-rumor",
+                "authz-5s",
+                "freeze-bf25",
+                "deploy-days",
+                "fx-fetch",
+                "region-eu-us",
+                "region-draft",
+                "pci"
+              ],
+              "id": "H23",
+              "ranked_admitted_count": 20
+            },
+            {
+              "beyond_budget": [
+                "bookclub",
+                "adr-db-v2",
+                "pgver-16",
+                "bus",
+                "ratelimit",
+                "ratelimit-rumor",
+                "authz-5s",
+                "freeze-bf25",
+                "inc-2207",
+                "migration-rule",
+                "money-repr",
+                "fx-fetch",
+                "fx-why",
+                "region-eu-us"
+              ],
+              "id": "H24",
+              "ranked_admitted_count": 16
+            }
+          ],
+          "per_query": [
+            {
+              "budget": 3,
+              "context_only_served": [
+                "adr-db-v2"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "inc-2207"
+              ],
+              "empty_delivery": false,
+              "id": "H01",
+              "intent": "current",
+              "ndcg": 0.70981,
+              "order_permutations_changed": "5/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "adr-db-v2",
+                "pgver-16",
+                "inc-2207"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "changing-fact-current",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "adr-db-v2",
+                "migration-rule"
+              ],
+              "empty_delivery": false,
+              "id": "H02",
+              "intent": "historical",
+              "ndcg": 0.201515,
+              "order_permutations_changed": "5/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 0.5,
+              "returned": [
+                "adr-db-v2",
+                "pgver-16",
+                "migration-rule"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "changing-fact-history",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt",
+                "inc-2207",
+                "room"
+              ],
+              "empty_delivery": false,
+              "id": "H03",
+              "intent": "historical",
+              "ndcg": 0.0,
+              "order_permutations_changed": "4/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": 0.0,
+              "returned": [
+                "oncall-lrt",
+                "inc-2207",
+                "room"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why-history",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "fx-fetch",
+                "fx-why"
+              ],
+              "empty_delivery": false,
+              "id": "H04",
+              "intent": "historical",
+              "ndcg": 0.393577,
+              "order_permutations_changed": "5/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 0.5,
+              "returned": [
+                "fx-fetch",
+                "fx-why",
+                "adr-db-v2"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why-history",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "bus"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "fx-why"
+              ],
+              "empty_delivery": false,
+              "id": "H05",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "bus-why",
+                "bus",
+                "fx-why"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "ratelimit"
+              ],
+              "empty_delivery": false,
+              "id": "H06",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "5/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "oncall-lrt",
+                "ratelimit"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "changing-fact-current",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "ratelimit-rumor"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt"
+              ],
+              "empty_delivery": false,
+              "id": "H07",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "5/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "ratelimit",
+                "ratelimit-rumor",
+                "oncall-lrt"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "unreliable-source",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "migration-rule"
+              ],
+              "empty_delivery": false,
+              "id": "H08",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "authz-5s",
+                "migration-rule"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "correction-current",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [
+                "deploy-days"
+              ],
+              "distractors_served": [
+                "adr-db-v2",
+                "region-eu-us"
+              ],
+              "empty_delivery": false,
+              "id": "H09",
+              "intent": "current",
+              "ndcg": 0.0,
+              "order_permutations_changed": "5/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": 0.0,
+              "returned": [
+                "adr-db-v2",
+                "freeze-bf25",
+                "region-eu-us"
+              ],
+              "safely_answerable": true,
+              "stale_served": [
+                "freeze-bf25"
+              ],
+              "stratum": "expired-window",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "2/2",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "adr-db-v2"
+              ],
+              "empty_delivery": false,
+              "id": "H10",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "inc-2207",
+                "migration-rule",
+                "adr-db-v2"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "multi-fact-why",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [
+                "money-repr"
+              ],
+              "distractors_served": [
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "empty_delivery": false,
+              "id": "H11",
+              "intent": "timeless",
+              "ndcg": 0.0,
+              "order_permutations_changed": "4/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": 0.0,
+              "returned": [
+                "adr-db-v2",
+                "inc-2207"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "single-fact",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "freeze-bf25"
+              ],
+              "empty_delivery": false,
+              "id": "H12",
+              "intent": "timeless",
+              "ndcg": 0.833991,
+              "order_permutations_changed": "5/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "fx-fetch",
+                "fx-why",
+                "freeze-bf25"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bus",
+                "oncall-lrt"
+              ],
+              "empty_delivery": false,
+              "id": "H13",
+              "intent": "current",
+              "ndcg": 0.917319,
+              "order_permutations_changed": "5/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "region-eu-us",
+                "bus",
+                "oncall-lrt"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "changing-fact-current",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "adr-db-v2",
+                "oncall-lrt"
+              ],
+              "empty_delivery": false,
+              "id": "H14",
+              "intent": "historical",
+              "ndcg": 0.337352,
+              "order_permutations_changed": "5/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 0.5,
+              "returned": [
+                "region-eu-us",
+                "adr-db-v2",
+                "oncall-lrt"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "correction-history",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "adr-db-v2"
+              ],
+              "empty_delivery": false,
+              "id": "H15",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "4/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "pci",
+                "adr-db-v2"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "paraphrase",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "bus-why"
+              ],
+              "empty_delivery": false,
+              "id": "H16",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "4/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "webhook-retry",
+                "bus-why"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "single-fact",
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/0",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt",
+                "ratelimit",
+                "ratelimit-rumor"
+              ],
+              "empty_delivery": false,
+              "id": "H17",
+              "intent": "current",
+              "ndcg": null,
+              "order_permutations_changed": "5/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": null,
+              "returned": [
+                "oncall-lrt",
+                "ratelimit",
+                "ratelimit-rumor"
+              ],
+              "safely_answerable": false,
+              "stale_served": [],
+              "stratum": "no-answer",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "0/0",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt",
+                "ratelimit",
+                "ratelimit-rumor"
+              ],
+              "empty_delivery": false,
+              "id": "H18",
+              "intent": "current",
+              "ndcg": null,
+              "order_permutations_changed": "5/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": null,
+              "returned": [
+                "oncall-lrt",
+                "ratelimit",
+                "ratelimit-rumor"
+              ],
+              "safely_answerable": false,
+              "stale_served": [],
+              "stratum": "no-answer-deleted",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "oncall-lrt"
+              ],
+              "critical": "0/0",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "adr-db-v2",
+                "pgver-16"
+              ],
+              "empty_delivery": false,
+              "id": "H19",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "5/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": null,
+              "returned": [
+                "oncall-lrt",
+                "adr-db-v2",
+                "pgver-16"
+              ],
+              "safely_answerable": false,
+              "stale_served": [],
+              "stratum": "no-answer-cross-project",
+              "top1_relevant": false
+            },
+            {
+              "budget": 4,
+              "context_only_served": [
+                "ratelimit-rumor"
+              ],
+              "critical": "0/3",
+              "critical_ranked_beyond_budget": [
+                "ratelimit",
+                "authz-5s",
+                "money-repr"
+              ],
+              "distractors_served": [
+                "inc-2207",
+                "fx-fetch"
+              ],
+              "empty_delivery": false,
+              "id": "H20",
+              "intent": "current",
+              "ndcg": 0.032579,
+              "order_permutations_changed": "5/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": 0.0,
+              "returned": [
+                "inc-2207",
+                "fx-fetch",
+                "ratelimit-rumor",
+                "freeze-bf25"
+              ],
+              "safely_answerable": true,
+              "stale_served": [
+                "freeze-bf25"
+              ],
+              "stratum": "multi-fact-current",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "bus-why"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "adr-db-v2"
+              ],
+              "empty_delivery": false,
+              "id": "H21",
+              "intent": "timeless",
+              "ndcg": 0.644287,
+              "order_permutations_changed": "5/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "adr-db-v2",
+                "bus",
+                "bus-why"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "unseen-terminology",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [
+                "ratelimit-rumor"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt"
+              ],
+              "empty_delivery": false,
+              "id": "H22",
+              "intent": "current",
+              "ndcg": 0.70981,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "ratelimit-rumor",
+                "ratelimit",
+                "oncall-lrt"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "contradiction",
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "adr-db-v2"
+              ],
+              "empty_delivery": false,
+              "id": "H23",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "4/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "inc-2207",
+                "migration-rule",
+                "adr-db-v2"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "decision-why",
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "oncall-lrt"
+              ],
+              "empty_delivery": false,
+              "id": "H24",
+              "intent": "timeless",
+              "ndcg": 1.0,
+              "order_permutations_changed": "2/5",
+              "precision": 0.5,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "room",
+                "oncall-lrt"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": "distractor-domain",
+              "top1_relevant": true
+            }
+          ],
+          "report_summary": {
+            "P0_safety": {
+              "cases_with_prohibited_exposure": 0,
+              "cases_with_stale_exposure": 2
+            },
+            "P1_served_correctness": {
+              "all_critical_groups_covered_rate": 0.714286,
+              "answer_abstention_status": "not_measured_without_answering_layer",
+              "answer_abstention_verified": null,
+              "answerable_case_count": 21,
+              "empty_delivery_on_answerable_count": 0,
+              "no_safe_answer_case_count": 3,
+              "no_safe_answer_empty_context_count": 0,
+              "no_safe_answer_served_total": 9,
+              "no_safe_answer_with_context_count": 3,
+              "top1_relevant_rate": 0.571429
+            },
+            "P2_context_utility": {
+              "irrelevant_served_total": 38,
+              "macro_critical_coverage": 0.714286,
+              "macro_ndcg_at_budget": 0.656202,
+              "macro_relevant_precision": 0.357143,
+              "macro_relevant_recall": 0.738095,
+              "macro_relevant_recall_at_budget": 0.738095,
+              "macro_scope": "answerable_cases_only"
+            }
+          },
+          "run": {
+            "execution_backend": "governed-lexical",
+            "input_sha256": "d6d87913cb8701076c8d2dc1321acb8e5bdca47f499481d72734c42c3ee10c01",
+            "lane_id": "independent-771-governed-lexical",
+            "rows": [
+              {
+                "id": "H01",
+                "returned": [
+                  "adr-db-v2",
+                  "pgver-16",
+                  "inc-2207"
+                ]
+              },
+              {
+                "id": "H02",
+                "returned": [
+                  "adr-db-v2",
+                  "pgver-16",
+                  "migration-rule"
+                ]
+              },
+              {
+                "id": "H03",
+                "returned": [
+                  "oncall-lrt",
+                  "inc-2207",
+                  "room"
+                ]
+              },
+              {
+                "id": "H04",
+                "returned": [
+                  "fx-fetch",
+                  "fx-why",
+                  "adr-db-v2"
+                ]
+              },
+              {
+                "id": "H05",
+                "returned": [
+                  "bus-why",
+                  "bus",
+                  "fx-why"
+                ]
+              },
+              {
+                "id": "H06",
+                "returned": [
+                  "oncall-lrt",
+                  "ratelimit"
+                ]
+              },
+              {
+                "id": "H07",
+                "returned": [
+                  "ratelimit",
+                  "ratelimit-rumor",
+                  "oncall-lrt"
+                ]
+              },
+              {
+                "id": "H08",
+                "returned": [
+                  "authz-5s",
+                  "migration-rule"
+                ]
+              },
+              {
+                "id": "H09",
+                "returned": [
+                  "adr-db-v2",
+                  "freeze-bf25",
+                  "region-eu-us"
+                ]
+              },
+              {
+                "id": "H10",
+                "returned": [
+                  "inc-2207",
+                  "migration-rule",
+                  "adr-db-v2"
+                ]
+              },
+              {
+                "id": "H11",
+                "returned": [
+                  "adr-db-v2",
+                  "inc-2207"
+                ]
+              },
+              {
+                "id": "H12",
+                "returned": [
+                  "fx-fetch",
+                  "fx-why",
+                  "freeze-bf25"
+                ]
+              },
+              {
+                "id": "H13",
+                "returned": [
+                  "region-eu-us",
+                  "bus",
+                  "oncall-lrt"
+                ]
+              },
+              {
+                "id": "H14",
+                "returned": [
+                  "region-eu-us",
+                  "adr-db-v2",
+                  "oncall-lrt"
+                ]
+              },
+              {
+                "id": "H15",
+                "returned": [
+                  "pci",
+                  "adr-db-v2"
+                ]
+              },
+              {
+                "id": "H16",
+                "returned": [
+                  "webhook-retry",
+                  "bus-why"
+                ]
+              },
+              {
+                "id": "H17",
+                "returned": [
+                  "oncall-lrt",
+                  "ratelimit",
+                  "ratelimit-rumor"
+                ]
+              },
+              {
+                "id": "H18",
+                "returned": [
+                  "oncall-lrt",
+                  "ratelimit",
+                  "ratelimit-rumor"
+                ]
+              },
+              {
+                "id": "H19",
+                "returned": [
+                  "oncall-lrt",
+                  "adr-db-v2",
+                  "pgver-16"
+                ]
+              },
+              {
+                "id": "H20",
+                "returned": [
+                  "inc-2207",
+                  "fx-fetch",
+                  "ratelimit-rumor",
+                  "freeze-bf25"
+                ]
+              },
+              {
+                "id": "H21",
+                "returned": [
+                  "adr-db-v2",
+                  "bus",
+                  "bus-why"
+                ]
+              },
+              {
+                "id": "H22",
+                "returned": [
+                  "ratelimit-rumor",
+                  "ratelimit",
+                  "oncall-lrt"
+                ]
+              },
+              {
+                "id": "H23",
+                "returned": [
+                  "inc-2207",
+                  "migration-rule",
+                  "adr-db-v2"
+                ]
+              },
+              {
+                "id": "H24",
+                "returned": [
+                  "room",
+                  "oncall-lrt"
+                ]
+              }
+            ],
+            "runtime_revision": "0ee4ed703fa68b0e61872acc096795ba534d0d65",
+            "schema": "served-memory-run-v1"
+          }
+        }
+      },
+      "gold_path": "reports/validation/771-cloud-qualification/holdout/halcyon-holdout-v1-gold.json",
+      "input_path": "reports/validation/771-cloud-qualification/holdout/halcyon-holdout-v1-input.json"
+    },
+    "v1-integration": {
+      "backends": {
+        "composed-multiroute": {
+          "P3_engineering": {
+            "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
+            "queries": 5,
+            "store_build_plus_all_queries_seconds": 0.051
+          },
+          "diagnostics": null,
+          "per_query": [
+            {
+              "budget": 3,
+              "context_only_served": [
+                "quota"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "boreal-quota"
+              ],
+              "empty_delivery": false,
+              "id": "Q-current-endpoint",
+              "intent": "current",
+              "ndcg": 0.938506,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "endpoint",
+                "quota",
+                "boreal-quota"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": null,
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "2/2",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "boreal-quota"
+              ],
+              "empty_delivery": false,
+              "id": "Q-compound",
+              "intent": "current",
+              "ndcg": 0.958041,
+              "order_permutations_changed": "0/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "endpoint",
+                "quota",
+                "boreal-quota"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": null,
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "endpoint"
+              ],
+              "empty_delivery": false,
+              "id": "Q-release-history",
+              "intent": "historical",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "release-old",
+                "release-current",
+                "endpoint"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": null,
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "0/0",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "endpoint",
+                "quota"
+              ],
+              "empty_delivery": false,
+              "id": "Q-no-owner",
+              "intent": "current",
+              "ndcg": null,
+              "order_permutations_changed": "0/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": null,
+              "returned": [
+                "endpoint",
+                "quota"
+              ],
+              "safely_answerable": false,
+              "stale_served": [],
+              "stratum": null,
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "endpoint"
+              ],
+              "empty_delivery": false,
+              "id": "Q-release-current",
+              "intent": "current",
+              "ndcg": 1.0,
+              "order_permutations_changed": "0/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "release-current",
+                "endpoint",
+                "release-old"
+              ],
+              "safely_answerable": true,
+              "stale_served": [
+                "release-old"
+              ],
+              "stratum": null,
+              "top1_relevant": true
+            }
+          ],
+          "report_summary": {
+            "P0_safety": {
+              "cases_with_prohibited_exposure": 0,
+              "cases_with_stale_exposure": 1
+            },
+            "P1_served_correctness": {
+              "all_critical_groups_covered_rate": 1.0,
+              "answer_abstention_status": "not_measured_without_answering_layer",
+              "answer_abstention_verified": null,
+              "answerable_case_count": 4,
+              "empty_delivery_on_answerable_count": 0,
+              "no_safe_answer_case_count": 1,
+              "no_safe_answer_empty_context_count": 0,
+              "no_safe_answer_served_total": 2,
+              "no_safe_answer_with_context_count": 1,
+              "top1_relevant_rate": 1.0
+            },
+            "P2_context_utility": {
+              "irrelevant_served_total": 6,
+              "macro_critical_coverage": 1.0,
+              "macro_ndcg_at_budget": 0.974137,
+              "macro_relevant_precision": 0.5,
+              "macro_relevant_recall": 1.0,
+              "macro_relevant_recall_at_budget": 1.0,
+              "macro_scope": "answerable_cases_only"
+            }
+          },
+          "run": {
+            "execution_backend": "composed-multiroute",
+            "input_sha256": "6b99154ea0c0a0a6138a43b1fe1fe00c0682d3d754f687cfe356a51d9f76e2db",
+            "lane_id": "independent-771-composed-multiroute",
+            "rows": [
+              {
+                "id": "Q-current-endpoint",
+                "returned": [
+                  "endpoint",
+                  "quota",
+                  "boreal-quota"
+                ]
+              },
+              {
+                "id": "Q-compound",
+                "returned": [
+                  "endpoint",
+                  "quota",
+                  "boreal-quota"
+                ]
+              },
+              {
+                "id": "Q-release-history",
+                "returned": [
+                  "release-old",
+                  "release-current",
+                  "endpoint"
+                ]
+              },
+              {
+                "id": "Q-no-owner",
+                "returned": [
+                  "endpoint",
+                  "quota"
+                ]
+              },
+              {
+                "id": "Q-release-current",
+                "returned": [
+                  "release-current",
+                  "endpoint",
+                  "release-old"
+                ]
+              }
+            ],
+            "runtime_revision": "0ee4ed703fa68b0e61872acc096795ba534d0d65",
+            "schema": "served-memory-run-v1"
+          }
+        },
+        "governed-lexical": {
+          "P3_engineering": {
+            "note": "single cold run incl. governed writes; tiny corpora, not a scalability result",
+            "queries": 5,
+            "store_build_plus_all_queries_seconds": 0.046
+          },
+          "diagnostics": null,
+          "per_query": [
+            {
+              "budget": 3,
+              "context_only_served": [
+                "quota"
+              ],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "release-old"
+              ],
+              "empty_delivery": false,
+              "id": "Q-current-endpoint",
+              "intent": "current",
+              "ndcg": 0.938506,
+              "order_permutations_changed": "4/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "endpoint",
+                "quota",
+                "release-old"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": null,
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "2/2",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "release-old"
+              ],
+              "empty_delivery": false,
+              "id": "Q-compound",
+              "intent": "current",
+              "ndcg": 0.958041,
+              "order_permutations_changed": "4/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "endpoint",
+                "quota",
+                "release-old"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": null,
+              "top1_relevant": true
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "endpoint"
+              ],
+              "empty_delivery": false,
+              "id": "Q-release-history",
+              "intent": "historical",
+              "ndcg": 1.0,
+              "order_permutations_changed": "3/5",
+              "precision": 0.666667,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "release-old",
+                "release-current",
+                "endpoint"
+              ],
+              "safely_answerable": true,
+              "stale_served": [],
+              "stratum": null,
+              "top1_relevant": true
+            },
+            {
+              "budget": 2,
+              "context_only_served": [],
+              "critical": "0/0",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "release-old",
+                "release-current"
+              ],
+              "empty_delivery": false,
+              "id": "Q-no-owner",
+              "intent": "current",
+              "ndcg": null,
+              "order_permutations_changed": "5/5",
+              "precision": 0.0,
+              "prohibited_served": [],
+              "recall_at_budget": null,
+              "returned": [
+                "release-old",
+                "release-current"
+              ],
+              "safely_answerable": false,
+              "stale_served": [],
+              "stratum": null,
+              "top1_relevant": false
+            },
+            {
+              "budget": 3,
+              "context_only_served": [],
+              "critical": "1/1",
+              "critical_ranked_beyond_budget": [],
+              "distractors_served": [
+                "endpoint"
+              ],
+              "empty_delivery": false,
+              "id": "Q-release-current",
+              "intent": "current",
+              "ndcg": 0.63093,
+              "order_permutations_changed": "5/5",
+              "precision": 0.333333,
+              "prohibited_served": [],
+              "recall_at_budget": 1.0,
+              "returned": [
+                "release-old",
+                "release-current",
+                "endpoint"
+              ],
+              "safely_answerable": true,
+              "stale_served": [
+                "release-old"
+              ],
+              "stratum": null,
+              "top1_relevant": false
+            }
+          ],
+          "report_summary": {
+            "P0_safety": {
+              "cases_with_prohibited_exposure": 0,
+              "cases_with_stale_exposure": 1
+            },
+            "P1_served_correctness": {
+              "all_critical_groups_covered_rate": 1.0,
+              "answer_abstention_status": "not_measured_without_answering_layer",
+              "answer_abstention_verified": null,
+              "answerable_case_count": 4,
+              "empty_delivery_on_answerable_count": 0,
+              "no_safe_answer_case_count": 1,
+              "no_safe_answer_empty_context_count": 0,
+              "no_safe_answer_served_total": 2,
+              "no_safe_answer_with_context_count": 1,
+              "top1_relevant_rate": 0.75
+            },
+            "P2_context_utility": {
+              "irrelevant_served_total": 6,
+              "macro_critical_coverage": 1.0,
+              "macro_ndcg_at_budget": 0.881869,
+              "macro_relevant_precision": 0.5,
+              "macro_relevant_recall": 1.0,
+              "macro_relevant_recall_at_budget": 1.0,
+              "macro_scope": "answerable_cases_only"
+            }
+          },
+          "run": {
+            "execution_backend": "governed-lexical",
+            "input_sha256": "6b99154ea0c0a0a6138a43b1fe1fe00c0682d3d754f687cfe356a51d9f76e2db",
+            "lane_id": "independent-771-governed-lexical",
+            "rows": [
+              {
+                "id": "Q-current-endpoint",
+                "returned": [
+                  "endpoint",
+                  "quota",
+                  "release-old"
+                ]
+              },
+              {
+                "id": "Q-compound",
+                "returned": [
+                  "endpoint",
+                  "quota",
+                  "release-old"
+                ]
+              },
+              {
+                "id": "Q-release-history",
+                "returned": [
+                  "release-old",
+                  "release-current",
+                  "endpoint"
+                ]
+              },
+              {
+                "id": "Q-no-owner",
+                "returned": [
+                  "release-old",
+                  "release-current"
+                ]
+              },
+              {
+                "id": "Q-release-current",
+                "returned": [
+                  "release-old",
+                  "release-current",
+                  "endpoint"
+                ]
+              }
+            ],
+            "runtime_revision": "0ee4ed703fa68b0e61872acc096795ba534d0d65",
+            "schema": "served-memory-run-v1"
+          }
+        }
+      },
+      "gold_path": "reference/fixtures/evaluation/served-memory-integration-v1-gold.json",
+      "input_path": "reference/fixtures/evaluation/served-memory-integration-v1-input.json"
+    }
+  },
+  "label": "baseline",
+  "runtime_revision": "0ee4ed703fa68b0e61872acc096795ba534d0d65"
+}

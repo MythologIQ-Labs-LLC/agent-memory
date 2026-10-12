@@ -146,11 +146,32 @@ def build() -> tuple[dict, dict, dict]:
     return inputs, gold, strata
 
 
+# v1.1 (added after the first v1 run, disclosed in the report): v1 encoded
+# every value change as `correct`, i.e. a runtime ERROR correction ("the old
+# value was false"). That contradicts v1's own gold, which credits the old
+# values for historical questions. These six events are real-world state
+# changes, so v1.1 replays them as `update` (replacement_kind=state_change).
+# Questions, budgets, intents and gold are byte-identical to v1.
+STATE_CHANGES = ("adr-db-v2", "pgver-15", "pgver-16", "oncall-lrt", "authz-5s", "region-eu-us")
+
+
+def build_v1_1(inputs: dict) -> dict:
+    import copy
+    data = copy.deepcopy(inputs)
+    for event in data["events"]:
+        if event["id"] in STATE_CHANGES:
+            assert event["op"] == "correct"
+            event["op"] = "update"
+    return data
+
+
 def main() -> None:
     inputs, gold, strata = build()
     for name, doc in (("input", inputs), ("gold", gold), ("strata", strata)):
         (HERE / f"halcyon-holdout-v1-{name}.json").write_text(
             json.dumps(doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    (HERE / "halcyon-holdout-v1.1-input.json").write_text(
+        json.dumps(build_v1_1(inputs), indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":

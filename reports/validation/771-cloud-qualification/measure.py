@@ -42,6 +42,9 @@ CORPORA = {
     "halcyon-holdout": (HERE / "holdout/halcyon-holdout-v1-input.json",
                         HERE / "holdout/halcyon-holdout-v1-gold.json",
                         HERE / "holdout/halcyon-holdout-v1-strata.json"),
+    "halcyon-holdout-v1.1": (HERE / "holdout/halcyon-holdout-v1.1-input.json",
+                             HERE / "holdout/halcyon-holdout-v1-gold.json",
+                             HERE / "holdout/halcyon-holdout-v1-strata.json"),
 }
 
 

@@ -123,6 +123,20 @@ class LifecycleRunnerTests(unittest.TestCase):
         self.assertNotIn("db-v1", current)
         self.assertNotIn("db-v2", current)
 
+    def test_state_change_history_is_admissible_but_error_correction_is_not(self):
+        outcomes = {}
+        for op in ("update", "correct"):
+            data = copy.deepcopy(INPUTS)
+            data["events"][1]["op"] = op
+            with tempfile.TemporaryDirectory() as tmp:
+                run, diag = lifecycle.run_scenarios(data, Path(tmp), revision="t", lane_id="l")
+            hist = next(r for r in run["rows"] if r["id"] == "hist")["returned"]
+            late = next(d for d in diag if d["id"] == "hist")["beyond_budget"]
+            cur = next(r for r in run["rows"] if r["id"] == "cur")["returned"]
+            outcomes[op] = ("db-v1" in hist + late, "db-v1" in cur)
+        self.assertEqual(outcomes["update"], (True, False))
+        self.assertEqual(outcomes["correct"], (False, False))
+
     def test_budget_diagnostics_report_relevant_but_late_memories(self):
         for backend, (run, diag) in self.runs.items():
             for row, extra in zip(run["rows"], diag):

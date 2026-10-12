@@ -7,7 +7,10 @@ annotation the runtime cannot act on. v2 inputs are an ordered event history:
 
   retain   new logical memory (optionally another project or tenant,
            optionally with caller-declared valid_from/valid_until)
-  correct  governed correction of an existing logical memory's current value
+  correct  governed ERROR correction: the previous value was wrong
+           (runtime replacement_kind=error_correction; never historical evidence)
+  update   governed STATE CHANGE: the previous value was true until now
+           (runtime replacement_kind=state_change; admissible as history)
   delete   governed permanent deletion of a logical memory's current value
 
 Corrections and deletions are executed through the real PAMA proposal path.
@@ -44,7 +47,8 @@ from agentmem_ref.verification import (  # noqa: E402
 )
 
 SCHEMA = "served-memory-lifecycle-v2"
-OPS = frozenset(("retain", "correct", "delete"))
+OPS = frozenset(("retain", "correct", "update", "delete"))
+_REPLACES = ("correct", "update")
 _TEMPORAL = frozenset(("valid_from", "valid_until"))
 
 
@@ -106,7 +110,7 @@ def validate_inputs(data):
                 raise ValueError(op + " cannot move a memory's scope")
             if live[event["memory"]]["tenant"] != data["tenant"]:
                 raise ValueError("lifecycle changes are evaluated for the home tenant only")
-            if op == "correct":
+            if op in _REPLACES:
                 _text(event.get("text"), "event text")
             else:
                 if "text" in event or "temporal" in event:
@@ -148,8 +152,8 @@ def lifecycle_facts(data: dict) -> dict:
     deleted_memories: set[str] = set()
     for event in data["events"]:
         memory = event["memory"]
-        if event["op"] in ("retain", "correct"):
-            scope = creators[current[memory]] if event["op"] == "correct" else {
+        if event["op"] in ("retain", *_REPLACES):
+            scope = creators[current[memory]] if event["op"] in _REPLACES else {
                 "project": event.get("project", data["project"]),
                 "tenant": event.get("tenant", data["tenant"]),
             }
@@ -185,7 +189,7 @@ def _host_corpora(data: dict) -> dict[str, TransitionRuleCorpus]:
         target = _memory_ref(event["memory"])
         if event["op"] == "retain":
             value[event["memory"]] = event["text"]
-        elif event["op"] == "correct":
+        elif event["op"] in _REPLACES:
             corpora[event["id"]] = TransitionRuleCorpus((TransitionRule(
                 rule_id="rule:" + event["id"], target_reference=target,
                 criterion="value-correction", from_state=value[event["memory"]],
@@ -214,7 +218,7 @@ def _event_proposal(data, event, memory_scope, *, op, version=0):
         return base
     common = dict(review_satisfied=True, approval_refs=("approval:quality-history",),
                   state_snapshot=f"v{version}")
-    if op == "correct":
+    if op in _REPLACES:
         return replace(base, operation="correction", **common)
     return replace(base, operation="permanent_deletion", reversibility="irreversible", **common)
 
@@ -258,19 +262,21 @@ def run_scenarios(data, root: Path, *, revision: str, lane_id: str,
         else:
             evidence = corpora[event["id"]].evidence_for(
                 target_reference=_memory_ref(memory),
-                criterion="value-correction" if op == "correct" else "permanent-deletion",
-                pre_state=value[memory] if op == "correct" else "current",
-                proposed_value=event["text"] if op == "correct" else "deleted",
+                criterion="value-correction" if op in _REPLACES else "permanent-deletion",
+                pre_state=value[memory] if op in _REPLACES else "current",
+                proposed_value=event["text"] if op in _REPLACES else "deleted",
             )
             proposal = _event_proposal(data, event, scope_of[memory], op=op, version=version[memory])
-            if op == "correct":
-                outcome = runtime.correct(proposal, event["text"], evidence=evidence, temporal=temporal)
+            if op in _REPLACES:
+                outcome = runtime.correct(
+                    proposal, event["text"], evidence=evidence, temporal=temporal,
+                    replacement_kind="state_change" if op == "update" else "error_correction")
                 version[memory] += 1
             else:
                 outcome = runtime.delete_current(proposal, evidence=evidence)
         if not outcome.committed:
             raise RuntimeError(f"governed {op} failed for event {event['id']}")
-        if op in ("retain", "correct"):
+        if op in ("retain", *_REPLACES):
             if type(outcome.fact_uuid) is not str or outcome.fact_uuid in labels:
                 raise RuntimeError("missing or duplicate persisted fact identity")
             labels[outcome.fact_uuid] = event["id"]
