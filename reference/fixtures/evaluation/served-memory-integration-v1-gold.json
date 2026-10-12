@@ -1,0 +1,131 @@
+{
+  "schema": "served-memory-quality-v1",
+  "cases": [
+    {
+      "id": "Q-current-endpoint",
+      "intent": "current",
+      "budget": 3,
+      "relevance": {
+        "release-old": 0,
+        "release-current": 1,
+        "endpoint": 3,
+        "quota": 1,
+        "mugs": 0,
+        "hidden-endpoint": 3,
+        "boreal-quota": 0
+      },
+      "critical_groups": [
+        [
+          "endpoint"
+        ]
+      ],
+      "prohibited": [
+        "hidden-endpoint"
+      ],
+      "stale": [],
+      "safe_answer_exists": true,
+      "scenario": "What is the Aster service endpoint?"
+    },
+    {
+      "id": "Q-compound",
+      "intent": "current",
+      "budget": 3,
+      "relevance": {
+        "release-old": 0,
+        "release-current": 1,
+        "endpoint": 3,
+        "quota": 3,
+        "mugs": 0,
+        "hidden-endpoint": 3,
+        "boreal-quota": 0
+      },
+      "critical_groups": [
+        [
+          "endpoint"
+        ],
+        [
+          "quota"
+        ]
+      ],
+      "prohibited": [
+        "hidden-endpoint"
+      ],
+      "stale": [],
+      "safe_answer_exists": true,
+      "scenario": "What are the Aster service endpoint and quota?"
+    },
+    {
+      "id": "Q-release-history",
+      "intent": "historical",
+      "budget": 3,
+      "relevance": {
+        "release-old": 3,
+        "release-current": 2,
+        "endpoint": 0,
+        "quota": 0,
+        "mugs": 0,
+        "hidden-endpoint": 0,
+        "boreal-quota": 0
+      },
+      "critical_groups": [
+        [
+          "release-old"
+        ]
+      ],
+      "prohibited": [
+        "hidden-endpoint"
+      ],
+      "stale": [],
+      "safe_answer_exists": true,
+      "scenario": "Why was Aster release 1.0 delayed?"
+    },
+    {
+      "id": "Q-no-owner",
+      "intent": "current",
+      "budget": 2,
+      "relevance": {
+        "release-old": 0,
+        "release-current": 0,
+        "endpoint": 0,
+        "quota": 0,
+        "mugs": 0,
+        "hidden-endpoint": 0,
+        "boreal-quota": 0
+      },
+      "critical_groups": [],
+      "prohibited": [
+        "hidden-endpoint"
+      ],
+      "stale": [],
+      "safe_answer_exists": false,
+      "scenario": "Who is the Aster service's security owner?"
+    },
+    {
+      "id": "Q-release-current",
+      "intent": "current",
+      "budget": 3,
+      "relevance": {
+        "release-old": 3,
+        "release-current": 3,
+        "endpoint": 0,
+        "quota": 0,
+        "mugs": 0,
+        "hidden-endpoint": 0,
+        "boreal-quota": 0
+      },
+      "critical_groups": [
+        [
+          "release-current"
+        ]
+      ],
+      "prohibited": [
+        "hidden-endpoint"
+      ],
+      "stale": [
+        "release-old"
+      ],
+      "safe_answer_exists": true,
+      "scenario": "Which Aster release is current?"
+    }
+  ]
+}
