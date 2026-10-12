@@ -1,0 +1,75 @@
+{
+  "schema": "served-memory-execution-v1",
+  "tenant": "tenant-quality-771",
+  "project": "project-alpha",
+  "purpose": "quality-evaluation",
+  "writes": [
+    {
+      "id": "release-old",
+      "text": "Aster release 1.0 was delayed because the database migration was incomplete",
+      "project": "project-alpha"
+    },
+    {
+      "id": "release-current",
+      "text": "Aster release 2.0 shipped after the database migration completed",
+      "project": "project-alpha"
+    },
+    {
+      "id": "endpoint",
+      "text": "Aster service endpoint is /healthz",
+      "project": "project-alpha"
+    },
+    {
+      "id": "quota",
+      "text": "Aster service quota is 24 requests per minute",
+      "project": "project-alpha"
+    },
+    {
+      "id": "mugs",
+      "text": "Aster team ordered mugs with company logos",
+      "project": "project-alpha"
+    },
+    {
+      "id": "hidden-endpoint",
+      "text": "Aster service endpoint is /private-secret",
+      "project": "project-beta"
+    },
+    {
+      "id": "boreal-quota",
+      "text": "Boreal service quota is 11 requests per minute",
+      "project": "project-alpha"
+    }
+  ],
+  "queries": [
+    {
+      "id": "Q-current-endpoint",
+      "query": "What is the Aster service endpoint?",
+      "intent": "current",
+      "budget": 3
+    },
+    {
+      "id": "Q-compound",
+      "query": "What are the Aster service endpoint and quota?",
+      "intent": "current",
+      "budget": 3
+    },
+    {
+      "id": "Q-release-history",
+      "query": "Why was Aster release 1.0 delayed?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "Q-no-owner",
+      "query": "Who is the Aster service's security owner?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "Q-release-current",
+      "query": "Which Aster release is current?",
+      "intent": "current",
+      "budget": 3
+    }
+  ]
+}
