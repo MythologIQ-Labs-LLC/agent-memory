@@ -1,0 +1,653 @@
+{
+  "cases": [
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "printer-petg"
+        ]
+      ],
+      "id": "F01",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 2,
+        "printer-petg": 3,
+        "printer-pla": 1,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Which filament did the makerspace printer use before ASA?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "hours-9"
+        ]
+      ],
+      "id": "F02",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 2,
+        "hours-9": 3,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What were the reading room opening hours previously?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "loan-14"
+        ]
+      ],
+      "id": "F03",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 3,
+        "loan-21": 2,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 1,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What loan period did members get prior to the extension?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "wifi-guest"
+        ]
+      ],
+      "id": "F04",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 3,
+        "wifi-open": 2
+      },
+      "safe_answer_exists": true,
+      "scenario": "Which wifi network name was replaced by FenOpen?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "printer-petg"
+        ]
+      ],
+      "id": "F05",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 2,
+        "printer-petg": 3,
+        "printer-pla": 1,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What filament came right ahead of the one the printer has now?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "printer-pla"
+        ]
+      ],
+      "id": "F06",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 1,
+        "printer-petg": 1,
+        "printer-pla": 3,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What filament did the makerspace printer originally use?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "why-loan"
+        ]
+      ],
+      "id": "F07",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 1,
+        "loan-21": 2,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 3,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "Why was the loan period extended?",
+      "stale": []
+    },
+    {
+      "budget": 2,
+      "critical_groups": [
+        [
+          "laser"
+        ]
+      ],
+      "id": "F08",
+      "intent": "timeless",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 3,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What is required before first use of the laser cutter?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [],
+      "id": "F09",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 1,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "What was the laser cutter induction rule before?",
+      "stale": []
+    },
+    {
+      "budget": 1,
+      "critical_groups": [],
+      "id": "F10",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 1,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "Who was the library director before?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [],
+      "id": "F11",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "Where was the book returns chute before?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [],
+      "id": "F12",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": false,
+      "scenario": "What was the branch refurbishment budget before?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "fine-20"
+        ]
+      ],
+      "id": "F13",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 3,
+        "fine-25": 2,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What was the late return fine before the current rate?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "printer-asa"
+        ]
+      ],
+      "id": "F14",
+      "intent": "current",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 3,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "What filament does the makerspace printer use now?",
+      "stale": [
+        "fine-20",
+        "fine-30",
+        "hours-9",
+        "loan-14",
+        "printer-petg",
+        "printer-pla",
+        "wifi-guest"
+      ]
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "archive"
+        ]
+      ],
+      "id": "F15",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 3,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 0,
+        "wifi-open": 0
+      },
+      "safe_answer_exists": true,
+      "scenario": "When did the local history archive move to the basement?",
+      "stale": []
+    },
+    {
+      "budget": 3,
+      "critical_groups": [
+        [
+          "wifi-guest"
+        ]
+      ],
+      "id": "F16",
+      "intent": "historical",
+      "prohibited": [
+        "chute-n",
+        "chute-s",
+        "refurb-300",
+        "refurb-450"
+      ],
+      "relevance": {
+        "archive": 0,
+        "chute-n": 0,
+        "chute-s": 0,
+        "director": 0,
+        "fine-20": 0,
+        "fine-25": 0,
+        "fine-30": 0,
+        "hours-830": 0,
+        "hours-9": 0,
+        "laser": 0,
+        "loan-14": 0,
+        "loan-21": 0,
+        "printer-asa": 0,
+        "printer-petg": 0,
+        "printer-pla": 0,
+        "refurb-300": 0,
+        "refurb-450": 0,
+        "why-loan": 0,
+        "wifi-guest": 3,
+        "wifi-open": 2
+      },
+      "safe_answer_exists": true,
+      "scenario": "Which guest wifi name did we use earlier?",
+      "stale": []
+    }
+  ],
+  "schema": "served-memory-quality-v1"
+}

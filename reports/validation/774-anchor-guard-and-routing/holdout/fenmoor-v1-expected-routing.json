@@ -1,0 +1,22 @@
+{
+  "expected_route": {
+    "F01": true,
+    "F02": true,
+    "F03": true,
+    "F04": false,
+    "F05": false,
+    "F06": false,
+    "F07": false,
+    "F08": true,
+    "F09": true,
+    "F10": true,
+    "F11": true,
+    "F12": true,
+    "F13": true,
+    "F14": false,
+    "F15": false,
+    "F16": true
+  },
+  "note": "reviewer prediction of the frozen rule, written before execution",
+  "policy_version": "0.1.0"
+}

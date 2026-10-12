@@ -1,0 +1,18 @@
+{
+  "F01": "predecessor-cue-3rev",
+  "F02": "predecessor-cue-2rev",
+  "F03": "predecessor-cue-with-rationale",
+  "F04": "predecessor-paraphrase-no-cue",
+  "F05": "predecessor-paraphrase-no-cue",
+  "F06": "origin-not-predecessor",
+  "F07": "why",
+  "F08": "decoy-before-not-predecessor",
+  "F09": "wrong-subject-no-history",
+  "F10": "wrong-subject-no-history-budget-1",
+  "F11": "predecessor-deleted-memory",
+  "F12": "predecessor-other-project",
+  "F13": "predecessor-past-error-correction",
+  "F14": "current",
+  "F15": "historical-event-not-predecessor",
+  "F16": "predecessor-cue-earlier"
+}

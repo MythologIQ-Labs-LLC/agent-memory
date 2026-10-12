@@ -1,0 +1,233 @@
+{
+  "events": [
+    {
+      "id": "printer-pla",
+      "memory": "printer",
+      "op": "retain",
+      "text": "The makerspace 3D printer uses PLA filament."
+    },
+    {
+      "id": "printer-petg",
+      "memory": "printer",
+      "op": "update",
+      "text": "The makerspace 3D printer now uses PETG filament."
+    },
+    {
+      "id": "printer-asa",
+      "memory": "printer",
+      "op": "update",
+      "text": "The makerspace 3D printer switched to ASA filament."
+    },
+    {
+      "id": "hours-9",
+      "memory": "hours",
+      "op": "retain",
+      "text": "The reading room opens at 9 in the morning."
+    },
+    {
+      "id": "hours-830",
+      "memory": "hours",
+      "op": "update",
+      "text": "The reading room now opens at 8:30 in the morning."
+    },
+    {
+      "id": "loan-14",
+      "memory": "loan",
+      "op": "retain",
+      "text": "The standard loan period for members is 14 days."
+    },
+    {
+      "id": "loan-21",
+      "memory": "loan",
+      "op": "update",
+      "text": "The standard loan period for members is now 21 days."
+    },
+    {
+      "id": "why-loan",
+      "memory": "why-loan",
+      "op": "retain",
+      "text": "The loan period was extended because course texts had long waiting lists."
+    },
+    {
+      "id": "wifi-guest",
+      "memory": "wifi",
+      "op": "retain",
+      "text": "The guest wifi network is called FenGuest."
+    },
+    {
+      "id": "wifi-open",
+      "memory": "wifi",
+      "op": "update",
+      "text": "The guest wifi network is now called FenOpen."
+    },
+    {
+      "id": "laser",
+      "memory": "laser",
+      "op": "retain",
+      "text": "The laser cutter requires a safety induction before first use."
+    },
+    {
+      "id": "archive",
+      "memory": "archive",
+      "op": "retain",
+      "text": "The local history archive moved to the basement in 2021."
+    },
+    {
+      "id": "director",
+      "memory": "director",
+      "op": "retain",
+      "text": "The Fenmoor library director is Ada Pike."
+    },
+    {
+      "id": "chute-n",
+      "memory": "chute",
+      "op": "retain",
+      "text": "The book returns chute is at the north door."
+    },
+    {
+      "id": "chute-s",
+      "memory": "chute",
+      "op": "update",
+      "text": "The book returns chute is now at the south door."
+    },
+    {
+      "id": "chute-del",
+      "memory": "chute",
+      "op": "delete"
+    },
+    {
+      "id": "refurb-300",
+      "memory": "refurb",
+      "op": "retain",
+      "project": "capital-programme",
+      "text": "The branch refurbishment budget is 300 thousand pounds."
+    },
+    {
+      "id": "refurb-450",
+      "memory": "refurb",
+      "op": "update",
+      "text": "The branch refurbishment budget is now 450 thousand pounds."
+    },
+    {
+      "id": "fine-20",
+      "memory": "fine",
+      "op": "retain",
+      "text": "The late return fine is 20 pence per day."
+    },
+    {
+      "id": "fine-30",
+      "memory": "fine",
+      "op": "update",
+      "text": "The late return fine is now 30 pence per day."
+    },
+    {
+      "id": "fine-25",
+      "memory": "fine",
+      "op": "correct",
+      "text": "The late return fine is 25 pence per day; 30 pence was entered by mistake."
+    }
+  ],
+  "project": "library-operations",
+  "purpose": "library-operations-assistant",
+  "queries": [
+    {
+      "budget": 3,
+      "id": "F01",
+      "intent": "historical",
+      "query": "Which filament did the makerspace printer use before ASA?"
+    },
+    {
+      "budget": 3,
+      "id": "F02",
+      "intent": "historical",
+      "query": "What were the reading room opening hours previously?"
+    },
+    {
+      "budget": 3,
+      "id": "F03",
+      "intent": "historical",
+      "query": "What loan period did members get prior to the extension?"
+    },
+    {
+      "budget": 3,
+      "id": "F04",
+      "intent": "historical",
+      "query": "Which wifi network name was replaced by FenOpen?"
+    },
+    {
+      "budget": 3,
+      "id": "F05",
+      "intent": "historical",
+      "query": "What filament came right ahead of the one the printer has now?"
+    },
+    {
+      "budget": 3,
+      "id": "F06",
+      "intent": "historical",
+      "query": "What filament did the makerspace printer originally use?"
+    },
+    {
+      "budget": 3,
+      "id": "F07",
+      "intent": "historical",
+      "query": "Why was the loan period extended?"
+    },
+    {
+      "budget": 2,
+      "id": "F08",
+      "intent": "timeless",
+      "query": "What is required before first use of the laser cutter?"
+    },
+    {
+      "budget": 3,
+      "id": "F09",
+      "intent": "historical",
+      "query": "What was the laser cutter induction rule before?"
+    },
+    {
+      "budget": 1,
+      "id": "F10",
+      "intent": "historical",
+      "query": "Who was the library director before?"
+    },
+    {
+      "budget": 3,
+      "id": "F11",
+      "intent": "historical",
+      "query": "Where was the book returns chute before?"
+    },
+    {
+      "budget": 3,
+      "id": "F12",
+      "intent": "historical",
+      "query": "What was the branch refurbishment budget before?"
+    },
+    {
+      "budget": 3,
+      "id": "F13",
+      "intent": "historical",
+      "query": "What was the late return fine before the current rate?"
+    },
+    {
+      "budget": 3,
+      "id": "F14",
+      "intent": "current",
+      "query": "What filament does the makerspace printer use now?"
+    },
+    {
+      "budget": 3,
+      "id": "F15",
+      "intent": "historical",
+      "query": "When did the local history archive move to the basement?"
+    },
+    {
+      "budget": 3,
+      "id": "F16",
+      "intent": "historical",
+      "query": "Which guest wifi name did we use earlier?"
+    }
+  ],
+  "reference_time": "2026-10-12T12:00:00Z",
+  "schema": "served-memory-lifecycle-v3",
+  "tenant": "fenmoor"
+}
