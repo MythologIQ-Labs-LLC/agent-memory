@@ -1,0 +1,22 @@
+{
+  "reference_time": "2026-10-12T12:00:00Z",
+  "note": "Derived v3 copies; v2 sources are unchanged and remain the frozen evidence.",
+  "derivations": [
+    {
+      "output": "halcyon-v1.1-at-20261012T12Z.v3.json",
+      "source_commit": "04543a79dbf3774e2d3381690fe4212cfe955614",
+      "source_path": "reports/validation/771-cloud-qualification/holdout/halcyon-holdout-v1.1-input.json",
+      "source_sha256": "d41ae86d6f81eaa11e277e83d24be8a5b065e6a3a3929d21abe1e60b7a4602ae",
+      "output_sha256": "b46348d9b951bf9194688a5dd0678f55be269a27bb140e865867bb4f031d4b7b",
+      "only_changes": "schema -> served-memory-lifecycle-v3; added reference_time"
+    },
+    {
+      "output": "cedarline-v1.1-at-20261012T12Z.v3.json",
+      "source_commit": "32404f7e0c800110cf7a72ba128479afc8bf0d83",
+      "source_path": "reference/fixtures/evaluation/cedarline-independent-v1.1-input.json",
+      "source_sha256": "eee23441f27ae2f9ccbb7ae3877759f20b3d47699f786fdadf281053e89a467c",
+      "output_sha256": "882dfc316b74c4655134d019134f152d641da5b46550d01a9cd4302eb1d1d9d3",
+      "only_changes": "schema -> served-memory-lifecycle-v3; added reference_time"
+    }
+  ]
+}
