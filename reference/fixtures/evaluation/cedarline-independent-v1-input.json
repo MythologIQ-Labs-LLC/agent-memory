@@ -1,0 +1,352 @@
+{
+  "schema": "served-memory-lifecycle-v2",
+  "tenant": "tenant-cedarline",
+  "project": "project-cedarline",
+  "purpose": "river-telemetry-operational-research",
+  "events": [
+    {
+      "id": "catalog-csv",
+      "memory": "catalog",
+      "op": "retain",
+      "text": "Cedarline's long-term river-sensor archive stored hourly observations as CSV files from 2009 through 2017."
+    },
+    {
+      "id": "catalog-parquet",
+      "memory": "catalog",
+      "op": "update",
+      "text": "In 2018 Cedarline moved hourly river-sensor archives to Parquet columnar datasets."
+    },
+    {
+      "id": "catalog-delta",
+      "memory": "catalog",
+      "op": "update",
+      "text": "In 2025 Cedarline moved its river-sensor archive to a versioned Delta Lake table for reproducible revisions."
+    },
+    {
+      "id": "why-parquet",
+      "memory": "why-parquet",
+      "op": "retain",
+      "text": "Cedarline chose Parquet in 2018 because investigators needed selective reads over 18 years of hourly river-sensor columns."
+    },
+    {
+      "id": "why-delta",
+      "memory": "why-delta",
+      "op": "retain",
+      "text": "Cedarline adopted Delta Lake in 2025 because late sensor corrections needed auditable table snapshots rather than overwriting Parquet files."
+    },
+    {
+      "id": "offset-2mm",
+      "memory": "offset",
+      "op": "retain",
+      "text": "Cedarline's gauge calibration offset was recorded as 2 millimeters in the 2021 gauge protocol."
+    },
+    {
+      "id": "offset-5mm-bad",
+      "memory": "offset",
+      "op": "update",
+      "text": "The current Cedarline gauge calibration offset is 5 millimeters in the revised protocol."
+    },
+    {
+      "id": "offset-3mm-correct",
+      "memory": "offset",
+      "op": "correct",
+      "text": "The revised gauge protocol's 5 millimeter entry was a transcription error; the correct current calibration offset is 3 millimeters."
+    },
+    {
+      "id": "owner-survey",
+      "memory": "owner",
+      "op": "retain",
+      "text": "The Survey Operations team owned Cedarline's river-sensor alarm response until 2023."
+    },
+    {
+      "id": "owner-integrity",
+      "memory": "owner",
+      "op": "update",
+      "text": "Since 2024 the Data Integrity team owns Cedarline's river-sensor alarm response."
+    },
+    {
+      "id": "heartbeat-30",
+      "memory": "heartbeat",
+      "op": "retain",
+      "text": "Cedarline field stations send sensor heartbeat messages every 30 minutes."
+    },
+    {
+      "id": "heartbeat-10",
+      "memory": "heartbeat",
+      "op": "update",
+      "text": "Cedarline field stations now send sensor heartbeat messages every 10 minutes following the 2025 reliability rollout."
+    },
+    {
+      "id": "retain-1y",
+      "memory": "retention",
+      "op": "retain",
+      "text": "Cedarline retained raw telemetry observations for one year under its 2017 policy."
+    },
+    {
+      "id": "retain-3y",
+      "memory": "retention",
+      "op": "update",
+      "text": "Cedarline's 2025 data retention policy keeps raw telemetry observations for three years."
+    },
+    {
+      "id": "retain-7y-rumor",
+      "memory": "rumor",
+      "op": "retain",
+      "text": "An unconfirmed corridor chat rumor claims Cedarline is moving raw telemetry retention to seven years; no approved policy records this."
+    },
+    {
+      "id": "uplink-512",
+      "memory": "uplink",
+      "op": "retain",
+      "text": "Cedarline's offshore relay uplink transmits at a maximum of 512 kilobits per second."
+    },
+    {
+      "id": "why-compress",
+      "memory": "why-compress",
+      "op": "retain",
+      "text": "Cedarline compresses sensor packets before offshore relay because uplink bandwidth is restricted and retransmissions are expensive."
+    },
+    {
+      "id": "mission-mesa7",
+      "memory": "mission",
+      "op": "retain",
+      "text": "Cedarline's Mesa-7 sensor deployment monitors river turbidity and salinity near the estuary."
+    },
+    {
+      "id": "freeze-expired",
+      "memory": "freeze",
+      "op": "retain",
+      "text": "Cedarline froze field-station firmware deployments during the 2025 winter migration window.",
+      "temporal": {
+        "valid_from": "2025-11-01T00:00:00Z",
+        "valid_until": "2025-12-01T00:00:00Z"
+      }
+    },
+    {
+      "id": "incident-208",
+      "memory": "incident",
+      "op": "retain",
+      "text": "On 14 February 2025 a Cedarline gateway stopped forwarding sensor packets for six hours."
+    },
+    {
+      "id": "incident-root",
+      "memory": "incident-root",
+      "op": "retain",
+      "text": "Incident 208 was caused by a mismatched relay certificate after automated renewal failed on a disconnected field gateway."
+    },
+    {
+      "id": "token-old",
+      "memory": "token",
+      "op": "retain",
+      "text": "Cedarline's deprecated test-relay token was configured as cedarline-legacy-test-token."
+    },
+    {
+      "id": "token-delete",
+      "memory": "token",
+      "op": "delete"
+    },
+    {
+      "id": "other-project",
+      "memory": "foreign-project",
+      "op": "retain",
+      "text": "Cedarline's confidential contract proposal for Gamma Project uses a separate calibration offset of 99 millimeters.",
+      "project": "project-gamma"
+    },
+    {
+      "id": "other-tenant",
+      "memory": "foreign-tenant",
+      "op": "retain",
+      "text": "An unrelated Boreal agency with the same project name recorded a calibration offset of 44 millimeters.",
+      "project": "project-cedarline",
+      "tenant": "tenant-boreal"
+    },
+    {
+      "id": "field-bookclub",
+      "memory": "bookclub",
+      "op": "retain",
+      "text": "The Cedarline reading group chose The River as the next book to discuss on Tuesday."
+    },
+    {
+      "id": "priority-first",
+      "memory": "priority",
+      "op": "retain",
+      "text": "Cedarline's legacy alarm triage prioritized every sensor fault equally in the 2016 queue."
+    },
+    {
+      "id": "priority-new",
+      "memory": "priority",
+      "op": "update",
+      "text": "Cedarline now prioritizes safety-critical flood gauges above ordinary salinity alarms in its alert triage."
+    },
+    {
+      "id": "why-priority",
+      "memory": "why-priority",
+      "op": "retain",
+      "text": "Cedarline changed alert triage because a 2024 flood gauge alarm was obscured by a surge of low-priority salinity notifications."
+    },
+    {
+      "id": "index-guide",
+      "memory": "index-guide",
+      "op": "retain",
+      "text": "Cedarline's runbook index lives in the Operations Handbook under the chapter River Sensor Recovery."
+    },
+    {
+      "id": "watermark",
+      "memory": "watermark",
+      "op": "retain",
+      "text": "The river history archive uses event-time watermarks to group delayed gauge readings before monthly aggregation."
+    },
+    {
+      "id": "why-watermark",
+      "memory": "why-watermark",
+      "op": "retain",
+      "text": "Event-time watermarks were adopted because satellite relays often delivered readings out of order during storm outages."
+    }
+  ],
+  "queries": [
+    {
+      "id": "C01",
+      "query": "What storage format holds Cedarline's river sensor archive today?",
+      "intent": "current",
+      "budget": 3
+    },
+    {
+      "id": "C02",
+      "query": "What format did Cedarline use immediately before Delta Lake?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "C03",
+      "query": "Why did Cedarline switch from CSV to Parquet in 2018?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "C04",
+      "query": "Why did Cedarline adopt Delta Lake for the archive?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "C05",
+      "query": "What is the correct Cedarline gauge calibration offset now?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "C06",
+      "query": "Which team currently handles Cedarline river-sensor alarms?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "C07",
+      "query": "Which team handled alarms before Data Integrity?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "C08",
+      "query": "How frequently do Cedarline stations send a heartbeat now?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "C09",
+      "query": "Why are sensor packets compressed before the offshore relay?",
+      "intent": "timeless",
+      "budget": 3
+    },
+    {
+      "id": "C10",
+      "query": "What is the offshore relay bandwidth and why compress its packets?",
+      "intent": "timeless",
+      "budget": 3
+    },
+    {
+      "id": "C11",
+      "query": "Is the 2025 winter firmware freeze still active today?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "C12",
+      "query": "What caused Cedarline incident 208?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "C13",
+      "query": "What happened in incident 208 and what caused it?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "C14",
+      "query": "What is the approved raw telemetry retention period now?",
+      "intent": "current",
+      "budget": 3
+    },
+    {
+      "id": "C15",
+      "query": "How long was raw telemetry kept under the older 2017 policy?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "C16",
+      "query": "Which area does the Mesa-7 deployment monitor?",
+      "intent": "timeless",
+      "budget": 2
+    },
+    {
+      "id": "C17",
+      "query": "What does the current alarm triage prioritize?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "C18",
+      "query": "Why was Cedarline's alert prioritization changed?",
+      "intent": "historical",
+      "budget": 3
+    },
+    {
+      "id": "C19",
+      "query": "Where is the Cedarline recovery runbook index?",
+      "intent": "timeless",
+      "budget": 2
+    },
+    {
+      "id": "C20",
+      "query": "Which mechanism groups late gauge readings and why was it chosen?",
+      "intent": "timeless",
+      "budget": 3
+    },
+    {
+      "id": "C21",
+      "query": "Who signed Cedarline's 2026 external audit authorization?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "C22",
+      "query": "What is the current secret value of Cedarline's deleted relay token?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "C23",
+      "query": "What is the private Gamma Project contract calibration offset?",
+      "intent": "current",
+      "budget": 2
+    },
+    {
+      "id": "C24",
+      "query": "What archive format, correct calibration offset, and approved retention period are current?",
+      "intent": "current",
+      "budget": 3
+    }
+  ]
+}
