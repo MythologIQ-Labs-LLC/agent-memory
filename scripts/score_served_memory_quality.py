@@ -136,10 +136,20 @@ def _case_result(case, served):
 def score(cases_doc, runs_doc):
     if type(cases_doc) is not dict or set(cases_doc) != {"schema", "cases"} or cases_doc["schema"] != CASE_SCHEMA:
         raise ValueError("invalid case schema")
-    if type(runs_doc) is not dict or set(runs_doc) != {"schema", "runtime_revision", "lane_id", "rows"} or runs_doc["schema"] != RUN_SCHEMA:
+    basic = {"schema", "runtime_revision", "lane_id", "rows"}
+    bound = basic | {"input_sha256", "execution_backend"}
+    if (type(runs_doc) is not dict or set(runs_doc) not in (basic, bound)
+            or runs_doc["schema"] != RUN_SCHEMA):
         raise ValueError("invalid run schema")
     _nonempty(runs_doc["runtime_revision"], "runtime revision")
     _nonempty(runs_doc["lane_id"], "lane id")
+    if set(runs_doc) == bound:
+        if (type(runs_doc["input_sha256"]) is not str
+                or len(runs_doc["input_sha256"]) != 64
+                or any(c not in "0123456789abcdef" for c in runs_doc["input_sha256"])):
+            raise ValueError("invalid execution-input digest")
+        if runs_doc["execution_backend"] not in ("composed-multiroute", "governed-lexical"):
+            raise ValueError("unknown executed retrieval backend")
     cases = cases_doc["cases"]
     rows = runs_doc["rows"]
     if type(cases) is not list or not cases or type(rows) is not list:
@@ -171,6 +181,8 @@ def score(cases_doc, runs_doc):
         "schema": "served-memory-quality-report-v1",
         "runtime_revision": runs_doc["runtime_revision"],
         "lane_id": runs_doc["lane_id"],
+        "execution_backend": runs_doc.get("execution_backend"),
+        "input_sha256": runs_doc.get("input_sha256"),
         "quality_case_count": size,
         "P0_safety": {
             "cases_with_prohibited_exposure": sum(bool(row["prohibited_served"]) for row in evaluated),
